@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 from LatinoAnalysis.Gardener.gardening         import gardener_cli
 from LatinoAnalysis.Gardener.gardening         import ModuleManager,Pruner,Grafter,AliasGrafter,RootWeighter
@@ -9,7 +9,8 @@ from LatinoAnalysis.Gardener.gardening         import ModuleManager,Pruner,Graft
 
 if __name__ == '__main__':
 
-
+    print "gardener"
+    
     modules = ModuleManager()
     modules['filter']           = Pruner()
     modules['adder']            = Grafter()

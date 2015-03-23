@@ -9,7 +9,7 @@ import warnings
 import os.path
 import traceback
 
-#import HWWAnalysis.Misc.odict as odict
+import LatinoAnalysis.Gardener.odict as odict
 
 # for trigger efficiency fits
 from LatinoAnalysis.Gardener.hwwtools import confirm
@@ -441,9 +441,8 @@ class RootWeighter(TreeCloner):
 #  \___/\___/_/_/_/_/_/_/\_,_/_//_/\_,_/ /_/_/_//_/\__/ 
 #                                                       
 
-#class ModuleManager(odict.OrderedDict):
-class ModuleManager():
-    
+class ModuleManager(odict.OrderedDict):
+
     def __setitem__(self,key,value):
         super(ModuleManager, self).__setitem__(key, value)
         value.label = key
