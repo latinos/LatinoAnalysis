@@ -1,14 +1,10 @@
 Example
 ====
 
-example to add a new variable
+In this example we add a new variable in the latino trees. It works only on the latino final trees, produced with the 'cmssw2latino.py' script.
 
-    gardener.py  adder \
-        -v 'test1/F=ch1*ch2'  \
-        input.root output.root
-        
-    gardener.py  adder \
-        -v 'test1/F=ch1*ch2'  \
-         ../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root  test.root
-         
-         
+    scram b -j 10    
+
+    gardener.py adder \
+                -v 'test1/F=ch1*ch2' \
+                input.root output.root
