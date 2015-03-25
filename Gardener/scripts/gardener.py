@@ -6,6 +6,9 @@ from LatinoAnalysis.Gardener.pileup            import PUpper
 #from LatinoAnalysis.Gardener.ww                import WWPruner, WWFlagsGrafter
 #from LatinoAnalysis.Gardener.efficiencies      import EffLepFiller,EffTrgFiller
 
+# new variables
+from LatinoAnalysis.Gardener.variables.WW2jVar    import WW2jVarFiller
+
 
 if __name__ == '__main__':
 
@@ -21,5 +24,10 @@ if __name__ == '__main__':
     modules['puadder']          = PUpper()
     #modules['effwfiller']       = EffLepFiller()
     #modules['efftfiller']       = EffTrgFiller()
+
+# new variables
+    modules['ww2jvarfiller']    = WW2jVarFiller()
+
+
 
     gardener_cli( modules )
