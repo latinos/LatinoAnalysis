@@ -9,7 +9,7 @@
 #
 
 
-from tree.gardening import TreeCloner
+from LatinoAnalysis.Gardener.gardening import TreeCloner
 import numpy
 import ROOT
 import sys

@@ -1,4 +1,4 @@
-from tree.gardening import TreeCloner
+from LatinoAnalysis.Gardener.gardening import TreeCloner
 
 import optparse
 import numpy
