@@ -66,9 +66,9 @@ class WW2jVarFiller(TreeCloner):
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
         try:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/HWWAnalysis/ShapeAnalysis/python/tree/WW2jVar.C+g')
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WW2jVar.C+g')
         except RuntimeError:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/HWWAnalysis/ShapeAnalysis/python/tree/WW2jVar.C++g')
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WW2jVar.C++g')
         #----------------------------------------------------------------------------------------------------
         print '- Starting eventloop'
         step = 5000
