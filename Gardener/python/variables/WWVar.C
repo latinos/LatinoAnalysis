@@ -42,10 +42,10 @@ WW::WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi) {
 float WW::pTWW(){
  
  if (isOk) {
-  return (L1+L2+MET).pT();
+  return (L1+L2+MET).Pt();
  }
  else {
-  return -9999.0
+  return -9999.0;
  }
  
 }

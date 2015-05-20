@@ -10,4 +10,10 @@ Here we add a new variable in a latino tree. It works on the trees produced with
                 input.root output.root
 
 
+Specific modules example:
+
+    gardener.py wwvarfiller \
+                ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root \
+                output.root
+
                 

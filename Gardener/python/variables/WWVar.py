@@ -75,8 +75,12 @@ class WWVarFiller(TreeCloner):
             phi1 = itree.phi1
             phi2 = itree.phi2
 
-            met = itree.pfmet
-            metphi = itree.pfmetphi
+
+            met = itree.pfType1Met
+            metphi = itree.pfType1Metphi
+
+            #met = itree.pfmet
+            #metphi = itree.pfmetphi
 
             WW = ROOT.WW(pt1, pt2, phi1, phi2, met, metphi)
 
