@@ -8,6 +8,7 @@ from LatinoAnalysis.Gardener.pileup            import PUpper
 
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar    import WW2jVarFiller
+from LatinoAnalysis.Gardener.variables.WWVar      import WWVarFiller
 
 
 if __name__ == '__main__':
@@ -27,6 +28,7 @@ if __name__ == '__main__':
 
 # new variables
     modules['ww2jvarfiller']    = WW2jVarFiller()
+    modules['wwvarfiller']      = WWVarFiller()
 
 
 
