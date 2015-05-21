@@ -12,6 +12,7 @@ public:
  
  //! functions
  float pTWW();
+ float dphill();
  
 private:
  //! variables
@@ -50,6 +51,17 @@ float WW::pTWW(){
  
 }
 
+
+float WW::dphill(){
+ 
+ if (isOk) {
+  return L1.DeltaPhi(L2);
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
 
 
 

@@ -85,7 +85,9 @@ class WWVarFiller(TreeCloner):
             WW = ROOT.WW(pt1, pt2, phi1, phi2, met, metphi)
 
             pTWW[0]   = WW.pTWW()
-
+ 
+            #print "dphill = ", WW.dphill()
+            
             otree.Fill()
 
         self.disconnect()
