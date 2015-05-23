@@ -7,8 +7,12 @@ from LatinoAnalysis.Gardener.pileup            import PUpper
 #from LatinoAnalysis.Gardener.efficiencies      import EffLepFiller,EffTrgFiller
 
 # new variables
-from LatinoAnalysis.Gardener.variables.WW2jVar    import WW2jVarFiller
-from LatinoAnalysis.Gardener.variables.WWVar      import WWVarFiller
+from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
+from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
+
+#generic tools
+from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
+
 
 
 if __name__ == '__main__':
@@ -30,6 +34,8 @@ if __name__ == '__main__':
     modules['ww2jvarfiller']    = WW2jVarFiller()
     modules['wwvarfiller']      = WWVarFiller()
 
+# generic tool
+    modules['tlorentzvectorfiller']  = TLorentzVectorCreator()
 
 
     gardener_cli( modules )
