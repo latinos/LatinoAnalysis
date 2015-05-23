@@ -111,8 +111,7 @@ class TLorentzVectorCreator(TreeCloner):
             if bname not in oldbranches: continue
             # found, check for consistency
             branch = self.itree.GetBranch(bname)
-            btype = self.variables[bname][1]
-            newtitle = bname+'/'+btype
+            newtitle = bname
             if ( branch.GetTitle() != newtitle ):
                 print 'WARNING: Branch mutation detected: from',branch.GetTitle(),'to',newtitle
                 hasMutation = True
