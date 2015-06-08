@@ -9,6 +9,7 @@ from LatinoAnalysis.Gardener.pileup            import PUpper
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
 from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
+from LatinoAnalysis.Gardener.variables.ElectronsVar               import ElectronsVarFiller
 
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
@@ -33,9 +34,13 @@ if __name__ == '__main__':
 # new variables
     modules['ww2jvarfiller']    = WW2jVarFiller()
     modules['wwvarfiller']      = WWVarFiller()
+    modules['electronidfiller'] = ElectronsVarFiller()
+
+
 
 # generic tool
     modules['tlorentzvectorfiller']  = TLorentzVectorCreator()
+
 
 
     gardener_cli( modules )
