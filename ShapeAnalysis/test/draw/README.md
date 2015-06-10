@@ -24,6 +24,10 @@ Example:
          ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_25ns.root \
          DrawCompare.cxx\(\"std_vector_jet_eta[0]\",20,-5,5\)
     
+    r99t ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_50ns.root \
+         ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_25ns.root \
+         DrawCompare.cxx\(\"std_vector_jet_phi[0]\",20,-3.15,3.15\)
+    
     
     muons
     r99t ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_50ns.root \
