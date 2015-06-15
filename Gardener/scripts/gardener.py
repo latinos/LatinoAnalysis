@@ -10,6 +10,7 @@ from LatinoAnalysis.Gardener.pileup            import PUpper
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
 from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
 from LatinoAnalysis.Gardener.variables.ElectronsVar               import ElectronsVarFiller
+from LatinoAnalysis.Gardener.variables.wwNLLcorrectionWeight      import wwNLLcorrectionWeightFiller
 
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
@@ -36,6 +37,8 @@ if __name__ == '__main__':
     modules['wwvarfiller']      = WWVarFiller()
     modules['electronidfiller'] = ElectronsVarFiller()
 
+# add nll re-weight for ww
+    modules['wwNLLcorrections']      =  wwNLLcorrectionWeightFiller()
 
 
 # generic tool
