@@ -101,30 +101,47 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed.'
 
-            #ptl1 = itree.genVV_lepton1_LHE_pt
-            #ptl2 = itree.genVV_lepton2_LHE_pt
-            #phil1 = itree.genVV_lepton1_LHE_phi
-            #phil2 = itree.genVV_lepton2_LHE_phi
-
-            #ptv1 = itree.genVV_neutrino1_LHE_pt
-            #ptv2 = itree.genVV_neutrino2_LHE_pt
-            #phiv1 = itree.genVV_neutrino1_LHE_phi
-            #phiv2 = itree.genVV_neutrino2_LHE_phi
-
             # after ISR but before QED FSR
             # because at calculation step these are not defined
             # and they don't know about photons
             # use lvlv status=3 (?? why not 1??) particles
 
-            ptl1 = itree.genVV_lepton1_pt
-            ptl2 = itree.genVV_lepton2_pt
-            phil1 = itree.genVV_lepton1_phi
-            phil2 = itree.genVV_lepton2_phi
+            number1 = -1
+            number2 = -1
+            
+            for numlepton in range(0, itree.std_vector_leptonGen_pt.size()):
+              if itree.std_vector_leptonGen_isHardProcess.at(numlepton) == 1 :
+                if number1 == -1 :
+                  number1 = numlepton
+                else :
+                  number2 = numlepton
+                  
+            print "     number1 = ",  number1           
+            print "     number2 = ",  number2
 
-            ptv1 = itree.genVV_neutrino1_pt
-            ptv2 = itree.genVV_neutrino2_pt
-            phiv1 = itree.genVV_neutrino1_phi
-            phiv2 = itree.genVV_neutrino2_phi
+            numberneutrino1 = -1
+            numberneutrino2 = -1
+            
+            for numlepton in range(0, itree.std_vector_neutrinoGen_pt.size()):
+              if itree.std_vector_neutrinoGen_isHardProcess.at(numlepton) == 1 :
+                if numberneutrino1 == -1 :
+                  numberneutrino1 = numlepton
+                else :
+                  numberneutrino2 = numlepton
+
+            print "     numberneutrino1 = ",  numberneutrino1           
+            print "     numberneutrino2 = ",  numberneutrino2
+
+
+            ptl1 = itree.std_vector_leptonGen_pt.at(number1)
+            ptl2 = itree.std_vector_leptonGen_pt.at(number2)
+            phil1 = itree.std_vector_leptonGen_phi.at(number1)
+            phil2 = itree.std_vector_leptonGen_phi.at(number2)
+
+            ptv1 = itree.std_vector_neutrinoGen_pt.at(numberneutrino1)
+            ptv2 = itree.std_vector_neutrinoGen_pt.at(numberneutrino2)
+            phiv1 = itree.std_vector_neutrinoGen_phi.at(numberneutrino1)
+            phiv2 = itree.std_vector_neutrinoGen_phi.at(numberneutrino2)
 
 
 
