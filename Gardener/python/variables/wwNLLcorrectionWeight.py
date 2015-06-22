@@ -11,7 +11,7 @@
 #
 
 
-from tree.gardening import TreeCloner
+from LatinoAnalysis.Gardener.gardening import TreeCloner
 import numpy
 import ROOT
 import sys
@@ -31,7 +31,6 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-d', '--data'        , dest='datafile', help='Name of the input root file with reweight histograms',)
         group.add_option('-m', '--mcsample'    , dest='mcsample', help='Name of the mc sample to be considered. Possible options [powheg, mcatnlo, madgraph]',)
         parser.add_option_group(group)
 
@@ -40,11 +39,9 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
 
     def checkOptions(self,opts):
         if (
-             not hasattr(opts,'datafile') and
              not hasattr(opts,'mcsample')      ) :
             raise RuntimeError('Missing parameter')
 
-        self.datafile = opts.datafile
         self.mcsample = opts.mcsample
 
     def process(self,**kwargs):
@@ -52,15 +49,14 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
         try:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/HWWAnalysis/ShapeAnalysis/python/tree/wwNLLcorrectionWeight.C+g')
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/wwNLLcorrectionWeight.C+g')
         except RuntimeError:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/HWWAnalysis/ShapeAnalysis/python/tree/wwNLLcorrectionWeight.C++g')
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/wwNLLcorrectionWeight.C++g')
         #----------------------------------------------------------------------------------------------------
 
-        print " file = ",self.datafile
-        wwNLL = ROOT.wwNLL(self.datafile,self.mcsample)
+        wwNLL = ROOT.wwNLL(self.mcsample)
 
-
+        print " starting ..."
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -106,46 +102,72 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             # and they don't know about photons
             # use lvlv status=3 (?? why not 1??) particles
 
+            #number1 = -1
+            #number2 = -1
+            
+            #for numlepton in range(0, itree.std_vector_leptonGen_pt.size()):
+              #if itree.std_vector_leptonGen_isHardProcess.at(numlepton) == 1 :
+                #if number1 == -1 :
+                  #number1 = numlepton
+                #else :
+                  #number2 = numlepton
+                  
+            #print "     number1 = ",  number1           
+            #print "     number2 = ",  number2
+
+            #numberneutrino1 = -1
+            #numberneutrino2 = -1
+            
+            #for numlepton in range(0, itree.std_vector_neutrinoGen_pt.size()):
+              #if itree.std_vector_neutrinoGen_isHardProcess.at(numlepton) == 1 :
+                #if numberneutrino1 == -1 :
+                  #numberneutrino1 = numlepton
+                #else :
+                  #numberneutrino2 = numlepton
+
+            #print "     numberneutrino1 = ",  numberneutrino1           
+            #print "     numberneutrino2 = ",  numberneutrino2
+
+
+            #ptl1 = itree.std_vector_leptonGen_pt.at(number1)
+            #ptl2 = itree.std_vector_leptonGen_pt.at(number2)
+            #phil1 = itree.std_vector_leptonGen_phi.at(number1)
+            #phil2 = itree.std_vector_leptonGen_phi.at(number2)
+
+            #ptv1 = itree.std_vector_neutrinoGen_pt.at(numberneutrino1)
+            #ptv2 = itree.std_vector_neutrinoGen_pt.at(numberneutrino2)
+            #phiv1 = itree.std_vector_neutrinoGen_phi.at(numberneutrino1)
+            #phiv2 = itree.std_vector_neutrinoGen_phi.at(numberneutrino2)
+
+            #wwNLL.SetPTWW(ptl1, phil1, ptl2, phil2, ptv1, phiv1, ptv2, phiv2)
+
+
+
             number1 = -1
             number2 = -1
             
-            for numlepton in range(0, itree.std_vector_leptonGen_pt.size()):
-              if itree.std_vector_leptonGen_isHardProcess.at(numlepton) == 1 :
+            print "--------"
+            print " size = ", itree.std_vector_VBoson_pt.size()
+            
+            for numlepton in range(0, itree.std_vector_VBoson_pt.size()):
+              print " - ", numlepton, " :: ", itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton), " :: ", abs(itree.std_vector_VBoson_pid.at(numlepton))
+              if itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton) == 1 and abs(itree.std_vector_VBoson_pid.at(numlepton)) == 24 :
                 if number1 == -1 :
                   number1 = numlepton
                 else :
                   number2 = numlepton
-                  
+
             print "     number1 = ",  number1           
             print "     number2 = ",  number2
 
-            numberneutrino1 = -1
-            numberneutrino2 = -1
-            
-            for numlepton in range(0, itree.std_vector_neutrinoGen_pt.size()):
-              if itree.std_vector_neutrinoGen_isHardProcess.at(numlepton) == 1 :
-                if numberneutrino1 == -1 :
-                  numberneutrino1 = numlepton
-                else :
-                  numberneutrino2 = numlepton
+            if number1 != -1 and number2 != -1 : 
+              ptV1 = itree.std_vector_VBoson_pt.at(number1)
+              ptV2 = itree.std_vector_VBoson_pt.at(number2)
+              phiV1 = itree.std_vector_VBoson_phi.at(number1)
+              phiV2 = itree.std_vector_VBoson_phi.at(number2)
 
-            print "     numberneutrino1 = ",  numberneutrino1           
-            print "     numberneutrino2 = ",  numberneutrino2
+              wwNLL.SetPTWW(ptV1, phiV1, ptV2, phiV2)
 
-
-            ptl1 = itree.std_vector_leptonGen_pt.at(number1)
-            ptl2 = itree.std_vector_leptonGen_pt.at(number2)
-            phil1 = itree.std_vector_leptonGen_phi.at(number1)
-            phil2 = itree.std_vector_leptonGen_phi.at(number2)
-
-            ptv1 = itree.std_vector_neutrinoGen_pt.at(numberneutrino1)
-            ptv2 = itree.std_vector_neutrinoGen_pt.at(numberneutrino2)
-            phiv1 = itree.std_vector_neutrinoGen_phi.at(numberneutrino1)
-            phiv2 = itree.std_vector_neutrinoGen_phi.at(numberneutrino2)
-
-
-
-            wwNLL.SetPTWW(ptl1, phil1, ptl2, phil2, ptv1, phiv1, ptv2, phiv2)
 
             nllW[0]   = wwNLL.nllWeight(0)
             nllW_Rup[0]   = wwNLL.nllWeight(1,1)

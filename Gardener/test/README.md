@@ -25,4 +25,9 @@ Specific modules example:
     gardener.py electronidfiller \
                 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root \
                 output.root
-           
+    
+    gardener.py wwNLLcorrections \
+                -m 'powheg'  \
+                ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_50ns.root \
+                output.root
+    
