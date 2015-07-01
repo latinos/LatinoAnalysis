@@ -12,6 +12,7 @@ from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFi
 from LatinoAnalysis.Gardener.variables.ElectronsVar               import ElectronsVarFiller
 from LatinoAnalysis.Gardener.variables.wwNLLcorrectionWeight      import wwNLLcorrectionWeightFiller
 from LatinoAnalysis.Gardener.variables.DMVar                      import DMVarFiller
+from LatinoAnalysis.Gardener.variables.XWWVar                     import XWWVarFiller
 
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
@@ -38,6 +39,7 @@ if __name__ == '__main__':
     modules['wwvarfiller']      = WWVarFiller()
     modules['electronidfiller'] = ElectronsVarFiller()
     modules['dmvarfiller']      = DMVarFiller()
+    modules['xwwvarfiller']     = XWWVarFiller()
 
 # add nll re-weight for ww
     modules['wwNLLcorrections']      =  wwNLLcorrectionWeightFiller()
