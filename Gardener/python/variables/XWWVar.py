@@ -78,9 +78,18 @@ class XWWVarFiller(TreeCloner):
             eta2 = itree.eta2
 
 
-            met = itree.pfType1Met
-            metphi = itree.pfType1Metphi
-
+            for branch in itree.GetListOfBranches():
+              if( branch.GetName() == "pfType1Met" ):
+                 met = itree.pfType1Met
+              else :
+                 met = 0
+           
+            for branch in itree.GetListOfBranches():
+              if( branch.GetName() == "pfType1Metphi" ):
+                 metphi = itree.pfType1Metphi
+              else :
+                 metphi = 0
+           
             #met = itree.pfmet
             #metphi = itree.pfmetphi
 

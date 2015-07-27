@@ -7,7 +7,7 @@
 class XWW {
 public:
  //! constructor
- XWW(float pt1, float pt2, float phi1, float phi2, float eta1, float eta2, float met, float metphi);
+ XWW(float pt1, float pt2, float phi1, float phi2, float eta1, float eta2, float met=0, float metphi=0);
  virtual ~XWW() {}
  
  //! functions
