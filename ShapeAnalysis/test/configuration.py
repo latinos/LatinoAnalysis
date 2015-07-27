@@ -9,7 +9,7 @@ outputDir = 'test'
 lumi = 19.47
 
 # set of mc samples: 0j1j, vbf
-mcset = 'general.py'
+#mcset = 'general.py'
 
 # variable, or formula to use: mll, mjj, 2*unboostedMr
 # for 2D, use TTree::Draw sytax i.e. x:y

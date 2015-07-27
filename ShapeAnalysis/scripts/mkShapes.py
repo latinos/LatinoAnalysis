@@ -79,8 +79,7 @@ class ShapeFactory:
         self._outFile = ROOT.TFile.Open( self._outputFileName, 'recreate')
         
         ROOT.TH1.SetDefaultSumw2(True)
-        shapeFiles = []
-
+        
         selections = "1"
 
         #---- first create structure in ourput root file
@@ -103,23 +102,27 @@ class ShapeFactory:
             print "variable[name]  = ", variable['name']
             print "variable[range] = ", variable['range']
             self._outFile.cd (cutName+"/"+variableName)
+            
+            list_of_trees_to_connect = {}
+            for sampleName, sample in self._samples.iteritems():
+              list_of_trees_to_connect[sampleName] = sample['name']
+
+            inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
+            
             for sampleName, sample in self._samples.iteritems():
               print "sample[name]    = ", sample ['name']
               print "sample[weight]  = ", sample ['weight']
               print "sample[weights] = ", sample ['weights']
 
-              # get the weight
-              # open the root file
-              # plot
-              # self._draw(doalias, rng, selections, output, inputs)
-              # save histogram
+              # create histogram: already the "hadd" of possible sub-contributions
+              outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName])
 
-                 #print 'Output file:',self._outputFile
+              outputsHisto.Write()
+              
+              
+            # - then disconnect the files
+            self._disconnectInputs(inputs)
 
-                 # - then disconnect the files
-                 #self._disconnectInputs(inputs)
-                 #shapeFiles.append(output)
-        
             #for nuisance in self._nuisances :
               #print "nuisance = ", nuisance
               #for sample in self._samples :
@@ -133,134 +136,156 @@ class ShapeFactory:
 
                  #print 'Output file:',self._outputFile
 
-                 # - then disconnect the files
-                 #self._disconnectInputs(inputs)
-                 #shapeFiles.append(output)
-        #return shapeFiles
 
 
     
     # _____________________________________________________________________________
-    def _draw(self, var, rng, selections, output, inputs):
+    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs):       
         '''
-        var :       the variable to plot
-        selection : the selection to draw
-        output :    the output file path
-        inputs :    the process-input files map
+        var           :   the variable to plot
+        rng           :   the variable to plot
+        global_weight :   the global weight for the samples
+        weights       :   the wieghts 'root file' dependent
+        cut           :   the selection
+        inputs        :   the list of input files for this particular sample
         '''
+        
         self._logger.info('Yields by process')
-        print output
-        outFile = ROOT.TFile.Open(output,'recreate')
-        print outFile
-        vdim = var.count(':')+1
-#         hproto,hdim = ShapeFactory._projexpr(rng)
-        # 3 items per dimention
-        hdim = self._bins2dim( rng )
+  
+        numTree = 0
+        hTotal = ROOT.TH1D
+        bigName = 'histo_' + sampleName
+        for tree in inputs:
+          print '    {0:<20} : {1:^9}'.format(sampleName,tree.GetEntries()),
+          # new histogram
+          shapeName = 'histo_' + sampleName + str(numTree)
 
-        if vdim != hdim:
-            raise ValueError('The variable\'s and range number of dimensions are mismatching')
+          # prepare a dummy to fill
+          shape = self._makeshape(shapeName,rng)
 
-        #print 'selections = ', selections
+          self._logger.debug('---'+sampleName+'---')
+          self._logger.debug('Formula: '+var+'>>'+shapeName)
+          self._logger.debug('Cut:     '+cut)
+          self._logger.debug('ROOTFiles:'+'\n'.join([f.GetTitle() for f in tree.GetListOfFiles()]))
 
-        print 'var: '+var
-        if 'WW' in selections : 
-          print 'selection (for WW  as example): '+selections['WW']
-        if 'WWlow' in selections : 
-          print 'selection (for WWlow  as example): '+selections['WWlow']
+          globalCut = "(" + cut + ") * (" + global_weight + ")"  
+          if len(weights) != 0 :
+            globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
+            
+          entries = tree.Draw( var+'>>'+shapeName, globalCut, 'goff')
+          #shape = (ROOT.TH1D*) gDirectory->Get(shapeName)
+          print ' >> ',entries,':',shape.Integral()
+          
+          if (numTree == 0) :
+            shape.SetTitle(bigName)
+            hTotal = shape
+          else :
+            hTotal.Add(shape)
 
-        if 'WW1' in selections : 
-          print 'selection (for WW1  as example): '+selections['WW1']
+          numTree += 1
 
-        if 'ggH' in selection :
-          print 'selection (for ggH as example): '+selections['ggH']
-        #print 'inputs = ', inputs
-
-        for process,tree  in inputs.iteritems():
-#             print ' '*3,process.ljust(20),':',tree.GetEntries(),
-            print '    {0:<20} : {1:^9}'.format(process,tree.GetEntries()),
-            # new histogram
-            shapeName = 'histo_'+process
-#             hstr = shapeName+hproto
-
-            outFile.cd()
-
-            # prepare a dummy to fill
-            shape = self._makeshape(shapeName,rng)
-            cut = selections[process]
-
-            self._logger.debug('---'+process+'---')
-            self._logger.debug('Formula: '+var+'>>'+shapeName)
-            self._logger.debug('Cut:     '+cut)
-            self._logger.debug('ROOTFiles:'+'\n'.join([f.GetTitle() for f in tree.GetListOfFiles()]))
-            entries = tree.Draw( var+'>>'+shapeName, cut, 'goff')
-#             print ' >> ',entries,':',shape.Integral()
-            shape = outFile.Get(shapeName)
-            shape.SetTitle(process+';'+var)
+        return hTotal
 
 
-            if isinstance(shape,ROOT.TH2):
-                shape2d = shape
-                # puts the over/under flows in
-                self._reshape( shape )
-                # go 1d
-                shape = self._h2toh1(shape2d)
-                # rename the old
-                shape2d.SetName(shape2d.GetName()+'_2d')
-                shape2d.Write()
-                shape.SetDirectory(outFile)
 
-            print '>> {0:>9} : {1:>9.2f}'.format(entries,shape.Integral())
-            shape.Write()
-        outFile.Close()
-        del outFile
 
+
+
+    # _____________________________________________________________________________
+    @staticmethod
+    def _bins2hclass( bins ):
+        '''
+        Fixed bin width
+        bins = (nx,xmin,xmax)
+        bins = (nx,xmin,xmax, ny,ymin,ymax)
+        Variable bin width
+        bins = ([x0,...,xn])
+        bins = ([x0,...,xn],[y0,...,ym])  
+        '''
+
+        from array import array
+        if not bins:
+            return name,0
+        elif not ( isinstance(bins, tuple) or isinstance(bins,list)):
+            raise RuntimeError('bin must be an ntuple or an arrays')
+
+        l = len(bins)
+        # 1D variable binning
+        if l == 1 and isinstance(bins[0],list):
+            ndim=1
+            hclass = ROOT.TH1D
+            xbins = bins[0]
+            hargs = (len(xbins)-1, array('d',xbins))
+        elif l == 2 and  isinstance(bins[0],list) and  isinstance(bins[1],list):
+            ndim=2
+            hclass = ROOT.TH2D
+            xbins = bins[0]
+            ybins = bins[1]
+            hargs = (len(xbins)-1, array('d',xbins),
+                    len(ybins)-1, array('d',ybins))
+        elif l == 3:
+            # nx,xmin,xmax
+            ndim=1
+            hclass = ROOT.TH1D
+            hargs = bins
+        elif l == 6:
+            # nx,xmin,xmax,ny,ymin,ymax
+            ndim=2
+            hclass = ROOT.TH2D
+            hargs = bins
+        else:
+            # only 1d or 2 d hist
+            raise RuntimeError('What a mess!!! bin malformed!')
+        
+        return hclass,hargs,ndim
+
+    @staticmethod
+    def _bins2dim(bins):
+        hclass,hargs,ndim = ShapeFactory._bins2hclass( bins )
+        return ndim
+
+    @staticmethod
+    def _makeshape( name, bins ):
+        hclass,hargs,ndim = ShapeFactory._bins2hclass( bins )
+        return hclass(name, name, *hargs)
+      
+       
  
     # _____________________________________________________________________________
-    def _connectInputs(self, var, samples, dirmap, mask=None):
+    def _connectInputs(self, samples, inputDir):
         inputs = {}
         treeName = 'latino'
         for process,filenames in samples.iteritems():
-            if mask and process not in mask:
-                continue
-            tree = self._buildchain(treeName,[ (dirmap['base']+'/'+f) for f in filenames])
-            if 'bdt' in var:
-                bdttreeName = 'latinobdt'
-                bdtdir = self._paths[var]
-                bdttree = self._buildchain(bdttreeName,[ (dirmap[var]+'/'+f) for f in filenames])
-                
-                if tree.GetEntries() != bdttree.GetEntries():
-                    raise RuntimeError('Mismatching number of entries: '
-                                       +tree.GetName()+'('+str(tree.GetEntries())+'), '
-                                       +bdttree.GetName()+'('+str(bdttree.GetEntries())+')')
-                logging.debug('{0:<20} - master: {1:<20} friend {2:<20}'.format(process,tree.GetEntries(), bdttree.GetEntries()))
-                tree.AddFriend(bdttree)
-
-            inputs[process] = tree
-
+          tree = self._buildchain(treeName,[ (inputDir + '/' + f) for f in filenames])
+          inputs[process] = tree
+          # FIXME: add possibility to add Friend Trees for new variables   
+         
         return inputs
 
     # _____________________________________________________________________________
     def _disconnectInputs(self,inputs):
         for n in inputs.keys():
-            friends = inputs[n].GetListOfFriends()
-            if friends.__nonzero__():
-                for fe in friends:
-                    friend = fe.GetTree()
-                    inputs[n].RemoveFriend(friend)
-                    ROOT.SetOwnership(friend,True)
-                    del friend
-            del inputs[n]
+          #friends = inputs[n].GetListOfFriends()
+          #if friends.__nonzero__():
+            #for fe in friends:
+              #friend = fe.GetTree()
+              #inputs[n].RemoveFriend(friend)
+              #ROOT.SetOwnership(friend,True)
+              #del friend
+          # remove the entire list of trees
+          del inputs[n]
     
     # _____________________________________________________________________________
     def _buildchain(self,treeName,files):
-        tree = ROOT.TChain(treeName)
+        listTrees = []
         for path in files:
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
             if not os.path.exists(path):
                 raise RuntimeError('File '+path+' doesn\'t exists')
-            tree.Add(path) 
-
-        return tree
+            tree = ROOT.TChain(treeName)
+            tree.Add(path)
+            listTrees.append(tree)
+        return listTrees
 
 
 
