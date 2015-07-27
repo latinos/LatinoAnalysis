@@ -7,6 +7,7 @@ import optparse
 #import hwwinfo
 #import hwwsamples
 #import hwwtools
+import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import os.path
 import string
 import logging
@@ -26,10 +27,7 @@ class ShapeFactory:
     def __init__(self):
         self._stdWgt = 'baseW*puW*effW*triggW'
         self._systByWeight = {}
-
-        ranges = {}
-        self._ranges = ranges
-        
+      
         variables = {}
         self._variables = variables
 
@@ -49,7 +47,7 @@ class ShapeFactory:
     def __del__(self):
         pass
 
-# _____________________________________________________________________________
+    # _____________________________________________________________________________
     def getvariable(self,tag,mass,cat):
 
         if tag in self._variables :
@@ -65,11 +63,20 @@ class ShapeFactory:
 
 
     # _____________________________________________________________________________
-    def makeNominals(self, var, sel, inputDir, outPath, **kwargs):
+    def makeNominals(self, inputDir, outputDir, variables, cuts, samples):
 
         print "======================"
         print "==== makeNominals ===="
         print "======================"
+        
+        self._variables = variables
+        self._samples   = samples
+        self._cuts      = cuts
+        
+        
+        self._outputFileName = outputDir+'/plots_'+self._tag+".root"
+        print " outputFileName = ", self._outputFileName
+        self._outFile = ROOT.TFile.Open( self._outputFileName, 'recreate')
         
         ROOT.TH1.SetDefaultSumw2(True)
         shapeFiles = []
@@ -77,22 +84,46 @@ class ShapeFactory:
         selections = "1"
 
         #---- first create structure in ourput root file
-        for cut in self._cuts :
-          print "cut = ", cut
-          for variable in self._variables :
-            print "variable = ", variable
-            for nuisance in self._nuisances :
-              print "nuisance = ", nuisance
+        for cutName in self._cuts :
+          print "cut = ", cutName, " :: ", cuts[cutName]
+          self._outFile.mkdir (cutName)
+          for variableName, variable in self._variables.iteritems():
+            self._outFile.mkdir (cutName+"/"+variableName)
+            print "variable[name]  = ", variable ['name']
+            print "variable[range] = ", variable ['range']
+            #for nuisance in self._nuisances :
+              #print "nuisance = ", nuisance
+              # open the root file
 
+       
         #---- now plot and save into output root file
-        for cut in self._cuts :
-          print "cut = ", cut
-          for variable in self._variables :
-            print "variable = ", variable
-            for nuisance in self._nuisances :
-              print "nuisance = ", nuisance
-              for sample in self._samples :
-                 print "sample = ", sample
+        for cutName, cut in self._cuts.iteritems():
+          print "cut = ", cutName, " :: ", cut
+          for variableName, variable in self._variables.iteritems():
+            print "variable[name]  = ", variable['name']
+            print "variable[range] = ", variable['range']
+            self._outFile.cd (cutName+"/"+variableName)
+            for sampleName, sample in self._samples.iteritems():
+              print "sample[name]    = ", sample ['name']
+              print "sample[weight]  = ", sample ['weight']
+              print "sample[weights] = ", sample ['weights']
+
+              # get the weight
+              # open the root file
+              # plot
+              # self._draw(doalias, rng, selections, output, inputs)
+              # save histogram
+
+                 #print 'Output file:',self._outputFile
+
+                 # - then disconnect the files
+                 #self._disconnectInputs(inputs)
+                 #shapeFiles.append(output)
+        
+            #for nuisance in self._nuisances :
+              #print "nuisance = ", nuisance
+              #for sample in self._samples :
+                 #print "sample = ", sample
                  
                  # get the weight
                  # open the root file
@@ -100,7 +131,7 @@ class ShapeFactory:
                  #self._draw(doalias, rng, selections, output, inputs)
                  # save histogram
 
-                 print 'Output file:',self._outputFile
+                 #print 'Output file:',self._outputFile
 
                  # - then disconnect the files
                  #self._disconnectInputs(inputs)
@@ -247,57 +278,81 @@ if __name__ == '__main__':
     parser = optparse.OptionParser(usage)
 
     parser.add_option('--tag'            , dest='tag'            , help='Tag used for the shape file name'           , default=None)
-    parser.add_option('--selection'      , dest='selection'      , help='Selection cut'                              , default=None)
     parser.add_option('--sigset'         , dest='sigset'         , help='Signal samples [SM]'                        , default='SM')
- 
- 
+    parser.add_option('--outputDir'      , dest='outputDir'      , help='output directory'                           , default='./')
+    parser.add_option('--inputDir'       , dest='inputDir'       , help='input directory'                            , default='./data/')
+          
+    # read default pargin options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
-
-    print 'EWK Singlet:' , opt.ewksinglet
-    print 'CPrime**2  :' , opt.cprimesq
-    print 'BRNew      :' , opt.brnew
-    print 'Approx. EWK :' , opt.approxewk 
 
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
 
+    print " configuration file = ", opt.pycfg
+    print " lumi =               ", opt.lumi
+    
+    print " inputDir =           ", opt.inputDir
+    print " outputDir =          ", opt.outputDir
+ 
+    
 
     if not opt.debug:
         pass
     elif opt.debug == 2:
         print 'Logging level set to DEBUG (%d)' % opt.debug
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
         print 'Logging level set to INFO (%d)' % opt.debug
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig( level=logging.INFO )
 
       
     factory = ShapeFactory()
-  
     factory._energy    = opt.energy
-    factory._dataTag   = opt.dataset
-    factory._sigTag    = opt.sigset
-    factory._mcTag     = opt.mcset
-    factory._range     = opt.range
-    factory._splitmode = opt.splitmode
     factory._lumi      = opt.lumi
-    factory._muVal     = opt.muVal 
- 
-    print factory.makeNominals(variable,selection,nomInputDir,nomOutDir+nominalOutFile)
-  
+    factory._tag       = opt.tag
+    
+    
+    variables = {}
+    if os.path.exists(opt.variablesFile) :
+      handle = open(opt.variablesFile,'r')
+      exec(handle)
+      handle.close()
+    
+    cuts = {}
+    if os.path.exists(opt.cutsFile) :
+      handle = open(opt.cutsFile,'r')
+      exec(handle)
+      handle.close()
+    
+    samples = {}
+    if os.path.exists(opt.samplesFile) :
+      handle = open(opt.samplesFile,'r')
+      exec(handle)
+      handle.close()
+    
+    
+    factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples)
+    
+        
+        
+        
+        
+        
+        
+        
+        
 
-
-    except Exception as e:
-        print '*'*80
-        print 'Fatal exception '+type(e).__name__+': '+str(e)
-        print '*'*80
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback, file=sys.stdout)
-#         traceback.print_tb(exc_traceback, limit=3, file=sys.stdout)
-        print '*'*80
-    finally:
-        print 'Used options'
-        print ', '.join([ '{0} = {1}'.format(a,b) for a,b in opt.__dict__.iteritems()])
+    #except Exception as e:
+        #print '*'*80
+        #print 'Fatal exception '+type(e).__name__+': '+str(e)
+        #print '*'*80
+        #exc_type, exc_value, exc_traceback = sys.exc_info()
+        #traceback.print_tb(exc_traceback, file=sys.stdout)
+##         traceback.print_tb(exc_traceback, limit=3, file=sys.stdout)
+        #print '*'*80
+    #finally:
+        #print 'Used options'
+        #print ', '.join([ '{0} = {1}'.format(a,b) for a,b in opt.__dict__.iteritems()])

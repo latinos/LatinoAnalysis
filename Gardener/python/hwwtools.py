@@ -128,18 +128,20 @@ def setDebugLevel(opt):
 
 #---
 def findopt(parser,dest):
-    ''' fint the option with dest as destination'''
+    ''' find the option with dest as destination'''
     for o in parser.option_list:
         if hasattr(o,'dest') and o.dest==dest:
             return o
     return None
 
 #---
-def loadOptDefaults(parser,pycfg=None,quiet=False):
+def loadOptDefaults(parser, pycfg=None, quiet=False):
     '''
     Load the default options from the configuation file.
     The new defaults options shall be written in python, as they are interpreted
     '''
+
+    print " loadOptDefaults::pycfg = ", pycfg
 
     if not pycfg:
         import sys
@@ -147,7 +149,7 @@ def loadOptDefaults(parser,pycfg=None,quiet=False):
         try:
             # pre-parse the python cfg location
             pyexp = re.compile('--pycfg(=)+')
-            j = max([i for i,a in enumerate(sys.argv) if pyexp.match(a) ])
+            j = max([i for i,a in enumerate(sys.argv) if pyexp.match(a) ])   # if more than one, only the last one is used
             dummy = [sys.argv[j]]
             try:
                 dummy += [sys.argv[i+1]]
@@ -160,22 +162,29 @@ def loadOptDefaults(parser,pycfg=None,quiet=False):
 
         pycfg = opt.pycfg
 
+    #print " pycfg = ", pycfg
+    
     if os.path.exists(pycfg):
         handle = open(pycfg,'r')
         vars = {}
         exec(handle,vars)
         handle.close()
 
-
+        #print " vars = ", vars
         for opt_name, opt_value in vars.iteritems():
             if opt_name[0] == '-': continue
 
+            #print " opt_name[0] = ", opt_name[0]
+            #print " opt_name    = ", opt_name
+            
             o = findopt(parser, opt_name)
             if o is None: continue
 
             o.default = opt_value
             parser.defaults[opt_name] = opt_value
-
+            # it modifies the default values
+            # if then not defined, these ones will be used
+            
             if not quiet: print ' - new default value:',opt_name,'=',opt_value
         return
 
@@ -215,11 +224,23 @@ class list_maker:
 
 
 def addOptions(parser):
-    parser.add_option('-l', '--lumi'     , dest='lumi'        , help='Luminosity'                            , default=None   , type='float'   )
-    parser.add_option('-v', '--variable' , dest='variable'    , help='variable'                              , default=None )
-    parser.add_option('-m', '--mass'     , dest='mass'        , help='run on one mass point only '           , default=hwwinfo.masses[:]      , type='string' , action='callback' , callback=list_maker('mass',',',int))
+    parser.add_option('--pycfg'          , dest='pycfg'       , help='configuration file (def=%default)' , default='configuration.py')
     parser.add_option('-d', '--debug'    , dest='debug'       , help='Debug level'                           , default=0      , action='count' )
-    parser.add_option('-c', '--chans'    , dest='chans'       , help='list of channels'                      , default=['0j'] , type='string' , action='callback' , callback=list_maker('chans'))
-    parser.add_option('-E', '--energy'   , dest='energy'      , help='Energy (def=%default)'                 , default='8TeV' , type='string')
-    parser.add_option('--pycfg'          , dest='pycfg'       , help='configuration file (def=%default)' , default='shape.py')
+    #parser.add_option('-c', '--chans'    , dest='chans'       , help='list of channels'                      , default=['0j'] , type='string' , action='callback' , callback=list_maker('chans'))
+    parser.add_option('-E', '--energy'   , dest='energy'      , help='Energy (def=%default)'                 , default='13TeV' , type='string')
+    parser.add_option('-l', '--lumi'     , dest='lumi'        , help='Luminosity'                            , default=None   , type='float'   )
+    
+    #parser.add_option('-v', '--variable' , dest='variable'    , help='variable'                              , default=None )
+    #parser.add_option('-m', '--mass'     , dest='mass'        , help='run on one mass point only '           , default=hwwinfo.masses[:]      , type='string' , action='callback' , callback=list_maker('mass',',',int))
+ 
+    parser.add_option('-V', '--variablesFile' , dest='variablesFile'    , help='file with variables'                         , default=None )
+    parser.add_option('-C', '--cutsFile' ,      dest='cutsFile'         , help='file with cuts'                              , default=None )
+    parser.add_option('-S', '--samplesFile' ,   dest='samplesFile'      , help='file with cuts'                              , default=None )
+ 
+ 
+ 
+ 
+
+
+
 

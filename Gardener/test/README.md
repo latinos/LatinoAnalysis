@@ -39,4 +39,8 @@ Specific modules example:
     gardener.py xwwvarfiller \
                 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_50ns.root \
                 output.root
-                
+    gardener.py xwwvarfiller  \
+          -r  /home/amassiro/Latinos/data  \
+          ./TEST/
+          
+          
