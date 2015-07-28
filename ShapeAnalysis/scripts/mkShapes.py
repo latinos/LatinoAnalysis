@@ -169,8 +169,11 @@ class ShapeFactory:
           self._logger.debug('ROOTFiles:'+'\n'.join([f.GetTitle() for f in tree.GetListOfFiles()]))
 
           globalCut = "(" + cut + ") * (" + global_weight + ")"  
+          # if weights vector is not given, do not apply file dependent weights
           if len(weights) != 0 :
-            globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
+            # if weight is not given for a given root file, '-', do not apply file dependent weight for that root file
+            if weights[numTree] != '-' :
+              globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
             
           entries = tree.Draw( var+'>>'+shapeName, globalCut, 'goff')
           #shape = (ROOT.TH1D*) gDirectory->Get(shapeName)
