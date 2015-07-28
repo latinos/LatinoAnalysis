@@ -37,9 +37,6 @@ class ShapeFactory:
         samples = {}
         self._samples = samples
 
-        outputFile = {}
-        self._outputFile = outputFile
-
 
 
 
@@ -82,7 +79,7 @@ class ShapeFactory:
         
         selections = "1"
 
-        #---- first create structure in ourput root file
+        #---- first create structure in output root file
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
           self._outFile.mkdir (cutName)
@@ -112,11 +109,15 @@ class ShapeFactory:
             for sampleName, sample in self._samples.iteritems():
               print "sample[name]    = ", sample ['name']
               print "sample[weight]  = ", sample ['weight']
-              print "sample[weights] = ", sample ['weights']
+              if 'weights' in sample.keys() :
+                print "sample[weights] = ", sample ['weights']
 
               # create histogram: already the "hadd" of possible sub-contributions
-              outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName])
-
+              if 'weights' in sample.keys() :
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName])
+              else :
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName])
+               
               outputsHisto.Write()
               
               
@@ -181,6 +182,7 @@ class ShapeFactory:
           
           if (numTree == 0) :
             shape.SetTitle(bigName)
+            shape.SetName(bigName)
             hTotal = shape
           else :
             hTotal.Add(shape)
@@ -295,11 +297,13 @@ class ShapeFactory:
 if __name__ == '__main__':
     print '''
 --------------------------------------------------------------------------------------------------
+
    ___|   |                               \  |         |                
  \___ \   __ \    _` |  __ \    _ \      |\/ |   _` |  |  /   _ \   __| 
        |  | | |  (   |  |   |   __/      |   |  (   |    <    __/  |    
  _____/  _| |_| \__,_|  .__/  \___|     _|  _| \__,_| _|\_\ \___| _|    
                        _|                                               
+
 --------------------------------------------------------------------------------------------------
 '''    
     usage = 'usage: %prog [options]'

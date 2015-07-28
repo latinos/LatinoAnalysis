@@ -236,6 +236,7 @@ def addOptions(parser):
     parser.add_option('-V', '--variablesFile' , dest='variablesFile'    , help='file with variables'                         , default=None )
     parser.add_option('-C', '--cutsFile' ,      dest='cutsFile'         , help='file with cuts'                              , default=None )
     parser.add_option('-S', '--samplesFile' ,   dest='samplesFile'      , help='file with cuts'                              , default=None )
+    parser.add_option('-P', '--plotFile' ,      dest='plotFile'         , help='file with plot configurations'               , default=None )
  
  
  
