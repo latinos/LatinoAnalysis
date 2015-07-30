@@ -95,54 +95,93 @@ class ShapeFactory:
 
             #---- now plot
             
-            wasThereData = False
+            
+            #  - get axis range
+            minXused = 0.
+            maxXused = 1.
+
+            maxYused = 1.
+            scaleToPlot = 2.5
+            
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :
                 histos[sampleName].Draw("p")
+                minXused = histos[sampleName].GetXaxis().GetBinLowEdge(1)
+                maxXused = histos[sampleName].GetXaxis().GetBinUpEdge(histos[sampleName].GetNbinsX()+1)
                 maxY = self.GetMaximumIncludingErrors(histos[sampleName])
-                histos[sampleName].SetMaximum(1.5 * maxY)
-                wasThereData = True
-              
-            if not wasThereData : 
-              if thsBackground.GetNhists() != 0:
-                thsBackground.Draw("hist")    
-                if thsSignal.GetNhists() != 0:
-                  thsSignal.Draw("hist same")
-              else :
-                if thsSignal.GetNhists() != 0:
-                  thsSignal.Draw("hist")
-            else : # data is already drawn
-             if thsBackground.GetNhists() != 0:
-                thsBackground.Draw("hist same")    
-             if thsSignal.GetNhists() != 0:
-                thsSignal.Draw("hist same")    
-              
+                histos[sampleName].SetMaximum(scaleToPlot * maxY)
+                maxYused = scaleToPlot * maxY
+            
+            if thsBackground.GetNhists() != 0:
+              thsBackground.Draw("hist")
+              maxY = thsBackground.GetMaximum ()
+              minXused = thsBackground.GetXaxis().GetBinLowEdge(1)
+              maxXused = thsBackground.GetXaxis().GetBinUpEdge(thsBackground.GetHistogram().GetNbinsX()+1)
+              if (scaleToPlot * maxY) > maxYused :
+                maxYused = scaleToPlot * maxY
+               
+            if thsSignal.GetNhists() != 0:
+              thsSignal.Draw("hist")
+              maxY = thsSignal.GetMaximum ()
+              minXused = thsSignal.GetXaxis().GetBinLowEdge(1)
+              maxXused = thsSignal.GetXaxis().GetBinUpEdge(thsSignal.GetHistogram().GetNbinsX()+1)
+              if (scaleToPlot * maxY) > maxYused :
+                maxYused = scaleToPlot * maxY
 
 
+            #print " X axis = ", minXused, " - ", maxXused
+            frame = ROOT.TH1F
+            frame = tcanvas.DrawFrame(minXused, 0.0, maxXused, 1.0)
+
+            # setup axis names
+            if 'xaxis' in variable.keys() : 
+              frame.GetXaxis().SetTitle(variable['xaxis'])
+            else :
+              frame.GetXaxis().SetTitle(variableName)
+            frame.GetYaxis().SetTitle("Events")
+
+
+            #  - now draw
+            #     - first the MC                        
+            if thsBackground.GetNhists() != 0:
+              thsBackground.Draw("hist same")
+               
+            if thsSignal.GetNhists() != 0:
+              thsSignal.Draw("hist same")
+              
+            #     - then the DATA  
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :
-                if thsBackground.GetNhists() != 0 or thsSignal.GetNhists() != 0 :
-                  histos[sampleName].Draw("psame")
-                  #print " - draw data"
-                  #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName()
-                else :
-                  histos[sampleName].Draw("p")
-                  maxY = self.GetMaximumIncludingErrors(histos[sampleName])
-                  histos[sampleName].SetMaximum(1.5 * maxY)
-                  
-                
-              if 'xaxis' in variable.keys() : 
-                histos[sampleName].GetXaxis().SetTitle(variable['xaxis'])
-              else :
-                histos[sampleName].GetXaxis().SetTitle(variableName)
-              histos[sampleName].GetYaxis().SetTitle("Events")
+                histos[sampleName].Draw("p same")
+
+  
 
                
+            #---- the Legend
+            legend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+            legend.SetFillColor(0)
+            legend.SetLineColor(0)
+            legend.SetShadowColor(0)
+            for sampleName, sample in self._samples.iteritems():
+              if plot[sampleName]['isData'] == 0 :
+                legend.AddEntry(histos[sampleName], sampleName, "F")
+             
+            for sampleName, sample in self._samples.iteritems():
+              if plot[sampleName]['isData'] == 1 :
+                legend.AddEntry(histos[sampleName], "DATA", "P")
+             
+            legend.SetNColumns(2)
+            legend.Draw()
+            print "- draw legend"
+            #---- the Legend (end)
+            
+            frame.GetYaxis().SetRangeUser( 0, maxYused )
             tcanvas.SaveAs(self._outputDir + "/" + canvasNameTemplate + ".png")
             tcanvas.SaveAs(self._outputDir + "/" + canvasNameTemplate + ".root")
              
             # log Y axis
-            tcanvas.SetLogy();
+            frame.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
+            tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDir + "/log_" + canvasNameTemplate + ".png")
             
             
