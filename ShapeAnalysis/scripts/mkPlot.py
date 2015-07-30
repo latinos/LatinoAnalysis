@@ -172,7 +172,7 @@ class ShapeFactory:
              
             legend.SetNColumns(2)
             legend.Draw()
-            print "- draw legend"
+            #print "- draw legend"
             #---- the Legend (end)
             
             frame.GetYaxis().SetRangeUser( 0, maxYused )
