@@ -37,7 +37,7 @@ class ShapeFactory:
         self._outputDir = outputDir
 
     # _____________________________________________________________________________
-    def makePlot(self, inputFile, outputDir, variables, cuts, samples, plot):
+    def makePlot(self, inputFile, outputDir, variables, cuts, samples, plot, legend):
 
         print "=================="
         print "==== makePlot ===="
@@ -122,10 +122,11 @@ class ShapeFactory:
               tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
               tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
             
-            tgrDataOverMC = (ROOT.TGraphAsymmErrors) tgrData.Clone("tgrDataOverMC")
+            tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             for iBin in range(0, len(tgrData_vx)) : 
-              tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetBinContent(iBin+1)) )
-              tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetBinContent(iBin+1)) )
+              tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+              tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+            
             
             
             #---- now plot
@@ -195,21 +196,29 @@ class ShapeFactory:
             
   
             #---- the Legend
-            legend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
-            legend.SetFillColor(0)
-            legend.SetLineColor(0)
-            legend.SetShadowColor(0)
+            tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+            tlegend.SetFillColor(0)
+            tlegend.SetLineColor(0)
+            tlegend.SetShadowColor(0)
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 0 :
-                legend.AddEntry(histos[sampleName], sampleName, "F")
+                tlegend.AddEntry(histos[sampleName], sampleName, "F")
              
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :
-                legend.AddEntry(histos[sampleName], "DATA", "P")
+                tlegend.AddEntry(histos[sampleName], "DATA", "P")
              
-            legend.SetNColumns(2)
-            legend.Draw()
-            #print "- draw legend"
+            tlegend.SetNColumns(2)
+            tlegend.Draw()
+            
+            if 'lumi' in legend.keys() :
+              flag_lumi = TLatex (0.6, 0.8, legend['lumi'])
+              flag_lumi.Draw()
+            if 'sqrt' in legend.keys() :
+              flag_sqrt = TLatex (0.6, 0.8, legend['sqrt'])
+              flag_sqrt.Draw()
+   
+            #print "- draw tlegend"
             #---- the Legend (end)
             
             frame.GetYaxis().SetRangeUser( 0, maxYused )
@@ -223,18 +232,24 @@ class ShapeFactory:
             
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
-            #print " X axis = ", minXused, " - ", maxXused
-            frameDistro = ROOT.TH1F
-            frameRatio  = ROOT.TH1F
-
+            
             canvasRatioNameTemplate = 'cratio_' + cutName + "_" + variableName
             tcanvasRatio = ROOT.TCanvas( canvasRatioNameTemplate, canvasRatioNameTemplate , 800, 800 )
 
-            frameDistro = tcanvasRatio.cd(0).DrawFrame(minXused, 0.0, maxXused, 1.0)
-            frameRatio  = tcanvasRatio.cd(1).DrawFrame(minXused, 0.0, maxXused, 2.0)
-
-            tcanvasRatio.cd(0)
-            frameDistro.Draw()
+            pad1 = ROOT.TPad("pad1","pad1", 0, 1-0.72, 1, 1)
+            pad1.SetTopMargin(0.098)
+            pad1.SetBottomMargin(0.000) 
+            pad1.Draw()
+            #pad1.cd().SetGrid()
+            
+            frameDistro = pad1.DrawFrame(minXused, 0.0, maxXused, 1.0)
+            if 'xaxis' in variable.keys() : 
+              frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+            else :
+              frameDistro.GetXaxis().SetTitle(variableName)
+            frameDistro.GetYaxis().SetTitle("Events")
+            frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
+            
             if thsBackground.GetNhists() != 0:
               thsBackground.Draw("hist same")
                
@@ -245,11 +260,41 @@ class ShapeFactory:
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
     
-            tcanvasRatio.cd(1)
-            frameRatio.Draw()
+            tlegend.Draw()
+            if 'lumi' in legend.keys() :
+              flag_lumi = TLatex (0.6, 0.8, legend['lumi'])
+              flag_lumi.Draw()
+            if 'sqrt' in legend.keys() :
+              flag_sqrt = TLatex (0.6, 0.8, legend['sqrt'])
+              flag_sqrt.Draw()
+            
+            pad2 = ROOT.TPad("pad2","pad2",0,0,1,1-0.72)
+            pad2.SetTopMargin(0.000)
+            pad2.SetBottomMargin(0.392)
+            pad2.Draw()
+            #pad2.cd().SetGrid()
+           
+            frameRatio = pad2.DrawFrame(minXused, 0.0, maxXused, 2.0)
+            if 'xaxis' in variable.keys() : 
+              frameRatio.GetXaxis().SetTitle(variable['xaxis'])
+            else :
+              frameRatio.GetXaxis().SetTitle(variableName)
+            frameRatio.GetYaxis().SetTitle("Data/MC")
+            frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
+           
             tgrDataOverMC.Draw("P0")
             
-            frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
+            c1.cd()
+            c1.Update()
+            c1.Modified()
+ 
+            pad1.Update()
+            pad1.Modified()
+  
+            pad2.Update()
+            pad2.Modified()
+
+
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".root")
             
@@ -386,13 +431,14 @@ if __name__ == '__main__':
       handle.close()
     
     plot = {}
+    legend = {}
     if os.path.exists(opt.plotFile) :
       handle = open(opt.plotFile,'r')
       exec(handle)
       handle.close()
     
    
-    factory.makePlot( opt.inputFile ,opt.outputDir, variables, cuts, samples, plot)
+    factory.makePlot( opt.inputFile ,opt.outputDir, variables, cuts, samples, plot, legend)
     
         
        
