@@ -63,7 +63,14 @@ class ShapeFactory:
             
             tcanvas = ROOT.TCanvas( canvasNameTemplate, variableName , 800, 600 )
              
-            thsSignal     = ROOT.THStack ("thsSignal","thsSignal")
+            tgrData_vx     = array('f')
+            tgrData_evx    = array('f')
+            tgrData_vy     = array('f')
+            tgrData_evy_up = array('f')
+            tgrData_evy_do = array('f')
+            
+            thsData       = ROOT.THStack ("thsData",      "thsData")
+            thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
             thsBackground = ROOT.THStack ("thsBackground","thsBackground")
 
             for sampleName, sample in self._samples.iteritems():
@@ -78,6 +85,24 @@ class ShapeFactory:
                 histos[sampleName].SetMarkerSize(1)
                 histos[sampleName].SetMarkerStyle(20)
                 histos[sampleName].SetLineColor(plot[sampleName]['color'])
+                thsData.Add(histos[sampleName])
+
+                # first time fill vectors X axis
+                if len(tgrData_vx) == 0 :
+                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    tgrData_vx.append(  histos[sampleName].GetBinCenter (iBin))
+                    tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
+                    tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
+                    tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
+                    tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
+                else :
+                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    tgrData_vx[iBin-1] = (  histos[sampleName].GetBinCenter (iBin))
+                    tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
+                    tgrData_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                    tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
+                    tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
+                    
 
               # MC style
               if plot[sampleName]['isData'] == 0 :
@@ -92,7 +117,17 @@ class ShapeFactory:
                 else :
                   thsBackground.Add(histos[sampleName])
 
-
+            tgrData       = ROOT.TGraphAsymmErrors()
+            for iBin in range(0, len(tgrData_vx)) : 
+              tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
+              tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
+            
+            tgrDataOverMC = (ROOT.TGraphAsymmErrors) tgrData.Clone("tgrDataOverMC")
+            for iBin in range(0, len(tgrData_vx)) : 
+              tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetBinContent(iBin+1)) )
+              tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetBinContent(iBin+1)) )
+            
+            
             #---- now plot
             
             
@@ -150,13 +185,15 @@ class ShapeFactory:
               thsSignal.Draw("hist same")
               
             #     - then the DATA  
-            for sampleName, sample in self._samples.iteritems():
-              if plot[sampleName]['isData'] == 1 :
-                histos[sampleName].Draw("p same")
+            if tgrData.GetN() != 0:
+              tgrData.Draw("P0")
+            else : # never happening if at least one data histogram is provided
+              for sampleName, sample in self._samples.iteritems():
+                if plot[sampleName]['isData'] == 1 :
+                  histos[sampleName].Draw("p same")
 
+            
   
-
-               
             #---- the Legend
             legend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
             legend.SetFillColor(0)
@@ -184,9 +221,81 @@ class ShapeFactory:
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDir + "/log_" + canvasNameTemplate + ".png")
             
+            # ~~~~~~~~~~~~~~~~~~~~
+            # plot with ratio plot            
+            #print " X axis = ", minXused, " - ", maxXused
+            frameDistro = ROOT.TH1F
+            frameRatio  = ROOT.TH1F
+
+            canvasRatioNameTemplate = 'cratio_' + cutName + "_" + variableName
+            tcanvasRatio = ROOT.TCanvas( canvasRatioNameTemplate, canvasRatioNameTemplate , 800, 800 )
+
+            frameDistro = tcanvasRatio.cd(0).DrawFrame(minXused, 0.0, maxXused, 1.0)
+            frameRatio  = tcanvasRatio.cd(1).DrawFrame(minXused, 0.0, maxXused, 2.0)
+
+            tcanvasRatio.cd(0)
+            frameDistro.Draw()
+            if thsBackground.GetNhists() != 0:
+              thsBackground.Draw("hist same")
+               
+            if thsSignal.GetNhists() != 0:
+              thsSignal.Draw("hist same")
+              
+            #     - then the DATA  
+            if tgrData.GetN() != 0:
+              tgrData.Draw("P0")
+    
+            tcanvasRatio.cd(1)
+            frameRatio.Draw()
+            tgrDataOverMC.Draw("P0")
+            
+            frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
+            tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".png")
+            tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".root")
             
             
             
+   # _____________________________________________________________________________
+   # --- squared sum
+    def SumQ(self, A, B):
+       return sqrt(A*A + B*B)
+
+   # _____________________________________________________________________________
+   # --- Ratio: if denominator is zero, then put 0!
+    def Ratio(self, A, B):
+       if B == 0: 
+         return 0.
+       else :
+         return A / B
+ 
+   # _____________________________________________________________________________
+   # --- poissonian error bayesian 1sigma band
+   #                                      1/0   1/0
+    def GetPoissError(self, numberEvents, down, up):
+       alpha = (1-0.6827)
+       L = 0
+       if numberEvents!=0 : 
+         L = ROOT.Math.gamma_quantile (alpha/2,numberEvents,1.)
+       U = 0
+       if numberEvents==0 :
+         U = ROOT.Math.gamma_quantile_c (alpha,numberEvents+1,1.) 
+       else :
+         U = ROOT.Math.gamma_quantile_c (alpha/2,numberEvents+1,1.)
+         
+       # the error
+       L = numberEvents - L
+       if numberEvents > 0 :
+         U = U - numberEvents
+       else :
+         U = 1.14 # --> bayesian interval Poisson with 0 events observed
+       
+       if up and not down :
+         return L
+       if down and not up :
+         return L
+       if up and down :
+         return (L,U)
+                  
    # _____________________________________________________________________________
     def GetMaximumIncludingErrors(self, histo):
         maxWithErrors = 0.
