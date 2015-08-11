@@ -211,13 +211,17 @@ class ShapeFactory:
             tlegend.SetNColumns(2)
             tlegend.Draw()
             
-            if 'lumi' in legend.keys() :
+            if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
               flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3./4., legend['lumi'])
               flag_lumi.Draw()
-            if 'sqrt' in legend.keys() :
-              flag_sqrt =ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
+            if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
+              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
               flag_sqrt.Draw()
-   
+            if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
+              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., "#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "}")
+              flag_lumi_sqrt.Draw()
+    
+    
             #print "- draw tlegend"
             #---- the Legend (end)
             
@@ -265,12 +269,15 @@ class ShapeFactory:
               tgrData.Draw("P0")
     
             tlegend.Draw()
-            if 'lumi' in legend.keys() :
+            if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
               flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3./4., legend['lumi'])
               flag_lumi.Draw()
-            if 'sqrt' in legend.keys() :
-              flag_sqrt =ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
+            if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
+              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
               flag_sqrt.Draw()
+            if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
+              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., "#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "}")
+              flag_lumi_sqrt.Draw()
             
             tcanvasRatio.cd()
             pad2 = ROOT.TPad("pad2","pad2",0,0,1,1-0.72)
@@ -295,6 +302,14 @@ class ShapeFactory:
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".root")
             
+            
+            # log Y axis
+            frameDistro.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
+            pad1.SetLogy()
+            tcanvasRatio.SaveAs(self._outputDir + "/log_" + canvasRatioNameTemplate + ".png")
+            
+          
+          
             print " >> end"
             
           print " >> all end"

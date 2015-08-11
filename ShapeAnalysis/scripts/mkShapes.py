@@ -113,9 +113,9 @@ class ShapeFactory:
                 print "sample[weights] = ", sample ['weights']
 
               doFold = 0
-              if 'fold' in sample.keys() :
-                print "sample[fold] = ", sample ['fold']
-                doFold = sample ['fold']
+              if 'fold' in variable.keys() :
+                print "variable[fold] = ", variable ['fold']
+                doFold = variable ['fold']
               
               # create histogram: already the "hadd" of possible sub-contributions
               if 'weights' in sample.keys() :
@@ -208,9 +208,9 @@ class ShapeFactory:
 
 
 
-    def _FoldUnderflow(self, hTotal):       
+    def _FoldUnderflow(self, h):       
 
-        print "fold underflow"
+        print " >> fold underflow"
         if h.GetDimension() == 1:
           nx = h.GetNbinsX()
           # 0 --> 1
@@ -235,9 +235,9 @@ class ShapeFactory:
           
         
         
-    def _FoldOverflow(self, hTotal):       
+    def _FoldOverflow(self, h):       
 
-        print "fold overflow"
+        print " >> fold overflow"
         if h.GetDimension() == 1:
           nx = h.GetNbinsX()
           # n+1 --> n
