@@ -292,17 +292,6 @@ class ShapeFactory:
            
             tgrDataOverMC.Draw("P0")
             
-            #tcanvasRatio.cd()
-            #tcanvasRatio.Update()
-            #tcanvasRatio.Modified()
- 
-            #pad1.Update()
-            #pad1.Modified()
-  
-            #pad2.Update()
-            #pad2.Modified()
-
-
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".root")
             

@@ -112,11 +112,16 @@ class ShapeFactory:
               if 'weights' in sample.keys() :
                 print "sample[weights] = ", sample ['weights']
 
+              doFold = 0
+              if 'fold' in sample.keys() :
+                print "sample[fold] = ", sample ['fold']
+                doFold = sample ['fold']
+              
               # create histogram: already the "hadd" of possible sub-contributions
               if 'weights' in sample.keys() :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName])
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold)
               else :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName])
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold)
                
               outputsHisto.Write()
               
@@ -141,7 +146,7 @@ class ShapeFactory:
 
     
     # _____________________________________________________________________________
-    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs):       
+    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold):       
         '''
         var           :   the variable to plot
         rng           :   the variable to plot
@@ -189,11 +194,162 @@ class ShapeFactory:
 
           numTree += 1
 
-        return hTotal
+        # fold if needed
+        if doFold == 1 or doFold == 3 :
+          self._FoldOverflow  (hTotal)
+        if doFold == 2 or doFold == 3 :
+          self._FoldUnderflow (hTotal)
+        
+        
+        # go 1d
+        hTotalFinal = self._h2toh1(hTotal)
+        
+        return hTotalFinal
 
 
 
+    def _FoldUnderflow(self, hTotal):       
 
+        print "fold underflow"
+        if h.GetDimension() == 1:
+          nx = h.GetNbinsX()
+          # 0 --> 1
+          ShapeFactory._moveAddBin(h, (0,),(1,) )
+          return
+        elif h.GetDimension() == 2:
+          nx = h.GetNbinsX()
+          ny = h.GetNbinsY()
+          for i in xrange(1,nx+1):
+            ShapeFactory._moveAddBin(h,(i,0   ),(i, 1 ) )
+
+          for j in xrange(1,ny+1):
+            ShapeFactory._moveAddBin(h,(0,    j),(1, j) )
+
+          # 0,0 -> 1,1
+          # 0,ny+1 -> 1,ny+1
+          # nx+1,0 -> nx+1,1
+          
+          ShapeFactory._moveAddBin(h, (0,0),(1,1) )
+          ShapeFactory._moveAddBin(h, (0,ny+1),(1,ny+1) )
+          ShapeFactory._moveAddBin(h, (nx+1,0),(nx+1,1) )
+          
+        
+        
+    def _FoldOverflow(self, hTotal):       
+
+        print "fold overflow"
+        if h.GetDimension() == 1:
+          nx = h.GetNbinsX()
+          # n+1 --> n
+          ShapeFactory._moveAddBin(h, (nx+1,),(nx,) )
+          return
+        elif h.GetDimension() == 2:
+          nx = h.GetNbinsX()
+          ny = h.GetNbinsY()
+          for i in xrange(1,nx+1):
+            ShapeFactory._moveAddBin(h,(i,ny+1),(i, ny) )
+
+          for j in xrange(1,ny+1):
+            ShapeFactory._moveAddBin(h,(nx+1, j),(nx,j) )
+
+            # 0,ny+1 -> 0,ny
+            # nx+1,0 -> nx,0
+            # nx+1,ny+1 ->nx,ny
+
+            ShapeFactory._moveAddBin(h, (0,ny+1),(0,ny) )
+            ShapeFactory._moveAddBin(h, (nx+1,0),(nx,0) )
+            ShapeFactory._moveAddBin(h, (nx+1,ny+1),(nx,ny) )
+
+
+# --- transform 2D into 1D: unrolling
+# 
+#      3    6    9
+#      2    5    8
+#      1    4    7
+#
+    def _h2toh1(self, h):
+        import array
+        
+        if not isinstance(h,ROOT.TH2):
+            return h
+           
+        sentry = TH1AddDirSentry()
+
+#         H1class = getattr(ROOT,h.__class__.__name__.replace('2','1'))
+        nx = h.GetNbinsX()
+        ny = h.GetNbinsY()
+
+        h_flat = ROOT.TH1D(h.GetName(),h.GetTitle(),nx*ny,0,nx*ny)
+ 
+        sumw2 = h.GetSumw2()
+        sumw2_flat = h_flat.GetSumw2()
+
+        for i in xrange(1,nx+1):
+            for j in xrange(1,ny+1):
+                # i,j must be mapped in 
+                b2d = h.GetBin( i,j )
+#                 b2d = h.GetBin( j,i )
+#                 b1d = ((i-1)+(j-1)*nx)+1
+                b1d = ((j-1)+(i-1)*ny)+1
+
+                h_flat.SetAt( h.At(b2d), b1d )
+                sumw2_flat.SetAt( sumw2.At(b2d), b1d ) 
+
+        h_flat.SetEntries(h.GetEntries())
+        
+        stats2d = array.array('d',[0]*7)
+        h.GetStats(stats2d)
+
+        stats1d = array.array('d',[0]*4)
+        stats1d[0] = stats2d[0]
+        stats1d[1] = stats2d[1]
+        stats1d[2] = stats2d[2]+stats2d[4]
+        stats1d[3] = stats2d[3]+stats2d[5]
+
+        h_flat.PutStats(stats1d)
+
+        xtitle = h.GetXaxis().GetTitle()
+        v1,v2 = xtitle.split(':') # we know it's a 2d filled by an expr like y:x
+        xtitle = '%s #times %s bin' % (v1,v2)
+
+        h_flat.GetXaxis().SetTitle(xtitle)
+
+        return h_flat
+       
+  
+  
+  
+
+    # _____________________________________________________________________________
+    @staticmethod
+    def _moveAddBin(h, fromBin, toBin ):
+        if not isinstance(fromBin,tuple) or not isinstance(toBin,tuple):
+            raise ValueError('Arguments must be tuples')
+
+        dims = [h.GetDimension(), len(fromBin), len(toBin) ]
+
+        if dims.count(dims[0]) != len(dims):
+            raise ValueError('histogram and the 2 bins don\'t have the same dimension')
+        
+        # get bins
+        b1 = h.GetBin( *fromBin )
+        b2 = h.GetBin( *toBin )
+
+        # move contents
+        c1 = h.At( b1 )
+        c2 = h.At( b2 )
+
+        h.SetAt(0, b1)
+        h.SetAt(c1+c2, b2)
+
+        # move weights as well
+        sumw2 = h.GetSumw2()
+
+        w1 = sumw2.At( b1 )
+        w2 = sumw2.At( b2 )
+
+        sumw2.SetAt(0, b1)
+        sumw2.SetAt(w1+w2, b2)
 
 
     # _____________________________________________________________________________
