@@ -212,10 +212,10 @@ class ShapeFactory:
             tlegend.Draw()
             
             if 'lumi' in legend.keys() :
-              flag_lumi = TLatex (0.6, 0.8, legend['lumi'])
+              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3./4., legend['lumi'])
               flag_lumi.Draw()
             if 'sqrt' in legend.keys() :
-              flag_sqrt = TLatex (0.6, 0.8, legend['sqrt'])
+              flag_sqrt =ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
               flag_sqrt.Draw()
    
             #print "- draw tlegend"
@@ -236,13 +236,17 @@ class ShapeFactory:
             canvasRatioNameTemplate = 'cratio_' + cutName + "_" + variableName
             tcanvasRatio = ROOT.TCanvas( canvasRatioNameTemplate, canvasRatioNameTemplate , 800, 800 )
 
+            tcanvasRatio.cd()
             pad1 = ROOT.TPad("pad1","pad1", 0, 1-0.72, 1, 1)
             pad1.SetTopMargin(0.098)
             pad1.SetBottomMargin(0.000) 
             pad1.Draw()
-            #pad1.cd().SetGrid()
+            pad1.cd().SetGrid()
             
+            print " pad1 = ", pad1
             frameDistro = pad1.DrawFrame(minXused, 0.0, maxXused, 1.0)
+            print " pad1 = ", pad1
+            
             if 'xaxis' in variable.keys() : 
               frameDistro.GetXaxis().SetTitle(variable['xaxis'])
             else :
@@ -262,19 +266,23 @@ class ShapeFactory:
     
             tlegend.Draw()
             if 'lumi' in legend.keys() :
-              flag_lumi = TLatex (0.6, 0.8, legend['lumi'])
+              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3./4., legend['lumi'])
               flag_lumi.Draw()
             if 'sqrt' in legend.keys() :
-              flag_sqrt = TLatex (0.6, 0.8, legend['sqrt'])
+              flag_sqrt =ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
               flag_sqrt.Draw()
             
+            tcanvasRatio.cd()
             pad2 = ROOT.TPad("pad2","pad2",0,0,1,1-0.72)
             pad2.SetTopMargin(0.000)
             pad2.SetBottomMargin(0.392)
             pad2.Draw()
-            #pad2.cd().SetGrid()
+            pad2.cd().SetGrid()
            
+            print " pad1 = ", pad1
+            print " pad2 = ", pad2
             frameRatio = pad2.DrawFrame(minXused, 0.0, maxXused, 2.0)
+            print " pad2 = ", pad2
             if 'xaxis' in variable.keys() : 
               frameRatio.GetXaxis().SetTitle(variable['xaxis'])
             else :
@@ -284,20 +292,23 @@ class ShapeFactory:
            
             tgrDataOverMC.Draw("P0")
             
-            c1.cd()
-            c1.Update()
-            c1.Modified()
+            #tcanvasRatio.cd()
+            #tcanvasRatio.Update()
+            #tcanvasRatio.Modified()
  
-            pad1.Update()
-            pad1.Modified()
+            #pad1.Update()
+            #pad1.Modified()
   
-            pad2.Update()
-            pad2.Modified()
+            #pad2.Update()
+            #pad2.Modified()
 
 
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".root")
             
+            print " >> end"
+            
+          print " >> all end"
             
             
    # _____________________________________________________________________________
