@@ -31,15 +31,96 @@ class DatacardFactory:
         samples = {}
         self._samples = samples
 
+        ## list of [processes]  
+        self.processes = []
+        ## list of [signal processes]
+        self.signals = []
+        ## list of [background processes]
+        self.backgrounds = []
+        ## data
+        self.data = []        
+        ## list of [(name of uncert, type of nuisance, list of samples affected, with value, additional value [in case of gmN])]
+        self.systs   = []
 
+    # _____________________________________________________________________________
+    # a datacard for each "cut" and each "variable" will be produced, in separate sub-folders, names after "cut/variable"
+    # _____________________________________________________________________________
+    def makeDatacards( self, inputFile, outputDirDatacard, variables, cuts, samples, structureFile):
+    
+        print "======================="
+        print "==== makeDatacards ===="
+        print "======================="
+        
+        self._variables = variables
+        self._samples   = samples
+        self._cuts      = cuts
 
+        self._outputDirDatacard = outputDirDatacard
 
+        # divide the list of samples among signal, background and data
+        for sampleName, sample in self._samples.iteritems():
+          if structureFile[sampleName]['isSignal'] == 1 :
+            self.signals.append(sampleName)
+          if structureFile[sampleName]['isData'] == 1 :
+            self.data.append(sampleName)
+          if structureFile[sampleName]['isSignal'] == 0 and structureFile[sampleName]['isData'] == 0:
+            self.backgrounds.append(sampleName)
+          
+        # loop over cuts  
+        for cutName in self._cuts :
+          print "cut = ", cutName, " :: ", cuts[cutName]
+          os.mkdir (self._outputDirDatacard + "/" + cutName)
+          # loop over variables
+          for variableName, variable in self._variables.iteritems():
+            print "  variableName = ", variableName
+            
+            # prepare yields
+            yieldsSig  = {}
+            yieldsBkg  = {}
+            yieldsData = {}
+            for sampleName in self.signals:
+              yieldsSig[sampleName] = 1.0
+              # ge the integral from histogram
+            for sampleName in self.backgrounds:
+              yieldsBkg[sampleName] = 1.0
+              # ge the integral from histogram
+            for sampleName in self.data:
+              yieldsData['data'] = 1.0 # data is data!
+              # ge the integral from histogram
+                          
+            os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName) 
+            os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/") # and the folder for the root files 
+        
+            # start creating the datacard 
+            cardPath = self._outputDirDatacard + "/" + cutName + "/" + variableName  + "/datacard.txt"
+            print 'Writing to ' + cardPath 
+            card = open( cardPath ,"w")
+            card.write('## Shape input card\n')
+        
+            card.write('imax 1 number of channels\n')
+            card.write('jmax * number of background\n')
+            card.write('kmax * number of nuisance parameters\n') 
 
+            card.write('-'*100+'\n')
+            tagNameToAppearInDatacard = "test"
+            card.write('bin         %s' % tagNameToAppearInDatacard+'\n')
+            if len(self.data) == 0:
+              self._log.warning( 'no data, no fun! ')
+              raise RuntimeError('No Data found!')
 
+            card.write('observation %.0f\n' % yieldsData['data'])
+            
+            #card.write('shapes  *           * '+
+                       #fileFmt.format(mass=self._mass, bin=self._bin)+
+                       #'     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC'+'\n')
+            #card.write('shapes  data_obs    * '+
+                       #fileFmt.format(mass=self._mass, bin=self._bin)+
+                       #'     histo_Data'+'\n')
 
+            card.write('-'*100+'\n')
 
-
-
+            card.write('\n')
+            card.close()
 
 
 
@@ -62,6 +143,8 @@ if __name__ == '__main__':
     parser.add_option('--sigset'             , dest='sigset'            , help='Signal samples [SM]'                        , default='SM')
     parser.add_option('--outputDirDatacard'  , dest='outputDirDatacard' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'          , dest='inputFile'         , help='input directory'                            , default='./input.root')
+    parser.add_option('--structureFile'      , dest='structureFile'     , help='file with datacard configurations'          , default=None )
+
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -113,7 +196,17 @@ if __name__ == '__main__':
       handle.close()
     
     
-    #factory.makeDatacards( opt.inputFile ,opt.outputDirDatacard, variables, cuts, samples)
+    structure = {}
+    if opt.structureFile == None :
+       print " Please provide the datacard structure "
+       exit ()
+       
+    if os.path.exists(opt.structureFile) :
+      handle = open(opt.structureFile,'r')
+      exec(handle)
+      handle.close()
+    
+    factory.makeDatacards( opt.inputFile ,opt.outputDirDatacard, variables, cuts, samples, structure)
     
         
         
