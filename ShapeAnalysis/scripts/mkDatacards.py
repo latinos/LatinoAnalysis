@@ -69,6 +69,7 @@ class DatacardFactory:
         # loop over cuts  
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
+          os.system ("rm -rf " + self._outputDirDatacard + "/" + cutName) 
           os.mkdir (self._outputDirDatacard + "/" + cutName)
           # loop over variables
           for variableName, variable in self._variables.iteritems():
@@ -87,7 +88,7 @@ class DatacardFactory:
             for sampleName in self.data:
               yieldsData['data'] = 1.0 # data is data!
               # ge the integral from histogram
-                          
+                                     
             os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName) 
             os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/") # and the folder for the root files 
         
@@ -110,18 +111,50 @@ class DatacardFactory:
 
             card.write('observation %.0f\n' % yieldsData['data'])
             
-            #card.write('shapes  *           * '+
-                       #fileFmt.format(mass=self._mass, bin=self._bin)+
-                       #'     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC'+'\n')
-            #card.write('shapes  data_obs    * '+
-                       #fileFmt.format(mass=self._mass, bin=self._bin)+
-                       #'     histo_Data'+'\n')
+            card.write('shapes  *           * '+
+                       'shapes/histos_' + tagNameToAppearInDatacard + ".root" +
+                       '     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC' + '\n')
+            
+            card.write('shapes  data_obs           * '+
+                       'shapes/histos_' + tagNameToAppearInDatacard + ".root" +
+                       '     histo_Data' + '\n')
+            
+            #   shapes  *           * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC
+            #   shapes  data_obs    * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_Data
 
+            
+            totalNumberSamples = len(self.signals) + len(self.backgrounds)
+            coldef = 15
+            
+            card.write('bin'.ljust(58) + ''.join( [tagNameToAppearInDatacard.ljust(coldef) * totalNumberSamples])+'\n')
+            
+            card.write('process'.ljust(58))
+            card.write(''.join([name.ljust(coldef) for name in self.signals]))
+            card.write(''.join([name.ljust(coldef) for name in self.backgrounds]))
+            card.write('\n')
+            
+            card.write('rate'.ljust(58))
+            card.write(''.join([('%-.4f' %yieldsSig[name]).ljust(coldef) for name in self.signals    ]))
+            card.write(''.join([('%-.4f' %yieldsBkg[name]).ljust(coldef) for name in self.backgrounds]))
+            card.write('\n')
+            
+            #bin                                       of_vh2j      of_vh2j    
+            #process                                      ggH         ggWW    
+            #process                                        0            1    
+            #rate                                      1.1234       2.3456
+
+            card.write('-'*100+'\n')
+
+            
             card.write('-'*100+'\n')
 
             card.write('\n')
             card.close()
 
+            # now create a root file with the subset of histograms
+            # and copy it where it is defined in the datacard
+            
+            # FIXME
 
 
 if __name__ == '__main__':
