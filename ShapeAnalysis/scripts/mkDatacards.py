@@ -132,10 +132,15 @@ class DatacardFactory:
             card.write(''.join([name.ljust(coldef) for name in self.signals]))
             card.write(''.join([name.ljust(coldef) for name in self.backgrounds]))
             card.write('\n')
-            
+
+            card.write('process'.ljust(58))
+            card.write(''.join([('%d' % -iSample   ).ljust(coldef) for iSample in range(len(self.signals))     ]))
+            card.write(''.join([('%d' % (iSample+1)).ljust(coldef) for iSample in range(len(self.backgrounds)) ]))
+            card.write('\n')
+
             card.write('rate'.ljust(58))
-            card.write(''.join([('%-.4f' %yieldsSig[name]).ljust(coldef) for name in self.signals    ]))
-            card.write(''.join([('%-.4f' %yieldsBkg[name]).ljust(coldef) for name in self.backgrounds]))
+            card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(coldef) for name in self.signals    ]))
+            card.write(''.join([('%-.4f' % yieldsBkg[name]).ljust(coldef) for name in self.backgrounds]))
             card.write('\n')
             
             #bin                                       of_vh2j      of_vh2j    
