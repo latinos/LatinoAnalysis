@@ -25,8 +25,6 @@ class ShapeFactory:
  
     # _____________________________________________________________________________
     def __init__(self):
-        self._stdWgt = 'baseW*puW*effW*triggW'
-        self._systByWeight = {}
       
         variables = {}
         self._variables = variables
@@ -470,7 +468,7 @@ if __name__ == '__main__':
     parser.add_option('--outputDir'      , dest='outputDir'      , help='output directory'                           , default='./')
     parser.add_option('--inputDir'       , dest='inputDir'       , help='input directory'                            , default='./data/')
           
-    # read default pargin options as well
+    # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()

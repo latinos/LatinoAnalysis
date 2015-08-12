@@ -21,9 +21,7 @@ class ShapeFactory:
  
     # _____________________________________________________________________________
     def __init__(self):
-        self._stdWgt = 'baseW*puW*effW*triggW'
-        self._systByWeight = {}
-      
+
         variables = {}
         self._variables = variables
 
@@ -33,11 +31,11 @@ class ShapeFactory:
         samples = {}
         self._samples = samples
 
-        outputDir = {}
-        self._outputDir = outputDir
+        outputDirPlots = {}
+        self._outputDirPlots = outputDirPlots
 
     # _____________________________________________________________________________
-    def makePlot(self, inputFile, outputDir, variables, cuts, samples, plot, legend):
+    def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, legend):
 
         print "=================="
         print "==== makePlot ===="
@@ -49,7 +47,7 @@ class ShapeFactory:
         self._samples   = samples
         self._cuts      = cuts
 
-        self._outputDir = outputDir
+        self._outputDirPlots = outputDirPlots
 
         ROOT.TH1.SetDefaultSumw2(True)
         
@@ -212,13 +210,13 @@ class ShapeFactory:
             tlegend.Draw()
             
             if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
-              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3./4., legend['lumi'])
+              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
               flag_lumi.Draw()
             if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
-              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
+              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
               flag_sqrt.Draw()
             if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
-              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., "#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "}")
+              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*2.5/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
               flag_lumi_sqrt.Draw()
     
     
@@ -226,13 +224,13 @@ class ShapeFactory:
             #---- the Legend (end)
             
             frame.GetYaxis().SetRangeUser( 0, maxYused )
-            tcanvas.SaveAs(self._outputDir + "/" + canvasNameTemplate + ".png")
-            tcanvas.SaveAs(self._outputDir + "/" + canvasNameTemplate + ".root")
+            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
+            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
              
             # log Y axis
             frame.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
             tcanvas.SetLogy()
-            tcanvas.SaveAs(self._outputDir + "/log_" + canvasNameTemplate + ".png")
+            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
@@ -270,15 +268,16 @@ class ShapeFactory:
     
             tlegend.Draw()
             if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
-              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3./4., legend['lumi'])
+              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
               flag_lumi.Draw()
             if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
-              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., legend['sqrt'])
+              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
               flag_sqrt.Draw()
             if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
-              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*2.5/4., "#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "}")
+              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*2.5/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
               flag_lumi_sqrt.Draw()
-            
+    
+                
             tcanvasRatio.cd()
             pad2 = ROOT.TPad("pad2","pad2",0,0,1,1-0.72)
             pad2.SetTopMargin(0.000)
@@ -299,14 +298,14 @@ class ShapeFactory:
            
             tgrDataOverMC.Draw("P0")
             
-            tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".png")
-            tcanvasRatio.SaveAs(self._outputDir + "/" + canvasRatioNameTemplate + ".root")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
             
             
             # log Y axis
             frameDistro.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
             pad1.SetLogy()
-            tcanvasRatio.SaveAs(self._outputDir + "/log_" + canvasRatioNameTemplate + ".png")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
             
           
           
@@ -392,10 +391,10 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--outputDir'      , dest='outputDir'      , help='output directory'                           , default='./')
+    parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
           
-    # read default pargin options as well
+    # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
@@ -407,8 +406,8 @@ if __name__ == '__main__':
     print " configuration file = ", opt.pycfg
     print " lumi =               ", opt.lumi
     
-    print " inputFile =          ", opt.inputFile
-    print " outputDir =          ", opt.outputDir
+    print " inputFile      =          ", opt.inputFile
+    print " outputDirPlots =          ", opt.outputDirPlots
  
     
 
@@ -453,7 +452,7 @@ if __name__ == '__main__':
       handle.close()
     
    
-    factory.makePlot( opt.inputFile ,opt.outputDir, variables, cuts, samples, plot, legend)
+    factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, legend)
     
         
        
