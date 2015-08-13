@@ -57,6 +57,8 @@ class DatacardFactory:
 
         self._outputDirDatacard = outputDirDatacard
 
+        fileIn = ROOT.TFile(inputFile, "READ")
+        
         # divide the list of samples among signal, background and data
         for sampleName, sample in self._samples.iteritems():
           if structureFile[sampleName]['isSignal'] == 1 :
@@ -74,23 +76,45 @@ class DatacardFactory:
           # loop over variables
           for variableName, variable in self._variables.iteritems():
             print "  variableName = ", variableName
-            
+            tagNameToAppearInDatacard = "test"
+
+            os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName) 
+            os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/") # and the folder for the root files 
+
+            outFile = ROOT.TFile.Open( self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/histos_" + tagNameToAppearInDatacard + ".root", 'recreate')
+            ROOT.TH1.SetDefaultSumw2(True)
+        
             # prepare yields
             yieldsSig  = {}
             yieldsBkg  = {}
             yieldsData = {}
+            
+            
             for sampleName in self.signals:
-              yieldsSig[sampleName] = 1.0
-              # ge the integral from histogram
+              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              histo = fileIn.Get(shapeName)
+              # get the integral == rate from histogram
+              yieldsSig[sampleName] = histo.Integral()
+              outFile.cd()
+              histo.Write()
+              
             for sampleName in self.backgrounds:
-              yieldsBkg[sampleName] = 1.0
-              # ge the integral from histogram
+              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              histo = fileIn.Get(shapeName)
+              # get the integral == rate from histogram
+              yieldsBkg[sampleName] = histo.Integral()
+              outFile.cd()
+              histo.Write()
+            
             for sampleName in self.data:
-              yieldsData['data'] = 1.0 # data is data!
-              # ge the integral from histogram
+              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              histo = fileIn.Get(shapeName)
+              # get the integral == rate from histogram
+              yieldsData['data'] = histo.Integral() # data is data!
+              histo.SetName("histo_Data")
+              outFile.cd()
+              histo.Write()
                                      
-            os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName) 
-            os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/") # and the folder for the root files 
         
             # start creating the datacard 
             cardPath = self._outputDirDatacard + "/" + cutName + "/" + variableName  + "/datacard.txt"
@@ -103,7 +127,6 @@ class DatacardFactory:
             card.write('kmax * number of nuisance parameters\n') 
 
             card.write('-'*100+'\n')
-            tagNameToAppearInDatacard = "test"
             card.write('bin         %s' % tagNameToAppearInDatacard+'\n')
             if len(self.data) == 0:
               self._log.warning( 'no data, no fun! ')
