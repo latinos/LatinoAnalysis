@@ -45,7 +45,7 @@ class DatacardFactory:
     # _____________________________________________________________________________
     # a datacard for each "cut" and each "variable" will be produced, in separate sub-folders, names after "cut/variable"
     # _____________________________________________________________________________
-    def makeDatacards( self, inputFile, outputDirDatacard, variables, cuts, samples, structureFile):
+    def makeDatacards( self, inputFile, outputDirDatacard, variables, cuts, samples, structureFile, nuisances):
     
         print "======================="
         print "==== makeDatacards ===="
@@ -173,6 +173,18 @@ class DatacardFactory:
 
             card.write('-'*100+'\n')
 
+            # add nuisances
+            
+            # first the 
+            for nuisanceName, nuisance in nuisances.iteritems():
+              print "nuisance[type] = ", nuisance ['type']
+              if nuisance ['type'] == 'lnN' :
+                card.write((nuisance['name']).ljust(58))
+                if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                  card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.signals      ]))
+                  card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.backgrounds  ]))
+                  card.write('\n')
+
             
             card.write('-'*100+'\n')
 
@@ -205,6 +217,8 @@ if __name__ == '__main__':
     parser.add_option('--outputDirDatacard'  , dest='outputDirDatacard' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'          , dest='inputFile'         , help='input directory'                            , default='./input.root')
     parser.add_option('--structureFile'      , dest='structureFile'     , help='file with datacard configurations'          , default=None )
+    parser.add_option('--nuisancesFile'      , dest='nuisancesFile'     , help='file with nuisances configurations'         , default=None )
+
 
           
     # read default parsing options as well
@@ -237,7 +251,7 @@ if __name__ == '__main__':
     factory._lumi      = opt.lumi
     factory._tag       = opt.tag
     
-    
+    # ~~~~
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
@@ -255,8 +269,8 @@ if __name__ == '__main__':
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
-    
-    
+   
+    # ~~~~
     structure = {}
     if opt.structureFile == None :
        print " Please provide the datacard structure "
@@ -266,8 +280,20 @@ if __name__ == '__main__':
       handle = open(opt.structureFile,'r')
       exec(handle)
       handle.close()
+
+
+    # ~~~~
+    nuisances = {}
+    if opt.nuisancesFile == None :
+       print " Please provide the nuisances structure if you want to add nuisances "
+       
+    if os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close()
     
-    factory.makeDatacards( opt.inputFile ,opt.outputDirDatacard, variables, cuts, samples, structure)
+    
+    factory.makeDatacards( opt.inputFile ,opt.outputDirDatacard, variables, cuts, samples, structure, nuisances)
     
         
         
