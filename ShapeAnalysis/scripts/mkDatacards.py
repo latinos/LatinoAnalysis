@@ -179,7 +179,8 @@ class DatacardFactory:
             for nuisanceName, nuisance in nuisances.iteritems():
               print "nuisance[type] = ", nuisance ['type']
               if nuisance ['type'] == 'lnN' :
-                card.write((nuisance['name']).ljust(58))
+                card.write((nuisance['name']).ljust(58-20))
+                card.write((nuisance ['type']).ljust(20))
                 if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                   card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.signals      ]))
                   card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.backgrounds  ]))
