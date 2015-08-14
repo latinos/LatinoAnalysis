@@ -177,25 +177,25 @@ class DatacardFactory:
             
             # first the 
             for nuisanceName, nuisance in nuisances.iteritems():
-              print "nuisance[type] = ", nuisance ['type']
-              if nuisance ['type'] == 'lnN' :
-                card.write((nuisance['name']).ljust(58-20))
-                card.write((nuisance ['type']).ljust(20))
-                if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                  card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.signals      ]))
-                  card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.backgrounds  ]))
-                  card.write('\n')
+              if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
+                  print "nuisance[type] = ", nuisance ['type']
+                  if nuisance ['type'] == 'lnN' :
+                    card.write((nuisance['name']).ljust(58-20))
+                    card.write((nuisance ['type']).ljust(20))
+                    if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.signals      ]))
+                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.backgrounds  ]))
+                      card.write('\n')
 
+            # now add other nuisances            
+            # FIXME
             
             card.write('-'*100+'\n')
 
             card.write('\n')
             card.close()
 
-            # now create a root file with the subset of histograms
-            # and copy it where it is defined in the datacard
-            
-            # FIXME
 
 
 if __name__ == '__main__':
