@@ -147,23 +147,23 @@ class DatacardFactory:
 
             
             totalNumberSamples = len(self.signals) + len(self.backgrounds)
-            coldef = 15
+            columndef = 15
             
-            card.write('bin'.ljust(58) + ''.join( [tagNameToAppearInDatacard.ljust(coldef) * totalNumberSamples])+'\n')
+            card.write('bin'.ljust(58) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
             
             card.write('process'.ljust(58))
-            card.write(''.join([name.ljust(coldef) for name in self.signals]))
-            card.write(''.join([name.ljust(coldef) for name in self.backgrounds]))
+            card.write(''.join([name.ljust(columndef) for name in self.signals]))
+            card.write(''.join([name.ljust(columndef) for name in self.backgrounds]))
             card.write('\n')
 
             card.write('process'.ljust(58))
-            card.write(''.join([('%d' % -iSample   ).ljust(coldef) for iSample in range(len(self.signals))     ]))
-            card.write(''.join([('%d' % (iSample+1)).ljust(coldef) for iSample in range(len(self.backgrounds)) ]))
+            card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(len(self.signals))     ]))
+            card.write(''.join([('%d' % (iSample+1)).ljust(columndef) for iSample in range(len(self.backgrounds)) ]))
             card.write('\n')
 
             card.write('rate'.ljust(58))
-            card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(coldef) for name in self.signals    ]))
-            card.write(''.join([('%-.4f' % yieldsBkg[name]).ljust(coldef) for name in self.backgrounds]))
+            card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef) for name in self.signals    ]))
+            card.write(''.join([('%-.4f' % yieldsBkg[name]).ljust(columndef) for name in self.backgrounds]))
             card.write('\n')
             
             #bin                                       of_vh2j      of_vh2j    
@@ -184,10 +184,32 @@ class DatacardFactory:
                     card.write((nuisance['name']).ljust(58-20))
                     card.write((nuisance ['type']).ljust(20))
                     if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.signals      ]))
-                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(coldef) for name in self.backgrounds  ]))
+                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
+                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
                       card.write('\n')
-
+              
+              # stat nuisances  
+              if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                #print "nuisance[type] = ", nuisance ['type']
+                for sampleNuisName, configurationNuis in nuisance['samples'] :
+                  if configurationNuis['typeStat'] == 'uni' : # unified approach
+                    #print "     >> uniform"
+                    card.write(( 'CMS_' + tagNameToAppearInDatacard + "_stat" ).ljust(58-20))
+                    card.write((nuisance ['type']).ljust(20))
+                    
+                    for sampleName in self.signals:
+                      if sampleName != sampleNuisName :
+                        card.write('-').ljust(columndef)
+                      else :
+                        card.write('1.000').ljust(columndef)
+                        
+                    for sampleName in self.backgrounds:
+                      if sampleName != sampleNuisName :
+                        card.write('-').ljust(columndef)
+                      else :
+                        card.write('1.000').ljust(columndef)
+              
+               
             # now add other nuisances            
             # FIXME
             

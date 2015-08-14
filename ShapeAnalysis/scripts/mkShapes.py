@@ -130,11 +130,11 @@ class ShapeFactory:
               # - bin by bin (in selected bins)
               for nuisanceName, nuisance in nuisances.iteritems():
                 if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                  print "nuisance[type] = ", nuisance ['type']
+                  #print "nuisance[type] = ", nuisance ['type']
                   for sampleNuisName, configurationNuis in nuisance['samples'] :
                     if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
                       if configurationNuis['typeStat'] == 'uni' :
-                        print "     >> uniform"
+                        #print "     >> uniform"
                         # take histogram --> outputsHisto
                         outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_stat_Up")
                         outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_stat_Down")
