@@ -131,7 +131,7 @@ class ShapeFactory:
               for nuisanceName, nuisance in nuisances.iteritems():
                 if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                   #print "nuisance[type] = ", nuisance ['type']
-                  for sampleNuisName, configurationNuis in nuisance['samples'] :
+                  for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
                     if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
                       if configurationNuis['typeStat'] == 'uni' :
                         #print "     >> uniform"
@@ -344,8 +344,8 @@ class ShapeFactory:
     def _scaleHistoStat(self, histo, direction):
         
         for iBin in range(1, histo.GetNbinsX()+1):
-          error = c.GetBinError(iBin)
-          value = c.GetBinContent(iBin)
+          error = histo.GetBinError(iBin)
+          value = histo.GetBinContent(iBin)
           newvalue = value + direction * error
           histo.SetBinContent(iBin, newvalue)
   

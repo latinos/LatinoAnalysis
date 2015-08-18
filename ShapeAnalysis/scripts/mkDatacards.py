@@ -191,24 +191,26 @@ class DatacardFactory:
               # stat nuisances  
               if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                 #print "nuisance[type] = ", nuisance ['type']
-                for sampleNuisName, configurationNuis in nuisance['samples'] :
-                  if configurationNuis['typeStat'] == 'uni' : # unified approach
-                    #print "     >> uniform"
-                    card.write(( 'CMS_' + tagNameToAppearInDatacard + "_stat" ).ljust(58-20))
-                    card.write((nuisance ['type']).ljust(20))
-                    
-                    for sampleName in self.signals:
-                      if sampleName != sampleNuisName :
-                        card.write('-').ljust(columndef)
-                      else :
-                        card.write('1.000').ljust(columndef)
-                        
-                    for sampleName in self.backgrounds:
-                      if sampleName != sampleNuisName :
-                        card.write('-').ljust(columndef)
-                      else :
-                        card.write('1.000').ljust(columndef)
-              
+                #print "     >> uniform"
+                card.write(( 'CMS_' + tagNameToAppearInDatacard + "_stat" ).ljust(58-20))
+                card.write((nuisance ['type']).ljust(20))
+                
+                for sampleName in self.signals:
+                  if sampleName in nuisance['samples'].keys() :
+                    if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+                      card.write(('1.000').ljust(columndef))
+                  else :
+                      card.write(('-').ljust(columndef))
+                   
+                for sampleName in self.backgrounds:
+                  if sampleName in nuisance['samples'].keys() :
+                    if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+                      card.write(('1.000').ljust(columndef))
+                  else :
+                      card.write(('-').ljust(columndef))
+
+                card.write('\n')
+
                
             # now add other nuisances            
             # FIXME
