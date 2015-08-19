@@ -57,7 +57,7 @@ class DatacardFactory:
 
         self._outputDirDatacard = outputDirDatacard
 
-        fileIn = ROOT.TFile(inputFile, "READ")
+        self._fileIn = ROOT.TFile(inputFile, "READ")
         
         # divide the list of samples among signal, background and data
         for sampleName, sample in self._samples.iteritems():
@@ -81,7 +81,7 @@ class DatacardFactory:
             os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName) 
             os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/") # and the folder for the root files 
 
-            outFile = ROOT.TFile.Open( self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/histos_" + tagNameToAppearInDatacard + ".root", 'recreate')
+            self._outFile = ROOT.TFile.Open( self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/histos_" + tagNameToAppearInDatacard + ".root", 'recreate')
             ROOT.TH1.SetDefaultSumw2(True)
         
             # prepare yields
@@ -92,27 +92,27 @@ class DatacardFactory:
             
             for sampleName in self.signals:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-              histo = fileIn.Get(shapeName)
+              histo = self._fileIn.Get(shapeName)
               # get the integral == rate from histogram
               yieldsSig[sampleName] = histo.Integral()
-              outFile.cd()
+              self._outFile.cd()
               histo.Write()
               
             for sampleName in self.backgrounds:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-              histo = fileIn.Get(shapeName)
+              histo = self._fileIn.Get(shapeName)
               # get the integral == rate from histogram
               yieldsBkg[sampleName] = histo.Integral()
-              outFile.cd()
+              self._outFile.cd()
               histo.Write()
             
             for sampleName in self.data:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-              histo = fileIn.Get(shapeName)
+              histo = self._fileIn.Get(shapeName)
               # get the integral == rate from histogram
               yieldsData['data'] = histo.Integral() # data is data!
               histo.SetName("histo_Data")
-              outFile.cd()
+              self._outFile.cd()
               histo.Write()
                                      
         
@@ -175,7 +175,7 @@ class DatacardFactory:
 
             # add nuisances
             
-            # first the 
+            # first the lnN nuisances
             for nuisanceName, nuisance in nuisances.iteritems():
               if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                 if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
@@ -199,6 +199,15 @@ class DatacardFactory:
                   if sampleName in nuisance['samples'].keys() :
                     if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                       card.write(('1.000').ljust(columndef))
+                      # save the nuisance histograms in the root file
+                      self._saveHisto(cutName+"/"+variableName+'/',
+                                       'histo_' + sampleName + '_stat' + "Up",
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Up"
+                                       )
+                      self._saveHisto(cutName+"/"+variableName+'/',
+                                       'histo_' + sampleName + '_stat' + "Down",
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Down"
+                                       )
                   else :
                       card.write(('-').ljust(columndef))
                    
@@ -206,6 +215,15 @@ class DatacardFactory:
                   if sampleName in nuisance['samples'].keys() :
                     if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                       card.write(('1.000').ljust(columndef))
+                      # save the nuisance histograms in the root file
+                      self._saveHisto(cutName+"/"+variableName+'/',
+                                       'histo_' + sampleName + '_stat' + "Up",
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Up"
+                                       )
+                      self._saveHisto(cutName+"/"+variableName+'/',
+                                       'histo_' + sampleName + '_stat' + "Down",
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Down"
+                                       )
                   else :
                       card.write(('-').ljust(columndef))
 
@@ -219,6 +237,34 @@ class DatacardFactory:
 
             card.write('\n')
             card.close()
+
+
+
+
+
+
+   
+    # _____________________________________________________________________________
+    def _saveHisto(self, folderName, histoName, histoNameOut):     
+       shapeName = folderName + histoName
+       histo = self._fileIn.Get(shapeName)
+       print " shapeName = ", shapeName
+       print " --> ", histoNameOut
+       print " --> histo = ", histo
+       histo.SetName(histoNameOut)
+       self._outFile.cd()
+       histo.Write()
+       
+
+
+
+
+
+
+
+
+
+
 
 
 

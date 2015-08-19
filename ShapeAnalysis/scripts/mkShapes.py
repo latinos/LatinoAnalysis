@@ -136,8 +136,8 @@ class ShapeFactory:
                       if configurationNuis['typeStat'] == 'uni' :
                         #print "     >> uniform"
                         # take histogram --> outputsHisto
-                        outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_stat_Up")
-                        outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_stat_Down")
+                        outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_statUp")
+                        outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_statDown")
                         # scale up/down
                         self._scaleHistoStat (outputsHistoUp,  1 )
                         self._scaleHistoStat (outputsHistoDo, -1 )

@@ -210,13 +210,13 @@ class ShapeFactory:
             tlegend.Draw()
             
             if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
-              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
+              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3.0/4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
               flag_lumi.Draw()
             if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
-              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
+              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3.0/4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
               flag_sqrt.Draw()
             if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
-              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*2.5/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
+              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3.0/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
               flag_lumi_sqrt.Draw()
     
     
