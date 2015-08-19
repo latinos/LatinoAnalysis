@@ -49,6 +49,10 @@ class ShapeFactory:
 
         self._outputDirPlots = outputDirPlots
 
+
+        tcanvas      = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
+        tcanvasRatio = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
+
         ROOT.TH1.SetDefaultSumw2(True)
         
         fileIn = ROOT.TFile(inputFile, "READ")
@@ -59,8 +63,9 @@ class ShapeFactory:
             histos = {}
             canvasNameTemplate = 'c_' + cutName + "_" + variableName
             
-            tcanvas = ROOT.TCanvas( canvasNameTemplate, variableName , 800, 600 )
-             
+            #tcanvas = ROOT.TCanvas( canvasNameTemplate, variableName , 800, 600 )
+            tcanvas.cd()
+            
             tgrData_vx     = array('f')
             tgrData_evx    = array('f')
             tgrData_vy     = array('f')
@@ -231,22 +236,24 @@ class ShapeFactory:
             frame.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
+            tcanvas.SetLogy(0)
             
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
             
             canvasRatioNameTemplate = 'cratio_' + cutName + "_" + variableName
-            tcanvasRatio = ROOT.TCanvas( canvasRatioNameTemplate, canvasRatioNameTemplate , 800, 800 )
 
             tcanvasRatio.cd()
-            pad1 = ROOT.TPad("pad1","pad1", 0, 1-0.72, 1, 1)
+            canvasPad1Name = 'pad1_' + cutName + "_" + variableName
+            pad1 = ROOT.TPad(canvasPad1Name,canvasPad1Name, 0, 1-0.72, 1, 1)
             pad1.SetTopMargin(0.098)
             pad1.SetBottomMargin(0.000) 
             pad1.Draw()
             pad1.cd().SetGrid()
             
             print " pad1 = ", pad1
-            frameDistro = pad1.DrawFrame(minXused, 0.0, maxXused, 1.0)
+            canvasFrameDistroName = 'frame_distro_' + cutName + "_" + variableName
+            frameDistro = pad1.DrawFrame(minXused, 0.0, maxXused, 1.0, canvasFrameDistroName)
             print " pad1 = ", pad1
             
             if 'xaxis' in variable.keys() : 
@@ -279,15 +286,18 @@ class ShapeFactory:
     
                 
             tcanvasRatio.cd()
-            pad2 = ROOT.TPad("pad2","pad2",0,0,1,1-0.72)
+            canvasPad2Name = 'pad2_' + cutName + "_" + variableName
+            pad2 = ROOT.TPad(canvasPad2Name,canvasPad2Name,0,0,1,1-0.72)
             pad2.SetTopMargin(0.000)
             pad2.SetBottomMargin(0.392)
             pad2.Draw()
             pad2.cd().SetGrid()
            
             print " pad1 = ", pad1
-            print " pad2 = ", pad2
-            frameRatio = pad2.DrawFrame(minXused, 0.0, maxXused, 2.0)
+            print " pad2 = ", pad2, " minXused = ", minXused, " maxXused = ", maxXused
+            canvasFrameRatioName = 'frame_ratio_' + cutName + "_" + variableName
+            print " canvasFrameRatioName = ", canvasFrameRatioName
+            frameRatio = pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, canvasFrameRatioName)
             print " pad2 = ", pad2
             if 'xaxis' in variable.keys() : 
               frameRatio.GetXaxis().SetTitle(variable['xaxis'])
@@ -306,7 +316,8 @@ class ShapeFactory:
             frameDistro.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
-            
+            pad1.SetLogy(0)
+
           
           
             print " >> end"
