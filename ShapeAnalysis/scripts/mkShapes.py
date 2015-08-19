@@ -83,36 +83,51 @@ class ShapeFactory:
           self._outFile.mkdir (cutName)
           for variableName, variable in self._variables.iteritems():
             self._outFile.mkdir (cutName+"/"+variableName)
-            print "variable[name]  = ", variable ['name']
-            print "variable[range] = ", variable ['range']
+            #print "variable[name]  = ", variable ['name']
+            #print "variable[range] = ", variable ['range']
             #for nuisance in self._nuisances :
               #print "nuisance = ", nuisance
               # open the root file
 
-       
+        # connect the trees
+        list_of_trees_to_connect = {}
+        for sampleName, sample in self._samples.iteritems():
+          list_of_trees_to_connect[sampleName] = sample['name']
+              
+        inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
+                   
         #---- now plot and save into output root file
         for cutName, cut in self._cuts.iteritems():
           print "cut = ", cutName, " :: ", cut
+
+          # create the list of events -> speed up!          
+          # for each tree!!!
+          if 'weights' in sample.keys() :
+            self._filterTrees( sample ['weight'], sample ['weights'], cut, inputs[sampleName])
+          else :
+            self._filterTrees( sample ['weight'],                     cut, inputs[sampleName])
+
+           
           for variableName, variable in self._variables.iteritems():
-            print "variable[name]  = ", variable['name']
-            print "variable[range] = ", variable['range']
+            print "  variable[name]  = ", variable['name']
+            print "  variable[range] = ", variable['range']
             self._outFile.cd (cutName+"/"+variableName)
             
-            list_of_trees_to_connect = {}
-            for sampleName, sample in self._samples.iteritems():
-              list_of_trees_to_connect[sampleName] = sample['name']
+            #list_of_trees_to_connect = {}
+            #for sampleName, sample in self._samples.iteritems():
+              #list_of_trees_to_connect[sampleName] = sample['name']
 
-            inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
+            #inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
             
             for sampleName, sample in self._samples.iteritems():
-              print "sample[name]    = ", sample ['name']
-              print "sample[weight]  = ", sample ['weight']
+              print "    sample[name]    = ", sample ['name']
+              print "    sample[weight]  = ", sample ['weight']
               if 'weights' in sample.keys() :
-                print "sample[weights] = ", sample ['weights']
+                print "    sample[weights] = ", sample ['weights']
 
               doFold = 0
               if 'fold' in variable.keys() :
-                print "variable[fold] = ", variable ['fold']
+                print "    variable[fold] = ", variable ['fold']
                 doFold = variable ['fold']
               
               # create histogram: already the "hadd" of possible sub-contributions
@@ -146,11 +161,6 @@ class ShapeFactory:
                         outputsHistoDo.Write()
                         
           
-            # - then disconnect the files
-            self._disconnectInputs(inputs)
-
-
-
             #for nuisance in self._nuisances :
               #print "nuisance = ", nuisance
               #for sample in self._samples :
@@ -164,9 +174,44 @@ class ShapeFactory:
 
                  #print 'Output file:',self._outputFile
 
+        # - then disconnect the files
+        self._disconnectInputs(inputs)
 
 
-    
+    # _____________________________________________________________________________
+    def _filterTrees(self, global_weight, weights, cut, inputs):       
+        '''
+        global_weight :   the global weight for the samples
+        weights       :   the wieghts 'root file' dependent
+        cut           :   the selection
+        inputs        :   the list of input files for this particular sample
+        '''
+        self._logger.info('filter Trees to speed up')
+
+        numTree = 0
+
+        for tree in inputs:
+          globalCut = "(" + cut + ") * (" + global_weight + ")"  
+          # if weights vector is not given, do not apply file dependent weights
+          if len(weights) != 0 :
+            # if weight is not given for a given root file, '-', do not apply file dependent weight for that root file
+            if weights[numTree] != '-' :
+              globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
+          
+          # clear list
+          tree.SetEntryList(0)
+          # get the list
+          myList = ROOT.TEntryList(tree)
+          tree.Draw(">> myList", globalCut, "entrylist");
+          #gDirectory = ROOT.gROOT.GetGlobal("gDirectory")
+          #myList = gDirectory.Get("myList")
+          # apply the list
+          tree.SetEntryList(myList)
+          
+          numTree += 1
+
+
+          
     # _____________________________________________________________________________
     def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold):       
         '''
@@ -184,7 +229,7 @@ class ShapeFactory:
         hTotal = ROOT.TH1D
         bigName = 'histo_' + sampleName
         for tree in inputs:
-          print '    {0:<20} : {1:^9}'.format(sampleName,tree.GetEntries()),
+          print '        {0:<20} : {1:^9}'.format(sampleName,tree.GetEntries()),
           # new histogram
           shapeName = 'histo_' + sampleName + str(numTree)
 
@@ -203,9 +248,12 @@ class ShapeFactory:
             if weights[numTree] != '-' :
               globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
             
+          # in principle now that the trees are filtered
+          # I may remove the globalCut here
+          # ... but it doesn't hurt leaving it
           entries = tree.Draw( var+'>>'+shapeName, globalCut, 'goff')
           #shape = (ROOT.TH1D*) gDirectory->Get(shapeName)
-          print ' >> ',entries,':',shape.Integral()
+          print '     >> ',entries,':',shape.Integral()
           
           if (numTree == 0) :
             shape.SetTitle(bigName)
@@ -216,6 +264,8 @@ class ShapeFactory:
 
           numTree += 1
 
+        print ' ~~~~ '
+        
         # fold if needed
         if doFold == 1 or doFold == 3 :
           self._FoldOverflow  (hTotal)
@@ -232,7 +282,7 @@ class ShapeFactory:
 
     def _FoldUnderflow(self, h):       
 
-        print " >> fold underflow"
+        #print " >> fold underflow"
         if h.GetDimension() == 1:
           nx = h.GetNbinsX()
           # 0 --> 1
@@ -259,7 +309,7 @@ class ShapeFactory:
         
     def _FoldOverflow(self, h):       
 
-        print " >> fold overflow"
+        #print " >> fold overflow"
         if h.GetDimension() == 1:
           nx = h.GetNbinsX()
           # n+1 --> n
