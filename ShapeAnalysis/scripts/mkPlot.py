@@ -12,6 +12,8 @@ import LatinoAnalysis.Gardener.odict as odict
 import traceback
 from array import array
 
+import os.path
+
 
 
 # ----------------------------------------------------- ShapeFactory --------------------------------------
@@ -48,7 +50,8 @@ class ShapeFactory:
         self._cuts      = cuts
 
         self._outputDirPlots = outputDirPlots
-
+        os.system ("mkdir " + outputDirPlots + "/") 
+        
 
         tcanvas      = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
         tcanvasRatio = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
@@ -106,6 +109,11 @@ class ShapeFactory:
                     tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                     tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     
+                    
+              # allow arbitrary scaling in MC (and DATA??), if needed
+              # for example to "see" a signal
+              if 'scale' in plot[sampleName].keys() : 
+                histos[sampleName].Scale(plot[sampleName]['scale'])
 
               # MC style
               if plot[sampleName]['isData'] == 0 :

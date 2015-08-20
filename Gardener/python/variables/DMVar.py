@@ -39,12 +39,14 @@ class DMVarFiller(TreeCloner):
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
-        newbranches = ['dphillStar']
+        newbranches = ['dphillStar', 'mllStar']
         self.clone(output,newbranches)
 
         dphillStar    = numpy.ones(1, dtype=numpy.float32)
-
+        mllStar       = numpy.ones(1, dtype=numpy.float32)
+        
         self.otree.Branch('dphillStar'  , dphillStar  , 'dphillStar/F')
+        self.otree.Branch('mllStar'     , mllStar     , 'mllStar/F')
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -85,6 +87,7 @@ class DMVarFiller(TreeCloner):
             DM = ROOT.DM(pt1, pt2, phi1, phi2, met, metphi)
 
             dphillStar[0]   = DM.dphillStar()
+            mllStar[0]      = DM.mllStar()
              
             otree.Fill()
 

@@ -71,6 +71,7 @@ class ShapeFactory:
         
         self._outputFileName = outputDir+'/plots_'+self._tag+".root"
         print " outputFileName = ", self._outputFileName
+        os.system ("mkdir " + outputDir + "/")
         self._outFile = ROOT.TFile.Open( self._outputFileName, 'recreate')
         
         ROOT.TH1.SetDefaultSumw2(True)
