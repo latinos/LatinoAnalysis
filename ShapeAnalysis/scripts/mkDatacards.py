@@ -71,6 +71,7 @@ class DatacardFactory:
         # loop over cuts  
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
+          os.mkdir (self._outputDirDatacard + "/")
           os.system ("rm -rf " + self._outputDirDatacard + "/" + cutName) 
           os.mkdir (self._outputDirDatacard + "/" + cutName)
           # loop over variables
