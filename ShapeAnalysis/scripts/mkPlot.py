@@ -117,8 +117,14 @@ class ShapeFactory:
 
               # MC style
               if plot[sampleName]['isData'] == 0 :
-                histos[sampleName].SetFillColor(plot[sampleName]['color'])
-                histos[sampleName].SetFillStyle(3001)
+                # only background "filled" histogram
+                if plot[sampleName]['isSignal'] == 0 : 
+                  histos[sampleName].SetFillColor(plot[sampleName]['color'])
+                  histos[sampleName].SetFillStyle(3001)
+                else :
+                  histos[sampleName].SetFillStyle(0)
+                  histos[sampleName].SetLineWidth(2)
+             
                 histos[sampleName].SetLineColor(plot[sampleName]['color'])
                 # scale to luminosity if MC
                 histos[sampleName].Scale(self._lumi)
