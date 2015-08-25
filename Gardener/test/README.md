@@ -10,6 +10,14 @@ Here we add a new variable in a latino tree. It works on the trees produced with
                 input.root output.root
 
 
+How to filter events:
+
+    gardener.py  filter \
+                -f "njet>=2"
+                -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
+                     /media/data/amassiro/LatinoTrees/WW/
+
+
 Specific modules example:
 
     gardener.py wwvarfiller \
