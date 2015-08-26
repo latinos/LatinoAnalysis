@@ -6,6 +6,9 @@ from LatinoAnalysis.Gardener.pileup            import PUpper
 #from LatinoAnalysis.Gardener.ww                import WWPruner, WWFlagsGrafter
 #from LatinoAnalysis.Gardener.efficiencies      import EffLepFiller,EffTrgFiller
 
+# selections
+from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
+
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
 from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
@@ -48,6 +51,8 @@ if __name__ == '__main__':
 # generic tool
     modules['tlorentzvectorfiller']  = TLorentzVectorCreator()
 
+# apply selections and update variables
+    modules['l2selfiller']     = L2SelFiller()
 
 
     gardener_cli( modules )

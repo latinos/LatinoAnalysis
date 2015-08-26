@@ -17,6 +17,17 @@ How to filter events:
                 -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
                      /media/data/amassiro/LatinoTrees/WW/
 
+                     
+How to filter events and update some collections:
+
+    gardener.py  l2selfiller \
+                -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
+                     /media/data/amassiro/LatinoTrees/WW/
+                    
+    gardener.py  l2selfiller \
+                /media/data/amassiro/LatinoTrees/WW/50ns/latino_WZ.root  \
+                /media/data/amassiro/LatinoTrees/WW/50ns/latino_WZ_TEST.root
+                     
 
 Specific modules example:
 
