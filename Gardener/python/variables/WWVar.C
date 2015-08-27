@@ -11,13 +11,21 @@
 class WW {
 public:
  //! constructor
+ WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
  WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
  virtual ~WW() {}
  
  //! functions
  float pTWW();
  float dphill();
+ float mll();
+ float pt1();
+ float pt2();
  float mT2();  //void functionMT2(int& npar, double* d, double& r, double par[], int flag);
+ float yll();
+ float ptll();
+ 
+ 
  
 private:
  //! variables
@@ -43,17 +51,49 @@ WW::WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi) {
  
 }
 
+WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi) {
+ 
+ if (pt1>0 && pt2>0) {  
+  L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
+  L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
+  MET.SetPtEtaPhiM(met, 0, metphi, 0.);
+  isOk =  true;
+ }
+ else {
+  isOk = false;
+ }
+ 
+}
+
 //! functions
 
-float WW::pTWW(){
- 
+float WW::ptll(){
+ if (isOk) {
+  return (L1+L2).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::yll(){
+ if (isOk) {
+  return (L1+L2).Rapidity();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::pTWW(){ 
  if (isOk) {
   return (L1+L2+MET).Pt();
  }
  else {
   return -9999.0;
  }
- 
 }
 
 
@@ -68,6 +108,39 @@ float WW::dphill(){
  
 }
 
+
+float WW::pt1(){
+ 
+ if (isOk) {
+  return L1.Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::pt2(){
+ 
+ if (isOk) {
+  return L2.Pt();
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+float WW::mll(){
+ 
+ if (isOk) {
+  return (L1+L2).M();
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
 
 
 

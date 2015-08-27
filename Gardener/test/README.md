@@ -25,8 +25,8 @@ How to filter events and update some collections:
                      /media/data/amassiro/LatinoTrees/WW/
                     
     gardener.py  l2selfiller \
-                /media/data/amassiro/LatinoTrees/WW/50ns/latino_WZ.root  \
-                /media/data/amassiro/LatinoTrees/WW/50ns/latino_WZ_TEST.root
+                /media/data/amassiro/LatinoTrees/50ns/05Aug2015/latino_WWTo2L2Nu.root  \
+                /media/data/amassiro/LatinoTrees/WW/50ns/latino_WW_TEST.root
                      
 
 Specific modules example:
@@ -61,5 +61,37 @@ Specific modules example:
     gardener.py xwwvarfiller  \
           -r  /home/amassiro/Latinos/data  \
           ./TEST/
+
+          
+          
+          
+          
+          
+    gardener.py  l2selfiller \
+                -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
+                     /media/data/amassiro/LatinoTrees/WW/25ns/05Aug2015/ 
+         
+    gardener.py  l2selfiller \
+                -r   /media/data/amassiro/LatinoTrees/50ns/05Aug2015/  \
+                     /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/ 
+
+    gardener.py  l2selfiller \
+                -r   /media/data/amassiro/LatinoTrees/data/  \
+                     /media/data/amassiro/LatinoTrees/WW/data/ 
+                     
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
           
           
