@@ -219,7 +219,10 @@ class ShapeFactory:
             tlegend.SetShadowColor(0)
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 0 :
-                tlegend.AddEntry(histos[sampleName], sampleName, "F")
+                if 'nameHR' in plot[sampleName].keys() :
+                  tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
+                else :
+                  tlegend.AddEntry(histos[sampleName], sampleName, "F")
              
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :

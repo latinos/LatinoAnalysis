@@ -24,8 +24,8 @@ public:
  float mT2();  //void functionMT2(int& npar, double* d, double& r, double par[], int flag);
  float yll();
  float ptll();
- 
- 
+ float mth();
+ float dphillmet();
  
 private:
  //! variables
@@ -135,6 +135,33 @@ float WW::mll(){
  
  if (isOk) {
   return (L1+L2).M();
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
+
+float WW::dphillmet(){
+ 
+ if (isOk) {
+  return  fabs( (L1+L2).DeltaPhi(MET) );
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
+
+
+
+
+float WW::mth(){
+ 
+ if (isOk) {
+  return sqrt( 2. * ptll() * MET.Pt() * ( 1. - cos (dphillmet()) ));
+//   AN 2011/155, v2, p19
+//   sqrt( 2 * pTll() * met(metToUse) * ( 1 - cos(dPhillMet(metToUse)) ) );
  }
  else {
   return -9999.0;

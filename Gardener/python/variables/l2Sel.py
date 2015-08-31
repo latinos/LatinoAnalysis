@@ -92,7 +92,8 @@ class L2SelFiller(TreeCloner):
            'yll',
            'ptll',
            'pt1',
-           'pt2'
+           'pt2',
+           'mth'
          ]
 
         self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable)
