@@ -2,9 +2,11 @@
 
 from LatinoAnalysis.Gardener.gardening         import gardener_cli
 from LatinoAnalysis.Gardener.gardening         import ModuleManager,Pruner,Grafter,AliasGrafter,RootWeighter
-from LatinoAnalysis.Gardener.pileup            import PUpper
 #from LatinoAnalysis.Gardener.ww                import WWPruner, WWFlagsGrafter
 #from LatinoAnalysis.Gardener.efficiencies      import EffLepFiller,EffTrgFiller
+
+# pileup
+from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
