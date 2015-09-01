@@ -83,7 +83,7 @@ class ShapeFactory:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = fileIn.Get(shapeName)
               histos[sampleName] = histo.Clone('new_histo_' + sampleName)
-              #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName()
+              #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
 
               # data style
               if plot[sampleName]['isData'] == 1 :
@@ -135,6 +135,7 @@ class ShapeFactory:
                   thsBackground.Add(histos[sampleName])
 
             tgrData       = ROOT.TGraphAsymmErrors()
+            
             for iBin in range(0, len(tgrData_vx)) : 
               tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
               tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
@@ -160,7 +161,7 @@ class ShapeFactory:
               if plot[sampleName]['isData'] == 1 :
                 histos[sampleName].Draw("p")
                 minXused = histos[sampleName].GetXaxis().GetBinLowEdge(1)
-                maxXused = histos[sampleName].GetXaxis().GetBinUpEdge(histos[sampleName].GetNbinsX()+1)
+                maxXused = histos[sampleName].GetXaxis().GetBinUpEdge(histos[sampleName].GetNbinsX())
                 maxY = self.GetMaximumIncludingErrors(histos[sampleName])
                 histos[sampleName].SetMaximum(scaleToPlot * maxY)
                 maxYused = scaleToPlot * maxY
@@ -169,7 +170,7 @@ class ShapeFactory:
               thsBackground.Draw("hist")
               maxY = thsBackground.GetMaximum ()
               minXused = thsBackground.GetXaxis().GetBinLowEdge(1)
-              maxXused = thsBackground.GetXaxis().GetBinUpEdge(thsBackground.GetHistogram().GetNbinsX()+1)
+              maxXused = thsBackground.GetXaxis().GetBinUpEdge(thsBackground.GetHistogram().GetNbinsX())
               if (scaleToPlot * maxY) > maxYused :
                 maxYused = scaleToPlot * maxY
                
@@ -177,7 +178,7 @@ class ShapeFactory:
               thsSignal.Draw("hist")
               maxY = thsSignal.GetMaximum ()
               minXused = thsSignal.GetXaxis().GetBinLowEdge(1)
-              maxXused = thsSignal.GetXaxis().GetBinUpEdge(thsSignal.GetHistogram().GetNbinsX()+1)
+              maxXused = thsSignal.GetXaxis().GetBinUpEdge(thsSignal.GetHistogram().GetNbinsX())
               if (scaleToPlot * maxY) > maxYused :
                 maxYused = scaleToPlot * maxY
 

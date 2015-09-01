@@ -621,6 +621,8 @@ class ShapeFactory:
         if dims.count(dims[0]) != len(dims):
             raise ValueError('histogram and the 2 bins don\'t have the same dimension')
         
+        #print " h = " , h.GetTitle(), " --> ", h.GetNbinsX()
+        
         # get bins
         b1 = h.GetBin( *fromBin )
         b2 = h.GetBin( *toBin )
@@ -818,12 +820,12 @@ if __name__ == '__main__':
     # ~~~~
     nuisances = {}
     if opt.nuisancesFile == None :
-       print " Please provide the nuisances structure if you want to add nuisances "
+      print " Please provide the nuisances structure if you want to add nuisances "
        
-    if os.path.exists(opt.nuisancesFile) :
-      handle = open(opt.nuisancesFile,'r')
-      exec(handle)
-      handle.close()
+      if os.path.exists(opt.nuisancesFile) :
+        handle = open(opt.nuisancesFile,'r')
+        exec(handle)
+        handle.close()
     
     
     factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
