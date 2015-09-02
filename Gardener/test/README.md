@@ -129,9 +129,23 @@ puW
        --kind=trpu   
            
 
+
+Trigger efficiency
+
+           effwfiller
           
-          
-          
+    gardener.py  effwfiller \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
+       test.root \
+       --isoid=data/isoidScaleFactors.py
+       
+       
+       
+       
+    gardener.py  effwfiller \
+       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
+       --isoid=data/isoidScaleFactors.py
           
           
           

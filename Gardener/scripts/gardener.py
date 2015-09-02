@@ -8,6 +8,10 @@ from LatinoAnalysis.Gardener.gardening         import ModuleManager,Pruner,Graft
 # pileup
 from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 
+# efficiencies
+from LatinoAnalysis.Gardener.variables.efficiencies      import EffLepFiller,EffTrgFiller
+
+
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
 
@@ -36,8 +40,8 @@ if __name__ == '__main__':
     #modules['wwfilter']         = WWPruner()
     #modules['wwflagger']        = WWFlagsGrafter()
     modules['puadder']          = PUpper()
-    #modules['effwfiller']       = EffLepFiller()
-    #modules['efftfiller']       = EffTrgFiller()
+    modules['effwfiller']       = EffLepFiller()
+    modules['efftfiller']       = EffTrgFiller()
 
 # new variables
     modules['ww2jvarfiller']    = WW2jVarFiller()
