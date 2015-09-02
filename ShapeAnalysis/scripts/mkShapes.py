@@ -313,10 +313,11 @@ class ShapeFactory:
 
           # create the list of events -> speed up!          
           # for each tree!!!
-          if 'weights' in sample.keys() :
-            self._filterTrees( sample ['weight'], sample ['weights'], cut, inputs[sampleName], cutName, sampleName)
-          else :
-            self._filterTrees( sample ['weight'], []                , cut, inputs[sampleName], cutName, sampleName)
+          for sampleName, sample in self._samples.iteritems():
+            if 'weights' in sample.keys() :
+              self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputs[sampleName], cutName, sampleName)
+            else :
+              self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputs[sampleName], cutName, sampleName)
 
            
           for variableName, variable in self._variables.iteritems():
@@ -405,6 +406,8 @@ class ShapeFactory:
             if weights[numTree] != '-' :
               globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
           
+          
+          #print " ::: ", tree.GetEntries(),
           # clear list
           tree.SetEntryList(0)
           # get the list
@@ -415,6 +418,8 @@ class ShapeFactory:
           #myList = gDirectory.Get("myList")
           # apply the list
           tree.SetEntryList(myList)
+          
+          #print " --> ", tree.GetEntries()
           
           numTree += 1
 
