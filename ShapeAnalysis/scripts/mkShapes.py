@@ -820,9 +820,8 @@ if __name__ == '__main__':
     # ~~~~
     nuisances = {}
     if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
-       
-      if os.path.exists(opt.nuisancesFile) :
+      print " Please provide the nuisances structure if you want to add nuisances "      
+    elif os.path.exists(opt.nuisancesFile) :
         handle = open(opt.nuisancesFile,'r')
         exec(handle)
         handle.close()
