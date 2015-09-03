@@ -1,6 +1,7 @@
 import optparse
 import numpy
 import ROOT
+import os.path
 
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 
@@ -43,18 +44,55 @@ class EffLepFiller(TreeCloner):
         if opts.isoidScaleFactorsFile == None :
           print " Please provide the nuisances structure if you want to add nuisances "
            
-          if os.path.exists(opts.isoidScaleFactorsFile) :
-            handle = open(opts.isoidScaleFactorsFile,'r')
-            exec(handle)
-            handle.close()
+        elif os.path.exists(opts.isoidScaleFactorsFile) :
+          handle = open(opts.isoidScaleFactorsFile,'r')
+          exec(handle)
+          handle.close()
 
+        #print " isoidScaleFactors = ", isoidScaleFactors
+        
         self.isoidScaleFactors = isoidScaleFactors
+        
+        self.minpt = 0
+        self.maxpt = 1000
+        
+        self.mineta = 0
+        self.maxeta = 4.0
+        
 
 
     def _getWeight (self, kindLep, pt, eta):
 
+        # fix underflow and overflow
+        if pt < self.minpt:
+          pt = self.minpt
+        if pt > self.maxpt:
+          pt = self.maxpt
+        
+        if eta < self.mineta:
+          eta = self.mineta
+        if eta > self.maxeta:
+          eta = self.maxeta
+ 
+        #print " self.isoidScaleFactors = ", self.isoidScaleFactors
+        
+        if kindLep in self.isoidScaleFactors.keys() : 
+          # get the efficiency
+          for point in self.isoidScaleFactors[kindLep] : 
+            #   pt           eta           down   value  up
+            # (( 0.0, 10.0), (0.0, 1.5), ( 0.980, 0.986, 0.999 ) ),
+
+            if ( pt  >= point[0][0] and pt  < point[0][1] and
+                 eta >= point[1][0] and eta < point[1][1] ) :
+                return point[2][0], point[2][1], point[2][2]
+
+          # default ... it should never happen!
+          # print " default ???"
+          return 1.0, 1.0, 1.0
+ 
+        # not a lepton ... like some default value
         return 1.0, 1.0, 1.0
-       
+   
 
     def process(self,**kwargs):
         tree  = kwargs['tree']

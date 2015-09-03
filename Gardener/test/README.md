@@ -137,7 +137,7 @@ Trigger efficiency
     gardener.py  effwfiller \
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
        test.root \
-       --isoid=data/isoidScaleFactors.py
+       --isoid=/afs/cern.ch/work/a/amassiro/Latinos/Framework/CMSSW_7_4_7/python/LatinoAnalysis/Gardener/data/isoidScaleFactors.py
        
        
        
