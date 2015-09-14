@@ -11,6 +11,7 @@
 class WW {
 public:
  //! constructor
+ WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
  WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
  virtual ~WW() {}
@@ -26,11 +27,14 @@ public:
  float ptll();
  float mth();
  float dphillmet();
+ float mjj();
+ float detajj();
  
 private:
  //! variables
  TLorentzVector L1,L2;
  TLorentzVector MET;
+ TLorentzVector J1, J2;
  
  bool isOk;
  
@@ -57,6 +61,22 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
   L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
+  isOk =  true;
+ }
+ else {
+  isOk = false;
+ }
+ 
+}
+
+WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
+ 
+ if (pt1>0 && pt2>0) {  
+  L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
+  L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
+  MET.SetPtEtaPhiM(met, 0, metphi, 0.);
+  J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1);
+  J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2);
   isOk =  true;
  }
  else {
@@ -153,9 +173,6 @@ float WW::dphillmet(){
  
 }
 
-
-
-
 float WW::mth(){
  
  if (isOk) {
@@ -168,6 +185,29 @@ float WW::mth(){
  }
  
 }
+
+// Jet Functions
+float WW::mjj(){
+ 
+ if (isOk) {
+  return (J1+J2).M();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::detajj(){
+ 
+ if (isOk) {
+  return abs(J1.Eta()-J2.Eta());
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
 
 
 
