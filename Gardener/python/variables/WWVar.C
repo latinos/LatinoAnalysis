@@ -11,7 +11,7 @@
 class WW {
 public:
  //! constructor
- WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
+ WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
  WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
  virtual ~WW() {}
@@ -27,6 +27,7 @@ public:
  float ptll();
  float mth();
  float dphillmet();
+ float channel();
  float mjj();
  float detajj();
  
@@ -35,6 +36,7 @@ private:
  TLorentzVector L1,L2;
  TLorentzVector MET;
  TLorentzVector J1, J2;
+ float pid1, pid2;
  
  bool isOk;
  
@@ -69,11 +71,13 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  
 }
 
-WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
+WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
  
  if (pt1>0 && pt2>0) {  
   L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
   L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
+  pid1 = pidl1;
+  pid2 = pidl2;
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
   J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1);
   J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2);
@@ -183,6 +187,29 @@ float WW::mth(){
  else {
   return -9999.0;
  }
+ 
+}
+
+float WW::channel(){
+ 
+ if (isOk) {
+  if( abs(pid1) == 11 ) {
+      if( abs(pid2) == 11 ) return 1; // ee
+      else if( abs(pid2) == 13 ) return 2; // em
+      else return -9999.0;
+  }
+  else if( abs(pid1) == 13 ){
+      if( abs(pid2) == 11 ) return 3; // me
+      else if( abs(pid2) == 13 ) return 0; // mm
+      else return -9999.0;
+  }
+  else {
+   return -9999.0;
+  }
+ }
+ else {
+   return -9999.0;
+  }
  
 }
 

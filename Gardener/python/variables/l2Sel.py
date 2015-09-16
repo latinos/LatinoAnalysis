@@ -158,6 +158,7 @@ class L2SelFiller(TreeCloner):
            'pt1',
            'pt2',
            'mth',
+           'channel',
            
            'mjj',
            'detajj'
@@ -192,8 +193,8 @@ class L2SelFiller(TreeCloner):
 
         # now actually connect the branches
         for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-            print " bname   = ", bname
-            print " bvector = ", bvector
+            #print " bname   = ", bname
+            #print " bvector = ", bvector
             self.otree.Branch(bname,bvector)
 
 
@@ -329,6 +330,8 @@ class L2SelFiller(TreeCloner):
               eta2 = itree.std_vector_lepton_eta[goodLep2]             
               phi1 = itree.std_vector_lepton_phi[goodLep1]
               phi2 = itree.std_vector_lepton_phi[goodLep2]
+              pid1 = itree.std_vector_lepton_flavour[goodLep1]
+              pid2 = itree.std_vector_lepton_flavour[goodLep2]
               met = itree.pfType1Met
               metphi = itree.pfType1Metphi
               jetpt1 = itree.std_vector_jet_pt[goodJets[0]]
@@ -341,7 +344,7 @@ class L2SelFiller(TreeCloner):
               jetmass2 = itree.std_vector_jet_mass[goodJets[1]]
              
               #WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, met, metphi)
-              WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
+              WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
                           
               for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
                 bvariable[0] = getattr(WW, bname)()
