@@ -301,7 +301,7 @@ class L2SelFiller(TreeCloner):
               goodJets = []
               for iJet in xrange(len(itree.std_vector_jet_pt)) :
                   isLepton = False;
-                  for iLep in xrange(len(goodLeps)) :
+                  for iLep in goodLeps :
 		      if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
 		          break;
                       if self.jetIsLepton(itree.std_vector_jet_eta[iJet],itree.std_vector_jet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
@@ -312,7 +312,7 @@ class L2SelFiller(TreeCloner):
               goodPuppiJets = []
               for iJet in xrange(len(itree.std_vector_puppijet_pt)) :
                   isLepton = False;
-                  for iLep in xrange(len(goodLeps)) :
+                  for iLep in goodLeps :
 	 	      if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
 		          break;
                       if self.jetIsLepton(itree.std_vector_puppijet_eta[iJet],itree.std_vector_puppijet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
