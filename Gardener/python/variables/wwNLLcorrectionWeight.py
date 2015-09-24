@@ -64,20 +64,25 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
-        newbranches = ['nllW', 'nllW_Rup', 'nllW_Qup', 'nllW_Rdown', 'nllW_Qdown']
+        newbranches = ['nllW', 'nllW_Rup', 'nllW_Qup', 'nllW_Rdown', 'nllW_Qdown', 'gen_mww', 'gen_ptww']
         self.clone(output,newbranches)
 
-        nllW    = numpy.ones(1, dtype=numpy.float32)
+
+        nllW        = numpy.ones(1, dtype=numpy.float32)
         nllW_Rup    = numpy.ones(1, dtype=numpy.float32)
         nllW_Qup    = numpy.ones(1, dtype=numpy.float32)
-        nllW_Rdown    = numpy.ones(1, dtype=numpy.float32)
-        nllW_Qdown    = numpy.ones(1, dtype=numpy.float32)
+        nllW_Rdown  = numpy.ones(1, dtype=numpy.float32)
+        nllW_Qdown  = numpy.ones(1, dtype=numpy.float32)
+        gen_mww     = numpy.ones(1, dtype=numpy.float32)
+        gen_ptww    = numpy.ones(1, dtype=numpy.float32)
 
         self.otree.Branch('nllW'  , nllW  , 'nllW/F')
         self.otree.Branch('nllW_Rup'  , nllW_Rup  , 'nllW_Rup/F')
         self.otree.Branch('nllW_Qup'  , nllW_Qup  , 'nllW_Qup/F')
         self.otree.Branch('nllW_Rdown'  , nllW_Rdown  , 'nllW_Rdown/F')
         self.otree.Branch('nllW_Qdown'  , nllW_Qdown  , 'nllW_Qdown/F')
+        self.otree.Branch('gen_mww'  , gen_mww   , 'gen_mww/F')
+        self.otree.Branch('gen_ptww' , gen_ptww  , 'gen_ptww/F')
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -165,9 +170,18 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
               ptV2 = itree.std_vector_VBoson_pt.at(number2)
               phiV1 = itree.std_vector_VBoson_phi.at(number1)
               phiV2 = itree.std_vector_VBoson_phi.at(number2)
+              etaV1 = itree.std_vector_VBoson_eta.at(number1)
+              etaV2 = itree.std_vector_VBoson_eta.at(number2)
 
-              wwNLL.SetPTWW(ptV1, phiV1, ptV2, phiV2)
-
+              wwNLL.SetPTWW(ptV1, phiV1, etaV1, ptV2, phiV2, etaV2)
+              
+              gen_ptww[0]  = wwNLL.GetPTWW()
+              gen_mww[0]   = wwNLL.GetMWW()
+              
+            else :
+              gen_mww[0]  = -9999.
+              gen_ptww[0] = -9999.
+              
 
             nllW[0]   = wwNLL.nllWeight(0)
             nllW_Rup[0]   = wwNLL.nllWeight(1,1)
