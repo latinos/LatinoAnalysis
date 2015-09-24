@@ -340,18 +340,19 @@ class L2SelFiller(TreeCloner):
               pid2 = itree.std_vector_lepton_flavour[goodLep2]
               met = itree.pfType1Met
               metphi = itree.pfType1Metphi
-              jetpt1 = itree.std_vector_jet_pt[goodJets[0]]
-              jetpt2 = itree.std_vector_jet_pt[goodJets[1]]
-              jeteta1 = itree.std_vector_jet_eta[goodJets[0]]
-              jeteta2 = itree.std_vector_jet_eta[goodJets[1]]
-              jetphi1 = itree.std_vector_jet_phi[goodJets[0]]
-              jetphi2 = itree.std_vector_jet_phi[goodJets[1]]
-              jetmass1 = itree.std_vector_jet_mass[goodJets[0]]
-              jetmass2 = itree.std_vector_jet_mass[goodJets[1]]
-             
-              #WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, met, metphi)
-              WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
-                          
+	      if len(goodJets) > 1:
+              	jetpt1 = itree.std_vector_jet_pt[goodJets[0]]
+              	jetpt2 = itree.std_vector_jet_pt[goodJets[1]]
+             	jeteta1 = itree.std_vector_jet_eta[goodJets[0]]
+             	jeteta2 = itree.std_vector_jet_eta[goodJets[1]]
+              	jetphi1 = itree.std_vector_jet_phi[goodJets[0]]
+              	jetphi2 = itree.std_vector_jet_phi[goodJets[1]]
+              	jetmass1 = itree.std_vector_jet_mass[goodJets[0]]
+              	jetmass2 = itree.std_vector_jet_mass[goodJets[1]]
+              	WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
+              else:
+	      	WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi)  
+          
               for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
                 bvariable[0] = getattr(WW, bname)()
                 

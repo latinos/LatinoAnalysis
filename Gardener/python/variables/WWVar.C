@@ -12,6 +12,7 @@ class WW {
 public:
  //! constructor
  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
+ WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi);
  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
  WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
  virtual ~WW() {}
@@ -38,7 +39,7 @@ private:
  TLorentzVector J1, J2;
  float pid1, pid2;
  
- bool isOk;
+ bool isOk, jetOk;
  
 };
 
@@ -54,7 +55,7 @@ WW::WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi) {
  else {
   isOk = false;
  }
- 
+ jetOk = false;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi) {
@@ -68,7 +69,23 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  else {
   isOk = false;
  }
+ jetOk = false;
+}
+
+WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi) {
  
+ if (pt1>0 && pt2>0) {  
+  L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
+  L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
+  pid1 = pidl1;
+  pid2 = pidl2;
+  MET.SetPtEtaPhiM(met, 0, metphi, 0.);
+  isOk =  true;
+ }
+ else {
+  isOk = false;
+ }
+ jetOk = false;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
@@ -86,7 +103,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  else {
   isOk = false;
  }
- 
+ jetOk = true;
 }
 
 //! functions
@@ -216,7 +233,7 @@ float WW::channel(){
 // Jet Functions
 float WW::mjj(){
  
- if (isOk) {
+ if (jetOk) {
   return (J1+J2).M();
  }
  else {
@@ -227,7 +244,7 @@ float WW::mjj(){
 
 float WW::detajj(){
  
- if (isOk) {
+ if (jetOk) {
   return abs(J1.Eta()-J2.Eta());
  }
  else {
