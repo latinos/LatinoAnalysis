@@ -296,10 +296,14 @@ class L2SelFiller(TreeCloner):
                      self.changeOrder( bname, bvector, goodLeps)
                 
               # clean jets
+              # for leptons with pt > minLeptonPt (default 10 GeV)
+	      minLeptonPt = 10.
               goodJets = []
               for iJet in xrange(len(itree.std_vector_jet_pt)) :
                   isLepton = False;
-                  for iLep in xrange(len(goodLeps)) :
+                  for iLep in goodLeps :
+		      if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
+		          break;
                       if self.jetIsLepton(itree.std_vector_jet_eta[iJet],itree.std_vector_jet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
                           isLepton = True;
                   if not isLepton:
@@ -308,7 +312,9 @@ class L2SelFiller(TreeCloner):
               goodPuppiJets = []
               for iJet in xrange(len(itree.std_vector_puppijet_pt)) :
                   isLepton = False;
-                  for iLep in xrange(len(goodLeps)) :
+                  for iLep in goodLeps :
+	 	      if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
+		          break;
                       if self.jetIsLepton(itree.std_vector_puppijet_eta[iJet],itree.std_vector_puppijet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
                           isLepton = True;
                   if not isLepton:
