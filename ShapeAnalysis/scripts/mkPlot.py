@@ -154,6 +154,7 @@ class ShapeFactory:
             minXused = 0.
             maxXused = 1.
 
+            minYused = 1.
             maxYused = 1.
             scaleToPlot = 2.5
             
@@ -165,6 +166,7 @@ class ShapeFactory:
                 maxY = self.GetMaximumIncludingErrors(histos[sampleName])
                 histos[sampleName].SetMaximum(scaleToPlot * maxY)
                 maxYused = scaleToPlot * maxY
+                minYused = self.GetMinimum(histos[sampleName])
             
             if thsBackground.GetNhists() != 0:
               thsBackground.Draw("hist")
@@ -173,6 +175,10 @@ class ShapeFactory:
               maxXused = thsBackground.GetXaxis().GetBinUpEdge(thsBackground.GetHistogram().GetNbinsX())
               if (scaleToPlot * maxY) > maxYused :
                 maxYused = scaleToPlot * maxY
+              minY = thsBackground.GetMinimum ()
+              if (minY < minYused) :
+                minYused = minY 
+
                
             if thsSignal.GetNhists() != 0:
               thsSignal.Draw("hist")
@@ -181,11 +187,17 @@ class ShapeFactory:
               maxXused = thsSignal.GetXaxis().GetBinUpEdge(thsSignal.GetHistogram().GetNbinsX())
               if (scaleToPlot * maxY) > maxYused :
                 maxYused = scaleToPlot * maxY
+              minY = thsSignal.GetMinimum ()
+              if (minY < minYused) :
+                minYused = minY 
 
 
             #print " X axis = ", minXused, " - ", maxXused
             frame = ROOT.TH1F
             frame = tcanvas.DrawFrame(minXused, 0.0, maxXused, 1.0)
+            # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+            xAxis = frame.GetXaxis()
+            xAxis.SetNdivisions(6,5,0)
 
             # setup axis names
             if 'xaxis' in variable.keys() : 
@@ -232,26 +244,44 @@ class ShapeFactory:
             tlegend.SetNColumns(2)
             tlegend.Draw()
             
-            if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
-              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3.0/4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
-              flag_lumi.Draw()
-            if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
-              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3.0/4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
-              flag_sqrt.Draw()
-            if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
-              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3.0/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
-              flag_lumi_sqrt.Draw()
-    
-    
-            #print "- draw tlegend"
-            #---- the Legend (end)
             
+            
+            #change the CMS_lumi variables (see CMS_lumi.py)
+            import LatinoAnalysis.ShapeAnalysis.CMS_lumi as CMS_lumi
+            CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
+            CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
+            CMS_lumi.lumi_13TeV = "100 fb^{-1}"
+            CMS_lumi.writeExtraText = 1
+            CMS_lumi.extraText = "Preliminary"
+            CMS_lumi.relPosX = 0.12
+            CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+            if 'sqrt' in legend.keys() :
+              CMS_lumi.lumi_sqrtS = legend['sqrt']
+            if 'lumi' in legend.keys() :
+              CMS_lumi.lumi_13TeV = legend['lumi']
+        
+            # Simple example of macro: plot with CMS name and lumi text
+            #  (this script does not pretend to work in all configurations)
+            # iPeriod = 1*(0/1 7 TeV) + 2*(0/1 8 TeV)  + 4*(0/1 13 TeV) 
+            # For instance: 
+            #               iPeriod = 3 means: 7 TeV + 8 TeV
+            #               iPeriod = 7 means: 7 TeV + 8 TeV + 13 TeV 
+            #               iPeriod = 0 means: free form (uses lumi_sqrtS)
+            iPeriod = 4
+            iPos  = 0
+            CMS_lumi.CMS_lumi(tcanvas, iPeriod, iPos)    
+
+    
+            print "- draw tlegend"
+            #---- the Legend (end)
+            tlegend.Draw()
+
             frame.GetYaxis().SetRangeUser( 0, maxYused )
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
              
             # log Y axis
-            frame.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
+            frame.GetYaxis().SetRangeUser( max(0.01, minYused), 100 * maxYused )
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             tcanvas.SetLogy(0)
@@ -267,20 +297,26 @@ class ShapeFactory:
             pad1.SetTopMargin(0.098)
             pad1.SetBottomMargin(0.000) 
             pad1.Draw()
-            pad1.cd().SetGrid()
+            #pad1.cd().SetGrid()
             
+            pad1.cd()
             print " pad1 = ", pad1
             canvasFrameDistroName = 'frame_distro_' + cutName + "_" + variableName
             frameDistro = pad1.DrawFrame(minXused, 0.0, maxXused, 1.0, canvasFrameDistroName)
             print " pad1 = ", pad1
             
+            # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+            xAxisDistro = frameDistro.GetXaxis()
+            xAxisDistro.SetNdivisions(6,5,0)
+
             if 'xaxis' in variable.keys() : 
               frameDistro.GetXaxis().SetTitle(variable['xaxis'])
             else :
               frameDistro.GetXaxis().SetTitle(variableName)
             frameDistro.GetYaxis().SetTitle("Events")
-            frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
-            
+            #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
+            frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
+
             if thsBackground.GetNhists() != 0:
               thsBackground.Draw("hist same")
                
@@ -292,16 +328,18 @@ class ShapeFactory:
               tgrData.Draw("P0")
     
             tlegend.Draw()
-            if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
-              flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
-              flag_lumi.Draw()
-            if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
-              flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
-              flag_sqrt.Draw()
-            if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
-              flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*2.5/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
-              flag_lumi_sqrt.Draw()
+            #if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
+              #flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
+              #flag_lumi.Draw()
+            #if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
+              #flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
+              #flag_sqrt.Draw()
+            #if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
+              #flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*2.5/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
+              #flag_lumi_sqrt.Draw()
     
+            CMS_lumi.CMS_lumi(tcanvasRatio, iPeriod, iPos)    
+
                 
             tcanvasRatio.cd()
             canvasPad2Name = 'pad2_' + cutName + "_" + variableName
@@ -309,29 +347,40 @@ class ShapeFactory:
             pad2.SetTopMargin(0.000)
             pad2.SetBottomMargin(0.392)
             pad2.Draw()
-            pad2.cd().SetGrid()
-           
+            #pad2.cd().SetGrid()
+            pad2.cd()
+            
             print " pad1 = ", pad1
             print " pad2 = ", pad2, " minXused = ", minXused, " maxXused = ", maxXused
             canvasFrameRatioName = 'frame_ratio_' + cutName + "_" + variableName
             print " canvasFrameRatioName = ", canvasFrameRatioName
             frameRatio = pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, canvasFrameRatioName)
             print " pad2 = ", pad2
+            # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+            xAxisDistro = frameRatio.GetXaxis()
+            xAxisDistro.SetNdivisions(6,5,0)
+
             if 'xaxis' in variable.keys() : 
               frameRatio.GetXaxis().SetTitle(variable['xaxis'])
             else :
               frameRatio.GetXaxis().SetTitle(variableName)
-            frameRatio.GetYaxis().SetTitle("Data/MC")
+            frameRatio.GetYaxis().SetTitle("Data/Expected")
+            #frameRatio.GetYaxis().SetTitle("Data/MC")
             frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
-           
+            self.Pad2TAxis(frameRatio)
             tgrDataOverMC.Draw("P0")
+            
+            oneLine2 = ROOT.TLine(frameRatio.GetXaxis().GetXmin(), 1,  frameRatio.GetXaxis().GetXmax(), 1);
+            oneLine2.SetLineStyle(3)
+            oneLine2.SetLineWidth(3)
+            oneLine2.Draw("same")
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
             
             
             # log Y axis
-            frameDistro.GetYaxis().SetRangeUser( max(0.01, maxYused/1000), 10 * maxYused )
+            frameDistro.GetYaxis().SetRangeUser( max(0.001, maxYused/1000), 10 * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
             pad1.SetLogy(0)
@@ -341,8 +390,33 @@ class ShapeFactory:
             print " >> end"
             
           print " >> all end"
-            
-            
+
+
+
+   # _____________________________________________________________________________
+   # --- squared sum
+    def Pad2TAxis(self, hist):
+         xaxis = hist.GetXaxis()
+         xaxis.SetLabelFont ( 42)
+         xaxis.SetLabelOffset( 0.025)
+         xaxis.SetLabelSize ( 0.1)
+         xaxis.SetNdivisions ( 505)
+         xaxis.SetTitleFont ( 42)
+         xaxis.SetTitleOffset( 1.35)   
+         xaxis.SetTitleSize ( 0.11)
+       
+         yaxis = hist.GetYaxis()
+         yaxis.CenterTitle ( )
+         yaxis.SetLabelFont ( 42)
+         yaxis.SetLabelOffset( 0.02)
+         yaxis.SetLabelSize ( 0.1)
+         yaxis.SetNdivisions ( 505)
+         yaxis.SetTitleFont ( 42)
+         yaxis.SetTitleOffset( .6)
+         yaxis.SetTitleSize ( 0.11)
+ 
+ 
+ 
    # _____________________________________________________________________________
    # --- squared sum
     def SumQ(self, A, B):
@@ -351,7 +425,8 @@ class ShapeFactory:
    # _____________________________________________________________________________
    # --- Ratio: if denominator is zero, then put 0!
     def Ratio(self, A, B):
-       if B == 0: 
+       if B == 0:
+         #print "divide by 0"
          return 0.
        else :
          return A / B
@@ -367,6 +442,7 @@ class ShapeFactory:
        U = 0
        if numberEvents==0 :
          U = ROOT.Math.gamma_quantile_c (alpha,numberEvents+1,1.) 
+         #print "u = ", U
        else :
          U = ROOT.Math.gamma_quantile_c (alpha/2,numberEvents+1,1.)
          
@@ -374,11 +450,12 @@ class ShapeFactory:
        L = numberEvents - L
        if numberEvents > 0 :
          U = U - numberEvents
-       else :
-         U = 1.14 # --> bayesian interval Poisson with 0 events observed
-       
+       #else :
+         #U = 1.14 # --> bayesian interval Poisson with 0 events observed
+         #1.14790758039 from 10 lines above
+         
        if up and not down :
-         return L
+         return U
        if down and not up :
          return L
        if up and down :
@@ -394,6 +471,15 @@ class ShapeFactory:
       
         return maxWithErrors;
 
+   # _____________________________________________________________________________
+    def GetMinimum(self, histo):
+        minimum = -1.
+        for iBin in range(1, histo.GetNbinsX()+1):
+          binHeight = histo.GetBinContent (iBin)
+          if binHeight < minimum or minimum<0:
+            minimum = binHeight
+      
+        return minimum;
  
  
     # _____________________________________________________________________________
@@ -402,6 +488,7 @@ class ShapeFactory:
         print "=================="
         import LatinoAnalysis.ShapeAnalysis.tdrStyle as tdrStyle
         tdrStyle.setTDRStyle()
+
         
    
 
