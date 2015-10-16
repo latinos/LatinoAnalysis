@@ -210,11 +210,18 @@ class DymvaVarFiller(TreeCloner):
               min_mt = sqrt(2 * itree.pt2 * itree.pfType1Met * (1 - cos(  self.deltaPhi(met, l2) ) ) )
               max_mt = sqrt(2 * itree.pt1 * itree.pfType1Met * (1 - cos(  self.deltaPhi(met, l1) ) ) )
               
+              if min_mt >= max_mt :
+                 max_mt, min_mt = min_mt, max_mt
+
               self.var7[0] =  min_mt
               self.var8[0] =  max_mt
               
               min_lep_met_dphi = self.deltaPhi(met, l2)
               max_lep_met_dphi = self.deltaPhi(met, l1)
+            
+              if min_lep_met_dphi >= max_lep_met_dphi :
+                 max_lep_met_dphi, min_lep_met_dphi = min_lep_met_dphi, max_lep_met_dphi
+                 
               
               self.var9[0]  =  min_lep_met_dphi
               self.var10[0] =  max_lep_met_dphi
@@ -239,6 +246,9 @@ class DymvaVarFiller(TreeCloner):
               
                   min_jet_met_dphi =  self.deltaPhi(jet2, met)
                   max_jet_met_dphi =  self.deltaPhi(jet1, met)
+
+                  if min_jet_met_dphi >= max_jet_met_dphi :
+                     max_jet_met_dphi, min_jet_met_dphi = min_jet_met_dphi, max_jet_met_dphi
               
                   dilep_jet1_dphi =  self.deltaPhi(jet1, dileptonTransverse)
                   dilep_jet2_dphi =  self.deltaPhi(jet2, dileptonTransverse)
