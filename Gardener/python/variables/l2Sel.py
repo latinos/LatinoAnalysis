@@ -256,11 +256,18 @@ class L2SelFiller(TreeCloner):
             
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
               isGoodLepton = False
+              
+              ###########
+              # electron
+              
               # id definition
               if ( itree.std_vector_lepton_eleIdMedium[iLep] == 1
                    and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
                   ) :
                 isGoodLepton = True
+
+              ###########
+              # muon
 
               if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
                    and (itree.std_vector_lepton_chargedHadronIso[iLep] + 

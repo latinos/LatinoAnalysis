@@ -31,6 +31,12 @@ How to filter events and update some collections:
 
 Specific modules example:
 
+
+    gardener.py mcweightsfiller \
+                ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root \
+                output.root
+
+
     gardener.py dymvaVarFiller \
                 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_Data_numEvent100.root \
                 output.root

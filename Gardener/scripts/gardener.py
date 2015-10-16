@@ -24,6 +24,9 @@ from LatinoAnalysis.Gardener.variables.DMVar                      import DMVarFi
 from LatinoAnalysis.Gardener.variables.XWWVar                     import XWWVarFiller
 from LatinoAnalysis.Gardener.variables.dymvaVar                   import DymvaVarFiller
 
+# specific variables for MC
+from LatinoAnalysis.Gardener.variables.mcWeights                  import mcWeightsFiller
+
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
 
@@ -43,6 +46,10 @@ if __name__ == '__main__':
     modules['puadder']          = PUpper()
     modules['effwfiller']       = EffLepFiller()
     modules['efftfiller']       = EffTrgFiller()
+
+# specific variables for MC
+    modules['mcweightsfiller']  = mcWeightsFiller()
+
 
 # new variables
     modules['ww2jvarfiller']    = WW2jVarFiller()
