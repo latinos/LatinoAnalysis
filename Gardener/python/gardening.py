@@ -28,6 +28,16 @@ class TreeCloner(object):
         self.otree = None
         self.label = None
     
+        self.itreeMC = None
+        self.itreePU = None
+        self.itreeTotalEvents = None
+        self.itreeTotalEventsTriggers = None
+        self.otreeMC = None
+        self.otreePU = None
+        self.ohistoTotalEvents = None
+        self.ohistoTotalEventsTriggers = None
+
+
     def _openRootFile(self,path, option=''):
         f =  ROOT.TFile.Open(path,option)
         if not f.__nonzero__() or not f.IsOpen():
@@ -37,12 +47,21 @@ class TreeCloner(object):
     def _getRootObj(self,d,name):
         o = d.Get(name)
         if not o.__nonzero__():
-            raise NameError('Object '+name+' doesn\'t exist in '+d.GetName())
+            print 'Object '+name+' doesn\'t exist in '+d.GetName(), ' BE CAREFUL!'
+            #raise NameError('Object '+name+' doesn\'t exist in '+d.GetName())
         return o
 
     def connect(self, tree, input):
         self.ifile = self._openRootFile(input)
         self.itree = self._getRootObj(self.ifile,tree)
+
+        # additional trees and histograms not to be lost ...
+        self.itreeMC = self._getRootObj(self.ifile,"mcweight")
+        self.itreePU = self._getRootObj(self.ifile,"pu")
+        self.itreeTotalEvents = self._getRootObj(self.ifile,"totalEvents")
+        self.itreeTotalEventsTriggers = self._getRootObj(self.ifile,"totalEventsTriggers")
+
+
 
     def clone(self,output,branches=[]):
 
@@ -60,6 +79,21 @@ class TreeCloner(object):
 
     def disconnect(self):
         self.otree.Write()
+        # additional trees and histograms not to be lost ...
+        self.ofile.cd()
+        if self.itreeMC.__nonzero__() : 
+          self.otreeMC = self.itreeMC.CloneTree()
+          self.otreeMC.Write()
+        if self.itreePU.__nonzero__() : 
+          self.otreePU = self.itreePU.CloneTree()
+          self.otreePU.Write()
+        if self.itreeTotalEvents.__nonzero__() : 
+          self.ohistoTotalEvents = self.itreeTotalEvents.Clone()
+          self.ohistoTotalEvents.Write()
+        if self.itreeTotalEventsTriggers.__nonzero__() : 
+          self.ohistoTotalEventsTriggers = self.itreeTotalEventsTriggers.Clone()
+          self.ohistoTotalEventsTriggers.Write()
+        
         self.ofile.Close()
         self.ifile.Close()
 
@@ -67,7 +101,26 @@ class TreeCloner(object):
         self.itree = None
         self.ofile = None
         self.otree = None
-
+        
+        # cleaning
+        if self.otreeMC != None : 
+          self.otreeMC = None
+        if self.otreePU != None : 
+          self.otreePU = None
+        if self.ohistoTotalEvents != None : 
+          self.ohistoTotalEvents = None
+        if self.ohistoTotalEventsTriggers != None : 
+          self.ohistoTotalEventsTriggers = None
+        if self.itreeMC != None : 
+          self.itreeMC = None
+        if self.itreePU != None : 
+          self.itreePU = None
+        if self.itreeTotalEvents != None : 
+          self.itreeTotalEvents = None
+        if self.itreeTotalEventsTriggers != None : 
+          self.itreeTotalEventsTriggers = None
+          
+          
 #    ___                       
 #   / _ \______ _____  ___ ____
 #  / ___/ __/ // / _ \/ -_) __/

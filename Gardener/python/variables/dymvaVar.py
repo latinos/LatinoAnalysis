@@ -177,12 +177,20 @@ class DymvaVarFiller(TreeCloner):
             upara[0] = 0.
             dymva[0] = -9999.
             
-            if itree.pt1>0 and itree.pt2>0 : 
+            # just because it is easier to write later ...
+            pt1 = itree.std_vector_lepton_pt[0]
+            pt2 = itree.std_vector_lepton_pt[1]
+            eta1 = itree.std_vector_lepton_eta[0]
+            eta2 = itree.std_vector_lepton_eta[1]
+            phi1 = itree.std_vector_lepton_phi[0]
+            phi2 = itree.std_vector_lepton_phi[1]
+            
+            if pt1>0 and pt2>0 : 
             
               l1 = ROOT.TLorentzVector()
               l2 = ROOT.TLorentzVector()
-              l1.SetPtEtaPhiM(itree.pt1, itree.eta1, itree.phi1, 0)
-              l2.SetPtEtaPhiM(itree.pt2, itree.eta2, itree.phi2, 0)
+              l1.SetPtEtaPhiM(pt1, eta1, phi1, 0)
+              l2.SetPtEtaPhiM(pt2, eta2, phi2, 0)
               
               met = ROOT.TLorentzVector()
               met.SetPxPyPzE(itree.pfType1Met * cos (itree.pfType1Metphi), itree.pfType1Met * sin (itree.pfType1Metphi), 0, itree.pfType1Met)
@@ -207,8 +215,8 @@ class DymvaVarFiller(TreeCloner):
               self.var5[0] =  itree.nvtx
               self.var6[0] =  itree.ptll
               
-              min_mt = sqrt(2 * itree.pt2 * itree.pfType1Met * (1 - cos(  self.deltaPhi(met, l2) ) ) )
-              max_mt = sqrt(2 * itree.pt1 * itree.pfType1Met * (1 - cos(  self.deltaPhi(met, l1) ) ) )
+              min_mt = sqrt(2 * pt2 * itree.pfType1Met * (1 - cos(  self.deltaPhi(met, l2) ) ) )
+              max_mt = sqrt(2 * pt1 * itree.pfType1Met * (1 - cos(  self.deltaPhi(met, l1) ) ) )
               
               if min_mt >= max_mt :
                  max_mt, min_mt = min_mt, max_mt
