@@ -18,7 +18,7 @@ class PUpper(TreeCloner):
     # ----
     def __del__(self):
         for f in ['datafile','mcfile']:
-            if hasattr(self,f):
+            if hasattr(self,f) and getattr(self,f) != None:
                 getattr(self,f).Close()
 
     # ----
@@ -42,7 +42,6 @@ class PUpper(TreeCloner):
     # ----
     def checkOptions(self,opts):
         if not (hasattr(opts,'datafile') and 
-                hasattr(opts,'mcfile') and
                 hasattr(opts,'kind') ):
             raise RuntimeError('Missing parameter')
 
@@ -51,8 +50,15 @@ class PUpper(TreeCloner):
 
         self.datafile   = self._openRootFile(opts.datafile)
         self.datadist   = self._getRootObj(self.datafile,opts.histname)
-        self.mcfile     = self._openRootFile(opts.mcfile)
-        self.mcdist     = self._getRootObj(self.mcfile, opts.histname)
+
+        if hasattr(opts,'mcfile') and opts.mcfile != None:
+          self.mcfile     = self._openRootFile(opts.mcfile)
+          self.mcdist     = self._getRootObj(self.mcfile, opts.histname)
+          self.getMCpuFromTree = False
+        else :
+          print 'measure pu from MC sample tree'
+          self.getMCpuFromTree = True
+          
 
     # ----
     def process(self,**kwargs):
@@ -71,6 +77,16 @@ class PUpper(TreeCloner):
         data_minValue = self.datadist.GetXaxis().GetXmin()
         data_maxValue = self.datadist.GetXaxis().GetXmax()
         data_dValue   = (data_maxValue - data_minValue) / data_nBin
+
+
+        if self.getMCpuFromTree :
+          itreePU = self.itreePU
+          self.mcdist  = self.datadist.Clone("mcdist")
+          for iBin in range(0, data_nBin):
+            self.mcdist.SetBinContent(iBin+1, 0)
+          itreePU.Draw("trpu >> mcdist")
+          
+          
 
         mc_nBin       = self.mcdist.GetNbinsX()
         mc_minValue   = self.mcdist.GetXaxis().GetXmin()

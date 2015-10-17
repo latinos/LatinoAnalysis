@@ -140,6 +140,16 @@ puW
        --kind=trpu   
            
 
+    gardener.py  puadder \
+      latino_stepB_MC_numEvent200.root  \
+      latino_stepB_MC_numEvent200_test.root \
+      --data=testPUDATA.root   \
+       --HistName=pileup   \
+       --branch=puW  \
+       --kind=trpu   
+           
+           
+           
 
 Lepton id/iso scale factors:
 
