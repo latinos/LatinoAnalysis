@@ -17,6 +17,9 @@ public:
  WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
  virtual ~WW() {}
  
+ //! set functions
+ void setJets(std::vector<float> invector);
+ 
  //! functions
  float pTWW();
  float dphill();
@@ -31,6 +34,7 @@ public:
  float channel();
  float mjj();
  float detajj();
+ float njet();
  
 private:
  //! variables
@@ -40,6 +44,8 @@ private:
  float pid1, pid2;
  
  bool isOk, jetOk;
+ 
+ std::vector<float> jetspt;
  
 };
 
@@ -96,8 +102,8 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   pid1 = pidl1;
   pid2 = pidl2;
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
-  J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1);
-  J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2);
+  J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1); //---- NB: jets are treated as massive
+  J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
   isOk =  true;
  }
  else {
@@ -106,7 +112,26 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  jetOk = true;
 }
 
+//! set functions
+
+void WW::setJets(std::vector<float> invector) {
+ jetspt = invector;
+}
+
+
+
 //! functions
+
+float WW::njet(){
+ float njet = 0;
+ for (int ijet=0; ijet < jetspt.size(); ijet++) {
+  if (jetspt.at(ijet) > 30) {
+   njet += 1;
+  }
+ }
+ return njet; 
+}
+
 
 float WW::ptll(){
  if (isOk) {

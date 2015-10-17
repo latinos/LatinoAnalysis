@@ -24,10 +24,14 @@ How to filter events and update some collections:
                 -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
                      /media/data/amassiro/LatinoTrees/WW/
                     
+    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/50ns/17Sep2015/25ns/mc/latino_WWTo2L2Nu.root /tmp/amassiro/
     gardener.py  l2selfiller \
-                /media/data/amassiro/LatinoTrees/50ns/05Aug2015/latino_WWTo2L2Nu.root  \
-                /media/data/amassiro/LatinoTrees/WW/50ns/latino_WW_TEST.root
+                /tmp/amassiro/latino_WWTo2L2Nu.root  \
+                /tmp/amassiro/latino_WW_TEST.root
                      
+    gardener.py  l2selfiller \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root  \
+                test.root
 
 Specific modules example:
 

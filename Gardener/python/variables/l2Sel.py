@@ -61,7 +61,11 @@ class L2SelFiller(TreeCloner):
           #print " --> after[ " , len(goodleptonslist), "] ", vectorname, "[", i, "] = ", getattr(self.otree, vectorname)[i]
         
     def jetIsLepton(self, jetEta, jetPhi, lepEta, lepPhi) :
-        dR = ROOT.TMath.Sqrt( ROOT.TMath.Power(lepEta - jetEta, 2) + ROOT.TMath.Power(ROOT.TMath.Abs(ROOT.TMath.Abs(lepPhi - jetPhi)-ROOT.TMath.Pi())-ROOT.TMath.Pi(), 2) )
+        #dR = ROOT.TMath.Sqrt( ROOT.TMath.Power(lepEta - jetEta, 2) + ROOT.TMath.Power(ROOT.TMath.Abs(ROOT.TMath.Abs(lepPhi - jetPhi)-ROOT.TMath.Pi())-ROOT.TMath.Pi(), 2) )
+        dPhi = ROOT.TMath.Abs(lepPhi - jetPhi)
+        if dPhi > ROOT.TMath.Pi() :
+          dPhi = dPhi - ROOT.TMath.Pi()
+        dR = (lepEta - jetEta) * (lepEta - jetEta) + dPhi * dPhi
         if dR < 0.3:
             return True
         else:
@@ -78,10 +82,13 @@ class L2SelFiller(TreeCloner):
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
 
-
+        #
         # create branches for otree, the ones that will be modified!
         # see: https://root.cern.ch/phpBB3/viewtopic.php?t=12507
-        
+        # this is the list of variables to be modified
+        # either because leptons are filtered by id/iso, 
+        # or because jets are filtered because they are actually leptons
+        #
         self.namesOldBranchesToBeModifiedVector = [
             'std_vector_lepton_BestTrackdxy',
             'std_vector_lepton_BestTrackdz',
@@ -150,6 +157,8 @@ class L2SelFiller(TreeCloner):
             'std_vector_puppijet_pt'
            ]
         
+        # and these variables NEED to be defined as functions in WWVar.C
+        # e.g. mll, dphill, ...
         self.namesOldBranchesToBeModifiedSimpleVariable = [
            'mll',
            'dphill',
@@ -161,9 +170,12 @@ class L2SelFiller(TreeCloner):
            'channel',
            
            'mjj',
-           'detajj'
+           'detajj',
+           'njet'
            ]
         
+        # jet variables with the structure "std_vector_jet_"NAME to be migrated to "jet"NAME"+number.
+        # e.g. jetpt1, jeteta1, jetpt2, jeteta2, ...
         self.jetVariables = [
             'pt',
             'eta',
@@ -177,13 +189,13 @@ class L2SelFiller(TreeCloner):
             ]
         
         self.jetVarList = []
-        self.jetVarBranch = []
-        njets = 7
+        # maximum number of "single jet" variables to be saved
+        maxnjets = 2 # 7 --> everything is available in form of std::vector -> these will be deprecated
         for jetVar in self.jetVariables:
-            self.jetVarBranch.append("std_vector_jet_"+jetVar)
-            for i in xrange(njets):
-                self.jetVarList.append("jet"+jetVar+str(i+1))
+          for i in xrange(maxnjets):
+            self.jetVarList.append("jet"+jetVar+str(i+1))
 
+        # clone the tree
         self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
 
         self.oldBranchesToBeModifiedVector = {}
@@ -209,7 +221,8 @@ class L2SelFiller(TreeCloner):
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
 
-        self.jetVarDic = OrderedDict()
+        #self.jetVarDic = OrderedDict()
+        self.jetVarDic = {}
         for bname in self.jetVarList:
           bvariable = numpy.ones(1, dtype=numpy.float32)
           self.jetVarDic[bname] = bvariable
@@ -237,8 +250,11 @@ class L2SelFiller(TreeCloner):
         print '- Starting eventloop'
         step = 5000
 
+        # to be used later on in the code ...
+        new_std_vector_jet_pt = ROOT.std.vector(float) ()
 
         #for i in xrange(10000):
+        #for i in xrange(2000):
         for i in xrange(nentries):
 
             itree.GetEntry(i)
@@ -248,7 +264,8 @@ class L2SelFiller(TreeCloner):
 
             # apply lepton id and isolation
             # and filter out unwanted leptons
-            # putting pt of those leptons to -10 GeV
+            # putting pt of those leptons to -9999 GeV
+            # and all other variables too set to the default -9999
 
             goodLeps = []
             goodLep1 = -1
@@ -298,23 +315,26 @@ class L2SelFiller(TreeCloner):
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():  # really necessary?
                 bvector.clear()
              
+              # prepare the new vectors removing unwanted positions
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-                 if "lepton" in bname:
+                 if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname):
                      self.changeOrder( bname, bvector, goodLeps)
                 
-              # clean jets
-              # for leptons with pt > minLeptonPt (default 10 GeV)
+              # now the jets:  
+              # - clean jets
+              #   for leptons with pt > minLeptonPt (default 10 GeV)
 	      minLeptonPt = 10.
+	      
               goodJets = []
               for iJet in xrange(len(itree.std_vector_jet_pt)) :
-                  isLepton = False;
-                  for iLep in goodLeps :
-		      if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
-		          break;
-                      if self.jetIsLepton(itree.std_vector_jet_eta[iJet],itree.std_vector_jet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
-                          isLepton = True;
-                  if not isLepton:
-                      goodJets.append(iJet)
+                isLepton = False;
+                for iLep in goodLeps :
+		  if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
+		    break;
+                  if self.jetIsLepton(itree.std_vector_jet_eta[iJet],itree.std_vector_jet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
+                    isLepton = True;
+                if not isLepton:
+                  goodJets.append(iJet)
               
               goodPuppiJets = []
               for iJet in xrange(len(itree.std_vector_puppijet_pt)) :
@@ -328,8 +348,8 @@ class L2SelFiller(TreeCloner):
                       goodPuppiJets.append(iJet)
                           
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-                   if "jet" in bname and not "lepton" in bname:
-                       if "puppi" in bname:
+                   if (("vector_jet" in bname) or (("vector_puppijet") in bname)) and not (("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname)):
+                       if "vector_puppijet" in bname:
                            self.changeOrder( bname, bvector, goodPuppiJets)
                        else:
                            self.changeOrder( bname, bvector, goodJets)
@@ -347,34 +367,41 @@ class L2SelFiller(TreeCloner):
               pid2 = itree.std_vector_lepton_flavour[goodLep2]
               met = itree.pfType1Met
               metphi = itree.pfType1Metphi
-	      if len(goodJets) > 1:
-              	jetpt1 = itree.std_vector_jet_pt[goodJets[0]]
-              	jetpt2 = itree.std_vector_jet_pt[goodJets[1]]
-             	jeteta1 = itree.std_vector_jet_eta[goodJets[0]]
-             	jeteta2 = itree.std_vector_jet_eta[goodJets[1]]
-              	jetphi1 = itree.std_vector_jet_phi[goodJets[0]]
-              	jetphi2 = itree.std_vector_jet_phi[goodJets[1]]
-              	jetmass1 = itree.std_vector_jet_mass[goodJets[0]]
-              	jetmass2 = itree.std_vector_jet_mass[goodJets[1]]
-              	WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
+              if len(goodJets) >=  2:
+                jetpt1 = itree.std_vector_jet_pt[goodJets[0]]
+                jetpt2 = itree.std_vector_jet_pt[goodJets[1]]
+                jeteta1 = itree.std_vector_jet_eta[goodJets[0]]
+                jeteta2 = itree.std_vector_jet_eta[goodJets[1]]
+                jetphi1 = itree.std_vector_jet_phi[goodJets[0]]
+                jetphi2 = itree.std_vector_jet_phi[goodJets[1]]
+                jetmass1 = itree.std_vector_jet_mass[goodJets[0]]
+                jetmass2 = itree.std_vector_jet_mass[goodJets[1]]
+                WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
               else:
-	      	WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi)  
+                WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi )
+              
+              # set the list of jets into the object "WW"
+              new_std_vector_jet_pt.clear()
+              for iGoodJet in goodJets :
+                new_std_vector_jet_pt.push_back(itree.std_vector_jet_pt[ iGoodJet ])
+              WW.setJets(new_std_vector_jet_pt)
           
+              # now fill the variables like "mll", "dphill", ...
               for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
                 bvariable[0] = getattr(WW, bname)()
                 
-              # refill jet variables
-              counter = 0
-              varCounter = 0
-              for bname, bvariable in self.jetVarDic.iteritems():
-                  bvariable[0] = (getattr(self.otree, self.jetVarBranch[varCounter]))[counter]
-                  counter += 1
-                  if counter == 8:
-                      varCounter += 1
-                      counter = 0
-                 
+              # refill the single jet variables
+              for jetVar in self.jetVariables:
+                for iJet in xrange(maxnjets):
+                  if iJet < len(goodJets) :
+                    #  e.g.       jetpt1 = itree.std_vector_jet_pt[  goodJets[ 0 ] ]                                         
+                    self.jetVarDic['jet'+jetVar+str(i+1)] = (getattr(self.itree, 'std_vector_jet_'+jetVar ))[ goodJets[iJet] ]
+                  else :
+                    self.jetVarDic['jet'+jetVar+str(i+1)] = -9999.
+                    
 
               otree.Fill()
 
         self.disconnect()
         print '- Eventloop completed'
+

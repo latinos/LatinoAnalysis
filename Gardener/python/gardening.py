@@ -103,22 +103,14 @@ class TreeCloner(object):
         self.otree = None
         
         # cleaning
-        if self.otreeMC != None : 
-          self.otreeMC = None
-        if self.otreePU != None : 
-          self.otreePU = None
-        if self.ohistoTotalEvents != None : 
-          self.ohistoTotalEvents = None
-        if self.ohistoTotalEventsTriggers != None : 
-          self.ohistoTotalEventsTriggers = None
-        if self.itreeMC != None : 
-          self.itreeMC = None
-        if self.itreePU != None : 
-          self.itreePU = None
-        if self.itreeTotalEvents != None : 
-          self.itreeTotalEvents = None
-        if self.itreeTotalEventsTriggers != None : 
-          self.itreeTotalEventsTriggers = None
+        self.otreeMC = None
+        self.otreePU = None
+        self.ohistoTotalEvents = None
+        self.ohistoTotalEventsTriggers = None
+        self.itreeMC = None
+        self.itreePU = None
+        self.itreeTotalEvents = None
+        self.itreeTotalEventsTriggers = None
           
           
 #    ___                       
