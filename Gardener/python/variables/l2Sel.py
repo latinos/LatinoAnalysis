@@ -136,6 +136,9 @@ class L2SelFiller(TreeCloner):
             'std_vector_jet_softMuIso',
             'std_vector_jet_softMuPhi',
             'std_vector_jet_softMuPt',
+            #'std_vector_jet_softMuD0',  # from next latino production
+            #'std_vector_jet_softMuDz',  # from next latino production
+            'std_vector_jet_NumberSoftMu',
             'std_vector_jet_ssvhb',
             'std_vector_jet_ssvhe',
             'std_vector_jet_tche',
