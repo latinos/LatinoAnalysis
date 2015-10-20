@@ -55,8 +55,13 @@ class mcWeightsFiller(TreeCloner):
 
 
         mcWeight        = numpy.ones(1, dtype=numpy.float32)
-
         self.otree.Branch('mcWeight'  , mcWeight  , 'mcWeight/F')
+        mcNegW        = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('mcNegW'  , mcNegW  , 'mcNegW/F')
+
+        bvector =  ROOT.std.vector(float) ()
+        self.otree.Branch("mcWeightSyst",bvector)
+
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -73,17 +78,36 @@ class mcWeightsFiller(TreeCloner):
         nentriesWeight = myTreeWeight.GetEntries()
 
         mcWeight[0] = 0
-        
+        mcNegW[0] = 0
+        positive = 0
+        negative = 0
+
+        if nentriesWeight > 0 :
+          myTreeWeight.GetEntry(0)
+          for isyst in xrange(myTreeWeight.weightsLHE.size()) :
+            bvector.push_back(0)
+
         for i in xrange(nentriesWeight):
           myTreeWeight.GetEntry(i)
           
           if myTreeWeight.weightSM > 0 :
              mcWeight[0] += 1
+             positive += 1
           if myTreeWeight.weightSM < 0 :
              mcWeight[0] -= 1
-             
-        print ' weight = ',  mcWeight      
-        
+             negative += 1
+
+          for isyst in xrange(myTreeWeight.weightsLHE.size()) :
+            if myTreeWeight.weightSM > 0 :
+              temp = bvector[isyst]
+              bvector[isyst] = temp + myTreeWeight.weightsLHE.at(isyst) / myTreeWeight.weightSM
+            if myTreeWeight.weightSM < 0 :
+              temp = bvector[isyst]
+              bvector[isyst] = temp - myTreeWeight.weightsLHE.at(isyst) / myTreeWeight.weightSM
+  
+  
+        print ' weight = ',  mcWeight, " = ", positive, " - ", negative      
+        mcNegW[0] = 1. * (positive - negative) / (positive + negative)
 
         print '- Starting eventloop'
         step = 5000
