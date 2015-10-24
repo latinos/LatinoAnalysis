@@ -206,7 +206,7 @@ class DatacardFactory:
                           card.write(('-').ljust(columndef))
                            
                   elif nuisance ['type'] == 'shape' :
-                    card.write((nuisance['name']).ljust(58-20))
+                    card.write(("CMS_" + (nuisance['name'])).ljust(58-20))
                     card.write((nuisance ['type']).ljust(20))
                     if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                       card.write(''.join([('1.000').ljust(columndef) for name in self.signals      ]))
@@ -220,11 +220,11 @@ class DatacardFactory:
                           # save the nuisance histograms in the root file
                           self._saveHisto(cutName+"/"+variableName+'/',
                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Up"
+                                           'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
                                            )
                           self._saveHisto(cutName+"/"+variableName+'/',
                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Down"
+                                           'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
                                            )
                         else :
                           card.write(('-').ljust(columndef))
@@ -234,57 +234,80 @@ class DatacardFactory:
                           # save the nuisance histograms in the root file
                           self._saveHisto(cutName+"/"+variableName+'/',
                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Up"
+                                           'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
                                            )
                           self._saveHisto(cutName+"/"+variableName+'/',
                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Down"
+                                           'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
                                            )
                         else :
                           card.write(('-').ljust(columndef))
                   
-                  
+                # new line at the end of any nuisance that is *not* stat ... because in that case it's already done on its own
+                card.write('\n')
+               
+                
               # stat nuisances  
               if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                #print "nuisance[type] = ", nuisance ['type']
-                #print "     >> uniform"
-                card.write(( 'CMS_' + tagNameToAppearInDatacard + "_stat" ).ljust(58-20))
-                card.write((nuisance ['type']).ljust(20))
-                
+
                 for sampleName in self.signals:
                   if sampleName in nuisance['samples'].keys() :
                     if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
-                      card.write(('1.000').ljust(columndef))
+                     
+                      card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(58-20))
+                      card.write((nuisance ['type']).ljust(20))
+
+                      # write line in datacard
+                      for sampleNameIterator2 in self.signals:
+                        if sampleNameIterator2 == sampleName :
+                          card.write(('1.000').ljust(columndef))
+                        else :
+                          card.write(('-').ljust(columndef))
+
+                      for sampleNameIterator2 in self.backgrounds:
+                        card.write(('-').ljust(columndef))
+
+                      card.write('\n')
+
                       # save the nuisance histograms in the root file
                       self._saveHisto(cutName+"/"+variableName+'/',
                                        'histo_' + sampleName + '_stat' + "Up",
-                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Up"
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
                                        )
                       self._saveHisto(cutName+"/"+variableName+'/',
                                        'histo_' + sampleName + '_stat' + "Down",
-                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Down"
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
                                        )
-                  else :
-                      card.write(('-').ljust(columndef))
-                   
+
                 for sampleName in self.backgrounds:
                   if sampleName in nuisance['samples'].keys() :
                     if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
-                      card.write(('1.000').ljust(columndef))
+                     
+                      card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(58-20))
+                      card.write((nuisance ['type']).ljust(20))
+
+                      # write line in datacard
+                      for sampleNameIterator2 in self.signals:
+                        card.write(('-').ljust(columndef))
+
+                      for sampleNameIterator2 in self.backgrounds:
+                        if sampleNameIterator2 == sampleName :
+                          card.write(('1.000').ljust(columndef))
+                        else :
+                          card.write(('-').ljust(columndef))
+
+                      card.write('\n')
+
                       # save the nuisance histograms in the root file
                       self._saveHisto(cutName+"/"+variableName+'/',
                                        'histo_' + sampleName + '_stat' + "Up",
-                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Up"
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
                                        )
                       self._saveHisto(cutName+"/"+variableName+'/',
                                        'histo_' + sampleName + '_stat' + "Down",
-                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_stat" + "Down"
+                                       'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
                                        )
-                  else :
-                      card.write(('-').ljust(columndef))
 
-              # new line at the end of any nuisance
-              card.write('\n')
 
                
             # now add other nuisances            
