@@ -96,8 +96,9 @@ Specific modules example:
                      
           
 puW
+====
 
-    # get data pu distribution
+get data pu distribution
     
     pileupCalc.py \
        -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-251883_13TeV_PromptReco_Collisions15_JSON_v2.txt \
@@ -108,14 +109,26 @@ puW
        testPUDATA.root
 
        
-    # get MC pu distribution
+get MC pu distribution
     
     r99t /media/data/amassiro/LatinoTrees/50ns/05Aug2015/latino_DYJetsToLL_M-50.root
     TH1F pileup("pileup","pileup", 80, 0, 80);
     latino->Draw("trpu >> pileup");
     pileup.SaveAs("MCpu.root");
-       
-    # add pu weight
+ 
+New way to get MC pu from MC directly from supporting trees:
+
+    r99t ../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root
+    TH1F pileup("pileup","pileup", 80, 0, 80);
+    pu->Draw("trpu >> pileup");
+    pileup.SaveAs("MCpu.root");
+ 
+add pu weight
+
+NB: if you don't give the "mcfile" (--mc) the tree with pu information stored within the root file will be used
+This is automatic and better, since it will exploit direclty the distribution used to generate that particular samples.
+
+
     gardener.py  puadder \
        /media/data/amassiro/LatinoTrees/WW/25ns/05Aug2015/latino_WZ.root \
        test.root \
@@ -134,15 +147,6 @@ puW
        --branch=puW  \
        --kind=trpu   
            
-    gardener.py  puadder \
-       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
-       --mc=MCpu.root    \
-       --data=testPUDATA.root   \
-       --HistName=pileup   \
-       --branch=puW  \
-       --kind=trpu   
-           
 
     gardener.py  puadder \
       latino_stepB_MC_numEvent200.root  \
@@ -155,9 +159,10 @@ puW
            
            
 
-Lepton id/iso scale factors:
+Lepton id/iso scale factors
+====
 
-           effwfiller
+Module: effwfiller
           
     gardener.py  effwfiller \
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
@@ -173,10 +178,10 @@ Lepton id/iso scale factors:
        --isoid=data/isoidScaleFactors.py
 
        
-Trigger efficiency:
+Trigger efficiency
+====
 
-          
-                  efftfiller
+Module: efftfiller
           
     gardener.py  efftfiller \
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \

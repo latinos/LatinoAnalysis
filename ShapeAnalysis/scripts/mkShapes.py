@@ -365,8 +365,37 @@ class ShapeFactory:
                         # save the new two histograms in final root file
                         outputsHistoUp.Write()
                         outputsHistoDo.Write()
+              
+              # prepare other nuisances:
+              # - weight based nuisances: "kind = 'weight'"
+              for nuisanceName, nuisance in nuisances.iteritems():
+                if 'kind' in nuisance :
+                  if nuisance['kind'] == 'weight' :
+                    #print 'nuisance based on weight'
+                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                      if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
+                        # now plot with the additional weight up/down
+                        newSampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
+                        newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
+                        #                                 the first weight is "up", the second is "down"
+                        newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
+                        newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
                         
-          
+                        if 'weights' in sample.keys() :
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold)
+                        else :
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold)
+
+                        if 'weights' in sample.keys() :
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold)
+                        else :
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold)
+ 
+                        # now save to the root file
+                        outputsHistoUp.Write()
+                        outputsHistoDo.Write()
+
+                    
             #for nuisance in self._nuisances :
               #print "nuisance = ", nuisance
               #for sample in self._samples :

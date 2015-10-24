@@ -68,10 +68,12 @@ class DatacardFactory:
           if structureFile[sampleName]['isSignal'] == 0 and structureFile[sampleName]['isData'] == 0:
             self.backgrounds.append(sampleName)
           
+        if not os.path.isdir (self._outputDirDatacard + "/") :
+          os.mkdir (self._outputDirDatacard + "/")
+
         # loop over cuts  
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
-          os.mkdir (self._outputDirDatacard + "/")
           os.system ("rm -rf " + self._outputDirDatacard + "/" + cutName) 
           os.mkdir (self._outputDirDatacard + "/" + cutName)
           # loop over variables
@@ -130,8 +132,9 @@ class DatacardFactory:
             card.write('-'*100+'\n')
             card.write('bin         %s' % tagNameToAppearInDatacard+'\n')
             if len(self.data) == 0:
-              self._log.warning( 'no data, no fun! ')
-              raise RuntimeError('No Data found!')
+              self._logger.warning( 'no data, no fun! ')
+              #raise RuntimeError('No Data found!')
+              yieldsData['data'] = 0
 
             card.write('observation %.0f\n' % yieldsData['data'])
             
@@ -179,6 +182,7 @@ class DatacardFactory:
             # first the lnN nuisances
             for nuisanceName, nuisance in nuisances.iteritems():
               if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                
                 if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
                   print "nuisance[type] = ", nuisance ['type']
                   if nuisance ['type'] == 'lnN' :
@@ -188,7 +192,58 @@ class DatacardFactory:
                       card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
                       card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
                       card.write('\n')
-              
+                    else :
+                      # apply only to selected samples
+                      for sampleName in self.signals:
+                        if sampleName in nuisance['samples'].keys() :
+                          card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                        else :
+                          card.write(('-').ljust(columndef))
+                      for sampleName in self.backgrounds:
+                        if sampleName in nuisance['samples'].keys() :
+                          card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                        else :
+                          card.write(('-').ljust(columndef))
+                           
+                  elif nuisance ['type'] == 'shape' :
+                    card.write((nuisance['name']).ljust(58-20))
+                    card.write((nuisance ['type']).ljust(20))
+                    if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                      card.write(''.join([('1.000').ljust(columndef) for name in self.signals      ]))
+                      card.write(''.join([('1.000').ljust(columndef) for name in self.backgrounds  ]))
+                      card.write('\n')
+                    else :
+                      # apply only to selected samples
+                      for sampleName in self.signals:
+                        if sampleName in nuisance['samples'].keys() :
+                          card.write(('1.000').ljust(columndef))                          
+                          # save the nuisance histograms in the root file
+                          self._saveHisto(cutName+"/"+variableName+'/',
+                                           'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Up"
+                                           )
+                          self._saveHisto(cutName+"/"+variableName+'/',
+                                           'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Down"
+                                           )
+                        else :
+                          card.write(('-').ljust(columndef))
+                      for sampleName in self.backgrounds:
+                        if sampleName in nuisance['samples'].keys() :
+                          card.write(('1.000').ljust(columndef))
+                          # save the nuisance histograms in the root file
+                          self._saveHisto(cutName+"/"+variableName+'/',
+                                           'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Up"
+                                           )
+                          self._saveHisto(cutName+"/"+variableName+'/',
+                                           'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                           'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + (nuisance['name']) + "Down"
+                                           )
+                        else :
+                          card.write(('-').ljust(columndef))
+                  
+                  
               # stat nuisances  
               if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                 #print "nuisance[type] = ", nuisance ['type']
@@ -228,7 +283,8 @@ class DatacardFactory:
                   else :
                       card.write(('-').ljust(columndef))
 
-                card.write('\n')
+              # new line at the end of any nuisance
+              card.write('\n')
 
                
             # now add other nuisances            
