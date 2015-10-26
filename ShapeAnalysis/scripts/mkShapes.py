@@ -99,6 +99,27 @@ class ShapeFactory:
         inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
                    
 
+        # connect nuisances trees
+        inputsNuisanceUp   = {}
+        inputsNuisanceDown = {}
+
+        for nuisanceName, nuisance in nuisances.iteritems():
+          if 'kind' in nuisance :
+            if nuisance['kind'] == 'tree' :
+              list_of_trees_to_connect_up = {}
+              list_of_trees_to_connect_do = {}
+              for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                list_of_trees_to_connect_up[sampleNuisName] = self._samples[sampleNuisName]['name']
+                list_of_trees_to_connect_do[sampleNuisName] = self._samples[sampleNuisName]['name']
+                
+              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect_up, nuisance['folderUp']  )
+              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect_do, nuisance['folderDown'])
+              
+              #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect_up  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
+
+
+
+
         ## test with LOOP: not very fast ... to be improved ...
 
         ##---- now plot and save into output root file
@@ -368,6 +389,7 @@ class ShapeFactory:
               
               # prepare other nuisances:
               # - weight based nuisances: "kind = 'weight'"
+              # - tree based nuisances:   "kind = 'tree'"
               for nuisanceName, nuisance in nuisances.iteritems():
                 if 'kind' in nuisance :
                   if nuisance['kind'] == 'weight' :
@@ -395,6 +417,34 @@ class ShapeFactory:
                         outputsHistoUp.Write()
                         outputsHistoDo.Write()
 
+                  if nuisance['kind'] == 'tree' :
+                    #print 'nuisance based on tree'
+                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                      if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
+                        # now plot with the additional weight up/down
+                        newSampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
+                        newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
+                        #                                 the first weight is "up", the second is "down" -> they might be useful!
+                        newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
+                        newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
+                        
+                        #print "  variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold = "
+                        #print " sampleName = ", sampleName
+                        #print " ===> ", variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold
+                        
+                        if 'weights' in sample.keys() :
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold)
+                        else :
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold)
+
+                        if 'weights' in sample.keys() :
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold)
+                        else :
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold)
+ 
+                        # now save to the root file
+                        outputsHistoUp.Write()
+                        outputsHistoDo.Write()
                     
             #for nuisance in self._nuisances :
               #print "nuisance = ", nuisance
