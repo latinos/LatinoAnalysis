@@ -125,7 +125,7 @@ class L2SelFiller(TreeCloner):
             'std_vector_lepton_isTightMuon',
             'std_vector_lepton_muSIP3D',
             'std_vector_lepton_phi',
-            
+
             'std_vector_jet_NumberSoftMu',
             'std_vector_jet_bjpb',
             'std_vector_jet_cmva',
@@ -281,22 +281,41 @@ class L2SelFiller(TreeCloner):
               # electron
               
               # id definition
-              if ( itree.std_vector_lepton_eleIdMedium[iLep] == 1
+              if ( itree.std_vector_lepton_eleIdTight[iLep] == 1
                    and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
                   ) :
                 isGoodLepton = True
 
               ###########
               # muon
+              muonIso = float(0.0)
+
+              if ( (itree.std_vector_lepton_photonIso[iLep] +
+                   itree.std_vector_lepton_neutralHadronIso[iLep] -
+                   0.5 * itree.std_vector_lepton_sumPUPt[iLep]) > 0
+                   ) :
+                  muonIso = (itree.std_vector_lepton_photonIso[iLep] +
+                             itree.std_vector_lepton_neutralHadronIso[iLep] -
+                             0.5 * itree.std_vector_lepton_sumPUPt[iLep])
+              else:
+                  muonIso = 0
 
               if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                   and (itree.std_vector_lepton_chargedHadronIso[iLep] + 
-                        itree.std_vector_lepton_neutralHadronIso[iLep] + 
-                        itree.std_vector_lepton_photonIso[iLep]
-                        ) / itree.std_vector_lepton_pt[iLep] < 0.20 
-                   and abs(itree.std_vector_lepton_flavour[iLep]) == 13 
-                  ) :
+                   and (itree.std_vector_lepton_chargedHadronIso[iLep] +
+                        muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
+                   and abs(itree.std_vector_lepton_flavour[iLep]) == 13
+                   and itree.std_vector_lepton_BestTrackdxy[iLep] < 0.02
+                   and itree.std_vector_lepton_BestTrackdz[iLep] < 0.1
+                   ) :
                 isGoodLepton = True
+                 
+  #and (itree.std_vector_lepton_chargedHadronIso[iLep] + 
+                   #     itree.std_vector_lepton_neutralHadronIso[iLep] + 
+                   #     itree.std_vector_lepton_photonIso[iLep]
+                   #     ) / itree.std_vector_lepton_pt[iLep] < 0.20 
+                   #and abs(itree.std_vector_lepton_flavour[iLep]) == 13 
+                  #) :
+                #isGoodLepton = True
               
               if isGoodLepton :
                 if goodLep1 < 0: 
