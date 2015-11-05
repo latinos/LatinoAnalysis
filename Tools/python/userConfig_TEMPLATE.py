@@ -2,4 +2,4 @@
 
 baseDir  = '/afs/cern.ch/user/x/xjanssen/cms/HWW2015/'
 jobDir   = baseDir+'jobs/'
-workidir = baseDir+'workspace/'
+workDir  = baseDir+'workspace/'

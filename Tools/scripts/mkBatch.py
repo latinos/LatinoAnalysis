@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from optparse import OptionParser
-from batchTools import *
+from LatinoAnalysis.Tools.batchTools import *
 
 # ------------------------ MAIN
 

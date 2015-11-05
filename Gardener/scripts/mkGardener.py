@@ -1,11 +1,27 @@
 #!/usr/bin/env python
 import sys, re, os, os.path
 from optparse import OptionParser
+import ROOT
 
 from LatinoAnalysis.Tools.userConfig  import *
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 from LatinoAnalysis.Gardener.Gardener_cfg import *
+
+# ------------------------ baseW -------------------------
+
+def GetBaseW(inTree,iTarget,id_iTarget,isData,db):
+   if isData : return '1'
+   else:
+     xs = db.get(id_iTarget) 
+     if xs == '' : return '1'
+     else:
+       #print 'Opening: ',inTree
+       fileIn = ROOT.TFile.Open(inTree, "READ")
+       nEvt = fileIn.Get('totalEvents').GetBinContent(1) 
+       fileIn.Close()
+       baseW = float(xs)*1000./nEvt
+       return str(baseW)
 
 # ------------------------------------------------------- MAIN --------------------------------------------
 
@@ -17,6 +33,10 @@ parser.add_option("-i","--iStep",   dest="iStep"   , help="Step to restart from"
 parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo all trees"                ,  default=False  , action="store_true")
 parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                  ,  default=False  , action="store_true")
 parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs" , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
+parser.add_option("-q", "--quiet",    dest="quiet",     help="Quiet logs",                default=False, action="store_true")
+parser.add_option("-n", "--dry-run",    dest="pretend",     help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
+
+
 # Parse options and Filter
 (options, args) = parser.parse_args()
 prodList = List_Filter(Productions,options.prods).get()
@@ -39,6 +59,10 @@ for iProd in prodList :
     if 'samples' in iLine : exec(iLine)  
     if 'config.Data.outLFNDirBase' in iLine : prodDir=iLine.split('=')[1].replace('\'','').replace(' ','')
   handle.close()
+
+  # Load x-section DB
+
+  xsDB = xsectionDB(Productions[iProd]['gDocID'])
     
   # Find existing Input files 
   if not options.iStep in Steps: options.iStep = 'Prod'
@@ -46,10 +70,11 @@ for iProd in prodList :
     fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']
   else:
     fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep
+  print fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
-  print FileInList
+  #print FileInList
  
   # Loop on Steps:
   for iStep in stepList:
@@ -63,14 +88,15 @@ for iProd in prodList :
       FileExistList=string.split(out)
       #print FileExistList
       for iSample in samples : 
-       if iSample == 'HWminusJ_HToTauTau_M120' :
+       #if iSample == 'HWminusJ_HToTauTau_M120' : 
+       if iSample == 'DYJetsToLL_M-10to50' :
         iTree = 'latino_'+iSample+'.root'
         if iTree in FileInList: 
           if options.redo :
             targetList.append(iSample)
           else:
             if not iTree in FileExistList: targetList.append(iSample)
-      print targetList  
+      #print targetList  
 
       # Create Jobs Dictionary
       list=[]
@@ -79,25 +105,71 @@ for iProd in prodList :
       if options.runBatch: jobs = batchJobs('Gardening',iProd,list,targetList,options.batchSplit)    
 
       # Create Output Directory on eos
-      os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir '+eosTargBase+'/'+iProd)
-      os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir '+eosTargBase+'/'+iProd+'/'+iStep)
+      if options.iStep == 'Prod' :
+        os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir -p '+eosTargBase+'/'+iProd+'/'+iStep)
+      else:
+        os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir -p '+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep)
 
       # Do some preliminary actions for some Steps
 
+ 
+
       # And now do/create to job for each target
       for iTarget in targetList: 
-        if Steps[iStep]['isChain']:
-          print 'TODO: implement chains'
-        else:
-          print prodDir
+        id_iTarget=samples[iTarget][1][1].replace('id=','')
+        print iTarget, id_iTarget
+        # Stage in   
+        if options.iStep == 'Prod' :
           inTree  ='root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
-          print inTree
-          outTree ='latino_'+iSample+'__'+iStep+'.root'
-          tmpDir  =workDir+'/Gardening__'+iProd+'__'+iStep
-          command='cd '+tmpDir+' ; '
-          command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
-          command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
-          print command
-          if not os.path.exists(tmpDir) : os.system('mkdir -p '+tmpDir) 
-          os.system(command) 
+        else:
+          inTree  ='root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
+        wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
+        if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
+        if   options.runBatch: command=''
+        else:                  command='cd '+wDir+' ; '
 
+        # Chains of subTargets
+        if 'isChain' in Steps[iStep] and Steps[iStep]['isChain']:
+          iName=''
+          cStep=0
+          for iSubStep in  Steps[iStep]['subTargets'] :
+            cStep+=1
+            print iSubStep
+            if cStep == 1 :
+              iName=iSubStep
+            else:
+              iName+='__'+iSubStep
+              inTree  = outTree
+            outTree ='latino_'+iTarget+'__'+iName+'.root'
+            command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
+            
+        # single Target
+        else:
+          outTree ='latino_'+iTarget+'__'+iStep+'.root'
+          command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
+
+        # Fix baseW if needed
+        baseW = GetBaseW(inTree,iTarget,id_iTarget,Productions[iProd]['isData'],xsDB)
+        command = command.replace('RPLME_baseW',baseW)
+
+        # Fix PU data 
+        puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 
+        command = command.replace('RPLME_puData',puData)  
+
+        # Stage Out
+        if options.iStep == 'Prod' :
+          command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+        else:
+          command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
+        command+='; rm '+outTree
+        logFile=wDir+'/log__'+iTarget+'.log'
+        if options.quiet :
+          command += ' 2>&1 > /dev/null \n' 
+        else:
+          command += ' 2>&1 | tee '+logFile+' \n'  
+        if options.pretend : print command
+        else :
+          if  options.runBatch: jobs.Add(iStep,iTarget,command)
+          else:                 os.system(command) 
+
+      if options.runBatch and not options.pretend: jobs.Sub()

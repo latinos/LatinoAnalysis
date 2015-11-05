@@ -7,7 +7,8 @@ Productions= {
   '21Oct_25ns_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
-                        'dirExt'  : 'LatinoTrees'
+                        'dirExt'  : 'LatinoTrees' ,
+                        'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                       } ,
 
 }
@@ -17,11 +18,11 @@ Steps= {
 
 # ... Chains
 
-  'MCl2sel' :     {
+  'MC' :       {
                   'isChain'    : True ,
                   'do4MC'      : True , 
-                  'do4Data'    : True ,
-                  'subTargets' : ['mcweights','puadder','baseW','wwNLL','l2sel']
+                  'do4Data'    : False,
+                  'subTargets' : ['mcweights','puadder','baseW','wwNLL']
                 },
 
 # ... Individual Steps
@@ -37,16 +38,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'preproc'    : 'PUCalc' ,
-                  'command'    : 'gardener.py puadder --data=RPLME --HistName=pileup --branch=puW --kind=trpu '
+                  'command'    : 'gardener.py puadder --data=RPLME_puData --HistName=pileup --branch=puW --kind=trpu '
                 } ,
 
   'baseW'     : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'preproc'    : 'baseWCalc' ,
-                  'command'    : 'gardener.py -v \'baseW/F=RPLME\' '
+                  'command'    : 'gardener.py -v \'baseW/F=RPLME_baseW\' '
 
                 } ,
 
@@ -54,7 +53,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'preproc'    : 'POWHEG_Only' ,
+                  #'preproc'    : 'POWHEG_Only' ,
                   'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' '
                 },
 

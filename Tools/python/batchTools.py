@@ -6,7 +6,7 @@ import os.path
 from LatinoAnalysis.Tools.userConfig  import *
 
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,useBatchDir=True,wDir=''):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -49,11 +49,13 @@ class batchJobs :
        jFile.write('#$ -N '+jName+'\n')
        jFile.write('#$ -q all.q\n')
        jFile.write('#$ -cwd\n')
-       jFile.write('pwd')
+       jFile.write('pwd\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
        jFile.write('ulimit -c 0\n')
+       if    useBatchDir : jFile.write('cd - ; pwd \n')
+       else              : jFile.write('cd '+wDir+' ;pwd \n')
        jFile.close()
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
@@ -128,7 +130,7 @@ def batchClean():
         if os.path.isfile(doneFile):
           cleanFile=iFile.replace('.sh','.*')
           print 'Clean',cleanFile
-          os.system('cd '+jobdir+'; rm '+cleanFile)
+          os.system('cd '+jobDir+'; rm '+cleanFile)
       try : 
         os.rmdir(jobDir+'/'+iDir) 
       except :
