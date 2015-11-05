@@ -18,6 +18,7 @@ def GetBaseW(inTree,iTarget,id_iTarget,isData,db):
      else:
        #print 'Opening: ',inTree
        fileIn = ROOT.TFile.Open(inTree, "READ")
+       fileIn.ls()
        nEvt = fileIn.Get('totalEvents').GetBinContent(1) 
        fileIn.Close()
        baseW = float(xs)*1000./nEvt
@@ -35,7 +36,8 @@ parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"        
 parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs" , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
 parser.add_option("-q", "--quiet",    dest="quiet",     help="Quiet logs",                default=False, action="store_true")
 parser.add_option("-n", "--dry-run",    dest="pretend",     help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
-
+parser.add_option("-T", "--selTree",   dest="selTree" , help="Select only some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('selTree',','))
+parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -88,14 +90,27 @@ for iProd in prodList :
       FileExistList=string.split(out)
       #print FileExistList
       for iSample in samples : 
-       #if iSample == 'HWminusJ_HToTauTau_M120' : 
-       if iSample == 'DYJetsToLL_M-10to50' :
+        # Tree selector
+        selectSample=True
+        # ... from options
+        if len(options.selTree) > 0 :
+          if not iSample in options.selTree: selectSample=False
+        if len(options.excTree) > 0 :
+          if iSample in options.excTree : selectSample=False
+        # ... From iStep 
+        if 'onlySample' in Steps[iStep] :
+          if len(Steps[iStep]['onlySample']) > 0 :
+            if not iSample in Steps[iStep]['onlySample'] : selectSample=False
+        if 'excludeSample' in Steps[iStep] :
+          if len(Steps[iStep]['excludeSample']) > 0 :
+            if iSample in Steps[iStep]['excludeSample'] : selectSample=False  
+        #if not iSample == 'DYJetsToLL_M-10to50' : selectSample=False
         iTree = 'latino_'+iSample+'.root'
         if iTree in FileInList: 
-          if options.redo :
+          if options.redo and selectSample:
             targetList.append(iSample)
           else:
-            if not iTree in FileExistList: targetList.append(iSample)
+            if not iTree in FileExistList and selectSample: targetList.append(iSample)
       #print targetList  
 
       # Create Jobs Dictionary
@@ -123,6 +138,7 @@ for iProd in prodList :
           inTree  ='root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
         else:
           inTree  ='root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
+        oriTree = inTree
         wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
         if   options.runBatch: command=''
@@ -132,16 +148,28 @@ for iProd in prodList :
         if 'isChain' in Steps[iStep] and Steps[iStep]['isChain']:
           iName=''
           cStep=0
+
           for iSubStep in  Steps[iStep]['subTargets'] :
             cStep+=1
-            print iSubStep
+            
+            # Tree selector
+            selectSample=True
+            # ... From iStep
+            if 'onlySample' in Steps[iSubStep] :
+              if len(Steps[iSubStep]['onlySample']) > 0 :
+                if not iSample in Steps[iSubStep]['onlySample'] : selectSample=False
+            if 'excludeSample' in Steps[iSubStep] :
+              if len(Steps[iSubStep]['excludeSample']) > 0 :
+                if iSample in Steps[iSubStep]['excludeSample'] : selectSample=False
+
             if cStep == 1 :
               iName=iSubStep
             else:
               iName+='__'+iSubStep
-              inTree  = outTree
-            outTree ='latino_'+iTarget+'__'+iName+'.root'
-            command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
+              if selectSample : inTree  = outTree
+            if selectSample : 
+              outTree ='latino_'+iTarget+'__'+iName+'.root'
+              command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
             
         # single Target
         else:
@@ -149,7 +177,7 @@ for iProd in prodList :
           command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
 
         # Fix baseW if needed
-        baseW = GetBaseW(inTree,iTarget,id_iTarget,Productions[iProd]['isData'],xsDB)
+        baseW = GetBaseW(oriTree,iTarget,id_iTarget,Productions[iProd]['isData'],xsDB)
         command = command.replace('RPLME_baseW',baseW)
 
         # Fix PU data 

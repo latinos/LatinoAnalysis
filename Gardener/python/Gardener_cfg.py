@@ -45,7 +45,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py -v \'baseW/F=RPLME_baseW\' '
+                  'command'    : 'gardener.py -adder v \'baseW/F=RPLME_baseW\' '
 
                 } ,
 
@@ -53,7 +53,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  #'preproc'    : 'POWHEG_Only' ,
+                  'onlySample' : ['WWTo2L2Nu'] ,
                   'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' '
                 },
 
