@@ -47,9 +47,11 @@ class xsectionDB:
       data = resp.read()
       for line in data.splitlines(): 
         info=line.split(",")
-        iKey=info[0].replace(' ','')
-        if iKey.isdigit() :
+        iID=info[0].replace(' ','')
+        if iID.isdigit() :
+          iKey = info[1].replace(' ','')
           self.xsections[iKey] = {}
+          self.xsections[iKey]['ID']     = iID
           self.xsections[iKey]['sample'] = info[1].replace(' ','')
           if len(info) > 9 :
             self.xsections[iKey]['xs']     = info[9].replace(' ','')
@@ -58,10 +60,10 @@ class xsectionDB:
 
       #print self.xsections
 
-    def get(self,id):
-      if str(id) in self.xsections : 
-        #print str(id), self.xsections[str(id)]['sample'], self.xsections[str(id)]['xs']
-        return self.xsections[str(id)]['xs']
+    def get(self,iSample):
+      if iSample in self.xsections : 
+        #print iSample, self.xsections[iSample]['sample'], self.xsections[iSample]['xs']
+        return self.xsections[iSample]['xs']
       else : 
         return ''
 

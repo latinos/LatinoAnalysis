@@ -45,7 +45,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py -adder v \'baseW/F=RPLME_baseW\' '
+                  'command'    : 'gardener.py adder -v \'baseW/F=RPLME_baseW\' '
 
                 } ,
 

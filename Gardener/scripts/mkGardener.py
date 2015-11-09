@@ -13,15 +13,16 @@ from LatinoAnalysis.Gardener.Gardener_cfg import *
 def GetBaseW(inTree,iTarget,id_iTarget,isData,db):
    if isData : return '1'
    else:
-     xs = db.get(id_iTarget) 
+     xs = db.get(iTarget) 
      if xs == '' : return '1'
      else:
-       #print 'Opening: ',inTree
+       print 'Opening: ',inTree
        fileIn = ROOT.TFile.Open(inTree, "READ")
        fileIn.ls()
        nEvt = fileIn.Get('totalEvents').GetBinContent(1) 
        fileIn.Close()
        baseW = float(xs)*1000./nEvt
+       print 'baseW: xs,N -> W', xs, nEvt , baseW
        return str(baseW)
 
 # ------------------------------------------------------- MAIN --------------------------------------------
@@ -104,6 +105,10 @@ for iProd in prodList :
         if 'excludeSample' in Steps[iStep] :
           if len(Steps[iStep]['excludeSample']) > 0 :
             if iSample in Steps[iStep]['excludeSample'] : selectSample=False  
+        # And check for mcweight !
+        if iStep == 'mcweights' :
+          if not 'doMCweights=True' in samples[iSample][1] : 
+             selectSample=False
         #if not iSample == 'DYJetsToLL_M-10to50' : selectSample=False
         iTree = 'latino_'+iSample+'.root'
         if iTree in FileInList: 
@@ -126,8 +131,6 @@ for iProd in prodList :
         os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir -p '+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep)
 
       # Do some preliminary actions for some Steps
-
- 
 
       # And now do/create to job for each target
       for iTarget in targetList: 
@@ -161,6 +164,8 @@ for iProd in prodList :
             if 'excludeSample' in Steps[iSubStep] :
               if len(Steps[iSubStep]['excludeSample']) > 0 :
                 if iSample in Steps[iSubStep]['excludeSample'] : selectSample=False
+            if iSubStep == 'mcweights' :
+              if not 'doMCweights=True' in samples[iTarget][1] : selectSample=False
 
             if cStep == 1 :
               iName=iSubStep
@@ -170,6 +175,7 @@ for iProd in prodList :
             if selectSample : 
               outTree ='latino_'+iTarget+'__'+iName+'.root'
               command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
+            else : outTree = inTree 
             
         # single Target
         else:
