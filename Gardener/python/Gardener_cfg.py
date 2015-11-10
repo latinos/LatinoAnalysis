@@ -9,6 +9,19 @@ Productions= {
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
                         'dirExt'  : 'LatinoTrees' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
+                        'bigSamples': ['DYJetsToLL_M-10to50'] ,
+                      } ,
+
+  '21Oct_Run2015D_05Oct2015' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_05Oct2015_25ns.py' ,
+                        'dirExt'  : 'Run2015D_05Oct2015' ,
+                      } ,
+
+  '21Oct_Run2015D_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns.py' ,
+                        'dirExt'  : 'Run2015D_PromptReco' ,
                       } ,
 
 }
