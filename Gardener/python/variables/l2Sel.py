@@ -64,7 +64,7 @@ class L2SelFiller(TreeCloner):
         #dR = ROOT.TMath.Sqrt( ROOT.TMath.Power(lepEta - jetEta, 2) + ROOT.TMath.Power(ROOT.TMath.Abs(ROOT.TMath.Abs(lepPhi - jetPhi)-ROOT.TMath.Pi())-ROOT.TMath.Pi(), 2) )
         dPhi = ROOT.TMath.Abs(lepPhi - jetPhi)
         if dPhi > ROOT.TMath.Pi() :
-          dPhi = dPhi - ROOT.TMath.Pi()
+          dPhi = 2*ROOT.TMath.Pi() - dPhi
         dR2 = (lepEta - jetEta) * (lepEta - jetEta) + dPhi * dPhi
         if dR2 < (0.3*0.3):
             return True
