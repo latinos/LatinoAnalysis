@@ -84,28 +84,30 @@ class mcWeightsFiller(TreeCloner):
 
         if nentriesWeight > 0 :
           myTreeWeight.GetEntry(0)
+          print 'Syst vec size: ',str(myTreeWeight.weightsLHE.size())
           for isyst in xrange(myTreeWeight.weightsLHE.size()) :
             bvector.push_back(0)
+        print 'Init done'
 
+        step = 5000
         for i in xrange(nentriesWeight):
           myTreeWeight.GetEntry(i)
-          
-          if myTreeWeight.weightSM > 0 :
+          if i > 0 and i%step == 0.:
+                print i,'events processed.'
+          weightSM   = myTreeWeight.weightSM          
+          weightsLHE = myTreeWeight.weightsLHE
+
+          if weightSM > 0 :
              mcWeight[0] += 1
              positive += 1
-          if myTreeWeight.weightSM < 0 :
+             for isyst in xrange(weightsLHE.size()) : bvector[isyst] += weightsLHE.at(isyst) / weightSM
+          elif weightSM < 0 :
              mcWeight[0] -= 1
              negative += 1
-
-          for isyst in xrange(myTreeWeight.weightsLHE.size()) :
-            if myTreeWeight.weightSM > 0 :
-              temp = bvector[isyst]
-              bvector[isyst] = temp + myTreeWeight.weightsLHE.at(isyst) / myTreeWeight.weightSM
-            if myTreeWeight.weightSM < 0 :
-              temp = bvector[isyst]
-              bvector[isyst] = temp - myTreeWeight.weightsLHE.at(isyst) / myTreeWeight.weightSM
-  
-  
+             for isyst in xrange(weightsLHE.size()) : bvector[isyst] -= weightsLHE.at(isyst) / weightSM
+          
+          #print list(bvector )
+ 
         print ' weight = ',  mcWeight, " = ", positive, " - ", negative      
         mcNegW[0] = 1. * (positive - negative) / (positive + negative)
 
