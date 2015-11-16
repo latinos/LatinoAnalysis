@@ -134,10 +134,10 @@ for iProd in prodList :
         selectSample=True
         # ... from options
         if len(options.selTree) > 0 :
-          print  iSample
-          print options.selTree
+          #print  iSample
+          #print options.selTree
           if not iSample in options.selTree: selectSample=False
-          print selectSample
+          #print selectSample
         if len(options.excTree) > 0 :
           if iSample in options.excTree : selectSample=False
         # ... From iStep 
@@ -152,15 +152,15 @@ for iProd in prodList :
           if not 'doMCweights=True' in samples[iSample][1] : 
              selectSample=False
         # And Now add trees
-        if not Productions[iProd]['isData'] :
-          iTree = 'latino_'+iSample+'.root'
-          if iTree in FileInList: 
-            if options.redo and selectSample:
-               targetList[iSample] = 'NOSPLIT'
-            else:
-              if not iTree in FileExistList and selectSample: targetList[iSample] = 'NOSPLIT'
-        else: 
-          for iFile in FileInList:
+        #if not Productions[iProd]['isData'] :
+          #iTree = 'latino_'+iSample+'.root'
+          #if iTree in FileInList: 
+          #  if options.redo and selectSample:
+          #     targetList[iSample] = 'NOSPLIT'
+          #  else:
+          #    if not iTree in FileExistList and selectSample: targetList[iSample] = 'NOSPLIT'
+        #else: 
+        for iFile in FileInList:
             if options.redo or not iFile in FileExistList :
               if selectSample and iSample.replace('_25ns','') in iFile:
                 iKey = iFile.replace('latino_','').replace('.root','')
@@ -232,6 +232,8 @@ for iProd in prodList :
       for iTarget in targetList.keys(): 
         if '__part' in iTarget :
           iTargetOri = iTarget.split('__part')[0]
+        elif '_000' in iTarget :
+          iTargetOri = iTarget.split('_000')[0]
         elif Productions[iProd]['isData'] :
           for iSample in samples :  
             if iSample.replace('_25ns','') in iTarget : iTargetOri = iSample

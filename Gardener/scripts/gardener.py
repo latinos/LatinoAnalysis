@@ -26,6 +26,7 @@ from LatinoAnalysis.Gardener.variables.dymvaVar                   import DymvaVa
 
 # specific variables for MC
 from LatinoAnalysis.Gardener.variables.mcWeights                  import mcWeightsFiller
+from LatinoAnalysis.Gardener.variables.mcWeightsCount             import mcWeightsCounter
 
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
@@ -48,6 +49,8 @@ if __name__ == '__main__':
     modules['efftfiller']       = EffTrgFiller()
 
 # specific variables for MC
+
+    modules['mcweightscounter'] = mcWeightsCounter()
     modules['mcweightsfiller']  = mcWeightsFiller()
 
 

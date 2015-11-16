@@ -7,7 +7,8 @@ Productions= {
   '21Oct_25ns_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
-                        'dirExt'  : 'LatinoTrees' ,
+                        #'dirExt'  : 'LatinoTrees' ,
+                        'dirExt'  : 'piedratest' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
                       } ,
@@ -39,6 +40,13 @@ Steps= {
                 },
 
 # ... Individual Steps
+
+  'mcwghtcount':{ 
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py mcweightscounter '
+                },
 
   'mcweights' : {
                   'isChain'    : False ,
