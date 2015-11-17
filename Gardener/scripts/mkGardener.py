@@ -12,17 +12,19 @@ from LatinoAnalysis.Gardener.Gardener_cfg import *
 
 # ------------------------ baseW -------------------------
 
-def GetBaseW(inTree,iTarget,id_iTarget,isData,db):
+def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db):
    if isData : return '1'
    else:
      xs = db.get(iTarget) 
      if xs == '' : return '1'
      else:
-       print 'Opening: ',inTree
-       fileIn = ROOT.TFile.Open(inTree, "READ")
-       fileIn.ls()
-       nEvt = fileIn.Get('totalEvents').GetBinContent(1) 
-       fileIn.Close()
+       nEvt = 0
+       for inTree in inTreeList: 
+         print 'Opening: ',inTree
+         fileIn = ROOT.TFile.Open(inTree, "READ")
+#        fileIn.ls()
+         nEvt += fileIn.Get('totalEvents').GetBinContent(1) 
+         fileIn.Close()
        baseW = float(xs)*1000./nEvt
        print 'baseW: xs,N -> W', xs, nEvt , baseW
        return str(baseW)
@@ -296,7 +298,13 @@ for iProd in prodList :
 
         # Fix baseW if needed
         if Productions[iProd]['isData'] : baseW = '1.'
-        else: baseW = GetBaseW(oriTree,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB)
+        else: 
+          oriTreeList = []
+          for kTarget in targetList.keys():
+            if iTargetOri in kTarget : oriTreeList.append(os.path.dirname(oriTree)+'/latino_'+kTarget+'.root')
+            #print oriTree
+            #print oriTreeList
+          baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB)
         command = command.replace('RPLME_baseW',baseW)
 
         # Fix PU data 

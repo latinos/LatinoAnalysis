@@ -36,7 +36,7 @@ class TreeCloner(object):
         self.otreePU = None
         self.ohistoTotalEvents = None
         self.ohistoTotalEventsTriggers = None
-
+        self.histos2keep = []
 
     def _openRootFile(self,path, option=''):
         f =  ROOT.TFile.Open(path,option)
@@ -60,8 +60,7 @@ class TreeCloner(object):
         self.itreePU = self._getRootObj(self.ifile,"pu")
         self.itreeTotalEvents = self._getRootObj(self.ifile,"totalEvents")
         self.itreeTotalEventsTriggers = self._getRootObj(self.ifile,"totalEventsTriggers")
-
-
+        #ObjList = list(OrderedDict.fromkeys( [key.GetName() for key in  fileIn.GetListOfKeys()] )) 
 
     def clone(self,output,branches=[]):
 

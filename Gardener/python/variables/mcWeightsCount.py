@@ -67,7 +67,6 @@ class mcWeightsCounter(TreeCloner):
 
         step = 5000
         nentries = self.itree.GetEntries()
-        #nentries = 15000
         print 'Total number of entries: ',nentries 
 
         #what is self.itree? what is self.otree?
@@ -81,7 +80,6 @@ class mcWeightsCounter(TreeCloner):
         if myTreeWeight.__nonzero__() :       
  
           nentriesWeight = myTreeWeight.GetEntries()
-          nentriesWeight = 15000
   
           mcWeight[0] = 0
           mcNegW[0] = 0
