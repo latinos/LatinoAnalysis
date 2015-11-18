@@ -325,18 +325,19 @@ for iProd in prodList :
 
         # Fix baseW if needed
         if Productions[iProd]['isData'] : baseW = '1.'
-        else: 
+        elif iStep == 'baseW' or ( 'isChain' in Steps[iStep] and Steps[iStep]['isChain'] and 'baseW' in Steps[iStep]['subTargets'] ): 
           oriTreeList = []
           for kTarget in targetList.keys():
             kTargetOri = kTarget
             if '_000' in kTarget :
               kTargetOri = kTarget.split('_000')[0]
-            #print kTargetOri , kTargetOri
+            elif '__part' in kTarget :
+              kTargetOri = kTarget.split('__part')[0]
             if iTargetOri == kTargetOri : 
-               #print "Match" , '/latino_'+kTarget+'.root'
                oriTreeList.append(os.path.dirname(oriTree)+'/latino_'+kTarget+'.root')
           #print oriTreeList
           baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB)
+        else: baseW = '1.'
         command = command.replace('RPLME_baseW',baseW)
 
         # Fix PU data 
