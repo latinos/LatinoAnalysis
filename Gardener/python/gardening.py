@@ -10,6 +10,7 @@ import os.path
 import traceback
 
 import LatinoAnalysis.Gardener.odict as odict
+#from collections import OrderedDict
 
 # for trigger efficiency fits
 from LatinoAnalysis.Gardener.hwwtools import confirm
@@ -51,7 +52,7 @@ class TreeCloner(object):
             #raise NameError('Object '+name+' doesn\'t exist in '+d.GetName())
         return o
 
-    def connect(self, tree, input):
+    def connect(self, tree, input , histos2Create =[]):
         self.ifile = self._openRootFile(input)
         self.itree = self._getRootObj(self.ifile,tree)
 
@@ -60,7 +61,13 @@ class TreeCloner(object):
         self.itreePU = self._getRootObj(self.ifile,"pu")
         self.itreeTotalEvents = self._getRootObj(self.ifile,"totalEvents")
         self.itreeTotalEventsTriggers = self._getRootObj(self.ifile,"totalEventsTriggers")
-        #ObjList = list(OrderedDict.fromkeys( [key.GetName() for key in  fileIn.GetListOfKeys()] )) 
+
+        self.histos2keep = []
+        ObjList = [key.GetName() for key in  self.ifile.GetListOfKeys()] 
+        for iObj in ObjList:
+          pObj = self.ifile.Get(iObj)
+          if not pObj.ClassName() == 'TTree' and not iObj in ['totalEvents','totalEventsTriggers'] and not iObj in histos2Create :
+            self.histos2keep.append(iObj)
 
     def clone(self,output,branches=[]):
 
@@ -93,6 +100,10 @@ class TreeCloner(object):
           self.ohistoTotalEventsTriggers = self.itreeTotalEventsTriggers.Clone()
           self.ohistoTotalEventsTriggers.Write()
         
+        for iObj in self.histos2keep : 
+           hist = self.ifile.Get(iObj).Clone()
+           hist.Write()
+
         self.ofile.Close()
         self.ifile.Close()
 
@@ -110,7 +121,7 @@ class TreeCloner(object):
         self.itreePU = None
         self.itreeTotalEvents = None
         self.itreeTotalEventsTriggers = None
-          
+        self.histos2keep = []  
           
 #    ___                       
 #   / _ \______ _____  ___ ____

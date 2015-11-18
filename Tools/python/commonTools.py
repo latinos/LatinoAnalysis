@@ -53,8 +53,8 @@ class xsectionDB:
           self.xsections[iKey] = {}
           self.xsections[iKey]['ID']     = iID
           self.xsections[iKey]['sample'] = info[1].replace(' ','')
-          if len(info) > 9 :
-            self.xsections[iKey]['xs']     = info[9].replace(' ','')
+          if len(info) > 4 :
+            self.xsections[iKey]['xs']     = info[5].replace(' ','')
           else: 
             self.xsections[iKey]['xs']     = ''
 

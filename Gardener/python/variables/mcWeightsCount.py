@@ -50,14 +50,16 @@ class mcWeightsCounter(TreeCloner):
         output = kwargs['output']
 
         # does that work so easily and give new variable itree and otree?
-        self.connect(tree,input)
+        # Histos that will be created and should be overwritten if existing
+        histos2Create = ['mcWhgt','mcWhgtPos','mcWhgtNeg','mcWhgtLHE','mcEvtCount']
+        self.connect(tree,input,histos2Create)
         newbranches = ['mcWeight']
+        newbranches = []
         self.clone(output,newbranches)
-        #self.ofile = self._openRootFile(output, 'recreate')
 
 
         mcWeight        = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('mcWeight'  , mcWeight  , 'mcWeight/F')
+#       self.otree.Branch('mcWeight'  , mcWeight  , 'mcWeight/F')
         mcNegW        = numpy.ones(1, dtype=numpy.float32)
 #       self.otree.Branch('mcNegW'  , mcNegW  , 'mcNegW/F')
 
@@ -66,6 +68,7 @@ class mcWeightsCounter(TreeCloner):
 
 
         step = 5000
+        nentries = 15000
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
 
@@ -78,9 +81,9 @@ class mcWeightsCounter(TreeCloner):
         
         myTreeWeight = self._getRootObj(self.ifile,'mcweight')
         if myTreeWeight.__nonzero__() :       
- 
+
           nentriesWeight = myTreeWeight.GetEntries()
-  
+           
           mcWeight[0] = 0
           mcNegW[0] = 0
           positive = 0
@@ -96,7 +99,7 @@ class mcWeightsCounter(TreeCloner):
           for i in xrange(nentriesWeight):
             myTreeWeight.GetEntry(i)
             if i > 0 and i%step == 0.:
-                  print i,'events processed.'
+                  print i,'events processed. / ',nentriesWeight
             weightSM   = myTreeWeight.weightSM          
             weightsLHE = myTreeWeight.weightsLHE
   
@@ -131,16 +134,19 @@ class mcWeightsCounter(TreeCloner):
   
           self.ofile.cd()
   
+          h_mcCount   = ROOT.TH1F("mcEvtCount" ,"mcEvtCount"    ,1,0,1)
           h_mcWhgt    = ROOT.TH1F("mcWhgt"   ,"mcWhgt"   ,1,0,1)
           h_mcWhgtPos = ROOT.TH1F("mcWhgtPos","mcWhgtPos",1,0,1)
           h_mcWhgtNeg = ROOT.TH1F("mcWhgtNeg","mcWhgtNeg",1,0,1)
           h_mcWhgtLHE = ROOT.TH1F("mcWhgtLHE","mcWhgtLHE",len(bvector),0,len(bvector))
   
+          h_mcCount.Fill(0.5,nentriesWeight) 
           h_mcWhgt.Fill(0.5,mcWeight[0])
           h_mcWhgtPos.Fill(0.5,positive)
           h_mcWhgtNeg.Fill(0.5,negative)
           for isyst in xrange(weightsLHE.size()) : h_mcWhgtLHE.Fill(isyst+0.5,bvector[isyst])        
-  
+ 
+          h_mcCount.Write() 
           h_mcWhgt.Write()
           h_mcWhgtPos.Write()
           h_mcWhgtNeg.Write()

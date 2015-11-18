@@ -7,8 +7,8 @@ Productions= {
   '21Oct_25ns_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
-                        #'dirExt'  : 'LatinoTrees' ,
-                        'dirExt'  : 'piedratest' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        #'dirExt'  : 'split' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
                       } ,
@@ -22,7 +22,8 @@ Productions= {
   '21Oct_Run2015D_PromptReco' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns.py' ,
-                        'dirExt'  : 'Run2015D_PromptReco' ,
+                        #'dirExt'  : 'Run2015D_PromptReco' ,
+                        'dirExt'  : 'split' ,
                       } ,
 
 }
@@ -36,7 +37,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True , 
                   'do4Data'    : False,
-                  'subTargets' : ['mcweights','puadder','baseW','wwNLL']
+                  'subTargets' : ['puadder','baseW','wwNLL']
                 },
 
 # ... Individual Steps
@@ -48,12 +49,12 @@ Steps= {
                   'command'    : 'gardener.py mcweightscounter '
                 },
 
-  'mcweights' : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False ,
-                  'command'    : 'gardener.py mcweightsfiller '
-                } ,
+# 'mcweights' : {
+#                 'isChain'    : False ,
+#                 'do4MC'      : True  ,
+#                 'do4Data'    : False ,
+#                 'command'    : 'gardener.py mcweightsfiller '
+#               } ,
 
   'puadder'   : {
                   'isChain'    : False ,
