@@ -180,10 +180,10 @@ for iProd in prodList :
               if selectSample and iSample.replace('_25ns','') in iFile:
                 iKey = iFile.replace('latino_','').replace('.root','')
                 #print iKey
-                if '__part' in iKey :
-                  aSample = iKey.split('__part')[0]
-                elif '_000' in iKey :
+                if '_000' in iKey :
                   aSample = iKey.split('_000')[0]
+                elif '__part' in iKey :
+                  aSample = iKey.split('__part')[0]
                 elif Productions[iProd]['isData'] :
                   if iSample.replace('_25ns','') in iKey : aSample = iSample
                   #for iSample in samples :
@@ -258,10 +258,10 @@ for iProd in prodList :
 
       # And now do/create to job for each target
       for iTarget in targetList.keys(): 
-        if '__part' in iTarget :
-          iTargetOri = iTarget.split('__part')[0]
-        elif '_000' in iTarget :
+        if '_000' in iTarget :
           iTargetOri = iTarget.split('_000')[0]
+        elif '__part' in iTarget :
+          iTargetOri = iTarget.split('__part')[0]
         elif Productions[iProd]['isData'] :
           for iSample in samples :  
             if iSample.replace('_25ns','') in iTarget : iTargetOri = iSample
@@ -345,17 +345,17 @@ for iProd in prodList :
         command = command.replace('RPLME_puData',puData)  
 
         # Stage Out
-        if '__part' in iTarget:
-          iPart = iTarget.split('__part')[1].split('_')[0]
-          if options.iStep == 'Prod' :
-            command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
-          else:
-            command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
+        #if '__part' in iTarget:
+        # iPart = iTarget.split('__part')[1].split('_')[0]
+        # if options.iStep == 'Prod' :
+        #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
+        # else:
+        #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
+        #lse:
+        if options.iStep == 'Prod' :
+          command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
         else:
-          if options.iStep == 'Prod' :
-            command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
-          else:
-            command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
+          command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
         command+='; rm '+outTree
         logFile=wDir+'/log__'+iTarget+'.log'
