@@ -83,10 +83,10 @@ class TreeCloner(object):
         self.itree.SetBranchStatus('*'  ,1)
 
 
-    def disconnect(self,keepTreeMC=True):
+    def disconnect(self,keepTreeMC=True,cleanUp=True):
+        self.ofile.cd()
         self.otree.Write()
         # additional trees and histograms not to be lost ...
-        self.ofile.cd()
         if self.itreeMC.__nonzero__() and keepTreeMC : 
           self.otreeMC = self.itreeMC.CloneTree()
           self.otreeMC.Write()
@@ -105,23 +105,24 @@ class TreeCloner(object):
            hist.Write()
 
         self.ofile.Close()
-        self.ifile.Close()
+	if cleanUp:
+          self.ifile.Close()
 
-        self.ifile = None
-        self.itree = None
-        self.ofile = None
-        self.otree = None
+          self.ifile = None
+          self.itree = None
+          self.ofile = None
+          self.otree = None
         
-        # cleaning
-        self.otreeMC = None
-        self.otreePU = None
-        self.ohistoTotalEvents = None
-        self.ohistoTotalEventsTriggers = None
-        self.itreeMC = None
-        self.itreePU = None
-        self.itreeTotalEvents = None
-        self.itreeTotalEventsTriggers = None
-        self.histos2keep = []  
+          # cleaning
+          self.otreeMC = None
+          self.otreePU = None
+          self.ohistoTotalEvents = None
+          self.ohistoTotalEventsTriggers = None
+          self.itreeMC = None
+          self.itreePU = None
+          self.itreeTotalEvents = None
+          self.itreeTotalEventsTriggers = None
+          self.histos2keep = []  
           
 #    ___                       
 #   / _ \______ _____  ___ ____
