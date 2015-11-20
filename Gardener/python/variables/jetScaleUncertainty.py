@@ -203,7 +203,7 @@ class JESTreeMaker(TreeCloner):
 
         #for i in xrange(10000):
         #for i in xrange(2000):
-        for i in xrange(10):
+        for i in xrange(nentries):
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
@@ -211,7 +211,6 @@ class JESTreeMaker(TreeCloner):
                 
             # scale jet pt
             # Scale Up
-            print 'jet pt: ', itree.std_vector_jet_pt[0]
             jetPtUp = []
             for i in range(itree.std_vector_jet_pt.size()):
                 if itree.std_vector_jet_pt[i] > 0:
@@ -222,9 +221,6 @@ class JESTreeMaker(TreeCloner):
                     break
                 
             jetOrderUp = sorted(range(len(jetPtUp)), key=lambda k: jetPtUp[k], reverse=True)
-            #print 'jet uncertainty: ', jecUnc.getUncertainty(True)
-            print 'jet pt: ', jetPtUp
-            print 'jet order: ', jetOrderUp
                            
             for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                 bvector.clear()
@@ -236,15 +232,18 @@ class JESTreeMaker(TreeCloner):
                 else:
                     self.changeOrder( bname, bvector, jetOrderUp)
             
-            jetpt1 = jetPtUp[jetOrderUp[0]]
-            jetpt2 = jetPtUp[jetOrderUp[1]]
-            jeteta1 = itree.std_vector_jet_eta[jetOrderUp[0]]
-            jeteta2 = itree.std_vector_jet_eta[jetOrderUp[1]]
-            jetphi1 = itree.std_vector_jet_phi[jetOrderUp[0]]
-            jetphi2 = itree.std_vector_jet_phi[jetOrderUp[1]]
-            jetmass1 = itree.std_vector_jet_mass[jetOrderUp[0]]
-            jetmass2 = itree.std_vector_jet_mass[jetOrderUp[1]]
-            WWUp = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
+            if len(jetPtUp) > 1:
+                jetpt1 = jetPtUp[jetOrderUp[0]]
+                jetpt2 = jetPtUp[jetOrderUp[1]]
+                jeteta1 = itree.std_vector_jet_eta[jetOrderUp[0]]
+                jeteta2 = itree.std_vector_jet_eta[jetOrderUp[1]]
+                jetphi1 = itree.std_vector_jet_phi[jetOrderUp[0]]
+                jetphi2 = itree.std_vector_jet_phi[jetOrderUp[1]]
+                jetmass1 = itree.std_vector_jet_mass[jetOrderUp[0]]
+                jetmass2 = itree.std_vector_jet_mass[jetOrderUp[1]]
+                WWUp = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
+            else:
+                WWUp = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             
             # set the list of jets into the object "WW"
             new_std_vector_jet_pt.clear()
@@ -284,7 +283,6 @@ class JESTreeMaker(TreeCloner):
                 else:
                      break
             jetOrderDown = sorted(range(len(jetPtDown)), key=lambda k: jetPtDown[k], reverse=True)
-            print 'jet pt down: ', jetPtDown          
                     
             for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                 bvector.clear()
@@ -295,17 +293,19 @@ class JESTreeMaker(TreeCloner):
                         bvector.push_back ( -9999. )
                 else:
                     self.changeOrder( bname, bvector, jetOrderDown)
-            
-            jetpt1 = jetPtDown[jetOrderDown[0]]
-            jetpt2 = jetPtDown[jetOrderDown[1]]
-            jeteta1 = itree.std_vector_jet_eta[jetOrderDown[0]]
-            jeteta2 = itree.std_vector_jet_eta[jetOrderDown[1]]
-            jetphi1 = itree.std_vector_jet_phi[jetOrderDown[0]]
-            jetphi2 = itree.std_vector_jet_phi[jetOrderDown[1]]
-            jetmass1 = itree.std_vector_jet_mass[jetOrderDown[0]]
-            jetmass2 = itree.std_vector_jet_mass[jetOrderDown[1]]
-            WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
-            
+                    
+            if len(jetPtDown) > 1:
+                jetpt1 = jetPtDown[jetOrderDown[0]]
+                jetpt2 = jetPtDown[jetOrderDown[1]]
+                jeteta1 = itree.std_vector_jet_eta[jetOrderDown[0]]
+                jeteta2 = itree.std_vector_jet_eta[jetOrderDown[1]]
+                jetphi1 = itree.std_vector_jet_phi[jetOrderDown[0]]
+                jetphi2 = itree.std_vector_jet_phi[jetOrderDown[1]]
+                jetmass1 = itree.std_vector_jet_mass[jetOrderDown[0]]
+                jetmass2 = itree.std_vector_jet_mass[jetOrderDown[1]]
+                WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
+            else:
+                WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             # set the list of jets into the object "WW"
             new_std_vector_jet_pt.clear()
             for iGoodJet in jetOrderDown :
