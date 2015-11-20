@@ -224,8 +224,7 @@ class L2SelFiller(TreeCloner):
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
 
-        #self.jetVarDic = OrderedDict()
-        self.jetVarDic = {}
+        self.jetVarDic = OrderedDict()
         for bname in self.jetVarList:
           bvariable = numpy.ones(1, dtype=numpy.float32)
           self.jetVarDic[bname] = bvariable
@@ -334,7 +333,7 @@ class L2SelFiller(TreeCloner):
               # now filter the leptons list
               # [ x, - , - , x , x , x , - , - ]
               # [ x  x   x   x   -   -   -   - ]
-              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():  # really necessary?
+              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                 bvector.clear()
              
               # prepare the new vectors removing unwanted positions
@@ -413,14 +412,14 @@ class L2SelFiller(TreeCloner):
                 bvariable[0] = getattr(WW, bname)()
                 
               # refill the single jet variables
-              for jetVar in self.jetVariables:
-                for iJet in xrange(maxnjets):
-                  if iJet < len(goodJets) :
-                    #  e.g.       jetpt1 = itree.std_vector_jet_pt[  goodJets[ 0 ] ]                                         
-                    self.jetVarDic['jet'+jetVar+str(i+1)] = (getattr(self.itree, 'std_vector_jet_'+jetVar ))[ goodJets[iJet] ]
-                  else :
-                    self.jetVarDic['jet'+jetVar+str(i+1)] = -9999.
-                    
+	      counter = 0
+              varCounter = 0
+              for bname, bvariable in self.jetVarDic.iteritems():
+                  bvariable[0] = (getattr(self.otree, 'std_vector_jet_'+self.jetVariables[varCounter]))[counter]
+                  counter += 1
+                  if counter == maxnjets:
+                      varCounter += 1
+                      counter = 0                    
 
               otree.Fill()
 
