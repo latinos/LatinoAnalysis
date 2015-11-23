@@ -102,14 +102,16 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   pid1 = pidl1;
   pid2 = pidl2;
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
-  J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1); //---- NB: jets are treated as massive
-  J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
   isOk =  true;
  }
  else {
   isOk = false;
  }
- jetOk = true;
+ if( jetpt1>0 && jetpt2 > 0) {
+  J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1); //---- NB: jets are treated as massive
+  J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
+  jetOk = true;
+ }
 }
 
 //! set functions

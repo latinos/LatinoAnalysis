@@ -31,6 +31,9 @@ from LatinoAnalysis.Gardener.variables.mcWeightsCount             import mcWeigh
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
 
+# JES uncertainty
+from LatinoAnalysis.Gardener.variables.jetScaleUncertainty        import JESTreeMaker
+
 
 
 if __name__ == '__main__':
@@ -72,5 +75,7 @@ if __name__ == '__main__':
 # apply selections and update variables
     modules['l2selfiller']     = L2SelFiller()
 
+# Nuisances
+    modules['JESTreeMaker']   = JESTreeMaker()
 
     gardener_cli( modules )
