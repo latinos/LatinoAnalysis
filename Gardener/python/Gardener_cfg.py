@@ -16,7 +16,8 @@ Productions= {
   '21Oct_Run2015D_05Oct2015' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_05Oct2015_25ns.py' ,
-                        'dirExt'  : 'Run2015D_05Oct2015' ,
+                        #'dirExt'  : 'Run2015D_05Oct2015' ,
+                        'dirExt'  : 'split' ,
                       } ,
 
   '21Oct_Run2015D_PromptReco' : {
@@ -38,6 +39,13 @@ Steps= {
                   'do4MC'      : True , 
                   'do4Data'    : False,
                   'subTargets' : ['puadder','baseW','wwNLL']
+                },
+
+  'MCl2sel' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['puadder','baseW','wwNLL','l2sel']
                 },
 
 # ... Individual Steps

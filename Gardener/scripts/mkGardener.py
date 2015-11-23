@@ -107,7 +107,10 @@ for iProd in prodList :
   prodFile=CMSSW+'/src/'+Productions[iProd]['samples']
   handle = open(prodFile,'r')
   for iLine in handle.read().split('\n') : 
-    if 'samples' in iLine : exec(iLine)  
+    #print iLine
+    if 'samples' in iLine : 
+      exec(iLine)  
+    #print samples.keys()
     if 'config.Data.outLFNDirBase' in iLine : prodDir=iLine.split('=')[1].replace('\'','').replace(' ','')
   handle.close()
 
@@ -116,7 +119,7 @@ for iProd in prodList :
   if not Productions[iProd]['isData'] :  xsDB = xsectionDB(Productions[iProd]['gDocID'])
     
   # Find existing Input files 
-  if not options.iStep in Steps: options.iStep = 'Prod'
+  #if not options.iStep in Steps: options.iStep = 'Prod'
   if options.iStep == 'Prod' : 
     fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']
   else:
@@ -142,7 +145,7 @@ for iProd in prodList :
       FileExistList=string.split(out)
       print fileCmd
       print FileExistList
-      #print samples
+      print samples.keys()
       for iSample in samples : 
         # Tree selector
         selectSample=True
@@ -190,8 +193,8 @@ for iProd in prodList :
                   #if iSample.replace('_25ns','') in iTarget : iTargetOri = iSample
                 else:
                   aSample = iKey
-                #print aSample , iSample
-                if aSample == iSample :
+                print aSample , iSample
+                if aSample == iSample.replace('_25ns','') :
                   if options.iStep == 'Prod' :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                   else:
@@ -292,6 +295,7 @@ for iProd in prodList :
         if 'isChain' in Steps[iStep] and Steps[iStep]['isChain']:
           iName=''
           cStep=0
+          finalTree=inTree
 
           for iSubStep in  Steps[iStep]['subTargets'] :
             cStep+=1
@@ -313,11 +317,17 @@ for iProd in prodList :
             else:
               iName+='__'+iSubStep
               if selectSample : inTree  = outTree
+
             if selectSample : 
               outTree ='latino_'+iTarget+'__'+iName+'.root'
               command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
-            else : outTree = inTree 
-            
+              finalTree=outTree
+            else : 
+              outTree = inTree 
+
+          # Tree to be kept:
+          outTree = finalTree  
+
         # single Target
         else:
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
