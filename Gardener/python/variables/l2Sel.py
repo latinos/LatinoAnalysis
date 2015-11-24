@@ -89,76 +89,13 @@ class L2SelFiller(TreeCloner):
         # either because leptons are filtered by id/iso, 
         # or because jets are filtered because they are actually leptons
         #
-        self.namesOldBranchesToBeModifiedVector = [
-            'std_vector_lepton_BestTrackdxy',
-            'std_vector_lepton_BestTrackdz',
-            'std_vector_lepton_Chi2LocalPos',
-            'std_vector_lepton_NTkLayers',
-            'std_vector_lepton_NValidFractInTrk',
-            'std_vector_lepton_NValidHitsInTrk',
-            'std_vector_lepton_NValidHitsSATrk',
-            'std_vector_lepton_NValidPixelHitsInTrk',
-            'std_vector_lepton_NormChi2GTrk',
-            'std_vector_lepton_NumOfMatchedStations',
-            'std_vector_lepton_SegCompatibilty',
-            'std_vector_lepton_TrkKink',
-            'std_vector_lepton_chargedHadronIso',
-            'std_vector_lepton_chargedParticleIso',
-            'std_vector_lepton_closejet_PartonFlavour',
-            'std_vector_lepton_closejet_drlj',
-            'std_vector_lepton_closejet_eta',
-            'std_vector_lepton_closejet_phi',
-            'std_vector_lepton_closejet_pt',
-            'std_vector_lepton_eleIdLoose',
-            'std_vector_lepton_eleIdMedium',
-            'std_vector_lepton_eleIdTight',
-            'std_vector_lepton_eleIdVeto',
-            'std_vector_lepton_neutralHadronIso',
-            'std_vector_lepton_photonIso',
-            'std_vector_lepton_sumPUPt',
-            'std_vector_lepton_pt',
-            'std_vector_lepton_ch',
-            'std_vector_lepton_flavour',
-            'std_vector_lepton_eta',
-            'std_vector_lepton_isMediumMuon',
-            'std_vector_lepton_elSIP3D',
-            'std_vector_lepton_isTightMuon',
-            'std_vector_lepton_muSIP3D',
-            'std_vector_lepton_phi',
-
-            'std_vector_jet_NumberSoftMu',
-            'std_vector_jet_bjpb',
-            'std_vector_jet_cmva',
-            'std_vector_jet_csvv2ivf',
-            'std_vector_jet_mass',
-            'std_vector_jet_pfcsv',
-            'std_vector_jet_softMuEta',
-            'std_vector_jet_softMuIso',
-            'std_vector_jet_softMuPhi',
-            'std_vector_jet_softMuPt',
-            #'std_vector_jet_softMuD0',  # from next latino production
-            #'std_vector_jet_softMuDz',  # from next latino production
-            'std_vector_jet_NumberSoftMu',
-            'std_vector_jet_ssvhb',
-            'std_vector_jet_ssvhe',
-            'std_vector_jet_tche',
-            'std_vector_jet_tchp',
-            'std_vector_jet_eta',
-            'std_vector_jet_QGRmax',
-            'std_vector_jet_puid',
-            'std_vector_jet_pt',
-            'std_vector_jet_phi',
-            'std_vector_jet_QGlikelihood',            
-            'std_vector_jet_QGaxis2',
-            'std_vector_jet_HadronFlavour',            
-            'std_vector_jet_QGaxis1',
-            'std_vector_jet_QGRMScand',
-            'std_vector_jet_PartonFlavour',
-            
-            'std_vector_puppijet_eta',
-            'std_vector_puppijet_phi',
-            'std_vector_puppijet_pt'
-           ]
+        self.namesOldBranchesToBeModifiedVector = []
+	vectorsToChange = ['std_vector_lepton_','std_vector_jet_','std_vector_puppijet_']
+        for b in self.itree.GetListOfBranches():
+	    branchName = b.GetName()
+	    for subString in vectorsToChange:
+		if subString in branchName:
+		    self.namesOldBranchesToBeModifiedVector.append(branchName)
         
         # and these variables NEED to be defined as functions in WWVar.C
         # e.g. mll, dphill, ...

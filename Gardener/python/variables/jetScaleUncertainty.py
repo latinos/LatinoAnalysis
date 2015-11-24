@@ -85,36 +85,13 @@ class JESTreeMaker(TreeCloner):
         # see: https://root.cern.ch/phpBB3/viewtopic.php?t=12507
         # this is the list of variables to be modified
         #
-        self.namesOldBranchesToBeModifiedVector = [
-            'std_vector_jet_pt',
-            'std_vector_jet_NumberSoftMu',
-            'std_vector_jet_bjpb',
-            'std_vector_jet_cmva',
-            'std_vector_jet_csvv2ivf',
-            'std_vector_jet_mass',
-            'std_vector_jet_pfcsv',
-            'std_vector_jet_softMuEta',
-            'std_vector_jet_softMuIso',
-            'std_vector_jet_softMuPhi',
-            'std_vector_jet_softMuPt',
-            #'std_vector_jet_softMuD0',  # from next latino production
-            #'std_vector_jet_softMuDz',  # from next latino production
-            'std_vector_jet_NumberSoftMu',
-            'std_vector_jet_ssvhb',
-            'std_vector_jet_ssvhe',
-            'std_vector_jet_tche',
-            'std_vector_jet_tchp',
-            'std_vector_jet_eta',
-            'std_vector_jet_QGRmax',
-            'std_vector_jet_puid',
-            'std_vector_jet_phi',
-            'std_vector_jet_QGlikelihood',            
-            'std_vector_jet_QGaxis2',
-            #'std_vector_jet_HadronFlavour',            
-            'std_vector_jet_QGaxis1',
-            'std_vector_jet_QGRMScand',
-            #'std_vector_jet_PartonFlavour',
-           ]
+	self.namesOldBranchesToBeModifiedVector = []
+	vectorsToChange = ['std_vector_jet_']
+        for b in self.itree.GetListOfBranches():
+	    branchName = b.GetName()
+	    for subString in vectorsToChange:
+		if subString in branchName:
+		    self.namesOldBranchesToBeModifiedVector.append(branchName)
         
         # and these variables NEED to be defined as functions in WWVar.C
         # e.g. mll, dphill, ...
