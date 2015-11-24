@@ -316,14 +316,12 @@ for iProd in prodList :
               iName=iSubStep
             else:
               iName+='__'+iSubStep
-              if selectSample : inTree  = outTree
 
             if selectSample : 
+              inTree=finalTree              
               outTree ='latino_'+iTarget+'__'+iName+'.root'
               command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
               finalTree=outTree
-            else : 
-              outTree = inTree 
 
           # Tree to be kept:
           outTree = finalTree  
