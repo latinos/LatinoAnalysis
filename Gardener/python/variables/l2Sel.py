@@ -150,10 +150,10 @@ class L2SelFiller(TreeCloner):
             'std_vector_jet_phi',
             'std_vector_jet_QGlikelihood',            
             'std_vector_jet_QGaxis2',
-            #'std_vector_jet_HadronFlavour',            
+            'std_vector_jet_HadronFlavour',            
             'std_vector_jet_QGaxis1',
             'std_vector_jet_QGRMScand',
-            #'std_vector_jet_PartonFlavour',
+            'std_vector_jet_PartonFlavour',
             
             'std_vector_puppijet_eta',
             'std_vector_puppijet_phi',
