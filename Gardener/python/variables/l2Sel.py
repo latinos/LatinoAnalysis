@@ -90,7 +90,7 @@ class L2SelFiller(TreeCloner):
         # or because jets are filtered because they are actually leptons
         #
         self.namesOldBranchesToBeModifiedVector = []
-	vectorsToChange = ['std_vector_lepton_','std_vector_jet_','std_vector_puppijet_']
+	vectorsToChange = ['std_vector_lepton_','std_vector_electron_','std_vector_muon_','std_vector_jet_','std_vector_puppijet_']
         for b in self.itree.GetListOfBranches():
 	    branchName = b.GetName()
 	    for subString in vectorsToChange:
