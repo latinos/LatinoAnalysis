@@ -121,7 +121,7 @@ for iProd in prodList :
   # Find existing Input files 
   #if not options.iStep in Steps: options.iStep = 'Prod'
   if options.iStep == 'Prod' : 
-    fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']
+    fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']+' | grep -v ttDM'
   else:
     fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep
   print fileCmd
@@ -194,12 +194,12 @@ for iProd in prodList :
                 else:
                   aSample = iKey
                 print aSample , iSample
-                if aSample == iSample.replace('_25ns','') :
+                if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
                   if options.iStep == 'Prod' :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                   else:
                     targetList[iKey] = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile
-      #print targetList  
+      print targetList  
 
 
 
