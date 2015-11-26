@@ -199,9 +199,37 @@ for iProd in prodList :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                   else:
                     targetList[iKey] = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile
-      print targetList  
+      #print targetList  
 
+      # Safeguard against partial run on splitted samples -> Re-include all files from that sample
+      if not iStep in ['mcwghtcount']: 
+        lSample = []
+        for iTarget in targetList.keys(): 
+          if   '_000' in iTarget :
+            aSample = iTarget.split('_000')[0]
+            if not aSample in lSample : lSample.append(aSample)
+          elif '__part' in iTarget:
+            aSample = iTarget.split('__part')[0]
+            if not aSample in lSample : lSample.append(aSample)
+        #print lSample  
+        for iSample in lSample:
+          #print iSample
+          for iFile in FileInList:
+            iKey = iFile.replace('latino_','').replace('.root','')
+            if '_000' in iKey :
+              aSample = iKey.split('_000')[0]
+            elif '__part' in iKey :
+              aSample = iKey.split('__part')[0] 
+            if aSample == iSample:
+              if not iKey in targetList.keys():
+                print 'Re-Adding split tree: ', iKey, iFile
+                if options.iStep == 'Prod' :
+                  targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
+                else:
+                  targetList[iKey] = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile 
 
+      print targetList
+      #quit() 
 
       # Create Output Directory on eos
       if options.iStep == 'Prod' :
