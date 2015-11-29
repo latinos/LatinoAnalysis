@@ -91,6 +91,24 @@ class ShapeFactory:
               #print "nuisance = ", nuisance
               # open the root file
 
+
+        #
+        # check if any sample is MC:
+        #    if MC then add the scaling to luminosity
+        #    first create the "weights" list, if not already available 
+        for sampleName, sample in self._samples.iteritems():
+          if 'weights' not in sample.keys() :
+            sample['weights'] = []
+            for numSample in range(0, len(sample ['name']) ) :
+              sample['weights'].append ('1')
+        # then add the lumi scale factor
+        for sampleName, sample in self._samples.iteritems():
+          for numisDataList in range(0, len(sample ['isData']) ) :
+            if sample ['isData'][numisDataList] == '0' :
+              sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
+              print " sample ['weights'][", numisDataList, "] = " , sample ['weights'][numisDataList]
+
+
         # connect the trees
         list_of_trees_to_connect = {}
         for sampleName, sample in self._samples.iteritems():
@@ -909,8 +927,7 @@ if __name__ == '__main__':
         handle = open(opt.nuisancesFile,'r')
         exec(handle)
         handle.close()
-    
-    
+         
     factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
     
         

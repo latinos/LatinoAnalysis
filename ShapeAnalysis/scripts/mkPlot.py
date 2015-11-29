@@ -114,6 +114,7 @@ class ShapeFactory:
               # for example to "see" a signal
               if 'scale' in plot[sampleName].keys() : 
                 histos[sampleName].Scale(plot[sampleName]['scale'])
+                print " >> scale ", sampleName, " to ", plot[sampleName]['scale']
 
               # MC style
               if plot[sampleName]['isData'] == 0 :
@@ -127,7 +128,7 @@ class ShapeFactory:
              
                 histos[sampleName].SetLineColor(plot[sampleName]['color'])
                 # scale to luminosity if MC
-                histos[sampleName].Scale(self._lumi)
+                #histos[sampleName].Scale(self._lumi)  ---> NO! They are already scaled to luminosity in mkShape!
                 
                 if plot[sampleName]['isSignal'] == 1 :
                   thsSignal.Add(histos[sampleName])
