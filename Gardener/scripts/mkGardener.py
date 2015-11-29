@@ -338,12 +338,15 @@ for iProd in prodList :
             # ... From iStep
             if 'onlySample' in Steps[iSubStep] :
               if len(Steps[iSubStep]['onlySample']) > 0 :
-                if not iSample in Steps[iSubStep]['onlySample'] : selectSample=False
+                #print Steps[iSubStep]['onlySample'] , iSample , iTargetOri
+                if not iTargetOri in Steps[iSubStep]['onlySample'] : selectSample=False
             if 'excludeSample' in Steps[iSubStep] :
               if len(Steps[iSubStep]['excludeSample']) > 0 :
-                if iSample in Steps[iSubStep]['excludeSample'] : selectSample=False
+                if iTargetOri in Steps[iSubStep]['excludeSample'] : selectSample=False
             if iSubStep in ['mcweights']: # ,'mcwghtcount' ]  :
               if not 'doMCweights=True' in samples[iTargetOri][1] : selectSample=False
+
+            #print iSubStep , selectSample
 
             if cStep == 1 :
               iName=iSubStep
