@@ -7,8 +7,8 @@ Productions= {
   '21Oct_25ns_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
-                        #'dirExt'  : 'LatinoTrees' ,
-                        'dirExt'  : 'split' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        #'dirExt'  : 'split' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
                       } ,
@@ -65,6 +65,13 @@ Steps= {
 #               } ,
 
   'puadder'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py puadder --data=RPLME_puData --HistName=pileup --branch=puW --kind=trpu '
+                } ,
+
+  'puadderFix'   : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,

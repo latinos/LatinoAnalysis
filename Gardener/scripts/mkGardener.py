@@ -87,6 +87,9 @@ parser.add_option("-q", "--quiet",    dest="quiet",     help="Quiet logs",      
 parser.add_option("-n", "--dry-run",    dest="pretend",     help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
 parser.add_option("-T", "--selTree",   dest="selTree" , help="Select only some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('selTree',','))
 parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
+#queue '8nh'
+parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default="8nh" , type='string' ) 
+
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -121,7 +124,7 @@ for iProd in prodList :
   # Find existing Input files 
   #if not options.iStep in Steps: options.iStep = 'Prod'
   if options.iStep == 'Prod' : 
-    fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']+' | grep -v ttDM'
+    fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] #+' | grep -v ttDM'
   else:
     fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep
   print fileCmd
@@ -216,10 +219,12 @@ for iProd in prodList :
           #print iSample
           for iFile in FileInList:
             iKey = iFile.replace('latino_','').replace('.root','')
+            aSample = iKey
             if '_000' in iKey :
               aSample = iKey.split('_000')[0]
             elif '__part' in iKey :
               aSample = iKey.split('__part')[0] 
+            print aSample, iSample
             if aSample == iSample:
               if not iKey in targetList.keys():
                 print 'Re-Adding split tree: ', iKey, iFile
@@ -377,7 +382,8 @@ for iProd in prodList :
         command = command.replace('RPLME_baseW',baseW)
 
         # Fix PU data 
-        puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 
+        #puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 
+        puData = '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root'
         command = command.replace('RPLME_puData',puData)  
 
         # Stage Out
@@ -389,9 +395,9 @@ for iProd in prodList :
         #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
         #lse:
         if options.iStep == 'Prod' :
-          command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+          command+='xrdcp -f '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
         else:
-          command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
+          command+='xrdcp -f '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
         command+='; rm '+outTree
         logFile=wDir+'/log__'+iTarget+'.log'
@@ -404,4 +410,4 @@ for iProd in prodList :
           if  options.runBatch: jobs.Add(iStep,iTarget,command)
           else:                 os.system(command) 
 
-      if options.runBatch and not options.pretend: jobs.Sub()
+      if options.runBatch and not options.pretend: jobs.Sub(options.queue)
