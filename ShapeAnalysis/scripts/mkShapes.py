@@ -108,7 +108,11 @@ class ShapeFactory:
               if sample ['isData'][numisDataList] == '0' :
                 sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
                 print " sample ['weights'][", numisDataList, "] = " , sample ['weights'][numisDataList]
-
+          else : # default is "scale to luminosity"
+            for numisDataList in range(0, len(sample ['name']) ) :
+              sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
+              print " sample ['weights'][", numisDataList, "] = " , sample ['weights'][numisDataList]
+           
 
         # connect the trees
         list_of_trees_to_connect = {}
