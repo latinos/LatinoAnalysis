@@ -11,6 +11,7 @@ import logging
 import LatinoAnalysis.Gardener.odict as odict
 import traceback
 from array import array
+from collections import OrderedDict
 
 import os.path
 
@@ -114,6 +115,7 @@ class ShapeFactory:
               # for example to "see" a signal
               if 'scale' in plot[sampleName].keys() : 
                 histos[sampleName].Scale(plot[sampleName]['scale'])
+                print " >> scale ", sampleName, " to ", plot[sampleName]['scale']
 
               # MC style
               if plot[sampleName]['isData'] == 0 :
@@ -127,7 +129,7 @@ class ShapeFactory:
              
                 histos[sampleName].SetLineColor(plot[sampleName]['color'])
                 # scale to luminosity if MC
-                histos[sampleName].Scale(self._lumi)
+                #histos[sampleName].Scale(self._lumi)  ---> NO! They are already scaled to luminosity in mkShape!
                 
                 if plot[sampleName]['isSignal'] == 1 :
                   thsSignal.Add(histos[sampleName])
@@ -239,7 +241,7 @@ class ShapeFactory:
              
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :
-                tlegend.AddEntry(histos[sampleName], "DATA", "P")
+                tlegend.AddEntry(histos[sampleName], "DATA", "EPL")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -554,7 +556,8 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
     
-    samples = {}
+    #samples = {}
+    samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
