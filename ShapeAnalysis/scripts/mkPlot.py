@@ -11,6 +11,7 @@ import logging
 import LatinoAnalysis.Gardener.odict as odict
 import traceback
 from array import array
+from collections import OrderedDict
 
 import os.path
 
@@ -240,7 +241,7 @@ class ShapeFactory:
              
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :
-                tlegend.AddEntry(histos[sampleName], "DATA", "P")
+                tlegend.AddEntry(histos[sampleName], "DATA", "EPL")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -555,7 +556,8 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
     
-    samples = {}
+    #samples = {}
+    samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
