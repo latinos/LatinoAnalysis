@@ -103,10 +103,11 @@ class ShapeFactory:
               sample['weights'].append ('1')
         # then add the lumi scale factor
         for sampleName, sample in self._samples.iteritems():
-          for numisDataList in range(0, len(sample ['isData']) ) :
-            if sample ['isData'][numisDataList] == '0' :
-              sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
-              print " sample ['weights'][", numisDataList, "] = " , sample ['weights'][numisDataList]
+          if 'isData' in sample.keys() :
+            for numisDataList in range(0, len(sample ['isData']) ) :
+              if sample ['isData'][numisDataList] == '0' :
+                sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
+                print " sample ['weights'][", numisDataList, "] = " , sample ['weights'][numisDataList]
 
 
         # connect the trees
