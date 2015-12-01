@@ -26,7 +26,7 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db):
 #        fileIn.ls()
          h_mcWhgt = fileIn.Get('mcWhgt')
          if h_mcWhgt.__nonzero__() :
-           print 'Using h_mcWhgt'
+           #print 'Using h_mcWhgt'
            nEvt += h_mcWhgt.GetBinContent(1) 
          else:
            nEvt += fileIn.Get('totalEvents').GetBinContent(1) 
@@ -148,7 +148,7 @@ for iProd in prodList :
       FileExistList=string.split(out)
       print fileCmd
       print FileExistList
-      print samples.keys()
+      #print samples.keys()
       for iSample in samples : 
         # Tree selector
         selectSample=True
@@ -196,7 +196,7 @@ for iProd in prodList :
                   #if iSample.replace('_25ns','') in iTarget : iTargetOri = iSample
                 else:
                   aSample = iKey
-                print aSample , iSample
+                #print aSample , iSample
                 if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
                   if options.iStep == 'Prod' :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -224,7 +224,7 @@ for iProd in prodList :
               aSample = iKey.split('_000')[0]
             elif '__part' in iKey :
               aSample = iKey.split('__part')[0] 
-            print aSample, iSample
+            #print aSample, iSample
             if aSample == iSample:
               if not iKey in targetList.keys():
                 print 'Re-Adding split tree: ', iKey, iFile
@@ -310,7 +310,7 @@ for iProd in prodList :
           id_iTarget=samples[iTargetOri][1][1].replace('id=','')
         #print iTarget , iTargetOri , id_iTarget
         # Stage in   
-        print targetList[iTarget] 
+        #print targetList[iTarget] 
         if targetList[iTarget] == 'NOSPLIT':
           if options.iStep == 'Prod' :
             inTree  ='root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
