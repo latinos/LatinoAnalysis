@@ -208,7 +208,6 @@ class ShapeFactory:
               frame.GetXaxis().SetTitle(variableName)
             frame.GetYaxis().SetTitle("Events")
 
-
             #  - now draw
             #     - first the MC                        
             if thsBackground.GetNhists() != 0:
@@ -241,7 +240,10 @@ class ShapeFactory:
              
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :
-                tlegend.AddEntry(histos[sampleName], "DATA", "EPL")
+                if 'nameHR' in plot[sampleName].keys() :
+                  tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                else :
+                  tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -278,7 +280,12 @@ class ShapeFactory:
             #---- the Legend (end)
             tlegend.Draw()
 
+
             frame.GetYaxis().SetRangeUser( 0, maxYused )
+            # draw back all the axes            
+            #frame.Draw("AXIS")
+            tcanvas.RedrawAxis()
+            
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
              
@@ -287,9 +294,12 @@ class ShapeFactory:
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             tcanvas.SetLogy(0)
+
+
             
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
+            print "- draw with ratio"
             
             canvasRatioNameTemplate = 'cratio_' + cutName + "_" + variableName
 
@@ -342,6 +352,10 @@ class ShapeFactory:
     
             CMS_lumi.CMS_lumi(tcanvasRatio, iPeriod, iPos)    
 
+            # draw back all the axes            
+            #frameDistro.Draw("AXIS")
+            pad1.RedrawAxis()
+
                 
             tcanvasRatio.cd()
             canvasPad2Name = 'pad2_' + cutName + "_" + variableName
@@ -376,6 +390,10 @@ class ShapeFactory:
             oneLine2.SetLineStyle(3)
             oneLine2.SetLineWidth(3)
             oneLine2.Draw("same")
+
+            # draw back all the axes            
+            #frameRatio.Draw("AXIS")
+            pad2.RedrawAxis()
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
@@ -386,6 +404,7 @@ class ShapeFactory:
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
             pad1.SetLogy(0)
+
 
           
           
