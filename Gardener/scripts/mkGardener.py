@@ -284,6 +284,27 @@ for iProd in prodList :
 #              File = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/Split/'+iSplit
 #            targetList[iKey] = File
 
+      # For hadd Step, regroup Files
+      if iStep == 'hadd' :
+        targetGroupList ={}
+        for iTarget in targetList.keys():
+          if '_000' in iTarget :
+            iKey = iTarget.split('_000')[0]
+          elif '__part' in iTarget :
+            iKey = iTarget.split('__part')[0]
+          elif Productions[iProd]['isData'] :
+            for iSample in samples :
+              if iSample.replace('_25ns','') in iTarget : iKey = iSample
+          else:
+            iKey = iTarget
+
+          if options.redo or not 'latino_'+iKey+'.root' in FileExistList :
+            if not iKey in targetGroupList:
+              targetGroupList[iKey] = []
+            targetGroupList[iKey].append(targetList[iTarget])             
+
+        targetList = targetGroupList 
+
       # Create Jobs Dictionary
       list=[]
       list.append(iStep)
@@ -324,8 +345,16 @@ for iProd in prodList :
         if   options.runBatch: command=''
         else:                  command='cd '+wDir+' ; '
 
+        if iStep == 'hadd' :
+          outTree ='latino_'+iTarget+'__'+iStep+'.root'
+          if len(targetList[iTarget]) == 1 :
+            command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
+          else:
+            command += 'hadd -f '+outTree+' ' 
+            for iFile in targetList[iTarget] : command += iFile+' '
+            command += ' ; ' 
         # Chains of subTargets
-        if 'isChain' in Steps[iStep] and Steps[iStep]['isChain']:
+        elif 'isChain' in Steps[iStep] and Steps[iStep]['isChain']:
           iName=''
           cStep=0
           finalTree=inTree

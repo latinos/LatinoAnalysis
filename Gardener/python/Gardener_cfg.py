@@ -100,5 +100,11 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l2selfiller '
                },
+
+  'hadd'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+               },
 }
 
