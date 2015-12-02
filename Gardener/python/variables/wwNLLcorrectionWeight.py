@@ -54,7 +54,20 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/wwNLLcorrectionWeight.C++g')
         #----------------------------------------------------------------------------------------------------
 
-        wwNLL = ROOT.wwNLL(self.mcsample)
+        wwNLL = ROOT.wwNLL(self.mcsample, 
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/central.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/resum_up.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/resum_down.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_up.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_down.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/nnlo_central.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_nlo.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_qup_nlo.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_qdown_nlo.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_sup_nlo.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_sdown_nlo.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_nnlo.dat'
+                           )
 
         print " starting ..."
 
@@ -64,10 +77,11 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
-        newbranches = ['nllW', 'nllW_Rup', 'nllW_Qup', 'nllW_Rdown', 'nllW_Qdown', 'gen_mww', 'gen_ptww']
+        newbranches = ['nllnnloW', 'nllW', 'nllW_Rup', 'nllW_Qup', 'nllW_Rdown', 'nllW_Qdown', 'gen_mww', 'gen_ptww']
         self.clone(output,newbranches)
 
 
+        nllnnloW    = numpy.ones(1, dtype=numpy.float32)
         nllW        = numpy.ones(1, dtype=numpy.float32)
         nllW_Rup    = numpy.ones(1, dtype=numpy.float32)
         nllW_Qup    = numpy.ones(1, dtype=numpy.float32)
@@ -76,6 +90,7 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
         gen_mww     = numpy.ones(1, dtype=numpy.float32)
         gen_ptww    = numpy.ones(1, dtype=numpy.float32)
 
+        self.otree.Branch('nllnnloW'  , nllnnloW  , 'nllnnloW/F')
         self.otree.Branch('nllW'  , nllW  , 'nllW/F')
         self.otree.Branch('nllW_Rup'  , nllW_Rup  , 'nllW_Rup/F')
         self.otree.Branch('nllW_Qup'  , nllW_Qup  , 'nllW_Qup/F')
@@ -183,6 +198,7 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
               gen_ptww[0] = -9999.
               
 
+            nllnnloW[0] = wwNLL.nllnnloWeight(0)
             nllW[0]   = wwNLL.nllWeight(0)
             nllW_Rup[0]   = wwNLL.nllWeight(1,1)
             nllW_Qup[0]   = wwNLL.nllWeight(1,0)
