@@ -834,13 +834,25 @@ class ShapeFactory:
               #del friend
           # remove the entire list of trees
           del inputs[n]
-    
+   
+    # _____________________________________________________________________________
+    def _testEosFile(self,path): 
+      eoususer='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select'
+      if 'eosuser.cern.ch' in path: 
+        if os.system(eoususer+' ls '+path.split('/eosuser.cern.ch/')[1]) == 0 : return True
+      return False 
+
     # _____________________________________________________________________________
     def _buildchain(self,treeName,files):
         listTrees = []
         for path in files:
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-            if not os.path.exists(path):
+            print path
+            if not 'eos' in path:
+              if not os.path.exists(path):
+                raise RuntimeError('File '+path+' doesn\'t exists')
+            else:
+              if not self._testEosFile(path):
                 raise RuntimeError('File '+path+' doesn\'t exists')
             tree = ROOT.TChain(treeName)
             tree.Add(path)

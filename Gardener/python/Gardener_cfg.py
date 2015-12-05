@@ -8,7 +8,7 @@ Productions= {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
                         'dirExt'  : 'LatinoTrees' ,
-                        #'dirExt'  : 'split' ,
+                        'dirExt'  : 'split' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
                       } ,
