@@ -166,19 +166,19 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             number1 = -1
             number2 = -1
             
-            print "--------"
-            print " size = ", itree.std_vector_VBoson_pt.size()
+            #print "--------"
+            #print " size = ", itree.std_vector_VBoson_pt.size()
             
             for numlepton in range(0, itree.std_vector_VBoson_pt.size()):
-              print " - ", numlepton, " :: ", itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton), " :: ", abs(itree.std_vector_VBoson_pid.at(numlepton))
+              #print " - ", numlepton, " :: ", itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton), " :: ", abs(itree.std_vector_VBoson_pid.at(numlepton))
               if itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton) == 1 and abs(itree.std_vector_VBoson_pid.at(numlepton)) == 24 :
                 if number1 == -1 :
                   number1 = numlepton
                 else :
                   number2 = numlepton
 
-            print "     number1 = ",  number1           
-            print "     number2 = ",  number2
+            #print "     number1 = ",  number1           
+            #print "     number2 = ",  number2
 
             if number1 != -1 and number2 != -1 : 
               ptV1 = itree.std_vector_VBoson_pt.at(number1)

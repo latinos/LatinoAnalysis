@@ -31,7 +31,7 @@ class ShapeFactory:
         cuts = {}
         self._cuts = cuts
 
-        samples = {}
+        samples = OrderedDict()
         self._samples = samples
 
         outputDirPlots = {}
@@ -231,14 +231,18 @@ class ShapeFactory:
             tlegend.SetFillColor(0)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
-            for sampleName, sample in self._samples.iteritems():
+            reversedSamplesItems = self._samples.items()
+            reversedSamplesItems.reverse()
+            reversedSamples = OrderedDict(reversedSamplesItems)
+            
+            for sampleName, sample in reversedSamples.iteritems():
               if plot[sampleName]['isData'] == 0 :
                 if 'nameHR' in plot[sampleName].keys() :
                   tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
                 else :
                   tlegend.AddEntry(histos[sampleName], sampleName, "F")
              
-            for sampleName, sample in self._samples.iteritems():
+            for sampleName, sample in reversedSamples.iteritems():
               if plot[sampleName]['isData'] == 1 :
                 if 'nameHR' in plot[sampleName].keys() :
                   tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
@@ -247,7 +251,6 @@ class ShapeFactory:
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
-            
             
             
             #change the CMS_lumi variables (see CMS_lumi.py)

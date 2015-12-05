@@ -6,11 +6,26 @@
 #include <TH1F.h>
 #include <iostream>
 #include <TSystem.h>
+#include <TGraph.h>
 
 class wwNLL {
 public:
  //! constructor
- wwNLL(std::string mcsample);
+ wwNLL(std::string mcsample, 
+              std::string central,
+              std::string resum_up,
+              std::string resum_down,
+              std::string scale_up,
+              std::string scale_down,
+              std::string nnlo_central,
+              std::string powheg_Rdownl2nu_nlo,
+              std::string powheg_Rdownl2nu_qup_nlo,
+              std::string powheg_Rdownl2nu_qdown_nlo,
+              std::string powheg_Rdownl2nu_sup_nlo,
+              std::string powheg_Rdownl2nu_sdown_nlo,
+              std::string powheg_Rdownl2nu_nnlo
+ );
+ 
  ~wwNLL();
  
  //! functions
@@ -19,6 +34,8 @@ public:
  void SetPTWW( float ptV1 , float phiV1, float etaV1,   float ptV2 , float phiV2, float etaV2);
 
  float nllWeight(int variation, int kind = 0); //---- variation = -1, 0, 1 for down, central, up    and kind is 0=Q or 1=R
+ float nllnnloWeight(int variation, int kind = 0); //---- variation = -1, 0, 1 for down, central, up    and kind is 0=Q or 1=R
+  
  float GetPTWW();
  float GetMWW();
  
@@ -36,14 +53,14 @@ private:
  TGraph* _resum_Rdown;
  TGraph* _resum_Qup;
  TGraph* _resum_Qdown;
- TGraph* _resum_5;
+ TGraph* _resum_nnlonnll_central;
  
  TGraph* _mc_central;
  TGraph* _mc_Rup;
  TGraph* _mc_Rdown;
  TGraph* _mc_Qup;
  TGraph* _mc_Qdown;
- TGraph* _mc_5;
+ TGraph* _mc_nnlonnll_central;
  
  
 };
@@ -64,18 +81,18 @@ wwNLL::wwNLL(std::string mcsample,
              std::string powheg_Rdownl2nu_nnlo
 ) {
  
- _resum_central = new TGraph(central);
- _resum_Rup = new TGraph(resum_up);
- _resum_Rdown = new TGraph(resum_down);
- _resum_Qup = new TGraph(scale_up);
- _resum_Qdown = new TGraph(scale_down);
- _resum_5 = new TGraph(nnlo_central);
- _mc_central = new TGraph(powheg_Rdownl2nu_nlo);
- _mc_Rup = new TGraph(powheg_Rdownl2nu_qup_nlo);
- _mc_Rdown = new TGraph(powheg_Rdownl2nu_qdown_nlo);
- _mc_Qup = new TGraph(powheg_Rdownl2nu_sup_nlo);
- _mc_Qdown = new TGraph(powheg_Rdownl2nu_sdown_nlo);
- _mc_5 = new TGraph(powheg_Rdownl2nu_nnlo);
+ _resum_central = new TGraph(central.c_str());
+ _resum_Rup = new TGraph(resum_up.c_str());
+ _resum_Rdown = new TGraph(resum_down.c_str());
+ _resum_Qup = new TGraph(scale_up.c_str());
+ _resum_Qdown = new TGraph(scale_down.c_str());
+ _resum_nnlonnll_central = new TGraph(nnlo_central.c_str());
+ _mc_central = new TGraph(powheg_Rdownl2nu_nlo.c_str());
+ _mc_Rup = new TGraph(powheg_Rdownl2nu_qup_nlo.c_str());
+ _mc_Rdown = new TGraph(powheg_Rdownl2nu_qdown_nlo.c_str());
+ _mc_Qup = new TGraph(powheg_Rdownl2nu_sup_nlo.c_str());
+ _mc_Qdown = new TGraph(powheg_Rdownl2nu_sdown_nlo.c_str());
+ _mc_nnlonnll_central = new TGraph(powheg_Rdownl2nu_nnlo.c_str());
  
  ptww = -1;
  mww = -1;
@@ -151,25 +168,25 @@ float wwNLL::nllWeight(int variation, int kind){
  
  
  if (variation == 0) {
-  weight = = ptww < 160. ? _resum_central->Eval(ptww)/_mc_central->Eval(ptww) : 1;
+  weight =  ptww < 160. ? _resum_central->Eval(ptww)/_mc_central->Eval(ptww) : 1;
  }
  else if (variation == -1) {
   if (kind == 0) {
-   weight = = ptww < 160. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
+   weight =  ptww < 160. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Qdown[bin];   
   }
   if (kind == 1) {
-   weight = = ptww < 160. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
+   weight =  ptww < 160. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Rdown[bin];   
   }
  }
  else if (variation == 1) {
   if (kind == 0) {
-   weight = = ptww < 160. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
+   weight =  ptww < 160. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Qup[bin];   
   }
   if (kind == 1) {
-   weight = = ptww < 160. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
+   weight =  ptww < 160. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Rup[bin];   
   }
  }
@@ -183,6 +200,35 @@ float wwNLL::nllWeight(int variation, int kind){
 
 float wwNLL::nllnnloWeight(int variation, int kind){
 
+ float weight = -1;
+ 
+ if (variation == 0) {
+  weight =  ptww < 160. ? _resum_nnlonnll_central->Eval(ptww)/_mc_nnlonnll_central->Eval(ptww) : 1;
+ }
+ else if (variation == -1) {
+  if (kind == 0) {
+   weight =  ptww < 160. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
+   //    weight = _reweightingFactors_Qdown[bin];   
+  }
+  if (kind == 1) {
+   weight =  ptww < 160. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
+   //    weight = _reweightingFactors_Rdown[bin];   
+  }
+ }
+ else if (variation == 1) {
+  if (kind == 0) {
+   weight =  ptww < 160. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
+   //    weight = _reweightingFactors_Qup[bin];   
+  }
+  if (kind == 1) {
+   weight =  ptww < 160. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
+   //    weight = _reweightingFactors_Rup[bin];   
+  }
+ }
+ 
+ return weight;
+ 
+ 
  
 }
  
