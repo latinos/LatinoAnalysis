@@ -196,7 +196,20 @@ Module: efftfiller
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
        --effTrig=data/triggerEfficiencies.py
           
+
+Jet Energy Scale
+====
+
+Module: JESTreeMaker
           
+    gardener.py  JESTreeMaker \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
+       test.root \      
+       
+       
+    gardener.py  JESTreeMaker \
+       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
           
           
           
