@@ -108,6 +108,15 @@ class L2SelFiller(TreeCloner):
            'pt2',
            'mth',
            'channel',
+
+           'drll',
+           'dphilljet',
+           'dphilljetjet',
+           'dphilmet',
+           'dphilmet1',
+           'dphilmet2',
+           'mtw1',
+           'mtw2',
            
            'mjj',
            'detajj',
