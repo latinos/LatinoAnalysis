@@ -35,7 +35,6 @@ How to filter events and update some collections:
 
 Specific modules example:
 
-
     gardener.py mcweightsfiller \
                 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root \
                 output.root
@@ -79,6 +78,19 @@ Specific modules example:
 
           
           
+    gardener.py  muccaMvaVarFiller \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root  \
+                test.root
+
+    gardener.py  muccaMvaVarFiller \
+                test.root \
+                test2.root
+
+    gardener.py  muccaMvaVarFiller \
+                --kind 2 \
+                test.root \
+                test2.root
+
           
           
           
