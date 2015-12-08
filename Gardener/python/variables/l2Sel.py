@@ -199,7 +199,8 @@ class L2SelFiller(TreeCloner):
         step = 5000
 
         # to be used later on in the code ...
-        new_std_vector_jet_pt = ROOT.std.vector(float) ()
+        new_std_vector_jet_pt  = ROOT.std.vector(float) ()
+        new_std_vector_jet_eta = ROOT.std.vector(float) ()
 
         #for i in xrange(10000):
         #for i in xrange(2000):
@@ -349,9 +350,11 @@ class L2SelFiller(TreeCloner):
               
               # set the list of jets into the object "WW"
               new_std_vector_jet_pt.clear()
+              new_std_vector_jet_eta.clear()
               for iGoodJet in goodJets :
                 new_std_vector_jet_pt.push_back(itree.std_vector_jet_pt[ iGoodJet ])
-              WW.setJets(new_std_vector_jet_pt)
+                new_std_vector_jet_eta.push_back(itree.std_vector_jet_eta[ iGoodJet ])
+              WW.setJets(new_std_vector_jet_pt, new_std_vector_jet_eta)
           
               # now fill the variables like "mll", "dphill", ...
               for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():

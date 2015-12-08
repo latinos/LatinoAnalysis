@@ -19,7 +19,8 @@ public:
  
  //! set functions
  void setJets(std::vector<float> invector);
- 
+ void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta);
+  
  //! functions
  float pTWW();
  float dphill();
@@ -57,7 +58,8 @@ private:
  
  bool isOk, jetOk;
  
- std::vector<float> jetspt;
+ std::vector<float> _jetspt;
+ std::vector<float> _jetseta;
  
 };
 
@@ -128,8 +130,13 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
 
 //! set functions
 
-void WW::setJets(std::vector<float> invector) {
- jetspt = invector;
+void WW::setJets(std::vector<float> invectorpt ) {
+ _jetspt = invectorpt;
+}
+
+void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta) {
+ _jetspt  = invectorpt;
+ _jetseta = invectoreta;
 }
 
 
@@ -138,8 +145,8 @@ void WW::setJets(std::vector<float> invector) {
 
 float WW::njet(){
  float njet = 0;
- for (int ijet=0; ijet < jetspt.size(); ijet++) {
-  if (jetspt.at(ijet) > 30) {
+ for (int ijet=0; ijet < _jetspt.size(); ijet++) {
+  if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet))<4.7) {
    njet += 1;
   }
  }
