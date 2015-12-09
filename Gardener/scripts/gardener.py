@@ -36,6 +36,8 @@ from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorent
 # JES uncertainty
 from LatinoAnalysis.Gardener.variables.jetScaleUncertainty        import JESTreeMaker
 
+# bpog sfale factors
+from LatinoAnalysis.Gardener.variables.btagPogScaleFactors        import btagPogScaleFactors
 
 
 if __name__ == '__main__':
@@ -73,6 +75,8 @@ if __name__ == '__main__':
 # add nll re-weight for ww
     modules['wwNLLcorrections']      =  wwNLLcorrectionWeightFiller()
 
+# add bpog SF
+    modules['btagPogScaleFactors']   = btagPogScaleFactors()
 
 # generic tool
     modules['tlorentzvectorfiller']  = TLorentzVectorCreator()
@@ -82,5 +86,6 @@ if __name__ == '__main__':
 
 # Nuisances
     modules['JESTreeMaker']   = JESTreeMaker()
+    
 
     gardener_cli( modules )
