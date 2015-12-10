@@ -224,6 +224,19 @@ Module: JESTreeMaker
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
           
           
-          
-          
+b POG scale factors
+====
+
+Module: btagPogScaleFactors 
+  
+    gardener.py  btagPogScaleFactors \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
+       test.root \
+
+
+    gardener.py  btagPogScaleFactors \
+       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \          
+
+this module needs to run after l2sel, because it needs the real jets in the event.          
           
