@@ -66,7 +66,11 @@ class btagPogScaleFactors(TreeCloner):
 
         #compile code to read scale factors
 
-        ROOT.gROOT.ProcessLine(".L "+cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc+')
+        #ROOT.gROOT.ProcessLine(".L "+cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc+')
+        try:
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc+g')
+        except RuntimeError:
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc++g')
         #ROOT.gROOT.ProcessLine('.L BTagCalibrationStandalone.cc+') 
         print "scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+opts.sfFile
 
@@ -162,8 +166,7 @@ class btagPogScaleFactors(TreeCloner):
 
         print '- Starting eventloop'
         step = 5000
-        #for i in xrange(nentries):
-        for i in xrange(100000):
+        for i in xrange(nentries):
             itree.GetEntry(i)
             ## print event count
             if i > 0 and i%step == 0.:
