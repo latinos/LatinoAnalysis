@@ -234,6 +234,10 @@ class L2SelFiller(TreeCloner):
 
               ###########
               # muon
+              dxy = float(0.01)
+              if (itree.std_vector_lepton_pt[iLep] > 20):
+                  dxy = float(0.02)
+
               muonIso = float(0.0)
 
               if ( (itree.std_vector_lepton_photonIso[iLep] +
@@ -250,7 +254,7 @@ class L2SelFiller(TreeCloner):
                    and (itree.std_vector_lepton_chargedHadronIso[iLep] +
                         muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
                    and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                   and itree.std_vector_lepton_BestTrackdxy[iLep] < 0.02
+                   and itree.std_vector_lepton_BestTrackdxy[iLep] < dxy
                    and itree.std_vector_lepton_BestTrackdz[iLep] < 0.1
                    ) :
                 isGoodLepton = True
