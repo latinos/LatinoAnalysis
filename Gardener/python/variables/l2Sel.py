@@ -181,6 +181,15 @@ class L2SelFiller(TreeCloner):
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
 
+	# keep loose leptons
+	self.looseLeptonVector = {}
+	looseLeptonCollections = ['std_vector_lepton_pt','std_vector_lepton_eta','std_vector_lepton_phi','std_vector_lepton_flavour']
+	for bname in looseLeptonCollections:
+	  if bname in self.itree.GetListOfBranches():
+	    bvector =  ROOT.std.vector(float) ()
+            self.looseLeptonVector[bname] = bvector
+            self.otree.Branch(bname.replace('lepton','looseLepton'), bvector)
+
         # input tree and output tree
         itree     = self.itree
         otree     = self.otree
@@ -202,7 +211,6 @@ class L2SelFiller(TreeCloner):
         new_std_vector_jet_pt  = ROOT.std.vector(float) ()
         new_std_vector_jet_eta = ROOT.std.vector(float) ()
 
-        #for i in xrange(10000):
         #for i in xrange(2000):
         for i in xrange(nentries):
 
@@ -326,6 +334,10 @@ class L2SelFiller(TreeCloner):
                        else:
                            self.changeOrder( bname, bvector, goodJets)
                            
+              for bname, bvector in self.looseLeptonVector.iteritems():
+		   bvector.clear() 
+                   self.changeOrder( bname, bvector, xrange(len(getattr(self.itree, bname))) )
+
               #print "goodJets: ", goodJets
               #print "goodPuppiJets: ", goodPuppiJets
 
