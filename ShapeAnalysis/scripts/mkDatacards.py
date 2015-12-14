@@ -279,6 +279,37 @@ class DatacardFactory:
                                        'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
                                        )
 
+                    if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                     
+                       histoTemplate = self._fileIn.Get("histo_" + sampleName)
+       
+                       for iBin in range(1, histoTemplate.GetNbinsX()+1):
+                     
+                         card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(58-20))
+                         card.write((nuisance ['type']).ljust(20))
+
+                         # write line in datacard
+                         for sampleNameIterator2 in self.signals:
+                           if sampleNameIterator2 == sampleName :
+                             card.write(('1.000').ljust(columndef))
+                           else :
+                             card.write(('-').ljust(columndef))
+    
+                         for sampleNameIterator2 in self.backgrounds:
+                           card.write(('-').ljust(columndef))
+    
+                         card.write('\n')
+    
+                         # save the nuisance histograms in the root file
+                         self._saveHisto(cutName+"/"+variableName+'/',
+                                          'histo_' + sampleName + '_ibin_' + str(iBin) + '_statUp',
+                                          'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                          )
+                         self._saveHisto(cutName+"/"+variableName+'/',
+                                          'histo_' + sampleName + '_ibin_' + str(iBin) + '_statDown',
+                                          'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                          )
+
                 for sampleName in self.backgrounds:
                   if sampleName in nuisance['samples'].keys() :
                     if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
@@ -307,6 +338,39 @@ class DatacardFactory:
                                        'histo_' + sampleName + '_stat' + "Down",
                                        'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
                                        )
+
+                    if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+              
+                       histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
+                       print "type = ", type( histoTemplate )
+
+       
+                       for iBin in range(1, histoTemplate.GetNbinsX()+1):
+                     
+                         card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(58-20))
+                         card.write((nuisance ['type']).ljust(20))
+
+                         # write line in datacard
+                         for sampleNameIterator2 in self.signals:
+                           card.write(('-').ljust(columndef))
+   
+                         for sampleNameIterator2 in self.backgrounds:
+                           if sampleNameIterator2 == sampleName :
+                             card.write(('1.000').ljust(columndef))
+                           else :
+                             card.write(('-').ljust(columndef))
+       
+                         card.write('\n')
+    
+                         # save the nuisance histograms in the root file
+                         self._saveHisto(cutName+"/"+variableName+'/',
+                                          'histo_' + sampleName + '_ibin_' + str(iBin) + '_statUp',
+                                          'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                          )
+                         self._saveHisto(cutName+"/"+variableName+'/',
+                                          'histo_' + sampleName + '_ibin_' + str(iBin) + '_statDown',
+                                          'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                          )
 
 
                
