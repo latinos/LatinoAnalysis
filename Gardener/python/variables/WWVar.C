@@ -19,7 +19,8 @@ public:
  
  //! set functions
  void setJets(std::vector<float> invector);
- 
+ void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta);
+  
  //! functions
  float pTWW();
  float dphill();
@@ -29,12 +30,24 @@ public:
  float mT2();  //void functionMT2(int& npar, double* d, double& r, double par[], int flag);
  float yll();
  float ptll();
+ float drll();
+ 
+ float dphilljet();
+ float dphilljetjet();
+ float dphilmet();
+ float dphilmet1();
+ float dphilmet2();
+ float mtw1();
+ float mtw2();
+ float pfmet();
+ 
  float mth();
  float dphillmet();
  float channel();
  float mjj();
  float detajj();
  float njet();
+  
  
 private:
  //! variables
@@ -45,7 +58,8 @@ private:
  
  bool isOk, jetOk;
  
- std::vector<float> jetspt;
+ std::vector<float> _jetspt;
+ std::vector<float> _jetseta;
  
 };
 
@@ -116,8 +130,13 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
 
 //! set functions
 
-void WW::setJets(std::vector<float> invector) {
- jetspt = invector;
+void WW::setJets(std::vector<float> invectorpt ) {
+ _jetspt = invectorpt;
+}
+
+void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta) {
+ _jetspt  = invectorpt;
+ _jetseta = invectoreta;
 }
 
 
@@ -126,8 +145,8 @@ void WW::setJets(std::vector<float> invector) {
 
 float WW::njet(){
  float njet = 0;
- for (int ijet=0; ijet < jetspt.size(); ijet++) {
-  if (jetspt.at(ijet) > 30) {
+ for (int ijet=0; ijet < _jetspt.size(); ijet++) {
+  if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet))<4.7) {
    njet += 1;
   }
  }
@@ -166,15 +185,112 @@ float WW::pTWW(){
 
 
 float WW::dphill(){
- 
  if (isOk) {
   return L1.DeltaPhi(L2);
  }
  else {
   return -9999.0;
- }
- 
+ } 
 }
+
+
+float WW::drll(){
+ //---- https://root.cern.ch/doc/master/TLorentzVector_8h_source.html#l00469
+ if (isOk) {
+  return L1.DeltaR(L2);
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+float WW::dphilljet(){ 
+ if (isOk) {
+  return  fabs( (L1+L2).DeltaPhi(J1) );
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::dphilljetjet(){ 
+ if (isOk) {
+  return  fabs( (L1+L2).DeltaPhi(J1+J2) );
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::dphilmet(){ 
+ if (isOk) {
+  float d1 = (L1).DeltaPhi(MET);
+  float d2 = (L2).DeltaPhi(MET);
+  if (d1<d2) return d1;
+  else       return d2;
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::dphilmet1(){ 
+ if (isOk) {
+  return (L1).DeltaPhi(MET);
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WW::dphilmet2(){ 
+ if (isOk) {
+  return (L2).DeltaPhi(MET);
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::mtw1(){ 
+ if (isOk) {
+  return sqrt(2 * pt1() * pfmet() * (1 - cos( dphilmet1() )));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::mtw2(){ 
+ if (isOk) {
+  return sqrt(2 * pt2() * pfmet() * (1 - cos( dphilmet2() )));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+
+
+
+float WW::pfmet(){
+ 
+ if (isOk) {
+  return MET.Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+
 
 
 float WW::pt1(){
@@ -278,6 +394,9 @@ float WW::detajj(){
   return -9999.0;
  } 
 }
+
+
+
 
 
 

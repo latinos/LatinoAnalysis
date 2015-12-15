@@ -35,7 +35,6 @@ How to filter events and update some collections:
 
 Specific modules example:
 
-
     gardener.py mcweightsfiller \
                 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root \
                 output.root
@@ -79,6 +78,19 @@ Specific modules example:
 
           
           
+    gardener.py  muccaMvaVarFiller \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root  \
+                test.root
+
+    gardener.py  muccaMvaVarFiller \
+                test.root \
+                test2.root
+
+    gardener.py  muccaMvaVarFiller \
+                --kind 2 \
+                test.root \
+                test2.root
+
           
           
           
@@ -196,9 +208,35 @@ Module: efftfiller
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
        --effTrig=data/triggerEfficiencies.py
           
+
+Jet Energy Scale
+====
+
+Module: JESTreeMaker
+          
+    gardener.py  JESTreeMaker \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
+       test.root \      
+       
+       
+    gardener.py  JESTreeMaker \
+       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
           
           
-          
-          
-          
+b POG scale factors
+====
+
+Module: btagPogScaleFactors 
+  
+    gardener.py  btagPogScaleFactors \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
+       test.root \
+
+
+    gardener.py  btagPogScaleFactors \
+       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \          
+
+this module needs to run after l2sel, because it needs the real jets in the event.          
           

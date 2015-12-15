@@ -138,7 +138,7 @@ class EffLepFiller(TreeCloner):
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
              
               pt = itree.std_vector_lepton_pt [iLep]
-              eta = itree.std_vector_lepton_pt [iLep]
+              eta = itree.std_vector_lepton_eta [iLep]
               flavour = itree.std_vector_lepton_flavour [iLep]
               
               kindLep = 'lep' # ele or mu
@@ -294,7 +294,7 @@ class EffTrgFiller(TreeCloner):
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
              
               pt = itree.std_vector_lepton_pt [iLep]
-              eta = itree.std_vector_lepton_pt [iLep]
+              eta = itree.std_vector_lepton_eta [iLep]
               flavour = itree.std_vector_lepton_flavour [iLep]
               
               kindLep = 'lep' # ele or mu

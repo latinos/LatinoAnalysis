@@ -409,6 +409,24 @@ class ShapeFactory:
                         # save the new two histograms in final root file
                         outputsHistoUp.Write()
                         outputsHistoDo.Write()
+
+                      # bin-by-bin
+                      if configurationNuis['typeStat'] == 'bbb' :
+                        #print "     >> bin-by-bin"
+                        keepNormalization = 0 # do not keep normalization, put 1 to keep normalization                       
+                        if 'keepNormalization' in configurationNuis.keys() :
+                          keepNormalization = configurationNuis['keepNormalization']
+                        # scale up/down
+                        for iBin in range(1, outputsHisto.GetNbinsX()+1):
+                          # take histogram --> outputsHisto
+                          outputsHistoUp = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp")
+                          outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
+                          self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization )
+                          self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization )
+                          # save the new two histograms in final root file
+                          outputsHistoUp.Write()
+                          outputsHistoDo.Write()
+
               
               # prepare other nuisances:
               # - weight based nuisances: "kind = 'weight'"
@@ -713,6 +731,27 @@ class ShapeFactory:
           value = histo.GetBinContent(iBin)
           newvalue = value + direction * error
           histo.SetBinContent(iBin, newvalue)
+  
+    # _____________________________________________________________________________
+    def _scaleHistoStatBBB(self, histo, direction, iBinToChange, keepNormalization):
+  
+        integral = 0.
+        integralVaried = 0.
+        for iBin in range(1, histo.GetNbinsX()+1):
+          error = histo.GetBinError(iBin)
+          value = histo.GetBinContent(iBin)
+          integral += value
+          if iBin == iBinToChange : 
+            newvalue = value + direction * error
+          else :
+            newvalue = value            
+          integralVaried += newvalue
+          histo.SetBinContent(iBin, newvalue)
+
+        if keepNormalization == 1 :
+          if integralVaried != 0 :
+            histo.Scale (integral / integralVaried)
+
   
   
   
