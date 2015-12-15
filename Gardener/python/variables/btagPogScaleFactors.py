@@ -216,8 +216,8 @@ class btagPogScaleFactors(TreeCloner):
                 pMC = pMC*effMC if tagged else pMC*(1.-effMC) 
 
                 pData     = pData*effMC*sf     if tagged else pData*(1.-effMC*sf)
-                pDataUp   = pData*effMC*sfUp   if tagged else pData*(1.-effMC*sfUp)
-                pDataDown = pData*effMC*sfDown if tagged else pData*(1.-effMC*sfDown)
+                pDataUp   = pDataUp*effMC*sfUp   if tagged else pDataUp*(1.-effMC*sfUp)
+                pDataDown = pDataDown*effMC*sfDown if tagged else pDataDown*(1.-effMC*sfDown)
               
                 #print "flavour, effMC, sf", flavour, effMC, sf
 
