@@ -29,10 +29,18 @@ class L2SelFiller(TreeCloner):
         return '''Apply id/iso and filter lepton collection'''
 
     def addOptions(self,parser):
-        pass
+        description = self.help()
+        group = optparse.OptionGroup(parser,self.label, description)
+        group.add_option('-k', '--kind',   dest='kind', help='Kind of lepton identification to be applied', default='1')
+        parser.add_option_group(group)
+        return group
 
     def checkOptions(self,opts):
-        pass
+        if not (hasattr(opts,'kind')):
+          self.kind = 1
+        else :    
+          self.kind   = opts.kind
+        print " kind of electron id = ", self.kind
 
     def changeOrder(self, vectorname, vector, goodleptonslist) :
         # vector is already linked to the otree branch
@@ -231,42 +239,46 @@ class L2SelFiller(TreeCloner):
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
               isGoodLepton = False
               
-              ###########
-              # electron
-              
-              # id definition
-              if ( itree.std_vector_lepton_eleIdTight[iLep] == 1
-                   and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
-                  ) :
-                isGoodLepton = True
-
-              ###########
-              # muon
-              dxy = float(0.01)
-              if (itree.std_vector_lepton_pt[iLep] > 20):
-                  dxy = float(0.02)
-
-              muonIso = float(0.0)
-
-              if ( (itree.std_vector_lepton_photonIso[iLep] +
-                   itree.std_vector_lepton_neutralHadronIso[iLep] -
-                   0.5 * itree.std_vector_lepton_sumPUPt[iLep]) > 0
-                   ) :
-                  muonIso = (itree.std_vector_lepton_photonIso[iLep] +
-                             itree.std_vector_lepton_neutralHadronIso[iLep] -
-                             0.5 * itree.std_vector_lepton_sumPUPt[iLep])
-              else:
-                  muonIso = 0
-
-              if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                   and (itree.std_vector_lepton_chargedHadronIso[iLep] +
-                        muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
-                   and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                   and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy
-                   and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1
-                   ) :
-                isGoodLepton = True
-                 
+              #
+              # analysis electron definition
+              if self.kind == 1 :
+               
+                ###########
+                # electron
+                
+                # id definition
+                if ( itree.std_vector_lepton_eleIdTight[iLep] == 1
+                     and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
+                    ) :
+                  isGoodLepton = True
+               
+                ###########
+                # muon
+                dxy = float(0.01)
+                if (itree.std_vector_lepton_pt[iLep] > 20):
+                    dxy = float(0.02)
+               
+                muonIso = float(0.0)
+               
+                if ( (itree.std_vector_lepton_photonIso[iLep] +
+                     itree.std_vector_lepton_neutralHadronIso[iLep] -
+                     0.5 * itree.std_vector_lepton_sumPUPt[iLep]) > 0
+                     ) :
+                    muonIso = (itree.std_vector_lepton_photonIso[iLep] +
+                               itree.std_vector_lepton_neutralHadronIso[iLep] -
+                               0.5 * itree.std_vector_lepton_sumPUPt[iLep])
+                else:
+                    muonIso = 0
+               
+                if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
+                     and (itree.std_vector_lepton_chargedHadronIso[iLep] +
+                          muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
+                     and abs(itree.std_vector_lepton_flavour[iLep]) == 13
+                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy
+                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1
+                     ) :
+                  isGoodLepton = True
+                   
   #and (itree.std_vector_lepton_chargedHadronIso[iLep] + 
                    #     itree.std_vector_lepton_neutralHadronIso[iLep] + 
                    #     itree.std_vector_lepton_photonIso[iLep]
@@ -274,7 +286,50 @@ class L2SelFiller(TreeCloner):
                    #and abs(itree.std_vector_lepton_flavour[iLep]) == 13 
                   #) :
                 #isGoodLepton = True
-              
+
+              # denominator of fakes definition
+              # TO BE UPDATED
+              if self.kind == 2 :
+               
+                ###########
+                # electron
+                
+                # id definition
+                if ( itree.std_vector_lepton_eleIdTight[iLep] == 1
+                     and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
+                    ) :
+                  isGoodLepton = True
+               
+                ###########
+                # muon
+                dxy = float(0.01)
+                if (itree.std_vector_lepton_pt[iLep] > 20):
+                    dxy = float(0.02)
+               
+                muonIso = float(0.0)
+               
+                if ( (itree.std_vector_lepton_photonIso[iLep] +
+                     itree.std_vector_lepton_neutralHadronIso[iLep] -
+                     0.5 * itree.std_vector_lepton_sumPUPt[iLep]) > 0
+                     ) :
+                    muonIso = (itree.std_vector_lepton_photonIso[iLep] +
+                               itree.std_vector_lepton_neutralHadronIso[iLep] -
+                               0.5 * itree.std_vector_lepton_sumPUPt[iLep])
+                else:
+                    muonIso = 0
+               
+                if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
+                     and (itree.std_vector_lepton_chargedHadronIso[iLep] +
+                          muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
+                     and abs(itree.std_vector_lepton_flavour[iLep]) == 13
+                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy
+                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1
+                     ) :
+                  isGoodLepton = True
+                   
+
+              # now check if we found 2 leptons        
+                             
               if isGoodLepton :
                 if goodLep1 < 0: 
                   goodLep1 = iLep
