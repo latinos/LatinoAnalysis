@@ -678,7 +678,7 @@ class ShapeFactory:
         if not isinstance(h,ROOT.TH2):
             return h
            
-        sentry = TH1AddDirSentry()
+        #sentry = TH1AddDirSentry()
 
 #         H1class = getattr(ROOT,h.__class__.__name__.replace('2','1'))
         nx = h.GetNbinsX()
@@ -714,8 +714,8 @@ class ShapeFactory:
         h_flat.PutStats(stats1d)
 
         xtitle = h.GetXaxis().GetTitle()
-        v1,v2 = xtitle.split(':') # we know it's a 2d filled by an expr like y:x
-        xtitle = '%s #times %s bin' % (v1,v2)
+        #v1,v2 = xtitle.split(':') # we know it's a 2d filled by an expr like y:x
+        #xtitle = '%s #times %s bin' % (v1,v2)
 
         h_flat.GetXaxis().SetTitle(xtitle)
 

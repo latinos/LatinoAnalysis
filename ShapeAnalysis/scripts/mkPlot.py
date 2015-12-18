@@ -92,6 +92,14 @@ class ShapeFactory:
                 histos[sampleName].SetMarkerSize(1)
                 histos[sampleName].SetMarkerStyle(20)
                 histos[sampleName].SetLineColor(plot[sampleName]['color'])
+                
+                # blind data
+                if 'isBlind' in plot[sampleName].keys() :
+                  if plot[sampleName]['isBlind'] == 1 :
+                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                      histos[sampleName].SetBinContent(iBin, 0)
+                
+                
                 thsData.Add(histos[sampleName])
 
                 # first time fill vectors X axis
