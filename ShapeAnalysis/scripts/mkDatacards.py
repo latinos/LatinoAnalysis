@@ -185,7 +185,7 @@ class DatacardFactory:
                 
                 if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
                   print "nuisance[type] = ", nuisance ['type']
-                  if nuisance ['type'] == 'lnN' :
+                  if nuisance ['type'] == 'lnN' or nuisance ['type'] == 'lnU' :
                     card.write((nuisance['name']).ljust(58-20))
                     card.write((nuisance ['type']).ljust(20))
                     if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
@@ -281,8 +281,10 @@ class DatacardFactory:
 
                     if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
                      
-                       histoTemplate = self._fileIn.Get("histo_" + sampleName)
-       
+                       #print "      sampleName = ", sampleName 
+                       histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
+                       #print "      type = ", type( histoTemplate )
+
                        for iBin in range(1, histoTemplate.GetNbinsX()+1):
                      
                          card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(58-20))
@@ -342,7 +344,7 @@ class DatacardFactory:
                     if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
               
                        histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
-                       print "type = ", type( histoTemplate )
+                       #print "type = ", type( histoTemplate )
 
        
                        for iBin in range(1, histoTemplate.GetNbinsX()+1):
