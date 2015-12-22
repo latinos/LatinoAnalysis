@@ -184,7 +184,7 @@ class DatacardFactory:
               if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                 
                 if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
-                  print "nuisance[type] = ", nuisance ['type']
+                  #print "nuisance[type] = ", nuisance ['type']
                   if nuisance ['type'] == 'lnN' or nuisance ['type'] == 'lnU' :
                     card.write((nuisance['name']).ljust(58-20))
                     card.write((nuisance ['type']).ljust(20))
@@ -375,9 +375,32 @@ class DatacardFactory:
                                           )
 
 
+              # now add the "rateParam" for the normalization
+              #  e.g.:            z_norm rateParam  htsearch zll 1 
+              # see: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWG/SWGuideNonStandardCombineUses#Rate_Parameters
+              if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
+                  #print "nuisance[type] = ", nuisance ['type']
+                  # 'rateParam' has a separate treatment -> it's just a line at the end of the datacard. It defines "free floating" samples
+                  # I do it here and not before because I want the freee floating parameters at the end of the datacard
+                  if nuisance ['type'] == 'rateParam' :
+                    card.write((nuisance['name']).ljust(58-20))
+                    card.write((nuisance ['type']).ljust(20))
+                    card.write((tagNameToAppearInDatacard).ljust(30))   # the bin
+                    # apply only to selected samples
+                    for sampleName in self.signals:
+                        if sampleName in nuisance['samples'].keys() :
+                          card.write((sampleName).ljust(20))
+                          card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
+                    for sampleName in self.backgrounds:
+                        if sampleName in nuisance['samples'].keys() :
+                          card.write((sampleName).ljust(20))
+                          card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
+                    card.write('\n')
+
                
             # now add other nuisances            
-            # FIXME
+            # Are there other kind of nuisances I forgot?
             
             card.write('-'*100+'\n')
 
