@@ -2,6 +2,10 @@
 eosProdBase= '/eos/cms/'
 eosTargBase= '/eos/user/x/xjanssen/HWW2015/'
 
+
+# ---- production to run on
+# .... .... this is defined by mkGardener in "-p" "--prods" option
+
 Productions= {
 
   '21Oct_25ns_MC'   : {
@@ -29,6 +33,12 @@ Productions= {
 
 }
 
+
+
+# ---- Steps
+# .... .... this is defined by mkGardener in "-s" "--steps" option
+# .... .... if it is a "chain", it means that the intermediate steps are NOT saved
+# .... ....    e.g. 'puadder','baseW','wwNLL' ---> only after all steps the folder will be saved on eos
 
 Steps= {
 
