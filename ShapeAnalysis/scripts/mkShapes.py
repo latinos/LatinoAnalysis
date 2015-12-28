@@ -396,36 +396,37 @@ class ShapeFactory:
               for nuisanceName, nuisance in nuisances.iteritems():
                 if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                   #print "nuisance[type] = ", nuisance ['type']
-                  for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                    if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
-                      if configurationNuis['typeStat'] == 'uni' :
-                        #print "     >> uniform"
-                        # take histogram --> outputsHisto
-                        outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_statUp")
-                        outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_statDown")
-                        # scale up/down
-                        self._scaleHistoStat (outputsHistoUp,  1 )
-                        self._scaleHistoStat (outputsHistoDo, -1 )
-                        # save the new two histograms in final root file
-                        outputsHistoUp.Write()
-                        outputsHistoDo.Write()
-
-                      # bin-by-bin
-                      if configurationNuis['typeStat'] == 'bbb' :
-                        #print "     >> bin-by-bin"
-                        keepNormalization = 0 # do not keep normalization, put 1 to keep normalization                       
-                        if 'keepNormalization' in configurationNuis.keys() :
-                          keepNormalization = configurationNuis['keepNormalization']
-                        # scale up/down
-                        for iBin in range(1, outputsHisto.GetNbinsX()+1):
+                  if 'samples' in nuisance.keys():
+                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                      if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
+                        if configurationNuis['typeStat'] == 'uni' :
+                          #print "     >> uniform"
                           # take histogram --> outputsHisto
-                          outputsHistoUp = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp")
-                          outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
-                          self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization )
-                          self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization )
+                          outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_statUp")
+                          outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_statDown")
+                          # scale up/down
+                          self._scaleHistoStat (outputsHistoUp,  1 )
+                          self._scaleHistoStat (outputsHistoDo, -1 )
                           # save the new two histograms in final root file
                           outputsHistoUp.Write()
                           outputsHistoDo.Write()
+                    
+                        # bin-by-bin
+                        if configurationNuis['typeStat'] == 'bbb' :
+                          #print "     >> bin-by-bin"
+                          keepNormalization = 0 # do not keep normalization, put 1 to keep normalization                       
+                          if 'keepNormalization' in configurationNuis.keys() :
+                            keepNormalization = configurationNuis['keepNormalization']
+                          # scale up/down
+                          for iBin in range(1, outputsHisto.GetNbinsX()+1):
+                            # take histogram --> outputsHisto
+                            outputsHistoUp = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp")
+                            outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
+                            self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization )
+                            self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization )
+                            # save the new two histograms in final root file
+                            outputsHistoUp.Write()
+                            outputsHistoDo.Write()
 
               
               # prepare other nuisances:
