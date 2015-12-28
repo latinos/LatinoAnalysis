@@ -173,17 +173,19 @@ class ShapeFactory:
                             else :  # otherwise just add the new sample in the list of samples to be considered
                               mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
                   else :
-                   if nuisanceName not in mynuisances.keys() :
-                     mynuisances[nuisanceName] = nuisances[nuisanceName]
-                   
+                    if nuisanceName not in mynuisances.keys() :
+                      if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
+                        print "skip this nuisance since 100 percent uncertainty"
+                      else :
+                        mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
                  
                 for nuisanceName, nuisance in mynuisances.iteritems():                 
                   shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
-                  print "loading shape variation", shapeNameUp
+                  #print "loading shape variation", shapeNameUp
                   histoUp = fileIn.Get(shapeNameUp)
                   shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
-                  print "loading shape variation", shapeNameDown
+                  #print "loading shape variation", shapeNameDown
                   histoDown = fileIn.Get(shapeNameDown)
                   if histoUp == None:
                     if 'samples' in nuisance.keys():
