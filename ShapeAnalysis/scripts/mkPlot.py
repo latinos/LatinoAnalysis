@@ -12,6 +12,7 @@ import LatinoAnalysis.Gardener.odict as odict
 import traceback
 from array import array
 from collections import OrderedDict
+import math
 
 import os.path
 
@@ -38,7 +39,7 @@ class ShapeFactory:
         self._outputDirPlots = outputDirPlots
 
     # _____________________________________________________________________________
-    def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, legend):
+    def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend):
 
         print "=================="
         print "==== makePlot ===="
@@ -75,6 +76,12 @@ class ShapeFactory:
             tgrData_vy     = array('f')
             tgrData_evy_up = array('f')
             tgrData_evy_do = array('f')
+
+            #these vectors are needed for nuisances accounting
+            nuisances_vy_up     = {}
+            nuisances_vy_do     = {}
+            tgrMC_vy         = array('f')
+ 
             
             thsData       = ROOT.THStack ("thsData",      "thsData")
             thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
@@ -143,9 +150,72 @@ class ShapeFactory:
                   thsSignal.Add(histos[sampleName])
                 else :
                   thsBackground.Add(histos[sampleName])
+                    
+                for nuisance in nuisances.keys():
+                  shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance+"Up"
+                  print "loading shape variation", shapeNameUp
+                  histoUp = fileIn.Get(shapeNameUp)
+                  shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance+"Down"
+                  print "loading shape variation", shapeNameDown
+                  histoDown = fileIn.Get(shapeNameDown)
+                  if histoUp == None:
+                    print "Warning! No", nuisance, " up variation for", sampleName
+                  if histoDown == None:
+                    print "Warning! No", nuisance, " down variation for", sampleName
+                  if nuisance not in nuisances_vy_up.keys() or nuisance not in nuisances_vy_do.keys():  
+                    nuisances_vy_up[nuisance] = array('f')
+                    nuisances_vy_do[nuisance] = array('f')
+                  if len(tgrMC_vy) == 0:
+                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                      tgrMC_vy.append(0.)
+                  if (len(nuisances_vy_up[nuisance]) == 0):
+                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                      nuisances_vy_up[nuisance].append(0.)
+                  if (len(nuisances_vy_do[nuisance]) == 0):
+                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                      nuisances_vy_do[nuisance].append(0.)
+                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                    if histoUp != None:
+                      nuisances_vy_up[nuisance][iBin-1] += histoUp.GetBinContent (iBin)
+                    else:
+                      #add the central sample 
+                      nuisances_vy_up[nuisance][iBin-1] += histos[sampleName].GetBinContent (iBin)  
+                    if histoDown != None:  
+                      nuisances_vy_do[nuisance][iBin-1] += histoDown.GetBinContent (iBin)
+                    else:
+                      #add the central sample 
+                      nuisances_vy_do[nuisance][iBin-1] += histos[sampleName].GetBinContent (iBin)
+                                            
 
-            tgrData       = ROOT.TGraphAsymmErrors()
+                #else :
+                #  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                #    tgrBkg_vx[iBin-1] = (  histos[sampleName].GetBinCenter (iBin))
+                #    tgrBkg_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)
+                #    tgrBkg_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                #    tgrBkg_evy_up[iBin-1] = SumQ ( tgrBkg_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
+                #    tgrBkg_evy_do[iBin-1] = SumQ ( tgrBkg_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) ) 
+
+            nuisances_err_up = array('f')
+            nuisances_err_do = array('f')
+            for nuisance in nuisances.keys():
+              if len(nuisances_err_up) == 0 : 
+                for iBin in range(len(tgrMC_vy)):
+                  nuisances_err_up.append(0.)
+                  nuisances_err_do.append(0.)
+              # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
+              for iBin in range(len(tgrMC_vy)):
+                #print "bin", iBin, " nuisances_vy_up[nuisance][iBin]", nuisances_vy_up[nuisance][iBin], " central", tgrMC_vy[iBin] 
+                if nuisances_vy_up[nuisance][iBin] - tgrMC_vy[iBin] > 0:
+                  nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisance][iBin] - tgrMC_vy[iBin])
+                  nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_do[nuisance][iBin] - tgrMC_vy[iBin])
+                else:
+                  nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_do[nuisance][iBin] - tgrMC_vy[iBin])
+                  nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_up[nuisance][iBin] - tgrMC_vy[iBin]) 
+
+              
             
+            tgrData       = ROOT.TGraphAsymmErrors()
             for iBin in range(0, len(tgrData_vx)) : 
               tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
               tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
@@ -155,7 +225,18 @@ class ShapeFactory:
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
             
-            
+            if len(nuisances.keys()) != 0:
+              tgrMC = ROOT.TGraphAsymmErrors()  
+              for iBin in range(0, len(tgrData_vx)) :
+                tgrMC.SetPoint     (iBin, tgrData_vx[iBin], tgrMC_vy[iBin])
+                tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
+              
+              tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
+              for iBin in range(0, len(tgrData_vx)) :
+                tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
+                tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                
+                         
             
             #---- now plot
             
@@ -223,7 +304,17 @@ class ShapeFactory:
                
             if thsSignal.GetNhists() != 0:
               thsSignal.Draw("hist same")
-              
+            
+            # if there is a systematic band draw it
+            if len(nuisances.keys()) != 0:
+              tgrMC.SetLineColor(12)
+              tgrMC.SetFillColor(12)
+              tgrMC.SetFillStyle(3004)
+              tgrMCOverMC.SetLineColor(12)
+              tgrMCOverMC.SetFillColor(12)
+              tgrMCOverMC.SetFillStyle(3004)
+              tgrMC.Draw("2")
+
             #     - then the DATA  
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
@@ -256,6 +347,8 @@ class ShapeFactory:
                   tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
                 else :
                   tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
+            if len(nuisances.keys()) != 0:
+              tlegend.AddEntry(tgrMC, "Systematics", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -345,7 +438,10 @@ class ShapeFactory:
                
             if thsSignal.GetNhists() != 0:
               thsSignal.Draw("hist same")
-              
+           
+            if (len(nuisances.keys())!=0):
+              tgrMC.Draw("2")
+
             #     - then the DATA  
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
@@ -395,6 +491,9 @@ class ShapeFactory:
             #frameRatio.GetYaxis().SetTitle("Data/MC")
             frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
             self.Pad2TAxis(frameRatio)
+            if (len(nuisances.keys())!=0):
+              tgrMCOverMC.Draw("2") 
+            
             tgrDataOverMC.Draw("P0")
             
             oneLine2 = ROOT.TLine(frameRatio.GetXaxis().GetXmin(), 1,  frameRatio.GetXaxis().GetXmax(), 1);
@@ -452,7 +551,7 @@ class ShapeFactory:
    # _____________________________________________________________________________
    # --- squared sum
     def SumQ(self, A, B):
-       return sqrt(A*A + B*B)
+       return math.sqrt(A*A + B*B)
 
    # _____________________________________________________________________________
    # --- Ratio: if denominator is zero, then put 0!
@@ -541,6 +640,7 @@ if __name__ == '__main__':
 
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
+    parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -599,9 +699,16 @@ if __name__ == '__main__':
       handle = open(opt.plotFile,'r')
       exec(handle)
       handle.close()
-    
    
-    factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, legend)
+    nuisances = {}
+    if opt.nuisancesFile == None :
+      print " Please provide the nuisances structure if you want to add nuisances "
+    elif os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close() 
+   
+    factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend)
     
         
        
