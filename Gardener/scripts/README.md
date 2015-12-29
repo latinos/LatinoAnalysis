@@ -4,23 +4,32 @@ mkGardener usage
 How to use mkGardener, automatic handling of gardener modules over lxbatch
 
 count weights: 
+
     ./mkGardener.py -p 21Oct_25ns_MC -b -s  mcwghtcount -S Target -Q 2nd
 
 apply weitghts on top:
+
     ./mkGardener.py -p 21Oct_25ns_MC -b -s MC -i mcwghtcount -S Target -Q 2nd
 
 and apply l2sel on top:
+
     ./mkGardener.py -p 21Oct_25ns_MC -b -s l2sel -i mcwghtcount__MC -S Target -Q 2nd
 
 and for data:
+
     ./mkGardener.py -p XXXXXX -b -s l2sel -S Target -Q 2nd
-where XXX is defined in python/Gardener_cfg.py
+
+    where XXX is defined in python/Gardener_cfg.py
 
 You can also do 
+
     -T <SampleName>
+    
 for a single sample
 and 
+
     -R
+
 to overwrite and redo
 
 Adding a gardener module should be done in python/Gardener_cfg.py
