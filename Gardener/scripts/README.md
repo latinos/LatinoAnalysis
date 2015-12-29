@@ -19,7 +19,7 @@ and for data:
 
     ./mkGardener.py -p XXXXXX -b -s l2sel -S Target -Q 2nd
 
-    where XXX is defined in python/Gardener_cfg.py
+where XXX is defined in python/Gardener_cfg.py
 
 You can also do 
 
