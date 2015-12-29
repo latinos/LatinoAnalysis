@@ -887,7 +887,7 @@ class ShapeFactory:
         listTrees = []
         for path in files:
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-            if not 'eos' in path:
+            if "eos.cern.ch" not in path and "eosuser.cern.ch" not in path:
               if not os.path.exists(path):
                 raise RuntimeError('File '+path+' doesn\'t exists')
             else:

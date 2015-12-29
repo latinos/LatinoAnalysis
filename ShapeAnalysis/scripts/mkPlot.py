@@ -211,17 +211,19 @@ class ShapeFactory:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_do[nuisanceName].append(0.)
                   for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
-                    if histoUp != None:
-                      nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
-                    else:
-                      #add the central sample 
-                      nuisances_vy_up[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)  
-                    if histoDown != None:  
-                      nuisances_vy_do[nuisanceName][iBin-1] += histoDown.GetBinContent (iBin)
-                    else:
-                      #add the central sample 
-                      nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
+                    #get the background sum
+                    if plot[sampleName]['isSignal'] == 0:
+                      tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                      if histoUp != None:
+                        nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
+                      else:
+                        #add the central sample 
+                        nuisances_vy_up[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)  
+                      if histoDown != None:  
+                        nuisances_vy_do[nuisanceName][iBin-1] += histoDown.GetBinContent (iBin)
+                      else:
+                        #add the central sample 
+                        nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
                                             
 
                 #else :
