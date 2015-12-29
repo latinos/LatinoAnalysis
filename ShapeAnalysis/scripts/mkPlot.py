@@ -203,7 +203,7 @@ class ShapeFactory:
                   if len(tgrMC_vy) == 0:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       tgrMC_vy.append(0.)
-                      tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                      #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                   if (len(nuisances_vy_up[nuisanceName]) == 0):
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_up[nuisanceName].append(0.)
@@ -211,7 +211,7 @@ class ShapeFactory:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_do[nuisanceName].append(0.)
                   for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                    tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                     if histoUp != None:
                       nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
                     else:
