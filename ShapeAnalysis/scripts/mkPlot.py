@@ -81,7 +81,7 @@ class ShapeFactory:
             #these vectors are needed for nuisances accounting
             nuisances_vy_up     = {}
             nuisances_vy_do     = {}
-            tgrMC_vy         = array('f')
+            tgrMC_vy            = array('f')
  
             
             thsData       = ROOT.THStack ("thsData",      "thsData")
@@ -179,6 +179,14 @@ class ShapeFactory:
                       else :
                         mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
+                # prepare the reference distribution
+                if len(tgrMC_vy) == 0:
+                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    tgrMC_vy.append(0.)
+                # fill the reference distribution, and add each "sample" that is not "signal"
+                if plot[sampleName]['isSignal'] == 0:
+                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                  
                 for nuisanceName, nuisance in mynuisances.iteritems():                 
                   shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
@@ -200,10 +208,6 @@ class ShapeFactory:
                   if nuisanceName not in nuisances_vy_up.keys() or nuisanceName not in nuisances_vy_do.keys():  
                     nuisances_vy_up[nuisanceName] = array('f')
                     nuisances_vy_do[nuisanceName] = array('f')
-                  if len(tgrMC_vy) == 0:
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      tgrMC_vy.append(0.)
-                      #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                   if (len(nuisances_vy_up[nuisanceName]) == 0):
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_up[nuisanceName].append(0.)
@@ -213,7 +217,7 @@ class ShapeFactory:
                   for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                     #get the background sum
                     if plot[sampleName]['isSignal'] == 0:
-                      tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                      #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                       if histoUp != None:
                         nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
                       else:
