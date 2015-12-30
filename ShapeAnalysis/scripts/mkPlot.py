@@ -81,7 +81,7 @@ class ShapeFactory:
             #these vectors are needed for nuisances accounting
             nuisances_vy_up     = {}
             nuisances_vy_do     = {}
-            tgrMC_vy         = array('f')
+            tgrMC_vy            = array('f')
  
             
             thsData       = ROOT.THStack ("thsData",      "thsData")
@@ -179,6 +179,14 @@ class ShapeFactory:
                       else :
                         mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
+                # prepare the reference distribution
+                if len(tgrMC_vy) == 0:
+                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    tgrMC_vy.append(0.)
+                # fill the reference distribution, and add each "sample" that is not "signal"
+                if plot[sampleName]['isSignal'] == 0:
+                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                  
                 for nuisanceName, nuisance in mynuisances.iteritems():                 
                   shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
