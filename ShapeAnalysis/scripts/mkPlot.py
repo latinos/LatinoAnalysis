@@ -200,10 +200,6 @@ class ShapeFactory:
                   if nuisanceName not in nuisances_vy_up.keys() or nuisanceName not in nuisances_vy_do.keys():  
                     nuisances_vy_up[nuisanceName] = array('f')
                     nuisances_vy_do[nuisanceName] = array('f')
-                  if len(tgrMC_vy) == 0:
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      tgrMC_vy.append(0.)
-                      #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                   if (len(nuisances_vy_up[nuisanceName]) == 0):
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_up[nuisanceName].append(0.)
@@ -213,7 +209,6 @@ class ShapeFactory:
                   for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                     #get the background sum
                     if plot[sampleName]['isSignal'] == 0:
-                      tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                       if histoUp != None:
                         nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
                       else:
@@ -224,7 +219,10 @@ class ShapeFactory:
                       else:
                         #add the central sample 
                         nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
-                                            
+            
+            #save the central values of the bkg sum for use for the nuisance band        
+            for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
+              tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
 
                 #else :
                 #  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
@@ -527,7 +525,8 @@ class ShapeFactory:
               frameRatio.GetXaxis().SetTitle(variableName)
             frameRatio.GetYaxis().SetTitle("Data/Expected")
             #frameRatio.GetYaxis().SetTitle("Data/MC")
-            frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
+            #frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
+            frameRatio.GetYaxis().SetRangeUser( 0.85, 1.15 )
             self.Pad2TAxis(frameRatio)
             if (len(mynuisances.keys())!=0):
               tgrMCOverMC.Draw("2") 
