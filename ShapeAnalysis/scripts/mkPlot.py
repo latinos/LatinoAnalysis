@@ -180,13 +180,13 @@ class ShapeFactory:
                         mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
                 # prepare the reference distribution
-                if len(tgrMC_vy) == 0:
-                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    tgrMC_vy.append(0.)
+                #if len(tgrMC_vy) == 0:
+                  #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    #tgrMC_vy.append(0.)
                 # fill the reference distribution, and add each "sample" that is not "signal"
-                if plot[sampleName]['isSignal'] == 0:
-                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                #if plot[sampleName]['isSignal'] == 0:
+                  #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                    #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                  
                 for nuisanceName, nuisance in mynuisances.iteritems():                 
                   shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
@@ -228,7 +228,8 @@ class ShapeFactory:
                         #add the central sample 
                         nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
             
-            #save the central values of the bkg sum for use for the nuisance band        
+            # fill the reference distribution with the background only distribution
+            # save the central values of the bkg sum for use for the nuisance band        
             for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
               tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
 
