@@ -3,12 +3,21 @@ import sys, re, os, os.path, math
 from optparse import OptionParser
 from collections import OrderedDict
 
+import subprocess
+
 import ROOT
 
+
+# configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
+
+# functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
+
+# list of different productions and chains
 from LatinoAnalysis.Gardener.Gardener_cfg import *
+
 
 # ------------------------ baseW -------------------------
 
@@ -86,9 +95,12 @@ parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode f
 parser.add_option("-q", "--quiet",    dest="quiet",     help="Quiet logs",                default=False, action="store_true")
 parser.add_option("-n", "--dry-run",    dest="pretend",     help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
 parser.add_option("-T", "--selTree",   dest="selTree" , help="Select only some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('selTree',','))
+parser.add_option("-I", "--input-target",   dest="inputTarget" , help="Input Target directory" , default=None     , type='string' , action='store' )
+parser.add_option("-O", "--output-target",   dest="outputTarget" , help="output Target directory" , default=None     , type='string' , action='store' )
 parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
 #queue '8nh'
 parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default="8nh" , type='string' ) 
+parser.add_option("-A",  "--aquamarine-location", dest="aquamarineLocation", help="the acuamarine location (i.e. the eos interface) to use ", action='store', default="0.3.84-aquamarine.user")
 
 
 # Parse options and Filter
@@ -98,7 +110,24 @@ stepList = List_Filter(Steps,options.steps).get()
 
 CMSSW=os.environ["CMSSW_BASE"]
 
+if options.inputTarget != None:
+  eosTargBase=options.inputTarget
 
+if options.outputTarget != None:
+  eosTargBaseOut=options.outputTarget
+
+#hack to be able to stat both files under /eos/cms and /eos/user
+aquamarineLocationIn = "0.3.84-aquamarine.user"
+aquamarineLocationOut = aquamarineLocationIn
+xrootdPathIn = 'root://eosuser.cern.ch/'
+xrootdPathOut = xrootdPathIn
+if "/eos/cms" in eosTargBase:
+  aquamarineLocationIn = "0.3.84-aquamarine"
+  xrootdPathIn = 'root://eoscms.cern.ch/'
+if "/eos/cms" in eosTargBaseOut:
+  aquamarineLocationOut = "0.3.84-aquamarine"
+  xrootdPathOut = 'root://eoscms.cern.ch/'
+  
 
 # Loop on input productions
 for iProd in prodList :
@@ -124,9 +153,9 @@ for iProd in prodList :
   # Find existing Input files 
   #if not options.iStep in Steps: options.iStep = 'Prod'
   if options.iStep == 'Prod' : 
-    fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] #+' | grep -v ttDM'
+    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] #+' | grep -v ttDM'
   else:
-    fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep
+    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep
   print fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
@@ -140,9 +169,9 @@ for iProd in prodList :
       targetList={}
       # Validate targets tree
       if options.iStep == 'Prod' :
-        fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+iStep
+        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
       else:
-        fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep
+        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileExistList=string.split(out)
@@ -201,7 +230,7 @@ for iProd in prodList :
                   if options.iStep == 'Prod' :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetList[iKey] = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile
+                    targetList[iKey] = xrootdPathIn+eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile
       #print targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
@@ -231,16 +260,16 @@ for iProd in prodList :
                 if options.iStep == 'Prod' :
                   targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                 else:
-                  targetList[iKey] = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile 
+                  targetList[iKey] = xrootdPathIn++eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile 
 
       print targetList
       #quit() 
 
       # Create Output Directory on eos
       if options.iStep == 'Prod' :
-        os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir -p '+eosTargBase+'/'+iProd+'/'+iStep)
+        os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
       else:
-        os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir -p '+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep)
+        os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep)
 
       # Check and Split big Trees
 
@@ -336,7 +365,7 @@ for iProd in prodList :
           if options.iStep == 'Prod' :
             inTree  ='root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
           else:
-            inTree  ='root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
+            inTree  =xrootdPathIn+eosTargBase+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
         else:
           inTree = targetList[iTarget]  # Pointing to File in case of Split
         oriTree = inTree
@@ -415,7 +444,8 @@ for iProd in prodList :
 
         # Fix PU data 
         #puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 
-        puData = '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root'
+        #puData = '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root'
+        # puData defined in 'userConfig.py'
         command = command.replace('RPLME_puData',puData)  
 
         # Stage Out
@@ -427,9 +457,9 @@ for iProd in prodList :
         #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
         #lse:
         if options.iStep == 'Prod' :
-          command+='xrdcp -f '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+          command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
         else:
-          command+='xrdcp -f '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
+          command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
         command+='; rm '+outTree
         logFile=wDir+'/log__'+iTarget+'.log'
