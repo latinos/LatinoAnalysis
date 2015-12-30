@@ -3,6 +3,8 @@ import sys, re, os, os.path
 import subprocess
 import string
 import os.path
+
+# configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
 
 class batchJobs :

@@ -86,19 +86,18 @@ def SplitTree(inTree,wDir,TargeDir,nEvtToSplit):
 
 parser = OptionParser(usage="usage: %prog [options]")
 
-parser.add_option("-p","--prods",   dest="prods"   , help="List of production to run on"  ,  default=[]     , type='string' , action='callback' , callback=list_maker('prods',','))
-parser.add_option("-s","--steps",   dest="steps"   , help="list of Steps to produce"      ,  default=[]     , type='string' , action='callback' , callback=list_maker('steps',','))
-parser.add_option("-i","--iStep",   dest="iStep"   , help="Step to restart from"          ,  default='Prod' , type='string' ) 
-parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo all trees"                ,  default=False  , action="store_true")
-parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                  ,  default=False  , action="store_true")
-parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs" , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
-parser.add_option("-q", "--quiet",    dest="quiet",     help="Quiet logs",                default=False, action="store_true")
-parser.add_option("-n", "--dry-run",    dest="pretend",     help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
+parser.add_option("-p","--prods",   dest="prods"   , help="List of production to run on"              , default=[]     , type='string' , action='callback' , callback=list_maker('prods',','))
+parser.add_option("-s","--steps",   dest="steps"   , help="list of Steps to produce"                  , default=[]     , type='string' , action='callback' , callback=list_maker('steps',','))
+parser.add_option("-i","--iStep",   dest="iStep"   , help="Step to restart from"                      , default='Prod' , type='string' ) 
+parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo, don't check if tree already exists"  , default=False  , action="store_true")
+parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                              , default=False  , action="store_true")
+parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs"        , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
+parser.add_option("-q", "--quiet",    dest="quiet",     help="Quiet logs"                             , default=False, action="store_true")
+parser.add_option("-n", "--dry-run",    dest="pretend", help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
 parser.add_option("-T", "--selTree",   dest="selTree" , help="Select only some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('selTree',','))
-parser.add_option("-I", "--input-target",   dest="inputTarget" , help="Input Target directory" , default=None     , type='string' , action='store' )
-parser.add_option("-O", "--output-target",   dest="outputTarget" , help="output Target directory" , default=None     , type='string' , action='store' )
+parser.add_option("-I", "--input-target",   dest="inputTarget" , help="Input Target directory"        , default=None     , type='string' , action='store' )
+parser.add_option("-O", "--output-target",   dest="outputTarget" , help="output Target directory"     , default=None     , type='string' , action='store' )
 parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
-#queue '8nh'
 parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default="8nh" , type='string' ) 
 parser.add_option("-A",  "--aquamarine-location", dest="aquamarineLocation", help="the acuamarine location (i.e. the eos interface) to use ", action='store', default="0.3.84-aquamarine.user")
 
@@ -110,14 +109,22 @@ stepList = List_Filter(Steps,options.steps).get()
 
 CMSSW=os.environ["CMSSW_BASE"]
 
+# eosTargBase is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
   eosTargBase=options.inputTarget
 
+# if not defined output target set to input folder on eos
+eosTargBaseOut = eosTargBase
 if options.outputTarget != None:
   eosTargBaseOut=options.outputTarget
 
+print "eosTargBase    = ", eosTargBase
+print "eosTargBaseOut = ", eosTargBaseOut  
+
 #hack to be able to stat both files under /eos/cms and /eos/user
-aquamarineLocationIn = "0.3.84-aquamarine.user"
+
+aquamarineLocationIn = options.aquamarineLocation
+#aquamarineLocationIn = "0.3.84-aquamarine.user"
 aquamarineLocationOut = aquamarineLocationIn
 xrootdPathIn = 'root://eosuser.cern.ch/'
 xrootdPathOut = xrootdPathIn

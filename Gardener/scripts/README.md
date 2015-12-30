@@ -49,11 +49,22 @@ General instructions
     FIXME DEFINITION
 
 
+In LatinoAnalysis/Tools/python/userConfig.py (rename from userConfig_TEMPLATE.py) definition of the jobs and working directory
+is set, as well as pile-up reference distribution:
+
+    e.g.:
+       jobDir 
+       workDir
+       puData
+    
     
 Examples
 ====
 
-    mkGardener.py -p 21Oct_25ns_MC -b -s wwNLL -i mcwghtcount__MC -S Target -Q 2nd
+    mkGardener.py -p 21Oct_25ns_MC   -b   -s wwNLL   -i mcwghtcount__MC   -S Target   -Q 2nd
+    mkGardener.py -p 21Oct_25ns_MC   -b   -s wwNLL   -i mcwghtcount__MC   -S Target   -Q 2nd    -R
+    
+    mkGardener.py -p 21Oct_25ns_MC   -b   -s wwNLL   -i mcwghtcount__MC   -S Target   -Q 2nd    -O /eos/user/a/amassiro/Test/
     
 get access to eos IT:
 
