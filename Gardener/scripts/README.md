@@ -72,6 +72,13 @@ get access to eos IT:
 
 see https://cern.service-now.com/service-portal/article.do?n=KB0001998&s=CERNBox
 
+Check:
+
+    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls  -alrth /eos/user/a/amassiro/Test/21Oct_25ns_MC/mcwghtcount__MC__wwNLL/latino_WWTo2L2Nu.root
+
+    
+    
+    
 
 
     

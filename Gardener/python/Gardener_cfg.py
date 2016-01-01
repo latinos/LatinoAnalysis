@@ -116,5 +116,20 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                },
+
+  'JESup'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py JESTreeMaker -k 1 '
+                } ,
+
+  'JESdo'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py JESTreeMaker -k -1 '
+                } ,
+    
 }
 

@@ -215,20 +215,28 @@ Jet Energy Scale
 Module: JESTreeMaker
           
     gardener.py  JESTreeMaker \
+       -k 1 \
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
        test.root \      
        
        
+    cp ../CMSSW_7_6_2/src/LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root    /tmp/amassiro/latino_WWTo2L2Nu.root
     gardener.py  JESTreeMaker \
+                -k -1 \
+                /tmp/amassiro/latino_WWTo2L2Nu.root  \
+                /tmp/amassiro/latino_WW_TEST.root
+                           
+    gardener.py  JESTreeMaker \
+       -k -1 \
        -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
+       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_JES \
           
           
 b POG scale factors
 ====
 
 Module: btagPogScaleFactors 
-  
+
     gardener.py  btagPogScaleFactors \
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
        test.root \
