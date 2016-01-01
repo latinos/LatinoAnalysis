@@ -29,10 +29,18 @@ class JESTreeMaker(TreeCloner):
         return '''Apply id/iso and filter lepton collection'''
 
     def addOptions(self,parser):
-        pass
+        description = self.help()
+        group = optparse.OptionGroup(parser,self.label, description)
+        group.add_option('-k', '--kind',   dest='kind', help='Kind of variation: -1, +1, +0.5, ...', default=1.0)
+        parser.add_option_group(group)
+        return group
 
     def checkOptions(self,opts):
-        pass
+        if not (hasattr(opts,'kind')):
+          self.kind = 1.0
+        else :    
+          self.kind   = 1.0 * float(opts.kind)
+        print " kind of variation = ", self.kind
 
     def changeOrder(self, vectorname, vector, jetOrderList) :
         # vector is already linked to the otree branch
@@ -64,7 +72,7 @@ class JESTreeMaker(TreeCloner):
         tree  = kwargs['tree']
         input = kwargs['input']
         output = kwargs['output']
-        
+                
         # Make two output directories
         outputSplit = os.path.split(output)
         outputUp = os.path.join( outputSplit[0] + 'Up' , outputSplit[1] )
@@ -136,7 +144,7 @@ class JESTreeMaker(TreeCloner):
         # now actually connect the branches
         for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
             self.upTree.Branch(bname,bvector)
-            self.downTree.Branch(bname,bvector)
+            #self.downTree.Branch(bname,bvector)
 
         self.oldBranchesToBeModifiedSimpleVariable = {}
         for bname in self.namesOldBranchesToBeModifiedSimpleVariable:
@@ -146,7 +154,7 @@ class JESTreeMaker(TreeCloner):
         # now actually connect the branches
         for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
             self.upTree.Branch(bname,bvariable,bname+'/F')
-            self.downTree.Branch(bname,bvariable,bname+'/F')
+            #self.downTree.Branch(bname,bvariable,bname+'/F')
 
         #self.jetVarDic = OrderedDict()
         self.jetVarDic = {}
@@ -159,7 +167,7 @@ class JESTreeMaker(TreeCloner):
             #print " bname   = ", bname
             #print " bvariable = ", bvariable
             self.upTree.Branch(bname,bvariable,bname+'/F')
-            self.downTree.Branch(bname,bvariable,bname+'/F')
+            #self.downTree.Branch(bname,bvariable,bname+'/F')
          
         # input tree  
         itree = self.itree
@@ -200,7 +208,7 @@ class JESTreeMaker(TreeCloner):
                 if itree.std_vector_jet_pt[i] > 0:
                     jecUnc.setJetEta(itree.std_vector_jet_eta[i])
                     jecUnc.setJetPt(itree.std_vector_jet_pt[i])
-                    jetPtUp.append(itree.std_vector_jet_pt[i]*(1+jecUnc.getUncertainty(True)))
+                    jetPtUp.append(itree.std_vector_jet_pt[i]*(1 + (self.kind) * (jecUnc.getUncertainty(True))))
                 else:
                     break
                 
@@ -274,76 +282,76 @@ class JESTreeMaker(TreeCloner):
             
             
             # Scale Down
-            jetPtDown = []
-            for i in range(itree.std_vector_jet_pt.size()):
-                if itree.std_vector_jet_pt[i] > 0:
-                    jecUnc.setJetEta(itree.std_vector_jet_eta[i])
-                    jecUnc.setJetPt(itree.std_vector_jet_pt[i])
-                    jetPtDown.append(itree.std_vector_jet_pt[i]*(1-jecUnc.getUncertainty(False)))
-                else:
-                     break
-            jetOrderDown = sorted(range(len(jetPtDown)), key=lambda k: jetPtDown[k], reverse=True)
+            #jetPtDown = []
+            #for i in range(itree.std_vector_jet_pt.size()):
+                #if itree.std_vector_jet_pt[i] > 0:
+                    #jecUnc.setJetEta(itree.std_vector_jet_eta[i])
+                    #jecUnc.setJetPt(itree.std_vector_jet_pt[i])
+                    #jetPtDown.append(itree.std_vector_jet_pt[i]*(1-jecUnc.getUncertainty(False)))
+                #else:
+                     #break
+            #jetOrderDown = sorted(range(len(jetPtDown)), key=lambda k: jetPtDown[k], reverse=True)
                     
-            for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-                bvector.clear()
-                if 'jet_pt' in bname:
-                    for i in range( len(jetOrderDown) ) :
-                        bvector.push_back ( jetPtDown[jetOrderDown[i]] )
-                    for i in range( len(getattr(self.itree, bname)) - len(jetOrderDown) ) :
-                        bvector.push_back ( -9999. )
-                else:
-                    self.changeOrder( bname, bvector, jetOrderDown)
+            #for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+                #bvector.clear()
+                #if 'jet_pt' in bname:
+                    #for i in range( len(jetOrderDown) ) :
+                        #bvector.push_back ( jetPtDown[jetOrderDown[i]] )
+                    #for i in range( len(getattr(self.itree, bname)) - len(jetOrderDown) ) :
+                        #bvector.push_back ( -9999. )
+                #else:
+                    #self.changeOrder( bname, bvector, jetOrderDown)
                     
-            if len(jetPtDown) > 1:
-                #print "    jetOrderDown[0] = ", jetOrderDown[0]
-                #print "    jetOrderDown[1] = ", jetOrderDown[1]
-                jetpt1 = jetPtDown[jetOrderDown[0]]
-                jetpt2 = jetPtDown[jetOrderDown[1]]
-                jeteta1 = itree.std_vector_jet_eta[jetOrderDown[0]]
-                jeteta2 = itree.std_vector_jet_eta[jetOrderDown[1]]
-                jetphi1 = itree.std_vector_jet_phi[jetOrderDown[0]]
-                jetphi2 = itree.std_vector_jet_phi[jetOrderDown[1]]
-                jetmass1 = itree.std_vector_jet_mass[jetOrderDown[0]]
-                jetmass2 = itree.std_vector_jet_mass[jetOrderDown[1]]
-                WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
-            else:
-                WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            # set the list of jets into the object "WW"
-            new_std_vector_jet_pt.clear()
-            new_std_vector_jet_eta.clear()
-            for iGoodJet in jetOrderDown :
-                new_std_vector_jet_pt.push_back( jetPtDown[ iGoodJet ])
-                new_std_vector_jet_eta.push_back(jetPtDown[ iGoodJet ])
-            WWDown.setJets(new_std_vector_jet_pt, new_std_vector_jet_eta)
+            #if len(jetPtDown) > 1:
+                ##print "    jetOrderDown[0] = ", jetOrderDown[0]
+                ##print "    jetOrderDown[1] = ", jetOrderDown[1]
+                #jetpt1 = jetPtDown[jetOrderDown[0]]
+                #jetpt2 = jetPtDown[jetOrderDown[1]]
+                #jeteta1 = itree.std_vector_jet_eta[jetOrderDown[0]]
+                #jeteta2 = itree.std_vector_jet_eta[jetOrderDown[1]]
+                #jetphi1 = itree.std_vector_jet_phi[jetOrderDown[0]]
+                #jetphi2 = itree.std_vector_jet_phi[jetOrderDown[1]]
+                #jetmass1 = itree.std_vector_jet_mass[jetOrderDown[0]]
+                #jetmass2 = itree.std_vector_jet_mass[jetOrderDown[1]]
+                #WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
+            #else:
+                #WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            ## set the list of jets into the object "WW"
+            #new_std_vector_jet_pt.clear()
+            #new_std_vector_jet_eta.clear()
+            #for iGoodJet in jetOrderDown :
+                #new_std_vector_jet_pt.push_back( jetPtDown[ iGoodJet ])
+                #new_std_vector_jet_eta.push_back(jetPtDown[ iGoodJet ])
+            #WWDown.setJets(new_std_vector_jet_pt, new_std_vector_jet_eta)
         
-            # now fill the variables like "mjj", "njets" ...
-            for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
-                bvariable[0] = getattr(WWDown, bname)()  
+            ## now fill the variables like "mjj", "njets" ...
+            #for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+                #bvariable[0] = getattr(WWDown, bname)()  
                 
-            # refill the single jet variables
-            counter = 0
-            varCounter = 0
-            for bname, bvariable in self.jetVarDic.iteritems():
-                if counter < len(jetOrderDown):
-                    if 'jetpt' in bname:
-                        bvariable[0] = jetPtDown[ jetOrderDown[counter] ]
-                    else:
-                        bvariable[0] = (getattr(self.itree, 'std_vector_jet_'+self.jetVariables[varCounter] ))[ jetOrderDown[counter] ]
-                    counter += 1
-                else:
-                    bvariable[0] = -9999.
-                if counter == maxnjets:
-                    varCounter += 1
-                    counter = 0
+            ## refill the single jet variables
+            #counter = 0
+            #varCounter = 0
+            #for bname, bvariable in self.jetVarDic.iteritems():
+                #if counter < len(jetOrderDown):
+                    #if 'jetpt' in bname:
+                        #bvariable[0] = jetPtDown[ jetOrderDown[counter] ]
+                    #else:
+                        #bvariable[0] = (getattr(self.itree, 'std_vector_jet_'+self.jetVariables[varCounter] ))[ jetOrderDown[counter] ]
+                    #counter += 1
+                #else:
+                    #bvariable[0] = -9999.
+                #if counter == maxnjets:
+                    #varCounter += 1
+                    #counter = 0
                         
-            self.downTree.Fill()
+            #self.downTree.Fill()
 
         self.otree = self.upTree
         self.ofile = self.upFile
-        self.disconnect(True,False)
+        #self.disconnect(True,False)
         
-        self.otree = self.downTree
-        self.ofile = self.downFile
+        #self.otree = self.downTree
+        #self.ofile = self.downFile
         self.disconnect(True,True)
         
         print '- Eventloop completed'
