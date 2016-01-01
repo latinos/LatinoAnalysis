@@ -106,8 +106,8 @@ class JESTreeMaker(TreeCloner):
             'pt',
             'eta',
             'phi',
-            'mass',
-            'tche'
+            #'mass',
+            #'tche'
             ]
         
         self.jetVarList = []
@@ -121,9 +121,12 @@ class JESTreeMaker(TreeCloner):
         self.clone(outputUp,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
         self.upTree = self.otree
         self.upFile = self.ofile
-        self.clone(outputDown,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
-        self.downTree = self.otree
-        self.downFile = self.ofile
+        
+        # "=" in python lets the object! 
+        # this is not cloning into "down" and "up" separately.
+        #self.clone(outputDown,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
+        #self.downTree = self.otree
+        #self.downFile = self.ofile
 
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
@@ -174,10 +177,12 @@ class JESTreeMaker(TreeCloner):
         #----------------------------------------------------------------------------------------------------
         print '- Starting eventloop'
         step = 5000
+        #step = 1
 
         # to be used later on in the code ...
         new_std_vector_jet_pt = ROOT.std.vector(float) ()
-
+        new_std_vector_jet_eta  = ROOT.std.vector(float) ()
+        
         #for i in xrange(10000):
         #for i in xrange(2000):
         for i in xrange(nentries):
@@ -189,6 +194,8 @@ class JESTreeMaker(TreeCloner):
             # scale jet pt
             # Scale Up
             jetPtUp = []
+            #print " itree.std_vector_jet_pt.size() = ", itree.std_vector_jet_pt.size()
+            
             for i in range(itree.std_vector_jet_pt.size()):
                 if itree.std_vector_jet_pt[i] > 0:
                     jecUnc.setJetEta(itree.std_vector_jet_eta[i])
@@ -209,7 +216,12 @@ class JESTreeMaker(TreeCloner):
                 else:
                     self.changeOrder( bname, bvector, jetOrderUp)
             
+            #print "    jetOrderUp.size() = ", len(jetOrderUp)
+            #print "    jetPtUp.size() = ", len(jetPtUp)
+            
             if len(jetPtUp) > 1:
+                #print "    jetOrderUp[0] = ", jetOrderUp[0]
+                #print "    jetOrderUp[1] = ", jetOrderUp[1]
                 jetpt1 = jetPtUp[jetOrderUp[0]]
                 jetpt2 = jetPtUp[jetOrderUp[1]]
                 jeteta1 = itree.std_vector_jet_eta[jetOrderUp[0]]
@@ -221,16 +233,25 @@ class JESTreeMaker(TreeCloner):
                 WWUp = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
             else:
                 WWUp = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            
+ 
+            #print "    here 1 "
+
             # set the list of jets into the object "WW"
             new_std_vector_jet_pt.clear()
+            new_std_vector_jet_eta.clear()
             for iGoodJet in jetOrderUp :
-                new_std_vector_jet_pt.push_back(jetPtUp[ iGoodJet ])
-            WWUp.setJets(new_std_vector_jet_pt)
+                new_std_vector_jet_pt.push_back( jetPtUp[ iGoodJet ])
+                new_std_vector_jet_eta.push_back(jetPtUp[ iGoodJet ])
+            WWUp.setJets(new_std_vector_jet_pt, new_std_vector_jet_eta)
+
+            #print "    here 2 "
         
             # now fill the variables like "mjj", "njets" ...
             for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+                #print "       >> bname = ", bname
                 bvariable[0] = getattr(WWUp, bname)()   
+
+            #print "    here 3 "
                 
             # refill the single jet variables
             counter = 0
@@ -249,6 +270,8 @@ class JESTreeMaker(TreeCloner):
                     counter = 0
 
             self.upTree.Fill()
+            
+            
             
             # Scale Down
             jetPtDown = []
@@ -272,6 +295,8 @@ class JESTreeMaker(TreeCloner):
                     self.changeOrder( bname, bvector, jetOrderDown)
                     
             if len(jetPtDown) > 1:
+                #print "    jetOrderDown[0] = ", jetOrderDown[0]
+                #print "    jetOrderDown[1] = ", jetOrderDown[1]
                 jetpt1 = jetPtDown[jetOrderDown[0]]
                 jetpt2 = jetPtDown[jetOrderDown[1]]
                 jeteta1 = itree.std_vector_jet_eta[jetOrderDown[0]]
@@ -285,9 +310,11 @@ class JESTreeMaker(TreeCloner):
                 WWDown = ROOT.WW(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             # set the list of jets into the object "WW"
             new_std_vector_jet_pt.clear()
+            new_std_vector_jet_eta.clear()
             for iGoodJet in jetOrderDown :
-                new_std_vector_jet_pt.push_back(jetPtDown[ iGoodJet ])
-            WWDown.setJets(new_std_vector_jet_pt)
+                new_std_vector_jet_pt.push_back( jetPtDown[ iGoodJet ])
+                new_std_vector_jet_eta.push_back(jetPtDown[ iGoodJet ])
+            WWDown.setJets(new_std_vector_jet_pt, new_std_vector_jet_eta)
         
             # now fill the variables like "mjj", "njets" ...
             for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
@@ -314,8 +341,10 @@ class JESTreeMaker(TreeCloner):
         self.otree = self.upTree
         self.ofile = self.upFile
         self.disconnect(True,False)
+        
         self.otree = self.downTree
         self.ofile = self.downFile
         self.disconnect(True,True)
+        
         print '- Eventloop completed'
 

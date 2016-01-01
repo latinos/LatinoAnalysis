@@ -20,7 +20,8 @@ public:
  //! set functions
  void setJets(std::vector<float> invector);
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta);
-  
+ void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass);
+ 
  //! functions
  float pTWW();
  float dphill();
@@ -60,6 +61,8 @@ private:
  
  std::vector<float> _jetspt;
  std::vector<float> _jetseta;
+ std::vector<float> _jetsphi;
+ std::vector<float> _jetsmass;
  
 };
 
@@ -132,13 +135,25 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
 
 void WW::setJets(std::vector<float> invectorpt ) {
  _jetspt = invectorpt;
+ jetOk = false;  //---- protection FIXME
+ //---- need to update J1 and J2
 }
 
 void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta) {
  _jetspt  = invectorpt;
  _jetseta = invectoreta;
+ jetOk = false;  //---- protection FIXME
+ //---- need to update J1 and J2
 }
 
+void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass) {
+ _jetspt   = invectorpt;
+ _jetseta  = invectoreta;
+ _jetsphi  = invectorphi;
+ _jetsmass = invectormass;
+ jetOk = false;  //---- protection FIXME
+//---- need to update J1 and J2
+}
 
 
 //! functions
@@ -215,8 +230,9 @@ float WW::dphilljet(){
 
 
 float WW::dphilljetjet(){ 
+//  if (isOk and jetOk) {  //---- FIXME
  if (isOk) {
-  return  fabs( (L1+L2).DeltaPhi(J1+J2) );
+   return  fabs( (L1+L2).DeltaPhi(J1+J2) );
  }
  else {
   return -9999.0;
