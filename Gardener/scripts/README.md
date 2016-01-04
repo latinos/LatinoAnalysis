@@ -66,6 +66,13 @@ Examples
     
     mkGardener.py -p 21Oct_25ns_MC   -b   -s wwNLL   -i mcwghtcount__MC   -S Target   -Q 2nd    -O /eos/user/a/amassiro/Test/
     
+    mkGardener.py -p 21Oct_25ns_MC   -b   -s wwNLL   -i mcwghtcount__MC   -S Target   -Q 2nd    -O /eos/user/a/amassiro/Test/
+    
+    mkGardener.py -p 21Oct_25ns_MC   -b   -s JESup   -i mcwghtcount__MC   -S Target   -Q 2nd    -O /eos/user/a/amassiro/Test/
+    mkGardener.py -p 21Oct_25ns_MC   -b   -s JESdo   -i mcwghtcount__MC   -S Target   -Q 2nd    -O /eos/user/a/amassiro/Test/
+    
+    
+    
 get access to eos IT:
 
     source /afs/cern.ch/project/eos/installation/user/etc/setup.sh

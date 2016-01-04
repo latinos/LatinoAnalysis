@@ -120,14 +120,14 @@ Steps= {
   'JESup'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
-                  'do4Data'    : True ,
+                  'do4Data'    : False ,
                   'command'    : 'gardener.py JESTreeMaker -k 1 '
                 } ,
 
   'JESdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
-                  'do4Data'    : True ,
+                  'do4Data'    : False ,
                   'command'    : 'gardener.py JESTreeMaker -k -1 '
                 } ,
     
