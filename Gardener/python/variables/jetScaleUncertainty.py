@@ -74,13 +74,13 @@ class JESTreeMaker(TreeCloner):
         output = kwargs['output']
                 
         # Make two output directories
-        outputSplit = os.path.split(output)
-        outputUp = os.path.join( outputSplit[0] + 'Up' , outputSplit[1] )
-        if outputUp and not os.path.exists(outputUp):
-           os.system('mkdir -p '+outputUp)
-        outputDown = os.path.join( outputSplit[0] + 'Down' , outputSplit[1] )
-        if outputDown and not os.path.exists(outputDown):
-           os.system('mkdir -p '+outputDown)
+        #outputSplit = os.path.split(output)
+        #outputUp = os.path.join( outputSplit[0] + 'Up' , outputSplit[1] )
+        #if outputUp and not os.path.exists(outputUp):
+           #os.system('mkdir -p '+outputUp)
+        #outputDown = os.path.join( outputSplit[0] + 'Down' , outputSplit[1] )
+        #if outputDown and not os.path.exists(outputDown):
+           #os.system('mkdir -p '+outputDown)
            
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
@@ -126,9 +126,10 @@ class JESTreeMaker(TreeCloner):
             self.jetVarList.append("jet"+jetVar+str(i+1))
 
         # clone the tree
-        self.clone(outputUp,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
-        self.upTree = self.otree
-        self.upFile = self.ofile
+        self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
+        #self.clone(outputUp,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
+        #self.upTree = self.otree
+        #self.upFile = self.ofile
         
         # "=" in python lets the object! 
         # this is not cloning into "down" and "up" separately.
@@ -143,7 +144,8 @@ class JESTreeMaker(TreeCloner):
 
         # now actually connect the branches
         for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-            self.upTree.Branch(bname,bvector)
+            self.otree.Branch(bname,bvector)
+            #self.upTree.Branch(bname,bvector)
             #self.downTree.Branch(bname,bvector)
 
         self.oldBranchesToBeModifiedSimpleVariable = {}
@@ -153,7 +155,8 @@ class JESTreeMaker(TreeCloner):
 
         # now actually connect the branches
         for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
-            self.upTree.Branch(bname,bvariable,bname+'/F')
+            self.otree.Branch(bname,bvariable,bname+'/F')
+            #self.upTree.Branch(bname,bvariable,bname+'/F')
             #self.downTree.Branch(bname,bvariable,bname+'/F')
 
         #self.jetVarDic = OrderedDict()
@@ -166,7 +169,8 @@ class JESTreeMaker(TreeCloner):
         for bname, bvariable in self.jetVarDic.iteritems():
             #print " bname   = ", bname
             #print " bvariable = ", bvariable
-            self.upTree.Branch(bname,bvariable,bname+'/F')
+            self.otree.Branch(bname,bvariable,bname+'/F')
+            #self.upTree.Branch(bname,bvariable,bname+'/F')
             #self.downTree.Branch(bname,bvariable,bname+'/F')
          
         # input tree  
@@ -277,7 +281,8 @@ class JESTreeMaker(TreeCloner):
                     varCounter += 1
                     counter = 0
 
-            self.upTree.Fill()
+            self.otree.Fill()
+            #self.upTree.Fill()
             
             
             
@@ -346,8 +351,8 @@ class JESTreeMaker(TreeCloner):
                         
             #self.downTree.Fill()
 
-        self.otree = self.upTree
-        self.ofile = self.upFile
+        #self.otree = self.upTree
+        #self.ofile = self.upFile
         #self.disconnect(True,False)
         
         #self.otree = self.downTree
