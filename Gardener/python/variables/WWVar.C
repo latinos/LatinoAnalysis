@@ -57,7 +57,8 @@ private:
  TLorentzVector J1, J2;
  float pid1, pid2;
  
- bool isOk, jetOk;
+ bool isOk;
+ int  jetOk;
  
  std::vector<float> _jetspt;
  std::vector<float> _jetseta;
@@ -78,7 +79,7 @@ WW::WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi) {
  else {
   isOk = false;
  }
- jetOk = false;
+ jetOk = 0;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi) {
@@ -92,7 +93,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  else {
   isOk = false;
  }
- jetOk = false;
+ jetOk = 0;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi) {
@@ -108,7 +109,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  else {
   isOk = false;
  }
- jetOk = false;
+ jetOk = 0;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
@@ -124,26 +125,30 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  else {
   isOk = false;
  }
- if( jetpt1>0 && jetpt2 > 0) {
+ if( jetpt1>0) {
   J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1); //---- NB: jets are treated as massive
-  J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
-  jetOk = true;
+  if( jetpt2>0) {
+   J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
+   jetOk = 2;
+  }
+  else {
+   jetOk = 1;
+  }
  }
+ 
 }
 
 //! set functions
 
 void WW::setJets(std::vector<float> invectorpt ) {
  _jetspt = invectorpt;
- jetOk = false;  //---- protection FIXME
- //---- need to update J1 and J2
+ jetOk = 0;  //---- protection need to update J1 and J2, but eta, phi and mass are missing!
 }
 
 void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta) {
  _jetspt  = invectorpt;
  _jetseta = invectoreta;
- jetOk = false;  //---- protection FIXME
- //---- need to update J1 and J2
+ jetOk = 0;  //---- protection need to update J1 and J2, but eta, phi and mass are missing!
 }
 
 void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass) {
@@ -151,8 +156,20 @@ void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, 
  _jetseta  = invectoreta;
  _jetsphi  = invectorphi;
  _jetsmass = invectormass;
- jetOk = false;  //---- protection FIXME
-//---- need to update J1 and J2
+
+ //---- need to update J1 and J2
+ if (( _jetspt.size() > 1 && _jetspt.at(0) > 0 && _jetspt.at(1) <= 0 ) || ( _jetspt.size() == 1 && _jetspt.at(0) > 0)) {
+  J1.SetPtEtaPhiM(_jetspt.at(0), _jetseta.at(0), _jetsphi.at(0), _jetsmass.at(0)); //---- NB: jets are treated as massive
+  jetOk = 1;
+ }
+ else if ( _jetspt.size() > 1 && _jetspt.at(0) > 0 && _jetspt.at(1) > 0 ) {
+  J1.SetPtEtaPhiM(_jetspt.at(0), _jetseta.at(0), _jetsphi.at(0), _jetsmass.at(0)); //---- NB: jets are treated as massive
+  J2.SetPtEtaPhiM(_jetspt.at(1), _jetseta.at(1), _jetsphi.at(1), _jetsmass.at(1)); //---- NB: jets are treated as massive
+  jetOk = 2;
+ }
+ else { 
+  jetOk = 0;  //---- protection
+ }
 }
 
 
@@ -220,7 +237,7 @@ float WW::drll(){
 }
 
 float WW::dphilljet(){ 
- if (isOk) {
+ if (isOk && jetOk >= 1) {
   return  fabs( (L1+L2).DeltaPhi(J1) );
  }
  else {
@@ -230,8 +247,7 @@ float WW::dphilljet(){
 
 
 float WW::dphilljetjet(){ 
-//  if (isOk and jetOk) {  //---- FIXME
- if (isOk) {
+ if (isOk && jetOk >= 2) {
    return  fabs( (L1+L2).DeltaPhi(J1+J2) );
  }
  else {
@@ -392,7 +408,7 @@ float WW::channel(){
 // Jet Functions
 float WW::mjj(){
  
- if (jetOk) {
+ if (jetOk >= 2) {
   return (J1+J2).M();
  }
  else {
@@ -403,7 +419,7 @@ float WW::mjj(){
 
 float WW::detajj(){
  
- if (jetOk) {
+ if (jetOk >= 2) {
   return abs(J1.Eta()-J2.Eta());
  }
  else {
