@@ -44,6 +44,7 @@ General instructions
     -p -->   list of production to run on (e.g. 21Oct_25ns_MC, 21Oct_Run2015D_05Oct2015, ..., as defined in python/Gardener_cfg.py)
     -s -->   list of Steps to produce (e.g. MC, as defined in python/Gardener_cfg.py)
     -i -->   step to restart from (e.g. mcwghtcount)
+    -O -->   alternative location on eos, e.g. /eos/user/a/amassiro/Test/ (note that it is still IT eos)
     
     -S -->   splitting mode for batch jobs. batchSplit = How to split jobs (by Step, Target)
     FIXME DEFINITION
