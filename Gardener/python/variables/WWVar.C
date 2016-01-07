@@ -28,6 +28,10 @@ public:
  float mll();
  float pt1();
  float pt2();
+ float eta1();
+ float eta2();
+ float phi1();
+ float phi2();
  float mT2();  //void functionMT2(int& npar, double* d, double& r, double par[], int flag);
  float yll();
  float ptll();
@@ -43,10 +47,12 @@ public:
  float pfmet();
  
  float mth();
+ float mcoll();
  float dphillmet();
  float channel();
  float mjj();
  float detajj();
+ float dphijj();
  float njet();
   
  
@@ -138,6 +144,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  
 }
 
+
 //! set functions
 
 void WW::setJets(std::vector<float> invectorpt ) {
@@ -218,7 +225,7 @@ float WW::pTWW(){
 
 float WW::dphill(){
  if (isOk) {
-  return L1.DeltaPhi(L2);
+  return fabs(L1.DeltaPhi(L2));
  }
  else {
   return -9999.0;
@@ -258,8 +265,8 @@ float WW::dphilljetjet(){
 
 float WW::dphilmet(){ 
  if (isOk) {
-  float d1 = (L1).DeltaPhi(MET);
-  float d2 = (L2).DeltaPhi(MET);
+  float d1 = fabs((L1).DeltaPhi(MET));
+  float d2 = fabs((L2).DeltaPhi(MET));
   if (d1<d2) return d1;
   else       return d2;
  }
@@ -271,7 +278,7 @@ float WW::dphilmet(){
 
 float WW::dphilmet1(){ 
  if (isOk) {
-  return (L1).DeltaPhi(MET);
+  return fabs((L1).DeltaPhi(MET));
  }
  else {
   return -9999.0;
@@ -280,7 +287,7 @@ float WW::dphilmet1(){
 
 float WW::dphilmet2(){ 
  if (isOk) {
-  return (L2).DeltaPhi(MET);
+  return fabs((L2).DeltaPhi(MET));
  }
  else {
   return -9999.0;
@@ -324,7 +331,7 @@ float WW::pfmet(){
 
 
 
-
+//---- pt
 float WW::pt1(){
  
  if (isOk) {
@@ -346,7 +353,52 @@ float WW::pt2(){
  } 
 }
 
+//---- eta
+float WW::eta1(){
+ 
+ if (isOk) {
+  return L1.Eta();
+ }
+ else {
+  return -9999.0;
+ }
+}
 
+
+float WW::eta2(){
+ 
+ if (isOk) {
+  return L2.Eta();
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+//---- phi
+float WW::phi1(){
+ 
+ if (isOk) {
+  return L1.Phi();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::phi2(){
+ 
+ if (isOk) {
+  return L2.Phi();
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+//---- mll
 float WW::mll(){
  
  if (isOk) {
@@ -381,6 +433,31 @@ float WW::mth(){
  }
  
 }
+
+
+float WW::mcoll(){
+ 
+ if (isOk) {
+  
+  //---- project met to lepton direction
+  float et_par_1 = MET.Pt() * cos ( fabs( (L1).DeltaPhi(MET) ) );
+  float et_par_2 = MET.Pt() * cos ( fabs( (L2).DeltaPhi(MET) ) ); 
+  
+  TLorentzVector L1_enhanced,L2_enhanced;
+  
+  L1_enhanced.SetPtEtaPhiM(pt1() + et_par_1, eta1(), phi1(), 0.);
+  L2_enhanced.SetPtEtaPhiM(pt2() + et_par_2, eta2(), phi2(), 0.);
+  
+  return (L1_enhanced + L2_enhanced).M();
+
+  
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
+
 
 float WW::channel(){
  
@@ -427,6 +504,15 @@ float WW::detajj(){
  } 
 }
 
+
+float WW::dphijj(){
+ if (isOk) {
+  return fabs(J1.DeltaPhi(J2));
+ }
+ else {
+  return -9999.0;
+ } 
+}
 
 
 
