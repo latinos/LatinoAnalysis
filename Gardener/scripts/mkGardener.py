@@ -99,7 +99,7 @@ parser.add_option("-I", "--input-target",   dest="inputTarget" , help="Input Tar
 parser.add_option("-O", "--output-target",   dest="outputTarget" , help="output Target directory"     , default=None     , type='string' , action='store' )
 parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
 parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default="8nh" , type='string' ) 
-parser.add_option("-A",  "--aquamarine-location", dest="aquamarineLocation", help="the acuamarine location (i.e. the eos interface) to use ", action='store', default="0.3.84-aquamarine.user")
+#parser.add_option("-A",  "--aquamarine-location", dest="aquamarineLocation", help="the acuamarine location (i.e. the eos interface) to use ", action='store', default="0.3.84-aquamarine.user")
 
 
 # Parse options and Filter
@@ -109,26 +109,36 @@ stepList = List_Filter(Steps,options.steps).get()
 
 CMSSW=os.environ["CMSSW_BASE"]
 
-# eosTargBase is defined by default in Gardener/python/Gardener_cfg.py
+# eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
-  eosTargBase=options.inputTarget
+  eosTargBaseIn=options.inputTarget
 
-# if not defined output target set to input folder on eos
-eosTargBaseOut = eosTargBase
+# eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.outputTarget != None:
   eosTargBaseOut=options.outputTarget
 
-print "eosTargBase    = ", eosTargBase
+print "eosProdBase    = ", eosProdBase
+print "eosTargBaseIn  = ", eosTargBaseIn
 print "eosTargBaseOut = ", eosTargBaseOut  
 
 #hack to be able to stat both files under /eos/cms and /eos/user
+ 
+aquamarineLocationProd = '0.3.84-aquamarine'
+xrootdPathProd         = 'root://eoscms.cern.ch/'
 
-aquamarineLocationIn = options.aquamarineLocation
+aquamarineLocationIn   = '0.3.84-aquamarine.user'
+xrootdPathIn           = 'root://eosuser.cern.ch/'
+
+aquamarineLocationOut  = '0.3.84-aquamarine.user'
+xrootdPathOut          = 'root://eosuser.cern.ch/'
+
+#aquamarineLocationIn = options.aquamarineLocation
 #aquamarineLocationIn = "0.3.84-aquamarine.user"
-aquamarineLocationOut = aquamarineLocationIn
-xrootdPathIn = 'root://eosuser.cern.ch/'
-xrootdPathOut = xrootdPathIn
-if "/eos/cms" in eosTargBase:
+#aquamarineLocationOut = aquamarineLocationIn
+#xrootdPathIn = 'root://eosuser.cern.ch/'
+#xrootdPathOut = xrootdPathIn
+
+if "/eos/cms" in eosTargBaseIn:
   aquamarineLocationIn = "0.3.84-aquamarine"
   xrootdPathIn = 'root://eoscms.cern.ch/'
 if "/eos/cms" in eosTargBaseOut:
@@ -160,9 +170,9 @@ for iProd in prodList :
   # Find existing Input files 
   #if not options.iStep in Steps: options.iStep = 'Prod'
   if options.iStep == 'Prod' : 
-    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] #+' | grep -v ttDM'
+    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] #+' | grep -v ttDM'
   else:
-    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep
+    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+options.iStep
   print fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
@@ -176,9 +186,9 @@ for iProd in prodList :
       targetList={}
       # Validate targets tree
       if options.iStep == 'Prod' :
-        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
+        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
       else:
-        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep
+        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileExistList=string.split(out)
@@ -216,12 +226,12 @@ for iProd in prodList :
           #  else:
           #    if not iTree in FileExistList and selectSample: targetList[iSample] = 'NOSPLIT'
         #else: 
-        #print iSample, selectSample 
+        print iSample, selectSample 
         for iFile in FileInList:
             if options.redo or not iFile in FileExistList :
               if selectSample and iSample.replace('_25ns','') in iFile:
                 iKey = iFile.replace('latino_','').replace('.root','')
-                #print iKey
+                print iKey
                 if '_000' in iKey :
                   aSample = iKey.split('_000')[0]
                 elif '__part' in iKey :
@@ -237,7 +247,7 @@ for iProd in prodList :
                   if options.iStep == 'Prod' :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetList[iKey] = xrootdPathIn+eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile
+                    targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile
       #print targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
@@ -267,7 +277,7 @@ for iProd in prodList :
                 if options.iStep == 'Prod' :
                   targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                 else:
-                  targetList[iKey] = xrootdPathIn++eosTargBase+'/'+iProd+'/'+options.iStep+'/'+iFile 
+                  targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile 
 
       print targetList
       #quit() 
@@ -372,7 +382,7 @@ for iProd in prodList :
           if options.iStep == 'Prod' :
             inTree  ='root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
           else:
-            inTree  =xrootdPathIn+eosTargBase+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
+            inTree  =xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
         else:
           inTree = targetList[iTarget]  # Pointing to File in case of Split
         oriTree = inTree
@@ -451,7 +461,7 @@ for iProd in prodList :
 
         # Fix PU data 
         #puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 
-        #puData = '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root'
+        puData = '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root'
         # puData defined in 'userConfig.py'
         command = command.replace('RPLME_puData',puData)  
 
