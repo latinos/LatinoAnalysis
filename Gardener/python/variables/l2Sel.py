@@ -278,8 +278,10 @@ class L2SelFiller(TreeCloner):
                      and (itree.std_vector_lepton_chargedHadronIso[iLep] +
                           muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
                      and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
-                     and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                     #and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     #and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                      ) :
                   isGoodLepton = True
                    
@@ -326,8 +328,10 @@ class L2SelFiller(TreeCloner):
                      and (itree.std_vector_lepton_chargedHadronIso[iLep] +
                           muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
                      and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
-                     and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                     #and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     #and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                      ) :
                   isGoodLepton = True
                    
@@ -408,8 +412,10 @@ class L2SelFiller(TreeCloner):
               phi2 = itree.std_vector_lepton_phi[goodLep2]
               pid1 = itree.std_vector_lepton_flavour[goodLep1]
               pid2 = itree.std_vector_lepton_flavour[goodLep2]
-              met = itree.metPfType1          # formerly pfType1Met
-              metphi = itree.metPfType1Phi    # formerly pfType1Metphi
+              met = itree.pfType1Met          # formerly pfType1Met
+              metphi = itree.pfType1Metphi    # formerly pfType1Metphi
+              #met = itree.metPfType1          # formerly pfType1Met
+              #metphi = itree.metPfType1Phi    # formerly pfType1Metphi
               if len(goodJets) >=  2:
                 jetpt1 = itree.std_vector_jet_pt[goodJets[0]]
                 jetpt2 = itree.std_vector_jet_pt[goodJets[1]]
