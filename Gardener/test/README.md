@@ -23,7 +23,21 @@ How to filter events and update some collections:
     gardener.py  l2selfiller \
                 -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
                      /media/data/amassiro/LatinoTrees/WW/
-                    
+              
+              
+    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/25ns/21Oct2015/mcwghtcount__MC__l2sel/latino_GluGluHToWWTo2L2Nu_M125.root /tmp/amassiro/          
+    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/25ns/21Oct2015/mcwghtcount__MC__l2sel/latino_WZTo3LNu.root /tmp/amassiro/          
+    
+    gardener.py  l2selfiller \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2Nu_M125.root  \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2Nu_M125_TEST.root
+
+    gardener.py  l2selfiller \
+                /tmp/amassiro/latino_WZTo3LNu.root  \
+                /tmp/amassiro/latino_WZTo3LNu_TEST.root
+
+                
+                
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/50ns/17Sep2015/25ns/mc/latino_WWTo2L2Nu.root /tmp/amassiro/
     gardener.py  l2selfiller \
                 /tmp/amassiro/latino_WWTo2L2Nu.root  \

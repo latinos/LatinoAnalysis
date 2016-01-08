@@ -131,7 +131,10 @@ class L2SelFiller(TreeCloner):
            
            'mjj',
            'detajj',
-           'njet'
+           'njet',
+           
+           'mllThird'
+           
            ]
         
         # jet variables with the structure "std_vector_jet_"NAME to be migrated to "jet"NAME"+number.
@@ -221,6 +224,11 @@ class L2SelFiller(TreeCloner):
         # to be used later on in the code ...
         new_std_vector_jet_pt  = ROOT.std.vector(float) ()
         new_std_vector_jet_eta = ROOT.std.vector(float) ()
+
+        new_std_vector_lepton_pt      = ROOT.std.vector(float) ()
+        new_std_vector_lepton_eta     = ROOT.std.vector(float) ()
+        new_std_vector_lepton_phi     = ROOT.std.vector(float) ()
+        new_std_vector_lepton_flavour = ROOT.std.vector(float) ()
 
         #for i in xrange(2000):
         for i in xrange(nentries):
@@ -361,8 +369,8 @@ class L2SelFiller(TreeCloner):
               # prepare the new vectors removing unwanted positions
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                  if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname):
-                     self.changeOrder( bname, bvector, goodLeps)
-                
+                     self.changeOrder( bname, bvector, goodLeps)            
+              
               # now the jets:  
               # - clean jets
               #   for leptons with pt > minLeptonPt (default 10 GeV)
@@ -428,6 +436,23 @@ class L2SelFiller(TreeCloner):
                 WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
               else:
                 WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi )
+              
+              
+              # set the list of leptons into the object "WW"
+              new_std_vector_lepton_pt.clear()
+              new_std_vector_lepton_eta.clear()
+              new_std_vector_lepton_phi.clear()
+              new_std_vector_lepton_flavour.clear()
+
+              for iGoodLep in goodLeps :
+                new_std_vector_lepton_pt.push_back(itree.std_vector_lepton_pt[ iGoodLep ])
+                new_std_vector_lepton_eta.push_back(itree.std_vector_lepton_eta[ iGoodLep ])
+                new_std_vector_lepton_phi.push_back(itree.std_vector_lepton_phi[ iGoodLep ])
+                new_std_vector_lepton_flavour.push_back(itree.std_vector_lepton_flavour[ iGoodLep ])
+              
+              WW.setLeptons(new_std_vector_lepton_pt, new_std_vector_lepton_eta, new_std_vector_lepton_phi, new_std_vector_lepton_flavour)
+
+
               
               # set the list of jets into the object "WW"
               new_std_vector_jet_pt.clear()
