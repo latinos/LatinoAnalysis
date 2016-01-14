@@ -133,7 +133,7 @@ class btagPogScaleFactors(TreeCloner):
                 return point[2]
 
           # default ... it should never happen!
-          print " default ???", pt, eta
+          print " default ???", pt, eta, kindJet
           return 1.0
  
         # not a lepton ... like some default value
@@ -148,14 +148,12 @@ class btagPogScaleFactors(TreeCloner):
         self.connect(tree,input)
 
           
-        self.clone(output,["bPogSF", "bPogSFUp", "bPogSFDown", "bPogSF1Jet", "bPogSF1JetUp", "bPogSF1JetDown", "bPogSF2Jet", "bPogSF2JetUp", "bPogSF2JetDown", 
-                           "bTPSF", "bTPSFUp", "bTPSFDown", "bTPSF1Jet", "bTPSF1JetUp", "bTPSF1JetDown", "bTPSF2Jet", "bTPSF2JetUp", "bTPSF2JetDown"])
+        self.clone(output,["bPogSF", "bPogSFUp", "bPogSFDown", 
+                           "bTPSF", "bTPSFUp", "bTPSFDown"])
 
 
         #bPogSF and similar are SF from bPOG
 
-        #The following SF are to use if you are applying a b-tag selection on ALL jets in the event. 
-        #These are the ones to use, for example, for the signal region b-veto
         bPogSF = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('bPogSF',bPogSF,'bPogSF/F')
         bPogSFUp = numpy.ones(1, dtype=numpy.float32)
@@ -163,53 +161,14 @@ class btagPogScaleFactors(TreeCloner):
         bPogSFDown = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('bPogSFDown',bPogSFDown,'bPogSFDown/F')
 
-        #The following SF are to use if you are applying a b-tag selection on the LEADING JET only.
-        #These are the ones to use, for example, in a ttbar control region in which you request a b-tagged leading jet
-        bPogSF1Jet = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bPogSF1Jet',bPogSF1Jet,'bPogSF1Jet/F')
-        bPogSF1JetUp = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bPogSF1JetUp',bPogSF1JetUp,'bPogSF1JetUp/F')
-        bPogSF1JetDown = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bPogSF1JetDown',bPogSF1JetDown,'bPogSF1JetDown/F') 
-
-        #The following SF are to use if you are applying a b-tag selection on the first two jets only.
-        #These are the ones to use, for example, in a ttbar control region in which you request at least one between the leading and the subleading jet to be b-tagged
-        bPogSF2Jet = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bPogSF2Jet',bPogSF2Jet,'bPogSF2Jet/F')
-        bPogSF2JetUp = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bPogSF2JetUp',bPogSF2JetUp,'bPogSF2JetUp/F')
-        bPogSF2JetDown = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bPogSF2JetDown',bPogSF2JetDown,'bPogSF2JetDown/F')
-
-        
         #bTPSF and similar are scale factors from out Tag and Probe studies
 
-        #The following SF are to use if you are applying a b-tag selection on ALL jets in the event. 
-        #These are the ones to use, for example, for the signal region b-veto
         bTPSF = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('bTPSF',bTPSF,'bTPSF/F')
         bTPSFUp = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('bTPSFUp',bTPSFUp,'bTPSFUp/F')
         bTPSFDown = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('bTPSFDown',bTPSFDown,'bTPSFDown/F')
-
-        #The following SF are to use if you are applying a b-tag selection on the LEADING JET only.
-        #These are the ones to use, for example, in a ttbar control region in which you request a b-tagged leading jet
-        bTPSF1Jet = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bTPSF1Jet',bTPSF1Jet,'bTPSF1Jet/F')
-        bTPSF1JetUp = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bTPSF1JetUp',bTPSF1JetUp,'bTPSF1JetUp/F')
-        bTPSF1JetDown = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bTPSF1JetDown',bTPSF1JetDown,'bTPSF1JetDown/F')
-
-        #The following SF are to use if you are applying a b-tag selection on the first two jets only.
-        #These are the ones to use, for example, in a ttbar control region in which you request at least one between the leading and the subleading jet to be b-tagged
-        bTPSF2Jet = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bTPSF2Jet',bTPSF2Jet,'bTPSF2Jet/F')
-        bTPSF2JetUp = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bTPSF2JetUp',bTPSF2JetUp,'bTPSF2JetUp/F')
-        bTPSF2JetDown = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('bTPSF2JetDown',bTPSF2JetDown,'bTPSF2JetDown/F')
 
 
         std_vector_jet_pt = ROOT.std.vector(float) ()
@@ -246,32 +205,12 @@ class btagPogScaleFactors(TreeCloner):
             pDataUp       = 1.
             pDataDown     = 1.
 
-            pData1Jet     = 1.
-            pData1JetUp   = 1.
-            pData1JetDown = 1.
-
-            pData2Jet     = 1.
-            pData2JetUp   = 1.
-            pData2JetDown = 1.
-
             pDataTP         = 1.
             pDataTPUp       = 1.
             pDataTPDown     = 1.
 
-            pDataTP1Jet     = 1.
-            pDataTP1JetUp   = 1.
-            pDataTP1JetDown = 1.
-
-            pDataTP2Jet     = 1.
-            pDataTP2JetUp   = 1.
-            pDataTP2JetDown = 1.
-
-  
             pMC           = 1.
-            pMC1Jet       = 1.
-            pMC2Jet       = 1.
 
-            njet = 0
             for iJet in xrange(len(itree.std_vector_jet_pt)) :
              
               pt      = itree.std_vector_jet_pt [iJet]
@@ -289,6 +228,11 @@ class btagPogScaleFactors(TreeCloner):
                 elif abs (flavour) == 0 :
                   kindJet = 'l'
                   idJet = 2
+                elif flavour == 5:
+                  kindJet = 'b'
+                  idJet = 0
+                else:
+                  print "BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5"
                 #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet 
                 if idJet != 2:
                   sf      = self.readerCentral.evaluate(idJet, eta, pt)
@@ -305,17 +249,11 @@ class btagPogScaleFactors(TreeCloner):
                   sfTP      = self.readerLightCentralTP.evaluate(idJet, eta, pt)
                   sfTPUp    = self.readerLightUpTP.evaluate(idJet, eta, pt)
                   sfTPDown  = self.readerLightDownTP.evaluate(idJet, eta, pt)
-                #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet, " sf, sfUp, sfDown, sfTP, sfTPUp, sfTPDown",  sf, sfUp, sfDown, sfTP, sfTPUp, sfTPDown
 
                 effMC = self._getEffMC(kindJet, pt, eta)
+                #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet, " sf, sfUp, sfDown, sfTP, sfTPUp, sfTPDown",  sf, sfUp, sfDown, sfTP, sfTPUp, sfTPDown, " effMC", effMC
 
                 pMC = pMC*effMC if tagged else pMC*(1.-effMC)
-                if njet < 1:
-                  pMC1Jet = pMC1Jet*effMC if tagged else pMC1Jet*(1.-effMC) 
-                
-                if njet < 2:
-                  pMC2Jet = pMC2Jet*effMC if tagged else pMC2Jet*(1.-effMC)
-
 
                 pData     = pData*effMC*sf         if tagged else pData*(1.-effMC*sf)
                 pDataUp   = pDataUp*effMC*sfUp     if tagged else pDataUp*(1.-effMC*sfUp)
@@ -325,27 +263,6 @@ class btagPogScaleFactors(TreeCloner):
                 pDataTPUp   = pDataTPUp*effMC*sfTPUp     if tagged else pDataTPUp*(1.-effMC*sfTPUp)
                 pDataTPDown = pDataTPDown*effMC*sfTPDown if tagged else pDataTPDown*(1.-effMC*sfTPDown)
 
-                if njet < 1:
-                  pData1Jet     = pData1Jet*effMC*sf         if tagged else pData1Jet*(1.-effMC*sf)
-                  pData1JetUp   = pData1JetUp*effMC*sfUp     if tagged else pData1JetUp*(1.-effMC*sfUp)
-                  pData1JetDown = pData1JetDown*effMC*sfDown if tagged else pData1JetDown*(1.-effMC*sfDown)
-
-                  pDataTP1Jet     = pDataTP1Jet*effMC*sfTP         if tagged else pDataTP1Jet*(1.-effMC*sfTP)
-                  pDataTP1JetUp   = pDataTP1JetUp*effMC*sfTPUp     if tagged else pDataTP1JetUp*(1.-effMC*sfTPUp)
-                  pDataTP1JetDown = pDataTP1JetDown*effMC*sfTPDown if tagged else pDataTP1JetDown*(1.-effMC*sfTPDown)
-                
-                if njet < 2:
-                  pData2Jet     = pData2Jet*effMC*sf         if tagged else pData2Jet*(1.-effMC*sf)
-                  pData2JetUp   = pData2JetUp*effMC*sfUp     if tagged else pData2JetUp*(1.-effMC*sfUp)
-                  pData2JetDown = pData2JetDown*effMC*sfDown if tagged else pData2JetDown*(1.-effMC*sfDown)
-
-                  pDataTP2Jet     = pDataTP2Jet*effMC*sfTP         if tagged else pDataTP2Jet*(1.-effMC*sfTP)
-                  pDataTP2JetUp   = pDataTP2JetUp*effMC*sfTPUp     if tagged else pDataTP2JetUp*(1.-effMC*sfTPUp)
-                  pDataTP2JetDown = pDataTP2JetDown*effMC*sfTPDown if tagged else pDataTP2JetDown*(1.-effMC*sfTPDown)
-
-
-                njet += 1
-
                 #print "flavour, effMC, sf", flavour, effMC, sf
 
             #print "pData, pMC", pData, pMC
@@ -354,25 +271,9 @@ class btagPogScaleFactors(TreeCloner):
             bPogSFUp[0]        = pDataUp/pMC
             bPogSFDown[0]      = pDataDown/pMC
 
-            bPogSF1Jet[0]      = pData1Jet/pMC1Jet
-            bPogSF1JetUp[0]    = pData1JetUp/pMC1Jet
-            bPogSF1JetDown[0]  = pData1JetDown/pMC1Jet
-    
-            bPogSF2Jet[0]      = pData2Jet/pMC2Jet
-            bPogSF2JetUp[0]    = pData2JetUp/pMC2Jet
-            bPogSF2JetDown[0]  = pData2JetDown/pMC2Jet
-
             bTPSF[0]          = pDataTP/pMC
             bTPSFUp[0]        = pDataTPUp/pMC
             bTPSFDown[0]      = pDataTPDown/pMC
-
-            bTPSF1Jet[0]      = pDataTP1Jet/pMC1Jet
-            bTPSF1JetUp[0]    = pDataTP1JetUp/pMC1Jet
-            bTPSF1JetDown[0]  = pDataTP1JetDown/pMC1Jet
-
-            bTPSF2Jet[0]      = pDataTP2Jet/pMC2Jet
-            bTPSF2JetUp[0]    = pDataTP2JetUp/pMC2Jet
-            bTPSF2JetDown[0]  = pDataTP2JetDown/pMC2Jet
 
             otree.Fill()
 

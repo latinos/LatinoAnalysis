@@ -130,6 +130,13 @@ Steps= {
                   'do4Data'    : False ,
                   'command'    : 'gardener.py JESTreeMaker -k -1 '
                 } ,
-    
+   
+  'bPogSF'   :{
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py btagPogScaleFactors '
+              },
+
 }
 
