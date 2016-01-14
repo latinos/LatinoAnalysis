@@ -21,6 +21,8 @@ public:
  void setJets(std::vector<float> invector);
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta);
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass);
+
+ void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  
  //! functions
  float pTWW();
@@ -28,6 +30,10 @@ public:
  float mll();
  float pt1();
  float pt2();
+ float eta1();
+ float eta2();
+ float phi1();
+ float phi2();
  float mT2();  //void functionMT2(int& npar, double* d, double& r, double par[], int flag);
  float yll();
  float ptll();
@@ -43,16 +49,21 @@ public:
  float pfmet();
  
  float mth();
+ float mcoll();
  float dphillmet();
  float channel();
  float mjj();
  float detajj();
+ float dphijj();
  float njet();
   
+ //---- to reject Wg*
+ float mllThird();
+ 
  
 private:
  //! variables
- TLorentzVector L1,L2;
+ TLorentzVector L1,L2,L3;
  TLorentzVector MET;
  TLorentzVector J1, J2;
  float pid1, pid2;
@@ -64,6 +75,11 @@ private:
  std::vector<float> _jetseta;
  std::vector<float> _jetsphi;
  std::vector<float> _jetsmass;
+
+ std::vector<float> _leptonspt;
+ std::vector<float> _leptonseta;
+ std::vector<float> _leptonsphi;
+ std::vector<float> _leptonsflavour;
  
 };
 
@@ -138,6 +154,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  
 }
 
+
 //! set functions
 
 void WW::setJets(std::vector<float> invectorpt ) {
@@ -171,6 +188,30 @@ void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, 
   jetOk = 0;  //---- protection
  }
 }
+
+void WW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
+ _leptonspt      = invectorpt;
+ _leptonseta     = invectoreta;
+ _leptonsphi     = invectorphi;
+ _leptonsflavour = invectorflavour;
+ 
+ //---- need to update L1 and L2
+ if ( _leptonspt.size() > 0 && _leptonspt.at(0) > 0 ) {
+  L1.SetPtEtaPhiM(_leptonspt.at(0), _leptonseta.at(0), _leptonsphi.at(0), 0); //---- NB: leptons are treated as massless
+ }
+ if ( _leptonspt.size() > 1 && _leptonspt.at(1) > 0 ) {
+  L2.SetPtEtaPhiM(_leptonspt.at(1), _leptonseta.at(1), _leptonsphi.at(1), 0); //---- NB: leptons are treated as massless
+ }
+ if ( _leptonspt.size() > 2 && _leptonspt.at(2) > 0 ) {
+  L3.SetPtEtaPhiM(_leptonspt.at(2), _leptonseta.at(2), _leptonsphi.at(2), 0); //---- NB: leptons are treated as massless
+ }
+ 
+}
+
+
+
+void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
+
 
 
 //! functions
@@ -218,7 +259,7 @@ float WW::pTWW(){
 
 float WW::dphill(){
  if (isOk) {
-  return L1.DeltaPhi(L2);
+  return fabs(L1.DeltaPhi(L2));
  }
  else {
   return -9999.0;
@@ -258,8 +299,8 @@ float WW::dphilljetjet(){
 
 float WW::dphilmet(){ 
  if (isOk) {
-  float d1 = (L1).DeltaPhi(MET);
-  float d2 = (L2).DeltaPhi(MET);
+  float d1 = fabs((L1).DeltaPhi(MET));
+  float d2 = fabs((L2).DeltaPhi(MET));
   if (d1<d2) return d1;
   else       return d2;
  }
@@ -271,7 +312,7 @@ float WW::dphilmet(){
 
 float WW::dphilmet1(){ 
  if (isOk) {
-  return (L1).DeltaPhi(MET);
+  return fabs((L1).DeltaPhi(MET));
  }
  else {
   return -9999.0;
@@ -280,7 +321,7 @@ float WW::dphilmet1(){
 
 float WW::dphilmet2(){ 
  if (isOk) {
-  return (L2).DeltaPhi(MET);
+  return fabs((L2).DeltaPhi(MET));
  }
  else {
   return -9999.0;
@@ -324,7 +365,7 @@ float WW::pfmet(){
 
 
 
-
+//---- pt
 float WW::pt1(){
  
  if (isOk) {
@@ -346,7 +387,52 @@ float WW::pt2(){
  } 
 }
 
+//---- eta
+float WW::eta1(){
+ 
+ if (isOk) {
+  return L1.Eta();
+ }
+ else {
+  return -9999.0;
+ }
+}
 
+
+float WW::eta2(){
+ 
+ if (isOk) {
+  return L2.Eta();
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+//---- phi
+float WW::phi1(){
+ 
+ if (isOk) {
+  return L1.Phi();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::phi2(){
+ 
+ if (isOk) {
+  return L2.Phi();
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+//---- mll
 float WW::mll(){
  
  if (isOk) {
@@ -381,6 +467,31 @@ float WW::mth(){
  }
  
 }
+
+
+float WW::mcoll(){
+ 
+ if (isOk) {
+  
+  //---- project met to lepton direction
+  float et_par_1 = MET.Pt() * cos ( fabs( (L1).DeltaPhi(MET) ) );
+  float et_par_2 = MET.Pt() * cos ( fabs( (L2).DeltaPhi(MET) ) ); 
+  
+  TLorentzVector L1_enhanced,L2_enhanced;
+  
+  L1_enhanced.SetPtEtaPhiM(pt1() + et_par_1, eta1(), phi1(), 0.);
+  L2_enhanced.SetPtEtaPhiM(pt2() + et_par_2, eta2(), phi2(), 0.);
+  
+  return (L1_enhanced + L2_enhanced).M();
+
+  
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
+
 
 float WW::channel(){
  
@@ -427,6 +538,15 @@ float WW::detajj(){
  } 
 }
 
+
+float WW::dphijj(){
+ if (isOk) {
+  return fabs(J1.DeltaPhi(J2));
+ }
+ else {
+  return -9999.0;
+ } 
+}
 
 
 
@@ -545,6 +665,54 @@ float WW::mT2(){
 
 
 
+
+
+//---- to reject Wg*
+
+float WW::mllThird(){
+ 
+ if (isOk) {
+  
+  //---- check L3
+  //----      pt3>2 GeV
+  if (_leptonspt.size()>2 && _leptonspt.at(2) > 2) {
+   float flav1 = _leptonsflavour.at(0);
+   float flav2 = _leptonsflavour.at(1);
+   float flav3 = _leptonsflavour.at(2);
+   
+   float newmll = - 9999.0;
+   float mll13 = -9999.0;
+   float mll23 = -9999.0;
+   
+   //---- same flavour and different charge
+   if (fabs(flav1) == fabs(flav3) && flav1*flav3<0) {
+    mll13 = (L1+L3).M();
+   }
+   if (fabs(flav2) == fabs(flav3) && flav2*flav3<0) {
+    mll23 = (L2+L3).M();
+   }
+   
+   //---- if both are ok (what the hell is it possible??? ... after it should not be possible, since I require ch1*ch2<0 !)
+   //---- take the minimum of the two   
+   if (mll23 >= 0 && mll13 >= 0) {
+    if (mll23<mll13) { newmll = mll23; }
+    else             { newmll = mll13; }
+   }
+   else {
+    if (mll13 >= 0) { newmll = mll13; }
+    if (mll23 >= 0) { newmll = mll23; }
+   }
+   return newmll;
+  }   
+  else { //---- if third lepton is not good
+   return -9999.0;
+  }
+ }
+ else { //---- if I don't even have 2 leptons
+  return -9999.0;
+ }
+  
+}
 
 
 

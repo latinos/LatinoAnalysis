@@ -39,7 +39,7 @@ class L2SelFiller(TreeCloner):
         if not (hasattr(opts,'kind')):
           self.kind = 1
         else :    
-          self.kind   = opts.kind
+          self.kind   = 1.0 * float(opts.kind)
         print " kind of electron id = ", self.kind
 
     def changeOrder(self, vectorname, vector, goodleptonslist) :
@@ -89,6 +89,7 @@ class L2SelFiller(TreeCloner):
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
+        savedentries = 0
 
         #
         # create branches for otree, the ones that will be modified!
@@ -115,7 +116,9 @@ class L2SelFiller(TreeCloner):
            'pt1',
            'pt2',
            'mth',
+           'mcoll',
            'channel',
+
 
            'drll',
            'dphilljet',
@@ -128,7 +131,10 @@ class L2SelFiller(TreeCloner):
            
            'mjj',
            'detajj',
-           'njet'
+           'njet',
+           
+           'mllThird'
+           
            ]
         
         # jet variables with the structure "std_vector_jet_"NAME to be migrated to "jet"NAME"+number.
@@ -219,6 +225,11 @@ class L2SelFiller(TreeCloner):
         new_std_vector_jet_pt  = ROOT.std.vector(float) ()
         new_std_vector_jet_eta = ROOT.std.vector(float) ()
 
+        new_std_vector_lepton_pt      = ROOT.std.vector(float) ()
+        new_std_vector_lepton_eta     = ROOT.std.vector(float) ()
+        new_std_vector_lepton_phi     = ROOT.std.vector(float) ()
+        new_std_vector_lepton_flavour = ROOT.std.vector(float) ()
+
         #for i in xrange(2000):
         for i in xrange(nentries):
 
@@ -235,12 +246,13 @@ class L2SelFiller(TreeCloner):
             goodLeps = []
             goodLep1 = -1
             goodLep2 = -1
-            
+                        
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
               isGoodLepton = False
               
               #
-              # analysis electron definition
+              # analysis lepton definition
+              #
               if self.kind == 1 :
                
                 ###########
@@ -274,8 +286,10 @@ class L2SelFiller(TreeCloner):
                      and (itree.std_vector_lepton_chargedHadronIso[iLep] +
                           muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
                      and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy
-                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1
+                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                     #and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     #and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                      ) :
                   isGoodLepton = True
                    
@@ -322,8 +336,10 @@ class L2SelFiller(TreeCloner):
                      and (itree.std_vector_lepton_chargedHadronIso[iLep] +
                           muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
                      and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy
-                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1
+                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                     #and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                     #and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                      ) :
                   isGoodLepton = True
                    
@@ -353,8 +369,8 @@ class L2SelFiller(TreeCloner):
               # prepare the new vectors removing unwanted positions
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                  if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname):
-                     self.changeOrder( bname, bvector, goodLeps)
-                
+                     self.changeOrder( bname, bvector, goodLeps)            
+              
               # now the jets:  
               # - clean jets
               #   for leptons with pt > minLeptonPt (default 10 GeV)
@@ -404,8 +420,10 @@ class L2SelFiller(TreeCloner):
               phi2 = itree.std_vector_lepton_phi[goodLep2]
               pid1 = itree.std_vector_lepton_flavour[goodLep1]
               pid2 = itree.std_vector_lepton_flavour[goodLep2]
-              met = itree.pfType1Met
-              metphi = itree.pfType1Metphi
+              met = itree.pfType1Met          # formerly pfType1Met
+              metphi = itree.pfType1Metphi    # formerly pfType1Metphi
+              #met = itree.metPfType1          # formerly pfType1Met
+              #metphi = itree.metPfType1Phi    # formerly pfType1Metphi
               if len(goodJets) >=  2:
                 jetpt1 = itree.std_vector_jet_pt[goodJets[0]]
                 jetpt2 = itree.std_vector_jet_pt[goodJets[1]]
@@ -418,6 +436,23 @@ class L2SelFiller(TreeCloner):
                 WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
               else:
                 WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, pid1, pid2, met, metphi )
+              
+              
+              # set the list of leptons into the object "WW"
+              new_std_vector_lepton_pt.clear()
+              new_std_vector_lepton_eta.clear()
+              new_std_vector_lepton_phi.clear()
+              new_std_vector_lepton_flavour.clear()
+
+              for iGoodLep in goodLeps :
+                new_std_vector_lepton_pt.push_back(itree.std_vector_lepton_pt[ iGoodLep ])
+                new_std_vector_lepton_eta.push_back(itree.std_vector_lepton_eta[ iGoodLep ])
+                new_std_vector_lepton_phi.push_back(itree.std_vector_lepton_phi[ iGoodLep ])
+                new_std_vector_lepton_flavour.push_back(itree.std_vector_lepton_flavour[ iGoodLep ])
+              
+              WW.setLeptons(new_std_vector_lepton_pt, new_std_vector_lepton_eta, new_std_vector_lepton_phi, new_std_vector_lepton_flavour)
+
+
               
               # set the list of jets into the object "WW"
               new_std_vector_jet_pt.clear()
@@ -442,7 +477,9 @@ class L2SelFiller(TreeCloner):
                       counter = 0                    
 
               otree.Fill()
+              savedentries+=1
 
         self.disconnect()
         print '- Eventloop completed'
+        print '   Saved: ', savedentries, ' events'
 

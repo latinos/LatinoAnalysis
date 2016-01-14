@@ -1,6 +1,7 @@
 
 eosProdBase= '/eos/cms/'
-eosTargBase= '/eos/user/x/xjanssen/HWW2015/'
+eosTargBaseIn = '/eos/user/x/xjanssen/HWW2015/'
+eosTargBaseOut= '/eos/user/x/xjanssen/HWW2015/'
 
 
 # ---- production to run on
@@ -29,6 +30,18 @@ Productions= {
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns.py' ,
                         #'dirExt'  : 'Run2015D_PromptReco' ,
                         'dirExt'  : 'split' ,
+                      } ,
+
+  '21OctBis_Run2015D_PromptReco_0716pb' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0716pb.py' ,
+                        'dirExt'  : 'split2' ,
+                      } ,
+
+  '21OctBis_Run2015D_PromptReco_0851pb' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0851pb.py' ,
+                        'dirExt'  : 'split2' ,
                       } ,
 
 }
