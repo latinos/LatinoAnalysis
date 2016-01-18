@@ -33,10 +33,13 @@ How to filter events and update some collections:
                 /tmp/amassiro/latino_GluGluHToWWTo2L2Nu_M125_TEST.root
 
     gardener.py  l2selfiller \
+                --kind 2 \
                 /tmp/amassiro/latino_WZTo3LNu.root  \
                 /tmp/amassiro/latino_WZTo3LNu_TEST.root
 
-                
+                -k 2
+                --kind 2 
+
                 
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/50ns/17Sep2015/25ns/mc/latino_WWTo2L2Nu.root /tmp/amassiro/
     gardener.py  l2selfiller \

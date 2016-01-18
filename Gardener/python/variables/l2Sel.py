@@ -283,8 +283,7 @@ class L2SelFiller(TreeCloner):
                     muonIso = 0
                
                 if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                     and (itree.std_vector_lepton_chargedHadronIso[iLep] +
-                          muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
+                     and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
                      and abs(itree.std_vector_lepton_flavour[iLep]) == 13
                      and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
                      and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
@@ -301,19 +300,46 @@ class L2SelFiller(TreeCloner):
                   #) :
                 #isGoodLepton = True
 
+              ##########################################
               # denominator of fakes definition
-              # TO BE UPDATED
               if self.kind == 2 :
                
+                #print " fakes " 
                 ###########
                 # electron
                 
                 # id definition
-                if ( itree.std_vector_lepton_eleIdTight[iLep] == 1
-                     and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
-                    ) :
-                  isGoodLepton = True
-               
+                if (
+                   abs(itree.std_vector_lepton_flavour[iLep]) == 11 
+                   and 
+                    ((
+                    (abs(itree.std_vector_lepton_eta[iLep]) <= 1.479) 
+                    and    (abs(itree.std_vector_electron_dEtaIn[iLep]) < 0.01               and
+                            abs(itree.std_vector_electron_dPhiIn[iLep]) < 0.04               and
+                            itree.std_vector_electron_full5x5_sigmaIetaIeta[iLep]    < 0.011              and
+                            itree.std_vector_electron_hOverE[iLep]              < 0.08               and
+                            itree.std_vector_electron_ooEmooP[iLep] < 0.01               and 
+                            itree.std_vector_electron_expectedMissingInnerHits[iLep]<=2  and
+                            itree.std_vector_electron_d0[iLep]      < 0.1                and
+                            abs(itree.std_vector_electron_dz[iLep])< 0.373              and
+                            itree.std_vector_electron_passConversionVeto[iLep] )
+                    )
+                    or 
+                    (
+                    (abs(itree.std_vector_lepton_eta[iLep]) > 1.479 and abs(itree.std_vector_lepton_eta[iLep]) < 2.5)
+                    and    (abs(itree.std_vector_electron_dEtaIn[iLep]) < 0.01               and
+                            abs(itree.std_vector_electron_dPhiIn[iLep]) < 0.08               and
+                            itree.std_vector_electron_full5x5_sigmaIetaIeta[iLep]    < 0.031              and
+                            itree.std_vector_electron_hOverE[iLep]              < 0.08               and
+                            itree.std_vector_electron_ooEmooP[iLep] < 0.01               and
+                            itree.std_vector_electron_expectedMissingInnerHits[iLep]<=1  and
+                            itree.std_vector_electron_d0[iLep]      < 0.2                and
+                            abs(itree.std_vector_electron_dz[iLep])< 0.602              and
+                            itree.std_vector_electron_passConversionVeto[iLep] )
+                    ))
+                   ) : 
+                     isGoodLepton = True; 
+
                 ###########
                 # muon
                 dxy = float(0.01)
@@ -333,8 +359,7 @@ class L2SelFiller(TreeCloner):
                     muonIso = 0
                
                 if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                     and (itree.std_vector_lepton_chargedHadronIso[iLep] +
-                          muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
+                     and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso) / itree.std_vector_lepton_pt[iLep] < 0.4
                      and abs(itree.std_vector_lepton_flavour[iLep]) == 13
                      and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
                      and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
@@ -342,8 +367,11 @@ class L2SelFiller(TreeCloner):
                      #and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                      ) :
                   isGoodLepton = True
-                   
-
+ 
+              # denominator of fakes definition (end)
+              ##########################################
+ 
+ 
               # now check if we found 2 leptons        
                              
               if isGoodLepton :
@@ -452,8 +480,6 @@ class L2SelFiller(TreeCloner):
               
               WW.setLeptons(new_std_vector_lepton_pt, new_std_vector_lepton_eta, new_std_vector_lepton_phi, new_std_vector_lepton_flavour)
 
-
-              
               # set the list of jets into the object "WW"
               new_std_vector_jet_pt.clear()
               new_std_vector_jet_eta.clear()
