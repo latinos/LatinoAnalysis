@@ -165,8 +165,15 @@ for iProd in prodList :
 
   # Load x-section DB
 
-  if not Productions[iProd]['isData'] :  xsDB = xsectionDB(Productions[iProd]['gDocID'])
-    
+  if not Productions[iProd]['isData'] :  
+    xsMethods=['gDoc','Python']  # Among 'gDoc','Python','YellowR' and order Matter (Overwriting for same samples !)
+    xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    xsDB = xsectionDB()
+    for iMethod in xsMethods :
+
+      if iMethod == 'gDoc'    : xsDB.readGDoc(Productions[iProd]['gDocID'])
+      if iMethod == 'Python'  : xsDB.readPython(xsFile)
+
   # Find existing Input files 
   #if not options.iStep in Steps: options.iStep = 'Prod'
   if options.iStep == 'Prod' : 
