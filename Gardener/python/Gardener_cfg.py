@@ -32,6 +32,14 @@ Productions= {
                         'dirExt'  : 'split' ,
                       } ,
 
+  '21OctBis_Run2015D_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_05Oct2015_25ns_21OctBis.py',
+                        #'dirExt'  : 'Run2015D_PromptReco' ,
+                        'dirExt'  : 'split2' ,
+                      } ,
+
+
   '21OctBis_Run2015D_PromptReco_0716pb' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0716pb.py' ,
