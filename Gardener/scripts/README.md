@@ -41,12 +41,14 @@ General instructions
 
     ./mkGardener.py
 
-    -p -->   list of production to run on (e.g. 21Oct_25ns_MC, 21Oct_Run2015D_05Oct2015, ..., as defined in python/Gardener_cfg.py)
-    -s -->   list of Steps to produce (e.g. MC, as defined in python/Gardener_cfg.py)
-    -i -->   step to restart from (e.g. mcwghtcount or mcwghtcount__MC__l2sel__hadd). It is used as folder name on eos.
-    -O -->   alternative location on eos, e.g. /eos/user/a/amassiro/Test/ (note that it is still IT eos)
+    -p (prods)         -->   list of production to run on (e.g. 21Oct_25ns_MC, 21Oct_Run2015D_05Oct2015, ..., as defined in python/Gardener_cfg.py)
+    -s (steps)         -->   list of Steps to produce (e.g. MC, as defined in python/Gardener_cfg.py)
+    -i (iStep)         -->   step to restart from (e.g. mcwghtcount or mcwghtcount__MC__l2sel__hadd). It is used as folder name on eos.
+                             if not iStep in Steps: options.iStep = 'Prod', that means it's starting from eos of GRID production
+    -O (output-target) -->   alternative location on eos, e.g. /eos/user/a/amassiro/Test/ (note that it is still IT eos)
     
-    -S -->   splitting mode for batch jobs. batchSplit = How to split jobs (by Step, Target)
+    -S (batchSplit)    -->   splitting mode for batch jobs. batchSplit = How to split jobs (by Step, Target)
+    
     FIXME DEFINITION
 
 

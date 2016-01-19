@@ -398,7 +398,8 @@ double BTagCalibrationReader::evaluate(BTagEntry::JetFlavor jf,
     }
   }
 
-  return 0.;  // default value
+  //return 0.;  // default value
+  return 1.;  // default value GIULIO: Default value should be 1 not 0
 }
 
 void BTagCalibrationReader::setupTmpData(const BTagCalibration* c)

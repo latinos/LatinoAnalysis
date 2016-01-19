@@ -23,7 +23,24 @@ How to filter events and update some collections:
     gardener.py  l2selfiller \
                 -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
                      /media/data/amassiro/LatinoTrees/WW/
-                    
+              
+              
+    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/25ns/21Oct2015/mcwghtcount__MC__l2sel/latino_GluGluHToWWTo2L2Nu_M125.root /tmp/amassiro/          
+    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/25ns/21Oct2015/mcwghtcount__MC__l2sel/latino_WZTo3LNu.root /tmp/amassiro/          
+    
+    gardener.py  l2selfiller \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2Nu_M125.root  \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2Nu_M125_TEST.root
+
+    gardener.py  l2selfiller \
+                --kind 2 \
+                /tmp/amassiro/latino_WZTo3LNu.root  \
+                /tmp/amassiro/latino_WZTo3LNu_TEST.root
+
+                -k 2
+                --kind 2 
+
+                
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/50ns/17Sep2015/25ns/mc/latino_WWTo2L2Nu.root /tmp/amassiro/
     gardener.py  l2selfiller \
                 /tmp/amassiro/latino_WWTo2L2Nu.root  \
@@ -250,17 +267,4 @@ this module needs to run after l2sel, because it needs the real jets in the even
 The module adds to the trees two sets of weights, one based on the POG provided SF, one based on our Tag and Probe method.
 The POG SF are contained in branch named `bPogSF*`, while the Tag & Probe Scale factors are called `bTPSF*`. 
 
-We recommend to use the product of the two weights.
-
-So Far, only weights for jets with pt > 30 GeV are added, in other cases the weight is 1.
-
-There are three different central values for each of the two weights, to be used according to the selection.
-They differ in the number of jets for which you apply btagging selection and/or veto.
-   * If you area applying a btag selection or veto on **all of the jets in your events** you should use `bPogSF*bTPSF`
-   * If you are applying a btag selection/veto **on the leading jet only** you should use `bPogSF1Jet*bTPSF1jet`
-   * If you are applying a btag selection/veto **on both the leading and the subleading jet** you should use `bPogSF1Jet*bTPSF1jet`
-This does not cover all possibilities, but covers most of teh useful ones.   
-Some examples:   
-   * If you are **vetoing b jets**, as in the signal region, (i.e. you are applying a b-veto on all jets in the event) you should use `bPogSF*bTPSF`
-   * If you are checking a control region requesting **the leading jet only to be btagged (or antib-tagged)** you should use `bPogSF1Jet*bTPSF1jet`
-   * If you are checking a control region requesting **at least one ofbetween the leading and the sub-leading jet to be b-tagged (or antib-tagged)** you should use `bPogSF2Jet*bTPSF2jet`
+The `bTPSF*` are currently placeholders and their value is 1.
