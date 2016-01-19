@@ -32,13 +32,12 @@ Productions= {
                         'dirExt'  : 'split' ,
                       } ,
 
-  '21OctBis_Run2015D_PromptReco' : {
+  '21OctBis_Run2015D_05Oct2015' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_05Oct2015_25ns_21OctBis.py',
                         #'dirExt'  : 'Run2015D_PromptReco' ,
                         'dirExt'  : 'split2' ,
                       } ,
-
 
   '21OctBis_Run2015D_PromptReco_0716pb' : {
                         'isData'  : True ,
@@ -130,6 +129,13 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l2selfiller '
+               },
+
+  'l2loose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 2'
                },
 
   'hadd'     : {
