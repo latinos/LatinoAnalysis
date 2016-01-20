@@ -21,7 +21,7 @@ from LatinoAnalysis.Gardener.Gardener_cfg import *
 
 # ------------------------ baseW -------------------------
 
-def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db):
+def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,version='74x'):
    if isData : return '1'
    else:
      xs = db.get(iTarget) 
@@ -33,12 +33,20 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db):
          print 'Opening: ',inTree
          fileIn = ROOT.TFile.Open(inTree, "READ")
 #        fileIn.ls()
-         h_mcWhgt = fileIn.Get('mcWhgt')
-         if h_mcWhgt.__nonzero__() :
-           #print 'Using h_mcWhgt'
-           nEvt += h_mcWhgt.GetBinContent(1) 
+         if version == '74x' : 
+           h_mcWhgt = fileIn.Get('mcWhgt')
+           if h_mcWhgt.__nonzero__() :
+             #print 'Using h_mcWhgt'
+             nEvt += h_mcWhgt.GetBinContent(1) 
+           else:
+             nEvt += fileIn.Get('totalEvents').GetBinContent(1) 
          else:
-           nEvt += fileIn.Get('totalEvents').GetBinContent(1) 
+           h_mcWeightPos = fileIn.Get('mcWeightPos')
+           h_mcWeightNeg = fileIn.Get('mcWeightNeg')
+           if h_mcWhgtPos.__nonzero__() and h_mcWeightNeg.__nonzero__() :
+             nEvt = h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
+           else:
+             nEvt += fileIn.Get('totalEvents').GetBinContent(1)
          nTot += fileIn.Get('totalEvents').GetBinContent(1)
          fileIn.Close()
        baseW = float(xs)*1000./nEvt
@@ -100,7 +108,7 @@ parser.add_option("-O", "--output-target",   dest="outputTarget" , help="output 
 parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
 parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default="8nh" , type='string' ) 
 #parser.add_option("-A",  "--aquamarine-location", dest="aquamarineLocation", help="the acuamarine location (i.e. the eos interface) to use ", action='store', default="0.3.84-aquamarine.user")
-
+parser.add_option("-c" , "--cmssw" , dest="cmssw"     , help="CMSSW version" , default='74x' , type='string' )
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
