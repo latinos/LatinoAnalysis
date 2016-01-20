@@ -9,6 +9,8 @@ eosTargBaseOut= '/eos/user/x/xjanssen/HWW2015/'
 
 Productions= {
 
+#### 74x / 21Oct & 21OctBis tags / miniAOD v2
+
   '21Oct_25ns_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
@@ -49,6 +51,15 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0851pb.py' ,
                         'dirExt'  : 'split2' ,
+                      } ,
+
+#### 76x / StarWars tag / miniAOD v1
+
+  '08Jan_25ns_mAODv1_MC'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_fall15_miniaod_25ns.py' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                       } ,
 
 }

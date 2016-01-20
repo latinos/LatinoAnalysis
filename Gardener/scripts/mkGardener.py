@@ -43,8 +43,9 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,version='74x'):
          else:
            h_mcWeightPos = fileIn.Get('mcWeightPos')
            h_mcWeightNeg = fileIn.Get('mcWeightNeg')
-           if h_mcWhgtPos.__nonzero__() and h_mcWeightNeg.__nonzero__() :
+           if h_mcWeightPos.__nonzero__() and h_mcWeightNeg.__nonzero__() :
              nEvt = h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
+             print 'Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1)
            else:
              nEvt += fileIn.Get('totalEvents').GetBinContent(1)
          nTot += fileIn.Get('totalEvents').GetBinContent(1)
