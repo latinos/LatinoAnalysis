@@ -156,7 +156,7 @@ class PUpper(TreeCloner):
 
             otree.Fill()
 
-        self.disconnect()
+        self.disconnect(False)
         print '- Eventloop completed'
 
 
