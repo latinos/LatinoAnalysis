@@ -128,14 +128,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py l2selfiller '
+                  'command'    : 'gardener.py l2selfiller --kind 1 --cmssw RPLME_CMSSW'
                },
 
   'l2loose'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py l2selfiller --kind 2'
+                  'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
   'hadd'     : {

@@ -108,7 +108,7 @@ parser.add_option("-O", "--output-target",   dest="outputTarget" , help="output 
 parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
 parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default="8nh" , type='string' ) 
 #parser.add_option("-A",  "--aquamarine-location", dest="aquamarineLocation", help="the acuamarine location (i.e. the eos interface) to use ", action='store', default="0.3.84-aquamarine.user")
-parser.add_option("-c" , "--cmssw" , dest="cmssw"     , help="CMSSW version" , default='74x' , type='string' )
+parser.add_option("-c" , "--cmssw" , dest="cmssw"     , help="CMSSW version" , default='763' , type='string' )
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -457,6 +457,9 @@ for iProd in prodList :
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
 
+        # Fix CMSSW flag
+        command = command.replace('RPLME_CMSSW',options.cmssw)
+
         # Fix baseW if needed
         if Productions[iProd]['isData'] : baseW = '1.'
         elif iStep == 'baseW' or ( 'isChain' in Steps[iStep] and Steps[iStep]['isChain'] and 'baseW' in Steps[iStep]['subTargets'] ): 
@@ -470,7 +473,7 @@ for iProd in prodList :
             if iTargetOri == kTargetOri : 
                oriTreeList.append(os.path.dirname(oriTree)+'/latino_'+kTarget+'.root')
           #print oriTreeList
-          baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB)
+          baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB,options.cmssw)
         else: baseW = '1.'
         command = command.replace('RPLME_baseW',baseW)
 
