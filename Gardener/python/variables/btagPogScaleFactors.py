@@ -59,7 +59,7 @@ class btagPogScaleFactors(TreeCloner):
         
         self.efficienciesMC = efficienciesMC
 
-        self.minpt = 30
+        self.minpt = 15
         self.maxpt = 290 
         
         self.mineta = 0
