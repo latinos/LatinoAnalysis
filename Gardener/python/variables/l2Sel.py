@@ -199,7 +199,7 @@ class L2SelFiller(TreeCloner):
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
 
-	# keep loose leptons
+	# keep loose leptons: copy in toto the list of leptons and variables
 	self.looseLeptonVector = {}
 	looseLeptonCollections = ['std_vector_lepton_pt','std_vector_lepton_eta','std_vector_lepton_phi','std_vector_lepton_flavour']
 	for bname in looseLeptonCollections:

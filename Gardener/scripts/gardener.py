@@ -38,8 +38,11 @@ from LatinoAnalysis.Gardener.variables.jetScaleUncertainty        import JESTree
 
 # bpog sfale factors
 from LatinoAnalysis.Gardener.variables.btagPogScaleFactors        import btagPogScaleFactors
-# lepton pT scale uncertainty
+# lepton pT scale uncertainty and resolution
 from LatinoAnalysis.Gardener.variables.lepScaleUncertainty        import LeppTScalerTreeMaker
+from LatinoAnalysis.Gardener.variables.lepResolutionUncertainty   import LeptonResolutionTreeMaker
+
+
 
 
 if __name__ == '__main__':
@@ -89,6 +92,8 @@ if __name__ == '__main__':
 # Nuisances
     modules['JESTreeMaker']   = JESTreeMaker()
     modules['LeppTScalerTreeMaker'] = LeppTScalerTreeMaker()
+    modules['leptonResolution'] = LeptonResolutionTreeMaker()
+    
     
 
     gardener_cli( modules )

@@ -270,5 +270,17 @@ The POG SF are contained in branch named `bPogSF*`, while the Tag & Probe Scale 
 The `bTPSF*` are currently placeholders and their value is 1.
 
 
-====== Lepton pT scale uncertainty
- gardener.py LeppTScalerTreeMaker -m 1 -b 2 -e 5 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testscalar.root
+Lepton pT scale uncertainty
+====
+
+    gardener.py LeppTScalerTreeMaker -m 1 -b 2 -e 5 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testscalar.root
+    
+    
+Lepton pT resolution uncertainty
+====
+    
+    gardener.py leptonResolution ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
+    
+    
+    
+    
