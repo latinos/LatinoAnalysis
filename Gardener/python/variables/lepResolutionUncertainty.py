@@ -110,11 +110,6 @@ class LeptonResolutionTreeMaker(TreeCloner):
         step = 5000
         #step = 1
 
-        # to be used later on in the code ... 
-        new_std_vector_lepton_pt       = ROOT.std.vector(float) ()
-        new_std_vector_lepton_eta      = ROOT.std.vector(float) ()
-        new_std_vector_lepton_phi      = ROOT.std.vector(float) ()
-        new_std_vector_lepton_flavour  = ROOT.std.vector(float) ()
 
         #for i in xrange(2000):
         for i in xrange(nentries):
