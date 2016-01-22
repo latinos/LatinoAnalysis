@@ -83,14 +83,13 @@ class MetUncertaintyTreeMaker(TreeCloner):
               unclEn = oldmet - itree.metPfType1UnclEnDn
               newmet = oldmet - ROOT.TMath.Sqrt(jetEn*jetEn + jetRes*jetRes + muonEn*muonEn + unclEn*unclEn)
 
-          print 'old met:', oldmet, 'new met:', newmet
+          #print 'old met:', oldmet, 'new met:', newmet
 
           if i > 0 and i%step == 0.:
             print i,'events processed :: ', nentries
               
           # now fill the variables
-#          for bname, bvariable in self.oldMetBranches.iteritems():
-#              bvariable[0] = getattr(WW, bname)()
+          self.oldMetBranches['metPfType1'] = newmet
 
           self.otree.Fill()
           savedentries+=1
