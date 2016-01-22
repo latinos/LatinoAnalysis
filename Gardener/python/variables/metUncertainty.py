@@ -47,14 +47,9 @@ class MetUncertaintyTreeMaker(TreeCloner):
         # clone the tree with new branches added
         self.clone(output,self.metVariables)
       
-        self.oldMetBranches = {}
-        for bname in self.metVariables:
-          bvariable = numpy.ones(1, dtype=numpy.float32)
-          self.oldMetBranches[bname] = bvariable
-
         # now actually connect the branches
-        for bname, bvariable in self.oldMetBranches.iteritems():
-            self.otree.Branch(bname,bvariable,bname+'/F')
+        newmet = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('metPfType1', newmet, 'metPfType1/F')
 
         # input tree  
         itree = self.itree
@@ -83,13 +78,13 @@ class MetUncertaintyTreeMaker(TreeCloner):
               unclEn = oldmet - itree.metPfType1UnclEnDn
               newmet = oldmet - ROOT.TMath.Sqrt(jetEn*jetEn + jetRes*jetRes + muonEn*muonEn + unclEn*unclEn)
 
-          #print 'old met:', oldmet, 'new met:', newmet
+          print 'old met:', oldmet, 'new met:', newmet
 
           if i > 0 and i%step == 0.:
             print i,'events processed :: ', nentries
               
           # now fill the variables
-          self.oldMetBranches['metPfType1'] = newmet
+#          self.oldMetBranches['metPfType1'] = newmet
 
           self.otree.Fill()
           savedentries+=1
