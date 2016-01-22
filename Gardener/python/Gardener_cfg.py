@@ -9,11 +9,13 @@ eosTargBaseOut= '/eos/user/x/xjanssen/HWW2015/'
 
 Productions= {
 
+#### 74x / 21Oct & 21OctBis tags / miniAOD v2
+
   '21Oct_25ns_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
                         'dirExt'  : 'LatinoTrees' ,
-                        'dirExt'  : 'split' ,
+                      #  'dirExt'  : 'split' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
                       } ,
@@ -32,6 +34,13 @@ Productions= {
                         'dirExt'  : 'split' ,
                       } ,
 
+  '21OctBis_Run2015D_05Oct2015' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_05Oct2015_25ns_21OctBis.py',
+                        #'dirExt'  : 'Run2015D_PromptReco' ,
+                        'dirExt'  : 'split2' ,
+                      } ,
+
   '21OctBis_Run2015D_PromptReco_0716pb' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0716pb.py' ,
@@ -42,6 +51,15 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0851pb.py' ,
                         'dirExt'  : 'split2' ,
+                      } ,
+
+#### 76x / StarWars tag / miniAOD v1
+
+  '08Jan_25ns_mAODv1_MC'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_fall15_miniaod_25ns.py' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                       } ,
 
 }
@@ -121,7 +139,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py l2selfiller '
+                  'command'    : 'gardener.py l2selfiller --kind 1 --cmssw RPLME_CMSSW'
+               },
+
+  'l2loose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
   'hadd'     : {
@@ -150,6 +175,20 @@ Steps= {
                   'do4Data'    : False  ,
                   'command'    : 'gardener.py btagPogScaleFactors '
               },
+
+ 'LeppTup'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py LeppTScalerTreeMaker --mu_Scl 1 --eEB_Scl 2 --eEE_Scl 5'
+                } ,
+
+  'LeppTdo'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py LeppTScalerTreeMaker --mu_Scl -1 --eEB_Scl -2 --eEE_Scl -5'
+                } ,
 
 }
 

@@ -38,9 +38,11 @@ class List_Filter:
 
 class xsectionDB:
 
-    def __init__(self,gdocKey='1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ'):
+    def __init__(self):
 
       self.xsections = {} 
+
+    def readGDoc(self,gdocKey='1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ'):
 
       opener = build_opener(HTTPCookieProcessor(CookieJar()))
       resp = opener.open('https://docs.google.com/spreadsheet/ccc?key='+gdocKey+'&output=csv')
@@ -51,21 +53,50 @@ class xsectionDB:
         if iID.isdigit() :
           iKey = info[1].replace(' ','')
           self.xsections[iKey] = {}
-          self.xsections[iKey]['ID']     = iID
-          self.xsections[iKey]['sample'] = info[1].replace(' ','')
+          #self.xsections[iKey]['ID']     = iID
+          #self.xsections[iKey]['sample'] = info[1].replace(' ','')
           if len(info) > 4 :
             self.xsections[iKey]['xs']     = info[5].replace(' ','')
+            self.xsections[iKey]['kfact']  = '1.0'
+            self.xsections[iKey]['src']    = 'gDOC' 
           else: 
             self.xsections[iKey]['xs']     = ''
+            self.xsections[iKey]['kfact']  = ''
+            self.xsections[iKey]['src']    = ''
 
       #print self.xsections
+
+    def readPython(self,xsFile):
+      handle = open(xsFile)
+      for iLine in handle.read().split('\n') :
+        if 'samples' in iLine.split('#')[0] :
+          #print iLine
+          iKey=iLine.split('\'')[1].replace(' ','')
+          #print iKey
+          #if iKey in self.xsections : print 'Replacing ....',iKey,self.xsections[iKey]
+          #else : print 'Adding ....',iKey         
+          self.xsections[iKey] = {}
+          vec=iLine.split('[')[2].split(']')[0]
+          #print vec
+          for iVec in vec.split(',') : 
+            info=iVec.split('\'')[1]
+            iName=info.split('=')[0]
+            iVal =info.split('=')[1] 
+            if iName == 'xsec'  : self.xsections[iKey]['xs']     = iVal
+            if iName == 'kfact' : self.xsections[iKey]['kfact']  = iVal
+            if iName == 'ref'   : self.xsections[iKey]['src']    = 'Python,ref='+iVal
+      handle.close()
+
 
     def get(self,iSample):
       if iSample in self.xsections : 
         #print iSample, self.xsections[iSample]['sample'], self.xsections[iSample]['xs']
-        return self.xsections[iSample]['xs']
+        return str(float(self.xsections[iSample]['xs'])*float(self.xsections[iSample]['kfact']))
       else : 
         return ''
+
+    def Print(self) :
+      print self.xsections
 
 #db = xsectionDB('1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ')
 #print db.get(20001)

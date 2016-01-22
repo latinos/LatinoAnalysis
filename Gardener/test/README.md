@@ -33,10 +33,13 @@ How to filter events and update some collections:
                 /tmp/amassiro/latino_GluGluHToWWTo2L2Nu_M125_TEST.root
 
     gardener.py  l2selfiller \
+                --kind 2 \
                 /tmp/amassiro/latino_WZTo3LNu.root  \
                 /tmp/amassiro/latino_WZTo3LNu_TEST.root
 
-                
+                -k 2
+                --kind 2 
+
                 
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/50ns/17Sep2015/25ns/mc/latino_WWTo2L2Nu.root /tmp/amassiro/
     gardener.py  l2selfiller \
@@ -265,3 +268,22 @@ The module adds to the trees two sets of weights, one based on the POG provided 
 The POG SF are contained in branch named `bPogSF*`, while the Tag & Probe Scale factors are called `bTPSF*`. 
 
 The `bTPSF*` are currently placeholders and their value is 1.
+
+
+Lepton pT scale uncertainty
+====
+
+    gardener.py LeppTScalerTreeMaker -m 1 -b 2 -e 5 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testscalar.root
+    
+    
+Lepton pT resolution uncertainty
+====
+    
+    gardener.py leptonResolution ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
+
+
+MET uncertainty
+====
+    
+    gardener.py metUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
+    
