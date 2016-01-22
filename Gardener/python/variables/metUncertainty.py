@@ -1,14 +1,3 @@
-#
-#
-#      |                   |                       _ \                      |         |   _)               
-#      |       _ \  __ \   __|   _ \   __ \       |   |   _ \   __|   _ \   |  |   |  __|  |   _ \   __ \  
-#      |       __/  |   |  |    (   |  |   |      __ <    __/ \__ \  (   |  |  |   |  |    |  (   |  |   | 
-#     _____| \___|  .__/  \__| \___/  _|  _|     _| \_\ \___| ____/ \___/  _| \__,_| \__| _| \___/  _|  _| 
-#                  _|                                                                                                                  
-#
-#
-
-
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 import numpy
 import ROOT
@@ -26,142 +15,86 @@ class MetUncertaintyTreeMaker(TreeCloner):
        pass
 
     def help(self):
-        return '''Lepton pT scaler'''
+        return '''MET uncertainty'''
 
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-f',  '--file',    dest='resolutionFile', help='Resolution file with numbers', default='test.py')
-        group.add_option('-k',  '--kind',    dest='kind', help='Kind of variation: -1, +1, +0.5, ..., meaning 100%, 50% of the values from the file', default=1.0)
+        group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763')
+        group.add_option('-k',  '--kind', dest='kind',  help='<Up|Dn> variation', default='Up')
         parser.add_option_group(group)
         return group
 
     def checkOptions(self,opts):
-        self.kind            = 1.0 * float(opts.kind)
-        self.resolutionFile  = opts.resolutionFile
-
-        print " amount of variation = ", self.kind
-        print " resolutionFile = ",      self.resolutionFile
-        
-
-    def changeOrder(self, vectorname, vector, leptonOrderList) :
-        # vector is already linked to the otree branch
-        # vector name is the "name" of that vector to be modified        
-
-        # take vector and clone vector
-        # equivalent of: temp_vector = itree."vector"
-        temp_vector = getattr(self.itree, vectorname)
-        # remix the order of vector picking from the clone
-        for i in range( len(leptonOrderList) ) :
-          vector.push_back ( temp_vector[ leptonOrderList[i] ] )
-        # set the default value for the remaining
-        for i in range( len(temp_vector) - len(leptonOrderList) ) :
-          vector.push_back ( -9999. )
-
-
+        self.cmssw = opts.cmssw
+        self.kind  = opts.kind
 
     def process(self,**kwargs):
-        tree  = kwargs['tree']
-        input = kwargs['input']
+        tree   = kwargs['tree']
+        input  = kwargs['input']
         output = kwargs['output']
                 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print 'Total number of entries:', nentries 
         savedentries = 0
 
-        #
-        # create branches for otree, the ones that will be modified!
-        # see: https://root.cern.ch/phpBB3/viewtopic.php?t=12507
-        # this is the list of variables to be modified
-        #
-        # all the vectors that start with "std_vector_lepton_" are to be changed
-        self.namesOldBranchesToBeModifiedVector = []
-        vectorsToChange = ['std_vector_lepton_']
-        for b in self.itree.GetListOfBranches():
-            branchName = b.GetName()
-            for subString in vectorsToChange:
-                if subString in branchName:
-                    self.namesOldBranchesToBeModifiedVector.append(branchName)
+        # create branches for otree, the ones that will be modified
+        self.metVariables = ['metPfType1']
         
-        # all "event based" variables will be changed in a "l2sel" step afterwards
-        # like mll, dphill, ...
-        
-
         # clone the tree with new branches added
-        self.clone(output,self.namesOldBranchesToBeModifiedVector)
+        self.clone(output,self.metVariables)
       
-        self.oldBranchesToBeModifiedVector = {}
-        for bname in self.namesOldBranchesToBeModifiedVector:
-          bvector =  ROOT.std.vector(float) ()
-          self.oldBranchesToBeModifiedVector[bname] = bvector
+        self.oldMetBranches = {}
+        for bname in self.metVariables:
+          bvariable = numpy.ones(1, dtype=numpy.float32)
+          self.oldMetBranches[bname] = bvariable
 
         # now actually connect the branches
-        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-          self.otree.Branch(bname,bvector)            
+        for bname, bvariable in self.oldMetBranches.iteritems():
+            self.otree.Branch(bname,bvariable,bname+'/F')
 
         # input tree  
         itree = self.itree
 
-        #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        #-----------------------------------------------------------------------
+        print '- Starting event loop'
         step = 5000
-        #step = 1
 
-
-        #for i in xrange(2000):
         for i in xrange(nentries):
           itree.GetEntry(i)
+
+          oldmet = itree.metPfType1
+
+          if self.kind == 'Up' :
+              jetEn  = oldmet - itree.metPfType1JetEnUp
+              jetRes = oldmet - itree.metPfType1JetResUp
+              muonEn = oldmet - itree.metPfType1MuonEnUp
+              elecEn = oldmet - itree.metPfType1ElecEnUp
+              unclEn = oldmet - itree.metPfType1UnclEnUp
+              newmet = oldmet + ROOT.TMath.Sqrt(jetEn*jetEn + jetRes*jetRes + muonEn*muonEn + unclEn*unclEn)
+          else :
+              jetEn  = oldmet - itree.metPfType1JetEnDn
+              jetRes = oldmet - itree.metPfType1JetResDn
+              muonEn = oldmet - itree.metPfType1MuonEnDn
+              elecEn = oldmet - itree.metPfType1ElecEnDn
+              unclEn = oldmet - itree.metPfType1UnclEnDn
+              newmet = oldmet - ROOT.TMath.Sqrt(jetEn*jetEn + jetRes*jetRes + muonEn*muonEn + unclEn*unclEn)
+
+          print 'old met:', oldmet, 'new met:', newmet
 
           if i > 0 and i%step == 0.:
             print i,'events processed :: ', nentries
               
-          # smear lepton pt, the core of this module
-          leptonPtChanged = []            
-          for i in range(itree.std_vector_lepton_pt.size()):
-            # don't do anything if pt < 0, meaning it's the default value -9999.
-            if not (itree.std_vector_lepton_pt[i] > 0):
-              continue
-                 
-            if abs(itree.std_vector_lepton_flavour[i]) == 13: # muon
-              leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (1.12345/100)))   #FIXME fix the random number
-            elif abs(itree.std_vector_lepton_flavour[i]) == 11: # electron
-              if abs(itree.std_vector_lepton_eta[i]) <=1.479:
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (1.12345/100)))   #FIXME fix the random number
-              elif (abs(itree.std_vector_lepton_eta[i]) <1.479 or abs (itree.std_vector_lepton_eta[i]) <=2.5 ):
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (1.12345/100)))          
-              else: 
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (0./100)))    # how could it be nor endcap nor barrel? Sneaky electron!     
-
- 
-          # sorting in descending order and storing index
-          leptonOrder = sorted(range(len(leptonPtChanged)), key = lambda k: leptonPtChanged[k], reverse=True)
-          # leptonOrder is the list of indexes "pt" ordered
-          
-          # now save into the tree the new pt "std_vector_lepton_pt" variable
-          # and reorder all th eother variables, to keep the correct order of leptons
-          for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-            bvector.clear()
-            if 'std_vector_lepton_pt' in bname:
-              for i in range( len(leptonOrder) ) :
-                bvector.push_back ( leptonPtChanged[leptonOrder[i]] )
-              # and if for any reason the list of leptonPtChanged (that is leptonOrder) is smaller than
-              # the original std_vector one, add the default values atthe end
-              for i in range( len(getattr(self.itree, bname)) - len(leptonOrder) ) :
-                bvector.push_back ( -9999. )
-            else:
-              # for all the std_vector variables that are not "pt", just re-order them
-              self.changeOrder( bname, bvector, leptonOrder)
-          
+          # now fill the variables
+#          for bname, bvariable in self.oldMetBranches.iteritems():
+#              bvariable[0] = getattr(WW, bname)()
 
           self.otree.Fill()
           savedentries+=1
           
-          
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
-            
-
+        print '- Event loop completed'
+        print '   Saved:', savedentries, 'events'
