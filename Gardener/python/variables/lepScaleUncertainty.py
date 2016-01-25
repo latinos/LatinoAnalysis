@@ -47,7 +47,6 @@ class LeppTScalerTreeMaker(TreeCloner):
 
 
         cmssw_base = os.getenv('CMSSW_BASE')
-
         if opts.Filewithleptscalevalues == None :
           opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/leppTscaler.py'
 
@@ -83,17 +82,20 @@ class LeppTScalerTreeMaker(TreeCloner):
         if eta > self.maxeta:
           eta = self.maxeta
 
-        print " leppTscaler = ", self.leppTscaler
+        print " pt = ", pt
+        print " eta = ", eta
         
         if kindLep in self.leppTscaler.keys() : 
-              # get the scale values in bins of pT and eta
+            # get the scale values in bins of pT and eta
+            print " self.leppTscaler[kindLep] = " , self.leppTscaler[kindLep]
             for point in self.leppTscaler[kindLep] :
-                print "here", point
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
                     print"wt from fx",point[2][0]
                     return point[2][0]
-                else:
-                    return 1.0
+            # default ... it should never happen!
+            # print " default ???"
+            return 1.0
+           
         else:
             return 1.0
 
