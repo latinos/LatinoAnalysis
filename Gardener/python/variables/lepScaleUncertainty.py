@@ -31,7 +31,7 @@ class LeppTScalerTreeMaker(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-f','--fileIn',dest='Filewithleptscalevalues',help='file with lep pT scale values for uncert calc',default='data/leppTscaler.py')
+        group.add_option('-f','--fileIn',dest='Filewithleptscalevalues',help='file with lep pT scale values for uncert calc',default=None)
         group.add_option('-v','--upordown',dest='variation',help='specify the variation type whether pT scaled up(1) or down(-1)',default='up')
 
         parser.add_option_group(group)
@@ -39,16 +39,30 @@ class LeppTScalerTreeMaker(TreeCloner):
 
     def checkOptions(self,opts):
 
+        print " >>  checkOptions "
+        
         leppTscaler = {}
         self.variation            = 1.0 * float(opts.variation)
+        print " amount of variation = ", self.variation
+
+
+        cmssw_base = os.getenv('CMSSW_BASE')
+
+        if opts.Filewithleptscalevalues == None :
+          opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/leppTscaler.py'
+
+        print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
+
         if opts.Filewithleptscalevalues == None :
           print " Using the default one"
            
         elif os.path.exists(opts.Filewithleptscalevalues) :
+          print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
           handle = open(opts.Filewithleptscalevalues,'r')
           exec(handle)
           handle.close()
-
+        else :
+          print "nothing ?"
 
         self.leppTscaler = leppTscaler
         self.minpt = 0
@@ -69,6 +83,8 @@ class LeppTScalerTreeMaker(TreeCloner):
         if eta > self.maxeta:
           eta = self.maxeta
 
+        print " leppTscaler = ", self.leppTscaler
+        
         if kindLep in self.leppTscaler.keys() : 
               # get the scale values in bins of pT and eta
             for point in self.leppTscaler[kindLep] :
@@ -150,19 +166,22 @@ class LeppTScalerTreeMaker(TreeCloner):
             leptonPtChanged = []
             
             for i in range(itree.std_vector_lepton_pt.size()):
+                #print " i = ", i, " -->  itree.std_vector_lepton_flavour[i] = ", itree.std_vector_lepton_flavour[i]
+                #print "    -> ", abs(itree.std_vector_lepton_flavour[i])
                 kindLep = 'lep' # ele or mu
                 pt_lep=itree.std_vector_lepton_pt[i]
                 eta_lep=itree.std_vector_lepton_eta[i]
 #                print "pt eta",pt_lep,eta_lep
-                if abs(itree.std_vector_lepton_flavour[i])==13:
+                if abs(itree.std_vector_lepton_flavour[i]) == 13:
                     kindLep = 'mu'
                     wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
                     leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (self.variation*wt/100.0)))
-                elif abs(itree.std_vector_lepton_flavour[i])==11:
+                elif abs(itree.std_vector_lepton_flavour[i]) == 11:
                     kindLep = 'ele'
                     wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
                     leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (self.variation*wt/100.0)))
                 else:
+                    #print " what? "
                     leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (0./100)))
 
 
