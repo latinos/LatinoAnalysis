@@ -116,8 +116,10 @@ class ShapeFactory:
 
         # connect the trees
         list_of_trees_to_connect = {}
+        #print " samples = ", self._samples
         for sampleName, sample in self._samples.iteritems():
           list_of_trees_to_connect[sampleName] = sample['name']
+          #print 'sample[name] = ', sample['name']
               
         inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
                    
@@ -363,6 +365,36 @@ class ShapeFactory:
             else :
               self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputs[sampleName], cutName, sampleName)
 
+          # and filter also the nuisances trees, the ones with a separate folder
+          # and whose systematic is based on using two different trees up/down
+          for nuisanceName, nuisance in nuisances.iteritems():
+            if 'kind' in nuisance :
+              if nuisance['kind'] == 'tree' :
+                for sampleName, sample in self._samples.iteritems():
+                  if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
+                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                      # now plot with the additional weight up/down
+                      newSampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
+                      newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
+                      #                                 the first weight is "up", the second is "down" -> they might be useful!
+                      print " configurationNuis = ", configurationNuis
+                      newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
+                      newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
+                      print " newSampleWeightUp = ", newSampleWeightUp
+                      print " newSampleWeightDo = ", newSampleWeightDo
+        
+                      if 'weights' in sample.keys() :
+                        self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName],   cutName, newSampleNameUp)
+                      else :                                                                                              
+                        self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName],   cutName, newSampleNameUp)
+        
+                      if 'weights' in sample.keys() :
+                        self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceDown[nuisanceName][sampleName], cutName, newSampleNameDo)
+                      else :                                                                                              
+                        self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceDown[nuisanceName][sampleName], cutName, newSampleNameDo)
+        
+  
+          # now let's start with all the variables ...
            
           for variableName, variable in self._variables.iteritems():
             print "  variable[name]  = ", variable['name']
@@ -467,13 +499,16 @@ class ShapeFactory:
                         newSampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
                         newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
                         #                                 the first weight is "up", the second is "down" -> they might be useful!
+                        print " configurationNuis = ", configurationNuis
                         newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
                         newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
+                        print " newSampleWeightUp = ", newSampleWeightUp
+                        print " newSampleWeightDo = ", newSampleWeightDo
                         
                         #print "  variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold = "
                         #print " sampleName = ", sampleName
                         #print " ===> ", variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold
-                        
+                         
                         if 'weights' in sample.keys() :
                           outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold)
                         else :
@@ -508,7 +543,7 @@ class ShapeFactory:
 
 
     # _____________________________________________________________________________
-    def _filterTrees(self, global_weight, weights, cut, inputs, sampleName, cutName):       
+    def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName):       
         '''
         global_weight :   the global weight for the samples
         weights       :   the wieghts 'root file' dependent
@@ -889,6 +924,7 @@ class ShapeFactory:
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
             if "eos.cern.ch" not in path and "eosuser.cern.ch" not in path:
               if not os.path.exists(path):
+                print 'File '+path+' doesn\'t exists'
                 raise RuntimeError('File '+path+' doesn\'t exists')
             else:
               if not self._testEosFile(path):

@@ -268,3 +268,22 @@ The module adds to the trees two sets of weights, one based on the POG provided 
 The POG SF are contained in branch named `bPogSF*`, while the Tag & Probe Scale factors are called `bTPSF*`. 
 
 The `bTPSF*` are currently placeholders and their value is 1.
+
+
+Lepton pT scale uncertainty
+====
+
+    gardener.py LeppTScalerTreeMaker -m 1 -b 2 -e 5 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testscalar.root
+    
+    
+Lepton pT resolution uncertainty
+====
+    
+    gardener.py leptonResolution ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
+
+
+MET uncertainty
+====
+    
+    gardener.py metUncertainty --kind='Up' ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root metUp.root
+    gardener.py metUncertainty --kind='Dn' ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root metDn.root
