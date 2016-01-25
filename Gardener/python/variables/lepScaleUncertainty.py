@@ -82,15 +82,15 @@ class LeppTScalerTreeMaker(TreeCloner):
         if eta > self.maxeta:
           eta = self.maxeta
 
-        print " pt = ", pt
-        print " eta = ", eta
+#        print " pt = ", pt
+ #       print " eta = ", eta
         
         if kindLep in self.leppTscaler.keys() : 
             # get the scale values in bins of pT and eta
-            print " self.leppTscaler[kindLep] = " , self.leppTscaler[kindLep]
+            #          print " self.leppTscaler[kindLep] = " , self.leppTscaler[kindLep]
             for point in self.leppTscaler[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
-                    print"wt from fx",point[2][0]
+                    #                 print"wt from fx",point[2][0]
                     return point[2][0]
             # default ... it should never happen!
             # print " default ???"
