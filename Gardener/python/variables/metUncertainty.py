@@ -19,14 +19,14 @@ import warnings
 import os.path
 from array import array;
 
-class MetUncertaintyTreeMaker(TreeCloner):
-    def __init__(self):
+class MetUncertaintyTreeMaker(TreeCloner) :
+    def __init__(self) :
        pass
 
-    def help(self):
+    def help(self) :
         return '''MET uncertainty'''
 
-    def addOptions(self,parser):
+    def addOptions(self,parser) :
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763')
@@ -34,19 +34,25 @@ class MetUncertaintyTreeMaker(TreeCloner):
         parser.add_option_group(group)
         return group
 
-    def checkOptions(self,opts):
+    def checkOptions(self,opts) :
         self.cmssw = opts.cmssw
         self.kind  = opts.kind
 
-    def process(self,**kwargs):
+    def deltaphi(self, phi1, phi2) :
+        dphi = abs(phi1 - phi2)
+        if dphi > ROOT.TMath.Pi() :
+            dphi = 2*ROOT.TMath.Pi() - dphi
+        return dphi
+
+    def process(self,**kwargs) :
         tree   = kwargs['tree']
         input  = kwargs['input']
         output = kwargs['output']
-                
+         
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries:', nentries 
+        print ' - Input entries:', nentries 
         savedentries = 0
 
         # Create branches for otree, the ones that will be modified
@@ -65,10 +71,10 @@ class MetUncertaintyTreeMaker(TreeCloner):
         itree = self.itree
 
         #-----------------------------------------------------------------------
-        print '- Starting event loop'
+        print ' - Starting event loop'
         step = 5000
 
-        for i in xrange(nentries):
+        for i in xrange(nentries) :
           itree.GetEntry(i)
 
           oldmet = itree.metPfType1
@@ -81,11 +87,20 @@ class MetUncertaintyTreeMaker(TreeCloner):
               metElecEn = itree.metPfType1ElecEnUp - oldmet
               metUnclEn = itree.metPfType1UnclEnUp - oldmet
 
-              phiJetEn  = itree.metPfRawPhiJetEnUp  - oldphi
-              phiJetRes = itree.metPfRawPhiJetResUp - oldphi
-              phiMuonEn = itree.metPfRawPhiMuonEnUp - oldphi
-              phiElecEn = itree.metPfRawPhiElecEnUp - oldphi
-              phiUnclEn = itree.metPfRawPhiUnclEnUp - oldphi
+              phiJetEn  = self.deltaphi(itree.metPfRawPhiJetEnUp,  oldphi)
+              phiJetRes = self.deltaphi(itree.metPfRawPhiJetResUp, oldphi)
+              phiMuonEn = self.deltaphi(itree.metPfRawPhiMuonEnUp, oldphi)
+              phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnUp, oldphi)
+              phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnUp, oldphi)
+
+              deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
+
+              if (deltaphimax == phiJetEn)  : newphi[0] = itree.metPfRawPhiJetEnUp
+              if (deltaphimax == phiJetRes) : newphi[0] = itree.metPfRawPhiJetResUp
+              if (deltaphimax == phiMuonEn) : newphi[0] = itree.metPfRawPhiMuonEnUp
+              if (deltaphimax == phiElecEn) : newphi[0] = itree.metPfRawPhiElecEnUp
+              if (deltaphimax == phiUnclEn) : newphi[0] = itree.metPfRawPhiUnclEnUp
+
           else :
               metJetEn  = itree.metPfType1JetEnDn  - oldmet
               metJetRes = itree.metPfType1JetResDn - oldmet
@@ -93,19 +108,19 @@ class MetUncertaintyTreeMaker(TreeCloner):
               metElecEn = itree.metPfType1ElecEnDn - oldmet
               metUnclEn = itree.metPfType1UnclEnDn - oldmet
 
-              phiJetEn  = itree.metPfRawPhiJetEnDn  - oldphi
-              phiJetRes = itree.metPfRawPhiJetResDn - oldphi
-              phiMuonEn = itree.metPfRawPhiMuonEnDn - oldphi
-              phiElecEn = itree.metPfRawPhiElecEnDn - oldphi
-              phiUnclEn = itree.metPfRawPhiUnclEnDn - oldphi
+              phiJetEn  = self.deltaphi(itree.metPfRawPhiJetEnDn,  oldphi)
+              phiJetRes = self.deltaphi(itree.metPfRawPhiJetResDn, oldphi)
+              phiMuonEn = self.deltaphi(itree.metPfRawPhiMuonEnDn, oldphi)
+              phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnDn, oldphi)
+              phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnDn, oldphi)
 
-          deltaphi = max(abs(phiJetEn), abs(phiJetRes), abs(phiMuonEn), abs(phiElecEn), abs(phiUnclEn))
+              deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
 
-          if (deltaphi == abs(phiJetEn))  : newphi[0] = phiJetEn  + oldphi
-          if (deltaphi == abs(phiJetRes)) : newphi[0] = phiJetRes + oldphi
-          if (deltaphi == abs(phiMuonEn)) : newphi[0] = phiMuonEn + oldphi
-          if (deltaphi == abs(phiElecEn)) : newphi[0] = phiElecEn + oldphi
-          if (deltaphi == abs(phiUnclEn)) : newphi[0] = phiUnclEn + oldphi
+              if (deltaphimax == phiJetEn)  : newphi[0] = itree.metPfRawPhiJetEnDn
+              if (deltaphimax == phiJetRes) : newphi[0] = itree.metPfRawPhiJetResDn
+              if (deltaphimax == phiMuonEn) : newphi[0] = itree.metPfRawPhiMuonEnDn
+              if (deltaphimax == phiElecEn) : newphi[0] = itree.metPfRawPhiElecEnDn
+              if (deltaphimax == phiUnclEn) : newphi[0] = itree.metPfRawPhiUnclEnDn
 
           deltamet = ROOT.TMath.Sqrt(metJetEn*metJetEn + metJetRes*metJetRes + metElecEn*metElecEn + metMuonEn*metMuonEn + metUnclEn*metUnclEn)
 
@@ -114,12 +129,12 @@ class MetUncertaintyTreeMaker(TreeCloner):
 
           #print 'oldmet:', oldmet, 'newmet:', newmet[0], 'oldphi:', oldphi, 'newphi:', newphi[0]
 
-          if i > 0 and i%step == 0.:
+          if (i > 0 and i%step == 0.) :
             print i,'events processed :: ', nentries
               
           self.otree.Fill()
           savedentries+=1
           
         self.disconnect()
-        print '- Event loop completed'
-        print '   Saved:', savedentries, 'events'
+        print ' - Event loop completed'
+        print ' - Saved entries:', savedentries
