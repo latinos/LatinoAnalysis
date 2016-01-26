@@ -79,7 +79,9 @@ class DatacardFactory:
           # loop over variables
           for variableName, variable in self._variables.iteritems():
             print "  variableName = ", variableName
-            tagNameToAppearInDatacard = "test"
+            tagNameToAppearInDatacard = cutName
+            # e.g.    hww2l2v_13TeV_of0j
+            #         to be defined in cuts.py
 
             os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName) 
             os.mkdir (self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/") # and the folder for the root files 
