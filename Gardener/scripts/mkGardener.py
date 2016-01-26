@@ -25,7 +25,9 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,version='74x'):
    if isData : return '1'
    else:
      xs = db.get(iTarget) 
-     if xs == '' : return '1'
+     if xs == '' : 
+       print 'WARNING: X-section not found for sample: ',iTarget,' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+       return '-1'
      else:
        nEvt = 0
        nTot = 0
@@ -170,12 +172,14 @@ for iProd in prodList :
       exec(iLine)  
     #print samples.keys()
     if 'config.Data.outLFNDirBase' in iLine : prodDir=iLine.split('=')[1].replace('\'','').replace(' ','')
+    if 'dir' in Productions[iProd] : prodDir=Productions[iProd]['dir']
   handle.close()
 
   # Load x-section DB
 
   if not Productions[iProd]['isData'] :  
     xsMethods=['gDoc','Python']  # Among 'gDoc','Python','YellowR' and order Matter (Overwriting for same samples !)
+    if options.cmssw == '763' : xsMethods=['Python']
     xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
     xsDB = xsectionDB()
     for iMethod in xsMethods :
@@ -408,6 +412,7 @@ for iProd in prodList :
         else:                  command='cd '+wDir+' ; '
 
         if iStep == 'hadd' :
+          command+='cd /tmp/xjanssen ; '
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           if len(targetList[iTarget]) == 1 :
             command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
@@ -475,6 +480,9 @@ for iProd in prodList :
                oriTreeList.append(os.path.dirname(oriTree)+'/latino_'+kTarget+'.root')
           #print oriTreeList
           baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB,options.cmssw)
+          #if baseW == '-1' : 
+          #   xsDB.Print()
+          #   exit()
         else: baseW = '1.'
         command = command.replace('RPLME_baseW',baseW)
 

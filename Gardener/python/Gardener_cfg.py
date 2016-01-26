@@ -67,6 +67,7 @@ Productions= {
   '22Jan_25ns_mAODv2_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_fall15_miniaodv2_25ns.py' ,
+                        #'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/22Jan/MC/',
                         'dirExt'  : 'LatinoTrees' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                       } ,
