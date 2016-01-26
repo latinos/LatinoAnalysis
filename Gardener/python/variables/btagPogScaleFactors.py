@@ -149,7 +149,11 @@ class btagPogScaleFactors(TreeCloner):
 
           
         self.clone(output,["bPogSF", "bPogSFUp", "bPogSFDown", 
-                           "bTPSF", "bTPSFUp", "bTPSFDown"])
+                           "bTPSF", "bTPSFUp", "bTPSFDown",
+			   "bPogSF1Jet", "bPogSF1JetUp", "bPogSF1JetDown",
+                           "bTPSF1Jet", "bTPSF1JetUp", "bTPSF1JetDown",
+			   "bPogSF2Jet", "bPogSF2JetUp", "bPogSF2JetDown",
+                           "bTPSF2Jet", "bTPSF2JetUp", "bTPSF2JetDown",])
 
 
         #bPogSF and similar are SF from bPOG
@@ -169,6 +173,50 @@ class btagPogScaleFactors(TreeCloner):
         self.otree.Branch('bTPSFUp',bTPSFUp,'bTPSFUp/F')
         bTPSFDown = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('bTPSFDown',bTPSFDown,'bTPSFDown/F')
+
+
+
+
+
+        #bPogSF1Jet and similar are SF from bPOG
+
+        bPogSF1Jet = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bPogSF1Jet',bPogSF1Jet,'bPogSF1Jet/F')
+        bPogSF1JetUp = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bPogSF1JetUp',bPogSF1JetUp,'bPogSF1JetUp/F')
+        bPogSF1JetDown = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bPogSF1JetDown',bPogSF1JetDown,'bPogSF1JetDown/F')
+
+        #bTPSF1Jet and similar are scale factors from out Tag and Probe studies
+
+        bTPSF1Jet = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bTPSF1Jet',bTPSF1Jet,'bTPSF1Jet/F')
+        bTPSF1JetUp = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bTPSF1JetUp',bTPSF1JetUp,'bTPSF1JetUp/F')
+        bTPSF1JetDown = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bTPSF1JetDown',bTPSF1JetDown,'bTPSF1JetDown/F')
+
+
+
+
+        #bPogSF2Jet and similar are SF from bPOG
+
+        bPogSF2Jet = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bPogSF2Jet',bPogSF2Jet,'bPogSF2Jet/F')
+        bPogSF2JetUp = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bPogSF2JetUp',bPogSF2JetUp,'bPogSF2JetUp/F')
+        bPogSF2JetDown = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bPogSF2JetDown',bPogSF2JetDown,'bPogSF2JetDown/F')
+
+        #bTPSF2Jet and similar are scale factors from out Tag and Probe studies
+
+        bTPSF2Jet = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bTPSF2Jet',bTPSF2Jet,'bTPSF2Jet/F')
+        bTPSF2JetUp = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bTPSF2JetUp',bTPSF2JetUp,'bTPSF2JetUp/F')
+        bTPSF2JetDown = numpy.ones(1, dtype=numpy.float32)
+        self.otree.Branch('bTPSF2JetDown',bTPSF2JetDown,'bTPSF2JetDown/F')
+
 
 
         std_vector_jet_pt = ROOT.std.vector(float) ()
@@ -210,6 +258,8 @@ class btagPogScaleFactors(TreeCloner):
             pDataTPDown     = 1.
 
             pMC           = 1.
+
+            njet 	  = 0
 
             for iJet in xrange(len(itree.std_vector_jet_pt)) :
              
@@ -263,6 +313,25 @@ class btagPogScaleFactors(TreeCloner):
                 pDataTPUp   = pDataTPUp*effMC*sfTPUp     if tagged else pDataTPUp*(1.-effMC*sfTPUp)
                 pDataTPDown = pDataTPDown*effMC*sfTPDown if tagged else pDataTPDown*(1.-effMC*sfTPDown)
 
+		if njet < 1:
+		  bPogSF1Jet[0]          = pData/pMC
+                  bPogSF1JetUp[0]        = pDataUp/pMC
+                  bPogSF1JetDown[0]      = pDataDown/pMC
+
+                  bTPSF1Jet[0]          = pDataTP/pMC
+                  bTPSF1JetUp[0]        = pDataTPUp/pMC
+                  bTPSF1JetDown[0]      = pDataTPDown/pMC
+
+                if njet < 2:
+                  bPogSF2Jet[0]          = pData/pMC
+                  bPogSF2JetUp[0]        = pDataUp/pMC
+                  bPogSF2JetDown[0]      = pDataDown/pMC
+
+                  bTPSF2Jet[0]          = pDataTP/pMC
+                  bTPSF2JetUp[0]        = pDataTPUp/pMC
+                  bTPSF2JetDown[0]      = pDataTPDown/pMC
+
+                njet += 1
                 #print "flavour, effMC, sf", flavour, effMC, sf
 
             #print "pData, pMC", pData, pMC
