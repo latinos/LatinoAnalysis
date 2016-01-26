@@ -7,7 +7,6 @@ import optparse
 import re
 import warnings
 import os.path
-from collections import OrderedDict
 from array import array;
 
 class MetUncertaintyTreeMaker(TreeCloner):
@@ -34,26 +33,25 @@ class MetUncertaintyTreeMaker(TreeCloner):
         input  = kwargs['input']
         output = kwargs['output']
                 
-        # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries:', nentries 
         savedentries = 0
 
-        # create branches for otree, the ones that will be modified
+        # Create branches for otree, the ones that will be modified
         self.metVariables = [ 'metPfType1', 'metPfType1Phi' ]
         
-        # clone the tree with new branches added
+        # Clone the tree with new branches added
         self.clone(output,self.metVariables)
       
-        # now actually connect the branches
+        # Now actually connect the branches
         newmet = numpy.ones(1, dtype=numpy.float32)
         newphi = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('metPfType1',    newmet, 'metPfType1/F')
         self.otree.Branch('metPfType1Phi', newphi, 'metPfType1Phi/F')
 
-        # input tree  
+        # Input tree  
         itree = self.itree
 
         #-----------------------------------------------------------------------
@@ -67,35 +65,44 @@ class MetUncertaintyTreeMaker(TreeCloner):
           oldphi = itree.metPfType1Phi
 
           if self.kind == 'Up' :
-              metJetEn  = oldmet - itree.metPfType1JetEnUp
-              metJetRes = oldmet - itree.metPfType1JetResUp
-              metMuonEn = oldmet - itree.metPfType1MuonEnUp
-              metElecEn = oldmet - itree.metPfType1ElecEnUp
-              metUnclEn = oldmet - itree.metPfType1UnclEnUp
-              newmet[0] = oldmet + ROOT.TMath.Sqrt(metJetEn*metJetEn + metJetRes*metJetRes + metElecEn*metElecEn + metMuonEn*metMuonEn + metUnclEn*metUnclEn)
+              metJetEn  = itree.metPfType1JetEnUp  - oldmet
+              metJetRes = itree.metPfType1JetResUp - oldmet
+              metMuonEn = itree.metPfType1MuonEnUp - oldmet
+              metElecEn = itree.metPfType1ElecEnUp - oldmet
+              metUnclEn = itree.metPfType1UnclEnUp - oldmet
 
-              phiJetEn  = oldphi - itree.metPfRawPhiJetEnUp
-              phiJetRes = oldphi - itree.metPfRawPhiJetResUp
-              phiMuonEn = oldphi - itree.metPfRawPhiMuonEnUp
-              phiElecEn = oldphi - itree.metPfRawPhiElecEnUp
-              phiUnclEn = oldphi - itree.metPfRawPhiUnclEnUp
-              newphi[0] = oldphi + ROOT.TMath.Sqrt(phiJetEn*phiJetEn + phiJetRes*phiJetRes + phiElecEn*phiElecEn + phiMuonEn*phiMuonEn + phiUnclEn*phiUnclEn)
+              phiJetEn  = itree.metPfRawPhiJetEnUp  - oldphi
+              phiJetRes = itree.metPfRawPhiJetResUp - oldphi
+              phiMuonEn = itree.metPfRawPhiMuonEnUp - oldphi
+              phiElecEn = itree.metPfRawPhiElecEnUp - oldphi
+              phiUnclEn = itree.metPfRawPhiUnclEnUp - oldphi
           else :
-              metJetEn  = oldmet - itree.metPfType1JetEnDn
-              metJetRes = oldmet - itree.metPfType1JetResDn
-              metMuonEn = oldmet - itree.metPfType1MuonEnDn
-              metElecEn = oldmet - itree.metPfType1ElecEnDn
-              metUnclEn = oldmet - itree.metPfType1UnclEnDn
-              newmet[0] = oldmet - ROOT.TMath.Sqrt(metJetEn*metJetEn + metJetRes*metJetRes + metElecEn*metElecEn + metMuonEn*metMuonEn + metUnclEn*metUnclEn)
+              metJetEn  = itree.metPfType1JetEnDn  - oldmet
+              metJetRes = itree.metPfType1JetResDn - oldmet
+              metMuonEn = itree.metPfType1MuonEnDn - oldmet
+              metElecEn = itree.metPfType1ElecEnDn - oldmet
+              metUnclEn = itree.metPfType1UnclEnDn - oldmet
 
-              phiJetEn  = oldphi - itree.metPfRawPhiJetEnDn
-              phiJetRes = oldphi - itree.metPfRawPhiJetResDn
-              phiMuonEn = oldphi - itree.metPfRawPhiMuonEnDn
-              phiElecEn = oldphi - itree.metPfRawPhiElecEnDn
-              phiUnclEn = oldphi - itree.metPfRawPhiUnclEnDn
-              newphi[0] = oldphi - ROOT.TMath.Sqrt(phiJetEn*phiJetEn + phiJetRes*phiJetRes + phiElecEn*phiElecEn + phiMuonEn*phiMuonEn + phiUnclEn*phiUnclEn)
+              phiJetEn  = itree.metPfRawPhiJetEnDn  - oldphi
+              phiJetRes = itree.metPfRawPhiJetResDn - oldphi
+              phiMuonEn = itree.metPfRawPhiMuonEnDn - oldphi
+              phiElecEn = itree.metPfRawPhiElecEnDn - oldphi
+              phiUnclEn = itree.metPfRawPhiUnclEnDn - oldphi
 
-#          print 'old met:', oldmet, 'new met:', newmet[0], 'old phi:', oldphi, 'new phi:', newphi[0]
+          deltaphi = max(abs(phiJetEn), abs(phiJetRes), abs(phiMuonEn), abs(phiElecEn), abs(phiUnclEn))
+
+          if (deltaphi == abs(phiJetEn))  : newphi[0] = phiJetEn  + oldphi
+          if (deltaphi == abs(phiJetRes)) : newphi[0] = phiJetRes + oldphi
+          if (deltaphi == abs(phiMuonEn)) : newphi[0] = phiMuonEn + oldphi
+          if (deltaphi == abs(phiElecEn)) : newphi[0] = phiElecEn + oldphi
+          if (deltaphi == abs(phiUnclEn)) : newphi[0] = phiUnclEn + oldphi
+
+          deltamet = ROOT.TMath.Sqrt(metJetEn*metJetEn + metJetRes*metJetRes + metElecEn*metElecEn + metMuonEn*metMuonEn + metUnclEn*metUnclEn)
+
+          if self.kind == 'Up' : newmet[0] = oldmet + deltamet
+          if self.kind == 'Dn' : newmet[0] = oldmet - deltamet
+
+          #print 'oldmet:', oldmet, 'newmet:', newmet[0], 'oldphi:', oldphi, 'newphi:', newphi[0]
 
           if i > 0 and i%step == 0.:
             print i,'events processed :: ', nentries
