@@ -285,5 +285,5 @@ Lepton pT resolution uncertainty
 MET uncertainty
 ====
     
-    gardener.py metUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
-    
+    gardener.py metUncertainty --kind='Up' ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root metUp.root
+    gardener.py metUncertainty --kind='Dn' ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root metDn.root
