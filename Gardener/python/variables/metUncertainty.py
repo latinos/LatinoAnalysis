@@ -1,3 +1,13 @@
+print """
+
+   \  |  ____| __ __|                                      |          _)         |          
+  |\/ |  __|      |        |   |  __ \    __|   _ \   __|  __|   _` |  |  __ \   __|  |   | 
+  |   |  |        |        |   |  |   |  (      __/  |     |    (   |  |  |   |  |    |   | 
+ _|  _| _____|   _|       \__,_| _|  _| \___| \___| _|    \__| \__,_| _| _|  _| \__| \__, | 
+                                                                                     ____/  
+
+"""
+
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 import numpy
 import ROOT
