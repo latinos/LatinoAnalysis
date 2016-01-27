@@ -137,6 +137,10 @@ stepList = List_Filter(Steps,options.steps).get()
 
 CMSSW=os.environ["CMSSW_BASE"]
 
+if options.cmssw == '763' :
+  eosTargBaseIn = '/eos/user/j/jlauwers/HWW2015/'
+  eosTargBaseOut= '/eos/user/j/jlauwers/HWW2015/'
+
 # eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
   eosTargBaseIn=options.inputTarget
@@ -159,12 +163,6 @@ xrootdPathIn           = 'root://eosuser.cern.ch/'
 
 aquamarineLocationOut  = '0.3.84-aquamarine.user'
 xrootdPathOut          = 'root://eosuser.cern.ch/'
-
-#aquamarineLocationIn = options.aquamarineLocation
-#aquamarineLocationIn = "0.3.84-aquamarine.user"
-#aquamarineLocationOut = aquamarineLocationIn
-#xrootdPathIn = 'root://eosuser.cern.ch/'
-#xrootdPathOut = xrootdPathIn
 
 if "/eos/cms" in eosTargBaseIn:
   aquamarineLocationIn = "0.3.84-aquamarine"
@@ -429,7 +427,7 @@ for iProd in prodList :
         else:                  command='cd '+wDir+' ; '
 
         if iStep == 'hadd' :
-          command+='cd /tmp/xjanssen ; '
+          command+='cd /tmp/'+os.getlogin()+' ; '
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           if len(targetList[iTarget]) == 1 :
             command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
@@ -502,7 +500,7 @@ for iProd in prodList :
           #   xsDB.Print()
           #   exit()
           print baseWInfo
-          f = open('/afs/cern.ch/user/x/xjanssen/public/baseWInfo.txt', 'a')
+          f = open(wDir+'/baseWInfo.txt', 'a')
           f.write(iProd+' '+iTargetOri+' : ')
           f.write(str(baseWInfo))
           f.write('\n')
