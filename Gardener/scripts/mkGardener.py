@@ -21,16 +21,23 @@ from LatinoAnalysis.Gardener.Gardener_cfg import *
 
 # ------------------------ baseW -------------------------
 
-def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,version='74x'):
+def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,baseWInfo,version='74x'):
    if isData : return '1'
    else:
      xs = db.get(iTarget) 
      if xs == '' : 
        print 'WARNING: X-section not found for sample: ',iTarget,' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+       baseWInfo['xs']     = ''
+       baseWInfo['baseW']  = '-1'
+       baseWInfo['nEvt']   = ''
+       baseWInfo['nPos']   = ''
+       baseWInfo['nNeg']   = ''
        return '-1'
      else:
        nEvt = 0
        nTot = 0
+       nPos = 0
+       nNeg = 0
        for inTree in inTreeList: 
          print 'Opening: ',inTree
          fileIn = ROOT.TFile.Open(inTree, "READ")
@@ -42,18 +49,28 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,version='74x'):
              nEvt += h_mcWhgt.GetBinContent(1) 
            else:
              nEvt += fileIn.Get('totalEvents').GetBinContent(1) 
+             nPos += fileIn.Get('totalEvents').GetBinContent(1)
          else:
            h_mcWeightPos = fileIn.Get('mcWeightPos')
            h_mcWeightNeg = fileIn.Get('mcWeightNeg')
            if h_mcWeightPos.__nonzero__() and h_mcWeightNeg.__nonzero__() :
-             nEvt = h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
+             nEvt += h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
+             nPos += h_mcWeightPos.GetBinContent(1)
+             nNeg += h_mcWeightNeg.GetBinContent(1) 
              print 'Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1)
            else:
              nEvt += fileIn.Get('totalEvents').GetBinContent(1)
+             nPos += fileIn.Get('totalEvents').GetBinContent(1)
          nTot += fileIn.Get('totalEvents').GetBinContent(1)
          fileIn.Close()
        baseW = float(xs)*1000./nEvt
        print 'baseW: xs,N -> W', xs, nEvt , baseW , ' nTot= ', nTot
+       baseWInfo['xs']     = str(xs)
+       baseWInfo['baseW']  = str(baseW) 
+       baseWInfo['nEvt']   = str(nEvt)
+       baseWInfo['nPos']   = str(nPos)
+       baseWInfo['nNeg']   = str(nNeg)
+       baseWInfo['nTot']   = str(nTot)
        return str(baseW)
 
 # --------------------- SPLIT ---------------------------
@@ -120,6 +137,10 @@ stepList = List_Filter(Steps,options.steps).get()
 
 CMSSW=os.environ["CMSSW_BASE"]
 
+if options.cmssw == '763' :
+  eosTargBaseIn = '/eos/user/j/jlauwers/HWW2015/'
+  eosTargBaseOut= '/eos/user/j/jlauwers/HWW2015/'
+
 # eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
   eosTargBaseIn=options.inputTarget
@@ -142,12 +163,6 @@ xrootdPathIn           = 'root://eosuser.cern.ch/'
 
 aquamarineLocationOut  = '0.3.84-aquamarine.user'
 xrootdPathOut          = 'root://eosuser.cern.ch/'
-
-#aquamarineLocationIn = options.aquamarineLocation
-#aquamarineLocationIn = "0.3.84-aquamarine.user"
-#aquamarineLocationOut = aquamarineLocationIn
-#xrootdPathIn = 'root://eosuser.cern.ch/'
-#xrootdPathOut = xrootdPathIn
 
 if "/eos/cms" in eosTargBaseIn:
   aquamarineLocationIn = "0.3.84-aquamarine"
@@ -412,7 +427,7 @@ for iProd in prodList :
         else:                  command='cd '+wDir+' ; '
 
         if iStep == 'hadd' :
-          command+='cd /tmp/xjanssen ; '
+          command+='cd /tmp/'+os.getlogin()+' ; '
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           if len(targetList[iTarget]) == 1 :
             command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
@@ -479,17 +494,26 @@ for iProd in prodList :
             if iTargetOri == kTargetOri : 
                oriTreeList.append(os.path.dirname(oriTree)+'/latino_'+kTarget+'.root')
           #print oriTreeList
-          baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB,options.cmssw)
+          baseWInfo = {}
+          baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB,baseWInfo,options.cmssw)
           #if baseW == '-1' : 
           #   xsDB.Print()
           #   exit()
+          print baseWInfo
+          f = open(wDir+'/baseWInfo.txt', 'a')
+          f.write(iProd+' '+iTargetOri+' : ')
+          f.write(str(baseWInfo))
+          f.write('\n')
+          f.close()
         else: baseW = '1.'
         command = command.replace('RPLME_baseW',baseW)
 
         # Fix PU data 
         #puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 
-        puData = '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root'
-        # puData defined in 'userConfig.py'
+        #puData = '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root'
+        puData = '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root'
+        if 'puData' in Productions[iProd] : puData = Productions[iProd]['puData']
+        print 'PU Data : ', puData
         command = command.replace('RPLME_puData',puData)  
 
         # Stage Out
