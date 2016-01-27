@@ -104,10 +104,16 @@ class ShapeFactory:
         # then add the lumi scale factor
         for sampleName, sample in self._samples.iteritems():
           if 'isData' in sample.keys() :
+            if len(sample ['isData']) == 1 and sample ['isData'][0] == 'all' :  # if you put 'all' all the root files are considered "data"
+              for numisDataList in range(0, len(sample ['name']) ) :
+                sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
+                print " sample ['weights'][", numisDataList, "] = " , sample ['weights'][numisDataList]           
+            
             for numisDataList in range(0, len(sample ['isData']) ) :
               if sample ['isData'][numisDataList] == '0' :
                 sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
                 print " sample ['weights'][", numisDataList, "] = " , sample ['weights'][numisDataList]
+          
           else : # default is "scale to luminosity"
             for numisDataList in range(0, len(sample ['name']) ) :
               sample ['weights'][numisDataList] = "( (" + sample ['weights'][numisDataList] + ") * " + str(self._lumi) + ")"
