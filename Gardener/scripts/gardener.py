@@ -15,6 +15,9 @@ from LatinoAnalysis.Gardener.variables.efficiencies      import EffLepFiller,Eff
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
 
+# kinematic variables
+from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
+
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
 from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
@@ -88,6 +91,10 @@ if __name__ == '__main__':
 
 # apply selections and update variables
     modules['l2selfiller']     = L2SelFiller()
+
+
+# update kinematic variables
+    modules['l2kinfiller']     = L2KinFiller()
 
 # Nuisances
     modules['JESTreeMaker']         = JESTreeMaker()

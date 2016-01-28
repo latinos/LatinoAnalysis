@@ -11,18 +11,24 @@
 class WW {
 public:
  //! constructor
+ WW();
  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi);
  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
  WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
  virtual ~WW() {}
  
+ //! check
+ void checkIfOk();
+  
  //! set functions
  void setJets(std::vector<float> invector);
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta);
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass);
 
  void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
+ 
+ void setMET(float met, float metphi);
  
  //! functions
  float pTWW();
@@ -68,8 +74,9 @@ private:
  TLorentzVector J1, J2;
  float pid1, pid2;
  
- bool isOk;
- int  jetOk;
+ bool _isOk;
+ int  _jetOk;
+ int  _lepOk;
  
  std::vector<float> _jetspt;
  std::vector<float> _jetseta;
@@ -84,18 +91,24 @@ private:
 };
 
 //! constructor
+WW::WW() {
+ _isOk = false;
+ _jetOk = 0;
+ _lepOk = 0;
+}
+
 WW::WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi) {
  
  if (pt1>0 && pt2>0) {  
   L1.SetPtEtaPhiM(pt1, 0, phi1, 0.);
   L2.SetPtEtaPhiM(pt2, 0, phi2, 0.);
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
-  isOk =  true;
+  _isOk =  true;
  }
  else {
-  isOk = false;
+  _isOk = false;
  }
- jetOk = 0;
+ _jetOk = 0;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi) {
@@ -104,12 +117,12 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
   L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
-  isOk =  true;
+  _isOk =  true;
  }
  else {
-  isOk = false;
+  _isOk = false;
  }
- jetOk = 0;
+ _jetOk = 0;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi) {
@@ -120,12 +133,12 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   pid1 = pidl1;
   pid2 = pidl2;
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
-  isOk =  true;
+  _isOk =  true;
  }
  else {
-  isOk = false;
+  _isOk = false;
  }
- jetOk = 0;
+ _jetOk = 0;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
@@ -136,20 +149,66 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   pid1 = pidl1;
   pid2 = pidl2;
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
-  isOk =  true;
+  _isOk =  true;
  }
  else {
-  isOk = false;
+  _isOk = false;
  }
  if( jetpt1>0) {
   J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1); //---- NB: jets are treated as massive
   if( jetpt2>0) {
    J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
-   jetOk = 2;
+   _jetOk = 2;
   }
   else {
-   jetOk = 1;
+   _jetOk = 1;
   }
+ }
+ 
+}
+
+//! check if ok
+
+//---- a function to check if "at least 2 leptons + met information" requirement is available
+//---- and to check if at least two jets are available
+void WW::checkIfOk() {
+ 
+ //---- leptons
+ if (_leptonspt.size() == _leptonseta.size()    &&   
+     _leptonspt.size() == _leptonsphi.size()    &&   
+     _leptonspt.size() == _leptonsflavour.size())
+  {
+   
+   int numLep = 0;   
+   for (int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+    if (_leptonspt.at(ilep) > 0.) numLep ++;
+   }
+   
+   //---- if 2 leptons and met is set
+   if (numLep >=2 && MET.E() > 0) {
+    _isOk = true;
+    _lepOk = numLep;
+   }
+  }
+  
+ //---- jets
+ 
+ if (_jetspt.size() == _jetseta.size()    &&   
+     _jetspt.size() == _jetsphi.size()    &&   
+     _jetspt.size() == _jetsmass.size())
+ {
+  
+  
+  int numJet = 0;
+  for (int ijet = 0; ijet < _jetspt.size(); ijet++) {
+   if (_jetspt.at(ijet) > 0.) numJet ++;
+  }
+  
+  //---- if 2 jets
+  if (numJet >=2) {
+   _jetOk = numJet;
+  }
+  
  }
  
 }
@@ -157,15 +216,21 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
 
 //! set functions
 
+void WW::setMET(float met, float metphi) {
+ MET.SetPtEtaPhiM(met, 0, metphi, 0.);
+}
+
+
+
 void WW::setJets(std::vector<float> invectorpt ) {
  _jetspt = invectorpt;
- jetOk = 0;  //---- protection need to update J1 and J2, but eta, phi and mass are missing!
+ _jetOk = 0;  //---- protection need to update J1 and J2, but eta, phi and mass are missing!
 }
 
 void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta) {
  _jetspt  = invectorpt;
  _jetseta = invectoreta;
- jetOk = 0;  //---- protection need to update J1 and J2, but eta, phi and mass are missing!
+ _jetOk = 0;  //---- protection need to update J1 and J2, but eta, phi and mass are missing!
 }
 
 void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass) {
@@ -177,15 +242,15 @@ void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, 
  //---- need to update J1 and J2
  if (( _jetspt.size() > 1 && _jetspt.at(0) > 0 && _jetspt.at(1) <= 0 ) || ( _jetspt.size() == 1 && _jetspt.at(0) > 0)) {
   J1.SetPtEtaPhiM(_jetspt.at(0), _jetseta.at(0), _jetsphi.at(0), _jetsmass.at(0)); //---- NB: jets are treated as massive
-  jetOk = 1;
+  _jetOk = 1;
  }
  else if ( _jetspt.size() > 1 && _jetspt.at(0) > 0 && _jetspt.at(1) > 0 ) {
   J1.SetPtEtaPhiM(_jetspt.at(0), _jetseta.at(0), _jetsphi.at(0), _jetsmass.at(0)); //---- NB: jets are treated as massive
   J2.SetPtEtaPhiM(_jetspt.at(1), _jetseta.at(1), _jetsphi.at(1), _jetsmass.at(1)); //---- NB: jets are treated as massive
-  jetOk = 2;
+  _jetOk = 2;
  }
  else { 
-  jetOk = 0;  //---- protection
+  _jetOk = 0;  //---- protection
  }
 }
 
@@ -210,7 +275,6 @@ void WW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoret
 
 
 
-void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
 
 
 
@@ -228,7 +292,7 @@ float WW::njet(){
 
 
 float WW::ptll(){
- if (isOk) {
+ if (_isOk) {
   return (L1+L2).Pt();
  }
  else {
@@ -238,7 +302,7 @@ float WW::ptll(){
 
 
 float WW::yll(){
- if (isOk) {
+ if (_isOk) {
   return (L1+L2).Rapidity();
  }
  else {
@@ -248,7 +312,7 @@ float WW::yll(){
 
 
 float WW::pTWW(){ 
- if (isOk) {
+ if (_isOk) {
   return (L1+L2+MET).Pt();
  }
  else {
@@ -258,7 +322,7 @@ float WW::pTWW(){
 
 
 float WW::dphill(){
- if (isOk) {
+ if (_isOk) {
   return fabs(L1.DeltaPhi(L2));
  }
  else {
@@ -269,7 +333,7 @@ float WW::dphill(){
 
 float WW::drll(){
  //---- https://root.cern.ch/doc/master/TLorentzVector_8h_source.html#l00469
- if (isOk) {
+ if (_isOk) {
   return L1.DeltaR(L2);
  }
  else {
@@ -278,7 +342,7 @@ float WW::drll(){
 }
 
 float WW::dphilljet(){ 
- if (isOk && jetOk >= 1) {
+ if (_isOk && _jetOk >= 1) {
   return  fabs( (L1+L2).DeltaPhi(J1) );
  }
  else {
@@ -288,7 +352,7 @@ float WW::dphilljet(){
 
 
 float WW::dphilljetjet(){ 
- if (isOk && jetOk >= 2) {
+ if (_isOk && _jetOk >= 2) {
    return  fabs( (L1+L2).DeltaPhi(J1+J2) );
  }
  else {
@@ -298,7 +362,7 @@ float WW::dphilljetjet(){
 
 
 float WW::dphilmet(){ 
- if (isOk) {
+ if (_isOk) {
   float d1 = fabs((L1).DeltaPhi(MET));
   float d2 = fabs((L2).DeltaPhi(MET));
   if (d1<d2) return d1;
@@ -311,7 +375,7 @@ float WW::dphilmet(){
 
 
 float WW::dphilmet1(){ 
- if (isOk) {
+ if (_isOk) {
   return fabs((L1).DeltaPhi(MET));
  }
  else {
@@ -320,7 +384,7 @@ float WW::dphilmet1(){
 }
 
 float WW::dphilmet2(){ 
- if (isOk) {
+ if (_isOk) {
   return fabs((L2).DeltaPhi(MET));
  }
  else {
@@ -330,7 +394,7 @@ float WW::dphilmet2(){
 
 
 float WW::mtw1(){ 
- if (isOk) {
+ if (_isOk) {
   return sqrt(2 * pt1() * pfmet() * (1 - cos( dphilmet1() )));
  }
  else {
@@ -340,7 +404,7 @@ float WW::mtw1(){
 
 
 float WW::mtw2(){ 
- if (isOk) {
+ if (_isOk) {
   return sqrt(2 * pt2() * pfmet() * (1 - cos( dphilmet2() )));
  }
  else {
@@ -354,7 +418,7 @@ float WW::mtw2(){
 
 float WW::pfmet(){
  
- if (isOk) {
+ if (_isOk) {
   return MET.Pt();
  }
  else {
@@ -368,7 +432,7 @@ float WW::pfmet(){
 //---- pt
 float WW::pt1(){
  
- if (isOk) {
+ if (_isOk) {
   return L1.Pt();
  }
  else {
@@ -379,7 +443,7 @@ float WW::pt1(){
 
 float WW::pt2(){
  
- if (isOk) {
+ if (_isOk) {
   return L2.Pt();
  }
  else {
@@ -390,7 +454,7 @@ float WW::pt2(){
 //---- eta
 float WW::eta1(){
  
- if (isOk) {
+ if (_isOk) {
   return L1.Eta();
  }
  else {
@@ -401,7 +465,7 @@ float WW::eta1(){
 
 float WW::eta2(){
  
- if (isOk) {
+ if (_isOk) {
   return L2.Eta();
  }
  else {
@@ -412,7 +476,7 @@ float WW::eta2(){
 //---- phi
 float WW::phi1(){
  
- if (isOk) {
+ if (_isOk) {
   return L1.Phi();
  }
  else {
@@ -423,7 +487,7 @@ float WW::phi1(){
 
 float WW::phi2(){
  
- if (isOk) {
+ if (_isOk) {
   return L2.Phi();
  }
  else {
@@ -435,7 +499,7 @@ float WW::phi2(){
 //---- mll
 float WW::mll(){
  
- if (isOk) {
+ if (_isOk) {
   return (L1+L2).M();
  }
  else {
@@ -446,7 +510,7 @@ float WW::mll(){
 
 float WW::dphillmet(){
  
- if (isOk) {
+ if (_isOk) {
   return  fabs( (L1+L2).DeltaPhi(MET) );
  }
  else {
@@ -457,7 +521,7 @@ float WW::dphillmet(){
 
 float WW::mth(){
  
- if (isOk) {
+ if (_isOk) {
   return sqrt( 2. * ptll() * MET.Pt() * ( 1. - cos (dphillmet()) ));
 //   AN 2011/155, v2, p19
 //   sqrt( 2 * pTll() * met(metToUse) * ( 1 - cos(dPhillMet(metToUse)) ) );
@@ -471,7 +535,7 @@ float WW::mth(){
 
 float WW::mcoll(){
  
- if (isOk) {
+ if (_isOk) {
   
   //---- project met to lepton direction
   float et_par_1 = MET.Pt() * cos ( fabs( (L1).DeltaPhi(MET) ) );
@@ -495,7 +559,7 @@ float WW::mcoll(){
 
 float WW::channel(){
  
- if (isOk) {
+ if (_isOk) {
   if( abs(pid1) == 11 ) {
       if( abs(pid2) == 11 ) return 1; // ee
       else if( abs(pid2) == 13 ) return 2; // em
@@ -519,7 +583,7 @@ float WW::channel(){
 // Jet Functions
 float WW::mjj(){
  
- if (jetOk >= 2) {
+ if (_jetOk >= 2) {
   return (J1+J2).M();
  }
  else {
@@ -530,7 +594,7 @@ float WW::mjj(){
 
 float WW::detajj(){
  
- if (jetOk >= 2) {
+ if (_jetOk >= 2) {
   return abs(J1.Eta()-J2.Eta());
  }
  else {
@@ -540,7 +604,7 @@ float WW::detajj(){
 
 
 float WW::dphijj(){
- if (isOk) {
+ if (_isOk) {
   return fabs(J1.DeltaPhi(J2));
  }
  else {
@@ -603,7 +667,7 @@ void functionMT2(int& npar, double* d, double& r, double par[], int flag){
 
 float WW::mT2(){
  
- if (isOk) {
+ if (_isOk) {
   
   if (VectX->size() != 6) { 
    VectX->push_back( L1.X()  );
@@ -671,7 +735,7 @@ float WW::mT2(){
 
 float WW::mllThird(){
  
- if (isOk) {
+ if (_isOk) {
   
   //---- check L3
   //----      pt3>2 GeV

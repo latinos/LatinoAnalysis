@@ -224,7 +224,15 @@ Module: efftfiller
        -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
        --effTrig=data/triggerEfficiencies.py
-          
+    
+
+
+Kinematic variables
+====
+    
+    gardener.py l2kinfiller --cmssw=763    input.root output.root
+    gardener.py l2kinfiller                input.root output.root
+
 
 Jet Energy Scale
 ====
