@@ -114,6 +114,41 @@ Steps= {
                   'subTargets' : ['puadder','baseW','wwNLL','l2sel']
                 },
 
+  'bSFL2Eff'   :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['bPogSF','TrigEff','LepEff','l2kin']
+                },
+
+  'JESup'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_JESup','bPogSF','l2kin']
+                },
+
+  'JESdo'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_JESdo','bPogSF','l2kin']
+                },
+
+  'LeppTup':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_LeppTup','TrigEff','LepEff','l2kin']
+              },
+
+  'LeppTdo':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_LeppTdo','TrigEff','LepEff','l2kin']
+              },
+
 # ... Individual Steps
 
   'mcwghtcount':{ 
@@ -194,14 +229,14 @@ Steps= {
                   'do4Data'    : True  ,
                },
 
-  'JESup'    : {
+  'do_JESup'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'command'    : 'gardener.py JESTreeMaker -k 1 '
                 } ,
 
-  'JESdo'    : {
+  'do_JESdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
@@ -215,14 +250,14 @@ Steps= {
                   'command'    : 'gardener.py btagPogScaleFactors '
               },
 
- 'LeppTup'    : {
+ 'do_LeppTup'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'command'    : 'gardener.py LeppTScalerTreeMaker --mu_Scl 1 --eEB_Scl 2 --eEE_Scl 5'
                 } ,
 
-  'LeppTdo'    : {
+ 'do_LeppTdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
