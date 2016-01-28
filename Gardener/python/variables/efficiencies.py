@@ -50,45 +50,71 @@ class EffLepFiller(TreeCloner):
         
         self.isoidScaleFactors = isoidScaleFactors
         
-        self.minpt = 0
-        self.maxpt = 1000
+        self.minpt_mu = 0
+        self.maxpt_mu = 200
+        self.mineta_mu = 0
+        self.maxeta_mu = 2.5
         
-        self.mineta = 0
-        self.maxeta = 4.0
-        
+        self.minpt_ele = 0
+        self.maxpt_ele = 200
+        self.mineta_ele = 0
+        self.maxeta_ele = 2.5
 
 
     def _getWeight (self, kindLep, pt, eta):
 
         # fix underflow and overflow
-        if pt < self.minpt:
-          pt = self.minpt
-        if pt > self.maxpt:
-          pt = self.maxpt
-        
-        if eta < self.mineta:
-          eta = self.mineta
-        if eta > self.maxeta:
-          eta = self.maxeta
+
+        if kindLep == 'ele' :          
+          if pt < self.minpt_ele:
+            pt = self.minpt_ele
+          if pt > self.maxpt_ele:
+            pt = self.maxpt_ele
+          
+          if eta < self.mineta_ele:
+            eta = self.mineta_ele
+          if eta > self.maxeta_ele:
+            eta = self.maxeta_ele
+
+        if kindLep == 'mu' :          
+          if pt < self.minpt_mu:
+            pt = self.minpt_mu
+          if pt > self.maxpt_mu:
+            pt = self.maxpt_mu
+          
+          if eta < self.mineta_mu:
+            eta = self.mineta_mu
+          if eta > self.maxeta_mu:
+            eta = self.maxeta_mu
+ 
  
         #print " self.isoidScaleFactors = ", self.isoidScaleFactors
         
         if kindLep in self.isoidScaleFactors.keys() : 
           # get the efficiency
           for point in self.isoidScaleFactors[kindLep] : 
-            #   pt           eta           down   value  up
-            # (( 0.0, 10.0), (0.0, 1.5), ( 0.980, 0.986, 0.999 ) ),
+            #   (( #   eta          ), (|    pt        |),   (   eff_data   stat   |     eff_mc   stat |      other nuisances
+            #  (( -2.500 ,  -2.000 ), ( 10.000 ,  20.000 ), ( 0.358 ,   0.009 ),     (  0.286 ,   0.002  ), ( 0.094 ,   0.048 ,   0.071 ,   0.127 ,   -1   ,    -1  ) ), 
+            
+            if ( eta >= point[0][0] and eta <= point[0][1] and         # the "=" in both directions is only used by the overflow bin
+                 pt  >= point[1][0] and pt  <= point[1][1] ) :         # in other cases the set is (min, max]
+                data = point[2][0]
+                mc   = point[3][0]
 
-            if ( pt  >= point[0][0] and pt  < point[0][1] and
-                 eta >= point[1][0] and eta < point[1][1] ) :
-                return point[2][0], point[2][1], point[2][2]
+                sigma_data = point[2][1]
+                sigma_mc   = point[3][1]
+                
+                scaleFactor = data / mc
+                error_scaleFactor = sqrt((sigma_data / mc) * (sigma_data / mc) + (data / mc / mc * sigma_mc)*(data / mc / mc * sigma_mc))
+                
+                return scaleFactor, error_scaleFactor
 
           # default ... it should never happen!
           # print " default ???"
-          return 1.0, 1.0, 1.0
+          return 1.0, 1.0
  
-        # not a lepton ... like some default value
-        return 1.0, 1.0, 1.0
+        # not a lepton ... like some default value: and what can it be if not a lepton? ah ah 
+        return 1.0, 1.0
    
 
     def process(self,**kwargs):
@@ -99,22 +125,21 @@ class EffLepFiller(TreeCloner):
         self.connect(tree,input)
 
         self.namesOldBranchesToBeModifiedVector = [
-           'std_vector_lepton_effW',
-           'std_vector_lepton_effW_Up',
-           'std_vector_lepton_effW_Down'
+           'std_vector_lepton_idisoW',
+           'std_vector_lepton_idisoW_Up',
+           'std_vector_lepton_idisoW_Down'                              
            ]
         
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
 
 
-        bvector_eff =  ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_lepton_effW',bvector_eff)
-        bvector_eff_Up =  ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_lepton_effW_Up',bvector_eff_Up)
-        bvector_eff_Down =  ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_lepton_effW_Down',bvector_eff_Down)
+        bvector_idiso =  ROOT.std.vector(float) ()
+        self.otree.Branch('std_vector_lepton_idisoW',bvector_idiso)
+        bvector_idiso_Up =  ROOT.std.vector(float) ()
+        self.otree.Branch('std_vector_lepton_idisoW_Up',bvector_idiso_Up)
+        bvector_idiso_Down =  ROOT.std.vector(float) ()
+        self.otree.Branch('std_vector_lepton_idisoW_Down',bvector_idiso_Down)
             
-
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
                 

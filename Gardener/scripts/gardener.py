@@ -11,6 +11,10 @@ from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 # efficiencies
 from LatinoAnalysis.Gardener.variables.efficiencies      import EffLepFiller,EffTrgFiller
 
+# id/isolation scale factors
+from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
+
+
 
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
@@ -62,6 +66,10 @@ if __name__ == '__main__':
     modules['puadder']          = PUpper()
     modules['effwfiller']       = EffLepFiller()
     modules['efftfiller']       = EffTrgFiller()
+
+
+# id/isolation scale factors
+    modules['idisofiller'] = IdIsoSFFiller()
 
 # specific variables for MC
 
