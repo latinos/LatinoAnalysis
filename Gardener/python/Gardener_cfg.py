@@ -119,7 +119,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['bPogSF','TrigEff','LepEff','l2kin']
+                  'subTargets' : ['bPogSF','TrigEff','IdIsoSC','l2kin']
                 },
 
   'JESup'     :  {
@@ -159,7 +159,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LeppTup','TrigEff','LepEff','l2kin'],
+                  'subTargets' : ['do_LeppTup','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
                                   'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
                                   'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
@@ -175,7 +175,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LeppTdo','TrigEff','LepEff','l2kin'],
+                  'subTargets' : ['do_LeppTdo','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
                                   'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
                                   'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
@@ -259,6 +259,13 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW'
+               },
+
+  'IdIsoSC'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py idisofiller'
                },
 
   'hadd'     : {
