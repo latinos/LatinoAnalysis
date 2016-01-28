@@ -8,8 +8,8 @@ from LatinoAnalysis.Gardener.gardening         import ModuleManager,Pruner,Graft
 # pileup
 from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 
-# efficiencies
-from LatinoAnalysis.Gardener.variables.efficiencies      import EffLepFiller,EffTrgFiller
+# trigger efficiencies
+from LatinoAnalysis.Gardener.variables.efficiencies               import EffTrgFiller
 
 # id/isolation scale factors
 from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
@@ -64,7 +64,8 @@ if __name__ == '__main__':
     #modules['wwfilter']         = WWPruner()
     #modules['wwflagger']        = WWFlagsGrafter()
     modules['puadder']          = PUpper()
-    modules['effwfiller']       = EffLepFiller()
+
+# trigger efficiency
     modules['efftfiller']       = EffTrgFiller()
 
 

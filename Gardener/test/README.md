@@ -211,20 +211,8 @@ Trigger efficiency
 ====
 
 Module: efftfiller
-          
-    gardener.py  efftfiller \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
-       test.root \
-       --effTrig=/afs/cern.ch/work/a/amassiro/Latinos/Framework/CMSSW_7_4_7/python/LatinoAnalysis/Gardener/data/triggerEfficiencies.py
-       
-       
-       
-       
-    gardener.py  efftfiller \
-       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
-       --effTrig=data/triggerEfficiencies.py
-    
+     
+    gardener.py  efftfiller    input.root output.root
 
            
 Id/isolation scale factors

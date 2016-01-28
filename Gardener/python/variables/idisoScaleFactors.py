@@ -60,14 +60,14 @@ class IdIsoSFFiller(TreeCloner):
         #print " idIsoScaleFactors = ", self.idIsoScaleFactors
         self.idIsoScaleFactors = idIsoScaleFactors
 
-        self.minpt_mu = 0
+        self.minpt_mu = 10
         self.maxpt_mu = 200
-        self.mineta_mu = 0
-        self.maxeta_mu = 2.5
+        self.mineta_mu = -2.4
+        self.maxeta_mu = 2.4
         
-        self.minpt_ele = 0
+        self.minpt_ele = 10
         self.maxpt_ele = 200
-        self.mineta_ele = 0
+        self.mineta_ele = -2.5
         self.maxeta_ele = 2.5
 
 
@@ -217,7 +217,7 @@ class IdIsoSFFiller(TreeCloner):
               eta = itree.std_vector_lepton_eta [iLep]
               flavour = itree.std_vector_lepton_flavour [iLep]
               
-              kindLep = 'lep' # ele or mu
+              kindLep = 'nonlep' # ele or mu
               if abs (flavour) == 11 : 
                 kindLep = 'ele'
               elif abs (flavour) == 13 :
