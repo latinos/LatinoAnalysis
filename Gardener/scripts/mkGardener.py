@@ -424,7 +424,8 @@ for iProd in prodList :
         wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
         if   options.runBatch: command=''
-        else:                  command='cd '+wDir+' ; '
+        #else:                  command='cd '+wDir+' ; '
+        else:                  command='cd /tmp/'+os.getlogin()+' ; '
 
         if iStep == 'hadd' :
           command+='cd /tmp/'+os.getlogin()+' ; '
