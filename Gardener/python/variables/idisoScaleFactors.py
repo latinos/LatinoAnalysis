@@ -102,30 +102,67 @@ class IdIsoSFFiller(TreeCloner):
         
         if kindLep in self.idIsoScaleFactors.keys() : 
           # get the efficiency
-          for point in self.idIsoScaleFactors[kindLep] : 
-            #   (( #   eta          ), (|    pt        |),   (   eff_data   stat   |     eff_mc   stat |      other nuisances
-            #  (( -2.500 ,  -2.000 ), ( 10.000 ,  20.000 ), ( 0.358 ,   0.009 ),     (  0.286 ,   0.002  ), ( 0.094 ,   0.048 ,   0.071 ,   0.127 ,   -1   ,    -1  ) ), 
-            
-            if ( eta >= point[0][0] and eta <= point[0][1] and         # the "=" in both directions is only used by the overflow bin
-                 pt  >= point[1][0] and pt  <= point[1][1] ) :         # in other cases the set is (min, max]
-                data = point[2][0]
-                mc   = point[3][0]
+          if kindLep == 'ele' :
+            for point in self.idIsoScaleFactors[kindLep] : 
+              #   (( #   eta          ), (|    pt        |),   (   eff_data   stat   |     eff_mc   stat |      other nuisances
+              #  (( -2.500 ,  -2.000 ), ( 10.000 ,  20.000 ), ( 0.358 ,   0.009 ),     (  0.286 ,   0.002  ), ( 0.094 ,   0.048 ,   0.071 ,   0.127 ,   -1   ,    -1  ) ), 
+              
+              if ( eta >= point[0][0] and eta <= point[0][1] and         # the "=" in both directions is only used by the overflow bin
+                   pt  >= point[1][0] and pt  <= point[1][1] ) :         # in other cases the set is (min, max]
+                  data = point[2][0]
+                  mc   = point[3][0]
+      
+                  sigma_data = point[2][1]
+                  sigma_mc   = point[3][1]
+                  
+                  scaleFactor = data / mc
+                  error_scaleFactor = math.sqrt((sigma_data / mc) * (sigma_data / mc) + (data / mc / mc * sigma_mc)*(data / mc / mc * sigma_mc))
+                  
+                  return scaleFactor, error_scaleFactor, error_scaleFactor
+      
+            # default ... it should never happen!
+            # print " default ???"
+            return 1.0, 0.0, 0.0
 
-                sigma_data = point[2][1]
-                sigma_mc   = point[3][1]
-                
-                scaleFactor = data / mc
-                error_scaleFactor = math.sqrt((sigma_data / mc) * (sigma_data / mc) + (data / mc / mc * sigma_mc)*(data / mc / mc * sigma_mc))
-                
-                return scaleFactor, error_scaleFactor
 
-          # default ... it should never happen!
-          # print " default ???"
-          return 1.0, 0.0
- 
+          elif kindLep == 'mu' :
+            for point in self.idIsoScaleFactors[kindLep] : 
+            #     Data                                                                                                   MC
+            # etamin  etamax            ptmin   ptmax         eff     deff_high       deff_low                                     eff     deff_high       deff_low
+            # ((  -2.4  ,  -2.1  ),   (  10  ,    12  ),   (  0.609191   ,     0.0505912    ,    0.046392      )      ,    (      0.662717    ,    0.0318054    ,    0.0310346    )  ),
+  
+              if ( eta >= point[0][0] and eta <= point[0][1] and         # the "=" in both directions is only used by the overflow bin
+                   pt  >= point[1][0] and pt  <= point[1][1] ) :         # in other cases the set is (min, max]
+                  data = point[2][0]
+                  mc   = point[3][0]
+      
+                  sigma_up_data = point[2][1]
+                  sigma_up_mc   = point[3][1]
+
+                  sigma_do_data = point[2][2]
+                  sigma_do_mc   = point[3][2]
+                  
+                  scaleFactor = data / mc
+                  error_scaleFactor_up = (data + sigma_up_data) / (mc - sigma_do_mc)  - scaleFactor
+                  error_scaleFactor_do = scaleFactor -   (data - sigma_do_data) / (mc + sigma_up_mc)  
+                  
+                  return scaleFactor, error_scaleFactor_do, error_scaleFactor_up
+      
+            # default ... it should never happen!
+            # print " default ???"
+            return 1.0, 0.0, 0.0
+
+      
+          # not a lepton ... like some default value: and what can it be if not a lepton? ah ah 
+          # --> it happens for default values -9999.
+          return 1.0, 0.0, 0.0
+
         # not a lepton ... like some default value: and what can it be if not a lepton? ah ah 
         # --> it happens for default values -9999.
-        return 1.0, 0.0
+        return 1.0, 0.0, 0.0
+
+
+
    
    
     def process(self,**kwargs):
@@ -187,11 +224,11 @@ class IdIsoSFFiller(TreeCloner):
                 kindLep = 'mu'
  
  
-              w, error_w = self._getWeight (kindLep, pt, eta)
+              w, error_w_lo, error_w_up = self._getWeight (kindLep, pt, eta)
              
               bvector_idiso.push_back(w)
-              bvector_idiso_Up.push_back(w+error_w)
-              bvector_idiso_Down.push_back(w-error_w)             
+              bvector_idiso_Up.push_back(w+error_w_up)
+              bvector_idiso_Down.push_back(w-error_w_lo)             
 
 
             otree.Fill()

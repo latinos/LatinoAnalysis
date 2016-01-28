@@ -74,11 +74,3 @@ idIsoScaleFactors['ele'] = [
                             
                             
 
-
-
-
-idIsoScaleFactors['mu'] = [
-                          #   pt           eta           value   down    up
-                          (( 0.0, 10.0   ), (0.0, 4.5), ( 0.980, 0.986, 0.999 ) ),
-                          ((10.0, 20000.0), (0.0, 4.5), ( 0.985, 0.989, 0.999 ) ),
-                         ]
