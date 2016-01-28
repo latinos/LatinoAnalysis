@@ -167,6 +167,13 @@ Steps= {
                   'command'    : 'gardener.py l2selfiller --kind 1 --cmssw RPLME_CMSSW'
                },
 
+  'l2kin'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW'
+               },
+
   'l2selFix'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
