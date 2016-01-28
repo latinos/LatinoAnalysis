@@ -120,10 +120,45 @@ class EffTrgFiller(TreeCloner):
         eff_sgl_1             , error_eff_sgl_1               = self._getEff (kindLep1, pt1, eta1, 'triggerSingleEle')
         eff_sgl_2             , error_eff_sgl_2               = self._getEff (kindLep2, pt2, eta2, 'triggerSingleEle')
         
-        evt_eff = 1 - \
-                  ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
+        evt_eff = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
                   + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
-                          
+
+        #  
+        # probability of passing the double lepton trigger + probability of passing the single lepton - the probability of passing both
+        #  
+        # probability of passing the double lepton trigger  ---> 1 - probability of not passing the double lepton trigger =
+        #                                                      = 1 - (probability for both leptons to fail the leading lepton
+        #                                                             + probability for the first  lepton to pass the leading leg but the second fails the trailing leg 
+        #                                                             + probability for the second lepton to pass the leading leg but the first  fails the trailing leg 
+        #                                           NEGLECTED:        + probability for both leptons to fail the trailing lepton 
+        #                                                            )
+        # 
+        # + probability of passing the single lepton trigger:
+        #                                                + probability that the second lepton passes the single lepton but the first  is failing the trailing trigger
+        #                                                + probability that the first  lepton passes the single lepton but the second is failing the trailing trigger
+        #                                                + probability that the first  lepton passes the single lepton but the second is failing the leading trigger
+        #                                                + probability that the seond  lepton passes the single lepton but the first  is failing the leading trigger
+        #
+        # - the probability of passing both:
+        #
+        #
+        #
+        # The part neglected above in the double lepton part is neglected because: 
+        #     - for double electron/muon triggers: if a lepton fails the trailing lepton, it will fail the leading lepton 
+        #                      --> then it is included in "probability for both leptons to fail the leading lepton" 
+        #
+        # why not adding?
+        # + probability that the first  lepton passes the single lepton but the second is failing the leading trigger
+        # + probability that the seond  lepton passes the single lepton but the first  is failing the leading trigger
+        # and neglecting the probability of passing both?
+        #
+        #  why why why ???
+        #
+        # For emu or mue events:
+        #   probability of passing the the trigger mu+e or the trigger e+mu or the single mu or the single e
+        #                             - 
+        
+        
         return evt_eff, 1.0, 1.0
        
        
