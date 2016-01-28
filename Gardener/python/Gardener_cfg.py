@@ -17,7 +17,8 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                       #  'dirExt'  : 'split' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
-                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root',
+                        #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root',
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
                       } ,
 
@@ -125,28 +126,48 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESup','bPogSF','l2kin']
+                  'subTargets' : ['do_JESup','bPogSF','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ',
+                                  'GluGluHToWWTo2L2Nu_M125'
+                                 ] ,
                 },
 
   'JESdo'     :  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESdo','bPogSF','l2kin']
+                  'subTargets' : ['do_JESdo','bPogSF','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ',
+                                  'GluGluHToWWTo2L2Nu_M125'
+                                 ] ,
                 },
 
   'LeppTup':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LeppTup','TrigEff','LepEff','l2kin']
+                  'subTargets' : ['do_LeppTup','TrigEff','LepEff','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ',
+                                  'GluGluHToWWTo2L2Nu_M125'
+                                 ] ,
               },
 
   'LeppTdo':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LeppTdo','TrigEff','LepEff','l2kin']
+                  'subTargets' : ['do_LeppTdo','TrigEff','LepEff','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ',
+                                  'GluGluHToWWTo2L2Nu_M125'
+                                 ] ,
               },
 
 # ... Individual Steps
