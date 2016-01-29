@@ -307,14 +307,14 @@ Steps= {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker --mu_Scl 1 --eEB_Scl 2 --eEE_Scl 5'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker -v 1.0'
                  } ,
   
   'do_LeppTdo'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker --mu_Scl -1 --eEB_Scl -2 --eEE_Scl -5'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker -v -1.0'
                  } ,
   
   
