@@ -53,6 +53,7 @@ public:
  float mtw1();
  float mtw2();
  float pfmet();
+ float projpfmet();
  
  float mth();
  float mcoll();
@@ -414,8 +415,6 @@ float WW::mtw2(){
 
 
 
-
-
 float WW::pfmet(){
  
  if (_isOk) {
@@ -427,6 +426,18 @@ float WW::pfmet(){
 }
 
 
+float WW::projpfmet(){
+ 
+  if (_isOk) {
+    if (dphilmet() < TMath::Pi() / 2.)
+      return sin(dphilmet()) * MET.Pt();
+    else
+      return MET.Pt();
+  }
+  else {
+    return -9999.0;
+  }
+}
 
 
 //---- pt
