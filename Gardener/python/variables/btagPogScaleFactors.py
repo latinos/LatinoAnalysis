@@ -224,7 +224,7 @@ class btagPogScaleFactors(TreeCloner):
         std_vector_jet_eta = ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_jet_eta',std_vector_jet_eta)
         std_vector_jet_HadronFlavour = ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_jet_HadronFlavour',std_vector_jet_eta)
+        self.otree.Branch('std_vector_jet_HadronFlavour',std_vector_jet_HadronFlavour)
         std_vector_jet_csvv2ivf = ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_jet_csvv2ivf',std_vector_jet_csvv2ivf)
 
