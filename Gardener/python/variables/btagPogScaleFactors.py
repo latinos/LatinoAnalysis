@@ -218,16 +218,6 @@ class btagPogScaleFactors(TreeCloner):
         self.otree.Branch('bTPSF2JetDown',bTPSF2JetDown,'bTPSF2JetDown/F')
 
 
-
-        std_vector_jet_pt = ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_jet_pt',std_vector_jet_pt)
-        std_vector_jet_eta = ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_jet_eta',std_vector_jet_eta)
-        std_vector_jet_HadronFlavour = ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_jet_HadronFlavour',std_vector_jet_HadronFlavour)
-        std_vector_jet_csvv2ivf = ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_jet_csvv2ivf',std_vector_jet_csvv2ivf)
-
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
                 
@@ -243,19 +233,14 @@ class btagPogScaleFactors(TreeCloner):
             if i > 0 and i%step == 0.:
               print i,'events processed.'
 
-            std_vector_jet_pt.clear()
-            std_vector_jet_eta.clear()
-            std_vector_jet_HadronFlavour.clear()
-            std_vector_jet_csvv2ivf.clear()
-            
 
             pData         = 1.
             pDataUp       = 1.
             pDataDown     = 1.
 
-            pDataTP         = 1.
-            pDataTPUp       = 1.
-            pDataTPDown     = 1.
+            pDataTP       = 1.
+            pDataTPUp     = 1.
+            pDataTPDown   = 1.
 
             pMC           = 1.
 
@@ -266,7 +251,7 @@ class btagPogScaleFactors(TreeCloner):
               pt      = itree.std_vector_jet_pt [iJet]
               eta     = itree.std_vector_jet_eta [iJet]
               flavour = itree.std_vector_jet_HadronFlavour [iJet]
-              tagged  =  itree.std_vector_jet_csvv2ivf[iJet] > self.cut
+              tagged  = itree.std_vector_jet_csvv2ivf[iJet] > self.cut
              
               if pt > self.minpt and abs(eta) < self.maxeta:
 
