@@ -210,16 +210,16 @@ class EffTrgFiller(TreeCloner):
             singleLegA  = "triggerSingleMu"
             singleLegB  = "triggerSingleEle"
             doubleLegHigPtA = "triggerMuEleLegHigPt"
-            doubleLegHigPtB = "triggerMuEleLegHigPt"
-            doubleLegLowPtA = "triggerMuEleLegLowPt"
+            doubleLegHigPtB = "triggerEleMuLegHigPt"
+            doubleLegLowPtA = "triggerEleMuLegLowPt"
             doubleLegLowPtB = "triggerMuEleLegLowPt"
             
           if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
             singleLegA  = "triggerSingleEle"
             singleLegB  = "triggerSingleMu"
             doubleLegHigPtA = "triggerEleMuLegHigPt"
-            doubleLegHigPtB = "triggerEleMuLegHigPt"
-            doubleLegLowPtA = "triggerEleMuLegLowPt"
+            doubleLegHigPtB = "triggerMuEleLegHigPt"
+            doubleLegLowPtA = "triggerMuEleLegLowPt"
             doubleLegLowPtB = "triggerEleMuLegLowPt"
        
           
