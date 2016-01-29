@@ -99,6 +99,18 @@ class EffTrgFiller(TreeCloner):
         self.list_triggers['triggerEleMuLegHigPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegHigPt]
         self.list_triggers['triggerEleMuLegLowPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegLowPt]
 
+
+        self.minpt_mu = 10
+        self.maxpt_mu = 200
+        self.mineta_mu = -2.4
+        self.maxeta_mu = 2.4
+        
+        self.minpt_ele = 10
+        self.maxpt_ele = 200
+        self.mineta_ele = -2.5
+        self.maxeta_ele = 2.5
+
+
         #     eta              pt          value    error
         # '-2.5', '-2.0', '10.0', '15.0', '0.000', '0.000'
         #
