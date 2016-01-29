@@ -428,7 +428,7 @@ float WW::pfmet(){
 
 float WW::projpfmet(){
  
-  if (isOk) {
+  if (_isOk) {
     if (dphilmet() < TMath::Pi() / 2.)
       return sin(dphilmet()) * MET.Pt();
     else
