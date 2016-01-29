@@ -261,12 +261,12 @@ for iProd in prodList :
           #  else:
           #    if not iTree in FileExistList and selectSample: targetList[iSample] = 'NOSPLIT'
         #else: 
-        print iSample, selectSample 
+        #print iSample, selectSample 
         for iFile in FileInList:
             if options.redo or not iFile in FileExistList :
               if selectSample and iSample.replace('_25ns','') in iFile:
                 iKey = iFile.replace('latino_','').replace('.root','')
-                print iKey
+                #print iKey
                 if '_000' in iKey :
                   aSample = iKey.split('_000')[0]
                 elif '__part' in iKey :
@@ -424,7 +424,8 @@ for iProd in prodList :
         wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
         if   options.runBatch: command=''
-        else:                  command='cd '+wDir+' ; '
+        #else:                  command='cd '+wDir+' ; '
+        else:                  command='cd /tmp/'+os.getlogin()+' ; '
 
         if iStep == 'hadd' :
           command+='cd /tmp/'+os.getlogin()+' ; '

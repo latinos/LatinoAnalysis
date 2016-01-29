@@ -8,12 +8,19 @@ from LatinoAnalysis.Gardener.gardening         import ModuleManager,Pruner,Graft
 # pileup
 from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 
-# efficiencies
-from LatinoAnalysis.Gardener.variables.efficiencies      import EffLepFiller,EffTrgFiller
+# trigger efficiencies
+from LatinoAnalysis.Gardener.variables.efficiencies               import EffTrgFiller
+
+# id/isolation scale factors
+from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
+
 
 
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
+
+# kinematic variables
+from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
 
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
@@ -57,8 +64,13 @@ if __name__ == '__main__':
     #modules['wwfilter']         = WWPruner()
     #modules['wwflagger']        = WWFlagsGrafter()
     modules['puadder']          = PUpper()
-    modules['effwfiller']       = EffLepFiller()
+
+# trigger efficiency
     modules['efftfiller']       = EffTrgFiller()
+
+
+# id/isolation scale factors
+    modules['idisofiller'] = IdIsoSFFiller()
 
 # specific variables for MC
 
@@ -88,6 +100,10 @@ if __name__ == '__main__':
 
 # apply selections and update variables
     modules['l2selfiller']     = L2SelFiller()
+
+
+# update kinematic variables
+    modules['l2kinfiller']     = L2KinFiller()
 
 # Nuisances
     modules['JESTreeMaker']         = JESTreeMaker()

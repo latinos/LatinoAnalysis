@@ -17,7 +17,8 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                       #  'dirExt'  : 'split' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
-                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root',
+                        #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root',
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
                       } ,
 
@@ -114,6 +115,78 @@ Steps= {
                   'subTargets' : ['puadder','baseW','wwNLL','l2sel']
                 },
 
+  'bSFL2Eff'   :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['bPogSF','TrigEff','IdIsoSC','l2kin']
+                },
+
+  'JESup'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_JESup','bPogSF','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+
+                                 ] ,
+                },
+
+  'JESdo'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_JESdo','bPogSF','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                 ] ,
+                },
+
+  'LeppTup':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_LeppTup','TrigEff','IdIsoSC','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                 ] ,
+              },
+
+  'LeppTdo':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_LeppTdo','TrigEff','IdIsoSC','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                 ] ,
+              },
+
 # ... Individual Steps
 
   'mcwghtcount':{ 
@@ -167,6 +240,13 @@ Steps= {
                   'command'    : 'gardener.py l2selfiller --kind 1 --cmssw RPLME_CMSSW'
                },
 
+  'l2kin'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW'
+               },
+
   'l2selFix'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -181,20 +261,27 @@ Steps= {
                   'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
+  'IdIsoSC'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py idisofiller'
+               },
+
   'hadd'     : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                },
 
-  'JESup'    : {
+  'do_JESup'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'command'    : 'gardener.py JESTreeMaker -k 1 '
                 } ,
 
-  'JESdo'    : {
+  'do_JESdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
@@ -208,14 +295,14 @@ Steps= {
                   'command'    : 'gardener.py btagPogScaleFactors '
               },
 
- 'LeppTup'    : {
+ 'do_LeppTup'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'command'    : 'gardener.py LeppTScalerTreeMaker --mu_Scl 1 --eEB_Scl 2 --eEE_Scl 5'
                 } ,
 
-  'LeppTdo'    : {
+ 'do_LeppTdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
