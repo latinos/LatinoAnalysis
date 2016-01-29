@@ -123,7 +123,7 @@ class L2SelFiller(TreeCloner):
            'mcoll',
            'channel',
            #'pfmet',
-           #'projpfmet',
+           'projpfmet',
 
            'drll',
            'dphilljet',
