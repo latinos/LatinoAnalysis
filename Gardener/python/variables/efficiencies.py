@@ -52,7 +52,7 @@ class EffTrgFiller(TreeCloner):
         if opts.triggerDoubleEleLegLowPt == None :
           opts.triggerDoubleEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele17_12LegLowPt.txt'
         if opts.triggerSingleEle == None :
-          opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele23_WPLoose.txt'
+          opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele23Single.txt'
 
         if opts.triggerDoubleMuLegHigPt == None :
           opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLegHigPt.txt'
@@ -101,8 +101,13 @@ class EffTrgFiller(TreeCloner):
 
         #     eta              pt          value    error
         # '-2.5', '-2.0', '10.0', '15.0', '0.000', '0.000'
-
-
+        #
+        # or
+        #
+        #     eta              pt          value    error_high    error_low
+        # '-2.5', '-2.0', '10.0', '15.0', '0.000', '0.000',     '0.000'
+        #
+        
     def _getEff (self, pt, eta, whichTrigger):
         
         for point in self.list_triggers[whichTrigger] :
@@ -113,9 +118,23 @@ class EffTrgFiller(TreeCloner):
                eff       = float(point[4])
                error_eff = float(point[5])
                
-               return eff, error_eff
+               error_eff_up = eff + error_eff
+               error_eff_lo = eff - error_eff
+               
+               # muons and electrons have provided different formats!
+               if len(point) > 6 :
+                  error_eff_lo = float(point[6])
+                  error_eff_lo = eff - error_eff_lo                  
+               
+               # correction not to have >1 probability!!!
+               if error_eff_up > 1.0 : 
+                 error_eff_up = 1.0
+               if error_eff_lo < 0.0 :
+                 error_eff_lo = 0.0
+                 
+               return eff, error_eff_lo, error_eff_up
         
-        return 0. , 0.
+        return 0. , 0., 0.
            
          
          
@@ -151,134 +170,135 @@ class EffTrgFiller(TreeCloner):
 
     def _getWeight (self, kindLep1, pt1, eta1, kindLep2, pt2, eta2):
 
-        self._fixOverflowUnderflow (kindLep1, pt1, eta1)  
-        self._fixOverflowUnderflow (kindLep2, pt2, eta2)  
-        
-        #
-        # ele = 11
-        # mu  = 13
-        #
-        singleLegA = "-"
-        singleLegB = "-"
-        doubleLegHigPtA = "-"
-        doubleLegHigPtB = "-"
-        doubleLegLowPtA = "-"
-        doubleLegLowPtB = "-"
-        
-        
-        if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
-          singleLegA  = "triggerSingleEle"
-          singleLegB  = "triggerSingleEle"
-          doubleLegHigPtA = "triggerDoubleEleLegHigPt"
-          doubleLegHigPtB = "triggerDoubleEleLegHigPt"
-          doubleLegLowPtA = "triggerDoubleEleLegLowPt"
-          doubleLegLowPtB = "triggerDoubleEleLegLowPt"
+        # only if leptons!
+        if kindLep1 > -20 and kindLep2 > -20 :
+         
+          self._fixOverflowUnderflow (kindLep1, pt1, eta1)  
+          self._fixOverflowUnderflow (kindLep2, pt2, eta2)  
           
-        if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
-          singleLegA  = "triggerSingleMu"
-          singleLegB  = "triggerSingleMu"
-          doubleLegHigPtA = "triggerDoubleMuLegHigPt"
-          doubleLegHigPtB = "triggerDoubleMuLegHigPt"
-          doubleLegLowPtA = "triggerDoubleMuLegLowPt"
-          doubleLegLowPtB = "triggerDoubleMuLegLowPt"
-
-        if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
-          singleLegA  = "triggerSingleMu"
-          singleLegB  = "triggerSingleEle"
-          doubleLegHigPtA = "triggerMuEleLegHigPt"
-          doubleLegHigPtB = "triggerMuEleLegHigPt"
-          doubleLegLowPtA = "triggerMuEleLegLowPt"
-          doubleLegLowPtB = "triggerMuEleLegLowPt"
+          #
+          # ele = 11
+          # mu  = 13
+          #
+          singleLegA = "-"
+          singleLegB = "-"
+          doubleLegHigPtA = "-"
+          doubleLegHigPtB = "-"
+          doubleLegLowPtA = "-"
+          doubleLegLowPtB = "-"
           
-        if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
-          singleLegA  = "triggerSingleEle"
-          singleLegB  = "triggerSingleMu"
-          doubleLegHigPtA = "triggerEleMuLegHigPt"
-          doubleLegHigPtB = "triggerEleMuLegHigPt"
-          doubleLegLowPtA = "triggerEleMuLegLowPt"
-          doubleLegLowPtB = "triggerEleMuLegLowPt"
-
-        
-        eff_dbl_1_leadingleg  , error_eff_dbl_1_leadingleg    = self._getEff (pt1, eta1, doubleLegHigPtA)
-        eff_dbl_2_leadingleg  , error_eff_dbl_2_leadingleg    = self._getEff (pt2, eta2, doubleLegHigPtB)
-        eff_dbl_1_trailingleg , error_eff_dbl_1_trailingleg   = self._getEff (pt1, eta1, doubleLegLowPtA)
-        eff_dbl_2_trailingleg , error_eff_dbl_2_trailingleg   = self._getEff (pt2, eta2, doubleLegLowPtB)
-        eff_sgl_1             , error_eff_sgl_1               = self._getEff (pt1, eta1, singleLegA)
-        eff_sgl_2             , error_eff_sgl_2               = self._getEff (pt2, eta2, singleLegB)
-        
-        evt_eff = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
-                  + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
-
-        # up variation ...
-        
-        eff_dbl_1_leadingleg  += error_eff_dbl_1_leadingleg    
-        eff_dbl_2_leadingleg  += error_eff_dbl_2_leadingleg    
-        eff_dbl_1_trailingleg += error_eff_dbl_1_trailingleg   
-        eff_dbl_2_trailingleg += error_eff_dbl_2_trailingleg   
-        eff_sgl_1             += error_eff_sgl_1               
-        eff_sgl_2             += error_eff_sgl_2            
-        
-        evt_eff_error_up = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
-                  + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
-
-
-        # and low variation ...
-        eff_dbl_1_leadingleg  -= error_eff_dbl_1_leadingleg   
-        eff_dbl_2_leadingleg  -= error_eff_dbl_2_leadingleg   
-        eff_dbl_1_trailingleg -= error_eff_dbl_1_trailingleg  
-        eff_dbl_2_trailingleg -= error_eff_dbl_2_trailingleg  
-        eff_sgl_1             -= error_eff_sgl_1              
-        eff_sgl_2             -= error_eff_sgl_2            
-  
-        eff_dbl_1_leadingleg  -= error_eff_dbl_1_leadingleg   
-        eff_dbl_2_leadingleg  -= error_eff_dbl_2_leadingleg   
-        eff_dbl_1_trailingleg -= error_eff_dbl_1_trailingleg  
-        eff_dbl_2_trailingleg -= error_eff_dbl_2_trailingleg  
-        eff_sgl_1             -= error_eff_sgl_1              
-        eff_sgl_2             -= error_eff_sgl_2            
-        
-   
-        evt_eff_error_low = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
-                  + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
-        
-        
-        #  
-        # probability of passing the double lepton trigger + probability of passing the single lepton - the probability of passing both
-        #  
-        # probability of passing the double lepton trigger  ---> 1 - probability of not passing the double lepton trigger =
-        #                                                      = 1 - (probability for both leptons to fail the leading lepton
-        #                                                             + probability for the first  lepton to pass the leading leg but the second fails the trailing leg 
-        #                                                             + probability for the second lepton to pass the leading leg but the first  fails the trailing leg 
-        #                                           NEGLECTED:        + probability for both leptons to fail the trailing lepton 
-        #                                                            )
-        # 
-        # + probability of passing the single lepton trigger:
-        #                                                + probability that the second lepton passes the single lepton but the first  is failing the trailing trigger
-        #                                                + probability that the first  lepton passes the single lepton but the second is failing the trailing trigger
-        #                                                + probability that the first  lepton passes the single lepton but the second is failing the leading trigger
-        #                                                + probability that the seond  lepton passes the single lepton but the first  is failing the leading trigger
-        #
-        # - the probability of passing both:
-        #
-        #
-        #
-        # The part neglected above in the double lepton part is neglected because: 
-        #     - for double electron/muon triggers: if a lepton fails the trailing lepton, it will fail the leading lepton 
-        #                      --> then it is included in "probability for both leptons to fail the leading lepton" 
-        #
-        # why not adding?
-        # + probability that the first  lepton passes the single lepton but the second is failing the leading trigger
-        # + probability that the seond  lepton passes the single lepton but the first  is failing the leading trigger
-        # and neglecting the probability of passing both?
-        #
-        #  why why why ???
-        #
-        # For emu or mue events:
-        #   probability of passing the the trigger mu+e or the trigger e+mu or the single mu or the single e
-        #                             - 
-        
-        
-        return evt_eff, evt_eff_error_low, evt_eff_error_up
+          #print " kindLep1 = ", kindLep1, " kindLep2 = ", kindLep2
+          
+          
+          if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
+            singleLegA  = "triggerSingleEle"
+            singleLegB  = "triggerSingleEle"
+            doubleLegHigPtA = "triggerDoubleEleLegHigPt"
+            doubleLegHigPtB = "triggerDoubleEleLegHigPt"
+            doubleLegLowPtA = "triggerDoubleEleLegLowPt"
+            doubleLegLowPtB = "triggerDoubleEleLegLowPt"
+            
+          if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
+            singleLegA  = "triggerSingleMu"
+            singleLegB  = "triggerSingleMu"
+            doubleLegHigPtA = "triggerDoubleMuLegHigPt"
+            doubleLegHigPtB = "triggerDoubleMuLegHigPt"
+            doubleLegLowPtA = "triggerDoubleMuLegLowPt"
+            doubleLegLowPtB = "triggerDoubleMuLegLowPt"
+       
+          if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
+            singleLegA  = "triggerSingleMu"
+            singleLegB  = "triggerSingleEle"
+            doubleLegHigPtA = "triggerMuEleLegHigPt"
+            doubleLegHigPtB = "triggerMuEleLegHigPt"
+            doubleLegLowPtA = "triggerMuEleLegLowPt"
+            doubleLegLowPtB = "triggerMuEleLegLowPt"
+            
+          if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
+            singleLegA  = "triggerSingleEle"
+            singleLegB  = "triggerSingleMu"
+            doubleLegHigPtA = "triggerEleMuLegHigPt"
+            doubleLegHigPtB = "triggerEleMuLegHigPt"
+            doubleLegLowPtA = "triggerEleMuLegLowPt"
+            doubleLegLowPtB = "triggerEleMuLegLowPt"
+       
+          
+          eff_dbl_1_leadingleg  , low_eff_dbl_1_leadingleg  , high_eff_dbl_1_leadingleg   = self._getEff (pt1, eta1, doubleLegHigPtA)
+          eff_dbl_2_leadingleg  , low_eff_dbl_2_leadingleg  , high_eff_dbl_2_leadingleg   = self._getEff (pt2, eta2, doubleLegHigPtB)
+          eff_dbl_1_trailingleg , low_eff_dbl_1_trailingleg , high_eff_dbl_1_trailingleg  = self._getEff (pt1, eta1, doubleLegLowPtA)
+          eff_dbl_2_trailingleg , low_eff_dbl_2_trailingleg , high_eff_dbl_2_trailingleg  = self._getEff (pt2, eta2, doubleLegLowPtB)
+          eff_sgl_1             , low_eff_sgl_1             , high_eff_sgl_1              = self._getEff (pt1, eta1, singleLegA)
+          eff_sgl_2             , low_eff_sgl_2             , high_eff_sgl_2              = self._getEff (pt2, eta2, singleLegB)
+          
+          evt_eff = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
+                    + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
+       
+          # up variation ...
+          
+          eff_dbl_1_leadingleg  = high_eff_dbl_1_leadingleg    
+          eff_dbl_2_leadingleg  = high_eff_dbl_2_leadingleg    
+          eff_dbl_1_trailingleg = high_eff_dbl_1_trailingleg   
+          eff_dbl_2_trailingleg = high_eff_dbl_2_trailingleg   
+          eff_sgl_1             = high_eff_sgl_1               
+          eff_sgl_2             = high_eff_sgl_2            
+          
+          evt_eff_error_up = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
+                    + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
+       
+       
+          # and low variation ...
+          eff_dbl_1_leadingleg  = low_eff_dbl_1_leadingleg   
+          eff_dbl_2_leadingleg  = low_eff_dbl_2_leadingleg   
+          eff_dbl_1_trailingleg = low_eff_dbl_1_trailingleg  
+          eff_dbl_2_trailingleg = low_eff_dbl_2_trailingleg  
+          eff_sgl_1             = low_eff_sgl_1              
+          eff_sgl_2             = low_eff_sgl_2              
+       
+          evt_eff_error_low = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
+                    + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
+          
+          
+          #  
+          # probability of passing the double lepton trigger + probability of passing the single lepton - the probability of passing both
+          #  
+          # probability of passing the double lepton trigger  ---> 1 - probability of not passing the double lepton trigger =
+          #                                                      = 1 - (probability for both leptons to fail the leading lepton
+          #                                                             + probability for the first  lepton to pass the leading leg but the second fails the trailing leg 
+          #                                                             + probability for the second lepton to pass the leading leg but the first  fails the trailing leg 
+          #                                           NEGLECTED:        + probability for both leptons to fail the trailing lepton 
+          #                                                            )
+          # 
+          # + probability of passing the single lepton trigger:
+          #                                                + probability that the second lepton passes the single lepton but the first  is failing the trailing trigger
+          #                                                + probability that the first  lepton passes the single lepton but the second is failing the trailing trigger
+          #                                                + probability that the first  lepton passes the single lepton but the second is failing the leading trigger
+          #                                                + probability that the seond  lepton passes the single lepton but the first  is failing the leading trigger
+          #
+          # - the probability of passing both:
+          #
+          #
+          #
+          # The part neglected above in the double lepton part is neglected because: 
+          #     - for double electron/muon triggers: if a lepton fails the trailing lepton, it will fail the leading lepton 
+          #                      --> then it is included in "probability for both leptons to fail the leading lepton" 
+          #
+          # why not adding?
+          # + probability that the first  lepton passes the single lepton but the second is failing the leading trigger
+          # + probability that the seond  lepton passes the single lepton but the first  is failing the leading trigger
+          # and neglecting the probability of passing both?
+          #
+          #  why why why ???
+          #
+          # For emu or mue events:
+          #   probability of passing the the trigger mu+e or the trigger e+mu or the single mu or the single e
+          #                             - 
+          
+          
+          return evt_eff, evt_eff_error_low, evt_eff_error_up
+        else : 
+          # if for any reason it is not a lepton ... 
+          return 1, 1, 1
+       
        
        
     def process(self,**kwargs):
