@@ -189,7 +189,7 @@ class EffTrgFiller(TreeCloner):
           
           #print " kindLep1 = ", kindLep1, " kindLep2 = ", kindLep2
           
-          
+          #                  ele                     ele
           if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
             singleLegA  = "triggerSingleEle"
             singleLegB  = "triggerSingleEle"
@@ -197,7 +197,8 @@ class EffTrgFiller(TreeCloner):
             doubleLegHigPtB = "triggerDoubleEleLegHigPt"
             doubleLegLowPtA = "triggerDoubleEleLegLowPt"
             doubleLegLowPtB = "triggerDoubleEleLegLowPt"
-            
+
+          #                   mu                      mu            
           if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
             singleLegA  = "triggerSingleMu"
             singleLegB  = "triggerSingleMu"
@@ -205,7 +206,8 @@ class EffTrgFiller(TreeCloner):
             doubleLegHigPtB = "triggerDoubleMuLegHigPt"
             doubleLegLowPtA = "triggerDoubleMuLegLowPt"
             doubleLegLowPtB = "triggerDoubleMuLegLowPt"
-       
+
+          #                   mu                     ele       
           if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
             singleLegA  = "triggerSingleMu"
             singleLegB  = "triggerSingleEle"
@@ -213,7 +215,8 @@ class EffTrgFiller(TreeCloner):
             doubleLegHigPtB = "triggerEleMuLegHigPt"
             doubleLegLowPtA = "triggerEleMuLegLowPt"
             doubleLegLowPtB = "triggerMuEleLegLowPt"
-            
+
+          #                   ele                     mu                   
           if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
             singleLegA  = "triggerSingleEle"
             singleLegB  = "triggerSingleMu"
