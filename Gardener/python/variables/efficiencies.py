@@ -28,18 +28,18 @@ class EffTrgFiller(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
 
-        group.add_option('--triggerDoubleEleLeg1', dest='triggerDoubleEleLeg1', help='file with trigger efficiencies triggerDoubleEleLeg1', default=None)
-        group.add_option('--triggerDoubleEleLeg2', dest='triggerDoubleEleLeg2', help='file with trigger efficiencies triggerDoubleEleLeg2', default=None)
+        group.add_option('--triggerDoubleEleLegHigPt', dest='triggerDoubleEleLegHigPt', help='file with trigger efficiencies triggerDoubleEleLegHigPt', default=None)
+        group.add_option('--triggerDoubleEleLegLowPt', dest='triggerDoubleEleLegLowPt', help='file with trigger efficiencies triggerDoubleEleLegLowPt', default=None)
         group.add_option('--triggerSingleEle',     dest='triggerSingleEle',     help='file with trigger efficiencies triggerSingleEle',     default=None)
 
-        group.add_option('--triggerDoubleMuLeg1', dest='triggerDoubleMuLeg1', help='file with trigger efficiencies triggerDoubleMuLeg1', default=None)
-        group.add_option('--triggerDoubleMuLeg2', dest='triggerDoubleMuLeg2', help='file with trigger efficiencies triggerDoubleMuLeg2', default=None)
+        group.add_option('--triggerDoubleMuLegHigPt', dest='triggerDoubleMuLegHigPt', help='file with trigger efficiencies triggerDoubleMuLegHigPt', default=None)
+        group.add_option('--triggerDoubleMuLegLowPt', dest='triggerDoubleMuLegLowPt', help='file with trigger efficiencies triggerDoubleMuLegLowPt', default=None)
         group.add_option('--triggerSingleMu',     dest='triggerSingleMu',     help='file with trigger efficiencies triggerSingleMu',     default=None)
 
-        group.add_option('--triggerMuEleLeg1', dest='triggerMuEleLeg1', help='file with trigger efficiencies triggerMuEleLeg1', default=None)
-        group.add_option('--triggerMuEleLeg2', dest='triggerMuEleLeg2', help='file with trigger efficiencies triggerMuEleLeg2', default=None)
-        group.add_option('--triggerEleMuLeg1', dest='triggerEleMuLeg1', help='file with trigger efficiencies triggerEleMuLeg1', default=None)
-        group.add_option('--triggerEleMuLeg2', dest='triggerEleMuLeg2', help='file with trigger efficiencies triggerEleMuLeg2', default=None)
+        group.add_option('--triggerMuEleLegHigPt', dest='triggerMuEleLegHigPt', help='file with trigger efficiencies triggerMuEleLegHigPt', default=None)
+        group.add_option('--triggerMuEleLegLowPt', dest='triggerMuEleLegLowPt', help='file with trigger efficiencies triggerMuEleLegLowPt', default=None)
+        group.add_option('--triggerEleMuLegHigPt', dest='triggerEleMuLegHigPt', help='file with trigger efficiencies triggerEleMuLegHigPt', default=None)
+        group.add_option('--triggerEleMuLegLowPt', dest='triggerEleMuLegLowPt', help='file with trigger efficiencies triggerEleMuLegLowPt', default=None)
 
         parser.add_option_group(group)
         return group 
@@ -47,57 +47,57 @@ class EffTrgFiller(TreeCloner):
     def checkOptions(self,opts):
        
         cmssw_base = os.getenv('CMSSW_BASE')
-        if opts.triggerDoubleEleLeg1 == None :
-          opts.triggerDoubleEleLeg1 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele17_12Leg1.txt'
-        if opts.triggerDoubleEleLeg2 == None :
-          opts.triggerDoubleEleLeg2 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele17_12Leg2.txt'
+        if opts.triggerDoubleEleLegHigPt == None :
+          opts.triggerDoubleEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele17_12LegHigPt.txt'
+        if opts.triggerDoubleEleLegLowPt == None :
+          opts.triggerDoubleEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele17_12LegLowPt.txt'
         if opts.triggerSingleEle == None :
           opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele23_WPLoose.txt'
 
-        if opts.triggerDoubleMuLeg1 == None :
-          opts.triggerDoubleMuLeg1 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLeg1.txt'
-        if opts.triggerDoubleMuLeg2 == None :
-          opts.triggerDoubleMuLeg2 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLeg2.txt'
+        if opts.triggerDoubleMuLegHigPt == None :
+          opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLegHigPt.txt'
+        if opts.triggerDoubleMuLegLowPt == None :
+          opts.triggerDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLegLowPt.txt'
         if opts.triggerSingleMu == None :
           opts.triggerSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuSingle.txt'
 
-        if opts.triggerMuEleLeg1 == None :
-          opts.triggerMuEleLeg1 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuEleLeg1.txt'
-        if opts.triggerMuEleLeg2 == None :
-          opts.triggerMuEleLeg2 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuEleLeg2.txt'
+        if opts.triggerMuEleLegHigPt == None :
+          opts.triggerMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuEleLegHigPt.txt'
+        if opts.triggerMuEleLegLowPt == None :
+          opts.triggerMuEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuEleLegLowPt.txt'
 
-        if opts.triggerEleMuLeg1 == None :
-          opts.triggerEleMuLeg1 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_EleMuLeg1.txt'
-        if opts.triggerEleMuLeg2 == None :
-          opts.triggerEleMuLeg2 = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_EleMuLeg2.txt'
+        if opts.triggerEleMuLegHigPt == None :
+          opts.triggerEleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_EleMuLegHigPt.txt'
+        if opts.triggerEleMuLegLowPt == None :
+          opts.triggerEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_EleMuLegLowPt.txt'
 
-        file_triggerDoubleEleLeg1 = open (opts.triggerDoubleEleLeg1)
-        file_triggerDoubleEleLeg2 = open (opts.triggerDoubleEleLeg2)
+        file_triggerDoubleEleLegHigPt = open (opts.triggerDoubleEleLegHigPt)
+        file_triggerDoubleEleLegLowPt = open (opts.triggerDoubleEleLegLowPt)
         file_triggerSingleEle     = open (opts.triggerSingleEle)
 
-        file_triggerDoubleMuLeg1 = open (opts.triggerDoubleMuLeg1)
-        file_triggerDoubleMuLeg2 = open (opts.triggerDoubleMuLeg2)
+        file_triggerDoubleMuLegHigPt = open (opts.triggerDoubleMuLegHigPt)
+        file_triggerDoubleMuLegLowPt = open (opts.triggerDoubleMuLegLowPt)
         file_triggerSingleMu     = open (opts.triggerSingleMu)
 
-        file_triggerMuEleLeg1 = open (opts.triggerMuEleLeg1)
-        file_triggerMuEleLeg2 = open (opts.triggerMuEleLeg2)
-        file_triggerEleMuLeg1 = open (opts.triggerEleMuLeg1)
-        file_triggerEleMuLeg2 = open (opts.triggerEleMuLeg2)
+        file_triggerMuEleLegHigPt = open (opts.triggerMuEleLegHigPt)
+        file_triggerMuEleLegLowPt = open (opts.triggerMuEleLegLowPt)
+        file_triggerEleMuLegHigPt = open (opts.triggerEleMuLegHigPt)
+        file_triggerEleMuLegLowPt = open (opts.triggerEleMuLegLowPt)
         
         self.list_triggers = {}
         
-        self.list_triggers['triggerDoubleEleLeg1']   =    [line.rstrip().split() for line in file_triggerDoubleEleLeg1]
-        self.list_triggers['triggerDoubleEleLeg2']   =    [line.rstrip().split() for line in file_triggerDoubleEleLeg2]
+        self.list_triggers['triggerDoubleEleLegHigPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegHigPt]
+        self.list_triggers['triggerDoubleEleLegLowPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegLowPt]
         self.list_triggers['triggerSingleEle']       =    [line.rstrip().split() for line in file_triggerSingleEle]
 
-        self.list_triggers['triggerDoubleMuLeg1']    =    [line.rstrip().split() for line in file_triggerDoubleMuLeg1]
-        self.list_triggers['triggerDoubleMuLeg2']    =    [line.rstrip().split() for line in file_triggerDoubleMuLeg2]
+        self.list_triggers['triggerDoubleMuLegHigPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegHigPt]
+        self.list_triggers['triggerDoubleMuLegLowPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegLowPt]
         self.list_triggers['triggerSingleMu']        =    [line.rstrip().split() for line in file_triggerSingleMu]
         
-        self.list_triggers['triggerMuEleLeg1']        =    [line.rstrip().split() for line in file_triggerMuEleLeg1]
-        self.list_triggers['triggerMuEleLeg2']        =    [line.rstrip().split() for line in file_triggerMuEleLeg2]
-        self.list_triggers['triggerEleMuLeg1']        =    [line.rstrip().split() for line in file_triggerEleMuLeg1]
-        self.list_triggers['triggerEleMuLeg2']        =    [line.rstrip().split() for line in file_triggerEleMuLeg2]
+        self.list_triggers['triggerMuEleLegHigPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegHigPt]
+        self.list_triggers['triggerMuEleLegLowPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegLowPt]
+        self.list_triggers['triggerEleMuLegHigPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegHigPt]
+        self.list_triggers['triggerEleMuLegLowPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegLowPt]
 
         #     eta              pt          value    error
         # '-2.5', '-2.0', '10.0', '15.0', '0.000', '0.000'
@@ -160,55 +160,88 @@ class EffTrgFiller(TreeCloner):
         #
         singleLegA = "-"
         singleLegB = "-"
-        doubleLeg1A = "-"
-        doubleLeg1B = "-"
-        doubleLeg2A = "-"
-        doubleLeg2B = "-"
+        doubleLegHigPtA = "-"
+        doubleLegHigPtB = "-"
+        doubleLegLowPtA = "-"
+        doubleLegLowPtB = "-"
         
         
         if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
           singleLegA  = "triggerSingleEle"
           singleLegB  = "triggerSingleEle"
-          doubleLeg1A = "triggerDoubleEleLeg1"
-          doubleLeg1B = "triggerDoubleEleLeg1"
-          doubleLeg2A = "triggerDoubleEleLeg2"
-          doubleLeg2B = "triggerDoubleEleLeg2"
+          doubleLegHigPtA = "triggerDoubleEleLegHigPt"
+          doubleLegHigPtB = "triggerDoubleEleLegHigPt"
+          doubleLegLowPtA = "triggerDoubleEleLegLowPt"
+          doubleLegLowPtB = "triggerDoubleEleLegLowPt"
           
         if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
           singleLegA  = "triggerSingleMu"
           singleLegB  = "triggerSingleMu"
-          doubleLeg1A = "triggerDoubleMuLeg1"
-          doubleLeg1B = "triggerDoubleMuLeg1"
-          doubleLeg2A = "triggerDoubleMuLeg2"
-          doubleLeg2B = "triggerDoubleMuLeg2"
+          doubleLegHigPtA = "triggerDoubleMuLegHigPt"
+          doubleLegHigPtB = "triggerDoubleMuLegHigPt"
+          doubleLegLowPtA = "triggerDoubleMuLegLowPt"
+          doubleLegLowPtB = "triggerDoubleMuLegLowPt"
 
         if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
           singleLegA  = "triggerSingleMu"
           singleLegB  = "triggerSingleEle"
-          doubleLeg1A = "triggerMuEleLeg1"
-          doubleLeg1B = "triggerMuEleLeg1"
-          doubleLeg2A = "triggerMuEleLeg2"
-          doubleLeg2B = "triggerMuEleLeg2"
+          doubleLegHigPtA = "triggerMuEleLegHigPt"
+          doubleLegHigPtB = "triggerMuEleLegHigPt"
+          doubleLegLowPtA = "triggerMuEleLegLowPt"
+          doubleLegLowPtB = "triggerMuEleLegLowPt"
           
         if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
           singleLegA  = "triggerSingleEle"
           singleLegB  = "triggerSingleMu"
-          doubleLeg1A = "triggerEleMuLeg1"
-          doubleLeg1B = "triggerEleMuLeg1"
-          doubleLeg2A = "triggerEleMuLeg2"
-          doubleLeg2B = "triggerEleMuLeg2"
+          doubleLegHigPtA = "triggerEleMuLegHigPt"
+          doubleLegHigPtB = "triggerEleMuLegHigPt"
+          doubleLegLowPtA = "triggerEleMuLegLowPt"
+          doubleLegLowPtB = "triggerEleMuLegLowPt"
 
         
-        eff_dbl_1_leadingleg  , error_eff_dbl_1_leadingleg    = self._getEff (pt1, eta1, doubleLeg1A)
-        eff_dbl_2_leadingleg  , error_eff_dbl_2_leadingleg    = self._getEff (pt2, eta2, doubleLeg1B)
-        eff_dbl_1_trailingleg , error_eff_dbl_1_trailingleg   = self._getEff (pt1, eta1, doubleLeg2A)
-        eff_dbl_2_trailingleg , error_eff_dbl_2_trailingleg   = self._getEff (pt2, eta2, doubleLeg2B)
+        eff_dbl_1_leadingleg  , error_eff_dbl_1_leadingleg    = self._getEff (pt1, eta1, doubleLegHigPtA)
+        eff_dbl_2_leadingleg  , error_eff_dbl_2_leadingleg    = self._getEff (pt2, eta2, doubleLegHigPtB)
+        eff_dbl_1_trailingleg , error_eff_dbl_1_trailingleg   = self._getEff (pt1, eta1, doubleLegLowPtA)
+        eff_dbl_2_trailingleg , error_eff_dbl_2_trailingleg   = self._getEff (pt2, eta2, doubleLegLowPtB)
         eff_sgl_1             , error_eff_sgl_1               = self._getEff (pt1, eta1, singleLegA)
         eff_sgl_2             , error_eff_sgl_2               = self._getEff (pt2, eta2, singleLegB)
         
         evt_eff = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
                   + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
 
+        # up variation ...
+        
+        eff_dbl_1_leadingleg  += error_eff_dbl_1_leadingleg    
+        eff_dbl_2_leadingleg  += error_eff_dbl_2_leadingleg    
+        eff_dbl_1_trailingleg += error_eff_dbl_1_trailingleg   
+        eff_dbl_2_trailingleg += error_eff_dbl_2_trailingleg   
+        eff_sgl_1             += error_eff_sgl_1               
+        eff_sgl_2             += error_eff_sgl_2            
+        
+        evt_eff_error_up = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
+                  + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
+
+
+        # and low variation ...
+        eff_dbl_1_leadingleg  -= error_eff_dbl_1_leadingleg   
+        eff_dbl_2_leadingleg  -= error_eff_dbl_2_leadingleg   
+        eff_dbl_1_trailingleg -= error_eff_dbl_1_trailingleg  
+        eff_dbl_2_trailingleg -= error_eff_dbl_2_trailingleg  
+        eff_sgl_1             -= error_eff_sgl_1              
+        eff_sgl_2             -= error_eff_sgl_2            
+  
+        eff_dbl_1_leadingleg  -= error_eff_dbl_1_leadingleg   
+        eff_dbl_2_leadingleg  -= error_eff_dbl_2_leadingleg   
+        eff_dbl_1_trailingleg -= error_eff_dbl_1_trailingleg  
+        eff_dbl_2_trailingleg -= error_eff_dbl_2_trailingleg  
+        eff_sgl_1             -= error_eff_sgl_1              
+        eff_sgl_2             -= error_eff_sgl_2            
+        
+   
+        evt_eff_error_low = 1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))  \
+                  + eff_sgl_2*(1-eff_dbl_1_trailingleg)+ eff_sgl_1*(1-eff_dbl_2_trailingleg)
+        
+        
         #  
         # probability of passing the double lepton trigger + probability of passing the single lepton - the probability of passing both
         #  
@@ -245,7 +278,7 @@ class EffTrgFiller(TreeCloner):
         #                             - 
         
         
-        return evt_eff, 1.0, 1.0
+        return evt_eff, evt_eff_error_low, evt_eff_error_up
        
        
     def process(self,**kwargs):
