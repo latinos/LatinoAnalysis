@@ -29,7 +29,7 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763')
-        group.add_option('-k',  '--kind', dest='kind',  help='<Up|Dn> variation', default='Up')
+        group.add_option('-k',  '--kind', dest='kind',  help='<Up|Dn> variation', default='Up', type='string' )
         parser.add_option_group(group)
         return group
 
