@@ -141,6 +141,12 @@ class L2SelFiller(TreeCloner):
            'mllThird'
            
            ]
+
+        self.namesOfSpecialSimpleVariable = [
+           'metFilter',
+        ]
+        
+        
         
         # jet variables with the structure "std_vector_jet_"NAME to be migrated to "jet"NAME"+number.
         # e.g. jetpt1, jeteta1, jetpt2, jeteta2, ...
@@ -164,7 +170,7 @@ class L2SelFiller(TreeCloner):
             self.jetVarList.append("jet"+jetVar+str(i+1))
 
         # clone the tree
-        self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.jetVarList)
+        self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.namesOfSpecialSimpleVariable + self.jetVarList)
 
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
@@ -188,6 +194,19 @@ class L2SelFiller(TreeCloner):
             #print " bname   = ", bname
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
+
+
+        self.oldBranchesToBeModifiedSpecialSimpleVariable = {}
+        for bname in self.namesOfSpecialSimpleVariable:
+          bvariable = numpy.ones(1, dtype=numpy.float32)
+          self.oldBranchesToBeModifiedSpecialSimpleVariable[bname] = bvariable
+
+        # now actually connect the branches
+        for bname, bvariable in self.oldBranchesToBeModifiedSpecialSimpleVariable.iteritems():
+            #print " bname   = ", bname
+            #print " bvariable = ", bvariable
+            self.otree.Branch(bname,bvariable,bname+'/F')
+
 
         self.jetVarDic = OrderedDict()
         for bname in self.jetVarList:
@@ -566,6 +585,17 @@ class L2SelFiller(TreeCloner):
                   if counter == maxnjets:
                       varCounter += 1
                       counter = 0                    
+
+              # met filters: "bool" (as weight)
+              if self.cmssw == '763' :
+                pass_met_filters = 1.
+                #print " min =", min( 8 , len(itree.std_vector_trigger_special) )
+                for metfilters in range( min( 8 , len(itree.std_vector_trigger_special) ) ) :
+                  if itree.std_vector_trigger_special[metfilters] == 0. : pass_met_filters = 0.  
+                  #print " i: ", i, " :: metfilters ", metfilters, " --> ", itree.std_vector_trigger_special[metfilters]
+                self.oldBranchesToBeModifiedSpecialSimpleVariable['metFilter'][0] = pass_met_filters
+               
+               
 
               otree.Fill()
               savedentries+=1
