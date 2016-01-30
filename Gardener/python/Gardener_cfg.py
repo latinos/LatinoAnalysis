@@ -127,6 +127,7 @@ Steps= {
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'Wg','ZZTo4L','WWZ'
                                  ] ,
                 },
 
