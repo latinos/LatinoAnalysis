@@ -171,9 +171,11 @@ class LeppTScalerTreeMaker(TreeCloner):
                 #print " i = ", i, " -->  itree.std_vector_lepton_flavour[i] = ", itree.std_vector_lepton_flavour[i]
                 #print "    -> ", abs(itree.std_vector_lepton_flavour[i])
                 kindLep = 'lep' # ele or mu
+#                print "pt eta",pt_lep,eta_lep
+                if not (itree.std_vector_lepton_pt[i] > 0):
+                    continue
                 pt_lep=itree.std_vector_lepton_pt[i]
                 eta_lep=itree.std_vector_lepton_eta[i]
-#                print "pt eta",pt_lep,eta_lep
                 if abs(itree.std_vector_lepton_flavour[i]) == 13:
                     kindLep = 'mu'
                     wt = self._getScale(kindLep,pt_lep,abs(eta_lep))

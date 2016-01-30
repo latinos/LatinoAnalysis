@@ -31,7 +31,7 @@ class LeptonResolutionTreeMaker(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-f',  '--file',    dest='resolutionFile', help='Resolution file with numbers', default='test.py')
+        group.add_option('-f',  '--file',    dest='resolutionFile', help='Resolution file with numbers', default=None)
         group.add_option('-k',  '--kind',    dest='kind', help='Kind of variation: -1, +1, +0.5, ..., meaning 100%, 50% of the values from the file', default=1.0)
         parser.add_option_group(group)
         return group
@@ -39,10 +39,62 @@ class LeptonResolutionTreeMaker(TreeCloner):
     def checkOptions(self,opts):
         self.kind            = 1.0 * float(opts.kind)
         self.resolutionFile  = opts.resolutionFile
-
         print " amount of variation = ", self.kind
         print " resolutionFile = ",      self.resolutionFile
         
+    def checkOptions(self,opts):
+        print " >>  checkOptions "
+        leppTresolution = {}
+        self.kind            = 1.0 * float(opts.kind)
+        print " amount of variation = ", self.kind
+
+        cmssw_base = os.getenv('CMSSW_BASE')
+        if opts.resolutionFile == None :
+          opts.resolutionFile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/leppTresolution.py'
+
+        print " opts.resolutionFile = " , opts.resolutionFile
+
+        if opts.resolutionFile == None :
+          print " Using the default one"
+
+        elif os.path.exists(opts.resolutionFile) :
+          print " opts.resolutionFile = " , opts.resolutionFile
+          handle = open(opts.resolutionFile,'r')
+          exec(handle)
+          handle.close()
+        else :
+          print "nothing ?"
+
+        self.leppTresolution = leppTresolution
+        self.minpt = 0
+        self.maxpt = 200
+        self.mineta = 0
+        self.maxeta = 2.5
+
+
+    def _getScale (self, kindLep, pt, eta):
+        # fix underflow and overflow                                                                                                    
+        if pt < self.minpt:
+          pt = self.minpt
+        if pt > self.maxpt:
+          pt = self.maxpt
+
+        if eta < self.mineta:
+          eta = self.mineta
+        if eta > self.maxeta:
+          eta = self.maxeta
+        if kindLep in self.leppTresolution.keys() :
+            # get the scale values in bins of pT and eta                                                                                  
+            for point in self.leppTresolution[kindLep] :
+                if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
+                    #                 print"wt from fx",point[2][0]                                                                    
+                    return point[2][0]
+            # default ... it should never happen!                                                                          
+            # print " default ???"                                                                                  
+                return 1.0
+
+        else:
+                return 1.0
 
     def changeOrder(self, vectorname, vector, leptonOrderList) :
         # vector is already linked to the otree branch
@@ -123,17 +175,24 @@ class LeptonResolutionTreeMaker(TreeCloner):
           for i in range(itree.std_vector_lepton_pt.size()):
             # don't do anything if pt < 0, meaning it's the default value -9999.
             if not (itree.std_vector_lepton_pt[i] > 0):
-              continue
-                 
+              continue                 
+            pt_lep=itree.std_vector_lepton_pt[i]
+            eta_lep=itree.std_vector_lepton_eta[i]
             if abs(itree.std_vector_lepton_flavour[i]) == 13: # muon
-              leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (1.12345/100)))   #FIXME fix the random number
-            elif abs(itree.std_vector_lepton_flavour[i]) == 11: # electron
-              if abs(itree.std_vector_lepton_eta[i]) <=1.479:
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (1.12345/100)))   #FIXME fix the random number
-              elif (abs(itree.std_vector_lepton_eta[i]) <1.479 or abs (itree.std_vector_lepton_eta[i]) <=2.5 ):
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (1.12345/100)))          
-              else: 
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (0./100)))    # how could it be nor endcap nor barrel? Sneaky electron!     
+                kindLep = 'mu'
+                wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
+                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (wt/100)))   
+            elif abs(itree.std_vector_lepton_flavour[i]) == 11:
+                kindLep = 'el'
+                wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
+                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (self.kind*wt/100.0)))
+                
+            elif (abs(itree.std_vector_lepton_eta[i]) <1.479 or abs (itree.std_vector_lepton_eta[i]) <=2.5 ):
+                wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
+                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (self.kind*wt/100.0)))
+
+            else: 
+                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (0./100))) # how could it be nor endcap nor barrel? Sneaky electron!     
 
  
           # sorting in descending order and storing index
