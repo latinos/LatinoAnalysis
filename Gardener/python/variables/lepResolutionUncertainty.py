@@ -72,7 +72,7 @@ class LeptonResolutionTreeMaker(TreeCloner):
         self.maxeta = 2.5
 
 
-    def _getScale (self, kindLep, pt, eta):
+    def _getSmear (self, kindLep, pt, eta):
         # fix underflow and overflow                                                                                                    
         if pt < self.minpt:
           pt = self.minpt
@@ -84,11 +84,11 @@ class LeptonResolutionTreeMaker(TreeCloner):
         if eta > self.maxeta:
           eta = self.maxeta
         if kindLep in self.leppTresolution.keys() :
-            # get the scale values in bins of pT and eta                                                                                  
             for point in self.leppTresolution[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
-                    #                 print"wt from fx",point[2][0]                                                                    
-                    return point[2][0]
+                    print"wt from fx",point[2][0]                                                                    
+                    smeared_pT=ROOT.gRandom.Gaus(pt, point[2][0]*pt)
+                    return smeared_pT
             # default ... it should never happen!                                                                          
             # print " default ???"                                                                                  
                 return 1.0
@@ -180,17 +180,12 @@ class LeptonResolutionTreeMaker(TreeCloner):
             eta_lep=itree.std_vector_lepton_eta[i]
             if abs(itree.std_vector_lepton_flavour[i]) == 13: # muon
                 kindLep = 'mu'
-                wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (wt/100)))   
+                wt = self._getSmear(kindLep,pt_lep,abs(eta_lep))
+                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (self.kind*wt/100.0)))
             elif abs(itree.std_vector_lepton_flavour[i]) == 11:
                 kindLep = 'el'
-                wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
+                wt = self._getSmear(kindLep,pt_lep,abs(eta_lep))
                 leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (self.kind*wt/100.0)))
-                
-            elif (abs(itree.std_vector_lepton_eta[i]) <1.479 or abs (itree.std_vector_lepton_eta[i]) <=2.5 ):
-                wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
-                leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (self.kind*wt/100.0)))
-
             else: 
                 leptonPtChanged.append(itree.std_vector_lepton_pt[i]*(1 + (0./100))) # how could it be nor endcap nor barrel? Sneaky electron!     
 
