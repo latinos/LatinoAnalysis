@@ -88,11 +88,11 @@ class EffTrgFiller(TreeCloner):
         
         self.list_triggers['triggerDoubleEleLegHigPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegHigPt]
         self.list_triggers['triggerDoubleEleLegLowPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegLowPt]
-        self.list_triggers['triggerSingleEle']       =    [line.rstrip().split() for line in file_triggerSingleEle]
+        self.list_triggers['triggerSingleEle']           =    [line.rstrip().split() for line in file_triggerSingleEle]
 
         self.list_triggers['triggerDoubleMuLegHigPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegHigPt]
         self.list_triggers['triggerDoubleMuLegLowPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegLowPt]
-        self.list_triggers['triggerSingleMu']        =    [line.rstrip().split() for line in file_triggerSingleMu]
+        self.list_triggers['triggerSingleMu']            =    [line.rstrip().split() for line in file_triggerSingleMu]
         
         self.list_triggers['triggerMuEleLegHigPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegHigPt]
         self.list_triggers['triggerMuEleLegLowPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegLowPt]
@@ -144,6 +144,13 @@ class EffTrgFiller(TreeCloner):
                if error_eff_lo < 0.0 :
                  error_eff_lo = 0.0
                  
+                 
+               # fix for 95% efficiency for DZ cut in double muon trigger
+               if whichTrigger == 'triggerDoubleMuLegHigPt' or whichTrigger == 'triggerDoubleMuLegLowPt' :
+                  eff = eff * 0.975                     # = sqrt (0.95)
+                  error_eff_up = error_eff_up * 0.975   # = sqrt (0.95)
+                  error_eff_lo = error_eff_lo * 0.975   # = sqrt (0.95)
+                  
                return eff, error_eff_lo, error_eff_up
         
         return 0. , 0., 0.

@@ -2,9 +2,9 @@
 # lepton pT scales
 # Run 1 numbers from here https://github.com/latinos/HWWAnalysis/blob/master/ShapeAnalysis/scripts/scaleAndSmearTree.py#L38-L58
 #
-#leppTscaler = {}
+#leppTresolution = {}
 
-leppTscaler['ele'] = [
+leppTresolution['ele'] = [
     #   pt           eta         down/up
     ( (0.0, 10.0),  (0.0, 1.5), (1.0) ),
     ( (0.0, 10.0),  (1.5, 2.0), (1.0) ),
@@ -27,7 +27,7 @@ leppTscaler['ele'] = [
 
                      ] 
 
-leppTscaler['mu'] =  [
+leppTresolution['mu'] =  [
     #   pt           eta         down/up
     ( (0.0, 10.0),  (0.0, 2.2), (0.5) ),
     ( (0.0, 10.0),  (2.2, 2.4), (1.5) ),
