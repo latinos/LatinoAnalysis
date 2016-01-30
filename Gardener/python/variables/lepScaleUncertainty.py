@@ -91,7 +91,7 @@ class LeppTScalerTreeMaker(TreeCloner):
             for point in self.leppTscaler[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
                     #                 print"wt from fx",point[2][0]
-                    return point[2][0]
+                    return point[2]
             # default ... it should never happen!
             # print " default ???"
             return 1.0
