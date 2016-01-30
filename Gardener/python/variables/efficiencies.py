@@ -146,7 +146,7 @@ class EffTrgFiller(TreeCloner):
                  
                  
                # fix for 95% efficiency for DZ cut in double muon trigger
-               if whichTrigger == 'triggerDoubleMuLegHigPt' or whichTrigger = 'triggerDoubleMuLegLowPt' :
+               if whichTrigger == 'triggerDoubleMuLegHigPt' or whichTrigger == 'triggerDoubleMuLegLowPt' :
                   eff = eff * 0.975                     # = sqrt (0.95)
                   error_eff_up = error_eff_up * 0.975   # = sqrt (0.95)
                   error_eff_lo = error_eff_lo * 0.975   # = sqrt (0.95)
