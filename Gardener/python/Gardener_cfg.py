@@ -82,7 +82,6 @@ Productions= {
   '22Jan_25ns_mAODv2_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_fall15_miniaodv2_25ns.py' ,
-                        #'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/22Jan/MC/',
                         'dirExt'  : 'LatinoTrees' ,
                         #'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
@@ -119,7 +118,16 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['bPogSF','TrigEff','IdIsoSC','l2kin']
+                  'subTargets' : ['puadder','bPogSF','TrigEff','IdIsoSC','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                 ] ,
                 },
 
   'JESup'     :  {
@@ -135,7 +143,6 @@ Steps= {
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-
                                  ] ,
                 },
 
@@ -187,6 +194,38 @@ Steps= {
                                  ] ,
               },
 
+   'METup':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_METup','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                 ] ,
+              },
+
+   'METdo':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_METdo','l2kin'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                 ] ,
+              },
+
 # ... Individual Steps
 
   'mcwghtcount':{ 
@@ -204,13 +243,6 @@ Steps= {
 #               } ,
 
   'puadder'   : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False ,
-                  'command'    : 'gardener.py puadder --data=RPLME_puData --HistName=pileup --branch=puW --kind=trpu '
-                } ,
-
-  'puadderFix'   : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
@@ -245,13 +277,6 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW'
-               },
-
-  'l2selFix'    : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True  ,
-                  'command'    : 'gardener.py l2selfiller --kind 1 --cmssw RPLME_CMSSW'
                },
 
   'l2loose'    : {
