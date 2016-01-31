@@ -29,13 +29,15 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763')
-        group.add_option('-k',  '--kind', dest='kind',  help='<Up|Dn> variation', default='Up', type='string' )
+        group.add_option('-k',  '--kind', dest='kind',  help='<Up|Dn> variation', default='Up', type='string')
         parser.add_option_group(group)
         return group
 
     def checkOptions(self,opts) :
         self.cmssw = opts.cmssw
         self.kind  = opts.kind
+        print " cmssw =", self.cmssw
+        print "  kind =", self.kind
 
     def deltaphi(self, phi1, phi2) :
         dphi = abs(phi1 - phi2)
@@ -55,16 +57,24 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         savedentries = 0
 
         # Create branches for otree, the ones that will be modified
-        self.metVariables = [ 'metPfType1', 'metPfType1Phi' ]
+        if self.cmssw == '763' :
+            self.metVariables = [ 'metPfType1', 'metPfType1Phi' ]
+        else :
+            self.metVariables = [ 'pfType1Met', 'pfType1Metphi' ]
         
         # Clone the tree with new branches added
-        self.clone(output,self.metVariables)
+        self.clone(output, self.metVariables)
       
         # Now actually connect the branches
         newmet = numpy.ones(1, dtype=numpy.float32)
         newphi = numpy.ones(1, dtype=numpy.float32)
-        self.otree.Branch('metPfType1',    newmet, 'metPfType1/F')
-        self.otree.Branch('metPfType1Phi', newphi, 'metPfType1Phi/F')
+
+        if self.cmssw == '763' :
+            self.otree.Branch('metPfType1',    newmet, 'metPfType1/F')
+            self.otree.Branch('metPfType1Phi', newphi, 'metPfType1Phi/F')
+        else :
+            self.otree.Branch('pfType1Met',    newmet, 'pfType1Met/F')
+            self.otree.Branch('pfType1Metphi', newphi, 'pfType1Metphi/F')
 
         # Input tree  
         itree = self.itree
@@ -76,60 +86,70 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         for i in xrange(nentries) :
           itree.GetEntry(i)
 
-          oldmet = itree.metPfType1
-          oldphi = itree.metPfType1Phi
+          # 76x ----------------------------------------------------------------
+          if self.cmssw == '763' :
+              oldmet = itree.metPfType1
+              oldphi = itree.metPfType1Phi
 
-          if self.kind == 'Up' :
-              metJetEn  = itree.metPfType1JetEnUp  - oldmet
-              metJetRes = itree.metPfType1JetResUp - oldmet
-              metMuonEn = itree.metPfType1MuonEnUp - oldmet
-              metElecEn = itree.metPfType1ElecEnUp - oldmet
-              metUnclEn = itree.metPfType1UnclEnUp - oldmet
+              if self.kind == 'Up' :
+                  metJetEn  = itree.metPfType1JetEnUp  - oldmet
+                  metJetRes = itree.metPfType1JetResUp - oldmet
+                  metMuonEn = itree.metPfType1MuonEnUp - oldmet
+                  metElecEn = itree.metPfType1ElecEnUp - oldmet
+                  metUnclEn = itree.metPfType1UnclEnUp - oldmet
 
-              phiJetEn  = self.deltaphi(itree.metPfRawPhiJetEnUp,  oldphi)
-              phiJetRes = self.deltaphi(itree.metPfRawPhiJetResUp, oldphi)
-              phiMuonEn = self.deltaphi(itree.metPfRawPhiMuonEnUp, oldphi)
-              phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnUp, oldphi)
-              phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnUp, oldphi)
+                  phiJetEn  = self.deltaphi(itree.metPfRawPhiJetEnUp,  oldphi)
+                  phiJetRes = self.deltaphi(itree.metPfRawPhiJetResUp, oldphi)
+                  phiMuonEn = self.deltaphi(itree.metPfRawPhiMuonEnUp, oldphi)
+                  phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnUp, oldphi)
+                  phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnUp, oldphi)
+                  
+                  deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
 
-              deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
+                  if (deltaphimax == phiJetEn)  : newphi[0] = itree.metPfRawPhiJetEnUp
+                  if (deltaphimax == phiJetRes) : newphi[0] = itree.metPfRawPhiJetResUp
+                  if (deltaphimax == phiMuonEn) : newphi[0] = itree.metPfRawPhiMuonEnUp
+                  if (deltaphimax == phiElecEn) : newphi[0] = itree.metPfRawPhiElecEnUp
+                  if (deltaphimax == phiUnclEn) : newphi[0] = itree.metPfRawPhiUnclEnUp
 
-              if (deltaphimax == phiJetEn)  : newphi[0] = itree.metPfRawPhiJetEnUp
-              if (deltaphimax == phiJetRes) : newphi[0] = itree.metPfRawPhiJetResUp
-              if (deltaphimax == phiMuonEn) : newphi[0] = itree.metPfRawPhiMuonEnUp
-              if (deltaphimax == phiElecEn) : newphi[0] = itree.metPfRawPhiElecEnUp
-              if (deltaphimax == phiUnclEn) : newphi[0] = itree.metPfRawPhiUnclEnUp
+              else :
+                  metJetEn  = itree.metPfType1JetEnDn  - oldmet
+                  metJetRes = itree.metPfType1JetResDn - oldmet
+                  metMuonEn = itree.metPfType1MuonEnDn - oldmet
+                  metElecEn = itree.metPfType1ElecEnDn - oldmet
+                  metUnclEn = itree.metPfType1UnclEnDn - oldmet
 
+                  phiJetEn  = self.deltaphi(itree.metPfRawPhiJetEnDn,  oldphi)
+                  phiJetRes = self.deltaphi(itree.metPfRawPhiJetResDn, oldphi)
+                  phiMuonEn = self.deltaphi(itree.metPfRawPhiMuonEnDn, oldphi)
+                  phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnDn, oldphi)
+                  phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnDn, oldphi)
+
+                  deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
+                      
+                  if (deltaphimax == phiJetEn)  : newphi[0] = itree.metPfRawPhiJetEnDn
+                  if (deltaphimax == phiJetRes) : newphi[0] = itree.metPfRawPhiJetResDn
+                  if (deltaphimax == phiMuonEn) : newphi[0] = itree.metPfRawPhiMuonEnDn
+                  if (deltaphimax == phiElecEn) : newphi[0] = itree.metPfRawPhiElecEnDn
+                  if (deltaphimax == phiUnclEn) : newphi[0] = itree.metPfRawPhiUnclEnDn
+
+              deltamet = ROOT.TMath.Sqrt(metJetEn*metJetEn + metJetRes*metJetRes + metElecEn*metElecEn + metMuonEn*metMuonEn + metUnclEn*metUnclEn)
+
+              if self.kind == 'Up' : newmet[0] = oldmet + deltamet
+              if self.kind == 'Dn' : newmet[0] = oldmet - deltamet
+
+          # 74x ----------------------------------------------------------------
           else :
-              metJetEn  = itree.metPfType1JetEnDn  - oldmet
-              metJetRes = itree.metPfType1JetResDn - oldmet
-              metMuonEn = itree.metPfType1MuonEnDn - oldmet
-              metElecEn = itree.metPfType1ElecEnDn - oldmet
-              metUnclEn = itree.metPfType1UnclEnDn - oldmet
+              oldmet = itree.pfType1Met
+              oldphi = itree.pfType1Metphi
 
-              phiJetEn  = self.deltaphi(itree.metPfRawPhiJetEnDn,  oldphi)
-              phiJetRes = self.deltaphi(itree.metPfRawPhiJetResDn, oldphi)
-              phiMuonEn = self.deltaphi(itree.metPfRawPhiMuonEnDn, oldphi)
-              phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnDn, oldphi)
-              phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnDn, oldphi)
+              if self.kind == 'Up' : newmet[0] = itree.pfType1Metup
+              if self.kind == 'Dn' : newmet[0] = itree.pfType1Metdn
 
-              deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
-
-              if (deltaphimax == phiJetEn)  : newphi[0] = itree.metPfRawPhiJetEnDn
-              if (deltaphimax == phiJetRes) : newphi[0] = itree.metPfRawPhiJetResDn
-              if (deltaphimax == phiMuonEn) : newphi[0] = itree.metPfRawPhiMuonEnDn
-              if (deltaphimax == phiElecEn) : newphi[0] = itree.metPfRawPhiElecEnDn
-              if (deltaphimax == phiUnclEn) : newphi[0] = itree.metPfRawPhiUnclEnDn
-
-          deltamet = ROOT.TMath.Sqrt(metJetEn*metJetEn + metJetRes*metJetRes + metElecEn*metElecEn + metMuonEn*metMuonEn + metUnclEn*metUnclEn)
-
-          if self.kind == 'Up' : newmet[0] = oldmet + deltamet
-          if self.kind == 'Dn' : newmet[0] = oldmet - deltamet
-
-          #print 'oldmet:', oldmet, 'newmet:', newmet[0], 'oldphi:', oldphi, 'newphi:', newphi[0]
+              newphi[0] = oldphi
 
           if (i > 0 and i%step == 0.) :
-            print i,'events processed :: ', nentries
+              print i,'events processed ::', nentries, 'oldmet:', oldmet, 'newmet:', newmet[0], 'oldphi:', oldphi, 'newphi:', newphi[0]
               
           self.otree.Fill()
           savedentries+=1
