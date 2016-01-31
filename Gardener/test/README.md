@@ -289,6 +289,13 @@ Lepton pT resolution uncertainty
 
 MET uncertainty
 ====
+
+If reading 74x MET naming convention and available uncertainties.
     
-    gardener.py metUncertainty --kind='Up' input.root output.root
-    gardener.py metUncertainty --kind='Dn' input.root output.root
+    gardener.py metUncertainty --kind='Up' --cmssw='74x' input.root output.root
+    gardener.py metUncertainty --kind='Dn' --cmssw='74x' input.root output.root
+
+If reading 763 MET naming convention and full set of uncertainties.
+
+    gardener.py metUncertainty --kind='Up' --cmssw='763' input.root output.root
+    gardener.py metUncertainty --kind='Dn' --cmssw='763' input.root output.root
