@@ -354,7 +354,7 @@ Steps= {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py metUncertainty --kind=Up '
+                   'command'    : 'gardener.py metUncertainty --kind=Up --cmssw=RPLME_CMSSW'
                  } ,
   
   
@@ -362,7 +362,7 @@ Steps= {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py metUncertainty --kind=Dn '
+                   'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW'
                  } ,
   
 
