@@ -196,15 +196,100 @@ class ShapeFactory:
                   #print "loading shape variation", shapeNameDown
                   histoDown = fileIn.Get(shapeNameDown)
                   if histoUp == None:
-                    if 'samples' in nuisance.keys():
+                    if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                       if nuisance['type'] == 'lnN' :                             
+                         # example:
+                         #              'samples'  : {
+                         #                   'WW' : '1.00',    
+                         #                   'ggH': '1.23/0.97'
+                         #                },                              
+                         down_variation = 0.
+                         up_variation = 0.
+                         
+                         if "/" in configurationNuis :
+                           twovariations = nuisance['value'].split("/")
+                           down_variation = float(twovariations[0])
+                           up_variation   = float(twovariations[1]) 
+                         else :
+                           down_variation = 2. - float(nuisance['value'])
+                           up_variation   = float(nuisance['value']) 
+                         
+                         histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
+                         histoUp.Scale(up_variation)
+
+                    elif 'samples' in nuisance.keys():
                       for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
                         if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                          print "Warning! No", nuisanceName, " up variation for", sampleName
+                          if 'type' in nuisance :
+                            if nuisance['type'] == 'lnN' :                             
+                              # example:
+                              #              'samples'  : {
+                              #                   'WW' : '1.00',    
+                              #                   'ggH': '1.23/0.97'
+                              #                },                              
+                              down_variation = 0.
+                              up_variation = 0.
+                              
+                              if "/" in configurationNuis :
+                                twovariations = configurationNuis.split("/")
+                                down_variation = float(twovariations[0])
+                                up_variation   = float(twovariations[1]) 
+                              else :
+                                down_variation = 2. - float(configurationNuis)
+                                up_variation   = float(configurationNuis) 
+                              
+                              histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
+                              histoUp.Scale(up_variation)
+                            else :
+                              print "Warning! No", nuisanceName, " up variation for", sampleName
+                          
                   if histoDown == None:
-                    if 'samples' in nuisance.keys():
+                    if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                       if nuisance['type'] == 'lnN' :                             
+                         # example:
+                         #              'samples'  : {
+                         #                   'WW' : '1.00',    
+                         #                   'ggH': '1.23/0.97'
+                         #                },                              
+                         down_variation = 0.
+                         up_variation = 0.
+                         
+                         if "/" in configurationNuis :
+                           twovariations = nuisance['value'].split("/")
+                           down_variation = float(twovariations[0])
+                           up_variation   = float(twovariations[1]) 
+                         else :
+                           down_variation = 2. - float(nuisance['value'])
+                           up_variation   = float(nuisance['value']) 
+                         
+                         histoDown   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
+                         histoDown.Scale(down_variation)
+                    elif 'samples' in nuisance.keys():
                       for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
                         if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                          print "Warning! No", nuisanceName, " down variation for", sampleName
+                          if 'type' in nuisance :
+                            if nuisance['type'] == 'lnN' :                             
+                              # example:
+                              #              'samples'  : {
+                              #                   'WW' : '1.00',    
+                              #                   'ggH': '1.23/0.97'
+                              #                },
+                              down_variation = 0.
+                              up_variation = 0.
+                              
+                              if "/" in configurationNuis :
+                                twovariations = configurationNuis.split("/")
+                                down_variation = float(twovariations[0])
+                                up_variation   = float(twovariations[1]) 
+                              else :
+                                down_variation = 2. - float(configurationNuis)
+                                up_variation   = float(configurationNuis) 
+                              
+                              histoDown = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
+                              histoDown.Scale(down_variation)
+                            else :
+                              print "Warning! No", nuisanceName, " down variation for", sampleName
+                              
                   if nuisanceName not in nuisances_vy_up.keys() or nuisanceName not in nuisances_vy_do.keys():  
                     nuisances_vy_up[nuisanceName] = array('f')
                     nuisances_vy_do[nuisanceName] = array('f')

@@ -191,19 +191,23 @@ class DatacardFactory:
                     card.write((nuisance['name']).ljust(58-20))
                     card.write((nuisance ['type']).ljust(20))
                     if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
-                      card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
+                      #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
+                      #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
+                      card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
+                      card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
                       card.write('\n')
                     else :
                       # apply only to selected samples
                       for sampleName in self.signals:
                         if sampleName in nuisance['samples'].keys() :
-                          card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                          #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                          card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
                         else :
                           card.write(('-').ljust(columndef))
                       for sampleName in self.backgrounds:
                         if sampleName in nuisance['samples'].keys() :
-                          card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                          #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                          card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
                         else :
                           card.write(('-').ljust(columndef))
                            

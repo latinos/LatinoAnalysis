@@ -137,8 +137,10 @@ class ShapeFactory:
               list_of_trees_to_connect_up = {}
               list_of_trees_to_connect_do = {}
               for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                list_of_trees_to_connect_up[sampleNuisName] = self._samples[sampleNuisName]['name']
-                list_of_trees_to_connect_do[sampleNuisName] = self._samples[sampleNuisName]['name']
+                for sampleName, sample in self._samples.iteritems():
+                  if sampleName == sampleNuisName :
+                    list_of_trees_to_connect_up[sampleNuisName] = self._samples[sampleNuisName]['name']
+                    list_of_trees_to_connect_do[sampleNuisName] = self._samples[sampleNuisName]['name']
                 
               inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect_up, nuisance['folderUp']  )
               inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect_do, nuisance['folderDown'])
@@ -382,8 +384,8 @@ class ShapeFactory:
                       newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
                       #                                 the first weight is "up", the second is "down" -> they might be useful!
                       #print " configurationNuis = ", configurationNuis
-                      newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
-                      newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
+                      newSampleWeightUp = sample ['weight'] + '* (' + configurationNuis[0] + ')'
+                      newSampleWeightDo = sample ['weight'] + '* (' + configurationNuis[1] + ')'
                       #print " nuisanceName = ", nuisanceName, " sampleName = ", sampleName, " newSampleWeightUp = ", newSampleWeightUp
                       #print " nuisanceName = ", nuisanceName, " sampleName = ", sampleName, " newSampleWeightDo = ", newSampleWeightDo
         
