@@ -371,25 +371,27 @@ class ShapeFactory:
           # and filter also the nuisances trees, the ones with a separate folder
           # and whose systematic is based on using two different trees up/down
           for nuisanceName, nuisance in nuisances.iteritems():
+            print "nuisanceName = ", nuisanceName, " ---> ", nuisance
             if 'kind' in nuisance :
               if nuisance['kind'] == 'tree' :
                 for sampleName, sample in self._samples.iteritems():
-                  if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
-                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                  for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                    if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
                       # now plot with the additional weight up/down
                       newSampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
                       newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
                       #                                 the first weight is "up", the second is "down" -> they might be useful!
-                      print " configurationNuis = ", configurationNuis
+                      #print " configurationNuis = ", configurationNuis
                       newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
                       newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
-                      print " newSampleWeightUp = ", newSampleWeightUp
-                      print " newSampleWeightDo = ", newSampleWeightDo
+                      #print " nuisanceName = ", nuisanceName, " sampleName = ", sampleName, " newSampleWeightUp = ", newSampleWeightUp
+                      #print " nuisanceName = ", nuisanceName, " sampleName = ", sampleName, " newSampleWeightDo = ", newSampleWeightDo
         
+                      #print " nuisance:sample = ", sample
                       if 'weights' in sample.keys() :
-                        self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName],   cutName, newSampleNameUp)
-                      else :                                                                                              
-                        self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName],   cutName, newSampleNameUp)
+                        self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName]  , cutName, newSampleNameUp)
+                      else :                                                                                                                                            
+                        self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName]  , cutName, newSampleNameUp)
         
                       if 'weights' in sample.keys() :
                         self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceDown[nuisanceName][sampleName], cutName, newSampleNameDo)
@@ -480,6 +482,7 @@ class ShapeFactory:
                         newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
                         newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
                         
+                        
                         if 'weights' in sample.keys() :
                           outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold)
                         else :
@@ -565,7 +568,7 @@ class ShapeFactory:
             if weights[numTree] != '-' :
               globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
           
-          
+          #print " '>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName = ", '>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName
           #print " ::: ", tree.GetEntries(),
           # clear list
           tree.SetEntryList(0)
