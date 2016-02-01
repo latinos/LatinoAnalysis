@@ -15,6 +15,7 @@ import LatinoAnalysis.Gardener.odict as odict
 # for trigger efficiency fits
 from LatinoAnalysis.Gardener.hwwtools import confirm
 
+
 #   _______                 
 #  / ___/ /__  ___  ___ ____
 # / /__/ / _ \/ _ \/ -_) __/
@@ -33,10 +34,12 @@ class TreeCloner(object):
         self.itreePU = None
         self.itreeTotalEvents = None
         self.itreeTotalEventsTriggers = None
+        self.itreeMcWeightExplainedOrdered = None
         self.otreeMC = None
         self.otreePU = None
         self.ohistoTotalEvents = None
         self.ohistoTotalEventsTriggers = None
+        self.ohistoMcWeightExplainedOrdered = None
         self.histos2keep = []
 
     def _openRootFile(self,path, option=''):
@@ -61,12 +64,13 @@ class TreeCloner(object):
         self.itreePU = self._getRootObj(self.ifile,"pu")
         self.itreeTotalEvents = self._getRootObj(self.ifile,"totalEvents")
         self.itreeTotalEventsTriggers = self._getRootObj(self.ifile,"totalEventsTriggers")
+        self.itreeMcWeightExplainedOrdered = self._getRootObj(self.ifile,"mcWeightExplainedOrdered")
 
         self.histos2keep = []
         ObjList = [key.GetName() for key in  self.ifile.GetListOfKeys()] 
         for iObj in ObjList:
           pObj = self.ifile.Get(iObj)
-          if not pObj.ClassName() == 'TTree' and not iObj in ['totalEvents','totalEventsTriggers'] and not iObj in histos2Create :
+          if not pObj.ClassName() == 'TTree' and not iObj in ['totalEvents','totalEventsTriggers','mcWeightExplainedOrdered'] and not iObj in histos2Create :
             self.histos2keep.append(iObj)
 
     def clone(self,output,branches=[]):
@@ -99,6 +103,9 @@ class TreeCloner(object):
         if self.itreeTotalEventsTriggers.__nonzero__() : 
           self.ohistoTotalEventsTriggers = self.itreeTotalEventsTriggers.Clone()
           self.ohistoTotalEventsTriggers.Write()
+        if self.itreeMcWeightExplainedOrdered.__nonzero__() : 
+          self.ohistoMcWeightExplainedOrdered = self.itreeMcWeightExplainedOrdered.Clone()
+          self.ohistoMcWeightExplainedOrdered.Write()
         
         for iObj in self.histos2keep : 
            hist = self.ifile.Get(iObj).Clone()
@@ -118,6 +125,7 @@ class TreeCloner(object):
           self.otreePU = None
           self.ohistoTotalEvents = None
           self.ohistoTotalEventsTriggers = None
+          self.ohistoMcWeightExplainedOrdered = None
           self.itreeMC = None
           self.itreePU = None
           self.itreeTotalEvents = None

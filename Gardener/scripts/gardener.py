@@ -50,6 +50,10 @@ from LatinoAnalysis.Gardener.variables.lepScaleUncertainty        import LeppTSc
 from LatinoAnalysis.Gardener.variables.lepResolutionUncertainty   import LeptonResolutionTreeMaker
 # MET uncertainty
 from LatinoAnalysis.Gardener.variables.metUncertainty             import MetUncertaintyTreeMaker
+# QCD uncertainty
+from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
+# PDF uncertainty
+from LatinoAnalysis.Gardener.variables.pdfUncertainty             import PdfUncertaintyTreeMaker
 
 
 if __name__ == '__main__':
@@ -110,6 +114,8 @@ if __name__ == '__main__':
     modules['LeppTScalerTreeMaker'] = LeppTScalerTreeMaker()
     modules['leptonResolution']     = LeptonResolutionTreeMaker()
     modules['metUncertainty']       = MetUncertaintyTreeMaker()
+    modules['pdfUncertainty']       = PdfUncertaintyTreeMaker()
+    modules['qcdUncertainty']       = QcdUncertaintyTreeMaker()
     
     
 
