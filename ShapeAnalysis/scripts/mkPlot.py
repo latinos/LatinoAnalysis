@@ -435,7 +435,7 @@ class ShapeFactory:
             if thsSignal.GetNhists() != 0:
               for ihisto in range(thsSignal.GetNhists()) :
                 ((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
-                ((thsSignal.GetHists().At(ihisto))).Draw("same")
+                ((thsSignal.GetHists().At(ihisto))).Draw("hist same")
               # thsSignal.Draw("hist same")
             
             # if there is a systematic band draw it
@@ -572,7 +572,7 @@ class ShapeFactory:
             if thsSignal.GetNhists() != 0:
               for ihisto in range(thsSignal.GetNhists()) :
                 ((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
-                ((thsSignal.GetHists().At(ihisto))).Draw("same")
+                ((thsSignal.GetHists().At(ihisto))).Draw("hist same")
               # thsSignal.Draw("hist same")
            
             if (len(mynuisances.keys())!=0):
