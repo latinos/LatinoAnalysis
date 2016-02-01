@@ -32,7 +32,7 @@ class LeppTScalerTreeMaker(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-f','--fileIn',dest='Filewithleptscalevalues',help='file with lep pT scale values for uncert calc',default=None)
-        group.add_option('-v','--upordown',dest='variation',help='specify the variation type whether pT scaled up(1) or down(-1)',default='up')
+        group.add_option('-v','--upordown',dest='variation',help='specify the variation in % type whether pT scaled up(1) or down(-1)',default='up')
 
         parser.add_option_group(group)
         return group
@@ -193,7 +193,7 @@ class LeppTScalerTreeMaker(TreeCloner):
                            
             for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                 bvector.clear()
-                if 'lepton_pt' in bname:
+                if 'std_vector_lepton_pt' in bname:
                     for i in range( len(leptonOrder) ) :
                         bvector.push_back ( leptonPtChanged[leptonOrder[i]] )
                     for i in range( len(getattr(self.itree, bname)) - len(leptonOrder) ) :

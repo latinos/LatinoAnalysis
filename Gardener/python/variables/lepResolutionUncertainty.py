@@ -26,7 +26,7 @@ class LeptonResolutionTreeMaker(TreeCloner):
        pass
 
     def help(self):
-        return '''Lepton pT scaler'''
+        return '''Lepton pT resolution'''
 
     def addOptions(self,parser):
         description = self.help()
@@ -36,12 +36,6 @@ class LeptonResolutionTreeMaker(TreeCloner):
         parser.add_option_group(group)
         return group
 
-    def checkOptions(self,opts):
-        self.kind            = 1.0 * float(opts.kind)
-        self.resolutionFile  = opts.resolutionFile
-        print " amount of variation = ", self.kind
-        print " resolutionFile = ",      self.resolutionFile
-        
     def checkOptions(self,opts):
         print " >>  checkOptions "
         leppTresolution = {}
@@ -84,20 +78,18 @@ class LeptonResolutionTreeMaker(TreeCloner):
         if eta > self.maxeta:
           eta = self.maxeta
         
-          if kindLep in self.leppTresolution.keys() :
+        if kindLep in self.leppTresolution.keys() :
             for point in self.leppTresolution[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
                     print"wt from fx",point[2]
-                    sigma=point[2][0]
-            # default ... it should never happen!                                                                          
-            # print " default ???"                                                                                  
-                return 1.0
-            
+                    sigma=point[2]
+                        
             smeared_pt = -1
             while smeared_pt < 0 :
                 smeared_pt=ROOT.gRandom.Gaus(pt, sigma*pt)
+                print" orignal and smeared pT",pt,smeared_pt
                 return smeared_pt
-          else:
+        else:
               return 1.0
 
     def changeOrder(self, vectorname, vector, leptonOrderList) :
@@ -182,13 +174,18 @@ class LeptonResolutionTreeMaker(TreeCloner):
               continue                 
             pt_lep=itree.std_vector_lepton_pt[i]
             eta_lep=itree.std_vector_lepton_eta[i]
+            print pt_lep,eta_lep
             if abs(itree.std_vector_lepton_flavour[i]) == 13: # muon
                 kindLep = 'mu'
+                print kindLep
                 pt_smeared = self._getSmear(kindLep,pt_lep,abs(eta_lep))
+                print "smeared value",pt_smeared                
                 leptonPtChanged.append(pt_smeared)
             elif abs(itree.std_vector_lepton_flavour[i]) == 11:
-                kindLep = 'el'
+                kindLep = 'ele'
+                print kindLep
                 pt_smeared = self._getSmear(kindLep,pt_lep,abs(eta_lep))
+                print "smeared value",pt_smeared                
                 leptonPtChanged.append(pt_smeared)
             else: 
                 leptonPtChanged.append(itree.std_vector_lepton_pt[i]) # how could it be nor endcap nor barrel? Sneaky electron!     
@@ -201,25 +198,27 @@ class LeptonResolutionTreeMaker(TreeCloner):
           # now save into the tree the new pt "std_vector_lepton_pt" variable
           # and reorder all th eother variables, to keep the correct order of leptons
           for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-            bvector.clear()
-            if 'std_vector_lepton_pt' in bname:
-              for i in range( len(leptonOrder) ) :
-                bvector.push_back ( leptonPtChanged[leptonOrder[i]] )
-              # and if for any reason the list of leptonPtChanged (that is leptonOrder) is smaller than
-              # the original std_vector one, add the default values atthe end
-              for i in range( len(getattr(self.itree, bname)) - len(leptonOrder) ) :
-                bvector.push_back ( -9999. )
-            else:
-              # for all the std_vector variables that are not "pt", just re-order them
-              self.changeOrder( bname, bvector, leptonOrder)
-          
-
+              bvector.clear()
+              if 'std_vector_lepton_pt' in bname:
+                  print bname
+                  for i in range( len(leptonOrder) ) :
+                      print"fishy thing",leptonPtChanged[leptonOrder[i]]
+                      bvector.push_back (leptonPtChanged[leptonOrder[i]] )
+                      # and if for any reason the list of leptonPtChanged (that is leptonOrder) is smaller than
+                      # the original std_vector one, add the default values atthe end
+                      for i in range( len(getattr(self.itree, bname)) - len(leptonOrder) ) :
+                          bvector.push_back ( -9999. )
+              else:
+                  # for all the std_vector variables that are not "pt", just re-order them
+                  self.changeOrder( bname, bvector, leptonOrder)
+                          
+                          
           self.otree.Fill()
-          savedentries+=1
+          #savedentries+=1
           
           
         self.disconnect()
         print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        #print '   Saved: ', savedentries, ' events'
             
 
