@@ -433,7 +433,10 @@ class ShapeFactory:
               thsBackground.Draw("hist same")
                
             if thsSignal.GetNhists() != 0:
-              thsSignal.Draw("hist same")
+              for ihisto in range(thsSignal.GetNhists()) :
+                ((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
+                ((thsSignal.GetHists().At(ihisto))).Draw("same")
+              # thsSignal.Draw("hist same")
             
             # if there is a systematic band draw it
             if len(mynuisances.keys()) != 0:
@@ -567,7 +570,10 @@ class ShapeFactory:
               thsBackground.Draw("hist same")
                
             if thsSignal.GetNhists() != 0:
-              thsSignal.Draw("hist same")
+              for ihisto in range(thsSignal.GetNhists()) :
+                ((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
+                ((thsSignal.GetHists().At(ihisto))).Draw("same")
+              # thsSignal.Draw("hist same")
            
             if (len(mynuisances.keys())!=0):
               tgrMC.Draw("2")
