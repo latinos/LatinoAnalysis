@@ -171,6 +171,8 @@ class ShapeFactory:
                           # add N ad hoc nuisances, one for each bin
                           for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                             if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
+                              #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
+                              #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
                               mynuisances['ibin_' + str(iBin) + '_stat'] = {
                                 'samples'  : {   sampleName : '1.00', },
                               }
@@ -202,6 +204,8 @@ class ShapeFactory:
                   elif 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                     is_this_nuisance_to_be_considered = True
 
+                  print " sampleName = ", sampleName, " nuisanceName = ", nuisanceName, " is_this_nuisance_to_be_considered = ", is_this_nuisance_to_be_considered
+                  
                   histoUp = None
                   histoDown = None
                   
@@ -233,7 +237,7 @@ class ShapeFactory:
                              down_variation = 2. - float(nuisance['value'])
                              up_variation   = float(nuisance['value']) 
                            
-                           histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
+                           histoUp   = histos[sampleName].Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
                            histoUp.Scale(up_variation)
                     
                       elif 'samples' in nuisance.keys():
@@ -260,7 +264,7 @@ class ShapeFactory:
                                   up_variation   = float(configurationNuis) 
                                 
                                 print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
-                                histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
+                                histoUp   = histos[sampleName].Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
                                 histoUp.Scale(up_variation)
                                 print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 
@@ -288,7 +292,7 @@ class ShapeFactory:
                              down_variation = 2. - float(nuisance['value'])
                              up_variation   = float(nuisance['value']) 
                            
-                           histoDown   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
+                           histoDown   = histos[sampleName].Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
                            histoDown.Scale(down_variation)
                            
                       elif 'samples' in nuisance.keys():
@@ -313,7 +317,7 @@ class ShapeFactory:
                                   down_variation = 2. - float(configurationNuis)
                                   up_variation   = float(configurationNuis) 
                                 
-                                histoDown = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
+                                histoDown = histos[sampleName].Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
                                 histoDown.Scale(down_variation)
                               else :
                                 print "Warning! No", nuisanceName, " down variation for", sampleName
@@ -335,12 +339,15 @@ class ShapeFactory:
                     # get the background sum
                     if plot[sampleName]['isSignal'] == 0:
                       if histoUp != None:
-                        print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin)
+                        print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
+                              "while default was: ", histos[sampleName].GetBinContent (iBin)
                         nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
                       else:
                         # add the central sample 
                         nuisances_vy_up[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)  
                       if histoDown != None:  
+                        print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoDown.GetBinContent (", iBin, ") = ", histoDown.GetBinContent (iBin), \
+                              "while default was: ", histos[sampleName].GetBinContent (iBin)
                         nuisances_vy_do[nuisanceName][iBin-1] += histoDown.GetBinContent (iBin)
                       else:
                         # add the central sample 
