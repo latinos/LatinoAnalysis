@@ -158,10 +158,13 @@ class ShapeFactory:
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
                 # "massage" the list of nuisances accordingly
-                for nuisanceName, nuisance in nuisances.iteritems():                  
+                for nuisanceName, nuisance in nuisances.iteritems():         
+                  print " nuisanceName = ", nuisanceName
                   if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                    print " nuisance = ", nuisance
                     if 'samples' in nuisance.keys():
                       if sampleName in nuisance['samples'].keys() :
+                        print " stat nuisances for ", sampleName
                         if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                           print 'In principle nothing to be done here ... just wait'
                         if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
@@ -189,114 +192,131 @@ class ShapeFactory:
                   #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                     #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                  
-                for nuisanceName, nuisance in mynuisances.iteritems():                 
-                  shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
-                  #print "loading shape variation", shapeNameUp
-                  histoUp = fileIn.Get(shapeNameUp)
-                  shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
-                  #print "loading shape variation", shapeNameDown
-                  histoDown = fileIn.Get(shapeNameDown)
-                  if histoUp == None:
-                    if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                       if nuisance['type'] == 'lnN' :                             
-                         # example:
-                         #              'samples'  : {
-                         #                   'WW' : '1.00',    
-                         #                   'ggH': '1.23/0.97'
-                         #                },                              
-                         down_variation = 0.
-                         up_variation = 0.
-                         
-                         if "/" in nuisance['value'] :
-                           print " nuisance['value'] = ", nuisance['value']
-                           twovariations = nuisance['value'].split("/")
-                           print " twovariations = ", twovariations
-                           down_variation = float(twovariations[0])
-                           up_variation   = float(twovariations[1]) 
-                         else :
-                           down_variation = 2. - float(nuisance['value'])
-                           up_variation   = float(nuisance['value']) 
-                         
-                         histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
-                         histoUp.Scale(up_variation)
+                for nuisanceName, nuisance in mynuisances.iteritems():
+                  # is this nuisance to be considered for this background?
+                  is_this_nuisance_to_be_considered = False
+                  if 'samples' in nuisance.keys() :
+                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                      if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
+                        is_this_nuisance_to_be_considered = True
+                  elif 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                    is_this_nuisance_to_be_considered = True
 
-                    elif 'samples' in nuisance.keys():
-                      for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                        if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                          if 'type' in nuisance.keys() :
-                            if nuisance['type'] == 'lnN' :                             
-                              # example:
-                              #              'samples'  : {
-                              #                   'WW' : '1.00',    
-                              #                   'ggH': '1.23/0.97'
-                              #                },                              
-                              down_variation = 0.
-                              up_variation = 0.
-                              
-                              if "/" in configurationNuis :
-                                print " configurationNuis samples = ", configurationNuis
-                                twovariations = configurationNuis.split("/")
-                                print " twovariations = ", twovariations
-                                down_variation = float(twovariations[0])
-                                up_variation   = float(twovariations[1]) 
+                  histoUp = None
+                  histoDown = None
+                  
+                  if is_this_nuisance_to_be_considered :
+                    shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
+                    #print "loading shape variation", shapeNameUp
+                    histoUp = fileIn.Get(shapeNameUp)
+                    shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
+                    #print "loading shape variation", shapeNameDown
+                    histoDown = fileIn.Get(shapeNameDown)
+                    if histoUp == None:
+                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                         if nuisance['type'] == 'lnN' :                             
+                           # example:
+                           #              'samples'  : {
+                           #                   'WW' : '1.00',    
+                           #                   'ggH': '1.23/0.97'
+                           #                },                              
+                           down_variation = 0.
+                           up_variation = 0.
+                           
+                           if "/" in nuisance['value'] :
+                             print " nuisance['value'] = ", nuisance['value']
+                             twovariations = nuisance['value'].split("/")
+                             print " twovariations = ", twovariations
+                             down_variation = float(twovariations[0])
+                             up_variation   = float(twovariations[1]) 
+                           else :
+                             down_variation = 2. - float(nuisance['value'])
+                             up_variation   = float(nuisance['value']) 
+                           
+                           histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
+                           histoUp.Scale(up_variation)
+                    
+                      elif 'samples' in nuisance.keys():
+                        for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                          if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
+                            if 'type' in nuisance.keys() :
+                              if nuisance['type'] == 'lnN' :                             
+                                # example:
+                                #              'samples'  : {
+                                #                   'WW' : '1.00',    
+                                #                   'ggH': '1.23/0.97'
+                                #                },                              
+                                down_variation = 0.
+                                up_variation = 0.
+                                
+                                if "/" in configurationNuis :
+                                  print " configurationNuis samples = ", configurationNuis
+                                  twovariations = configurationNuis.split("/")
+                                  print " twovariations = ", twovariations
+                                  down_variation = float(twovariations[0])
+                                  up_variation   = float(twovariations[1]) 
+                                else :
+                                  down_variation = 2. - float(configurationNuis)
+                                  up_variation   = float(configurationNuis) 
+                                
+                                histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
+                                histoUp.Scale(up_variation)
                               else :
-                                down_variation = 2. - float(configurationNuis)
-                                up_variation   = float(configurationNuis) 
-                              
-                              histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
-                              histoUp.Scale(up_variation)
-                            else :
-                              print "Warning! No", nuisanceName, " up variation for", sampleName
-                          
-                  if histoDown == None:
-                    if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                       if nuisance['type'] == 'lnN' :                             
-                         # example:
-                         #              'samples'  : {
-                         #                   'WW' : '1.00',    
-                         #                   'ggH': '1.23/0.97'
-                         #                },                              
-                         down_variation = 0.
-                         up_variation = 0.
-                         
-                         if "/" in nuisance['value'] :
-                           print " nuisance['value'] down = ", nuisance['value']
-                           twovariations = nuisance['value'].split("/")
-                           down_variation = float(twovariations[0])
-                           up_variation   = float(twovariations[1]) 
-                         else :
-                           down_variation = 2. - float(nuisance['value'])
-                           up_variation   = float(nuisance['value']) 
-                         
-                         histoDown   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
-                         histoDown.Scale(down_variation)
-                    elif 'samples' in nuisance.keys():
-                      for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                        if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                          if 'type' in nuisance.keys() :
-                            if nuisance['type'] == 'lnN' :                             
-                              # example:
-                              #              'samples'  : {
-                              #                   'WW' : '1.00',    
-                              #                   'ggH': '1.23/0.97'
-                              #                },
-                              down_variation = 0.
-                              up_variation = 0.
-                              
-                              if "/" in configurationNuis :
-                                print " configurationNuis down samples = ", configurationNuis
-                                twovariations = configurationNuis.split("/")
-                                down_variation = float(twovariations[0])
-                                up_variation   = float(twovariations[1]) 
+                                print "Warning! No", nuisanceName, " up variation for", sampleName
+                            
+                    if histoDown == None:
+                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                         if nuisance['type'] == 'lnN' :                             
+                           # example:
+                           #              'samples'  : {
+                           #                   'WW' : '1.00',    
+                           #                   'ggH': '1.23/0.97'
+                           #                },                              
+                           down_variation = 0.
+                           up_variation = 0.
+                           
+                           if "/" in nuisance['value'] :
+                             print " nuisance['value'] down = ", nuisance['value']
+                             twovariations = nuisance['value'].split("/")
+                             down_variation = float(twovariations[0])
+                             up_variation   = float(twovariations[1]) 
+                           else :
+                             down_variation = 2. - float(nuisance['value'])
+                             up_variation   = float(nuisance['value']) 
+                           
+                           histoDown   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
+                           histoDown.Scale(down_variation)
+                      elif 'samples' in nuisance.keys():
+                        for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
+                          if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
+                            if 'type' in nuisance.keys() :
+                              if nuisance['type'] == 'lnN' :                             
+                                # example:
+                                #              'samples'  : {
+                                #                   'WW' : '1.00',    
+                                #                   'ggH': '1.23/0.97'
+                                #                },
+                                down_variation = 0.
+                                up_variation = 0.
+                                
+                                if "/" in configurationNuis :
+                                  print " configurationNuis down samples = ", configurationNuis
+                                  twovariations = configurationNuis.split("/")
+                                  down_variation = float(twovariations[0])
+                                  up_variation   = float(twovariations[1]) 
+                                else :
+                                  down_variation = 2. - float(configurationNuis)
+                                  up_variation   = float(configurationNuis) 
+                                
+                                histoDown = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
+                                histoDown.Scale(down_variation)
                               else :
-                                down_variation = 2. - float(configurationNuis)
-                                up_variation   = float(configurationNuis) 
-                              
-                              histoDown = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
-                              histoDown.Scale(down_variation)
-                            else :
-                              print "Warning! No", nuisanceName, " down variation for", sampleName
-                              
+                                print "Warning! No", nuisanceName, " down variation for", sampleName
+                  
+                  # now, even if not considered this nuisance, I need to add it, 
+                  # so that in case is "empty" it will add the nominal value
+                  # for this sample that is not affected by the nuisance
+                  
                   if nuisanceName not in nuisances_vy_up.keys() or nuisanceName not in nuisances_vy_do.keys():  
                     nuisances_vy_up[nuisanceName] = array('f')
                     nuisances_vy_do[nuisanceName] = array('f')
@@ -307,17 +327,18 @@ class ShapeFactory:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_do[nuisanceName].append(0.)
                   for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    #get the background sum
+                    # get the background sum
                     if plot[sampleName]['isSignal'] == 0:
                       if histoUp != None:
+                        print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin)
                         nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
                       else:
-                        #add the central sample 
+                        # add the central sample 
                         nuisances_vy_up[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)  
                       if histoDown != None:  
                         nuisances_vy_do[nuisanceName][iBin-1] += histoDown.GetBinContent (iBin)
                       else:
-                        #add the central sample 
+                        # add the central sample 
                         nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
             
             # fill the reference distribution with the background only distribution
@@ -348,10 +369,10 @@ class ShapeFactory:
               for iBin in range(len(tgrMC_vy)):
                 print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
                      " diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     " new error = ", nuisances_err_up[iBin]
+                     " new global error = ", nuisances_err_up[iBin]
                 print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
                      " diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     " new error = ", nuisances_err_do[iBin]
+                     " new global error = ", nuisances_err_do[iBin]
                 
                 if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
                   nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
