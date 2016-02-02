@@ -154,6 +154,7 @@ class ShapeFactory:
                   thsSignal.Add(histos[sampleName])
                 else :
                   thsBackground.Add(histos[sampleName])
+                  print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
                 # "massage" the list of nuisances accordingly
@@ -222,7 +223,7 @@ class ShapeFactory:
                     elif 'samples' in nuisance.keys():
                       for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
                         if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                          if 'type' in nuisance :
+                          if 'type' in nuisance.keys() :
                             if nuisance['type'] == 'lnN' :                             
                               # example:
                               #              'samples'  : {
@@ -272,7 +273,7 @@ class ShapeFactory:
                     elif 'samples' in nuisance.keys():
                       for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
                         if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                          if 'type' in nuisance :
+                          if 'type' in nuisance.keys() :
                             if nuisance['type'] == 'lnN' :                             
                               # example:
                               #              'samples'  : {
@@ -320,9 +321,12 @@ class ShapeFactory:
                         nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
             
             # fill the reference distribution with the background only distribution
-            # save the central values of the bkg sum for use for the nuisance band        
+            # save the central values of the bkg sum for use for the nuisance band 
+            print " tgrMC_vy = ", tgrMC_vy
             for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
               tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
+              print " nominal: ", iBin, " ===> ", thsBackground.GetStack().Last().GetBinContent(iBin)
+            print " tgrMC_vy = ", tgrMC_vy
 
                 #else :
                 #  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
@@ -345,6 +349,9 @@ class ShapeFactory:
                 print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
                      " diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
                      " new error = ", nuisances_err_up[iBin]
+                print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
+                     " diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
+                     " new error = ", nuisances_err_do[iBin]
                 
                 if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
                   nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
@@ -443,10 +450,10 @@ class ShapeFactory:
               thsBackground.Draw("hist same")
                
             if thsSignal.GetNhists() != 0:
-              for ihisto in range(thsSignal.GetNhists()) :
-                ((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
-                ((thsSignal.GetHists().At(ihisto))).Draw("hist same")
-              # thsSignal.Draw("hist same")
+              #for ihisto in range(thsSignal.GetNhists()) :
+                #((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
+                #((thsSignal.GetHists().At(ihisto))).Draw("hist same")
+              thsSignal.Draw("hist same noclear")
             
             # if there is a systematic band draw it
             if len(mynuisances.keys()) != 0:
@@ -580,10 +587,10 @@ class ShapeFactory:
               thsBackground.Draw("hist same")
                
             if thsSignal.GetNhists() != 0:
-              for ihisto in range(thsSignal.GetNhists()) :
-                ((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
-                ((thsSignal.GetHists().At(ihisto))).Draw("hist same")
-              # thsSignal.Draw("hist same")
+              #for ihisto in range(thsSignal.GetNhists()) :
+                #((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
+                #((thsSignal.GetHists().At(ihisto))).Draw("hist same")
+              thsSignal.Draw("hist same noclear")
            
             if (len(mynuisances.keys())!=0):
               tgrMC.Draw("2")
