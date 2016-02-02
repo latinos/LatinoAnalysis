@@ -81,14 +81,13 @@ class LeptonResolutionTreeMaker(TreeCloner):
         if kindLep in self.leppTresolution.keys() :
             for point in self.leppTresolution[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
-                    print"wt from fx",point[2]
                     sigma=point[2]
-                        
-            smeared_pt = -1
-            while smeared_pt < 0 :
-                smeared_pt=ROOT.gRandom.Gaus(pt, sigma*pt)
-                print" orignal and smeared pT",pt,smeared_pt
-                return smeared_pt
+                else:
+                     sigma=1.0       
+        smeared_pt = -1
+        while smeared_pt < 0 :
+            smeared_pt=ROOT.gRandom.Gaus(pt, sigma*pt)
+            return smeared_pt
         else:
               return 1.0
 
@@ -174,18 +173,13 @@ class LeptonResolutionTreeMaker(TreeCloner):
               continue                 
             pt_lep=itree.std_vector_lepton_pt[i]
             eta_lep=itree.std_vector_lepton_eta[i]
-            print pt_lep,eta_lep
             if abs(itree.std_vector_lepton_flavour[i]) == 13: # muon
                 kindLep = 'mu'
-                print kindLep
                 pt_smeared = self._getSmear(kindLep,pt_lep,abs(eta_lep))
-                print "smeared value",pt_smeared                
                 leptonPtChanged.append(pt_smeared)
             elif abs(itree.std_vector_lepton_flavour[i]) == 11:
                 kindLep = 'ele'
-                print kindLep
                 pt_smeared = self._getSmear(kindLep,pt_lep,abs(eta_lep))
-                print "smeared value",pt_smeared                
                 leptonPtChanged.append(pt_smeared)
             else: 
                 leptonPtChanged.append(itree.std_vector_lepton_pt[i]) # how could it be nor endcap nor barrel? Sneaky electron!     
@@ -202,7 +196,6 @@ class LeptonResolutionTreeMaker(TreeCloner):
               if 'std_vector_lepton_pt' in bname:
                   print bname
                   for i in range( len(leptonOrder) ) :
-                      print"fishy thing",leptonPtChanged[leptonOrder[i]]
                       bvector.push_back (leptonPtChanged[leptonOrder[i]] )
                       # and if for any reason the list of leptonPtChanged (that is leptonOrder) is smaller than
                       # the original std_vector one, add the default values atthe end
