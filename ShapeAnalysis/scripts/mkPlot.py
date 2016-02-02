@@ -353,8 +353,8 @@ class ShapeFactory:
                     # get the background sum
                     if plot[sampleName]['isSignal'] == 0:
                       if histoUp != None:
-                        #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
-                              #"while default was: ", histos[sampleName].GetBinContent (iBin)
+                        print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
+                              "while default was: ", histos[sampleName].GetBinContent (iBin)
                         nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
                       else:
                         # add the central sample 

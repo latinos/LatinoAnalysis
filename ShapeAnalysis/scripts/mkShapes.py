@@ -482,8 +482,8 @@ class ShapeFactory:
                         newSampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
                         newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
                         #                                 the first weight is "up", the second is "down"
-                        newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
-                        newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
+                        newSampleWeightUp = sample ['weight'] + '* (' + configurationNuis[0] + ")"
+                        newSampleWeightDo = sample ['weight'] + '* (' + configurationNuis[1] + ")"
                         
                         
                         if 'weights' in sample.keys() :
@@ -509,8 +509,8 @@ class ShapeFactory:
                         newSampleNameDo = sampleName + '_' + nuisance['name'] + 'Down'
                         #                                 the first weight is "up", the second is "down" -> they might be useful!
                         print " configurationNuis = ", configurationNuis
-                        newSampleWeightUp = sample ['weight'] + '*' + configurationNuis[0]
-                        newSampleWeightDo = sample ['weight'] + '*' + configurationNuis[1]
+                        newSampleWeightUp = sample ['weight'] + '* (' + configurationNuis[0] + ")"
+                        newSampleWeightDo = sample ['weight'] + '* (' + configurationNuis[1] + ")"
                         print " newSampleWeightUp = ", newSampleWeightUp
                         print " newSampleWeightDo = ", newSampleWeightDo
                         
