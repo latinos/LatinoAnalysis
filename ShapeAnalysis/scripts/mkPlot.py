@@ -259,8 +259,12 @@ class ShapeFactory:
                                   down_variation = 2. - float(configurationNuis)
                                   up_variation   = float(configurationNuis) 
                                 
+                                print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 histoUp   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up")
                                 histoUp.Scale(up_variation)
+                                print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
+                                
+                                
                               else :
                                 print "Warning! No", nuisanceName, " up variation for", sampleName
                             
@@ -286,6 +290,7 @@ class ShapeFactory:
                            
                            histoDown   = histos[sampleName].Clone(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down")
                            histoDown.Scale(down_variation)
+                           
                       elif 'samples' in nuisance.keys():
                         for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
                           if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
