@@ -96,6 +96,8 @@ class ShapeFactory:
               histo = fileIn.Get(shapeName)
               histos[sampleName] = histo.Clone('new_histo_' + sampleName)
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
+              for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
+                 print " i = ", iBinAmassiro, " [" , sampleName, " ==> ", histos[sampleName].GetBinContent(iBinAmassiro)
 
               # data style
               if plot[sampleName]['isData'] == 1 :
@@ -263,10 +265,10 @@ class ShapeFactory:
                                   down_variation = 2. - float(configurationNuis)
                                   up_variation   = float(configurationNuis) 
                                 
-                                print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
+                                #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 histoUp   = histos[sampleName].Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
                                 histoUp.Scale(up_variation)
-                                print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
+                                #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 
                                 
                               else :
@@ -321,6 +323,18 @@ class ShapeFactory:
                                 histoDown.Scale(down_variation)
                               else :
                                 print "Warning! No", nuisanceName, " down variation for", sampleName
+                  
+                  
+                  if 'scale' in plot[sampleName].keys() : 
+                    if histoDown != None:  
+                      print " histoDown integral = ", histoDown.Integral()
+                      histoDown.Scale(plot[sampleName]['scale'])
+                      print " ---> plot[", sampleName, "]['scale'] = ", plot[sampleName]['scale']
+                      print " --> histoDown integral = ", histoDown.Integral()
+                      
+                    if histoUp != None:  
+                      histoUp.Scale(plot[sampleName]['scale'])
+                                 
                   
                   # now, even if not considered this nuisance, I need to add it, 
                   # so that in case is "empty" it will add the nominal value

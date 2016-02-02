@@ -456,6 +456,7 @@ class ShapeFactory:
                           keepNormalization = 0 # do not keep normalization, put 1 to keep normalization                       
                           if 'keepNormalization' in configurationNuis.keys() :
                             keepNormalization = configurationNuis['keepNormalization']
+                            print " keepNormalization = ", keepNormalization
                           # scale up/down
                           for iBin in range(1, outputsHisto.GetNbinsX()+1):
                             # take histogram --> outputsHisto
