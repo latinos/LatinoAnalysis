@@ -367,6 +367,7 @@ class ShapeFactory:
                         # add the central sample 
                         nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
             
+            
             # fill the reference distribution with the background only distribution
             # save the central values of the bkg sum for use for the nuisance band 
             #print " tgrMC_vy = ", tgrMC_vy
@@ -393,12 +394,12 @@ class ShapeFactory:
                   nuisances_err_do.append(0.)
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               for iBin in range(len(tgrMC_vy)):
-                #print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     #" diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     #" new global error = ", nuisances_err_up[iBin]
-                #print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     #" diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     #" new global error = ", nuisances_err_do[iBin]
+                print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
+                     " diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
+                     " new global error = ", nuisances_err_up[iBin]
+                print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
+                     " diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
+                     " new global error = ", nuisances_err_do[iBin]
                 
                 if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
                   nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
@@ -406,6 +407,9 @@ class ShapeFactory:
                 else:
                   nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin])
                   nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin]) 
+
+                print "nuisances_err_up[", iBin, "] = ", nuisances_err_up[iBin], " --> ", \
+                      "nuisances_err_do[", iBin, "] = ", nuisances_err_do[iBin], " --> " 
 
               
             
@@ -434,7 +438,16 @@ class ShapeFactory:
             
             #---- now plot
             
-            
+            #if thsBackground.GetNhists() != 0:
+              #print " MC   = ", thsBackground.GetStack().Last().Integral()
+              #for ihisto in range(thsBackground.GetNhists()) :
+                #print "     - ",ihisto, " - ", ((thsBackground.GetHists().At(ihisto))).GetName(), " = ", ((thsBackground.GetHists().At(ihisto))).Integral() 
+                  
+            #if thsData.GetNhists() != 0:
+              #print " DATA = ", thsData.GetStack().Last().Integral()
+               
+             
+                         
             #  - get axis range
             minXused = 0.
             maxXused = 1.
