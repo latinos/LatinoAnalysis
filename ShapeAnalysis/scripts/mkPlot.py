@@ -96,8 +96,8 @@ class ShapeFactory:
               histo = fileIn.Get(shapeName)
               histos[sampleName] = histo.Clone('new_histo_' + sampleName)
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
-              for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
-                 print " i = ", iBinAmassiro, " [" , sampleName, " ==> ", histos[sampleName].GetBinContent(iBinAmassiro)
+              #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
+                 #print " i = ", iBinAmassiro, " [" , sampleName, " ==> ", histos[sampleName].GetBinContent(iBinAmassiro)
 
               # data style
               if plot[sampleName]['isData'] == 1 :
@@ -156,17 +156,17 @@ class ShapeFactory:
                   thsSignal.Add(histos[sampleName])
                 else :
                   thsBackground.Add(histos[sampleName])
-                  print " adding to background: ", sampleName
+                  #print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
                 # "massage" the list of nuisances accordingly
                 for nuisanceName, nuisance in nuisances.iteritems():         
                   print " nuisanceName = ", nuisanceName
                   if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                    print " nuisance = ", nuisance
+                    #print " nuisance = ", nuisance
                     if 'samples' in nuisance.keys():
                       if sampleName in nuisance['samples'].keys() :
-                        print " stat nuisances for ", sampleName
+                        #print " stat nuisances for ", sampleName
                         if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                           print 'In principle nothing to be done here ... just wait'
                         if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
@@ -206,7 +206,7 @@ class ShapeFactory:
                   elif 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                     is_this_nuisance_to_be_considered = True
 
-                  print " sampleName = ", sampleName, " nuisanceName = ", nuisanceName, " is_this_nuisance_to_be_considered = ", is_this_nuisance_to_be_considered
+                  #print " sampleName = ", sampleName, " nuisanceName = ", nuisanceName, " is_this_nuisance_to_be_considered = ", is_this_nuisance_to_be_considered
                   
                   histoUp = None
                   histoDown = None
@@ -230,9 +230,9 @@ class ShapeFactory:
                            up_variation = 0.
                            
                            if "/" in nuisance['value'] :
-                             print " nuisance['value'] = ", nuisance['value']
+                             #print " nuisance['value'] = ", nuisance['value']
                              twovariations = nuisance['value'].split("/")
-                             print " twovariations = ", twovariations
+                             #print " twovariations = ", twovariations
                              down_variation = float(twovariations[0])
                              up_variation   = float(twovariations[1]) 
                            else :
@@ -256,9 +256,9 @@ class ShapeFactory:
                                 up_variation = 0.
                                 
                                 if "/" in configurationNuis :
-                                  print " configurationNuis samples = ", configurationNuis
+                                  #print " configurationNuis samples = ", configurationNuis
                                   twovariations = configurationNuis.split("/")
-                                  print " twovariations = ", twovariations
+                                  #print " twovariations = ", twovariations
                                   down_variation = float(twovariations[0])
                                   up_variation   = float(twovariations[1]) 
                                 else :
@@ -286,7 +286,7 @@ class ShapeFactory:
                            up_variation = 0.
                            
                            if "/" in nuisance['value'] :
-                             print " nuisance['value'] down = ", nuisance['value']
+                             #print " nuisance['value'] down = ", nuisance['value']
                              twovariations = nuisance['value'].split("/")
                              down_variation = float(twovariations[0])
                              up_variation   = float(twovariations[1]) 
@@ -311,7 +311,7 @@ class ShapeFactory:
                                 up_variation = 0.
                                 
                                 if "/" in configurationNuis :
-                                  print " configurationNuis down samples = ", configurationNuis
+                                  #print " configurationNuis down samples = ", configurationNuis
                                   twovariations = configurationNuis.split("/")
                                   down_variation = float(twovariations[0])
                                   up_variation   = float(twovariations[1]) 
@@ -327,10 +327,10 @@ class ShapeFactory:
                   
                   if 'scale' in plot[sampleName].keys() : 
                     if histoDown != None:  
-                      print " histoDown integral = ", histoDown.Integral()
+                      #print " histoDown integral = ", histoDown.Integral()
                       histoDown.Scale(plot[sampleName]['scale'])
-                      print " ---> plot[", sampleName, "]['scale'] = ", plot[sampleName]['scale']
-                      print " --> histoDown integral = ", histoDown.Integral()
+                      #print " ---> plot[", sampleName, "]['scale'] = ", plot[sampleName]['scale']
+                      #print " --> histoDown integral = ", histoDown.Integral()
                       
                     if histoUp != None:  
                       histoUp.Scale(plot[sampleName]['scale'])
@@ -353,15 +353,15 @@ class ShapeFactory:
                     # get the background sum
                     if plot[sampleName]['isSignal'] == 0:
                       if histoUp != None:
-                        print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
-                              "while default was: ", histos[sampleName].GetBinContent (iBin)
+                        #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
+                              #"while default was: ", histos[sampleName].GetBinContent (iBin)
                         nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
                       else:
                         # add the central sample 
                         nuisances_vy_up[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)  
                       if histoDown != None:  
-                        print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoDown.GetBinContent (", iBin, ") = ", histoDown.GetBinContent (iBin), \
-                              "while default was: ", histos[sampleName].GetBinContent (iBin)
+                        #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoDown.GetBinContent (", iBin, ") = ", histoDown.GetBinContent (iBin), \
+                              #"while default was: ", histos[sampleName].GetBinContent (iBin)
                         nuisances_vy_do[nuisanceName][iBin-1] += histoDown.GetBinContent (iBin)
                       else:
                         # add the central sample 
@@ -369,11 +369,11 @@ class ShapeFactory:
             
             # fill the reference distribution with the background only distribution
             # save the central values of the bkg sum for use for the nuisance band 
-            print " tgrMC_vy = ", tgrMC_vy
+            #print " tgrMC_vy = ", tgrMC_vy
             for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
               tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
-              print " nominal: ", iBin, " ===> ", thsBackground.GetStack().Last().GetBinContent(iBin)
-            print " tgrMC_vy = ", tgrMC_vy
+              #print " nominal: ", iBin, " ===> ", thsBackground.GetStack().Last().GetBinContent(iBin)
+            #print " tgrMC_vy = ", tgrMC_vy
 
                 #else :
                 #  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
@@ -386,19 +386,19 @@ class ShapeFactory:
             nuisances_err_up = array('f')
             nuisances_err_do = array('f')
             for nuisanceName in mynuisances.keys():
-              print " nuisanceName = " , nuisanceName
+              #print " nuisanceName = " , nuisanceName
               if len(nuisances_err_up) == 0 : 
                 for iBin in range(len(tgrMC_vy)):
                   nuisances_err_up.append(0.)
                   nuisances_err_do.append(0.)
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               for iBin in range(len(tgrMC_vy)):
-                print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     " diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     " new global error = ", nuisances_err_up[iBin]
-                print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     " diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     " new global error = ", nuisances_err_do[iBin]
+                #print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
+                     #" diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
+                     #" new global error = ", nuisances_err_up[iBin]
+                #print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
+                     #" diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
+                     #" new global error = ", nuisances_err_do[iBin]
                 
                 if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
                   nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
