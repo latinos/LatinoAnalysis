@@ -175,7 +175,7 @@ class ShapeFactory:
                   else :
                     if nuisanceName not in mynuisances.keys() :
                       if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
-                        print "skip this nuisance since 100 percent uncertainty"
+                        print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
                       else :
                         mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
@@ -206,8 +206,10 @@ class ShapeFactory:
                          down_variation = 0.
                          up_variation = 0.
                          
-                         if "/" in configurationNuis :
+                         if "/" in nuisance['value'] :
+                           print " nuisance['value'] = ", nuisance['value']
                            twovariations = nuisance['value'].split("/")
+                           print " twovariations = ", twovariations
                            down_variation = float(twovariations[0])
                            up_variation   = float(twovariations[1]) 
                          else :
@@ -231,7 +233,9 @@ class ShapeFactory:
                               up_variation = 0.
                               
                               if "/" in configurationNuis :
+                                print " configurationNuis samples = ", configurationNuis
                                 twovariations = configurationNuis.split("/")
+                                print " twovariations = ", twovariations
                                 down_variation = float(twovariations[0])
                                 up_variation   = float(twovariations[1]) 
                               else :
@@ -254,7 +258,8 @@ class ShapeFactory:
                          down_variation = 0.
                          up_variation = 0.
                          
-                         if "/" in configurationNuis :
+                         if "/" in nuisance['value'] :
+                           print " nuisance['value'] down = ", nuisance['value']
                            twovariations = nuisance['value'].split("/")
                            down_variation = float(twovariations[0])
                            up_variation   = float(twovariations[1]) 
@@ -278,6 +283,7 @@ class ShapeFactory:
                               up_variation = 0.
                               
                               if "/" in configurationNuis :
+                                print " configurationNuis down samples = ", configurationNuis
                                 twovariations = configurationNuis.split("/")
                                 down_variation = float(twovariations[0])
                                 up_variation   = float(twovariations[1]) 
@@ -329,13 +335,17 @@ class ShapeFactory:
             nuisances_err_up = array('f')
             nuisances_err_do = array('f')
             for nuisanceName in mynuisances.keys():
+              print " nuisanceName = " , nuisanceName
               if len(nuisances_err_up) == 0 : 
                 for iBin in range(len(tgrMC_vy)):
                   nuisances_err_up.append(0.)
                   nuisances_err_do.append(0.)
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               for iBin in range(len(tgrMC_vy)):
-                #print "bin", iBin, " nuisances_vy_up[nuisanceName][iBin]", nuisances_vy_up[nuisanceName][iBin], " central", tgrMC_vy[iBin] 
+                print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
+                     " diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
+                     " new error = ", nuisances_err_up[iBin]
+                
                 if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
                   nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
                   nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin])
