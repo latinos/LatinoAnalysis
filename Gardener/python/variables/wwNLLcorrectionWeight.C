@@ -141,7 +141,7 @@ float wwNLL::nllWeight(int variation, int kind){
 
 //  int bin = -1;
 //  
-//  bin = int (320*ptww/160.);
+//  bin = int (320*ptww/500.);
 //  
 //  if (!(bin < 0 || bin >= 320)) {
 //    
@@ -168,25 +168,25 @@ float wwNLL::nllWeight(int variation, int kind){
  
  
  if (variation == 0) {
-  weight =  ptww < 160. ? _resum_central->Eval(ptww)/_mc_central->Eval(ptww) : 1;
+  weight =  ptww < 500. ? _resum_central->Eval(ptww)/_mc_central->Eval(ptww) : 1;
  }
  else if (variation == -1) {
   if (kind == 0) {
-   weight =  ptww < 160. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Qdown[bin];   
   }
   if (kind == 1) {
-   weight =  ptww < 160. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Rdown[bin];   
   }
  }
  else if (variation == 1) {
   if (kind == 0) {
-   weight =  ptww < 160. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Qup[bin];   
   }
   if (kind == 1) {
-   weight =  ptww < 160. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
 //    weight = _reweightingFactors_Rup[bin];   
   }
  }
@@ -203,25 +203,25 @@ float wwNLL::nllnnloWeight(int variation, int kind){
  float weight = -1;
  
  if (variation == 0) {
-  weight =  ptww < 160. ? _resum_nnlonnll_central->Eval(ptww)/_mc_nnlonnll_central->Eval(ptww) : 1;
+  weight =  ptww < 500. ? _resum_nnlonnll_central->Eval(ptww)/_mc_nnlonnll_central->Eval(ptww) : 1;
  }
  else if (variation == -1) {
   if (kind == 0) {
-   weight =  ptww < 160. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
    //    weight = _reweightingFactors_Qdown[bin];   
   }
   if (kind == 1) {
-   weight =  ptww < 160. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
    //    weight = _reweightingFactors_Rdown[bin];   
   }
  }
  else if (variation == 1) {
   if (kind == 0) {
-   weight =  ptww < 160. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
    //    weight = _reweightingFactors_Qup[bin];   
   }
   if (kind == 1) {
-   weight =  ptww < 160. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
+   weight =  ptww < 500. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
    //    weight = _reweightingFactors_Rup[bin];   
   }
  }
