@@ -11,7 +11,7 @@
 class wwNLL {
 public:
  //! constructor
- wwNLL(std::string mcsample, 
+ wwNLL(       std::string mcsample, 
               std::string central,
               std::string resum_up,
               std::string resum_down,
@@ -25,6 +25,16 @@ public:
               std::string powheg_Rdownl2nu_sdown_nlo,
               std::string powheg_Rdownl2nu_nnlo
  );
+ 
+ 
+ wwNLL(
+  std::string central,
+  std::string resum_up,
+  std::string resum_down,
+  std::string scale_up,
+  std::string scale_down
+ );
+  
  
  ~wwNLL();
  
@@ -62,6 +72,7 @@ private:
  TGraph* _mc_Qdown;
  TGraph* _mc_nnlonnll_central;
  
+ bool _useOnlyRatio;
  
 };
 
@@ -96,6 +107,32 @@ wwNLL::wwNLL(std::string mcsample,
  
  ptww = -1;
  mww = -1;
+ 
+ _useOnlyRatio = false;
+ 
+}
+
+
+
+wwNLL::wwNLL(
+             std::string central,
+             std::string resum_up,
+             std::string resum_down,
+             std::string scale_up,
+             std::string scale_down
+) {
+ 
+ _resum_central = new TGraph(central.c_str());
+ _resum_Rup = new TGraph(resum_up.c_str());
+ _resum_Rdown = new TGraph(resum_down.c_str());
+ _resum_Qup = new TGraph(scale_up.c_str());
+ _resum_Qdown = new TGraph(scale_down.c_str());
+ _resum_nnlonnll_central = 0x0;
+ 
+ ptww = -1;
+ mww = -1;
+ 
+ _useOnlyRatio = true;
  
 }
 
@@ -138,56 +175,56 @@ void wwNLL::SetPTWW( float ptl1 , float phil1,   float ptl2 , float phil2,   flo
 
 float wwNLL::nllWeight(int variation, int kind){
  float weight = -1;
-
-//  int bin = -1;
-//  
-//  bin = int (320*ptww/500.);
-//  
-//  if (!(bin < 0 || bin >= 320)) {
-//    
-//   if (variation == 0) {
-//    weight = _reweightingFactors_central[bin];   
-//   }
-//   else if (variation == -1) {
-//    if (kind == 0) {
-//     weight = _reweightingFactors_Qdown[bin];   
-//    }
-//    if (kind == 1) {
-//     weight = _reweightingFactors_Rdown[bin];   
-//    }
-//   }
-//   else if (variation == 1) {
-//    if (kind == 0) {
-//     weight = _reweightingFactors_Qup[bin];   
-//    }
-//    if (kind == 1) {
-//     weight = _reweightingFactors_Rup[bin];   
-//    }
-//   }
-//  }
  
+ if (_useOnlyRatio == false) {
+  
+  if (variation == 0) {
+   weight =  ptww < 500. ? _resum_central->Eval(ptww)/_mc_central->Eval(ptww) : 1;
+  }
+  else if (variation == -1) {
+   if (kind == 0) {
+    weight =  ptww < 500. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Qdown[bin];   
+   }
+   if (kind == 1) {
+    weight =  ptww < 500. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Rdown[bin];   
+   }
+  }
+  else if (variation == 1) {
+   if (kind == 0) {
+    weight =  ptww < 500. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Qup[bin];   
+   }
+   if (kind == 1) {
+    weight =  ptww < 500. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Rup[bin];   
+   }
+  }
+  
+ }
  
- if (variation == 0) {
-  weight =  ptww < 500. ? _resum_central->Eval(ptww)/_mc_central->Eval(ptww) : 1;
- }
- else if (variation == -1) {
-  if (kind == 0) {
-   weight =  ptww < 500. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
-//    weight = _reweightingFactors_Qdown[bin];   
+ else {
+  //---- new for Moriond
+  if (variation == 0) {
+   weight =  ptww < 500. ? _resum_central->Eval(ptww) : 1;
   }
-  if (kind == 1) {
-   weight =  ptww < 500. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
-//    weight = _reweightingFactors_Rdown[bin];   
+  else if (variation == -1) {
+   if (kind == 0) {
+    weight =  ptww < 500. ? _resum_Qdown->Eval(ptww) : 1;
+   }
+   if (kind == 1) {
+    weight =  ptww < 500. ? _resum_Rdown->Eval(ptww) : 1;
+   }
   }
- }
- else if (variation == 1) {
-  if (kind == 0) {
-   weight =  ptww < 500. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
-//    weight = _reweightingFactors_Qup[bin];   
-  }
-  if (kind == 1) {
-   weight =  ptww < 500. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
-//    weight = _reweightingFactors_Rup[bin];   
+  else if (variation == 1) {
+   if (kind == 0) {
+    weight =  ptww < 500. ? _resum_Qup->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Qup[bin];   
+   }
+   if (kind == 1) {
+    weight =  ptww < 500. ? _resum_Rup->Eval(ptww) : 1;
+   }
   }
  }
  
@@ -202,27 +239,30 @@ float wwNLL::nllnnloWeight(int variation, int kind){
 
  float weight = -1;
  
- if (variation == 0) {
-  weight =  ptww < 500. ? _resum_nnlonnll_central->Eval(ptww)/_mc_nnlonnll_central->Eval(ptww) : 1;
- }
- else if (variation == -1) {
-  if (kind == 0) {
-   weight =  ptww < 500. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
-   //    weight = _reweightingFactors_Qdown[bin];   
+ 
+ if (_resum_nnlonnll_central != 0x0) {
+  if (variation == 0) {
+   weight =  ptww < 500. ? _resum_nnlonnll_central->Eval(ptww)/_mc_nnlonnll_central->Eval(ptww) : 1;
   }
-  if (kind == 1) {
-   weight =  ptww < 500. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
-   //    weight = _reweightingFactors_Rdown[bin];   
+  else if (variation == -1) {
+   if (kind == 0) {
+    weight =  ptww < 500. ? _resum_Qdown->Eval(ptww)/_mc_Qdown->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Qdown[bin];   
+   }
+   if (kind == 1) {
+    weight =  ptww < 500. ? _resum_Rdown->Eval(ptww)/_mc_Rdown->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Rdown[bin];   
+   }
   }
- }
- else if (variation == 1) {
-  if (kind == 0) {
-   weight =  ptww < 500. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
-   //    weight = _reweightingFactors_Qup[bin];   
-  }
-  if (kind == 1) {
-   weight =  ptww < 500. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
-   //    weight = _reweightingFactors_Rup[bin];   
+  else if (variation == 1) {
+   if (kind == 0) {
+    weight =  ptww < 500. ? _resum_Qup->Eval(ptww)/_mc_Qup->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Qup[bin];   
+   }
+   if (kind == 1) {
+    weight =  ptww < 500. ? _resum_Rup->Eval(ptww)/_mc_Rup->Eval(ptww) : 1;
+    //    weight = _reweightingFactors_Rup[bin];   
+   }
   }
  }
  

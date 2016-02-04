@@ -54,19 +54,27 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/wwNLLcorrectionWeight.C++g')
         #----------------------------------------------------------------------------------------------------
 
-        wwNLL = ROOT.wwNLL(self.mcsample, 
+        #wwNLL = ROOT.wwNLL(self.mcsample, 
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/central.dat',
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/resum_up.dat',  #
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/resum_down.dat',  #
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_up.dat',    #
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_down.dat',  #
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/nnlo_central.dat',   
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_nlo.dat',
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_qup_nlo.dat',
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_qdown_nlo.dat',
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_sup_nlo.dat',
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_sdown_nlo.dat',
+                           #cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_nnlo.dat'
+                           #)
+
+        wwNLL = ROOT.wwNLL(
                            cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/central.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/resum_up.dat',
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/resum_up.dat',  
                            cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/resum_down.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_up.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_down.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/nnlo_central.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_nlo.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_qup_nlo.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_qdown_nlo.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_sup_nlo.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_sdown_nlo.dat',
-                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/powheg_2l2nu_nnlo.dat'
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_up.dat', 
+                           cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_down.dat'
                            )
 
         print " starting ..."
@@ -117,52 +125,6 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed.'
 
-            # after ISR but before QED FSR
-            # because at calculation step these are not defined
-            # and they don't know about photons
-            # use lvlv status=3 (?? why not 1??) particles
-
-            #number1 = -1
-            #number2 = -1
-            
-            #for numlepton in range(0, itree.std_vector_leptonGen_pt.size()):
-              #if itree.std_vector_leptonGen_isHardProcess.at(numlepton) == 1 :
-                #if number1 == -1 :
-                  #number1 = numlepton
-                #else :
-                  #number2 = numlepton
-                  
-            #print "     number1 = ",  number1           
-            #print "     number2 = ",  number2
-
-            #numberneutrino1 = -1
-            #numberneutrino2 = -1
-            
-            #for numlepton in range(0, itree.std_vector_neutrinoGen_pt.size()):
-              #if itree.std_vector_neutrinoGen_isHardProcess.at(numlepton) == 1 :
-                #if numberneutrino1 == -1 :
-                  #numberneutrino1 = numlepton
-                #else :
-                  #numberneutrino2 = numlepton
-
-            #print "     numberneutrino1 = ",  numberneutrino1           
-            #print "     numberneutrino2 = ",  numberneutrino2
-
-
-            #ptl1 = itree.std_vector_leptonGen_pt.at(number1)
-            #ptl2 = itree.std_vector_leptonGen_pt.at(number2)
-            #phil1 = itree.std_vector_leptonGen_phi.at(number1)
-            #phil2 = itree.std_vector_leptonGen_phi.at(number2)
-
-            #ptv1 = itree.std_vector_neutrinoGen_pt.at(numberneutrino1)
-            #ptv2 = itree.std_vector_neutrinoGen_pt.at(numberneutrino2)
-            #phiv1 = itree.std_vector_neutrinoGen_phi.at(numberneutrino1)
-            #phiv2 = itree.std_vector_neutrinoGen_phi.at(numberneutrino2)
-
-            #wwNLL.SetPTWW(ptl1, phil1, ptl2, phil2, ptv1, phiv1, ptv2, phiv2)
-
-
-
             number1 = -1
             number2 = -1
             
@@ -209,4 +171,6 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
 
         self.disconnect()
         print '- Eventloop completed'
+
+
 
