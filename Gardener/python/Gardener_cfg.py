@@ -87,6 +87,17 @@ Productions= {
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
                       } ,
 
+  '22Jan_Run2015D_16Dec2015' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_16Dec2015-v1_25ns_StarWars.py' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'reName'  : { 
+                                       'DoubleEG_Run2015D_25ns-16Dec2015-v2'    : 'Run2015D_16Dec2015_DoubleEG' ,
+                                       'DoubleMuon_Run2015D_25ns-16Dec2015-v1'  : 'Run2015D_16Dec2015_DoubleMuon' ,
+                                       'MuonEG_Run2015D_25ns-16Dec2015-v1'      : 'Run2015D_16Dec2015_MuonEG' , 
+                                    }
+                      } ,
+
 }
 
 
@@ -119,16 +130,16 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   'subTargets' : ['puadder','bPogSF','TrigEff','IdIsoSC','l2kin'],
-                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
-                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
-                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
-                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
-                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
-                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
-                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-                                  'Wg','ZZTo4L','WWZ',
-                                 ] ,
+#                 'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
+#                                 'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
+#                                 'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+#                                 'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+#                                 'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+#                                 'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+#                                 'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+#                                 'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+#                                 'Wg','ZZTo4L','WWZ',
+#                                ] ,
                 },
 
   'JESup'     :  {

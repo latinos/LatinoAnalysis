@@ -184,7 +184,11 @@ for iProd in prodList :
   for iLine in handle.read().split('\n') : 
     #print iLine
     if 'samples' in iLine : 
-      exec(iLine)  
+      iLineMod=iLine
+      if 'reName' in Productions[iProd]:
+        for iOldName in Productions[iProd]['reName']: 
+          iLineMod=iLineMod.replace(iOldName, Productions[iProd]['reName'][iOldName])
+      exec(iLineMod)  
     #print samples.keys()
     if 'config.Data.outLFNDirBase' in iLine : prodDir=iLine.split('=')[1].replace('\'','').replace(' ','')
     if 'dir' in Productions[iProd] : prodDir=Productions[iProd]['dir']
