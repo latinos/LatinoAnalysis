@@ -184,6 +184,8 @@ print HiggsXS.GetHiggsBR('YR3','H_WW','125.0')
 print HiggsXS.GetHiggsBR('YR4prel','H_WW','125.0')
 
 print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
+print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToZZTo4L_M125')
+print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
 
 
 
