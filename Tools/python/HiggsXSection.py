@@ -124,7 +124,54 @@ class HiggsXSection:
        return self.GetYRVal(self._YR[YRversion][model]['br']['VV'],mh,self.YR4dec(YRversion,decay))
      return 0
 
+   def GetHiggsXS4Sample(self,YRVersion,energy,SampleName):
+     HiggsXS = {}
+     HiggsXS['Sample'] = SampleName
+     HiggsXS['Energy'] = energy
+     # ... Higgs production mechanism
+     HiggsProdXS = 0.
+     ProdMode = 'unknown'
+     if 'GluGluH'  in SampleName : ProdMode = 'ggH'
+     if 'VBFH'     in SampleName : ProdMode = 'vbfH'
+     #if 'HZJ'      in SampleName : ProdMode = 'ZH'
+     #if 'HWplusJ'  in SampleName : ProdMode = 'XXX'
+     #if 'HWminusJ' in SampleName : ProdMode = 'XXX'
+     if 'ttH'      in SampleName : ProdMode = 'ttH'  
+     HiggsMass   = 0.
+     if '_M' in SampleName : HiggsMass = SampleName.split('_M')[1]
+     if not ProdMode == 'unknown' :
+       HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
+     
+     HiggsXS['ProdMode']  = ProdMode
+     HiggsXS['HiggsMass'] = HiggsMass
+     HiggsXS['ProdXS']    = HiggsProdXS
 
+     # ... Higgs decay
+     HiggsBR = 0.
+     DecayMode =  'unknown'
+     if 'HToWW'       in SampleName : DecayMode = 'H_WW'
+     if 'HToZZ'       in SampleName : DecayMode = 'H_ZZ'
+     if 'HToTauTau'   in SampleName : DecayMode = 'H_tautau'
+     if 'HJetTobb'    in SampleName : DecayMode = 'H_bb'
+     #if 'HJetToNonbb' in SampleName : DecayMode = 'H_bb'
+     if not DecayMode == 'unknown' :
+       HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass)
+
+     HiggsXS['DecayMode'] = DecayMode
+     HiggsXS['HiggsBR'  ] = HiggsBR
+     
+     # ... Final states
+     FinalState =  'unknown'
+     FinalStateBR = 1.
+
+     HiggsXS['FinalState']   = FinalState
+     HiggsXS['FinalStateBR'] = FinalStateBR
+     
+
+     # Final X-Section
+     HiggsXS['xs'] =  HiggsProdXS * HiggsBR * FinalStateBR    
+
+     return HiggsXS
 
 HiggsXS = HiggsXSection() 
 #HiggsXS.printYR()
@@ -135,4 +182,8 @@ print HiggsXS.GetHiggsProdXS('YR4prel','13TeV','ggH','125.0')
 print HiggsXS.GetHiggsBR('YR2','H_WW','125.0')
 print HiggsXS.GetHiggsBR('YR3','H_WW','125.0')
 print HiggsXS.GetHiggsBR('YR4prel','H_WW','125.0')
+
+print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
+
+
 
