@@ -158,9 +158,10 @@ class HiggsXSection:
      if 'HToZZ'       in SampleName : DecayMode = 'H_ZZ'
      if 'HToTauTau'   in SampleName : DecayMode = 'H_tautau'
      if 'HJetTobb'    in SampleName : DecayMode = 'H_bb'
-     #if 'HJetToNonbb' in SampleName : DecayMode = 'H_bb'
+     if 'HJetToNonbb' in SampleName : DecayMode = 'H_bb'
      if not DecayMode == 'unknown' :
        HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass)
+       if 'HJetToNonbb' in SampleName : HiggsBR = 1.0 - HiggsBR
 
      HiggsXS['DecayMode'] = DecayMode
      HiggsXS['HiggsBR'  ] = HiggsBR
@@ -186,6 +187,8 @@ class HiggsXSection:
      HiggsXS['xs'] =  HiggsProdXS * HiggsBR * FinalStateBR    
 
      return HiggsXS
+
+### Below some examples of usage :
 
 HiggsXS = HiggsXSection() 
 #HiggsXS.printYR()
