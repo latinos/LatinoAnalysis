@@ -128,11 +128,11 @@ class HiggsXSection:
 
 HiggsXS = HiggsXSection() 
 #HiggsXS.printYR()
-#print HiggsXS.GetXsection('YR2','8TeV','ggH','125.0')
-#print HiggsXS.GetXsection('YR3','8TeV','ggH','125.0')
-#print HiggsXS.GetXsection('YR4prel','13TeV','ggH','125.0')
+print HiggsXS.GetHiggsProdXS('YR2','8TeV','ggH','125.0')
+print HiggsXS.GetHiggsProdXS('YR3','8TeV','ggH','125.0')
+print HiggsXS.GetHiggsProdXS('YR4prel','13TeV','ggH','125.0')
 
 print HiggsXS.GetHiggsBR('YR2','H_WW','125.0')
 print HiggsXS.GetHiggsBR('YR3','H_WW','125.0')
-print HiggsXS.GetHiggsBR('YR4prel','H_WW','125.63')
+print HiggsXS.GetHiggsBR('YR4prel','H_WW','125.0')
 
