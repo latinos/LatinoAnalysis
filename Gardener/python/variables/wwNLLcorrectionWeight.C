@@ -211,19 +211,39 @@ float wwNLL::nllWeight(int variation, int kind){
   }
   else if (variation == -1) {
    if (kind == 0) {
-    weight =  ptww < 500. ? _resum_Qdown->Eval(ptww) : 1;
+    weight =  ptww < 500. ? (_resum_Qdown->Eval(ptww)*_resum_central->Eval(ptww)) : 1;
    }
    if (kind == 1) {
-    weight =  ptww < 500. ? _resum_Rdown->Eval(ptww) : 1;
+    if (ptww < 500.) {
+     if (ptww < 50.) {
+      weight =  _resum_Rdown->Eval(ptww) * _resum_central->Eval(ptww);
+     }
+     else {
+      weight =  _resum_central->Eval(ptww);      
+     }
+    }
+    else {
+     weight = 1.0;
+    }
    }
   }
   else if (variation == 1) {
    if (kind == 0) {
-    weight =  ptww < 500. ? _resum_Qup->Eval(ptww) : 1;
+    weight =  ptww < 500. ? (_resum_Qup->Eval(ptww)*_resum_central->Eval(ptww)) : 1;
     //    weight = _reweightingFactors_Qup[bin];   
    }
    if (kind == 1) {
-    weight =  ptww < 500. ? _resum_Rup->Eval(ptww) : 1;
+    if (ptww < 500.) {
+     if (ptww < 50.) {
+      weight =  _resum_Rup->Eval(ptww) * _resum_central->Eval(ptww);
+     }
+     else {
+      weight =  _resum_central->Eval(ptww);      
+     }
+    }
+    else {
+     weight = 1.0;
+    }
    }
   }
  }

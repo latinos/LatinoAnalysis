@@ -31,7 +31,8 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-m', '--mcsample'    , dest='mcsample', help='Name of the mc sample to be considered. Possible options [powheg, mcatnlo, madgraph]',)
+        group.add_option('-m', '--mcsample' , dest='mcsample', help='Name of the mc sample to be considered. Possible options [powheg, mcatnlo, madgraph]',default='random')
+        group.add_option('-c', '--cmssw'    , dest='cmssw', help='cmssw version (naming convention may change)', default='764', type='string')
         parser.add_option_group(group)
 
         return group
@@ -43,6 +44,10 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             raise RuntimeError('Missing parameter')
 
         self.mcsample = opts.mcsample
+
+        self.cmssw = opts.cmssw
+        print " cmssw =", self.cmssw
+
 
     def process(self,**kwargs):
 
@@ -130,35 +135,74 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             
             #print "--------"
             #print " size = ", itree.std_vector_VBoson_pt.size()
+            #print " self.cmssw  = ", self.cmssw 
             
-            for numlepton in range(0, itree.std_vector_VBoson_pt.size()):
-              #print " - ", numlepton, " :: ", itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton), " :: ", abs(itree.std_vector_VBoson_pid.at(numlepton))
-              if itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton) == 1 and abs(itree.std_vector_VBoson_pid.at(numlepton)) == 24 :
-                if number1 == -1 :
-                  number1 = numlepton
-                else :
-                  number2 = numlepton
+            if self.cmssw == '763' :
 
-            #print "     number1 = ",  number1           
-            #print "     number2 = ",  number2
 
-            if number1 != -1 and number2 != -1 : 
-              ptV1 = itree.std_vector_VBoson_pt.at(number1)
-              ptV2 = itree.std_vector_VBoson_pt.at(number2)
-              phiV1 = itree.std_vector_VBoson_phi.at(number1)
-              phiV2 = itree.std_vector_VBoson_phi.at(number2)
-              etaV1 = itree.std_vector_VBoson_eta.at(number1)
-              etaV2 = itree.std_vector_VBoson_eta.at(number2)
-
-              wwNLL.SetPTWW(ptV1, phiV1, etaV1, ptV2, phiV2, etaV2)
+              if itree.std_vector_VBoson_pt.size() >= 2 :
+                number1 = 0
+                number2 = 1
               
-              gen_ptww[0]  = wwNLL.GetPTWW()
-              gen_mww[0]   = wwNLL.GetMWW()
-              
+              #print "     number1 = ",  number1           
+              #print "     number2 = ",  number2
+      
+              if number1 != -1 and number2 != -1 : 
+                ptV1 = itree.std_vector_VBoson_pt.at(number1)
+                ptV2 = itree.std_vector_VBoson_pt.at(number2)
+                phiV1 = itree.std_vector_VBoson_phi.at(number1)
+                phiV2 = itree.std_vector_VBoson_phi.at(number2)
+                etaV1 = itree.std_vector_VBoson_eta.at(number1)
+                etaV2 = itree.std_vector_VBoson_eta.at(number2)
+      
+                wwNLL.SetPTWW(ptV1, phiV1, etaV1, ptV2, phiV2, etaV2)
+                
+                gen_ptww[0]  = wwNLL.GetPTWW()
+                gen_mww[0]   = wwNLL.GetMWW()
+                
+              else :
+                gen_mww[0]  = -9999.
+                gen_ptww[0] = -9999.
+                                
+                
             else :
-              gen_mww[0]  = -9999.
-              gen_ptww[0] = -9999.
+
+
+              # 74X release, 21st Oct tag
               
+              for numlepton in range(0, itree.std_vector_VBoson_pt.size()):
+                #print " - ", numlepton, " :: ", itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton), " :: ", abs(itree.std_vector_VBoson_pid.at(numlepton))
+                if itree.std_vector_VBoson_fromHardProcessBeforeFSR.at(numlepton) == 1 and abs(itree.std_vector_VBoson_pid.at(numlepton)) == 24 :
+                  if number1 == -1 :
+                    number1 = numlepton
+                  else :
+                    number2 = numlepton
+      
+              #print "     number1 = ",  number1           
+              #print "     number2 = ",  number2
+      
+              if number1 != -1 and number2 != -1 : 
+                ptV1 = itree.std_vector_VBoson_pt.at(number1)
+                ptV2 = itree.std_vector_VBoson_pt.at(number2)
+                phiV1 = itree.std_vector_VBoson_phi.at(number1)
+                phiV2 = itree.std_vector_VBoson_phi.at(number2)
+                etaV1 = itree.std_vector_VBoson_eta.at(number1)
+                etaV2 = itree.std_vector_VBoson_eta.at(number2)
+      
+                wwNLL.SetPTWW(ptV1, phiV1, etaV1, ptV2, phiV2, etaV2)
+                
+                gen_ptww[0]  = wwNLL.GetPTWW()
+                gen_mww[0]   = wwNLL.GetMWW()
+                
+              else :
+                gen_mww[0]  = -9999.
+                gen_ptww[0] = -9999.
+
+
+
+
+
+             
 
             nllnnloW[0] = wwNLL.nllnnloWeight(0)
             nllW[0]   = wwNLL.nllWeight(0)
