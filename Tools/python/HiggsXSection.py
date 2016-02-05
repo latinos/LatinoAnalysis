@@ -31,6 +31,11 @@ class HiggsXSection:
       
       self.readYR('YR4prel','13TeV')
 
+      self._br = {}
+      self._br['W2lv'] = 0.108*3.0
+      self._br['W2QQ'] = 0.676
+      self._br['Z2ll'] = 0.337*3.0
+
    def readYR(self,YRversion,energy,model='sm'):
       if not YRversion in ['YR2','YR3','YR4prel'] : return
       if not energy in ['7TeV','8TeV','13TeV' ] : return
@@ -166,13 +171,13 @@ class HiggsXSection:
 
      if 'WWTo2L2Nu' in SampleName :  
         FinalState   = 'WW->2l2v'
-        FinalStateBR = 1.
+        FinalStateBR = self._br['W2lv']*self._br['W2lv']
      if 'WWToLNuQQ' in SampleName :  
         FinalState   = 'WW->lvQQ'
-        FinalStateBR = 1.
+        FinalStateBR = self._br['W2lv']*self._br['W2QQ']
      if 'ZZTo4L'    in SampleName :  
         FinalState   = 'ZZ->4l'
-        FinalStateBR = 1.
+        FinalStateBR = self._br['Z2ll']*self._br['Z2ll']
 
      HiggsXS['FinalState']   = FinalState
      HiggsXS['FinalStateBR'] = FinalStateBR
