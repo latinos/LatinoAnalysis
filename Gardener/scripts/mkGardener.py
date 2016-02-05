@@ -198,13 +198,14 @@ for iProd in prodList :
 
   if not Productions[iProd]['isData'] :  
     xsMethods=['gDoc','Python']  # Among 'gDoc','Python','YellowR' and order Matter (Overwriting for same samples !)
-    if options.cmssw == '763' : xsMethods=['Python']
+    if options.cmssw == '763' : xsMethods=['Python','YellowR']
     xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
     xsDB = xsectionDB()
     for iMethod in xsMethods :
 
       if iMethod == 'gDoc'    : xsDB.readGDoc(Productions[iProd]['gDocID'])
       if iMethod == 'Python'  : xsDB.readPython(xsFile)
+      if iMethod == 'YellowR' : xsDB.readYR('YR4prel','13TeV')
 
   # Find existing Input files 
   #if not options.iStep in Steps: options.iStep = 'Prod'
@@ -501,9 +502,9 @@ for iProd in prodList :
           #print oriTreeList
           baseWInfo = {}
           baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB,baseWInfo,options.cmssw)
-          #if baseW == '-1' : 
-          #   xsDB.Print()
-          #   exit()
+          if baseW == '-1' : 
+             xsDB.Print()
+             exit()
           print baseWInfo
           f = open(wDir+'/baseWInfo.txt', 'a')
           f.write(iProd+' '+iTargetOri+' : ')
@@ -512,6 +513,7 @@ for iProd in prodList :
           f.close()
         else: baseW = '1.'
         command = command.replace('RPLME_baseW',baseW)
+        command = command.replace('RPLME_XSection',baseWInfo['xs'])
 
         # Fix PU data 
         #puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 

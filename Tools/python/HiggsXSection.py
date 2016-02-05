@@ -77,6 +77,10 @@ class HiggsXSection:
    def printYR(self):
       print self._YR
 
+   def GetYR(self):
+     return self._YR
+
+
    def GetYRVal(self,YRDic,mh,Key):
      iMass=float(mh)
      if iMass in YRDic :
@@ -205,4 +209,4 @@ print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToZZTo4L_M125')
 print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
 print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWToLNuQQ_M650')
 
-
+print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')

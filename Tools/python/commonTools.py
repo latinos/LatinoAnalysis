@@ -3,6 +3,9 @@ import sys, re, os, os.path, string
 import subprocess
 from cookielib import CookieJar
 from urllib2 import build_opener, HTTPCookieProcessor
+
+from LatinoAnalysis.Tools.HiggsXSection  import *
+
 #---
 class list_maker:
     def __init__(self, var, sep=',', type=None ):
@@ -41,6 +44,9 @@ class xsectionDB:
     def __init__(self):
 
       self.xsections = {} 
+      self._useYR     = False
+      self._YRVersion = ''
+      self._YREnergy  = ''
 
     def readGDoc(self,gdocKey='1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ'):
 
@@ -87,8 +93,19 @@ class xsectionDB:
             if iName == 'ref'   : self.xsections[iKey]['src']    = 'Python,ref='+iVal
       handle.close()
 
+    def readYR(self,YRVersion,YREnergy):
+
+      self._useYR     = True
+      self._YRVersion = YRVersion
+      self._YREnergy  = YREnergy
+      self._HiggsXS   = HiggsXSection() 
 
     def get(self,iSample):
+      if self._useYR :
+        Higgs = self._HiggsXS.GetHiggsXS4Sample(self._YRVersion,self._YREnergy,iSample)
+        print Higgs
+        if not Higgs['xs'] == 0. : return str(Higgs['xs'])
+
       if iSample in self.xsections : 
         #print iSample, self.xsections[iSample]['sample'], self.xsections[iSample]['xs']
         return str(float(self.xsections[iSample]['xs'])*float(self.xsections[iSample]['kfact']))
