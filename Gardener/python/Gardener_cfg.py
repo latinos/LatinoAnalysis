@@ -92,9 +92,10 @@ Productions= {
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_16Dec2015-v1_25ns_StarWars.py' ,
                         'dirExt'  : 'LatinoTrees' ,
                         'reName'  : { 
-                                       'DoubleEG_Run2015D_25ns-16Dec2015-v2'    : 'Run2015D_16Dec2015_DoubleEG' ,
-                                       'DoubleMuon_Run2015D_25ns-16Dec2015-v1'  : 'Run2015D_16Dec2015_DoubleMuon' ,
-                                       'MuonEG_Run2015D_25ns-16Dec2015-v1'      : 'Run2015D_16Dec2015_MuonEG' , 
+                                       'DoubleEG_Run2015D_25ns-16Dec2015-v2'       : 'Run2015D_16Dec2015_DoubleEG' ,
+                                       'DoubleMuon_Run2015D_25ns-16Dec2015-v1'     : 'Run2015D_16Dec2015_DoubleMuon' ,
+                                       'MuonEG_Run2015D_25ns-16Dec2015-v1'         : 'Run2015D_16Dec2015_MuonEG' , 
+                                       'SingleElectron_Run2015D_25ns-16Dec2015-v1' : 'Run2015D_16Dec2015_SingleElectron' ,
                                     }
                       } ,
 

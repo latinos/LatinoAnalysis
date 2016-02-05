@@ -290,7 +290,7 @@ for iProd in prodList :
       #print targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
-      if not iStep in ['mcwghtcount']: 
+      if not iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
         lSample = []
         for iTarget in targetList.keys(): 
           if   '_000' in iTarget :
