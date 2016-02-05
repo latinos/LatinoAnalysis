@@ -164,9 +164,18 @@ class HiggsXSection:
      FinalState =  'unknown'
      FinalStateBR = 1.
 
+     if 'WWTo2L2Nu' in SampleName :  
+        FinalState   = 'WW->2l2v'
+        FinalStateBR = 1.
+     if 'WWToLNuQQ' in SampleName :  
+        FinalState   = 'WW->lvQQ'
+        FinalStateBR = 1.
+     if 'ZZTo4L'    in SampleName :  
+        FinalState   = 'ZZ->4l'
+        FinalStateBR = 1.
+
      HiggsXS['FinalState']   = FinalState
      HiggsXS['FinalStateBR'] = FinalStateBR
-     
 
      # Final X-Section
      HiggsXS['xs'] =  HiggsProdXS * HiggsBR * FinalStateBR    
@@ -186,6 +195,6 @@ print HiggsXS.GetHiggsBR('YR4prel','H_WW','125.0')
 print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
 print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToZZTo4L_M125')
 print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
-
+print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWToLNuQQ_M650')
 
 
