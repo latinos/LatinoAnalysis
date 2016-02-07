@@ -511,9 +511,8 @@ for iProd in prodList :
           f.write(str(baseWInfo))
           f.write('\n')
           f.close()
-        else: baseW = '1.'
-        command = command.replace('RPLME_baseW',baseW)
-        command = command.replace('RPLME_XSection',baseWInfo['xs'])
+          command = command.replace('RPLME_baseW',baseW)
+          command = command.replace('RPLME_XSection',baseWInfo['xs'])
 
         # Fix PU data 
         #puData = '/afs/cern.ch/user/p/piedra/work/pudata.root' 
