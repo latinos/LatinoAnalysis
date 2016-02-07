@@ -317,3 +317,14 @@ If reading 763 MET naming convention and full set of uncertainties.
 
     gardener.py metUncertainty --kind='Up' --cmssw='763' input.root output.root
     gardener.py metUncertainty --kind='Dn' --cmssw='763' input.root output.root
+
+    
+    
+baseW table
+====
+
+Get the baseW table
+
+    ls /media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/*.root | grep ".root" | awk '{print "root -l -q drawBasew.cxx\\\(\\\""$1"\\\"\\\)"}' | /bin/sh
+
+    
