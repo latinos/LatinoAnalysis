@@ -46,7 +46,7 @@ class qq2vvEWKcorrectionsWeightFiller(TreeCloner):
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/qq2vvEWKcorrectionsWeight.C++g')
         #----------------------------------------------------------------------------------------------------
 
-        qq2vvEWKcorrections = ROOT.qq2vvEWKcorrections(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/data/ewk/out_qqbww_EW_L8_200_forCMS.dat')
+        qq2vvEWKcorrections = ROOT.qq2vvEWKcorrections(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/out_qqbww_EW_L8_200_forCMS.dat')
 
         print '- Starting eventloop'
         step = 5000
@@ -56,35 +56,23 @@ class qq2vvEWKcorrectionsWeightFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed.'
 
-            #ptl1 = itree.leptonLHEpt1
-            #ptl2 = itree.leptonLHEpt2
-            #etal1 = itree.leptonLHEeta1
-            #etal2 = itree.leptonLHEeta2
-            #phil1 = itree.leptonLHEphi1
-            #phil2 = itree.leptonLHEphi2
-            #idl1 = itree.leptonLHEpid1
-            #idl2 = itree.leptonLHEpid2
+            ptl1 = itree.std_vector_LHElepton_pt[0]
+            ptl2 = itree.std_vector_LHElepton_pt[1]
+            etal1 = itree.std_vector_LHElepton_eta[0]
+            etal2 = itree.std_vector_LHElepton_eta[1]
+            phil1 = itree.std_vector_LHElepton_phi[0]
+            phil2 = itree.std_vector_LHElepton_phi[1]
+            idl1 = itree.std_vector_LHElepton_id[0]
+            idl2 = itree.std_vector_LHElepton_id[1]
 
-
-            ptl1 = itree.genVV_lepton1_LHE_pt
-            ptl2 = itree.genVV_lepton2_LHE_pt
-            etal1 = itree.genVV_lepton1_LHE_eta
-            etal2 = itree.genVV_lepton2_LHE_eta
-            phil1 = itree.genVV_lepton1_LHE_phi
-            phil2 = itree.genVV_lepton2_LHE_phi
-            idl1 = itree.genVV_lepton1_LHE_pid
-            idl2 = itree.genVV_lepton2_LHE_pid
-
-            ptv1 = itree.genVV_neutrino1_LHE_pt
-            ptv2 = itree.genVV_neutrino2_LHE_pt
-            etav1 = itree.genVV_neutrino1_LHE_eta
-            etav2 = itree.genVV_neutrino2_LHE_eta
-            phiv1 = itree.genVV_neutrino1_LHE_phi
-            phiv2 = itree.genVV_neutrino2_LHE_phi
-
-
-
-
+            ptv1 = itree.std_vector_LHEneutrino_pt[0]
+            ptv2 = itree.std_vector_LHEneutrino_pt[1]
+            etav1 = itree.std_vector_LHEneutrino_eta[0]
+            etav2 = itree.std_vector_LHEneutrino_eta[1]
+            phiv1 = itree.std_vector_LHEneutrino_phi[0]
+            phiv2 = itree.std_vector_LHEneutrino_phi[1]
+                  
+ 
             x1 = itree.pdfx1
             x2 = itree.pdfx2
 
@@ -99,9 +87,6 @@ class qq2vvEWKcorrectionsWeightFiller(TreeCloner):
     #int   id1  , int   id2 ,                             // parton PDG id's
 
             ewkW[0] = qq2vvEWKcorrections.getqq2WWEWKCorr(ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2, ptv1, etav1, phiv1, ptv2, etav2, phiv2, x1, x2, id1, id2)
-
-            #print "itree.pdfid1 = ",itree.pdfid1,"   itree.pdfid2 = ",itree.pdfid2
-            #print ewkW[0]
 
             otree.Fill()
 

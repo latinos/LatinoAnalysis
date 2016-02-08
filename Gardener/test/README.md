@@ -192,6 +192,22 @@ WW NNLO+NNLL scales and uncertainty
 
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/latino_WWTo2L2Nu.root  /tmp/amassiro/
            
+    gardener.py wwEWKcorrections \
+       ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root \
+       output.root
+    
+    gardener.py wwEWKcorrections \
+       /tmp/amassiro/latino_WWTo2L2Nu.root \
+       output.root
+
+       
+     
+
+WW EWK corrections
+====
+
+    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/latino_WWTo2L2Nu.root  /tmp/amassiro/
+           
     gardener.py wwNLLcorrections \
        --cmssw=763   \
        ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root \
@@ -202,8 +218,7 @@ WW NNLO+NNLL scales and uncertainty
        output.root
 
     
-
-    
+  
     
 
 Lepton id/iso scale factors

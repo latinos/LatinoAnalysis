@@ -22,11 +22,14 @@ from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFi
 # kinematic variables
 from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
 
+# qqWW corrections
+from LatinoAnalysis.Gardener.variables.wwNLLcorrectionWeight      import wwNLLcorrectionWeightFiller
+from LatinoAnalysis.Gardener.variables.qq2vvEWKcorrectionsWeight  import qq2vvEWKcorrectionsWeightFiller
+
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
 from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
 from LatinoAnalysis.Gardener.variables.ElectronsVar               import ElectronsVarFiller
-from LatinoAnalysis.Gardener.variables.wwNLLcorrectionWeight      import wwNLLcorrectionWeightFiller
 from LatinoAnalysis.Gardener.variables.DMVar                      import DMVarFiller
 from LatinoAnalysis.Gardener.variables.XWWVar                     import XWWVarFiller
 from LatinoAnalysis.Gardener.variables.dymvaVar                   import DymvaVarFiller
@@ -95,6 +98,8 @@ if __name__ == '__main__':
 
 # add nll re-weight for ww
     modules['wwNLLcorrections']      =  wwNLLcorrectionWeightFiller()
+    modules['wwEWKcorrections']      =  qq2vvEWKcorrectionsWeightFiller()
+
 
 # add bpog SF
     modules['btagPogScaleFactors']   = btagPogScaleFactors()
