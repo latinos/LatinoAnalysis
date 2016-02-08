@@ -606,6 +606,7 @@ class ShapeFactory:
             
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
+            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".C")
              
             # log Y axis
             frame.GetYaxis().SetRangeUser( max(0.01, minYused), 100 * maxYused )
