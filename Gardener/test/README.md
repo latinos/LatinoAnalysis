@@ -40,6 +40,11 @@ How to filter events and update some collections:
                 -k 2
                 --kind 2 
 
+    gardener.py  l2selfiller \
+                --kind 3 \
+                /tmp/amassiro/latino_WZTo3LNu.root  \
+                /tmp/amassiro/latino_WZTo3LNu_TEST.root
+
                 
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/50ns/17Sep2015/25ns/mc/latino_WWTo2L2Nu.root /tmp/amassiro/
     gardener.py  l2selfiller \
@@ -218,7 +223,7 @@ WW EWK corrections
        output.root
 
     
-  
+
     
 
 Lepton id/iso scale factors
