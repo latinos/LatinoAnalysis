@@ -2,8 +2,8 @@
  
  
  
- TFile fileNominal("MyRatioWWpTHistogram.root","READ");
- 
+ //  TFile fileNominal("MyRatioWWpTHistogram.root","READ");
+ TFile fileNominal("MyNewRatioWWpTHistogram.root","READ");
  
  TH1F* histo = (TH1F*) fileNominal.Get("wwpt");
  ofstream myfile;
