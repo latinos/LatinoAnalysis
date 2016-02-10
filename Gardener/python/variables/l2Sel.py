@@ -262,6 +262,89 @@ class L2SelFiller(TreeCloner):
 
        return isThisATightLepton
 
+
+
+
+    def isWgsLepton(self, ilepton) :
+
+       isThisAWgsLepton = 0
+       
+       #
+       # Wg* lepton definition
+       #    - remove from isolation cone the lepton pt component
+       #
+        
+       ###########
+       # electron
+       
+       # id definition
+       if ( self.itree.std_vector_lepton_eleIdTight[ilepton] == 1
+            and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
+           ) :
+         isThisAWgsLepton = 1
+       
+       ###########
+       # muon
+       dxy = float(0.01)
+       if (self.itree.std_vector_lepton_pt[ilepton] > 20):
+           dxy = float(0.02)
+       
+       muonIso = float(0.0)
+       
+       if ( (self.itree.std_vector_lepton_photonIso[ilepton] +
+            self.itree.std_vector_lepton_neutralHadronIso[ilepton] -
+            0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton]) > 0
+            ) :
+           muonIso = (self.itree.std_vector_lepton_photonIso[ilepton] +
+                      self.itree.std_vector_lepton_neutralHadronIso[ilepton] -
+                      0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton])
+       else:
+           muonIso = 0
+
+       # isolation cone removal
+       pt_to_be_removed_from_overlap = 0
+
+       for jlepton in xrange(len(self.itree.std_vector_lepton_pt)) :
+         if jlepton != ilepton :
+           if self.itree.std_vector_lepton_pt[jlepton] > 0 :                 
+             if self.isAcloseToB(self.itree.std_vector_lepton_eta[jlepton], self.itree.std_vector_lepton_phi[jlepton],
+                                 self.itree.std_vector_lepton_eta[ilepton], self.itree.std_vector_lepton_phi[ilepton],
+                                 0.3) :
+               pt_to_be_removed_from_overlap += self.itree.std_vector_lepton_pt[jlepton]
+       
+       if self.cmssw == '763' :
+         if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
+            and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
+            and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+            and abs(self.itree.std_vector_lepton_d0[ilepton]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+            and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+            ) :
+           isThisAWgsLepton = 1
+       else :
+         if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
+            and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
+            and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+            and abs(self.itree.std_vector_lepton_BestTrackdxy[ilepton]) < dxy    
+            and abs(self.itree.std_vector_lepton_BestTrackdz[ilepton]) < 0.1     
+            ) :
+           isThisAWgsLepton = 1
+
+       return isThisAWgsLepton
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
                     
     def process(self,**kwargs):
@@ -480,70 +563,20 @@ class L2SelFiller(TreeCloner):
               ##########################################
  
 
-              #
+              ##########################################
               # Wg* lepton definition
               #    - remove from isolation cone the lepton pt component
               #
               if self.kind == 3 :
                
-                ###########
-                # electron
+                WgsTag = self.isWgsLepton(iLep)
                 
-                # id definition
-                if ( itree.std_vector_lepton_eleIdTight[iLep] == 1
-                     and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
-                    ) :
+                if WgsTag == 1 :
                   isGoodLepton = True
-               
-                ###########
-                # muon
-                dxy = float(0.01)
-                if (itree.std_vector_lepton_pt[iLep] > 20):
-                    dxy = float(0.02)
-               
-                muonIso = float(0.0)
-               
-                if ( (itree.std_vector_lepton_photonIso[iLep] +
-                     itree.std_vector_lepton_neutralHadronIso[iLep] -
-                     0.5 * itree.std_vector_lepton_sumPUPt[iLep]) > 0
-                     ) :
-                    muonIso = (itree.std_vector_lepton_photonIso[iLep] +
-                               itree.std_vector_lepton_neutralHadronIso[iLep] -
-                               0.5 * itree.std_vector_lepton_sumPUPt[iLep])
-                else:
-                    muonIso = 0
 
-                # isolation cone removal
-                pt_to_be_removed_from_overlap = 0
+              ##########################################
 
-                for jLep in xrange(len(itree.std_vector_lepton_pt)) :
-                  if jLep != iLep :
-                    if itree.std_vector_lepton_pt[jLep] > 0 :                 
-                      if self.isAcloseToB(itree.std_vector_lepton_eta[jLep], itree.std_vector_lepton_phi[jLep],
-                                          itree.std_vector_lepton_eta[iLep], itree.std_vector_lepton_phi[iLep],
-                                          0.3) :
-                        pt_to_be_removed_from_overlap += itree.std_vector_lepton_pt[jLep]
-               
-                if self.cmssw == '763' :
-                  if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                     and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso - pt_to_be_removed_from_overlap) / itree.std_vector_lepton_pt[iLep] < 0.15
-                     and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
-                     and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
-                     ) :
-                    isGoodLepton = True
-                else :
-                  if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                     and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso - pt_to_be_removed_from_overlap) / itree.std_vector_lepton_pt[iLep] < 0.15
-                     and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy    
-                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1     
-                     ) :
-                    isGoodLepton = True
-
-
-
-
+     
  
               # now check if we found 2 leptons        
                              
