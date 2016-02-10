@@ -374,6 +374,12 @@ class L2SelFiller(TreeCloner):
 		if subString in branchName:
 		    self.namesOldBranchesToBeModifiedVector.append(branchName)
         
+        
+        # new branches to be added as std_vector
+        self.namesNewBranchesVector = ['std_vector_lepton_isLooseLepton', 'std_vector_lepton_isTightLepton', 'std_vector_lepton_isWgsLepton']        
+        
+
+
         # and these variables NEED to be defined as functions in WWVar.C
         # e.g. mll, dphill, ...
         self.namesOldBranchesToBeModifiedSimpleVariable = [
@@ -434,7 +440,8 @@ class L2SelFiller(TreeCloner):
             self.jetVarList.append("jet"+jetVar+str(i+1))
 
         # clone the tree
-        self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.namesOfSpecialSimpleVariable + self.jetVarList)
+        self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOldBranchesToBeModifiedSimpleVariable + self.namesOfSpecialSimpleVariable + self.jetVarList + self.namesNewBranchesVector)
+
 
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
@@ -492,6 +499,18 @@ class L2SelFiller(TreeCloner):
 	    bvector =  ROOT.std.vector(float) ()
             self.looseLeptonVector[bname] = bvector
             self.otree.Branch(bname.replace('lepton','looseLepton'), bvector)
+
+        # new brances as std_vector
+        self.newBranchesVector = {}
+        for bname in self.namesNewBranchesVector:
+          bvector =  ROOT.std.vector(float) ()
+          self.newBranchesVector[bname] = bvector
+
+        # now actually connect the branches
+        for bname, bvector in self.newBranchesVector.iteritems():
+          self.otree.Branch(bname,bvector)
+
+
 
         # input tree and output tree
         itree     = self.itree
@@ -554,9 +573,9 @@ class L2SelFiller(TreeCloner):
               # denominator of fakes definition
               if self.kind == 2 :
                
-                TightTag = self.isTightLepton(iLep)
+                LooseTag = self.isLooseLepton(iLep)
                 
-                if TightTag == 1 :
+                if LooseTag == 1 :
                   isGoodLepton = True
 
               # denominator of fakes definition (end)
@@ -604,6 +623,33 @@ class L2SelFiller(TreeCloner):
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                  if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname):
                      self.changeOrder( bname, bvector, goodLeps)            
+
+              
+              # fill the lepton id vectors
+              maxNumLeptons = len(itree.std_vector_lepton_pt)
+              for bname, bvector in self.newBranchesVector.iteritems():
+                bvector.clear() 
+                if bname == 'std_vector_lepton_isLooseLepton' :
+                  for iLep in goodLeps :
+                     LooseTag = self.isLooseLepton(iLep)
+                     bvector.push_back (LooseTag)
+                  for remainingLep in range( maxNumLeptons - len(goodLeps) ) :
+                     bvector.push_back ( -9999. )
+
+                if bname == 'std_vector_lepton_isTightLepton' :
+                  for iLep in goodLeps :
+                     TightTag = self.isTightLepton(iLep)
+                     bvector.push_back (TightTag)
+                  for remainingLep in range( maxNumLeptons - len(goodLeps) ) :
+                     bvector.push_back ( -9999. )
+
+                if bname == 'std_vector_lepton_isWgsLepton' :
+                  for iLep in goodLeps :
+                     WgsTag = self.isWgsLepton(iLep)
+                     bvector.push_back (WgsTag)
+                  for remainingLep in range( maxNumLeptons - len(goodLeps) ) :
+                     bvector.push_back ( -9999. )
+
 
               # now the jets:  
               # - clean jets
