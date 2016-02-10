@@ -92,7 +92,177 @@ class L2SelFiller(TreeCloner):
             return True
         else:
             return False
-                    
+  
+
+
+
+
+    def isLooseLepton(self, ilepton) :
+       
+       # denominator of fakes definition
+       
+       isThisALooseLepton = 0
+       
+       ###########
+       # electron
+       
+       # id definition
+       if self.cmssw == '763' :               
+
+         if (
+            abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
+            and 
+             ((
+             (abs(self.itree.std_vector_lepton_eta[ilepton]) <= 1.479) 
+             and    (abs(self.itree.std_vector_electron_dEtaIn[ilepton]) < 0.01               and
+                     abs(self.itree.std_vector_electron_dPhiIn[ilepton]) < 0.04               and
+                     self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.011              and
+                     self.itree.std_vector_electron_hOverE[ilepton]              < 0.08               and
+                     self.itree.std_vector_electron_ooEmooP[ilepton] < 0.01               and 
+                     self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2  and
+                     self.itree.std_vector_lepton_d0[ilepton]      < 0.1                and
+                     abs(self.itree.std_vector_lepton_dz[ilepton])< 0.373              and
+                     self.itree.std_vector_electron_passConversionVeto[ilepton] )
+             )
+             or 
+             (
+             (abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5)
+             and    (abs(self.itree.std_vector_electron_dEtaIn[ilepton]) < 0.01               and
+                     abs(self.itree.std_vector_electron_dPhiIn[ilepton]) < 0.08               and
+                     self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.031              and
+                     self.itree.std_vector_electron_hOverE[ilepton]              < 0.08               and
+                     self.itree.std_vector_electron_ooEmooP[ilepton] < 0.01               and
+                     self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1  and
+                     self.itree.std_vector_lepton_d0[ilepton]      < 0.2                and
+                     abs(self.itree.std_vector_lepton_dz[ilepton])< 0.602              and
+                     self.itree.std_vector_electron_passConversionVeto[ilepton] )
+             ))
+            ) : 
+              isThisALooseLepton = 0 
+
+       else : # 74X cmssw release
+         if (
+            abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
+            and 
+             ((
+             (abs(self.itree.std_vector_lepton_eta[ilepton]) <= 1.479) 
+             and    (abs(self.itree.std_vector_electron_dEtaIn[ilepton]) < 0.01               and
+                     abs(self.itree.std_vector_electron_dPhiIn[ilepton]) < 0.04               and
+                     self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.011              and
+                     self.itree.std_vector_electron_hOverE[ilepton]              < 0.08               and
+                     self.itree.std_vector_electron_ooEmooP[ilepton] < 0.01               and 
+                     self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2  and
+                     self.itree.std_vector_electron_d0[ilepton]      < 0.1                and
+                     abs(self.itree.std_vector_electron_dz[ilepton])< 0.373              and
+                     self.itree.std_vector_electron_passConversionVeto[ilepton] )
+             )
+             or 
+             (
+             (abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5)
+             and    (abs(self.itree.std_vector_electron_dEtaIn[ilepton]) < 0.01               and
+                     abs(self.itree.std_vector_electron_dPhiIn[ilepton]) < 0.08               and
+                     self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.031              and
+                     self.itree.std_vector_electron_hOverE[ilepton]              < 0.08               and
+                     self.itree.std_vector_electron_ooEmooP[ilepton] < 0.01               and
+                     self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1  and
+                     self.itree.std_vector_electron_d0[ilepton]      < 0.2                and
+                     abs(self.itree.std_vector_electron_dz[ilepton])< 0.602              and
+                     self.itree.std_vector_electron_passConversionVeto[ilepton] )
+             ))
+            ) : 
+              isThisALooseLepton = 1 
+
+       ###########
+       # muon
+       dxy = float(0.01)
+       if (self.itree.std_vector_lepton_pt[ilepton] > 20):
+           dxy = float(0.02)
+       
+       muonIso = float(0.0)
+       
+       if ( (self.itree.std_vector_lepton_photonIso[ilepton] +
+            self.itree.std_vector_lepton_neutralHadronIso[ilepton] -
+            0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton]) > 0
+            ) :
+           muonIso = (self.itree.std_vector_lepton_photonIso[ilepton] +
+                      self.itree.std_vector_lepton_neutralHadronIso[ilepton] -
+                      0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton])
+       else:
+           muonIso = 0
+
+       if self.cmssw == '763' :               
+         if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
+              and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.4
+              and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+              and abs(self.itree.std_vector_lepton_d0[ilepton]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+              and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+              ) :
+           isThisALooseLepton = 1.0
+       else : 
+         if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
+              and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.4
+              and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+              and abs(self.itree.std_vector_lepton_BestTrackdxy[ilepton]) < dxy
+              and abs(self.itree.std_vector_lepton_BestTrackdz[ilepton]) < 0.1 
+              ) :
+           isThisALooseLepton = 1.0
+    
+       return isThisALooseLepton
+      
+
+
+
+    def isTightLepton(self, ilepton) :
+
+       isThisATightLepton = 0
+       
+       ###########
+       # electron
+       
+       # id definition
+       if ( self.itree.std_vector_lepton_eleIdTight[ilepton] == 1
+            and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
+           ) :
+         isThisATightLepton = 1
+       
+       ###########
+       # muon
+       dxy = float(0.01)
+       if (self.itree.std_vector_lepton_pt[ilepton] > 20):
+           dxy = float(0.02)
+       
+       muonIso = float(0.0)
+       
+       if ( (self.itree.std_vector_lepton_photonIso[ilepton] +
+            self.itree.std_vector_lepton_neutralHadronIso[ilepton] -
+            0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton]) > 0
+            ) :
+           muonIso = (self.itree.std_vector_lepton_photonIso[ilepton] +
+                      self.itree.std_vector_lepton_neutralHadronIso[ilepton] -
+                      0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton])
+       else:
+           muonIso = 0
+       
+       if self.cmssw == '763' :
+         if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
+            and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
+            and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+            and abs(self.itree.std_vector_lepton_d0[ilepton]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+            and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+            ) :
+           isThisATightLepton = 1
+       else :
+         if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
+            and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
+            and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+            and abs(self.itree.std_vector_lepton_BestTrackdxy[ilepton]) < dxy    
+            and abs(self.itree.std_vector_lepton_BestTrackdz[ilepton]) < 0.1     
+            ) :
+           isThisATightLepton = 1
+
+       return isThisATightLepton
+
+  
                     
     def process(self,**kwargs):
         tree  = kwargs['tree']
@@ -290,175 +460,21 @@ class L2SelFiller(TreeCloner):
               # analysis lepton definition
               #
               if self.kind == 1 :
-               
-                ###########
-                # electron
+ 
+                TightTag = self.isTightLepton(iLep)
                 
-                # id definition
-                if ( itree.std_vector_lepton_eleIdTight[iLep] == 1
-                     and abs(itree.std_vector_lepton_flavour[iLep]) == 11 
-                    ) :
+                if TightTag == 1 :
                   isGoodLepton = True
-               
-                ###########
-                # muon
-                dxy = float(0.01)
-                if (itree.std_vector_lepton_pt[iLep] > 20):
-                    dxy = float(0.02)
-               
-                muonIso = float(0.0)
-               
-                if ( (itree.std_vector_lepton_photonIso[iLep] +
-                     itree.std_vector_lepton_neutralHadronIso[iLep] -
-                     0.5 * itree.std_vector_lepton_sumPUPt[iLep]) > 0
-                     ) :
-                    muonIso = (itree.std_vector_lepton_photonIso[iLep] +
-                               itree.std_vector_lepton_neutralHadronIso[iLep] -
-                               0.5 * itree.std_vector_lepton_sumPUPt[iLep])
-                else:
-                    muonIso = 0
-               
-                if self.cmssw == '763' :
-                  if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                     and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
-                     and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
-                     and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
-                     ) :
-                    isGoodLepton = True
-                else :
-                  if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                     and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso) / itree.std_vector_lepton_pt[iLep] < 0.15
-                     and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                     and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy    
-                     and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1     
-                     ) :
-                    isGoodLepton = True
-
-                   
-  #and (itree.std_vector_lepton_chargedHadronIso[iLep] + 
-                   #     itree.std_vector_lepton_neutralHadronIso[iLep] + 
-                   #     itree.std_vector_lepton_photonIso[iLep]
-                   #     ) / itree.std_vector_lepton_pt[iLep] < 0.20 
-                   #and abs(itree.std_vector_lepton_flavour[iLep]) == 13 
-                  #) :
-                #isGoodLepton = True
+              
 
               ##########################################
               # denominator of fakes definition
               if self.kind == 2 :
                
-                #print " fakes " 
-                ###########
-                # electron
+                TightTag = self.isTightLepton(iLep)
                 
-                # id definition
-                if self.cmssw == '763' :               
-
-                  if (
-                     abs(itree.std_vector_lepton_flavour[iLep]) == 11 
-                     and 
-                      ((
-                      (abs(itree.std_vector_lepton_eta[iLep]) <= 1.479) 
-                      and    (abs(itree.std_vector_electron_dEtaIn[iLep]) < 0.01               and
-                              abs(itree.std_vector_electron_dPhiIn[iLep]) < 0.04               and
-                              itree.std_vector_electron_full5x5_sigmaIetaIeta[iLep]    < 0.011              and
-                              itree.std_vector_electron_hOverE[iLep]              < 0.08               and
-                              itree.std_vector_electron_ooEmooP[iLep] < 0.01               and 
-                              itree.std_vector_electron_expectedMissingInnerHits[iLep]<=2  and
-                              itree.std_vector_lepton_d0[iLep]      < 0.1                and
-                              abs(itree.std_vector_lepton_dz[iLep])< 0.373              and
-                              itree.std_vector_electron_passConversionVeto[iLep] )
-                      )
-                      or 
-                      (
-                      (abs(itree.std_vector_lepton_eta[iLep]) > 1.479 and abs(itree.std_vector_lepton_eta[iLep]) < 2.5)
-                      and    (abs(itree.std_vector_electron_dEtaIn[iLep]) < 0.01               and
-                              abs(itree.std_vector_electron_dPhiIn[iLep]) < 0.08               and
-                              itree.std_vector_electron_full5x5_sigmaIetaIeta[iLep]    < 0.031              and
-                              itree.std_vector_electron_hOverE[iLep]              < 0.08               and
-                              itree.std_vector_electron_ooEmooP[iLep] < 0.01               and
-                              itree.std_vector_electron_expectedMissingInnerHits[iLep]<=1  and
-                              itree.std_vector_lepton_d0[iLep]      < 0.2                and
-                              abs(itree.std_vector_lepton_dz[iLep])< 0.602              and
-                              itree.std_vector_electron_passConversionVeto[iLep] )
-                      ))
-                     ) : 
-                       isGoodLepton = True; 
-
-                else : # 74X cmssw release
-                  if (
-                     abs(itree.std_vector_lepton_flavour[iLep]) == 11 
-                     and 
-                      ((
-                      (abs(itree.std_vector_lepton_eta[iLep]) <= 1.479) 
-                      and    (abs(itree.std_vector_electron_dEtaIn[iLep]) < 0.01               and
-                              abs(itree.std_vector_electron_dPhiIn[iLep]) < 0.04               and
-                              itree.std_vector_electron_full5x5_sigmaIetaIeta[iLep]    < 0.011              and
-                              itree.std_vector_electron_hOverE[iLep]              < 0.08               and
-                              itree.std_vector_electron_ooEmooP[iLep] < 0.01               and 
-                              itree.std_vector_electron_expectedMissingInnerHits[iLep]<=2  and
-                              itree.std_vector_electron_d0[iLep]      < 0.1                and
-                              abs(itree.std_vector_electron_dz[iLep])< 0.373              and
-                              itree.std_vector_electron_passConversionVeto[iLep] )
-                      )
-                      or 
-                      (
-                      (abs(itree.std_vector_lepton_eta[iLep]) > 1.479 and abs(itree.std_vector_lepton_eta[iLep]) < 2.5)
-                      and    (abs(itree.std_vector_electron_dEtaIn[iLep]) < 0.01               and
-                              abs(itree.std_vector_electron_dPhiIn[iLep]) < 0.08               and
-                              itree.std_vector_electron_full5x5_sigmaIetaIeta[iLep]    < 0.031              and
-                              itree.std_vector_electron_hOverE[iLep]              < 0.08               and
-                              itree.std_vector_electron_ooEmooP[iLep] < 0.01               and
-                              itree.std_vector_electron_expectedMissingInnerHits[iLep]<=1  and
-                              itree.std_vector_electron_d0[iLep]      < 0.2                and
-                              abs(itree.std_vector_electron_dz[iLep])< 0.602              and
-                              itree.std_vector_electron_passConversionVeto[iLep] )
-                      ))
-                     ) : 
-                       isGoodLepton = True; 
-
-
-
-
-
-
-
-                ###########
-                # muon
-                dxy = float(0.01)
-                if (itree.std_vector_lepton_pt[iLep] > 20):
-                    dxy = float(0.02)
-               
-                muonIso = float(0.0)
-               
-                if ( (itree.std_vector_lepton_photonIso[iLep] +
-                     itree.std_vector_lepton_neutralHadronIso[iLep] -
-                     0.5 * itree.std_vector_lepton_sumPUPt[iLep]) > 0
-                     ) :
-                    muonIso = (itree.std_vector_lepton_photonIso[iLep] +
-                               itree.std_vector_lepton_neutralHadronIso[iLep] -
-                               0.5 * itree.std_vector_lepton_sumPUPt[iLep])
-                else:
-                    muonIso = 0
-
-                if self.cmssw == '763' :               
-                  if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                       and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso) / itree.std_vector_lepton_pt[iLep] < 0.4
-                       and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                       and abs(itree.std_vector_lepton_d0[iLep]) < dxy          # formerly std_vector_lepton_BestTrackdxy
-                       and abs(itree.std_vector_lepton_dz[iLep]) < 0.1          # formerly std_vector_lepton_BestTrackdz
-                       ) :
-                    isGoodLepton = True
-                else : 
-                  if ( itree.std_vector_lepton_isMediumMuon[iLep] == 1 
-                       and (itree.std_vector_lepton_chargedHadronIso[iLep] + muonIso) / itree.std_vector_lepton_pt[iLep] < 0.4
-                       and abs(itree.std_vector_lepton_flavour[iLep]) == 13
-                       and abs(itree.std_vector_lepton_BestTrackdxy[iLep]) < dxy
-                       and abs(itree.std_vector_lepton_BestTrackdz[iLep]) < 0.1 
-                       ) :
-                    isGoodLepton = True
-
+                if TightTag == 1 :
+                  isGoodLepton = True
 
               # denominator of fakes definition (end)
               ##########################################
@@ -555,7 +571,7 @@ class L2SelFiller(TreeCloner):
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                  if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname):
                      self.changeOrder( bname, bvector, goodLeps)            
-              
+
               # now the jets:  
               # - clean jets
               #   for leptons with pt > minLeptonPt (default 10 GeV)
