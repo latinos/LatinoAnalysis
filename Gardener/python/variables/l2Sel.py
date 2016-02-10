@@ -138,7 +138,7 @@ class L2SelFiller(TreeCloner):
                      self.itree.std_vector_electron_passConversionVeto[ilepton] )
              ))
             ) : 
-              isThisALooseLepton = 0 
+              isThisALooseLepton = 1
 
        else : # 74X cmssw release
          if (
