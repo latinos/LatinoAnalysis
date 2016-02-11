@@ -343,7 +343,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py filter -f \'std_vector_lepton_pt[0]>18 && std_vector_lepton_pt[1]>8  && std_vector_lepton_isTightLepton[0]>0.5 && std_vector_lepton_isTightLepton[1]>0.5\' '
+                  'command'    : 'gardener.py filter -f \'std_vector_lepton_isTightLepton[0]>0.5 && std_vector_lepton_isTightLepton[1]>0.5\' '
                },
 
   'WgStarsel' : {
