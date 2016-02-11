@@ -97,8 +97,8 @@ Productions= {
                                        'MuonEG_Run2015D_25ns-16Dec2015-v1'         : 'Run2015D_16Dec2015_MuonEG' , 
                                        'SingleElectron_Run2015D_25ns-16Dec2015-v1' : 'Run2015D_16Dec2015_SingleElectron' ,
                                        'SingleMuon_Run2015D_25ns-16Dec2015-v1'     : 'Run2015D_16Dec2015_SingleMuon' ,
-                                       'MET_Run2015D_25ns-16Dec2015-v1'            : 'Run2015D_16Dec2015_MET' ,
-                                       'SinglePhoton_Run2015D_25ns-16Dec2015-v1'   : 'Run2015D_16Dec2015_SinglePhoton' ,
+                                      #'MET_Run2015D_25ns-16Dec2015-v1'            : 'Run2015D_16Dec2015_MET' ,
+                                      #'SinglePhoton_Run2015D_25ns-16Dec2015-v1'   : 'Run2015D_16Dec2015_SinglePhoton' ,
                                     }
                       } ,
 
@@ -142,6 +142,14 @@ Steps= {
                   'do4Data'    : False,
                   'subTargets' : ['puadder','baseW','wwNLL','l2sel']
                 },
+
+  'MCl2loose' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['puadder','baseW','wwNLL','l2loose']
+                },
+
 
   'bSFL2Eff'   :   {
                   'isChain'    : True ,
@@ -336,7 +344,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW'
+                  'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW --selection 1'
                },
 
   'l2tight'    : {
