@@ -33,6 +33,7 @@ class L2SelFiller(TreeCloner):
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-k', '--kind',  dest='kind',  help='Kind of lepton identification to be applied [default is loose leptons]',  default='2')
         group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='764', type='string')
+        group.add_option('-s', '--selection', dest='selection', help='apply some selections, like pt cuts', default=0)
         parser.add_option_group(group)
         return group
 
@@ -45,6 +46,10 @@ class L2SelFiller(TreeCloner):
 
         self.cmssw = opts.cmssw
         print " cmssw = ", self.cmssw
+
+        self.selection = opts.selection
+        print " selection = ", self.selection
+
 
     def changeOrder(self, vectorname, vector, goodleptonslist) :
         # vector is already linked to the otree branch
@@ -774,10 +779,21 @@ class L2SelFiller(TreeCloner):
                   #print " i: ", i, " :: metfilters ", metfilters, " --> ", itree.std_vector_trigger_special[metfilters]
                 self.oldBranchesToBeModifiedSpecialSimpleVariable['metFilter'][0] = pass_met_filters
                
-               
 
-              otree.Fill()
-              savedentries+=1
+              # apply selections to reduce trees size:
+              #   - self.selection
+              #      1 = pt>18/8 for two leading leptons
+              saveEvent = 1
+              if self.selection == 1 :
+                if new_std_vector_lepton_pt.at(0) > 18 and new_std_vector_lepton_pt.at(1) > 8 :
+                  saveEvent = 1
+                else :
+                  saveEvent = 0
+                  
+              if saveEvent == 1: 
+                otree.Fill()
+                savedentries+=1
+
 
         self.disconnect()
         print '- Eventloop completed'
