@@ -106,7 +106,7 @@ class EffTrgFiller(TreeCloner):
         self.maxeta_mu = 2.4
         
         self.minpt_ele = 10
-        self.maxpt_ele = 200
+        self.maxpt_ele = 100
         self.mineta_ele = -2.5
         self.maxeta_ele = 2.5
 
