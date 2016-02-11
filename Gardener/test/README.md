@@ -62,6 +62,15 @@ How to filter events and update some collections:
                 ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
                 test.root
 
+    gardener.py  l2selfiller \
+                --kind 2 \
+                --cmssw=763   \
+                --selection=1   \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                test.root
+
+                
+                
 Specific modules example:
 
     gardener.py mcweightsfiller \
