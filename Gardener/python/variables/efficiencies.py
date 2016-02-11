@@ -146,36 +146,42 @@ class EffTrgFiller(TreeCloner):
                   
                return eff, error_eff_lo, error_eff_up
         
+        #print " is 0 ... ", pt, "  ", eta, "   " , whichTrigger
+        #if pt > 100:
+          #for point in self.list_triggers[whichTrigger] :
+            #print " ---> ", float(point[0]), " ", float(point[1]), " ", float(point[2]), " ", float(point[3])
+        
         return 0. , 0., 0.
            
          
          
     def _fixOverflowUnderflow (self, kindLep, pt, eta):
 
+        # formy education: read here, http://stackoverflow.com/questions/15148496/python-passing-an-integer-by-reference
+        
         # fix underflow and overflow
 
-        if kindLep == 'ele' :          
-          if pt < self.minpt_ele:
-            pt = self.minpt_ele
-          if pt > self.maxpt_ele:
-            pt = self.maxpt_ele
+        if abs(kindLep) == 11 :          
+          if pt[0] < self.minpt_ele:
+            pt[0] = self.minpt_ele
+          if pt[0] > self.maxpt_ele:
+            pt[0] = self.maxpt_ele
           
-          if eta < self.mineta_ele:
-            eta = self.mineta_ele
-          if eta > self.maxeta_ele:
-            eta = self.maxeta_ele
+          if eta[0] < self.mineta_ele:
+            eta[0] = self.mineta_ele
+          if eta[0] > self.maxeta_ele:
+            eta[0] = self.maxeta_ele
 
-        if kindLep == 'mu' :          
-          if pt < self.minpt_mu:
-            pt = self.minpt_mu
-          if pt > self.maxpt_mu:
-            pt = self.maxpt_mu
+        if abs(kindLep) == 13 :          
+          if pt[0] < self.minpt_mu:
+            pt[0] = self.minpt_mu
+          if pt[0] > self.maxpt_mu:
+            pt[0] = self.maxpt_mu
           
-          if eta < self.mineta_mu:
-            eta = self.mineta_mu
-          if eta > self.maxeta_mu:
-            eta = self.maxeta_mu
-
+          if eta[0] < self.mineta_mu:
+            eta[0] = self.mineta_mu
+          if eta[0] > self.maxeta_mu:
+            eta[0] = self.maxeta_mu
 
 
 
@@ -185,8 +191,23 @@ class EffTrgFiller(TreeCloner):
         # only if leptons!
         if kindLep1 > -20 and kindLep2 > -20 :
          
-          self._fixOverflowUnderflow (kindLep1, pt1, eta1)  
-          self._fixOverflowUnderflow (kindLep2, pt2, eta2)  
+          vpt1 = [pt1]
+          veta1 = [eta1]
+          vpt2 = [pt2]
+          veta2 = [eta2]
+          
+          self._fixOverflowUnderflow (kindLep1, vpt1, veta1)  
+          self._fixOverflowUnderflow (kindLep2, vpt2, veta2)  
+          
+          pt1 = vpt1[0]
+          eta1 = veta1[0]
+          pt2 = vpt2[0]
+          eta2 = veta2[0]
+          
+          #if pt2>100:
+            #print " ", kindLep2," ",  pt2, " ", eta2
+          #if pt1>100:
+            #print " ", kindLep1," ",  pt1, " ", eta1
           
           #
           # ele = 11
