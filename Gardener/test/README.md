@@ -88,7 +88,7 @@ Specific modules example:
                 output.root
 
     gardener.py tlorentzvectorfiller \
-                -v 'TLlep=std_variable_vector_lepton_pt,std_variable_vector_lepton_eta,std_variable_vector_lepton_phi' \
+                -v 'TLlep=std_variable_vector_ton_pt,std_variable_vector_lepton_eta,std_variable_vector_lepton_phi' \
                 ../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_numEvent200.root \
                 output.root
 
@@ -241,25 +241,6 @@ WW EWK corrections
     
 
     
-
-Lepton id/iso scale factors
-====
-
-Module: effwfiller
-          
-    gardener.py  effwfiller \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
-       test.root \
-       --isoid=/afs/cern.ch/work/a/amassiro/Latinos/Framework/CMSSW_7_4_7/python/LatinoAnalysis/Gardener/data/isoidScaleFactors.py
-       
-       
-       
-       
-    gardener.py  effwfiller \
-       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \
-       --isoid=data/isoidScaleFactors.py
-
        
 Trigger efficiency
 ====
@@ -332,7 +313,7 @@ The `bTPSF*` are currently placeholders and their value is 1.
 Lepton pT scale uncertainty
 ====
 
-    gardener.py LeppTScalerTreeMaker -v 1 -k mu  ../../../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testscalar.root
+    gardener.py LeppTScalerTreeMaker -v 1 -k mu  ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testscalar.root
     
     
 Lepton pT resolution uncertainty
