@@ -513,13 +513,13 @@ class L2SelFiller(TreeCloner):
 
 	# keep loose leptons: copy in toto the list of leptons and variables
 	#                     and change the name adding "loose" in it
-	self.looseLeptonVector = {}
-	looseLeptonCollections = ['std_vector_lepton_pt','std_vector_lepton_eta','std_vector_lepton_phi','std_vector_lepton_flavour']
-	for bname in looseLeptonCollections:
-	  if bname in self.itree.GetListOfBranches():
-	    bvector =  ROOT.std.vector(float) ()
-            self.looseLeptonVector[bname] = bvector
-            self.otree.Branch(bname.replace('lepton','looseLepton'), bvector)
+	#self.looseLeptonVector = {}
+	#looseLeptonCollections = ['std_vector_lepton_pt','std_vector_lepton_eta','std_vector_lepton_phi','std_vector_lepton_flavour']
+	#for bname in looseLeptonCollections:
+	  #if bname in self.itree.GetListOfBranches():
+	    #bvector =  ROOT.std.vector(float) ()
+            #self.looseLeptonVector[bname] = bvector
+            #self.otree.Branch(bname.replace('lepton','looseLepton'), bvector)
 
         # new brances as std_vector
         self.newBranchesVector = {}
@@ -650,6 +650,7 @@ class L2SelFiller(TreeCloner):
               maxNumLeptons = len(itree.std_vector_lepton_pt)
               for bname, bvector in self.newBranchesVector.iteritems():
                 bvector.clear() 
+                
                 if bname == 'std_vector_lepton_isLooseLepton' :
                   for iLep in goodLeps :
                      LooseTag = self.isLooseLepton(iLep)
@@ -706,9 +707,10 @@ class L2SelFiller(TreeCloner):
                        else:
                            self.changeOrder( bname, bvector, goodJets)
                            
-              for bname, bvector in self.looseLeptonVector.iteritems():
-		   bvector.clear() 
-                   self.changeOrder( bname, bvector, xrange(len(getattr(self.itree, bname))) )
+              #for bname, bvector in self.looseLeptonVector.iteritems():
+		   #bvector.clear() 
+		   ##print " boh = ",len(getattr(self.itree, bname))
+                   #self.changeOrder( bname, bvector, xrange(len(getattr(self.itree, bname))) )
 
               #print "goodJets: ", goodJets
               #print "goodPuppiJets: ", goodPuppiJets
