@@ -59,10 +59,7 @@ class LeppTScalerTreeMaker(TreeCloner):
         if opts.lepFlavourToChange == None :
             print "please enter mu or ele=",opts.lepFlavourToChange
             
-        if opts.Filewithleptscalevalues == None :
-          print " Using the default one"
-           
-        elif os.path.exists(opts.Filewithleptscalevalues) :
+        if os.path.exists(opts.Filewithleptscalevalues) :
           print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
           handle = open(opts.Filewithleptscalevalues,'r')
           exec(handle)
