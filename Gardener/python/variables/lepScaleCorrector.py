@@ -32,136 +32,78 @@ class LeptonPtCorrector(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-c','--cmssw',dest='cmssw',help='cmssw version req for met vars',default='763')
-        group.add_option('-d','--fileInScale',   dest='FileWithPtScaleData' ,help='file with lep pT scale values to be applied to Data',default=None)
-        group.add_option('-m','--fileInSmearing',dest='FileWithPtSmearingMC',help='file with lep pT smearing values to be applied to MC',default=None)
-        group.add_option('-w','--isData',dest='isData',help='is data? 1 = data, 0 = mc', default='1')
+        group.add_option('--fileInScaleEle',   dest='FileWithPtScaleDataEle' ,help='file with lep pT scale values to be applied to Data for Ele',default=None)
+        group.add_option('--fileInSmearingEle',dest='FileWithPtSmearingMCEle',help='file with lep pT smearing values to be applied to MC for Ele',default=None)
+        group.add_option('-w','--isData',dest='isData',help='is data? 1 = data, 0 = mc', default=1)
         parser.add_option_group(group)
         return group
 
     def checkOptions(self,opts):
         print " >>  checkOptions "
-        leppTscaler = {}     
-        leppTsmearing = {}     
    
         self.cmssw=opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
-        if opts.FileWithPtScaleData == None :
-          opts.FileWithPtScaleData = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_scales.dat'
-        print " opts.FileWithPtScaleData = " , opts.FileWithPtScaleData
-        if opts.FileWithPtSmearingMC == None :
-          opts.FileWithPtSmearingMC = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_smearings.dat'
-        print " opts.FileWithPtSmearingMC = " , opts.FileWithPtSmearingMC
-
-        if os.path.exists(opts.FileWithPtScaleData) :
-          print " opts.FileWithPtScaleData = " , opts.FileWithPtScaleData
-          handle = open(opts.FileWithPtScaleData,'r')
-          exec(handle)
-          handle.close()
-        else :
-          print "nothing ?"
+        if opts.FileWithPtScaleDataEle == None :
+          opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_scales.dat'
+        print " opts.FileWithPtScaleDataEle = " , opts.FileWithPtScaleDataEle
+        if opts.FileWithPtSmearingMCEle == None :
+          opts.FileWithPtSmearingMCEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_smearings.dat'
+        print " opts.FileWithPtSmearingMCEle = " , opts.FileWithPtSmearingMCEle
 
 
-        if os.path.exists(opts.FileWithPtSmearingMC) :
-          print " opts.FileWithPtSmearingMC = " , opts.FileWithPtSmearingMC
-          handle = open(opts.FileWithPtSmearingMC,'r')
-          exec(handle)
-          handle.close()
-        else :
-          print "nothing ?"
-
-        self.leppTscaler = leppTscaler
-        self.leppTsmearing = leppTsmearing
+        file_FileWithPtScaleDataEle  = open (opts.FileWithPtScaleDataEle)
+        file_FileWithPtSmearingMCEle = open (opts.FileWithPtSmearingMCEle)
         
-        self.minpt_mu = 10
-        self.maxpt_mu = 200
-        self.mineta_mu = -2.4
-        self.maxeta_mu = 2.4
-        
-        self.minpt_ele = 10
-        self.maxpt_ele = 100
-        self.mineta_ele = -2.5
-        self.maxeta_ele = 2.5
+        self.leppTscaler = {}
+        self.leppTscaler['ele']   =    [line.rstrip().split() for line in file_FileWithPtScaleDataEle]
+        #  e.g.        [ eta  ]    string              [     run    ]   scale   boh? uncertainties?
+        #               0    1    lowR9                254790  256629  1.0028  0.0007 0.0001 0.0002 
 
+
+        self.leppTsmearing = {}
+        self.leppTsmearing['ele']   =    [line.rstrip().split() for line in file_FileWithPtSmearingMCEle if '#' not in line ]
+        #  e.g.
+        #       # category             Emean    err   Emean    rho            err   rho       
+        #       0   1   highR9         0        0            0.0080     0.0005       
+
+        #print " leppTsmearing = ", self.leppTsmearing
+     
         self.isData = opts.isData
-
+        print " self.isData = ", self.isData
 
     def _getScale (self, kindLep, pt, eta, run):
-        # fix underflow and overflow
-
-        if abs(kindLep) == 11 :          
-          if pt < self.minpt_ele:
-            pt = self.minpt_ele
-          if pt > self.maxpt_ele:
-            pt = self.maxpt_ele
-          
-          if eta < self.mineta_ele:
-            eta = self.mineta_ele
-          if eta > self.maxeta_ele:
-            eta = self.maxeta_ele
-
-        if abs(kindLep) == 13 :          
-          if pt < self.minpt_mu:
-            pt = self.minpt_mu
-          if pt > self.maxpt_mu:
-            pt = self.maxpt_mu
-          
-          if eta < self.mineta_mu:
-            eta = self.mineta_mu
-          if eta > self.maxeta_mu:
-            eta = self.maxeta_mu
-                
+        
         if kindLep in self.leppTscaler.keys() : 
-            # get the scale values in bins of pT and eta
-            for point in self.leppTscaler[kindLep] :
-              if run >= point[2][0] and run < (point[2][1]+1) : 
-                if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
-                  return point[2]
-            # default ... it should never happen!
-            # print " default ???"
-            return 1.0
-           
-        else:
-            return 1.0
-    
+          for point in self.leppTscaler[kindLep] :
+            if kindLep == 'ele':
+              # use only high R9 for electrons
+              if point[2] == 'highR9': 
+                if run >= float(point[3])  and run < (float(point[4])+1) : 
+                  if ( abs(eta) >= float(point[0]) and abs(eta) < float(point[1]) ) :
+                    return float(point[5])
+        
+        # default ... it should never happen!
+        # print " default ???"
+        return 1.0
+         
+         
 
     def _getSmearing (self, kindLep, pt, eta):
-        # fix underflow and overflow
 
-        if abs(kindLep) == 11 :          
-          if pt < self.minpt_ele:
-            pt = self.minpt_ele
-          if pt > self.maxpt_ele:
-            pt = self.maxpt_ele
-          
-          if eta < self.mineta_ele:
-            eta = self.mineta_ele
-          if eta > self.maxeta_ele:
-            eta = self.maxeta_ele
-
-        if abs(kindLep) == 13 :          
-          if pt < self.minpt_mu:
-            pt = self.minpt_mu
-          if pt > self.maxpt_mu:
-            pt = self.maxpt_mu
-          
-          if eta < self.mineta_mu:
-            eta = self.mineta_mu
-          if eta > self.maxeta_mu:
-            eta = self.maxeta_mu
-        
+        #print " kindLep = ", kindLep
         if kindLep in self.leppTsmearing.keys() : 
-            # get the scale values in bins of pT and eta
-            for point in self.leppTsmearing[kindLep] :
-                if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
-                    return point[2]
-            # default ... it should never happen!
-            # print " default ???"
-            return 1.0
-           
-        else:
-            return 1.0
-
-
+          for point in self.leppTsmearing[kindLep] :
+            if kindLep == 'ele':
+              # use only high R9 for electrons
+              if point[2] == 'highR9': 
+                #print " ", point[0], " - ", point[1] , " :: ", eta, " ---> ", point[5]
+                if ( abs(eta) >= float(point[0]) and abs(eta) < float(point[1]) ) :
+                  return float(point[5])
+        # default ... it should never happen!
+        # print " default ???"
+        return 0.0
+  
+  
     
     def _corMET (self,met,lpt_org,lpt):
         newmet = met + lpt_org - lpt
@@ -282,17 +224,22 @@ class LeptonPtCorrector(TreeCloner):
                     print "not a el or muon"
 
                 # scale the data and smear the MC
-                if self.isData : 
-                  wt = self._getScale(kindLep,pt_lep,abs(eta_lep), itree.run)
+                if self.isData == 1 : 
+                  wt = self._getScale(kindLep, pt_lep, eta_lep, itree.run)
                   new_pt_lep = itree.std_vector_lepton_pt[i] * wt
                   leptonPtChanged.append( itree.std_vector_lepton_pt[i] * wt )
+                  #print " wt = ", wt
                 else :
-                  smearing = self._getSmearing(kindLep,pt_lep,abs(eta_lep))
+                  smearing = self._getSmearing(kindLep, pt_lep, eta_lep)
                   wt = -1
-                  while wt < 0 :
-                    wt = ROOT.gRandom.Gaus(1, smearing)
+                  if smearing != 0:
+                    while wt < 0 :
+                      wt = ROOT.gRandom.Gaus(1, smearing)
+                  else:
+                    wt = 1
                   new_pt_lep = itree.std_vector_lepton_pt[i] * wt
                   leptonPtChanged.append( itree.std_vector_lepton_pt[i] * wt )
+                  #print " wt = ", wt, " smearing = ", smearing
                   
                 l1 = ROOT.TLorentzVector()
                 l1_org = ROOT.TLorentzVector()

@@ -208,6 +208,18 @@ This is automatic and better, since it will exploit direclty the distribution us
            
            
 
+Lepton pT corrector
+====
+
+    gardener.py letPtCorrector  ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testCorr.root
+    
+    gardener.py letPtCorrector --isData=0 \
+         ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testCorr.root
+    
+    gardener.py letPtCorrector --isData=1 \
+         ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100_data.root testCorr.root
+    
+    
        
 Fake Weight adder
 ====
@@ -331,6 +343,18 @@ Lepton pT resolution uncertainty
 ====
     
     gardener.py leptonResolution ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
+
+
+PDF uncertainty
+====
+    
+    gardener.py pdfUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
+
+
+QCD uncertainty
+====
+    
+    gardener.py qcdUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
 
 
 MET uncertainty
