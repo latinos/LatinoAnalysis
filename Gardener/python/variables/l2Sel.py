@@ -228,14 +228,22 @@ class L2SelFiller(TreeCloner):
        ###########
        # electron
        
-       # id definition
-       if ( self.itree.std_vector_lepton_eleIdTight[ilepton] == 1
-            and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
-            and self.itree.std_vector_lepton_trackIso[ilepton] < 0.2 
-            and self.itree.std_vector_electron_ecalPFClusterIso[ilepton] < 0.45
-            and self.itree.std_vector_electron_hcalPFClusterIso[ilepton] < 0.25 
-           ) :
-         isThisATightLepton = 1
+       if self.cmssw == '763' :
+         # id definition
+         if ( self.itree.std_vector_lepton_eleIdTight[ilepton] == 1
+              and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
+              and self.itree.std_vector_lepton_trackIso[ilepton] < 0.2 
+              and self.itree.std_vector_electron_ecalPFClusterIso[ilepton] < 0.45
+              and self.itree.std_vector_electron_hcalPFClusterIso[ilepton] < 0.25 
+             ) :
+           isThisATightLepton = 1
+       else :
+         # id definition
+         if ( self.itree.std_vector_lepton_eleIdTight[ilepton] == 1
+             ) :
+           isThisATightLepton = 1
+        
+        
        
        ###########
        # muon
