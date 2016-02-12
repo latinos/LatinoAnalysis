@@ -22,6 +22,9 @@ from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFi
 # kinematic variables
 from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
 
+# fake weights adder for W+jet sample
+from LatinoAnalysis.Gardener.variables.fakeWeight                 import FakeWeightFiller
+
 # qqWW corrections
 from LatinoAnalysis.Gardener.variables.wwNLLcorrectionWeight      import wwNLLcorrectionWeightFiller
 from LatinoAnalysis.Gardener.variables.qq2vvEWKcorrectionsWeight  import qq2vvEWKcorrectionsWeightFiller
@@ -122,6 +125,11 @@ if __name__ == '__main__':
     modules['pdfUncertainty']       = PdfUncertaintyTreeMaker()
     modules['qcdUncertainty']       = QcdUncertaintyTreeMaker()
     
-    
+# fake weights
+    modules['fakeWeights']      = FakeWeightFiller()
+
+
+
+
 
     gardener_cli( modules )

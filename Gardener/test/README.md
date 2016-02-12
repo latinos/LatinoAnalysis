@@ -208,6 +208,17 @@ This is automatic and better, since it will exploit direclty the distribution us
            
            
 
+       
+Fake Weight adder
+====
+
+Module: fakeWeights
+     
+    gardener.py  fakeWeights    input.root output.root
+
+
+    
+    
 WW NNLO+NNLL scales and uncertainty
 ====
 
