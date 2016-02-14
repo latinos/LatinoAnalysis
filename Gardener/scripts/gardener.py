@@ -42,6 +42,8 @@ from LatinoAnalysis.Gardener.variables.XWWVar                     import XWWVarF
 from LatinoAnalysis.Gardener.variables.dymvaVar                   import DymvaVarFiller
 # mucca
 from LatinoAnalysis.Gardener.variables.muccaMvaVar                import MuccaMvaVarFiller   
+# mrww
+from LatinoAnalysis.Gardener.variables.MrWWVar                    import MrWWVarFiller   
 
 # specific variables for MC
 from LatinoAnalysis.Gardener.variables.mcWeights                  import mcWeightsFiller
@@ -100,8 +102,13 @@ if __name__ == '__main__':
     modules['xwwvarfiller']     = XWWVarFiller()
     modules['dymvaVarFiller']   = DymvaVarFiller()
 
-#mucca
+# mucca
     modules['muccaMvaVarFiller']   = MuccaMvaVarFiller()
+
+# mrWW
+    modules['mrWWvarfiller']   = MrWWVarFiller()
+
+
 
 # add nll re-weight for ww
     modules['wwNLLcorrections']      =  wwNLLcorrectionWeightFiller()
