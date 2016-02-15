@@ -48,7 +48,10 @@ class MrWWVarFiller(TreeCloner):
        
         # mva trainined xml
         baseCMSSW = os.getenv('CMSSW_BASE')
-        self.getMrWW.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/mrww/TMVARegression_BDT.weights.xml")
+        if self.kind == 1: 
+          self.getMrWW.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/mrww/TMVARegression_BDT.weights.xml")
+        else : 
+          self.getMrWW.BookMVA("MLP",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/mrww/TMVARegression_MLP.weights.xml")
 
 
     def help(self):
@@ -140,10 +143,13 @@ class MrWWVarFiller(TreeCloner):
               self.var8[0]  =  itree.dphilmet1 * itree.mll
               self.var9[0]  =  itree.dphilmet2 * itree.mll
               self.var10[0]  =  itree.drll 
-              self.var10[0]  =  itree.mcoll
+              self.var11[0]  =  itree.mcoll
               
-              mrww[0] = self.getMrWW.EvaluateRegression(0,"BDT")
-              
+              if self.kind == 1 :
+                mrww[0] = self.getMrWW.EvaluateRegression(0,"BDT")
+              else :
+                mrww[0] = self.getMrWW.EvaluateRegression(0,"MLP")
+               
             otree.Fill()
             
         self.disconnect()
