@@ -309,6 +309,7 @@ class L2SelFiller(TreeCloner):
            
              if (
                 abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
+                and self.itree.std_vector_electron_hcalPFClusterIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.25 
                 and 
                  ((
                  (abs(self.itree.std_vector_lepton_eta[ilepton]) <= 1.479) 
