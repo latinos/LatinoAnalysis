@@ -60,6 +60,10 @@ class HiggsXSection:
         if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
         self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggH.txt') 
         self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-vbfH.txt') 
+        self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-WH.txt') 
+        self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt') 
+        self._YR[YRversion][model]['xs'][energy]['ggZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggZH.txt') 
+        self._YR[YRversion][model]['xs'][energy]['bbH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-bbH.txt') 
         self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
 
       # BR
@@ -70,7 +74,6 @@ class HiggsXSection:
         self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2bosons.txt')
         self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2fermions.txt')
       if YRversion in  ['YR4prel'] :  
-        print self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt'
         self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
         self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
 
@@ -106,7 +109,25 @@ class HiggsXSection:
      if not 'xs'      in self._YR[YRversion][model]               : return 0
      if not energy    in self._YR[YRversion][model]['xs']         : return 0
      if not proc      in self._YR[YRversion][model]['xs'][energy] : return 0 
-     return self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_pb')
+     if proc == 'ZH' :
+       xs_ZH = self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_pb')
+       if self._UseggZH and 'YR4' in YRversion :
+         xs_ggZH = self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH'],mh,'XS_pb')
+       else:
+         xs_ggZH = 0.
+       return xs_ZH-xs_ggZH
+     elif proc == 'HWplus' :
+       if 'YR4' in YRversion :
+         return self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_W_plus_pb')
+       else:
+         return 0.
+     elif proc == 'HWminus' :
+       if 'YR4' in YRversion :
+         return self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_W_minus_pb')
+       else:
+         return 0.
+     else:
+       return self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_pb')
 
    def YR4dec(self,YRversion,decay):
      if not YRversion in ['YR4prel' ] : return decay
@@ -142,9 +163,9 @@ class HiggsXSection:
      ProdMode = 'unknown'
      if 'GluGluH'  in SampleName : ProdMode = 'ggH'
      if 'VBFH'     in SampleName : ProdMode = 'vbfH'
-     #if 'HZJ'      in SampleName : ProdMode = 'ZH'
-     #if 'HWplusJ'  in SampleName : ProdMode = 'XXX'
-     #if 'HWminusJ' in SampleName : ProdMode = 'XXX'
+     if 'HZJ'      in SampleName : ProdMode = 'ZH'
+     if 'HWplusJ'  in SampleName : ProdMode = 'HWplus'
+     if 'HWminusJ' in SampleName : ProdMode = 'HWminus'
      if 'ttH'      in SampleName : ProdMode = 'ttH'  
      HiggsMass   = 0.
      if '_M' in SampleName : HiggsMass = SampleName.split('_M')[1]
@@ -179,7 +200,7 @@ class HiggsXSection:
      if 'WWTo2L2Nu' in SampleName :  
         FinalState   = 'WW->2l2v'
         FinalStateBR = self._br['W2lv']*self._br['W2lv']
-     if 'WWToLNuQQ' in SampleName :  
+     if 'WWToLNuQQ' in SampleName or 'WWToNuQQ' in SampleName:  
         FinalState   = 'WW->lvQQ'
         FinalStateBR = self._br['W2lv']*self._br['W2QQ']
      if 'ZZTo4L'    in SampleName :  
@@ -196,19 +217,19 @@ class HiggsXSection:
 
 ### Below some examples of usage :
 
-HiggsXS = HiggsXSection() 
+#HiggsXS = HiggsXSection() 
 #HiggsXS.printYR()
-print HiggsXS.GetHiggsProdXS('YR2','8TeV','ggH','125.0')
-print HiggsXS.GetHiggsProdXS('YR3','8TeV','ggH','125.0')
-print HiggsXS.GetHiggsProdXS('YR4prel','13TeV','ggH','125.0')
+#print HiggsXS.GetHiggsProdXS('YR2','8TeV','ggH','125.0')
+#print HiggsXS.GetHiggsProdXS('YR3','8TeV','ggH','125.0')
+#print HiggsXS.GetHiggsProdXS('YR4prel','13TeV','ggH','125.0')
 
-print HiggsXS.GetHiggsBR('YR2','H_WW','125.0')
-print HiggsXS.GetHiggsBR('YR3','H_WW','125.0')
-print HiggsXS.GetHiggsBR('YR4prel','H_WW','125.0')
+#print HiggsXS.GetHiggsBR('YR2','H_WW','125.0')
+#print HiggsXS.GetHiggsBR('YR3','H_WW','125.0')
+#print HiggsXS.GetHiggsBR('YR4prel','H_WW','125.0')
 
-print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
-print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToZZTo4L_M125')
-print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
-print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWToLNuQQ_M650')
-
-print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToZZTo4L_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWToLNuQQ_M650')
+#
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
