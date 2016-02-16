@@ -148,6 +148,7 @@ class HiggsXSection:
      if 'ttH'      in SampleName : ProdMode = 'ttH'  
      HiggsMass   = 0.
      if '_M' in SampleName : HiggsMass = SampleName.split('_M')[1]
+     #if 'large' in HiggsMass : ProdMode = 'unknown'
      if not ProdMode == 'unknown' :
        HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
      
@@ -163,6 +164,7 @@ class HiggsXSection:
      if 'HToTauTau'   in SampleName : DecayMode = 'H_tautau'
      if 'HJetTobb'    in SampleName : DecayMode = 'H_bb'
      if 'HJetToNonbb' in SampleName : DecayMode = 'H_bb'
+     #if 'large' in HiggsMass : DecayMode = 'unknown'
      if not DecayMode == 'unknown' :
        HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass)
        if 'HJetToNonbb' in SampleName : HiggsBR = 1.0 - HiggsBR

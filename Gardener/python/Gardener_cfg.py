@@ -147,7 +147,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['puadder','baseW','wwNLL','l2loose']
+                  'subTargets' : ['l2loose','puadder','baseW','wwNLL']
                 },
 
 
@@ -218,6 +218,15 @@ Steps= {
                                   'Wg','ZZTo4L','WWZ',
                                  ] ,
                 },
+
+  'lpTCorr' : {
+                 'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin'],
+               },
+
+
 
   'LeppTup':  {
                   'isChain'    : True ,
@@ -382,6 +391,21 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                },
+
+  'do_lpTCorrMC'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py letPtCorrector --isData=0 '
+                } ,
+
+  'do_lpTCorrData'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py letPtCorrector --isData=1 '
+                } ,
+
 
   'do_JESup'    : {
                   'isChain'    : False ,
