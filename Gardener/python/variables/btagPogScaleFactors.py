@@ -29,9 +29,9 @@ class btagPogScaleFactors(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-w', '--working-point', dest='workingPoint', help='CSVv2 working point', default='0')
-        group.add_option('-s', '--scalefactor-file', dest='sfFile', help='file with scale factors', default='data/CSVv2.csv')
+        group.add_option('-s', '--scalefactor-file', dest='sfFile', help='file with scale factors', default='data/cMVAv2.csv')
         group.add_option('-p', '--scalefactor-file-tp', dest='sfFileTP', help='file with scale factors', default='data/TPScaleFactors.csv')
-        group.add_option('-e', '--efficiency-file', dest='efficiencyMCFile', help='file with efficiency tables on MC', default='data/efficiencyMCFile.py')
+        group.add_option('-e', '--efficiency-file', dest='efficiencyMCFile', help='file with efficiency tables on MC', default='data/efficiencyMCFile76X.py')
 
         parser.add_option_group(group)
         return group
@@ -59,7 +59,7 @@ class btagPogScaleFactors(TreeCloner):
         
         self.efficienciesMC = efficienciesMC
 
-        self.minpt = 15
+        self.minpt = 20
         self.maxpt = 290 
         
         self.mineta = 0
@@ -76,16 +76,16 @@ class btagPogScaleFactors(TreeCloner):
         print "scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+opts.sfFile
 
         wp = int(opts.workingPoint)
-        self.calib = ROOT.BTagCalibration("csvv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+opts.sfFile)
-        self.readerCentral = ROOT.BTagCalibrationReader(self.calib, wp, "mujets", "central")  
-        self.readerUp = ROOT.BTagCalibrationReader(self.calib, wp, "mujets", "up")  
-        self.readerDown = ROOT.BTagCalibrationReader(self.calib, wp, "mujets", "down")  
+        self.calib = ROOT.BTagCalibration("cMVAv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+opts.sfFile)
+        self.readerCentral = ROOT.BTagCalibrationReader(self.calib, wp, "ttbar", "central")  
+        self.readerUp = ROOT.BTagCalibrationReader(self.calib, wp, "ttbar", "up")  
+        self.readerDown = ROOT.BTagCalibrationReader(self.calib, wp, "ttbar", "down")  
         
-        #it seems that so far light jet scal factors are only available in the comb dataset 
+        #it seems that so far light jet scale factors are only available in the incl dataset 
         #(light jets is the only thing available in that dataset)
-        self.readerLightCentral = ROOT.BTagCalibrationReader(self.calib, wp, "comb", "central")  
-        self.readerLightUp = ROOT.BTagCalibrationReader(self.calib, wp, "comb", "up")  
-        self.readerLightDown = ROOT.BTagCalibrationReader(self.calib, wp, "comb", "down")  
+        self.readerLightCentral = ROOT.BTagCalibrationReader(self.calib, wp, "incl", "central")  
+        self.readerLightUp = ROOT.BTagCalibrationReader(self.calib, wp, "incl", "up")  
+        self.readerLightDown = ROOT.BTagCalibrationReader(self.calib, wp, "incl", "down")  
 
         # our T&P scale factors
         self.calibTP = ROOT.BTagCalibration("csvv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+opts.sfFileTP)
@@ -99,11 +99,11 @@ class btagPogScaleFactors(TreeCloner):
 
         
         if wp == 0:
-          self.cut = 0.605
+          self.cut = -0.715
         elif wp == 1:
-          self.cut =0.89
+          self.cut =0.185
         elif wp == 2:
-          self.cut =0.97
+          self.cut =0.875
         else:
           print "WP", opts.workingPoint, " is not supported"
 
@@ -285,7 +285,7 @@ class btagPogScaleFactors(TreeCloner):
                   sfTPUp    = self.readerLightUpTP.evaluate(idJet, eta, pt)
                   sfTPDown  = self.readerLightDownTP.evaluate(idJet, eta, pt)
 
-                effMC = self._getEffMC(kindJet, pt, eta)
+                effMC = self._getEffMC(kindJet, pt, abs(eta))
                 #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet, " sf, sfUp, sfDown, sfTP, sfTPUp, sfTPDown",  sf, sfUp, sfDown, sfTP, sfTPUp, sfTPDown, " effMC", effMC
 
                 pMC = pMC*effMC if tagged else pMC*(1.-effMC)
@@ -294,27 +294,27 @@ class btagPogScaleFactors(TreeCloner):
                 pDataUp   = pDataUp*effMC*sfUp     if tagged else pDataUp*(1.-effMC*sfUp)
                 pDataDown = pDataDown*effMC*sfDown if tagged else pDataDown*(1.-effMC*sfDown)
 
-                pDataTP     = pDataTP*effMC*sfTP         if tagged else pDataTP*(1.-effMC*sfTP)
-                pDataTPUp   = pDataTPUp*effMC*sfTPUp     if tagged else pDataTPUp*(1.-effMC*sfTPUp)
-                pDataTPDown = pDataTPDown*effMC*sfTPDown if tagged else pDataTPDown*(1.-effMC*sfTPDown)
+                #pDataTP     = pDataTP*effMC*sfTP         if tagged else pDataTP*(1.-effMC*sfTP)
+                #pDataTPUp   = pDataTPUp*effMC*sfTPUp     if tagged else pDataTPUp*(1.-effMC*sfTPUp)
+                #pDataTPDown = pDataTPDown*effMC*sfTPDown if tagged else pDataTPDown*(1.-effMC*sfTPDown)
 
 		if njet < 1:
 		  bPogSF1Jet[0]          = pData/pMC
                   bPogSF1JetUp[0]        = pDataUp/pMC
                   bPogSF1JetDown[0]      = pDataDown/pMC
 
-                  bTPSF1Jet[0]          = pDataTP/pMC
-                  bTPSF1JetUp[0]        = pDataTPUp/pMC
-                  bTPSF1JetDown[0]      = pDataTPDown/pMC
+                  #bTPSF1Jet[0]          = pDataTP/pMC
+                  #bTPSF1JetUp[0]        = pDataTPUp/pMC
+                  #bTPSF1JetDown[0]      = pDataTPDown/pMC
 
                 if njet < 2:
                   bPogSF2Jet[0]          = pData/pMC
                   bPogSF2JetUp[0]        = pDataUp/pMC
                   bPogSF2JetDown[0]      = pDataDown/pMC
 
-                  bTPSF2Jet[0]          = pDataTP/pMC
-                  bTPSF2JetUp[0]        = pDataTPUp/pMC
-                  bTPSF2JetDown[0]      = pDataTPDown/pMC
+                  #bTPSF2Jet[0]          = pDataTP/pMC
+                  #bTPSF2JetUp[0]        = pDataTPUp/pMC
+                  #bTPSF2JetDown[0]      = pDataTPDown/pMC
 
                 njet += 1
                 #print "flavour, effMC, sf", flavour, effMC, sf
@@ -325,9 +325,9 @@ class btagPogScaleFactors(TreeCloner):
             bPogSFUp[0]        = pDataUp/pMC
             bPogSFDown[0]      = pDataDown/pMC
 
-            bTPSF[0]          = pDataTP/pMC
-            bTPSFUp[0]        = pDataTPUp/pMC
-            bTPSFDown[0]      = pDataTPDown/pMC
+            #bTPSF[0]          = pDataTP/pMC
+            #bTPSFUp[0]        = pDataTPUp/pMC
+            #bTPSFDown[0]      = pDataTPDown/pMC
 
             otree.Fill()
 
