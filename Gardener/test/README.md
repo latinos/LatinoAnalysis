@@ -60,8 +60,21 @@ How to filter events and update some collections:
                 --kind 2 \
                 --cmssw=763   \
                 ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
-                test.root
+                test.2.root
 
+    gardener.py  l2selfiller \
+                --kind 3 \
+                --cmssw=763   \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                test.3.root
+
+    gardener.py  l2selfiller \
+                --kind 1 \
+                --cmssw=763   \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                test.1.root
+                
+                
     gardener.py  l2selfiller \
                 --kind 2 \
                 --cmssw=763   \
