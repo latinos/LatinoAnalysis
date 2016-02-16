@@ -55,8 +55,10 @@ class ShapeFactory:
         os.system ("mkdir " + outputDirPlots + "/") 
         
 
-        tcanvas      = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
-        tcanvasRatio = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
+        tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
+        tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
+        # weight_X_tcanvas      = ROOT.TCanvas( "weight_X_tcanvas",      "weight_X_tcanvas",      800, 800 )
+        weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio", "weight_X_tcanvasRatio", 800, 800 )
 
         ROOT.TH1.SetDefaultSumw2(True)
         
@@ -736,8 +738,212 @@ class ShapeFactory:
 
 
           
-          
-            print " >> end"
+            #
+            # draw weighted plot
+            #
+            
+            if 'doWeight' in variable.keys() : 
+              if variable['doWeight'] == 1 :
+                if 'binX' in variable.keys() and 'binY' in variable.keys() :
+                  nbinX = variable['binX']
+                  nbinY = variable['binY']
+                  
+                  #
+                  # Add weight 1D
+                  #  - sample the 1D histogram in 'nbinX' slices long 'nbinY'.
+                  #  - calculate the integral of S and B for each of them
+                  #  - add a weight on them S/B, for signal, background and data
+                  #  - add the weighted histogram to the final histogram, made of 'nbinY' bins
+                  #
+      
+                  if thsBackground.GetNhists() != 0 and thsSignal.GetNhists() != 0 :
+
+                    weight_X_thsData       = ROOT.THStack ("weight_X_thsData",      "weight_X_thsData")
+                    weight_X_thsSignal     = ROOT.THStack ("weight_X_thsSignal",    "weight_X_thsSignal")
+                    weight_X_thsBackground = ROOT.THStack ("weight_X_thsBackground","weight_X_thsBackground")
+                  
+                    #
+                    # the final histogram should be scaled such that the integral
+                    # is the expected signal + background yield
+                    # --> or only background ?
+                    #
+                    totalBkg = thsBackground.GetStack().Last().Integral()
+                    totalSig = thsSignal.GetStack().Last().Integral()
+                    totalBkgSig = totalBkg + totalSig
+                    
+                    totalWeightedIntegralBkg = 0.
+                    totalWeightedIntegralSig = 0.
+                    
+                    weight_X_list_Data = []
+                    weight_X_list_Signal = []
+                    weight_X_list_Background = []
+                    
+                    for sliceX in range(nbinX) :
+                      integral_bkg = 0.
+                      #for ibin in range( thsBackground.GetStack().Last().GetNbinsX() )
+                      for ibin in range( nbinY ) :
+                        integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin+1)
+                      integral_sig = 0.
+                      for ibin in range( thsSignal.GetStack().Last().GetNbinsX() ) :
+                        integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1)
+                      
+                      weight = 1
+                      if integral_bkg != 0 : 
+                        weight = integral_sig / integral_bkg
+                      else :
+                        weight = 1
+
+                              
+                      for ihisto in range(thsBackground.GetNhists()) :
+                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName(), '-' , nbinY, 0, nbinY)
+                         histo.SetFillColor( ((thsBackground.GetHists().At(ihisto))).GetFillColor())
+                         histo.SetFillStyle( ((thsBackground.GetHists().At(ihisto))).GetFillStyle())
+                         histo.SetLineColor( ((thsBackground.GetHists().At(ihisto))).GetLineColor())
+                         histo.SetLineWidth( ((thsBackground.GetHists().At(ihisto))).GetLineWidth())
+                         
+                         for ibin in range( nbinY ) :
+                           histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                         
+                         weight_X_list_Background.append(histo)
+                         totalWeightedIntegralBkg += histo.Integral()
+                         #weight_X_thsBackground.Add(histo)
+                         
+                      for ihisto in range(thsSignal.GetNhists()) :
+                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName(), "-", nbinY, 0, nbinY)
+                         histo.SetFillColor( ((thsSignal.GetHists().At(ihisto))).GetFillColor())
+                         histo.SetFillStyle( ((thsSignal.GetHists().At(ihisto))).GetFillStyle())
+                         histo.SetLineColor( ((thsSignal.GetHists().At(ihisto))).GetLineColor())
+                         histo.SetLineWidth( ((thsSignal.GetHists().At(ihisto))).GetLineWidth())
+                         
+                         for ibin in range( nbinY ) :
+                           histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+
+                         weight_X_list_Signal.append(histo)
+                         totalWeightedIntegralSig += histo.Integral()
+                         #weight_X_thsSignal.Add(histo)
+             
+                      for ihisto in range(thsData.GetNhists()) :
+                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName(), "-", nbinY, 0, nbinY)
+                         for ibin in range( nbinY ) :
+                           histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                         
+                         weight_X_list_Data.append(histo)
+                         #weight_X_thsData.Add(histo)
+
+                    for histo in weight_X_list_Data:
+                       histo.Scale(totalBkg / totalWeightedIntegralBkg)
+                    for histo in weight_X_list_Background:
+                       histo.Scale(totalBkg / totalWeightedIntegralBkg)
+                    for histo in weight_X_list_Signal:
+                       histo.Scale(totalBkg / totalWeightedIntegralBkg)
+                  
+                    for histo in weight_X_list_Data:
+                       weight_X_thsData.Add(histo)
+                    for histo in weight_X_list_Background:
+                       weight_X_thsBackground.Add(histo)
+                    for histo in weight_X_list_Signal:
+                       weight_X_thsSignal.Add(histo)
+ 
+                    weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + cutName + "_" + variableName
+            
+                    weight_X_tcanvasRatio.cd()
+                    canvasPad1Name = 'weight_X_pad1_' + cutName + "_" + variableName
+                    weight_X_pad1 = ROOT.TPad(canvasPad1Name,canvasPad1Name, 0, 1-0.72, 1, 1)
+                    weight_X_pad1.SetTopMargin(0.098)
+                    weight_X_pad1.SetBottomMargin(0.000) 
+                    weight_X_pad1.Draw()
+                    
+                    weight_X_pad1.cd()
+                    weight_X_canvasFrameDistroName = 'weight_X_frame_distro_' + cutName + "_" + variableName
+                    #weight_X_frameDistro = weight_X_pad1.DrawFrame(minXused, 0.0, maxXused, 1.0, weight_X_canvasFrameDistroName)
+                    weight_X_frameDistro = weight_X_pad1.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_canvasFrameDistroName)
+                    
+                    # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+                    xAxisDistro = weight_X_frameDistro.GetXaxis()
+                    xAxisDistro.SetNdivisions(6,5,0)
+            
+                    if 'xaxis' in variable.keys() : 
+                      weight_X_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+                    else :
+                      weight_X_frameDistro.GetXaxis().SetTitle(variableName)
+                    weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+                    weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
+            
+                    if weight_X_thsBackground.GetNhists() != 0:
+                      weight_X_thsBackground.Draw("hist same")
+                       
+                    if weight_X_thsSignal.GetNhists() != 0:
+                      weight_X_thsSignal.Draw("hist same noclear")
+                    
+                    if (len(mynuisances.keys())!=0):
+                      tgrMC.Draw("2")
+            
+                    #     - then the DATA  
+                    #if weight_X_thsData.GetN() != 0:
+                      #weight_X_thsData.Draw("P0")
+                    # ---> FIXME I need to add the weigths in the TGraphAsymmErrors!!!
+               
+                    tlegend.Draw()
+              
+                    CMS_lumi.CMS_lumi(weight_X_tcanvasRatio, iPeriod, iPos)    
+            
+                    # draw back all the axes            
+                    #weight_X_frameDistro.Draw("AXIS")
+                    weight_X_pad1.RedrawAxis()
+            
+                        
+                    weight_X_tcanvasRatio.cd()
+                    canvasPad2Name = 'weight_X_weight_X_pad2_' + cutName + "_" + variableName
+                    weight_X_pad2 = ROOT.TPad(canvasPad2Name,canvasPad2Name,0,0,1,1-0.72)
+                    weight_X_pad2.SetTopMargin(0.000)
+                    weight_X_pad2.SetBottomMargin(0.392)
+                    weight_X_pad2.Draw()
+                    #weight_X_pad2.cd().SetGrid()
+                    weight_X_pad2.cd()
+                    
+                    canvasFrameRatioName = 'weight_X_frame_ratio_' + cutName + "_" + variableName
+                    weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, canvasFrameRatioName)
+                    # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+                    xAxisDistro = weight_X_frameRatio.GetXaxis()
+                    xAxisDistro.SetNdivisions(6,5,0)
+            
+                    if 'xaxis' in variable.keys() : 
+                      weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
+                    else :
+                      weight_X_frameRatio.GetXaxis().SetTitle(variableName)
+                    weight_X_frameRatio.GetYaxis().SetTitle("Data/Expected")
+                    weight_X_frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
+                    self.Pad2TAxis(weight_X_frameRatio)
+                    
+                    # FIXME I need to calculate the ratios in the weigthed distributions! Like for TGraphAsymmErrors for data
+                    #if (len(mynuisances.keys())!=0):
+                      #tgrMCOverMC.Draw("2") 
+                    
+                    #tgrDataOverMC.Draw("P0")
+                    
+                    oneLine2 = ROOT.TLine(weight_X_frameRatio.GetXaxis().GetXmin(), 1,  weight_X_frameRatio.GetXaxis().GetXmax(), 1);
+                    oneLine2.SetLineStyle(3)
+                    oneLine2.SetLineWidth(3)
+                    oneLine2.Draw("same")
+            
+                    # draw back all the axes            
+                    #weight_X_frameRatio.Draw("AXIS")
+                    weight_X_pad2.RedrawAxis()
+                    
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
+                    
+                    
+                    # log Y axis
+                    weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, maxYused/1000), 10 * maxYused )
+                    weight_X_pad1.SetLogy()
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
+                    weight_X_pad1.SetLogy(0)
+ 
+ 
+ 
+
+            print " >> end: ", variableName
             
           print " >> all end"
 
