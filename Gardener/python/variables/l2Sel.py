@@ -206,7 +206,7 @@ class L2SelFiller(TreeCloner):
                   and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
                   and abs(self.itree.std_vector_lepton_d0[ilepton]) < dxy          # formerly std_vector_lepton_BestTrackdxy
                   and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
-                  and self.itree.std_vector_lepton_trackIso[ilepton] < 0.4
+                  and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
                   ) :
                isThisALooseLepton = 1.0
            else : 
