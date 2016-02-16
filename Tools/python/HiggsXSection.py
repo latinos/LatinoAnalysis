@@ -30,6 +30,8 @@ class HiggsXSection:
       self.readYR('YR3','8TeV')
       
       self.readYR('YR4prel','13TeV')
+      
+      self._UseggZH = True
 
       self._br = {}
       self._br['W2lv'] = 0.108*3.0
