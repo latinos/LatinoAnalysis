@@ -332,7 +332,7 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'onlySample' : ['WWTo2L2Nu'] ,
-                  'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' '
+                  'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' --cmssw RPLME_CMSSW'
                 },
 
   'l2sel'    : {
