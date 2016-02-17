@@ -42,20 +42,60 @@ class FakeWeightFiller(TreeCloner):
 
 
     def checkOptions(self,opts):
-        pass
+
+        self.fileMuPR = self._openRootFile('../data/fake_prompt_rates/MuPR_RunII_25ns_ZJets_08Jan.root')
+        self.fileElPR = self._openRootFile('../data/fake_prompt_rates/EGPR_RunII_25ns_ZJets_08Jan.root')
+
+        self.MuPR = self._getRootObj(self.fileMuPR, 'h_Muon_signal_pt_eta_bin')
+        self.ElPR = self._getRootObj(self.fileElPR, 'h_Ele_signal_pt_eta_bin')
+
+        self.fileMuFR_jet10 = self._openRootFile('../data/fake_prompt_rates/MuFR_RunII_25ns_jet10_08Jan.root')
+        self.fileMuFR_jet15 = self._openRootFile('../data/fake_prompt_rates/MuFR_RunII_25ns_jet15_08Jan.root')
+        self.fileMuFR_jet20 = self._openRootFile('../data/fake_prompt_rates/MuFR_RunII_25ns_jet20_08Jan.root')
+        self.fileMuFR_jet25 = self._openRootFile('../data/fake_prompt_rates/MuFR_RunII_25ns_jet25_08Jan.root')
+        self.fileMuFR_jet30 = self._openRootFile('../data/fake_prompt_rates/MuFR_RunII_25ns_jet30_08Jan.root')
+        self.fileMuFR_jet35 = self._openRootFile('../data/fake_prompt_rates/MuFR_RunII_25ns_jet35_08Jan.root')
+        self.fileMuFR_jet45 = self._openRootFile('../data/fake_prompt_rates/MuFR_RunII_25ns_jet45_08Jan.root')
+
+        self.fileElFR_jet25 = self._openRootFile('../data/fake_prompt_rates/EGFR_RunII_25ns_jet25_08Jan.root')
+        self.fileElFR_jet35 = self._openRootFile('../data/fake_prompt_rates/EGFR_RunII_25ns_jet35_08Jan.root')
+        self.fileElFR_jet45 = self._openRootFile('../data/fake_prompt_rates/EGFR_RunII_25ns_jet45_08Jan.root')
+
+        self.MuFR_jet10 = self._getRootObj(self.fileMuFR_jet10, 'FR_pT_eta_EWKcorr')
+        self.MuFR_jet15 = self._getRootObj(self.fileMuFR_jet15, 'FR_pT_eta_EWKcorr')
+        self.MuFR_jet20 = self._getRootObj(self.fileMuFR_jet20, 'FR_pT_eta_EWKcorr')
+        self.MuFR_jet25 = self._getRootObj(self.fileMuFR_jet25, 'FR_pT_eta_EWKcorr')
+        self.MuFR_jet30 = self._getRootObj(self.fileMuFR_jet30, 'FR_pT_eta_EWKcorr')
+        self.MuFR_jet35 = self._getRootObj(self.fileMuFR_jet35, 'FR_pT_eta_EWKcorr')
+        self.MuFR_jet45 = self._getRootObj(self.fileMuFR_jet45, 'FR_pT_eta_EWKcorr')
+
+        self.ElFR_jet25 = self._getRootObj(self.fileElFR_jet25, 'FR_pT_eta_EWKcorr')
+        self.ElFR_jet35 = self._getRootObj(self.fileElFR_jet35, 'FR_pT_eta_EWKcorr')
+        self.ElFR_jet45 = self._getRootObj(self.fileElFR_jet45, 'FR_pT_eta_EWKcorr')
 
 
-    def _getWeight(self, kindLep, pt, eta, istight):
+    def _getRate(self, h2, pt, eta, leptonptmax):
 
-        # FIXME function to be defined
+        aeta  = abs(eta)
+        nbins = h2.GetNbinsX()
+        ptmax = leptonptmax
         
-        return 1.0, 0.0, 0.0
+        if (ptmax <= 0.) : ptmax = h2.GetXaxis().GetBinCenter(nbins)
+        
+        rate_value = h2.GetBinContent(h2.FindBin(min(pt, ptmax), aeta))
+        rate_error = h2.GetBinError  (h2.FindBin(min(pt, ptmax), aeta))
+        
+        return rate_value, rate_error
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # _get2lWeight
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def _get2lWeight(self, leptons, muonThreshold, electronThreshold, stat):
+    def _get2lWeight(self, leptons, MuFR, ElFR, stat):
+
+        # avoid dots to go faster
+        MuPR = self.MuPR
+        ElPR = self.ElPR
 
         if (len(leptons) < 2) :
 
@@ -72,23 +112,23 @@ class FakeWeightFiller(TreeCloner):
 
                 if (i > 1) : break
                 
-                p = 1.0  # lep.pr;
-
-                f  = 0.0
-                fE = 0.0
+                p  = 1.  # prompt rate
+                f  = 0.  # fake   rate
+                pE = 0.  # prompt rate statistical error
+                fE = 0.  # fake   rate statistical error
 
                 if (leptons[i][0] == 'mu') :
 
-                    f  = 0.05  # GetFactor     (MuonFR[mu],  lep.pt, lep.eta, muonThreshold);
-                    fE = 0.02  # GetFactorError(MuonFR[mu],  lep.pt, lep.eta, muonThreshold);
+                    p, pE = self._getRate(MuPR, leptons[i][1], leptons[i][2], -999.)
+                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2],   30.)
 
                     if   (stat == 'MuUp')   : f = f + fE
                     elif (stat == 'MuDown') : f = f - fE
 
                 elif (leptons[i][0] == 'el') :
 
-                    f  = 0.03  # GetFactor     (ElecFR[ele],  lep.pt, lep.eta, electronThreshold);
-                    fE = 0.01  # GetFactorError(ElecFR[ele],  lep.pt, lep.eta, electronThreshold);
+                    p, pE = self._getRate(ElPR, leptons[i][1], leptons[i][2], -999.)
+                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],   30.)
 
                     if   (stat == 'ElUp')   : f = f + fE
                     elif (stat == 'ElDown') : f = f - fE
@@ -245,44 +285,40 @@ class FakeWeightFiller(TreeCloner):
                    # *all* leptons should be already loose after l2sel step!
                    IsTightLepton = itree.std_vector_lepton_isTightLepton[iLep]
                    
-                   # get the weight, the error up and the error down
-                   # FIXME: possibility to extend to more nuisances, like having the statistical nuisance separate.
-                   weight, weigth_error_up, weigth_error_do = self._getWeight(kindLep, pt, eta, IsTightLepton)
-                   
-                   Leptons[selectedLepton] = [kindLep, pt, eta, IsTightLepton, weight, weigth_error_up, weigth_error_do]
+                   Leptons[selectedLepton] = [kindLep, pt, eta, IsTightLepton]
 
                    selectedLepton += 1
 
-            #                                                   mu  ele
-            fakeW2l0j          [0] = self._get2lWeight(Leptons, 20, 35, 'Nominal')
-            fakeW2l0jMuUp      [0] = self._get2lWeight(Leptons, 30, 35, 'Nominal')
-            fakeW2l0jMuDown    [0] = self._get2lWeight(Leptons, 10, 35, 'Nominal')
-            fakeW2l0jElUp      [0] = self._get2lWeight(Leptons, 20, 45, 'Nominal')
-            fakeW2l0jElDown    [0] = self._get2lWeight(Leptons, 20, 25, 'Nominal')
-            fakeW2l0jstatMuUp  [0] = self._get2lWeight(Leptons, 20, 35, 'MuUp')
-            fakeW2l0jstatMuDown[0] = self._get2lWeight(Leptons, 20, 35, 'MuDown')
-            fakeW2l0jstatElUp  [0] = self._get2lWeight(Leptons, 20, 35, 'ElUp')
-            fakeW2l0jstatElDown[0] = self._get2lWeight(Leptons, 20, 35, 'ElDown')
 
-            fakeW2l1j          [0] = self._get2lWeight(Leptons, 25, 35, 'Nominal')
-            fakeW2l1jMuUp      [0] = self._get2lWeight(Leptons, 35, 35, 'Nominal')
-            fakeW2l1jMuDown    [0] = self._get2lWeight(Leptons, 15, 35, 'Nominal')
-            fakeW2l1jElUp      [0] = self._get2lWeight(Leptons, 25, 45, 'Nominal')
-            fakeW2l1jElDown    [0] = self._get2lWeight(Leptons, 25, 25, 'Nominal')
-            fakeW2l1jstatMuUp  [0] = self._get2lWeight(Leptons, 25, 35, 'MuUp')
-            fakeW2l1jstatMuDown[0] = self._get2lWeight(Leptons, 25, 35, 'MuDown')
-            fakeW2l1jstatElUp  [0] = self._get2lWeight(Leptons, 25, 35, 'ElUp')
-            fakeW2l1jstatElDown[0] = self._get2lWeight(Leptons, 25, 35, 'ElDown')
+            fakeW2l0j          [0] = self._get2lWeight(Leptons, self.MuFR_jet20, self.ElFR_jet35, 'Nominal')
+            fakeW2l0jMuUp      [0] = self._get2lWeight(Leptons, self.MuFR_jet30, self.ElFR_jet35, 'Nominal')
+            fakeW2l0jMuDown    [0] = self._get2lWeight(Leptons, self.MuFR_jet10, self.ElFR_jet35, 'Nominal')
+            fakeW2l0jElUp      [0] = self._get2lWeight(Leptons, self.MuFR_jet20, self.ElFR_jet45, 'Nominal')
+            fakeW2l0jElDown    [0] = self._get2lWeight(Leptons, self.MuFR_jet20, self.ElFR_jet25, 'Nominal')
+            fakeW2l0jstatMuUp  [0] = self._get2lWeight(Leptons, self.MuFR_jet20, self.ElFR_jet35, 'MuUp')
+            fakeW2l0jstatMuDown[0] = self._get2lWeight(Leptons, self.MuFR_jet20, self.ElFR_jet35, 'MuDown')
+            fakeW2l0jstatElUp  [0] = self._get2lWeight(Leptons, self.MuFR_jet20, self.ElFR_jet35, 'ElUp')
+            fakeW2l0jstatElDown[0] = self._get2lWeight(Leptons, self.MuFR_jet20, self.ElFR_jet35, 'ElDown')
 
-            fakeW2l2j          [0] = self._get2lWeight(Leptons, 35, 35, 'Nominal')
-            fakeW2l2jMuUp      [0] = self._get2lWeight(Leptons, 45, 35, 'Nominal')
-            fakeW2l2jMuDown    [0] = self._get2lWeight(Leptons, 25, 35, 'Nominal')
-            fakeW2l2jElUp      [0] = self._get2lWeight(Leptons, 35, 45, 'Nominal')
-            fakeW2l2jElDown    [0] = self._get2lWeight(Leptons, 35, 25, 'Nominal')
-            fakeW2l2jstatMuUp  [0] = self._get2lWeight(Leptons, 35, 35, 'MuUp')
-            fakeW2l2jstatMuDown[0] = self._get2lWeight(Leptons, 35, 35, 'MuDown')
-            fakeW2l2jstatElUp  [0] = self._get2lWeight(Leptons, 35, 35, 'ElUp')
-            fakeW2l2jstatElDown[0] = self._get2lWeight(Leptons, 35, 35, 'ElDown')
+            fakeW2l1j          [0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet35, 'Nominal')
+            fakeW2l1jMuUp      [0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'Nominal')
+            fakeW2l1jMuDown    [0] = self._get2lWeight(Leptons, self.MuFR_jet15, self.ElFR_jet35, 'Nominal')
+            fakeW2l1jElUp      [0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet45, 'Nominal')
+            fakeW2l1jElDown    [0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet25, 'Nominal')
+            fakeW2l1jstatMuUp  [0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet35, 'MuUp')
+            fakeW2l1jstatMuDown[0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet35, 'MuDown')
+            fakeW2l1jstatElUp  [0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet35, 'ElUp')
+            fakeW2l1jstatElDown[0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet35, 'ElDown')
+
+            fakeW2l2j          [0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'Nominal')
+            fakeW2l2jMuUp      [0] = self._get2lWeight(Leptons, self.MuFR_jet45, self.ElFR_jet35, 'Nominal')
+            fakeW2l2jMuDown    [0] = self._get2lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet35, 'Nominal')
+            fakeW2l2jElUp      [0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet45, 'Nominal')
+            fakeW2l2jElDown    [0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet25, 'Nominal')
+            fakeW2l2jstatMuUp  [0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'MuUp')
+            fakeW2l2jstatMuDown[0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'MuDown')
+            fakeW2l2jstatElUp  [0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'ElUp')
+            fakeW2l2jstatElDown[0] = self._get2lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'ElDown')
               
             otree.Fill()
             savedentries += 1
@@ -290,5 +326,3 @@ class FakeWeightFiller(TreeCloner):
         self.disconnect()
         print ' - Event loop completed'
         print '   Saved entries:', savedentries
-
-
