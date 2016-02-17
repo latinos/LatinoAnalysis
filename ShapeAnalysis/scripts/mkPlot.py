@@ -113,6 +113,7 @@ class ShapeFactory:
                   if plot[sampleName]['isBlind'] == 1 :
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       histos[sampleName].SetBinContent(iBin, 0)
+                      histos[sampleName].SetBinError  (iBin, 0)
                 
                 
                 thsData.Add(histos[sampleName])
@@ -777,22 +778,23 @@ class ShapeFactory:
                     weight_X_list_Data = []
                     weight_X_list_Signal = []
                     weight_X_list_Background = []
+                    weight_X_list_weights = []
                     
                     for sliceX in range(nbinX) :
                       integral_bkg = 0.
                       #for ibin in range( thsBackground.GetStack().Last().GetNbinsX() )
                       for ibin in range( nbinY ) :
-                        integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin+1)
+                        integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
                       integral_sig = 0.
                       for ibin in range( thsSignal.GetStack().Last().GetNbinsX() ) :
-                        integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1)
+                        integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
                       
                       weight = 1
                       if integral_bkg != 0 : 
                         weight = integral_sig / integral_bkg
                       else :
                         weight = 1
-
+                      weight_X_list_weights.append(weight)
                               
                       for ihisto in range(thsBackground.GetNhists()) :
                          histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName(), '-' , nbinY, 0, nbinY)
@@ -804,9 +806,13 @@ class ShapeFactory:
                          for ibin in range( nbinY ) :
                            histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                          
-                         weight_X_list_Background.append(histo)
+                         if sliceX != 0:
+                           weight_X_list_Background[ihisto].Add(histo)
+                         else :
+                           weight_X_list_Background.append(histo)
+
                          totalWeightedIntegralBkg += histo.Integral()
-                         #weight_X_thsBackground.Add(histo)
+
                          
                       for ihisto in range(thsSignal.GetNhists()) :
                          histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName(), "-", nbinY, 0, nbinY)
@@ -818,24 +824,32 @@ class ShapeFactory:
                          for ibin in range( nbinY ) :
                            histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
 
-                         weight_X_list_Signal.append(histo)
+                         if sliceX != 0:
+                           weight_X_list_Signal[ihisto].Add(histo)
+                         else :
+                           weight_X_list_Signal.append(histo)
+                           
                          totalWeightedIntegralSig += histo.Integral()
-                         #weight_X_thsSignal.Add(histo)
+
              
                       for ihisto in range(thsData.GetNhists()) :
                          histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName(), "-", nbinY, 0, nbinY)
                          for ibin in range( nbinY ) :
                            histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                          
+                         if sliceX != 0:
+                           weight_X_list_Data[ihisto].Add(histo)
+                         else :
+                           weight_X_list_Data.append(histo)
                          weight_X_list_Data.append(histo)
-                         #weight_X_thsData.Add(histo)
 
+                    global_normalization = totalBkg / totalWeightedIntegralBkg
                     for histo in weight_X_list_Data:
-                       histo.Scale(totalBkg / totalWeightedIntegralBkg)
+                       histo.Scale(global_normalization)
                     for histo in weight_X_list_Background:
-                       histo.Scale(totalBkg / totalWeightedIntegralBkg)
+                       histo.Scale(global_normalization)
                     for histo in weight_X_list_Signal:
-                       histo.Scale(totalBkg / totalWeightedIntegralBkg)
+                       histo.Scale(global_normalization)
                   
                     for histo in weight_X_list_Data:
                        weight_X_thsData.Add(histo)
@@ -843,8 +857,93 @@ class ShapeFactory:
                        weight_X_thsBackground.Add(histo)
                     for histo in weight_X_list_Signal:
                        weight_X_thsSignal.Add(histo)
- 
-                    weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + cutName + "_" + variableName
+
+
+                    #print " weight_X_list_weights = ", weight_X_list_weights
+     
+                    # create the weighted data distribution
+                    weight_X_tgrData = ROOT.TGraphAsymmErrors()
+                    for sliceX in range( nbinX ) :
+                      for ibin in range( nbinY ) :
+                        x = tgrData_vx[ibin]
+                        #print " sliceX, ibin = ", sliceX, " , ", ibin, " -> ", tgrData_vx[ibin]
+                        y      = weight_X_list_weights[sliceX] * global_normalization * tgrData_vy[ibin + sliceX * nbinY]
+                        exlow  = tgrData_evx[ibin + sliceX * nbinY]
+                        exhigh = tgrData_evx[ibin + sliceX * nbinY]
+                        eylow  = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_do[ibin + sliceX * nbinY]
+                        eyhigh = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_up[ibin + sliceX * nbinY]
+                        
+                        if sliceX != 0:
+                          y += weight_X_tgrData.GetY()[ibin]
+                          eylow  = self.SumQ ( eylow,  weight_X_tgrData.GetErrorYlow(ibin) )
+                          eyhigh = self.SumQ ( eyhigh, weight_X_tgrData.GetErrorYhigh(ibin) )
+                        
+                        #print " eylow = ", eylow, " eyhigh = ", eyhigh, " y = ", y, " x = ", x 
+                        
+                        weight_X_tgrData.SetPoint      (ibin, x, y)
+                        weight_X_tgrData.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
+                     
+                        #if sliceX == ( nbinX - 1) :
+                          #print " ibin,x,y = ", ibin, ", ", x, ", ", y
+                          
+                    # create the weighted data distribution
+                    weight_X_tgrMC = ROOT.TGraphAsymmErrors()
+                    for sliceX in range(nbinX) :
+                      for ibin in range( nbinY ) :
+                        x = tgrData_vx[ibin]
+                        y = weight_X_list_weights[sliceX] * global_normalization * tgrMC_vy[ibin + sliceX * nbinY]
+                        exlow  = tgrData_evx[ibin + sliceX * nbinY]
+                        exhigh = tgrData_evx[ibin + sliceX * nbinY]
+                        eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[ibin + sliceX * nbinY]
+                        eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[ibin + sliceX * nbinY]
+                        
+                        if sliceX != 0 :
+                          y += weight_X_tgrMC.GetY()[ibin]
+                          eylow  = self.SumQ ( eylow,  weight_X_tgrMC.GetErrorYlow(ibin) )
+                          eyhigh = self.SumQ ( eyhigh, weight_X_tgrMC.GetErrorYhigh(ibin) )
+                        
+                        #print " eylow = ", eylow, " eyhigh = ", eyhigh, " y = ", y, " x = ", x 
+
+                        weight_X_tgrMC.SetPoint      (ibin, x, y)
+                        weight_X_tgrMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
+                    
+                    
+                    # create the weighted data over MC distribution
+                    weight_X_tgrDataOverMC = weight_X_tgrData.Clone("tgrDataOverMCweighted")
+                    for ibin in range( nbinY ) :
+                      x = weight_X_tgrDataOverMC.GetX()[ibin]
+                      y = self.Ratio(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
+                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+                      eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                      eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                      
+                      weight_X_tgrDataOverMC.SetPoint      (ibin, x, y)
+                      weight_X_tgrDataOverMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
+
+                      #print " Ratio:: ibin,x,y = ", ibin, ", ", x, ", ", y, ", ", eylow, ", ", eyhigh, " <-- ", weight_X_tgrData.GetY()[ibin], " / ",  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) 
+            
+                    # create the weighted MC over MC distribution
+                    weight_X_tgrMCOverMC = weight_X_tgrData.Clone("tgrMCOverMCweighted")
+                    for ibin in range( nbinY ) :
+                      x = weight_X_tgrMCOverMC.GetX()[ibin]
+                      y = 1 
+                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
+                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+                      eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                      eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                      
+                      weight_X_tgrMCOverMC.SetPoint      (ibin, x, y)
+                      weight_X_tgrMCOverMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
+           
+           
+                    #
+                    # now plot
+                    #
+                    # - recalculate the maxY
+                    maxYused = 1.2 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+
+                    weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + cutName + '_' + variableName
             
                     weight_X_tcanvasRatio.cd()
                     canvasPad1Name = 'weight_X_pad1_' + cutName + "_" + variableName
@@ -876,12 +975,14 @@ class ShapeFactory:
                       weight_X_thsSignal.Draw("hist same noclear")
                     
                     if (len(mynuisances.keys())!=0):
-                      tgrMC.Draw("2")
-            
+                      weight_X_tgrMC.SetLineColor(12)
+                      weight_X_tgrMC.SetFillColor(12)
+                      weight_X_tgrMC.SetFillStyle(3004)
+                      weight_X_tgrMC.Draw("2")
+           
                     #     - then the DATA  
-                    #if weight_X_thsData.GetN() != 0:
-                      #weight_X_thsData.Draw("P0")
-                    # ---> FIXME I need to add the weigths in the TGraphAsymmErrors!!!
+                    if weight_X_tgrData.GetN() != 0:
+                      weight_X_tgrData.Draw("P0")
                
                     tlegend.Draw()
               
@@ -901,8 +1002,8 @@ class ShapeFactory:
                     #weight_X_pad2.cd().SetGrid()
                     weight_X_pad2.cd()
                     
-                    canvasFrameRatioName = 'weight_X_frame_ratio_' + cutName + "_" + variableName
-                    weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, canvasFrameRatioName)
+                    weight_X_canvasFrameRatioName = 'weight_X_frame_ratio_' + cutName + "_" + variableName
+                    weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameRatioName)
                     # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
                     xAxisDistro = weight_X_frameRatio.GetXaxis()
                     xAxisDistro.SetNdivisions(6,5,0)
@@ -915,12 +1016,15 @@ class ShapeFactory:
                     weight_X_frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
                     self.Pad2TAxis(weight_X_frameRatio)
                     
-                    # FIXME I need to calculate the ratios in the weigthed distributions! Like for TGraphAsymmErrors for data
-                    #if (len(mynuisances.keys())!=0):
-                      #tgrMCOverMC.Draw("2") 
-                    
-                    #tgrDataOverMC.Draw("P0")
-                    
+                    if (len(mynuisances.keys())!=0):
+                      weight_X_tgrMCOverMC.SetLineColor(12)
+                      weight_X_tgrMCOverMC.SetFillColor(12)
+                      weight_X_tgrMCOverMC.SetFillStyle(3004)
+                      weight_X_tgrMCOverMC.Draw("2") 
+                        
+                    weight_X_tgrDataOverMC.Draw("P0")
+ 
+ 
                     oneLine2 = ROOT.TLine(weight_X_frameRatio.GetXaxis().GetXmin(), 1,  weight_X_frameRatio.GetXaxis().GetXmax(), 1);
                     oneLine2.SetLineStyle(3)
                     oneLine2.SetLineWidth(3)
