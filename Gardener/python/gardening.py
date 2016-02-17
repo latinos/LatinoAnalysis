@@ -87,7 +87,7 @@ class TreeCloner(object):
         self.itree.SetBranchStatus('*'  ,1)
 
 
-    def disconnect(self,keepTreeMC=True,cleanUp=True):
+    def disconnect(self,keepTreeMC=False,cleanUp=True):
         self.ofile.cd()
         self.otree.Write()
         # additional trees and histograms not to be lost ...
