@@ -37,14 +37,12 @@ class FakeWeightFiller(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-s', '--stat', dest='stat', help='<Nominal|MuUp|MuDo|ElUp|ElDo>', default='Nominal')
         parser.add_option_group(group)
         return group
 
 
     def checkOptions(self,opts):
-        self.stat = opts.stat
-        print " stat =", self.stat
+        pass
 
 
     def _getWeight(self, kindLep, pt, eta, istight):
@@ -55,13 +53,13 @@ class FakeWeightFiller(TreeCloner):
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # _getPFWeight
+    # _get2lWeight
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def _getPFWeight(self, leptons, muonThreshold, electronThreshold):
+    def _get2lWeight(self, leptons, muonThreshold, electronThreshold, stat):
 
         if (len(leptons) < 2) :
 
-            return 0.0, 0.0, 0.0
+            return 0.0
 
         else :
 
@@ -84,16 +82,16 @@ class FakeWeightFiller(TreeCloner):
                     f  = 0.05  # GetFactor     (MuonFR[mu],  lep.pt, lep.eta, muonThreshold);
                     fE = 0.02  # GetFactorError(MuonFR[mu],  lep.pt, lep.eta, muonThreshold);
 
-                    if   (self.stat == 'MuUp')   : f = f + fE
-                    elif (self.stat == 'MuDown') : f = f - fE
+                    if   (stat == 'MuUp')   : f = f + fE
+                    elif (stat == 'MuDown') : f = f - fE
 
                 elif (leptons[i][0] == 'el') :
 
                     f  = 0.03  # GetFactor     (ElecFR[ele],  lep.pt, lep.eta, electronThreshold);
                     fE = 0.01  # GetFactorError(ElecFR[ele],  lep.pt, lep.eta, electronThreshold);
 
-                    if   (self.stat == 'ElUp')   : f = f + fE
-                    elif (self.stat == 'ElDown') : f = f - fE
+                    if   (stat == 'ElUp')   : f = f + fE
+                    elif (stat == 'ElDown') : f = f - fE
 
                 if (leptons[i][3] == 1) :
 
@@ -110,30 +108,19 @@ class FakeWeightFiller(TreeCloner):
                 promptProbability[i] /= (p - f)
                 fakeProbability[i]   /= (p - f)
  
-            PF = promptProbability[0] * fakeProbability[1]
-            FP = promptProbability[1] * fakeProbability[0]
+            PF = promptProbability[0] * fakeProbability  [1]
+            FP = fakeProbability  [0] * promptProbability[1]
+            FF = fakeProbability  [0] * fakeProbability  [1]
 
-            result = PF + FP;
+            if (ntight == 1) :
+                FF *= -1.
+            else :
+                PF *= -1.
+                FP *= -1.
+
+            result = PF + FP + FF
     
-            if (ntight == 0 or ntight == 2) : result *= -1.
-
-###            if (result > 0) : print ' result:',result
- 
-            return result, result, result
-
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # _getFFWeight
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    def _getFFWeight (self, leptons, muonThreshold, electronThreshold): 
-      
-        # Using the dictionary "Leptons" defined below
-        #     Leptons[selectedLepton] = [kindLep, pt, eta, IsTightLepton, weight, weigth_error_up, weigth_error_do]
-        #     with selectedLepton = 0 or 1
-
-        # FIXME function to be defined
-                
-        return 1.0, 0.0, 0.0
+            return result
 
 
     def process(self,**kwargs):
@@ -143,23 +130,75 @@ class FakeWeightFiller(TreeCloner):
 
         self.connect(tree,input)
          
-        self.fakeVariables = [ 'fakeW2l', 'fakeW2l0j', 'fakeW2l1j', 'fakeW2l2j' ]
+        self.fakeVariables = [ 'fakeW2l0j', 'fakeW2l0jMuUp', 'fakeW2l0jMuDown', 'fakeW2l0jElUp', 'fakeW2l0jElDown', 'fakeW2l0jstatMuUp', 'fakeW2l0jstatMuDown', 'fakeW2l0jstatElUp', 'fakeW2l0jstatElDown',
+                               'fakeW2l1j', 'fakeW2l1jMuUp', 'fakeW2l1jMuDown', 'fakeW2l1jElUp', 'fakeW2l1jElDown', 'fakeW2l1jstatMuUp', 'fakeW2l1jstatMuDown', 'fakeW2l1jstatElUp', 'fakeW2l1jstatElDown',
+                               'fakeW2l2j', 'fakeW2l2jMuUp', 'fakeW2l2jMuDown', 'fakeW2l2jElUp', 'fakeW2l2jElDown', 'fakeW2l2jstatMuUp', 'fakeW2l2jstatMuDown', 'fakeW2l2jstatElUp', 'fakeW2l2jstatElDown' ]
         
         # Clone the tree with new branches added
         self.clone(output, self.fakeVariables)
       
-        # Now actually connect the branches
-        fakeW2l   = numpy.ones(1, dtype=numpy.float32)
-        fakeW2lUp = numpy.ones(1, dtype=numpy.float32)
+        # Nominal values
         fakeW2l0j = numpy.ones(1, dtype=numpy.float32)
         fakeW2l1j = numpy.ones(1, dtype=numpy.float32)
         fakeW2l2j = numpy.ones(1, dtype=numpy.float32)
 
-        self.otree.Branch('fakeW2l',   fakeW2l,   'fakeW2l/F')
-        self.otree.Branch('fakeW2lUp', fakeW2lUp, 'fakeW2lUp/F')
+        # Jet pt up/down
+        fakeW2l0jMuUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jMuUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jMuUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l0jMuDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jMuDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jMuDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l0jElUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jElUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jElUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l0jElDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jElDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jElDown = numpy.ones(1, dtype=numpy.float32)
+
+        # Fake rate statistical error up/down
+        fakeW2l0jstatMuUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jstatMuUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jstatMuUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l0jstatMuDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jstatMuDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jstatMuDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l0jstatElUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jstatElUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jstatElUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l0jstatElDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l1jstatElDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW2l2jstatElDown = numpy.ones(1, dtype=numpy.float32)
+
         self.otree.Branch('fakeW2l0j', fakeW2l0j, 'fakeW2l0j/F')
         self.otree.Branch('fakeW2l1j', fakeW2l1j, 'fakeW2l1j/F')
         self.otree.Branch('fakeW2l2j', fakeW2l2j, 'fakeW2l2j/F')
+
+        self.otree.Branch('fakeW2l0jMuUp',   fakeW2l0jMuUp,   'fakeW2l0jMuUp/F')
+        self.otree.Branch('fakeW2l1jMuUp',   fakeW2l1jMuUp,   'fakeW2l1jMuUp/F')
+        self.otree.Branch('fakeW2l2jMuUp',   fakeW2l2jMuUp,   'fakeW2l2jMuUp/F')
+        self.otree.Branch('fakeW2l0jMuDown', fakeW2l0jMuDown, 'fakeW2l0jMuDown/F')
+        self.otree.Branch('fakeW2l1jMuDown', fakeW2l1jMuDown, 'fakeW2l1jMuDown/F')
+        self.otree.Branch('fakeW2l2jMuDown', fakeW2l2jMuDown, 'fakeW2l2jMuDown/F')
+        self.otree.Branch('fakeW2l0jElUp',   fakeW2l0jElUp,   'fakeW2l0jElUp/F')
+        self.otree.Branch('fakeW2l1jElUp',   fakeW2l1jElUp,   'fakeW2l1jElUp/F')
+        self.otree.Branch('fakeW2l2jElUp',   fakeW2l2jElUp,   'fakeW2l2jElUp/F')
+        self.otree.Branch('fakeW2l0jElDown', fakeW2l0jElDown, 'fakeW2l0jElDown/F')
+        self.otree.Branch('fakeW2l1jElDown', fakeW2l1jElDown, 'fakeW2l1jElDown/F')
+        self.otree.Branch('fakeW2l2jElDown', fakeW2l2jElDown, 'fakeW2l2jElDown/F')
+
+        self.otree.Branch('fakeW2l0jstatMuUp',   fakeW2l0jstatMuUp,   'fakeW2l0jstatMuUp/F')
+        self.otree.Branch('fakeW2l1jstatMuUp',   fakeW2l1jstatMuUp,   'fakeW2l1jstatMuUp/F')
+        self.otree.Branch('fakeW2l2jstatMuUp',   fakeW2l2jstatMuUp,   'fakeW2l2jstatMuUp/F')
+        self.otree.Branch('fakeW2l0jstatMuDown', fakeW2l0jstatMuDown, 'fakeW2l0jstatMuDown/F')
+        self.otree.Branch('fakeW2l1jstatMuDown', fakeW2l1jstatMuDown, 'fakeW2l1jstatMuDown/F')
+        self.otree.Branch('fakeW2l2jstatMuDown', fakeW2l2jstatMuDown, 'fakeW2l2jstatMuDown/F')
+        self.otree.Branch('fakeW2l0jstatElUp',   fakeW2l0jstatElUp,   'fakeW2l0jstatElUp/F')
+        self.otree.Branch('fakeW2l1jstatElUp',   fakeW2l1jstatElUp,   'fakeW2l1jstatElUp/F')
+        self.otree.Branch('fakeW2l2jstatElUp',   fakeW2l2jstatElUp,   'fakeW2l2jstatElUp/F')
+        self.otree.Branch('fakeW2l0jstatElDown', fakeW2l0jstatElDown, 'fakeW2l0jstatElDown/F')
+        self.otree.Branch('fakeW2l1jstatElDown', fakeW2l1jstatElDown, 'fakeW2l1jstatElDown/F')
+        self.otree.Branch('fakeW2l2jstatElDown', fakeW2l2jstatElDown, 'fakeW2l2jstatElDown/F')
 
         nentries = self.itree.GetEntries()
         print ' - Input entries:', nentries
@@ -214,17 +253,36 @@ class FakeWeightFiller(TreeCloner):
 
                    selectedLepton += 1
 
-                   
-            #                                     mu  ele
-            weightPF = self._getPFWeight(Leptons, 15, 15)
-            weightFF = self._getFFWeight(Leptons, 15, 15)
+            #                                                   mu  ele
+            fakeW2l0j          [0] = self._get2lWeight(Leptons, 20, 35, 'Nominal')
+            fakeW2l0jMuUp      [0] = self._get2lWeight(Leptons, 30, 35, 'Nominal')
+            fakeW2l0jMuDown    [0] = self._get2lWeight(Leptons, 10, 35, 'Nominal')
+            fakeW2l0jElUp      [0] = self._get2lWeight(Leptons, 20, 45, 'Nominal')
+            fakeW2l0jElDown    [0] = self._get2lWeight(Leptons, 20, 25, 'Nominal')
+            fakeW2l0jstatMuUp  [0] = self._get2lWeight(Leptons, 20, 35, 'MuUp')
+            fakeW2l0jstatMuDown[0] = self._get2lWeight(Leptons, 20, 35, 'MuDown')
+            fakeW2l0jstatElUp  [0] = self._get2lWeight(Leptons, 20, 35, 'ElUp')
+            fakeW2l0jstatElDown[0] = self._get2lWeight(Leptons, 20, 35, 'ElDown')
 
-            fakeW2l  [0] = weightPF[0] + weightFF[0]
-            fakeW2l0j[0] = 1.23456
-            fakeW2l1j[0] = 7.890
-            fakeW2l2j[0] = 7.890
+            fakeW2l1j          [0] = self._get2lWeight(Leptons, 25, 35, 'Nominal')
+            fakeW2l1jMuUp      [0] = self._get2lWeight(Leptons, 35, 35, 'Nominal')
+            fakeW2l1jMuDown    [0] = self._get2lWeight(Leptons, 15, 35, 'Nominal')
+            fakeW2l1jElUp      [0] = self._get2lWeight(Leptons, 25, 45, 'Nominal')
+            fakeW2l1jElDown    [0] = self._get2lWeight(Leptons, 25, 25, 'Nominal')
+            fakeW2l1jstatMuUp  [0] = self._get2lWeight(Leptons, 25, 35, 'MuUp')
+            fakeW2l1jstatMuDown[0] = self._get2lWeight(Leptons, 25, 35, 'MuDown')
+            fakeW2l1jstatElUp  [0] = self._get2lWeight(Leptons, 25, 35, 'ElUp')
+            fakeW2l1jstatElDown[0] = self._get2lWeight(Leptons, 25, 35, 'ElDown')
 
-            fakeW2lUp[0] = weightPF[1] + weightFF[1]
+            fakeW2l2j          [0] = self._get2lWeight(Leptons, 35, 35, 'Nominal')
+            fakeW2l2jMuUp      [0] = self._get2lWeight(Leptons, 45, 35, 'Nominal')
+            fakeW2l2jMuDown    [0] = self._get2lWeight(Leptons, 25, 35, 'Nominal')
+            fakeW2l2jElUp      [0] = self._get2lWeight(Leptons, 35, 45, 'Nominal')
+            fakeW2l2jElDown    [0] = self._get2lWeight(Leptons, 35, 25, 'Nominal')
+            fakeW2l2jstatMuUp  [0] = self._get2lWeight(Leptons, 35, 35, 'MuUp')
+            fakeW2l2jstatMuDown[0] = self._get2lWeight(Leptons, 35, 35, 'MuDown')
+            fakeW2l2jstatElUp  [0] = self._get2lWeight(Leptons, 35, 35, 'ElUp')
+            fakeW2l2jstatElDown[0] = self._get2lWeight(Leptons, 35, 35, 'ElDown')
               
             otree.Fill()
             savedentries += 1
