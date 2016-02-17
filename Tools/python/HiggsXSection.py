@@ -111,6 +111,7 @@ class HiggsXSection:
      if not 'xs'      in self._YR[YRversion][model]               : return 0
      if not energy    in self._YR[YRversion][model]['xs']         : return 0
      if not proc      in self._YR[YRversion][model]['xs'][energy] : return 0 
+     
      if proc == 'ZH' :
        xs_ZH = self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_pb')
        if self._UseggZH and 'YR4' in YRversion :
@@ -163,14 +164,16 @@ class HiggsXSection:
      # ... Higgs production mechanism
      HiggsProdXS = 0.
      ProdMode = 'unknown'
-     if 'GluGluH'  in SampleName : ProdMode = 'ggH'
-     if 'VBFH'     in SampleName : ProdMode = 'vbfH'
-     if 'HZJ'      in SampleName : ProdMode = 'ZH'
-     if 'HWplusJ'  in SampleName : ProdMode = 'HWplus'
-     if 'HWminusJ' in SampleName : ProdMode = 'HWminus'
-     if 'ttH'      in SampleName : ProdMode = 'ttH'  
+     if 'Mlarge' in SampleName : ProdMode = 'unknown' ## 
+     elif 'GluGluH'  in SampleName : ProdMode = 'ggH'
+     elif 'VBFH'     in SampleName : ProdMode = 'vbfH'
+     elif 'HZJ'      in SampleName : ProdMode = 'ZH'
+     elif 'HWplusJ'  in SampleName : ProdMode = 'HWplus'
+     elif 'HWminusJ' in SampleName : ProdMode = 'HWminus'
+     elif 'ttH'      in SampleName : ProdMode = 'ttH'  
      HiggsMass   = 0.
-     if '_M' in SampleName : HiggsMass = SampleName.split('_M')[1]
+     if 'Mlarge' in SampleName : HiggsMass = '0.0'
+     elif '_M' in SampleName : HiggsMass = SampleName.split('_M')[1]
      #if 'large' in HiggsMass : ProdMode = 'unknown'
      if not ProdMode == 'unknown' :
        HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
