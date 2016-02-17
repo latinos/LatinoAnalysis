@@ -28,16 +28,19 @@ class MetUncertaintyTreeMaker(TreeCloner) :
     def addOptions(self,parser) :
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763')
-        group.add_option('-k',  '--kind', dest='kind',  help='<Up|Dn> variation', default='Up', type='string')
+        group.add_option('-c', '--cmssw',  dest='cmssw',  help='cmssw version (naming convention may change)', default='763')
+        group.add_option('-k', '--kind',   dest='kind',   help='<Up|Dn> variation', default='Up', type='string')
+        group.add_option('-l', '--lepton', dest='lepton', help='Include leptons in the MET uncertainty? <yes|no>', default='yes', type='string')
         parser.add_option_group(group)
         return group
 
     def checkOptions(self,opts) :
-        self.cmssw = opts.cmssw
-        self.kind  = opts.kind
-        print " cmssw =", self.cmssw
-        print "  kind =", self.kind
+        self.cmssw  = opts.cmssw
+        self.kind   = opts.kind
+        self.lepton = opts.lepton
+        print "  cmssw =", self.cmssw
+        print "   kind =", self.kind
+        print " lepton =", self.lepton
 
     def deltaphi(self, phi1, phi2) :
         dphi = abs(phi1 - phi2)
@@ -104,6 +107,12 @@ class MetUncertaintyTreeMaker(TreeCloner) :
                   phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnUp, oldphi)
                   phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnUp, oldphi)
                   
+                  if (self.lepton == 'no') :
+                      metMuonEn = 0.
+                      metElecEn = 0.
+                      phiMuonEn = 0.
+                      phiElecEn = 0.
+
                   deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
 
                   if (deltaphimax == phiJetEn)  : newphi[0] = itree.metPfRawPhiJetEnUp
@@ -124,6 +133,12 @@ class MetUncertaintyTreeMaker(TreeCloner) :
                   phiMuonEn = self.deltaphi(itree.metPfRawPhiMuonEnDn, oldphi)
                   phiElecEn = self.deltaphi(itree.metPfRawPhiElecEnDn, oldphi)
                   phiUnclEn = self.deltaphi(itree.metPfRawPhiUnclEnDn, oldphi)
+
+                  if (self.lepton == 'no') :
+                      metMuonEn = 0.
+                      metElecEn = 0.
+                      phiMuonEn = 0.
+                      phiElecEn = 0.
 
                   deltaphimax = max(phiJetEn, phiJetRes, phiMuonEn, phiElecEn, phiUnclEn)
                       
