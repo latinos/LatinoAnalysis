@@ -85,7 +85,11 @@ class L2KinFiller(TreeCloner):
            'detajj',
            'njet',
            
-           'mllThird'
+           'mllThird',
+           
+           'ht',
+           'vht_pt',
+           'vht_phi'
            
            ]
         

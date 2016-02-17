@@ -63,7 +63,11 @@ public:
  float detajj();
  float dphijj();
  float njet();
-  
+
+ float vht_pt();
+ float vht_phi();
+ float ht();
+ 
  //---- to reject Wg*
  float mllThird();
  
@@ -181,7 +185,7 @@ void WW::checkIfOk() {
   {
    
    int numLep = 0;   
-   for (int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+   for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
     if (_leptonspt.at(ilep) > 0.) numLep ++;
    }
    
@@ -201,7 +205,7 @@ void WW::checkIfOk() {
   
   
   int numJet = 0;
-  for (int ijet = 0; ijet < _jetspt.size(); ijet++) {
+  for (unsigned int ijet = 0; ijet < _jetspt.size(); ijet++) {
    if (_jetspt.at(ijet) > 0.) numJet ++;
   }
   
@@ -283,7 +287,7 @@ void WW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoret
 
 float WW::njet(){
  float njet = 0;
- for (int ijet=0; ijet < _jetspt.size(); ijet++) {
+ for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
   if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet))<4.7) {
    njet += 1;
   }
@@ -624,7 +628,75 @@ float WW::dphijj(){
 }
 
 
+float WW::ht(){ 
+ if (_isOk && _leptonspt.size() > 0) {
+  float ht_value = 0;
+  for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+   if (_leptonspt.at(ilep) > 0) {
+    ht_value += _leptonspt.at(ilep);
+   }
+  }
+  for (unsigned int ijet = 0; ijet < _jetspt.size(); ijet++) {
+   if (_jetspt.at(ijet) > 30) {
+    ht_value += _jetspt.at(ijet);
+    }
+  }
+  return  ht_value;
+ }
+ else {
+  return -9999.0;
+ }
+}
 
+
+float WW::vht_pt(){ 
+ if (_isOk && _leptonspt.size() > 0) {
+   TLorentzVector vht_Vector;
+   for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+    if (_leptonspt.at(ilep) > 0) {
+     TLorentzVector Ltemp;
+     Ltemp.SetPtEtaPhiM(_leptonspt.at(ilep), _leptonseta.at(ilep), _leptonsphi.at(ilep), 0.);
+     vht_Vector += Ltemp;
+    }
+   }
+   for (unsigned int ijet = 0; ijet < _jetspt.size(); ijet++) {
+    if (_jetspt.at(ijet) > 30) {
+     TLorentzVector Jtemp;
+     Jtemp.SetPtEtaPhiM(_jetspt.at(ijet), _jetseta.at(ijet), _jetsphi.at(ijet), 0.);
+     vht_Vector += Jtemp;
+    }
+   }
+   return vht_Vector.Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::vht_phi(){ 
+ if (_isOk && _leptonspt.size() > 0) {
+  TLorentzVector vht_Vector;
+  for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+   if (_leptonspt.at(ilep) > 0) {
+    TLorentzVector Ltemp;
+    Ltemp.SetPtEtaPhiM(_leptonspt.at(ilep), _leptonseta.at(ilep), _leptonsphi.at(ilep), 0.);
+    vht_Vector += Ltemp;
+   }
+  }
+  for (unsigned int ijet = 0; ijet < _jetspt.size(); ijet++) {
+   if (_jetspt.at(ijet) > 30) {
+    TLorentzVector Jtemp;
+    Jtemp.SetPtEtaPhiM(_jetspt.at(ijet), _jetseta.at(ijet), _jetsphi.at(ijet), 0.);
+    vht_Vector += Jtemp;
+   }
+  }
+  return vht_Vector.Phi();
+ }
+ else {
+  return -9999.0;
+ }
+}
 
 
 
