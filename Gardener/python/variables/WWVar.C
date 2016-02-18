@@ -57,6 +57,7 @@ public:
  
  float mth();
  float mcoll();
+ float mcollWW();
  float dphillmet();
  float channel();
  float mjj();
@@ -570,6 +571,32 @@ float WW::mcoll(){
  }
  
 }
+
+
+
+float WW::mcollWW(){
+ 
+ if (_isOk) {
+  
+  //---- project met to lepton direction
+  float et_par_1 = MET.Pt() * cos ( fabs( (L1).DeltaPhi(MET) ) );
+  float et_par_2 = MET.Pt() * cos ( fabs( (L2).DeltaPhi(MET) ) ); 
+  
+  TLorentzVector L1_enhanced,L2_enhanced;
+  
+  L1_enhanced.SetPtEtaPhiM(pt1() + et_par_1, eta1(), phi1(), 80.385);
+  L2_enhanced.SetPtEtaPhiM(pt2() + et_par_2, eta2(), phi2(), 80.385);
+  
+  return (L1_enhanced + L2_enhanced).M();
+  
+  
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
+
 
 
 float WW::channel(){
