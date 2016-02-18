@@ -69,6 +69,7 @@ class L2KinFiller(TreeCloner):
            'mth',
            'mcoll',
            'mcollWW',
+           'mTi',
            'channel',
            'projpfmet',
 

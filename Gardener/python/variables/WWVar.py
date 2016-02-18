@@ -39,18 +39,20 @@ class WWVarFiller(TreeCloner):
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
-        newbranches = ['pTWW', 'HT', 'redHT', 'mT2']
+        newbranches = ['pTWW', 'HT', 'redHT', 'mT2', 'mTi']
         self.clone(output,newbranches)
 
         pTWW    = numpy.ones(1, dtype=numpy.float32)
         HT      = numpy.ones(1, dtype=numpy.float32)
         redHT   = numpy.ones(1, dtype=numpy.float32)
         mT2     = numpy.ones(1, dtype=numpy.float32)
+        mTi     = numpy.ones(1, dtype=numpy.float32)
 
         self.otree.Branch('pTWW'  , pTWW  , 'pTWW/F')
         self.otree.Branch('HT'    , HT    , 'HT/F')
         self.otree.Branch('redHT' , redHT , 'redHT/F')
         self.otree.Branch('mT2'   , mT2   , 'mT2/F')
+        self.otree.Branch('mTi'   , mTi   , 'mTi/F')
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -80,7 +82,8 @@ class WWVarFiller(TreeCloner):
             pt2 = itree.std_vector_lepton_pt[1]
             phi1 = itree.std_vector_lepton_pt[0]
             phi2 = itree.std_vector_lepton_pt[1]
-
+            eta1 = itree.std_vector_lepton_pt[0]
+            eta2 = itree.std_vector_lepton_pt[1]
 
             met = itree.pfType1Met
             metphi = itree.pfType1Metphi
@@ -88,7 +91,7 @@ class WWVarFiller(TreeCloner):
             #metphi = itree.pfmetphi
             
             WW = ROOT.WW(pt1, pt2, phi1, phi2, met, metphi)
-            
+ 
             #ptWW
             pTWW[0]   = WW.pTWW()
             #print "dphill = ", WW.dphill()
@@ -98,6 +101,9 @@ class WWVarFiller(TreeCloner):
             #WW = ROOT.WW(pt1, pt2, phi1, phi2, met, metphi)
             mT2[0]   = WW.mT2()
             
+	    # mTi
+            WWi = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, met, metphi)
+            mTi[0]   = WWi.mTi()
             
             # calculate HT with leptons and jets
             HT[0] = 0.0
