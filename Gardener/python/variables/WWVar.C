@@ -641,6 +641,7 @@ float WW::ht(){
     ht_value += _jetspt.at(ijet);
     }
   }
+  ht_value += MET.Pt();
   return  ht_value;
  }
  else {
