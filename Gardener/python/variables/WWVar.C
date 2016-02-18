@@ -58,6 +58,7 @@ public:
  float mth();
  float mcoll();
  float mcollWW();
+ float mTi();
  float dphillmet();
  float channel();
  float mjj();
@@ -597,6 +598,17 @@ float WW::mcollWW(){
  
 }
 
+
+float WW::mTi(){
+
+ if (_isOk) {
+  return (L1+L2+MET).M();
+ }
+ else{
+  return -9999.0;
+ }
+
+}
 
 
 float WW::channel(){

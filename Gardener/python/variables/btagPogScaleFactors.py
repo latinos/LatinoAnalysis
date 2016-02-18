@@ -272,8 +272,8 @@ class btagPogScaleFactors(TreeCloner):
                 if idJet != 2:
                   sf      = self.readerCentral.evaluate(idJet, eta, pt)
 		  if pt<30:
-                    sfUp    = 2*(self.readerUp.evaluate(idJet, eta, pt))
-                    sfDown  = 2*(self.readerDown.evaluate(idJet, eta, pt))
+                    sfUp    = 2*( self.readerUp.evaluate(idJet, eta, pt) - sf ) + sf
+                    sfDown  = 2*( self.readerDown.evaluate(idJet, eta, pt) -sf ) +sf
                   else:
                     sfUp    = self.readerUp.evaluate(idJet, eta, pt)
                     sfDown  = self.readerDown.evaluate(idJet, eta, pt)
