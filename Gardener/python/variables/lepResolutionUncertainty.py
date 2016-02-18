@@ -82,8 +82,11 @@ class LeptonResolutionTreeMaker(TreeCloner):
             for point in self.leppTresolution[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
                     sigma=point[2]
+                    print sigma
                 else:
                      sigma=1.0       
+        else:
+            sigma=1.0
         smeared_pt = -1
         while smeared_pt < 0 :
             smeared_pt=ROOT.gRandom.Gaus(pt, sigma*pt)
