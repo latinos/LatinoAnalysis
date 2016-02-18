@@ -44,7 +44,7 @@ class LeptonResolutionTreeMaker(TreeCloner):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         if opts.resolutionFile == None :
-          opts.resolutionFile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/leppTresolution.py'
+          opts.resolutionFile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTresolution_el_76_rereco.py'
 
         print " opts.resolutionFile = " , opts.resolutionFile
 
