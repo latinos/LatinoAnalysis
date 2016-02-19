@@ -154,7 +154,7 @@ Steps= {
   'bSFL2pTEff'   :   {
                   'isChain'    : True ,
                   'do4MC'      : True ,
-                  'do4Data'    : False,
+                  'do4Data'    : True ,
                   'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin'],
 #                 'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
 #                                 'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
