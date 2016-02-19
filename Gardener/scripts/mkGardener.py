@@ -463,6 +463,12 @@ for iProd in prodList :
             if iSubStep in ['mcweights']: # ,'mcwghtcount' ]  :
               if not 'doMCweights=True' in samples[iTargetOri][1] : selectSample=False
 
+            if Productions[iProd]['isData'] : 
+              if not Steps[iSubStep]['do4Data'] : selectSample=False
+            else:
+              if not Steps[iSubStep]['do4MC'] : selectSample=False
+
+
             #print iSubStep , selectSample
 
             if cStep == 1 :
