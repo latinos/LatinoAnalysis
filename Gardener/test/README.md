@@ -338,7 +338,17 @@ this module needs to run after l2sel, because it needs the real jets in the even
 The module adds to the trees two sets of weights, one based on the POG provided SF, one based on our Tag and Probe method.
 The POG SF are contained in branch named `bPogSF*`, while the Tag & Probe Scale factors are called `bTPSF*`. 
 
+Module options:
+    
+    '-w', '--working-point' (default 0): 0 (loose), 1 (medium), 2 (tight)
+    '-s', '--scalefactor-file' (default: data/cMVAv2.csv): csv file with the scale factors
+    '-p', '--scalefactor-file-tp' (CURRENTLY NOT USED): csv file with the T&P scale factors
+    '-e', '--efficiency-file' (default: data/efficiencyMCFile76X.py): root file with MC efficiencies for b, c and light jets in bins of eta and pT
+
+
 The `bTPSF*` are currently placeholders and their value is 1.
+
+NB: currently only the scale factors provided by BTV are used, even for jets with pT between 20 and 30 GeV (doubling the uncertainty).
 
 
 Lepton pT scale uncertainty
