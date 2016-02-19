@@ -277,7 +277,6 @@ class EffTrgFiller(TreeCloner):
                       (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
                       (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
-          
           # up variation ...
           
           eff_dbl_1_leadingleg  = high_eff_dbl_1_leadingleg    
@@ -466,16 +465,16 @@ class EffTrgFiller(TreeCloner):
           s2  , low_s2  , high_s2   = self._getEff(pt2, eta2, single2)
           s3  , low_s3  , high_s3   = self._getEff(pt3, eta3, single3)
                     
-          eff12 = (s1 - l1t2) * (s2 - t2l1) * dz_eff + (s2 - l2t1) * (s1 - t1l2) * dz_eff - (s1 - l1t2) * (s2 - l2t1) * dz_eff
-          eff13 = (s1 - l1t3) * (s3 - t3l1) * dz_eff + (s3 - l2t1) * (s1 - t1l3) * dz_eff - (s1 - l1t3) * (s3 - l3t1) * dz_eff
-          eff23 = (s2 - l2t3) * (s3 - t3l2) * dz_eff + (s3 - l3t2) * (s2 - t2l3) * dz_eff - (s2 - l2t3) * (s3 - l3t2) * dz_eff
+          ### eff12 = (s1 - l1t2) * (s2 - t2l1) * dz_eff + (s2 - l2t1) * (s1 - t1l2) * dz_eff - (s1 - l1t2) * (s2 - l2t1) * dz_eff
+          ### eff13 = (s1 - l1t3) * (s3 - t3l1) * dz_eff + (s3 - l2t1) * (s1 - t1l3) * dz_eff - (s1 - l1t3) * (s3 - l3t1) * dz_eff
+          ### eff23 = (s2 - l2t3) * (s3 - t3l2) * dz_eff + (s3 - l3t2) * (s2 - t2l3) * dz_eff - (s2 - l2t3) * (s3 - l3t2) * dz_eff
 
-          evt_eff = s1 + s2 + s3 - s1*s2 - s1*s3 - s2*s3 + eff12 + eff13 + eff23
+          evt_eff = s1 + s2 + s3 - s1*s2 - s1*s3 - s2*s3 + s1*s2*s3  # INCOMPLETE
           
           evt_eff_low  = evt_eff  # Temporary
           evt_eff_high = evt_eff  # Temporary
 
-          print " Testing 3-lepton trigger efficiency:", evt_eff
+          ### print " Testing 3-lepton trigger efficiency:", evt_eff
           
           return evt_eff, evt_eff_low, evt_eff_high
 
@@ -552,12 +551,11 @@ class EffTrgFiller(TreeCloner):
               self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Down'][0] = 0.0
               self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Up'][0] = 0.0
 
-              
-            # 3-lepton case
-            if itree.std_vector_lepton_flavour.size() >= 3 :
-                a, b, c = self._get3lWeight(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
-                                            itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1],
-                                            itree.std_vector_lepton_flavour[2], itree.std_vector_lepton_pt[2], itree.std_vector_lepton_eta[2])
+            # 3-lepton case -- INCOMPLETE
+            ### if itree.std_vector_lepton_flavour.size() >= 3 :
+            ###     a, b, c = self._get3lWeight(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
+            ###                                 itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1],
+            ###                                 itree.std_vector_lepton_flavour[2], itree.std_vector_lepton_pt[2], itree.std_vector_lepton_eta[2])
 
             otree.Fill()
             savedentries+=1
