@@ -320,6 +320,7 @@ for iProd in prodList :
                   targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile 
 
       print targetList
+      for i in targetList : print i
       #quit() 
 
       # Create Output Directory on eos
