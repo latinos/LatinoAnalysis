@@ -374,7 +374,14 @@ QCD uncertainty
     
     gardener.py qcdUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
 
+    
+PDF and scale uncertainty
+====
+    
+    gardener.py pdfAndScaleUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
 
+
+    
 MET uncertainty
 ====
 

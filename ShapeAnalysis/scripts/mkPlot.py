@@ -68,6 +68,8 @@ class ShapeFactory:
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
           for variableName, variable in self._variables.iteritems():
+            print "variableName = ", variableName
+            
             histos = {}
             canvasNameTemplate = 'c_' + cutName + "_" + variableName
             
@@ -186,7 +188,8 @@ class ShapeFactory:
                   else :
                     if nuisanceName not in mynuisances.keys() :
                       if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
-                        print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
+                        pass
+                        #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
                       else :
                         mynuisances[nuisanceName] = nuisances[nuisanceName]
                  

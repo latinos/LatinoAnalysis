@@ -66,6 +66,8 @@ from LatinoAnalysis.Gardener.variables.metUncertainty             import MetUnce
 from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
 # PDF uncertainty
 from LatinoAnalysis.Gardener.variables.pdfUncertainty             import PdfUncertaintyTreeMaker
+# PDF and scale uncertainty
+from LatinoAnalysis.Gardener.variables.pdfAndScaleUncertainty     import PdfAndScaleUncertaintyTreeMaker
 
 
 if __name__ == '__main__':
@@ -129,12 +131,14 @@ if __name__ == '__main__':
     modules['l2kinfiller']     = L2KinFiller()
 
 # Nuisances
-    modules['JESTreeMaker']         = JESTreeMaker()
-    modules['LeppTScalerTreeMaker'] = LeppTScalerTreeMaker()
-    modules['leptonResolution']     = LeptonResolutionTreeMaker()
-    modules['metUncertainty']       = MetUncertaintyTreeMaker()
-    modules['pdfUncertainty']       = PdfUncertaintyTreeMaker()
-    modules['qcdUncertainty']       = QcdUncertaintyTreeMaker()
+    modules['JESTreeMaker']           = JESTreeMaker()
+    modules['LeppTScalerTreeMaker']   = LeppTScalerTreeMaker()
+    modules['leptonResolution']       = LeptonResolutionTreeMaker()
+    modules['metUncertainty']         = MetUncertaintyTreeMaker()
+    modules['pdfUncertainty']         = PdfUncertaintyTreeMaker()
+    modules['qcdUncertainty']         = QcdUncertaintyTreeMaker()
+    modules['pdfAndScaleUncertainty'] = PdfAndScaleUncertaintyTreeMaker()
+    
     
 # fake weights
     modules['fakeWeights']      = FakeWeightFiller()
