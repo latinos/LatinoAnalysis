@@ -28,7 +28,8 @@ public:
 
  void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  
- void setMET(float met, float metphi);
+ void setMET  (float met, float metphi);
+ void setTkMET(float met, float metphi);
  
  //! functions
  float pTWW();
@@ -54,6 +55,10 @@ public:
  float mtw2();
  float pfmet();
  float projpfmet();
+ float dphiltkmet();
+ float projtkmet();
+ float mpmet();
+ 
  
  float mth();
  float mcoll();
@@ -80,10 +85,12 @@ private:
  TLorentzVector MET;
  TLorentzVector J1, J2;
  float pid1, pid2;
+ TLorentzVector TkMET;
  
  bool _isOk;
  int  _jetOk;
  int  _lepOk;
+ bool _isTkMET;
  
  std::vector<float> _jetspt;
  std::vector<float> _jetseta;
@@ -102,6 +109,7 @@ WW::WW() {
  _isOk = false;
  _jetOk = 0;
  _lepOk = 0;
+ _isTkMET = false;
 }
 
 WW::WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi) {
@@ -116,6 +124,7 @@ WW::WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi) {
   _isOk = false;
  }
  _jetOk = 0;
+ _isTkMET = false; 
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi) {
@@ -130,6 +139,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   _isOk = false;
  }
  _jetOk = 0;
+ _isTkMET = false;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi) {
@@ -146,6 +156,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   _isOk = false;
  }
  _jetOk = 0;
+ _isTkMET = false;
 }
 
 WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
@@ -172,6 +183,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   }
  }
  
+ _isTkMET = false;
 }
 
 //! check if ok
@@ -195,6 +207,10 @@ void WW::checkIfOk() {
    if (numLep >=2 && MET.E() > 0) {
     _isOk = true;
     _lepOk = numLep;
+    
+    if (TkMET.E() > 0) {
+     _isTkMET = true;
+    }
    }
   }
   
@@ -225,6 +241,11 @@ void WW::checkIfOk() {
 
 void WW::setMET(float met, float metphi) {
  MET.SetPtEtaPhiM(met, 0, metphi, 0.);
+}
+
+void WW::setTkMET(float met, float metphi) {
+ TkMET.SetPtEtaPhiM(met, 0, metphi, 0.);
+ _isTkMET = true;
 }
 
 
@@ -380,6 +401,18 @@ float WW::dphilmet(){
  }
 }
 
+float WW::dphiltkmet(){ 
+ if (_isOk && _isTkMET) {
+  float d1 = fabs((L1).DeltaPhi(TkMET));
+  float d2 = fabs((L2).DeltaPhi(TkMET));
+  if (d1<d2) return d1;
+  else       return d2;
+ }
+ else {
+  return -9999.0;
+ }
+}
+
 
 float WW::dphilmet1(){ 
  if (_isOk) {
@@ -444,6 +477,34 @@ float WW::projpfmet(){
     return -9999.0;
   }
 }
+
+
+float WW::projtkmet(){
+ 
+ if (_isOk && _isTkMET) {
+  if (dphiltkmet() < TMath::Pi() / 2.)
+   return sin(dphiltkmet()) * TkMET.Pt();
+  else
+   return TkMET.Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::mpmet(){
+ 
+ if (_isOk && _isTkMET) {
+  return min(projtkmet(),projpfmet());
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+
 
 
 //---- pt
