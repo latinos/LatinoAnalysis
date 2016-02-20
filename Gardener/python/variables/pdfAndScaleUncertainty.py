@@ -114,14 +114,14 @@ class PdfAndScaleUncertaintyTreeMaker(TreeCloner) :
           #pdfRange = range(loopStart,itree.std_vector_LHE_weight.size())
           pdfRange = range(9, 108)
           for count in pdfRange:
-              print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
+              #print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
               pdfHisto.Fill(itree.std_vector_LHE_weight[count] / default_weight)
               #if (itree.std_vector_LHE_weight[count] == 1):
               #    print 'posizione = ', count
 
           RFRange = range(1, 8)
           for count in RFRange:
-              print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
+              #print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
               RFHisto.Fill(itree.std_vector_LHE_weight[count] / default_weight)
 
           scaleMd = pdfHisto.GetMean()

@@ -97,10 +97,13 @@ class PdfUncertaintyTreeMaker(TreeCloner) :
         for i in xrange(nentries) :
           itree.GetEntry(i)
 
+          default_weight = itree.std_vector_LHE_weight[0]
+          print " default_weight = ", default_weight
+
           pdfRange = range(loopStart,itree.std_vector_LHE_weight.size())
           for count in pdfRange:
               print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
-              pdfHisto.Fill(itree.std_vector_LHE_weight[count])
+              pdfHisto.Fill(itree.std_vector_LHE_weight[count] / default_weight)
               if (itree.std_vector_LHE_weight[count] == 1):
                   print 'posizione = ', count
 
