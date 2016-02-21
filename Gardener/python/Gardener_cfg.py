@@ -150,12 +150,18 @@ Steps= {
                   'subTargets' : ['l2loose','puadder','baseW','wwNLL']
                 },
 
-
-  'bSFL2pTEff'   :   {
+  'MCl1loose' :       {
                   'isChain'    : True ,
                   'do4MC'      : True ,
-                  'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin'],
+                  'do4Data'    : False,
+                  'subTargets' : ['l1loose','puadder','baseW','wwNLL']
+                },
+
+  'bSFL2Eff'   :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['bPogSF','TrigEff','IdIsoSC','l2kin'],
 #                 'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
 #                                 'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
 #                                 'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
@@ -184,9 +190,6 @@ Steps= {
 #                                 'Wg','ZZTo4L','WWZ',
 #                                ] ,
                  },
-
-
-
 
   'JESup'     :  {
                   'isChain'    : True ,
@@ -364,6 +367,13 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \'std_vector_lepton_isTightLepton[0]>0.5 && std_vector_lepton_isTightLepton[1]>0.5\' '
+               },
+
+  'l1loose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
   'WgStarsel' : {
