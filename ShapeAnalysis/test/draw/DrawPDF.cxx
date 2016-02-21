@@ -5,7 +5,6 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
  TCanvas* cc = new TCanvas("cc","",800,600);
  
  TTree* myTree = (TTree*) _file0 -> Get("latino");
- TH1F* h[200];
  
  
  TH1F* hReference = new TH1F("Reference","",nbin,min,max); ;
@@ -17,7 +16,26 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
 
  TLegend* leg = new TLegend(0.7,0.2,0.9,0.9);
  leg->AddEntry(hReference,"Reference","l");
+
  
+ TH1F* hReferenceNoCuts = new TH1F("ReferenceNoCuts","",nbin,min,max); ;
+ TString toDrawReferenceNoCuts = Form ("%s >> ReferenceNoCuts", var.c_str());
+ myTree -> Draw(toDrawReferenceNoCuts.Data(),"1","");
+ 
+ TH1F* hNoCuts[200];
+ for (int iHisto = 0; iHisto < MAXPDF; iHisto++) {
+  TString nameHisto = Form ("hNoCuts_%d",iHisto);
+  hNoCuts[iHisto] = new TH1F(nameHisto.Data(),"",nbin,min,max); 
+  hNoCuts[iHisto]->Sumw2();
+  TString toDraw = Form ("%s >> %s", var.c_str(),nameHisto.Data());
+  TString toCut  = Form ("(1) * (std_vector_LHE_weight[%d]/std_vector_LHE_weight[0])", iHisto+STARTPOINTPDF);
+  myTree -> Draw(toDraw.Data(),toCut.Data(),"");
+  hNoCuts[iHisto]->SetLineColor(TColor::GetColorBright(iHisto+1));
+  hNoCuts[iHisto]->SetLineWidth(2);
+ }
+ 
+ 
+ TH1F* h[200];
  for (int iHisto = 0; iHisto < MAXPDF; iHisto++) {
   TString nameHisto = Form ("h_%d",iHisto);
   h[iHisto] = new TH1F(nameHisto.Data(),"",nbin,min,max); 
@@ -28,6 +46,18 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
   h[iHisto]->SetLineColor(TColor::GetColorBright(iHisto+1));
   h[iHisto]->SetLineWidth(2);
   leg->AddEntry(h[iHisto],nameHisto,"l");
+  
+  //---- fix to take into account only efficiency
+  for (int iBin = 0; iBin < nbin; iBin++) {
+   float ratio = 1;
+   float den = hReferenceNoCuts->GetBinContent(iBin+1);
+   if (den != 0) {
+    ratio = hNoCuts[iHisto]->GetBinContent(iBin+1) / den;
+   }
+   if (ratio != 0) {
+    h[iHisto]->SetBinContent (iBin+1, h[iHisto]->GetBinContent(iBin+1) / ratio);
+   }
+  }
  }
 
  hReference->Draw("histo");
