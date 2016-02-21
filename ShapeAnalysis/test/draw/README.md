@@ -1,13 +1,23 @@
 Simple scripts for super-fast plots
 ====
 
-Compare two samples, normalized to 1
+Compare two samples, normalized to 1:
 
     r99t file1.root file2.root DrawCompare.cxx\(\"variable\", nBin, min, max, weightAndCut\)
+
+Plot PDF and QCD scale variation distributions:
+
+    r99t file1.root DrawPDF.cxx\(\"variable\", nBin, min, max, weightAndCut\)
     
     
 Example:
 
+    r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
+         DrawPDF.cxx\(\"mll\",10,0,100,\"std_vector_lepton_pt[1]\>15\"\)
+
+    r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
+         DrawPDF.cxx\(\"mll\",10,0,100,\"std_vector_lepton_pt[1]\>15\",90\)
+         
     
     r99t ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_50ns.root \
          ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_25ns.root \
