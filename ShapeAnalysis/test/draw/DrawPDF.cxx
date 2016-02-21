@@ -1,4 +1,4 @@
-void DrawPDF(std::string var, int nbin, float min, float max, std::string weightAndCut = "1", int MAXPDF = 30, int STARTPOINTPDF = 9) {
+void DrawPDF(std::string var, int nbin, float min, float max, std::string weightAndCut = "1", int MAXPDF = 30, int STARTPOINTPDF = 9, int onlyEfficiency=1) {
  
  gStyle->SetOptStat(0);
  
@@ -48,14 +48,16 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
   leg->AddEntry(h[iHisto],nameHisto,"l");
   
   //---- fix to take into account only efficiency
-  for (int iBin = 0; iBin < nbin; iBin++) {
-   float ratio = 1;
-   float den = hReferenceNoCuts->GetBinContent(iBin+1);
-   if (den != 0) {
-    ratio = hNoCuts[iHisto]->GetBinContent(iBin+1) / den;
-   }
-   if (ratio != 0) {
-    h[iHisto]->SetBinContent (iBin+1, h[iHisto]->GetBinContent(iBin+1) / ratio);
+  if (onlyEfficiency) {
+   for (int iBin = 0; iBin < nbin; iBin++) {
+    float ratio = 1;
+    float den = hReferenceNoCuts->GetBinContent(iBin+1);
+    if (den != 0) {
+     ratio = hNoCuts[iHisto]->GetBinContent(iBin+1) / den;
+    }
+    if (ratio != 0) {
+     h[iHisto]->SetBinContent (iBin+1, h[iHisto]->GetBinContent(iBin+1) / ratio);
+    }
    }
   }
  }
