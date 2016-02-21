@@ -1,5 +1,7 @@
 void DrawPDF(std::string var, int nbin, float min, float max, std::string weightAndCut = "1", int MAXPDF = 30, int STARTPOINTPDF = 9) {
  
+ gStyle->SetOptStat(0);
+ 
  TCanvas* cc = new TCanvas("cc","",800,600);
  
  TTree* myTree = (TTree*) _file0 -> Get("latino");
@@ -11,9 +13,9 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
  myTree -> Draw(toDrawReference.Data(),weightAndCut.c_str(),"");
  hReference->SetMaximum(1.5 * hReference->GetMaximum());
  hReference->SetLineColor(kBlue);
- hReference->SetLineWidth(2);
+ hReference->SetLineWidth(5);
 
- TLegend* leg = new TLegend(0.1,0.7,0.48,0.9);
+ TLegend* leg = new TLegend(0.7,0.2,0.9,0.9);
  leg->AddEntry(hReference,"Reference","l");
  
  for (int iHisto = 0; iHisto < MAXPDF; iHisto++) {
@@ -23,7 +25,7 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
   TString toDraw = Form ("%s >> %s", var.c_str(),nameHisto.Data());
   TString toCut  = Form ("(%s) * (std_vector_LHE_weight[%d]/std_vector_LHE_weight[0])", weightAndCut.c_str(), iHisto+STARTPOINTPDF);
   myTree -> Draw(toDraw.Data(),toCut.Data(),"");
-  h[iHisto]->SetLineColor(TColor::GetColorBright(iHisto));
+  h[iHisto]->SetLineColor(TColor::GetColorBright(iHisto+1));
   h[iHisto]->SetLineWidth(2);
   leg->AddEntry(h[iHisto],nameHisto,"l");
  }
@@ -47,7 +49,7 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
  hReferenceRatio->SetMaximum(1.5);
  hReferenceRatio->SetMinimum(0.5);
  hReferenceRatio->SetLineColor(kBlue);
- hReferenceRatio->SetLineWidth(2);
+ hReferenceRatio->SetLineWidth(5);
  
  for (int iBin = 0; iBin < nbin; iBin++) {
   hReferenceRatio->SetBinContent(iBin+1, 1.);
@@ -69,7 +71,7 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
    hRatio[iHisto] -> SetBinContent(iBin+1, ratio);
   }
   
-  hRatio[iHisto]->SetLineColor(TColor::GetColorBright(iHisto));
+  hRatio[iHisto]->SetLineColor(TColor::GetColorBright(iHisto+1));
   hRatio[iHisto]->SetLineWidth(2);
  }
  

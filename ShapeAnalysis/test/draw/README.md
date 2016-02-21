@@ -15,9 +15,28 @@ Example:
     r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
          DrawPDF.cxx\(\"mll\",10,0,100,\"std_vector_lepton_pt[1]\>15\"\)
 
+    PDF variation
     r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
-         DrawPDF.cxx\(\"mll\",10,0,100,\"std_vector_lepton_pt[1]\>15\",90\)
+         DrawPDF.cxx\(\"mll\",20,12,200,\"std_vector_lepton_pt[1]\>15\",90\)
+
+    r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
+         DrawPDF.cxx\(\"mll\",20,12,200,\"mll\>12\&\&std_vector_lepton_pt[0]\>20\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",90\)
+
+    r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
+         DrawPDF.cxx\(\"mth\",20,60,200,\"mll\>12\&\&std_vector_lepton_pt[0]\>20\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",90\)
+
          
+    QCD variation
+    r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
+         DrawPDF.cxx\(\"mll\",20,12,200,\"std_vector_lepton_pt[1]\>15\",9,1\)
+    
+    r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
+         DrawPDF.cxx\(\"mll\",20,12,200,\"mll\>12\&\&std_vector_lepton_pt[0]\>20\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
+    
+    r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2Nu_M124.root  \
+         DrawPDF.cxx\(\"mth\",20,60,200,\"mll\>12\&\&std_vector_lepton_pt[0]\>20\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
+    
+
     
     r99t ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_50ns.root \
          ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_25ns.root \
