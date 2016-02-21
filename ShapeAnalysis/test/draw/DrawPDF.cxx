@@ -47,8 +47,20 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
   h[iHisto]->SetLineWidth(2);
   leg->AddEntry(h[iHisto],nameHisto,"l");
   
-  //---- fix to take into account only efficiency
-  if (onlyEfficiency) {
+  //---- fix to take into account only efficiency, really only the normalization effect (correct procedure)
+  if (onlyEfficiency == 1) {
+   float noCutsIntegral = hNoCuts[iHisto]->Integral();
+   float noCutsIntegralReference = hReferenceNoCuts->Integral();
+   float ratio = 1;
+   if (noCutsIntegral != 0) {
+    ratio = noCutsIntegralReference / noCutsIntegral;
+   }
+   
+   h[iHisto]->Scale (ratio);
+  }
+  
+  //---- fix to take into account only efficiency keeping the shape
+  if (onlyEfficiency == 2) {
    for (int iBin = 0; iBin < nbin; iBin++) {
     float ratio = 1;
     float den = hReferenceNoCuts->GetBinContent(iBin+1);
@@ -60,6 +72,7 @@ void DrawPDF(std::string var, int nbin, float min, float max, std::string weight
     }
    }
   }
+  
  }
 
  hReference->Draw("histo");
