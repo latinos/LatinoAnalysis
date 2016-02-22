@@ -59,6 +59,7 @@ public:
  float mcoll();
  float mcollWW();
  float mTi();
+ float mTe();
  float dphillmet();
  float channel();
  float mjj();
@@ -605,6 +606,23 @@ float WW::mTi(){
   return (L1+L2+MET).M();
  }
  else{
+  return -9999.0;
+ }
+
+}
+
+
+float WW::mTe(){
+
+ if (_isOk) {
+  TLorentzVector L1_enhanced,L2_enhanced;
+
+  L1_enhanced.SetPtEtaPhiM(pt1(), eta1(), phi1(), 80.385);
+  L2_enhanced.SetPtEtaPhiM(pt2(), eta2(), phi2(), 80.385);
+
+  return (L1_enhanced + L2_enhanced+MET).M();
+ }
+ else {
   return -9999.0;
  }
 
