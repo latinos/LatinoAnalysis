@@ -277,7 +277,6 @@ class EffTrgFiller(TreeCloner):
                       (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
                       (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
-          
           # up variation ...
           
           eff_dbl_1_leadingleg  = high_eff_dbl_1_leadingleg    
@@ -315,9 +314,178 @@ class EffTrgFiller(TreeCloner):
         else : 
           # if for any reason it is not a lepton ... 
           return 1, 1, 1
-       
-       
-       
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # _get3lWeight
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def _get3lWeight(self, kindLep1, pt1, eta1, kindLep2, pt2, eta2, kindLep3, pt3, eta3):
+
+        # only if leptons!
+        if kindLep1 > -20 and kindLep2 > -20 and kindLep3 > -20 :
+         
+          vpt1 = [pt1]
+          vpt2 = [pt2]
+          vpt3 = [pt3]
+          veta1 = [eta1]
+          veta2 = [eta2]
+          veta3 = [eta3]
+          
+          self._fixOverflowUnderflow(kindLep1, vpt1, veta1)
+          self._fixOverflowUnderflow(kindLep2, vpt2, veta2)
+          self._fixOverflowUnderflow(kindLep3, vpt3, veta3)
+          
+          pt1 = vpt1[0]
+          pt2 = vpt2[0]
+          pt3 = vpt2[0]
+          eta1 = veta1[0]
+          eta2 = veta2[0]
+          eta3 = veta3[0]
+          
+          dz_eff_12 = 1.00
+          dz_eff_13 = 1.00
+          dz_eff_23 = 1.00
+
+          single1 = "triggerSingleMu"
+          single2 = "triggerSingleMu"
+          single3 = "triggerSingleMu"
+
+          if abs(kindLep1) == 11 : single1 = "triggerSingleEle"
+          if abs(kindLep2) == 11 : single2 = "triggerSingleEle"
+          if abs(kindLep3) == 11 : single3 = "triggerSingleEle"
+  
+          lead1trail2 = "-"
+          lead1trail3 = "-"
+          lead2trail1 = "-"
+          lead2trail3 = "-"
+          lead3trail1 = "-"
+          lead3trail2 = "-"
+
+          trail1lead2 = "-"
+          trail1lead3 = "-"
+          trail2lead1 = "-"
+          trail2lead3 = "-"
+          trail3lead1 = "-"
+          trail3lead2 = "-"
+
+          # ee ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
+              lead1trail2 = "triggerDoubleEleLegHigPt"
+              lead2trail1 = "triggerDoubleEleLegHigPt"
+              trail1lead2 = "triggerDoubleEleLegLowPt"
+              trail2lead1 = "triggerDoubleEleLegLowPt"
+              dz_eff_12 = 0.995
+          if abs(kindLep1) == 11 and abs(kindLep3) == 11 :
+              lead1trail3 = "triggerDoubleEleLegHigPt"
+              lead3trail1 = "triggerDoubleEleLegHigPt"
+              trail1lead3 = "triggerDoubleEleLegLowPt"
+              trail3lead1 = "triggerDoubleEleLegLowPt"
+              dz_eff_13 = 0.995
+          if abs(kindLep2) == 11 and abs(kindLep3) == 11 :
+              lead2trail3 = "triggerDoubleEleLegHigPt"
+              lead3trail2 = "triggerDoubleEleLegHigPt"
+              trail2lead3 = "triggerDoubleEleLegLowPt"
+              trail3lead2 = "triggerDoubleEleLegLowPt"
+              dz_eff_23 = 0.995
+
+          # mm ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
+            lead1trail2 = "triggerDoubleMuLegHigPt"
+            lead2trail1 = "triggerDoubleMuLegHigPt"
+            trail1lead2 = "triggerDoubleMuLegLowPt"
+            trail2lead1 = "triggerDoubleMuLegLowPt"
+            dz_eff_12 = 0.95
+          if abs(kindLep1) == 13 and abs(kindLep3) == 13 :
+            lead1trail3 = "triggerDoubleMuLegHigPt"
+            lead3trail1 = "triggerDoubleMuLegHigPt"
+            trail1lead3 = "triggerDoubleMuLegLowPt"
+            trail3lead1 = "triggerDoubleMuLegLowPt"
+            dz_eff_13 = 0.95
+          if abs(kindLep2) == 13 and abs(kindLep3) == 13 :
+            lead2trail3 = "triggerDoubleMuLegHigPt"
+            lead3trail2 = "triggerDoubleMuLegHigPt"
+            trail2lead3 = "triggerDoubleMuLegLowPt"
+            trail3lead2 = "triggerDoubleMuLegLowPt"
+            dz_eff_23 = 0.95
+            
+          # em ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
+            lead1trail2 = "triggerMuEleLegHigPt"
+            lead2trail1 = "triggerEleMuLegHigPt"
+            trail1lead2 = "triggerEleMuLegLowPt"
+            trail2lead1 = "triggerMuEleLegLowPt"
+          if abs(kindLep1) == 13 and abs(kindLep3) == 11 :
+            lead1trail3 = "triggerMuEleLegHigPt"
+            lead3trail1 = "triggerEleMuLegHigPt"
+            trail1lead3 = "triggerEleMuLegLowPt"
+            trail3lead1 = "triggerMuEleLegLowPt"
+          if abs(kindLep2) == 13 and abs(kindLep1) == 11 :
+            lead2trail1 = "triggerMuEleLegHigPt"
+            lead1trail2 = "triggerEleMuLegHigPt"
+            trail2lead1 = "triggerEleMuLegLowPt"
+            trail1lead2 = "triggerMuEleLegLowPt"
+          if abs(kindLep2) == 13 and abs(kindLep3) == 11 :
+            lead2trail3 = "triggerMuEleLegHigPt"
+            lead3trail2 = "triggerEleMuLegHigPt"
+            trail2lead3 = "triggerEleMuLegLowPt"
+            trail3lead2 = "triggerMuEleLegLowPt"
+          if abs(kindLep3) == 13 and abs(kindLep1) == 11 :
+            lead3trail1 = "triggerMuEleLegHigPt"
+            lead1trail3 = "triggerEleMuLegHigPt"
+            trail3lead1 = "triggerEleMuLegLowPt"
+            trail1lead3 = "triggerMuEleLegLowPt"
+          if abs(kindLep3) == 13 and abs(kindLep2) == 11 :
+            lead3trail2 = "triggerMuEleLegHigPt"
+            lead2trail3 = "triggerEleMuLegHigPt"
+            trail3lead2 = "triggerEleMuLegLowPt"
+            trail2lead3 = "triggerMuEleLegLowPt"
+          
+          l1t2, low_l1t2, high_l1t2 = self._getEff(pt1, eta1, lead1trail2)
+          l1t3, low_l1t3, high_l1t3 = self._getEff(pt1, eta1, lead1trail3)
+          l2t1, low_l2t1, high_l2t1 = self._getEff(pt2, eta2, lead2trail1)
+          l2t3, low_l2t3, high_l2t3 = self._getEff(pt2, eta2, lead2trail3)
+          l3t1, low_l3t1, high_l3t1 = self._getEff(pt3, eta3, lead3trail1)
+          l3t2, low_l3t2, high_l3t2 = self._getEff(pt3, eta3, lead3trail2)
+
+          t1l2, low_t1l2, high_t1l2 = self._getEff(pt1, eta1, trail1lead2)
+          t1l3, low_t1l3, high_t1l3 = self._getEff(pt1, eta1, trail1lead3)
+          t2l1, low_t2l1, high_t2l1 = self._getEff(pt2, eta2, trail2lead1)
+          t2l3, low_t2l3, high_t2l3 = self._getEff(pt2, eta2, trail2lead3)
+          t3l1, low_t3l1, high_t3l1 = self._getEff(pt3, eta3, trail3lead1)
+          t3l2, low_t3l2, high_t3l2 = self._getEff(pt3, eta3, trail3lead2)
+          s1  , low_s1  , high_s1   = self._getEff(pt1, eta1, single1)
+          s2  , low_s2  , high_s2   = self._getEff(pt2, eta2, single2)
+          s3  , low_s3  , high_s3   = self._getEff(pt3, eta3, single3)
+
+          ### SINGLE TRIGGERS ARE NOT YET INCLUDED ###
+
+          # Nominal values
+          eff12 = (l1t2*t2l1 + (1 - l1t2*t2l1) * l2t1*t1l2) * dz_eff_12
+          eff13 = (l1t3*t3l1 + (1 - l1t3*t3l1) * l3t1*t1l3) * dz_eff_13
+          eff23 = (l2t3*t3l2 + (1 - l2t3*t3l2) * l3t2*t2l3) * dz_eff_23
+
+          evt_eff = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+
+          # Low values
+          eff12 = (low_l1t2*low_t2l1 + (1 - low_l1t2*low_t2l1) * low_l2t1*low_t1l2) * dz_eff_12
+          eff13 = (low_l1t3*low_t3l1 + (1 - low_l1t3*low_t3l1) * low_l3t1*low_t1l3) * dz_eff_13
+          eff23 = (low_l2t3*low_t3l2 + (1 - low_l2t3*low_t3l2) * low_l3t2*low_t2l3) * dz_eff_23
+
+          evt_eff_low = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+
+          # High values
+          eff12 = (high_l1t2*high_t2l1 + (1 - high_l1t2*high_t2l1) * high_l2t1*high_t1l2) * dz_eff_12
+          eff13 = (high_l1t3*high_t3l1 + (1 - high_l1t3*high_t3l1) * high_l3t1*high_t1l3) * dz_eff_13
+          eff23 = (high_l2t3*high_t3l2 + (1 - high_l2t3*high_t3l2) * high_l3t2*high_t2l3) * dz_eff_23
+
+          evt_eff_high = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+          
+          return evt_eff, evt_eff_low, evt_eff_high
+
+        else : 
+
+          return 1, 1, 1
+
+
     def process(self,**kwargs):
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -331,22 +499,25 @@ class EffTrgFiller(TreeCloner):
         self.connect(tree,input)
 
 
-        self.namesOldBranchesToBeModifiedSimpleVariable = [
+        self.namesBranches = [
            'effTrigW',
            'effTrigW_Up',
-           'effTrigW_Down'
+           'effTrigW_Down',
+           'effTrigW3l',
+           'effTrigW3l_Up',
+           'effTrigW3l_Down'
            ]
         
         # clone the tree
-        self.clone(output, self.namesOldBranchesToBeModifiedSimpleVariable)
+        self.clone(output, self.namesBranches)
 
-        self.oldBranchesToBeModifiedSimpleVariable = {}
-        for bname in self.namesOldBranchesToBeModifiedSimpleVariable:
+        self.branches = {}
+        for bname in self.namesBranches:
           bvariable = numpy.ones(1, dtype=numpy.float32)
-          self.oldBranchesToBeModifiedSimpleVariable[bname] = bvariable
+          self.branches[bname] = bvariable
 
         # now actually connect the branches
-        for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+        for bname, bvariable in self.branches.iteritems():
             #print " bname   = ", bname
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
@@ -369,23 +540,34 @@ class EffTrgFiller(TreeCloner):
             if i > 0 and i%step == 0.:
               print i,'events processed.'
 
-            self.oldBranchesToBeModifiedSimpleVariable['effTrigW'][0]      = 1.0
-            self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Up'][0]   = 1.0
-            self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Down'][0] = 1.0
+            self.branches['effTrigW']       [0] = 1.0
+            self.branches['effTrigW_Up']    [0] = 1.0
+            self.branches['effTrigW_Down']  [0] = 1.0
+            self.branches['effTrigW3l']     [0] = 1.0
+            self.branches['effTrigW3l_Up']  [0] = 1.0
+            self.branches['effTrigW3l_Down'][0] = 1.0
                
-            # now calculate the trigger weight
+            # 2-lepton trigger weight
             if itree.std_vector_lepton_flavour.size() >= 2 :
-              self.oldBranchesToBeModifiedSimpleVariable['effTrigW'][0], \
-              self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Down'][0], \
-              self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Up'][0] = \
-                  self._getWeight ( itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0], \
-                                    itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1])
-
+              self.branches['effTrigW'][0], self.branches['effTrigW_Down'][0], self.branches['effTrigW_Up'][0] = \
+                  self._getWeight(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
+                                  itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1])
             else :
-              self.oldBranchesToBeModifiedSimpleVariable['effTrigW'][0] = 0.0
-              self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Down'][0] = 0.0
-              self.oldBranchesToBeModifiedSimpleVariable['effTrigW_Up'][0] = 0.0
-      
+              self.branches['effTrigW']     [0] = 0.0
+              self.branches['effTrigW_Down'][0] = 0.0
+              self.branches['effTrigW_Up']  [0] = 0.0
+
+            # 3-lepton trigger weight
+            if itree.std_vector_lepton_flavour.size() >= 3 :
+                self.branches['effTrigW3l'][0], self.branches['effTrigW3l_Down'][0], self.branches['effTrigW3l_Up'][0] = \
+                    self._get3lWeight(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
+                                      itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1],
+                                      itree.std_vector_lepton_flavour[2], itree.std_vector_lepton_pt[2], itree.std_vector_lepton_eta[2])
+            else :
+              self.branches['effTrigW3l']     [0] = 0.0
+              self.branches['effTrigW3l_Down'][0] = 0.0
+              self.branches['effTrigW3l_Up']  [0] = 0.0
+
             otree.Fill()
             savedentries+=1
 

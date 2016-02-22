@@ -320,6 +320,7 @@ for iProd in prodList :
                   targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile 
 
       print targetList
+      for i in targetList : print i
       #quit() 
 
       # Create Output Directory on eos
@@ -462,6 +463,12 @@ for iProd in prodList :
                 if iTargetOri in Steps[iSubStep]['excludeSample'] : selectSample=False
             if iSubStep in ['mcweights']: # ,'mcwghtcount' ]  :
               if not 'doMCweights=True' in samples[iTargetOri][1] : selectSample=False
+
+            if Productions[iProd]['isData'] : 
+              if not Steps[iSubStep]['do4Data'] : selectSample=False
+            else:
+              if not Steps[iSubStep]['do4MC'] : selectSample=False
+
 
             #print iSubStep , selectSample
 

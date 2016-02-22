@@ -18,6 +18,7 @@ from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSF
 
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
+from LatinoAnalysis.Gardener.variables.l1Sel                      import L1SelFiller
 
 # kinematic variables
 from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
@@ -66,7 +67,10 @@ from LatinoAnalysis.Gardener.variables.metUncertainty             import MetUnce
 from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
 # PDF uncertainty
 from LatinoAnalysis.Gardener.variables.pdfUncertainty             import PdfUncertaintyTreeMaker
-
+# EWK singlet reweighter
+from LatinoAnalysis.Gardener.variables.BWEwkSingletReweighter     import BWEwkSingletReweighter
+# PDF and scale uncertainty
+from LatinoAnalysis.Gardener.variables.pdfAndScaleUncertainty     import PdfAndScaleUncertaintyTreeMaker
 
 if __name__ == '__main__':
 
@@ -123,18 +127,21 @@ if __name__ == '__main__':
 
 # apply selections and update variables
     modules['l2selfiller']     = L2SelFiller()
+    modules['l1selfiller']     = L1SelFiller()
 
 
 # update kinematic variables
     modules['l2kinfiller']     = L2KinFiller()
 
 # Nuisances
-    modules['JESTreeMaker']         = JESTreeMaker()
-    modules['LeppTScalerTreeMaker'] = LeppTScalerTreeMaker()
-    modules['leptonResolution']     = LeptonResolutionTreeMaker()
-    modules['metUncertainty']       = MetUncertaintyTreeMaker()
-    modules['pdfUncertainty']       = PdfUncertaintyTreeMaker()
-    modules['qcdUncertainty']       = QcdUncertaintyTreeMaker()
+    modules['JESTreeMaker']           = JESTreeMaker()
+    modules['LeppTScalerTreeMaker']   = LeppTScalerTreeMaker()
+    modules['leptonResolution']       = LeptonResolutionTreeMaker()
+    modules['metUncertainty']         = MetUncertaintyTreeMaker()
+    modules['pdfUncertainty']         = PdfUncertaintyTreeMaker()
+    modules['qcdUncertainty']         = QcdUncertaintyTreeMaker()
+    modules['pdfAndScaleUncertainty'] = PdfAndScaleUncertaintyTreeMaker()
+    
     
 # fake weights
     modules['fakeWeights']      = FakeWeightFiller()
@@ -142,7 +149,8 @@ if __name__ == '__main__':
 # lepton pt corrector
     modules['letPtCorrector']   = LeptonPtCorrector()
 
-
+# EWK bw weights
+    modules['BWEwkSingletReweighter'] = BWEwkSingletReweighter()
 
 
     gardener_cli( modules )

@@ -72,7 +72,6 @@ class L2KinFiller(TreeCloner):
            'mTi',
            'mTe',
            'channel',
-           'projpfmet',
 
 
            'drll',
@@ -92,7 +91,12 @@ class L2KinFiller(TreeCloner):
            
            'ht',
            'vht_pt',
-           'vht_phi'
+           'vht_phi',
+           
+           'projpfmet',
+           'dphiltkmet',
+           'projtkmet',
+           'mpmet'
            
            ]
         
@@ -142,11 +146,12 @@ class L2KinFiller(TreeCloner):
             if self.cmssw == '763' :
                 met = itree.metPfType1      
                 metphi = itree.metPfType1Phi
+                WW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
             else : 
                 met = itree.pfType1Met          # formerly pfType1Met
                 metphi = itree.pfType1Metphi    # formerly pfType1Metphi
             WW.setMET(met, metphi)
-
+ 
             WW.checkIfOk()
 
  
