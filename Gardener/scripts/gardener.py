@@ -66,7 +66,8 @@ from LatinoAnalysis.Gardener.variables.metUncertainty             import MetUnce
 from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
 # PDF uncertainty
 from LatinoAnalysis.Gardener.variables.pdfUncertainty             import PdfUncertaintyTreeMaker
-
+# EWK singlet reweighter
+from LatinoAnalysis.Gardener.variables.BWEwkSingletReweighter     import BWEwkSingletReweighter
 
 if __name__ == '__main__':
 
@@ -142,7 +143,8 @@ if __name__ == '__main__':
 # lepton pt corrector
     modules['letPtCorrector']   = LeptonPtCorrector()
 
-
+# EWK bw weights
+    modules['BWEwkSingletReweighter'] = BWEwkSingletReweighter()
 
 
     gardener_cli( modules )
