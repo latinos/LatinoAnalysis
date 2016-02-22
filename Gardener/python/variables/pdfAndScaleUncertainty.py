@@ -21,7 +21,7 @@ import warnings
 import os.path
 from array import array;
 
-class PdfUncertaintyTreeMaker(TreeCloner) :
+class PdfAndScaleUncertaintyTreeMaker(TreeCloner) :
     def __init__(self) :
        pass
 
