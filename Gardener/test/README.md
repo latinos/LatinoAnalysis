@@ -420,20 +420,20 @@ The module BWEwkSingletReweighter adds a series of weights corresponding to the 
 
 The user can specify a range of C' and BRnew to cover and a step in each of the two parameters. For each variation a weight in the form
 
-cprimeVALUE\_BRnewVALUE
+    cprimeVALUE\_BRnewVALUE
 
 The module can be run as
   
-  gardener.py BWEwkSingletReweighter filein.root fileout.root
+    gardener.py BWEwkSingletReweighter filein.root fileout.root
 
 The following optional parameters are available
 
-  --cprimemin
-  --cprimemax
-  --cprimestep
-  --brnewmin
-  --brnewmax
-  --brnewstep
-  --mass: the higgs central mass
+    --cprimemin
+    --cprimemax
+    --cprimestep
+    --brnewmin
+    --brnewmax
+    --brnewstep
+    --mass: the higgs central mass
 
 
