@@ -1,3 +1,12 @@
+///*
+ *
+ * onlyEfficiency = 0   ->  consider the pdf/qcd scale variation not only on the efficiency but also on the global normalization
+ * onlyEfficiency = 1   ->  consider the pdf/qcd scale variation only on the efficiency, bin by bin, and don't take into account the global normalization 
+ * onlyEfficiency = 2   ->  consider the pdf/qcd scale variation only on the efficiency, but correcting bin by bin, as if for the shape we know it's ok.
+ *
+**//
+
+
 void DrawPDF(std::string var, int nbin, float min, float max, std::string weightAndCut = "1", int MAXPDF = 30, int STARTPOINTPDF = 9, int onlyEfficiency=1) {
  
  gStyle->SetOptStat(0);
