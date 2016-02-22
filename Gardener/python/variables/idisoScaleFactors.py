@@ -125,6 +125,12 @@ class IdIsoSFFiller(TreeCloner):
              #            eta       |      pt     | eff_data   stat  |  eff_mc   stat |      other nuisances
              #       -2.500  -2.000  10.000  20.000  0.358   0.009     0.286   0.002       0.094   0.048   0.071   0.127   -1      -1
 
+              #
+              # Procedure required by EGamma:
+              # - electrons scale factors are provided in absolute eta bins
+              #
+              eta = abs(eta)
+
               if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
                    pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
                   data = float(point[4])
@@ -136,11 +142,19 @@ class IdIsoSFFiller(TreeCloner):
                   scaleFactor = data / mc
                   error_scaleFactor = math.sqrt((sigma_data / mc) * (sigma_data / mc) + (data / mc / mc * sigma_mc)*(data / mc / mc * sigma_mc))
                   
-                  return scaleFactor, error_scaleFactor, error_scaleFactor
+                  # systematic uncertainty
+                  error_syst_scaleFactor = math.sqrt( float(point[8]) * float(point[8])   + 
+                                                      float(point[9]) * float(point[9])   +
+                                                      float(point[10]) * float(point[10]) +
+                                                      float(point[11]) * float(point[11])  )
+                  
+                  error_syst_scaleFactor = error_syst_scaleFactor / mc
+                  
+                  return scaleFactor, error_scaleFactor, error_scaleFactor, error_syst_scaleFactor
       
             # default ... it should never happen!
             #print " default ele ???"
-            return 1.0, 0.0, 0.0
+            return 1.0, 0.0, 0.0, 0.0
 
 
           elif kindLep == 'mu' :
@@ -150,7 +164,7 @@ class IdIsoSFFiller(TreeCloner):
             else :
               kindTight = "muLoose"
              
-            
+             
             for point in self.isoScaleFactors[kindTight] : 
               iso_scaleFactor = 1
               iso_error_scaleFactor_up = 0
@@ -199,20 +213,21 @@ class IdIsoSFFiller(TreeCloner):
                   error_scaleFactor_do = scaleFactor * iso_scaleFactor * math.sqrt(error_scaleFactor_do*error_scaleFactor_do/scaleFactor/scaleFactor +  iso_error_scaleFactor_do*iso_error_scaleFactor_do/iso_scaleFactor/iso_scaleFactor)
                   scaleFactor *= iso_scaleFactor
                   
-                  return scaleFactor, error_scaleFactor_do, error_scaleFactor_up
+                  #                                                             no systematic uncertainty for the time being
+                  return scaleFactor, error_scaleFactor_do, error_scaleFactor_up, 0.0
       
             # default ... it should never happen!
             #print " default mu ???"
-            return 1.0, 0.0, 0.0
+            return 1.0, 0.0, 0.0, 0.0
 
       
           # not a lepton ... like some default value: and what can it be if not a lepton? ah ah 
           # --> it happens for default values -9999.
-          return 1.0, 0.0, 0.0
+          return 1.0, 0.0, 0.0, 0.0
 
         # not a lepton ... like some default value: and what can it be if not a lepton? ah ah 
         # --> it happens for default values -9999.
-        return 1.0, 0.0, 0.0
+        return 1.0, 0.0, 0.0, 0.0
 
 
 
@@ -228,10 +243,12 @@ class IdIsoSFFiller(TreeCloner):
         self.namesOldBranchesToBeModifiedVector = [
            'std_vector_lepton_idisoW',
            'std_vector_lepton_idisoW_Up',
-           'std_vector_lepton_idisoW_Down'                              
+           'std_vector_lepton_idisoW_Down',                              
+           'std_vector_lepton_idisoW_Syst',                              
            'std_vector_lepton_idisoLooseW',
            'std_vector_lepton_idisoLooseW_Up',
-           'std_vector_lepton_idisoLooseW_Down'                              
+           'std_vector_lepton_idisoLooseW_Down',                              
+           'std_vector_lepton_idisoLooseW_Syst'                              
            ]
         
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
@@ -243,6 +260,8 @@ class IdIsoSFFiller(TreeCloner):
         self.otree.Branch('std_vector_lepton_idisoW_Up',bvector_idiso_Up)
         bvector_idiso_Down =  ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_lepton_idisoW_Down',bvector_idiso_Down)
+        bvector_idiso_Syst =  ROOT.std.vector(float) ()
+        self.otree.Branch('std_vector_lepton_idisoW_Syst',bvector_idiso_Syst)
             
         bvector_idisoLoose =  ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_lepton_idisoLooseW',bvector_idisoLoose)
@@ -250,6 +269,8 @@ class IdIsoSFFiller(TreeCloner):
         self.otree.Branch('std_vector_lepton_idisoLooseW_Up',bvector_idisoLoose_Up)
         bvector_idisoLoose_Down =  ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_lepton_idisoLooseW_Down',bvector_idisoLoose_Down)
+        bvector_idisoLoose_Syst =  ROOT.std.vector(float) ()
+        self.otree.Branch('std_vector_lepton_idisoLooseW_Syst',bvector_idisoLoose_Syst)
             
             
         nentries = self.itree.GetEntries()
@@ -272,10 +293,12 @@ class IdIsoSFFiller(TreeCloner):
             bvector_idiso.clear()
             bvector_idiso_Up.clear()
             bvector_idiso_Down.clear()
+            bvector_idiso_Syst.clear()
 
             bvector_idisoLoose.clear()
             bvector_idisoLoose_Up.clear()
             bvector_idisoLoose_Down.clear()
+            bvector_idisoLoose_Syst.clear()
 
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
              
@@ -290,17 +313,20 @@ class IdIsoSFFiller(TreeCloner):
                 kindLep = 'mu'
  
               #                                                              is tight lepton? 1=tight, 0=loose
-              w, error_w_lo, error_w_up = self._getWeight (kindLep, pt, eta, 1)
+              w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1)
              
               bvector_idiso.push_back(w)
               bvector_idiso_Up.push_back(w+error_w_up)
               bvector_idiso_Down.push_back(w-error_w_lo)             
+              bvector_idiso_Syst.push_back(w+error_w_syst)             
 
-              loose_w, error_loose_w_lo, error_loose_w_up = self._getWeight (kindLep, pt, eta, 0)
+
+              loose_w, error_loose_w_lo, error_loose_w_up, error_loose_w_syst = self._getWeight (kindLep, pt, eta, 0)
              
               bvector_idisoLoose.push_back(loose_w)
               bvector_idisoLoose_Up.push_back(loose_w+error_loose_w_up)
               bvector_idisoLoose_Down.push_back(loose_w-error_loose_w_lo)             
+              bvector_idisoLoose_Syst.push_back(loose_w+error_loose_w_syst)             
 
 
             otree.Fill()

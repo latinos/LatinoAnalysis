@@ -110,8 +110,12 @@ class HiggsXSection:
      if not model     in self._YR[YRversion]                      : return 0
      if not 'xs'      in self._YR[YRversion][model]               : return 0
      if not energy    in self._YR[YRversion][model]['xs']         : return 0
-     if not proc      in self._YR[YRversion][model]['xs'][energy] : return 0 
-     
+     if proc in ['HWplus','HWminus'] :
+       if not 'WH'      in self._YR[YRversion][model]['xs'][energy]  : return 0 
+     else:
+       if not proc      in self._YR[YRversion][model]['xs'][energy]  : return 0 
+    
+     #print 'Hello',proc 
      if proc == 'ZH' :
        xs_ZH = self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_pb')
        if self._UseggZH and 'YR4' in YRversion :
@@ -121,12 +125,12 @@ class HiggsXSection:
        return xs_ZH-xs_ggZH
      elif proc == 'HWplus' :
        if 'YR4' in YRversion :
-         return self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_W_plus_pb')
+         return self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['WH'],mh,'XS_W_plus_pb')
        else:
          return 0.
      elif proc == 'HWminus' :
        if 'YR4' in YRversion :
-         return self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_W_minus_pb')
+         return self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['WH'],mh,'XS_W_minus_pb')
        else:
          return 0.
      else:
@@ -168,6 +172,7 @@ class HiggsXSection:
      elif 'GluGluH'  in SampleName : ProdMode = 'ggH'
      elif 'VBFH'     in SampleName : ProdMode = 'vbfH'
      elif 'HZJ'      in SampleName : ProdMode = 'ZH'
+     elif 'ggZH'     in SampleName : ProdMode = 'ggZH'
      elif 'HWplusJ'  in SampleName : ProdMode = 'HWplus'
      elif 'HWminusJ' in SampleName : ProdMode = 'HWminus'
      elif 'ttH'      in SampleName : ProdMode = 'ttH'  
@@ -238,3 +243,7 @@ class HiggsXSection:
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWToLNuQQ_M650')
 #
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','VBFHToTauTau_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','HWplusJ_HToWW_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','ggZH_HToWW_M130')
+
+

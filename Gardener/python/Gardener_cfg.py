@@ -150,6 +150,12 @@ Steps= {
                   'subTargets' : ['l2loose','puadder','baseW','wwNLL']
                 },
 
+  'MCl1loose' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['l1loose','puadder','baseW','wwNLL']
+                },
 
   'bSFL2Eff'   :   {
                   'isChain'    : True ,
@@ -361,6 +367,13 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \'std_vector_lepton_isTightLepton[0]>0.5 && std_vector_lepton_isTightLepton[1]>0.5\' '
+               },
+
+  'l1loose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
   'WgStarsel' : {

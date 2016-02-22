@@ -80,6 +80,7 @@ class PdfUncertaintyTreeMaker(TreeCloner) :
         for contHisto in countEntries:
             loopStart = contHisto
             label = ROOT.TString(weightsHisto.GetXaxis().GetBinLabel(loopStart))
+            print " label ", contHisto, " = ", label
             if (label.Contains("PDF set")):
                 break
 
@@ -96,9 +97,13 @@ class PdfUncertaintyTreeMaker(TreeCloner) :
         for i in xrange(nentries) :
           itree.GetEntry(i)
 
+          default_weight = itree.std_vector_LHE_weight[0]
+          print " default_weight = ", default_weight
+
           pdfRange = range(loopStart,itree.std_vector_LHE_weight.size())
           for count in pdfRange:
-              pdfHisto.Fill(itree.std_vector_LHE_weight[count])
+              print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
+              pdfHisto.Fill(itree.std_vector_LHE_weight[count] / default_weight)
               if (itree.std_vector_LHE_weight[count] == 1):
                   print 'posizione = ', count
 
