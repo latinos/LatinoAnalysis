@@ -1,12 +1,12 @@
 #
-# 
-#    _ \   __ \   ____|                        |       ___|                |            |   |                           |          _)         |          
-#   |   |  |   |  |           _` |  __ \    _` |     \___ \    __|   _` |  |   _ \      |   |  __ \    __|   _ \   __|  __|   _` |  |  __ \   __|  |   | 
-#   ___/   |   |  __|        (   |  |   |  (   |           |  (     (   |  |   __/      |   |  |   |  (      __/  |     |    (   |  |  |   |  |    |   | 
-#  _|     ____/  _|         \__,_| _|  _| \__,_|     _____/  \___| \__,_| _| \___|     \___/  _|  _| \___| \___| _|    \__| \__,_| _| _|  _| \__| \__, | 
-#                                                                                                                                                 ____/  
-# 
-# 
+#  _____  _____  ______                             _        _       _         
+# |  __ \|  __ \|  ____|                           | |      (_)     | |        
+# | |__) | |  | | |__     _   _ _ __   ___ ___ _ __| |_ __ _ _ _ __ | |_ _   _ 
+# |  ___/| |  | |  __|   | | | | '_ \ / __/ _ \ '__| __/ _` | | '_ \| __| | | |
+# | |    | |__| | |      | |_| | | | | (_|  __/ |  | || (_| | | | | | |_| |_| |
+# |_|    |_____/|_|       \__,_|_| |_|\___\___|_|   \__\__,_|_|_| |_|\__|\__, |
+#                                                                         __/ |
+#                                                                        |___/ 
 
 
 
@@ -21,12 +21,12 @@ import warnings
 import os.path
 from array import array;
 
-class PdfAndScaleUncertaintyTreeMaker(TreeCloner) :
+class PdfUncertaintyTreeMaker(TreeCloner) :
     def __init__(self) :
        pass
 
     def help(self) :
-        return '''PDF and scale uncertainty'''
+        return '''PDF uncertainty'''
 
     def addOptions(self,parser) :
         description = self.help()
@@ -83,7 +83,7 @@ class PdfAndScaleUncertaintyTreeMaker(TreeCloner) :
         itree = self.itree
 
         # Weights Histo
-        #weightsHisto = self.itreeMcWeightExplainedOrdered
+        #weightsHisto = self.itreemcWeightExplainedOrdered
         #histoEntries = weightsHisto.GetEntries()
         #loopStart = 0
         #countEntries = range (1, int(histoEntries))
@@ -97,58 +97,74 @@ class PdfAndScaleUncertaintyTreeMaker(TreeCloner) :
         # Labels start from Bin 1, vector starts from bin 0
         #loopStart = loopStart - 1
 
-        # pdfHisto & QCDhisto
-        pdfHisto = ROOT.TH1F("pdfHisto", "pdfHisto", 200, 0., 3.)
-        RFHisto  = ROOT.TH1F("RFHisto" , "RFHisto" , 200, 0., 3.)
+	#if self.itree.GetListOfKeys().Contains("mcWeightExplainedOrdered"):
+	#	pdfUp[0] = 1
+        #  	pdfDn[0] = 1
+        # 	pdfMd[0] = 1      
+	#	RFUp[0]  = 1
+        # 	RFDn[0]  = 1
+        #  	RFMd[0]  = 1
 
-        #-----------------------------------------------------------------------
-        print ' - Starting event loop'
-        step = 5000
+	#	return
 
-        for i in xrange(nentries) :
-          itree.GetEntry(i)
+	if self.itreeMcWeightExplainedOrdered.GetEntries() == 0:
+		pdfUp[0] = 1
+          	pdfDn[0] = 1
+          	pdfMd[0] = 1      
+		RFUp[0]  = 1
+          	RFDn[0]  = 1
+          	RFMd[0]  = 1
 
-          default_weight = itree.std_vector_LHE_weight[0]
-          print " default_weight = ", default_weight
-          
-          #pdfRange = range(loopStart,itree.std_vector_LHE_weight.size())
-          pdfRange = range(9, 108)
-          for count in pdfRange:
-              #print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
-              pdfHisto.Fill(itree.std_vector_LHE_weight[count] / default_weight)
-              #if (itree.std_vector_LHE_weight[count] == 1):
-              #    print 'posizione = ', count
+	elif self.itreeMcWeightExplainedOrdered.GetEntries() > 0: 
+		# pdfHisto & QCDhisto
+		pdfHisto = ROOT.TH1F("pdfHisto", "pdfHisto", 200, 0., 10.)
+		RFHisto  = ROOT.TH1F("RFHisto" , "RFHisto" , 200, 0., 10.)
 
-          RFRange = range(1, 8)
-          for count in RFRange:
-              #print " itree.std_vector_LHE_weight[", count, "] = ", itree.std_vector_LHE_weight[count]
-              RFHisto.Fill(itree.std_vector_LHE_weight[count] / default_weight)
+		#-----------------------------------------------------------------------
+		print ' - Starting event loop'
+		step = 5000
 
-          scaleMd = pdfHisto.GetMean()
-          scaleUp = scaleMd + pdfHisto.GetRMS()
-          scaleDn = scaleMd - pdfHisto.GetRMS()
+		for i in xrange(nentries) :
+		  itree.GetEntry(i)
 
-          pdfUp[0] = scaleUp / scaleMd
-          pdfDn[0] = scaleDn / scaleMd
-          pdfMd[0] = scaleMd
+		  default_weight = itree.std_vector_LHE_weight[0]
+
+		  #pdfRange = range(loopStart,itree.std_vector_LHE_weight.size())
+		  pdfRange = range(9, 108)
+		  for count in pdfRange:
+		      pdfHisto.Fill(itree.std_vector_LHE_weight[count]/default_weight)
+		      #if (itree.std_vector_LHE_weight[count] == 1):
+		      #    print 'posizione = ', count
+
+		  RFRange = range(1, 8)
+		  for count in RFRange:
+		      RFHisto.Fill(itree.std_vector_LHE_weight[count]/default_weight)
+
+		  scaleMd = pdfHisto.GetMean()
+		  scaleUp = scaleMd + pdfHisto.GetRMS()
+		  scaleDn = scaleMd - pdfHisto.GetRMS()
+
+		  pdfUp[0] = scaleUp / scaleMd
+		  pdfDn[0] = scaleDn / scaleMd
+		  pdfMd[0] = scaleMd
 
 
-          RFmean = RFHisto.GetMean()
-          RFup   = RFMd + RFHisto.GetRMS()
-          RFdown = RFMd - RFHisto.GetRMS()
+		  RFmean = RFHisto.GetMean()
+		  RFup   = RFMd + RFHisto.GetRMS()
+		  RFdown = RFMd - RFHisto.GetRMS()
 
-          RFUp[0] = RFup   / RFmean
-          RFDn[0] = RFdown / RFmean
-          RFMd[0] = RFmean
+		  RFUp[0] = RFup   / RFmean
+		  RFDn[0] = RFdown / RFmean
+		  RFMd[0] = RFmean
 
-          if (i > 0 and i%step == 0.) :
-              print i,'events processed ::', nentries, 'Scale Dn:', pdfDn[0], 'Scale Md:', pdfMd[0], 'Scale Up:', pdfUp[0]
+		  if (i > 0 and i%step == 0.):
+	      	  	print i,'events processed ::', nentries, 'Scale Dn:', pdfDn[0], 'Scale Md:', pdfMd[0], 'Scale Up:', pdfUp[0]
 
-          if (i > 0 and i%step == 1.) :
-              print i, 'RF Dn:', RFDn[0], 'RF Md:', RFMd[0], 'RF Up:', RFUp[0]
+                  if (i > 0 and i%step == 1.):
+              	  	print i, 'RF Dn:', RFDn[0], 'RF Md:', RFMd[0], 'RF Up:', RFUp[0]
               
-          self.otree.Fill()
-          savedentries+=1
+        self.otree.Fill()
+        savedentries+=1
           
         self.disconnect()
         print ' - Event loop completed'
