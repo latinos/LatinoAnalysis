@@ -420,7 +420,7 @@ The module BWEwkSingletReweighter adds a series of weights corresponding to the 
 
 The user can specify a range of C' and BRnew to cover and a step in each of the two parameters. For each variation a weight in the form
 
-    cprimeVALUE\_BRnewVALUE
+    cprimeVALUE_BRnewVALUE
 
 The module can be run as
   
