@@ -82,6 +82,11 @@ How to filter events and update some collections:
                 ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
                 test.root
 
+    gardener.py  l1selfiller \
+                --kind 2 \
+                --cmssw=763   \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                test.l1sel.root
                 
                 
 Specific modules example:
@@ -338,7 +343,17 @@ this module needs to run after l2sel, because it needs the real jets in the even
 The module adds to the trees two sets of weights, one based on the POG provided SF, one based on our Tag and Probe method.
 The POG SF are contained in branch named `bPogSF*`, while the Tag & Probe Scale factors are called `bTPSF*`. 
 
+Module options:
+    
+    '-w', '--working-point' (default 0): 0 (loose), 1 (medium), 2 (tight)
+    '-s', '--scalefactor-file' (default: data/cMVAv2.csv): csv file with the scale factors
+    '-p', '--scalefactor-file-tp' (CURRENTLY NOT USED): csv file with the T&P scale factors
+    '-e', '--efficiency-file' (default: data/efficiencyMCFile76X.py): root file with MC efficiencies for b, c and light jets in bins of eta and pT
+
+
 The `bTPSF*` are currently placeholders and their value is 1.
+
+NB: currently only the scale factors provided by BTV are used, even for jets with pT between 20 and 30 GeV (doubling the uncertainty).
 
 
 Lepton pT scale uncertainty
@@ -364,7 +379,14 @@ QCD uncertainty
     
     gardener.py qcdUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
 
+    
+PDF and scale uncertainty
+====
+    
+    gardener.py pdfAndScaleUncertainty ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root     test.root
 
+
+    
 MET uncertainty
 ====
 
@@ -391,4 +413,27 @@ Get the baseW table
 
     ls /media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/*.root | grep ".root" | awk '{print "root -l -q drawBasew.cxx\\\(\\\""$1"\\\"\\\)"}' | /bin/sh
 
-    
+
+Breit-Wigner weight for EWK singlet
+====
+The module BWEwkSingletReweighter adds a series of weights corresponding to the event weights in the EWK singlet model for different values of c' and BRnew. 
+
+The user can specify a range of C' and BRnew to cover and a step in each of the two parameters. For each variation a weight in the form
+
+    cprimeVALUE_BRnewVALUE
+
+The module can be run as
+  
+    gardener.py BWEwkSingletReweighter filein.root fileout.root
+
+The following optional parameters are available
+
+    --cprimemin
+    --cprimemax
+    --cprimestep
+    --brnewmin
+    --brnewmax
+    --brnewstep
+    --mass: the higgs central mass
+
+
