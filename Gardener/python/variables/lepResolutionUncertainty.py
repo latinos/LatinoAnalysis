@@ -82,7 +82,6 @@ class LeptonResolutionTreeMaker(TreeCloner):
             for point in self.leppTresolution[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
                     sigma=point[2]
-                    print sigma
                 #else:
                  #    sigma=0.0
         else:
@@ -91,7 +90,6 @@ class LeptonResolutionTreeMaker(TreeCloner):
 
         while smeared_pt < 0 :
             smeared_pt=ROOT.gRandom.Gaus(pt, sigma*pt)
-            print "from function",smeared_pt
             return smeared_pt
         else:
               return 1.0
@@ -181,12 +179,11 @@ class LeptonResolutionTreeMaker(TreeCloner):
             if abs(itree.std_vector_lepton_flavour[i]) == 13: # muon
                 kindLep = 'mu'
                 pt_smeared = self._getSmear(kindLep,pt_lep,abs(eta_lep))
-                print"org and smeared value for muon ",pt_lep,pt_smeared
                 leptonPtChanged.append(pt_smeared)
             elif abs(itree.std_vector_lepton_flavour[i]) == 11:
                 kindLep = 'ele'
                 pt_smeared = self._getSmear(kindLep,pt_lep,abs(eta_lep))
-                print"org and smeared value",pt_lep,pt_smeared
+#                print"org and smeared value",pt_lep,pt_smeared
                 leptonPtChanged.append(pt_smeared)
             else: 
                 leptonPtChanged.append(itree.std_vector_lepton_pt[i]) # how could it be nor endcap nor barrel? Sneaky electron!     
