@@ -31,6 +31,7 @@ class BWEwkSingletReweighter(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-m',    "--mass",       dest = 'mH',   help="mass point",      default=125., type='float')
+        group.add_option('-u',    "--undoCPS",       dest = 'undoCPS',   help="Needed in case the original sample was produced withc omplex Pole Mass Scheme",      default=True, action='store_true')
         group.add_option('-i', '--cprimemin' , dest='cprimemin' , help="c' minimum value", default=0.,  type='float')
         group.add_option('-f', '--cprimemax' , dest='cprimemax' , help="c' maximum value", default=1.,  type='float')
         group.add_option('-s' , '--cprimestep', dest='cprimestep', help="c' step",          default=0.1, type='float')
@@ -50,6 +51,7 @@ class BWEwkSingletReweighter(TreeCloner):
         self.brnewstep = opts.brnewstep
         self.mH        = opts.mH
         self.gsm       = self.g.GetBinContent(self.g.FindBin(self.mH))
+        self.undoCPS   = opts.undoCPS
         print "c' start", self.cprimemin
         print "c' stop", self.cprimemax
         print "c' step", self.cprimestep
@@ -57,6 +59,19 @@ class BWEwkSingletReweighter(TreeCloner):
         print "BRnew stop", self.brnewmax
         print "BRnew step", self.brnewstep
         print "Mass", self.mH, " with SM width", self.gsm
+        if self.undoCPS:
+          print "Undoing Complex Pole Scheme before applying the BW weights"
+        cmssw_base = os.getenv('CMSSW_BASE')
+        complexpoleLib = cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/libcpHTO.so'
+        complexpoleSrc = cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/pwhg_cpHTO_reweight.f'
+        if not os.path.exists(complexpoleLib) or \
+          os.stat(complexpoleLib).st_mtime < os.stat(complexpoleSrc).st_mtime:
+          os.system('gfortran '+complexpoleSrc+' -fPIC --shared -o '+complexpoleLib)
+        ROOT.gSystem.Load(complexpoleLib)
+        try:
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/pwhg_cpHTO_wrapper.cc+g')
+        except RuntimeError:
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/pwhg_cpHTO_wrapper.cc++g') 
     
     def muprime(self, k, br):
       return k*(1-br)
@@ -131,13 +146,16 @@ class BWEwkSingletReweighter(TreeCloner):
                 print i,'events processed :: ', nentries
             
             mass = itree.higgsGenmass
+            CPSweight = 1.
+            if self.undoCPS:
+              CPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
             for cprime in rangecprime:
               for BRnew in rangeBRnew:
                 name = 'cprime'+str(cprime)+"BRnew"+str(BRnew)
                 kprime = cprime**2;
                 overallweight = kprime*(1-BRnew) 
                 gprime = self.Gprime(self.mH, kprime, BRnew);
-                self.oldBranchesToBeModifiedSimpleVariable[name][0] = self.RelBreightWigner(mass, self.mH, gprime)/self.RelBreightWigner(mass, self.mH, self.gsm)*overallweight
+                self.oldBranchesToBeModifiedSimpleVariable[name][0] = self.RelBreightWigner(mass, self.mH, gprime)/self.RelBreightWigner(mass, self.mH, self.gsm)/CPSweight
                 #print self.oldBranchesToBeModifiedSimpleVariable[name]  
               
             otree.Fill()
