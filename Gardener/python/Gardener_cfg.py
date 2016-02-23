@@ -274,6 +274,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -303,6 +304,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -333,6 +335,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -362,6 +365,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -393,6 +397,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -422,6 +427,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
