@@ -41,20 +41,11 @@ class LeppTScalerTreeMaker(TreeCloner):
     def checkOptions(self,opts):
         print " >>  checkOptions "
         leppTscaler = {}     
-
-        self.lepFlavourToChange = opts.lepFlavourToChange
-        if opts.lepFlavourToChange == None :
-            print "please enter mu or ele=",opts.lepFlavourToChange
+   
         self.cmssw=opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
-
-        if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
-            if opts.lepFlavourToChange == 'ele' :
-                opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_el_76_rereco.py'
-            elif opts.lepFlavourToChange == 'mu' :
-                opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_76_rereco.py'
-            else:
-                print "please select mu or ele"
+        if opts.Filewithleptscalevalues == None :
+          opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/leppTscaler.py'
         print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
 
         self.variation = opts.variation
@@ -64,6 +55,9 @@ class LeppTScalerTreeMaker(TreeCloner):
             self.variation    = 1.0 * float(opts.variation)
         print " amount of variation = ", self.variation
 
+        self.lepFlavourToChange = opts.lepFlavourToChange
+        if opts.lepFlavourToChange == None :
+            print "please enter mu or ele=",opts.lepFlavourToChange
             
         if os.path.exists(opts.Filewithleptscalevalues) :
           print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
