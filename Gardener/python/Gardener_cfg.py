@@ -277,7 +277,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -307,7 +307,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -338,7 +338,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -368,7 +368,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -400,7 +400,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -430,7 +430,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
