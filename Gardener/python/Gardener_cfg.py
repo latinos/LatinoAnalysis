@@ -157,11 +157,11 @@ Steps= {
                   'subTargets' : ['l1loose','puadder','baseW','wwNLL']
                 },
 
-  'bSFL2Eff'   :   {
+  'bSFL2pTEff'   :   {
                   'isChain'    : True ,
                   'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : ['bPogSF','TrigEff','IdIsoSC','l2kin'],
+                  'do4Data'    : True ,
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin'],
 #                 'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
 #                                 'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
 #                                 'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
@@ -274,9 +274,10 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -303,9 +304,10 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -333,9 +335,10 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -362,9 +365,10 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -393,9 +397,10 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -422,9 +427,10 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -588,14 +594,14 @@ Steps= {
                    'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange ele   -v -1.0'
                  } ,
   
-  'do_LeppMuTup'    : {
+  'do_LepMupTup'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
                    'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange mu    -v 1.0'
                  } ,
   
-  'do_LeppMuTdo'    : {
+  'do_LepMupTdo'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
@@ -606,17 +612,30 @@ Steps= {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py metUncertainty --kind=Up --cmssw=RPLME_CMSSW'
+                   'command'    : 'gardener.py metUncertainty --kind=Up --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no  '
                  } ,
-  
   
   'do_METdo'        : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW'
+                   'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
                  } ,
   
+   # fix datasets names
+  'fixdataset_Herwig_nuisance':  {
+               'isChain'    : False ,
+               'do4MC'      : True ,
+               'do4Data'    : False,
+               'onlySample' : [
+                               #  qqWW
+                               'latino_WWTo2L2NuHerwigPS',
+                               # ggH
+                               'latino_GluGluHToWWTo2L2NuHerwigPS_M125'
+                              ] ,
+               'command'    : 'gardener.py adder -v \'dataset/F=42\'  '
+           },
+
 
 }
 
