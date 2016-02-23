@@ -34,18 +34,27 @@ class LeppTScalerTreeMaker(TreeCloner):
         group.add_option('-c','--cmssw',dest='cmssw',help='cmssw version req for met vars',default='763')
         group.add_option('-f','--fileIn',dest='Filewithleptscalevalues',help='file with lep pT scale values for uncert calc',default=None)
         group.add_option('-v','--upordown',dest='variation',help='specify the variation whether pT scaled up(1) or down(-1)',default=None)
-        group.add_option('-k','--lepFlavourToChange',dest='lepFlavourToChange',help='select the lepton  ele (11) or mu (13)',default=None)
+        group.add_option('-k','--lepFlavourToChange',dest='lepFlavourToChange',help='select the lepton  ele (11) or mu (13)', type='string', default=None)
         parser.add_option_group(group)
         return group
 
     def checkOptions(self,opts):
         print " >>  checkOptions "
         leppTscaler = {}     
-   
+
+        self.lepFlavourToChange = opts.lepFlavourToChange
+        if opts.lepFlavourToChange == None :
+            print "please enter mu or ele=",opts.lepFlavourToChange
         self.cmssw=opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
-        if opts.Filewithleptscalevalues == None :
-          opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/leppTscaler.py'
+
+        if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
+            if opts.lepFlavourToChange == 'ele' :
+                opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_el_76_rereco.py'
+            elif opts.lepFlavourToChange == 'mu' :
+                opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_76_rereco.py'
+            else:
+                print "please select mu or ele"
         print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
 
         self.variation = opts.variation
@@ -55,9 +64,6 @@ class LeppTScalerTreeMaker(TreeCloner):
             self.variation    = 1.0 * float(opts.variation)
         print " amount of variation = ", self.variation
 
-        self.lepFlavourToChange = opts.lepFlavourToChange
-        if opts.lepFlavourToChange == None :
-            print "please enter mu or ele=",opts.lepFlavourToChange
             
         if os.path.exists(opts.Filewithleptscalevalues) :
           print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
@@ -141,12 +147,12 @@ class LeppTScalerTreeMaker(TreeCloner):
         self.namesOldBranchesToBeModifiedSimpleVariable = [self.metvar1,self.metvar2]
 
         self.namesOldBranchesToBeModifiedVector = []
-	vectorsToChange = ['std_vector_lepton_']
+        vectorsToChange = ['std_vector_lepton_']
         for b in self.itree.GetListOfBranches():
-	    branchName = b.GetName()
-	    for subString in vectorsToChange:
-		if subString in branchName:
-		    self.namesOldBranchesToBeModifiedVector.append(branchName)
+            branchName = b.GetName()
+            for subString in vectorsToChange:
+                if subString in branchName:
+                    self.namesOldBranchesToBeModifiedVector.append(branchName)
         
         # clone the tree with new branches added
         self.clone(output,self.namesOldBranchesToBeModifiedVector+self.namesOldBranchesToBeModifiedSimpleVariable)
@@ -261,4 +267,3 @@ class LeppTScalerTreeMaker(TreeCloner):
         self.disconnect()
         print '- Eventloop completed'
         print '- Saved:', savedevents, 'events'
-
