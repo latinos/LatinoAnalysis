@@ -258,11 +258,11 @@ Steps= {
 
 
 
-  'LeppTup':  {
+  'LepElepTup':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LeppTup','TrigEff','IdIsoSC','l2kin'],
+                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -287,11 +287,11 @@ Steps= {
                                  ] ,
               },
 
-  'LeppTdo':  {
+  'LepElepTdo':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LeppTdo','TrigEff','IdIsoSC','l2kin'],
+                  'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -315,6 +315,67 @@ Steps= {
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                  ] ,
               },
+
+
+  'LepMupTup':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin'],
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  # Top
+                                  'TTTo2L2Nu',
+                                  'ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'ZZ','Zg',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                 ] ,
+              },
+
+  'LepMupTdo':  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin'],
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  # Top
+                                  'TTTo2L2Nu',
+                                  'ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'ZZ','Zg',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                 ] ,
+              },
+                  
+                  
 
    'METup':  {
                   'isChain'    : True ,
@@ -513,20 +574,33 @@ Steps= {
                   'command'    : 'gardener.py btagPogScaleFactors '
               },
 
-  'do_LeppTup'    : {
+  'do_LepElepTup'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker -v 1.0'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange ele    -v 1.0'
                  } ,
   
-  'do_LeppTdo'    : {
+  'do_LepElepTdo'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker -v -1.0'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange ele   -v -1.0'
                  } ,
   
+  'do_LeppMuTup'    : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False ,
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange mu    -v 1.0'
+                 } ,
+  
+  'do_LeppMuTdo'    : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False ,
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange mu   -v -1.0'
+                 } ,
   
   'do_METup'        : {
                    'isChain'    : False ,

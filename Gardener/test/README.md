@@ -360,7 +360,11 @@ Lepton pT scale uncertainty
 ====
 
     gardener.py LeppTScalerTreeMaker -v 1 -k mu  ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testscalar.root
+
+or 
     
+    --lepFlavourToChange ele  
+
     
 Lepton pT resolution uncertainty
 ====
@@ -413,27 +417,4 @@ Get the baseW table
 
     ls /media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/*.root | grep ".root" | awk '{print "root -l -q drawBasew.cxx\\\(\\\""$1"\\\"\\\)"}' | /bin/sh
 
-
-Breit-Wigner weight for EWK singlet
-====
-The module BWEwkSingletReweighter adds a series of weights corresponding to the event weights in the EWK singlet model for different values of c' and BRnew. 
-
-The user can specify a range of C' and BRnew to cover and a step in each of the two parameters. For each variation a weight in the form
-
-    cprimeVALUE_BRnewVALUE
-
-The module can be run as
-  
-    gardener.py BWEwkSingletReweighter filein.root fileout.root
-
-The following optional parameters are available
-
-    --cprimemin
-    --cprimemax
-    --cprimestep
-    --brnewmin
-    --brnewmax
-    --brnewstep
-    --mass: the higgs central mass
-
-
+    
