@@ -207,6 +207,7 @@ Steps= {
                                   # VV (including WW) 
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
+                                  'ZZ','Zg',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -217,7 +218,6 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
-                                  #'ZZTo4L',
                                  ] ,
                 },
 
