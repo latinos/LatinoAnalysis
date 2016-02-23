@@ -179,6 +179,7 @@ class HiggsXSection:
      HiggsMass   = 0.
      if 'Mlarge' in SampleName : HiggsMass = '0.0'
      elif '_M' in SampleName : HiggsMass = SampleName.split('_M')[1]
+     if '_' in str(HiggsMass) : HiggsMass = HiggsMass.split('_')[0]
      #if 'large' in HiggsMass : ProdMode = 'unknown'
      if not ProdMode == 'unknown' :
        HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
