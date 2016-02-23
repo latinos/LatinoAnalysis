@@ -196,15 +196,28 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   'subTargets' : ['do_JESup','bPogSF','l2kin'],
-                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
-                                  'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
-                                  'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
+                  'onlySample' : [
+                                  # DY and W+jets
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3'
+                                  'WJetsToLNu',
+                                  # Top
+                                  'TTTo2L2Nu','TTJets',
+                                  'ST_t-channel_antitop','ST_t-channel_top'
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-                                  'Wg','ZZTo4L','WWZ',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  #'ZZTo4L',
                                  ] ,
                 },
 
