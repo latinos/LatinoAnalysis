@@ -631,9 +631,9 @@ Steps= {
                'do4Data'    : False,
                'onlySample' : [
                                #  qqWW
-                               'latino_WWTo2L2NuHerwigPS',
+                               'WWTo2L2NuHerwigPS',
                                # ggH
-                               'latino_GluGluHToWWTo2L2NuHerwigPS_M125'
+                               'GluGluHToWWTo2L2NuHerwigPS_M125'
                               ] ,
                'command'    : 'gardener.py adder -v \'dataset/F=42\'  '
            },
