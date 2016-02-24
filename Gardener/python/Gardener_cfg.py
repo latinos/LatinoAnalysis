@@ -207,6 +207,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -236,6 +237,7 @@ Steps= {
                                   'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -629,9 +631,9 @@ Steps= {
                'do4Data'    : False,
                'onlySample' : [
                                #  qqWW
-                               'latino_WWTo2L2NuHerwigPS',
+                               'WWTo2L2NuHerwigPS',
                                # ggH
-                               'latino_GluGluHToWWTo2L2NuHerwigPS_M125'
+                               'GluGluHToWWTo2L2NuHerwigPS_M125'
                               ] ,
                'command'    : 'gardener.py adder -v \'dataset/F=42\'  '
            },
