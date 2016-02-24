@@ -157,6 +157,15 @@ Steps= {
                   'subTargets' : ['l1loose','puadder','baseW','wwNLL']
                 },
 
+  'bSFL2Eff'   :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['bPogSF','TrigEff','IdIsoSC'],
+                },
+      
+
+
   'bSFL2pTEff'   :   {
                   'isChain'    : True ,
                   'do4MC'      : True ,
@@ -633,7 +642,9 @@ Steps= {
                                #  qqWW
                                'WWTo2L2NuHerwigPS',
                                # ggH
-                               'GluGluHToWWTo2L2NuHerwigPS_M125'
+                               'GluGluHToWWTo2L2NuHerwigPS_M125' ,
+                               # VBF
+                               'VBFHToWWTo2L2NuHerwigPS_M125'
                               ] ,
                'command'    : 'gardener.py adder -v \'dataset/F=42\'  '
            },
