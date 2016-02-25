@@ -464,6 +464,11 @@ class ShapeFactory:
                             outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
                             self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization )
                             self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization )
+
+                            # fix negative bins not consistent
+                            self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                            self._fixNegativeBin(outputsHistoDo, outputsHisto)
+                            
                             # save the new two histograms in final root file
                             outputsHistoUp.Write()
                             outputsHistoDo.Write()
@@ -654,6 +659,12 @@ class ShapeFactory:
         # go 1d
         hTotalFinal = self._h2toh1(hTotal)
         
+        
+        # fix negative (almost never happening)
+        #for ibin in range(1, hTotalFina.GetNbinsX()+1)
+          #if hTotalFinal.GetBinContent(ibin) < 0 :
+            #hTotalFinal.SetBinContent(ibin, 0) 
+        
         return hTotalFinal
 
 
@@ -799,6 +810,18 @@ class ShapeFactory:
 
   
   
+    # _____________________________________________________________________________
+    def _fixNegativeBin(self, histoNew, histoReference):
+        # if a histogram has a bin >/< 0
+        # than also the variation has to have the bin in the 
+        # same sign, because combine cannot handle it otherwise!
+       
+        for ibin in range(1, histoNew.GetNbinsX()+1) :
+          if histoNew.GetBinContent(ibin) * histoReference.GetBinContent(ibin) < 0 :
+            histoNew.SetBinContent(ibin, 0) 
+
+
+
   
 
     # _____________________________________________________________________________
