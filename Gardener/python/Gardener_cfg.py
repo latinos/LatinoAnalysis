@@ -221,7 +221,7 @@ Steps= {
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
@@ -251,7 +251,68 @@ Steps= {
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                 ] ,
+                },
+
+
+  'JESMaxup'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_JESMaxup','bPogSF','l2kin'],
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  # Top
+                                  'TTTo2L2Nu',
+                                  'ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                 ] ,
+                },
+
+  'JESMaxdo'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_JESMaxdo','bPogSF','l2kin'],
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  # Top
+                                  'TTTo2L2Nu',
+                                  'ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
@@ -282,7 +343,7 @@ Steps= {
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
-                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM','GluGluHToWWTo2L2NuPowheg_M125',
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
@@ -320,7 +381,7 @@ Steps= {
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
@@ -351,7 +412,7 @@ Steps= {
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
@@ -381,7 +442,7 @@ Steps= {
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
@@ -413,7 +474,7 @@ Steps= {
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
@@ -443,7 +504,7 @@ Steps= {
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
                                   'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
@@ -487,7 +548,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'onlySample' : ['WWTo2L2Nu'] ,
+                  'onlySample' : ['WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown'] ,
                   'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' --cmssw RPLME_CMSSW'
                 },
 
@@ -583,7 +644,22 @@ Steps= {
                   'do4Data'    : False ,
                   'command'    : 'gardener.py JESTreeMaker -k -1 '
                 } ,
-   
+  
+  'do_JESMaxup'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py JESTreeMaker -k 1 --maxUncertainty '
+                } ,
+
+  'do_JESMaxdo'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py JESTreeMaker -k -1 --maxUncertainty'
+                } ,
+
+ 
   'bPogSF'   :{
                   'isChain'    : False ,
                   'do4MC'      : True  ,
