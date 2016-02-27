@@ -421,9 +421,9 @@ class ShapeFactory:
               
               # create histogram: already the "hadd" of possible sub-contributions
               if 'weights' in sample.keys() :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold, cutName, variableName)
               else :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold, cutName, variableName)
                
               outputsHisto.Write()              
               
@@ -492,14 +492,14 @@ class ShapeFactory:
                         
                         
                         if 'weights' in sample.keys() :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName)
 
                         if 'weights' in sample.keys() :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName)
  
                         # now save to the root file
                         outputsHistoUp.Write()
@@ -524,14 +524,14 @@ class ShapeFactory:
                         #print " ===> ", variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold
                          
                         if 'weights' in sample.keys() :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName)
 
                         if 'weights' in sample.keys() :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName)
  
                         # now save to the root file
                         outputsHistoUp.Write()
@@ -596,7 +596,7 @@ class ShapeFactory:
 
           
     # _____________________________________________________________________________
-    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold):       
+    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold, cutName, variableName):       
         '''
         var           :   the variable to plot
         rng           :   the variable to plot
@@ -609,7 +609,7 @@ class ShapeFactory:
         self._logger.info('Yields by process')
   
         numTree = 0
-        bigName = 'histo_' + sampleName
+        bigName = 'histo_' + sampleName + '_' + cutName + '_' + variableName
         hTotal = self._makeshape(bigName,rng)
         for tree in inputs:
           print '        {0:<20} : {1:^9}'.format(sampleName,tree.GetEntries()),
@@ -658,9 +658,11 @@ class ShapeFactory:
         
         # go 1d
         hTotalFinal = self._h2toh1(hTotal)
-        
+        hTotalFinal.SetTitle('histo_' + sampleName)
+        hTotalFinal.SetName('histo_' + sampleName)
         
         # fix negative (almost never happening)
+        # don't do it here, because you may have interference that is actually negative!
         #for ibin in range(1, hTotalFina.GetNbinsX()+1)
           #if hTotalFinal.GetBinContent(ibin) < 0 :
             #hTotalFinal.SetBinContent(ibin, 0) 
