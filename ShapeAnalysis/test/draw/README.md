@@ -1,3 +1,14 @@
+Compare nuisances
+====
+
+See the nuisances effect by means of plots.
+On top of mkPlot.py code
+
+    r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root\",\"histo_ggH_hww\",\"histo_ggH_hww_CMS_PSUp\",\"histo_ggH_hww_CMS_PSDown\"\)
+    r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root\",\"histo_WW\",\"histo_WW_CMS_WWqscale0jUp\",\"histo_WW_CMS_WWqscale0jDown\"\)
+    r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root\",\"histo_WW\",\"histo_WW_CMS_WWqscale0jUp\",\"histo_WW_CMS_WWqscale0jDown\"\)
+
+
 Simple scripts for super-fast plots
 ====
 
