@@ -9,6 +9,24 @@ On top of mkPlot.py code
     r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root\",\"histo_WW\",\"histo_WW_CMS_WWqscale0jUp\",\"histo_WW_CMS_WWqscale0jDown\"\)
 
 
+Run on all:
+
+    python DrawNuisancesAll.py
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root  \
+         --outputDirPlots ggH0j  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_of0j
+    
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of1j/mllVSmth/shapes/histos_hww2l2v_13TeV_of1j.root  \
+         --outputDirPlots ggH1j  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_of1j
+    
+    
 Simple scripts for super-fast plots
 ====
 
