@@ -125,7 +125,7 @@ class FakeWeightFiller(TreeCloner):
                     if   (stat == 'MuUp')   : f = f + fE
                     elif (stat == 'MuDown') : f = f - fE
 
-                elif (leptons[i][0] == 'el') :
+                elif (leptons[i][0] == 'ele') :
 
                     p, pE = self._getRate(ElPR, leptons[i][1], leptons[i][2], -999.)
                     f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],   30.)
@@ -200,7 +200,7 @@ class FakeWeightFiller(TreeCloner):
                     if   (stat == 'MuUp')   : f = f + fE
                     elif (stat == 'MuDown') : f = f - fE
 
-                elif (leptons[i][0] == 'el') :
+                elif (leptons[i][0] == 'ele') :
 
                     p, pE = self._getRate(ElPR, leptons[i][1], leptons[i][2], -999.)
                     f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],   30.)
