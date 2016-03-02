@@ -1,5 +1,5 @@
 
-void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down) {
+void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./" ) {
  
  gStyle->SetOptStat(0);
  
@@ -26,9 +26,9 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  hDo->SetLineStyle(2);
  
  
- hNominal->Draw();
- hUp->Draw("same");
- hDo->Draw("same");
+ hNominal->Draw("histo");
+ hUp->Draw("histo same");
+ hDo->Draw("histo same");
  
  TLegend* leg = new TLegend(0.1,0.8,0.9,0.99);
  leg->SetFillColor(kWhite);
@@ -49,7 +49,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  hReferenceRatio->SetLineWidth(5);
  
  for (int iBin = 0; iBin < hReferenceRatio->GetNbinsX(); iBin++) {
-  if (1./hReferenceRatio->GetBinContent(iBin+1) != 0) hReferenceRatio->SetBinError  (iBin+1, 1./hReferenceRatio->GetBinContent(iBin+1) * hReferenceRatio->GetBinError(iBin+1));
+//   if (1./hReferenceRatio->GetBinContent(iBin+1) != 0) hReferenceRatio->SetBinError  (iBin+1, 1./hReferenceRatio->GetBinContent(iBin+1) * hReferenceRatio->GetBinError(iBin+1));
+  hReferenceRatio->SetBinError  (iBin+1, 0.);
   hReferenceRatio->SetBinContent(iBin+1, 1.);
  }
  
@@ -63,7 +64,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
     ratio = hRatioUp->GetBinContent(iBin+1) / den;
    }
    hRatioUp -> SetBinContent(iBin+1, ratio);
-   if (den != 0) hRatioUp -> SetBinError  (iBin+1, 1./den * hRatioUp->GetBinError(iBin+1));
+   hRatioUp -> SetBinError  (iBin+1, 0.);
+//    if (den != 0) hRatioUp -> SetBinError  (iBin+1, 1./den * hRatioUp->GetBinError(iBin+1));
  }
   hRatioUp->SetLineColor(kRed);
   hRatioUp->SetLineWidth(2);
@@ -75,7 +77,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
    ratio = hRatioDo->GetBinContent(iBin+1) / den;
   }
   hRatioDo -> SetBinContent(iBin+1, ratio);
-  if (den != 0) hRatioDo -> SetBinError  (iBin+1, 1./den * hRatioDo->GetBinError(iBin+1));
+  hRatioDo -> SetBinError  (iBin+1, 0.);
+//   if (den != 0) hRatioDo -> SetBinError  (iBin+1, 1./den * hRatioDo->GetBinError(iBin+1));
  }
  hRatioDo->SetLineColor(kMagenta);
  hRatioDo->SetLineWidth(2);
@@ -88,7 +91,12 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  gPad->SetGrid();
  
  
-
+ TString name;
+ name = Form ("%s/cratio_%s.png", outputDirPlots.c_str(), histo_up.c_str());
+ ccRatio->SaveAs( name.Data() );
+ name = Form ("%s/cc_%s.png", outputDirPlots.c_str(), histo_up.c_str());
+ cc->SaveAs( name.Data() );
+ 
 }
 
 
