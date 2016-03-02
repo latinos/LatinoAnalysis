@@ -8,7 +8,7 @@ import os.path
 from LatinoAnalysis.Tools.userConfig  import *
 
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,useBatchDir=True,wDir=''):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',useBatchDir=True,wDir=''):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -38,7 +38,7 @@ class batchJobs :
          else:
            kTarget = iTarget
    
-         jName  = baseName+'__'+prodName+'__'+kStep+'__'+kTarget
+         jName  = baseName+'__'+prodName+'__'+kStep+'__'+kTarget+postFix
          self.jobsDic[iStep][iTarget] = jName
          if not jName in self.jobsList: self.jobsList.append(jName)
           

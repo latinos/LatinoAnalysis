@@ -396,7 +396,9 @@ for iProd in prodList :
       list=[]
       list.append(iStep)
       options.batchSplit+=',Steps'
-      if options.runBatch: jobs = batchJobs('Gardening',iProd,list,targetList.keys(),options.batchSplit)
+      bpostFix=''
+      if not options.iStep == 'Prod' : bpostFix='____'+options.iStep
+      if options.runBatch: jobs = batchJobs('Gardening',iProd,list,targetList.keys(),options.batchSplit,bpostFix)
 
       # Do some preliminary actions for some Steps
 
