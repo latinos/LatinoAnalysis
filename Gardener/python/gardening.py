@@ -142,6 +142,7 @@ class Pruner(TreeCloner):
     def __init__(self):
         self.filter = ''
         self.drops = []
+        self.keeps = []
         self.dryrun = False
 
     def help(self):
@@ -152,17 +153,20 @@ class Pruner(TreeCloner):
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-f','--filter',dest='filter', help='cut string as undestood by TTree::Draw', default='')
         group.add_option('-d','--drop',  dest='drops',  help='drops the variables while cloning', action='append',default=[])
+        group.add_option('-k','--keep'  ,dest='keeps',  help='keeps the variables while cloning', action='append',default=[]) #, action='store_true')
         group.add_option('-n','--dryrun',dest='dryrun', help='do nothing, just count', action='store_true')
+        
         parser.add_option_group(group)
         return group
 
     def checkOptions(self, opts ):
-        if not opts.filter and not opts.drops:
+        if not opts.filter and not opts.drops and not opts.keeps:
             raise ValueError('No filter defined?!?')
 
         self.filter = getattr(opts,'filter')
         self.dryrun = getattr(opts,'dryrun')
         self.drops  = getattr(opts,'drops')
+        self.keeps  = getattr(opts,'keeps')
 
     def process(self, **kwargs ):
         print 'Filtering \''+self.filter+'\''
@@ -182,9 +186,32 @@ class Pruner(TreeCloner):
             print 'Dryrun: eventloops skipped'
             return
 
+        #algebra to reverse the 'keeps' options
+        tl = ROOT.TObjArray(self.itree.GetListOfBranches())
+        branches = ROOT.std.vector( ROOT.TString )()
+        cont = 0
+        nBranch = tl.At(cont).GetName()
+        branches.push_back(nBranch)
+        while(tl.After(tl.At(cont))):
+            cont = cont + 1
+            nBranch = tl.At(cont).GetName()
+            branches.push_back(nBranch)
+
+        keeps_string = ROOT.std.vector( ROOT.TString )()
+        keeps_string += self.keeps
+        for q in xrange(keeps_string.size()):
+            print keeps_string.at(q)
+        for q in xrange(keeps_string.size()):
+            for j in xrange(branches.size()):
+                if (keeps_string.at(q).Contains(branches.at(j))):
+                    print 'keep this:', keeps_string.at(q)
+                    branches.erase(branches.begin()+j)
+                    break
+
         # do we want to support wildcards? with fnmatch?
         # complicated because here we can't access the input tree
         self.clone(output, self.drops)
+        self.clone(output, branches)
 
         itree = self.itree
         otree = self.otree
