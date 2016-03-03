@@ -221,7 +221,7 @@ class Pruner(TreeCloner):
 
         # do we want to support wildcards? with fnmatch?
         # complicated because here we can't access the input tree
-        if self.drops:
+        else: #if not self.keeps
             self.clone(output, self.drops)
 
         itree = self.itree
