@@ -87,6 +87,13 @@ How to filter events and update some collections:
                 --cmssw=763   \
                 ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
                 test.l1sel.root
+
+
+How to keep only some branches of a tree:
+
+    gardener.py filter -k "njet" latino_stepB_numEvent100.root output.root	
+
+    gardener.py filter -k "njet" -k "std_vector_lepton_pt" latino_stepB_numEvent100.root output.root	
                 
                 
 Specific modules example:
