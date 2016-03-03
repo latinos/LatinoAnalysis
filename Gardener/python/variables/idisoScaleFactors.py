@@ -47,7 +47,7 @@ class IdIsoSFFiller(TreeCloner):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         if opts.idScaleFactorsFileMu == None :
-          opts.idScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_Moriond76x.txt'
+          opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_Moriond76x.txt'
         if opts.isoTightScaleFactorsFileMu == None :
           opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_tight_Moriond76x.txt'
         if opts.isoLooseScaleFactorsFileMu == None :
@@ -78,7 +78,7 @@ class IdIsoSFFiller(TreeCloner):
         self.maxeta_mu = 2.4
         
         self.minpt_ele = 10
-        self.maxpt_ele = 100
+        self.maxpt_ele = 200
         self.mineta_ele = -2.5
         self.maxeta_ele = 2.5
 
