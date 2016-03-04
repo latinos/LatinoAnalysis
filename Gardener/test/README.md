@@ -242,7 +242,7 @@ Lepton pT corrector
          ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root testCorr.root
     
     gardener.py letPtCorrector --isData=1 \
-         ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100_data.root testCorr.root
+         ../LatinoTrees/AnalysisStep/test/latino_stepB_data_numEvent100.root testCorr.root
 
 
 Fake weight adder
