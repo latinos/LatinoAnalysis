@@ -124,7 +124,8 @@ class ShapeFactory:
           list_of_trees_to_connect[sampleName] = sample['name']
           #print 'sample[name] = ', sample['name']
               
-        inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
+        #                                                                 skipMissingFiles
+        inputs = self._connectInputs( list_of_trees_to_connect, inputDir, False)
                    
 
         # connect nuisances trees
@@ -141,9 +142,10 @@ class ShapeFactory:
                   if sampleName == sampleNuisName :
                     list_of_trees_to_connect_up[sampleNuisName] = self._samples[sampleNuisName]['name']
                     list_of_trees_to_connect_do[sampleNuisName] = self._samples[sampleNuisName]['name']
-                
-              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect_up, nuisance['folderUp']  )
-              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect_do, nuisance['folderDown'])
+
+              #                                                                                                        skipMissingFiles                
+              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect_up, nuisance['folderUp']  , True)
+              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect_do, nuisance['folderDown'], True)
               
               #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect_up  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
@@ -921,11 +923,11 @@ class ShapeFactory:
        
  
     # _____________________________________________________________________________
-    def _connectInputs(self, samples, inputDir):
+    def _connectInputs(self, samples, inputDir, skipMissingFiles):
         inputs = {}
         treeName = 'latino'
         for process,filenames in samples.iteritems():
-          tree = self._buildchain(treeName,[ (inputDir + '/' + f) for f in filenames])
+          tree = self._buildchain(treeName,[ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
           inputs[process] = tree
           # FIXME: add possibility to add Friend Trees for new variables   
          
@@ -952,20 +954,24 @@ class ShapeFactory:
       return False 
 
     # _____________________________________________________________________________
-    def _buildchain(self,treeName,files):
+    def _buildchain(self, treeName, files, skipMissingFiles):
         listTrees = []
         for path in files:
+            doesFileExist = True
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
             if "eos.cern.ch" not in path and "eosuser.cern.ch" not in path:
               if not os.path.exists(path):
                 print 'File '+path+' doesn\'t exists'
-                raise RuntimeError('File '+path+' doesn\'t exists')
+                doesFileExist = False
+                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
             else:
               if not self._testEosFile(path):
-                raise RuntimeError('File '+path+' doesn\'t exists')
-            tree = ROOT.TChain(treeName)
-            tree.Add(path)
-            listTrees.append(tree)
+                doesFileExist = False
+                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
+            if doesFileExist :
+              tree = ROOT.TChain(treeName)
+              tree.Add(path)
+              listTrees.append(tree)
         return listTrees
 
 
