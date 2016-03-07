@@ -1151,6 +1151,8 @@ class ShapeFactory:
         print "=================="
         import LatinoAnalysis.ShapeAnalysis.tdrStyle as tdrStyle
         tdrStyle.setTDRStyle()
+        
+        ROOT.TGaxis.SetExponentOffset(-0.08, 0.00,"y")
 
         
    
