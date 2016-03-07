@@ -34,6 +34,7 @@ class IdIsoSFFiller(TreeCloner):
         group.add_option( '--isoLoosemu', dest='isoLooseScaleFactorsFileMu' , help='file with scale factors for isolation ,loose definition, for muons', default=None)
         
         group.add_option( '--isoidele' , dest='idIsoScaleFactorsFileElectron', help='file with scale factors for isolation and id for electrons',     default=None)
+        group.add_option( '--tkSCele'  , dest='tkSCFileElectron',              help='file with scale factors for track-SC efficiency for electrons',  default=None)
 
         parser.add_option_group(group)
         return group
@@ -54,8 +55,11 @@ class IdIsoSFFiller(TreeCloner):
           opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_loose_Moriond76x.txt'
 
         if opts.idIsoScaleFactorsFileElectron == None :
-          opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt'
-           
+          opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt' 
+        if opts.tkSCFileElectron == None :
+          opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/eleRECO.txt.egamma_SF2D.root'
+ 
+ 
            
         file_idScaleFactorsFileMu  = open (opts.idScaleFactorsFileMu)
         file_isoTightScaleFactorsFileMu  = open (opts.isoTightScaleFactorsFileMu)
@@ -72,6 +76,9 @@ class IdIsoSFFiller(TreeCloner):
         self.isoScaleFactors['muTight']   =    [line.rstrip().split()    for line in file_isoTightScaleFactorsFileMu        if '#' not in line]
         self.isoScaleFactors['muLoose']   =    [line.rstrip().split()    for line in file_isoLooseScaleFactorsFileMu        if '#' not in line]
 
+        self.tkSCElectronRootFile = self._openRootFile(opts.tkSCFileElectron)
+        self.tkSCElectronHisto = self._getRootObj(self.tkSCElectronRootFile, 'EGamma_SF2D')
+        
         self.minpt_mu = 10
         self.maxpt_mu = 200
         self.mineta_mu = -2.4
@@ -81,6 +88,22 @@ class IdIsoSFFiller(TreeCloner):
         self.maxpt_ele = 200
         self.mineta_ele = -2.5
         self.maxeta_ele = 2.5
+
+
+    def _getHistoValue(self, h2, pt, eta):
+
+        nbins = h2.GetNbinsY()
+        ptmax = -1
+        if (ptmax <= 0.) : 
+          ptmax = h2.GetYaxis().GetBinCenter(nbins)
+        
+        # eta on x-axis, pt on y-axis
+        value = h2.GetBinContent(h2.FindBin(eta, min(pt, ptmax)))
+        error = h2.GetBinError  (h2.FindBin(eta, min(pt, ptmax)))
+        
+        #print ' x,y(max),z,err = ', eta, ' - ', min(pt, ptmax), '(', ptmax, ') - ', value, ' - ', error
+        return value, error
+
 
 
     def _getWeight (self, kindLep, pt, eta, tight):
@@ -120,6 +143,10 @@ class IdIsoSFFiller(TreeCloner):
           # get the efficiency
           if kindLep == 'ele' :
             #print " self.idIsoScaleFactors[", kindLep, "] = ", self.idIsoScaleFactors[kindLep]
+            
+            tkSC, tkSC_err = self._getHistoValue(self.tkSCElectronHisto, pt, eta)
+            #print ' pt, eta, tkSC, tkSC_err = ', pt, ' ', eta, ' ', tkSC, ' ', tkSC_err
+            
             for point in self.idIsoScaleFactors[kindLep] : 
  
              #            eta       |      pt     | eff_data   stat  |  eff_mc   stat |      other nuisances
@@ -150,6 +177,14 @@ class IdIsoSFFiller(TreeCloner):
                   
                   error_syst_scaleFactor = error_syst_scaleFactor / mc
                   
+                  if tkSC != 0 :
+                    # sum in quadrature the relative uncertainty
+                    error_scaleFactor = scaleFactor * math.sqrt(error_scaleFactor/scaleFactor*error_scaleFactor/scaleFactor + tkSC_err/tkSC*tkSC_err/tkSC )
+                    # now scale by the correction factor
+                    scaleFactor *= tkSC
+                    error_scaleFactor *= tkSC 
+                    error_syst_scaleFactor *= tkSC 
+ 
                   return scaleFactor, error_scaleFactor, error_scaleFactor, error_syst_scaleFactor
       
             # default ... it should never happen!
