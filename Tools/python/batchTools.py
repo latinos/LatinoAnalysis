@@ -53,17 +53,26 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
-
+       else:
+         jFile.write('export X509_USER_PROXY=/localgrid/xjanssen/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
        jFile.write('ulimit -c 0\n')
-       if    useBatchDir : jFile.write('cd - \n')
+       if    useBatchDir : 
+         if 'iihe' in os.uname()[1]:
+           jFile.write('cd /tmp/xjanssen \n')
+         else:
+           jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
        jFile.close()
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
+     # Create Proxy at IIHE
+     if 'iihe'  in os.uname()[1]:
+       os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
+       os.system('cp $X509_USER_PROXY /localgrid/xjanssen/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]

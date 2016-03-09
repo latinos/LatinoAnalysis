@@ -300,6 +300,8 @@ Module: idisofiller
           
     gardener.py  idisofiller    input.root output.root
     
+    gardener.py  idisofiller    -r     eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel__TrigEff/   \
+         /tmp/amassiro/test/
     
     
 Kinematic variables
@@ -424,4 +426,29 @@ Get the baseW table
 
     ls /media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/*.root | grep ".root" | awk '{print "root -l -q drawBasew.cxx\\\(\\\""$1"\\\"\\\)"}' | /bin/sh
 
+    
+
+           
+generator level variables
+====
+
+Module: genvariablesfiller
+          
+    gardener.py  genvariablesfiller    input.root output.root
+    
+    gardener.py  genvariablesfiller    test.kin.root  test.mc.root
+    gardener.py  genvariablesfiller    /tmp/amassiro/eos/user/j/jlauwers/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_DYJetsToLL_M-50_0000__part0.root   /tmp/amassiro/test.mc.root
+    
+    
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15)")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && gen_mll>80)", "same")
+    
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15)")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && gen_mll>80)", "same")
+    
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20)")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20 && gen_mll>80)", "same")
+    
+    
+    
     

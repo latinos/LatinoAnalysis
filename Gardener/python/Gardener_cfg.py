@@ -115,6 +115,34 @@ Productions= {
                                    }
                       } ,
 
+  '03Mar_Run2015D_16Dec2015' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_16Dec2015-v1_25ns_StarWars.py' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'reName'  : {
+                                       'DoubleEG_Run2015D_25ns-16Dec2015-v2'       : 'Run2015D_16Dec2015_DoubleEG' ,
+                                       'DoubleMuon_Run2015D_25ns-16Dec2015-v1'     : 'Run2015D_16Dec2015_DoubleMuon' ,
+                                       'MuonEG_Run2015D_25ns-16Dec2015-v1'         : 'Run2015D_16Dec2015_MuonEG' ,
+                                       'SingleElectron_Run2015D_25ns-16Dec2015-v1' : 'Run2015D_16Dec2015_SingleElectron' ,
+                                       'SingleMuon_Run2015D_25ns-16Dec2015-v1'     : 'Run2015D_16Dec2015_SingleMuon' ,
+                                      #'MET_Run2015D_25ns-16Dec2015-v1'            : 'Run2015D_16Dec2015_MET' ,
+                                      #'SinglePhoton_Run2015D_25ns-16Dec2015-v1'   : 'Run2015D_16Dec2015_SinglePhoton' ,
+                                    }
+                      } ,
+
+  '03Mar_Run2015C_16Dec2015' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataC_16Dec2015-v1_25ns_StarWars.py',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'reName'  : {
+                                       'DoubleEG_Run2015C_25ns-16Dec2015-v1'       : 'Run2015C_16Dec2015_DoubleEG' ,
+                                       'DoubleMuon_Run2015C_25ns-16Dec2015-v1'     : 'Run2015C_16Dec2015_DoubleMuon' ,
+                                       'MuonEG_Run2015C_25ns-16Dec2015-v1'         : 'Run2015C_16Dec2015_MuonEG' ,
+                                       'SingleElectron_Run2015C_25ns-16Dec2015-v1' : 'Run2015C_16Dec2015_SingleElectron' ,
+                                       'SingleMuon_Run2015C_25ns-16Dec2015-v1'     : 'Run2015C_16Dec2015_SingleMuon' ,
+                                   }
+                      } ,
+
 
 }
 
@@ -147,14 +175,80 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','puadder','baseW','wwNLL']
+                  'subTargets' : ['l2loose','puadder','baseW','wwNLL'],
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  # Top
+                                  'TTTo2L2Nu',
+                                  'ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  # PS
+                                  'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
+                                  # UE
+                                  'GluGluHToWWTo2L2Nu_M125_CUETDown',
+                                  'GluGluHToWWTo2L2Nu_M125_CUETUp',
+                                  'VBFHToWWTo2L2Nu_M125_CUETDown',
+                                  'VBFHToWWTo2L2Nu_M125_CUETUp',
+                                  'WWTo2L2Nu_CUETDown',
+                                  'WWTo2L2Nu_CUETUp',
+                                 ] ,
+
                 },
 
   'MCl1loose' :       {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','baseW','wwNLL']
+                  'subTargets' : ['l1loose','puadder','baseW','wwNLL'],
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  # Top
+                                  'TTTo2L2Nu',
+                                  'ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  # PS
+                                  'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
+                                  # UE
+                                  'GluGluHToWWTo2L2Nu_M125_CUETDown',
+                                  'GluGluHToWWTo2L2Nu_M125_CUETUp',
+                                  'VBFHToWWTo2L2Nu_M125_CUETDown',
+                                  'VBFHToWWTo2L2Nu_M125_CUETUp',
+                                  'WWTo2L2Nu_CUETDown',
+                                  'WWTo2L2Nu_CUETUp',
+                                 ] ,
+
                 },
 
   'bSFL2Eff'   :   {
@@ -171,19 +265,43 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : True ,
                   'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin'],
-#                 'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
-#                                 'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
-#                                 'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
-#                                 'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
-#                                 'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
-#                                 'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
-#                                 'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
-#                                 'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-#                                 'Wg','ZZTo4L','WWZ',
-#                                ] ,
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  # Top
+                                  'TTTo2L2Nu',
+                                  'ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top',
+                                  # VV (including WW) 
+                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  'WZTo3LNu',
+                                  'ZZ','Zg',
+                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
+                                  'Wg_AMCNLOFXFX',
+                                  # VVV
+                                  'WZZ','ZZZ','WWZ',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  # PS
+                                  'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
+                                  # UE
+                                  'GluGluHToWWTo2L2Nu_M125_CUETDown',
+                                  'GluGluHToWWTo2L2Nu_M125_CUETUp',
+                                  'VBFHToWWTo2L2Nu_M125_CUETDown',
+                                  'VBFHToWWTo2L2Nu_M125_CUETUp',
+                                  'WWTo2L2Nu_CUETDown',
+                                  'WWTo2L2Nu_CUETUp',
+                                 ] ,
                 },
 
-  'L2Eff74x'  :   {
+
+
+  'L2Eff'  :   {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
