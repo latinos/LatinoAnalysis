@@ -76,9 +76,9 @@ class LeptonPtCorrector(TreeCloner):
         if kindLep in self.leppTscaler.keys() : 
           for point in self.leppTscaler[kindLep] :
             if kindLep == 'ele':
-              #if (point[2] == 'highR9' and r9_lep>=0.94) or (point[2] == 'lowR9' and r9_lep<0.94):  # FIXME new               
+              if (point[2] == 'highR9' and r9_lep>=0.94) or (point[2] == 'lowR9' and r9_lep<0.94):  # FIXME new               
               # use only high R9 for electrons
-              if point[2] == 'highR9': 
+              #if point[2] == 'highR9': 
                 if run >= float(point[3])  and run < (float(point[4])+1) : 
                   if ( abs(eta) >= float(point[0]) and abs(eta) < float(point[1]) ) :
                     return float(point[5])
@@ -213,8 +213,8 @@ class LeptonPtCorrector(TreeCloner):
                 pt_lep = itree.std_vector_lepton_pt[i]
                 eta_lep = itree.std_vector_lepton_eta[i]
                 phi_lep = itree.std_vector_lepton_phi[i] 
-                r9_lep = 0.                                  # FIXME new
-                #r9_lep  = itree.std_vector_electron_R9[i]   # FIXME new
+                #r9_lep = 0.                                  # FIXME new
+                r9_lep  = itree.std_vector_electron_R9[i]   # FIXME new
 #                print "pt eta",pt_lep,eta_lep,phi_lep
 
                 new_pt_lep = pt_lep
