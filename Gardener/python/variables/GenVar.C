@@ -18,7 +18,7 @@ public:
  void checkIfOk();
  
  //! set functions
- void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass);
+ void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setNeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setMET  (float met, float metphi);
@@ -27,6 +27,7 @@ public:
 //  float pTGenVar();
 //  float dphill();
 //  float mll();
+ float gen_ptll();
  
 private:
  //! variables
@@ -39,7 +40,7 @@ private:
  std::vector<float> _jetspt;
  std::vector<float> _jetseta;
  std::vector<float> _jetsphi;
- std::vector<float> _jetsmass;
+ std::vector<float> _jetsflavour;
  
  std::vector<float> _leptonspt;
  std::vector<float> _leptonseta;
@@ -73,14 +74,14 @@ void GenVar::setMET(float met, float metphi) {
  _met_phi = metphi;
 }
 
-void GenVar::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass) {
- _jetspt   = invectorpt;
- _jetseta  = invectoreta;
- _jetsphi  = invectorphi;
- _jetsmass = invectormass;
+void GenVar::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
+ _jetspt      = invectorpt;
+ _jetseta     = invectoreta;
+ _jetsphi     = invectorphi;
+ _jetsflavour = invectorflavour;
  
  _jetOk = 0;
- for (int ijet = 0; ijet < _jetspt.size(); ijet++) {
+ for (unsigned int ijet = 0; ijet < _jetspt.size(); ijet++) {
   if (_jetspt.at(ijet) > 0) _jetOk++;
  }
 }
@@ -92,7 +93,7 @@ void GenVar::setLeptons(std::vector<float> invectorpt, std::vector<float> invect
  _leptonsflavour = invectorflavour;
  
  _lepOk = 0;
- for (int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+ for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
   if (_leptonspt.at(ilep) > 0) _lepOk++;
  }
 }
@@ -106,7 +107,7 @@ void GenVar::setNeutrinos(std::vector<float> invectorpt, std::vector<float> inve
  _neutrinosflavour = invectorflavour;
  
  _neuOk = 0;
- for (int ineu = 0; ineu < _neutrinospt.size(); ineu++) {
+ for (unsigned int ineu = 0; ineu < _neutrinospt.size(); ineu++) {
   if (_neutrinospt.at(ineu) > 0) _lepOk++;
  }
 }
@@ -127,15 +128,20 @@ void GenVar::setNeutrinos(std::vector<float> invectorpt, std::vector<float> inve
 // }
 // 
 // 
-// float GenVar::ptll(){
-//  if (_isOk) {
-//   return (L1+L2).Pt();
-//  }
-//  else {
-//   return -9999.0;
-//  }
-// }
-// 
+
+
+float GenVar::gen_ptll(){
+ if (_lepOk >=2 ) {
+  TLorentzVector L1,L2;
+  L1.SetPtEtaPhiM(_leptonspt.at(0), _leptonseta.at(0), _leptonsphi.at(0), 0.);
+  L2.SetPtEtaPhiM(_leptonspt.at(1), _leptonseta.at(1), _leptonsphi.at(1), 0.);
+  return (L1+L2).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
 // 
 // float GenVar::yll(){
 //  if (_isOk) {

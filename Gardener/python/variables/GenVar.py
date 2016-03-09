@@ -58,7 +58,7 @@ class genVariablesFiller(TreeCloner):
         # if you add a new variable here, be sure it IS defined in GenVar.C
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
-           'mll'           
+           'gen_ptll'           
            ]
         
         # clone the tree
@@ -105,6 +105,14 @@ class genVariablesFiller(TreeCloner):
 
             if i > 0 and i%step == 0.:
                 print i,'events processed.'
+
+            GenVar = ROOT.GenVar()
+            GenVar.setLeptons(itree.std_vector_leptonGen_pt, itree.std_vector_leptonGen_eta, itree.std_vector_leptonGen_phi, itree.std_vector_leptonGen_pid)
+            GenVar.setJets   (itree.std_vector_partonGen_pt, itree.std_vector_partonGen_eta, itree.std_vector_partonGen_phi, itree.std_vector_partonGen_pid)
+
+            # now fill the variables like "mll", "dphill", ...
+            for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+              bvariable[0] = getattr(GenVar, bname)()
 
             otree.Fill()
             savedentries+=1
