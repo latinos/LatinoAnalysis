@@ -88,9 +88,9 @@ class ShapeFactory:
             tgrMC_vy            = array('f')
  
             
-            thsData       = ROOT.THStack ("thsData",      "thsData")
-            thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
-            thsBackground = ROOT.THStack ("thsBackground","thsBackground")
+            thsData       = ROOT.THStack ("thsData_" + cutName + "_" + variableName,      "thsData")
+            thsSignal     = ROOT.THStack ("thsSignal_" + cutName + "_" + variableName,    "thsSignal")
+            thsBackground = ROOT.THStack ("thsBackground_" + cutName + "_" + variableName,"thsBackground")
 
             # enhanced list of nuisances, including bin-by-bin 
             mynuisances = {}
