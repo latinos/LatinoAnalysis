@@ -300,6 +300,8 @@ Module: idisofiller
           
     gardener.py  idisofiller    input.root output.root
     
+    gardener.py  idisofiller    -r     eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel__TrigEff/   \
+         /tmp/amassiro/test/
     
     
 Kinematic variables

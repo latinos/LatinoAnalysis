@@ -87,18 +87,22 @@ class ShapeFactory:
             nuisances_vy_do     = {}
             tgrMC_vy            = array('f')
  
+            #print 'before thstack ...',
             
-            thsData       = ROOT.THStack ("thsData",      "thsData")
-            thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
-            thsBackground = ROOT.THStack ("thsBackground","thsBackground")
+            thsData       = ROOT.THStack ("thsData_" + cutName + "_" + variableName,      "thsData")
+            thsSignal     = ROOT.THStack ("thsSignal_" + cutName + "_" + variableName,    "thsSignal")
+            thsBackground = ROOT.THStack ("thsBackground_" + cutName + "_" + variableName,"thsBackground")
+
+            #print '... after thstack ...'
 
             # enhanced list of nuisances, including bin-by-bin 
             mynuisances = {}
 
             for sampleName, sample in self._samples.iteritems():
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              #print '     -> shapeName = ', shapeName
               histo = fileIn.Get(shapeName)
-              histos[sampleName] = histo.Clone('new_histo_' + sampleName)
+              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
                  #print " i = ", iBinAmassiro, " [" , sampleName, " ==> ", histos[sampleName].GetBinContent(iBinAmassiro)
@@ -1151,6 +1155,8 @@ class ShapeFactory:
         print "=================="
         import LatinoAnalysis.ShapeAnalysis.tdrStyle as tdrStyle
         tdrStyle.setTDRStyle()
+        
+        ROOT.TGaxis.SetExponentOffset(-0.08, 0.00,"y")
 
         
    
