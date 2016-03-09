@@ -55,8 +55,8 @@ class ShapeFactory:
         os.system ("mkdir " + outputDirPlots + "/") 
         
 
-        tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
-        tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
+        #tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
+        #tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
         # weight_X_tcanvas      = ROOT.TCanvas( "weight_X_tcanvas",      "weight_X_tcanvas",      800, 800 )
         weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio", "weight_X_tcanvasRatio", 800, 800 )
 
@@ -71,16 +71,25 @@ class ShapeFactory:
             print "variableName = ", variableName
             
             histos = {}
-            canvasNameTemplate = 'c_' + cutName + "_" + variableName
             
-            #tcanvas = ROOT.TCanvas( canvasNameTemplate, variableName , 800, 600 )
+            #print "here ..."
+           
+            canvasNameTemplateRatio = 'ccRatio_' + cutName + "_" + variableName
+            tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
+
+            canvasNameTemplate = 'c_' + cutName + "_" + variableName
+            tcanvas = ROOT.TCanvas( canvasNameTemplate, variableName , 800, 600 )
             tcanvas.cd()
             
+            #print " and now this ..."
+
             tgrData_vx     = array('f')
             tgrData_evx    = array('f')
             tgrData_vy     = array('f')
             tgrData_evy_up = array('f')
             tgrData_evy_do = array('f')
+
+            #print " ... how this is still a thing ..."
 
             #these vectors are needed for nuisances accounting
             nuisances_vy_up     = {}
