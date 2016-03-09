@@ -29,6 +29,7 @@ public:
 //  float mll();
  float gen_ptll();
  float gen_mll();
+ float gen_llchannel();
  
 private:
  //! variables
@@ -154,6 +155,18 @@ float GenVar::gen_mll(){
   return -9999.0;
  }
 }
+
+
+
+float GenVar::gen_llchannel(){
+ if (_lepOk >=2 ) {
+  return _leptonsflavour.at(0) * _leptonsflavour.at(1);
+ }
+ else {
+  return -9999.0;
+ }
+}
+
 
 
 // 

@@ -59,7 +59,8 @@ class genVariablesFiller(TreeCloner):
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
            'gen_ptll',
-           'gen_mll'
+           'gen_mll',
+           'gen_llchannel'
            ]
         
         # clone the tree
