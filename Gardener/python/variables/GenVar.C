@@ -28,6 +28,7 @@ public:
 //  float dphill();
 //  float mll();
  float gen_ptll();
+ float gen_mll();
  
 private:
  //! variables
@@ -141,6 +142,19 @@ float GenVar::gen_ptll(){
   return -9999.0;
  }
 }
+
+float GenVar::gen_mll(){
+ if (_lepOk >=2 ) {
+  TLorentzVector L1,L2;
+  L1.SetPtEtaPhiM(_leptonspt.at(0), _leptonseta.at(0), _leptonsphi.at(0), 0.);
+  L2.SetPtEtaPhiM(_leptonspt.at(1), _leptonseta.at(1), _leptonsphi.at(1), 0.);
+  return (L1+L2).M();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
 
 // 
 // float GenVar::yll(){

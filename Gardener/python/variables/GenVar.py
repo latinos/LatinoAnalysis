@@ -58,7 +58,8 @@ class genVariablesFiller(TreeCloner):
         # if you add a new variable here, be sure it IS defined in GenVar.C
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
-           'gen_ptll'           
+           'gen_ptll',
+           'gen_mll'
            ]
         
         # clone the tree
