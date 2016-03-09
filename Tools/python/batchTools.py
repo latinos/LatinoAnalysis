@@ -45,12 +45,16 @@ class batchJobs :
      # Create job and init files (loop on Steps,Targets)
      if not os.path.exists(self.subDir) : os.system('mkdir -p '+self.subDir)
      CMSSW=os.environ["CMSSW_BASE"]
+     SCRAMARCH=os.environ["SCRAM_ARCH"]
      for jName in self.jobsList:
        jFile = open(self.subDir+'/'+jName+'.sh','w')
        jFile.write('#!/bin/bash\n')
-       jFile.write('#$ -N '+jName+'\n')
-       jFile.write('#$ -q all.q\n')
-       jFile.write('#$ -cwd\n')
+       if 'cern' in os.uname()[1]:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('#$ -q all.q\n')
+         jFile.write('#$ -cwd\n')
+
+       jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
@@ -81,9 +85,15 @@ class batchJobs :
         jFile.close()
         jidFile=self.subDir+'/'+jName+'.jid'
         print 'Submit',jName
-        #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
-        jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-        #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        if 'iihe' in os.uname()[1] : 
+          queue='localgrid@cream02'
+          QSOPT=''
+          jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+
+        else:
+          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
 def batchStatus():
     fileCmd = 'ls '+jobDir

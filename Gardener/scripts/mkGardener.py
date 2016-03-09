@@ -73,43 +73,6 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,baseWInfo,version='74x'):
        baseWInfo['nTot']   = str(nTot)
        return str(baseW)
 
-# --------------------- SPLIT ---------------------------
-
-def SplitTree(inTree,wDir,TargeDir,nEvtToSplit):
-   fileIn  = ROOT.TFile.Open(inTree, "READ")
-   nEvents = fileIn.Get("latino").GetEntries()
-   nTSplit = int(math.ceil(float(nEvents)/float(nEvtToSplit)))
-   ObjList = list(OrderedDict.fromkeys( [key.GetName() for key in  fileIn.GetListOfKeys()] ))
-
-   print 'Splitting : ', str(nEvents) , str(nTSplit)
-   baseName=os.path.basename(inTree) 
-   for iSplit in range(0,nTSplit):
-    fileTmp = baseName.replace('.root','__split'+str(iSplit)+'_In.root') 
-    fileOut = ROOT.TFile.Open(wDir+'/'+fileTmp, "RECREATE")   
-    fileOut.cd()
-    for iObj in ObjList:
-      pObj = fileIn.Get(iObj)
-      if iObj == 'latino' :
-       print iObj
-       iStart = nEvtToSplit * iSplit
-       iStop  = nEvtToSplit*(iSplit+1)
-       if nEvents < iStop : iStop=nEvents
-       nTree = pObj.CloneTree(0)
-       for iEvent in range(iStart,iStop) :
-         pObj.GetEntry(iEvent)
-         nTree.Fill()
-         if iEvent%10000 == 0: print iEvent,' events processed.' 
-       nTree.Write()
-      elif pObj.ClassName() == 'TTree' :
-       nTree = pObj.CloneTree(-1,"fast");
-       nTree.Write()
-      else: pObj.Write()
-    fileOut.Close()
-    os.system('xrdcp '+wDir+'/'+fileTmp+' '+TargeDir+'/'+fileTmp)
-    os.system('rm '+wDir+'/'+fileTmp)
-
-   fileIn.Close()
-
 # ------------------------------------------------------- MAIN --------------------------------------------
 
 parser = OptionParser(usage="usage: %prog [options]")
@@ -209,15 +172,22 @@ for iProd in prodList :
 
   # Find existing Input files 
   #if not options.iStep in Steps: options.iStep = 'Prod'
-  if options.iStep == 'Prod' : 
-    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] #+' | grep -v ttDM'
+  if 'iihe' in os.uname()[1]:
+    if options.iStep == 'Prod' :
+      fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] 
+    else:
+      fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep
   else:
-    fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+options.iStep
+    if options.iStep == 'Prod' : 
+      fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] #+' | grep -v ttDM'
+    else:
+      fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+options.iStep
   print fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
   print FileInList
+
  
   # Loop on Steps:
   for iStep in stepList:
@@ -225,14 +195,20 @@ for iProd in prodList :
       print '---------------- for Step : ',iStep
       targetList={}
       # Validate targets tree
-      if options.iStep == 'Prod' :
-        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
+      if 'iihe' in os.uname()[1]:
+        if options.iStep == 'Prod' :
+          fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015'+'/'+iProd+'/'+iStep
+        else: 
+          fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015'+'/'+iProd+'/'+options.iStep+'__'+iStep
       else:
-        fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep
+        if options.iStep == 'Prod' :
+          fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
+        else:
+          fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep
+      print fileCmd
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileExistList=string.split(out)
-      print fileCmd
       print FileExistList
       #print samples.keys()
       for iSample in samples : 
@@ -284,10 +260,16 @@ for iProd in prodList :
                   aSample = iKey
                 #print aSample , iSample
                 if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
-                  if options.iStep == 'Prod' :
-                    targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
+                  if 'iihe' in os.uname()[1]:
+                    if options.iStep == 'Prod' :
+                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                    else:
+                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                   else:
-                    targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile
+                    if options.iStep == 'Prod' :
+                      targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
+                    else:
+                      targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile
       #print targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
@@ -314,62 +296,29 @@ for iProd in prodList :
             if aSample == iSample:
               if not iKey in targetList.keys():
                 print 'Re-Adding split tree: ', iKey, iFile
-                if options.iStep == 'Prod' :
-                  targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
-                else:
-                  targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile 
+                if 'iihe' in os.uname()[1]:
+                  if options.iStep == 'Prod' :
+                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                  else:
+                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                else: 
+                  if options.iStep == 'Prod' :
+                    targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
+                  else:
+                    targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile 
 
       print targetList
       for i in targetList : print i
       #quit() 
 
       # Create Output Directory on eos
-      if options.iStep == 'Prod' :
-        os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
+      if 'iihe' in os.uname()[1]:
+        print 'Using LCG ...'
       else:
-        os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep)
-
-      # Check and Split big Trees
-
-#      for iTarget in targetList.keys():
-#        if  'bigSamples' in Productions[iProd] and iTarget in Productions[iProd]['bigSamples'] :
-#          if options.iStep == 'Prod' :
-#            os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir -p '+eosTargBase+'/'+iProd+'/'+iStep+'/Split')      
-#            fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+iStep+'/Split/latino_'+iTarget+'__part*_In.root'
-#          else:
-#            os.system('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select mkdir -p '+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split')
-#            #fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split/latino_'+iTarget+'_part*_In.root'
-#            # Well I can use __partX_Out of prevous step and no split again 
-#            fileCmd = '/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls '+eosTargBase+'/'+iProd+'/'+options.iStep+'/Split/latino_'+iTarget+'__part*_Out.root'
-#            
-#          proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
-#          out, err = proc.communicate()
-#          SplitFileList=string.split(out)
-#          if len(SplitFileList) == 0 :
-#            print 'Need to Split'
-#            if options.iStep == 'Prod' :
-#              inTree     = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
-#              targetDir  = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/Split'
-#            else:
-#              inTree     = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
-#              targetDir  = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split'
-#            wDir  ='/tmp/xjanssen'+'/Gardening__'+iProd+'__'+iStep
-#            if not os.path.exists(wDir) : os.system('mkdir -p '+wDir)
-#            SplitTree(inTree,wDir,targetDir,1000000)
-#            proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
-#            out, err = proc.communicate()
-#            SplitFileList=string.split(out) 
-#          else:
-#            print 'Found Split tree !'
-#          print SplitFileList
-#          del targetList[Target]
-#          for iSplit in SplitFileList : 
-#            iKey = iSplit.replace('latino_','').replace('.root','')  
-#            if options.iStep == 'Prod' :
-#              File = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+iStep+'/Split/'+iSplit            
-#            else:
-#              File = 'root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'/Split/'+iSplit
-#            targetList[iKey] = File
+        if options.iStep == 'Prod' :
+          os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
+        else:
+          os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep)
 
       # For hadd Step, regroup Files
       if iStep == 'hadd' :
@@ -421,22 +370,29 @@ for iProd in prodList :
         #print iTarget , iTargetOri , id_iTarget
         # Stage in   
         #print targetList[iTarget] 
-        if targetList[iTarget] == 'NOSPLIT':
-          if options.iStep == 'Prod' :
-            inTree  ='root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
-          else:
-            inTree  =xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
-        else:
-          inTree = targetList[iTarget]  # Pointing to File in case of Split
+        #if targetList[iTarget] == 'NOSPLIT':
+        #  if options.iStep == 'Prod' :
+        #    inTree  ='root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/latino_'+iTarget+'.root'
+        #  else:
+        #    inTree  =xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/latino_'+iTarget+'.root'
+        #else:
+        inTree = targetList[iTarget]  # Pointing to File in case of Split
         oriTree = inTree
         wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
         if   options.runBatch: command=''
-        #else:                  command='cd '+wDir+' ; '
-        else:                  command='cd /tmp/'+os.getlogin()+' ; '
+        else:  
+          if 'iihe' in os.uname()[1]:
+            command='cd '+wDir+' ; '
+          else:       
+            command='cd /tmp/'+os.getlogin()+' ; '
 
         if iStep == 'hadd' :
-          command+='cd /tmp/'+os.getlogin()+' ; '
+          if 'iihe' in os.uname()[1]:
+            command='cd '+wDir+' ; '
+          else:
+            command+='cd /tmp/'+os.getlogin()+' ; '
+            
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           if len(targetList[iTarget]) == 1 :
             command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
@@ -539,12 +495,17 @@ for iProd in prodList :
         # else:
         #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+options.iStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
         #lse:
-        if options.iStep == 'Prod' :
-          command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+        if 'iihe' in os.uname()[1]:
+          if options.iStep == 'Prod' :
+            command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+          else: 
+            command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
         else:
-          command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
-
-        command+='; rm '+outTree
+          if options.iStep == 'Prod' :
+            command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+          else:
+            command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+options.iStep+'__'+iStep+'/latino_'+iTarget+'.root'
+          command+='; rm '+outTree
         logFile=wDir+'/log__'+iTarget+'.log'
         if options.quiet :
           command += ' 2>&1 > /dev/null \n' 
