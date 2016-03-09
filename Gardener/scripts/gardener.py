@@ -49,6 +49,7 @@ from LatinoAnalysis.Gardener.variables.MrWWVar                    import MrWWVar
 # specific variables for MC
 from LatinoAnalysis.Gardener.variables.mcWeights                  import mcWeightsFiller
 from LatinoAnalysis.Gardener.variables.mcWeightsCount             import mcWeightsCounter
+from LatinoAnalysis.Gardener.variables.GenVar                     import genVariablesFiller
 
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
@@ -96,6 +97,10 @@ if __name__ == '__main__':
 
     modules['mcweightscounter'] = mcWeightsCounter()
     modules['mcweightsfiller']  = mcWeightsFiller()
+
+# generator level variables
+    modules['genvariablesfiller']  = genVariablesFiller()
+
 
 
 # new variables

@@ -427,3 +427,17 @@ Get the baseW table
     ls /media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/*.root | grep ".root" | awk '{print "root -l -q drawBasew.cxx\\\(\\\""$1"\\\"\\\)"}' | /bin/sh
 
     
+
+           
+generator level variables
+====
+
+Module: genvariablesfiller
+          
+    gardener.py  genvariablesfiller    input.root output.root
+    
+    gardener.py  genvariablesfiller    test.kin.root  test.mc.root
+    
+    
+    
+    
