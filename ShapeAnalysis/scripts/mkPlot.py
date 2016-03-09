@@ -55,8 +55,8 @@ class ShapeFactory:
         os.system ("mkdir " + outputDirPlots + "/") 
         
 
-        #tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
-        #tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
+        tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
+        tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
         # weight_X_tcanvas      = ROOT.TCanvas( "weight_X_tcanvas",      "weight_X_tcanvas",      800, 800 )
         weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio", "weight_X_tcanvasRatio", 800, 800 )
 
@@ -75,10 +75,10 @@ class ShapeFactory:
             #print "here ..."
            
             canvasNameTemplateRatio = 'ccRatio_' + cutName + "_" + variableName
-            tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
+            #tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
 
             canvasNameTemplate = 'c_' + cutName + "_" + variableName
-            tcanvas = ROOT.TCanvas( canvasNameTemplate, variableName , 800, 600 )
+            #tcanvas = ROOT.TCanvas( canvasNameTemplate, variableName , 800, 600 )
             tcanvas.cd()
             
             #print " and now this ..."
