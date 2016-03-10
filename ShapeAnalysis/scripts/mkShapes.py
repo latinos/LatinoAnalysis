@@ -124,7 +124,8 @@ class ShapeFactory:
           list_of_trees_to_connect[sampleName] = sample['name']
           #print 'sample[name] = ', sample['name']
               
-        inputs = self._connectInputs( list_of_trees_to_connect, inputDir)
+        #                                                                 skipMissingFiles
+        inputs = self._connectInputs( list_of_trees_to_connect, inputDir, False)
                    
 
         # connect nuisances trees
@@ -141,9 +142,10 @@ class ShapeFactory:
                   if sampleName == sampleNuisName :
                     list_of_trees_to_connect_up[sampleNuisName] = self._samples[sampleNuisName]['name']
                     list_of_trees_to_connect_do[sampleNuisName] = self._samples[sampleNuisName]['name']
-                
-              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect_up, nuisance['folderUp']  )
-              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect_do, nuisance['folderDown'])
+
+              #                                                                                                        skipMissingFiles                
+              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect_up, nuisance['folderUp']  , True)
+              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect_do, nuisance['folderDown'], True)
               
               #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect_up  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
@@ -421,9 +423,9 @@ class ShapeFactory:
               
               # create histogram: already the "hadd" of possible sub-contributions
               if 'weights' in sample.keys() :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold, cutName, variableName)
               else :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold, cutName, variableName)
                
               outputsHisto.Write()              
               
@@ -464,6 +466,11 @@ class ShapeFactory:
                             outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
                             self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization )
                             self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization )
+
+                            # fix negative bins not consistent
+                            self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                            self._fixNegativeBin(outputsHistoDo, outputsHisto)
+                            
                             # save the new two histograms in final root file
                             outputsHistoUp.Write()
                             outputsHistoDo.Write()
@@ -487,14 +494,14 @@ class ShapeFactory:
                         
                         
                         if 'weights' in sample.keys() :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName)
 
                         if 'weights' in sample.keys() :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName)
  
                         # now save to the root file
                         outputsHistoUp.Write()
@@ -519,14 +526,14 @@ class ShapeFactory:
                         #print " ===> ", variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold
                          
                         if 'weights' in sample.keys() :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold)
+                          outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName)
 
                         if 'weights' in sample.keys() :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName)
                         else :
-                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold)
+                          outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName)
  
                         # now save to the root file
                         outputsHistoUp.Write()
@@ -591,7 +598,7 @@ class ShapeFactory:
 
           
     # _____________________________________________________________________________
-    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold):       
+    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold, cutName, variableName):       
         '''
         var           :   the variable to plot
         rng           :   the variable to plot
@@ -604,7 +611,7 @@ class ShapeFactory:
         self._logger.info('Yields by process')
   
         numTree = 0
-        bigName = 'histo_' + sampleName
+        bigName = 'histo_' + sampleName + '_' + cutName + '_' + variableName
         hTotal = self._makeshape(bigName,rng)
         for tree in inputs:
           print '        {0:<20} : {1:^9}'.format(sampleName,tree.GetEntries()),
@@ -653,6 +660,14 @@ class ShapeFactory:
         
         # go 1d
         hTotalFinal = self._h2toh1(hTotal)
+        hTotalFinal.SetTitle('histo_' + sampleName)
+        hTotalFinal.SetName('histo_' + sampleName)
+        
+        # fix negative (almost never happening)
+        # don't do it here, because you may have interference that is actually negative!
+        #for ibin in range(1, hTotalFina.GetNbinsX()+1)
+          #if hTotalFinal.GetBinContent(ibin) < 0 :
+            #hTotalFinal.SetBinContent(ibin, 0) 
         
         return hTotalFinal
 
@@ -799,6 +814,18 @@ class ShapeFactory:
 
   
   
+    # _____________________________________________________________________________
+    def _fixNegativeBin(self, histoNew, histoReference):
+        # if a histogram has a bin >/< 0
+        # than also the variation has to have the bin in the 
+        # same sign, because combine cannot handle it otherwise!
+       
+        for ibin in range(1, histoNew.GetNbinsX()+1) :
+          if histoNew.GetBinContent(ibin) * histoReference.GetBinContent(ibin) < 0 :
+            histoNew.SetBinContent(ibin, 0) 
+
+
+
   
 
     # _____________________________________________________________________________
@@ -896,11 +923,11 @@ class ShapeFactory:
        
  
     # _____________________________________________________________________________
-    def _connectInputs(self, samples, inputDir):
+    def _connectInputs(self, samples, inputDir, skipMissingFiles):
         inputs = {}
         treeName = 'latino'
         for process,filenames in samples.iteritems():
-          tree = self._buildchain(treeName,[ (inputDir + '/' + f) for f in filenames])
+          tree = self._buildchain(treeName,[ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
           inputs[process] = tree
           # FIXME: add possibility to add Friend Trees for new variables   
          
@@ -927,20 +954,24 @@ class ShapeFactory:
       return False 
 
     # _____________________________________________________________________________
-    def _buildchain(self,treeName,files):
+    def _buildchain(self, treeName, files, skipMissingFiles):
         listTrees = []
         for path in files:
+            doesFileExist = True
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
             if "eos.cern.ch" not in path and "eosuser.cern.ch" not in path:
               if not os.path.exists(path):
                 print 'File '+path+' doesn\'t exists'
-                raise RuntimeError('File '+path+' doesn\'t exists')
+                doesFileExist = False
+                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
             else:
               if not self._testEosFile(path):
-                raise RuntimeError('File '+path+' doesn\'t exists')
-            tree = ROOT.TChain(treeName)
-            tree.Add(path)
-            listTrees.append(tree)
+                doesFileExist = False
+                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
+            if doesFileExist :
+              tree = ROOT.TChain(treeName)
+              tree.Add(path)
+              listTrees.append(tree)
         return listTrees
 
 

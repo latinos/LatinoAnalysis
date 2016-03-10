@@ -8,7 +8,7 @@ import os.path
 from LatinoAnalysis.Tools.userConfig  import *
 
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,useBatchDir=True,wDir=''):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',useBatchDir=True,wDir=''):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -38,7 +38,7 @@ class batchJobs :
          else:
            kTarget = iTarget
    
-         jName  = baseName+'__'+prodName+'__'+kStep+'__'+kTarget
+         jName  = baseName+'__'+prodName+'__'+kStep+'__'+kTarget+postFix
          self.jobsDic[iStep][iTarget] = jName
          if not jName in self.jobsList: self.jobsList.append(jName)
           
@@ -99,23 +99,30 @@ def batchStatus():
       Pend={}
       Runn={}
       Tota={}
+      FileRuns={}
       for iFile in FileList:
         jidFile=iFile.replace('.sh','.jid')
         iStep=iFile.split('__')[3]
+        iSample=iFile.split('__')[4].replace('.sh','')
         if not iStep in Done: Done[iStep] = 0
         if not iStep in Pend: Pend[iStep] = 0
         if not iStep in Runn: Runn[iStep] = 0
         if not iStep in Tota: Tota[iStep] = 0
+        if not iStep in FileRuns: FileRuns[iStep] = []
         Tota[iStep]+=1
         if os.path.isfile(jidFile):
           iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
           if 'PEND' in iStat : Pend[iStep]+=1
           else: Runn[iStep]+=1 
+          FileRuns[iStep].append(iSample)
         else:
           Done[iStep]+=1
       print iDir+' : '
       for iStep in Done:
-        print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' / TOTAL= '+str(Tota[iStep])
+        print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
+      print '   Samples not done:'
+      for iStep in Done:
+        print '     --> '+iStep+' : ',FileRuns[iStep]
 
 def batchClean():
     fileCmd = 'ls '+jobDir

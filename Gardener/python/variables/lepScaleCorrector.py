@@ -68,16 +68,17 @@ class LeptonPtCorrector(TreeCloner):
 
         #print " leppTsmearing = ", self.leppTsmearing
      
-        self.isData = opts.isData
+        self.isData = float(opts.isData)
         print " self.isData = ", self.isData
 
-    def _getScale (self, kindLep, pt, eta, run):
+    def _getScale (self, kindLep, pt, eta, run, r9_lep):
         
         if kindLep in self.leppTscaler.keys() : 
           for point in self.leppTscaler[kindLep] :
             if kindLep == 'ele':
+              if (point[2] == 'highR9' and r9_lep>=0.94) or (point[2] == 'lowR9' and r9_lep<0.94):  # FIXME new               
               # use only high R9 for electrons
-              if point[2] == 'highR9': 
+              #if point[2] == 'highR9': 
                 if run >= float(point[3])  and run < (float(point[4])+1) : 
                   if ( abs(eta) >= float(point[0]) and abs(eta) < float(point[1]) ) :
                     return float(point[5])
@@ -212,7 +213,9 @@ class LeptonPtCorrector(TreeCloner):
                 pt_lep = itree.std_vector_lepton_pt[i]
                 eta_lep = itree.std_vector_lepton_eta[i]
                 phi_lep = itree.std_vector_lepton_phi[i] 
-#                print "pt eta",pt_lep,eta_lep,phi_lep
+                #r9_lep = 0.                                  # FIXME new
+                r9_lep  = itree.std_vector_electron_R9[i]   # FIXME new
+                #print "pt eta phi r9 = ",pt_lep, ' ' , eta_lep, ' ' , phi_lep, ' ' , r9_lep
 
                 new_pt_lep = pt_lep
                 
@@ -225,11 +228,13 @@ class LeptonPtCorrector(TreeCloner):
 
                 # scale the data and smear the MC
                 if self.isData == 1 : 
-                  wt = self._getScale(kindLep, pt_lep, eta_lep, itree.run)
+                  wt = self._getScale(kindLep, pt_lep, eta_lep, itree.run, r9_lep)
+                  #print " wt = ", wt
                   new_pt_lep = itree.std_vector_lepton_pt[i] * wt
                   leptonPtChanged.append( itree.std_vector_lepton_pt[i] * wt )
                   #print " wt = ", wt
                 else :
+                  #print " seariously you are smearing? "
                   smearing = self._getSmearing(kindLep, pt_lep, eta_lep)
                   wt = -1
                   if smearing != 0:

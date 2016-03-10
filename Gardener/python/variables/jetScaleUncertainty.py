@@ -21,6 +21,7 @@ class JESTreeMaker(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-k', '--kind',   dest='kind', help='Kind of variation: -1, +1, +0.5, ...', default=1.0)
+	group.add_option('-m', '--maxUncertainty',   dest='maxUncertainty', help='Use maximum of JES uncertainties', default=False, action="store_true")
         parser.add_option_group(group)
         return group
 
@@ -30,6 +31,9 @@ class JESTreeMaker(TreeCloner):
         else :    
           self.kind   = 1.0 * float(opts.kind)
         print " kind of variation = ", self.kind
+
+	self.maxUncertainty = opts.maxUncertainty
+	print " Using maximum of JES uncertainties = ", self.maxUncertainty
 
     def changeOrder(self, vectorname, vector, jetOrderList) :
         # take vector and clone vector
@@ -91,7 +95,8 @@ class JESTreeMaker(TreeCloner):
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWVar.C++g')
 
         # Load jes uncertainty
-        jecUnc = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
+        jecUncFall15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Fall15_25nsV2_MC_Uncertainty_AK4PFchs.txt"))
+	jecUncSummer15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
         #----------------------------------------------------------------------------------------------------
         print '- Starting eventloop'
         step = 5000
@@ -107,9 +112,16 @@ class JESTreeMaker(TreeCloner):
             
             for i in range(itree.std_vector_jet_pt.size()):
                 if itree.std_vector_jet_pt[i] > 0:
-                    jecUnc.setJetEta(itree.std_vector_jet_eta[i])
-                    jecUnc.setJetPt(itree.std_vector_jet_pt[i])
-                    jetPtUp.append(itree.std_vector_jet_pt[i]*(1 + (self.kind) * (jecUnc.getUncertainty(True))))
+                    jecUncSummer15.setJetEta(itree.std_vector_jet_eta[i])
+                    jecUncSummer15.setJetPt(itree.std_vector_jet_pt[i])
+		    maxUnc = jecUncSummer15.getUncertainty(True)
+
+		    if self.maxUncertainty:
+		    	jecUncFall15.setJetEta(itree.std_vector_jet_eta[i])
+                    	jecUncFall15.setJetPt(itree.std_vector_jet_pt[i])
+		    	maxUnc = max(maxUnc,jecUncFall15.getUncertainty(True))
+
+                    jetPtUp.append(itree.std_vector_jet_pt[i]*(1 + (self.kind) * maxUnc))
                 else:
                     break
                 
