@@ -438,17 +438,36 @@ Module: genvariablesfiller
     
     gardener.py  genvariablesfiller    test.kin.root  test.mc.root
     gardener.py  genvariablesfiller    /tmp/amassiro/eos/user/j/jlauwers/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_DYJetsToLL_M-50_0000__part0.root   /tmp/amassiro/test.mc.root
+    gardener.py  genvariablesfiller    /tmp/amassiro/eos/user/j/jlauwers/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2Eff/latino_DYJetsToLL_M-50_0000__part0.root   /tmp/amassiro/test.mc.2.root
+    
+    
+    
+    latino->Draw("gen_mll / std_vector_VBoson_mass[0]","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_VBoson_mass[0]>0)", "same")
     
     
     latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15)")
     latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && gen_mll>80)", "same")
     
     latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15)")
-    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && gen_mll>80)", "same")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && std_vector_VBoson_mass[0]>80)", "same")
+    
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_VBoson_mass[0]>0) * (std_vector_lepton_isTightLepton[0]<0.5 || std_vector_lepton_isTightLepton[1]<0.5) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15)")
+    latino->Draw("std_vector_VBoson_mass[0]","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_VBoson_mass[0]>0) * (std_vector_lepton_isTightLepton[0]<0.5 || std_vector_lepton_isTightLepton[1]<0.5) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15)")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_VBoson_mass[0]>0) * (std_vector_lepton_isTightLepton[0]<0.5 || std_vector_lepton_isTightLepton[1]<0.5) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15)", "same")
+    
+    latino->Draw("std_vector_VBoson_mass[0]","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_VBoson_mass[0]>0) * (std_vector_lepton_isTightLepton[0]<0.5 || std_vector_lepton_isTightLepton[1]<0.5) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[1]<20)")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_VBoson_mass[0]>0) * (std_vector_lepton_isTightLepton[0]<0.5 || std_vector_lepton_isTightLepton[1]<0.5) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[1]<20)", "same")
     
     latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20)")
     latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20 && gen_mll>80)", "same")
     
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20)")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -11*11 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20 && gen_mll>80)", "same")
+    
+    
+    
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -13*13 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20)")
+    latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -13*13 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20 && gen_mll>80)", "same")
     
     
     
