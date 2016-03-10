@@ -215,7 +215,7 @@ class LeptonPtCorrector(TreeCloner):
                 phi_lep = itree.std_vector_lepton_phi[i] 
                 #r9_lep = 0.                                  # FIXME new
                 r9_lep  = itree.std_vector_electron_R9[i]   # FIXME new
-#                print "pt eta",pt_lep,eta_lep,phi_lep
+                print "pt eta phi r9 = ",pt_lep, ' ' , eta_lep, ' ' , phi_lep, ' ' , r9_lep
 
                 new_pt_lep = pt_lep
                 
