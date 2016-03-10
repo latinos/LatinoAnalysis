@@ -68,7 +68,7 @@ class LeptonPtCorrector(TreeCloner):
 
         #print " leppTsmearing = ", self.leppTsmearing
      
-        self.isData = opts.isData
+        self.isData = float(opts.isData)
         print " self.isData = ", self.isData
 
     def _getScale (self, kindLep, pt, eta, run, r9_lep):
@@ -229,10 +229,12 @@ class LeptonPtCorrector(TreeCloner):
                 # scale the data and smear the MC
                 if self.isData == 1 : 
                   wt = self._getScale(kindLep, pt_lep, eta_lep, itree.run, r9_lep)
+                  #print " wt = ", wt
                   new_pt_lep = itree.std_vector_lepton_pt[i] * wt
                   leptonPtChanged.append( itree.std_vector_lepton_pt[i] * wt )
                   #print " wt = ", wt
                 else :
+                  #print " seariously you are smearing? "
                   smearing = self._getSmearing(kindLep, pt_lep, eta_lep)
                   wt = -1
                   if smearing != 0:
