@@ -213,6 +213,7 @@ class LeptonPtCorrector(TreeCloner):
                 pt_lep = itree.std_vector_lepton_pt[i]
                 eta_lep = itree.std_vector_lepton_eta[i]
                 phi_lep = itree.std_vector_lepton_phi[i] 
+
                 if not self.isData == 1 : 
                   r9_lep = 0.                                  # FIXME new
                 else:
@@ -230,6 +231,8 @@ class LeptonPtCorrector(TreeCloner):
 
                 # scale the data and smear the MC
                 if self.isData == 1 : 
+                  #r9_lep = 0.                                  # FIXME new
+                  r9_lep  = itree.std_vector_electron_R9[i]   # FIXME new
                   wt = self._getScale(kindLep, pt_lep, eta_lep, itree.run, r9_lep)
                   #print " wt = ", wt
                   new_pt_lep = itree.std_vector_lepton_pt[i] * wt

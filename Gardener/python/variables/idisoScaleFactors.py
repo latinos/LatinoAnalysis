@@ -351,6 +351,10 @@ class IdIsoSFFiller(TreeCloner):
             if i > 0 and i%step == 0.:
               print i,'events processed.'
 
+            bvector_reco.clear()
+            bvector_reco_Up.clear()
+            bvector_reco_Down.clear()
+
             bvector_idiso.clear()
             bvector_idiso_Up.clear()
             bvector_idiso_Down.clear()

@@ -305,6 +305,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M125_CUETUp',
                                   'WWTo2L2Nu_CUETDown',
                                   'WWTo2L2Nu_CUETUp',
+				  # VBS
+				  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
                                  ] ,
                 },
 
