@@ -62,7 +62,7 @@ class batchJobs :
        jFile.write('ulimit -c 0\n')
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
-           jFile.write('cd /tmp/xjanssen \n')
+           jFile.write('cd $TMPDIR \n')
          else:
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
