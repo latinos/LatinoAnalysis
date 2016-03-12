@@ -278,7 +278,7 @@ for iProd in prodList :
       #print targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
-      if not iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
+      if  iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
         lSample = []
         for iTarget in targetList.keys(): 
           if   '_000' in iTarget :
@@ -356,9 +356,13 @@ for iProd in prodList :
             iKey = iTarget
 
           if options.redo or not 'latino_'+iKey+'.root' in FileExistList :
-            if not iKey in targetGroupList:
-              targetGroupList[iKey] = []
-            targetGroupList[iKey].append(targetList[iTarget])             
+            if not iKey in Steps['hadd']['bigSamples'] : 
+              if not iKey in targetGroupList:
+                targetGroupList[iKey] = []
+              targetGroupList[iKey].append(targetList[iTarget])             
+            else:
+              targetGroupList[iTarget] = []           
+              targetGroupList[iTarget].append(targetList[iTarget])             
 
         targetList = targetGroupList 
 
@@ -421,7 +425,10 @@ for iProd in prodList :
             
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           if len(targetList[iTarget]) == 1 :
-            command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
+            if not  'iihe' in os.uname()[1]:
+              command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
+            else:
+              outTree = 'srm://maite.iihe.ac.be:8443'+targetList[iTarget][0]
           else:
             command += 'hadd -f '+outTree+' ' 
             for iFile in targetList[iTarget] : command += iFile+' '
