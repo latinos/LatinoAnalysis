@@ -190,6 +190,7 @@ for iProd in prodList :
   print FileInList
 
   isFirstinChain = True
+  replaceStep=''
   previousStep=''
   targetListKeep={}
 
@@ -318,10 +319,13 @@ for iProd in prodList :
       if options.chain :
         if not isFirstinChain: 
           print "Gone hacking targetList for chain"
-          print startingStep,previousStep
+          #print startingStep,replaceStep,previousStep
           targetList = targetListKeep
           for i in targetList :
-            targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut).replace(startingStep,previousStep)
+            if not replaceStep:
+              targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut).replace(startingStep,previousStep)
+            else:
+              targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut).replace(replaceStep,previousStep)
           startingStep=previousStep
 
       #if options.chain and isNotFirstinChain: 
@@ -388,7 +392,8 @@ for iProd in prodList :
 
       # And now do/create to job for each target
       for iTarget in targetList.keys(): 
-        print "FOING : ",iTarget
+        print "DOING : ",iTarget
+        GarbageCollector=[]
         if '_000' in iTarget :
           iTargetOri = iTarget.split('_000')[0]
         elif '__part' in iTarget :
@@ -433,6 +438,7 @@ for iProd in prodList :
             command += 'hadd -f '+outTree+' ' 
             for iFile in targetList[iTarget] : command += iFile+' '
             command += ' ; ' 
+            GarbageCollector.append(outTree)
         # Chains of subTargets
         elif 'isChain' in Steps[iStep] and Steps[iStep]['isChain']:
           iName=''
@@ -473,6 +479,7 @@ for iProd in prodList :
               outTree ='latino_'+iTarget+'__'+iName+'.root'
               command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
               finalTree=outTree
+              GarbageCollector.append(outTree)
 
           # Tree to be kept:
           outTree = finalTree  
@@ -481,6 +488,7 @@ for iProd in prodList :
         else:
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
+          GarbageCollector.append(outTree)
 
         # Fix CMSSW flag
         command = command.replace('RPLME_CMSSW',options.cmssw)
@@ -542,7 +550,9 @@ for iProd in prodList :
             command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
           else:
             command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
-          command+='; rm '+outTree
+
+        for iGarbage in GarbageCollector: 
+          command+='; rm '+iGarbage
 
         logFile=wDir+'/log__'+iTarget+'.log'
         if options.quiet :
@@ -556,6 +566,7 @@ for iProd in prodList :
 
       if options.chain :
         isFirstinChain = False
+        replaceStep=previousStep
         previousStep=startingStep+'__'+iStep
         targetListKeep=targetList
       else:
