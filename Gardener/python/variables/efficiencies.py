@@ -277,6 +277,25 @@ class EffTrgFiller(TreeCloner):
                       (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
                       (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
+          # Single lepton only
+          
+          #                   ele                    ele
+          if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
+            evt_eff_snglEle = eff_sgl_1 + (1-eff_sgl_1) * eff_sgl_2
+            evt_eff_snglMu  = 0.0
+          #                   mu                     mu
+          if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
+            evt_eff_snglEle = 0.0
+            evt_eff_snglMu  = eff_sgl_1 + (1-eff_sgl_1) * eff_sgl_2
+          #                   mu                     ele       
+          if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
+            evt_eff_snglEle = eff_sgl_2
+            evt_eff_snglMu  = eff_sgl_1
+          #                   ele                     mu                   
+          if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
+            evt_eff_snglEle = eff_sgl_1
+            evt_eff_snglMu  = eff_sgl_2
+
           # up variation ...
           
           eff_dbl_1_leadingleg  = high_eff_dbl_1_leadingleg    
@@ -310,10 +329,10 @@ class EffTrgFiller(TreeCloner):
                       (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
           
-          return evt_eff, evt_eff_error_low, evt_eff_error_up
+          return evt_eff, evt_eff_error_low, evt_eff_error_up ,  evt_eff_snglEle , evt_eff_snglMu
         else : 
           # if for any reason it is not a lepton ... 
-          return 1, 1, 1
+          return 1, 1, 1 , 1 , 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # _get3lWeight
@@ -479,11 +498,11 @@ class EffTrgFiller(TreeCloner):
 
           evt_eff_high = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
           
-          return evt_eff, evt_eff_low, evt_eff_high
+          return evt_eff, evt_eff_low, evt_eff_high 
 
         else : 
 
-          return 1, 1, 1
+          return 1, 1, 1 
 
 
     def process(self,**kwargs):
@@ -505,7 +524,9 @@ class EffTrgFiller(TreeCloner):
            'effTrigW_Down',
            'effTrigW3l',
            'effTrigW3l_Up',
-           'effTrigW3l_Down'
+           'effTrigW3l_Down',
+           'effTrigW_SnglEle',
+           'effTrigW_SnglMu',
            ]
         
         # clone the tree
@@ -546,16 +567,20 @@ class EffTrgFiller(TreeCloner):
             self.branches['effTrigW3l']     [0] = 1.0
             self.branches['effTrigW3l_Up']  [0] = 1.0
             self.branches['effTrigW3l_Down'][0] = 1.0
+            self.branches['effTrigW_SnglEle'][0] = 1.0
+            self.branches['effTrigW_SnglMu'][0] = 1.0
                
             # 2-lepton trigger weight
             if itree.std_vector_lepton_flavour.size() >= 2 :
-              self.branches['effTrigW'][0], self.branches['effTrigW_Down'][0], self.branches['effTrigW_Up'][0] = \
+              self.branches['effTrigW'][0], self.branches['effTrigW_Down'][0], self.branches['effTrigW_Up'][0] , self.branches['effTrigW_SnglEle'][0] , self.branches['effTrigW_SnglMu'][0] = \
                   self._getWeight(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
                                   itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1])
             else :
               self.branches['effTrigW']     [0] = 0.0
               self.branches['effTrigW_Down'][0] = 0.0
               self.branches['effTrigW_Up']  [0] = 0.0
+              self.branches['effTrigW_SnglEle'][0] = 0.0
+              self.branches['effTrigW_SnglMu'][0] = 0.0
 
             # 3-lepton trigger weight
             if itree.std_vector_lepton_flavour.size() >= 3 :

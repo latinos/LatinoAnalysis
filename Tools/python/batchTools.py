@@ -45,21 +45,34 @@ class batchJobs :
      # Create job and init files (loop on Steps,Targets)
      if not os.path.exists(self.subDir) : os.system('mkdir -p '+self.subDir)
      CMSSW=os.environ["CMSSW_BASE"]
+     SCRAMARCH=os.environ["SCRAM_ARCH"]
      for jName in self.jobsList:
        jFile = open(self.subDir+'/'+jName+'.sh','w')
        jFile.write('#!/bin/bash\n')
-       jFile.write('#$ -N '+jName+'\n')
-       jFile.write('#$ -q all.q\n')
-       jFile.write('#$ -cwd\n')
+       if 'cern' in os.uname()[1]:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('#$ -q all.q\n')
+         jFile.write('#$ -cwd\n')
+       else:
+         jFile.write('export X509_USER_PROXY=/localgrid/xjanssen/.proxy\n')
+       jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
        jFile.write('ulimit -c 0\n')
-       if    useBatchDir : jFile.write('cd - \n')
+       if    useBatchDir : 
+         if 'iihe' in os.uname()[1]:
+           jFile.write('cd $TMPDIR \n')
+         else:
+           jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
        jFile.close()
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
+     # Create Proxy at IIHE
+     if 'iihe'  in os.uname()[1]:
+       os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
+       os.system('cp $X509_USER_PROXY /localgrid/xjanssen/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -81,9 +94,15 @@ class batchJobs :
         jFile.close()
         jidFile=self.subDir+'/'+jName+'.jid'
         print 'Submit',jName
-        #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
-        jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-        #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        if 'iihe' in os.uname()[1] : 
+          queue='localgrid@cream02'
+          QSOPT=''
+          jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+
+        else:
+          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
 def batchStatus():
     fileCmd = 'ls '+jobDir
