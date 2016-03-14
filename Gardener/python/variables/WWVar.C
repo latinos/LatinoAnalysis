@@ -74,6 +74,7 @@ public:
  float vht_pt();
  float vht_phi();
  float ht();
+ float htmiss();
  
  //---- to reject Wg*
  float mllThird();
@@ -750,11 +751,38 @@ float WW::ht(){
 }
 
 
+float WW::htmiss(){ 
+ if (_isOk && _leptonspt.size() > 0) {
+  TLorentzVector htmiss_enhanced;
+  for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+   if (_leptonspt.at(ilep) > 10) {  //---- 10 GeV threshold for leptons
+    TLorentzVector lepton_temp;
+    
+    htmiss_enhanced += _leptonspt.at(ilep);
+   }
+  }
+  for (unsigned int ijet = 0; ijet < _jetspt.size(); ijet++) {
+   if (_jetspt.at(ijet) > 30) {
+    ht_value += _jetspt.at(ijet);
+   }
+  }
+  ht_value += MET.Pt();
+  return  ht_value;
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+
+
+
 float WW::vht_pt(){ 
  if (_isOk && _leptonspt.size() > 0) {
    TLorentzVector vht_Vector;
    for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
-    if (_leptonspt.at(ilep) > 0) {
+    if (_leptonspt.at(ilep) > 10) {  //---- 10 GeV threshold for leptons
      TLorentzVector Ltemp;
      Ltemp.SetPtEtaPhiM(_leptonspt.at(ilep), _leptonseta.at(ilep), _leptonsphi.at(ilep), 0.);
      vht_Vector += Ltemp;
