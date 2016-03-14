@@ -155,21 +155,21 @@ class DatacardFactory:
             totalNumberSamples = len(self.signals) + len(self.backgrounds)
             columndef = 25
             
-            card.write('bin'.ljust(70) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
+            card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
 
-            columndef = 15
+            columndef = 18
             
-            card.write('process'.ljust(70))
+            card.write('process'.ljust(80))
             card.write(''.join([name.ljust(columndef) for name in self.signals]))
             card.write(''.join([name.ljust(columndef) for name in self.backgrounds]))
             card.write('\n')
 
-            card.write('process'.ljust(70))
+            card.write('process'.ljust(80))
             card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(len(self.signals))     ]))
             card.write(''.join([('%d' % (iSample+1)).ljust(columndef) for iSample in range(len(self.backgrounds)) ]))
             card.write('\n')
 
-            card.write('rate'.ljust(70))
+            card.write('rate'.ljust(80))
             card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef) for name in self.signals    ]))
             card.write(''.join([('%-.4f' % yieldsBkg[name]).ljust(columndef) for name in self.backgrounds]))
             card.write('\n')
@@ -204,7 +204,7 @@ class DatacardFactory:
                   if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
                     #print "nuisance[type] = ", nuisance ['type']
                     if nuisance ['type'] == 'lnN' or nuisance ['type'] == 'lnU' :
-                      card.write((nuisance['name']).ljust(70-20))
+                      card.write((nuisance['name']).ljust(80-20))
                       card.write((nuisance ['type']).ljust(20))
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                         #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
@@ -228,7 +228,7 @@ class DatacardFactory:
                             card.write(('-').ljust(columndef))
                              
                     elif nuisance ['type'] == 'shape' :
-                      card.write(("CMS_" + (nuisance['name'])).ljust(70-20))
+                      card.write(("CMS_" + (nuisance['name'])).ljust(80-20))
                       card.write((nuisance ['type']).ljust(20))
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                         card.write(''.join([('1.000').ljust(columndef) for name in self.signals      ]))
@@ -276,7 +276,7 @@ class DatacardFactory:
                     if sampleName in nuisance['samples'].keys() :
                       if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                        
-                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(70-20))
+                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
                         card.write((nuisance ['type']).ljust(20))
                 
                         # write line in datacard
@@ -309,7 +309,7 @@ class DatacardFactory:
                 
                          for iBin in range(1, histoTemplate.GetNbinsX()+1):
                        
-                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(70-20))
+                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(80-20))
                            card.write((nuisance ['type']).ljust(20))
                 
                            # write line in datacard
@@ -338,7 +338,7 @@ class DatacardFactory:
                     if sampleName in nuisance['samples'].keys() :
                       if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                        
-                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(70-20))
+                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
                         card.write((nuisance ['type']).ljust(20))
                 
                         # write line in datacard
@@ -371,7 +371,7 @@ class DatacardFactory:
                 
                          for iBin in range(1, histoTemplate.GetNbinsX()+1):
                        
-                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(70-20))
+                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(80-20))
                            card.write((nuisance ['type']).ljust(20))
                 
                            # write line in datacard
@@ -406,7 +406,7 @@ class DatacardFactory:
                     # 'rateParam' has a separate treatment -> it's just a line at the end of the datacard. It defines "free floating" samples
                     # I do it here and not before because I want the freee floating parameters at the end of the datacard
                     if nuisance ['type'] == 'rateParam' :
-                      card.write((nuisance['name']).ljust(70-20))
+                      card.write((nuisance['name']).ljust(80-20))
                       card.write((nuisance ['type']).ljust(20))
                       card.write((tagNameToAppearInDatacard).ljust(30))   # the bin
                       # apply only to selected samples
