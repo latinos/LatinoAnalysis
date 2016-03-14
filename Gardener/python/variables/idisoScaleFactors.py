@@ -163,6 +163,7 @@ class IdIsoSFFiller(TreeCloner):
           
                 if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
                      pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
+                    
                     data = float(point[4])
                     mc   = float(point[6])
           
