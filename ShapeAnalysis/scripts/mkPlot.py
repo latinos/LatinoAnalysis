@@ -104,6 +104,8 @@ class ShapeFactory:
 
             #print '... after thstack ...'
 
+	    sigSupList    = []
+
             # enhanced list of nuisances, including bin-by-bin 
             mynuisances = {}
 
@@ -159,7 +161,8 @@ class ShapeFactory:
               # MC style
               if plot[sampleName]['isData'] == 0 :
                 # only background "filled" histogram
-                if plot[sampleName]['isSignal'] == 0 : 
+#                if (plot[sampleName]['isSignal'] == 0) and (plot[sampleName]['isSignalSup'] == 0):
+                if plot[sampleName]['isSignal'] == 0: 
                   histos[sampleName].SetFillColor(plot[sampleName]['color'])
                   histos[sampleName].SetFillStyle(3001)
                 else :
@@ -172,6 +175,10 @@ class ShapeFactory:
                 
                 if plot[sampleName]['isSignal'] == 1 :
                   thsSignal.Add(histos[sampleName])
+#                if plot[sampleName]['isSignalSup'] == 1 :
+                if plot[sampleName]['isSignal'] == 2 :
+                  print "SigSup histo: ", histos[sampleName]
+		  sigSupList.append(histos[sampleName])
                 else :
                   thsBackground.Add(histos[sampleName])
                   #print " adding to background: ", sampleName
@@ -548,6 +555,12 @@ class ShapeFactory:
               tgrMCOverMC.SetFillStyle(3004)
               tgrMC.Draw("2")
 
+
+	    #     - then the superimposed MC
+            if len(sigSupList) != 0:
+              for hist in sigSupList:
+                hist.Draw("hist same")
+   
             #     - then the DATA  
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
@@ -556,8 +569,6 @@ class ShapeFactory:
                 if plot[sampleName]['isData'] == 1 :
                   histos[sampleName].Draw("p same")
 
-            
-  
             #---- the Legend
             tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
             tlegend.SetFillColor(0)
@@ -678,6 +689,11 @@ class ShapeFactory:
            
             if (len(mynuisances.keys())!=0):
               tgrMC.Draw("2")
+             
+            #     - then the superimposed MC
+            if len(sigSupList) != 0:
+              for hist in sigSupList:
+                hist.Draw("hist same")
 
             #     - then the DATA  
             if tgrData.GetN() != 0:
