@@ -161,7 +161,6 @@ class ShapeFactory:
               # MC style
               if plot[sampleName]['isData'] == 0 :
                 # only background "filled" histogram
-#                if (plot[sampleName]['isSignal'] == 0) and (plot[sampleName]['isSignalSup'] == 0):
                 if plot[sampleName]['isSignal'] == 0: 
                   histos[sampleName].SetFillColor(plot[sampleName]['color'])
                   histos[sampleName].SetFillStyle(3001)
@@ -175,7 +174,6 @@ class ShapeFactory:
                 
                 if plot[sampleName]['isSignal'] == 1 :
                   thsSignal.Add(histos[sampleName])
-#                if plot[sampleName]['isSignalSup'] == 1 :
                 if plot[sampleName]['isSignal'] == 2 :
                   print "SigSup histo: ", histos[sampleName]
 		  sigSupList.append(histos[sampleName])
