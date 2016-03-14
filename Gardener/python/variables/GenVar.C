@@ -19,7 +19,12 @@ public:
  
  //! set functions
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
- void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
+ void setLeptons(std::vector<float> invectorpt,std::vector<float> invectoreta, std::vector<float> invectorphi,
+                 std::vector<float> invectorflavour,
+                 std::vector<float> Status,
+                 std::vector<float> IsPrompt,
+                 std::vector<float> MotherPID,
+                 std::vector<float> MotherStatus);
  void setNeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setMET  (float met, float metphi);
  
@@ -48,6 +53,9 @@ private:
  std::vector<float> _leptonseta;
  std::vector<float> _leptonsphi;
  std::vector<float> _leptonsflavour;
+ std::vector<float> _leptonsStatus;
+ std::vector<float> _leptonsMotherPID;
+ std::vector<float> _leptonsMotherStatus;
 
  std::vector<float> _neutrinospt;
  std::vector<float> _neutrinoseta;
@@ -88,11 +96,21 @@ void GenVar::setJets(std::vector<float> invectorpt, std::vector<float> invectore
  }
 }
 
-void GenVar::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
- _leptonspt      = invectorpt;
- _leptonseta     = invectoreta;
- _leptonsphi     = invectorphi;
- _leptonsflavour = invectorflavour;
+void GenVar::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi,
+                        std::vector<float> invectorflavour,
+                        std::vector<float> Status,
+                        std::vector<float> IsPrompt,
+                        std::vector<float> MotherPID,
+                        std::vector<float> MotherStatus
+			) {
+
+ _leptonspt      	= invectorpt;
+ _leptonseta     	= invectoreta;
+ _leptonsphi     	= invectorphi;
+ _leptonsflavour 	= invectorflavour;
+ _leptonsStatus  	= Status;
+ _leptonsMotherPID 	= MotherPID;
+ _leptonsMotherStatus 	= MotherStatus;
  
  _lepOk = 0;
  for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
