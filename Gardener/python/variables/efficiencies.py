@@ -271,11 +271,27 @@ class EffTrgFiller(TreeCloner):
           eff_sgl_2             , low_eff_sgl_2             , high_eff_sgl_2              = self._getEff (pt2, eta2, singleLegB)
           
           
+          #evt_eff =   eff_sgl_1 + eff_sgl_2 -    \
+                      #eff_sgl_1*eff_sgl_2 +   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+                      #(eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+
           evt_eff =   eff_sgl_1 + eff_sgl_2 -    \
                       eff_sgl_1*eff_sgl_2 +   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
-                      (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
+                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
+                      dz_eff
+
+
+          #evt_eff_old =   eff_sgl_1 + eff_sgl_2 -    \
+                      #eff_sgl_1*eff_sgl_2 +   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+                      #(eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+          
+          #print " evt_eff, evt_eff_old = ", evt_eff ," , ", evt_eff_old
+          
           
           # Single lepton only
           
