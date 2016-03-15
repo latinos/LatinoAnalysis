@@ -298,15 +298,19 @@ class EffTrgFiller(TreeCloner):
 
           # Double lepton only
           
-          eff_tl = eff_dbl_1_leadingleg * eff_dbl_2_trailingleg
+          eff_tl = eff_dbl_1_leadingleg * eff_dbl_2_trailingleg 
           eff_lt = eff_dbl_2_leadingleg * eff_dbl_1_trailingleg
           #                   ele                    ele
           if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
+            eff_tl *= dz_eff
+            eff_lt *= dz_eff
             evt_eff_dbleEle = eff_tl + (1-eff_tl) * eff_lt
             evt_eff_dbleMu  = 0.0
             evt_eff_EleMu   = 0.0
           #                   mu                     mu
           if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
+            eff_tl *= dz_eff
+            eff_lt *= dz_eff
             evt_eff_dbleEle = 0.0
             evt_eff_dbleMu  = eff_tl + (1-eff_tl) * eff_lt
             evt_eff_EleMu   = 0.0
@@ -335,10 +339,12 @@ class EffTrgFiller(TreeCloner):
             # DbleEle
             Leg1_tl  = eff_dbl_1_leadingleg  > ROOT.gRandom.Rndm()
             Leg2_tl  = eff_dbl_2_trailingleg > ROOT.gRandom.Rndm()
-            Leg12_tl = Leg1_tl and Leg2_tl
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_tl = Leg1_tl and Leg2_tl and DZpass
             Leg1_lt  = eff_dbl_2_leadingleg  > ROOT.gRandom.Rndm()
             Leg2_lt  = eff_dbl_1_trailingleg > ROOT.gRandom.Rndm()
-            Leg12_lt = Leg1_lt and Leg2_lt
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_lt = Leg1_lt and Leg2_lt and DZpass
             TrgEmulator[3] = Leg12_tl or Leg12_lt 
           #                   mu                     mu
           if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
@@ -349,10 +355,12 @@ class EffTrgFiller(TreeCloner):
             # DbleMu 
             Leg1_tl  = eff_dbl_1_leadingleg  > ROOT.gRandom.Rndm()
             Leg2_tl  = eff_dbl_2_trailingleg > ROOT.gRandom.Rndm()
-            Leg12_tl = Leg1_tl and Leg2_tl
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_tl = Leg1_tl and Leg2_tl and DZpass
             Leg1_lt  = eff_dbl_2_leadingleg  > ROOT.gRandom.Rndm()
             Leg2_lt  = eff_dbl_1_trailingleg > ROOT.gRandom.Rndm()
-            Leg12_lt = Leg1_lt and Leg2_lt
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_lt = Leg1_lt and Leg2_lt and DZpass
             TrgEmulator[4] = Leg12_tl or Leg12_lt
           #                   mu                     ele       
           if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
