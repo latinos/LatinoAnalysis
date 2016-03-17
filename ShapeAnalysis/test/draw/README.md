@@ -127,3 +127,11 @@ Example:
          DrawCompare.cxx\(\"std_vector_lepton_id[0]\",100,-30,30\)
     
     
+    
+    
+    
+    r99t /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_DYJetsToLL_M-50_0000__part0.root  \
+         /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_DYJetsToLL_M-50-LO__part0.root  \
+         DrawCompare.cxx\(\"ptll\",100,0,200,\"std_vector_lepton_pt[1]\>15\"\)
+    
+    

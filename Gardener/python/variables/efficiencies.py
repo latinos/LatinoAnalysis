@@ -271,11 +271,27 @@ class EffTrgFiller(TreeCloner):
           eff_sgl_2             , low_eff_sgl_2             , high_eff_sgl_2              = self._getEff (pt2, eta2, singleLegB)
           
           
+          #evt_eff =   eff_sgl_1 + eff_sgl_2 -    \
+                      #eff_sgl_1*eff_sgl_2 +   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+                      #(eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+
           evt_eff =   eff_sgl_1 + eff_sgl_2 -    \
                       eff_sgl_1*eff_sgl_2 +   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
-                      (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
+                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
+                      dz_eff
+
+
+          #evt_eff_old =   eff_sgl_1 + eff_sgl_2 -    \
+                      #eff_sgl_1*eff_sgl_2 +   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+                      #(eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+                      #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+          
+          #print " evt_eff, evt_eff_old = ", evt_eff ," , ", evt_eff_old
+          
           
           # Single lepton only
           
@@ -296,6 +312,104 @@ class EffTrgFiller(TreeCloner):
             evt_eff_snglEle = eff_sgl_1
             evt_eff_snglMu  = eff_sgl_2
 
+          # Double lepton only
+          
+          eff_tl = eff_dbl_1_leadingleg * eff_dbl_2_trailingleg 
+          eff_lt = eff_dbl_2_leadingleg * eff_dbl_1_trailingleg
+          #                   ele                    ele
+          if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
+            eff_tl *= dz_eff
+            eff_lt *= dz_eff
+            evt_eff_dbleEle = eff_tl + (1-eff_tl) * eff_lt
+            evt_eff_dbleMu  = 0.0
+            evt_eff_EleMu   = 0.0
+          #                   mu                     mu
+          if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
+            eff_tl *= dz_eff
+            eff_lt *= dz_eff
+            evt_eff_dbleEle = 0.0
+            evt_eff_dbleMu  = eff_tl + (1-eff_tl) * eff_lt
+            evt_eff_EleMu   = 0.0
+          #                   mu                     ele       
+          if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
+            evt_eff_dbleEle = 0.0
+            evt_eff_dbleMu  = 0.0
+            evt_eff_EleMu   = eff_tl + (1-eff_tl) * eff_lt
+          #                   ele                     mu                   
+          if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
+            evt_eff_dbleEle = 0.0
+            evt_eff_dbleMu  = 0.0
+            evt_eff_EleMu   = eff_tl + (1-eff_tl) * eff_lt
+
+          # And the Trigger Emulation
+          # 0: Combo / 1:SnglEle / 2: SnglMu / 3:DbleEle / 4:DbleMu / 5: EleMu
+
+          TrgEmulator = [ False , False , False , False , False , False ]
+
+          #                   ele                    ele
+          if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
+            # SnglEle
+            Leg1 = eff_sgl_1  > ROOT.gRandom.Rndm()
+            Leg2 = eff_sgl_2  > ROOT.gRandom.Rndm()
+            TrgEmulator[1] = Leg1 or Leg2           
+            # DbleEle
+            Leg1_tl  = eff_dbl_1_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_tl  = eff_dbl_2_trailingleg > ROOT.gRandom.Rndm()
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_tl = Leg1_tl and Leg2_tl and DZpass
+            Leg1_lt  = eff_dbl_2_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_lt  = eff_dbl_1_trailingleg > ROOT.gRandom.Rndm()
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_lt = Leg1_lt and Leg2_lt and DZpass
+            TrgEmulator[3] = Leg12_tl or Leg12_lt 
+          #                   mu                     mu
+          if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
+            # SnglMu 
+            Leg1 = eff_sgl_1  > ROOT.gRandom.Rndm()
+            Leg2 = eff_sgl_2  > ROOT.gRandom.Rndm()
+            TrgEmulator[2] = Leg1 or Leg2
+            # DbleMu 
+            Leg1_tl  = eff_dbl_1_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_tl  = eff_dbl_2_trailingleg > ROOT.gRandom.Rndm()
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_tl = Leg1_tl and Leg2_tl and DZpass
+            Leg1_lt  = eff_dbl_2_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_lt  = eff_dbl_1_trailingleg > ROOT.gRandom.Rndm()
+            DZpass   = dz_eff > ROOT.gRandom.Rndm()
+            Leg12_lt = Leg1_lt and Leg2_lt and DZpass
+            TrgEmulator[4] = Leg12_tl or Leg12_lt
+          #                   mu                     ele       
+          if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
+            # SnglEle
+            TrgEmulator[1] = eff_sgl_2  > ROOT.gRandom.Rndm()
+            # SnglMu
+            TrgEmulator[2] = eff_sgl_1  > ROOT.gRandom.Rndm()
+            # EleMu 
+            Leg1_tl  = eff_dbl_1_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_tl  = eff_dbl_2_trailingleg > ROOT.gRandom.Rndm()
+            Leg12_tl = Leg1_tl and Leg2_tl
+            Leg1_lt  = eff_dbl_2_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_lt  = eff_dbl_1_trailingleg > ROOT.gRandom.Rndm()
+            Leg12_lt = Leg1_lt and Leg2_lt
+            TrgEmulator[5] = Leg12_tl or Leg12_lt
+          #                   ele                    mu        
+          if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
+            # SnglEle
+            TrgEmulator[1] = eff_sgl_1  > ROOT.gRandom.Rndm()
+            # SnglMu
+            TrgEmulator[2] = eff_sgl_2  > ROOT.gRandom.Rndm()
+            # EleMu 
+            Leg1_tl  = eff_dbl_1_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_tl  = eff_dbl_2_trailingleg > ROOT.gRandom.Rndm()
+            Leg12_tl = Leg1_tl and Leg2_tl
+            Leg1_lt  = eff_dbl_2_leadingleg  > ROOT.gRandom.Rndm()
+            Leg2_lt  = eff_dbl_1_trailingleg > ROOT.gRandom.Rndm()
+            Leg12_lt = Leg1_lt and Leg2_lt
+            TrgEmulator[5] = Leg12_tl or Leg12_lt
+
+          # ...And the grand combo:
+          TrgEmulator[0] = TrgEmulator[1] or TrgEmulator[2] or TrgEmulator[3] or TrgEmulator[4] or TrgEmulator[5] 
+
           # up variation ...
           
           eff_dbl_1_leadingleg  = high_eff_dbl_1_leadingleg    
@@ -304,13 +418,20 @@ class EffTrgFiller(TreeCloner):
           eff_dbl_2_trailingleg = high_eff_dbl_2_trailingleg   
           eff_sgl_1             = high_eff_sgl_1               
           eff_sgl_2             = high_eff_sgl_2            
-          
-          
+         
+
           evt_eff_error_up =   eff_sgl_1 + eff_sgl_2 -    \
                       eff_sgl_1*eff_sgl_2 +   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
-                      (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
+                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
+                      dz_eff
+ 
+          
+          #evt_eff_error_up =   eff_sgl_1 + eff_sgl_2 -    \
+          #            eff_sgl_1*eff_sgl_2 +   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+          #            (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
        
           # and low variation ...
@@ -320,19 +441,26 @@ class EffTrgFiller(TreeCloner):
           eff_dbl_2_trailingleg = low_eff_dbl_2_trailingleg  
           eff_sgl_1             = low_eff_sgl_1              
           eff_sgl_2             = low_eff_sgl_2              
-       
-          
+
           evt_eff_error_low =   eff_sgl_1 + eff_sgl_2 -    \
                       eff_sgl_1*eff_sgl_2 +   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
-                      (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
+                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
+                      dz_eff
+       
+          
+          #evt_eff_error_low =   eff_sgl_1 + eff_sgl_2 -    \
+          #            eff_sgl_1*eff_sgl_2 +   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+          #            (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
           
-          return evt_eff, evt_eff_error_low, evt_eff_error_up ,  evt_eff_snglEle , evt_eff_snglMu
+          return evt_eff, evt_eff_error_low, evt_eff_error_up ,  evt_eff_snglEle , evt_eff_snglMu , evt_eff_dbleEle , evt_eff_dbleMu , evt_eff_EleMu , TrgEmulator
         else : 
           # if for any reason it is not a lepton ... 
-          return 1, 1, 1 , 1 , 1
+          TrgEmulator = [ False , False , False , False , False , False ]
+          return 1, 1, 1 , 1 , 1 , 1 , 1 , 1 , TrgEmulator
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # _get3lWeight
@@ -527,8 +655,11 @@ class EffTrgFiller(TreeCloner):
            'effTrigW3l_Down',
            'effTrigW_SnglEle',
            'effTrigW_SnglMu',
+           'effTrigW_DbleEle',
+           'effTrigW_DbleMu',
+           'effTrigW_EleMu',
            ]
-        
+
         # clone the tree
         self.clone(output, self.namesBranches)
 
@@ -543,6 +674,12 @@ class EffTrgFiller(TreeCloner):
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
 
+        self.namesOldBranchesToBeModifiedVector = [
+           'std_vector_TrgEmulator'
+        ]
+
+        bvector_TrgEmulator =  ROOT.std.vector(bool) ()
+        self.otree.Branch('std_vector_TrgEmulator',bvector_TrgEmulator)
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -569,18 +706,33 @@ class EffTrgFiller(TreeCloner):
             self.branches['effTrigW3l_Down'][0] = 1.0
             self.branches['effTrigW_SnglEle'][0] = 1.0
             self.branches['effTrigW_SnglMu'][0] = 1.0
-               
+            self.branches['effTrigW_DbleEle'][0] = 1.0
+            self.branches['effTrigW_DbleMu'][0] = 1.0
+            self.branches['effTrigW_EleMu'][0] = 1.0
+
+            bvector_TrgEmulator.clear()
+
+            #evt_eff_dbleEle , evt_eff_dble_Mu , evt_eff_EleMu , TrgEmulator   
             # 2-lepton trigger weight
             if itree.std_vector_lepton_flavour.size() >= 2 :
-              self.branches['effTrigW'][0], self.branches['effTrigW_Down'][0], self.branches['effTrigW_Up'][0] , self.branches['effTrigW_SnglEle'][0] , self.branches['effTrigW_SnglMu'][0] = \
+              self.branches['effTrigW'][0], self.branches['effTrigW_Down'][0], self.branches['effTrigW_Up'][0] , \
+              self.branches['effTrigW_SnglEle'][0] , self.branches['effTrigW_SnglMu'][0] , \
+              self.branches['effTrigW_DbleEle'][0] , self.branches['effTrigW_DbleMu'][0] , self.branches['effTrigW_EleMu'][0] , \
+              TrgEmulator = \
                   self._getWeight(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
-                                  itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1])
+                                   itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1])
+              #print TrgEmulator
+              for iEmu in TrgEmulator: bvector_TrgEmulator.push_back(iEmu)
             else :
               self.branches['effTrigW']     [0] = 0.0
               self.branches['effTrigW_Down'][0] = 0.0
               self.branches['effTrigW_Up']  [0] = 0.0
               self.branches['effTrigW_SnglEle'][0] = 0.0
               self.branches['effTrigW_SnglMu'][0] = 0.0
+              self.branches['effTrigW_DbleEle'][0] = 0.0
+              self.branches['effTrigW_DbleMu'][0] = 0.0
+              self.branches['effTrigW_EleMu'][0] = 0.0
+              for x in range(0, 5): bvector_TrgEmulator.push_back(False)
 
             # 3-lepton trigger weight
             if itree.std_vector_lepton_flavour.size() >= 3 :

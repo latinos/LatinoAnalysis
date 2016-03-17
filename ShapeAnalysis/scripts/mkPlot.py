@@ -756,6 +756,7 @@ class ShapeFactory:
             # draw back all the axes            
             #frameRatio.Draw("AXIS")
             pad2.RedrawAxis()
+            pad2.SetGrid()
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")

@@ -1,5 +1,7 @@
 void DrawCompare(std::string var, int nbin, float min, float max, std::string weightAndCut = "1") {
  
+ weightAndCut = "(" + weightAndCut + ")*( GEN_weight_SM/abs(GEN_weight_SM) )";
+ 
  TTree* myTree_0 = (TTree*) _file0 -> Get("latino");
  TH1F* h_0 = new TH1F("h_0","",nbin,min,max);
  h_0->Sumw2();
