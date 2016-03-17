@@ -218,37 +218,43 @@ Steps= {
                   'do4Data'    : False,
                   'subTargets' : ['l1loose','puadder','baseW','wwNLL'],
                   'onlySample' : [
-                                  # DY 
+                                  #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
-                                  # Top
-                                  'TTTo2L2Nu',
-                                  'ST_t-channel_antitop','ST_t-channel_top',
-                                  'ST_tW_antitop','ST_tW_top',
-                                  # VV (including WW) 
-                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
-                                  'WZTo3LNu',
-                                  'ZZ','Zg',
-                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
-                                  # VVV
-                                  'WZZ','ZZZ','WWZ',
-                                  # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
-                                  'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
-                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
-                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
-                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
-                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  ####
+                                  'WJetsToLNu',
+                                  ####
+                                  'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
+                                  'QCD_Pt-20toInf_MuEnrichedPt15' ,
+
+                                  #### Top
+                                  #'TTTo2L2Nu',
+                                  #'ST_t-channel_antitop','ST_t-channel_top',
+                                  #'ST_tW_antitop','ST_tW_top',
+                                  #### VV (including WW) 
+                                  #'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
+                                  #'WZTo3LNu',
+                                  #'ZZ','Zg',
+                                  #'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
+                                  #'Wg_AMCNLOFXFX',
+                                  ### VVV
+                                  #'WZZ','ZZZ','WWZ',
+                                  #### Higgs 
+                                  #'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                                  #'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
+                                  #'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  #'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  #'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  #'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  #'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   # PS
-                                  'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
+                                  #'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
                                   # UE
-                                  'GluGluHToWWTo2L2Nu_M125_CUETDown',
-                                  'GluGluHToWWTo2L2Nu_M125_CUETUp',
-                                  'VBFHToWWTo2L2Nu_M125_CUETDown',
-                                  'VBFHToWWTo2L2Nu_M125_CUETUp',
-                                  'WWTo2L2Nu_CUETDown',
-                                  'WWTo2L2Nu_CUETUp',
+                                  #'GluGluHToWWTo2L2Nu_M125_CUETDown',
+                                  #'GluGluHToWWTo2L2Nu_M125_CUETUp',
+                                  #'VBFHToWWTo2L2Nu_M125_CUETDown',
+                                  #'VBFHToWWTo2L2Nu_M125_CUETUp',
+                                  #'WWTo2L2Nu_CUETDown',
+                                  #'WWTo2L2Nu_CUETUp',
                                  ] ,
 
                 },
@@ -275,7 +281,7 @@ Steps= {
                   'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' ,
                                   # Top
                                   'TTTo2L2Nu',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -761,7 +767,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q'],
+                  'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO'],
                },
 
   'do_lpTCorrMC'  : {
