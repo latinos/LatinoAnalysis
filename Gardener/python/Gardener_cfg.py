@@ -692,6 +692,13 @@ Steps= {
                   'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' --cmssw RPLME_CMSSW'
                 },
 
+  'genVariables'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py genvariablesfiller '
+                },
+
   'l2sel'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,

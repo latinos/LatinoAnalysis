@@ -25,6 +25,7 @@ public:
                  std::vector<float> IsPrompt,
                  std::vector<float> MotherPID,
                  std::vector<float> MotherStatus);
+ void setLeptons(std::vector<float> invectorpt,std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setNeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setMET  (float met, float metphi);
  
@@ -102,16 +103,30 @@ void GenVar::setLeptons(std::vector<float> invectorpt, std::vector<float> invect
                         std::vector<float> IsPrompt,
                         std::vector<float> MotherPID,
                         std::vector<float> MotherStatus
-			) {
-
- _leptonspt      	= invectorpt;
- _leptonseta     	= invectoreta;
- _leptonsphi     	= invectorphi;
- _leptonsflavour 	= invectorflavour;
- _leptonsStatus  	= Status;
- _leptonsMotherPID 	= MotherPID;
- _leptonsMotherStatus 	= MotherStatus;
+) {
  
+ _leptonspt             = invectorpt;
+ _leptonseta            = invectoreta;
+ _leptonsphi            = invectorphi;
+ _leptonsflavour        = invectorflavour;
+ _leptonsStatus         = Status;
+ _leptonsMotherPID      = MotherPID;
+ _leptonsMotherStatus   = MotherStatus;
+ 
+ _lepOk = 0;
+ for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
+  if (_leptonspt.at(ilep) > 0) _lepOk++;
+ }
+}
+
+
+void GenVar::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
+ 
+ _leptonspt             = invectorpt;
+ _leptonseta            = invectoreta;
+ _leptonsphi            = invectorphi;
+ _leptonsflavour        = invectorflavour;
+
  _lepOk = 0;
  for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
   if (_leptonspt.at(ilep) > 0) _lepOk++;
