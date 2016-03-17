@@ -168,14 +168,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['puadder','baseW','wwNLL','l2sel']
+                  'subTargets' : ['puadder','baseW','wwNLL','l2sel','genVariables']
                 },
 
   'MCl2loose' :       {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','puadder','baseW','wwNLL'],
+                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables'],
 #                 'onlySample' : [
 #                                 # DY 
 #                                 'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -216,7 +216,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','baseW','wwNLL'],
+                  'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -702,7 +702,12 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py genvariablesfiller '
+                  'command'    : 'gardener.py genvariablesfiller ',
+                  'onlySample' : [
+                                  # DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  ]
+
                 },
 
   'l2sel'    : {
