@@ -109,19 +109,26 @@ class genVariablesFiller(TreeCloner):
                 print i,'events processed.'
 
             GenVar = ROOT.GenVar()
-            GenVar.setLeptons(itree.std_vector_leptonGen_pt, itree.std_vector_leptonGen_eta, itree.std_vector_leptonGen_phi,
-		              itree.std_vector_leptonGen_pid,
-		              itree.std_vector_leptonGen_status,
-		              itree.std_vector_leptonGen_isPrompt,
-		              itree.std_vector_leptonGen_MotherPID,
-		              itree.std_vector_leptonGen_MotherStatus
-			      )
-            GenVar.setJets   (itree.std_vector_partonGen_pt, itree.std_vector_partonGen_eta, itree.std_vector_partonGen_phi, itree.std_vector_partonGen_pid)
-
-            # now fill the variables like "mll", "dphill", ...
-            for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
-              bvariable[0] = getattr(GenVar, bname)()
-
+            # if no gen information, don't fill the variable
+            if hasattr(itree, 'std_vector_leptonGen_pt') :
+  
+              if hasattr(itree, 'std_vector_leptonGen_MotherPID') :
+                GenVar.setLeptons(itree.std_vector_leptonGen_pt, itree.std_vector_leptonGen_eta, itree.std_vector_leptonGen_phi,
+                                  itree.std_vector_leptonGen_pid,
+                                  itree.std_vector_leptonGen_status,
+                                  itree.std_vector_leptonGen_isPrompt,
+                                  itree.std_vector_leptonGen_MotherPID,
+                                  itree.std_vector_leptonGen_MotherStatus
+                                  )
+              else : 
+                GenVar.setLeptons(itree.std_vector_leptonGen_pt, itree.std_vector_leptonGen_eta, itree.std_vector_leptonGen_phi, itree.std_vector_leptonGen_pid)
+              
+              GenVar.setJets   (itree.std_vector_partonGen_pt, itree.std_vector_partonGen_eta, itree.std_vector_partonGen_phi, itree.std_vector_partonGen_pid)
+  
+              # now fill the variables like "mll", "dphill", ...
+              for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+                bvariable[0] = getattr(GenVar, bname)()
+  
             otree.Fill()
             savedentries+=1
             

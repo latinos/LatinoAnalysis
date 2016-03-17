@@ -441,6 +441,17 @@ Module: genvariablesfiller
     gardener.py  genvariablesfiller    /tmp/amassiro/eos/user/j/jlauwers/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2Eff/latino_DYJetsToLL_M-50_0000__part0.root   /tmp/amassiro/test.mc.2.root
     
     
+    gardener.py  genvariablesfiller   /tmp/amassiro/latino_DYJetsToLL_M-50_0000__part0.root /tmp/amassiro/latino_DYJetsToLL_M-50_0000__part0_genVar.root
+    
+    
+    
+    latino->Draw("gen_ptll / ptll", "gen_ptll / ptll < 3")
+    latino->Draw("gen_ptll / ptll", "gen_ptll / ptll < 3 && gen_llchannel == -11*11")
+    latino->Draw("gen_ptll / ptll", "gen_ptll / ptll < 3 && gen_llchannel == -13*13")
+    latino->Draw("gen_ptll / ptll", "gen_ptll / ptll < 3 && gen_llchannel == -15*15")
+    
+    
+    
     
     latino->Draw("gen_mll / std_vector_VBoson_mass[0]","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_VBoson_mass[0]>0)", "same")
     
