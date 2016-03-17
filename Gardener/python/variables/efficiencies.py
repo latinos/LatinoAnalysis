@@ -418,13 +418,20 @@ class EffTrgFiller(TreeCloner):
           eff_dbl_2_trailingleg = high_eff_dbl_2_trailingleg   
           eff_sgl_1             = high_eff_sgl_1               
           eff_sgl_2             = high_eff_sgl_2            
-          
-          
+         
+
           evt_eff_error_up =   eff_sgl_1 + eff_sgl_2 -    \
                       eff_sgl_1*eff_sgl_2 +   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
-                      (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
+                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
+                      dz_eff
+ 
+          
+          #evt_eff_error_up =   eff_sgl_1 + eff_sgl_2 -    \
+          #            eff_sgl_1*eff_sgl_2 +   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+          #            (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
        
           # and low variation ...
@@ -434,13 +441,19 @@ class EffTrgFiller(TreeCloner):
           eff_dbl_2_trailingleg = low_eff_dbl_2_trailingleg  
           eff_sgl_1             = low_eff_sgl_1              
           eff_sgl_2             = low_eff_sgl_2              
-       
-          
+
           evt_eff_error_low =   eff_sgl_1 + eff_sgl_2 -    \
                       eff_sgl_1*eff_sgl_2 +   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
-                      (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
-                      (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
+                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
+                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
+                      dz_eff
+       
+          
+          #evt_eff_error_low =   eff_sgl_1 + eff_sgl_2 -    \
+          #            eff_sgl_1*eff_sgl_2 +   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
+          #            (eff_sgl_2 - eff_dbl_2_leadingleg)*(eff_sgl_1 - eff_dbl_1_trailingleg)*dz_eff -   \
+          #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
           
           return evt_eff, evt_eff_error_low, evt_eff_error_up ,  evt_eff_snglEle , evt_eff_snglMu , evt_eff_dbleEle , evt_eff_dbleMu , evt_eff_EleMu , TrgEmulator
