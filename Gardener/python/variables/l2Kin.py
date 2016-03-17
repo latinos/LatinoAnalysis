@@ -71,6 +71,8 @@ class L2KinFiller(TreeCloner):
            'mcollWW',
            'mTi',
            'mTe',
+	   'choiMass',
+	   'mR',
            'channel',
 
 

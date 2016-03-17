@@ -65,6 +65,8 @@ public:
  float mcollWW();
  float mTi();
  float mTe();
+ float choiMass();
+ float mR();
  float dphillmet();
  float channel();
  float mjj();
@@ -672,6 +674,33 @@ float WW::mTi(){
 
 }
 
+float WW::choiMass(){
+
+ //TVector3 METvec, ptllvec, pt1vec, pt2vec;
+ //METvec.SetXYZ(MET.X(),MET.Y(),MET.Z());
+ //ptllvec.SetXYZ((L1+L2).X(),(L1+L2).Y(),(L1+L2).Z());
+ //pt1vec.SetXYZ((L1).X(),(L1).Y(),0);
+ //pt2vec.SetXYZ((L2).X(),(L2).Y(),0);
+ if (_isOk) {
+  return sqrt( 2*(pt1()*pt1()) + 2*(pt2()*pt2()) + 3*(pt1()*pt2() + (MET.Pt())*(pt1()+pt2()) - MET.Pt()*ptll()*cos(dphillmet()) - 2*pt1()*pt2()*cos(dphill())) );
+ }
+ else{
+  return -9999.0;
+ }
+
+}
+
+
+float WW::mR(){
+
+ if (_isOk) {
+  return sqrt( 0.5*( mll()*mll() - MET.Pt()*ptll()*cos(dphillmet()) + sqrt( ( mll()*mll() + ptll()*ptll() )*( mll()*mll() + MET.Pt()*MET.Pt()  )  )  )  );
+ }
+ else{
+  return -9999.0;
+ }
+
+}
 
 float WW::mTe(){
 
