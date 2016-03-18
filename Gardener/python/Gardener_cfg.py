@@ -219,12 +219,13 @@ Steps= {
                   'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables'],
                   'onlySample' : [
                                   #### DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
                                   ####
-                                  'WJetsToLNu',
+                                  'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
+                                  'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
                                   ####
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
-                                  'QCD_Pt-20toInf_MuEnrichedPt15' ,
+                                  'QCD_Pt-20toInf_MuEnrichedPt15',
 
                                   #### Top
                                   #'TTTo2L2Nu',
@@ -258,6 +259,28 @@ Steps= {
                                  ] ,
 
                 },
+
+  'MCWgStarsel' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_WgStarsel','puadder','baseW','wwNLL','genVariables'],
+                  'onlySample' : [
+                                   'Wg500','Wg_AMCNLOFXFX','WZTo3LNu',
+                                 ]
+                },
+
+  'WgStarsel' : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['do_WgStarsel'],
+                  'onlySample' : [
+                                   'Run2015C_16Dec2015_DoubleMuon' , 'Run2015C_16Dec2015_SingleElectron' , 'Run2015C_16Dec2015_SingleMuon',
+                                   'Run2015D_16Dec2015_DoubleMuon' , 'Run2015D_16Dec2015_SingleElectron' , 'Run2015D_16Dec2015_SingleMuon',
+                                 ]
+                },
+
 
   'bSFL2Eff'   :   {
                   'isChain'    : True ,
@@ -745,7 +768,7 @@ Steps= {
                   'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
-  'WgStarsel' : {
+  'do_WgStarsel' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
