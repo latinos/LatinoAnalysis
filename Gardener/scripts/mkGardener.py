@@ -268,9 +268,9 @@ for iProd in prodList :
                 if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
                   if 'iihe' in os.uname()[1]:
                     if options.iStep == 'Prod' :
-                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                      targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                     else:
-                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                      targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                   else:
                     if options.iStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -304,9 +304,9 @@ for iProd in prodList :
                 print 'Re-Adding split tree: ', iKey, iFile
                 if 'iihe' in os.uname()[1]:
                   if options.iStep == 'Prod' :
-                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                    targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                    targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                 else: 
                   if options.iStep == 'Prod' :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -540,10 +540,10 @@ for iProd in prodList :
         #lse:
         if 'iihe' in os.uname()[1]:
           if startingStep == 'Prod' :
-            command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
+            if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
           else: 
-            command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
+            if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
         else:
           if startingStep == 'Prod' :
