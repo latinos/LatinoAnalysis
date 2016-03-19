@@ -42,10 +42,10 @@ if __name__ == '__main__':
         handle.close()
 
       for sampleName, sample in samples.iteritems():
-        print '     -> sampleName = ', sampleName
+        #print '     -> sampleName = ', sampleName
         list_of_trees_to_connect = sample['name']      
         for file_name in list_of_trees_to_connect :
-          print 'file = ', file_name
+          #print 'file = ', file_name
           nEvt = 0
           nTot = 0
           nPos = 0
@@ -60,7 +60,7 @@ if __name__ == '__main__':
               nEvt += h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
               nPos += h_mcWeightPos.GetBinContent(1)
               nNeg += h_mcWeightNeg.GetBinContent(1) 
-              print 'Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1)
+              #print 'Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1)
             else:
               totalEvents = fileIn.Get('totalEvents')
               if totalEvents.__nonzero__() :
@@ -75,7 +75,7 @@ if __name__ == '__main__':
           xs = 1.
           if nEvt != 0 :
             baseW = float(xs)*1000./nEvt
-            print 'baseW: file,xs,N -> W', file_name, ', ', xs, ' , ', nEvt , ' , ', baseW , ' nTot= ', nTot
+            print '[', sampleName, ']: file, N, nPos, nNeg -> W', file_name, ', ', nEvt , ', ', nPos , ', ', nNeg , ' , ', baseW , ' nTot= ', nTot
             
             
           
