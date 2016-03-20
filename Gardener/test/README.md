@@ -1,3 +1,15 @@
+Get baseW
+====
+
+    tellMeBaseW.py
+    
+    tellMeBaseW.py --inputFile  /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_Zg.root
+    
+    tellMeBaseW.py --inputFiles  ../PlotsConfigurations/Configurations/ggH/samples.py  \
+                   --folder      /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/
+    
+    
+
 Example
 ====
 
