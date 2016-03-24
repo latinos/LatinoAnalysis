@@ -30,7 +30,7 @@ class FilterDuplicates(TreeCloner):
 
 
     def help(self):
-        return '''Add mucca mva variables'''
+        return '''Remove duplicate events: actually adding a variable 0/1 about it'''
 
 
     def addOptions(self,parser):
