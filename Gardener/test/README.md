@@ -181,7 +181,25 @@ Specific modules example:
                 -r   /media/data/amassiro/LatinoTrees/data/  \
                      /media/data/amassiro/LatinoTrees/WW/data/ 
                      
-          
+
+                     
+Filter duplicates
+====
+
+Filter duplicates in data
+
+    gardener.py  filterduplicates \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_data_numEvent100.root  \
+                test.root
+
+                
+    gardener.py  filterduplicates \
+                /tmp/amassiro/eos/user/r/rebeca/HWW2015/03Mar_Run2015D_16Dec2015/l2loose__hadd__EpTCorr__l2tight__wwSel/latino_Run2015D_16Dec2015_SingleMuon.root \
+                /tmp/amassiro/test.root
+                
+                
+                
+
 puW
 ====
 
