@@ -84,7 +84,7 @@ class FilterDuplicates(TreeCloner):
             run_lumi = ( itree.run, itree.lumi )
             if  run_lumi in DoubleChecker.keys() :
               if itree.event in DoubleChecker[run_lumi]:
-                print " already there! "
+                print " already there! ", itree.run, ", ", itree.lumi, ", ", itree.event 
                 isDuplicate[0] = 0
               else :
                 isDuplicate[0] = 1
