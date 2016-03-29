@@ -903,6 +903,58 @@ Steps= {
                    'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
                  } ,
   
+  
+   'Mucca'       :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'subTargets' : [
+                                  'do_Mucca_1',
+                                  'do_Mucca_2',
+                                  'do_Mucca_3',
+                                  'do_Mucca_4',
+                                  'do_Mucca_5'
+                                  ],
+                },
+
+   'do_Mucca_1'        : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py muccaMvaVarFiller --kind 1'
+                 } ,
+  
+   'do_Mucca_2'        : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py muccaMvaVarFiller --kind 2'
+                 } ,
+
+   'do_Mucca_3'        : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py muccaMvaVarFiller --kind 3'
+                 } ,
+
+   'do_Mucca_4'        : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py muccaMvaVarFiller --kind 4'
+                 } ,
+
+   'do_Mucca_5'        : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py muccaMvaVarFiller --kind 5'
+                 } ,
+
+
+
+
    # fix datasets names
   'fixdataset_Herwig_nuisance':  {
                'isChain'    : False ,
