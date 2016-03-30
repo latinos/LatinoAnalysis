@@ -39,6 +39,14 @@ class MuccaMvaVarFiller(TreeCloner):
         self.getMuccaMVAV.AddVariable("dphill",            (self.var4))
         self.getMuccaMVAV.AddVariable("yll",               (self.var5))
         self.getMuccaMVAV.AddVariable("ptll",              (self.var6))
+
+        self.getMuccaMVAV.AddVariable("dphilmet1",         (self.var7))
+        self.getMuccaMVAV.AddVariable("dphilmet2",         (self.var8))
+        self.getMuccaMVAV.AddVariable("dphilmet",          (self.var9))
+        self.getMuccaMVAV.AddVariable("metPfType1",        (self.var10))
+       
+        # I need to declare the spectator ... for some strange ROOT reasons ...
+        self.getMuccaMVAV.AddSpectator("mth",              (self.var11))
        
         # mva trainined xml
         baseCMSSW = os.getenv('CMSSW_BASE')
@@ -69,12 +77,17 @@ class MuccaMvaVarFiller(TreeCloner):
 
         self.getMuccaMVAV = None
 
-        self.var1 = array.array('f',[0])
-        self.var2 = array.array('f',[0])
-        self.var3 = array.array('f',[0])
-        self.var4 = array.array('f',[0])
-        self.var5 = array.array('f',[0])
-        self.var6 = array.array('f',[0])
+        self.var1  = array.array('f',[0])
+        self.var2  = array.array('f',[0])
+        self.var3  = array.array('f',[0])
+        self.var4  = array.array('f',[0])
+        self.var5  = array.array('f',[0])
+        self.var6  = array.array('f',[0])
+        self.var7  = array.array('f',[0])
+        self.var8  = array.array('f',[0])
+        self.var9  = array.array('f',[0])
+        self.var10 = array.array('f',[0])
+        self.var11 = array.array('f',[0])
         
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -116,12 +129,17 @@ class MuccaMvaVarFiller(TreeCloner):
             
             if pt1>0 and pt2>0 : 
             
-              self.var1[0]  =  itree.std_vector_lepton_pt[0]
-              self.var2[0]  =  itree.std_vector_lepton_pt[1]
-              self.var3[0]  =  itree.mll
-              self.var4[0]  =  itree.dphill
-              self.var5[0]  =  itree.yll
-              self.var6[0]  =  itree.ptll
+              self.var1[0]   =  itree.std_vector_lepton_pt[0]
+              self.var2[0]   =  itree.std_vector_lepton_pt[1]
+              self.var3[0]   =  itree.mll
+              self.var4[0]   =  itree.dphill
+              self.var5[0]   =  itree.yll
+              self.var6[0]   =  itree.ptll
+              self.var7[0]   =  itree.dphilmet1
+              self.var8[0]   =  itree.dphilmet2
+              self.var9[0]   =  itree.dphilmet
+              self.var10[0]  =  itree.metPfType1
+              self.var11[0]  =  itree.mth
               
               muccamva[0] = self.getMuccaMVAV.EvaluateMVA("BDT")
               

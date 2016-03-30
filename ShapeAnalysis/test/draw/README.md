@@ -27,6 +27,38 @@ Run on all:
          --cutName hww2l2v_13TeV_of1j
     
     
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_em_mp_0j/mllVSmth/shapes/histos_hww2l2v_13TeV_em_mp_0j.root  \
+         --outputDirPlots ggH_em_mp_0j  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_em_mp_0j
+    
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_em_pm_0j/mllVSmth/shapes/histos_hww2l2v_13TeV_em_pm_0j.root  \
+         --outputDirPlots ggH_em_pm_0j  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_em_pm_0j
+         
+    
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_me_mp_0j/mllVSmth/shapes/histos_hww2l2v_13TeV_me_mp_0j.root  \
+         --outputDirPlots ggH_me_mp_0j  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_me_mp_0j
+    
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_me_pm_0j/mllVSmth/shapes/histos_hww2l2v_13TeV_me_pm_0j.root  \
+         --outputDirPlots ggH_me_pm_0j  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_me_pm_0j
+    
+    
+    
+    
 Simple scripts for super-fast plots
 ====
 

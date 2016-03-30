@@ -54,6 +54,9 @@ from LatinoAnalysis.Gardener.variables.GenVar                     import genVari
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
 
+# filter duplicates in data
+from LatinoAnalysis.Gardener.variables.filterDuplicates          import FilterDuplicates
+
 # JES uncertainty
 from LatinoAnalysis.Gardener.variables.jetScaleUncertainty        import JESTreeMaker
 
@@ -85,6 +88,10 @@ if __name__ == '__main__':
     #modules['wwfilter']         = WWPruner()
     #modules['wwflagger']        = WWFlagsGrafter()
     modules['puadder']          = PUpper()
+
+
+# filter duplicates
+    modules['filterduplicates']          = FilterDuplicates()
 
 # trigger efficiency
     modules['efftfiller']       = EffTrgFiller()
