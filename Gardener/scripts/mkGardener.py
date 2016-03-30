@@ -268,9 +268,9 @@ for iProd in prodList :
                 if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
                   if 'iihe' in os.uname()[1]:
                     if options.iStep == 'Prod' :
-                      targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                     else:
-                      targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                   else:
                     if options.iStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -304,9 +304,9 @@ for iProd in prodList :
                 print 'Re-Adding split tree: ', iKey, iFile
                 if 'iihe' in os.uname()[1]:
                   if options.iStep == 'Prod' :
-                    targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetList[iKey] = 'dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                 else: 
                   if options.iStep == 'Prod' :
                     targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
