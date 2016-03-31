@@ -104,7 +104,9 @@ class ShapeFactory:
 
             #print '... after thstack ...'
 
-	    sigSupList    = []
+            sigSupList    = []
+            # list of additional histograms to be used in the ratio plot
+            sigForAdditionalRatioList    = {}
 
             # enhanced list of nuisances, including bin-by-bin 
             mynuisances = {}
@@ -174,9 +176,12 @@ class ShapeFactory:
                 
                 if plot[sampleName]['isSignal'] == 1 :
                   thsSignal.Add(histos[sampleName])
-                if plot[sampleName]['isSignal'] == 2 :
+                if plot[sampleName]['isSignal'] == 2 or plot[sampleName]['isSignal'] == 3 :
                   print "SigSup histo: ", histos[sampleName]
-		  sigSupList.append(histos[sampleName])
+                  sigSupList.append(histos[sampleName])
+                  if plot[sampleName]['isSignal'] == 3 :
+                    print "sigForAdditionalRatio histo: ", histos[sampleName]
+                    sigForAdditionalRatioList[sampleName] = histos[sampleName]
                 else :
                   thsBackground.Add(histos[sampleName])
                   #print " adding to background: ", sampleName
@@ -464,6 +469,18 @@ class ShapeFactory:
                 
                          
             
+            tgrRatioList = {}
+            for samplesToRatioName, samplesToRatio in sigForAdditionalRatioList.iteritems() :
+              tgrDataOverMCTemp = tgrData.Clone("tgrDataOverMC"+samplesToRatioName)
+              for iBin in range(0, len(tgrData_vx)) : 
+                tgrDataOverMCTemp.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , samplesToRatio.GetBinContent(iBin+1)) )
+                tgrDataOverMCTemp.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], samplesToRatio.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], samplesToRatio.GetBinContent(iBin+1)) )
+
+              tgrDataOverMCTemp.SetLineColor(samplesToRatio.GetLineColor())
+              tgrDataOverMCTemp.SetMarkerColor(samplesToRatio.GetLineColor())
+              tgrRatioList[samplesToRatioName] = tgrDataOverMCTemp
+              
+            
             #---- now plot
             
             if thsBackground.GetNhists() != 0:
@@ -747,6 +764,12 @@ class ShapeFactory:
               tgrMCOverMC.Draw("2") 
             
             tgrDataOverMC.Draw("P0")
+            
+            
+            
+            for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
+              samplesGrToRatio.Draw("P0")
+
             
             oneLine2 = ROOT.TLine(frameRatio.GetXaxis().GetXmin(), 1,  frameRatio.GetXaxis().GetXmax(), 1);
             oneLine2.SetLineStyle(3)
