@@ -115,6 +115,16 @@ Productions= {
                                    }
                       } ,
 
+  '03Mar_25ns_mAODv2_MC'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_fall15_miniaodv2_25ns.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/03Mar/MC/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        #'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
+                      } ,
+
+
   '03Mar_Run2015D_16Dec2015' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_16Dec2015-v1_25ns_StarWars.py' ,
@@ -336,8 +346,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M125_CUETUp',
                                   'WWTo2L2Nu_CUETDown',
                                   'WWTo2L2Nu_CUETUp',
-				  # VBS
-				  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
+ 			  # VBS
+ 			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
                                  ] ,
                 },
 
