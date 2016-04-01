@@ -316,7 +316,7 @@ Steps= {
                   'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' ,
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' , 'DY2JetsToLL', 
                                   # Top
                                   'TTTo2L2Nu',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -348,6 +348,7 @@ Steps= {
                                   'WWTo2L2Nu_CUETUp',
  			  # VBS
  			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
+                          'WGJJ','EWKZ2Jets',
                                  ] ,
                 },
 
