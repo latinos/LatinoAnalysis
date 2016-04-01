@@ -30,6 +30,7 @@ class HiggsXSection:
       self.readYR('YR3','8TeV')
       
       self.readYR('YR4prel','13TeV')
+      self.readYR('YR4prel','13TeV','bsm')
       
       self._UseggZH = True
 
@@ -46,27 +47,39 @@ class HiggsXSection:
       if not model  in self._YR[YRversion] : self._YR[YRversion][model] = {}
       if not 'xs' in self._YR[YRversion][model] : self._YR[YRversion][model]['xs'] = {}
       if not 'br' in self._YR[YRversion][model] : self._YR[YRversion][model]['br'] = {}
-      
+     
       # Add x-sections
-      if YRversion in  ['YR2','YR3'] :
-        if not energy in ['7TeV','8TeV'] : return  
-        if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
-        self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-vbfH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-WH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
+      # ... SM
+      if model == 'sm' : 
+
+        if YRversion in  ['YR2','YR3'] :
+          if not energy in ['7TeV','8TeV'] : return  
+          if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
+          self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-vbfH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-WH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
+    
+        if YRversion in  ['YR4prel'] :
+          if not energy in ['13TeV'] : return  
+          if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
+          self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-vbfH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-WH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['ggZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggZH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['bbH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-bbH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
   
-      if YRversion in  ['YR4prel'] :
-        if not energy in ['13TeV'] : return  
-        if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
-        self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-vbfH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-WH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['ggZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggZH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['bbH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-bbH.txt') 
-        self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
+      # ... BSM (high mass NWA Higgs-like)
+      if model == 'bsm' :
+        if YRversion in  ['YR4prel'] :
+          if not energy in ['13TeV'] : return
+          if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
+          self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-ggH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-vbfH.txt') 
+
 
       # BR
       if YRversion in  ['YR2'] : 
@@ -78,6 +91,7 @@ class HiggsXSection:
       if YRversion in  ['YR4prel'] :  
         self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
         self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
+
 
    def printYR(self):
       print self._YR
@@ -182,7 +196,10 @@ class HiggsXSection:
      if '_' in str(HiggsMass) : HiggsMass = HiggsMass.split('_')[0]
      #if 'large' in HiggsMass : ProdMode = 'unknown'
      if not ProdMode == 'unknown' :
-       HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
+       if float(HiggsMass) <= 130 : 
+         HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
+       else:
+         HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass,'bsm')
      
      HiggsXS['ProdMode']  = ProdMode
      HiggsXS['HiggsMass'] = HiggsMass
@@ -229,6 +246,10 @@ class HiggsXSection:
 ### Below some examples of usage :
 
 #HiggsXS = HiggsXSection() 
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M130')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
+
 #HiggsXS.printYR()
 #print HiggsXS.GetHiggsProdXS('YR2','8TeV','ggH','125.0')
 #print HiggsXS.GetHiggsProdXS('YR3','8TeV','ggH','125.0')
