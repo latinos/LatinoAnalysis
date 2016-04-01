@@ -79,6 +79,11 @@ class HiggsXSection:
           if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
           self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-ggH.txt') 
           self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-vbfH.txt') 
+          self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-WH.txt')
+          self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt')
+          #self._YR[YRversion][model]['xs'][energy]['ggZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggZH.txt')
+          self._YR[YRversion][model]['xs'][energy]['bbH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-bbH.txt')
+          self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt')
 
 
       # BR
@@ -132,7 +137,7 @@ class HiggsXSection:
      #print 'Hello',proc 
      if proc == 'ZH' :
        xs_ZH = self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_pb')
-       if self._UseggZH and 'YR4' in YRversion :
+       if self._UseggZH and 'YR4' in YRversion and not model == 'bsm' :
          xs_ggZH = self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH'],mh,'XS_pb')
        else:
          xs_ggZH = 0.
