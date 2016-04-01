@@ -87,16 +87,24 @@ class HiggsXSection:
 
 
       # BR
-      if YRversion in  ['YR2'] : 
-        self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR.txt')
-        self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR1.txt')
-      if YRversion in  ['YR3'] : 
-        self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2bosons.txt')
-        self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2fermions.txt')
-      if YRversion in  ['YR4prel'] :  
-        self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
-        self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
+      # ... SM
+      if model == 'sm' : 
 
+        if YRversion in  ['YR2'] : 
+          self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR.txt')
+          self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR1.txt')
+        if YRversion in  ['YR3'] : 
+          self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2bosons.txt')
+          self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2fermions.txt')
+        if YRversion in  ['YR4prel'] :  
+          self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
+          self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
+
+      # ... BSM (high mass NWA Higgs-like)
+      if model == 'bsm' :
+        if YRversion in  ['YR4prel'] :
+          self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/br/BR4.txt')
+          self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/br/BR4.txt')
 
    def printYR(self):
       print self._YR
@@ -220,7 +228,10 @@ class HiggsXSection:
      if 'HJetToNonbb' in SampleName : DecayMode = 'H_bb'
      #if 'large' in HiggsMass : DecayMode = 'unknown'
      if not DecayMode == 'unknown' :
-       HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass)
+       if float(HiggsMass) <= 130 :
+         HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass)
+       else:
+         HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass,'bsm')    
        if 'HJetToNonbb' in SampleName : HiggsBR = 1.0 - HiggsBR
 
      HiggsXS['DecayMode'] = DecayMode
@@ -250,10 +261,10 @@ class HiggsXSection:
 
 ### Below some examples of usage :
 
-#HiggsXS = HiggsXSection() 
+HiggsXS = HiggsXSection() 
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M130')
-#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
+print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
 
 #HiggsXS.printYR()
 #print HiggsXS.GetHiggsProdXS('YR2','8TeV','ggH','125.0')
