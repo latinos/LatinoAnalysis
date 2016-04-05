@@ -395,6 +395,14 @@ The `bTPSF*` are currently placeholders and their value is 1.
 NB: currently only the scale factors provided by BTV are used, even for jets with pT between 20 and 30 GeV (doubling the uncertainty).
 
 
+Module: allBtagPogScaleFactors 
+
+Same skeleton as the previous module but this time add 3 weights (nominal, up and down) for each working point (loose, medium and tight) of the CMVA and the CSVv2 taggers.
+In addition the module also adds the weights for the b tagging discriminator reshaping, both for CMVA and CSVv2.
+To each one of the two reshaping weight are associated 18 additional weights representing the systematic variations of several quantities (such as JES variations), to be treated as nuisance parameters.
+
+
+
 Lepton pT scale uncertainty
 ====
 
