@@ -177,10 +177,10 @@ class ShapeFactory:
                 if plot[sampleName]['isSignal'] == 1 :
                   thsSignal.Add(histos[sampleName])
                 if plot[sampleName]['isSignal'] == 2 or plot[sampleName]['isSignal'] == 3 :
-                  print "SigSup histo: ", histos[sampleName]
+                  #print "SigSup histo: ", histos[sampleName]
                   sigSupList.append(histos[sampleName])
                   if plot[sampleName]['isSignal'] == 3 :
-                    print "sigForAdditionalRatio histo: ", histos[sampleName]
+                    #print "sigForAdditionalRatio histo: ", histos[sampleName]
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                 else :
                   thsBackground.Add(histos[sampleName])
@@ -475,9 +475,12 @@ class ShapeFactory:
               for iBin in range(0, len(tgrData_vx)) : 
                 tgrDataOverMCTemp.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , samplesToRatio.GetBinContent(iBin+1)) )
                 tgrDataOverMCTemp.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], samplesToRatio.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], samplesToRatio.GetBinContent(iBin+1)) )
+                if variableName == 'events' :
+                   print ' >> ratio[', cutName, '][', samplesToRatioName, ']  = ', self.Ratio(tgrData_vy[0] , samplesToRatio.GetBinContent(0+1)) 
 
               tgrDataOverMCTemp.SetLineColor(samplesToRatio.GetLineColor())
               tgrDataOverMCTemp.SetMarkerColor(samplesToRatio.GetLineColor())
+              tgrDataOverMCTemp.SetMarkerSize(0.3)
               tgrRatioList[samplesToRatioName] = tgrDataOverMCTemp
               
             
@@ -676,10 +679,10 @@ class ShapeFactory:
             #pad1.cd().SetGrid()
             
             pad1.cd()
-            print " pad1 = ", pad1
+            #print " pad1 = ", pad1
             canvasFrameDistroName = 'frame_distro_' + cutName + "_" + variableName
             frameDistro = pad1.DrawFrame(minXused, 0.0, maxXused, 1.0, canvasFrameDistroName)
-            print " pad1 = ", pad1
+            #print " pad1 = ", pad1
             
             # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
             xAxisDistro = frameDistro.GetXaxis()
@@ -741,12 +744,12 @@ class ShapeFactory:
             #pad2.cd().SetGrid()
             pad2.cd()
             
-            print " pad1 = ", pad1
-            print " pad2 = ", pad2, " minXused = ", minXused, " maxXused = ", maxXused
+            #print " pad1 = ", pad1
+            #print " pad2 = ", pad2, " minXused = ", minXused, " maxXused = ", maxXused
             canvasFrameRatioName = 'frame_ratio_' + cutName + "_" + variableName
-            print " canvasFrameRatioName = ", canvasFrameRatioName
+            #print " canvasFrameRatioName = ", canvasFrameRatioName
             frameRatio = pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, canvasFrameRatioName)
-            print " pad2 = ", pad2
+            #print " pad2 = ", pad2
             # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
             xAxisDistro = frameRatio.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
@@ -768,7 +771,7 @@ class ShapeFactory:
             
             
             for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
-              samplesGrToRatio.Draw("P0")
+              samplesGrToRatio.Draw("P")
 
             
             oneLine2 = ROOT.TLine(frameRatio.GetXaxis().GetXmin(), 1,  frameRatio.GetXaxis().GetXmax(), 1);
