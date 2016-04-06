@@ -177,6 +177,12 @@ if __name__ == '__main__':
 	    queue.join()
 
             command = ""
+            command += "rm "+opt.outputDir+'/plots_'+opt.tag+".root"
+            print command
+            os.system(command)
+
+
+            command = ""
             command += "hadd "+opt.outputDir+'/plots_'+opt.tag+".root"
             for i in xrange(number):
               command += " "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root"
