@@ -61,7 +61,7 @@ class Worker(threading.Thread):
         process = subprocess.Popen(command, shell=True, stdout=logfile, stderr=logfile)
         process.wait()
         self.status = process.returncode
-        print 'task finished with exit code '+str(self.status)
+        print 'task finished with exit code '+str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())
         self.queue.task_done()
       except Queue.Empty, e:
         break
