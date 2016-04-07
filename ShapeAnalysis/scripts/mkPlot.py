@@ -303,7 +303,7 @@ class ShapeFactory:
                                 
                                 
                               else :
-                                print "Warning! No", nuisanceName, " up variation for", sampleName
+                                print "Warning! No", nuisanceName, " up variation for", sampleName, ' of kind lnN'
                             
                     if histoDown == None:
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
@@ -355,7 +355,7 @@ class ShapeFactory:
                                 histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
                                 histoDown.Scale(down_variation)
                               else :
-                                print "Warning! No", nuisanceName, " down variation for", sampleName
+                                print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
                   
                   
                   if 'scale' in plot[sampleName].keys() : 
@@ -835,6 +835,10 @@ class ShapeFactory:
                   #  - add the weighted histogram to the final histogram, made of 'nbinY' bins
                   #
       
+                  #
+                  # check if I have to remove the signal on the ackground stack here
+                  #  --> ok, it works and it is correct
+                  #
                   if thsBackground.GetNhists() != 0 and thsSignal.GetNhists() != 0 :
 
                     weight_X_thsData       = ROOT.THStack ("weight_X_thsData",      "weight_X_thsData")
@@ -866,7 +870,8 @@ class ShapeFactory:
                       integral_sig = 0.
                       for ibin in range( thsSignal.GetStack().Last().GetNbinsX() ) :
                         integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
-                      
+                      # this is because the signal was added into the background  stack before    
+                      integral_bkg = integral_bkg - integral_sig
                       weight = 1
                       if integral_bkg != 0 : 
                         weight = integral_sig / integral_bkg
@@ -889,7 +894,9 @@ class ShapeFactory:
                          else :
                            weight_X_list_Background.append(histo)
 
-                         totalWeightedIntegralBkg += histo.Integral()
+                         # the minus signal is because the signal was added into the background stack before  
+                         if ihisto < (thsBackground.GetNhists() - thsSignal.GetNhists()) :
+                           totalWeightedIntegralBkg += histo.Integral()
 
                          
                       for ihisto in range(thsSignal.GetNhists()) :
