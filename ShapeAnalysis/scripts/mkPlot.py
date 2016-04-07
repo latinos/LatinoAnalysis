@@ -176,7 +176,7 @@ class ShapeFactory:
                 
                 if plot[sampleName]['isSignal'] == 1 :
                   thsSignal.Add(histos[sampleName])
-                if plot[sampleName]['isSignal'] == 2 or plot[sampleName]['isSignal'] == 3 :
+                elif plot[sampleName]['isSignal'] == 2 or plot[sampleName]['isSignal'] == 3 :
                   #print "SigSup histo: ", histos[sampleName]
                   sigSupList.append(histos[sampleName])
                   if plot[sampleName]['isSignal'] == 3 :
@@ -382,9 +382,10 @@ class ShapeFactory:
                   if (len(nuisances_vy_do[nuisanceName]) == 0):
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_do[nuisanceName].append(0.)
-                  for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    # get the background sum
-                    if plot[sampleName]['isSignal'] == 0:
+                  # get the background sum
+                  if plot[sampleName]['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
+                    #print "plot[", sampleName, "]['isSignal'] == ", plot[sampleName]['isSignal']
+                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       if histoUp != None:
                         #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
                               #"while default was: ", histos[sampleName].GetBinContent (iBin)
@@ -403,9 +404,29 @@ class ShapeFactory:
             
             # fill the reference distribution with the background only distribution
             # save the central values of the bkg sum for use for the nuisance band 
+            #
             #print " tgrMC_vy = ", tgrMC_vy
             for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
               tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
+            
+            #
+            # and now  let's add the signal on top of the background stack 
+            # It is important to do this after setting (without signal) tgrMC_vy
+            #
+            for sampleName, sample in self._samples.iteritems():
+              # MC style
+              if plot[sampleName]['isData'] == 0 :
+                if plot[sampleName]['isSignal'] == 1 :
+                  thsBackground.Add(histos[sampleName])
+
+            #
+            # you need to add the signal as well, since the signal was considered in the nuisances vector
+            # otherwise you would introduce an uncertainty as big as the signal itself!!!
+            #
+            #if thsSignal.GetNhists() != 0:
+              #for iBin in range(1,thsSignal.GetStack().Last().GetNbinsX()+1):
+                #tgrMC_vy[iBin] += (thsSignal.GetStack().Last().GetBinContent(iBin))
+                          
               #print " nominal: ", iBin, " ===> ", thsBackground.GetStack().Last().GetBinContent(iBin)
             #print " tgrMC_vy = ", tgrMC_vy
 
@@ -951,8 +972,13 @@ class ShapeFactory:
                         y = weight_X_list_weights[sliceX] * global_normalization * tgrMC_vy[ibin + sliceX * nbinY]
                         exlow  = tgrData_evx[ibin + sliceX * nbinY]
                         exhigh = tgrData_evx[ibin + sliceX * nbinY]
-                        eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[ibin + sliceX * nbinY]
-                        eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[ibin + sliceX * nbinY]
+                        #print " ibin + sliceX * nbinY = " , ibin , "+", sliceX ,"*", nbinY, " = ", ibin + sliceX * nbinY
+                        #print "nuisances_err_do = ", nuisances_err_do
+                        eylow = 0
+                        eyhigh = 0
+                        if len(nuisances_err_do) != 0:
+                          eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[ibin + sliceX * nbinY]
+                          eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[ibin + sliceX * nbinY]
                         
                         if sliceX != 0 :
                           y += weight_X_tgrMC.GetY()[ibin]

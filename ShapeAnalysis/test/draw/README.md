@@ -8,23 +8,41 @@ On top of mkPlot.py code
     r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root\",\"histo_WW\",\"histo_WW_CMS_WWqscale0jUp\",\"histo_WW_CMS_WWqscale0jDown\"\)
     r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root\",\"histo_WW\",\"histo_WW_CMS_WWqscale0jUp\",\"histo_WW_CMS_WWqscale0jDown\"\)
 
-
+    r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/datacard.txt\",\"histo_ggH_hww\",\"histo_ggH_hww_CMS_PSUp\",\"histo_ggH_hww_CMS_PSDown\"\)
+    
+    
 Run on all:
 
     python DrawNuisancesAll.py
     python DrawNuisancesAll.py \
-         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/shapes/histos_hww2l2v_13TeV_of0j.root  \
-         --outputDirPlots ggH0j  \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_me_0j/mllVSmth/shapes/histos_hww2l2v_13TeV_me_0j.root  \
+         --outputDirPlots ggH0jme  \
          --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
          --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
-         --cutName hww2l2v_13TeV_of0j
+         --cutName hww2l2v_13TeV_me_0j
     
     python DrawNuisancesAll.py \
-         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of1j/mllVSmth/shapes/histos_hww2l2v_13TeV_of1j.root  \
-         --outputDirPlots ggH1j  \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_em_0j/mllVSmth/shapes/histos_hww2l2v_13TeV_em_0j.root  \
+         --outputDirPlots ggH0jem  \
          --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
          --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
-         --cutName hww2l2v_13TeV_of1j
+         --cutName hww2l2v_13TeV_em_0j
+    
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_me_1j/mllVSmth/shapes/histos_hww2l2v_13TeV_me_1j.root  \
+         --outputDirPlots ggH1jme  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_me_1j
+    
+    python DrawNuisancesAll.py \
+         --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_em_1j/mllVSmth/shapes/histos_hww2l2v_13TeV_em_1j.root  \
+         --outputDirPlots ggH1jem  \
+         --nuisancesFile  /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/nuisances.py  \
+         --samplesFile    /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/samples.py \
+         --cutName hww2l2v_13TeV_em_1j
+    
+    
     
     
     python DrawNuisancesAll.py \
