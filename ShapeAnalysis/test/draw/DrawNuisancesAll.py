@@ -28,6 +28,7 @@ if __name__ == '__main__':
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
     parser.add_option('--samplesFile'    , dest='samplesFile'    , help='file with samples'                          , default=None )
     parser.add_option('--cutName'        , dest='cutName'        , help='cut names'                                  , default=None )
+    parser.add_option('--dryRun'         , dest='dryRun'         , help='allow a dry run only '                      , default=None )
 
 
     (opt, args) = parser.parse_args()
@@ -40,6 +41,9 @@ if __name__ == '__main__':
     print " samplesFile =         ", opt.samplesFile
     print " outputDirPlots =      ", opt.outputDirPlots
     print " cutName =             ", opt.cutName
+    print " dryRun  =             ", opt.dryRun
+    
+    
     
     os.system ("mkdir " + opt.outputDirPlots + "/") 
 
@@ -58,6 +62,9 @@ if __name__ == '__main__':
 
     ROOTinputFile = ROOT.TFile.Open( opt.inputFile, 'READ')
        
+    texOutputFile =  open( 'plot_' + opt.cutName + '.tex' ,"w")
+    texOutputFile.write('\n')
+
     # loop over nuisances
     for sampleName, sample in samples.iteritems():
       nameNominal = 'histo_' + sampleName
@@ -66,17 +73,35 @@ if __name__ == '__main__':
         histoNominal = ROOTinputFile.Get(nameNominal)
         nbins = histoNominal.GetNbinsX()
       print " nbins = ", nbins
-      
+
+      texOutputFile.write('\n')      
+      texOutputFile.write('\n')
+      texOutputFile.write('\\begin{figure*}[htbp]  \n')
+      texOutputFile.write('\\centering \n')
+
+      counterNuisance = 0
+
       for nuisanceName, nuisance in nuisances.iteritems(): 
         print " nuisanceName = ", nuisanceName
         #print " nuisance = ", nuisance
         if 'name' in nuisance.keys() :
           nameDown = 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + 'Down'
-          nameUp   = 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + 'Up'
+          nameUp   = 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + 'Up'          
           
           if nameDown in ROOTinputFile.GetListOfKeys() :
             print ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
-            os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+            if opt.dryRun == None :
+              os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+
+            texOutputFile.write('\\includegraphics[width=0.09\\textwidth]{Figs/Nuisance/'+ opt.outputDirPlots + '/cc_' + nameUp +'.png}')
+            
+            counterNuisance += 1
+            if counterNuisance >= 9 :
+              counterNuisance = 0
+              texOutputFile.write('\\\\')
+            texOutputFile.write('\n')
+
+
         else :
           if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
             if 'samples' in nuisance.keys():
@@ -89,9 +114,28 @@ if __name__ == '__main__':
                   
                   if nameDown in ROOTinputFile.GetListOfKeys() :
                     print ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
-                    os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
-         
-                                         
+                    if opt.dryRun == None :
+                      os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+  
+                    texOutputFile.write('\\includegraphics[width=0.10\\textwidth]{Figs/Nuisance/'+ opt.outputDirPlots + '/cc_' + nameUp +'.png}')
+                    
+                    counterNuisance += 1
+                    if counterNuisance >= 9 :
+                      counterNuisance = 0
+                      texOutputFile.write('\\\\')
+                    texOutputFile.write('\n')
+            
+  
+      texOutputFile.write('\\\\ \n')      
+      texOutputFile.write('\\caption{ \n')
+      texOutputFile.write('   Distributions for ' + (sampleName).replace('_', '-') + ' of nuisances effects for ' + (opt.cutName).replace('_', '-') + ' selections.\n')
+      texOutputFile.write('} \n')
+      texOutputFile.write('\\label{fig:' + sampleName + '_' + opt.cutName + '} \n')
+      texOutputFile.write('\\end{figure*} \n')
+      texOutputFile.write('\n')
+      texOutputFile.write('\n')
+    
+
 
 
 
