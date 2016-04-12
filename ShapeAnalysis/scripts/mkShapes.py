@@ -56,7 +56,7 @@ class Worker(threading.Thread):
         sub_file.write(infile)
         sub_file.close()
 
-        logfile = open("log"+str(number)+".txt","w")
+        logfile = open("log" + str(number) + "_" + str(cuts.keys()[0]) + "_" + str(samples.keys()[0]) + ".txt","w")
         command = "python "+sub_file.name
         process = subprocess.Popen(command, shell=True, stdout=logfile, stderr=logfile)
         process.wait()
