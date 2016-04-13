@@ -251,7 +251,7 @@ class btagPogScaleFactors(TreeCloner):
               pt      = itree.std_vector_jet_pt [iJet]
               eta     = itree.std_vector_jet_eta [iJet]
               flavour = itree.std_vector_jet_HadronFlavour [iJet]
-              tagged  = itree.std_vector_jet_csvv2ivf[iJet] > self.cut
+              tagged  = itree.std_vector_jet_cmvav2 [iJet] > self.cut
              
               if pt > self.minpt and abs(eta) < self.maxeta:
 
