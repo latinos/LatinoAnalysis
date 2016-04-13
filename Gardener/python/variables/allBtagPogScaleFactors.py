@@ -534,12 +534,12 @@ class allBtagPogScaleFactors(TreeCloner):
               flavour = itree.std_vector_jet_HadronFlavour [iJet]
               cmva    = itree.std_vector_jet_cmvav2 [iJet]
               csv    = itree.std_vector_jet_csvv2ivf [iJet]
-              tagged_CMVAL  = itree.std_vector_jet_csvv2ivf[iJet] > -0.715
-              tagged_CMVAM  = itree.std_vector_jet_csvv2ivf[iJet] > 0.185
-              tagged_CMVAT  = itree.std_vector_jet_csvv2ivf[iJet] > 0.875
-              tagged_CSVL  = itree.std_vector_jet_csvv2ivf[iJet] > 0.460
-              tagged_CSVM  = itree.std_vector_jet_csvv2ivf[iJet] > 0.800
-              tagged_CSVT  = itree.std_vector_jet_csvv2ivf[iJet] > 0.935
+              tagged_CMVAL  = itree.std_vector_jet_cmvav2 [iJet] > -0.715
+              tagged_CMVAM  = itree.std_vector_jet_cmvav2 [iJet] > 0.185
+              tagged_CMVAT  = itree.std_vector_jet_cmvav2 [iJet] > 0.875
+              tagged_CSVL  = itree.std_vector_jet_csvv2ivf [iJet] > 0.460
+              tagged_CSVM  = itree.std_vector_jet_csvv2ivf [iJet] > 0.800
+              tagged_CSVT  = itree.std_vector_jet_csvv2ivf [iJet] > 0.935
               
              
               if pt > self.minpt and abs(eta) < self.maxeta:
