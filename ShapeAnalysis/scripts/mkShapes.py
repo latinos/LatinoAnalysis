@@ -56,7 +56,7 @@ class Worker(threading.Thread):
         sub_file.write(infile)
         sub_file.close()
 
-        logfile = open("log" + str(number) + "_" + str(cuts.keys()[0]) + "_" + str(samples.keys()[0]) + ".txt","w")
+        logfile = open("log/log" + str(number) + "_" + str(cuts.keys()[0]) + "_" + str(samples.keys()[0]) + ".txt","w")
         command = "python "+sub_file.name
         process = subprocess.Popen(command, shell=True, stdout=logfile, stderr=logfile)
         process.wait()
@@ -149,9 +149,17 @@ if __name__ == '__main__':
          
 
     if opt.doThreads != 0:
-          
+
             print "~~~~~~~~~~~ Running mkShape in multi-threading mode..."
 
+            command = ""
+            command += "rm -r log\n"
+            command += "mkdir log"
+            os.system(command)
+
+
+            os.system(command)
+ 
             numThreads = int(opt.numThreads)
             print "number of threads = ", numThreads
 
@@ -180,7 +188,6 @@ if __name__ == '__main__':
             command += "rm "+opt.outputDir+'/plots_'+opt.tag+".root"
             print command
             os.system(command)
-
 
             command = ""
             command += "hadd "+opt.outputDir+'/plots_'+opt.tag+".root"
