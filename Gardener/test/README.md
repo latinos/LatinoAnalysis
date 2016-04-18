@@ -183,6 +183,27 @@ Specific modules example:
                      
 
                      
+                     
+Generator Lepton matching
+====
+
+Check if there is a gen lepton close to the reco-lepton.
+Used to remove fake-leptons in MC samples, already estimated with data-driven methods.
+
+
+    gardener.py  genmatchvarfiller \
+                test.root  \
+                test.genmatch.root
+
+    gardener.py  genmatchvarfiller \
+                /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WWTo2L2Nu.root \
+                /tmp/amassiro/latino_WWTo2L2Nu_gen.root
+                
+                
+                
+                     
+                     
+                     
 Filter duplicates
 ====
 
