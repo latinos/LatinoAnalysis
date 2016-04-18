@@ -90,8 +90,8 @@ class GenMatchVarFiller(TreeCloner):
 
         print '- Starting eventloop'
         step = 5000
-        for i in xrange(1000):
-        #for i in xrange(nentries):
+        #for i in xrange(1000):
+        for i in xrange(nentries):
             itree.GetEntry(i)
 
             ## print event count
@@ -110,7 +110,9 @@ class GenMatchVarFiller(TreeCloner):
               if hasattr(itree, 'std_vector_leptonGen_pt') :
                 for iGenLep in xrange(len(itree.std_vector_leptonGen_pt)) :
                   # if there is a gen lepton with pt>0 and status 1
-                  if self.itree.std_vector_leptonGen_pt[iGenLep] > 0 and  self.itree.std_vector_leptonGen_status[iGenLep] == 1 : 
+                  if self.itree.std_vector_leptonGen_pt[iGenLep] > 0 \
+                     and  self.itree.std_vector_leptonGen_status[iGenLep] == 1 \
+                     and  (abs(self.itree.std_vector_leptonGen_pid[iGenLep]) == 11 or abs(self.itree.std_vector_leptonGen_pid[iGenLep]) == 13)   : 
                     # and if the reco lepton is close to this gen lepton
                     if self.isAcloseToB(self.itree.std_vector_lepton_eta[iLep],    self.itree.std_vector_lepton_phi[iLep],
                                         self.itree.std_vector_leptonGen_eta[iLep], self.itree.std_vector_leptonGen_phi[iLep],
