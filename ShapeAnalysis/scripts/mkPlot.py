@@ -62,6 +62,7 @@ class ShapeFactory:
 
         ROOT.TH1.SetDefaultSumw2(True)
         
+        dataColor = 1
         
         fileIn = ROOT.TFile(inputFile, "READ")
         #---- save one TCanvas for every cut and every variable
@@ -113,15 +114,27 @@ class ShapeFactory:
 
             for sampleName, sample in self._samples.iteritems():
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-              #print '     -> shapeName = ', shapeName
+              print '     -> shapeName = ', shapeName,
               histo = fileIn.Get(shapeName)
+              print ' --> ', histo
               histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
                  #print " i = ", iBinAmassiro, " [" , sampleName, " ==> ", histos[sampleName].GetBinContent(iBinAmassiro)
 
+              # allow arbitrary scaling in MC (and DATA??), if needed
+              # for example to "see" a signal
+              if 'scale' in plot[sampleName].keys() : 
+                histos[sampleName].Scale(plot[sampleName]['scale'])
+                #print " >> scale ", sampleName, " to ", plot[sampleName]['scale']
+
+              if plot[sampleName]['isData'] == 1 :  
+                thsData.Add(histos[sampleName])
+
+
               # data style
               if plot[sampleName]['isData'] == 1 :
+                #print ' plot[', sampleName, '][color] = ' , plot[sampleName]['color']
                 histos[sampleName].SetMarkerColor(plot[sampleName]['color'])
                 histos[sampleName].SetMarkerSize(1)
                 histos[sampleName].SetMarkerStyle(20)
@@ -134,31 +147,33 @@ class ShapeFactory:
                       histos[sampleName].SetBinContent(iBin, 0)
                       histos[sampleName].SetBinError  (iBin, 0)
                 
-                
-                thsData.Add(histos[sampleName])
+                #thsData.Add(histos[sampleName])
 
                 # first time fill vectors X axis
                 if len(tgrData_vx) == 0 :
+                  dataColor = histos[sampleName].GetMarkerColor()
                   for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                     tgrData_vx.append(  histos[sampleName].GetBinCenter (iBin))
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
-                    tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
-                    tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
+                    #print " plot[", sampleName, "].keys() = ", plot[sampleName].keys()
+                    if 'isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3 :
+                      tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
+                      tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
+                    else :
+                      tgrData_evy_up.append( 0 )
+                      tgrData_evy_do.append( 0 )
+                      
                 else :
                   for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                     tgrData_vx[iBin-1] = (  histos[sampleName].GetBinCenter (iBin))
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
-                    tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
-                    tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
+                    if 'isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] == 3 :
+                      tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
+                      tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     
                     
-              # allow arbitrary scaling in MC (and DATA??), if needed
-              # for example to "see" a signal
-              if 'scale' in plot[sampleName].keys() : 
-                histos[sampleName].Scale(plot[sampleName]['scale'])
-                #print " >> scale ", sampleName, " to ", plot[sampleName]['scale']
 
               # MC style
               if plot[sampleName]['isData'] == 0 :
@@ -471,6 +486,9 @@ class ShapeFactory:
             for iBin in range(0, len(tgrData_vx)) : 
               tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
               tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
+            
+            tgrData.SetMarkerColor(dataColor)
+            tgrData.SetLineColor(dataColor)
             
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             for iBin in range(0, len(tgrData_vx)) : 

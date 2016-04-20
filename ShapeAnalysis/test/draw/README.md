@@ -14,6 +14,9 @@ On top of mkPlot.py code
 Run on all:
 
     python DrawNuisancesAll.py
+ 
+    cd /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/LatinoAnalysis/ShapeAnalysis/test/draw/
+
     python DrawNuisancesAll.py \
          --inputFile /afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggH/datacards/hww2l2v_13TeV_me_0j/mllVSmth/shapes/histos_hww2l2v_13TeV_me_0j.root  \
          --outputDirPlots ggH0jme  \
@@ -78,6 +81,9 @@ Run on all:
          --dryRun 1
          
          
+    
+    
+    
     
     
     python DrawNuisancesAll.py \

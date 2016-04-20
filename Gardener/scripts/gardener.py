@@ -50,12 +50,14 @@ from LatinoAnalysis.Gardener.variables.MrWWVar                    import MrWWVar
 from LatinoAnalysis.Gardener.variables.mcWeights                  import mcWeightsFiller
 from LatinoAnalysis.Gardener.variables.mcWeightsCount             import mcWeightsCounter
 from LatinoAnalysis.Gardener.variables.GenVar                     import genVariablesFiller
+# gen lepton matching
+from LatinoAnalysis.Gardener.variables.genMatchVar                import GenMatchVarFiller
 
 #generic tools
 from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorentzVectorCreator
 
 # filter duplicates in data
-from LatinoAnalysis.Gardener.variables.filterDuplicates          import FilterDuplicates
+from LatinoAnalysis.Gardener.variables.filterDuplicates           import FilterDuplicates
 
 # JES uncertainty
 from LatinoAnalysis.Gardener.variables.jetScaleUncertainty        import JESTreeMaker
@@ -108,6 +110,9 @@ if __name__ == '__main__':
 
 # generator level variables
     modules['genvariablesfiller']  = genVariablesFiller()
+# gen lepton matching
+    modules['genmatchvarfiller']  = GenMatchVarFiller()
+
 
 
 
