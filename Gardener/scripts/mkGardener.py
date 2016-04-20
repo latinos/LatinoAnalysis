@@ -93,6 +93,7 @@ parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , de
 #parser.add_option("-A",  "--aquamarine-location", dest="aquamarineLocation", help="the acuamarine location (i.e. the eos interface) to use ", action='store', default="0.3.84-aquamarine.user")
 parser.add_option("-c" , "--cmssw" , dest="cmssw"     , help="CMSSW version" , default='763' , type='string' )
 parser.add_option("-C" , "--chain" , dest="chain"     , help="Chain several steps" , default=False, action="store_true")
+parser.add_option("-a" , "--allSamples" , dest="ignoreOnlySamples",  help="ignoreOnlySamples"  , default=False  , action="store_true")
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -228,7 +229,7 @@ for iProd in prodList :
         if len(options.excTree) > 0 :
           if iSample in options.excTree : selectSample=False
         # ... From iStep 
-        if 'onlySample' in Steps[iStep] :
+        if 'onlySample' in Steps[iStep] and not options.ignoreOnlySamples :
           if len(Steps[iStep]['onlySample']) > 0 :
             if not iSample in Steps[iStep]['onlySample'] : selectSample=False
         if 'excludeSample' in Steps[iStep] :
@@ -451,7 +452,7 @@ for iProd in prodList :
             # Tree selector
             selectSample=True
             # ... From iStep
-            if 'onlySample' in Steps[iSubStep] :
+            if 'onlySample' in Steps[iSubStep]  and not options.ignoreOnlySamples :
               if len(Steps[iSubStep]['onlySample']) > 0 :
                 #print Steps[iSubStep]['onlySample'] , iSample , iTargetOri
                 if not iTargetOri in Steps[iSubStep]['onlySample'] : selectSample=False

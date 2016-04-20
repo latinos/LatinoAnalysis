@@ -278,7 +278,7 @@ Steps= {
                   'do4Data'    : False,
                   'subTargets' : ['do_WgStarsel','puadder','baseW','wwNLL','genVariables'],
                   'onlySample' : [
-                                   'Wg500','Wg_AMCNLOFXFX','WZTo3LNu',
+                                   'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu'
                                  ]
                 },
 
@@ -318,7 +318,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' , 'DY2JetsToLL', 
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TTWJetsToLNu',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -337,6 +337,70 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125',
+                                  # ... ggH High Mass
+                                  'GluGluHToWWTo2L2Nu_M130',
+                                  'GluGluHToWWTo2L2Nu_M135',
+                                  'GluGluHToWWTo2L2Nu_M140',
+                                  'GluGluHToWWTo2L2Nu_M145',
+                                  'GluGluHToWWTo2L2Nu_M150',
+                                  'GluGluHToWWTo2L2Nu_M155',
+                                  'GluGluHToWWTo2L2Nu_M160',
+                                  'GluGluHToWWTo2L2Nu_M165',
+                                  'GluGluHToWWTo2L2Nu_M170',
+                                  'GluGluHToWWTo2L2Nu_M175',
+                                  'GluGluHToWWTo2L2Nu_M180',
+                                  'GluGluHToWWTo2L2Nu_M190',
+                                  'GluGluHToWWTo2L2Nu_M200',
+                                  'GluGluHToWWTo2L2Nu_M210',
+                                  'GluGluHToWWTo2L2Nu_M230',
+                                  'GluGluHToWWTo2L2Nu_M250',
+                                  'GluGluHToWWTo2L2Nu_M270',
+                                  'GluGluHToWWTo2L2Nu_M300',
+                                  'GluGluHToWWTo2L2Nu_M350',
+                                  'GluGluHToWWTo2L2Nu_M400',
+                                  'GluGluHToWWTo2L2Nu_M450',
+                                  'GluGluHToWWTo2L2Nu_M500',
+                                  'GluGluHToWWTo2L2Nu_M550',
+                                  'GluGluHToWWTo2L2Nu_M600',
+                                  'GluGluHToWWTo2L2Nu_M650',
+                                  'GluGluHToWWTo2L2Nu_M750',
+                                  'GluGluHToWWTo2L2Nu_M750_NWA',
+                                  'GluGluHToWWTo2L2Nu_M800',
+                                  'GluGluHToWWTo2L2Nu_M900',
+                                  'GluGluHToWWTo2L2Nu_M1000',
+                                  # ... VBF High Mass
+                                  'VBFHToWWTo2L2Nu_M130',
+                                  'VBFHToWWTo2L2Nu_M135',
+                                  'VBFHToWWTo2L2Nu_M140',
+                                  'VBFHToWWTo2L2Nu_M145',
+                                  'VBFHToWWTo2L2Nu_M150',
+                                  'VBFHToWWTo2L2Nu_M155',
+                                  'VBFHToWWTo2L2Nu_M160',
+                                  'VBFHToWWTo2L2Nu_M165',
+                                  'VBFHToWWTo2L2Nu_M170',
+                                  'VBFHToWWTo2L2Nu_M175',
+                                  'VBFHToWWTo2L2Nu_M180',
+                                  'VBFHToWWTo2L2Nu_M190',
+                                  'VBFHToWWTo2L2Nu_M200',
+                                  'VBFHToWWTo2L2Nu_M210',
+                                  'VBFHToWWTo2L2Nu_M230',
+                                  'VBFHToWWTo2L2Nu_M250',
+                                  'VBFHToWWTo2L2Nu_M270',
+                                  'VBFHToWWTo2L2Nu_M300',
+                                  'VBFHToWWTo2L2Nu_M350',
+                                  'VBFHToWWTo2L2Nu_M400',
+                                  'VBFHToWWTo2L2Nu_M450',
+                                  'VBFHToWWTo2L2Nu_M500',
+                                  'VBFHToWWTo2L2Nu_M550',
+                                  'VBFHToWWTo2L2Nu_M600',
+                                  'VBFHToWWTo2L2Nu_M650',
+                                  'VBFHToWWTo2L2Nu_M700',
+                                  'VBFHToWWTo2L2Nu_M750',
+                                  'VBFHToWWTo2L2Nu_M750_NWA',
+                                  'VBFHToWWTo2L2Nu_M800',
+                                  'VBFHToWWTo2L2Nu_M900',
+                                  'VBFHToWWTo2L2Nu_M1000',
                                   # PS
                                   'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
                                   # UE
@@ -399,6 +463,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
                 },
 
@@ -430,6 +495,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
                 },
 
@@ -462,6 +528,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
                 },
 
@@ -493,6 +560,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
                 },
 
@@ -533,6 +601,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
               },
 
@@ -564,6 +633,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
               },
 
@@ -596,6 +666,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
               },
 
@@ -628,6 +699,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
               },
                   
@@ -661,6 +733,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
               },
 
@@ -692,6 +765,7 @@ Steps= {
                                   'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125','TTWJetsToLNu',
                                  ] ,
               },
 
