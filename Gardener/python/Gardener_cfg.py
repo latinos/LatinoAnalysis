@@ -185,7 +185,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables'],
+                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
 #                 'onlySample' : [
 #                                 # DY 
 #                                 'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
