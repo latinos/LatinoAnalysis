@@ -439,7 +439,6 @@ class allBtagPogScaleFactors(TreeCloner):
         for i in xrange(nentries):
             itree.GetEntry(i)
             ## print event count
-            if i == 100000: break
             if i > 0 and i%step == 0.:
               print i,'events processed.'
 
