@@ -527,7 +527,7 @@ for iProd in prodList :
         puData = '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root'
         if 'puData' in Productions[iProd] : puData = Productions[iProd]['puData']
         if 'iihe' in os.uname()[1]:
-          puData=puData.replace('/afs/cern.ch/user/x/xjanssen/public','/localgrid/xjanssen/HWW2015/pudata')
+          puData=puData.replace('/afs/cern.ch/user/x/xjanssen/public','/user/xjanssen/HWW2015/pudata')
         print 'PU Data : ', puData
         command = command.replace('RPLME_puData',puData)  
 
