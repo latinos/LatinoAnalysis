@@ -176,10 +176,16 @@ class HiggsXSection:
        if not proc      in self._YR[YRversion][model]['xs'][energy]  : return '1.0'
         
      if    np == 'scale' :
-       return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_pos')/100.)
+       if proc == 'ggZH':
+         return '1.37'  # Number from CMS/ATLAS combination !
+       else:
+         return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_pos')/100.)
 
      elif  np == 'pdf' :
-       return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'PDF_plus_alpha_s')/100.  )
+       if proc == 'ggZH':
+         return '1.15'  # Number from CMS/ATLAS combination !
+       else:  
+         return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'PDF_plus_alpha_s')/100.  )
 
 
 
