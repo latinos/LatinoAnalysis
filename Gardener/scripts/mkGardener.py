@@ -181,7 +181,7 @@ for iProd in prodList :
       fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep
   else:
     if options.iStep == 'Prod' : 
-      fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt'] # +' | grep  ttDM'
+      fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
     else:
       fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+options.iStep
   print fileCmd

@@ -163,6 +163,28 @@ class HiggsXSection:
      else:
        return self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'XS_pb')
 
+   def GetHiggsProdXSNP(self,YRversion,energy,proc,mh,np='scale',model='sm'):
+     # np= 'scale' or 'pdf'
+     if not np in ['scale','pdf']                                 : return '1.0'
+     if not YRversion in self._YR                                 : return '1.0'
+     if not model     in self._YR[YRversion]                      : return '1.0'
+     if not 'xs'      in self._YR[YRversion][model]               : return '1.0'
+     if not energy    in self._YR[YRversion][model]['xs']         : return '1.0'
+     if proc in ['HWplus','HWminus'] :
+       if not 'WH'      in self._YR[YRversion][model]['xs'][energy]  : return '1.0'
+     else:
+       if not proc      in self._YR[YRversion][model]['xs'][energy]  : return '1.0'
+        
+     if    np == 'scale' :
+       return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_pos')/100.)
+
+     elif  np == 'pdf' :
+       return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'PDF_plus_alpha_s')/100.  )
+
+
+
+
+
    def YR4dec(self,YRversion,decay):
      if not YRversion in ['YR4prel' ] : return decay
      if decay == 'H_bb'       : return 'hbb'
@@ -264,7 +286,7 @@ class HiggsXSection:
 HiggsXS = HiggsXSection() 
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M130')
-print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
 
 #HiggsXS.printYR()
 #print HiggsXS.GetHiggsProdXS('YR2','8TeV','ggH','125.0')
@@ -284,4 +306,5 @@ print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','HWplusJ_HToWW_M125')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','ggZH_HToWW_M130')
 
-
+print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','scale','sm')
+print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','pdf','sm')
