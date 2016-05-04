@@ -280,6 +280,7 @@ Steps= {
                   'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 
+                                   'WZTo2L2Q',
                                  ]
                 },
 
@@ -328,6 +329,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX',
+                                  'WZTo2L2Q',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -453,7 +455,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -549,7 +551,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -646,7 +648,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -742,7 +744,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -846,7 +848,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -941,7 +943,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1038,7 +1040,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1135,7 +1137,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1232,7 +1234,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1328,7 +1330,7 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1528,7 +1530,9 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO'],
+                  'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
+                                  'WZTo2L2Q',
+                                 ],
                },
 
   'do_lpTCorrMC'  : {
