@@ -317,8 +317,8 @@ class ShapeFactory:
                                 #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 
                                 
-                              else :
-                                print "Warning! No", nuisanceName, " up variation for", sampleName, ' of kind lnN'
+                              #else :
+                                #print "Warning! No", nuisanceName, " up variation for", sampleName, ' of kind lnN'
                             
                     if histoDown == None:
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
@@ -369,8 +369,8 @@ class ShapeFactory:
                                 # don't use  histos[sampleName], or the second "scale" will fail!!!
                                 histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
                                 histoDown.Scale(down_variation)
-                              else :
-                                print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
+                              #else :
+                                #print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
                   
                   
                   if 'scale' in plot[sampleName].keys() : 

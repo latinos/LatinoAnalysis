@@ -225,4 +225,28 @@ Example:
          /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_DYJetsToLL_M-50-LO__part0.root  \
          DrawCompare.cxx\(\"ptll\",100,0,200,\"std_vector_lepton_pt[1]\>15\"\)
     
+
+    r99t /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel__UEup/latino_WWTo2L2Nu.root  \
+         /tmp/amassiro/eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WWTo2L2Nu.root  \
+
+         
+    latino0 = (TTree*) _file0->Get("latino");
+    latino1 = (TTree*) _file1->Get("latino");
+    
+    latino0->GetEntries("std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10")
+    latino1->GetEntries("std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10")
+    
+    latino0->Draw("1 >> htemp(1,0,2)","(puW*baseW*bPogSF*effTrigW*std_vector_lepton_idisoW[0]*std_vector_lepton_idisoW[1])*(std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10)","goff");
+    htemp->GetBinContent(1)
+    
+    latino1->Draw("1 >> htemp(1,0,2)","(puW*baseW*bPogSF*effTrigW*std_vector_lepton_idisoW[0]*std_vector_lepton_idisoW[1])*(std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10)","goff");
+    htemp->GetBinContent(1)
+    
+    
+    
+    
+    
+    
+    
+    
     
