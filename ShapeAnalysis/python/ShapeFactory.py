@@ -539,6 +539,14 @@ class ShapeFactory:
                         else :
                           outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName)
  
+ 
+                        # check if I need to symmetrize:
+                        #    - the up will be symmetrized
+                        #    - down ->   down - (up - down)
+                        #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
+                        if 'symmetrize' in nuisance:
+                          self._symmetrize(outputsHistoUp, outputsHistoDo)
+ 
                         # now save to the root file
                         outputsHistoUp.Write()
                         outputsHistoDo.Write()
@@ -559,6 +567,22 @@ class ShapeFactory:
         # - then disconnect the files
         self._disconnectInputs(inputs)
 
+        
+    # _____________________________________________________________________________
+    def _symmetrize(self, hUp, hDo): 
+
+        #print " >> fold underflow"
+        if hUp.GetDimension() == 1:
+          nx = hUp.GetNbinsX()
+          for iBin in range(1, nx+1):
+            valueUp = hUp.GetBinContent(iBin)
+            valueDo = hDo.GetBinContent(iBin) 
+            newValueDo = valueDo - (valueUp-valueDo)
+            hDo.SetBinContent(iBin, newValueDo)
+        else :
+          print 'No way! I am not going to symmetrize something that is not already folded into 1D'
+        
+        
         
 
 
