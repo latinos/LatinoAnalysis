@@ -34,6 +34,7 @@ class GenMatchVarFiller(TreeCloner):
         if dPhi > ROOT.TMath.Pi() :
           dPhi = 2*ROOT.TMath.Pi() - dPhi
         dR2 = (b_Eta - a_Eta) * (b_Eta - a_Eta) + dPhi * dPhi
+        #print ">> dR = ", math.sqrt(dR2), " :: ", dPhi, " (+) ", (b_Eta - a_Eta) 
         if dR2 < (drmax*drmax):
             return True
         else:
@@ -115,13 +116,15 @@ class GenMatchVarFiller(TreeCloner):
                      and  (abs(self.itree.std_vector_leptonGen_pid[iGenLep]) == 11 or abs(self.itree.std_vector_leptonGen_pid[iGenLep]) == 13)   : 
                     # and if the reco lepton is close to this gen lepton
                     if self.isAcloseToB(self.itree.std_vector_lepton_eta[iLep],    self.itree.std_vector_lepton_phi[iLep],
-                                        self.itree.std_vector_leptonGen_eta[iLep], self.itree.std_vector_leptonGen_phi[iLep],
+                                        self.itree.std_vector_leptonGen_eta[iGenLep], self.itree.std_vector_leptonGen_phi[iGenLep],
                                         0.3) :
                       isLeptonMatched = 1
               
               # now save the variable
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                 bvector.push_back ( isLeptonMatched )
+                #print " itree.std_vector_lepton_pt[", iLep, "] = ", itree.std_vector_lepton_pt[iLep], "  --> ", isLeptonMatched
+          
           
               
             otree.Fill()

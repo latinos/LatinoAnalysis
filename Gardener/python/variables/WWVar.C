@@ -80,6 +80,10 @@ public:
  
  //---- to reject Wg*
  float mllThird();
+ float mllOneThree();
+ float mllTwoThree();
+ float drllOneThree();
+ float drllTwoThree();
  
  
 private:
@@ -1011,5 +1015,115 @@ float WW::mllThird(){
 }
 
 
+
+float WW::mllOneThree(){
+ 
+ if (_isOk) {
+  
+  //---- check L3
+  //----      pt3>2 GeV
+  if (_leptonspt.size()>2 && _leptonspt.at(2) > 2) {
+   float flav1 = _leptonsflavour.at(0);
+   float flav2 = _leptonsflavour.at(1);
+   float flav3 = _leptonsflavour.at(2);
+   
+   float newmll = - 9999.0;
+   float mll13 = -9999.0;
+   
+   //---- same flavour and different charge
+   mll13 = (L1+L3).M();
+   return mll13;
+  }   
+  else { //---- if third lepton is not good
+   return -9999.0;
+  }
+ }
+ else { //---- if I don't even have 2 leptons
+  return -9999.0;
+ }
+ 
+}
+
+
+
+float WW::mllTwoThree(){
+ 
+ if (_isOk) {
+  
+  //---- check L3
+  //----      pt3>2 GeV
+  if (_leptonspt.size()>2 && _leptonspt.at(2) > 2) {
+   float flav1 = _leptonsflavour.at(0);
+   float flav2 = _leptonsflavour.at(1);
+   float flav3 = _leptonsflavour.at(2);
+   
+   float newmll = - 9999.0;
+   float mll23 = -9999.0;
+   
+   //---- same flavour and different charge
+   mll23 = (L2+L3).M();
+   return mll23;
+  }   
+  else { //---- if third lepton is not good
+   return -9999.0;
+  }
+ }
+ else { //---- if I don't even have 2 leptons
+  return -9999.0;
+ }
+ 
+}
+
+
+
+
+
+float WW::drllOneThree(){
+ 
+ if (_isOk) {
+  
+  //---- check L3
+  //----      pt3>2 GeV
+  if (_leptonspt.size()>2 && _leptonspt.at(2) > 2) {
+   float flav1 = _leptonsflavour.at(0);
+   float flav2 = _leptonsflavour.at(1);
+   float flav3 = _leptonsflavour.at(2);
+   
+   return L1.DeltaR(L3);
+  }   
+  else { //---- if third lepton is not good
+   return -9999.0;
+  }
+ }
+ else { //---- if I don't even have 2 leptons
+  return -9999.0;
+ }
+ 
+}
+
+
+
+float WW::drllTwoThree(){
+ 
+ if (_isOk) {
+  
+  //---- check L3
+  //----      pt3>2 GeV
+  if (_leptonspt.size()>2 && _leptonspt.at(2) > 2) {
+   float flav1 = _leptonsflavour.at(0);
+   float flav2 = _leptonsflavour.at(1);
+   float flav3 = _leptonsflavour.at(2);
+   
+   return L2.DeltaR(L3);
+  }   
+  else { //---- if third lepton is not good
+   return -9999.0;
+  }
+ }
+ else { //---- if I don't even have 2 leptons
+  return -9999.0;
+ }
+ 
+}
 
 
