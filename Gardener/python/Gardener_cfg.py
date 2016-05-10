@@ -319,6 +319,8 @@ Steps= {
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' , 'DY2JetsToLL', 
+                                  # WJets
+                                  'WJetsToLNu',
                                   # Top
                                   'TTTo2L2Nu','TTWJetsToLNu',
                                   'ST_t-channel_antitop','ST_t-channel_top',
