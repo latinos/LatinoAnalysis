@@ -33,6 +33,7 @@ public:
 //  float pTGenVar();
 //  float dphill();
 //  float mll();
+ float gen_ptllmet();
  float gen_ptll();
  float gen_mll();
  float gen_llchannel();
@@ -83,6 +84,7 @@ GenVar::GenVar() {
 void GenVar::setMET(float met, float metphi) {
  _met = met;
  _met_phi = metphi;
+ _metOk = true;
 }
 
 void GenVar::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
@@ -163,6 +165,21 @@ void GenVar::setNeutrinos(std::vector<float> invectorpt, std::vector<float> inve
 // }
 // 
 // 
+
+float GenVar::gen_ptllmet(){
+  if (_lepOk >=2 && _metOk ) {
+    TLorentzVector L1,L2;
+    L1.SetPtEtaPhiM(_leptonspt.at(0), _leptonseta.at(0), _leptonsphi.at(0), 0.);
+    L2.SetPtEtaPhiM(_leptonspt.at(1), _leptonseta.at(1), _leptonsphi.at(1), 0.);
+
+    TLorentzVector MET;
+    MET.SetPtEtaPhiM(_met , 0, _met, 0.);
+    return (L1+L2+MET).Pt();
+  }
+  else {
+    return -9999.0;
+  }
+}
 
 
 float GenVar::gen_ptll(){
