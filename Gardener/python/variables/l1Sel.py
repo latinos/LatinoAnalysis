@@ -432,20 +432,59 @@ class L1SelFiller(TreeCloner):
        return isThisAWgsLepton
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
+    def isVeryLooseLepton(self, ilepton) :
+       
+       # denominator of fakes definition      
+       isThisAVeryLooseLepton = 0
+       if self.itree.std_vector_lepton_pt[ilepton] > 0 :
+            
+           ###########
+           # electron
+           # id definition       
+           if (
+                abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
+                and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5
+                and 
+                 ((
+                 (abs(self.itree.std_vector_lepton_eta[ilepton]) <= 1.479) 
+                 and    (abs(self.itree.std_vector_electron_dEtaIn[ilepton]) < 0.01               and
+                         abs(self.itree.std_vector_electron_dPhiIn[ilepton]) < 0.04               and
+                         self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.011              and
+                         self.itree.std_vector_electron_hOverE[ilepton]              < 0.08               and
+                         self.itree.std_vector_electron_ooEmooP[ilepton] < 0.01               and 
+                         self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2  and
+                         self.itree.std_vector_lepton_d0[ilepton]      < 0.5                and
+                         abs(self.itree.std_vector_lepton_dz[ilepton])< 1.              and
+                         self.itree.std_vector_electron_passConversionVeto[ilepton] )
+                 )
+                 or 
+                 (
+                 (abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5)
+                 and    (abs(self.itree.std_vector_electron_dEtaIn[ilepton]) < 0.01               and
+                         abs(self.itree.std_vector_electron_dPhiIn[ilepton]) < 0.08               and
+                         self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.031              and
+                         self.itree.std_vector_electron_hOverE[ilepton]              < 0.08               and
+                         self.itree.std_vector_electron_ooEmooP[ilepton] < 0.01               and
+                         self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1  and
+                         self.itree.std_vector_lepton_d0[ilepton]      < 0.5                and
+                         abs(self.itree.std_vector_lepton_dz[ilepton])< 1.              and
+                         self.itree.std_vector_electron_passConversionVeto[ilepton] )
+                 ))
+              ) : 
+                isThisAVeryLooseLepton = 1
+           
+           ###########
+           # muon        
+                         
+           if ( abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+                  and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.4
+                  and abs(self.itree.std_vector_lepton_d0[ilepton]) < 0.5          # formerly std_vector_lepton_BestTrackdxy
+                  and abs(self.itree.std_vector_lepton_dz[ilepton]) < 1.          # formerly std_vector_lepton_BestTrackdz
+            ) :
+              isThisAVeryLooseLepton = 1
+           
+       return isThisAVeryLooseLepton
+   
                     
     def process(self,**kwargs):
         tree  = kwargs['tree']
@@ -467,12 +506,12 @@ class L1SelFiller(TreeCloner):
         # or because jets are filtered because they are actually leptons
         #
         self.namesOldBranchesToBeModifiedVector = []
-	vectorsToChange = ['std_vector_lepton_','std_vector_electron_','std_vector_muon_','std_vector_jet_','std_vector_puppijet_']
+        vectorsToChange = ['std_vector_lepton_','std_vector_electron_','std_vector_muon_','std_vector_jet_','std_vector_puppijet_']
         for b in self.itree.GetListOfBranches():
-	    branchName = b.GetName()
-	    for subString in vectorsToChange:
-		if subString in branchName:
-		    self.namesOldBranchesToBeModifiedVector.append(branchName)
+            branchName = b.GetName()
+            for subString in vectorsToChange:
+                if subString in branchName:
+                    self.namesOldBranchesToBeModifiedVector.append(branchName)
         
         
         # new branches to be added as std_vector
@@ -590,13 +629,13 @@ class L1SelFiller(TreeCloner):
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
 
-	# keep loose leptons: copy in toto the list of leptons and variables
-	#                     and change the name adding "loose" in it
-	#self.looseLeptonVector = {}
-	#looseLeptonCollections = ['std_vector_lepton_pt','std_vector_lepton_eta','std_vector_lepton_phi','std_vector_lepton_flavour']
-	#for bname in looseLeptonCollections:
-	  #if bname in self.itree.GetListOfBranches():
-	    #bvector =  ROOT.std.vector(float) ()
+        # keep loose leptons: copy in toto the list of leptons and variables
+        #                     and change the name adding "loose" in it
+        #self.looseLeptonVector = {}
+        #looseLeptonCollections = ['std_vector_lepton_pt','std_vector_lepton_eta','std_vector_lepton_phi','std_vector_lepton_flavour']
+        #for bname in looseLeptonCollections:
+          #if bname in self.itree.GetListOfBranches():
+            #bvector =  ROOT.std.vector(float) ()
             #self.looseLeptonVector[bname] = bvector
             #self.otree.Branch(bname.replace('lepton','looseLepton'), bvector)
 
@@ -694,7 +733,12 @@ class L1SelFiller(TreeCloner):
 
               ##########################################
 
-     
+              if self.kind == 4 :
+               
+                VeryLooseTag = self.isVeryLooseLepton(iLep)
+                
+                if VeryLooseTag == 1 :
+                  isGoodLepton = True
  
               # now check if we found 2 leptons        
                              
@@ -751,14 +795,14 @@ class L1SelFiller(TreeCloner):
               # now the jets:  
               # - clean jets
               #   for leptons with pt > minLeptonPt (default 10 GeV)
-	      minLeptonPt = 10.
-	      
+              minLeptonPt = 10.
+              
               goodJets = []
               for iJet in xrange(len(itree.std_vector_jet_pt)) :
                 isLepton = False;
                 for iLep in goodLeps :
-		  if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
-		    break;
+                  if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
+                    break;
                   if self.jetIsLepton(itree.std_vector_jet_eta[iJet],itree.std_vector_jet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
                     isLepton = True;
                 if not isLepton:
@@ -768,8 +812,8 @@ class L1SelFiller(TreeCloner):
               for iJet in xrange(len(itree.std_vector_puppijet_pt)) :
                   isLepton = False;
                   for iLep in goodLeps :
-	 	      if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
-		          break;
+                      if itree.std_vector_lepton_pt[iLep] < minLeptonPt:
+                          break;
                       if self.jetIsLepton(itree.std_vector_puppijet_eta[iJet],itree.std_vector_puppijet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
                           isLepton = True;
                   if not isLepton:
@@ -783,8 +827,8 @@ class L1SelFiller(TreeCloner):
                            self.changeOrder( bname, bvector, goodJets)
                            
               #for bname, bvector in self.looseLeptonVector.iteritems():
-		   #bvector.clear() 
-		   ##print " boh = ",len(getattr(self.itree, bname))
+                   #bvector.clear() 
+                   ##print " boh = ",len(getattr(self.itree, bname))
                    #self.changeOrder( bname, bvector, xrange(len(getattr(self.itree, bname))) )
 
               #print "goodJets: ", goodJets
@@ -839,7 +883,7 @@ class L1SelFiller(TreeCloner):
                 bvariable[0] = getattr(WW, bname)()
                 
               # refill the single jet variables
-	      counter = 0
+              counter = 0
               varCounter = 0
               for bname, bvariable in self.jetVarDic.iteritems():
                   bvariable[0] = (getattr(self.otree, 'std_vector_jet_'+self.jetVariables[varCounter]))[counter]
