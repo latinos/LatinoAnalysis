@@ -311,6 +311,22 @@ Steps= {
                   'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin'],
                 },
 
+  'bSFKinFix'    : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['bPogSF','genMatchVariables'],
+                },
+
+  'KinFix'    : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['genMatchVariables'],
+                },
+
+
+
   'bSFL2pTEff'   :   {
                   'isChain'    : True ,
                   'do4MC'      : True ,
@@ -319,6 +335,8 @@ Steps= {
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' , 'DY2JetsToLL', 
+                                  # WJets
+                                  'WJetsToLNu',
                                   # Top
                                   'TTTo2L2Nu','TTWJetsToLNu',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -328,7 +346,8 @@ Steps= {
                                   'WZTo3LNu',
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX',
+                                  'Wg_AMCNLOFXFX', 
+                                  'Wg_MADGRAPHMLM',
                                   'WZTo2L2Q',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
@@ -456,6 +475,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -552,6 +572,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -649,6 +670,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -745,6 +767,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ',
                                   # Higgs 
@@ -849,6 +872,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -944,6 +968,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1041,6 +1066,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1138,6 +1164,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1235,6 +1262,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1331,6 +1359,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
+                                  'Wg_MADGRAPHMLM',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1583,7 +1612,9 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py btagPogScaleFactors '
+                  #'command'    : 'gardener.py btagPogScaleFactors '
+                  # --> switch to multiple bTag algo SF:
+                  'command'    : 'gardener.py allBtagPogScaleFactors '
               },
 
   'do_LepElepTup'    : {
@@ -1702,6 +1733,13 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && metPfType1 > 20 && ptll > 30 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*13) \' '
+           },
+
+  'vh3lSel'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' std_vector_lepton_isTightLepton[0] > 0.5  && std_vector_lepton_isTightLepton[1] > 0.5  && std_vector_lepton_isTightLepton[2] > 0.5 && std_vector_lepton_pt[0] > 20. && std_vector_lepton_pt[1] > 10. && std_vector_lepton_pt[2] > 10.\' '
            },
 
 }
