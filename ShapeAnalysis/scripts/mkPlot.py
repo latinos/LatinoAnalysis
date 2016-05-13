@@ -1159,6 +1159,8 @@ class ShapeFactory:
             
           print " >> all end"
 
+        print " >> all but really all "
+        
 
 
    # _____________________________________________________________________________
