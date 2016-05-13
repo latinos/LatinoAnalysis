@@ -11,7 +11,8 @@ import os.path
 from collections import OrderedDict
 from array import array;
 import numpy as np
-
+import pickle
+from scipy.interpolate import interp1d
 
 class BWEwkSingletReweighter(TreeCloner):
     def __init__(self):
@@ -30,35 +31,54 @@ class BWEwkSingletReweighter(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-m',    "--mass",       dest = 'mH',   help="mass point",      default=125., type='float')
-        group.add_option('-u',    "--undoCPS",       dest = 'undoCPS',   help="Needed in case the original sample was produced withc omplex Pole Mass Scheme",      default=True, action='store_true')
-        group.add_option('-i', '--cprimemin' , dest='cprimemin' , help="c' minimum value", default=0.,  type='float')
+        #group.add_option('-m', "--mass",       dest = 'mH',   help="mass point",      default=125., type='float')
+        group.add_option('-u', "--undoCPS",       dest = 'undoCPS',   help="Needed in case the original sample was produced withc omplex Pole Mass Scheme",      default=True, action='store_true')
+        group.add_option('-i', '--cprimemin' , dest='cprimemin' , help="c' minimum value", default=0.1,  type='float')
         group.add_option('-f', '--cprimemax' , dest='cprimemax' , help="c' maximum value", default=1.,  type='float')
-        group.add_option('-s' , '--cprimestep', dest='cprimestep', help="c' step",          default=0.1, type='float')
+        group.add_option('-s', '--cprimestep', dest='cprimestep', help="c' step",          default=0.1, type='float')
         group.add_option('-l', '--brnewmin' , dest='brnewmin' ,   help="BRnew minimum value", default=0.,  type='float')
         group.add_option('-n', '--brnewmax' , dest='brnewmax' ,   help="BRnew maximum value", default=1.,  type='float')
         group.add_option('-q' , '--brnewstep', dest='brnewstep',   help="BRnew step",          default=0.1, type='float') 
+        group.add_option('-w' , '--globalshiftfileGG', dest='shiftfileGG',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for GG.", default="data/BWShifts_ggH.pkl") 
+        group.add_option('-k' , '--globalshiftfileVBF', dest='shiftfileVBF',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for VBF.", default="data/BWShifts_VBF.pkl") 
+        group.add_option('-d' , '--decayWeightsFile', dest='decayWeightsFile',   help="pickle file containing the JHU derived decay weights for WW", default="data/decayWeightsWW.pkl") 
+        group.add_option('-p' , '--fileNameFormat', dest='fileNameFormat',   help="file name format to determine production process and mass", default="latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+).root") 
 
         parser.add_option_group(group)
         return group
 
     def checkOptions(self,opts):
-        self.cprimemin = opts.cprimemin
-        self.cprimemax = opts.cprimemax
-        self.cprimestep = opts.cprimestep
-        self.brnewmin  = opts.brnewmin
-        self.brnewmax  = opts.brnewmax
-        self.brnewstep = opts.brnewstep
-        self.mH        = opts.mH
-        self.gsm       = self.g.GetBinContent(self.g.FindBin(self.mH))
-        self.undoCPS   = opts.undoCPS
+        cmssw_base = os.getenv('CMSSW_BASE')
+        self.cprimemin        = opts.cprimemin
+        self.cprimemax        = opts.cprimemax
+        self.cprimestep       = opts.cprimestep
+        self.brnewmin         = opts.brnewmin
+        self.brnewmax         = opts.brnewmax
+        self.brnewstep        = opts.brnewstep
+        #self.mH               = opts.mH
+        #self.gsm              = self.g.GetBinContent(self.g.FindBin(self.mH))
+        self.undoCPS          = opts.undoCPS
+        if opts.shiftfileGG == "":
+          self.shiftfileGG        = opts.shiftfileGG
+        else:
+          self.shiftfileGG        = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+opts.shiftfileGG
+          
+        if opts.shiftfileVBF == "":
+          self.shiftfileVBF        = opts.shiftfileVBF
+        else:
+          self.shiftfileVBF        = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+opts.shiftfileVBF
+ 
+        self.decayWeightsFile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+opts.decayWeightsFile
+        self.fileNameFormat    = opts.fileNameFormat
         print "c' start", self.cprimemin
         print "c' stop", self.cprimemax
         print "c' step", self.cprimestep
         print "BRnew start", self.brnewmin
         print "BRnew stop", self.brnewmax
         print "BRnew step", self.brnewstep
-        print "Mass", self.mH, " with SM width", self.gsm
+        print "global shift for GG from file", self.shiftfileGG
+        print "global shift for VBF from file", self.shiftfileVBF
+        print "Decay weights from file", self.decayWeightsFile
         if self.undoCPS:
           print "Undoing Complex Pole Scheme before applying the BW weights"
         cmssw_base = os.getenv('CMSSW_BASE')
@@ -76,10 +96,11 @@ class BWEwkSingletReweighter(TreeCloner):
     def muprime(self, k, br):
       return k*(1-br)
 
-    def RelBreightWigner(self, m, mH, G):
-      gamma = ROOT.TMath.Sqrt(mH*mH*(mH*mH+G*G))
-      N = mH*G*gamma/ROOT.TMath.Sqrt(mH*mH+gamma)
-      return N/((m*m-mH*mH)*(m*m-mH*mH)+mH*mH*G*G)
+    def FixedBreightWigner(self, m, mH, G):
+      return mH*G/((m**2-mH**2)**2 + (mH*G)**2)
+    
+    def RunningBreightWigner(self, m, mH, G):
+      return (m**2*G/mH)/((m**2-mH**2)**2 + (m**2*G/mH)**2)
 
     def GprimeOverGsm(self, k,br):
       return k/(1-br)
@@ -89,11 +110,28 @@ class BWEwkSingletReweighter(TreeCloner):
         raise Exception("Internal histogram of higgs widths not initialized")
       return  self.GprimeOverGsm(k, br)*self.g.GetBinContent(self.g.FindBin(mh)) 
 
-                
+        
     def process(self,**kwargs):
         tree  = kwargs['tree']
         input = kwargs['input']
         output = kwargs['output']
+
+        filename = (input.split("/"))[-1]
+        pattern = re.match(self.fileNameFormat, filename)
+        if pattern == None:
+          print "cannot parse filename",filename, "Expected pattern is", self.fileNameFormat
+          return
+        if pattern.group(1) == "VBF":
+          productionProcess = "VBF"
+        elif pattern.group(1) == "GluGlu":
+          productionProcess = "GG"
+        else:
+          print pattern.group(1), "is an unknown production process"
+          return
+        
+        self.mH  = float(pattern.group(2))
+        self.gsm = self.g.GetBinContent(self.g.FindBin(self.mH))
+        print "Mass", self.mH, " with SM width", self.gsm
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
@@ -104,12 +142,13 @@ class BWEwkSingletReweighter(TreeCloner):
         self.namesOldBranchesToBeModifiedSimpleVariable = []
         rangecprime = np.arange(self.cprimemin, self.cprimemax, self.cprimestep).tolist()
         rangeBRnew  = np.arange(self.brnewmin, self.brnewmax, self.brnewstep).tolist()
-        print "cprimes", rangecprime
-        print "BRnews", rangeBRnew
         if (self.cprimemax) not in rangecprime:
           rangecprime.append(self.cprimemax)
         if (self.brnewmin) not in rangeBRnew:
           rangeBRnew.insert(0, self.brnewmin)
+        print "cprimes", rangecprime
+        print "BRnews", rangeBRnew
+
         for cprime in rangecprime:
           for BRnew in rangeBRnew:
             self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew))
@@ -131,13 +170,30 @@ class BWEwkSingletReweighter(TreeCloner):
         # input tree and output tree
         itree     = self.itree
         otree     = self.otree
+        
+        if productionProcess == "GG":
+          shiftfile = self.shiftfileGG
+        elif productionProcess == "VBF":
+          shiftfile = self.shiftfileVBF
+        else:
+          print "Unknown process", productionProcess
+          return
+        if shiftfile != "":
+          with open (shiftfile) as shiftfile_stream:
+            shifts = pickle.load(shiftfile_stream)
+            #print shifts[str(int(self.mH))]
 
+        with open (self.decayWeightsFile) as decayWeightsFile:
+          allparams = pickle.load(decayWeightsFile)
+          decayWeightFunction = interp1d(**allparams[str(int(self.mH))]["decayWeight"])
+          minmass = min(allparams[str(int(self.mH))]["decayWeight"]['x'])
+          maxmass = max(allparams[str(int(self.mH))]["decayWeight"]['x'])
+          print "decay weights for mass", str(int(self.mH)), " available between", minmass, " and", maxmass 
 
         #----------------------------------------------------------------------------------------------------
         print '- Starting eventloop'
         step = 5000
 
-        #for i in xrange(2000):
         for i in xrange(nentries):
 
             itree.GetEntry(i)
@@ -145,18 +201,26 @@ class BWEwkSingletReweighter(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
             
-            mass = itree.higgsGenmass
+            mass = itree.higgsLHEMass
             CPSweight = 1.
             if self.undoCPS:
               CPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
+            shift = 1.
+            if mass < minmass:
+              decayWeight = decayWeightFunction(minmass)
+            elif mass > maxmass:  
+              decayWeight = decayWeightFunction(maxmass)
+            else:   
+              decayWeight = decayWeightFunction(mass)
             for cprime in rangecprime:
               for BRnew in rangeBRnew:
                 name = 'cprime'+str(cprime)+"BRnew"+str(BRnew)
                 kprime = cprime**2;
-                overallweight = kprime*(1-BRnew) 
+                #overallweight = kprime*(1-BRnew) 
                 gprime = self.Gprime(self.mH, kprime, BRnew);
-                self.oldBranchesToBeModifiedSimpleVariable[name][0] = self.RelBreightWigner(mass, self.mH, gprime)/self.RelBreightWigner(mass, self.mH, self.gsm)/CPSweight
-                #print self.oldBranchesToBeModifiedSimpleVariable[name]  
+                if shiftfile != "":
+                  shift = shifts[str(int(self.mH))]["cprime"+str(cprime)]["brnew"+str(BRnew)]["weight"]
+                self.oldBranchesToBeModifiedSimpleVariable[name][0] = (1./shift)*decayWeight*self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsm)/CPSweight
               
             otree.Fill()
 
