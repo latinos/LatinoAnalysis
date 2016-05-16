@@ -551,26 +551,26 @@ Module: BWEwkSingletReweighter
 
   This module reweights the Higgs lineshape according to the EWK singlet c' BRnew parametrization. It does not change the overall normalization. If you want the EWK singlet corresponfing cross section you should multiply your event yield by c'c'(1-BRnew) 
 
-  The module adds to the tree a set of weights names cprime<value>\_BRnew<value>.
+  The module adds to the tree a set of weights names cprime[value]\_BRnew[value].
 
   Example:
 
   gardener.py BWEwkSingletReweighter filein.root fileout.root
 
-  options:
+    options:
 
-  -u, --undoCPS:  assumes the POWHEG sample was produced with CPS lineshape. Default True.
+    -u, --undoCPS:  assumes the POWHEG sample was produced with CPS lineshape. Default True.
 
-  (-i, --cprimemin), (-f, --cprimemax), (-s, --cprimestep) are used to compute the c' steps, from cprimemin (default 0.1) to cprimemax (default 1.0) in cprimestep (default 0.1) steps
- 
-  (-l, --brnewmin), (-n, --brnewmax), (-q, --brnewstep), same as above for BRnew. defaults: brnewmin 0.0, brnewmax 1.0, brnewstep 0.1
+    (-i, --cprimemin), (-f, --cprimemax), (-s, --cprimestep) are used to compute the c' steps, from cprimemin (default 0.1) to cprimemax (default 1.0) in cprimestep (default 0.1) steps
+   
+    (-l, --brnewmin), (-n, --brnewmax), (-q, --brnewstep), same as above for BRnew. defaults: brnewmin 0.0, brnewmax 1.0, brnewstep 0.1
 
-  -w , --globalshiftfileGG,  pickle file containing the global shifts due to reweighting (to preserve integral) for GG. Default="data/BWShifts_ggH.pkl"
- 
-  -k , --globalshiftfileVBF, pickle file containing the global shifts due to reweighting (to preserve integral) for VBF. Default="data/BWShifts_VBF.pkl"
+    -w , --globalshiftfileGG,  pickle file containing the global shifts due to reweighting (to preserve integral) for GG. Default="data/BWShifts_ggH.pkl"
+   
+    -k , --globalshiftfileVBF, pickle file containing the global shifts due to reweighting (to preserve integral) for VBF. Default="data/BWShifts_VBF.pkl"
 
-  -d , --decayWeightsFile, pickle file containing the JHU derived decay weights for WW, default="data/decayWeightsWW.pkl"
-        
-  -p , --fileNameFormat, file name format to determine production process and mass, default="latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+).root")
+    -d , --decayWeightsFile, pickle file containing the JHU derived decay weights for WW, default="data/decayWeightsWW.pkl"
+          
+    -p , --fileNameFormat, file name format to determine production process and mass, default="latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+).root")
 
   Code to produce the pickle files in https://github.com/lenzip/LineshapeTools. Currently these are produced for the default cprime and BRnew intervals and steps only.
