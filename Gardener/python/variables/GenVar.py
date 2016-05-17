@@ -58,6 +58,7 @@ class genVariablesFiller(TreeCloner):
         # if you add a new variable here, be sure it IS defined in GenVar.C
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
+           'gen_ptllmet',
            'gen_ptll',
            'gen_mll',
            'gen_llchannel'
@@ -125,6 +126,10 @@ class genVariablesFiller(TreeCloner):
               
               GenVar.setJets   (itree.std_vector_partonGen_pt, itree.std_vector_partonGen_eta, itree.std_vector_partonGen_phi, itree.std_vector_partonGen_pid)
   
+              # add GenMET information
+              if hasattr(itree, 'metGenpt') and hasattr(itree, 'metGenphi'):
+                GenVar.setMET(itree.metGenpt, itree.metGenphi)
+                
               # now fill the variables like "mll", "dphill", ...
               for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
                 bvariable[0] = getattr(GenVar, bname)()
