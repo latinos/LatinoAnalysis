@@ -186,41 +186,16 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
-#                 'onlySample' : [
-#                                 # DY 
-#                                 'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
-#                                 # Top
-#                                 'TTTo2L2Nu',
-#                                 'ST_t-channel_antitop','ST_t-channel_top',
-#                                 'ST_tW_antitop','ST_tW_top',
-#                                 # VV (including WW) 
-#                                 'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
-#                                 'WZTo3LNu',
-#                                 'ZZ','Zg',
-#                                 'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-#                                 'Wg_AMCNLOFXFX',
-#                                 # VVV
-#                                 'WZZ','ZZZ','WWZ',
-#                                 # Higgs 
-#                                 'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
-#                                 'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
-#                                 'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
-#                                 'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
-#                                 'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
-#                                 'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-#                                 'ggZH_HToWW_M125', # missing ggZHToTauTau
-#                                 # PS
-#                                 'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
-#                                 # UE
-#                                 'GluGluHToWWTo2L2Nu_M125_CUETDown',
-#                                 'GluGluHToWWTo2L2Nu_M125_CUETUp',
-#                                 'VBFHToWWTo2L2Nu_M125_CUETDown',
-#                                 'VBFHToWWTo2L2Nu_M125_CUETUp',
-#                                 'WWTo2L2Nu_CUETDown',
-#                                 'WWTo2L2Nu_CUETUp',
-#                                ] ,
-
                 },
+
+  'MCl2vloose' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                },
+
+
 
   'MCl1loose' :       {
                   'isChain'    : True ,
@@ -239,38 +214,29 @@ Steps= {
                                   ####
                                   'TT','TTJets',
  
-                                  #### Top
-                                  #'TTTo2L2Nu',
-                                  #'ST_t-channel_antitop','ST_t-channel_top',
-                                  #'ST_tW_antitop','ST_tW_top',
-                                  #### VV (including WW) 
-                                  #'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
-                                  #'WZTo3LNu',
-                                  #'ZZ','Zg',
-                                  #'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  #'Wg_AMCNLOFXFX',
-                                  ### VVV
-                                  #'WZZ','ZZZ','WWZ',
-                                  #### Higgs 
-                                  #'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
-                                  #'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
-                                  #'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
-                                  #'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
-                                  #'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
-                                  #'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-                                  #'ggZH_HToWW_M125', # missing ggZHToTauTau
-                                  # PS
-                                  #'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
-                                  # UE
-                                  #'GluGluHToWWTo2L2Nu_M125_CUETDown',
-                                  #'GluGluHToWWTo2L2Nu_M125_CUETUp',
-                                  #'VBFHToWWTo2L2Nu_M125_CUETDown',
-                                  #'VBFHToWWTo2L2Nu_M125_CUETUp',
-                                  #'WWTo2L2Nu_CUETDown',
-                                  #'WWTo2L2Nu_CUETUp',
                                  ] ,
 
                 },
+
+  'MCl1vloose' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['l1vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'onlySample' : [
+                                  #### DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
+                                  ####
+                                  'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
+                                  'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
+                                  ####
+                                  'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
+                                  'QCD_Pt-20toInf_MuEnrichedPt15',
+                                  ####
+                                  'TT','TTJets',
+                                 ] ,
+                },
+
 
   'MCWgStarsel' : {
                   'isChain'    : True ,
@@ -1519,6 +1485,14 @@ Steps= {
                   'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW --selection 1'
                },
 
+ 'l2vloose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1'
+               },
+
+
   'l2tight'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1532,6 +1506,14 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
+
+  'l1vloose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l1selfiller --kind 4 --cmssw RPLME_CMSSW'
+               },
+
 
   'do_WgStarsel' : {
                   'isChain'    : False ,
