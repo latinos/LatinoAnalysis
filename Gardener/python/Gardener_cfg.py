@@ -192,7 +192,12 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+		  'onlySample' : [ 
+			   	  # VBS
+				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+ 			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
+                                 ] ,
                 },
 
 
