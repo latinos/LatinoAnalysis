@@ -544,4 +544,33 @@ Module: genvariablesfiller
     latino->Draw("mll","GEN_weight_SM/abs(GEN_weight_SM) * (std_vector_leptonGen_isPrompt[0] == 1 && std_vector_leptonGen_isPrompt[1] == 1 &&  mll<120 && gen_llchannel == -13*13 && std_vector_lepton_pt[1]>15 && std_vector_lepton_pt[1]<20 && gen_mll>80)", "same")
     
     
-    
+Higgs Lineshape variations    
+====
+
+Module: BWEwkSingletReweighter
+
+  This module reweights the Higgs lineshape according to the EWK singlet c' BRnew parametrization. It does not change the overall normalization. If you want the EWK singlet corresponfing cross section you should multiply your event yield by c'c'(1-BRnew) 
+
+  The module adds to the tree a set of weights names cprime[value]\_BRnew[value].
+
+  Example:
+
+  gardener.py BWEwkSingletReweighter filein.root fileout.root
+
+    options:
+
+    -u, --undoCPS:  assumes the POWHEG sample was produced with CPS lineshape. Default True.
+
+    (-i, --cprimemin), (-f, --cprimemax), (-s, --cprimestep) are used to compute the c' steps, from cprimemin (default 0.1) to cprimemax (default 1.0) in cprimestep (default 0.1) steps
+   
+    (-l, --brnewmin), (-n, --brnewmax), (-q, --brnewstep), same as above for BRnew. defaults: brnewmin 0.0, brnewmax 1.0, brnewstep 0.1
+
+    -w , --globalshiftfileGG,  pickle file containing the global shifts due to reweighting (to preserve integral) for GG. Default="data/BWShifts_ggH.pkl"
+   
+    -k , --globalshiftfileVBF, pickle file containing the global shifts due to reweighting (to preserve integral) for VBF. Default="data/BWShifts_VBF.pkl"
+
+    -d , --decayWeightsFile, pickle file containing the JHU derived decay weights for WW, default="data/decayWeightsWW.pkl"
+          
+    -p , --fileNameFormat, file name format to determine production process and mass, default="latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+).root")
+
+  Code to produce the pickle files in https://github.com/lenzip/LineshapeTools. Currently these are produced for the default cprime and BRnew intervals and steps only.
