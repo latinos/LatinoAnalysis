@@ -411,24 +411,6 @@ Steps= {
                 },
 
 
-
-  'L2Eff'  :   {
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : ['TrigEff','IdIsoSC'],
-#                 'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','WJetsToLNu','TTTo2L2Nu','TTJets',
-#                                 'ST_t-channel','ST_tW_antitop','ST_tW_top','WWTo2L2Nu','WZTo3LNu',
-#                                 'WZZ','ZZZ','GluGluWWTo2L2Nu_MCFM',
-#                                 'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125',
-#                                 'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
-#                                 'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
-#                                 'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
-#                                 'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-#                                 'Wg','ZZTo4L','WWZ',
-#                                ] ,
-                 },
-
   'JESup'     :  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
@@ -438,7 +420,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -535,7 +517,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -633,7 +615,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -730,7 +712,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -835,7 +817,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -931,7 +913,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -1029,7 +1011,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -1126,7 +1108,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -1225,7 +1207,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -1321,7 +1303,7 @@ Steps= {
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   # Top
-                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu','TT',
                                   'ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top',
                                   # VV (including WW) 
@@ -1468,6 +1450,54 @@ Steps= {
                 },
 
 
+  'BWEwkSinglet' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+      
+                  'onlySample' : [
+                                  # ... ggH High Mass
+                                  'GluGluHToWWTo2L2Nu_M200',
+                                  'GluGluHToWWTo2L2Nu_M210',
+                                  'GluGluHToWWTo2L2Nu_M230',
+                                  'GluGluHToWWTo2L2Nu_M250',
+                                  'GluGluHToWWTo2L2Nu_M270',
+                                  'GluGluHToWWTo2L2Nu_M300',
+                                  'GluGluHToWWTo2L2Nu_M350',
+                                  'GluGluHToWWTo2L2Nu_M400',
+                                  'GluGluHToWWTo2L2Nu_M450',
+                                  'GluGluHToWWTo2L2Nu_M500',
+                                  'GluGluHToWWTo2L2Nu_M550',
+                                  'GluGluHToWWTo2L2Nu_M600',
+                                  'GluGluHToWWTo2L2Nu_M650',
+                                  'GluGluHToWWTo2L2Nu_M750',
+                                  #'GluGluHToWWTo2L2Nu_M750_NWA',
+                                  'GluGluHToWWTo2L2Nu_M800',
+                                  'GluGluHToWWTo2L2Nu_M900',
+                                  'GluGluHToWWTo2L2Nu_M1000',
+                                  # ... VBF High Mass
+                                  'VBFHToWWTo2L2Nu_M200',
+                                  'VBFHToWWTo2L2Nu_M210',
+                                  'VBFHToWWTo2L2Nu_M230',
+                                  'VBFHToWWTo2L2Nu_M250',
+                                  'VBFHToWWTo2L2Nu_M270',
+                                  'VBFHToWWTo2L2Nu_M300',
+                                  'VBFHToWWTo2L2Nu_M350',
+                                  'VBFHToWWTo2L2Nu_M400',
+                                  'VBFHToWWTo2L2Nu_M450',
+                                  'VBFHToWWTo2L2Nu_M500',
+                                  'VBFHToWWTo2L2Nu_M550',
+                                  'VBFHToWWTo2L2Nu_M600',
+                                  'VBFHToWWTo2L2Nu_M650',
+                                  'VBFHToWWTo2L2Nu_M700',
+                                  'VBFHToWWTo2L2Nu_M750',
+                                  #'VBFHToWWTo2L2Nu_M750_NWA',
+                                  'VBFHToWWTo2L2Nu_M800',
+                                  'VBFHToWWTo2L2Nu_M900',
+                                  'VBFHToWWTo2L2Nu_M1000', 
+                                 ],
+                  'command'    : 'gardener.py BWEwkSingletReweighter ',
+                 },
 
   'l2sel'    : {
                   'isChain'    : False ,
