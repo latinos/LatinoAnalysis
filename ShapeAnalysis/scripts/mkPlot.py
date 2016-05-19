@@ -128,6 +128,13 @@ class ShapeFactory:
                 histos[sampleName].Scale(plot[sampleName]['scale'])
                 #print " >> scale ", sampleName, " to ", plot[sampleName]['scale']
 
+              # apply cut dependent scale factors
+              # for example when plotting different phase spaces
+              if 'cuts' in plot[sampleName].keys() : 
+                if cutName in plot[sampleName]['cuts'] :
+                  histos[sampleName].Scale( float( plot[sampleName]['cuts'][cutName] ) )
+     
+
               if plot[sampleName]['isData'] == 1 :  
                 thsData.Add(histos[sampleName])
 
@@ -383,6 +390,17 @@ class ShapeFactory:
                     if histoUp != None:  
                       histoUp.Scale(plot[sampleName]['scale'])
                                  
+
+                  # apply cut dependent scale factors
+                  # for example when plotting different phase spaces
+                  if 'cuts' in plot[sampleName].keys() : 
+                    if cutName in plot[sampleName]['cuts'] :
+                      if histoDown != None:  
+                        #print " rescaling: ", sampleName, " - ", cutName, " = ", plot[sampleName]['cuts'][cutName]
+                        histoDown.Scale( float(plot[sampleName]['cuts'][cutName]) )
+                      if histoUp != None:  
+                        histoUp.Scale( float(plot[sampleName]['cuts'][cutName]) )
+
                   
                   # now, even if not considered this nuisance, I need to add it, 
                   # so that in case is "empty" it will add the nominal value
