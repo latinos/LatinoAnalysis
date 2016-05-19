@@ -201,7 +201,7 @@ class BWEwkSingletReweighter(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
             
-            mass = itree.higgsLHEMass
+            mass = itree.higgsLHEmass
             CPSweight = 1.
             if self.undoCPS:
               CPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
