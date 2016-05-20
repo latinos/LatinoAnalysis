@@ -32,7 +32,7 @@ class L1SelFiller(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-k', '--kind',  dest='kind',  help='Kind of lepton identification to be applied [default is loose leptons]',  default='2')
-        group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='764', type='string')
+        group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763', type='string')
         group.add_option('-s', '--selection', dest='selection', help='apply some selections, like pt cuts', default=0)
         parser.add_option_group(group)
         return group
