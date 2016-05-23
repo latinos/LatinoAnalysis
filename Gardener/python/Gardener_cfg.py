@@ -155,7 +155,7 @@ Productions= {
 
 # 80X 2016 DAT/MC
 
-  '13May16_25ns_Spring16_MC'   : {
+  '13May2016_25ns_Spring16_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/May13/MC/25ns/',
@@ -164,7 +164,7 @@ Productions= {
                         #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
                       } ,
 
-  '20May16_Run2026B_PromptReco' : {
+  '20May2016_Run2016B_PromptReco' : {
                         'isData'  : True ,        
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
                         'dirExt'  : 'LatinoTrees' ,
