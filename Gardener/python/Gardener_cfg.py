@@ -208,14 +208,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
                 },
 
   'MCl2loose16' :       {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','baseW','wwNLL','genVariables','genMatchVariables','l2kin'],
+                  'subTargets' : ['l2loose','baseW','wwNLL','genVariables','genMatchVariables','l2kin','BWEwkSinglet'],
                 },
 
 
@@ -232,7 +232,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -246,7 +246,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -267,7 +267,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['l1vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
