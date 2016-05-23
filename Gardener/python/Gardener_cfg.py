@@ -153,6 +153,29 @@ Productions= {
                                    }
                       } ,
 
+# 80X 2016 DAT/MC
+
+  '13May16_25ns_Spring16_MC'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/May13/MC/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        #'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
+                        #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
+                      } ,
+
+  '20May16_Run2026B_PromptReco' : {
+                        'isData'  : True ,        
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'reName'  : {
+                                       'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016B-PromptReco-v2'            : 'Run2016B_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016B-PromptReco-v2'    : 'Run2016B_PromptReco_SingleElectron',   
+                                       'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
+                                    },
+                     },
 
 }
 
@@ -187,6 +210,23 @@ Steps= {
                   'do4Data'    : False,
                   'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
                 },
+
+  'MCl2loose16' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['l2loose','baseW','wwNLL','genVariables','genMatchVariables','l2kin'],
+                },
+
+
+  'l2loose16'  :       {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['l2loose','l2kin'],
+                },
+
+
 
   'MCl2vloose' :       {
                   'isChain'    : True ,
