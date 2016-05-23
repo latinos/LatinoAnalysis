@@ -219,7 +219,25 @@ Filter duplicates in data
                 /tmp/amassiro/test.root
                 
                 
+         
+                     
+Filter using JSON
+====
+
+Filter using JSON in data
+
+    gardener.py  filterjson \
+                --json=Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt  \
+                data.root  \
+                test.root
+
                 
+                
+         
+         
+         
+         
+         
 
 puW
 ====

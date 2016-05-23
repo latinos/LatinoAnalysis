@@ -59,6 +59,10 @@ from LatinoAnalysis.Gardener.variables.TLorentzVectorCreator      import TLorent
 # filter duplicates in data
 from LatinoAnalysis.Gardener.variables.filterDuplicates           import FilterDuplicates
 
+# filter using a JSON in data
+from LatinoAnalysis.Gardener.variables.filterJson                 import FilterJSON
+
+
 # JES uncertainty
 from LatinoAnalysis.Gardener.variables.jetScaleUncertainty        import JESTreeMaker
 
@@ -95,6 +99,10 @@ if __name__ == '__main__':
 
 # filter duplicates
     modules['filterduplicates']          = FilterDuplicates()
+
+# filter using a json file
+    modules['filterjson']          = FilterJSON()
+
 
 # trigger efficiency
     modules['efftfiller']       = EffTrgFiller()
