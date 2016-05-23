@@ -656,7 +656,8 @@ class ShapeFactory:
             for sampleName, sample in reversedSamples.iteritems():
               if plot[sampleName]['isData'] == 0 :
                 if 'nameHR' in plot[sampleName].keys() :
-                  tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
+                  if plot[sampleName]['nameHR'] != '' :
+                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
                 else :
                   tlegend.AddEntry(histos[sampleName], sampleName, "F")
              
