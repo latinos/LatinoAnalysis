@@ -157,7 +157,7 @@ class DatacardFactory:
             
             card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
 
-            columndef = 18
+            columndef = 25
             
             card.write('process'.ljust(80))
             card.write(''.join([name.ljust(columndef) for name in self.signals]))
