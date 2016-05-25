@@ -337,6 +337,14 @@ Steps= {
                 },
 
 
+  'filterjson'   : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['tagjson', 'selectjson'],
+                } ,
+
+
 
   'bSFL2pTEff'   :   {
                   'isChain'    : True ,
@@ -1446,13 +1454,24 @@ Steps= {
 #                 'command'    : 'gardener.py mcweightsfiller '
 #               } ,
 
-  'filterjson'   : {
+
+  'tagjson'   : {
                   'isChain'    : False ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   #'command'    : 'gardener.py  filterjson --json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
                   'command'    : 'gardener.py  filterjson --json=/user/xjanssen/HWW2015/pudata/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
                 } ,
+
+
+  'selectjson'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py filter -f \'isJsonOk>0.5\' '
+                } ,
+
+
 
   'puadder'   : {
                   'isChain'    : False ,
