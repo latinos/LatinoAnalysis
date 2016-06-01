@@ -102,6 +102,12 @@ stepList = List_Filter(Steps,options.steps).get()
 
 CMSSW=os.environ["CMSSW_BASE"]
 
+# fix bTag for 74x
+if options.cmssw == '74x' :
+  Steps['bPogSF']['command'] = 'gardener.py btagPogScaleFactors '  
+  Steps['bPogSF']['do4MC'] = False
+  print Steps['bPogSF']['command']  
+
 if options.cmssw == '763' :
   eosTargBaseIn = '/eos/user/j/jlauwers/HWW2015/'
   eosTargBaseOut= '/eos/user/j/jlauwers/HWW2015/'

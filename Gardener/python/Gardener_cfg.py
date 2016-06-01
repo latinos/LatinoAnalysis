@@ -14,8 +14,8 @@ Productions= {
   '21Oct_25ns_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring15_miniaodv2_25ns.py' , 
-                        'dirExt'  : 'LatinoTrees' ,
-                      #  'dirExt'  : 'split' ,
+                      #  'dirExt'  : 'LatinoTrees' ,
+                        'dirExt'  : 'split' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root',
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
@@ -209,6 +209,30 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
+#                  'XonlySample' : [ 'T2bW_X05_mStop125to275_mLSP0to150',
+#'T2bW_X05_mStop300to400_mLSP0to275',
+#'T2bW_X05_mStop425to600_mLSP0to375',
+#'T2bW_X05_mStop625to950_mLSP0to350',
+#'T2tb_mStop200to325_mLSP0to150',
+#'T2tb_mStop200to625_mLSP50to475',
+#'T2tb_mStop425to600_mLSP0to425',
+#'T2tb_mStop625to850_mLSP0to450',
+#'T2tb_mStop875to1125_mLSP0to475',
+#'T2tt_mStop100-125_mLSP1to50',
+#'T2tt_mStop150-175_mLSP1to100',
+#'T2tt_mStop183to291_mLSP1to100',
+#'T2tt_mStop200_mLSP1to125',
+#'T2tt_mStop225_mLSP25to150',
+#'T2tt_mStop250_mLSP1to175',
+#'T2tt_mStop275_mLSP75to200',
+#'T2tt_mStop400to475_mLSP1to400',
+#'T2ttmStop425mLSP325',
+#'T2tt_mStop500-525-550_mLSP1to425-325to450-1to475',
+#'T2tt_mStop500_mLSP325',
+#'T2tt_mStop600-950_mLSP1to450',
+#'T2tt_mStop850_mLSP100',
+#]
+
                 },
 
   'MCl2loose16' :       {
@@ -237,6 +261,7 @@ Steps= {
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
  			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
+                                  'TTToSemiLeptonic',
                                  ] ,
                 },
 
@@ -1653,14 +1678,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py letPtCorrector --isData=0 '
+                  'command'    : 'gardener.py letPtCorrector --isData=0 --cmssw=RPLME_CMSSW'
                 } ,
 
   'do_lpTCorrData'  : {
                   'isChain'    : False ,
                   'do4MC'      : False  ,
                   'do4Data'    : True ,
-                  'command'    : 'gardener.py letPtCorrector --isData=1 '
+                  'command'    : 'gardener.py letPtCorrector --isData=1 --cmssw=RPLME_CMSSW'
                 } ,
 
 
