@@ -189,17 +189,30 @@ if __name__ == '__main__':
             print command
             os.system(command)
 
-            command = ""
-            command += "hadd "+opt.outputDir+'/plots_'+opt.tag+".root"
-            for i in xrange(number):
-              command += " "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root"
-            print command
-            os.system(command)
+            if number<1000:
+              command = ""
+              command += "hadd "+opt.outputDir+'/plots_'+opt.tag+".root"
+              for i in xrange(number):
+                command += " "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root"
+              print command
+              os.system(command)
+            else:
+              print "WARNING: you are trying to hadd more than 1000 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
+              for istart in range(0,int(float(number)/500+1)):
+                command = ""
+                command += "hadd "+opt.outputDir+"/plots_"+opt.tag+"_temp"+str(istart)+".root"
+                for i in range(istart*500,(istart+1)*500):
+                  if i>=number: break
+                  command += " "+opt.outputDir+"/plots_"+opt.tag+"_"+str(i)+".root"
+                print command
+                os.system(command)
+              os.system("hadd "+opt.outputDir+'/plots_'+opt.tag+".root "+opt.outputDir+"/plots_"+opt.tag+"_temp*")
 
             for i in xrange(number):
               if opt.doCleanup :
                 os.system("rm sub"+str(i)+".py")
                 os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root")
+                os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_temp*.root")
             
       
     else:

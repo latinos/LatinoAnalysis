@@ -39,7 +39,7 @@ class ShapeFactory:
         self._outputDirPlots = outputDirPlots
 
     # _____________________________________________________________________________
-    def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend):
+    def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
 
         print "=================="
         print "==== makePlot ===="
@@ -63,6 +63,24 @@ class ShapeFactory:
         ROOT.TH1.SetDefaultSumw2(True)
         
         dataColor = 1
+
+        #thsData       = ROOT.THStack ("thsData",      "thsData")
+        #thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
+        #thsBackground = ROOT.THStack ("thsBackground","thsBackground")
+
+        #thsSignal_grouped     = ROOT.THStack ("thsSignal_grouped",    "thsSignal_grouped")
+        #thsBackground_grouped = ROOT.THStack ("thsBackground_grouped","thsBackground_grouped")
+
+        gROOT.cd()
+
+        list_thsData       = {}
+        list_thsSignal     = {}
+        list_thsBackground = {}
+
+        list_thsSignal_grouped     = {}
+        list_thsBackground_grouped = {}
+
+        generalCounter = 0
         
         fileIn = ROOT.TFile(inputFile, "READ")
         #---- save one TCanvas for every cut and every variable
@@ -72,8 +90,9 @@ class ShapeFactory:
             print "variableName = ", variableName
             
             histos = {}
+            histos_grouped = {}
             
-            #print "here ..."
+            print "here ..."
            
             canvasNameTemplateRatio = 'ccRatio_' + cutName + "_" + variableName
             #tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
@@ -90,19 +109,47 @@ class ShapeFactory:
             tgrData_evy_up = array('f')
             tgrData_evy_do = array('f')
 
-            #print " ... how this is still a thing ..."
+            #print " ... how is this still a thing ..."
 
             #these vectors are needed for nuisances accounting
             nuisances_vy_up     = {}
+            #print " ... one "
             nuisances_vy_do     = {}
+            #print " ... two"
             tgrMC_vy            = array('f')
  
-            #print 'before thstack ...',
-            
-            thsData       = ROOT.THStack ("thsData_" + cutName + "_" + variableName,      "thsData")
-            thsSignal     = ROOT.THStack ("thsSignal_" + cutName + "_" + variableName,    "thsSignal")
-            thsBackground = ROOT.THStack ("thsBackground_" + cutName + "_" + variableName,"thsBackground")
+            #print 'before thstack ...'
+            #print 'really before thstack ...'
 
+
+            #thsData       = ROOT.THStack ("thsData",      "thsData")
+            #thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
+            #thsBackground = ROOT.THStack ("thsBackground","thsBackground")
+    
+            #thsSignal_grouped     = ROOT.THStack ("thsSignal_grouped",    "thsSignal_grouped")
+            #thsBackground_grouped = ROOT.THStack ("thsBackground_grouped","thsBackground_grouped")
+    
+ 
+            gROOT.cd()
+ 
+            thsData       = ROOT.THStack ("thsData_" + cutName + "_" + variableName,      "thsData_" + cutName + "_" + variableName)
+            #print 'really before thstack ... one'
+            thsSignal     = ROOT.THStack ("thsSignal_" + cutName + "_" + variableName,    "thsSignal_" + cutName + "_" + variableName)
+            #print 'really before thstack ... two'
+            thsBackground = ROOT.THStack ("thsBackground_" + cutName + "_" + variableName,"thsBackground_" + cutName + "_" + variableName)
+            #print 'really before thstack ... three'
+
+            thsSignal_grouped     = ROOT.THStack ("thsSignal_grouped_" + cutName + "_" + variableName,    "thsSignal_grouped_" + cutName + "_" + variableName)
+            #print 'really before thstack ... four'
+            thsBackground_grouped = ROOT.THStack ("thsBackground_grouped_" + cutName + "_" + variableName,"thsBackground_grouped_" + cutName + "_" + variableName)
+
+            list_thsData               [generalCounter] = thsData
+            list_thsSignal             [generalCounter] = thsSignal
+            list_thsBackground         [generalCounter] = thsBackground
+            list_thsSignal_grouped     [generalCounter] = thsSignal_grouped
+            list_thsBackground_grouped [generalCounter] = thsBackground_grouped
+            generalCounter += 1
+            
             #print '... after thstack ...'
 
             sigSupList    = []
@@ -117,7 +164,8 @@ class ShapeFactory:
               print '     -> shapeName = ', shapeName,
               histo = fileIn.Get(shapeName)
               print ' --> ', histo
-              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
+              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
+              
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
                  #print " i = ", iBinAmassiro, " [" , sampleName, " ==> ", histos[sampleName].GetBinContent(iBinAmassiro)
@@ -434,6 +482,29 @@ class ShapeFactory:
                         # add the central sample 
                         nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
             
+
+              # create the group of histograms to plot
+              # this has to be done after the scaling of the previous lines
+              # andl also after all the rest, so that we inherit the style of the histograms
+              for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+                for samples_to_group in sampleConfiguration['samples'] :
+                  if samples_to_group == sampleName :
+                    if sampleNameGroup in histos_grouped.keys() :
+                      histos_grouped[sampleNameGroup].Add(histos[sampleName])
+                    else :
+                      histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
+
+
+            # set the colors for the groups of samples
+            for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+              if sampleNameGroup in histos_grouped.keys() :
+                histos_grouped[sampleNameGroup].SetLineColor(sampleConfiguration['color'])
+                if sampleConfiguration['isSignal'] == 0: 
+                  histos_grouped[sampleNameGroup].SetFillColor(sampleConfiguration['color'])
+                  histos_grouped[sampleNameGroup].SetFillStyle(3001)
+                else :
+                  histos_grouped[sampleNameGroup].SetFillStyle(0)
+                  histos_grouped[sampleNameGroup].SetLineWidth(2)
             
             # fill the reference distribution with the background only distribution
             # save the central values of the bkg sum for use for the nuisance band 
@@ -540,6 +611,19 @@ class ShapeFactory:
               tgrDataOverMCTemp.SetMarkerSize(0.3)
               tgrRatioList[samplesToRatioName] = tgrDataOverMCTemp
               
+
+
+
+            #---- prepare the grouped histograms
+            for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+              if sampleConfiguration['isSignal'] == 1 :
+                  thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
+              # the signal is added on top of the background
+              # the signal has to be the last one in the dictionary!
+              # make it sure in plot.py
+              thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
+
+
             
             #---- now plot
             
@@ -609,16 +693,27 @@ class ShapeFactory:
               frame.GetXaxis().SetTitle(variableName)
             frame.GetYaxis().SetTitle("Events")
 
+            #
             #  - now draw
-            #     - first the MC                        
-            if thsBackground.GetNhists() != 0:
-              thsBackground.Draw("hist same")
-               
-            if thsSignal.GetNhists() != 0:
-              #for ihisto in range(thsSignal.GetNhists()) :
-                #((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
-                #((thsSignal.GetHists().At(ihisto))).Draw("hist same")
-              thsSignal.Draw("hist same noclear")
+            #     - first the MC    
+            #         before the background+signal, and then only the signal alone
+            #
+            if len(groupPlot.keys()) == 0:          
+              if thsBackground.GetNhists() != 0:
+                thsBackground.Draw("hist same")
+                 
+              if thsSignal.GetNhists() != 0:
+                #for ihisto in range(thsSignal.GetNhists()) :
+                  #((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
+                  #((thsSignal.GetHists().At(ihisto))).Draw("hist same")
+                thsSignal.Draw("hist same noclear")
+            else :
+              if thsBackground_grouped.GetNhists() != 0:
+                thsBackground_grouped.Draw("hist same")
+                 
+              if thsSignal_grouped.GetNhists() != 0:
+                thsSignal_grouped.Draw("hist same noclear")
+              
             
             # if there is a systematic band draw it
             if len(mynuisances.keys()) != 0:
@@ -653,20 +748,36 @@ class ShapeFactory:
             reversedSamplesItems.reverse()
             reversedSamples = OrderedDict(reversedSamplesItems)
             
-            for sampleName, sample in reversedSamples.iteritems():
-              if plot[sampleName]['isData'] == 0 :
-                if 'nameHR' in plot[sampleName].keys() :
-                  if plot[sampleName]['nameHR'] != '' :
-                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
-                else :
-                  tlegend.AddEntry(histos[sampleName], sampleName, "F")
-             
-            for sampleName, sample in reversedSamples.iteritems():
-              if plot[sampleName]['isData'] == 1 :
-                if 'nameHR' in plot[sampleName].keys() :
-                  tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
-                else :
-                  tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
+            if len(groupPlot.keys()) == 0:
+              for sampleName, sample in reversedSamples.iteritems():
+                if plot[sampleName]['isData'] == 0 :
+                  if 'nameHR' in plot[sampleName].keys() :
+                    if plot[sampleName]['nameHR'] != '' :
+                        tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
+                  else :
+                    tlegend.AddEntry(histos[sampleName], sampleName, "F")
+               
+              for sampleName, sample in reversedSamples.iteritems():
+                if plot[sampleName]['isData'] == 1 :
+                  if 'nameHR' in plot[sampleName].keys() :
+                    tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                  else :
+                    tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
+            
+            else :
+              
+              for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+                tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
+               
+              for sampleName, sample in reversedSamples.iteritems():
+                if plot[sampleName]['isData'] == 1 :
+                  if 'nameHR' in plot[sampleName].keys() :
+                    tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                  else :
+                    tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
+              
+              
+                  
             if len(mynuisances.keys()) != 0:
               tlegend.AddEntry(tgrMC, "Systematics", "F")
              
@@ -754,14 +865,23 @@ class ShapeFactory:
             #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
             frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
 
-            if thsBackground.GetNhists() != 0:
-              thsBackground.Draw("hist same")
-               
-            if thsSignal.GetNhists() != 0:
-              #for ihisto in range(thsSignal.GetNhists()) :
-                #((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
-                #((thsSignal.GetHists().At(ihisto))).Draw("hist same")
-              thsSignal.Draw("hist same noclear")
+
+            if len(groupPlot.keys()) == 0:          
+              if thsBackground.GetNhists() != 0:
+                thsBackground.Draw("hist same")
+                 
+              if thsSignal.GetNhists() != 0:
+                #for ihisto in range(thsSignal.GetNhists()) :
+                  #((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
+                  #((thsSignal.GetHists().At(ihisto))).Draw("hist same")
+                thsSignal.Draw("hist same noclear")
+            else :
+              if thsBackground_grouped.GetNhists() != 0:
+                thsBackground_grouped.Draw("hist same")
+                 
+              if thsSignal_grouped.GetNhists() != 0:
+                thsSignal_grouped.Draw("hist same noclear")
+
            
             if (len(mynuisances.keys())!=0):
               tgrMC.Draw("2")
@@ -917,7 +1037,7 @@ class ShapeFactory:
                       weight_X_list_weights.append(weight)
                               
                       for ihisto in range(thsBackground.GetNhists()) :
-                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName(), '-' , nbinY, 0, nbinY)
+                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
                          histo.SetFillColor( ((thsBackground.GetHists().At(ihisto))).GetFillColor())
                          histo.SetFillStyle( ((thsBackground.GetHists().At(ihisto))).GetFillStyle())
                          histo.SetLineColor( ((thsBackground.GetHists().At(ihisto))).GetLineColor())
@@ -937,7 +1057,7 @@ class ShapeFactory:
 
                          
                       for ihisto in range(thsSignal.GetNhists()) :
-                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName(), "-", nbinY, 0, nbinY)
+                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
                          histo.SetFillColor( ((thsSignal.GetHists().At(ihisto))).GetFillColor())
                          histo.SetFillStyle( ((thsSignal.GetHists().At(ihisto))).GetFillStyle())
                          histo.SetLineColor( ((thsSignal.GetHists().At(ihisto))).GetLineColor())
@@ -955,7 +1075,7 @@ class ShapeFactory:
 
              
                       for ihisto in range(thsData.GetNhists()) :
-                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName(), "-", nbinY, 0, nbinY)
+                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
                          for ibin in range( nbinY ) :
                            histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                          
@@ -1171,14 +1291,30 @@ class ShapeFactory:
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
                     weight_X_pad1.SetLogy(0)
  
- 
- 
+            
 
+            # some cleaning 
+            
+            #print " cleaning ..."
+            #thsData.Delete()
+            #print " cleaning ..."
+            #thsSignal.Delete()
+            #print " cleaning ..."
+            #thsBackground.Delete()
+            
+            #print " cleaning ..."
+            #thsSignal_grouped.Delete()    
+            #print " cleaning ..."
+            #thsBackground_grouped.Delete()
+            
             print " >> end: ", variableName
             
           print " >> all end"
 
         print " >> all but really all "
+        
+        # sys.exit(0)
+        # ... or it will remain hanging forever ...
         
 
 
@@ -1353,6 +1489,7 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
     
+    groupPlot = OrderedDict()
     plot = {}
     legend = {}
     if os.path.exists(opt.plotFile) :
@@ -1368,7 +1505,8 @@ if __name__ == '__main__':
       exec(handle)
       handle.close() 
    
-    factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend)
+    factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     
+    print '... and now closing ...'
         
        

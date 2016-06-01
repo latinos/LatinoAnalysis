@@ -58,7 +58,7 @@ class ShapeFactory:
 
 
     # _____________________________________________________________________________
-    def makeNominals(self, inputDir, outputDir, variables, cuts, samples, nuisances, supercut, number=999):
+    def makeNominals(self, inputDir, outputDir, variables, cuts, samples, nuisances, supercut, number=99999):
 
         print "======================"
         print "==== makeNominals ===="
@@ -70,7 +70,7 @@ class ShapeFactory:
         
         print " supercut = ", supercut
         
-        if number != 999 :
+        if number != 99999 :
           self._outputFileName = outputDir+'/plots_'+self._tag+"_"+str(number)+".root"
         else :
           self._outputFileName = outputDir+'/plots_'+self._tag+".root"
