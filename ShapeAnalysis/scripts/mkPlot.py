@@ -55,10 +55,10 @@ class ShapeFactory:
         os.system ("mkdir " + outputDirPlots + "/") 
         
 
-        tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
-        tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
-        # weight_X_tcanvas      = ROOT.TCanvas( "weight_X_tcanvas",      "weight_X_tcanvas",      800, 800 )
-        weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio", "weight_X_tcanvasRatio", 800, 800 )
+        #tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
+        #tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
+        ## weight_X_tcanvas      = ROOT.TCanvas( "weight_X_tcanvas",      "weight_X_tcanvas",      800, 800 )
+        #weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio", "weight_X_tcanvasRatio", 800, 800 )
 
         ROOT.TH1.SetDefaultSumw2(True)
         
@@ -71,7 +71,7 @@ class ShapeFactory:
         #thsSignal_grouped     = ROOT.THStack ("thsSignal_grouped",    "thsSignal_grouped")
         #thsBackground_grouped = ROOT.THStack ("thsBackground_grouped","thsBackground_grouped")
 
-        gROOT.cd()
+        ROOT.gROOT.cd()
 
         list_thsData       = {}
         list_thsSignal     = {}
@@ -79,6 +79,10 @@ class ShapeFactory:
 
         list_thsSignal_grouped     = {}
         list_thsBackground_grouped = {}
+
+        list_tcanvas               = {}
+        list_tcanvasRatio          = {}
+        list_weight_X_tcanvasRatio = {}
 
         generalCounter = 0
         
@@ -88,11 +92,19 @@ class ShapeFactory:
           print "cut = ", cutName, " :: ", cuts[cutName]
           for variableName, variable in self._variables.iteritems():
             print "variableName = ", variableName
-            
+  
+            tcanvas            = ROOT.TCanvas( "cc" + cutName + "_" + variableName,      "cc"     , 800, 600 )
+            tcanvasRatio       = ROOT.TCanvas( "ccRatio" + cutName + "_" + variableName, "ccRatio", 800, 800 )
+            weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio" + cutName + "_" + variableName, "weight_X_tcanvasRatio", 800, 800 )
+ 
+            list_tcanvas                 [generalCounter] = tcanvas
+            list_tcanvasRatio            [generalCounter] = tcanvasRatio
+            list_weight_X_tcanvasRatio   [generalCounter] = weight_X_tcanvasRatio
+
             histos = {}
             histos_grouped = {}
             
-            print "here ..."
+            #print "here ..."
            
             canvasNameTemplateRatio = 'ccRatio_' + cutName + "_" + variableName
             #tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
@@ -130,7 +142,7 @@ class ShapeFactory:
             #thsBackground_grouped = ROOT.THStack ("thsBackground_grouped","thsBackground_grouped")
     
  
-            gROOT.cd()
+            ROOT.gROOT.cd()
  
             thsData       = ROOT.THStack ("thsData_" + cutName + "_" + variableName,      "thsData_" + cutName + "_" + variableName)
             #print 'really before thstack ... one'
@@ -740,7 +752,7 @@ class ShapeFactory:
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
-            tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+            tlegend = ROOT.TLegend(0.2, 0.55, 0.8, 0.88)
             tlegend.SetFillColor(0)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
