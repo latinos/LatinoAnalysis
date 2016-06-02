@@ -20,6 +20,7 @@ Productions= {
                         #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/MyDataPileupHistogram.root',
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
                         #'bigSamples': ['DYJetsToLL_M-10to50'] ,
+                        'cmssw' : '74x' ,
                       } ,
 
   '21Oct_Run2015D_05Oct2015' : {
@@ -27,6 +28,7 @@ Productions= {
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_05Oct2015_25ns.py' ,
                         #'dirExt'  : 'Run2015D_05Oct2015' ,
                         'dirExt'  : 'split' ,
+                        'cmssw' : '74x' ,
                       } ,
 
   '21Oct_Run2015D_PromptReco' : {
@@ -34,6 +36,7 @@ Productions= {
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns.py' ,
                         #'dirExt'  : 'Run2015D_PromptReco' ,
                         'dirExt'  : 'split' ,
+                        'cmssw' : '74x' ,
                       } ,
 
   '21OctBis_Run2015D_05Oct2015' : {
@@ -41,18 +44,21 @@ Productions= {
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_05Oct2015_25ns_21OctBis.py',
                         #'dirExt'  : 'Run2015D_PromptReco' ,
                         'dirExt'  : 'split2' ,
+                        'cmssw' : '74x' ,
                       } ,
 
   '21OctBis_Run2015D_PromptReco_0716pb' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0716pb.py' ,
                         'dirExt'  : 'split2' ,
+                        'cmssw' : '74x' ,
                       } ,
 
   '21OctBis_Run2015D_PromptReco_0851pb' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_PromptReco_25ns_21OctBis_0851pb.py' ,
                         'dirExt'  : 'split2' ,
+                        'cmssw' : '74x' ,
                       } ,
 
 #### 76x / StarWars tag / miniAOD v1
@@ -63,6 +69,7 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                         'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
+                        'cmssw'   : '763' ,
                       } ,
 
 #### 76x / StarWars tag (v2) / miniAOD v2
@@ -74,6 +81,7 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                         #'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
+                        'cmssw'   : '763' ,
                       } ,
 
 
@@ -85,12 +93,14 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                         #'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
+                        'cmssw'   : '763' ,
                       } ,
 
   '22Jan_Run2015D_16Dec2015' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_16Dec2015-v1_25ns_StarWars.py' ,
                         'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : '763' ,
                         'reName'  : { 
                                        'DoubleEG_Run2015D_25ns-16Dec2015-v2'       : 'Run2015D_16Dec2015_DoubleEG' ,
                                        'DoubleMuon_Run2015D_25ns-16Dec2015-v1'     : 'Run2015D_16Dec2015_DoubleMuon' ,
@@ -106,6 +116,7 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataC_16Dec2015-v1_25ns_StarWars.py',
                         'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : '763' ,
                         'reName'  : {
                                        'DoubleEG_Run2015C_25ns-16Dec2015-v1'       : 'Run2015C_16Dec2015_DoubleEG' ,
                                        'DoubleMuon_Run2015C_25ns-16Dec2015-v1'     : 'Run2015C_16Dec2015_DoubleMuon' ,
@@ -122,6 +133,7 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                         #'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
+                        'cmssw'   : '763' ,
                       } ,
 
 
@@ -129,6 +141,7 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataD_16Dec2015-v1_25ns_StarWars.py' ,
                         'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : '763' ,
                         'reName'  : {
                                        'DoubleEG_Run2015D_25ns-16Dec2015-v2'       : 'Run2015D_16Dec2015_DoubleEG' ,
                                        'DoubleMuon_Run2015D_25ns-16Dec2015-v1'     : 'Run2015D_16Dec2015_DoubleMuon' ,
@@ -144,6 +157,7 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_dataC_16Dec2015-v1_25ns_StarWars.py',
                         'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : '763' ,
                         'reName'  : {
                                        'DoubleEG_Run2015C_25ns-16Dec2015-v1'       : 'Run2015C_16Dec2015_DoubleEG' ,
                                        'DoubleMuon_Run2015C_25ns-16Dec2015-v1'     : 'Run2015C_16Dec2015_DoubleMuon' ,
@@ -153,13 +167,14 @@ Productions= {
                                    }
                       } ,
 
-# 80X 2016 DAT/MC
+# 80X 2016 DAT/MC --> REM: Still using 763 post-processing
 
   '13May2016_25ns_Spring16_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/May13/MC/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : '763' ,
                         #'gDocID'  : '1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ' ,
                         #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2_from256630_PileupHistogram.root' ,
                       } ,
@@ -168,6 +183,7 @@ Productions= {
                         'isData'  : True ,        
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
                         'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : '763' ,
                         'reName'  : {
                                        'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
                                        'DoubleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_DoubleMuon',
@@ -1670,7 +1686,7 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
-                                  'WZTo2L2Q',
+                                  'WZTo2L2Q','TTToSemiLeptonic'
                                  ],
                },
 
