@@ -146,7 +146,7 @@ if "/eos/cms" in eosTargBaseOut:
 # Loop on input productions
 for iProd in prodList :
   cmssw=options.cmssw
-  if 'cmssw' in prodList[iProd] : cmssw = prodList[iProd]['cmssw']
+  if 'cmssw' in Productions[iProd] : cmssw = Productions[iProd]['cmssw']
 
   samples = {}
   prodDir = 'NONE'
@@ -350,10 +350,14 @@ for iProd in prodList :
       if 'iihe' in os.uname()[1]:
         print 'Using LCG ...'
       else:
-        if startingStep == 'Prod' :
-          os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
+        if iStep == 'UEPS' :
+          for iUEPS in Steps[iStep]['cpMap'] :
+            os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iUEPS)  
         else:
-          os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep)
+          if startingStep == 'Prod' :
+            os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
+          else:
+            os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep)
 
       # For hadd Step, regroup Files
       if iStep == 'hadd' :
@@ -432,6 +436,7 @@ for iProd in prodList :
           else:       
             command='cd /tmp/'+os.getlogin()+' ; '
 
+        # Special hadd command
         if iStep == 'hadd' :
           if 'iihe' in os.uname()[1]:
             command='cd '+wDir+' ; '
@@ -449,6 +454,18 @@ for iProd in prodList :
             for iFile in targetList[iTarget] : command += iFile+' '
             command += ' ; ' 
             GarbageCollector.append(outTree)
+
+        # Special UEPS directories
+        elif iStep == 'UEPS' :
+          for iUEPS in Steps[iStep]['cpMap'] :
+            if iTarget in Steps[iStep]['cpMap'][iUEPS] :
+              for i in range(len(Steps[iStep]['cpMap'][iUEPS][iTarget])):
+                print iUEPS, iTarget , '--->' , Steps[iStep]['cpMap'][iUEPS][iTarget][i]
+                outTree = os.path.dirname(inTree)+'__'+iUEPS+'/'+'latino_'+Steps[iStep]['cpMap'][iUEPS][iTarget][i]+'.root'
+                print inTree , '--->', outTree 
+                command +='lcg-cp srm://maite.iihe.ac.be:8443'+inTree+' srm://maite.iihe.ac.be:8443'+outTree+' '
+                if i <  len(Steps[iStep]['cpMap'][iUEPS][iTarget])-1 : command += ' ; '
+
         # Chains of subTargets
         elif 'isChain' in Steps[iStep] and Steps[iStep]['isChain']:
           iName=''
@@ -548,18 +565,19 @@ for iProd in prodList :
         # else:
         #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+startingStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
         #lse:
-        if 'iihe' in os.uname()[1]:
-          if startingStep == 'Prod' :
-            if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
-            command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
-          else: 
-            if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
-            command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
-        else:
-          if startingStep == 'Prod' :
-            command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
-          else:
-            command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
+        if not 'UEPS' == iStep :
+         if 'iihe' in os.uname()[1]:
+           if startingStep == 'Prod' :
+             if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
+             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+           else: 
+             if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
+             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
+         else:
+           if startingStep == 'Prod' :
+             command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+           else:
+             command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
         for iGarbage in GarbageCollector: 
           command+='; rm '+iGarbage

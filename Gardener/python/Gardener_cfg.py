@@ -1690,6 +1690,34 @@ Steps= {
                                  ],
                },
 
+  'UEPS'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'onlySample' : [ 
+                                    'GluGluHToWWTo2L2Nu_M125_CUETDown' , 'VBFHToWWTo2L2Nu_M125_CUETDown' , 'WWTo2L2Nu_CUETDown' ,
+                                    'GluGluHToWWTo2L2Nu_M125_CUETUp'   , 'VBFHToWWTo2L2Nu_M125_CUETUp'   , 'WWTo2L2Nu_CUETUp'   ,
+                                    'GluGluHToWWTo2L2NuHerwigPS_M125'  , 'VBFHToWWTo2L2NuHerwigPS_M125'  , 'WWTo2L2NuHerwigPS'  ,
+                                 ] ,
+                  'cpMap' : {
+                              'UEdo' : { 
+                                          'GluGluHToWWTo2L2Nu_M125_CUETDown' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
+                                          'VBFHToWWTo2L2Nu_M125_CUETDown'    : ['VBFHToWWTo2L2Nu_M125']    ,
+                                          'WWTo2L2Nu_CUETDown'               : ['WWTo2L2Nu'] , 
+                                       },
+                              'UEup' : {
+                                          'GluGluHToWWTo2L2Nu_M125_CUETUp'   : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
+                                          'VBFHToWWTo2L2Nu_M125_CUETUp'      : ['VBFHToWWTo2L2Nu_M125']    ,
+                                          'WWTo2L2Nu_CUETUp'                 : ['WWTo2L2Nu'] ,
+                                       },
+                              'PS'   : {    
+                                          'GluGluHToWWTo2L2NuHerwigPS_M125'  : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
+                                          'VBFHToWWTo2L2NuHerwigPS_M125'     : ['VBFHToWWTo2L2Nu_M125'] ,
+                                          'WWTo2L2NuHerwigPS'                : ['WWTo2L2Nu'] ,
+                                       },
+                            },
+               },
+
   'do_lpTCorrMC'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
