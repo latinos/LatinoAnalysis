@@ -147,6 +147,9 @@ if "/eos/cms" in eosTargBaseOut:
 for iProd in prodList :
   cmssw=options.cmssw
   if 'cmssw' in Productions[iProd] : cmssw = Productions[iProd]['cmssw']
+  # Fix for 74x: can not run these modules: 
+  if cmssw == '74x' : Steps['bPogSF']['do4MC'] = False
+  if cmssw == '74x' : Steps['genVariables']['do4MC'] = False
 
   samples = {}
   prodDir = 'NONE'
