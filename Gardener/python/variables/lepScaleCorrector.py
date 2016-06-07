@@ -139,12 +139,12 @@ class LeptonPtCorrector(TreeCloner):
 
         # met branches to be changed
 
-        if self.cmssw == '763' :
-            self.metvar1 = 'metPfType1'
-            self.metvar2= 'metPfType1Phi' 
-        else :
+        if self.cmssw == '74x' :
             self.metvar1 = 'pfType1Met'
             self.metvar2= 'pfType1Metphi' 
+        else :
+            self.metvar1 = 'metPfType1'
+            self.metvar2= 'metPfType1Phi' 
         self.namesOldBranchesToBeModifiedSimpleVariable = [self.metvar1,self.metvar2]
 
         self.namesOldBranchesToBeModifiedVector = []
@@ -193,12 +193,12 @@ class LeptonPtCorrector(TreeCloner):
             # Scale Up
             leptonPtChanged = []
 
-            if self.cmssw == '763' :
-              oldmet = itree.metPfType1
-              oldphi = itree.metPfType1Phi
-            else :
+            if self.cmssw == '74x' :
               oldmet = itree.pfType1Met
               oldphi = itree.pfType1Metphi
+            else :
+              oldmet = itree.metPfType1
+              oldphi = itree.metPfType1Phi
             met_org = ROOT.TLorentzVector()
             met_org.SetPtEtaPhiM(oldmet, 0, oldphi, 0)
             newmet = ROOT.TLorentzVector()

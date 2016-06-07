@@ -158,13 +158,16 @@ class L2KinFiller(TreeCloner):
             WW.setLeptons(itree.std_vector_lepton_pt, itree.std_vector_lepton_eta, itree.std_vector_lepton_phi, itree.std_vector_lepton_flavour)
             WW.setJets   (itree.std_vector_jet_pt,       itree.std_vector_jet_eta,    itree.std_vector_jet_phi,    itree.std_vector_jet_mass)
             
-            if self.cmssw == '763' :
+            if self.cmssw == '74x' :
+
+                met = itree.pfType1Met          # formerly pfType1Met
+                metphi = itree.pfType1Metphi    # formerly pfType1Metphi
+
+            else : 
                 met = itree.metPfType1      
                 metphi = itree.metPfType1Phi
                 WW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
-            else : 
-                met = itree.pfType1Met          # formerly pfType1Met
-                metphi = itree.pfType1Metphi    # formerly pfType1Metphi
+            
             WW.setMET(met, metphi)
  
             WW.checkIfOk()
