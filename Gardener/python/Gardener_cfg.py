@@ -167,7 +167,7 @@ Productions= {
                                    }
                       } ,
 
-# 80X 2016 DAT/MC --> REM: Still using 763 post-processing
+# 80X 2016 DAT/MC --> REM: Still using 763 post-processing  --> MoneyMonster tag
 
   '13May2016_25ns_Spring16_MC'   : {
                         'isData'  : False ,
@@ -182,6 +182,7 @@ Productions= {
   '20May2016_Run2016B_PromptReco' : {
                         'isData'  : True ,        
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/May20/data/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : '763' ,
                         'reName'  : {
@@ -225,30 +226,6 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
-#                  'XonlySample' : [ 'T2bW_X05_mStop125to275_mLSP0to150',
-#'T2bW_X05_mStop300to400_mLSP0to275',
-#'T2bW_X05_mStop425to600_mLSP0to375',
-#'T2bW_X05_mStop625to950_mLSP0to350',
-#'T2tb_mStop200to325_mLSP0to150',
-#'T2tb_mStop200to625_mLSP50to475',
-#'T2tb_mStop425to600_mLSP0to425',
-#'T2tb_mStop625to850_mLSP0to450',
-#'T2tb_mStop875to1125_mLSP0to475',
-#'T2tt_mStop100-125_mLSP1to50',
-#'T2tt_mStop150-175_mLSP1to100',
-#'T2tt_mStop183to291_mLSP1to100',
-#'T2tt_mStop200_mLSP1to125',
-#'T2tt_mStop225_mLSP25to150',
-#'T2tt_mStop250_mLSP1to175',
-#'T2tt_mStop275_mLSP75to200',
-#'T2tt_mStop400to475_mLSP1to400',
-#'T2ttmStop425mLSP325',
-#'T2tt_mStop500-525-550_mLSP1to425-325to450-1to475',
-#'T2tt_mStop500_mLSP325',
-#'T2tt_mStop600-950_mLSP1to450',
-#'T2tt_mStop850_mLSP100',
-#]
-
                 },
 
   'MCl2loose16' :       {
@@ -264,6 +241,14 @@ Steps= {
                   'do4MC'      : False ,
                   'do4Data'    : True,
                   'subTargets' : ['l2loose','l2kin'],
+                },
+
+
+  'l1loose16'  :       {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['l1loose','l2kin'],
                 },
 
 
@@ -298,6 +283,9 @@ Steps= {
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
                                   'QCD_Pt-20toInf_MuEnrichedPt15',
                                   ####
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
+                                  ####
                                   'TT','TTJets',
  
                                  ] ,
@@ -318,6 +306,9 @@ Steps= {
                                   ####
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
                                   'QCD_Pt-20toInf_MuEnrichedPt15',
+                                  ####
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
                                   'TT','TTJets',
                                  ] ,
