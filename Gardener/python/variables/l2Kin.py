@@ -79,6 +79,7 @@ class L2KinFiller(TreeCloner):
            'drll',
            'dphilljet',
            'dphilljetjet',
+           'dphillmet',
            'dphilmet',
            'dphilmet1',
            'dphilmet2',
@@ -95,6 +96,13 @@ class L2KinFiller(TreeCloner):
            'drllOneThree',
            'drllTwoThree',
            
+           'dphijet1met',  
+           'dphijet2met',  
+           'dphijjmet',    
+           'dphilep1jet1', 
+           'dphilep1jet2', 
+           'dphilep2jet1', 
+           'dphilep2jet2', 
            
            'ht',
            'vht_pt',
