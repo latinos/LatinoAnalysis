@@ -336,6 +336,46 @@ class L2SelFiller(TreeCloner):
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1 
                          )
                  ))
+                 
+                 
+                 and
+                 
+                ((
+                 (abs(self.itree.std_vector_lepton_eta[ilepton]) <= 1.479) 
+                 and    (
+                         self.itree.std_vector_electron_hOverE[ilepton]              < 0.0597       and
+                         abs(self.itree.std_vector_electron_dEtaIn[ilepton])         < 0.00926      and
+                         abs(self.itree.std_vector_electron_dPhiIn[ilepton])         < 0.0336       and
+                         self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.0101  and
+                         abs(self.itree.std_vector_electron_ooEmooP[ilepton]) < 0.012               and 
+                         self.itree.std_vector_lepton_d0[ilepton]      < 0.1                        and
+                         abs(self.itree.std_vector_lepton_dz[ilepton])< 0.373                       and
+                         self.itree.std_vector_electron_passConversionVeto[ilepton]                 and
+                         self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2        and
+                         (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.165 + \
+                         self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.060 + \
+                         self.itree.std_vector_lepton_trackIso[ilepton] ) / self.itree.std_vector_lepton_pt[ilepton] < 0.0354
+                         )
+                 )
+                 or 
+                 (
+                 (abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5)
+                 and    (
+                         self.itree.std_vector_electron_hOverE[ilepton]              < 0.0615           and
+                         abs(self.itree.std_vector_electron_dEtaIn[ilepton])         < 0.00724          and
+                         abs(self.itree.std_vector_electron_dPhiIn[ilepton])         < 0.0918           and
+                         self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]   < 0.0279       and
+                         abs(self.itree.std_vector_electron_ooEmooP[ilepton]) < 0.00999                 and 
+                         self.itree.std_vector_lepton_d0[ilepton]      < 0.2                            and
+                         abs(self.itree.std_vector_lepton_dz[ilepton])< 0.602                           and
+                         self.itree.std_vector_electron_passConversionVeto[ilepton]                     and
+                         self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1             and
+                         (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.132 + \
+                         self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.131 + \
+                         self.itree.std_vector_lepton_trackIso[ilepton] ) / self.itree.std_vector_lepton_pt[ilepton] < 0.0646
+                         )
+                 ))
+                 
                 ) : 
                   isThisATightLepton = 1
 
