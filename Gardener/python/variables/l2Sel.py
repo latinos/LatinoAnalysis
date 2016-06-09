@@ -174,7 +174,7 @@ class L2SelFiller(TreeCloner):
                          abs(self.itree.std_vector_electron_ooEmooP[ilepton]) < 0.013               and 
                          (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.165)/self.itree.std_vector_lepton_pt[ilepton] < 0.160   and
                          (self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.060)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.1                  and
+                         abs(self.itree.std_vector_lepton_d0[ilepton])< 0.1                  and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.373                 and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]           and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2
@@ -190,7 +190,7 @@ class L2SelFiller(TreeCloner):
                          (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.132)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
                          (self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.131)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
                          abs(self.itree.std_vector_electron_gsfnormalizedchi2[ilepton]) < 3       and
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.2               and
+                         abs(self.itree.std_vector_lepton_d0[ilepton])< 0.2               and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.602              and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]        and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1 
@@ -314,7 +314,7 @@ class L2SelFiller(TreeCloner):
                          abs(self.itree.std_vector_electron_ooEmooP[ilepton]) < 0.013               and 
                          (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.165)/self.itree.std_vector_lepton_pt[ilepton] < 0.160   and
                          (self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.060)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.1                  and
+                         abs(self.itree.std_vector_lepton_d0[ilepton])      < 0.1                  and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.373                 and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]           and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2  
@@ -330,7 +330,7 @@ class L2SelFiller(TreeCloner):
                          (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.132)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
                          (self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.131)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
                          abs(self.itree.std_vector_electron_gsfnormalizedchi2[ilepton]) < 3       and
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.2               and
+                         abs(self.itree.std_vector_lepton_d0[ilepton])      < 0.2               and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.602              and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]        and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1 
@@ -348,7 +348,7 @@ class L2SelFiller(TreeCloner):
                          abs(self.itree.std_vector_electron_dPhiIn[ilepton])         < 0.0336       and
                          self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]    < 0.0101  and
                          abs(self.itree.std_vector_electron_ooEmooP[ilepton]) < 0.012               and 
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.1                        and
+                         abs(self.itree.std_vector_lepton_d0[ilepton])      < 0.1                   and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.373                       and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]                 and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2        and
@@ -366,7 +366,7 @@ class L2SelFiller(TreeCloner):
                          abs(self.itree.std_vector_electron_dPhiIn[ilepton])         < 0.0918           and
                          self.itree.std_vector_electron_full5x5_sigmaIetaIeta[ilepton]   < 0.0279       and
                          abs(self.itree.std_vector_electron_ooEmooP[ilepton]) < 0.00999                 and 
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.2                            and
+                         abs(self.itree.std_vector_lepton_d0[ilepton])      < 0.2                       and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.602                           and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]                     and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1             and
@@ -501,7 +501,7 @@ class L2SelFiller(TreeCloner):
                          abs(self.itree.std_vector_electron_ooEmooP[ilepton]) < 0.013               and 
                          (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.165)/self.itree.std_vector_lepton_pt[ilepton] < 0.160   and
                          (self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.060)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.1                  and
+                         abs(self.itree.std_vector_lepton_d0[ilepton]) < 0.1                  and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.373                 and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]           and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=2  
@@ -517,7 +517,7 @@ class L2SelFiller(TreeCloner):
                          (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.132)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
                          (self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.131)/self.itree.std_vector_lepton_pt[ilepton] < 0.120   and
                          abs(self.itree.std_vector_electron_gsfnormalizedchi2[ilepton]) < 3       and
-                         self.itree.std_vector_lepton_d0[ilepton]      < 0.2               and
+                         abs(self.itree.std_vector_lepton_d0[ilepton]) < 0.2               and
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.602              and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]        and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<=1 
