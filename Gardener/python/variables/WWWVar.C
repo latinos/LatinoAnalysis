@@ -37,7 +37,7 @@ public:
  void setTkMET(float met, float metphi);
  
  //! functions
- float mll();
+ float mllmin3l();
  float pt1();
  float pt2();
  float pt3();
@@ -47,12 +47,12 @@ public:
  float phi1();
  float phi2();
  float phi3();
- float drll();
- float zveto(); 
+ float drllmin3l();
+ float zveto_3l(); 
  float pfmet();
  float channel();
- float njet();
- float nbjet();
+ float njet_3l();
+ float nbjet_3l();
  float ht();
  float chlll();
  float mlll();
@@ -380,7 +380,7 @@ return -9999.;
 }
 }
 
-float WWW::drll(){
+float WWW::drllmin3l(){
  //---- https://root.cern.ch/doc/master/TLorentzVector_8h_source.html#l00469
  if (_isOk) {
  float L1Charge = _leptonsflavour.at(0);
@@ -422,7 +422,7 @@ deltaRN3 = L1.DeltaR(L3);
 }
 
 //---- mll
-float WWW::mll(){
+float WWW::mllmin3l(){
  
  if (_isOk) {
  float L1Charge = _leptonsflavour.at(0);
@@ -463,7 +463,7 @@ return dlep_sort[1];
  } 
 }
 
-float WWW::zveto(){
+float WWW::zveto_3l(){
 float Zmass = 91.1876;
 
  if (_isOk) {
@@ -539,7 +539,7 @@ float WWW::chlll(){
  }
 }
 
-float WWW::njet(){
+float WWW::njet_3l(){
  float njet = 0;
  for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
   if (_jetspt.at(ijet) > 40 && fabs(_jetseta.at(ijet))<4.7) {
@@ -549,7 +549,7 @@ float WWW::njet(){
  return njet; 
 }
 
-float WWW::nbjet(){
+float WWW::nbjet_3l(){
  float nbjet = 0;
  float btag = -9999.;
  for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {

@@ -60,8 +60,8 @@ class L3KinFiller(TreeCloner):
         # if you add a new variable here, be sure it IS defined in WWWVar.C
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
-           'mll',
-           'zveto',
+           'mllmin3l',
+           'zveto_3l',
            'pt1',
            'pt2',
            'pt3',
@@ -72,9 +72,9 @@ class L3KinFiller(TreeCloner):
            'phi2',
            'phi3',
    #        'channel',
-           'drll',
-           'njet',
-           'nbjet',
+           'drllmin3l',
+           'njet_3l',
+           'nbjet_3l',
            'chlll',
            'ht',
            'pfmet',
