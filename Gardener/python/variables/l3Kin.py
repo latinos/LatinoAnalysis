@@ -21,7 +21,7 @@ import os.path
 from collections import OrderedDict
 from array import array;
 
-class L2KinFiller(TreeCloner):
+class L3KinFiller(TreeCloner):
     def __init__(self):
        pass
 
@@ -55,64 +55,31 @@ class L2KinFiller(TreeCloner):
 
         #
         # create branches for otree, the ones that will be modified!
-        # These variables NEED to be defined as functions in WWVar.C
+        # These variables NEED to be defined as functions in WWWVar.C
         # e.g. mll, dphill, ...
-        # if you add a new variable here, be sure it IS defined in WWVar.C
+        # if you add a new variable here, be sure it IS defined in WWWVar.C
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
-           'mll',
-           'dphill',
-           'yll',
-           'ptll',
+           'mllmin3l',
+           'zveto_3l',
            'pt1',
            'pt2',
-           'mth',
-           'mcoll',
-           'mcollWW',
-           'mTi',
-           'mTe',
-	   'choiMass',
-	   'mR',
-           'channel',
-
-
-           'drll',
-           'dphilljet',
-           'dphilljetjet',
-           'dphillmet',
-           'dphilmet',
-           'dphilmet1',
-           'dphilmet2',
-           'mtw1',
-           'mtw2',
-           
-           'mjj',
-           'detajj',
-           'njet',
-           
-           'mllThird',
-           'mllOneThree',
-           'mllTwoThree',
-           'drllOneThree',
-           'drllTwoThree',
-           
-           'dphijet1met',  
-           'dphijet2met',  
-           'dphijjmet',    
-           'dphilep1jet1', 
-           'dphilep1jet2', 
-           'dphilep2jet1', 
-           'dphilep2jet2', 
-           
+           'pt3',
+           'eta1',
+           'eta2',
+           'eta3',
+           'phi1',
+           'phi2',
+           'phi3',
+   #        'channel',
+           'drllmin3l',
+           'njet_3l',
+           'nbjet_3l',
+           'chlll',
            'ht',
-           'vht_pt',
-           'vht_phi',
-           
-           'projpfmet',
-           'dphiltkmet',
-           'projtkmet',
-           'mpmet'
-           
+           'pfmet',
+           'mlll',
+           'flagOSSF'
            ]
         
         # clone the tree
@@ -137,9 +104,9 @@ class L2KinFiller(TreeCloner):
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
         try:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWVar.C+g')
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWWVar.C+g')
         except RuntimeError:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWVar.C++g')
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWWVar.C++g')
 
 
         #----------------------------------------------------------------------------------------------------
@@ -154,28 +121,26 @@ class L2KinFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
 
-            WW = ROOT.WW()
-            WW.setLeptons(itree.std_vector_lepton_pt, itree.std_vector_lepton_eta, itree.std_vector_lepton_phi, itree.std_vector_lepton_flavour)
-            WW.setJets   (itree.std_vector_jet_pt,       itree.std_vector_jet_eta,    itree.std_vector_jet_phi,    itree.std_vector_jet_mass)
+            WWW = ROOT.WWW()
+#            WWW.setLeptons(itree.std_vector_lepton_pt, itree.std_vector_lepton_eta, itree.std_vector_lepton_phi, itree.std_vector_lepton_flavour)
+            WWW.setLeptons(itree.std_vector_lepton_pt, itree.std_vector_lepton_eta, itree.std_vector_lepton_phi, itree.std_vector_lepton_ch, itree.std_vector_lepton_flavour)
+            WWW.setJets   (itree.std_vector_jet_pt,       itree.std_vector_jet_eta,    itree.std_vector_jet_phi,    itree.std_vector_jet_mass, itree.std_vector_jet_cmvav2)
             
-            if self.cmssw == '74x' :
-
-                met = itree.pfType1Met          # formerly pfType1Met
-                metphi = itree.pfType1Metphi    # formerly pfType1Metphi
-
-            else : 
+            if self.cmssw == '763' :
                 met = itree.metPfType1      
                 metphi = itree.metPfType1Phi
-                WW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
-            
-            WW.setMET(met, metphi)
+                WWW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
+            else : 
+                met = itree.pfType1Met          # formerly pfType1Met
+                metphi = itree.pfType1Metphi    # formerly pfType1Metphi
+            WWW.setMET(met, metphi)
  
-            WW.checkIfOk()
+            WWW.checkIfOk()
 
  
             # now fill the variables like "mll", "dphill", ...
             for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
-              bvariable[0] = getattr(WW, bname)()
+              bvariable[0] = getattr(WWW, bname)()
               
             otree.Fill()
             savedentries+=1

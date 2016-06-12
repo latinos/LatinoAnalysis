@@ -59,7 +59,6 @@ public:
  float projtkmet();
  float mpmet();
  
- 
  float mth();
  float mcoll();
  float mcollWW();
@@ -73,6 +72,14 @@ public:
  float detajj();
  float dphijj();
  float njet();
+
+ float dphijet1met();  
+ float dphijet2met();  
+ float dphijjmet();    
+ float dphilep1jet1(); 
+ float dphilep1jet2(); 
+ float dphilep2jet1(); 
+ float dphilep2jet2(); 
 
  float vht_pt();
  float vht_phi();
@@ -772,6 +779,76 @@ float WW::detajj(){
 float WW::dphijj(){
  if (_isOk) {
   return fabs(J1.DeltaPhi(J2));
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+float WW::dphijet1met(){
+ if (_isOk && _jetOk >= 1) {
+  return fabs(J1.DeltaPhi(MET));
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+float WW::dphijet2met(){
+ if (_isOk && _jetOk >= 2) {
+  return fabs(J2.DeltaPhi(MET));
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+float WW::dphijjmet(){
+  if (_isOk && _jetOk >= 2) {
+    return fabs((J1+J2).DeltaPhi(MET));
+  }
+  else {
+    return -9999.0;
+  } 
+}
+
+
+float WW::dphilep1jet1(){
+ if (_isOk && _jetOk >= 1) {
+  return fabs(L1.DeltaPhi(J1));
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+float WW::dphilep2jet1(){
+ if (_isOk && _jetOk >= 1) {
+  return fabs(L2.DeltaPhi(J1));
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+float WW::dphilep1jet2(){
+ if (_isOk && _jetOk >= 2) {
+  return fabs(L1.DeltaPhi(J2));
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
+float WW::dphilep2jet2(){
+ if (_isOk && _jetOk >= 2) {
+  return fabs(L2.DeltaPhi(J2));
  }
  else {
   return -9999.0;

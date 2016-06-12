@@ -65,33 +65,40 @@ How to filter events and update some collections:
                      
     gardener.py  l2selfiller \
                 --cmssw=763   \
-                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_mc_numEvent100.root  \
                 test.root
 
     gardener.py  l2selfiller \
                 --kind 2 \
                 --cmssw=763   \
-                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_mc_numEvent100.root  \
                 test.2.root
 
     gardener.py  l2selfiller \
                 --kind 3 \
                 --cmssw=763   \
-                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_mc_numEvent100.root  \
                 test.3.root
 
     gardener.py  l2selfiller \
                 --kind 1 \
                 --cmssw=763   \
-                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_mc_numEvent100.root  \
                 test.1.root
+                
+    gardener.py  l2selfiller \
+                --kind 1 \
+                --cmssw=ICHEP2016   \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_mc_numEvent100.root  \
+                test.1.root
+
                 
                 
     gardener.py  l2selfiller \
                 --kind 2 \
                 --cmssw=763   \
                 --selection=1   \
-                ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_mc_numEvent100.root  \
                 test.root
 
     gardener.py  l1selfiller \
