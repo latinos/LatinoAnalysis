@@ -74,6 +74,7 @@ from LatinoAnalysis.Gardener.variables.lepScaleUncertainty        import LeppTSc
 from LatinoAnalysis.Gardener.variables.lepResolutionUncertainty   import LeptonResolutionTreeMaker
 # MET uncertainty
 from LatinoAnalysis.Gardener.variables.metUncertainty             import MetUncertaintyTreeMaker
+from LatinoAnalysis.Gardener.variables.metXYshift                 import MetXYshiftTreeMaker
 # QCD uncertainty
 from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
 # PDF uncertainty
@@ -175,6 +176,8 @@ if __name__ == '__main__':
 
 # lepton pt corrector
     modules['letPtCorrector']   = LeptonPtCorrector()
+# MET corrector
+    modules['metXYshift']     = MetXYshiftTreeMaker()
 
 # EWK bw weights
     modules['BWEwkSingletReweighter'] = BWEwkSingletReweighter()
