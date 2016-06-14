@@ -203,7 +203,8 @@ Productions= {
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun07/MC/v2/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
-                        #'puData'  : '' ,
+                        # [FIXME] Partial PU data only, missing latest runs
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_14Jun.root' , 
                        },
 
   '07Jun2016_Run2016B_PromptReco' : {
@@ -273,12 +274,12 @@ Steps= {
                 },
 
 
-  'l1loose16'  :       {
-                  'isChain'    : True ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True,
-                  'subTargets' : ['l1loose','l2kin'],
-                },
+# 'l1loose16'  :       {
+#                 'isChain'    : True ,
+#                 'do4MC'      : False ,
+#                 'do4Data'    : True,
+#                 'subTargets' : ['l1loose','l2kin'],
+#               },
 
 
 
@@ -740,7 +741,7 @@ Steps= {
                   'subTargets' : ['do_JESMaxup','bPogSF','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -843,7 +844,7 @@ Steps= {
                   'subTargets' : ['do_JESMaxdo','bPogSF','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -954,7 +955,7 @@ Steps= {
                   'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -1056,7 +1057,7 @@ Steps= {
                   'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -1160,7 +1161,7 @@ Steps= {
                   'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -1263,7 +1264,7 @@ Steps= {
                   'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -1368,7 +1369,7 @@ Steps= {
                   'subTargets' : ['do_METup','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -1470,7 +1471,7 @@ Steps= {
                   'subTargets' : ['do_METdo','l2kin'],
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -1630,7 +1631,7 @@ Steps= {
                   'command'    : 'gardener.py genvariablesfiller ',
                   'onlySample' : [
                                   # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
@@ -1712,6 +1713,16 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW'
                },
+
+
+
+  'l3kin'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l3kinfiller --cmssw RPLME_CMSSW'
+               },
+
 
   'l2loose'    : {
                   'isChain'    : False ,
