@@ -262,7 +262,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','baseW','wwNLL','genVariables','genMatchVariables','l2kin','BWEwkSinglet'],
+                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
                 },
 
 
@@ -270,7 +270,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['l2loose','l2kin'],
+                  'subTargets' : ['l2loose','l2kin','l3kin'],
                 },
 
 
