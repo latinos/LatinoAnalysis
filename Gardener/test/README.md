@@ -107,7 +107,13 @@ How to filter events and update some collections:
                 ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root  \
                 test.l1sel.root
 
+    gardener.py  l1selfiller \
+                --kind 1 \
+                --cmssw=ICHEP2016   \
+                ../LatinoTrees/AnalysisStep/test/latino_stepB_mc_numEvent100.root  \
+                test.l1sel.1.root
 
+                
 How to keep only some branches of a tree:
 
     gardener.py filter -k "njet" latino_stepB_numEvent100.root output.root	
