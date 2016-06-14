@@ -381,7 +381,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin'],
                 },
 
   'bSFKinFix'    : {
@@ -412,7 +412,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' ,
@@ -531,7 +531,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESup','bPogSF','l2kin'],
+                  'subTargets' : ['do_JESup','bPogSF','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -634,7 +634,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESdo','bPogSF','l2kin'],
+                  'subTargets' : ['do_JESdo','bPogSF','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -738,7 +738,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESMaxup','bPogSF','l2kin'],
+                  'subTargets' : ['do_JESMaxup','bPogSF','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
@@ -841,7 +841,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESMaxdo','bPogSF','l2kin'],
+                  'subTargets' : ['do_JESMaxdo','bPogSF','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
@@ -943,7 +943,7 @@ Steps= {
                  'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin'],
                },
 
 
@@ -952,7 +952,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin'],
+                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
@@ -1054,7 +1054,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin'],
+                  'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
@@ -1158,7 +1158,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin'],
+                  'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
@@ -1261,7 +1261,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin'],
+                  'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
@@ -1366,7 +1366,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METup','l2kin'],
+                  'subTargets' : ['do_METup','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
@@ -1468,7 +1468,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METdo','l2kin'],
+                  'subTargets' : ['do_METdo','l2kin','l3kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
