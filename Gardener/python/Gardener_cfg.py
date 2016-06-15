@@ -204,7 +204,7 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         # [FIXME] Partial PU data only, missing latest runs
-                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_14Jun.root' , 
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_15Jun.root' , 
                        },
 
   '07Jun2016_Run2016B_PromptReco' : {
