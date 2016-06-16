@@ -75,8 +75,8 @@ class IdIsoSFFiller(TreeCloner):
         file_isoTightScaleFactorsFileMu  = open (opts.isoTightScaleFactorsFileMu)
         file_isoLooseScaleFactorsFileMu  = open (opts.isoLooseScaleFactorsFileMu)
 
-        file_idIsoScaleFactorsFileElectronAlternative = open (opts.idIsoScaleFactorsFileElectronAlternative)
         file_idIsoScaleFactorsFileElectron = open (opts.idIsoScaleFactorsFileElectron)
+        if opts.cmssw == "ICHEP2016" :  file_idIsoScaleFactorsFileElectronAlternative = open (opts.idIsoScaleFactorsFileElectronAlternative)
 
 
         self.idIsoScaleFactors = {}
@@ -152,6 +152,9 @@ class IdIsoSFFiller(TreeCloner):
  
  
         #print " self.idIsoScaleFactors = ", self.idIsoScaleFactors
+        
+        # decide if to use the first period of 2016 electron data
+        # or the second period
         toss_a_coin = 1.
         if opts.cmssw == "ICHEP2016" : 
           toss_a_coin = ROOT.gRandom.Rndm()
