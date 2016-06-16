@@ -61,7 +61,7 @@ class EffTrgFiller(TreeCloner):
           else :                          opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele23Single.txt'
 
         if opts.triggerDoubleMuLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HICHEP2016/LT_DoubleMuLegHigPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/LT_DoubleMuLegHigPt.txt'
           else :                          opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLegHigPt.txt'
         if opts.triggerDoubleMuLegLowPt == None :
           if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegLowPt.txt'
