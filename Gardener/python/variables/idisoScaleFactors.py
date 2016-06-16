@@ -29,12 +29,16 @@ class IdIsoSFFiller(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
 
+        group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763', type='string')
+
         group.add_option( '--idmu',       dest='idScaleFactorsFileMu' ,       help='file with scale factors for id for muons', default=None)
         group.add_option( '--isoTightmu', dest='isoTightScaleFactorsFileMu' , help='file with scale factors for isolation ,tight definition, for muons', default=None)
         group.add_option( '--isoLoosemu', dest='isoLooseScaleFactorsFileMu' , help='file with scale factors for isolation ,loose definition, for muons', default=None)
         
-        group.add_option( '--isoidele' , dest='idIsoScaleFactorsFileElectron', help='file with scale factors for isolation and id for electrons',     default=None)
-        group.add_option( '--tkSCele'  , dest='tkSCFileElectron',              help='file with scale factors for track-SC efficiency for electrons',  default=None)
+        group.add_option( '--isoidele'   , dest='idIsoScaleFactorsFileElectron',            help='file with scale factors for isolation and id for electrons',                  default=None)
+        group.add_option( '--tkSCele'    , dest='tkSCFileElectron',                         help='file with scale factors for track-SC efficiency for electrons',               default=None)
+        group.add_option( '--isoideleAlt', dest='idIsoScaleFactorsFileElectronAlternative', help='file with scale factors for isolation and id for electrons, alternative',     default=None)
+        group.add_option( '--isoideleAltLumiRatio', dest='idIsoScaleFactorsFileElectronAlternativeLumiRatio', help='Luminosity ratio between first period and the whole',       default=0.0)
 
         parser.add_option_group(group)
         return group
@@ -48,17 +52,23 @@ class IdIsoSFFiller(TreeCloner):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         if opts.idScaleFactorsFileMu == None :
-          opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_Moriond76x.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/muons.txt'  
+          else :                          opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_Moriond76x.txt'
         if opts.isoTightScaleFactorsFileMu == None :
-          opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_tight_Moriond76x.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/muons_iso_tight.txt'  
+          else :                          opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_tight_Moriond76x.txt'
         if opts.isoLooseScaleFactorsFileMu == None :
-          opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_loose_Moriond76x.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/muons_iso_loose.txt'  
+          else :                          opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_loose_Moriond76x.txt'
 
         if opts.idIsoScaleFactorsFileElectron == None :
-          opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt' 
+          if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/electrons.txt'   
+          else :                          opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt' 
+        
         if opts.tkSCFileElectron == None :
           opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/eleRECO.txt.egamma_SF2D.root'
  
+        if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectronAlternative = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/electrons_firstPart.txt'   
  
            
         file_idScaleFactorsFileMu  = open (opts.idScaleFactorsFileMu)
@@ -66,10 +76,15 @@ class IdIsoSFFiller(TreeCloner):
         file_isoLooseScaleFactorsFileMu  = open (opts.isoLooseScaleFactorsFileMu)
 
         file_idIsoScaleFactorsFileElectron = open (opts.idIsoScaleFactorsFileElectron)
+        if opts.cmssw == "ICHEP2016" :  file_idIsoScaleFactorsFileElectronAlternative = open (opts.idIsoScaleFactorsFileElectronAlternative)
+
 
         self.idIsoScaleFactors = {}
-        #                                      create the list               from the line                                if there is no "#"
-        self.idIsoScaleFactors['ele']   =    [line.rstrip().split()    for line in file_idIsoScaleFactorsFileElectron     if '#' not in line]
+        #                                       create the list               from the line                                if there is no "#"
+        self.idIsoScaleFactors['ele']    =    [line.rstrip().split()    for line in file_idIsoScaleFactorsFileElectron     if '#' not in line]
+        if opts.cmssw == "ICHEP2016" : 
+          self.idIsoScaleFactors['eleAlt'] =    [line.rstrip().split()    for line in file_idIsoScaleFactorsFileElectronAlternative     if '#' not in line]
+        
         self.idIsoScaleFactors['mu']    =    [line.rstrip().split()    for line in file_idScaleFactorsFileMu              if '#' not in line]
 
         self.isoScaleFactors = {}
@@ -137,6 +152,15 @@ class IdIsoSFFiller(TreeCloner):
  
  
         #print " self.idIsoScaleFactors = ", self.idIsoScaleFactors
+        
+        # decide if to use the first period of 2016 electron data
+        # or the second period
+        toss_a_coin = 1.
+        if opts.cmssw == "ICHEP2016" : 
+          toss_a_coin = ROOT.gRandom.Rndm()
+          if kindLep == 'ele' :
+            if toss_a_coin < opts.idIsoScaleFactorsFileElectronAlternativeLumiRatio: 
+              kindLep == 'eleAlt'
         
         # idiso * reco scale factors
         if wantOnlyRecoEff == 2 or wantOnlyRecoEff == 0:
