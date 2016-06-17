@@ -43,6 +43,16 @@ class EffTrgFiller(TreeCloner):
         group.add_option('--triggerEleMuLegHigPt', dest='triggerEleMuLegHigPt', help='file with trigger efficiencies triggerEleMuLegHigPt', default=None)
         group.add_option('--triggerEleMuLegLowPt', dest='triggerEleMuLegLowPt', help='file with trigger efficiencies triggerEleMuLegLowPt', default=None)
 
+
+        group.add_option('--triggerSpecialDoubleMuLegHigPt', dest='triggerSpecialDoubleMuLegHigPt', help='file with triggerSpecial efficiencies triggerSpecialDoubleMuLegHigPt', default=None)
+        group.add_option('--triggerSpecialDoubleMuLegLowPt', dest='triggerSpecialDoubleMuLegLowPt', help='file with triggerSpecial efficiencies triggerSpecialDoubleMuLegLowPt', default=None)
+        group.add_option('--triggerSpecialSingleMu',     dest='triggerSpecialSingleMu',     help='file with triggerSpecial efficiencies triggerSpecialSingleMu',     default=None)
+
+        group.add_option('--triggerSpecialMuEleLegHigPt', dest='triggerSpecialMuEleLegHigPt', help='file with triggerSpecial efficiencies triggerSpecialMuEleLegHigPt', default=None)
+        group.add_option('--triggerSpecialEleMuLegLowPt', dest='triggerSpecialEleMuLegLowPt', help='file with triggerSpecial efficiencies triggerSpecialEleMuLegLowPt', default=None)
+
+        group.add_option( '--fixMuonTriggerLumiRatio', dest='fixMuonTriggerLumiRatio', help='Luminosity ratio between first period and the whole',       default=-1.0)
+
         parser.add_option_group(group)
         return group 
 
@@ -61,7 +71,7 @@ class EffTrgFiller(TreeCloner):
           else :                          opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele23Single.txt'
 
         if opts.triggerDoubleMuLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/LT_DoubleMuLegHigPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegHigPt.txt'
           else :                          opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLegHigPt.txt'
         if opts.triggerDoubleMuLegLowPt == None :
           if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegLowPt.txt'
@@ -85,6 +95,27 @@ class EffTrgFiller(TreeCloner):
           else :                          opts.triggerEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_EleMuLegLowPt.txt'
 
 
+        # special runs for muons
+        if opts.triggerSpecialDoubleMuLegHigPt == None :
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegHigPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegHigPt_BeforeRun274094.txt'
+        if opts.triggerSpecialDoubleMuLegLowPt == None :
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegLowPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegLowPt_BeforeRun274094.txt'
+        if opts.triggerSpecialSingleMu == None :
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuSingle_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuSingle_BeforeRun274094.txt'
+
+        if opts.triggerSpecialMuEleLegHigPt == None :
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuEleLegHigPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuEleLegHigPt_BeforeRun274094.txt'
+        if opts.triggerSpecialEleMuLegLowPt == None :
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_EleMuLegLowPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_EleMuLegLowPt_BeforeRun274094.txt'
+
+
+
+
         file_triggerDoubleEleLegHigPt = open (opts.triggerDoubleEleLegHigPt)
         file_triggerDoubleEleLegLowPt = open (opts.triggerDoubleEleLegLowPt)
         file_triggerSingleEle     = open (opts.triggerSingleEle)
@@ -97,21 +128,43 @@ class EffTrgFiller(TreeCloner):
         file_triggerMuEleLegLowPt = open (opts.triggerMuEleLegLowPt)
         file_triggerEleMuLegHigPt = open (opts.triggerEleMuLegHigPt)
         file_triggerEleMuLegLowPt = open (opts.triggerEleMuLegLowPt)
+
+
+
+        file_triggerSpecialDoubleMuLegHigPt = open (opts.triggerSpecialDoubleMuLegHigPt)
+        file_triggerSpecialDoubleMuLegLowPt = open (opts.triggerSpecialDoubleMuLegLowPt)
+        file_triggerSpecialSingleMu     = open (opts.triggerSpecialSingleMu)
+
+        file_triggerSpecialMuEleLegHigPt = open (opts.triggerSpecialMuEleLegHigPt)
+        file_triggerSpecialEleMuLegLowPt = open (opts.triggerSpecialEleMuLegLowPt)
         
         self.list_triggers = {}
         
-        self.list_triggers['triggerDoubleEleLegHigPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegHigPt]
-        self.list_triggers['triggerDoubleEleLegLowPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegLowPt]
-        self.list_triggers['triggerSingleEle']           =    [line.rstrip().split() for line in file_triggerSingleEle]
+        self.list_triggers['triggerDoubleEleLegHigPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegHigPt        if '#' not in line]
+        self.list_triggers['triggerDoubleEleLegLowPt']   =    [line.rstrip().split() for line in file_triggerDoubleEleLegLowPt        if '#' not in line]
+        self.list_triggers['triggerSingleEle']           =    [line.rstrip().split() for line in file_triggerSingleEle                if '#' not in line]
 
-        self.list_triggers['triggerDoubleMuLegHigPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegHigPt]
-        self.list_triggers['triggerDoubleMuLegLowPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegLowPt]
-        self.list_triggers['triggerSingleMu']            =    [line.rstrip().split() for line in file_triggerSingleMu]
+        self.list_triggers['triggerDoubleMuLegHigPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegHigPt        if '#' not in line]
+        self.list_triggers['triggerDoubleMuLegLowPt']    =    [line.rstrip().split() for line in file_triggerDoubleMuLegLowPt        if '#' not in line]
+        self.list_triggers['triggerSingleMu']            =    [line.rstrip().split() for line in file_triggerSingleMu                if '#' not in line]
         
-        self.list_triggers['triggerMuEleLegHigPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegHigPt]
-        self.list_triggers['triggerMuEleLegLowPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegLowPt]
-        self.list_triggers['triggerEleMuLegHigPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegHigPt]
-        self.list_triggers['triggerEleMuLegLowPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegLowPt]
+        self.list_triggers['triggerMuEleLegHigPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegHigPt        if '#' not in line]
+        self.list_triggers['triggerMuEleLegLowPt']       =    [line.rstrip().split() for line in file_triggerMuEleLegLowPt        if '#' not in line]
+        self.list_triggers['triggerEleMuLegHigPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegHigPt        if '#' not in line]
+        self.list_triggers['triggerEleMuLegLowPt']       =    [line.rstrip().split() for line in file_triggerEleMuLegLowPt        if '#' not in line]
+
+        if opts.cmssw == "ICHEP2016" : 
+          self.list_triggers['triggerSpecialDoubleMuLegHigPt']    =    [line.rstrip().split() for line in file_triggerSpecialDoubleMuLegHigPt        if '#' not in line]
+          self.list_triggers['triggerSpecialDoubleMuLegLowPt']    =    [line.rstrip().split() for line in file_triggerSpecialDoubleMuLegLowPt        if '#' not in line]
+          self.list_triggers['triggerSpecialSingleMu']            =    [line.rstrip().split() for line in file_triggerSpecialSingleMu                if '#' not in line]
+  
+          self.list_triggers['triggerSpecialMuEleLegHigPt']       =    [line.rstrip().split() for line in file_triggerSpecialMuEleLegHigPt        if '#' not in line]
+          self.list_triggers['triggerSpecialEleMuLegLowPt']       =    [line.rstrip().split() for line in file_triggerSpecialEleMuLegLowPt        if '#' not in line]
+  
+
+
+        self.cmssw = opts.cmssw
+        self.fixMuonTriggerLumiRatio = opts.fixMuonTriggerLumiRatio
 
 
         self.minpt_mu = 10
@@ -237,6 +290,23 @@ class EffTrgFiller(TreeCloner):
           #print " kindLep1 = ", kindLep1, " kindLep2 = ", kindLep2
 
           dz_eff = 1.00
+
+
+          # decide if to use the first period of 2016 muons data, before Run 274094
+          # or the second period
+          toss_a_coin = 1.
+          if self.cmssw == "ICHEP2016" : 
+            toss_a_coin = ROOT.gRandom.Rndm()
+          # if   fixMuonTriggerLumiRatio is -1 (default)
+          # any number here will put to false  "toss_a_coin < self.fixMuonTriggerLumiRatio"
+          # then we will pick up always the "standard" trigger, not the special ones
+          #
+          # while, if we put fixMuonTriggerLumiRatio = 0.10 (10% of the lumi)
+          # 10% of the times we will have "toss_a_coin < self.fixMuonTriggerLumiRatio" triggering "true"
+          # then we will get 10% of the times the "special" trigger
+          #
+          # all the rest of the code is factorized, and transparent to these changes!!
+          # 
   
           #                  ele                     ele
           if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
@@ -252,11 +322,22 @@ class EffTrgFiller(TreeCloner):
           if abs(kindLep1) == 13 and abs(kindLep2) == 13 :
             singleLegA  = "triggerSingleMu"
             singleLegB  = "triggerSingleMu"
-            doubleLegHigPtA = "triggerDoubleMuLegHigPt"
-            doubleLegHigPtB = "triggerDoubleMuLegHigPt"
-            doubleLegLowPtA = "triggerDoubleMuLegLowPt"
-            doubleLegLowPtB = "triggerDoubleMuLegLowPt"
+            
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+              doubleLegHigPtA = "triggerSpecialDoubleMuLegHigPt"
+              doubleLegHigPtB = "triggerSpecialDoubleMuLegHigPt"
+              doubleLegLowPtA = "triggerSpecialDoubleMuLegLowPt"
+              doubleLegLowPtB = "triggerSpecialDoubleMuLegLowPt"
+            else :
+              doubleLegHigPtA = "triggerDoubleMuLegHigPt"
+              doubleLegHigPtB = "triggerDoubleMuLegHigPt"
+              doubleLegLowPtA = "triggerDoubleMuLegLowPt"
+              doubleLegLowPtB = "triggerDoubleMuLegLowPt"              
             dz_eff = 0.95
+            if self.cmssw == "ICHEP2016" : 
+              dz_eff = 1.00
+              # in 2016 there is no DZ cut
+              
 
           #                   mu                     ele       
           if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
@@ -267,6 +348,12 @@ class EffTrgFiller(TreeCloner):
             doubleLegLowPtA = "triggerEleMuLegLowPt"
             doubleLegLowPtB = "triggerMuEleLegLowPt"
 
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+              singleLegA  = "triggerSpecialSingleMu"
+              doubleLegHigPtA = "triggerSpecialMuEleLegHigPt"
+              doubleLegLowPtA = "triggerSpecialEleMuLegLowPt"
+
+
           #                   ele                     mu                   
           if abs(kindLep1) == 11 and abs(kindLep2) == 13 :
             singleLegA  = "triggerSingleEle"
@@ -275,6 +362,16 @@ class EffTrgFiller(TreeCloner):
             doubleLegHigPtB = "triggerMuEleLegHigPt"
             doubleLegLowPtA = "triggerMuEleLegLowPt"
             doubleLegLowPtB = "triggerEleMuLegLowPt"
+
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+              singleLegB  = "triggerSpecialSingleMu"
+              doubleLegHigPtB = "triggerSpecialMuEleLegHigPt"
+              doubleLegLowPtB = "triggerSpecialEleMuLegLowPt"
+
+
+
+
+
        
           
           eff_dbl_1_leadingleg  , low_eff_dbl_1_leadingleg  , high_eff_dbl_1_leadingleg   = self._getEff (pt1, eta1, doubleLegHigPtA)

@@ -38,7 +38,7 @@ class IdIsoSFFiller(TreeCloner):
         group.add_option( '--isoidele'   , dest='idIsoScaleFactorsFileElectron',            help='file with scale factors for isolation and id for electrons',                  default=None)
         group.add_option( '--tkSCele'    , dest='tkSCFileElectron',                         help='file with scale factors for track-SC efficiency for electrons',               default=None)
         group.add_option( '--isoideleAlt', dest='idIsoScaleFactorsFileElectronAlternative', help='file with scale factors for isolation and id for electrons, alternative',     default=None)
-        group.add_option( '--isoideleAltLumiRatio', dest='idIsoScaleFactorsFileElectronAlternativeLumiRatio', help='Luminosity ratio between first period and the whole',       default=0.0)
+        group.add_option( '--isoideleAltLumiRatio', dest='idIsoScaleFactorsFileElectronAlternativeLumiRatio', help='Luminosity ratio between first period and the whole',       default=-1.0)
 
         parser.add_option_group(group)
         return group
@@ -93,6 +93,13 @@ class IdIsoSFFiller(TreeCloner):
 
         self.tkSCElectronRootFile = self._openRootFile(opts.tkSCFileElectron)
         self.tkSCElectronHisto = self._getRootObj(self.tkSCElectronRootFile, 'EGamma_SF2D')
+
+
+
+        self.cmssw = opts.cmssw
+        self.idIsoScaleFactorsFileElectronAlternativeLumiRatio = opts.idIsoScaleFactorsFileElectronAlternativeLumiRatio
+
+
         
         self.minpt_mu = 10
         self.maxpt_mu = 200
@@ -156,10 +163,10 @@ class IdIsoSFFiller(TreeCloner):
         # decide if to use the first period of 2016 electron data
         # or the second period
         toss_a_coin = 1.
-        if opts.cmssw == "ICHEP2016" : 
+        if self.cmssw == "ICHEP2016" : 
           toss_a_coin = ROOT.gRandom.Rndm()
           if kindLep == 'ele' :
-            if toss_a_coin < opts.idIsoScaleFactorsFileElectronAlternativeLumiRatio: 
+            if toss_a_coin < self.idIsoScaleFactorsFileElectronAlternativeLumiRatio: 
               kindLep == 'eleAlt'
         
         # idiso * reco scale factors
