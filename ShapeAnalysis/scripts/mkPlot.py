@@ -83,6 +83,7 @@ class ShapeFactory:
         list_tcanvas               = {}
         list_tcanvasRatio          = {}
         list_weight_X_tcanvasRatio = {}
+        list_tcanvasSigVsBkg       = {}
 
         generalCounter = 0
         
@@ -96,10 +97,14 @@ class ShapeFactory:
             tcanvas            = ROOT.TCanvas( "cc" + cutName + "_" + variableName,      "cc"     , 800, 600 )
             tcanvasRatio       = ROOT.TCanvas( "ccRatio" + cutName + "_" + variableName, "ccRatio", 800, 800 )
             weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio" + cutName + "_" + variableName, "weight_X_tcanvasRatio", 800, 800 )
+            tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
  
             list_tcanvas                 [generalCounter] = tcanvas
             list_tcanvasRatio            [generalCounter] = tcanvasRatio
             list_weight_X_tcanvasRatio   [generalCounter] = weight_X_tcanvasRatio
+            list_tcanvasSigVsBkg         [generalCounter] = tcanvasSigVsBkg
+
+
 
             histos = {}
             histos_grouped = {}
@@ -525,6 +530,7 @@ class ShapeFactory:
             for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
               tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
             
+                        
             #
             # and now  let's add the signal on top of the background stack 
             # It is important to do this after setting (without signal) tgrMC_vy
@@ -634,8 +640,6 @@ class ShapeFactory:
               # the signal has to be the last one in the dictionary!
               # make it sure in plot.py
               thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
-
-
             
             #---- now plot
             
@@ -843,6 +847,36 @@ class ShapeFactory:
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             tcanvas.SetLogy(0)
 
+
+            # ~~~~~~~~~~~~~~~~~~~~
+            # plot signal vs background normalized
+            tcanvasSigVsBkg.cd()
+
+            frameNorm = ROOT.TH1F
+            frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
+
+            frameNorm.GetYaxis().SetRangeUser( 0, 2 )
+            # setup axis names
+            if 'xaxis' in variable.keys() : 
+              frameNorm.GetXaxis().SetTitle(variable['xaxis'])
+            tcanvasSigVsBkg.RedrawAxis()
+
+
+            for ihisto in range(thsBackground_grouped.GetNhists()) :
+              num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
+              for ibin in range( num_bins ) :
+                (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+              (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                
+            for ihisto in range(thsSignal_grouped.GetNhists()) :
+              num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
+              for ibin in range( num_bins ) :
+                (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+              (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+
+            tlegend.Draw()
+            tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + ".png")
+         
 
             
             # ~~~~~~~~~~~~~~~~~~~~
