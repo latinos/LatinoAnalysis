@@ -97,12 +97,14 @@ class ShapeFactory:
             tcanvas            = ROOT.TCanvas( "cc" + cutName + "_" + variableName,      "cc"     , 800, 600 )
             tcanvasRatio       = ROOT.TCanvas( "ccRatio" + cutName + "_" + variableName, "ccRatio", 800, 800 )
             weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio" + cutName + "_" + variableName, "weight_X_tcanvasRatio", 800, 800 )
-            tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
+            if self._plotNormalizedDistributions :
+              tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
  
             list_tcanvas                 [generalCounter] = tcanvas
             list_tcanvasRatio            [generalCounter] = tcanvasRatio
             list_weight_X_tcanvasRatio   [generalCounter] = weight_X_tcanvasRatio
-            list_tcanvasSigVsBkg         [generalCounter] = tcanvasSigVsBkg
+            if self._plotNormalizedDistributions :
+              list_tcanvasSigVsBkg         [generalCounter] = tcanvasSigVsBkg
 
 
 
@@ -848,34 +850,35 @@ class ShapeFactory:
             tcanvas.SetLogy(0)
 
 
-            # ~~~~~~~~~~~~~~~~~~~~
-            # plot signal vs background normalized
-            tcanvasSigVsBkg.cd()
-
-            frameNorm = ROOT.TH1F
-            frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
-
-            frameNorm.GetYaxis().SetRangeUser( 0, 2 )
-            # setup axis names
-            if 'xaxis' in variable.keys() : 
-              frameNorm.GetXaxis().SetTitle(variable['xaxis'])
-            tcanvasSigVsBkg.RedrawAxis()
-
-
-            for ihisto in range(thsBackground_grouped.GetNhists()) :
-              num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
-              for ibin in range( num_bins ) :
-                (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-              (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("same")
-                
-            for ihisto in range(thsSignal_grouped.GetNhists()) :
-              num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
-              for ibin in range( num_bins ) :
-                (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-              (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
-
-            tlegend.Draw()
-            tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + ".png")
+            if self._plotNormalizedDistributions :
+              # ~~~~~~~~~~~~~~~~~~~~
+              # plot signal vs background normalized
+              tcanvasSigVsBkg.cd()
+  
+              frameNorm = ROOT.TH1F
+              frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
+  
+              frameNorm.GetYaxis().SetRangeUser( 0, 2 )
+              # setup axis names
+              if 'xaxis' in variable.keys() : 
+                frameNorm.GetXaxis().SetTitle(variable['xaxis'])
+              tcanvasSigVsBkg.RedrawAxis()
+  
+  
+              for ihisto in range(thsBackground_grouped.GetNhists()) :
+                num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
+                for ibin in range( num_bins ) :
+                  (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                  
+              for ihisto in range(thsSignal_grouped.GetNhists()) :
+                num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
+                for ibin in range( num_bins ) :
+                  (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+  
+              tlegend.Draw()
+              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + ".png")
          
 
             
@@ -1483,6 +1486,11 @@ if __name__ == '__main__':
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
+   
+    parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
+          
+          
+          
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -1499,6 +1507,7 @@ if __name__ == '__main__':
     print " inputFile      =          ", opt.inputFile
     print " outputDirPlots =          ", opt.outputDirPlots
  
+    print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
     
 
     if not opt.debug:
@@ -1514,6 +1523,7 @@ if __name__ == '__main__':
     factory = ShapeFactory()
     factory._energy    = opt.energy
     factory._lumi      = opt.lumi
+    factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
     
     
     variables = {}
