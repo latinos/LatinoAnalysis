@@ -109,8 +109,8 @@ CMSSW=os.environ["CMSSW_BASE"]
 #  print Steps['bPogSF']['command']  
 
 #if options.cmssw == '763' :
-#  eosTargBaseIn = '/eos/user/j/jlauwers/HWW2015/'
-#  eosTargBaseOut= '/eos/user/j/jlauwers/HWW2015/'
+eosTargBaseIn = '/eos/user/j/jlauwers/HWW2015/'
+eosTargBaseOut= '/eos/user/j/jlauwers/HWW2015/'
 
 # eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:

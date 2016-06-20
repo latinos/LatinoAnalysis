@@ -22,6 +22,7 @@ from LatinoAnalysis.Gardener.variables.l1Sel                      import L1SelFi
 
 # kinematic variables
 from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
+from LatinoAnalysis.Gardener.variables.l3Kin                      import L3KinFiller
 
 # fake weights adder for W+jet sample
 from LatinoAnalysis.Gardener.variables.fakeWeight                 import FakeWeightFiller
@@ -74,6 +75,7 @@ from LatinoAnalysis.Gardener.variables.lepScaleUncertainty        import LeppTSc
 from LatinoAnalysis.Gardener.variables.lepResolutionUncertainty   import LeptonResolutionTreeMaker
 # MET uncertainty
 from LatinoAnalysis.Gardener.variables.metUncertainty             import MetUncertaintyTreeMaker
+from LatinoAnalysis.Gardener.variables.metXYshift                 import MetXYshiftTreeMaker
 # QCD uncertainty
 from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
 # PDF uncertainty
@@ -159,6 +161,7 @@ if __name__ == '__main__':
 
 # update kinematic variables
     modules['l2kinfiller']     = L2KinFiller()
+    modules['l3kinfiller']     = L3KinFiller()
 
 # Nuisances
     modules['JESTreeMaker']           = JESTreeMaker()
@@ -175,6 +178,8 @@ if __name__ == '__main__':
 
 # lepton pt corrector
     modules['letPtCorrector']   = LeptonPtCorrector()
+# MET corrector
+    modules['metXYshift']     = MetXYshiftTreeMaker()
 
 # EWK bw weights
     modules['BWEwkSingletReweighter'] = BWEwkSingletReweighter()
