@@ -78,6 +78,7 @@ class ShapeFactory:
         list_thsBackground = {}
 
         list_thsSignal_grouped     = {}
+        list_thsSignalSup_grouped     = {}
         list_thsBackground_grouped = {}
 
         list_tcanvas               = {}
@@ -170,6 +171,7 @@ class ShapeFactory:
             #print '... after thstack ...'
 
             sigSupList    = []
+            sigSupList_grouped    = []
             # list of additional histograms to be used in the ratio plot
             sigForAdditionalRatioList    = {}
 
@@ -631,15 +633,20 @@ class ShapeFactory:
               
 
 
-
+            groupFlag = False
             #---- prepare the grouped histograms
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
               if sampleConfiguration['isSignal'] == 1 :
+                  print "############################################################## isSignal 1", sampleNameGroup
                   thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
+              elif sampleConfiguration['isSignal'] == 2 :
+                  print "############################################################## isSignal 2", sampleNameGroup
+                  groupFlag = True
+                  sigSupList_grouped.append(histos_grouped[sampleNameGroup])
               # the signal is added on top of the background
               # the signal has to be the last one in the dictionary!
               # make it sure in plot.py
-              thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
+              if groupFlag == False: thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
             
             #---- now plot
             
@@ -730,6 +737,10 @@ class ShapeFactory:
               if thsSignal_grouped.GetNhists() != 0:
                 thsSignal_grouped.Draw("hist same noclear")
               
+              if len(sigSupList_grouped) != 0:
+                for histo in sigSupList_grouped:
+                  histo.Draw("hist same")
+              
             
             # if there is a systematic band draw it
             if len(mynuisances.keys()) != 0:
@@ -743,10 +754,10 @@ class ShapeFactory:
 
 
 	    #     - then the superimposed MC
-            if len(sigSupList) != 0:
+            if len(sigSupList) != 0 and groupFlag==False:
               for hist in sigSupList:
                 hist.Draw("hist same")
-   
+  
             #     - then the DATA  
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
@@ -756,7 +767,7 @@ class ShapeFactory:
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
-            tlegend = ROOT.TLegend(0.2, 0.55, 0.8, 0.88)
+            tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
             tlegend.SetFillColor(0)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
@@ -928,12 +939,15 @@ class ShapeFactory:
               if thsSignal_grouped.GetNhists() != 0:
                 thsSignal_grouped.Draw("hist same noclear")
 
+              if len(sigSupList_grouped) != 0:
+                for histo in sigSupList_grouped: 
+                  histo.Draw("hist same")
            
             if (len(mynuisances.keys())!=0):
               tgrMC.Draw("2")
              
             #     - then the superimposed MC
-            if len(sigSupList) != 0:
+            if len(sigSupList) != 0 and groupFlag==False:
               for hist in sigSupList:
                 hist.Draw("hist same")
 
