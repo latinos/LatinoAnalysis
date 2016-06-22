@@ -106,7 +106,7 @@ class MetXYshiftTreeMaker(TreeCloner) :
           itree.GetEntry(i)
 
           # 76x ----------------------------------------------------------------
-          if self.cmssw > 763 :
+          if self.cmssw >= 763 :
               oldPfType1Met = itree.metPfType1
               oldPfType1Phi = itree.metPfType1Phi
 
@@ -150,7 +150,7 @@ class MetXYshiftTreeMaker(TreeCloner) :
 	  #corrPfType1Phi = math.asin(corrPfType1Met_y / corrPfType1Met )
 
 	  #print 'oldMet, phi: ', oldPfType1Met, oldPfType1Phi
-	  #print 'newMet, phi: ', corrPfType1Met, corrPfType1Phi
+	  #print 'newMet, phi: ', corrPfType1Met[0], corrPfType1Phi[0]
 
 
           if (i > 0 and i%step == 0.) :
