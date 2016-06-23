@@ -153,11 +153,13 @@ class DatacardFactory:
 
             
             totalNumberSamples = len(self.signals) + len(self.backgrounds)
-            columndef = 25
+            columndef = 30
+
+            # adapt column length to long bin names            
+            if len(tagNameToAppearInDatacard) >= (columndef +5) :
+              columndef = len(tagNameToAppearInDatacard) + 5
             
             card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
-
-            columndef = 25
             
             card.write('process'.ljust(80))
             card.write(''.join([name.ljust(columndef) for name in self.signals]))
@@ -309,7 +311,7 @@ class DatacardFactory:
                 
                          for iBin in range(1, histoTemplate.GetNbinsX()+1):
                        
-                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(80-20))
+                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(100-20))
                            card.write((nuisance ['type']).ljust(20))
                 
                            # write line in datacard

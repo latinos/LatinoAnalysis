@@ -2,6 +2,7 @@
 
 import json
 import sys
+from sys import exit
 import ROOT
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
@@ -14,7 +15,7 @@ from array import array
 from collections import OrderedDict
 import math
 
-import os.path
+#import os.path
 
 
 
@@ -78,11 +79,13 @@ class ShapeFactory:
         list_thsBackground = {}
 
         list_thsSignal_grouped     = {}
+        list_thsSignalSup_grouped     = {}
         list_thsBackground_grouped = {}
 
         list_tcanvas               = {}
         list_tcanvasRatio          = {}
         list_weight_X_tcanvasRatio = {}
+        list_tcanvasSigVsBkg       = {}
 
         generalCounter = 0
         
@@ -96,10 +99,16 @@ class ShapeFactory:
             tcanvas            = ROOT.TCanvas( "cc" + cutName + "_" + variableName,      "cc"     , 800, 600 )
             tcanvasRatio       = ROOT.TCanvas( "ccRatio" + cutName + "_" + variableName, "ccRatio", 800, 800 )
             weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio" + cutName + "_" + variableName, "weight_X_tcanvasRatio", 800, 800 )
+            if self._plotNormalizedDistributions :
+              tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
  
             list_tcanvas                 [generalCounter] = tcanvas
             list_tcanvasRatio            [generalCounter] = tcanvasRatio
             list_weight_X_tcanvasRatio   [generalCounter] = weight_X_tcanvasRatio
+            if self._plotNormalizedDistributions :
+              list_tcanvasSigVsBkg         [generalCounter] = tcanvasSigVsBkg
+
+
 
             histos = {}
             histos_grouped = {}
@@ -165,6 +174,7 @@ class ShapeFactory:
             #print '... after thstack ...'
 
             sigSupList    = []
+            sigSupList_grouped    = []
             # list of additional histograms to be used in the ratio plot
             sigForAdditionalRatioList    = {}
 
@@ -525,6 +535,7 @@ class ShapeFactory:
             for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
               tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
             
+                        
             #
             # and now  let's add the signal on top of the background stack 
             # It is important to do this after setting (without signal) tgrMC_vy
@@ -625,17 +636,20 @@ class ShapeFactory:
               
 
 
-
+            groupFlag = False
             #---- prepare the grouped histograms
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
               if sampleConfiguration['isSignal'] == 1 :
+                  print "############################################################## isSignal 1", sampleNameGroup
                   thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
+              elif sampleConfiguration['isSignal'] == 2 :
+                  print "############################################################## isSignal 2", sampleNameGroup
+                  groupFlag = True
+                  sigSupList_grouped.append(histos_grouped[sampleNameGroup])
               # the signal is added on top of the background
               # the signal has to be the last one in the dictionary!
               # make it sure in plot.py
-              thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
-
-
+              if groupFlag == False: thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
             
             #---- now plot
             
@@ -726,6 +740,10 @@ class ShapeFactory:
               if thsSignal_grouped.GetNhists() != 0:
                 thsSignal_grouped.Draw("hist same noclear")
               
+              if len(sigSupList_grouped) != 0:
+                for histo in sigSupList_grouped:
+                  histo.Draw("hist same")
+              
             
             # if there is a systematic band draw it
             if len(mynuisances.keys()) != 0:
@@ -739,10 +757,10 @@ class ShapeFactory:
 
 
 	    #     - then the superimposed MC
-            if len(sigSupList) != 0:
+            if len(sigSupList) != 0 and groupFlag==False:
               for hist in sigSupList:
                 hist.Draw("hist same")
-   
+  
             #     - then the DATA  
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
@@ -752,7 +770,7 @@ class ShapeFactory:
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
-            tlegend = ROOT.TLegend(0.2, 0.55, 0.8, 0.88)
+            tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
             tlegend.SetFillColor(0)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
@@ -844,6 +862,37 @@ class ShapeFactory:
             tcanvas.SetLogy(0)
 
 
+            if self._plotNormalizedDistributions :
+              # ~~~~~~~~~~~~~~~~~~~~
+              # plot signal vs background normalized
+              tcanvasSigVsBkg.cd()
+  
+              frameNorm = ROOT.TH1F
+              frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
+  
+              frameNorm.GetYaxis().SetRangeUser( 0, 2 )
+              # setup axis names
+              if 'xaxis' in variable.keys() : 
+                frameNorm.GetXaxis().SetTitle(variable['xaxis'])
+              tcanvasSigVsBkg.RedrawAxis()
+  
+  
+              for ihisto in range(thsBackground_grouped.GetNhists()) :
+                num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
+                for ibin in range( num_bins ) :
+                  (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                  
+              for ihisto in range(thsSignal_grouped.GetNhists()) :
+                num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
+                for ibin in range( num_bins ) :
+                  (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+  
+              tlegend.Draw()
+              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + ".png")
+         
+
             
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
@@ -894,12 +943,15 @@ class ShapeFactory:
               if thsSignal_grouped.GetNhists() != 0:
                 thsSignal_grouped.Draw("hist same noclear")
 
+              if len(sigSupList_grouped) != 0:
+                for histo in sigSupList_grouped: 
+                  histo.Draw("hist same")
            
             if (len(mynuisances.keys())!=0):
               tgrMC.Draw("2")
              
             #     - then the superimposed MC
-            if len(sigSupList) != 0:
+            if len(sigSupList) != 0 and groupFlag==False:
               for hist in sigSupList:
                 hist.Draw("hist same")
 
@@ -1325,7 +1377,12 @@ class ShapeFactory:
 
         print " >> all but really all "
         
-        # sys.exit(0)
+        #sys.exit(0)
+	#quit()
+	#raise SystemExit()
+        os._exit(0)
+	#exit()
+
         # ... or it will remain hanging forever ...
         
 
@@ -1449,6 +1506,11 @@ if __name__ == '__main__':
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
+   
+    parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
+          
+          
+          
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -1465,6 +1527,7 @@ if __name__ == '__main__':
     print " inputFile      =          ", opt.inputFile
     print " outputDirPlots =          ", opt.outputDirPlots
  
+    print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
     
 
     if not opt.debug:
@@ -1480,6 +1543,7 @@ if __name__ == '__main__':
     factory = ShapeFactory()
     factory._energy    = opt.energy
     factory._lumi      = opt.lumi
+    factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
     
     
     variables = {}
