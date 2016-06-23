@@ -2,6 +2,7 @@
 
 import json
 import sys
+from sys import exit
 import ROOT
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
@@ -14,7 +15,7 @@ from array import array
 from collections import OrderedDict
 import math
 
-import os.path
+#import os.path
 
 
 
@@ -1376,7 +1377,12 @@ class ShapeFactory:
 
         print " >> all but really all "
         
-        # sys.exit(0)
+        #sys.exit(0)
+	#quit()
+	#raise SystemExit()
+        os._exit(0)
+	#exit()
+
         # ... or it will remain hanging forever ...
         
 
