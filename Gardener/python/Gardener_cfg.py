@@ -406,6 +406,12 @@ Steps= {
                   'subTargets' : ['tagjson', 'selectjson'],
                 } ,
 
+  'LepEff'       :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['TrigEff','IdIsoSC']
+                    }, 
 
 
   'bSFL2pTEff'   :   {
