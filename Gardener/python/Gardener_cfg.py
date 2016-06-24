@@ -406,11 +406,11 @@ Steps= {
                   'subTargets' : ['tagjson', 'selectjson'],
                 } ,
 
-  'LepEff'       :  {
+  'bSFLepEff'       :  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
-                  'subTargets' : ['TrigEff','IdIsoSC']
+                  'subTargets' : ['bPogSF','TrigEff','IdIsoSC']
                     }, 
 
 
@@ -1877,7 +1877,7 @@ Steps= {
                   'do4Data'    : False  ,
                   #'command'    : 'gardener.py btagPogScaleFactors '
                   # --> switch to multiple bTag algo SF:
-                  'command'    : 'gardener.py allBtagPogScaleFactors '
+                  'command'    : 'gardener.py allBtagPogScaleFactors --cmssw=RPLME_CMSSW'
               },
 
   'do_LepElepTup'    : {
