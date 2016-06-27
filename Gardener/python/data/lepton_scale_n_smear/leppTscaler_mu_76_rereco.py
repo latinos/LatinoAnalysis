@@ -2,6 +2,7 @@
 # mu pT scales
 # Run II numbers for muons 
 # numbers in % for MB (abs(eta) < 2.2) 0.5% , ME (abs(eta) > 2.2) 1.5%
+# FIXME : to be updated with 2016 numbers on Friday 1st July
 #leppTscaler = {}
 
 leppTscaler['mu'] = [

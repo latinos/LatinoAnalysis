@@ -42,11 +42,17 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         self.lepton = opts.lepton
         self.jetresolution = opts.jetresolution
         self.unclustered = opts.unclustered
+
+        # force unclustered part to 'yes' for ICHEP2016
+        if opts.cmssw == 'ICHEP2016' :
+          self.unclustered = 'yes'
+
         print "  cmssw =", self.cmssw
         print "   kind =", self.kind
         print " lepton =", self.lepton
         print " jetresolution =", self.jetresolution
         print " unclustered =", self.unclustered
+        
 
     def deltaphi(self, phi1, phi2) :
         dphi = abs(phi1 - phi2)
@@ -66,10 +72,10 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         savedentries = 0
 
         # Create branches for otree, the ones that will be modified
-        if self.cmssw == '763' :
-            self.metVariables = [ 'metPfType1', 'metPfType1Phi' ]
-        else :
+        if self.cmssw == '74x' :
             self.metVariables = [ 'pfType1Met', 'pfType1Metphi' ]
+        else :
+            self.metVariables = [ 'metPfType1', 'metPfType1Phi' ]
         
         # Clone the tree with new branches added
         self.clone(output, self.metVariables)
@@ -78,12 +84,12 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         newmet = numpy.ones(1, dtype=numpy.float32)
         newphi = numpy.ones(1, dtype=numpy.float32)
 
-        if self.cmssw == '763' :
-            self.otree.Branch('metPfType1',    newmet, 'metPfType1/F')
-            self.otree.Branch('metPfType1Phi', newphi, 'metPfType1Phi/F')
-        else :
+        if self.cmssw == '74x' :
             self.otree.Branch('pfType1Met',    newmet, 'pfType1Met/F')
             self.otree.Branch('pfType1Metphi', newphi, 'pfType1Metphi/F')
+        else :
+            self.otree.Branch('metPfType1',    newmet, 'metPfType1/F')
+            self.otree.Branch('metPfType1Phi', newphi, 'metPfType1Phi/F')
 
         # Input tree  
         itree = self.itree
@@ -95,8 +101,19 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         for i in xrange(nentries) :
           itree.GetEntry(i)
 
-          # 76x ----------------------------------------------------------------
-          if self.cmssw == '763' :
+          # 74x ----------------------------------------------------------------
+          if self.cmssw == '74x' :
+
+              oldmet = itree.pfType1Met
+              oldphi = itree.pfType1Metphi
+
+              if self.kind == 'Up' : newmet[0] = itree.pfType1Metup
+              if self.kind == 'Dn' : newmet[0] = itree.pfType1Metdn
+
+              newphi[0] = oldphi
+
+          # 76x and more ----------------------------------------------------------------
+          else :
               oldmet = itree.metPfType1
               oldphi = itree.metPfType1Phi
 
@@ -176,15 +193,6 @@ class MetUncertaintyTreeMaker(TreeCloner) :
               if self.kind == 'Up' : newmet[0] = oldmet + deltamet
               if self.kind == 'Dn' : newmet[0] = oldmet - deltamet
 
-          # 74x ----------------------------------------------------------------
-          else :
-              oldmet = itree.pfType1Met
-              oldphi = itree.pfType1Metphi
-
-              if self.kind == 'Up' : newmet[0] = itree.pfType1Metup
-              if self.kind == 'Dn' : newmet[0] = itree.pfType1Metdn
-
-              newphi[0] = oldphi
 
           if (i > 0 and i%step == 0.) :
               print i,'events processed ::', nentries, 'oldmet:', oldmet, 'newmet:', newmet[0], 'oldphi:', oldphi, 'newphi:', newphi[0]
