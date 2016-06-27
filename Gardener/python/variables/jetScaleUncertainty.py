@@ -12,7 +12,7 @@ from array import array;
 
 class JESTreeMaker(TreeCloner):
     def __init__(self):
-       pass
+        pass
 
     def help(self):
         return '''Apply id/iso and filter lepton collection'''
@@ -21,19 +21,23 @@ class JESTreeMaker(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-k', '--kind',   dest='kind', help='Kind of variation: -1, +1, +0.5, ...', default=1.0)
-	group.add_option('-m', '--maxUncertainty',   dest='maxUncertainty', help='Use maximum of JES uncertainties', default=False, action="store_true")
+        group.add_option('-m', '--maxUncertainty',   dest='maxUncertainty', help='Use maximum of JES uncertainties', default=False, action="store_true")
+        group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763', type='string')
         parser.add_option_group(group)
         return group
 
     def checkOptions(self,opts):
         if not (hasattr(opts,'kind')):
-          self.kind = 1.0
+            self.kind = 1.0
         else :    
-          self.kind   = 1.0 * float(opts.kind)
+            self.kind   = 1.0 * float(opts.kind)
         print " kind of variation = ", self.kind
 
-	self.maxUncertainty = opts.maxUncertainty
-	print " Using maximum of JES uncertainties = ", self.maxUncertainty
+        self.maxUncertainty = opts.maxUncertainty
+        print " Using maximum of JES uncertainties = ", self.maxUncertainty
+
+        self.cmssw = opts.cmssw
+        print " cmssw = ", self.cmssw
 
     def changeOrder(self, vectorname, vector, jetOrderList) :
         # take vector and clone vector
@@ -41,11 +45,11 @@ class JESTreeMaker(TreeCloner):
         temp_vector = getattr(self.itree, vectorname)
         # remix the order of vector picking from the clone
         for i in range( len(jetOrderList) ) :
-          vector.push_back ( temp_vector[ jetOrderList[i] ] )
+            vector.push_back ( temp_vector[ jetOrderList[i] ] )
         # set the default value for the remaining
         for i in range( len(temp_vector) - len(jetOrderList) ) :
-          vector.push_back ( -9999. )
-          
+            vector.push_back ( -9999. )
+        
 
 
     def process(self,**kwargs):
@@ -63,21 +67,21 @@ class JESTreeMaker(TreeCloner):
         # see: https://root.cern.ch/phpBB3/viewtopic.php?t=12507
         # this is the list of variables to be modified
         #
-	self.namesOldBranchesToBeModifiedVector = []
-	vectorsToChange = ['std_vector_jet_']
+        self.namesOldBranchesToBeModifiedVector = []
+        vectorsToChange = ['std_vector_jet_']
         for b in self.itree.GetListOfBranches():
-	    branchName = b.GetName()
-	    for subString in vectorsToChange:
-		if subString in branchName:
-		    self.namesOldBranchesToBeModifiedVector.append(branchName)
+            branchName = b.GetName()
+            for subString in vectorsToChange:
+                if subString in branchName:
+                    self.namesOldBranchesToBeModifiedVector.append(branchName)
 
         # clone the tree
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
 
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
-          bvector =  ROOT.std.vector(float) ()
-          self.oldBranchesToBeModifiedVector[bname] = bvector
+            bvector =  ROOT.std.vector(float) ()
+            self.oldBranchesToBeModifiedVector[bname] = bvector
 
         # now actually connect the branches
         for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
@@ -95,8 +99,12 @@ class JESTreeMaker(TreeCloner):
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWVar.C++g')
 
         # Load jes uncertainty
-        jecUncFall15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Fall15_25nsV2_MC_Uncertainty_AK4PFchs.txt"))
-	jecUncSummer15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
+        if self.cmssw == 'ICHEP2016':
+            jecUnc = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV1_MC_Uncertainty_AK4PFchs.txt"))
+        else:
+            jecUncFall15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Fall15_25nsV2_MC_Uncertainty_AK4PFchs.txt"))
+            jecUncSummer15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
+
         #----------------------------------------------------------------------------------------------------
         print '- Starting eventloop'
         step = 5000
@@ -105,28 +113,33 @@ class JESTreeMaker(TreeCloner):
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-              print i,'events processed :: ', nentries
+                print i,'events processed :: ', nentries
                 
             # scale jet pt
             jetPtUp = []
             
             for i in range(itree.std_vector_jet_pt.size()):
                 if itree.std_vector_jet_pt[i] > 0:
-                    jecUncSummer15.setJetEta(itree.std_vector_jet_eta[i])
-                    jecUncSummer15.setJetPt(itree.std_vector_jet_pt[i])
-		    maxUnc = jecUncSummer15.getUncertainty(True)
+                    if self.cmssw == 'ICHEP2016':
+                        jecUnc.setJetEta(itree.std_vector_jet_eta[i])
+                        jecUnc.setJetPt(itree.std_vector_jet_pt[i])
+                        unc = jecUnc.getUncertainty(True)
+                    else:
+                        jecUncSummer15.setJetEta(itree.std_vector_jet_eta[i])
+                        jecUncSummer15.setJetPt(itree.std_vector_jet_pt[i])
+                        unc = jecUncSummer15.getUncertainty(True)
 
-		    if self.maxUncertainty:
-		    	jecUncFall15.setJetEta(itree.std_vector_jet_eta[i])
-                    	jecUncFall15.setJetPt(itree.std_vector_jet_pt[i])
-		    	maxUnc = max(maxUnc,jecUncFall15.getUncertainty(True))
+                        if self.maxUncertainty:
+                            jecUncFall15.setJetEta(itree.std_vector_jet_eta[i])
+                            jecUncFall15.setJetPt(itree.std_vector_jet_pt[i])
+                            unc = max(unc,jecUncFall15.getUncertainty(True))
 
-                    jetPtUp.append(itree.std_vector_jet_pt[i]*(1 + (self.kind) * maxUnc))
+                    jetPtUp.append(itree.std_vector_jet_pt[i]*(1 + (self.kind) * unc))
                 else:
                     break
                 
             jetOrderUp = sorted(range(len(jetPtUp)), key=lambda k: jetPtUp[k], reverse=True)
-                           
+                        
             for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                 bvector.clear()
                 if 'jet_pt' in bname:

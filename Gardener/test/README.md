@@ -398,23 +398,14 @@ Jet Energy Scale
 
 Module: JESTreeMaker
           
-    gardener.py  JESTreeMaker \
-       -k 1 \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
-       test.root \      
-       
-       
-    cp ../CMSSW_7_6_2/src/LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root    /tmp/amassiro/latino_WWTo2L2Nu.root
-    gardener.py  JESTreeMaker \
-                -k -1 \
-                /tmp/amassiro/latino_WWTo2L2Nu.root  \
-                /tmp/amassiro/latino_WW_TEST.root
-                           
-    gardener.py  JESTreeMaker \
-       -k -1 \
-       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_JES \
-          
+    gardener.py JESTreeMaker 	           input.root output.root
+    gardener.py JESTreeMaker            -r inputDir/ outputDir/
+
+    options:
+	-k/--kind  : factor (usually 1 or -1)
+	-c/--cmssw : cmssw version (f.e. ICHEP2016)
+	-m/--maxUncertainty : Maximum of Fall15_25nsV2 and Summer15_25nsV6 uncertainties
+
           
 b POG scale factors
 ====
