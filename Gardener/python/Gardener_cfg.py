@@ -255,23 +255,24 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
-                },
-
-  'MCl2loose16' :       {
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : ['l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
+                  'subTargets' : ['do_l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
                 },
 
 
-  'l2loose16'  :       {
+  'l2loose'  :       {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['l2loose','l2kin','l3kin'],
+                  'subTargets' : ['do_l2loose','l2kin','l3kin'],
                 },
+
+  'l2vloose'  :       {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['do_l2vloose','l2kin','l3kin'],
+                },
+
 
 
 # 'l1loose16'  :       {
@@ -287,7 +288,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
+                  'subTargets' : ['do_l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -365,6 +366,7 @@ Steps= {
                   'onlySample' : [
                                    'Run2015C_16Dec2015_DoubleMuon' , 'Run2015C_16Dec2015_SingleElectron' , 'Run2015C_16Dec2015_SingleMuon',
                                    'Run2015D_16Dec2015_DoubleMuon' , 'Run2015D_16Dec2015_SingleElectron' , 'Run2015D_16Dec2015_SingleMuon',
+                                   'Run2016B_PromptReco_DoubleMuon', 'Run2016B_PromptReco_SingleElectron', 'Run2016B_PromptReco_SingleMuon',
                                  ]
                 },
 
@@ -528,7 +530,9 @@ Steps= {
                                   'WWTo2L2Nu_CUETUp',
  			  # VBS
  			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
-                          'WGJJ','EWKZ2Jets','TTToSemiLeptonic'
+                          'WGJJ','EWKZ2Jets','TTToSemiLeptonic',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
                 },
 
@@ -633,6 +637,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
                 },
 
@@ -736,6 +742,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
                 },
 
@@ -840,6 +848,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
                 },
 
@@ -942,6 +952,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
                 },
 
@@ -1053,6 +1065,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
               },
 
@@ -1156,6 +1170,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
               },
 
@@ -1260,6 +1276,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
               },
 
@@ -1363,6 +1381,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
               },
                   
@@ -1467,6 +1487,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
               },
 
@@ -1569,6 +1591,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
+                                  # VBF 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
               },
 
@@ -1730,14 +1754,14 @@ Steps= {
                },
 
 
-  'l2loose'    : {
+  'do_l2loose'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW --selection 1'
                },
 
- 'l2vloose'    : {
+  'do_l2vloose'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
@@ -1795,7 +1819,8 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
-                                  'WZTo2L2Q','TTToSemiLeptonic'
+                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1',
+                                  'DYJetsToEE_Pow',
                                  ],
                },
 
