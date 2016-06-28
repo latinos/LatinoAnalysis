@@ -205,6 +205,9 @@ Productions= {
                         'cmssw'   : 'ICHEP2016' ,
                         # [FIXME] Partial PU data only, missing latest runs
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_15Jun.root' , 
+#                       'reName'  : {
+#                                     'DYJetsToTauTau_ForcedMuEleDecay_M-50' : 'DYJetsToTT_MuEle_M-50' ,
+#                                   } 
                        },
 
   '07Jun2016_Run2016B_PromptReco' : {
@@ -421,7 +424,7 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : True ,
                   'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin','l3kin'],
-                  'onlySample' : [
+                  'XonlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' ,
                                   'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
@@ -956,14 +959,6 @@ Steps= {
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
                                  ] ,
                 },
-
-  'lpTCorr' : {
-                 'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin'],
-               },
-
 
 
   'LepElepTup':  {
@@ -1667,6 +1662,16 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-5to50-LO',
+                                  'DYJetsToLL_M-50-LO-ext1',
+                                  'DYJetsToLL_M-10to50-LO' ,
+                                  'DYJetsToEE_Pow' ,
+                                  'DYJetsToTT_MuEle_M-50' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1' ,
+                                  'DYJetsToLL_M-50_HT-200to400_ext1' ,
+                                  'DYJetsToLL_M-50_HT-400to600_ext1' ,
+                                  'DYJetsToLL_M-50_HT-600toInf_ext1' ,
+                                  
                                   ]
 
                 },
