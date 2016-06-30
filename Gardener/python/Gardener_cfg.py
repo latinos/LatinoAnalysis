@@ -197,14 +197,16 @@ Productions= {
 
 # 80X 2016 DATA/MC: 3June2016_NinjaTurtles_v3 Tag / mAODv2
 
-  '07Jun2016_spring16__mAODv2'   : {
+  '07Jun2016_spring16_mAODv2'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod_v2.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun07/MC/v2/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
-                        # [FIXME] Partial PU data only, missing latest runs
-                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_15Jun.root' , 
+                        # [FIXME] Partial PU data only, missing latest runs, 0.8 fb-1
+                        #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_15Jun.root' , 
+                        # 2.6 fb-1
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_28Jun.root' , 
 #                       'reName'  : {
 #                                     'DYJetsToTauTau_ForcedMuEleDecay_M-50' : 'DYJetsToTT_MuEle_M-50' ,
 #                                   } 
@@ -261,6 +263,12 @@ Steps= {
                   'subTargets' : ['do_l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
                 },
 
+  'puWbaseWFix' :     {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['puadder','baseW','genVariables']
+                },
 
   'l2loose'  :       {
                   'isChain'    : True ,
@@ -448,7 +456,7 @@ Steps= {
                                   'Wg_MADGRAPHMLM',
                                   'WZTo2L2Q',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
@@ -565,7 +573,7 @@ Steps= {
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
@@ -670,7 +678,7 @@ Steps= {
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
@@ -776,7 +784,7 @@ Steps= {
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
@@ -881,7 +889,7 @@ Steps= {
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM',
                                   # VVV
-                                  'WZZ','ZZZ','WWZ',
+                                  'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
