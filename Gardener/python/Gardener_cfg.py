@@ -1815,8 +1815,10 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py efftfiller'
-               },
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.23     --cmssw=RPLME_CMSSW'
+               }, 
+               # the number is 0.595/fb / XXX/fb 
+               # then 0.595 / 2.6 = 0.23
 
 
   'hadd'     : {

@@ -52,6 +52,8 @@ class EffTrgFiller(TreeCloner):
         group.add_option('--triggerSpecialEleMuLegLowPt', dest='triggerSpecialEleMuLegLowPt', help='file with triggerSpecial efficiencies triggerSpecialEleMuLegLowPt', default=None)
 
         group.add_option( '--fixMuonTriggerLumiRatio', dest='fixMuonTriggerLumiRatio', help='Luminosity ratio between first period and the whole',       default=-1.0)
+        # brilcalc lumi --begin  273158 --end 274094 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
+        # 0.595 /fb
 
         parser.add_option_group(group)
         return group 
