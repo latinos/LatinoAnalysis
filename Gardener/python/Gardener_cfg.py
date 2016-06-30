@@ -1808,8 +1808,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py idisofiller'
+                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.23'
                },
+               # the number is 0.497/fb / XXX/fb 
+               # then 0.497 / 2.6 = 0.19
+               # export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
+               # brilcalc lumi --begin  273158 --end 273726 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
+               # 0.497 /fb
+
 
   'TrigEff'  : {
                   'isChain'    : False ,
