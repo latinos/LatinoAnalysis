@@ -169,6 +169,9 @@ Productions= {
 
 # 80X 2016 DAT/MC --> REM: Still using 763 post-processing  --> MoneyMonster tag
 
+
+
+
   '13May2016_25ns_Spring16_MC'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod.py' ,
@@ -197,19 +200,25 @@ Productions= {
 
 # 80X 2016 DATA/MC: 3June2016_NinjaTurtles_v3 Tag / mAODv2
 
+  '07Jun2016_spring16_mAODv2_0p8fbm1' : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod_v2.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun07/MC/v2/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        # 0.8 fb-1
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_15Jun.root' , 
+                       },
+
+
   '07Jun2016_spring16_mAODv2'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod_v2.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun07/MC/v2/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
-                        # [FIXME] Partial PU data only, missing latest runs, 0.8 fb-1
-                        #'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_15Jun.root' , 
                         # 2.6 fb-1
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_28Jun.root' , 
-#                       'reName'  : {
-#                                     'DYJetsToTauTau_ForcedMuEleDecay_M-50' : 'DYJetsToTT_MuEle_M-50' ,
-#                                   } 
                        },
 
   '07Jun2016_Run2016B_PromptReco' : {
@@ -227,6 +236,20 @@ Productions= {
                                     },
                        },
             
+  '21Jun2016_Run2016B_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun21/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016B-PromptReco-v2'            : 'Run2016B_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016B-PromptReco-v2'    : 'Run2016B_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
+                                    },
+                       },
 
 
 }
