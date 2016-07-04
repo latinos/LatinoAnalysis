@@ -1,9 +1,9 @@
-#ifndef BTagEntry_H
-#define BTagEntry_H
+#ifndef BTagEntryStandalone_H
+#define BTagEntryStandalone_H
 
 /**
  *
- * BTagEntry
+ * BTagEntryStandalone
  *
  * Represents one pt- or discriminator-dependent calibration function.
  *
@@ -20,7 +20,7 @@
 #include <TH1.h>
 
 
-class BTagEntry
+class BTagEntryStandalone
 {
 public:
   enum OperatingPoint {
@@ -62,12 +62,12 @@ public:
 
   };
 
-  BTagEntry() {}
-  BTagEntry(const std::string &csvLine);
-  BTagEntry(const std::string &func, Parameters p);
-  BTagEntry(const TF1* func, Parameters p);
-  BTagEntry(const TH1* histo, Parameters p);
-  ~BTagEntry() {}
+  BTagEntryStandalone() {}
+  BTagEntryStandalone(const std::string &csvLine);
+  BTagEntryStandalone(const std::string &func, Parameters p);
+  BTagEntryStandalone(const TF1* func, Parameters p);
+  BTagEntryStandalone(const TH1* histo, Parameters p);
+  ~BTagEntryStandalone() {}
   static std::string makeCSVHeader();
   std::string makeCSVLine() const;
   static std::string trimStr(std::string str);
@@ -78,17 +78,17 @@ public:
 
 };
 
-#endif  // BTagEntry_H
+#endif  // BTagEntryStandalone_H
 
 
-#ifndef BTagCalibration_H
-#define BTagCalibration_H
+#ifndef BTagCalibrationStandalone_H
+#define BTagCalibrationStandalone_H
 
 /**
- * BTagCalibration
+ * BTagCalibrationStandalone
  *
  * The 'hierarchy' of stored information is this:
- * - by tagger (BTagCalibration)
+ * - by tagger (BTagCalibrationStandalone)
  *   - by operating point or reshape bin
  *     - by jet parton flavor
  *       - by type of measurement
@@ -105,18 +105,18 @@ public:
 #include <ostream>
 
 
-class BTagCalibration
+class BTagCalibrationStandalone
 {
 public:
-  BTagCalibration() {}
-  BTagCalibration(const std::string &tagger);
-  BTagCalibration(const std::string &tagger, const std::string &filename);
-  ~BTagCalibration() {}
+  BTagCalibrationStandalone() {}
+  BTagCalibrationStandalone(const std::string &tagger);
+  BTagCalibrationStandalone(const std::string &tagger, const std::string &filename);
+  ~BTagCalibrationStandalone() {}
 
   std::string tagger() const {return tagger_;}
 
-  void addEntry(const BTagEntry &entry);
-  const std::vector<BTagEntry>& getEntries(const BTagEntry::Parameters &par) const;
+  void addEntry(const BTagEntryStandalone &entry);
+  const std::vector<BTagEntryStandalone>& getEntries(const BTagEntryStandalone::Parameters &par) const;
 
   void readCSV(std::istream &s);
   void readCSV(const std::string &s);
@@ -124,24 +124,24 @@ public:
   std::string makeCSV() const;
 
 protected:
-  static std::string token(const BTagEntry::Parameters &par);
+  static std::string token(const BTagEntryStandalone::Parameters &par);
 
   std::string tagger_;
-  std::map<std::string, std::vector<BTagEntry> > data_;
+  std::map<std::string, std::vector<BTagEntryStandalone> > data_;
 
 };
 
-#endif  // BTagCalibration_H
+#endif  // BTagCalibrationStandalone_H
 
 
-#ifndef BTagCalibrationReader_H
-#define BTagCalibrationReader_H
+#ifndef BTagCalibrationStandaloneReader_H
+#define BTagCalibrationStandaloneReader_H
 
 /**
- * BTagCalibrationReader
+ * BTagCalibrationStandaloneReader
  *
- * Helper class to pull out a specific set of BTagEntry's out of a
- * BTagCalibration. TF1 functions are set up at initialization time.
+ * Helper class to pull out a specific set of BTagEntryStandalone's out of a
+ * BTagCalibrationStandalone. TF1 functions are set up at initialization time.
  *
  ************************************************************/
 
@@ -151,17 +151,17 @@ protected:
 #include <TF1.h>
 
 
-class BTagCalibrationReader
+class BTagCalibrationStandaloneReader
 {
 public:
-  BTagCalibrationReader() {}
-  BTagCalibrationReader(const BTagCalibration* c,
-                        BTagEntry::OperatingPoint op,
+  BTagCalibrationStandaloneReader() {}
+  BTagCalibrationStandaloneReader(const BTagCalibrationStandalone* c,
+                        BTagEntryStandalone::OperatingPoint op,
                         std::string measurementType="comb",
                         std::string sysType="central");
-  ~BTagCalibrationReader() {}
+  ~BTagCalibrationStandaloneReader() {}
 
-  double evaluate(BTagEntry::JetFlavor jf,
+  double evaluate(BTagEntryStandalone::JetFlavor jf,
               float eta,
               float pt,
               float discr=0.) const;
@@ -176,13 +176,13 @@ public:
     float discrMax;
     TF1 func;
   };
-  void setupTmpData(const BTagCalibration* c);
+  void setupTmpData(const BTagCalibrationStandalone* c);
 
-  BTagEntry::Parameters params;
-  std::map<BTagEntry::JetFlavor, std::vector<TmpEntry> > tmpData_;
+  BTagEntryStandalone::Parameters params;
+  std::map<BTagEntryStandalone::JetFlavor, std::vector<TmpEntry> > tmpData_;
   std::vector<bool> useAbsEta;
 };
 
-#endif  // BTagCalibrationReader_H
+#endif  // BTagCalibrationStandaloneReader_H
 
 

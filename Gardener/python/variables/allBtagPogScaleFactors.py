@@ -26,15 +26,20 @@ class allBtagPogScaleFactors(TreeCloner):
         return '''Add a scale factor derived according to POG recommendations, method 1a in https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods#1a_Event_reweighting_using_scale'''
 
     def addOptions(self,parser):
-        pass
+        description = self.help()
+        group = optparse.OptionGroup(parser,self.label, description)
+        group.add_option('-c','--cmssw',dest='cmssw',help='cmssw version req for met vars',default='763')
+        return group
 
+    #def checkOptions(self,opts):
+    #    pass
     def checkOptions(self,opts):
-        pass
-
-    def _readSF (self):
+    #def _readSF (self):
         #ROOT.gSystem.Load('libCondFormatsBTagObjects') 
         cmssw_base = os.getenv('CMSSW_BASE')
         effFile = "data/efficiencyMCFile76X_all.py"
+        if opts.cmssw == "ICHEP2016":
+          effFile = "data/efficiencyMCFile80X_all.py"
 
         efficienciesMC_CMVA = {}
         efficienciesMC_CSV = {}
@@ -66,63 +71,66 @@ class allBtagPogScaleFactors(TreeCloner):
         wps = 3
 
         #compile code to read scale factors
-
+        
         self.cmvaSfFile = 'cMVAv2.csv'
         self.csvSfFile = 'CSVv2.csv'
+        if opts.cmssw == "ICHEP2016":
+          self.cmvaSfFile = "cMVAv2_ICHEP2016.csv"
+          self.csvSfFile  = "CSVv2_ICHEP2016.csv"
 
-        #ROOT.gROOT.ProcessLine(".L "+cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc+')
+        #ROOT.gROOT.ProcessLine(".L "+cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandaloneStandalone.cc+')
         try:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc+g')
         except RuntimeError:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc++g')
-        #ROOT.gROOT.ProcessLine('.L BTagCalibrationStandalone.cc+') 
+        #ROOT.gROOT.ProcessLine('.L BTagCalibrationStandaloneStandalone.cc+') 
         print "CMVA scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile
         print "CSVv2 scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile
 
         ### Readers for cMVAv2 re-shaping (1 nominal + 9 Up variations + 9 Down variations)
-        self.calibCMVA = ROOT.BTagCalibration("cMVAv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
-        self.readerCentralCMVAshape = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "central")
-        self.readerCentralCMVAshape_up_jes = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_jes")
-        self.readerCentralCMVAshape_down_jes = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_jes")
-        self.readerCentralCMVAshape_up_lf = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_lf")
-        self.readerCentralCMVAshape_down_lf = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_lf")
-        self.readerCentralCMVAshape_up_hfstats1 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_hfstats1")
-        self.readerCentralCMVAshape_down_hfstats1 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_hfstats1")
-        self.readerCentralCMVAshape_up_hfstats2 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_hfstats2")
-        self.readerCentralCMVAshape_down_hfstats2 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_hfstats2")
-        self.readerCentralCMVAshape_up_cferr1 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_cferr1")
-        self.readerCentralCMVAshape_down_cferr1 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_cferr1")
-        self.readerCentralCMVAshape_up_cferr2 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_cferr2")
-        self.readerCentralCMVAshape_down_cferr2 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_cferr2")
-        self.readerCentralCMVAshape_up_hf = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_hf")
-        self.readerCentralCMVAshape_down_hf = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_hf")
-        self.readerCentralCMVAshape_up_lfstats1 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_lfstats1")
-        self.readerCentralCMVAshape_down_lfstats1 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_lfstats1")
-        self.readerCentralCMVAshape_up_lfstats2 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "up_lfstats2")
-        self.readerCentralCMVAshape_down_lfstats2 = ROOT.BTagCalibrationReader(self.calibCMVA, wps, "iterativefit", "down_lfstats2")
+        self.calibCMVA = ROOT.BTagCalibrationStandalone("cMVAv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
+        self.readerCentralCMVAshape = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "central")
+        self.readerCentralCMVAshape_up_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_jes")
+        self.readerCentralCMVAshape_down_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_jes")
+        self.readerCentralCMVAshape_up_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_lf")
+        self.readerCentralCMVAshape_down_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_lf")
+        self.readerCentralCMVAshape_up_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_hfstats1")
+        self.readerCentralCMVAshape_down_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_hfstats1")
+        self.readerCentralCMVAshape_up_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_hfstats2")
+        self.readerCentralCMVAshape_down_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_hfstats2")
+        self.readerCentralCMVAshape_up_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_cferr1")
+        self.readerCentralCMVAshape_down_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_cferr1")
+        self.readerCentralCMVAshape_up_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_cferr2")
+        self.readerCentralCMVAshape_down_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_cferr2")
+        self.readerCentralCMVAshape_up_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_hf")
+        self.readerCentralCMVAshape_down_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_hf")
+        self.readerCentralCMVAshape_up_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_lfstats1")
+        self.readerCentralCMVAshape_down_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_lfstats1")
+        self.readerCentralCMVAshape_up_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_lfstats2")
+        self.readerCentralCMVAshape_down_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_lfstats2")
 
 
         ### Readers for CSVv2 re-shaping (1 nominal + 9 Up variations + 9 Down variations)
-        self.calibCSV  = ROOT.BTagCalibration("CSVv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile)
-        self.readerCentralCSVshape = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "central")
-        self.readerCentralCSVshape_up_jes = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_jes")
-        self.readerCentralCSVshape_down_jes = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_jes")
-        self.readerCentralCSVshape_up_lf = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_lf")
-        self.readerCentralCSVshape_down_lf = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_lf")
-        self.readerCentralCSVshape_up_hfstats1 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_hfstats1")
-        self.readerCentralCSVshape_down_hfstats1 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_hfstats1")
-        self.readerCentralCSVshape_up_hfstats2 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_hfstats2")
-        self.readerCentralCSVshape_down_hfstats2 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_hfstats2")
-        self.readerCentralCSVshape_up_cferr1 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_cferr1")
-        self.readerCentralCSVshape_down_cferr1 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_cferr1")
-        self.readerCentralCSVshape_up_cferr2 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_cferr2")
-        self.readerCentralCSVshape_down_cferr2 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_cferr2")
-        self.readerCentralCSVshape_up_hf = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_hf")
-        self.readerCentralCSVshape_down_hf = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_hf")
-        self.readerCentralCSVshape_up_lfstats1 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_lfstats1")
-        self.readerCentralCSVshape_down_lfstats1 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_lfstats1")
-        self.readerCentralCSVshape_up_lfstats2 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "up_lfstats2")
-        self.readerCentralCSVshape_down_lfstats2 = ROOT.BTagCalibrationReader(self.calibCSV, wps, "iterativefit", "down_lfstats2")
+        self.calibCSV  = ROOT.BTagCalibrationStandalone("CSVv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile)
+        self.readerCentralCSVshape = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "central")
+        self.readerCentralCSVshape_up_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_jes")
+        self.readerCentralCSVshape_down_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_jes")
+        self.readerCentralCSVshape_up_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_lf")
+        self.readerCentralCSVshape_down_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_lf")
+        self.readerCentralCSVshape_up_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_hfstats1")
+        self.readerCentralCSVshape_down_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_hfstats1")
+        self.readerCentralCSVshape_up_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_hfstats2")
+        self.readerCentralCSVshape_down_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_hfstats2")
+        self.readerCentralCSVshape_up_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_cferr1")
+        self.readerCentralCSVshape_down_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_cferr1")
+        self.readerCentralCSVshape_up_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_cferr2")
+        self.readerCentralCSVshape_down_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_cferr2")
+        self.readerCentralCSVshape_up_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_hf")
+        self.readerCentralCSVshape_down_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_hf")
+        self.readerCentralCSVshape_up_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_lfstats1")
+        self.readerCentralCSVshape_down_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_lfstats1")
+        self.readerCentralCSVshape_up_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_lfstats2")
+        self.readerCentralCSVshape_down_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_lfstats2")
 
 
         ### Readers for CMVA and CSV working point based 
@@ -147,8 +155,8 @@ class allBtagPogScaleFactors(TreeCloner):
               sampleCMVA = "incl"
               sampleCSV  ="incl"
             for variation in self.variations:
-              self.readers["CMVA"][wp][flavor][variation] = ROOT.BTagCalibrationReader(self.calibCMVA, iwp, sampleCMVA, variation)
-              self.readers["CSV"][wp][flavor][variation]  = ROOT.BTagCalibrationReader(self.calibCSV,  iwp, sampleCSV,  variation)
+              self.readers["CMVA"][wp][flavor][variation] = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, iwp, sampleCMVA, variation)
+              self.readers["CSV"][wp][flavor][variation]  = ROOT.BTagCalibrationStandaloneReader(self.calibCSV,  iwp, sampleCSV,  variation)
     
 
 
@@ -224,7 +232,7 @@ class allBtagPogScaleFactors(TreeCloner):
 
         self.connect(tree,input)
 
-        self._readSF()        
+        #self._readSF()        
         branchlist = ["bPogSF", "bPogSFUp", "bPogSFDown",
                            "bPogSF_CMVAreshape",
                            "bPogSF_CMVAreshape_up_jes", "bPogSF_CMVAreshape_down_jes",
