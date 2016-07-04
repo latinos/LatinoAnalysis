@@ -130,9 +130,15 @@ def batchStatus():
         if not iStep in FileRuns: FileRuns[iStep] = []
         Tota[iStep]+=1
         if os.path.isfile(jidFile):
-          iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
-          if 'PEND' in iStat : Pend[iStep]+=1
-          else: Runn[iStep]+=1 
+#         print jidFile
+          if 'iihe' in os.uname()[1] :
+            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid  | awk \'{print $5}\' ').read()
+            if 'Q' in iStat : Pend[iStep]+=1
+            else: Runn[iStep]+=1
+          else:
+            iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
+            if 'PEND' in iStat : Pend[iStep]+=1
+            else: Runn[iStep]+=1 
           FileRuns[iStep].append(iSample)
         else:
           Done[iStep]+=1

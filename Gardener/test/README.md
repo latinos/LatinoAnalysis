@@ -327,6 +327,18 @@ Lepton pT corrector
          ../LatinoTrees/AnalysisStep/test/latino_stepB_data_numEvent100.root testCorr.root
 
 
+         
+    gardener.py letPtCorrector --isData=0 \
+         --cmssw=ICHEP2016    \
+         test.root testCorr.root
+    
+    gardener.py letPtCorrector --isData=1 \
+         --cmssw=ICHEP2016    \
+         test.root testCorr.root
+
+
+         
+         
 Fake weight adder
 ====
 
@@ -398,23 +410,14 @@ Jet Energy Scale
 
 Module: JESTreeMaker
           
-    gardener.py  JESTreeMaker \
-       -k 1 \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
-       test.root \      
-       
-       
-    cp ../CMSSW_7_6_2/src/LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root    /tmp/amassiro/latino_WWTo2L2Nu.root
-    gardener.py  JESTreeMaker \
-                -k -1 \
-                /tmp/amassiro/latino_WWTo2L2Nu.root  \
-                /tmp/amassiro/latino_WW_TEST.root
-                           
-    gardener.py  JESTreeMaker \
-       -k -1 \
-       -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
-       /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_JES \
-          
+    gardener.py JESTreeMaker 	           input.root output.root
+    gardener.py JESTreeMaker            -r inputDir/ outputDir/
+
+    options:
+	-k/--kind  : factor (usually 1 or -1)
+	-c/--cmssw : cmssw version (f.e. ICHEP2016)
+	-m/--maxUncertainty : Maximum of Fall15_25nsV2 and Summer15_25nsV6 uncertainties
+
           
 b POG scale factors
 ====
@@ -512,7 +515,14 @@ If reading 763 MET naming convention but not using lepton (electron and muon) un
     gardener.py metUncertainty --kind='Up' --cmssw='763' --lepton='no' input.root output.root
     gardener.py metUncertainty --kind='Dn' --cmssw='763' --lepton='no' input.root output.root
 
+    
+80X MET for ICHEP
 
+    gardener.py metUncertainty --kind='Up' --cmssw='ICHEP2016'  --unclustered='no' test.root test.met.root
+    gardener.py metUncertainty --kind='Do' --cmssw='ICHEP2016'  --unclustered='no' test.root test.met.root
+
+    
+    
 baseW table
 ====
 

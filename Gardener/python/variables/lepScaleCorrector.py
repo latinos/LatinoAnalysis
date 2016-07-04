@@ -41,14 +41,31 @@ class LeptonPtCorrector(TreeCloner):
     def checkOptions(self,opts):
         print " >>  checkOptions "
    
-        self.cmssw=opts.cmssw
+        #
+        # check inputs from https://twiki.cern.ch/twiki/bin/viewauth/CMS/EGMSmearer
+        #    https://github.com/ECALELFS/ScalesSmearings/blob/master/80X_10JunGoldplusDCS_approval_scales.dat
+        #    https://github.com/ECALELFS/ScalesSmearings/blob/master/80X_10JunGoldplusDCS_approval_smearings.dat
+        #
+         
+        self.cmssw = opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
-        if opts.FileWithPtScaleDataEle == None :
-          opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_scales.dat'
-        print " opts.FileWithPtScaleDataEle = " , opts.FileWithPtScaleDataEle
-        if opts.FileWithPtSmearingMCEle == None :
-          opts.FileWithPtSmearingMCEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_smearings.dat'
-        print " opts.FileWithPtSmearingMCEle = " , opts.FileWithPtSmearingMCEle
+        if opts.cmssw == 'ICHEP2016' :
+          if opts.FileWithPtScaleDataEle == None :
+            opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_28JunPrompt_2016_scales.dat'
+          print " opts.FileWithPtScaleDataEle = " , opts.FileWithPtScaleDataEle
+          if opts.FileWithPtSmearingMCEle == None :
+            opts.FileWithPtSmearingMCEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_28JunPrompt_2016_smearings.dat'
+          print " opts.FileWithPtSmearingMCEle = " , opts.FileWithPtSmearingMCEle
+        else :    # 2015 numbers re-reco
+          if opts.FileWithPtScaleDataEle == None :
+            opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_scales.dat'
+          print " opts.FileWithPtScaleDataEle = " , opts.FileWithPtScaleDataEle
+          if opts.FileWithPtSmearingMCEle == None :
+            opts.FileWithPtSmearingMCEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/76X_16DecRereco_2015_smearings.dat'
+          print " opts.FileWithPtSmearingMCEle = " , opts.FileWithPtSmearingMCEle
+          
+
+
 
 
         file_FileWithPtScaleDataEle  = open (opts.FileWithPtScaleDataEle)

@@ -48,14 +48,25 @@ class LeppTScalerTreeMaker(TreeCloner):
         self.cmssw=opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
 
-        if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
-            if opts.lepFlavourToChange == 'ele' :
-                opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_el_76_rereco.py'
-            elif opts.lepFlavourToChange == 'mu' :
-                opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_76_rereco.py'
-            else:
-                print "please select mu or ele"
+        if opts.cmssw == 'ICHEP2016' :
+          if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
+              if opts.lepFlavourToChange == 'ele' :
+                  opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_el_80_prompt.py'
+              elif opts.lepFlavourToChange == 'mu' :
+                  opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_80_prompt.py'
+              else:
+                  print "please select mu or ele"        
+
+        else :   # 2015
+          if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
+              if opts.lepFlavourToChange == 'ele' :
+                  opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_el_76_rereco.py'
+              elif opts.lepFlavourToChange == 'mu' :
+                  opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_76_rereco.py'
+              else:
+                  print "please select mu or ele"
         print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
+
 
         self.variation = opts.variation
         if opts.variation == None :
@@ -138,12 +149,12 @@ class LeppTScalerTreeMaker(TreeCloner):
 
         # met branches to be changed
 
-        if self.cmssw == '763' :
-            self.metvar1 = 'metPfType1'
-            self.metvar2= 'metPfType1Phi' 
-        else :
+        if self.cmssw == '74x' :
             self.metvar1 = 'pfType1Met'
             self.metvar2= 'pfType1Metphi' 
+        else :
+            self.metvar1 = 'metPfType1'
+            self.metvar2= 'metPfType1Phi' 
         self.namesOldBranchesToBeModifiedSimpleVariable = [self.metvar1,self.metvar2]
 
         self.namesOldBranchesToBeModifiedVector = []
@@ -192,12 +203,12 @@ class LeppTScalerTreeMaker(TreeCloner):
             # Scale Up
             leptonPtChanged = []
 
-            if self.cmssw == '763' :
-              oldmet = itree.metPfType1
-              oldphi = itree.metPfType1Phi
-            else :
+            if self.cmssw == '74x' :
               oldmet = itree.pfType1Met
               oldphi = itree.pfType1Metphi
+            else :
+              oldmet = itree.metPfType1
+              oldphi = itree.metPfType1Phi
             met_org = ROOT.TLorentzVector()
             met_org.SetPtEtaPhiM(oldmet, 0, oldphi, 0)
             newmet = ROOT.TLorentzVector()
