@@ -290,7 +290,7 @@ class HiggsXSection:
 
 ### Below some examples of usage :
 
-HiggsXS = HiggsXSection() 
+#HiggsXS = HiggsXSection() 
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M130')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
@@ -313,10 +313,10 @@ HiggsXS = HiggsXSection()
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','HWplusJ_HToWW_M125')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','ggZH_HToWW_M130')
 
-print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
-print HiggsXS.GetHiggsXS4Sample('YR4','13TeV','GluGluHToWWTo2L2Nu_M125')
-print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','scale','sm')
-print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','pdf','sm')
-print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ggH','125.0','scale','sm')
-print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ggH','125.0','pdf','sm')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4','13TeV','GluGluHToWWTo2L2Nu_M125')
+#print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','scale','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','pdf','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ggH','125.0','scale','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ggH','125.0','pdf','sm')
 
