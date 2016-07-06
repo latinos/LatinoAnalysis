@@ -582,6 +582,22 @@ class EffTrgFiller(TreeCloner):
 
         # only if leptons!
         if kindLep1 > -20 and kindLep2 > -20 and kindLep3 > -20 :
+
+          # decide if to use the first period of 2016 muons data, before Run 274094
+          # or the second period
+          toss_a_coin = 1.
+          if self.cmssw == "ICHEP2016" : 
+            toss_a_coin = ROOT.gRandom.Rndm()
+          # if   fixMuonTriggerLumiRatio is -1 (default)
+          # any number here will put to false  "toss_a_coin < self.fixMuonTriggerLumiRatio"
+          # then we will pick up always the "standard" trigger, not the special ones
+          #
+          # while, if we put fixMuonTriggerLumiRatio = 0.10 (10% of the lumi)
+          # 10% of the times we will have "toss_a_coin < self.fixMuonTriggerLumiRatio" triggering "true"
+          # then we will get 10% of the times the "special" trigger
+          #
+          # all the rest of the code is factorized, and transparent to these changes!!
+          # 
          
           vpt1 = [pt1]
           vpt2 = [pt2]
@@ -609,6 +625,12 @@ class EffTrgFiller(TreeCloner):
           single2 = "triggerSingleMu"
           single3 = "triggerSingleMu"
 
+          if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+            single1 = "triggerSpecialSingleMu"
+            single2 = "triggerSpecialSingleMu"
+            single3 = "triggerSpecialSingleMu"
+
+
           if abs(kindLep1) == 11 : single1 = "triggerSingleEle"
           if abs(kindLep2) == 11 : single2 = "triggerSingleEle"
           if abs(kindLep3) == 11 : single3 = "triggerSingleEle"
@@ -633,7 +655,8 @@ class EffTrgFiller(TreeCloner):
               lead2trail1 = "triggerDoubleEleLegHigPt"
               trail1lead2 = "triggerDoubleEleLegLowPt"
               trail2lead1 = "triggerDoubleEleLegLowPt"
-              dz_eff_12 = 0.995
+              dz_eff_12 = 0.995              
+              
           if abs(kindLep1) == 11 and abs(kindLep3) == 11 :
               lead1trail3 = "triggerDoubleEleLegHigPt"
               lead3trail1 = "triggerDoubleEleLegHigPt"
@@ -653,19 +676,46 @@ class EffTrgFiller(TreeCloner):
             lead2trail1 = "triggerDoubleMuLegHigPt"
             trail1lead2 = "triggerDoubleMuLegLowPt"
             trail2lead1 = "triggerDoubleMuLegLowPt"
-            dz_eff_12 = 0.95
+            dz_eff_12 = 0.95           
+            if self.cmssw == "ICHEP2016" : 
+              dz_eff_12 = 1.00
+              # in 2016 there is no DZ cut
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail2 = "triggerSpecialDoubleMuLegHigPt" 
+                lead2trail1 = "triggerSpecialDoubleMuLegHigPt" 
+                trail1lead2 = "triggerSpecialDoubleMuLegLowPt" 
+                trail2lead1 = "triggerSpecialDoubleMuLegLowPt" 
+            
           if abs(kindLep1) == 13 and abs(kindLep3) == 13 :
             lead1trail3 = "triggerDoubleMuLegHigPt"
             lead3trail1 = "triggerDoubleMuLegHigPt"
             trail1lead3 = "triggerDoubleMuLegLowPt"
             trail3lead1 = "triggerDoubleMuLegLowPt"
             dz_eff_13 = 0.95
+            if self.cmssw == "ICHEP2016" : 
+              dz_eff_13 = 1.00
+              # in 2016 there is no DZ cut
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail3 = "triggerSpecialDoubleMuLegHigPt"
+                lead3trail1 = "triggerSpecialDoubleMuLegHigPt"
+                trail1lead3 = "triggerSpecialDoubleMuLegLowPt"
+                trail3lead1 = "triggerSpecialDoubleMuLegLowPt"
+
           if abs(kindLep2) == 13 and abs(kindLep3) == 13 :
             lead2trail3 = "triggerDoubleMuLegHigPt"
             lead3trail2 = "triggerDoubleMuLegHigPt"
             trail2lead3 = "triggerDoubleMuLegLowPt"
             trail3lead2 = "triggerDoubleMuLegLowPt"
             dz_eff_23 = 0.95
+            if self.cmssw == "ICHEP2016" : 
+              dz_eff_23 = 1.00
+              # in 2016 there is no DZ cut
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead2trail3 = "triggerSpecialDoubleMuLegHigPt"
+                lead3trail2 = "triggerSpecialDoubleMuLegHigPt"
+                trail2lead3 = "triggerSpecialDoubleMuLegLowPt"
+                trail3lead2 = "triggerSpecialDoubleMuLegLowPt"
+
             
           # em ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
           if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
@@ -673,31 +723,55 @@ class EffTrgFiller(TreeCloner):
             lead2trail1 = "triggerEleMuLegHigPt"
             trail1lead2 = "triggerEleMuLegLowPt"
             trail2lead1 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail2 = "triggerSpecialMuEleLegHigPt"
+                trail1lead2 = "triggerSpecialEleMuLegLowPt"
+            
           if abs(kindLep1) == 13 and abs(kindLep3) == 11 :
             lead1trail3 = "triggerMuEleLegHigPt"
             lead3trail1 = "triggerEleMuLegHigPt"
             trail1lead3 = "triggerEleMuLegLowPt"
             trail3lead1 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail3 = "triggerSpecialMuEleLegHigPt"
+                trail1lead3 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep2) == 13 and abs(kindLep1) == 11 :
             lead2trail1 = "triggerMuEleLegHigPt"
             lead1trail2 = "triggerEleMuLegHigPt"
             trail2lead1 = "triggerEleMuLegLowPt"
             trail1lead2 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead2trail1 = "triggerSpecialMuEleLegHigPt"
+                trail2lead1 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep2) == 13 and abs(kindLep3) == 11 :
             lead2trail3 = "triggerMuEleLegHigPt"
             lead3trail2 = "triggerEleMuLegHigPt"
             trail2lead3 = "triggerEleMuLegLowPt"
             trail3lead2 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead2trail3 = "triggerSpecialMuEleLegHigPt"
+                trail2lead3 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep3) == 13 and abs(kindLep1) == 11 :
             lead3trail1 = "triggerMuEleLegHigPt"
             lead1trail3 = "triggerEleMuLegHigPt"
             trail3lead1 = "triggerEleMuLegLowPt"
             trail1lead3 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead3trail1 = "triggerSpecialMuEleLegHigPt"
+                trail3lead1 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep3) == 13 and abs(kindLep2) == 11 :
             lead3trail2 = "triggerMuEleLegHigPt"
             lead2trail3 = "triggerEleMuLegHigPt"
             trail3lead2 = "triggerEleMuLegLowPt"
             trail2lead3 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead3trail2 = "triggerSpecialMuEleLegHigPt"
+                trail3lead2 = "triggerSpecialEleMuLegLowPt"
+          
           
           l1t2, low_l1t2, high_l1t2 = self._getEff(pt1, eta1, lead1trail2)
           l1t3, low_l1t3, high_l1t3 = self._getEff(pt1, eta1, lead1trail3)
