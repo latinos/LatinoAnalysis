@@ -582,6 +582,22 @@ class EffTrgFiller(TreeCloner):
 
         # only if leptons!
         if kindLep1 > -20 and kindLep2 > -20 and kindLep3 > -20 :
+
+          # decide if to use the first period of 2016 muons data, before Run 274094
+          # or the second period
+          toss_a_coin = 1.
+          if self.cmssw == "ICHEP2016" : 
+            toss_a_coin = ROOT.gRandom.Rndm()
+          # if   fixMuonTriggerLumiRatio is -1 (default)
+          # any number here will put to false  "toss_a_coin < self.fixMuonTriggerLumiRatio"
+          # then we will pick up always the "standard" trigger, not the special ones
+          #
+          # while, if we put fixMuonTriggerLumiRatio = 0.10 (10% of the lumi)
+          # 10% of the times we will have "toss_a_coin < self.fixMuonTriggerLumiRatio" triggering "true"
+          # then we will get 10% of the times the "special" trigger
+          #
+          # all the rest of the code is factorized, and transparent to these changes!!
+          # 
          
           vpt1 = [pt1]
           vpt2 = [pt2]
@@ -609,6 +625,12 @@ class EffTrgFiller(TreeCloner):
           single2 = "triggerSingleMu"
           single3 = "triggerSingleMu"
 
+          if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+            single1 = "triggerSpecialSingleMu"
+            single2 = "triggerSpecialSingleMu"
+            single3 = "triggerSpecialSingleMu"
+
+
           if abs(kindLep1) == 11 : single1 = "triggerSingleEle"
           if abs(kindLep2) == 11 : single2 = "triggerSingleEle"
           if abs(kindLep3) == 11 : single3 = "triggerSingleEle"
@@ -633,7 +655,8 @@ class EffTrgFiller(TreeCloner):
               lead2trail1 = "triggerDoubleEleLegHigPt"
               trail1lead2 = "triggerDoubleEleLegLowPt"
               trail2lead1 = "triggerDoubleEleLegLowPt"
-              dz_eff_12 = 0.995
+              dz_eff_12 = 0.995              
+              
           if abs(kindLep1) == 11 and abs(kindLep3) == 11 :
               lead1trail3 = "triggerDoubleEleLegHigPt"
               lead3trail1 = "triggerDoubleEleLegHigPt"
@@ -653,19 +676,46 @@ class EffTrgFiller(TreeCloner):
             lead2trail1 = "triggerDoubleMuLegHigPt"
             trail1lead2 = "triggerDoubleMuLegLowPt"
             trail2lead1 = "triggerDoubleMuLegLowPt"
-            dz_eff_12 = 0.95
+            dz_eff_12 = 0.95           
+            if self.cmssw == "ICHEP2016" : 
+              dz_eff_12 = 1.00
+              # in 2016 there is no DZ cut
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail2 = "triggerSpecialDoubleMuLegHigPt" 
+                lead2trail1 = "triggerSpecialDoubleMuLegHigPt" 
+                trail1lead2 = "triggerSpecialDoubleMuLegLowPt" 
+                trail2lead1 = "triggerSpecialDoubleMuLegLowPt" 
+            
           if abs(kindLep1) == 13 and abs(kindLep3) == 13 :
             lead1trail3 = "triggerDoubleMuLegHigPt"
             lead3trail1 = "triggerDoubleMuLegHigPt"
             trail1lead3 = "triggerDoubleMuLegLowPt"
             trail3lead1 = "triggerDoubleMuLegLowPt"
             dz_eff_13 = 0.95
+            if self.cmssw == "ICHEP2016" : 
+              dz_eff_13 = 1.00
+              # in 2016 there is no DZ cut
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail3 = "triggerSpecialDoubleMuLegHigPt"
+                lead3trail1 = "triggerSpecialDoubleMuLegHigPt"
+                trail1lead3 = "triggerSpecialDoubleMuLegLowPt"
+                trail3lead1 = "triggerSpecialDoubleMuLegLowPt"
+
           if abs(kindLep2) == 13 and abs(kindLep3) == 13 :
             lead2trail3 = "triggerDoubleMuLegHigPt"
             lead3trail2 = "triggerDoubleMuLegHigPt"
             trail2lead3 = "triggerDoubleMuLegLowPt"
             trail3lead2 = "triggerDoubleMuLegLowPt"
             dz_eff_23 = 0.95
+            if self.cmssw == "ICHEP2016" : 
+              dz_eff_23 = 1.00
+              # in 2016 there is no DZ cut
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead2trail3 = "triggerSpecialDoubleMuLegHigPt"
+                lead3trail2 = "triggerSpecialDoubleMuLegHigPt"
+                trail2lead3 = "triggerSpecialDoubleMuLegLowPt"
+                trail3lead2 = "triggerSpecialDoubleMuLegLowPt"
+
             
           # em ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
           if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
@@ -673,31 +723,55 @@ class EffTrgFiller(TreeCloner):
             lead2trail1 = "triggerEleMuLegHigPt"
             trail1lead2 = "triggerEleMuLegLowPt"
             trail2lead1 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail2 = "triggerSpecialMuEleLegHigPt"
+                trail1lead2 = "triggerSpecialEleMuLegLowPt"
+            
           if abs(kindLep1) == 13 and abs(kindLep3) == 11 :
             lead1trail3 = "triggerMuEleLegHigPt"
             lead3trail1 = "triggerEleMuLegHigPt"
             trail1lead3 = "triggerEleMuLegLowPt"
             trail3lead1 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead1trail3 = "triggerSpecialMuEleLegHigPt"
+                trail1lead3 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep2) == 13 and abs(kindLep1) == 11 :
             lead2trail1 = "triggerMuEleLegHigPt"
             lead1trail2 = "triggerEleMuLegHigPt"
             trail2lead1 = "triggerEleMuLegLowPt"
             trail1lead2 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead2trail1 = "triggerSpecialMuEleLegHigPt"
+                trail2lead1 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep2) == 13 and abs(kindLep3) == 11 :
             lead2trail3 = "triggerMuEleLegHigPt"
             lead3trail2 = "triggerEleMuLegHigPt"
             trail2lead3 = "triggerEleMuLegLowPt"
             trail3lead2 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead2trail3 = "triggerSpecialMuEleLegHigPt"
+                trail2lead3 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep3) == 13 and abs(kindLep1) == 11 :
             lead3trail1 = "triggerMuEleLegHigPt"
             lead1trail3 = "triggerEleMuLegHigPt"
             trail3lead1 = "triggerEleMuLegLowPt"
             trail1lead3 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead3trail1 = "triggerSpecialMuEleLegHigPt"
+                trail3lead1 = "triggerSpecialEleMuLegLowPt"
+
           if abs(kindLep3) == 13 and abs(kindLep2) == 11 :
             lead3trail2 = "triggerMuEleLegHigPt"
             lead2trail3 = "triggerEleMuLegHigPt"
             trail3lead2 = "triggerEleMuLegLowPt"
             trail2lead3 = "triggerMuEleLegLowPt"
+            if toss_a_coin < self.fixMuonTriggerLumiRatio: 
+                lead3trail2 = "triggerSpecialMuEleLegHigPt"
+                trail3lead2 = "triggerSpecialEleMuLegLowPt"
+          
           
           l1t2, low_l1t2, high_l1t2 = self._getEff(pt1, eta1, lead1trail2)
           l1t3, low_l1t3, high_l1t3 = self._getEff(pt1, eta1, lead1trail3)
@@ -717,27 +791,38 @@ class EffTrgFiller(TreeCloner):
           s3  , low_s3  , high_s3   = self._getEff(pt3, eta3, single3)
 
           ### SINGLE TRIGGERS ARE NOT YET INCLUDED ###
+          ### XJ (6th July 2016: Putting single back)
 
           # Nominal values
+          eff_sng= s1 + (1-s1)*s2 + (1-s1-(1-s1)*s2)*s3  
           eff12 = (l1t2*t2l1 + (1 - l1t2*t2l1) * l2t1*t1l2) * dz_eff_12
           eff13 = (l1t3*t3l1 + (1 - l1t3*t3l1) * l3t1*t1l3) * dz_eff_13
           eff23 = (l2t3*t3l2 + (1 - l2t3*t3l2) * l3t2*t2l3) * dz_eff_23
+          eff_dbl = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
 
-          evt_eff = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+          # XJ: That was double only 
+          #evt_eff = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+          evt_eff = eff_dbl + (1-eff_dbl) * eff_sng
 
           # Low values
+          eff_sng= low_s1 + (1-low_s1)*low_s2 + (1-low_s1-(1-low_s1)*low_s2)*low_s3
           eff12 = (low_l1t2*low_t2l1 + (1 - low_l1t2*low_t2l1) * low_l2t1*low_t1l2) * dz_eff_12
           eff13 = (low_l1t3*low_t3l1 + (1 - low_l1t3*low_t3l1) * low_l3t1*low_t1l3) * dz_eff_13
           eff23 = (low_l2t3*low_t3l2 + (1 - low_l2t3*low_t3l2) * low_l3t2*low_t2l3) * dz_eff_23
+          eff_dbl = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
 
-          evt_eff_low = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+          #evt_eff_low = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+          evt_eff_low = eff_dbl + (1-eff_dbl) * eff_sng
 
           # High values
+          eff_sng= high_s1 + (1-high_s1)*high_s2 + (1-high_s1-(1-high_s1)*high_s2)*high_s3
           eff12 = (high_l1t2*high_t2l1 + (1 - high_l1t2*high_t2l1) * high_l2t1*high_t1l2) * dz_eff_12
           eff13 = (high_l1t3*high_t3l1 + (1 - high_l1t3*high_t3l1) * high_l3t1*high_t1l3) * dz_eff_13
           eff23 = (high_l2t3*high_t3l2 + (1 - high_l2t3*high_t3l2) * high_l3t2*high_t2l3) * dz_eff_23
+          eff_dbl = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
 
-          evt_eff_high = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+          #evt_eff_high = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
+          eff_eff_high = eff_dbl + (1-eff_dbl) * eff_sng
           
           return evt_eff, evt_eff_low, evt_eff_high 
 

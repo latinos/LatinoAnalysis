@@ -250,7 +250,7 @@ class L1SelFiller(TreeCloner):
            else:
                muonIso = 0
            
-           if self.cmssw == '763' or  self.cmssw == 'ICHEP2016' :               
+           if self.cmssw == '763' :               
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                   and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.4
                   and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
@@ -260,6 +260,18 @@ class L1SelFiller(TreeCloner):
                   and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
                   ) :
                isThisALooseLepton = 1.0
+               
+           elif self.cmssw == 'ICHEP2016' :               
+             if ( self.itree.std_vector_lepton_isTightMuon[ilepton] == 1 
+                  and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.4
+                  and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+                  and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.4
+                  and abs(self.itree.std_vector_lepton_d0[ilepton]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                  and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                  and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
+                  ) :
+               isThisALooseLepton = 1.0
+               
            else : 
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                   and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.4
@@ -407,7 +419,7 @@ class L1SelFiller(TreeCloner):
            else:
                muonIso = 0
            
-           if self.cmssw == '763' or  self.cmssw == 'ICHEP2016' :
+           if self.cmssw == '763' :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
                 and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
@@ -417,6 +429,18 @@ class L1SelFiller(TreeCloner):
                 and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
                 ) :
                isThisATightLepton = 1
+
+           elif self.cmssw == 'ICHEP2016' :
+             if ( self.itree.std_vector_lepton_isTightMuon[ilepton] == 1 
+                and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
+                and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+                and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.4
+                and abs(self.itree.std_vector_lepton_d0[ilepton]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
+                ) :
+               isThisATightLepton = 1
+
            else :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
@@ -590,7 +614,7 @@ class L1SelFiller(TreeCloner):
                                      0.3) :
                    pt_to_be_removed_from_overlap += self.itree.std_vector_lepton_pt[jlepton]
            
-           if self.cmssw == '763' or  self.cmssw == 'ICHEP2016' :
+           if self.cmssw == '763' :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
                 and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
@@ -599,6 +623,17 @@ class L1SelFiller(TreeCloner):
                 and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                 ) :
                isThisAWgsLepton = 1
+
+           elif self.cmssw == 'ICHEP2016' :
+             if ( self.itree.std_vector_lepton_isTightMuon[ilepton] == 1 
+                and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
+                and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+                and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.4
+                and abs(self.itree.std_vector_lepton_d0[ilepton]) < dxy          # formerly std_vector_lepton_BestTrackdxy
+                and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
+                ) :
+               isThisAWgsLepton = 1
+
            else :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
