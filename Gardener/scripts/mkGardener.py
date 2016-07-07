@@ -292,7 +292,7 @@ for iProd in prodList :
       #print targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
-      if not iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
+      if  iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
         lSample = []
         for iTarget in targetList.keys(): 
           if   '_000' in iTarget :
@@ -315,6 +315,8 @@ for iProd in prodList :
             if aSample == iSample:
               if not iKey in targetList.keys():
                 print 'Re-Adding split tree: ', iKey, iFile
+
+
                 if 'iihe' in os.uname()[1]:
                   if options.iStep == 'Prod' :
                     targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
