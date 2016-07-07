@@ -142,6 +142,44 @@ private:
  //! variables
  void Definitions(const std::string& fLine);
  void Record(const std::string& fLine);
+ void BuildFormula();
+
+ XYshiftDB tmpDB;
+ TF1* formula_hEtaPlus_x;
+ TF1* formula_hEtaPlus_y;
+
+ TF1* formula_hEtaMinus_x;
+ TF1* formula_hEtaMinus_y;
+
+ TF1* formula_h0Barrel_x;
+ TF1* formula_h0Barrel_y;
+
+ TF1* formula_h0EndcapPlus_x;
+ TF1* formula_h0EndcapPlus_y;
+
+ TF1* formula_h0EndcapMinus_x;
+ TF1* formula_h0EndcapMinus_y;
+
+ TF1* formula_gammaBarrel_x;
+ TF1* formula_gammaBarrel_y;
+
+ TF1* formula_gammaEndcapPlus_x;
+ TF1* formula_gammaEndcapPlus_y;
+
+ TF1* formula_gammaEndcapMinus_x;
+ TF1* formula_gammaEndcapMinus_y;
+
+ TF1* formula_hHFPlus_x;
+ TF1* formula_hHFPlus_y;
+
+ TF1* formula_hHFMinus_x;
+ TF1* formula_hHFMinus_y;
+
+ TF1* formula_egammaHFPlus_x;
+ TF1* formula_egammaHFPlus_y;
+
+ TF1* formula_egammaHFMinus_x;
+ TF1* formula_egammaHFMinus_y;
 
 
  float _met;
@@ -212,6 +250,8 @@ metXYshift::metXYshift(string paraFile) {
     }
   }
   v_XYshiftDB.push_back(myDB); // last section to be filled
+
+  BuildFormula();
 }
 
 void metXYshift::Definitions(const std::string& fLine)
@@ -340,153 +380,204 @@ void metXYshift::CalcXYshiftCorr(
   cory = 0;
   for(unsigned i(0);i<v_XYshiftDB.size();i++)
   {
-    XYshiftDB tmpDB=v_XYshiftDB[i];
+    tmpDB=v_XYshiftDB[i];
     //cout<<"tmpDB.section: "<<tmpDB.section<<endl;
     if(tmpDB.section == "hEtaPlus")
     {
       //cout<<"hEtaPlus_counts: "<<hEtaPlus_counts<<endl;
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(hEtaPlus_counts);
-      cory -= formula_y->Eval(hEtaPlus_counts);
+      corx -= formula_hEtaPlus_x->Eval(hEtaPlus_counts);
+      cory -= formula_hEtaPlus_y->Eval(hEtaPlus_counts);
       //cout<<"corx: "<<corx<<endl;
     }
     else if(tmpDB.section == "hEtaMinus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(hEtaMinus_counts);
-      cory -= formula_y->Eval(hEtaMinus_counts);
+      corx -= formula_hEtaMinus_x->Eval(hEtaMinus_counts);
+      cory -= formula_hEtaMinus_y->Eval(hEtaMinus_counts);
     }
     else if(tmpDB.section == "h0Barrel")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(h0Barrel_counts);
-      cory -= formula_y->Eval(h0Barrel_counts);
+      corx -= formula_h0Barrel_x->Eval(h0Barrel_counts);
+      cory -= formula_h0Barrel_y->Eval(h0Barrel_counts);
     }
     else if(tmpDB.section == "h0EndcapPlus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(h0EndcapPlus_counts);
-      cory -= formula_y->Eval(h0EndcapPlus_counts);
+      corx -= formula_h0EndcapPlus_x->Eval(h0EndcapPlus_counts);
+      cory -= formula_h0EndcapPlus_y->Eval(h0EndcapPlus_counts);
     }
     else if(tmpDB.section == "h0EndcapMinus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(h0EndcapMinus_counts);
-      cory -= formula_y->Eval(h0EndcapMinus_counts);
+      corx -= formula_h0EndcapMinus_x->Eval(h0EndcapMinus_counts);
+      cory -= formula_h0EndcapMinus_y->Eval(h0EndcapMinus_counts);
     }
     else if(tmpDB.section == "gammaBarrel")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(gammaBarrel_counts);
-      cory -= formula_y->Eval(gammaBarrel_counts);
+      corx -= formula_gammaBarrel_x->Eval(gammaBarrel_counts);
+      cory -= formula_gammaBarrel_y->Eval(gammaBarrel_counts);
     }
     else if(tmpDB.section == "gammaEndcapPlus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(gammaEndcapPlus_counts);
-      cory -= formula_y->Eval(gammaEndcapPlus_counts);
+      corx -= formula_gammaEndcapPlus_x->Eval(gammaEndcapPlus_counts);
+      cory -= formula_gammaEndcapPlus_y->Eval(gammaEndcapPlus_counts);
     }
     else if(tmpDB.section == "gammaEndcapMinus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(gammaEndcapMinus_counts);
-      cory -= formula_y->Eval(gammaEndcapMinus_counts);
+      corx -= formula_gammaEndcapMinus_x->Eval(gammaEndcapMinus_counts);
+      cory -= formula_gammaEndcapMinus_y->Eval(gammaEndcapMinus_counts);
     }
     else if(tmpDB.section == "hHFPlus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(hHFPlus_counts);
-      cory -= formula_y->Eval(hHFPlus_counts);
+      corx -= formula_hHFPlus_x->Eval(hHFPlus_counts);
+      cory -= formula_hHFPlus_y->Eval(hHFPlus_counts);
     }
     else if(tmpDB.section == "hHFMinus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(hHFMinus_counts);
-      cory -= formula_y->Eval(hHFMinus_counts);
+      corx -= formula_hHFMinus_x->Eval(hHFMinus_counts);
+      cory -= formula_hHFMinus_y->Eval(hHFMinus_counts);
     }
     else if(tmpDB.section == "egammaHFPlus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-      corx -= formula_x->Eval(egammaHFPlus_counts);
-      cory -= formula_y->Eval(egammaHFPlus_counts);
+      corx -= formula_egammaHFPlus_x->Eval(egammaHFPlus_counts);
+      cory -= formula_egammaHFPlus_y->Eval(egammaHFPlus_counts);
     }
     else if(tmpDB.section == "egammaHFMinus")
     {
-      TF1* formula_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      TF1* formula_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      corx -= formula_egammaHFMinus_x->Eval(egammaHFMinus_counts);
+      cory -= formula_egammaHFMinus_y->Eval(egammaHFMinus_counts);
+    }
+    else
+    {
+      std::stringstream sserr;
+      sserr<<"This section is not reserved: "<<tmpDB.section;
+      handleError("metXYshift::CalcXYshiftCorr",sserr.str());
+    }
+  }
+}
+
+void metXYshift::BuildFormula(){
+  for(unsigned i(0);i<v_XYshiftDB.size();i++)
+  {
+    tmpDB=v_XYshiftDB[i];
+    //cout<<"tmpDB.section: "<<tmpDB.section<<endl;
+    if(tmpDB.section == "hEtaPlus")
+    {
+      //cout<<"hEtaPlus_counts: "<<hEtaPlus_counts<<endl;
+      formula_hEtaPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_hEtaPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
       for(int j(0); j<tmpDB.metXparameters.size();j++)
       {
-        formula_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_y->SetParameter(j, tmpDB.metYparameters[j]);
+        formula_hEtaPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_hEtaPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
       }
-      corx -= formula_x->Eval(egammaHFMinus_counts);
-      cory -= formula_y->Eval(egammaHFMinus_counts);
+    }
+    else if(tmpDB.section == "hEtaMinus")
+    {
+      formula_hEtaMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_hEtaMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_hEtaMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_hEtaMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "h0Barrel")
+    {
+      formula_h0Barrel_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_h0Barrel_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_h0Barrel_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_h0Barrel_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "h0EndcapPlus")
+    {
+      formula_h0EndcapPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_h0EndcapPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_h0EndcapPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_h0EndcapPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "h0EndcapMinus")
+    {
+      formula_h0EndcapMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_h0EndcapMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_h0EndcapMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_h0EndcapMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "gammaBarrel")
+    {
+      formula_gammaBarrel_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_gammaBarrel_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_gammaBarrel_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_gammaBarrel_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "gammaEndcapPlus")
+    {
+      formula_gammaEndcapPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_gammaEndcapPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_gammaEndcapPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_gammaEndcapPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "gammaEndcapMinus")
+    {
+      formula_gammaEndcapMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_gammaEndcapMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_gammaEndcapMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_gammaEndcapMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "hHFPlus")
+    {
+      formula_hHFPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_hHFPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_hHFPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_hHFPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "hHFMinus")
+    {
+      formula_hHFMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_hHFMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_hHFMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_hHFMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "egammaHFPlus")
+    {
+      formula_egammaHFPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_egammaHFPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_egammaHFPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_egammaHFPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
+    }
+    else if(tmpDB.section == "egammaHFMinus")
+    {
+      formula_egammaHFMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
+      formula_egammaHFMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
+      for(int j(0); j<tmpDB.metXparameters.size();j++)
+      {
+        formula_egammaHFMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
+        formula_egammaHFMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
+      }
     }
     else
     {

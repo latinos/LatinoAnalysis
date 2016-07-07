@@ -101,6 +101,13 @@ class MetXYshiftTreeMaker(TreeCloner) :
         step = 5000
 
 	#nentries = 100
+        corx = ROOT.Double(0)
+        cory = ROOT.Double(0)
+        oldPfType1Met = ROOT.Double(0)
+        oldPfType1Phi = ROOT.Double(0)
+        corrPfType1Met_x = ROOT.Double(0)
+        corrPfType1Met_y = ROOT.Double(0)
+	corrPftype1Met_2d = TVector2()
 
         for i in xrange(nentries) :
           itree.GetEntry(i)
@@ -116,8 +123,6 @@ class MetXYshiftTreeMaker(TreeCloner) :
               oldPfType1Met = itree.pfType1Met
               oldPfType1Phi = itree.pfType1Metphi
 
-          corx = ROOT.Double(0)
-          cory = ROOT.Double(0)
 	  metXYshift.CalcXYshiftCorr(
 	          itree.hEtaPlus_counts,
 	          itree.hEtaMinus_counts,
@@ -131,7 +136,7 @@ class MetXYshiftTreeMaker(TreeCloner) :
 	          itree.hHFMinus_counts,
 	          itree.egammaHFPlus_counts,
 	          itree.egammaHFMinus_counts,
-		  corx, cory
+	          corx, cory
 	      )
 	  #print 'corx: ', corx, ' cory: ', cory
 	  corrPfType1Met_x = oldPfType1Met*math.cos(oldPfType1Phi)
@@ -141,7 +146,8 @@ class MetXYshiftTreeMaker(TreeCloner) :
 	  corrPfType1Met_x += corx
 	  corrPfType1Met_y += cory
 	  #print 'new xy ', corrPfType1Met_x, corrPfType1Met_y
-	  corrPftype1Met_2d = TVector2(corrPfType1Met_x, corrPfType1Met_y)
+	  corrPftype1Met_2d.Set(corrPfType1Met_x, corrPfType1Met_y)
+	  #corrPftype1Met_2d = TVector2(corrPfType1Met_x, corrPfType1Met_y)
 	  corrPfType1Met[0] = corrPftype1Met_2d.Mod()
 	  corrPfType1Phi[0] = corrPftype1Met_2d.Phi()
 	  corrPfType1Phi[0] = self.phiLessPi(corrPfType1Phi)
