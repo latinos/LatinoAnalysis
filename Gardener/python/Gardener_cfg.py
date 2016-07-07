@@ -1703,7 +1703,16 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_ext1' ,
                                   'DYJetsToLL_M-50_HT-400to600_ext1' ,
                                   'DYJetsToLL_M-50_HT-600toInf_ext1' ,
-                                  
+                                  # WW ewk
+                                  'WpWmJJ_EWK_QCD_noTop',
+                                  # Higgs 
+                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
+                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
+                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
+                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+                                  'ttHJetToNonbb_M125'
                                   ]
 
                 },
@@ -1840,10 +1849,11 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.23'
+                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.12'
                },
                # the number is 0.497/fb / XXX/fb 
                # then 0.497 / 2.6 = 0.19
+               # then 0.497 / 4.0 = 0.12
                # export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
                # brilcalc lumi --begin  273158 --end 273726 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
                # 0.497 /fb
@@ -1853,10 +1863,11 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.23     --cmssw=RPLME_CMSSW'
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.15     --cmssw=RPLME_CMSSW'
                }, 
                # the number is 0.595/fb / XXX/fb 
                # then 0.595 / 2.6 = 0.23
+               # then 0.595 / 4.0 = 0.15
 
 
   'hadd'     : {

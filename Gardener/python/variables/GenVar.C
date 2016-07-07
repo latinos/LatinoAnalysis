@@ -25,9 +25,12 @@ public:
                  std::vector<float> IsPrompt,
                  std::vector<float> MotherPID,
                  std::vector<float> MotherStatus);
- void setLeptons(std::vector<float> invectorpt,std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
+ void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setNeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setMET  (float met, float metphi);
+ 
+ void setLHELeptons  (std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi);
+ void setLHENeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi);
  
  //! functions
 //  float pTGenVar();
@@ -37,6 +40,9 @@ public:
  float gen_ptll();
  float gen_mll();
  float gen_llchannel();
+ float gen_mlvlv();
+ 
+ float lhe_mlvlv();
  
 private:
  //! variables
@@ -64,6 +70,15 @@ private:
  std::vector<float> _neutrinosphi;
  std::vector<float> _neutrinosflavour;
 
+ std::vector<float> _lhe_leptonspt;
+ std::vector<float> _lhe_leptonseta;
+ std::vector<float> _lhe_leptonsphi;
+
+ std::vector<float> _lhe_neutrinospt;
+ std::vector<float> _lhe_neutrinoseta;
+ std::vector<float> _lhe_neutrinosphi;
+
+ 
  float _met;
  float _met_phi;
  
@@ -152,6 +167,27 @@ void GenVar::setNeutrinos(std::vector<float> invectorpt, std::vector<float> inve
 
 
 
+
+void GenVar::setLHELeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi) {
+  
+  _lhe_leptonspt             = invectorpt;
+  _lhe_leptonseta            = invectoreta;
+  _lhe_leptonsphi            = invectorphi;
+  
+}
+
+
+
+void GenVar::setLHENeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi) {
+
+  _lhe_neutrinospt      = invectorpt;
+  _lhe_neutrinoseta     = invectoreta;
+  _lhe_neutrinosphi     = invectorphi;
+  
+}
+
+
+
 //! functions
 
 // float GenVar::njet(){
@@ -171,10 +207,26 @@ float GenVar::gen_ptllmet(){
     TLorentzVector L1,L2;
     L1.SetPtEtaPhiM(_leptonspt.at(0), _leptonseta.at(0), _leptonsphi.at(0), 0.);
     L2.SetPtEtaPhiM(_leptonspt.at(1), _leptonseta.at(1), _leptonsphi.at(1), 0.);
-
+    
     TLorentzVector MET;
     MET.SetPtEtaPhiM(_met , 0, _met, 0.);
     return (L1+L2+MET).Pt();
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+float GenVar::gen_mlvlv(){
+  if (_lepOk >=2 && _metOk ) {
+    TLorentzVector L1,L2;
+    L1.SetPtEtaPhiM(_leptonspt.at(0), _leptonseta.at(0), _leptonsphi.at(0), 0.);
+    L2.SetPtEtaPhiM(_leptonspt.at(1), _leptonseta.at(1), _leptonsphi.at(1), 0.);
+    
+    TLorentzVector MET;
+    MET.SetPtEtaPhiM(_met , 0, _met, 0.);
+    return (L1+L2+MET).M();
   }
   else {
     return -9999.0;
@@ -216,6 +268,30 @@ float GenVar::gen_llchannel(){
   return -9999.0;
  }
 }
+
+
+
+
+float GenVar::lhe_mlvlv(){
+  if (_lhe_leptonspt.size() > 0 ) {
+    TLorentzVector L1,L2;
+    L1.SetPtEtaPhiM(_lhe_leptonspt.at(0), _lhe_leptonseta.at(0), _lhe_leptonsphi.at(0), 0.);
+    L2.SetPtEtaPhiM(_lhe_leptonspt.at(1), _lhe_leptonseta.at(1), _lhe_leptonsphi.at(1), 0.);
+    
+    TLorentzVector V1,V2;
+    V1.SetPtEtaPhiM(_lhe_neutrinospt.at(0), _lhe_neutrinoseta.at(0), _lhe_neutrinosphi.at(0), 0.);
+    V2.SetPtEtaPhiM(_lhe_neutrinospt.at(1), _lhe_neutrinoseta.at(1), _lhe_neutrinosphi.at(1), 0.);
+
+    return (L1+L2+V1+V2).M();
+  }
+  else {
+    return -9999.0;
+  }
+  
+}
+
+
+
 
 
 

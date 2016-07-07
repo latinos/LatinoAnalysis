@@ -29,6 +29,7 @@ class HiggsXSection:
       self.readYR('YR3','7TeV')
       self.readYR('YR3','8TeV')
       
+      self.readYR('YR4','13TeV')
       self.readYR('YR4prel','13TeV')
       self.readYR('YR4prel','13TeV','bsm')
       
@@ -40,7 +41,7 @@ class HiggsXSection:
       self._br['Z2ll'] = 0.337*3.0
 
    def readYR(self,YRversion,energy,model='sm'):
-      if not YRversion in ['YR2','YR3','YR4prel'] : return
+      if not YRversion in ['YR2','YR3','YR4prel','YR4'] : return
       if not energy in ['7TeV','8TeV','13TeV' ] : return
       # Create Structure
       if not YRversion in self._YR : self._YR[YRversion] = {}
@@ -61,7 +62,7 @@ class HiggsXSection:
           self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt') 
           self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
     
-        if YRversion in  ['YR4prel'] :
+        if YRversion in  ['YR4prel','YR4'] :
           if not energy in ['13TeV'] : return  
           if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
           self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggH.txt') 
@@ -96,7 +97,7 @@ class HiggsXSection:
         if YRversion in  ['YR3'] : 
           self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2bosons.txt')
           self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR2fermions.txt')
-        if YRversion in  ['YR4prel'] :  
+        if YRversion in  ['YR4prel','YR4'] :  
           self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
           self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/br/BR4.txt')
 
@@ -192,7 +193,7 @@ class HiggsXSection:
 
 
    def YR4dec(self,YRversion,decay):
-     if not YRversion in ['YR4prel' ] : return decay
+     if not YRversion in ['YR4prel','YR4' ] : return decay
      if decay == 'H_bb'       : return 'hbb'
      if decay == 'H_tautau'   : return 'htt'
      if decay == 'H_mumu'     : return 'hmm'
@@ -289,7 +290,7 @@ class HiggsXSection:
 
 ### Below some examples of usage :
 
-HiggsXS = HiggsXSection() 
+#HiggsXS = HiggsXSection() 
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M130')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M750')
@@ -312,5 +313,10 @@ HiggsXS = HiggsXSection()
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','HWplusJ_HToWW_M125')
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','ggZH_HToWW_M130')
 
-print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','scale','sm')
-print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','pdf','sm')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
+#print HiggsXS.GetHiggsXS4Sample('YR4','13TeV','GluGluHToWWTo2L2Nu_M125')
+#print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','scale','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggH','125.0','pdf','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ggH','125.0','scale','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ggH','125.0','pdf','sm')
+

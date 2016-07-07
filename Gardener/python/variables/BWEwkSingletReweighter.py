@@ -82,6 +82,7 @@ class BWEwkSingletReweighter(TreeCloner):
         if self.undoCPS:
           print "Undoing Complex Pole Scheme before applying the BW weights"
         cmssw_base = os.getenv('CMSSW_BASE')
+        cmssw_arch = os.getenv('SCRAM_ARCH')
         complexpoleLib = cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/libcpHTO.so'
         complexpoleSrc = cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/pwhg_cpHTO_reweight.f'
         if not os.path.exists(complexpoleLib) or \
@@ -91,7 +92,17 @@ class BWEwkSingletReweighter(TreeCloner):
         try:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/pwhg_cpHTO_wrapper.cc+g')
         except RuntimeError:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/pwhg_cpHTO_wrapper.cc++g') 
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/pwhg_cpHTO_wrapper.cc++g')
+
+        #MELA reweighting
+        ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"/interface/");
+        ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"MSSW_BASE/src/");
+        ROOT.gSystem.Load("libZZMatrixElementMELA.so");
+        ROOT.gSystem.Load(cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_7p0.so");
+        try:
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaReweighterWW.C+g')
+        except RuntimeError:
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaReweighterWW.C++g')
     
     def muprime(self, k, br):
       return k*(1-br)
@@ -152,7 +163,9 @@ class BWEwkSingletReweighter(TreeCloner):
         for cprime in rangecprime:
           for BRnew in rangeBRnew:
             self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew))
-        
+            self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_I")
+            self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_B")
+
         # clone the tree
         self.clone(output, self.namesOldBranchesToBeModifiedSimpleVariable)
 
@@ -190,6 +203,15 @@ class BWEwkSingletReweighter(TreeCloner):
           maxmass = max(allparams[str(int(self.mH))]["decayWeight"]['x'])
           print "decay weights for mass", str(int(self.mH)), " available between", minmass, " and", maxmass 
 
+
+        # MELA reweighter
+        mela = ROOT.MelaReweighterWW(13000, self.mH, self.gsm)
+        #GF 1.16637e-5
+        #sin2thetaW 0.22264585341299603
+        #Wmass  = 80.398
+        #ZMass = 91.1876
+        mela.resetMCFM_EWKParameters(1.16637e-5, 1./128., 80.398, 91.1876, 0.22264585341299603)
+
         #----------------------------------------------------------------------------------------------------
         print '- Starting eventloop'
         step = 5000
@@ -202,6 +224,24 @@ class BWEwkSingletReweighter(TreeCloner):
                 print i,'events processed :: ', nentries
             
             mass = itree.higgsLHEmass
+            fourMomenta=[]
+            ids=[]
+            for ilep in range(2):
+              l = ROOT.TLorentzVector()
+              l.SetPtEtaPhiM(itree.std_vector_LHElepton_pt[ilep], \
+                             itree.std_vector_LHElepton_eta[ilep],
+                             itree.std_vector_LHElepton_phi[ilep],
+                             0.)
+              fourMomenta.append(l)
+              ids.append(itree.std_vector_LHElepton_id[ilep])
+              n = ROOT.TLorentzVector()
+              n.SetPtEtaPhiM(itree.std_vector_LHEneutrino_pt[ilep], \
+                             itree.std_vector_LHEneutrino_eta[ilep],
+                             itree.std_vector_LHEneutrino_phi[ilep],
+                             0.)                
+              fourMomenta.append(n)
+              ids.append(itree.std_vector_LHEneutrino_id[ilep])
+      
             CPSweight = 1.
             if self.undoCPS:
               CPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
@@ -221,6 +261,15 @@ class BWEwkSingletReweighter(TreeCloner):
                 if shiftfile != "":
                   shift = shifts[str(int(self.mH))]["cprime"+str(cprime)]["brnew"+str(BRnew)]["weight"]
                 self.oldBranchesToBeModifiedSimpleVariable[name][0] = (1./shift)*decayWeight*self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsm)/CPSweight
+                mela.setMelaHiggsMassWidth(self.mH, gprime)
+                weightInterference = mela.weightStoI((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+                weightBackground   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+                self.oldBranchesToBeModifiedSimpleVariable[name+"_I"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterference
+                self.oldBranchesToBeModifiedSimpleVariable[name+"_B"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightBackground
+
+
               
             otree.Fill()
 
