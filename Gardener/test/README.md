@@ -521,8 +521,15 @@ If reading 763 MET naming convention but not using lepton (electron and muon) un
     gardener.py metUncertainty --kind='Up' --cmssw='ICHEP2016'  --unclustered='no' test.root test.met.root
     gardener.py metUncertainty --kind='Do' --cmssw='ICHEP2016'  --unclustered='no' test.root test.met.root
 
-    
-    
+
+MET uncertainty
+====
+
+This will add the xy-shift corrected MET and phi in the latino trees: corrPfType1Met and corrPfType1Phi
+
+    gardener.py metXYshift -c 809 -p Spring16_V0_MET_MC_XYshiftMC_PfType1MetLocal.txt input.root output.root
+
+
 baseW table
 ====
 

@@ -165,6 +165,10 @@ class BWEwkSingletReweighter(TreeCloner):
             self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew))
             self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_I")
             self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_B")
+            #self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_I_Honly")
+            #self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_I_Bonly")
+            self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_I_HB")
+            self.namesOldBranchesToBeModifiedSimpleVariable.append('cprime'+str(cprime)+"BRnew"+str(BRnew)+"_H")
 
         # clone the tree
         self.clone(output, self.namesOldBranchesToBeModifiedSimpleVariable)
@@ -226,6 +230,7 @@ class BWEwkSingletReweighter(TreeCloner):
             mass = itree.higgsLHEmass
             fourMomenta=[]
             ids=[]
+
             for ilep in range(2):
               l = ROOT.TLorentzVector()
               l.SetPtEtaPhiM(itree.std_vector_LHElepton_pt[ilep], \
@@ -264,10 +269,22 @@ class BWEwkSingletReweighter(TreeCloner):
                 mela.setMelaHiggsMassWidth(self.mH, gprime)
                 weightInterference = mela.weightStoI((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+                #weightInterferenceHonly = mela.weightStoI_H((productionProcess=="VBF"), int(ids[0]), int(ids[2]), int(ids[1]), int(ids[3]),
+                #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+                #weightInterferenceBonly = mela.weightStoI_B((productionProcess=="VBF"), int(ids[0]), int(ids[2]), int(ids[1]), int(ids[3]),
+                #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+                weightInterferenceHB = mela.weightStoI_HB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
                 weightBackground   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+                weightSignalH   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterference
+                #self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Honly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHonly
+                #self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Bonly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceBonly
+                self.oldBranchesToBeModifiedSimpleVariable[name+"_I_HB"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHB
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_B"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightBackground
+                self.oldBranchesToBeModifiedSimpleVariable[name+"_H"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightSignalH
 
 
               
