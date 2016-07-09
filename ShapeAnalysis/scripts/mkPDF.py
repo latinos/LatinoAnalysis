@@ -42,13 +42,15 @@ class ShapeFactory:
         histoName = 'list_vectors_weights'
         for process,filenames in samples.iteritems():
           histo = self._buildchainHisto(histoName,[ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
-          inputs[process] = histo       
+          inputs[process] = histo 
+          #print ' process -> ', process, ' => ', inputs[process]
         return inputs
 
     # _____________________________________________________________________________
     def _buildchainHisto(self, histoName, files, skipMissingFiles):
         
-        histoSum = ROOT.TH1F
+        self._outFile.cd()
+        #histoSum = ROOT.TH1F
         isFirstOne = True
         for path in files:
             doesFileExist = True
@@ -66,11 +68,14 @@ class ShapeFactory:
               fileIn = ROOT.TFile(path)
               print " path = ", path
               if isFirstOne :
-                histoSum = fileIn.Get(histoName)   
+                self._outFile.cd()
+                histoSum = (fileIn.Get(histoName)).Clone()   
+                #print ' histogram found : ', histoSum, ' :: ', histoName
                 isFirstOne = False
               else :
                 histoSumTemp = fileIn.Get(histoName)   
                 histoSum.Add(histoSumTemp)
+                #print ' histogram found again: ', histoSum
               
         return histoSum
 
@@ -106,7 +111,9 @@ class ShapeFactory:
 
         fileIn = ROOT.TFile(inputFile, "READ")
 
-        variableName = "list_vectors_weights"
+        self._outFile = ROOT.TFile.Open( self._outputDirPDF + '/results_unc.root', 'recreate')       
+        #ROOT.TH1.SetDefaultSumw2(True)
+
         # get the pre-any-cut histogram
         list_of_trees_to_connect = {}
         for sampleName, sample in self._samples.iteritems():
@@ -115,21 +122,62 @@ class ShapeFactory:
         #                                                                    skipMissingFiles
         preCutsHistograms = self._connectInputs( list_of_trees_to_connect, inputDir, False)
         
+        print ' preCutsHistograms = ', preCutsHistograms
+        
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
-            
-          for sampleName, sample in self._samples.iteritems():
           
-            # get the after-cut histogram
+          summaryNuisanceFile = open(self._outputDirPDF + '/summary_nuisance' + cutName + '.py', 'w')
+
+          summaryNuisanceFile.write("nuisances['QCDscale_qqbar_accept']  = { \n")
+          summaryNuisanceFile.write("    'name'  : 'QCDscale_qqbar_accept', \n")
+          summaryNuisanceFile.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFile.write("    'samples'  : { \n")
             
-            shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-            print '     -> shapeName = ', shapeName,
-            histoAfterCuts = fileIn.Get(shapeName)
+
+          for sampleName, sample in self._samples.iteritems():
+            
+            tcanvas  = ROOT.TCanvas( "c_unc_" + cutName + "_" + sampleName,      "cc"     , 800, 600 )
+
+            # get the after-cut histogram
+            histoRatio = ROOT.TH1F('ratio_', cutName + '_' + sampleName, 100,0, 2)
+
+            nominalRatio = 1.
+
+            for ipdf in range(0,10):
+              variableName = 'weight_' + str(ipdf)
+              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              #print '     -> shapeName = ', shapeName,
+              histoAfterCuts = fileIn.Get(shapeName)
+              totalWeighted = 0
+              #print ' mean*integral = ', histoAfterCuts.GetMean(), ' * ', histoAfterCuts.Integral(), ' = ', histoAfterCuts.GetMean() * histoAfterCuts.Integral(),
+              for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
+                 totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+              #print ' ---> integral = ',    totalWeighted
               
-            # and now let's play with the histograms
-            # the nominal:         preCutsHistograms[shapeName]
-            # and the after cuts:  histoAfterCuts
-                           
+              #print 'preCutsHistograms[', sampleName, '] = ', preCutsHistograms[sampleName]
+              
+              denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
+              
+              if ipdf == 0 :
+                nominalRatio = totalWeighted/denominator
+              else : 
+                histoRatio.Fill(totalWeighted/denominator/nominalRatio)
+                            #variableName = "list_vectors_weights"
+
+            histoRatio.Draw()
+            tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".png")
+            tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".root")
+
+            tcanvas.Write()
+            string_to_write = "         '" +  sampleName +  "': " +  str(1. + histoRatio.GetRMS()) + " ,\n"
+            summaryNuisanceFile.write( string_to_write )
+
+
+          summaryNuisanceFile.write("    }, \n")
+          summaryNuisanceFile.write(" } \n")
+          summaryNuisanceFile.close()
+          
           
         print " >> all but really all "
         
