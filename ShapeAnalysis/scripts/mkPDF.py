@@ -42,13 +42,15 @@ class ShapeFactory:
         histoName = 'list_vectors_weights'
         for process,filenames in samples.iteritems():
           histo = self._buildchainHisto(histoName,[ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
-          inputs[process] = histo       
+          inputs[process] = histo 
+          #print ' process -> ', process, ' => ', inputs[process]
         return inputs
 
     # _____________________________________________________________________________
     def _buildchainHisto(self, histoName, files, skipMissingFiles):
         
-        histoSum = ROOT.TH1F
+        self._outFile.cd()
+        #histoSum = ROOT.TH1F
         isFirstOne = True
         for path in files:
             doesFileExist = True
@@ -66,11 +68,14 @@ class ShapeFactory:
               fileIn = ROOT.TFile(path)
               print " path = ", path
               if isFirstOne :
-                histoSum = fileIn.Get(histoName)   
+                self._outFile.cd()
+                histoSum = (fileIn.Get(histoName)).Clone()   
+                #print ' histogram found : ', histoSum, ' :: ', histoName
                 isFirstOne = False
               else :
                 histoSumTemp = fileIn.Get(histoName)   
                 histoSum.Add(histoSumTemp)
+                #print ' histogram found again: ', histoSum
               
         return histoSum
 
@@ -106,7 +111,9 @@ class ShapeFactory:
 
         fileIn = ROOT.TFile(inputFile, "READ")
 
-        variableName = "list_vectors_weights"
+        self._outFile = ROOT.TFile.Open( self._outputDirPDF + '/results_unc.root', 'recreate')       
+        #ROOT.TH1.SetDefaultSumw2(True)
+
         # get the pre-any-cut histogram
         list_of_trees_to_connect = {}
         for sampleName, sample in self._samples.iteritems():
@@ -115,21 +122,137 @@ class ShapeFactory:
         #                                                                    skipMissingFiles
         preCutsHistograms = self._connectInputs( list_of_trees_to_connect, inputDir, False)
         
+        print ' preCutsHistograms = ', preCutsHistograms
+        
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
-            
-          for sampleName, sample in self._samples.iteritems():
           
-            # get the after-cut histogram
+          summaryNuisanceFileQCD = open(self._outputDirPDF + '/summary_nuisance_qcd_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileQCD.write("nuisances['QCDscale_qqbar_accept']  = { \n")
+          summaryNuisanceFileQCD.write("    'name'  : 'QCDscale_qqbar_accept', \n")
+          summaryNuisanceFileQCD.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileQCD.write("    'samples'  : { \n")
             
-            shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-            print '     -> shapeName = ', shapeName,
-            histoAfterCuts = fileIn.Get(shapeName)
+
+
+          summaryNuisanceFilePDF = open(self._outputDirPDF + '/summary_nuisance_pdf_' + cutName + '.py', 'w')
+
+          summaryNuisanceFilePDF.write("nuisances['{pdf_qq_accept']  = { \n")
+          summaryNuisanceFilePDF.write("    'name'  : 'pdf_qq_accept', \n")
+          summaryNuisanceFilePDF.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFilePDF.write("    'samples'  : { \n")
+
+
+
+          summaryNuisanceFileAlpha = open(self._outputDirPDF + '/summary_nuisance_alpha_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileAlpha.write("nuisances['Alphascale_qqbar_accept']  = { \n")
+          summaryNuisanceFileAlpha.write("    'name'  : 'Alphascale_qqbar_accept', \n")
+          summaryNuisanceFileAlpha.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileAlpha.write("    'samples'  : { \n")
+
+
+
+          for sampleName, sample in self._samples.iteritems():
+            
+            tcanvas  = ROOT.TCanvas( "c_unc_" + cutName + "_" + sampleName,      "cc"     , 800, 600 )
+
+            nominalRatio = 1.
+
+            # get the after-cut histogram
+
+            # qcd uncertainty
+            low_qcd = 1
+            high_qcd = 1
+            for ipdf in range(0,10):
+              if (ipdf == 0 or ipdf == 5 or ipdf == 9) :
               
-            # and now let's play with the histograms
-            # the nominal:         preCutsHistograms[shapeName]
-            # and the after cuts:  histoAfterCuts
-                           
+                variableName = 'weight_' + str(ipdf)
+                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                histoAfterCuts = fileIn.Get(shapeName)
+                totalWeighted = 0
+                for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
+                   totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+                
+                denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
+                
+                if ipdf == 0 :
+                  nominalRatio = totalWeighted/denominator
+                elif ipdf == 4:
+                  low_qcd = totalWeighted/denominator/nominalRatio
+                elif ipdf == 8:
+                  high_qcd = totalWeighted/denominator/nominalRatio
+
+            string_to_write = "         '" +  sampleName +  "': " +  str(low_qcd) + "/" + str(high_qcd) + " ,\n"
+            summaryNuisanceFileQCD.write( string_to_write )
+ 
+ 
+            # alpha uncertainty
+            low_alpha = 1
+            high_alpha = 1
+            for ipdf in range(109,111):
+              if (ipdf == 108 or ipdf == 109) :
+              
+                variableName = 'weight_' + str(ipdf)
+                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                histoAfterCuts = fileIn.Get(shapeName)
+                totalWeighted = 0
+                for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
+                   totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+                
+                denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
+                
+                if ipdf == 109 :
+                  low_alpha = totalWeighted/denominator/nominalRatio
+                elif ipdf == 110:
+                  high_alpha = totalWeighted/denominator/nominalRatio
+ 
+            string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha) + "/" + str(high_alpha) + " ,\n"
+            summaryNuisanceFileAlpha.write( string_to_write )
+
+        
+            # pdf uncertainty
+            histoRatioPDF = ROOT.TH1F('ratio_pdf_', cutName + '_' + sampleName, 100,0, 2)
+            for ipdf in range(10,109):
+              variableName = 'weight_' + str(ipdf)
+              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              #print '     -> shapeName = ', shapeName,
+              histoAfterCuts = fileIn.Get(shapeName)
+              totalWeighted = 0
+              #print ' mean*integral = ', histoAfterCuts.GetMean(), ' * ', histoAfterCuts.Integral(), ' = ', histoAfterCuts.GetMean() * histoAfterCuts.Integral(),
+              for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
+                 totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+              #print ' ---> integral = ',    totalWeighted
+              
+              #print 'preCutsHistograms[', sampleName, '] = ', preCutsHistograms[sampleName]
+              
+              denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
+              
+              histoRatioPDF.Fill(totalWeighted/denominator/nominalRatio)
+
+
+            histoRatioPDF.Draw()
+            tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".png")
+            tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".root")
+
+            tcanvas.Write()
+            string_to_write = "         '" +  sampleName +  "': " +  str(1. + histoRatioPDF.GetRMS()) + " ,\n"
+            summaryNuisanceFilePDF.write( string_to_write )
+
+
+          summaryNuisanceFilePDF.write("    }, \n")
+          summaryNuisanceFilePDF.write(" } \n")
+          summaryNuisanceFilePDF.close()
+
+          summaryNuisanceFileQCD.write("    }, \n")
+          summaryNuisanceFileQCD.write(" } \n")
+          summaryNuisanceFileQCD.close()
+
+          summaryNuisanceFileAlpha.write("    }, \n")
+          summaryNuisanceFileAlpha.write(" } \n")
+          summaryNuisanceFileAlpha.close()
+          
           
         print " >> all but really all "
         
