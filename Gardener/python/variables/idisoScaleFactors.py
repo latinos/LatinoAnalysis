@@ -38,7 +38,7 @@ class IdIsoSFFiller(TreeCloner):
         group.add_option( '--isoidele'   , dest='idIsoScaleFactorsFileElectron',            help='file with scale factors for isolation and id for electrons',                  default=None)
         group.add_option( '--tkSCele'    , dest='tkSCFileElectron',                         help='file with scale factors for track-SC efficiency for electrons',               default=None)
         group.add_option( '--isoideleAlt', dest='idIsoScaleFactorsFileElectronAlternative', help='file with scale factors for isolation and id for electrons, alternative',     default=None)
-        group.add_option( '--isoideleAltLumiRatio', dest='idIsoScaleFactorsFileElectronAlternativeLumiRatio', help='Luminosity ratio between first period and the whole',       default=-1.0)
+        group.add_option( '--isoideleAltLumiRatio', dest='idIsoScaleFactorsFileElectronAlternativeLumiRatio', help='Luminosity ratio between first period and the whole', type='float'  ,    default=-1.0)
 
         parser.add_option_group(group)
         return group
