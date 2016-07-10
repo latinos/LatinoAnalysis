@@ -415,15 +415,21 @@ for iProd in prodList :
             FileTarget.append(os.path.basename(jFile))
 
           if 'iihe' in os.uname()[1]:
-            if not '__' in  options.iStep :
-              fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']
-            else:
-              fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep
+            PrevStep='' 
+            if '__' in options.iStep :
+              SubSteps=options.iStep.split('__')
+              for i in range(len(SubSteps)-1) : 
+                 PrevStep+=SubSteps[i]
+                 if len(SubSteps)-1 > 1 and i < len(SubSteps)-2 : PrevStep+='__'
+#            if not '__' in  options.iStep :
+            fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']
+#            else:
+#              fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+PrevStep
           else:
-            if not '__' in  options.iStep :
-              fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
-            else:
-              fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+options.iStep
+#            if not '__' in  options.iStep :
+            fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+#            else:
+#              fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+PrevStep
 
           fileCmd += '/' + os.path.basename(targetList[iTarget][0]).split('_000')[0].split('__part')[0]
           if   '_000'   in targetList[iTarget][0] : fileCmd += '_000*.root'
