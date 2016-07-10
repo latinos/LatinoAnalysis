@@ -277,7 +277,7 @@ class BWEwkSingletReweighter(TreeCloner):
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
                 weightBackground   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                weightSignalH   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                weightSignalH   = mela.weightStoH((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterference
                 #self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Honly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHonly
