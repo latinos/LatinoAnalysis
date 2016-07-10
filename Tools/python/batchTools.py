@@ -71,7 +71,7 @@ class batchJobs :
 
      # Create Proxy at IIHE
      if 'iihe'  in os.uname()[1]:
-       os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
+       #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/xjanssen/.proxy')
 
    def Add (self,iStep,iTarget,command):

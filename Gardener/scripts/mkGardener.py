@@ -40,6 +40,7 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,baseWInfo,version='74x'):
        nNeg = 0
        for inTree in inTreeList: 
          print 'Opening: ',inTree
+         #fileIn = ROOT.TFile.Open("dcap://maite.iihe.ac.be"+inTree, "READ")
          fileIn = ROOT.TFile.Open(inTree, "READ")
 #        fileIn.ls()
          if version == '74x' : 
@@ -389,6 +390,70 @@ for iProd in prodList :
 
         targetList = targetGroupList 
 
+      #print targetList 
+      # Check job in not already running before allowing it ? 
+      keysToDel=[] 
+      for iTarget in targetList:
+          pidFile=jobDir+'Gardening__'+iProd+'/Gardening__'+iProd+'__'+iStep
+          if options.chain: pidFile+='_Chain'
+          pidFile+='__'+iTarget
+          if not startingStep == 'Prod' : pidFile+='____'+startingStep
+          pidFile+='.jid'
+          if os.path.isfile(pidFile) : 
+            print '--> Job Running already : '+iTarget
+            keysToDel.append(iTarget)
+      for iTarget in keysToDel:
+          del targetList[iTarget]
+      # For hadd, we need to check that all jobs are done !
+      if iStep == 'hadd' :
+        #print targetList
+        keysToDel=[]
+        for iTarget in targetList:
+          #print targetList[iTarget]
+          FileTarget=[]
+          for jFile in targetList[iTarget] : 
+            FileTarget.append(os.path.basename(jFile))
+
+          if 'iihe' in os.uname()[1]:
+            PrevStep='' 
+            if '__' in options.iStep :
+              SubSteps=options.iStep.split('__')
+              for i in range(len(SubSteps)-1) : 
+                 PrevStep+=SubSteps[i]
+                 if len(SubSteps)-1 > 1 and i < len(SubSteps)-2 : PrevStep+='__'
+#            if not '__' in  options.iStep :
+            fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']
+#            else:
+#              fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+PrevStep
+          else:
+#            if not '__' in  options.iStep :
+            fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+#            else:
+#              fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+PrevStep
+
+          fileCmd += '/' + os.path.basename(targetList[iTarget][0]).split('_000')[0].split('__part')[0]
+          if   '_000'   in targetList[iTarget][0] : fileCmd += '_000*.root'
+          elif '__part' in targetList[iTarget][0] : fileCmd += '__part*.root'
+          else : fileCmd += '.root'
+          #print fileCmd 
+          proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+          out, err = proc.communicate()
+          FileOriList=string.split(out)
+          haddTest=True
+          #print FileOriList
+          #print FileTarget
+          for jFile in FileOriList:
+            if not (os.path.basename(jFile)) in FileTarget : haddTest=False
+          if not haddTest : keysToDel.append(iTarget)
+        for iTarget in keysToDel:
+          iKey = iTarget.split('_000')[0].split('__part')[0]
+          if not iKey in Steps['hadd']['bigSamples'] :
+            print '--> HADD: Some jobs stil running/not done : '+iTarget 
+            del targetList[iTarget]
+
+
+      print targetList
+
       # Create Jobs Dictionary
       list=[]
       list.append(iStep)
@@ -575,6 +640,7 @@ for iProd in prodList :
            if startingStep == 'Prod' :
              if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
              command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+             #command+='pwd;ls -l;srmcp file:///`pwd`/'+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
            else: 
              if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
              command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'

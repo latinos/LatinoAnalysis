@@ -51,7 +51,7 @@ class EffTrgFiller(TreeCloner):
         group.add_option('--triggerSpecialMuEleLegHigPt', dest='triggerSpecialMuEleLegHigPt', help='file with triggerSpecial efficiencies triggerSpecialMuEleLegHigPt', default=None)
         group.add_option('--triggerSpecialEleMuLegLowPt', dest='triggerSpecialEleMuLegLowPt', help='file with triggerSpecial efficiencies triggerSpecialEleMuLegLowPt', default=None)
 
-        group.add_option( '--fixMuonTriggerLumiRatio', dest='fixMuonTriggerLumiRatio', help='Luminosity ratio between first period and the whole',       default=-1.0)
+        group.add_option( '--fixMuonTriggerLumiRatio', dest='fixMuonTriggerLumiRatio', help='Luminosity ratio between first period and the whole',  type='float' ,    default=-1.0)
         # brilcalc lumi --begin  273158 --end 274094 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
         # 0.595 /fb
 
@@ -349,7 +349,6 @@ class EffTrgFiller(TreeCloner):
             doubleLegHigPtB = "triggerEleMuLegHigPt"
             doubleLegLowPtA = "triggerEleMuLegLowPt"
             doubleLegLowPtB = "triggerMuEleLegLowPt"
-
             if toss_a_coin < self.fixMuonTriggerLumiRatio: 
               singleLegA  = "triggerSpecialSingleMu"
               doubleLegHigPtA = "triggerSpecialMuEleLegHigPt"
@@ -374,7 +373,6 @@ class EffTrgFiller(TreeCloner):
 
 
 
-       
           
           eff_dbl_1_leadingleg  , low_eff_dbl_1_leadingleg  , high_eff_dbl_1_leadingleg   = self._getEff (pt1, eta1, doubleLegHigPtA)
           eff_dbl_2_leadingleg  , low_eff_dbl_2_leadingleg  , high_eff_dbl_2_leadingleg   = self._getEff (pt2, eta2, doubleLegHigPtB)
@@ -822,7 +820,7 @@ class EffTrgFiller(TreeCloner):
           eff_dbl = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
 
           #evt_eff_high = eff12 + (1 - eff12)*eff13 + (1 - eff12)*(1 - eff13)*eff23
-          eff_eff_high = eff_dbl + (1-eff_dbl) * eff_sng
+          evt_eff_high = eff_dbl + (1-eff_dbl) * eff_sng
           
           return evt_eff, evt_eff_low, evt_eff_high 
 
