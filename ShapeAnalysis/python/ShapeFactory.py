@@ -137,6 +137,11 @@ class ShapeFactory:
         inputsNuisanceDown = {}
 
         for nuisanceName, nuisance in nuisances.iteritems():
+          if nuisanceName == "stat":
+            for sample,item in nuisance["samples"].iteritems():
+              if "zeroMCError" not in item:
+                item["zeroMCError"] = '0'
+
           if 'kind' in nuisance :
             if nuisance['kind'] == 'tree' :
               list_of_trees_to_connect_up = {}
@@ -463,13 +468,18 @@ class ShapeFactory:
                           if 'keepNormalization' in configurationNuis.keys() :
                             keepNormalization = configurationNuis['keepNormalization']
                             print " keepNormalization = ", keepNormalization
+
                           # scale up/down
+                          zeroMC = False
+                          if  configurationNuis['zeroMCError'] == '1' : zeroMC = True
+
                           for iBin in range(1, outputsHisto.GetNbinsX()+1):
                             # take histogram --> outputsHisto
                             outputsHistoUp = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp")
                             outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
-                            self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization )
-                            self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization )
+                            print "########### DEBUG: scaleHistoStatBBB sample", sampleName
+                            self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization, zeroMC)
+                            self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization, zeroMC)
 
                             # fix negative bins not consistent
                             self._fixNegativeBin(outputsHistoUp, outputsHisto)
@@ -809,8 +819,6 @@ class ShapeFactory:
 
         return h_flat
        
- 
- 
     # _____________________________________________________________________________
     def _scaleHistoStat(self, histo, direction):
         
@@ -821,27 +829,53 @@ class ShapeFactory:
           histo.SetBinContent(iBin, newvalue)
   
     # _____________________________________________________________________________
-    def _scaleHistoStatBBB(self, histo, direction, iBinToChange, keepNormalization):
+    def _scaleHistoStatBBB(self, histo, direction, iBinToChange, keepNormalization, zeroMC=False):
   
+
         integral = 0.
         integralVaried = 0.
-        for iBin in range(1, histo.GetNbinsX()+1):
-          error = histo.GetBinError(iBin)
-          value = histo.GetBinContent(iBin)
-          integral += value
-          if iBin == iBinToChange : 
-            newvalue = value + direction * error
-          else :
-            newvalue = value            
-          integralVaried += newvalue
-          histo.SetBinContent(iBin, newvalue)
+
+        if zeroMC == False:
+          for iBin in range(1, histo.GetNbinsX()+1):
+            error = histo.GetBinError(iBin)
+            value = histo.GetBinContent(iBin)
+            integral += value
+            if iBin == iBinToChange : 
+              newvalue = value + direction * error
+            else :
+              newvalue = value            
+
+            integralVaried += newvalue
+            histo.SetBinContent(iBin, newvalue)
+
+        else:
+          basew = self._getBaseW(histo)
+          print "###DEBUG: Effective baseW = ", basew
+          for iBin in range(1, histo.GetNbinsX()+1):
+            error = histo.GetBinError(iBin)
+            value = histo.GetBinContent(iBin)
+            integral += value
+            if iBin == iBinToChange :
+              if value == 0:
+                print "###DEBUG: 0 MC stat --> value = ", value, " error = ", error
+                if direction == 1:
+                  print "###DEBUG: lumi = ", float(self._lumi), " basew = ", basew
+                  newvalue = 1.64*float(self._lumi)*basew
+                  print "###DEBUG: new value up = ", newvalue
+                else:
+                  newvalue = 0
+              else:
+                newvalue = value + direction * error
+            else :
+              newvalue = value
+            integralVaried += newvalue
+            histo.SetBinContent(iBin, newvalue)
 
         if keepNormalization == 1 :
           if integralVaried != 0 :
             histo.Scale (integral / integralVaried)
 
-  
-  
+
     # _____________________________________________________________________________
     def _fixNegativeBin(self, histoNew, histoReference):
         # if a histogram has a bin >/< 0
@@ -852,9 +886,17 @@ class ShapeFactory:
           if histoNew.GetBinContent(ibin) * histoReference.GetBinContent(ibin) < 0 :
             histoNew.SetBinContent(ibin, 0) 
 
+    # _____________________________________________________________________________
+    def _getBaseW(self, histo):
+ 
+      ### returns the effective baseW
+      baseW = histo.Integral()/histo.GetEntries()/self._lumi if histo.GetEntries()>0 else 0
 
+      ### old method 
+      #tree.GetEntry(0)
+      #baseW = eval("tree.baseW")     
 
-  
+      return baseW 
 
     # _____________________________________________________________________________
     @staticmethod
