@@ -174,17 +174,18 @@ if __name__ == '__main__':
 
             number = 0
 
-            for sam_k,sam_v in samples.iteritems():
-              samples_new = {}
-              samples_new[sam_k] = sam_v
+            for cut_k,cut_v in cuts.iteritems():
 
-	      for cut_k,cut_v in cuts.iteritems():
-	        cuts_new = {}
-	        cuts_new[cut_k] = cut_v
+              cuts_new = {}
+              cuts_new[cut_k] = cut_v
 
-	        queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
-	        number += 1
-	    queue.join()
+              for sam_k,sam_v in samples.iteritems():
+                samples_new = {}
+                samples_new[sam_k] = sam_v
+
+                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                number += 1
+            queue.join()
 
             command = ""
             command += "rm "+opt.outputDir+'/plots_'+opt.tag+".root"

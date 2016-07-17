@@ -376,6 +376,8 @@ class ShapeFactory:
                                 #                },                              
                                 down_variation = 0.
                                 up_variation = 0.
+
+                                #print " configurationNuis samples = ", configurationNuis
                                 
                                 if "/" in configurationNuis :
                                   #print " configurationNuis samples = ", configurationNuis
