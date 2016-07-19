@@ -1,14 +1,14 @@
-#./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl2loose -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl2loose -S Target -b -E DYJetsToLL_M-50
 #./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl2loose__hadd -S Target -b
 
-#./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl1loose -S Target -b
-#./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl1loose__EpTCorr -S Target -b -E WJetsToLNu_HT400_600
-#./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl1loose__EpTCorr__hadd -S Target -b -E WJetsToLNu_HT400_600
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl1loose -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl1loose__EpTCorr -S Target -b 
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCl1loose__EpTCorr__hadd -S Target -b 
 
 
-#./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCWgStarsel -S Target -b
-#./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCWgStarsel__hadd -S Target -b
-#./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCWgStarsel__hadd__EpTCorr   -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCWgStarsel -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCWgStarsel__hadd -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s baseW -i MCWgStarsel__hadd__EpTCorr   -S Target -b
 
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s MCl2loose -S Target -b
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s hadd -i MCl2loose -S Target -b
@@ -16,6 +16,9 @@
 
 #./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s UEPS -i MCl2loose__hadd__bSFL2pTEff__l2tight -S Target
 #./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s UEPS -i MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel -S Target
+
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s TrigEff -i MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s TrigEff -i MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel -S Target -b
 
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s JESMaxup,wwSel -C -i MCl2loose__hadd__bSFL2pTEff__l2tight -S Target -b
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_4p0fbm1  -s JESMaxdo,wwSel -C -i MCl2loose__hadd__bSFL2pTEff__l2tight -S Target -b

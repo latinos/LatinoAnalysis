@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys, re, os, os.path, math
+import sys, re, os, os.path, math, copy
 from optparse import OptionParser
 from collections import OrderedDict
 
@@ -293,9 +293,11 @@ for iProd in prodList :
       #print targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
-      if  iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
+      #if  iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
+      if not Productions[iProd]['isData']: 
+        targetListBaseW = copy.deepcopy(targetList)
         lSample = []
-        for iTarget in targetList.keys(): 
+        for iTarget in targetListBaseW.keys(): 
           if   '_000' in iTarget :
             aSample = iTarget.split('_000')[0]
             if not aSample in lSample : lSample.append(aSample)
@@ -314,20 +316,20 @@ for iProd in prodList :
               aSample = iKey.split('__part')[0] 
             #print aSample, iSample
             if aSample == iSample:
-              if not iKey in targetList.keys():
+              if not iKey in targetListBaseW.keys():
                 print 'Re-Adding split tree: ', iKey, iFile
 
 
                 if 'iihe' in os.uname()[1]:
                   if options.iStep == 'Prod' :
-                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                    targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                    targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                 else: 
                   if options.iStep == 'Prod' :
-                    targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
+                    targetListBaseW[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile 
+                    targetListBaseW[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile 
 
      
 
@@ -594,7 +596,7 @@ for iProd in prodList :
         if Productions[iProd]['isData'] : baseW = '1.'
         elif iStep == 'baseW' or ( 'isChain' in Steps[iStep] and Steps[iStep]['isChain'] and 'baseW' in Steps[iStep]['subTargets'] ): 
           oriTreeList = []
-          for kTarget in targetList.keys():
+          for kTarget in targetListBaseW.keys():
             kTargetOri = kTarget
             if '_000' in kTarget :
               kTargetOri = kTarget.split('_000')[0]

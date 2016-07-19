@@ -529,7 +529,10 @@ class EffTrgFiller(TreeCloner):
           eff_dbl_2_trailingleg = high_eff_dbl_2_trailingleg   
           eff_sgl_1             = high_eff_sgl_1               
           eff_sgl_2             = high_eff_sgl_2            
-         
+       
+          #print kindLep1,kindLep2 
+          #print pt1,eta1,pt2,eta2 
+          #print eff_dbl_1_leadingleg,eff_dbl_2_leadingleg,eff_dbl_1_trailingleg,eff_dbl_2_trailingleg,eff_sgl_1,eff_sgl_2
 
           evt_eff_error_up =   eff_sgl_1 + eff_sgl_2 -    \
                       eff_sgl_1*eff_sgl_2 +   \
@@ -537,7 +540,7 @@ class EffTrgFiller(TreeCloner):
                       (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
                       dz_eff
  
-          
+          #print evt_eff_error_up 
           #evt_eff_error_up =   eff_sgl_1 + eff_sgl_2 -    \
           #            eff_sgl_1*eff_sgl_2 +   \
           #            (eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
