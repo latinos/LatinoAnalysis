@@ -138,7 +138,7 @@ class ShapeFactory:
 
           summaryNuisanceFilePDF = open(self._outputDirPDF + '/summary_nuisance_pdf_' + cutName + '.py', 'w')
 
-          summaryNuisanceFilePDF.write("nuisances['{pdf_qq_accept']  = { \n")
+          summaryNuisanceFilePDF.write("nuisances['pdf_qq_accept']  = { \n")
           summaryNuisanceFilePDF.write("    'name'  : 'pdf_qq_accept', \n")
           summaryNuisanceFilePDF.write("    'type'  : 'lnN', \n")
           summaryNuisanceFilePDF.write("    'samples'  : { \n")
@@ -154,6 +154,15 @@ class ShapeFactory:
 
 
 
+          summaryNuisanceFileAlphaPDF = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileAlphaPDF.write("nuisances['AlphaPDFscale_qqbar_accept']  = { \n")
+          summaryNuisanceFileAlphaPDF.write("    'name'  : 'AlphaPDFscale_qqbar_accept', \n")
+          summaryNuisanceFileAlphaPDF.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileAlphaPDF.write("    'samples'  : { \n")
+
+
+
           for sampleName, sample in self._samples.iteritems():
             
             tcanvas  = ROOT.TCanvas( "c_unc_" + cutName + "_" + sampleName,      "cc"     , 800, 600 )
@@ -166,24 +175,36 @@ class ShapeFactory:
             low_qcd = 1
             high_qcd = 1
             for ipdf in range(0,10):
-              if (ipdf == 0 or ipdf == 5 or ipdf == 9) :
+                if (ipdf == 0 or ipdf == 4 or ipdf == 8) :
               
-                variableName = 'weight_' + str(ipdf)
-                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-                histoAfterCuts = fileIn.Get(shapeName)
-                totalWeighted = 0
+                    variableName = 'weight_' + str(ipdf)
+                    shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                    histoAfterCuts = fileIn.Get(shapeName)
+                    totalWeighted = 0
                 for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
-                   totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+                    totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+                  #print 'totalWeighted = ' + str(totalWeighted)
                 
                 denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
-                
-                if ipdf == 0 :
-                  nominalRatio = totalWeighted/denominator
-                elif ipdf == 4:
-                  low_qcd = totalWeighted/denominator/nominalRatio
-                elif ipdf == 8:
-                  high_qcd = totalWeighted/denominator/nominalRatio
+              #print 'denominator = ' + str(denominator)
 
+                if denominator != 0 and nominalRatio != 0 :
+                    #print 'totalWeighted = ' + str(totalWeighted)
+                    #print 'denominator = ' + str(denominator)
+                    if ipdf == 0 :
+                        nominalRatio = totalWeighted/denominator
+                        #print 'nominalRatio QCD = ' + str(nominalRatio)
+                    elif ipdf == 4:
+                        low_qcd = totalWeighted/denominator/nominalRatio
+                        #print 'low_qcd = ' + str(low_qcd)
+                    elif ipdf == 8:
+                        high_qcd = totalWeighted/denominator/nominalRatio
+                        #print 'high_qcd = ' + str(high_qcd)
+                    elif denominator == 0 :
+                        print 'Denominator is 0 !!!!'
+                    elif nominalRatio == 0:
+                        print 'nominalRatio is 0 !!!!'
+                    
             string_to_write = "         '" +  sampleName +  "': " +  str(low_qcd) + "/" + str(high_qcd) + " ,\n"
             summaryNuisanceFileQCD.write( string_to_write )
  
@@ -191,8 +212,8 @@ class ShapeFactory:
             # alpha uncertainty
             low_alpha = 1
             high_alpha = 1
-            for ipdf in range(109,111):
-              if (ipdf == 108 or ipdf == 109) :
+            for ipdf in range(109,112):
+              if (ipdf == 109 or ipdf == 110) :
               
                 variableName = 'weight_' + str(ipdf)
                 shapeName = cutName+"/"+variableName+'/histo_' + sampleName
@@ -203,11 +224,22 @@ class ShapeFactory:
                 
                 denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
                 
-                if ipdf == 109 :
-                  low_alpha = totalWeighted/denominator/nominalRatio
-                elif ipdf == 110:
-                  high_alpha = totalWeighted/denominator/nominalRatio
- 
+                if denominator != 0 and nominalRatio != 0 :
+                    #print 'totalWeighted = ' + str(totalWeighted)
+                    #print 'denominator = '   + str(denominator)
+                    #print 'nominalRatio alpha = '  + str(nominalRatio)
+                    if ipdf == 109 :
+                        low_alpha = totalWeighted/denominator/nominalRatio
+                        #print 'low_alpha = ' + str(low_alpha)
+                    elif ipdf == 110:
+                        high_alpha = totalWeighted/denominator/nominalRatio
+                        #print 'high_alpha = ' + str(high_alpha)
+                elif denominator == 0 : 
+                    print 'Denominator is 0 !!!!'
+                elif nominalRatio == 0:
+                    print 'nominalRatio is 0 !!!!'
+                
+
             string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha) + "/" + str(high_alpha) + " ,\n"
             summaryNuisanceFileAlpha.write( string_to_write )
 
@@ -229,7 +261,10 @@ class ShapeFactory:
               
               denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
               
-              histoRatioPDF.Fill(totalWeighted/denominator/nominalRatio)
+              if denominator != 0 :
+                  histoRatioPDF.Fill(totalWeighted/denominator/nominalRatio)
+              elif denominator == 0 :
+                    print 'Denominator is 0 !!!!'
 
 
             histoRatioPDF.Draw()
@@ -239,6 +274,16 @@ class ShapeFactory:
             tcanvas.Write()
             string_to_write = "         '" +  sampleName +  "': " +  str(1. + histoRatioPDF.GetRMS()) + " ,\n"
             summaryNuisanceFilePDF.write( string_to_write )
+
+
+            # pdf and alpha_s combined uncertainty
+
+            high_alpha_pdf = 1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - high_alpha) * (1. - high_alpha))
+            low_alpha_pdf  = 1. / (1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - low_alpha)  * (1. - low_alpha)))
+
+
+            string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha_pdf) + "/" + str(high_alpha_pdf) + " ,\n"
+            summaryNuisanceFileAlphaPDF.write( string_to_write )
 
 
           summaryNuisanceFilePDF.write("    }, \n")
@@ -252,6 +297,10 @@ class ShapeFactory:
           summaryNuisanceFileAlpha.write("    }, \n")
           summaryNuisanceFileAlpha.write(" } \n")
           summaryNuisanceFileAlpha.close()
+          
+          summaryNuisanceFileAlphaPDF.write("    }, \n")
+          summaryNuisanceFileAlphaPDF.write(" } \n")
+          summaryNuisanceFileAlphaPDF.close()
           
           
         print " >> all but really all "
