@@ -342,7 +342,9 @@ Lepton pT corrector
 Fake weight adder
 ====
 
-    gardener.py fakeWeights input.root output.root
+    gardener.py fakeWeights \
+                21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr/latino_Run2016B_PromptReco_DoubleEG.root \
+                latino_DD_Run2016B_PromptReco_DoubleEG.root
 
 
 WW NNLO+NNLL scales and uncertainty
