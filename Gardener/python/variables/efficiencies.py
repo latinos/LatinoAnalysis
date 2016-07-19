@@ -168,7 +168,8 @@ class EffTrgFiller(TreeCloner):
         self.cmssw = opts.cmssw
         self.fixMuonTriggerLumiRatio = opts.fixMuonTriggerLumiRatio
 
-
+        print " cmssw = ", self.cmssw
+    
         self.minpt_mu = 10
         self.maxpt_mu = 200
         self.mineta_mu = -2.4
@@ -259,7 +260,7 @@ class EffTrgFiller(TreeCloner):
 
         # only if leptons!
         if kindLep1 > -20 and kindLep2 > -20 :
-         
+                   
           vpt1 = [pt1]
           veta1 = [eta1]
           vpt2 = [pt2]
@@ -382,6 +383,42 @@ class EffTrgFiller(TreeCloner):
           eff_sgl_2             , low_eff_sgl_2             , high_eff_sgl_2              = self._getEff (pt2, eta2, singleLegB)
           
           
+          # fix for tracker inefficiency in muons
+          tracker_SF_for_muons = 1.00
+          if self.cmssw == "ICHEP2016" :
+            tracker_SF_for_muons = 0.99
+            tracker_SF_for_muons_low = 0.98
+            if abs(kindLep1) == 13 :
+               eff_sgl_1       *=  tracker_SF_for_muons
+               low_eff_sgl_1   *=  tracker_SF_for_muons_low
+               high_eff_sgl_1  *=  tracker_SF_for_muons
+               
+               eff_dbl_1_leadingleg           *=  tracker_SF_for_muons
+               low_eff_dbl_1_leadingleg       *=  tracker_SF_for_muons_low
+               high_eff_dbl_1_leadingleg      *=  tracker_SF_for_muons
+    
+               eff_dbl_1_trailingleg          *=  tracker_SF_for_muons
+               low_eff_dbl_1_trailingleg      *=  tracker_SF_for_muons_low
+               high_eff_dbl_1_trailingleg     *=  tracker_SF_for_muons
+               
+               
+            if abs(kindLep2) == 13 :
+               eff_sgl_2       *=  tracker_SF_for_muons
+               low_eff_sgl_2   *=  tracker_SF_for_muons_low
+               high_eff_sgl_2  *=  tracker_SF_for_muons
+   
+               eff_dbl_2_leadingleg           *=  tracker_SF_for_muons
+               low_eff_dbl_2_leadingleg       *=  tracker_SF_for_muons_low
+               high_eff_dbl_2_leadingleg      *=  tracker_SF_for_muons
+    
+               eff_dbl_2_trailingleg          *=  tracker_SF_for_muons
+               low_eff_dbl_2_trailingleg      *=  tracker_SF_for_muons_low
+               high_eff_dbl_2_trailingleg     *=  tracker_SF_for_muons
+   
+   
+   
+   
+   
           #evt_eff =   eff_sgl_1 + eff_sgl_2 -    \
                       #eff_sgl_1*eff_sgl_2 +   \
                       #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_trailingleg)*dz_eff +   \
@@ -402,6 +439,7 @@ class EffTrgFiller(TreeCloner):
                       #(eff_sgl_1 - eff_dbl_1_leadingleg)*(eff_sgl_2 - eff_dbl_2_leadingleg)*dz_eff
           
           #print " evt_eff, evt_eff_old = ", evt_eff ," , ", evt_eff_old
+          #print " evt_eff  = ", evt_eff 
           
           
           # Single lepton only
