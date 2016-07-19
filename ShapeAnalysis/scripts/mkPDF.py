@@ -138,7 +138,7 @@ class ShapeFactory:
 
           summaryNuisanceFilePDF = open(self._outputDirPDF + '/summary_nuisance_pdf_' + cutName + '.py', 'w')
 
-          summaryNuisanceFilePDF.write("nuisances['{pdf_qq_accept']  = { \n")
+          summaryNuisanceFilePDF.write("nuisances['pdf_qq_accept']  = { \n")
           summaryNuisanceFilePDF.write("    'name'  : 'pdf_qq_accept', \n")
           summaryNuisanceFilePDF.write("    'type'  : 'lnN', \n")
           summaryNuisanceFilePDF.write("    'samples'  : { \n")
@@ -151,6 +151,15 @@ class ShapeFactory:
           summaryNuisanceFileAlpha.write("    'name'  : 'Alphascale_qqbar_accept', \n")
           summaryNuisanceFileAlpha.write("    'type'  : 'lnN', \n")
           summaryNuisanceFileAlpha.write("    'samples'  : { \n")
+
+
+
+          summaryNuisanceFileAlphaPDF = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileAlphaPDF.write("nuisances['AlphaPDFscale_qqbar_accept']  = { \n")
+          summaryNuisanceFileAlphaPDF.write("    'name'  : 'AlphaPDFscale_qqbar_accept', \n")
+          summaryNuisanceFileAlphaPDF.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileAlphaPDF.write("    'samples'  : { \n")
 
 
 
@@ -267,6 +276,16 @@ class ShapeFactory:
             summaryNuisanceFilePDF.write( string_to_write )
 
 
+            # pdf and alpha_s combined uncertainty
+
+            high_alpha_pdf = 1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - high_alpha) * (1. - high_alpha))
+            low_alpha_pdf  = 1. / (1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - low_alpha)  * (1. - low_alpha)))
+
+
+            string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha_pdf) + "/" + str(high_alpha_pdf) + " ,\n"
+            summaryNuisanceFileAlphaPDF.write( string_to_write )
+
+
           summaryNuisanceFilePDF.write("    }, \n")
           summaryNuisanceFilePDF.write(" } \n")
           summaryNuisanceFilePDF.close()
@@ -278,6 +297,10 @@ class ShapeFactory:
           summaryNuisanceFileAlpha.write("    }, \n")
           summaryNuisanceFileAlpha.write(" } \n")
           summaryNuisanceFileAlpha.close()
+          
+          summaryNuisanceFileAlphaPDF.write("    }, \n")
+          summaryNuisanceFileAlphaPDF.write(" } \n")
+          summaryNuisanceFileAlphaPDF.close()
           
           
         print " >> all but really all "
