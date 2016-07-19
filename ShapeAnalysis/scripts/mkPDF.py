@@ -90,7 +90,7 @@ class ShapeFactory:
 
 
     # _____________________________________________________________________________
-    def makePDF(self, inputFile, outputDirPDF, cuts, samples, inputDir):
+    def makePDF(self, inputFile, outputDirPDF, cuts, samples, inputDir, structureFile):
 
         print "================="
         print "==== makePDF ===="
@@ -127,182 +127,241 @@ class ShapeFactory:
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
           
-          summaryNuisanceFileQCD = open(self._outputDirPDF + '/summary_nuisance_qcd_' + cutName + '.py', 'w')
+          # creating qqbar files
+          summaryNuisanceFileQCDqq = open(self._outputDirPDF + '/summary_nuisance_qcd_qq_' + cutName + '.py', 'w')
 
-          summaryNuisanceFileQCD.write("nuisances['QCDscale_qqbar_accept']  = { \n")
-          summaryNuisanceFileQCD.write("    'name'  : 'QCDscale_qqbar_accept', \n")
-          summaryNuisanceFileQCD.write("    'type'  : 'lnN', \n")
-          summaryNuisanceFileQCD.write("    'samples'  : { \n")
+          summaryNuisanceFileQCDqq.write("nuisances['QCDscale_qqbar_accept']  = { \n")
+          summaryNuisanceFileQCDqq.write("    'name'  : 'QCDscale_qqbar_accept', \n")
+          summaryNuisanceFileQCDqq.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileQCDqq.write("    'samples'  : { \n")
             
 
 
-          summaryNuisanceFilePDF = open(self._outputDirPDF + '/summary_nuisance_pdf_' + cutName + '.py', 'w')
+          summaryNuisanceFilePDFqq = open(self._outputDirPDF + '/summary_nuisance_pdf_qq_' + cutName + '.py', 'w')
 
-          summaryNuisanceFilePDF.write("nuisances['pdf_qq_accept']  = { \n")
-          summaryNuisanceFilePDF.write("    'name'  : 'pdf_qq_accept', \n")
-          summaryNuisanceFilePDF.write("    'type'  : 'lnN', \n")
-          summaryNuisanceFilePDF.write("    'samples'  : { \n")
-
-
-
-          summaryNuisanceFileAlpha = open(self._outputDirPDF + '/summary_nuisance_alpha_' + cutName + '.py', 'w')
-
-          summaryNuisanceFileAlpha.write("nuisances['Alphascale_qqbar_accept']  = { \n")
-          summaryNuisanceFileAlpha.write("    'name'  : 'Alphascale_qqbar_accept', \n")
-          summaryNuisanceFileAlpha.write("    'type'  : 'lnN', \n")
-          summaryNuisanceFileAlpha.write("    'samples'  : { \n")
+          summaryNuisanceFilePDFqq.write("nuisances['pdf_qqbar_accept']  = { \n")
+          summaryNuisanceFilePDFqq.write("    'name'  : 'pdf_qqbar_accept', \n")
+          summaryNuisanceFilePDFqq.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFilePDFqq.write("    'samples'  : { \n")
 
 
 
-          summaryNuisanceFileAlphaPDF = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_' + cutName + '.py', 'w')
+          summaryNuisanceFileAlphaqq = open(self._outputDirPDF + '/summary_nuisance_alpha_qq_' + cutName + '.py', 'w')
 
-          summaryNuisanceFileAlphaPDF.write("nuisances['AlphaPDFscale_qqbar_accept']  = { \n")
-          summaryNuisanceFileAlphaPDF.write("    'name'  : 'AlphaPDFscale_qqbar_accept', \n")
-          summaryNuisanceFileAlphaPDF.write("    'type'  : 'lnN', \n")
-          summaryNuisanceFileAlphaPDF.write("    'samples'  : { \n")
+          summaryNuisanceFileAlphaqq.write("nuisances['Alphascale_qqbar_accept']  = { \n")
+          summaryNuisanceFileAlphaqq.write("    'name'  : 'Alphascale_qqbar_accept', \n")
+          summaryNuisanceFileAlphaqq.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileAlphaqq.write("    'samples'  : { \n")
 
+
+
+          summaryNuisanceFileAlphaPDFqq = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_qq_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileAlphaPDFqq.write("nuisances['AlphaPDFscale_qqbar_accept']  = { \n")
+          summaryNuisanceFileAlphaPDFqq.write("    'name'  : 'AlphaPDFscale_qqbar_accept', \n")
+          summaryNuisanceFileAlphaPDFqq.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileAlphaPDFqq.write("    'samples'  : { \n")
+
+
+          # creating gg files
+          summaryNuisanceFileQCDgg = open(self._outputDirPDF + '/summary_nuisance_qcd_gg_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileQCDgg.write("nuisances['QCDscale_gg_accept']  = { \n")
+          summaryNuisanceFileQCDgg.write("    'name'  : 'QCDscale_gg_accept', \n")
+          summaryNuisanceFileQCDgg.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileQCDgg.write("    'samples'  : { \n")
+            
+
+
+          summaryNuisanceFilePDFgg = open(self._outputDirPDF + '/summary_nuisance_pdf_gg_' + cutName + '.py', 'w')
+
+          summaryNuisanceFilePDFgg.write("nuisances['pdf_gg_accept']  = { \n")
+          summaryNuisanceFilePDFgg.write("    'name'  : 'pdf_gg_accept', \n")
+          summaryNuisanceFilePDFgg.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFilePDFgg.write("    'samples'  : { \n")
+
+
+
+          summaryNuisanceFileAlphagg = open(self._outputDirPDF + '/summary_nuisance_alpha_gg_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileAlphagg.write("nuisances['Alphascale_gg_accept']  = { \n")
+          summaryNuisanceFileAlphagg.write("    'name'  : 'Alphascale_gg_accept', \n")
+          summaryNuisanceFileAlphagg.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileAlphagg.write("    'samples'  : { \n")
+
+
+
+          summaryNuisanceFileAlphaPDFgg = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_' + cutName + '.py', 'w')
+
+          summaryNuisanceFileAlphaPDFgg.write("nuisances['AlphaPDFscale_gg_accept']  = { \n")
+          summaryNuisanceFileAlphaPDFgg.write("    'name'  : 'AlphaPDFscale_gg_accept', \n")
+          summaryNuisanceFileAlphaPDFgg.write("    'type'  : 'lnN', \n")
+          summaryNuisanceFileAlphaPDFgg.write("    'samples'  : { \n")
 
 
           for sampleName, sample in self._samples.iteritems():
             
-            tcanvas  = ROOT.TCanvas( "c_unc_" + cutName + "_" + sampleName,      "cc"     , 800, 600 )
+              #if structureFile[sampleName]['isFromGluons'] == 0 :
+              tcanvas  = ROOT.TCanvas( "c_unc_" + cutName + "_" + sampleName,      "cc"     , 800, 600 )
 
-            nominalRatio = 1.
+              nominalRatio = 1.
 
-            # get the after-cut histogram
+              # get the after-cut histogram
 
-            # qcd uncertainty
-            low_qcd = 1
-            high_qcd = 1
-            for ipdf in range(0,10):
-                if (ipdf == 0 or ipdf == 4 or ipdf == 8) :
-              
-                    variableName = 'weight_' + str(ipdf)
-                    shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-                    histoAfterCuts = fileIn.Get(shapeName)
-                    totalWeighted = 0
-                for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
-                    totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
-                  #print 'totalWeighted = ' + str(totalWeighted)
+              # qcd uncertainty
+              low_qcd = 1
+              high_qcd = 1
+              for ipdf in range(0,10):
+                  if (ipdf == 0 or ipdf == 4 or ipdf == 8) :
+                      
+                      variableName = 'weight_' + str(ipdf)
+                      shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                      histoAfterCuts = fileIn.Get(shapeName)
+                      totalWeighted = 0
+                      for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
+                          totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+                          #print 'totalWeighted = ' + str(totalWeighted) 
                 
-                denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
-              #print 'denominator = ' + str(denominator)
+                      denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
+                      #print 'denominator = ' + str(denominator)
 
-                if denominator != 0 and nominalRatio != 0 :
-                    #print 'totalWeighted = ' + str(totalWeighted)
-                    #print 'denominator = ' + str(denominator)
-                    if ipdf == 0 :
-                        nominalRatio = totalWeighted/denominator
-                        #print 'nominalRatio QCD = ' + str(nominalRatio)
-                    elif ipdf == 4:
-                        low_qcd = totalWeighted/denominator/nominalRatio
-                        #print 'low_qcd = ' + str(low_qcd)
-                    elif ipdf == 8:
-                        high_qcd = totalWeighted/denominator/nominalRatio
-                        #print 'high_qcd = ' + str(high_qcd)
-                    elif denominator == 0 :
-                        print 'Denominator is 0 !!!!'
-                    elif nominalRatio == 0:
-                        print 'nominalRatio is 0 !!!!'
+                      if denominator != 0 and nominalRatio != 0 :
+                          #print 'totalWeighted = ' + str(totalWeighted)
+                          #print 'denominator = ' + str(denominator)
+                          if ipdf == 0 :
+                              nominalRatio = totalWeighted/denominator
+                              #print 'nominalRatio QCD = ' + str(nominalRatio)
+                          elif ipdf == 4:
+                              low_qcd = totalWeighted/denominator/nominalRatio
+                              #print 'low_qcd = ' + str(low_qcd)
+                          elif ipdf == 8:
+                              high_qcd = totalWeighted/denominator/nominalRatio
+                              #print 'high_qcd = ' + str(high_qcd)
+                          elif denominator == 0 :
+                              print 'Denominator is 0 !!!!'
+                          elif nominalRatio == 0:
+                              print 'nominalRatio is 0 !!!!'
                     
-            string_to_write = "         '" +  sampleName +  "': " +  str(low_qcd) + "/" + str(high_qcd) + " ,\n"
-            summaryNuisanceFileQCD.write( string_to_write )
+              string_to_write = "         '" +  sampleName +  "': " +  str(low_qcd) + "/" + str(high_qcd) + " ,\n"
+              if structureFile[sampleName]['isFromGluons'] == 0 :
+                  summaryNuisanceFileQCDqq.write( string_to_write )
+              elif structureFile[sampleName]['isFromGluons'] == 1 :
+                  summaryNuisanceFileQCDgg.write( string_to_write )
  
  
-            # alpha uncertainty
-            low_alpha = 1
-            high_alpha = 1
-            for ipdf in range(109,112):
-              if (ipdf == 109 or ipdf == 110) :
-              
-                variableName = 'weight_' + str(ipdf)
-                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-                histoAfterCuts = fileIn.Get(shapeName)
-                totalWeighted = 0
-                for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
-                   totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
+              # alpha uncertainty
+              low_alpha = 1
+              high_alpha = 1
+              for ipdf in range(109,112):
+                  if (ipdf == 109 or ipdf == 110) :
+                      
+                      variableName = 'weight_' + str(ipdf)
+                      shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                      histoAfterCuts = fileIn.Get(shapeName)
+                      totalWeighted = 0
+                      for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
+                          totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
                 
-                denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
-                
-                if denominator != 0 and nominalRatio != 0 :
-                    #print 'totalWeighted = ' + str(totalWeighted)
-                    #print 'denominator = '   + str(denominator)
-                    #print 'nominalRatio alpha = '  + str(nominalRatio)
-                    if ipdf == 109 :
-                        low_alpha = totalWeighted/denominator/nominalRatio
-                        #print 'low_alpha = ' + str(low_alpha)
-                    elif ipdf == 110:
-                        high_alpha = totalWeighted/denominator/nominalRatio
-                        #print 'high_alpha = ' + str(high_alpha)
-                elif denominator == 0 : 
-                    print 'Denominator is 0 !!!!'
-                elif nominalRatio == 0:
-                    print 'nominalRatio is 0 !!!!'
+                      denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
+                              
+                      if denominator != 0 and nominalRatio != 0 :
+                          if ipdf == 109 :
+                              low_alpha = totalWeighted/denominator/nominalRatio
+                          elif ipdf == 110:
+                              high_alpha = totalWeighted/denominator/nominalRatio
+                          elif denominator == 0 : 
+                              print 'Denominator is 0 !!!!'
+                          elif nominalRatio == 0:
+                              print 'nominalRatio is 0 !!!!'
                 
 
-            string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha) + "/" + str(high_alpha) + " ,\n"
-            summaryNuisanceFileAlpha.write( string_to_write )
+              string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha) + "/" + str(high_alpha) + " ,\n"
+              if structureFile[sampleName]['isFromGluons'] == 0 :
+                  summaryNuisanceFileAlphaqq.write( string_to_write )
+              if structureFile[sampleName]['isFromGluons'] == 1 :
+                  summaryNuisanceFileAlphagg.write( string_to_write )
+              
 
         
-            # pdf uncertainty
-            histoRatioPDF = ROOT.TH1F('ratio_pdf_', cutName + '_' + sampleName, 100,0, 2)
-            for ipdf in range(10,109):
-              variableName = 'weight_' + str(ipdf)
-              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-              #print '     -> shapeName = ', shapeName,
-              histoAfterCuts = fileIn.Get(shapeName)
-              totalWeighted = 0
-              #print ' mean*integral = ', histoAfterCuts.GetMean(), ' * ', histoAfterCuts.Integral(), ' = ', histoAfterCuts.GetMean() * histoAfterCuts.Integral(),
-              for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
-                 totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
-              #print ' ---> integral = ',    totalWeighted
+              # pdf uncertainty
+              histoRatioPDF = ROOT.TH1F('ratio_pdf_', cutName + '_' + sampleName, 100,0, 2)
+              for ipdf in range(10,109):
+                  variableName = 'weight_' + str(ipdf)
+                  shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                  histoAfterCuts = fileIn.Get(shapeName)
+                  totalWeighted = 0
+                  for iBin in range(1, histoAfterCuts.GetNbinsX()+1):
+                      totalWeighted += histoAfterCuts.GetBinContent(iBin) * histoAfterCuts.GetBinCenter(iBin)
               
-              #print 'preCutsHistograms[', sampleName, '] = ', preCutsHistograms[sampleName]
+                  denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
               
-              denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
+                  if denominator != 0 :
+                      histoRatioPDF.Fill(totalWeighted/denominator/nominalRatio)
+                  elif denominator == 0 :
+                      print 'Denominator is 0 !!!!'
+                      
+
+              histoRatioPDF.Draw()
+              tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".png")
+              tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".root")
+
+              tcanvas.Write()
+              string_to_write = "         '" +  sampleName +  "': " +  str(1. + histoRatioPDF.GetRMS()) + " ,\n"
+              if structureFile[sampleName]['isFromGluons'] == 0 :
+                  summaryNuisanceFilePDFqq.write( string_to_write )
+              if structureFile[sampleName]['isFromGluons'] == 1 :
+                  summaryNuisanceFilePDFgg.write( string_to_write )
+
+
+              # pdf and alpha_s combined uncertainty
+
+              high_alpha_pdf = 1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - high_alpha) * (1. - high_alpha))
+              low_alpha_pdf  = 1. / (1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - low_alpha)  * (1. - low_alpha)))
               
-              if denominator != 0 :
-                  histoRatioPDF.Fill(totalWeighted/denominator/nominalRatio)
-              elif denominator == 0 :
-                    print 'Denominator is 0 !!!!'
+
+              string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha_pdf) + "/" + str(high_alpha_pdf) + " ,\n"
+              if structureFile[sampleName]['isFromGluons'] == 0 :
+                  summaryNuisanceFileAlphaPDFqq.write( string_to_write )
+              if structureFile[sampleName]['isFromGluons'] == 1 :
+                  summaryNuisanceFileAlphaPDFgg.write( string_to_write )
 
 
-            histoRatioPDF.Draw()
-            tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".png")
-            tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".root")
-
-            tcanvas.Write()
-            string_to_write = "         '" +  sampleName +  "': " +  str(1. + histoRatioPDF.GetRMS()) + " ,\n"
-            summaryNuisanceFilePDF.write( string_to_write )
-
-
-            # pdf and alpha_s combined uncertainty
-
-            high_alpha_pdf = 1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - high_alpha) * (1. - high_alpha))
-            low_alpha_pdf  = 1. / (1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - low_alpha)  * (1. - low_alpha)))
-
-
-            string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha_pdf) + "/" + str(high_alpha_pdf) + " ,\n"
-            summaryNuisanceFileAlphaPDF.write( string_to_write )
-
-
-          summaryNuisanceFilePDF.write("    }, \n")
-          summaryNuisanceFilePDF.write(" } \n")
-          summaryNuisanceFilePDF.close()
-
-          summaryNuisanceFileQCD.write("    }, \n")
-          summaryNuisanceFileQCD.write(" } \n")
-          summaryNuisanceFileQCD.close()
-
-          summaryNuisanceFileAlpha.write("    }, \n")
-          summaryNuisanceFileAlpha.write(" } \n")
-          summaryNuisanceFileAlpha.close()
-          
-          summaryNuisanceFileAlphaPDF.write("    }, \n")
-          summaryNuisanceFileAlphaPDF.write(" } \n")
-          summaryNuisanceFileAlphaPDF.close()
+          # closing qqbar files
+          summaryNuisanceFilePDFqq.write("    }, \n")
+          summaryNuisanceFilePDFqq.write(" } \n")
+          summaryNuisanceFilePDFqq.close()
+              
+          summaryNuisanceFileQCDqq.write("    }, \n")
+          summaryNuisanceFileQCDqq.write(" } \n")
+          summaryNuisanceFileQCDqq.close()
+              
+          summaryNuisanceFileAlphaqq.write("    }, \n")
+          summaryNuisanceFileAlphaqq.write(" } \n")
+          summaryNuisanceFileAlphaqq.close()
+              
+          summaryNuisanceFileAlphaPDFqq.write("    }, \n")
+          summaryNuisanceFileAlphaPDFqq.write(" } \n")
+          summaryNuisanceFileAlphaPDFqq.close()
           
           
+          # closing gg files
+          summaryNuisanceFilePDFgg.write("    }, \n")
+          summaryNuisanceFilePDFgg.write(" } \n")
+          summaryNuisanceFilePDFgg.close()
+              
+          summaryNuisanceFileQCDgg.write("    }, \n")
+          summaryNuisanceFileQCDgg.write(" } \n")
+          summaryNuisanceFileQCDgg.close()
+              
+          summaryNuisanceFileAlphagg.write("    }, \n")
+          summaryNuisanceFileAlphagg.write(" } \n")
+          summaryNuisanceFileAlphagg.close()
+              
+          summaryNuisanceFileAlphaPDFgg.write("    }, \n")
+          summaryNuisanceFileAlphaPDFgg.write(" } \n")
+          summaryNuisanceFileAlphaPDFgg.close()
+
+
         print " >> all but really all "
         
 
@@ -377,6 +436,7 @@ if __name__ == '__main__':
     parser.add_option('--outputDirPDF'   , dest='outputDirPDF'   , help='output directory for values and plots'           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                      , default='input.root')
     parser.add_option('--inputDir'       , dest='inputDir'       , help='input directory where to find the default trees' , default='./data/')
+    parser.add_option('--structureFile'      , dest='structureFile'     , help='file with datacard configurations'          , default=None )
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -418,7 +478,19 @@ if __name__ == '__main__':
       handle.close()
     
    
-    factory.makePDF( opt.inputFile ,opt.outputDirPDF, cuts, samples, opt.inputDir)
+    # ~~~~
+    structure = {}
+    if opt.structureFile == None :
+       print " Please provide the datacard structure "
+       exit ()
+       
+    if os.path.exists(opt.structureFile) :
+      handle = open(opt.structureFile,'r')
+      exec(handle)
+      handle.close()
+
+
+    factory.makePDF( opt.inputFile ,opt.outputDirPDF, cuts, samples, opt.inputDir, structure)
     
     print '... and now closing ...'
         
