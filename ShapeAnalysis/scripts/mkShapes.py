@@ -211,11 +211,12 @@ if __name__ == '__main__':
                 os.system(command)
               os.system("hadd "+opt.outputDir+'/plots_'+opt.tag+".root "+opt.outputDir+"/plots_"+opt.tag+"_temp*")
 
-            for i in xrange(number):
-              if opt.doCleanup :
+
+            if opt.doCleanup=="True" :
+              os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_temp*.root")
+              for i in xrange(number):
                 os.system("rm sub"+str(i)+".py")
                 os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root")
-                os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_temp*.root")
             
       
     else:
