@@ -242,7 +242,7 @@ class ShapeFactory:
                           elif nominalRatio == 0:
                               print 'nominalRatio is 0 !!!!'
 
-              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_qcd,high_qcd)
+              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(high_qcd,low_qcd)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileQCDqq.write( string_to_write )
               elif structureFile[sampleName]['isFromGluons'] == 1 :
@@ -274,7 +274,7 @@ class ShapeFactory:
                           elif nominalRatio == 0:
                               print 'nominalRatio is 0 !!!!'
                 
-              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_alpha,high_alpha)
+              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(high_alpha,low_alpha)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileAlphaqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
@@ -318,7 +318,7 @@ class ShapeFactory:
               high_alpha_pdf = 1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - high_alpha) * (1. - high_alpha))
               low_alpha_pdf  = 1. / (1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - low_alpha)  * (1. - low_alpha)))
               
-              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_alpha_pdf,high_alpha_pdf)
+              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(high_alpha_pdf,low_alpha_pdf)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileAlphaPDFqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
