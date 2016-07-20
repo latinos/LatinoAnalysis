@@ -15,6 +15,8 @@ from array import array
 from collections import OrderedDict
 import math
 
+import os
+
 #import os.path
 
 
@@ -328,37 +330,89 @@ class ShapeFactory:
           # closing qqbar files
           summaryNuisanceFilePDFqq.write("    }, \n")
           summaryNuisanceFilePDFqq.write(" } \n")
+          summaryNuisanceFilePDFqq.write("\n")
+          summaryNuisanceFilePDFqq.write("\n")
           summaryNuisanceFilePDFqq.close()
               
           summaryNuisanceFileQCDqq.write("    }, \n")
           summaryNuisanceFileQCDqq.write(" } \n")
+          summaryNuisanceFileQCDqq.write("\n")
+          summaryNuisanceFileQCDqq.write("\n")
           summaryNuisanceFileQCDqq.close()
               
           summaryNuisanceFileAlphaqq.write("    }, \n")
           summaryNuisanceFileAlphaqq.write(" } \n")
+          summaryNuisanceFileAlphaqq.write("\n")
+          summaryNuisanceFileAlphaqq.write("\n")
           summaryNuisanceFileAlphaqq.close()
               
           summaryNuisanceFileAlphaPDFqq.write("    }, \n")
           summaryNuisanceFileAlphaPDFqq.write(" } \n")
+          summaryNuisanceFileAlphaPDFqq.write("\n")
+          summaryNuisanceFileAlphaPDFqq.write("\n")
           summaryNuisanceFileAlphaPDFqq.close()
           
           
           # closing gg files
           summaryNuisanceFilePDFgg.write("    }, \n")
           summaryNuisanceFilePDFgg.write(" } \n")
+          summaryNuisanceFilePDFgg.write("\n")
+          summaryNuisanceFilePDFgg.write("\n")
           summaryNuisanceFilePDFgg.close()
               
           summaryNuisanceFileQCDgg.write("    }, \n")
           summaryNuisanceFileQCDgg.write(" } \n")
+          summaryNuisanceFileQCDgg.write("\n")
+          summaryNuisanceFileQCDgg.write("\n")
           summaryNuisanceFileQCDgg.close()
               
           summaryNuisanceFileAlphagg.write("    }, \n")
           summaryNuisanceFileAlphagg.write(" } \n")
+          summaryNuisanceFileAlphagg.write("\n")
+          summaryNuisanceFileAlphagg.write("\n")
           summaryNuisanceFileAlphagg.close()
               
           summaryNuisanceFileAlphaPDFgg.write("    }, \n")
           summaryNuisanceFileAlphaPDFgg.write(" } \n")
+          summaryNuisanceFileAlphaPDFgg.write("\n")
+          summaryNuisanceFileAlphaPDFgg.write("\n")
           summaryNuisanceFileAlphaPDFgg.close()
+
+
+          # merging and cleaning ;)
+
+        for cutName in self._cuts :
+            filenames = [self._outputDirPDF + '/summary_nuisance_pdf_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_pdf_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_pdf_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
+
+            filenames = [self._outputDirPDF + '/summary_nuisance_qcd_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_qcd_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_qcd_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
+
+            filenames = [self._outputDirPDF + '/summary_nuisance_alpha_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_alpha_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_alpha_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
+
+            filenames = [self._outputDirPDF + '/summary_nuisance_alpha_pdf_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_alpha_pdf_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
 
 
         print " >> all but really all "
