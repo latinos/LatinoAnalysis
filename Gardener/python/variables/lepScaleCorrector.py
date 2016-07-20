@@ -46,12 +46,15 @@ class LeptonPtCorrector(TreeCloner):
         #    https://github.com/ECALELFS/ScalesSmearings/blob/master/80X_10JunGoldplusDCS_approval_scales.dat
         #    https://github.com/ECALELFS/ScalesSmearings/blob/master/80X_10JunGoldplusDCS_approval_smearings.dat
         #
+        # from Giuseppe: /afs/cern.ch/user/g/gfasanel/public/test_2016B/80X_DCS05July_plus_Golden22_scales.dat
+        #
          
         self.cmssw = opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
         if opts.cmssw == 'ICHEP2016' :
           if opts.FileWithPtScaleDataEle == None :
-            opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_28JunPrompt_2016_scales.dat'
+            opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_DCS05July_plus_Golden22_scales.dat'
+            #opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_28JunPrompt_2016_scales.dat'
           print " opts.FileWithPtScaleDataEle = " , opts.FileWithPtScaleDataEle
           if opts.FileWithPtSmearingMCEle == None :
             opts.FileWithPtSmearingMCEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_28JunPrompt_2016_smearings.dat'
