@@ -388,6 +388,9 @@ Module: efftfiller
      
     gardener.py  efftfiller    input.root output.root
 
+    gardener.py  efftfiller   --cmssw=ICHEP2016  /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125_idiso.root  \
+         /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125_idiso_trigg.root
+    
            
 Id/isolation scale factors
 ====
@@ -398,6 +401,9 @@ Module: idisofiller
     
     gardener.py  idisofiller    -r     eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel__TrigEff/   \
          /tmp/amassiro/test/
+    
+    gardener.py  idisofiller   --cmssw=ICHEP2016  /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root  \
+         /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125_idiso.root
     
     
 Kinematic variables
