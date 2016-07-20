@@ -267,7 +267,6 @@ for iProd in prodList :
             if options.redo or not iFile in FileExistList :
               if selectSample and iSample.replace('_25ns','') in iFile:
                 iKey = iFile.replace('latino_','').replace('.root','')
-                #print iKey
                 if '_000' in iKey :
                   aSample = iKey.split('_000')[0]
                 elif '__part' in iKey :
@@ -392,7 +391,6 @@ for iProd in prodList :
 
         targetList = targetGroupList 
 
-      #print targetList 
       # Check job in not already running before allowing it ? 
       keysToDel=[] 
       for iTarget in targetList:

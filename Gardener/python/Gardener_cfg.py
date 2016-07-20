@@ -634,7 +634,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['puW','do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin','l3kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin','l3kin'],
                   'XonlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' ,
@@ -1843,6 +1843,12 @@ Steps= {
                   'command'    : 'gardener.py filter -f \'isJsonOk>0.5\' '
                 } ,
 
+  'fakeW'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py fakeWeights ',
+                } ,
 
 
   'puadder'   : {
@@ -1858,6 +1864,14 @@ Steps= {
                   'do4Data'    : False ,
                   'command'    : 'gardener.py puadder --data=/user/xjanssen/HWW2015/pudata/PileupHistogram_805_28Jun.root --HistName=pileup --branch=puW2p6 --kind=trpu '
                 }, 
+
+  'pu4p3'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py puadder --data=/user/xjanssen/HWW2015/pudata/PileupHistogram_805_5Jul_4fb.root --HistName=pileup --branch=puW4p3 --kind=trpu '
+                },
+
 
   'pu6p3'   : {
                   'isChain'    : False ,
