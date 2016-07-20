@@ -71,6 +71,10 @@ class IdIsoSFFiller(TreeCloner):
         if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectronAlternative = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/electrons_firstPart.txt'   
  
            
+        print "opts.idScaleFactorsFileMu = ", opts.idScaleFactorsFileMu
+        print "opts.isoTightScaleFactorsFileMu = ", opts.isoTightScaleFactorsFileMu
+        print "opts.isoLooseScaleFactorsFileMu = ", opts.isoLooseScaleFactorsFileMu
+        
         file_idScaleFactorsFileMu  = open (opts.idScaleFactorsFileMu)
         file_isoTightScaleFactorsFileMu  = open (opts.isoTightScaleFactorsFileMu)
         file_isoLooseScaleFactorsFileMu  = open (opts.isoLooseScaleFactorsFileMu)
