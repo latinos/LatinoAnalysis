@@ -157,8 +157,8 @@ class ShapeFactory:
 
           summaryNuisanceFileAlphaPDFqq = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_qq_' + cutName + '.py', 'w')
 
-          summaryNuisanceFileAlphaPDFqq.write("nuisances['AlphaPDFscale_qqbar_accept']  = { \n")
-          summaryNuisanceFileAlphaPDFqq.write("    'name'  : 'AlphaPDFscale_qqbar_accept', \n")
+          summaryNuisanceFileAlphaPDFqq.write("nuisances['pdf_qqbar_accept']  = { \n")
+          summaryNuisanceFileAlphaPDFqq.write("    'name'  : 'pdf_qqbar_accept', \n")
           summaryNuisanceFileAlphaPDFqq.write("    'type'  : 'lnN', \n")
           summaryNuisanceFileAlphaPDFqq.write("    'samples'  : { \n")
 
@@ -191,10 +191,10 @@ class ShapeFactory:
 
 
 
-          summaryNuisanceFileAlphaPDFgg = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_' + cutName + '.py', 'w')
+          summaryNuisanceFileAlphaPDFgg = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_gg_' + cutName + '.py', 'w')
 
-          summaryNuisanceFileAlphaPDFgg.write("nuisances['AlphaPDFscale_gg_accept']  = { \n")
-          summaryNuisanceFileAlphaPDFgg.write("    'name'  : 'AlphaPDFscale_gg_accept', \n")
+          summaryNuisanceFileAlphaPDFgg.write("nuisances['pdf_gg_accept']  = { \n")
+          summaryNuisanceFileAlphaPDFgg.write("    'name'  : 'pdf_gg_accept', \n")
           summaryNuisanceFileAlphaPDFgg.write("    'type'  : 'lnN', \n")
           summaryNuisanceFileAlphaPDFgg.write("    'samples'  : { \n")
 
@@ -241,8 +241,8 @@ class ShapeFactory:
                               print 'Denominator is 0 !!!!'
                           elif nominalRatio == 0:
                               print 'nominalRatio is 0 !!!!'
-                    
-              string_to_write = "         '" +  sampleName +  "': " +  str(low_qcd) + "/" + str(high_qcd) + " ,\n"
+
+              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_qcd,high_qcd)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileQCDqq.write( string_to_write )
               elif structureFile[sampleName]['isFromGluons'] == 1 :
@@ -274,8 +274,7 @@ class ShapeFactory:
                           elif nominalRatio == 0:
                               print 'nominalRatio is 0 !!!!'
                 
-
-              string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha) + "/" + str(high_alpha) + " ,\n"
+              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_alpha,high_alpha)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileAlphaqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
@@ -306,7 +305,8 @@ class ShapeFactory:
               tcanvas.SaveAs(self._outputDirPDF + "/" + "c_unc_" + cutName + "_" + sampleName + ".root")
 
               tcanvas.Write()
-              string_to_write = "         '" +  sampleName +  "': " +  str(1. + histoRatioPDF.GetRMS()) + " ,\n"
+
+              string_to_write = "         '" +  sampleName +  "': %4.3f,\n" %(1. + histoRatioPDF.GetRMS())
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFilePDFqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
@@ -318,8 +318,7 @@ class ShapeFactory:
               high_alpha_pdf = 1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - high_alpha) * (1. - high_alpha))
               low_alpha_pdf  = 1. / (1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - low_alpha)  * (1. - low_alpha)))
               
-
-              string_to_write = "         '" +  sampleName +  "': " +  str(low_alpha_pdf) + "/" + str(high_alpha_pdf) + " ,\n"
+              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_alpha_pdf,high_alpha_pdf)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileAlphaPDFqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
