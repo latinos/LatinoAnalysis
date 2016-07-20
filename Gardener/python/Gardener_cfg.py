@@ -232,6 +232,17 @@ Productions= {
                        },
 
 
+  '07Jun2016_spring16_mAODv2_6p3fbm1'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod_v2.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun07/MC/v2/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        # 6.3 fb-1
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_8Jul_6p3fb.root' ,
+                       },
+
+
   '07Jun2016_Run2016B_PromptReco' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
@@ -1832,6 +1843,12 @@ Steps= {
                   'command'    : 'gardener.py filter -f \'isJsonOk>0.5\' '
                 } ,
 
+  'fakeW'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py fakeWeights ',
+                } ,
 
 
   'puadder'   : {
@@ -1847,6 +1864,14 @@ Steps= {
                   'do4Data'    : False ,
                   'command'    : 'gardener.py puadder --data=/user/xjanssen/HWW2015/pudata/PileupHistogram_805_28Jun.root --HistName=pileup --branch=puW2p6 --kind=trpu '
                 }, 
+
+  'pu4p3'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py puadder --data=/user/xjanssen/HWW2015/pudata/PileupHistogram_805_5Jul_4fb.root --HistName=pileup --branch=puW4p3 --kind=trpu '
+                },
+
 
   'pu6p3'   : {
                   'isChain'    : False ,
