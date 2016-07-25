@@ -111,7 +111,7 @@ if __name__ == '__main__':
     print " outputDir =          ", opt.outputDir
  
     
-    TFormula.SetMaxima(1000000,10000,10000000)
+    #TFormula.SetMaxima(1000000,10000,10000000)
 
     if not opt.debug:
         pass
