@@ -67,7 +67,8 @@ class IdIsoSFFiller(TreeCloner):
         
         if opts.tkSCFileElectron == None :
           if opts.cmssw == "ICHEP2016" : 
-            opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi.txt_SF2D.root'
+            #opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi.txt_SF2D.root'
+            opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi_nVtx.txt_SF2D.root'
           else :
             opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/eleRECO.txt.egamma_SF2D.root'
  
@@ -133,10 +134,23 @@ class IdIsoSFFiller(TreeCloner):
         #print ' x,y(max),z,err = ', eta, ' - ', min(pt, ptmax), '(', ptmax, ') - ', value, ' - ', error
         return value, error
 
+    def _getHistoValueNVTX(self, h2, nvtx, eta):
+
+        nbins = h2.GetNbinsY()
+        nvtxmax = -1
+        if (nvtxmax <= 0.) : 
+          nvtxmax = h2.GetYaxis().GetBinCenter(nbins)
+        
+        # eta on x-axis, nvtx on y-axis
+        value = h2.GetBinContent(h2.FindBin(eta, min(nvtx, nvtxmax)))
+        error = h2.GetBinError  (h2.FindBin(eta, min(nvtx, nvtxmax)))
+        
+        return value, error
+
 
 
     #                                              wantOnlyRecoEff = 0 ( idiso scale factors only ), 1 (reco scale factors only), 2 ( idiso * reco scale factors )
-    def _getWeight (self, kindLep, pt, eta, tight, wantOnlyRecoEff):
+    def _getWeight (self, kindLep, pt, eta, tight, wantOnlyRecoEff, nvtx):
 
         # fix underflow and overflow
 
@@ -185,7 +199,10 @@ class IdIsoSFFiller(TreeCloner):
             if kindLep == 'ele' :
               #print " self.idIsoScaleFactors[", kindLep, "] = ", self.idIsoScaleFactors[kindLep]
               
-              tkSC, tkSC_err = self._getHistoValue(self.tkSCElectronHisto, pt, eta)
+              
+              #tkSC, tkSC_err = self._getHistoValue(self.tkSCElectronHisto, pt, eta)
+              tkSC, tkSC_err = self._getHistoValueNVTX(self.tkSCElectronHisto, nvtx, eta)
+              
               #print ' pt, eta, tkSC, tkSC_err = ', pt, ' ', eta, ' ', tkSC, ' ', tkSC_err
               
               for point in self.idIsoScaleFactors[kindLep] : 
@@ -417,21 +434,21 @@ class IdIsoSFFiller(TreeCloner):
                 kindLep = 'mu'
  
               #                                                              is tight lepton? 1=tight, 0=loose
-              w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   0)
+              w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   0,     itree.nvtx)
              
               bvector_idiso.push_back(w)
               bvector_idiso_Up.push_back(w+error_w_up)
               bvector_idiso_Down.push_back(w-error_w_lo)             
               bvector_idiso_Syst.push_back(w+error_w_syst)             
 
-              w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   1)
+              w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   1,     itree.nvtx)
              
               bvector_reco.push_back(w)
               bvector_reco_Up.push_back(w+error_w_up)
               bvector_reco_Down.push_back(w-error_w_lo)             
 
 
-              loose_w, error_loose_w_lo, error_loose_w_up, error_loose_w_syst = self._getWeight (kindLep, pt, eta, 0,       0)
+              loose_w, error_loose_w_lo, error_loose_w_up, error_loose_w_syst = self._getWeight (kindLep, pt, eta, 0,       0,     itree.nvtx)
              
               bvector_idisoLoose.push_back(loose_w)
               bvector_idisoLoose_Up.push_back(loose_w+error_loose_w_up)

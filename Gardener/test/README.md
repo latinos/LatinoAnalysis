@@ -415,6 +415,9 @@ Module: idisofiller
          /tmp/amassiro/latino_DYJetsToLL_M-50_0001__part2_idiso.root
     
     
+    gardener.py  idisofiller   --cmssw=ICHEP2016 --isoideleAltLumiRatio=0.079  /tmp/amassiro/latino_DYJetsToLL_M-50_0001__part2_idiso_trigg.root  \
+         /tmp/amassiro/latino_DYJetsToLL_M-50_0001__part2_idiso_trigg_again_2.root
+    
     
 Kinematic variables
 ====
