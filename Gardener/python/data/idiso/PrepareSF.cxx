@@ -345,7 +345,8 @@ latinoDATA->Add("/tmp/amassiro/eosBig/cms/store/group/phys_higgs/cmshww/amassiro
 
 
 TChain* latinoMC = new TChain("latino")
-latinoMC->Add("/tmp/amassiro/latino_DYJetsToLL_M-50_0001__part2_idiso_trigg_again.root");
+// latinoMC->Add("/tmp/amassiro/latino_DYJetsToLL_M-50_0001__part2_idiso_trigg_again.root");
+latinoMC->Add("/tmp/amassiro/latino_DYJetsToLL_M-50_0001__part2_idiso_trigg_again_2.root");
 
 TChain* latinoDATA = new TChain("latino")
 
@@ -374,12 +375,12 @@ TH1F* hData = new TH1F("hData", "", 100,-3.2,3.2)
 // latinoDATA->Draw("std_vector_lepton_eta[0] >> hData", "(abs(std_vector_lepton_flavour[0]) == 11) * ((abs(std_vector_lepton_flavour[1]) == 11)) * trigger * (std_vector_lepton_pt[0] > 30 && std_vector_lepton_pt[1] > 20)", "same")
 
 
-// latinoMC->Draw("std_vector_lepton_eta[0] >> hMC", "(mll>50) * (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)))* (abs(std_vector_lepton_flavour[0]) == 11) * ((abs(std_vector_lepton_flavour[1]) == 11)) * baseW * puW*effTrigW_DbleEle*std_vector_lepton_idisoW[0]*std_vector_lepton_idisoW[1] * bPogSF * std_vector_lepton_recoW[0] * std_vector_lepton_recoW[1]*1327139./116631 * 0.2 *4 *4 *1.5  * GEN_weight_SM/abs(GEN_weight_SM)*std_vector_lepton_genmatched[0]*std_vector_lepton_genmatched[1] * (std_vector_lepton_pt[0] > 30 && std_vector_lepton_pt[1] > 20)")
+latinoMC->Draw("std_vector_lepton_eta[0] >> hMC", "(mll>50) * (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)))* (abs(std_vector_lepton_flavour[0]) == 11) * ((abs(std_vector_lepton_flavour[1]) == 11)) * baseW * puW*effTrigW_DbleEle*std_vector_lepton_idisoW[0]*std_vector_lepton_idisoW[1] * bPogSF * std_vector_lepton_recoW[0] * std_vector_lepton_recoW[1]*1327139./116631 * 0.2 *4 *4 *1.5  * GEN_weight_SM/abs(GEN_weight_SM)*std_vector_lepton_genmatched[0]*std_vector_lepton_genmatched[1] * (std_vector_lepton_pt[0] > 30 && std_vector_lepton_pt[1] > 20)")
 
 latinoMC->Draw("std_vector_lepton_eta[0] >> hMCnoReco", "(mll>50) * (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)))* (abs(std_vector_lepton_flavour[0]) == 11) * ((abs(std_vector_lepton_flavour[1]) == 11)) * baseW * puW*effTrigW_DbleEle*std_vector_lepton_idisoW[0]*std_vector_lepton_idisoW[1] * bPogSF *1327139./116631 * 0.2 *4 *4 *1.5  * GEN_weight_SM/abs(GEN_weight_SM)*std_vector_lepton_genmatched[0]*std_vector_lepton_genmatched[1] * (std_vector_lepton_pt[0] > 30 && std_vector_lepton_pt[1] > 20)")
 
 
-latinoMC->Draw("std_vector_lepton_eta[0] >> hMC", "(mll>50) * (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)))* (abs(std_vector_lepton_flavour[0]) == 11) * ((abs(std_vector_lepton_flavour[1]) == 11)) * baseW * puW*effTrigW_DbleEle*std_vector_lepton_idisoW[0]*std_vector_lepton_idisoW[1] * bPogSF * 1./std_vector_lepton_recoW[0] * 1./std_vector_lepton_recoW[1]*1327139./116631 * 0.2 *4 *4 *1.5  * GEN_weight_SM/abs(GEN_weight_SM)*std_vector_lepton_genmatched[0]*std_vector_lepton_genmatched[1] * (std_vector_lepton_pt[0] > 30 && std_vector_lepton_pt[1] > 20)")
+// latinoMC->Draw("std_vector_lepton_eta[0] >> hMC", "(mll>50) * (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)))* (abs(std_vector_lepton_flavour[0]) == 11) * ((abs(std_vector_lepton_flavour[1]) == 11)) * baseW * puW*effTrigW_DbleEle*std_vector_lepton_idisoW[0]*std_vector_lepton_idisoW[1] * bPogSF * 1./std_vector_lepton_recoW[0] * 1./std_vector_lepton_recoW[1]*1327139./116631 * 0.2 *4 *4 *1.5  * GEN_weight_SM/abs(GEN_weight_SM)*std_vector_lepton_genmatched[0]*std_vector_lepton_genmatched[1] * (std_vector_lepton_pt[0] > 30 && std_vector_lepton_pt[1] > 20)")
 
 
 
