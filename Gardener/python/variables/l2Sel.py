@@ -109,7 +109,7 @@ class L2SelFiller(TreeCloner):
     def isLooseLepton(self, ilepton) :
        
        # denominator of fakes definition
-       
+      
        isThisALooseLepton = 0
        
        if self.itree.std_vector_lepton_pt[ilepton] > 0 :
@@ -611,7 +611,7 @@ class L2SelFiller(TreeCloner):
                                      self.itree.std_vector_lepton_eta[ilepton], self.itree.std_vector_lepton_phi[ilepton],
                                      0.3) :
                    pt_to_be_removed_from_overlap += self.itree.std_vector_lepton_pt[jlepton]
-           
+          
            if self.cmssw == '763' :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
@@ -622,7 +622,7 @@ class L2SelFiller(TreeCloner):
                 ) :
                isThisAWgsLepton = 1
 
-           if self.cmssw == 'ICHEP2016' :
+           elif self.cmssw == 'ICHEP2016' :
              if ( self.itree.std_vector_lepton_isTightMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
                 and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13

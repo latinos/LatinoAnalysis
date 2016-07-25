@@ -385,7 +385,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
+                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
                   'XexcludeSample': [ 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -488,7 +488,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose','puadder','pu2p6','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
+                  'subTargets' : ['do_l2vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -503,7 +503,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','pu2p6','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
+                  'subTargets' : ['l1loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -527,7 +527,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1vloose','puadder','pu2p6','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
+                  'subTargets' : ['l1vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -551,7 +551,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu6p3','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables'],
                   'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 
@@ -975,6 +975,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1080,6 +1083,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1185,6 +1191,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1289,6 +1298,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1395,6 +1407,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1500,6 +1515,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1607,6 +1625,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1711,6 +1732,9 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
+                                  'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-50_HT-600toInf', 
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
