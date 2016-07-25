@@ -256,10 +256,12 @@ class ShapeFactory:
               if plot[sampleName]['isData'] == 0 :
                 # only background "filled" histogram
                 if plot[sampleName]['isSignal'] == 0:
-                  histos[sampleName].SetFillStyle(1001)
-                  histos[sampleName].SetFillColorAlpha(plot[sampleName]['color'], 0.5)
+                  #histos[sampleName].SetFillStyle(1001)
+                  #histos[sampleName].SetFillColorAlpha(plot[sampleName]['color'], 0.5)
                   #histos[sampleName].SetFillColor(plot[sampleName]['color'])
-                  #histos[sampleName].SetFillStyle(3001)
+                  #histos[sampleName].SetLineColor(plot[sampleName]['color']+1)
+                  histos[sampleName].SetFillColor(plot[sampleName]['color'])
+                  histos[sampleName].SetFillStyle(3001)
                 else :
                   histos[sampleName].SetFillStyle(0)
                   histos[sampleName].SetLineWidth(2)
@@ -526,10 +528,12 @@ class ShapeFactory:
               if sampleNameGroup in histos_grouped.keys() :
                 histos_grouped[sampleNameGroup].SetLineColor(sampleConfiguration['color'])
                 if sampleConfiguration['isSignal'] == 0:
-                  histos_grouped[sampleNameGroup].SetFillStyle(1001)
-                  histos_grouped[sampleNameGroup].SetFillColorAlpha(sampleConfiguration['color'], 0.5)
+                  #histos_grouped[sampleNameGroup].SetFillStyle(1001)
+                  #histos_grouped[sampleNameGroup].SetFillColorAlpha(sampleConfiguration['color'], 0.5)
                   #histos_grouped[sampleNameGroup].SetFillColor(sampleConfiguration['color'])
-                  #histos_grouped[sampleNameGroup].SetFillStyle(3001)
+                  #histos_grouped[sampleNameGroup].SetLineColor(sampleConfiguration['color']+1)
+                  histos_grouped[sampleNameGroup].SetFillColor(sampleConfiguration['color'])
+                  histos_grouped[sampleNameGroup].SetFillStyle(3001)
                 else :
                   histos_grouped[sampleNameGroup].SetFillStyle(0)
                   histos_grouped[sampleNameGroup].SetLineWidth(2)
@@ -755,9 +759,11 @@ class ShapeFactory:
             if len(mynuisances.keys()) != 0:
               tgrMC.SetLineColor(12)
               tgrMC.SetFillColor(12)
+              tgrMC.SetLineWidth(2)
               tgrMC.SetFillStyle(3004)
               tgrMCOverMC.SetLineColor(12)
               tgrMCOverMC.SetFillColor(12)
+              tgrMCOverMC.SetLineWidth(2)
               tgrMCOverMC.SetFillStyle(3004)
               tgrMC.Draw("2")
 
@@ -860,15 +866,15 @@ class ShapeFactory:
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".C")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".eps")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
+            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".eps")
+            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
              
             # log Y axis
             frame.GetYaxis().SetRangeUser( max(0.01, minYused), 100 * maxYused )
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
-            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".eps")
-            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".pdf")
+            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".eps")
+            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".pdf")
             tcanvas.SetLogy(0)
 
 
