@@ -34,6 +34,191 @@
 
   
   
+    10.000   
+    10.000   
+    10.000   
+    10.000   
+    10.000   
+    10.000   
+    10.000   
+    10.000   
+    10.000   
+    10.000   
+    20.000   
+    20.000   
+    20.000   
+    20.000   
+    20.000   
+    20.000   
+    20.000   
+    20.000   
+    20.000   
+    20.000   
+    30.000   
+    30.000   
+    30.000   
+    30.000   
+    30.000   
+    30.000   
+    30.000   
+    30.000   
+    30.000   
+    30.000   
+    40.000   
+    40.000   
+    40.000   
+    40.000   
+    40.000   
+    40.000   
+    40.000   
+    40.000   
+    40.000   
+    40.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+    50.000   
+  
+  
+  
+  
+  
+  
+  * ((abs(std_vector_lepton_flavour[0]) == 13) * std_vector_lepton_idisoW[0] + (   \
+  (abs(std_vector_lepton_flavour[0]) == 11)   *    \
+  (  std_vector_lepton_eta[0]>   -2.500    &&     std_vector_lepton_eta[0]<      -2.000   &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.935    +      \
+  (  std_vector_lepton_eta[0]>   -2.000    &&     std_vector_lepton_eta[0]<      -1.566   &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.885    +      \
+  (  std_vector_lepton_eta[0]>   -1.566    &&     std_vector_lepton_eta[0]<      -1.444   &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.983    +      \
+  (  std_vector_lepton_eta[0]>   -1.444    &&     std_vector_lepton_eta[0]<      -0.800   &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.960    +      \
+  (  std_vector_lepton_eta[0]>   -0.800    &&     std_vector_lepton_eta[0]<      0.000    &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  1.016    +      \
+  (  std_vector_lepton_eta[0]>   0.000     &&     std_vector_lepton_eta[0]<      0.800    &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  1.003    +      \
+  (  std_vector_lepton_eta[0]>   0.800     &&     std_vector_lepton_eta[0]<      1.444    &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.963    +      \
+  (  std_vector_lepton_eta[0]>   1.444     &&     std_vector_lepton_eta[0]<      1.566    &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.918    +      \
+  (  std_vector_lepton_eta[0]>   1.566     &&     std_vector_lepton_eta[0]<      2.000    &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.916    +      \
+  (  std_vector_lepton_eta[0]>   2.000     &&     std_vector_lepton_eta[0]<      2.500    &&      std_vector_lepton_pt[0]>    10.000    &&     std_vector_lepton_pt[0]<      20.000     )   *  0.946    +      \
+  (  std_vector_lepton_eta[0]>   -2.500    &&     std_vector_lepton_eta[0]<      -2.000   &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.970    +      \
+  (  std_vector_lepton_eta[0]>   -2.000    &&     std_vector_lepton_eta[0]<      -1.566   &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.921    +      \
+  (  std_vector_lepton_eta[0]>   -1.566    &&     std_vector_lepton_eta[0]<      -1.444   &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.963    +      \
+  (  std_vector_lepton_eta[0]>   -1.444    &&     std_vector_lepton_eta[0]<      -0.800   &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.978    +      \
+  (  std_vector_lepton_eta[0]>   -0.800    &&     std_vector_lepton_eta[0]<      0.000    &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.983    +      \
+  (  std_vector_lepton_eta[0]>   0.000     &&     std_vector_lepton_eta[0]<      0.800    &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.986    +      \
+  (  std_vector_lepton_eta[0]>   0.800     &&     std_vector_lepton_eta[0]<      1.444    &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.993    +      \
+  (  std_vector_lepton_eta[0]>   1.444     &&     std_vector_lepton_eta[0]<      1.566    &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.933    +      \
+  (  std_vector_lepton_eta[0]>   1.566     &&     std_vector_lepton_eta[0]<      2.000    &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.938    +      \
+  (  std_vector_lepton_eta[0]>   2.000     &&     std_vector_lepton_eta[0]<      2.500    &&      std_vector_lepton_pt[0]>    20.000    &&     std_vector_lepton_pt[0]<      30.000     )   *  0.971    +      \
+  (  std_vector_lepton_eta[0]>   -2.500    &&     std_vector_lepton_eta[0]<      -2.000   &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.978    +      \
+  (  std_vector_lepton_eta[0]>   -2.000    &&     std_vector_lepton_eta[0]<      -1.566   &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.947    +      \
+  (  std_vector_lepton_eta[0]>   -1.566    &&     std_vector_lepton_eta[0]<      -1.444   &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.978    +      \
+  (  std_vector_lepton_eta[0]>   -1.444    &&     std_vector_lepton_eta[0]<      -0.800   &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.977    +      \
+  (  std_vector_lepton_eta[0]>   -0.800    &&     std_vector_lepton_eta[0]<      0.000    &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.974    +      \
+  (  std_vector_lepton_eta[0]>   0.000     &&     std_vector_lepton_eta[0]<      0.800    &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.985    +      \
+  (  std_vector_lepton_eta[0]>   0.800     &&     std_vector_lepton_eta[0]<      1.444    &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.977    +      \
+  (  std_vector_lepton_eta[0]>   1.444     &&     std_vector_lepton_eta[0]<      1.566    &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.984    +      \
+  (  std_vector_lepton_eta[0]>   1.566     &&     std_vector_lepton_eta[0]<      2.000    &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.958    +      \
+  (  std_vector_lepton_eta[0]>   2.000     &&     std_vector_lepton_eta[0]<      2.500    &&      std_vector_lepton_pt[0]>    30.000    &&     std_vector_lepton_pt[0]<      40.000     )   *  0.973    +      \
+  (  std_vector_lepton_eta[0]>   -2.500    &&     std_vector_lepton_eta[0]<      -2.000   &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.985    +      \
+  (  std_vector_lepton_eta[0]>   -2.000    &&     std_vector_lepton_eta[0]<      -1.566   &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.975    +      \
+  (  std_vector_lepton_eta[0]>   -1.566    &&     std_vector_lepton_eta[0]<      -1.444   &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.976    +      \
+  (  std_vector_lepton_eta[0]>   -1.444    &&     std_vector_lepton_eta[0]<      -0.800   &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.979    +      \
+  (  std_vector_lepton_eta[0]>   -0.800    &&     std_vector_lepton_eta[0]<      0.000    &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.974    +      \
+  (  std_vector_lepton_eta[0]>   0.000     &&     std_vector_lepton_eta[0]<      0.800    &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.989    +      \
+  (  std_vector_lepton_eta[0]>   0.800     &&     std_vector_lepton_eta[0]<      1.444    &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.979    +      \
+  (  std_vector_lepton_eta[0]>   1.444     &&     std_vector_lepton_eta[0]<      1.566    &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.985    +      \
+  (  std_vector_lepton_eta[0]>   1.566     &&     std_vector_lepton_eta[0]<      2.000    &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.977    +      \
+  (  std_vector_lepton_eta[0]>   2.000     &&     std_vector_lepton_eta[0]<      2.500    &&      std_vector_lepton_pt[0]>    40.000    &&     std_vector_lepton_pt[0]<      50.000     )   *  0.992    +      \
+  (  std_vector_lepton_eta[0]>   -2.500    &&     std_vector_lepton_eta[0]<      -2.000   &&      std_vector_lepton_pt[0]>    50.000        )   *   0.981      +      \                     
+  (  std_vector_lepton_eta[0]>   -2.000    &&     std_vector_lepton_eta[0]<      -1.566   &&      std_vector_lepton_pt[0]>    50.000        )   *   0.985      +      \                     
+  (  std_vector_lepton_eta[0]>   -1.566    &&     std_vector_lepton_eta[0]<      -1.444   &&      std_vector_lepton_pt[0]>    50.000        )   *   0.977      +      \                     
+  (  std_vector_lepton_eta[0]>   -1.444    &&     std_vector_lepton_eta[0]<      -0.800   &&      std_vector_lepton_pt[0]>    50.000        )   *   0.986      +      \                     
+  (  std_vector_lepton_eta[0]>   -0.800    &&     std_vector_lepton_eta[0]<      0.000    &&      std_vector_lepton_pt[0]>    50.000        )   *   0.980      +      \                     
+  (  std_vector_lepton_eta[0]>   0.000     &&     std_vector_lepton_eta[0]<      0.800    &&      std_vector_lepton_pt[0]>    50.000        )   *   0.985      +      \                     
+  (  std_vector_lepton_eta[0]>   0.800     &&     std_vector_lepton_eta[0]<      1.444    &&      std_vector_lepton_pt[0]>    50.000        )   *   0.981      +      \                     
+  (  std_vector_lepton_eta[0]>   1.444     &&     std_vector_lepton_eta[0]<      1.566    &&      std_vector_lepton_pt[0]>    50.000        )   *   0.992      +      \                     
+  (  std_vector_lepton_eta[0]>   1.566     &&     std_vector_lepton_eta[0]<      2.000    &&      std_vector_lepton_pt[0]>    50.000        )   *   1.007      +      \                     
+  (  std_vector_lepton_eta[0]>   2.000     &&     std_vector_lepton_eta[0]<      2.500    &&      std_vector_lepton_pt[0]>    50.000        )   *   1.007      +      \                     
+  (  std_vector_lepton_eta[0]>   2.000     &&     std_vector_lepton_eta[0]<      2.500    &&      std_vector_lepton_pt[0]>    50.000        )   *   1.007            \                      
+  ))    \
+  * ((abs(std_vector_lepton_flavour[1]) == 13) * std_vector_lepton_idisoW[1] + (   \
+  (abs(std_vector_lepton_flavour[1]) == 11)   *    \
+  (  std_vector_lepton_eta[1]>   -2.500    &&     std_vector_lepton_eta[1]<      -2.000   &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.935    +      \
+  (  std_vector_lepton_eta[1]>   -2.000    &&     std_vector_lepton_eta[1]<      -1.566   &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.885    +      \
+  (  std_vector_lepton_eta[1]>   -1.566    &&     std_vector_lepton_eta[1]<      -1.444   &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.983    +      \
+  (  std_vector_lepton_eta[1]>   -1.444    &&     std_vector_lepton_eta[1]<      -0.800   &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.960    +      \
+  (  std_vector_lepton_eta[1]>   -0.800    &&     std_vector_lepton_eta[1]<      0.000    &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  1.016    +      \
+  (  std_vector_lepton_eta[1]>   0.000     &&     std_vector_lepton_eta[1]<      0.800    &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  1.003    +      \
+  (  std_vector_lepton_eta[1]>   0.800     &&     std_vector_lepton_eta[1]<      1.444    &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.963    +      \
+  (  std_vector_lepton_eta[1]>   1.444     &&     std_vector_lepton_eta[1]<      1.566    &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.918    +      \
+  (  std_vector_lepton_eta[1]>   1.566     &&     std_vector_lepton_eta[1]<      2.000    &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.916    +      \
+  (  std_vector_lepton_eta[1]>   2.000     &&     std_vector_lepton_eta[1]<      2.500    &&      std_vector_lepton_pt[1]>    10.000    &&     std_vector_lepton_pt[1]<      20.000     )   *  0.946    +      \
+  (  std_vector_lepton_eta[1]>   -2.500    &&     std_vector_lepton_eta[1]<      -2.000   &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.970    +      \
+  (  std_vector_lepton_eta[1]>   -2.000    &&     std_vector_lepton_eta[1]<      -1.566   &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.921    +      \
+  (  std_vector_lepton_eta[1]>   -1.566    &&     std_vector_lepton_eta[1]<      -1.444   &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.963    +      \
+  (  std_vector_lepton_eta[1]>   -1.444    &&     std_vector_lepton_eta[1]<      -0.800   &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.978    +      \
+  (  std_vector_lepton_eta[1]>   -0.800    &&     std_vector_lepton_eta[1]<      0.000    &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.983    +      \
+  (  std_vector_lepton_eta[1]>   0.000     &&     std_vector_lepton_eta[1]<      0.800    &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.986    +      \
+  (  std_vector_lepton_eta[1]>   0.800     &&     std_vector_lepton_eta[1]<      1.444    &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.993    +      \
+  (  std_vector_lepton_eta[1]>   1.444     &&     std_vector_lepton_eta[1]<      1.566    &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.933    +      \
+  (  std_vector_lepton_eta[1]>   1.566     &&     std_vector_lepton_eta[1]<      2.000    &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.938    +      \
+  (  std_vector_lepton_eta[1]>   2.000     &&     std_vector_lepton_eta[1]<      2.500    &&      std_vector_lepton_pt[1]>    20.000    &&     std_vector_lepton_pt[1]<      30.000     )   *  0.971    +      \
+  (  std_vector_lepton_eta[1]>   -2.500    &&     std_vector_lepton_eta[1]<      -2.000   &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.978    +      \
+  (  std_vector_lepton_eta[1]>   -2.000    &&     std_vector_lepton_eta[1]<      -1.566   &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.947    +      \
+  (  std_vector_lepton_eta[1]>   -1.566    &&     std_vector_lepton_eta[1]<      -1.444   &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.978    +      \
+  (  std_vector_lepton_eta[1]>   -1.444    &&     std_vector_lepton_eta[1]<      -0.800   &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.977    +      \
+  (  std_vector_lepton_eta[1]>   -0.800    &&     std_vector_lepton_eta[1]<      0.000    &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.974    +      \
+  (  std_vector_lepton_eta[1]>   0.000     &&     std_vector_lepton_eta[1]<      0.800    &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.985    +      \
+  (  std_vector_lepton_eta[1]>   0.800     &&     std_vector_lepton_eta[1]<      1.444    &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.977    +      \
+  (  std_vector_lepton_eta[1]>   1.444     &&     std_vector_lepton_eta[1]<      1.566    &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.984    +      \
+  (  std_vector_lepton_eta[1]>   1.566     &&     std_vector_lepton_eta[1]<      2.000    &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.958    +      \
+  (  std_vector_lepton_eta[1]>   2.000     &&     std_vector_lepton_eta[1]<      2.500    &&      std_vector_lepton_pt[1]>    30.000    &&     std_vector_lepton_pt[1]<      40.000     )   *  0.973    +      \
+  (  std_vector_lepton_eta[1]>   -2.500    &&     std_vector_lepton_eta[1]<      -2.000   &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.985    +      \
+  (  std_vector_lepton_eta[1]>   -2.000    &&     std_vector_lepton_eta[1]<      -1.566   &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.975    +      \
+  (  std_vector_lepton_eta[1]>   -1.566    &&     std_vector_lepton_eta[1]<      -1.444   &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.976    +      \
+  (  std_vector_lepton_eta[1]>   -1.444    &&     std_vector_lepton_eta[1]<      -0.800   &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.979    +      \
+  (  std_vector_lepton_eta[1]>   -0.800    &&     std_vector_lepton_eta[1]<      0.000    &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.974    +      \
+  (  std_vector_lepton_eta[1]>   0.000     &&     std_vector_lepton_eta[1]<      0.800    &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.989    +      \
+  (  std_vector_lepton_eta[1]>   0.800     &&     std_vector_lepton_eta[1]<      1.444    &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.979    +      \
+  (  std_vector_lepton_eta[1]>   1.444     &&     std_vector_lepton_eta[1]<      1.566    &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.985    +      \
+  (  std_vector_lepton_eta[1]>   1.566     &&     std_vector_lepton_eta[1]<      2.000    &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.977    +      \
+  (  std_vector_lepton_eta[1]>   2.000     &&     std_vector_lepton_eta[1]<      2.500    &&      std_vector_lepton_pt[1]>    40.000    &&     std_vector_lepton_pt[1]<      50.000     )   *  0.992    +      \
+  (  std_vector_lepton_eta[1]>   -2.500    &&     std_vector_lepton_eta[1]<      -2.000   &&      std_vector_lepton_pt[1]>    50.000        )   *   0.981      +      \                     
+  (  std_vector_lepton_eta[1]>   -2.000    &&     std_vector_lepton_eta[1]<      -1.566   &&      std_vector_lepton_pt[1]>    50.000        )   *   0.985      +      \                     
+  (  std_vector_lepton_eta[1]>   -1.566    &&     std_vector_lepton_eta[1]<      -1.444   &&      std_vector_lepton_pt[1]>    50.000        )   *   0.977      +      \                     
+  (  std_vector_lepton_eta[1]>   -1.444    &&     std_vector_lepton_eta[1]<      -0.800   &&      std_vector_lepton_pt[1]>    50.000        )   *   0.986      +      \                     
+  (  std_vector_lepton_eta[1]>   -0.800    &&     std_vector_lepton_eta[1]<      0.000    &&      std_vector_lepton_pt[1]>    50.000        )   *   0.980      +      \                     
+  (  std_vector_lepton_eta[1]>   0.000     &&     std_vector_lepton_eta[1]<      0.800    &&      std_vector_lepton_pt[1]>    50.000        )   *   0.985      +      \                     
+  (  std_vector_lepton_eta[1]>   0.800     &&     std_vector_lepton_eta[1]<      1.444    &&      std_vector_lepton_pt[1]>    50.000        )   *   0.981      +      \                     
+  (  std_vector_lepton_eta[1]>   1.444     &&     std_vector_lepton_eta[1]<      1.566    &&      std_vector_lepton_pt[1]>    50.000        )   *   0.992      +      \                     
+  (  std_vector_lepton_eta[1]>   1.566     &&     std_vector_lepton_eta[1]<      2.000    &&      std_vector_lepton_pt[1]>    50.000        )   *   1.007      +      \                     
+  (  std_vector_lepton_eta[1]>   2.000     &&     std_vector_lepton_eta[1]<      2.500    &&      std_vector_lepton_pt[1]>    50.000        )   *   1.007      +      \                     
+  (  std_vector_lepton_eta[1]>   2.000     &&     std_vector_lepton_eta[1]<      2.500    &&      std_vector_lepton_pt[1]>    50.000        )   *   1.007            \                      
+  ))    \ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
