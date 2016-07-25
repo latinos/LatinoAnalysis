@@ -66,11 +66,18 @@ class IdIsoSFFiller(TreeCloner):
           else :                          opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt' 
         
         if opts.tkSCFileElectron == None :
-          opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/eleRECO.txt.egamma_SF2D.root'
+          if opts.cmssw == "ICHEP2016" : 
+            opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi.txt_SF2D.root'
+          else :
+            opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/eleRECO.txt.egamma_SF2D.root'
  
         if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectronAlternative = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/electrons_firstPart.txt'   
  
            
+        print "opts.idScaleFactorsFileMu = ", opts.idScaleFactorsFileMu
+        print "opts.isoTightScaleFactorsFileMu = ", opts.isoTightScaleFactorsFileMu
+        print "opts.isoLooseScaleFactorsFileMu = ", opts.isoLooseScaleFactorsFileMu
+        
         file_idScaleFactorsFileMu  = open (opts.idScaleFactorsFileMu)
         file_isoTightScaleFactorsFileMu  = open (opts.isoTightScaleFactorsFileMu)
         file_isoLooseScaleFactorsFileMu  = open (opts.isoLooseScaleFactorsFileMu)

@@ -15,6 +15,8 @@ from array import array
 from collections import OrderedDict
 import math
 
+import os
+
 #import os.path
 
 
@@ -242,7 +244,7 @@ class ShapeFactory:
                           elif nominalRatio == 0:
                               print 'nominalRatio is 0 !!!!'
 
-              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_qcd,high_qcd)
+              string_to_write = "         '" +  sampleName +  "': '%4.3f/%4.3f' ,\n" %(low_qcd, high_qcd)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileQCDqq.write( string_to_write )
               elif structureFile[sampleName]['isFromGluons'] == 1 :
@@ -274,7 +276,7 @@ class ShapeFactory:
                           elif nominalRatio == 0:
                               print 'nominalRatio is 0 !!!!'
                 
-              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_alpha,high_alpha)
+              string_to_write = "         '" +  sampleName +  "': '%4.3f/%4.3f' ,\n" %(low_alpha, high_alpha)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileAlphaqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
@@ -306,7 +308,7 @@ class ShapeFactory:
 
               tcanvas.Write()
 
-              string_to_write = "         '" +  sampleName +  "': %4.3f,\n" %(1. + histoRatioPDF.GetRMS())
+              string_to_write = "         '" +  sampleName +  "': '%4.3f',\n" %(1. + histoRatioPDF.GetRMS())
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFilePDFqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
@@ -318,7 +320,7 @@ class ShapeFactory:
               high_alpha_pdf = 1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - high_alpha) * (1. - high_alpha))
               low_alpha_pdf  = 1. / (1. + math.sqrt(histoRatioPDF.GetRMS() * histoRatioPDF.GetRMS() + (1. - low_alpha)  * (1. - low_alpha)))
               
-              string_to_write = "         '" +  sampleName +  "': %4.3f/%4.3f ,\n" %(low_alpha_pdf,high_alpha_pdf)
+              string_to_write = "         '" +  sampleName +  "': '%4.3f/%4.3f' ,\n" %(low_alpha_pdf, high_alpha_pdf)
               if structureFile[sampleName]['isFromGluons'] == 0 :
                   summaryNuisanceFileAlphaPDFqq.write( string_to_write )
               if structureFile[sampleName]['isFromGluons'] == 1 :
@@ -328,37 +330,89 @@ class ShapeFactory:
           # closing qqbar files
           summaryNuisanceFilePDFqq.write("    }, \n")
           summaryNuisanceFilePDFqq.write(" } \n")
+          summaryNuisanceFilePDFqq.write("\n")
+          summaryNuisanceFilePDFqq.write("\n")
           summaryNuisanceFilePDFqq.close()
               
           summaryNuisanceFileQCDqq.write("    }, \n")
           summaryNuisanceFileQCDqq.write(" } \n")
+          summaryNuisanceFileQCDqq.write("\n")
+          summaryNuisanceFileQCDqq.write("\n")
           summaryNuisanceFileQCDqq.close()
               
           summaryNuisanceFileAlphaqq.write("    }, \n")
           summaryNuisanceFileAlphaqq.write(" } \n")
+          summaryNuisanceFileAlphaqq.write("\n")
+          summaryNuisanceFileAlphaqq.write("\n")
           summaryNuisanceFileAlphaqq.close()
               
           summaryNuisanceFileAlphaPDFqq.write("    }, \n")
           summaryNuisanceFileAlphaPDFqq.write(" } \n")
+          summaryNuisanceFileAlphaPDFqq.write("\n")
+          summaryNuisanceFileAlphaPDFqq.write("\n")
           summaryNuisanceFileAlphaPDFqq.close()
           
           
           # closing gg files
           summaryNuisanceFilePDFgg.write("    }, \n")
           summaryNuisanceFilePDFgg.write(" } \n")
+          summaryNuisanceFilePDFgg.write("\n")
+          summaryNuisanceFilePDFgg.write("\n")
           summaryNuisanceFilePDFgg.close()
               
           summaryNuisanceFileQCDgg.write("    }, \n")
           summaryNuisanceFileQCDgg.write(" } \n")
+          summaryNuisanceFileQCDgg.write("\n")
+          summaryNuisanceFileQCDgg.write("\n")
           summaryNuisanceFileQCDgg.close()
               
           summaryNuisanceFileAlphagg.write("    }, \n")
           summaryNuisanceFileAlphagg.write(" } \n")
+          summaryNuisanceFileAlphagg.write("\n")
+          summaryNuisanceFileAlphagg.write("\n")
           summaryNuisanceFileAlphagg.close()
               
           summaryNuisanceFileAlphaPDFgg.write("    }, \n")
           summaryNuisanceFileAlphaPDFgg.write(" } \n")
+          summaryNuisanceFileAlphaPDFgg.write("\n")
+          summaryNuisanceFileAlphaPDFgg.write("\n")
           summaryNuisanceFileAlphaPDFgg.close()
+
+
+          # merging and cleaning ;)
+
+        for cutName in self._cuts :
+            filenames = [self._outputDirPDF + '/summary_nuisance_pdf_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_pdf_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_pdf_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
+
+            filenames = [self._outputDirPDF + '/summary_nuisance_qcd_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_qcd_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_qcd_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
+
+            filenames = [self._outputDirPDF + '/summary_nuisance_alpha_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_alpha_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_alpha_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
+
+            filenames = [self._outputDirPDF + '/summary_nuisance_alpha_pdf_gg_' + cutName + '.py',self._outputDirPDF + '/summary_nuisance_alpha_pdf_qq_' + cutName + '.py']
+            with open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_' + cutName + '.py', 'w') as outfile:
+                for fname in filenames:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+            for fname in filenames:
+                os.system('rm ' + fname)
 
 
         print " >> all but really all "

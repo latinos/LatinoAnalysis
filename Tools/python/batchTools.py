@@ -142,7 +142,9 @@ def batchStatus():
           FileRuns[iStep].append(iSample)
         else:
           Done[iStep]+=1
+      print '----------------------------'
       print iDir+' : '
+      print '----------------------------'
       for iStep in Done:
         print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
       print '   Samples not done:'
