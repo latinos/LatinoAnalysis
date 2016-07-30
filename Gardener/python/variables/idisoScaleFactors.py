@@ -78,6 +78,9 @@ class IdIsoSFFiller(TreeCloner):
         print "opts.idScaleFactorsFileMu = ", opts.idScaleFactorsFileMu
         print "opts.isoTightScaleFactorsFileMu = ", opts.isoTightScaleFactorsFileMu
         print "opts.isoLooseScaleFactorsFileMu = ", opts.isoLooseScaleFactorsFileMu
+        print "opts.tkSCFileElectron = ", opts.tkSCFileElectron
+        print "opts.idIsoScaleFactorsFileElectron = ", opts.idIsoScaleFactorsFileElectron
+        print "opts.idIsoScaleFactorsFileElectronAlternative = ", opts.idIsoScaleFactorsFileElectronAlternative
         
         file_idScaleFactorsFileMu  = open (opts.idScaleFactorsFileMu)
         file_isoTightScaleFactorsFileMu  = open (opts.isoTightScaleFactorsFileMu)
