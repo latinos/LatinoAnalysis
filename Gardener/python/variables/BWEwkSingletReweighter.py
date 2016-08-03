@@ -269,9 +269,9 @@ class BWEwkSingletReweighter(TreeCloner):
                 mela.setMelaHiggsMassWidth(self.mH, gprime)
                 weightInterference = mela.weightStoI((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                #weightInterferenceHonly = mela.weightStoI_H((productionProcess=="VBF"), int(ids[0]), int(ids[2]), int(ids[1]), int(ids[3]),
+                #weightInterferenceHonly = mela.weightStoI_H((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                 #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                #weightInterferenceBonly = mela.weightStoI_B((productionProcess=="VBF"), int(ids[0]), int(ids[2]), int(ids[1]), int(ids[3]),
+                #weightInterferenceBonly = mela.weightStoI_B((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                 #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
                 weightInterferenceHB = mela.weightStoI_HB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
