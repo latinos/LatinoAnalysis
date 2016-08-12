@@ -146,7 +146,7 @@ class IdIsoSFFiller(TreeCloner):
 
         # eta on x-axis, pt on y-axis
         if (pt <= 20.) : #because reco histo starts from 20 GeV and no dependency on PT.
-          pt = pt+11
+          pt = pt+20
 
         value = h2.GetBinContent(h2.FindBin(eta, min(pt, ptmax)))
         error = h2.GetBinError  (h2.FindBin(eta, min(pt, ptmax)))
