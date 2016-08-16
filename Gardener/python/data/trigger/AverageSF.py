@@ -143,41 +143,7 @@ if __name__ == '__main__':
       outFile.write( '        {0:.4f}  {1:.4f}  {2:.4f}  \n'.format(float(eff), float(error_eff_up - eff), float(eff-error_eff_lo)) )
     
           
-        
-        
-
-    #for point in self.list_triggers[whichTrigger] :
-           
-           #if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
-                #pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
-               
-               #eff       = float(point[4])
-               #error_eff = float(point[5])
-               
-               #error_eff_up = eff + error_eff
-               #error_eff_lo = eff - error_eff
-               
-               ## muons and electrons have provided different formats!
-               #if len(point) > 6 :
-                  #error_eff_lo = float(point[6])
-                  #error_eff_lo = eff - error_eff_lo                  
-               
-               ## correction not to have >1 probability!!!
-               #if error_eff_up > 1.0 : 
-                 #error_eff_up = 1.0
-               #if error_eff_lo < 0.0 :
-                 #error_eff_lo = 0.0
-                  
-               #return eff, error_eff_lo, error_eff_up
-        
-        ##print " is 0 ... ", pt, "  ", eta, "   " , whichTrigger
-        ##if pt > 100:
-          ##for point in self.list_triggers[whichTrigger] :
-            ##print " ---> ", float(point[0]), " ", float(point[1]), " ", float(point[2]), " ", float(point[3])
-        
-        #return 0. , 0., 0.
-           
-
+  
     print " outputFile       = ", opt.outputFile
 
 
