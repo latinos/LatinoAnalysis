@@ -44,19 +44,25 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-
-    print " outputFile       = ", opt.outputFile
-
      
       
     print "list of trigger files"
     
     files_names_trigger = {}
-    files_names_trigger["ICHEP2016/muons.txt"] = 1.32
-    files_names_trigger["ICHEP2016/muons_iso_tight.txt"] = 1.60
+
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/muons_Run_271036_275783.txt"] = 6.274  
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/muons_Run_275784_276500.txt"] = 3.426 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/muons_Run_276501_276811.txt"] = 3.191 
+    #opt.outputFile = "ICHEP2016fullLumi/muons.txt"
+
+    files_names_trigger["ICHEP2016fullLumi/PartialRuns/muons_iso_tight_Run_271036_275783.txt"] = 6.274 
+    files_names_trigger["ICHEP2016fullLumi/PartialRuns/muons_iso_tight_Run_275784_276500.txt"] = 3.426 
+    files_names_trigger["ICHEP2016fullLumi/PartialRuns/muons_iso_tight_Run_276501_276811.txt"] = 3.191 
+    opt.outputFile = "ICHEP2016fullLumi/muons_iso_tight.txt"
 
 
-    
+    print " outputFile       = ", opt.outputFile
+
     print " files_names_trigger = ", files_names_trigger
     
     files_trigger = {}    

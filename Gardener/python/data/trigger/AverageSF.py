@@ -52,9 +52,47 @@ if __name__ == '__main__':
     print "list of trigger files"
     
     files_names_trigger = {}
-    files_names_trigger["ICHEP2016/HLT_DoubleMuLegLowPt.txt"] = 1.32
-    files_names_trigger["ICHEP2016/HLT_DoubleMuLegLowPt_BeforeRun274094.txt"] = 1.60
-    #files_names_trigger["ICHEP2016/HLT_EleMuLegLowPt_BeforeRun274094.txt"] = 4.50
+
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegLowPt_Run_274094_275000.txt"] = 2.916
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegLowPt_Run_275001_275783.txt"] = 2.736    
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegLowPt_Run_275784_276500.txt"] = 3.426 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegLowPt_Run_276501_276811.txt"] = 3.191   
+    #opt.outputFile = "ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt"
+
+
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_EleMuLegLowPt_Run_274094_275000.txt"] = 3.426 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_EleMuLegLowPt_Run_275001_275783.txt"] = 3.191 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_EleMuLegLowPt_Run_275784_276500.txt"] = 3.191 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_EleMuLegLowPt_Run_276501_276811.txt"] = 3.191 
+    #opt.outputFile = "ICHEP2016fullLumi/HLT_EleMuLegLowPt.txt"
+
+
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuSingle_Run_274094_275000.txt"] = 3.426 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuSingle_Run_275001_275783.txt"] = 3.191 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuSingle_Run_275784_276500.txt"] = 3.191 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuSingle_Run_276501_276811.txt"] = 3.191 
+    #opt.outputFile = "ICHEP2016fullLumi/HLT_MuSingle.txt"
+
+
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuEleLegHigPt_Run_274094_275000.txt"] = 3.426 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuEleLegHigPt_Run_275001_275783.txt"] = 3.191 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuEleLegHigPt_Run_275784_276500.txt"] = 3.191 
+    #files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_MuEleLegHigPt_Run_276501_276811.txt"] = 3.191 
+    #opt.outputFile = "ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt"
+
+
+    files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegHigPt_Run_274094_275000.txt"] = 3.426 
+    files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegHigPt_Run_275001_275783.txt"] = 3.191 
+    files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegHigPt_Run_275784_276500.txt"] = 3.191 
+    files_names_trigger["ICHEP2016fullLumi/PartialRuns/HLT_DoubleMuLegHigPt_Run_276501_276811.txt"] = 3.191 
+    opt.outputFile = "ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt"
+
+
+
+
+
+    print " outputFile       = ", opt.outputFile
+
     
     print " files_names_trigger = ", files_names_trigger
     
