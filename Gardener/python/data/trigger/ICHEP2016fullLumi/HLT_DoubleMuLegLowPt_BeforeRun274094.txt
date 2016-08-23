@@ -1,4 +1,4 @@
-# etamin  etamax  ptmin   ptmax   eff     deff_high       deff_low
+#         etamin  etamax  ptmin   ptmax   eff     deff_high       deff_low
 -2.4    -2.1    10      13      0.946689        0.013725         0.0165227
 -2.1    -1.6    10      13      0.966713        0.00931206       0.0109161
 -1.6    -1.2    10      13      0.975493        0.00820262       0.0105877
