@@ -116,6 +116,23 @@ class EffTrgFiller(TreeCloner):
           else :                          opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_EleMuLegLowPt_BeforeRun274094.txt'
 
 
+        print 'opts.triggerDoubleEleLegHigPt = ', opts.triggerDoubleEleLegHigPt
+        print 'opts.triggerDoubleEleLegLowPt = ', opts.triggerDoubleEleLegLowPt
+        print 'opts.triggerSingleEle = ', opts.triggerSingleEle
+        print 'opts.triggerDoubleMuLegHigPt = ', opts.triggerDoubleMuLegHigPt
+        print 'opts.triggerDoubleMuLegLowPt = ', opts.triggerDoubleMuLegLowPt
+        print 'opts.triggerSingleMu = ', opts.triggerSingleMu
+        print 'opts.triggerMuEleLegHigPt = ', opts.triggerMuEleLegHigPt
+        print 'opts.triggerMuEleLegLowPt = ', opts.triggerMuEleLegLowPt
+        print 'opts.triggerEleMuLegHigPt = ', opts.triggerEleMuLegHigPt
+        print 'opts.triggerEleMuLegLowPt = ', opts.triggerEleMuLegLowPt
+
+        print 'opts.triggerSpecialDoubleMuLegHigPt = ', opts.triggerSpecialDoubleMuLegHigPt
+        print 'opts.triggerSpecialDoubleMuLegLowPt = ', opts.triggerSpecialDoubleMuLegLowPt
+        print 'opts.triggerSpecialSingleMu = ', opts.triggerSpecialSingleMu
+        print 'opts.triggerSpecialMuEleLegHigPt = ', opts.triggerSpecialMuEleLegHigPt
+        print 'opts.triggerSpecialEleMuLegLowPt = ', opts.triggerSpecialEleMuLegLowPt
+
 
 
         file_triggerDoubleEleLegHigPt = open (opts.triggerDoubleEleLegHigPt)
