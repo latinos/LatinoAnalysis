@@ -1,0 +1,41 @@
+
+
+
+
+cp HLT_MuSingle.txt HLT_MuSingle_Run_274094_275000.txt
+cp HLT_MuSingle.txt HLT_MuSingle_Run_275001_275783.txt
+cp HLT_MuSingle.txt HLT_MuSingle_Run_275784_276500.txt
+cp HLT_MuSingle.txt HLT_MuSingle_Run_276501_276811.txt
+
+
+cp HLT_DoubleMuLegHigPt.txt HLT_DoubleMuLegHigPt_Run_274094_275000.txt
+cp HLT_DoubleMuLegHigPt.txt HLT_DoubleMuLegHigPt_Run_275001_275783.txt
+cp HLT_DoubleMuLegHigPt.txt HLT_DoubleMuLegHigPt_Run_275784_276500.txt
+cp HLT_DoubleMuLegHigPt.txt HLT_DoubleMuLegHigPt_Run_276501_276811.txt
+
+
+cp HLT_EleMuLegLowPt.txt HLT_EleMuLegLowPt_Run_274094_275000.txt
+cp HLT_EleMuLegLowPt.txt HLT_EleMuLegLowPt_Run_275001_275783.txt
+cp HLT_EleMuLegLowPt.txt HLT_EleMuLegLowPt_Run_275784_276500.txt
+cp HLT_EleMuLegLowPt.txt HLT_EleMuLegLowPt_Run_276501_276811.txt
+
+
+cp HLT_DoubleMuLegLowPt.txt HLT_DoubleMuLegLowPt_Run_274094_275000.txt
+cp HLT_DoubleMuLegLowPt.txt HLT_DoubleMuLegLowPt_Run_275001_275783.txt
+cp HLT_DoubleMuLegLowPt.txt HLT_DoubleMuLegLowPt_Run_275784_276500.txt
+cp HLT_DoubleMuLegLowPt.txt HLT_DoubleMuLegLowPt_Run_276501_276811.txt
+
+
+cp HLT_MuEleLegHigPt.txt HLT_MuEleLegHigPt_Run_274094_275000.txt
+cp HLT_MuEleLegHigPt.txt HLT_MuEleLegHigPt_Run_275001_275783.txt
+cp HLT_MuEleLegHigPt.txt HLT_MuEleLegHigPt_Run_275784_276500.txt
+cp HLT_MuEleLegHigPt.txt HLT_MuEleLegHigPt_Run_276501_276811.txt
+
+
+
+
+
+
+
+
+
