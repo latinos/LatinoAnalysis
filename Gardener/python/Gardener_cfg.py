@@ -262,7 +262,7 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun21/data/25ns/',
-                        'dirExt'  : 'LatinoTrees_v2' ,
+                        'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         'reName'  : {
                                        'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
@@ -385,7 +385,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
+                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
                   'XexcludeSample': [ 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -629,6 +629,12 @@ Steps= {
                   'subTargets' : ['bPogSF','TrigEff','IdIsoSC']
                     }, 
 
+  'puextra'      :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['puW63mb','puW69mb']
+                    }, 
 
   'bSFL2pTEff'   :   {
                   'isChain'    : True ,
@@ -1904,6 +1910,21 @@ Steps= {
                   'command'    : 'gardener.py puadder --data=/user/xjanssen/HWW2015/pudata/PileupHistogram_805_8Jul_6p3fb.root --HistName=pileup --branch=puW6p3 --kind=trpu '
                 },
 
+  'puW63mb'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py puadder --data=/user/xjanssen/HWW2015/pudata/PileupHistogram_805_6.3fb_63mb_26Jul.root  --HistName=pileup --branch=puW63mb --kind=trpu '
+                }, 
+
+
+
+  'puW69mb'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py puadder --data=/user/xjanssen/HWW2015/pudata/PileupHistogram_805_6.3fb_69.2mb_26Jul.root  --HistName=pileup --branch=puW69mb --kind=trpu '
+                },
 
 
   'baseW'     : {

@@ -208,7 +208,7 @@ for iProd in prodList :
   previousStep=''
   targetListKeep={}
 
-  # Loop on Steps:
+  # Loop on Steps
   for iStep in stepList:
     if ( not Productions[iProd]['isData'] and Steps[iStep]['do4MC'] ) or ( Productions[iProd]['isData'] and Steps[iStep]['do4Data'] ) :
       print '---------------- for Step : ',iStep
@@ -235,6 +235,7 @@ for iProd in prodList :
         selectSample=True
         # ... from options
         if len(options.selTree) > 0 :
+          #if 'DYJetsToLL_M-50' in iSample : print iSample
           #print  iSample
           #print options.selTree
           if not iSample in options.selTree: selectSample=False
@@ -252,6 +253,7 @@ for iProd in prodList :
         if iStep in ['mcweights'] : # ,'mcwghtcount' ]  :
           if not 'doMCweights=True' in samples[iSample][1] : 
              selectSample=False
+        #print selectSample
         # And Now add trees
         #if not Productions[iProd]['isData'] :
           #iTree = 'latino_'+iSample+'.root'
@@ -264,6 +266,7 @@ for iProd in prodList :
         #if 'ttDM' in iSample: print iSample, selectSample 
          
         for iFile in FileInList:
+            #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in FileExistList 
             if options.redo or not iFile in FileExistList :
               if selectSample and iSample.replace('_25ns','') in iFile:
                 iKey = iFile.replace('latino_','').replace('.root','')
