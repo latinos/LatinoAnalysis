@@ -52,27 +52,27 @@ class IdIsoSFFiller(TreeCloner):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         if opts.idScaleFactorsFileMu == None :
-          if opts.cmssw == "ICHEP2016" :  opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/muons.txt'  
+          if opts.cmssw == "ICHEP2016" :  opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/muons.txt'  
           else :                          opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_Moriond76x.txt'
         if opts.isoTightScaleFactorsFileMu == None :
-          if opts.cmssw == "ICHEP2016" :  opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/muons_iso_tight.txt'  
+          if opts.cmssw == "ICHEP2016" :  opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/muons_iso_tight.txt'  
           else :                          opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_tight_Moriond76x.txt'
         if opts.isoLooseScaleFactorsFileMu == None :
-          if opts.cmssw == "ICHEP2016" :  opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/muons_iso_loose.txt'  
+          if opts.cmssw == "ICHEP2016" :  opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/muons_iso_loose.txt'  
           else :                          opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_loose_Moriond76x.txt'
 
         if opts.idIsoScaleFactorsFileElectron == None :
-          if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/electrons.txt'   
+          if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/electrons.txt'   
           else :                          opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt' 
         
         if opts.tkSCFileElectron == None :
           if opts.cmssw == "ICHEP2016" : 
-            #opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi.txt_SF2D.root'
-            opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi_nVtx.txt_SF2D.root'
+            opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/egammaEffi.txt_SF2D.root'
+      #      opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi_nVtx.txt_SF2D.root'
           else :
             opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/eleRECO.txt.egamma_SF2D.root'
  
-        if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectronAlternative = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/electrons_firstPart.txt'   
+        if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectronAlternative = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/electrons_firstPart.txt'   
  
            
         print "opts.idScaleFactorsFileMu = ", opts.idScaleFactorsFileMu
@@ -136,6 +136,24 @@ class IdIsoSFFiller(TreeCloner):
         
         #print ' x,y(max),z,err = ', eta, ' - ', min(pt, ptmax), '(', ptmax, ') - ', value, ' - ', error
         return value, error
+
+    def _getHistoValueRECO(self, h2, pt, eta):
+
+        nbins = h2.GetNbinsY()
+        ptmax = -1
+        if (ptmax <= 0.) :
+          ptmax = h2.GetYaxis().GetBinCenter(nbins)
+
+        # eta on x-axis, pt on y-axis
+        if (pt <= 20.) : #because reco histo starts from 20 GeV and no dependency on PT.
+          pt = pt+20
+
+        value = h2.GetBinContent(h2.FindBin(eta, min(pt, ptmax)))
+        error = h2.GetBinError  (h2.FindBin(eta, min(pt, ptmax)))
+
+        #print ' x,y(max),z,err = ', eta, ' - ', min(pt, ptmax), '(', ptmax, ') - ', value, ' - ', error
+        return value, error
+
 
     def _getHistoValueNVTX(self, h2, nvtx, eta):
 
@@ -203,8 +221,8 @@ class IdIsoSFFiller(TreeCloner):
               #print " self.idIsoScaleFactors[", kindLep, "] = ", self.idIsoScaleFactors[kindLep]
               
               
-              #tkSC, tkSC_err = self._getHistoValue(self.tkSCElectronHisto, pt, eta)
-              tkSC, tkSC_err = self._getHistoValueNVTX(self.tkSCElectronHisto, nvtx, eta)
+              tkSC, tkSC_err = self._getHistoValueRECO(self.tkSCElectronHisto, pt, eta)
+              #tkSC, tkSC_err = self._getHistoValueNVTX(self.tkSCElectronHisto, nvtx, eta)
               
               #print ' pt, eta, tkSC, tkSC_err = ', pt, ' ', eta, ' ', tkSC, ' ', tkSC_err
               
@@ -333,7 +351,7 @@ class IdIsoSFFiller(TreeCloner):
           scaleFactor = 1 
           error_scaleFactor = 0. 
           if kindLep == 'ele' :
-            tkSC, tkSC_err = self._getHistoValue(self.tkSCElectronHisto, pt, eta)
+            tkSC, tkSC_err = self._getHistoValueRECO(self.tkSCElectronHisto, pt, eta)
             scaleFactor *= tkSC
             error_scaleFactor = tkSC_err 
           

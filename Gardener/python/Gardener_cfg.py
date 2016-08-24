@@ -2175,12 +2175,15 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.079'
+                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.0404229'
                },
                # the number is 0.497/fb / XXX/fb 
                # then 0.497 / 2.6 = 0.19
                # then 0.497 / 4.0 = 0.12
                # then 0.497 / (2.791 + 1.546 + 1.549 + 0.378) = 0.497 / 6.264 = 0.079
+               # then 0.497 / (2.791 + 1.546 + 1.549 + 0.378) = 0.497 / 6.264 = 0.079
+               # then 0.497 / 12.2950 =   0.0404229              
+               #
                # export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
                # brilcalc lumi --begin  273158 --end 273726 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
                # 0.497 /fb
@@ -2190,12 +2193,13 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.095     --cmssw=RPLME_CMSSW'
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0483937   --cmssw=RPLME_CMSSW'
                }, 
                # the number is 0.595/fb / XXX/fb 
                # then 0.595 / 2.6 = 0.23
                # then 0.595 / 4.0 = 0.15
                # then 0.595 / (2.791 + 1.546 + 1.549 + 0.378) = 0.595 / 6.264 = 0.095
+               # then 0.595 / 12.2950 =    0.0483937
 
 
   'hadd'     : {

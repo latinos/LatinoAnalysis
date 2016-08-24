@@ -63,58 +63,75 @@ class EffTrgFiller(TreeCloner):
         cmssw_base = os.getenv('CMSSW_BASE')
                 
         if opts.triggerDoubleEleLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleEleLegHigPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt'
           else :                          opts.triggerDoubleEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele17_12LegHigPt.txt'
         if opts.triggerDoubleEleLegLowPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleEleLegLowPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt'
           else :                          opts.triggerDoubleEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele17_12LegLowPt.txt'
         if opts.triggerSingleEle == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_EleSingle.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_EleSingle.txt'
           else :                          opts.triggerSingleEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_Ele23Single.txt'
 
         if opts.triggerDoubleMuLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegHigPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt'
           else :                          opts.triggerDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLegHigPt.txt'
         if opts.triggerDoubleMuLegLowPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegLowPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt'
           else :                          opts.triggerDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_DoubleMuLegLowPt.txt'
         if opts.triggerSingleMu == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuSingle.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_MuSingle.txt'
           else :                          opts.triggerSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuSingle.txt'
 
         if opts.triggerMuEleLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuEleLegHigPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt'
           else :                          opts.triggerMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuEleLegHigPt.txt'
         if opts.triggerMuEleLegLowPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerMuEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuEleLegLowPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerMuEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_MuEleLegLowPt.txt'
           else :                          opts.triggerMuEleLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_MuEleLegLowPt.txt'
 
         if opts.triggerEleMuLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerEleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_EleMuLegHigPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerEleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_EleMuLegHigPt.txt'
           else :                          opts.triggerEleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_EleMuLegHigPt.txt'
         if opts.triggerEleMuLegLowPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_EleMuLegLowPt.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_EleMuLegLowPt.txt'
           else :                          opts.triggerEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/HLT_EleMuLegLowPt.txt'
 
 
         # special runs for muons
         if opts.triggerSpecialDoubleMuLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegHigPt_BeforeRun274094.txt'
-          else :                          opts.triggerSpecialDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegHigPt_BeforeRun274094.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleMuLegHigPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialDoubleMuLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleMuLegHigPt_BeforeRun274094.txt'
         if opts.triggerSpecialDoubleMuLegLowPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegLowPt_BeforeRun274094.txt'
-          else :                          opts.triggerSpecialDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_DoubleMuLegLowPt_BeforeRun274094.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleMuLegLowPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialDoubleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_DoubleMuLegLowPt_BeforeRun274094.txt'
         if opts.triggerSpecialSingleMu == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuSingle_BeforeRun274094.txt'
-          else :                          opts.triggerSpecialSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuSingle_BeforeRun274094.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_MuSingle_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialSingleMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_MuSingle_BeforeRun274094.txt'
 
         if opts.triggerSpecialMuEleLegHigPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuEleLegHigPt_BeforeRun274094.txt'
-          else :                          opts.triggerSpecialMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_MuEleLegHigPt_BeforeRun274094.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_MuEleLegHigPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialMuEleLegHigPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_MuEleLegHigPt_BeforeRun274094.txt'
         if opts.triggerSpecialEleMuLegLowPt == None :
-          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_EleMuLegLowPt_BeforeRun274094.txt'
-          else :                          opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016/HLT_EleMuLegLowPt_BeforeRun274094.txt'
+          if opts.cmssw == "ICHEP2016" :  opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_EleMuLegLowPt_BeforeRun274094.txt'
+          else :                          opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_EleMuLegLowPt_BeforeRun274094.txt'
 
+
+        print 'opts.triggerDoubleEleLegHigPt = ', opts.triggerDoubleEleLegHigPt
+        print 'opts.triggerDoubleEleLegLowPt = ', opts.triggerDoubleEleLegLowPt
+        print 'opts.triggerSingleEle = ', opts.triggerSingleEle
+        print 'opts.triggerDoubleMuLegHigPt = ', opts.triggerDoubleMuLegHigPt
+        print 'opts.triggerDoubleMuLegLowPt = ', opts.triggerDoubleMuLegLowPt
+        print 'opts.triggerSingleMu = ', opts.triggerSingleMu
+        print 'opts.triggerMuEleLegHigPt = ', opts.triggerMuEleLegHigPt
+        print 'opts.triggerMuEleLegLowPt = ', opts.triggerMuEleLegLowPt
+        print 'opts.triggerEleMuLegHigPt = ', opts.triggerEleMuLegHigPt
+        print 'opts.triggerEleMuLegLowPt = ', opts.triggerEleMuLegLowPt
+
+        print 'opts.triggerSpecialDoubleMuLegHigPt = ', opts.triggerSpecialDoubleMuLegHigPt
+        print 'opts.triggerSpecialDoubleMuLegLowPt = ', opts.triggerSpecialDoubleMuLegLowPt
+        print 'opts.triggerSpecialSingleMu = ', opts.triggerSpecialSingleMu
+        print 'opts.triggerSpecialMuEleLegHigPt = ', opts.triggerSpecialMuEleLegHigPt
+        print 'opts.triggerSpecialEleMuLegLowPt = ', opts.triggerSpecialEleMuLegLowPt
 
 
 
