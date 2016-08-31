@@ -2154,7 +2154,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.0404229'
+                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.0404229     --cmssw=RPLME_CMSSW'
                },
                # the number is 0.497/fb / XXX/fb 
                # then 0.497 / 2.6 = 0.19

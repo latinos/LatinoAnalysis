@@ -234,8 +234,9 @@ class IdIsoSFFiller(TreeCloner):
                 #
                 # Procedure required by EGamma:
                 # - electrons scale factors are provided in absolute eta bins
-                #
-                eta = abs(eta)
+                #    ---------> only for Moriond2016!!!
+                if not self.cmssw == "ICHEP2016" : 
+                  eta = abs(eta)
           
                 if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
                      pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
@@ -457,6 +458,8 @@ class IdIsoSFFiller(TreeCloner):
               #                                                              is tight lepton? 1=tight, 0=loose
               w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   0,     itree.nvtx)
              
+              #if kindLep == 'ele' : print " kindLep, pt, eta, w, ", kindLep, "  ", pt, "  ", eta, "  ", w
+              
               bvector_idiso.push_back(w)
               bvector_idiso_Up.push_back(w+error_w_up)
               bvector_idiso_Down.push_back(w-error_w_lo)             
