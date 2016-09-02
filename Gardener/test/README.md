@@ -464,6 +464,9 @@ Module: btagPogScaleFactors
        -r /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015  \
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015_puW \          
 
+
+       
+       
 this module needs to run after l2sel, because it needs the real jets in the event.
 The module adds to the trees two sets of weights, one based on the POG provided SF, one based on our Tag and Probe method.
 The POG SF are contained in branch named `bPogSF*`, while the Tag & Probe Scale factors are called `bTPSF*`. 
@@ -487,6 +490,12 @@ Module: allBtagPogScaleFactors
        /media/data/amassiro/LatinoTrees/WW/50ns/05Aug2015/latino_WZ.root   \
        test.root \
 
+
+    gardener.py  allBtagPogScaleFactors --cmssw=ICHEP2016  \
+       /tmp/amassiro/latino_TTTo2L2Nu_ext1__part0.root   \
+       /tmp/amassiro/latino_TTTo2L2Nu_ext1__part0_btag.root            
+
+       
 Same skeleton as the previous module but this time add 3 weights (nominal, up and down) for each working point (loose, medium and tight) of the CMVA and the CSVv2 taggers.
 In addition the module also adds the weights for the b tagging discriminator reshaping, both for CMVA and CSVv2.
 To each one of the two reshaping weight are associated 18 additional weights representing the systematic variations of several quantities (such as JES variations), to be treated as nuisance parameters.
