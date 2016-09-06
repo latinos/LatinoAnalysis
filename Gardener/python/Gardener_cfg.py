@@ -2448,6 +2448,14 @@ Steps= {
                'command'    : 'gardener.py adder -v \'dataset/F=42\'  '
            },
 
+  'fakeSel'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'metPfType1 < 20 && mtw1 < 20\' '
+           },
+
+
 
   'wwSel'    : {
                   'isChain'    : False ,
