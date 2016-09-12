@@ -38,6 +38,9 @@ class ShapeFactory:
 
         outputDirPlots = {}
         self._outputDirPlots = outputDirPlots
+        
+        self._showIntegralLegend = 1
+        # 0 is no
 
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
@@ -795,28 +798,56 @@ class ShapeFactory:
                 if plot[sampleName]['isData'] == 0 :
                   if 'nameHR' in plot[sampleName].keys() :
                     if plot[sampleName]['nameHR'] != '' :
+                      if self._showIntegralLegend == 0 :
                         tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
+                      else :
+                        nevents = histos[sampleName].Integral(-1,-1)
+                        tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
                   else :
-                    tlegend.AddEntry(histos[sampleName], sampleName, "F")
+                    if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(histos[sampleName], sampleName, "F")
+                    else :
+                      nevents = histos[sampleName].Integral(-1,-1)
+                      tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "F")
                
               for sampleName, sample in reversedSamples.iteritems():
                 if plot[sampleName]['isData'] == 1 :
                   if 'nameHR' in plot[sampleName].keys() :
-                    tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                    if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                    else :
+                      nevents = histos[sampleName].Integral(-1,-1)
+                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
-                    tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
+                    if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
+                    else :
+                      nevents = histos[sampleName].Integral(-1,-1)
+                      tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
               
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-                tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
+                if self._showIntegralLegend == 0 :
+                  tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
+                else :
+                  nevents = histos_grouped[sampleNameGroup].Integral(-1,-1)
+                  tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
               for sampleName, sample in reversedSamples.iteritems():
                 if plot[sampleName]['isData'] == 1 :
                   if 'nameHR' in plot[sampleName].keys() :
-                    tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                    if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                    else :
+                      nevents = histos[sampleName].Integral(-1,-1)
+                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
-                    tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
+                    if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(histos[sampleName], sampleName , "EPL")
+                    else :
+                      nevents = histos[sampleName].Integral(-1,-1)
+                      tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
               
                   
