@@ -226,6 +226,16 @@ class ShapeFactory:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       histos[sampleName].SetBinContent(iBin, 0)
                       histos[sampleName].SetBinError  (iBin, 0)
+                    but_how_is_it_possible = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                    print " what is it = ", sampleName
+                    print " but_how_is_it_possible [", sampleName, "] = ", but_how_is_it_possible
+                    but_how_is_it_possible_low_high = histos[sampleName].Integral(-1, -1)
+                    print " but_how_is_it_possible_low_high [", sampleName, "] = ", but_how_is_it_possible_low_high
+                    histos[sampleName].Reset()
+                    but_how_is_it_possible_low_high_reset = histos[sampleName].Integral(-1, -1)
+                    print " but_how_is_it_possible_low_high_reset [", sampleName, "] = ", but_how_is_it_possible_low_high_reset
+                    
+                      
                 
                 #thsData.Add(histos[sampleName])
 
@@ -801,13 +811,13 @@ class ShapeFactory:
                       if self._showIntegralLegend == 0 :
                         tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
                       else :
-                        nevents = histos[sampleName].Integral(-1,-1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                         tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "F")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "F")
                
               for sampleName, sample in reversedSamples.iteritems():
@@ -816,13 +826,13 @@ class ShapeFactory:
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
@@ -831,7 +841,7 @@ class ShapeFactory:
                 if self._showIntegralLegend == 0 :
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
-                  nevents = histos_grouped[sampleNameGroup].Integral(-1,-1)
+                  nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1)
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
               for sampleName, sample in reversedSamples.iteritems():
@@ -840,13 +850,15 @@ class ShapeFactory:
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName , "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
               
