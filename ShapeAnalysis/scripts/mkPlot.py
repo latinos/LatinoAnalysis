@@ -91,7 +91,7 @@ class ShapeFactory:
         list_tcanvasSigVsBkg       = {}
 
         generalCounter = 0
-        
+
         fileIn = ROOT.TFile(inputFile, "READ")
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
@@ -183,6 +183,8 @@ class ShapeFactory:
 
             # enhanced list of nuisances, including bin-by-bin 
             mynuisances = {}
+
+            nexpected = 0
 
             for sampleName, sample in self._samples.iteritems():
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
@@ -293,6 +295,7 @@ class ShapeFactory:
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                 else :
                   thsBackground.Add(histos[sampleName])
+                  nexpected += histos[sampleName].Integral(-1,-1)
                   #print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
@@ -864,7 +867,11 @@ class ShapeFactory:
               
                   
             if len(mynuisances.keys()) != 0:
-              tlegend.AddEntry(tgrMC, "Systematics", "F")
+                if self._showIntegralLegend == 0 :
+                    tlegend.AddEntry(tgrMC, "Systematics]", "F")
+                else :
+                    print " nexpected  = ", nexpected
+                    tlegend.AddEntry(tgrMC, "Systematics [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
