@@ -228,14 +228,14 @@ class ShapeFactory:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       histos[sampleName].SetBinContent(iBin, 0)
                       histos[sampleName].SetBinError  (iBin, 0)
-                    but_how_is_it_possible = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
-                    print " what is it = ", sampleName
-                    print " but_how_is_it_possible [", sampleName, "] = ", but_how_is_it_possible
-                    but_how_is_it_possible_low_high = histos[sampleName].Integral(-1, -1)
-                    print " but_how_is_it_possible_low_high [", sampleName, "] = ", but_how_is_it_possible_low_high
+                    #but_how_is_it_possible = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                    #print " what is it = ", sampleName
+                    #print " but_how_is_it_possible [", sampleName, "] = ", but_how_is_it_possible
+                    #but_how_is_it_possible_low_high = histos[sampleName].Integral(-1, -1)
+                    #print " but_how_is_it_possible_low_high [", sampleName, "] = ", but_how_is_it_possible_low_high
                     histos[sampleName].Reset()
-                    but_how_is_it_possible_low_high_reset = histos[sampleName].Integral(-1, -1)
-                    print " but_how_is_it_possible_low_high_reset [", sampleName, "] = ", but_how_is_it_possible_low_high_reset
+                    #but_how_is_it_possible_low_high_reset = histos[sampleName].Integral(-1, -1)
+                    #print " but_how_is_it_possible_low_high_reset [", sampleName, "] = ", but_how_is_it_possible_low_high_reset
                     
                       
                 
@@ -1574,6 +1574,7 @@ if __name__ == '__main__':
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
    
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
+    parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
           
           
@@ -1594,6 +1595,7 @@ if __name__ == '__main__':
     print " outputDirPlots =          ", opt.outputDirPlots
  
     print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
+    print " showIntegralLegend = ", opt.showIntegralLegend
     
 
     if not opt.debug:
@@ -1610,6 +1612,7 @@ if __name__ == '__main__':
     factory._energy    = opt.energy
     factory._lumi      = opt.lumi
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
+    factory._showIntegralLegend = opt.showIntegralLegend
     
     
     variables = {}
