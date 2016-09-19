@@ -920,7 +920,7 @@ class ShapeFactory:
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
              
             # log Y axis
-            frame.GetYaxis().SetRangeUser( max(0.01, minYused), 100 * maxYused )
+            frame.GetYaxis().SetRangeUser( max(opt.minLogC, minYused), opt.maxLogC * maxYused )
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".eps")
@@ -1097,7 +1097,7 @@ class ShapeFactory:
             
             
             # log Y axis
-            frameDistro.GetYaxis().SetRangeUser( max(0.001, maxYused/1000), 10 * maxYused )
+            frameDistro.GetYaxis().SetRangeUser( max(opt.minLogCratio, maxYused/1000), opt.maxLogCratio * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
             pad1.SetLogy(0)
@@ -1569,6 +1569,10 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
+    parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01)
+    parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100)
+    parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001)
+    parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10)
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
@@ -1597,6 +1601,17 @@ if __name__ == '__main__':
     print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
     print " showIntegralLegend = ", opt.showIntegralLegend
     
+    print " minLogC   =          ", opt.minLogC
+    print " maxLogC   =          ", opt.maxLogC
+
+    print " minLogCratio   =          ", opt.minLogCratio
+    print " maxLogCratio   =          ", opt.maxLogCratio
+
+    opt.minLogC = float(opt.minLogC)
+    opt.maxLogC = float(opt.maxLogC)
+
+    opt.minLogCratio = float(opt.minLogCratio)
+    opt.maxLogCratio = float(opt.maxLogCratio)
 
     if not opt.debug:
         pass
