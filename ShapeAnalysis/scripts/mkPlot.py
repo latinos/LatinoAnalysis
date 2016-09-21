@@ -249,7 +249,7 @@ class ShapeFactory:
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
                     #print " plot[", sampleName, "].keys() = ", plot[sampleName].keys()
-                    if 'isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3 :
+                    if ('isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3) and plot[sampleName]['isBlind'] == 0 :
                       tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                       tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     else :
