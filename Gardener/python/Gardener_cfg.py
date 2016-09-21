@@ -477,7 +477,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet','BWEwkSinglet_JHUGen698'],
+                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'], #,'BWEwkSinglet_JHUGen698'],
                 },
 
   'puWbaseWFix' :     {
