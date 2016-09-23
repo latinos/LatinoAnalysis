@@ -156,10 +156,16 @@ class DatacardFactory:
             columndef = 30
 
             # adapt column length to long bin names            
-            if len(tagNameToAppearInDatacard) >= (columndef +5) :
+            if len(tagNameToAppearInDatacard) >= (columndef - 5) :
               columndef = len(tagNameToAppearInDatacard) + 5
             
+            #print " columndef = ", columndef
+            #print " len(tagNameToAppearInDatacard)  = ", len(tagNameToAppearInDatacard) 
+            #print " tagNameToAppearInDatacard  = ", tagNameToAppearInDatacard
+            
+            
             card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
+            #card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) for iterator in range(totalNumberSamples) ])+'\n')
             
             card.write('process'.ljust(80))
             card.write(''.join([name.ljust(columndef) for name in self.signals]))
