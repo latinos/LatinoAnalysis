@@ -157,7 +157,7 @@ class DatacardFactory:
 
             # adapt column length to long bin names            
             if len(tagNameToAppearInDatacard) >= (columndef - 5) :
-              columndef = len(tagNameToAppearInDatacard) + 5
+              columndef = len(tagNameToAppearInDatacard) + 7
             
             #print " columndef = ", columndef
             #print " len(tagNameToAppearInDatacard)  = ", len(tagNameToAppearInDatacard) 
@@ -416,7 +416,7 @@ class DatacardFactory:
                     if nuisance ['type'] == 'rateParam' :
                       card.write((nuisance['name']).ljust(80-20))
                       card.write((nuisance ['type']).ljust(20))
-                      card.write((tagNameToAppearInDatacard).ljust(30))   # the bin
+                      card.write((tagNameToAppearInDatacard).ljust(columndef))   # the bin
                       # apply only to selected samples
                       for sampleName in self.signals:
                           if sampleName in nuisance['samples'].keys() :
