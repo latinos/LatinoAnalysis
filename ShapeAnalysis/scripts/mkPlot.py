@@ -91,7 +91,7 @@ class ShapeFactory:
         list_tcanvasSigVsBkg       = {}
 
         generalCounter = 0
-        
+
         fileIn = ROOT.TFile(inputFile, "READ")
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
@@ -184,6 +184,8 @@ class ShapeFactory:
             # enhanced list of nuisances, including bin-by-bin 
             mynuisances = {}
 
+            nexpected = 0
+
             for sampleName, sample in self._samples.iteritems():
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               print '     -> shapeName = ', shapeName,
@@ -226,6 +228,16 @@ class ShapeFactory:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       histos[sampleName].SetBinContent(iBin, 0)
                       histos[sampleName].SetBinError  (iBin, 0)
+                    #but_how_is_it_possible = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                    #print " what is it = ", sampleName
+                    #print " but_how_is_it_possible [", sampleName, "] = ", but_how_is_it_possible
+                    #but_how_is_it_possible_low_high = histos[sampleName].Integral(-1, -1)
+                    #print " but_how_is_it_possible_low_high [", sampleName, "] = ", but_how_is_it_possible_low_high
+                    histos[sampleName].Reset()
+                    #but_how_is_it_possible_low_high_reset = histos[sampleName].Integral(-1, -1)
+                    #print " but_how_is_it_possible_low_high_reset [", sampleName, "] = ", but_how_is_it_possible_low_high_reset
+                    
+                      
                 
                 #thsData.Add(histos[sampleName])
 
@@ -237,7 +249,7 @@ class ShapeFactory:
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
                     #print " plot[", sampleName, "].keys() = ", plot[sampleName].keys()
-                    if 'isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3 :
+                    if ('isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3) and ('isBlind' in plot[sampleName].keys() and plot[sampleName]['isBlind'] != 1) :
                       tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                       tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     else :
@@ -283,6 +295,7 @@ class ShapeFactory:
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                 else :
                   thsBackground.Add(histos[sampleName])
+                  nexpected += histos[sampleName].Integral(-1,-1)
                   #print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
@@ -801,13 +814,13 @@ class ShapeFactory:
                       if self._showIntegralLegend == 0 :
                         tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
                       else :
-                        nevents = histos[sampleName].Integral(-1,-1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                         tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "F")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "F")
                
               for sampleName, sample in reversedSamples.iteritems():
@@ -816,13 +829,13 @@ class ShapeFactory:
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
@@ -831,7 +844,7 @@ class ShapeFactory:
                 if self._showIntegralLegend == 0 :
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
-                  nevents = histos_grouped[sampleNameGroup].Integral(-1,-1)
+                  nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1)
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
               for sampleName, sample in reversedSamples.iteritems():
@@ -840,19 +853,25 @@ class ShapeFactory:
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName , "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(-1,-1)
+                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
               
                   
             if len(mynuisances.keys()) != 0:
-              tlegend.AddEntry(tgrMC, "Systematics", "F")
+                if self._showIntegralLegend == 0 :
+                    tlegend.AddEntry(tgrMC, "Systematics", "F")
+                else :
+                    print " nexpected  = ", nexpected
+                    tlegend.AddEntry(tgrMC, "Systematics [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -901,7 +920,7 @@ class ShapeFactory:
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
              
             # log Y axis
-            frame.GetYaxis().SetRangeUser( max(0.01, minYused), 100 * maxYused )
+            frame.GetYaxis().SetRangeUser( max( self._minLogC, minYused), self._maxLogC * maxYused )
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".eps")
@@ -1078,7 +1097,7 @@ class ShapeFactory:
             
             
             # log Y axis
-            frameDistro.GetYaxis().SetRangeUser( max(0.001, maxYused/1000), 10 * maxYused )
+            frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
             pad1.SetLogy(0)
@@ -1550,11 +1569,16 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
+    parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
+    parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
+    parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
+    parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
    
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
+    parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
           
           
@@ -1575,7 +1599,19 @@ if __name__ == '__main__':
     print " outputDirPlots =          ", opt.outputDirPlots
  
     print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
+    print " showIntegralLegend = ", opt.showIntegralLegend
     
+    print " minLogC   =          ", opt.minLogC
+    print " maxLogC   =          ", opt.maxLogC
+
+    print " minLogCratio   =          ", opt.minLogCratio
+    print " maxLogCratio   =          ", opt.maxLogCratio
+
+    opt.minLogC = float(opt.minLogC)
+    opt.maxLogC = float(opt.maxLogC)
+
+    opt.minLogCratio = float(opt.minLogCratio)
+    opt.maxLogCratio = float(opt.maxLogCratio)
 
     if not opt.debug:
         pass
@@ -1591,7 +1627,13 @@ if __name__ == '__main__':
     factory._energy    = opt.energy
     factory._lumi      = opt.lumi
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
+    factory._showIntegralLegend = opt.showIntegralLegend
     
+    factory._minLogC = opt.minLogC 
+    factory._maxLogC = opt.maxLogC 
+    factory._minLogCratio = opt.minLogCratio
+    factory._maxLogCratio = opt.maxLogCratio
+
     
     variables = {}
     if os.path.exists(opt.variablesFile) :

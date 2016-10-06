@@ -61,6 +61,8 @@ Productions= {
                         'cmssw' : '74x' ,
                       } ,
 
+
+
 #### 76x / StarWars tag / miniAOD v1
 
   '08Jan_25ns_mAODv1_MC'   : {
@@ -283,6 +285,22 @@ Productions= {
                                     },
                        },
 
+  '21Jun2016_v2_Run2016B_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jun21_v2/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016B-PromptReco-v2'            : 'Run2016B_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016B-PromptReco-v2'    : 'Run2016B_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
+                                    },
+                       },
+
+
   '05Jul2016_Run2016B_PromptReco' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
@@ -396,6 +414,37 @@ Productions= {
                                     },
                        },
 
+  '31Aug2016_Run2016E_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Aug31/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016D
+                                       'DoubleEG_Run2016E-PromptReco-v2'          : 'Run2016E_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016E-PromptReco-v2'        : 'Run2016E_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016E-PromptReco-v2'            : 'Run2016E_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016E-PromptReco-v2'    : 'Run2016E_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016E-PromptReco-v2'        : 'Run2016E_PromptReco_SingleMuon',
+                                    },
+                       },
+
+  '31Aug2016_Run2016F_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Aug31/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016D
+                                       'DoubleEG_Run2016F-PromptReco-v1'          : 'Run2016F_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016F-PromptReco-v1'        : 'Run2016F_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016F-PromptReco-v1'            : 'Run2016F_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016F-PromptReco-v1'    : 'Run2016F_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016F-PromptReco-v1'        : 'Run2016F_PromptReco_SingleMuon',
+                                    },
+                       },
 
 }
 
@@ -428,71 +477,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
-                  'XexcludeSample': [ 
-                                  # ... ggH High Mass
-                                  'GluGluHToWWTo2L2Nu_M130',
-                                  'GluGluHToWWTo2L2Nu_M135',
-                                  'GluGluHToWWTo2L2Nu_M140',
-                                  'GluGluHToWWTo2L2Nu_M145',
-                                  'GluGluHToWWTo2L2Nu_M150',
-                                  'GluGluHToWWTo2L2Nu_M155',
-                                  'GluGluHToWWTo2L2Nu_M160',
-                                  'GluGluHToWWTo2L2Nu_M165',
-                                  'GluGluHToWWTo2L2Nu_M170',
-                                  'GluGluHToWWTo2L2Nu_M175',
-                                  'GluGluHToWWTo2L2Nu_M180',
-                                  'GluGluHToWWTo2L2Nu_M190',
-                                  'GluGluHToWWTo2L2Nu_M200',
-                                  'GluGluHToWWTo2L2Nu_M210',
-                                  'GluGluHToWWTo2L2Nu_M230',
-                                  'GluGluHToWWTo2L2Nu_M250',
-                                  'GluGluHToWWTo2L2Nu_M270',
-                                  'GluGluHToWWTo2L2Nu_M300',
-                                  'GluGluHToWWTo2L2Nu_M350',
-                                  'GluGluHToWWTo2L2Nu_M400',
-                                  'GluGluHToWWTo2L2Nu_M450',
-                                  'GluGluHToWWTo2L2Nu_M500',
-                                  'GluGluHToWWTo2L2Nu_M550',
-                                  'GluGluHToWWTo2L2Nu_M600',
-                                  'GluGluHToWWTo2L2Nu_M650',
-                                  'GluGluHToWWTo2L2Nu_M700',
-                                  'GluGluHToWWTo2L2Nu_M750',
-                                  'GluGluHToWWTo2L2Nu_M800',
-                                  'GluGluHToWWTo2L2Nu_M900',
-                                  'GluGluHToWWTo2L2Nu_M1000',
-                                  # ... VBF High Mass
-                                  'VBFHToWWTo2L2Nu_M130',
-                                  'VBFHToWWTo2L2Nu_M135',
-                                  'VBFHToWWTo2L2Nu_M140',
-                                  'VBFHToWWTo2L2Nu_M145',
-                                  'VBFHToWWTo2L2Nu_M150',
-                                  'VBFHToWWTo2L2Nu_M155',
-                                  'VBFHToWWTo2L2Nu_M160',
-                                  'VBFHToWWTo2L2Nu_M165',
-                                  'VBFHToWWTo2L2Nu_M170',
-                                  'VBFHToWWTo2L2Nu_M175',
-                                  'VBFHToWWTo2L2Nu_M180',
-                                  'VBFHToWWTo2L2Nu_M190',
-                                  'VBFHToWWTo2L2Nu_M200',
-                                  'VBFHToWWTo2L2Nu_M210',
-                                  'VBFHToWWTo2L2Nu_M230',
-                                  'VBFHToWWTo2L2Nu_M250',
-                                  'VBFHToWWTo2L2Nu_M270',
-                                  'VBFHToWWTo2L2Nu_M300',
-                                  'VBFHToWWTo2L2Nu_M350',
-                                  'VBFHToWWTo2L2Nu_M400',
-                                  'VBFHToWWTo2L2Nu_M450',
-                                  'VBFHToWWTo2L2Nu_M500',
-                                  'VBFHToWWTo2L2Nu_M550',
-                                  'VBFHToWWTo2L2Nu_M600',
-                                  'VBFHToWWTo2L2Nu_M650',
-                                  'VBFHToWWTo2L2Nu_M700',
-                                  'VBFHToWWTo2L2Nu_M750',
-                                  'VBFHToWWTo2L2Nu_M800',
-                                  'VBFHToWWTo2L2Nu_M900',
-                                  'VBFHToWWTo2L2Nu_M1000',
-                               ],
+                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'], #,'BWEwkSinglet_JHUGen698'],
                 },
 
   'puWbaseWFix' :     {
@@ -535,6 +520,7 @@ Steps= {
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                  'WmWmJJ_EWK_powheg',
  			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
                                   'TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX'
                                  ] ,
@@ -546,7 +532,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
+                  'subTargets' : ['l1loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -570,7 +556,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],
+                  'subTargets' : ['l1vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -598,7 +584,7 @@ Steps= {
                   'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 
-                                   'WZTo2L2Q',  
+                                   'WZTo2L2Q','WZTo3LNu_mllmin01'  
                                  ]
                 },
 
@@ -1026,7 +1012,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1037,7 +1023,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1116,6 +1102,21 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
+
+                                  
                                  ] ,
                 },
 
@@ -1134,7 +1135,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1145,7 +1146,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1223,6 +1224,20 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
                                  ] ,
                 },
 
@@ -1242,7 +1257,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1253,7 +1268,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1331,6 +1346,20 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
+
                                  ] ,
               },
 
@@ -1349,7 +1378,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1360,7 +1389,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1439,6 +1468,20 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
                                  ] ,
               },
 
@@ -1458,7 +1501,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1469,7 +1512,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1548,6 +1591,20 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
+
                                  ] ,
               },
 
@@ -1566,7 +1623,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1578,7 +1635,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1656,6 +1713,20 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
+
                                  ] ,
               },
                   
@@ -1676,7 +1747,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1687,7 +1758,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1765,6 +1836,20 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
+
                                  ] ,
               },
 
@@ -1783,7 +1868,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-600toInf_MLM' ,
                                   'DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-100to200_ext1','DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-50_HT-600toInf', 
+                                  'DYJetsToLL_M-50_HT-600toInf', 'DYJetsToTT_MuEle_M-50',
                                   # Top
                                   'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
                                   'ST_t-channel_antitop','ST_t-channel_top',
@@ -1795,7 +1880,7 @@ Steps= {
                                   'ZZ','Zg',
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
-                                  'Wg_MADGRAPHMLM',
+                                  'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1872,6 +1957,19 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+
+                                  # stop
+
+                                  'latino_T2bW',
+                                  'latino_T2tt_dM10to80',
+                                  'latino_T2tt_dM10to80_genHT160_genMET80',
+                                  'latino_T2tt_mStop-150to250',
+                                  'latino_T2tt_mStop-250to350',
+                                  'latino_T2tt_mStop-350to400',
+                                  'latino_T2tt_mStop-400to1200',
+                                  'latino_T2tt_mStop425_mLSP325',
+                                  'latino_T2tt_mStop500_mLSP325',
+                                  'latino_T2tt_mStop850_mLSP100',
                                  ] ,
               },
 
@@ -1918,7 +2016,7 @@ Steps= {
                   'command'    : 'gardener.py filter -f \'isJsonOk>0.5\' '
                 } ,
 
-  'fakeW'     : {
+  'fakeW12fb'     : {
                   'isChain'    : False ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
@@ -1996,7 +2094,7 @@ Steps= {
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
-                                  'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
+                                  'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL','DYJetsToTT_MuEle_M-50',
                                   'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
                                   'DYJetsToLL_M-50_HT-200to400_MLM' , 
                                   'DYJetsToLL_M-50_HT-400to600_MLM' ,
@@ -2145,6 +2243,64 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000', 
                                  ],
                   'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+)*"',
+                 },
+
+
+  'BWEwkSinglet_JHUGen698' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+      
+                  'onlySample' : [
+                                  # ... ggH High Mass
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M200',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M210',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M230',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M250',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M270',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M300',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M350',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M400',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M450',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M500',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M550',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M600',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M650',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M700',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M750',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M800',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M900',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1000',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
+
+                                  # ... VBF High Mass
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M200',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M210',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M230',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M250',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M270',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M300',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M350',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M400',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M450',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M500',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M550',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M600',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M650',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M700',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M750',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M800',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M900',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M1000', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M1500', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M2000', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M2500', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M3000', 
+                                 ],
+                  'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_JHUGen698_M([0-9]+)*" --undoCPS=False',
                  },
 
   'l2sel'    : {
@@ -2455,6 +2611,13 @@ Steps= {
                   'command'    : 'gardener.py filter -f \'metPfType1 < 20 && mtw1 < 20\' '
            },
 
+
+  'topSel'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' mll>20 && std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>15 && njet>1 \' '
+           },
 
 
   'wwSel'    : {
