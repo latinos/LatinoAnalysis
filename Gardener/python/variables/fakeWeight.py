@@ -16,7 +16,7 @@ from LatinoAnalysis.Gardener.gardening import TreeCloner
 #
 
 #
-# origin: https://github.com/calderona/WW13TeV/blob/master/addWJet/addWJetsWeights.C
+# Origin: https://github.com/calderona/WW13TeV/blob/master/addWJet/addWJetsWeights.C
 #
 
 
@@ -249,6 +249,110 @@ class FakeWeightFiller(TreeCloner):
             return result
 
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # _get4lWeight
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def _get4lWeight(self, leptons, MuFR, ElFR, stat):
+
+        # avoid dots to go faster
+        MuPR = self.MuPR
+        ElPR = self.ElPR
+
+        if (len(leptons) < 4) :
+
+            return 0.0
+
+        else :
+
+            promptProbability = numpy.ones(4, dtype=numpy.float32)
+            fakeProbability   = numpy.ones(4, dtype=numpy.float32)
+
+            ntight = 0
+
+            for i in leptons :
+
+                if (i > 3) : break
+                
+                p  = 1.  # prompt rate
+                f  = 0.  # fake   rate
+                pE = 0.  # prompt rate statistical error
+                fE = 0.  # fake   rate statistical error
+
+                if (leptons[i][0] == 'mu') :
+
+                    p, pE = self._getRate(MuPR, leptons[i][1], leptons[i][2], -999.)
+                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2],   35.)
+
+                    if   (stat == 'MuUp')   : f = f + fE
+                    elif (stat == 'MuDown') : f = f - fE
+
+                elif (leptons[i][0] == 'ele') :
+
+                    p, pE = self._getRate(ElPR, leptons[i][1], leptons[i][2], -999.)
+                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],   35.)
+
+                    if   (stat == 'ElUp')   : f = f + fE
+                    elif (stat == 'ElDown') : f = f - fE
+
+                if (leptons[i][3] == 1) :
+
+                    ntight += 1
+ 
+                    promptProbability[i] = p * (1 - f)
+                    fakeProbability[i]   = f * (1 - p)
+             
+                else :
+
+                    promptProbability[i] = p * f
+                    fakeProbability[i]   = p * f
+
+                promptProbability[i] /= (p - f)
+                fakeProbability[i]   /= (p - f)
+ 
+            PPPF = promptProbability[0] * promptProbability[1] * promptProbability[2] * fakeProbability  [3];
+            PPFP = promptProbability[0] * promptProbability[1] * fakeProbability  [2] * promptProbability[3];
+            PFPP = promptProbability[0] * fakeProbability  [1] * promptProbability[2] * promptProbability[3];
+            FPPP = fakeProbability  [0] * promptProbability[1] * promptProbability[2] * promptProbability[3];
+
+            FFPP = fakeProbability  [0] * fakeProbability  [1] * promptProbability[2] * promptProbability[3];
+            PPFF = promptProbability[0] * promptProbability[1] * fakeProbability  [2] * fakeProbability  [3];
+            PFPF = promptProbability[0] * fakeProbability  [1] * promptProbability[2] * fakeProbability  [3];
+            FPFP = fakeProbability  [0] * promptProbability[1] * fakeProbability  [2] * promptProbability[3];
+            FPPF = fakeProbability  [0] * promptProbability[1] * promptProbability[2] * fakeProbability  [3];
+            PFFP = promptProbability[0] * fakeProbability  [1] * fakeProbability  [2] * promptProbability[3];
+
+            FFFP = fakeProbability  [0] * fakeProbability  [1] * fakeProbability  [2] * promptProbability[3];
+            FFPF = fakeProbability  [0] * fakeProbability  [1] * promptProbability[2] * fakeProbability  [3];
+            FPFF = fakeProbability  [0] * promptProbability[1] * fakeProbability  [2] * fakeProbability  [3];
+            PFFF = promptProbability[0] * fakeProbability  [1] * fakeProbability  [2] * fakeProbability  [3];
+
+            FFFF = fakeProbability[0] * fakeProbability[1] * fakeProbability[2] * fakeProbability[3];
+
+            if (ntight == 1 or ntight == 3) :
+                FFPP *= -1.
+                PPFF *= -1.
+                PFPF *= -1.
+                FPFP *= -1.
+                FPPF *= -1.
+                PFFP *= -1.
+                #
+                FFFF *= -1.
+            else :
+                PPPF *= -1.
+                PPFP *= -1.
+                PFPP *= -1.
+                FPPP *= -1.
+                #
+                FFFP *= -1.
+                FFPF *= -1.
+                FPFF *= -1.
+                PFFF *= -1.
+
+            result = PPPF+PPFP+PFPP+FPPP + FFPP+PPFF+PFPF+FPFP+FPPF+PFFP + FFFP+FFPF+FPFF+FPFF+PFFF + FFFF
+
+            return result
+
+
     def process(self,**kwargs):
         tree   = kwargs['tree']
         input  = kwargs['input']
@@ -259,7 +363,8 @@ class FakeWeightFiller(TreeCloner):
         self.fakeVariables = [ 'fakeW2l0j', 'fakeW2l0jMuUp', 'fakeW2l0jMuDown', 'fakeW2l0jElUp', 'fakeW2l0jElDown', 'fakeW2l0jstatMuUp', 'fakeW2l0jstatMuDown', 'fakeW2l0jstatElUp', 'fakeW2l0jstatElDown',
                                'fakeW2l1j', 'fakeW2l1jMuUp', 'fakeW2l1jMuDown', 'fakeW2l1jElUp', 'fakeW2l1jElDown', 'fakeW2l1jstatMuUp', 'fakeW2l1jstatMuDown', 'fakeW2l1jstatElUp', 'fakeW2l1jstatElDown',
                                'fakeW2l2j', 'fakeW2l2jMuUp', 'fakeW2l2jMuDown', 'fakeW2l2jElUp', 'fakeW2l2jElDown', 'fakeW2l2jstatMuUp', 'fakeW2l2jstatMuDown', 'fakeW2l2jstatElUp', 'fakeW2l2jstatElDown',
-                               'fakeW3l',   'fakeW3lMuUp',   'fakeW3lMuDown',   'fakeW3lElUp',   'fakeW3lElDown',   'fakeW3lstatMuUp',   'fakeW3lstatMuDown',   'fakeW3lstatElUp',   'fakeW3lstatElDown' ]
+                               'fakeW3l',   'fakeW3lMuUp',   'fakeW3lMuDown',   'fakeW3lElUp',   'fakeW3lElDown',   'fakeW3lstatMuUp',   'fakeW3lstatMuDown',   'fakeW3lstatElUp',   'fakeW3lstatElDown',
+                               'fakeW4l',   'fakeW4lMuUp',   'fakeW4lMuDown',   'fakeW4lElUp',   'fakeW4lElDown',   'fakeW4lstatMuUp',   'fakeW4lstatMuDown',   'fakeW4lstatElUp',   'fakeW4lstatElDown' ]
 
         # Clone the tree with new branches added
         self.clone(output, self.fakeVariables)
@@ -304,6 +409,16 @@ class FakeWeightFiller(TreeCloner):
         fakeW3lstatElUp   = numpy.ones(1, dtype=numpy.float32)
         fakeW3lstatElDown = numpy.ones(1, dtype=numpy.float32)
 
+        fakeW4l           = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lMuUp       = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lMuDown     = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lElUp       = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lElDown     = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lstatMuUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lstatMuDown = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lstatElUp   = numpy.ones(1, dtype=numpy.float32)
+        fakeW4lstatElDown = numpy.ones(1, dtype=numpy.float32)
+
         self.otree.Branch('fakeW2l0j',           fakeW2l0j,           'fakeW2l0j/F')
         self.otree.Branch('fakeW2l0jMuUp',       fakeW2l0jMuUp,       'fakeW2l0jMuUp/F')
         self.otree.Branch('fakeW2l0jMuDown',     fakeW2l0jMuDown,     'fakeW2l0jMuDown/F')
@@ -343,6 +458,16 @@ class FakeWeightFiller(TreeCloner):
         self.otree.Branch('fakeW3lstatMuDown', fakeW3lstatMuDown, 'fakeW3lstatMuDown/F')
         self.otree.Branch('fakeW3lstatElUp',   fakeW3lstatElUp,   'fakeW3lstatElUp/F')
         self.otree.Branch('fakeW3lstatElDown', fakeW3lstatElDown, 'fakeW3lstatElDown/F')
+
+        self.otree.Branch('fakeW4l',           fakeW4l,           'fakeW4l/F')
+        self.otree.Branch('fakeW4lMuUp',       fakeW4lMuUp,       'fakeW4lMuUp/F')
+        self.otree.Branch('fakeW4lMuDown',     fakeW4lMuDown,     'fakeW4lMuDown/F')
+        self.otree.Branch('fakeW4lElUp',       fakeW4lElUp,       'fakeW4lElUp/F')
+        self.otree.Branch('fakeW4lElDown',     fakeW4lElDown,     'fakeW4lElDown/F')
+        self.otree.Branch('fakeW4lstatMuUp',   fakeW4lstatMuUp,   'fakeW4lstatMuUp/F')
+        self.otree.Branch('fakeW4lstatMuDown', fakeW4lstatMuDown, 'fakeW4lstatMuDown/F')
+        self.otree.Branch('fakeW4lstatElUp',   fakeW4lstatElUp,   'fakeW4lstatElUp/F')
+        self.otree.Branch('fakeW4lstatElDown', fakeW4lstatElDown, 'fakeW4lstatElDown/F')
 
         nentries = self.itree.GetEntries()
         print ' - Input entries:', nentries
@@ -433,6 +558,16 @@ class FakeWeightFiller(TreeCloner):
             fakeW3lstatMuDown[0] = self._get3lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'MuDown')
             fakeW3lstatElUp  [0] = self._get3lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'ElUp')
             fakeW3lstatElDown[0] = self._get3lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'ElDown')
+
+            fakeW4l          [0] = self._get4lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'Nominal')
+            fakeW4lMuUp      [0] = self._get4lWeight(Leptons, self.MuFR_jet45, self.ElFR_jet35, 'Nominal')
+            fakeW4lMuDown    [0] = self._get4lWeight(Leptons, self.MuFR_jet25, self.ElFR_jet35, 'Nominal')
+            fakeW4lElUp      [0] = self._get4lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet45, 'Nominal')
+            fakeW4lElDown    [0] = self._get4lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet25, 'Nominal')
+            fakeW4lstatMuUp  [0] = self._get4lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'MuUp')
+            fakeW4lstatMuDown[0] = self._get4lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'MuDown')
+            fakeW4lstatElUp  [0] = self._get4lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'ElUp')
+            fakeW4lstatElDown[0] = self._get4lWeight(Leptons, self.MuFR_jet35, self.ElFR_jet35, 'ElDown')
               
             otree.Fill()
             savedentries += 1
