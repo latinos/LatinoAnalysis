@@ -100,7 +100,8 @@ class JESTreeMaker(TreeCloner):
 
         # Load jes uncertainty
         if self.cmssw == 'ICHEP2016':
-            jecUnc = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV1_MC_Uncertainty_AK4PFchs.txt"))
+            jecUncSpring16V1 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV1_MC_Uncertainty_AK4PFchs.txt"))
+	    jecUncSpring16V6 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
         else:
             jecUncFall15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Fall15_25nsV2_MC_Uncertainty_AK4PFchs.txt"))
             jecUncSummer15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
@@ -121,9 +122,20 @@ class JESTreeMaker(TreeCloner):
             for i in range(itree.std_vector_jet_pt.size()):
                 if itree.std_vector_jet_pt[i] > 0:
                     if self.cmssw == 'ICHEP2016':
-                        jecUnc.setJetEta(itree.std_vector_jet_eta[i])
-                        jecUnc.setJetPt(itree.std_vector_jet_pt[i])
-                        unc = jecUnc.getUncertainty(True)
+                        jecUncSpring16V1.setJetEta(itree.std_vector_jet_eta[i])
+                        jecUncSpring16V1.setJetPt(itree.std_vector_jet_pt[i])
+                        unc = jecUncSpring16V1.getUncertainty(True)
+
+			if self.maxUncertainty:
+                            jecUncSpring16V6.setJetEta(itree.std_vector_jet_eta[i])
+                            jecUncSpring16V6.setJetPt(itree.std_vector_jet_pt[i])
+                            unc = max(unc,jecUncSpring16V6.getUncertainty(True))
+
+			    if abs(itree.std_vector_jet_eta[i]) > 2.5:
+				if itree.std_vector_jet_pt[i] > 150:
+                                    unc *= 2
+				elif itree.std_vector_jet_pt[i] > 50:
+				    unc *= 1 + (itree.std_vector_jet_pt[i] - 50 ) / 100.
                     else:
                         jecUncSummer15.setJetEta(itree.std_vector_jet_eta[i])
                         jecUncSummer15.setJetPt(itree.std_vector_jet_pt[i])
