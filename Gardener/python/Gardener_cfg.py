@@ -2767,28 +2767,28 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py JESTreeMaker -k 1 '
+                  'command'    : 'gardener.py JESTreeMaker -k 1 --cmssw=RPLME_CMSSW'
                 } ,
 
   'do_JESdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py JESTreeMaker -k -1 '
+                  'command'    : 'gardener.py JESTreeMaker -k -1 --cmssw=RPLME_CMSSW'
                 } ,
   
   'do_JESMaxup'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py JESTreeMaker -k 1 --maxUncertainty '
+                  'command'    : 'gardener.py JESTreeMaker -k 1 --maxUncertainty --cmssw=RPLME_CMSSW'
                 } ,
 
   'do_JESMaxdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'command'    : 'gardener.py JESTreeMaker -k -1 --maxUncertainty'
+                  'command'    : 'gardener.py JESTreeMaker -k -1 --maxUncertainty --cmssw=RPLME_CMSSW'
                 } ,
 
  
@@ -2805,28 +2805,28 @@ Steps= {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange ele    -v 1.0'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange ele    -v 1.0 --cmssw=RPLME_CMSSW'
                  } ,
   
   'do_LepElepTdo'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange ele   -v -1.0'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange ele   -v -1.0 --cmssw=RPLME_CMSSW'
                  } ,
   
   'do_LepMupTup'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange mu    -v 1.0'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange mu    -v 1.0 --cmssw=RPLME_CMSSW'
                  } ,
   
   'do_LepMupTdo'    : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange mu   -v -1.0'
+                   'command'    : 'gardener.py LeppTScalerTreeMaker --lepFlavourToChange mu   -v -1.0 --cmssw=RPLME_CMSSW'
                  } ,
   
   'do_METup'        : {
