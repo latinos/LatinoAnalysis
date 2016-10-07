@@ -522,7 +522,8 @@ Steps= {
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
                                   'WmWmJJ_EWK_powheg',
  			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
-                                  'TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX'
+                                  'TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX',
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
                                  ] ,
                 },
 
@@ -781,7 +782,7 @@ Steps= {
  			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
                           'WGJJ','EWKZ2Jets','TTToSemiLeptonic',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                  ] ,
                 },
 
@@ -887,7 +888,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                  ] ,
                 },
 
@@ -992,7 +993,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                  ] ,
                 },
 
@@ -1101,7 +1102,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
                                   # stop
 
@@ -1116,8 +1117,43 @@ Steps= {
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
 
-                                  
-                                 ] ,
+   
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               ],               
                 },
 
   'JESMaxdo'     :  {
@@ -1223,7 +1259,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
 
                                   # stop
@@ -1238,6 +1274,45 @@ Steps= {
                                   'latino_T2tt_mStop425_mLSP325',
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
+
+
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               
+
                                  ] ,
                 },
 
@@ -1345,7 +1420,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
                                   # stop
 
@@ -1359,6 +1434,44 @@ Steps= {
                                   'latino_T2tt_mStop425_mLSP325',
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
+
+
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               
 
                                  ] ,
               },
@@ -1467,7 +1580,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
 
                                   # stop
@@ -1482,6 +1595,45 @@ Steps= {
                                   'latino_T2tt_mStop425_mLSP325',
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
+
+
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               
+
                                  ] ,
               },
 
@@ -1590,7 +1742,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
                                   # stop
 
@@ -1604,6 +1756,45 @@ Steps= {
                                   'latino_T2tt_mStop425_mLSP325',
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
+
+
+
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               
 
                                  ] ,
               },
@@ -1712,7 +1903,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
                                   # stop
 
@@ -1726,6 +1917,44 @@ Steps= {
                                   'latino_T2tt_mStop425_mLSP325',
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
+
+
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               
 
                                  ] ,
               },
@@ -1835,7 +2064,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
                                   # stop
 
@@ -1849,6 +2078,45 @@ Steps= {
                                   'latino_T2tt_mStop425_mLSP325',
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
+
+
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               
+
 
                                  ] ,
               },
@@ -1956,7 +2224,7 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
 
                                   # stop
 
@@ -1970,6 +2238,45 @@ Steps= {
                                   'latino_T2tt_mStop425_mLSP325',
                                   'latino_T2tt_mStop500_mLSP325',
                                   'latino_T2tt_mStop850_mLSP100',
+
+
+                                  # monoH
+                                  'monoH_2HDM_MZp-1000_MA0-400',
+                                  'monoH_2HDM_MZp-1000_MA0-500',
+                                  'monoH_2HDM_MZp-1000_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-700',
+                                  'monoH_2HDM_MZp-1000_MA0-800',
+                                  'monoH_2HDM_MZp-1200_MA0-400',
+                                  'monoH_2HDM_MZp-1200_MA0-500',
+                                  'monoH_2HDM_MZp-1200_MA0-600',
+                                  'monoH_2HDM_MZp-1200_MA0-700',
+                                  'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-500',
+                                  'monoH_2HDM_MZp-1400_MA0-600',
+                                  'monoH_2HDM_MZp-1400_MA0-700',
+                                  'monoH_2HDM_MZp-1400_MA0-800',
+                                  'monoH_2HDM_MZp-1700_MA0-400',
+                                  'monoH_2HDM_MZp-1700_MA0-500',
+                                  'monoH_2HDM_MZp-1700_MA0-600',
+                                  'monoH_2HDM_MZp-1700_MA0-700',
+                                  'monoH_2HDM_MZp-1700_MA0-800',
+                                  'monoH_2HDM_MZp-2000_MA0-400',
+                                  'monoH_2HDM_MZp-2000_MA0-500',
+                                  'monoH_2HDM_MZp-2000_MA0-600',
+                                  'monoH_2HDM_MZp-2000_MA0-700',
+                                  'monoH_2HDM_MZp-2000_MA0-800',
+                                  'monoH_2HDM_MZp-2500_MA0-400',
+                                  'monoH_2HDM_MZp-2500_MA0-500',
+                                  'monoH_2HDM_MZp-2500_MA0-600',
+                                  'monoH_2HDM_MZp-2500_MA0-700',
+                                  'monoH_2HDM_MZp-2500_MA0-800',
+                                  'monoH_2HDM_MZp-600_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-400',
+                                  'monoH_2HDM_MZp-800_MA0-500',
+                                  'monoH_2HDM_MZp-800_MA0-600',
+
+                               
+
                                  ] ,
               },
 
@@ -2109,7 +2416,7 @@ Steps= {
                                   'DYJetsToLL_M-50_HT-400to600_ext1' ,
                                   'DYJetsToLL_M-50_HT-600toInf_ext1' ,
                                   # WW ewk
-                                  'WpWmJJ_EWK_QCD_noTop',
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
                                   # Higgs @ 125
                                   'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
                                   'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
@@ -2633,6 +2940,14 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \' std_vector_lepton_isTightLepton[0] > 0.5  && std_vector_lepton_isTightLepton[1] > 0.5  && std_vector_lepton_isTightLepton[2] > 0.5 && std_vector_lepton_pt[0] > 20. && std_vector_lepton_pt[1] > 10. && std_vector_lepton_pt[2] > 10.\' '
            },
+
+  'wh2lss1jSel' :  {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && std_vector_jet_pt[0]>30 && (abs(std_vector_lepton_flavour[1])==13 || std_vector_lepton_pt[1]>13) && ( (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == 11*11) || (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == 13*13) || (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == 11*13)  )  \' '
+           },
+
 
 }
 

@@ -229,6 +229,7 @@ for iProd in prodList :
       out, err = proc.communicate()
       FileExistList=string.split(out)
       print FileExistList
+      #print samples
       #print samples.keys()
       for iSample in samples : 
         # Tree selector
@@ -453,7 +454,6 @@ for iProd in prodList :
           if not iKey in Steps['hadd']['bigSamples'] :
             print '--> HADD: Some jobs stil running/not done : '+iTarget 
             del targetList[iTarget]
-
 
       print targetList
 
