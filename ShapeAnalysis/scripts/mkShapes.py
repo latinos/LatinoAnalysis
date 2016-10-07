@@ -93,7 +93,7 @@ if __name__ == '__main__':
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=os.sysconf('SC_NPROCESSORS_ONLN'))
-    parser.add_option('--doClean'        , dest='doCleanup'      , help='remove additional support files'            , default=True)
+    parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -213,7 +213,7 @@ if __name__ == '__main__':
               os.system("hadd "+opt.outputDir+'/plots_'+opt.tag+".root "+opt.outputDir+"/plots_"+opt.tag+"_temp*")
 
 
-            if opt.doCleanup=="True" :
+            if not opt.doNotCleanup:
               os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_temp*.root")
               for i in xrange(number):
                 os.system("rm sub"+str(i)+".py")

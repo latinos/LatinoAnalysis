@@ -249,7 +249,7 @@ class ShapeFactory:
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
                     #print " plot[", sampleName, "].keys() = ", plot[sampleName].keys()
-                    if ('isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3) and plot[sampleName]['isBlind'] == 0 :
+                    if ('isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3) and ('isBlind' in plot[sampleName].keys() and plot[sampleName]['isBlind'] != 1) :
                       tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                       tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     else :
@@ -920,7 +920,7 @@ class ShapeFactory:
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
              
             # log Y axis
-            frame.GetYaxis().SetRangeUser( max(opt.minLogC, minYused), opt.maxLogC * maxYused )
+            frame.GetYaxis().SetRangeUser( max( self._minLogC, minYused), self._maxLogC * maxYused )
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".eps")
@@ -1097,7 +1097,7 @@ class ShapeFactory:
             
             
             # log Y axis
-            frameDistro.GetYaxis().SetRangeUser( max(opt.minLogCratio, maxYused/1000), opt.maxLogCratio * maxYused )
+            frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
             pad1.SetLogy(0)
@@ -1569,16 +1569,16 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01)
-    parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100)
-    parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001)
-    parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10)
+    parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
+    parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
+    parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
+    parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
    
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
-    parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=1,    type=float )
+    parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
           
           
@@ -1629,6 +1629,11 @@ if __name__ == '__main__':
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
     factory._showIntegralLegend = opt.showIntegralLegend
     
+    factory._minLogC = opt.minLogC 
+    factory._maxLogC = opt.maxLogC 
+    factory._minLogCratio = opt.minLogCratio
+    factory._maxLogCratio = opt.maxLogCratio
+
     
     variables = {}
     if os.path.exists(opt.variablesFile) :

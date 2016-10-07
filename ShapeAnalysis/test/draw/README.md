@@ -170,6 +170,33 @@ Example:
     r99t /media/data/amassiro/LatinoTrees/Moriond/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_VBFHToWWTo2L2Nu_M125.root  \
          DrawPDF.cxx\(\"mth\",20,60,200,\"std_vector_jet_pt[0]\<30\&\&mll\>12\&\&std_vector_lepton_pt[0]\>20\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
     
+    
+    r99t /tmp/amassiro/eos/user/a/amassiro/HWW2015/ICHEP/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WZTo3LNu.root  \
+         DrawPDF.cxx\(\"mth\",20,0,200,\"std_vector_jet_pt[0]\<30\&\&mll\>12\&\&std_vector_lepton_pt[0]\>25\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
+    
+    r99t /tmp/amassiro/eos/user/a/amassiro/HWW2015/ICHEP/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WZTo3LNu.root  \
+         DrawPDF.cxx\(\"\(mth\<60\&\&mll\>40\&\&mll\<80\)*1+\(mth\>60\)*2\",2,1,3,\"std_vector_jet_pt[0]\<30\&\&mll\>12\&\&std_vector_lepton_pt[0]\>25\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
+    
+    
+    
+    
+    
+    r99t /tmp/amassiro/eos/user/a/amassiro/HWW2015/ICHEP/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WZTo3LNu.root  \
+         DrawPDF.cxx\(\"\(mth\<60\&\&mll\>40\&\&mll\<80\)*1+\(mth\>60\)*2\",2,1,3,\"std_vector_jet_pt[0]\<30\&\&mll\>12\&\&std_vector_lepton_pt[0]\>25\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
+    
+    r99t /tmp/amassiro/eos/user/a/amassiro/HWW2015/ICHEP/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_DYJetsToTT_MuEle_M-50.root  \
+         DrawPDF.cxx\(\"\(mth\<60\&\&mll\>40\&\&mll\<80\)*1+\(mth\>60\)*2\",2,1,3,\"std_vector_jet_pt[0]\<30\&\&mll\>12\&\&std_vector_lepton_pt[0]\>25\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
+
+         
+         
+    r99t /tmp/amassiro/eos/user/a/amassiro/HWW2015/ICHEP/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_TTTo2L2Nu_ext1__part0.root  \
+         DrawPDF.cxx\(\"\(std_vector_jet_cmvav2[0]\>-0.715\|\|std_vector_jet_cmvav2[1]\>-0.715\)*1+\(std_vector_jet_pt[0]\<20\|\|std_vector_jet_cmvav2[0]\<-0.715\)*2\",2,1,3,\"std_vector_jet_pt[0]\<30\&\&mll\>12\&\&std_vector_lepton_pt[0]\>25\&\&std_vector_lepton_pt[1]\>10\&\&std_vector_lepton_pt[2]\<10\&\&metPfType1\>20\&\&ptll\>30\",9,1\)
+    
+    
+    
+
+                
+    
     r99t ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_50ns.root \
          ../../../../LatinoTrees/AnalysisStep/test/latino_stepB_MC_25ns.root \
          DrawCompare.cxx\(\"std_vector_lepton_pt[0]\",10,0,100\)
