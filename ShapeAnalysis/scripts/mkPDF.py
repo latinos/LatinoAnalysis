@@ -296,7 +296,7 @@ class ShapeFactory:
               
                   denominator = preCutsHistograms[sampleName].GetBinContent(ipdf+1)
               
-                  if denominator != 0 :
+                  if denominator != 0 and nominalRatio != 0 :
                       histoRatioPDF.Fill(totalWeighted/denominator/nominalRatio)
                   elif denominator == 0 :
                       print 'Denominator is 0 !!!!'
