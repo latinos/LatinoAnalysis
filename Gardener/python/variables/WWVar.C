@@ -429,7 +429,7 @@ float WW::dphiltkmet(){
 
 
 float WW::dphilmet1(){ 
- if ( pt1() > 0 && MET.E() > 0 ) {
+ if ( L1.Pt() > 0 && MET.E() > 0 ) {
   return fabs((L1).DeltaPhi(MET));
  }
  else {
@@ -449,7 +449,7 @@ float WW::dphilmet2(){
 
 
 float WW::mtw1(){ 
- if ( pt1() > 0 && MET.E() > 0 ) {
+ if ( L1.Pt() > 0 && MET.E() > 0 ) {
   return sqrt(2 * pt1() * pfmet() * (1 - cos( dphilmet1() )));
  }
  else {
@@ -525,7 +525,7 @@ float WW::mpmet(){
 //---- pt
 float WW::pt1(){
  
- if ( pt1() > 0 ) {
+ if ( L1.Pt() > 0 ) {
   return L1.Pt();
  }
  else {
@@ -547,7 +547,7 @@ float WW::pt2(){
 //---- eta
 float WW::eta1(){
  
- if ( pt1() > 0 ) {
+ if ( L1.Pt() > 0 ) {
   return L1.Eta();
  }
  else {
@@ -569,7 +569,7 @@ float WW::eta2(){
 //---- phi
 float WW::phi1(){
  
- if ( pt1() > 0 ) {
+ if ( L1.Pt() > 0 ) {
   return L1.Phi();
  }
  else {
