@@ -76,10 +76,21 @@ class L3KinFiller(TreeCloner):
            'njet_3l',
            'nbjet_3l',
            'chlll',
-           'ht',
            'pfmet',
            'mlll',
-           'flagOSSF'
+           'flagOSSF',
+	   'mtwww',
+	   'mtw1_wh3l',
+	   'mtw2_wh3l',
+	   'mtw3_wh3l',
+	   'minmtw_wh3l',
+	   'mindphi_lmet',
+	   'dphilllmet',
+	   'ptlll',
+	   'pTWWW',
+           'dphilmet1_wh3l',
+           'dphilmet2_wh3l',
+           'dphilmet3_wh3l',
            ]
         
         # clone the tree

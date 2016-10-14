@@ -53,11 +53,23 @@ public:
  float channel();
  float njet_3l();
  float nbjet_3l();
- float ht();
  float chlll();
  float mlll();
  float flagOSSF();
- 
+ float mtwww();
+ float mtw1_wh3l();
+ float mtw2_wh3l();
+ float mtw3_wh3l();
+ float minmtw_wh3l();
+ float mindphi_lmet();
+ float dphilllmet();
+ float ptlll();
+ float pTWWW();
+ float dphilmet1_wh3l();
+ float dphilmet2_wh3l();
+ float dphilmet3_wh3l();
+
+
 private:
  //! variables
  TLorentzVector L1,L2,L3;
@@ -556,7 +568,7 @@ float WWW::nbjet_3l(){
   if (_jetspt.at(ijet) > 20 && _jetspt.at(ijet) < 40 && fabs(_jetseta.at(ijet))<4.7) {
 //    cout << "number of taggable jets = " << ijet << endl;
     btag = _jetsbtag.at(ijet);
-  if(btag > 0.875) {
+  if(btag > -0.715) {
 //   cout << "BTagged Jet" << endl;
    nbjet += 1;
 }
@@ -682,46 +694,129 @@ float WWW::mlll(){
  }
 }
 
-/*
-float WWW::channel(){
- 
+float WWW::dphilllmet(){
+
  if (_isOk) {
-  if( abs(pid1) == 11 ) {
-      if( abs(pid2) == 11 ) return 1; // ee
-      else if( abs(pid2) == 13 ) return 2; // em
-      else return -9999.0;
-  }
-  else if( abs(pid1) == 13 ){
-      if( abs(pid2) == 11 ) return 3; // me
-      else if( abs(pid2) == 13 ) return 0; // mm
-      else return -9999.0;
-  }
-  else {
-   return -9999.0;
-  }
+  return  fabs( (L1+L2+L3).DeltaPhi(MET) );
  }
  else {
-   return -9999.0;
-  }
+  return -9999.0;
+ }
 }
 
-*/
+float WWW::ptlll(){
+ if (_isOk) {
+  return (L1+L2+L3).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
 
-float WWW::ht(){ 
- if (_isOk && _leptonspt.size() > 0) {
-  float ht_value = 0;
-  for (unsigned int ilep = 0; ilep < _leptonspt.size(); ilep++) {
-   if (_leptonspt.at(ilep) > 0) {
-    ht_value += _leptonspt.at(ilep);
-   }
-  }
-  for (unsigned int ijet = 0; ijet < _jetspt.size(); ijet++) {
-   if (_jetspt.at(ijet) > 30) {
-    ht_value += _jetspt.at(ijet);
+float WWW::mtwww(){
+
+ if (_isOk) {
+  return sqrt( 2. * ptlll() * MET.Pt() * ( 1. - cos (dphilllmet()) ));
     }
-  }
-  ht_value += MET.Pt();
-  return  ht_value;
+     else {
+       return -9999.0;
+     }
+   }
+
+float WWW::pTWWW(){
+ if (_isOk) {
+  return (L1+L2+L3+MET).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::mtw1_wh3l(){
+ if ( L1.Pt() > 0 && MET.E() > 0 ) {
+  return sqrt(2 * pt1() * pfmet() * (1 - cos(fabs((L1).DeltaPhi(MET)))));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::mtw2_wh3l(){
+ if ( L2.Pt() > 0 && MET.E() > 0 ) {
+  return sqrt(2 * pt2() * pfmet() * (1 - cos(fabs((L2).DeltaPhi(MET)))));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::mtw3_wh3l(){
+ if ( L3.Pt() > 0 && MET.E() > 0 ) {
+  return sqrt(2 * pt3() * pfmet() * (1 - cos(fabs((L3).DeltaPhi(MET)))));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::minmtw_wh3l(){
+ if ( L1.Pt() > 0 && L2.Pt() > 0 && L3.Pt() > 0 && MET.E() > 0 ) {
+float mt1 = mtw1_wh3l();
+float mt2 = mtw2_wh3l();
+float mt3 = mtw3_wh3l();
+float mtmin = 0.;
+
+if(mt1 < mt2) mtmin = mt1;
+else mtmin = mt2;
+if(mtmin > mt3) mtmin = mt3;
+
+  return mtmin;
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::mindphi_lmet(){
+ if ( L1.Pt() > 0 && L2.Pt() > 0 && L3.Pt() > 0 && MET.E() > 0 ) {
+
+float dphilmet1 = fabs(L1.DeltaPhi(MET));
+float dphilmet2 = fabs(L2.DeltaPhi(MET));
+float dphilmet3 = fabs(L3.DeltaPhi(MET));
+float mindphilmet;
+
+if(dphilmet1 < dphilmet2) mindphilmet = dphilmet1;
+else mindphilmet = dphilmet2;
+if(mindphilmet > dphilmet3) mindphilmet = dphilmet3;
+
+  return mindphilmet;
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::dphilmet1_wh3l(){ 
+ if ( L1.Pt() > 0 && MET.E() > 0 ) {
+  return fabs((L1).DeltaPhi(MET));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::dphilmet2_wh3l(){
+ if ( L2.Pt() > 0 && MET.E() > 0 ) {
+  return fabs((L2).DeltaPhi(MET));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::dphilmet3_wh3l(){
+ if ( L3.Pt() > 0 && MET.E() > 0 ) {
+  return fabs((L3).DeltaPhi(MET));
  }
  else {
   return -9999.0;
