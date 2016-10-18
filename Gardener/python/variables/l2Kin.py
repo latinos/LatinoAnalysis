@@ -111,7 +111,9 @@ class L2KinFiller(TreeCloner):
            'projpfmet',
            'dphiltkmet',
            'projtkmet',
-           'mpmet'
+           'mpmet',
+           
+           'pTWW'
            
            ]
         
