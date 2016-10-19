@@ -91,6 +91,8 @@ if __name__ == '__main__':
     parser.add_option('--outputDir'      , dest='outputDir'      , help='output directory'                           , default='./')
     parser.add_option('--inputDir'       , dest='inputDir'       , help='input directory'                            , default='./data/')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None)
+    parser.add_option('--doBatch'        , dest='doBatch'        , help='Run on batch'                               , default=False)
+    parser.add_option('--doHadd'         , dest='doHadd'         , help='Hadd for batch mode'                        , default=False)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=os.sysconf('SC_NPROCESSORS_ONLN'))
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
@@ -151,7 +153,13 @@ if __name__ == '__main__':
         handle.close()
          
 
-    if opt.doThreads != 0:
+    if   opt.doBatch != 0:
+            print "~~~~~~~~~~~ Running mkShape on Batch Queue"
+
+    elif opt.doHadd != 0:
+            print "~~~~~~~~~~~ mkShape on Batch : Hadd"
+
+    elif opt.doThreads != 0:
 
             print "~~~~~~~~~~~ Running mkShape in multi-threading mode..."
 

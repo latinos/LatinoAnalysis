@@ -705,6 +705,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -822,6 +825,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -927,6 +933,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1036,6 +1045,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1129,6 +1141,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -1194,6 +1207,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -1287,6 +1303,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -1355,6 +1372,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -1447,6 +1467,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -1514,6 +1535,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1608,6 +1632,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -1676,6 +1701,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1770,6 +1798,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -1838,6 +1867,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -1930,6 +1962,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -1999,6 +2032,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -2091,6 +2127,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -2159,6 +2196,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125','TTWJetsToLNu',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -2251,6 +2291,7 @@ Steps= {
                                   'monoH_2HDM_MZp-1200_MA0-600',
                                   'monoH_2HDM_MZp-1200_MA0-700',
                                   'monoH_2HDM_MZp-1200_MA0-800',
+                                  'monoH_2HDM_MZp-1400_MA0-400',
                                   'monoH_2HDM_MZp-1400_MA0-500',
                                   'monoH_2HDM_MZp-1400_MA0-600',
                                   'monoH_2HDM_MZp-1400_MA0-700',
@@ -2425,6 +2466,9 @@ Steps= {
                                   'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125',
+                                  'GluGluHToZZTo4L_M125',
+                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
+                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
                                   # WW
                                   'WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown' 
                                   # High Mass ggH
@@ -2714,7 +2758,8 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
+                  'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
+                                 # 'DYJetsToLL_M-50-LO-ext1',
                                   'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1',
                                   'DYJetsToEE_Pow',
                                  ],
@@ -2941,6 +2986,14 @@ Steps= {
                   'command'    : 'gardener.py filter -f \' std_vector_lepton_isTightLepton[0] > 0.5  && std_vector_lepton_isTightLepton[1] > 0.5  && std_vector_lepton_isTightLepton[2] > 0.5 && std_vector_lepton_pt[0] > 20. && std_vector_lepton_pt[1] > 10. && std_vector_lepton_pt[2] > 10.\' '
            },
 
+  'vh3lFakeSel'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' std_vector_lepton_pt[0] > 20. && std_vector_lepton_pt[1] > 10. && std_vector_lepton_pt[2] > 10.\' ' ,
+           },
+
+
   'wh2lss1jSel' :  {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2948,6 +3001,14 @@ Steps= {
                   'command'    : 'gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && std_vector_jet_pt[0]>30 && (abs(std_vector_lepton_flavour[1])==13 || std_vector_lepton_pt[1]>13) && ( (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == 11*11) || (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == 13*13) || (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == 11*13)  )  \' '
            },
 
+  'dymvaSel' : {  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' mll > 12 && std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && (abs(std_vector_lepton_flavour[1]) == 13 || std_vector_lepton_pt[1]>13)  && ( (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*11) || (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -13*13) ) && std_vector_jet_pt[1]<30    && fabs(91.1876 - mll) > 15  && ( std_vector_jet_pt[0] < 20 || std_vector_jet_cmvav2[0] < -0.715 ) && ( std_vector_jet_pt[1] < 20 || std_vector_jet_cmvav2[1] < -0.715 ) && ( std_vector_jet_pt[2] < 20 || std_vector_jet_cmvav2[2] < -0.715 ) && ( std_vector_jet_pt[3] < 20 || std_vector_jet_cmvav2[3] < -0.715 ) && ( std_vector_jet_pt[4] < 20 || std_vector_jet_cmvav2[4] < -0.715 ) && ( std_vector_jet_pt[5] < 20 || std_vector_jet_cmvav2[5] < -0.715 ) && ( std_vector_jet_pt[6] < 20 || std_vector_jet_cmvav2[6] < -0.715 ) && ( std_vector_jet_pt[7] < 20 || std_vector_jet_cmvav2[7] < -0.715 ) && ( std_vector_jet_pt[8] < 20 || std_vector_jet_cmvav2[8] < -0.715 ) && ( std_vector_jet_pt[9] < 20 || std_vector_jet_cmvav2[9] < -0.715 ) && metTtrk > 20 \' ' ,
 
+                  'onlySample' : [ 'GluGluHToWWTo2L2Nu_alternative_M125' ,
+                                   'DYJetsToLL_M-10to50-LO' ,
+                                   'DYJetsToLL_M-50-LO-ext1' , 
+                                 ],
+          },
 }
-
