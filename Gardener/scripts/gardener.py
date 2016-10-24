@@ -23,6 +23,7 @@ from LatinoAnalysis.Gardener.variables.l1Sel                      import L1SelFi
 # kinematic variables
 from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
 from LatinoAnalysis.Gardener.variables.l3Kin                      import L3KinFiller
+from LatinoAnalysis.Gardener.variables.l4Kin                      import L4KinFiller
 
 # fake weights adder for W+jet sample
 from LatinoAnalysis.Gardener.variables.fakeWeight                 import FakeWeightFiller
@@ -162,6 +163,7 @@ if __name__ == '__main__':
 # update kinematic variables
     modules['l2kinfiller']     = L2KinFiller()
     modules['l3kinfiller']     = L3KinFiller()
+    modules['l4kinfiller']     = L4KinFiller()
 
 # Nuisances
     modules['JESTreeMaker']           = JESTreeMaker()
