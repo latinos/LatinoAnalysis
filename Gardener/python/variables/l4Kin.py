@@ -60,31 +60,19 @@ class L4KinFiller(TreeCloner):
         # if you add a new variable here, be sure it IS defined in ZWWVar.C
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
-            'lep1Pt',
-            'lep2Pt',
-            'lep3Pt',
-            'lep4Pt',
-            'lep1Eta',
-            'lep2Eta',
-            'lep3Eta',
-            'lep4Eta',
-            'lep1Phi',
-            'lep2Phi',
-            'lep3Phi',
-            'lep4Phi',
-            'pfmet',
-            'pfmetPhi',
-            'z0mass',
-            'z1mass',
-            'flagZ1SF',
-            'z0DeltaPhi',
-            'z1DeltaPhi',
-            'z1DeltaR',
-            'mllll',
-            'chllll',
-            'st',
-            'njet',
-            'nbjet'
+            'lep1Mt_zh4l',
+            'lep2Mt_zh4l',
+            'lep3Mt_zh4l',
+            'lep4Mt_zh4l',
+            'z1Mt_zh4l',
+            'z0mass_zh4l',
+            'z1mass_zh4l',
+            'flagZ1SF_zh4l',
+            'z0DeltaPhi_zh4l',
+            'z1DeltaPhi_zh4l',
+            'z1DeltaR_zh4l',
+            'mllll_zh4l',
+            'chllll_zh4l',
             ]
         
         # clone the tree
@@ -141,12 +129,11 @@ class L4KinFiller(TreeCloner):
             ZWW.setMET(met, metphi)
  
             ZWW.isAllOk()
-            if ZWW.preSelection():
             # now fill the variables like "mll", "dphill", ...
-                for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
-                    bvariable[0] = getattr(ZWW, bname)()
-                otree.Fill()
-                savedentries+=1
+            for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+                bvariable[0] = getattr(ZWW, bname)()
+            otree.Fill()
+            savedentries+=1
 
         self.disconnect()
         print '- Eventloop completed'
