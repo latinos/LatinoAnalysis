@@ -229,6 +229,7 @@ class HiggsXSection:
      elif 'VBFH'     in SampleName : ProdMode = 'vbfH'
      elif 'HZJ'      in SampleName : ProdMode = 'ZH'
      elif 'ggZH'     in SampleName : ProdMode = 'ggZH'
+     elif 'GluGluZH' in SampleName : ProdMode = 'ggZH'
      elif 'HWplusJ'  in SampleName : ProdMode = 'HWplus'
      elif 'HWminusJ' in SampleName : ProdMode = 'HWminus'
      elif 'ttH'      in SampleName : ProdMode = 'ttH'  
