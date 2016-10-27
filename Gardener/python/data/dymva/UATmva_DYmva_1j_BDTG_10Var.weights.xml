@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MethodSetup Method="BDT::DYmva_1j_BDT_400Trees_AdaBoost_GiniIndex_20Cuts_CostComplexity_12PruneStrength_10Var">
+<MethodSetup Method="BDT::BDT">
   <GeneralInfo>
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.06/01 [394753]"/>
