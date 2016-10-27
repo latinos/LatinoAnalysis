@@ -31,16 +31,16 @@ class chargeFlipWeight(TreeCloner):
 
         self.minpt_ele = 10
         self.maxpt_ele = 200
-        self.mineta_ele = -2.5
-        self.maxeta_ele = 2.5
+        self.mineta_ele = -2.4
+        self.maxeta_ele = 2.4
 
     def _getHistoValue(self, h2, eta1, eta2):
         eta1_V = eta1
         eta2_V = eta2
-        if eta1 < self.mineta_ele : eta1_V = -2.499
-        if eta2 < self.mineta_ele : eta2_V = -2.499
-        if eta1 > self.maxeta_ele : eta1_V =  2.499 
-        if eta2 > self.maxeta_ele : eta2_V =  2.499 
+        if eta1 < self.mineta_ele : eta1_V = -2.399
+        if eta2 < self.mineta_ele : eta2_V = -2.399
+        if eta1 > self.maxeta_ele : eta1_V =  2.399 
+        if eta2 > self.maxeta_ele : eta2_V =  2.399 
         value = h2.GetBinContent(h2.FindBin(eta1_V, eta2_V))
         return value
 
