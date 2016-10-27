@@ -44,6 +44,8 @@ from LatinoAnalysis.Gardener.variables.DMVar                      import DMVarFi
 from LatinoAnalysis.Gardener.variables.XWWVar                     import XWWVarFiller
 from LatinoAnalysis.Gardener.variables.dymvaVar                   import DymvaVarFiller
 from LatinoAnalysis.Gardener.variables.dymvaGGHVar                import DymvaGGHVarFiller
+
+from LatinoAnalysis.Gardener.variables.chargeFlipWeight           import chargeFlipWeight
 # mucca
 from LatinoAnalysis.Gardener.variables.muccaMvaVar                import MuccaMvaVarFiller   
 # mrww
@@ -136,6 +138,9 @@ if __name__ == '__main__':
     modules['xwwvarfiller']     = XWWVarFiller()
     modules['dymvaVarFiller']   = DymvaVarFiller()
     modules['dymvaGGHVarFiller']   = DymvaGGHVarFiller()
+
+# Charge Flip
+    modules['chFlipProba']      = chargeFlipWeight()
 
 # mucca
     modules['muccaMvaVarFiller']   = MuccaMvaVarFiller()
