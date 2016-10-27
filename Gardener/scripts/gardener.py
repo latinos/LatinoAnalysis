@@ -43,6 +43,7 @@ from LatinoAnalysis.Gardener.variables.ElectronsVar               import Electro
 from LatinoAnalysis.Gardener.variables.DMVar                      import DMVarFiller
 from LatinoAnalysis.Gardener.variables.XWWVar                     import XWWVarFiller
 from LatinoAnalysis.Gardener.variables.dymvaVar                   import DymvaVarFiller
+from LatinoAnalysis.Gardener.variables.dymvaGGHVar                import DymvaGGHVarFiller
 # mucca
 from LatinoAnalysis.Gardener.variables.muccaMvaVar                import MuccaMvaVarFiller   
 # mrww
@@ -134,6 +135,7 @@ if __name__ == '__main__':
     modules['dmvarfiller']      = DMVarFiller()
     modules['xwwvarfiller']     = XWWVarFiller()
     modules['dymvaVarFiller']   = DymvaVarFiller()
+    modules['dymvaGGHVarFiller']   = DymvaGGHVarFiller()
 
 # mucca
     modules['muccaMvaVarFiller']   = MuccaMvaVarFiller()

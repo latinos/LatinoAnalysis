@@ -41,6 +41,14 @@ public:
  float PfMetDivSumMet();
  float upara();
  float uperp();
+ float m2ljj20();
+ float m2ljj30();
+
+ float pTWW();
+ float mTi();
+ float mTe();
+ float choiMass();
+ float mT2();  //void functionMT2(int& npar, double* d, double& r, double par[], int flag);
 
  float dphill();
  float mll();
@@ -389,6 +397,16 @@ float WW::ptll(){
 float WW::yll(){
  if (_isOk) {
   return (L1+L2).Rapidity();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::pTWW(){
+ if (_isOk) {
+  return (L1+L2+MET).Pt();
  }
  else {
   return -9999.0;
@@ -780,12 +798,58 @@ float WW::mcollWW(){
 }
 
 
+float WW::mTi(){
+
+ if (_isOk) {
+  return (L1+L2+MET).M();
+ }
+ else{
+  return -9999.0;
+ }
+
+}
+
+
+float WW::choiMass(){
+
+ //TVector3 METvec, ptllvec, pt1vec, pt2vec;
+ //METvec.SetXYZ(MET.X(),MET.Y(),MET.Z());
+ //ptllvec.SetXYZ((L1+L2).X(),(L1+L2).Y(),(L1+L2).Z());
+ //pt1vec.SetXYZ((L1).X(),(L1).Y(),0);
+ //pt2vec.SetXYZ((L2).X(),(L2).Y(),0);
+ if (_isOk) {
+  return sqrt( 2*(pt1()*pt1()) + 2*(pt2()*pt2()) + 3*(pt1()*pt2() + (MET.Pt())*(pt1()+pt2()) - MET.Pt()*ptll()*cos(dphillmet()) - 2*pt1()*pt2()*cos(dphill())) );
+ }
+ else{
+  return -9999.0;
+ }
+ 
+}
+
+
 float WW::mR(){
 
  if (_isOk) {
   return sqrt( 0.5*( mll()*mll() - MET.Pt()*ptll()*cos(dphillmet()) + sqrt( ( mll()*mll() + ptll()*ptll() )*( mll()*mll() + MET.Pt()*MET.Pt()  )  )  )  );
  }
  else{
+  return -9999.0;
+ }
+
+}
+
+
+float WW::mTe(){
+
+ if (_isOk) {
+  TLorentzVector L1_enhanced,L2_enhanced;
+
+  L1_enhanced.SetPtEtaPhiM(pt1(), eta1(), phi1(), 80.385);
+  L2_enhanced.SetPtEtaPhiM(pt2(), eta2(), phi2(), 80.385);
+
+  return (L1_enhanced + L2_enhanced+MET).M();
+ }
+ else {
   return -9999.0;
  }
 
@@ -918,6 +982,32 @@ float WW::dphilep2jet2(){
 }
 
 
+float WW::m2ljj20(){
+ if (_isOk && _jetOk >= 1 && J1.Pt()>30) {
+  if (J2.Pt()>20) 
+    return (L1+L2+J1+J2).M();
+  else
+    return (L1+L2+J1).M();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::m2ljj30(){
+ if (_isOk && _jetOk >= 1 && J1.Pt()>30) {
+  if (J2.Pt()>30) 
+    return (L1+L2+J1+J2).M();
+  else
+    return (L1+L2+J1).M();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
 float WW::ht(){ 
  if (_isOk && _leptonspt.size() > 0) {
   float ht_value = 0;
@@ -1039,6 +1129,66 @@ void functionMT2(int& npar, double* d, double& r, double par[], int flag){
  r = sqrt(maxmt2);
 }
 
+float WW::mT2(){
+
+ if (_isOk) {
+
+  if (VectX->size() != 6) {
+   VectX->push_back( L1.X()  );
+   VectX->push_back( L1.Y()  );
+   VectX->push_back( L2.X()  );
+   VectX->push_back( L1.Y()  );
+   VectX->push_back( MET.X() );
+   VectX->push_back( MET.Y() );
+  }
+  else {
+   VectX->at(0) = L1.X()  ;
+   VectX->at(1) = L1.Y()  ;
+   VectX->at(2) = L2.X()  ;
+   VectX->at(3) = L1.Y()  ;
+   VectX->at(4) = MET.X() ;
+   VectX->at(5) = MET.Y() ;
+  }
+
+  double mT2 = 0.;
+
+  double met = 10;
+  double PI = 3.14159266;
+
+  const int nParametri = 2;
+  TMinuit minuit(nParametri);
+  minuit.SetFCN(functionMT2);
+
+  minuit.SetPrintLevel(-1); // quiet
+
+  met = MET.E();
+
+  double par[nParametri]={met/2.,0.0};
+  double stepSize[nParametri]={met/100.,0.001};
+  double minVal[nParametri]={met/100.,0.0};
+  double maxVal[nParametri]={30.*met,2.*PI};
+  string parName[nParametri]={"met1","metphi1"};
+  for (int i=0; i<nParametri; i++){
+   minuit.DefineParameter(i,parName[i].c_str(),par[i],stepSize[i],minVal[i],maxVal[i]);
+  }
+  minuit.Migrad();
+  //  double outParametri[nParametri];
+  //  double errParametri[nParametri];
+  //  for (int i=0; i<nParametri; i++){
+  //   minuit.GetParameter(i,outParametri[i],errParametri[i]);
+  //   std::cout << "outParametri[" << i << "] = " << outParametri[i] << " +/- " << errParametri[i] << std::endl;
+  //  }
+
+  mT2 = minuit.fAmin;
+  //  std::cout << " "  << pxl1 << " ; " << pyl1 << " ; " << pxl2 << " ; " << pyl2 << " ; " << metx << " ; " << mety << " --> mT2 = " << mT2 << std::endl;
+  return mT2;
+
+  }
+  else {
+   return -9999.0;
+  }
+  
+}
 
 //---- to reject Wg*
 
