@@ -2887,6 +2887,28 @@ Steps= {
                    'do4Data'    : False ,
                    'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
                  } ,
+
+   'dymvaGGH' :   {
+                   'isChain'    : True ,
+                   'do4MC'      : True ,
+                   'do4Data'    : True ,
+                   'subTargets' : ['wwvarfiller','do_dymvaGGH'],
+                  },
+
+   'wwvarfiller' : {
+                   'isChain'    : False ,
+                   'do4MC'      : True ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py wwvarfiller',
+                   },
+
+
+   'do_dymvaGGH'  : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py dymvaGGHVarFiller',
+                },
   
   
    'Mucca'       :  {

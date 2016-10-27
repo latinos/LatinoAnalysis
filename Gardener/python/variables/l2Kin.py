@@ -113,7 +113,18 @@ class L2KinFiller(TreeCloner):
            'projtkmet',
            'mpmet',
            
-           'pTWW'
+           'pTWW',
+
+           'recoil',
+           'jetpt1_cut',
+           'dphilljet_cut',
+           'dphijet1met_cut',
+           'PfMetDivSumMet',
+           'upara',
+           'uperp',
+           'm2ljj20',
+           'm2ljj30'
+
            
            ]
         
