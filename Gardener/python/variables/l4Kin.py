@@ -60,10 +60,7 @@ class L4KinFiller(TreeCloner):
         # if you add a new variable here, be sure it IS defined in ZWWVar.C
         #
         self.namesOldBranchesToBeModifiedSimpleVariable = [
-            'lep1Mt_zh4l',
-            'lep2Mt_zh4l',
-            'lep3Mt_zh4l',
-            'lep4Mt_zh4l',
+            'pfmetPhi_zh4l',
             'z0Mass_zh4l',
             'z1Mass_zh4l',
             'zaMass_zh4l',
@@ -74,6 +71,7 @@ class L4KinFiller(TreeCloner):
             'zaDeltaPhi_zh4l',
             'zbDeltaPhi_zh4l',
             'minDeltaPhi_zh4l',
+            'z0DeltaR_zh4l',
             'z1DeltaR_zh4l',
             'zaDeltaR_zh4l',
             'zbDeltaR_zh4l',
@@ -141,11 +139,12 @@ class L4KinFiller(TreeCloner):
             ZWW.setMET(met, metphi)
  
             ZWW.isAllOk()
+            if ZWW.preSelection():
             # now fill the variables like "mll", "dphill", ...
-            for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
-                bvariable[0] = getattr(ZWW, bname)()
-            otree.Fill()
-            savedentries+=1
+                for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+                    bvariable[0] = getattr(ZWW, bname)()
+                otree.Fill()
+                savedentries+=1
 
         self.disconnect()
         print '- Eventloop completed'

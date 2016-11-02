@@ -37,24 +37,30 @@ class ZWW{
     //! functions
     bool  preSelection();
 //    bool  selection();
-    float lep1Mt_zh4l();
-    float lep2Mt_zh4l();
-    float lep3Mt_zh4l();
-    float lep4Mt_zh4l();
-    float minMt_zh4l();
+    float pfmetPhi_zh4l();
+    float zMass_zh4l(int zLepIdx_[2]);
     float z0Mass_zh4l();
     float z1Mass_zh4l();
-    float zaMass_zh4l();//
-    float zbMass_zh4l();//
+    float zaMass_zh4l();
+    float zbMass_zh4l();
     float flagZ1SF_zh4l();
+    float zDeltaPhi_zh4l(int zLepIdx_[2]);
     float z0DeltaPhi_zh4l();
     float z1DeltaPhi_zh4l();
     float zaDeltaPhi_zh4l();
     float zbDeltaPhi_zh4l();
     float minDeltaPhi_zh4l();
+    float zDeltaR_zh4l(int zLepIdx_[2]);
+    float z0DeltaR_zh4l();
     float z1DeltaR_zh4l();
-    float zaDeltaR_zh4l();//
-    float zbDeltaR_zh4l();//
+    float zaDeltaR_zh4l();
+    float zbDeltaR_zh4l();
+    float lepMt_zh4l(int iL);
+    float lep1Mt_zh4l();
+    float lep2Mt_zh4l();
+    float lep3Mt_zh4l();
+    float lep4Mt_zh4l();
+    float minMt_zh4l();  
     float z1Mt_zh4l();
     float mllll_zh4l();
     float chllll_zh4l();
@@ -87,8 +93,11 @@ class ZWW{
     std::vector<float> jetTag_;
     float met_;
     float metPhi_;
+    float st_;
     float minDeltaPhi_;
     float minMt_;
+
+    float minDeltaR_;///forVHNL
 
         // Buffer and buffer setter
     std::vector<TLorentzVector> lepVec_;
@@ -101,6 +110,8 @@ class ZWW{
     int zaLepIdx_[2];
     int zbLepIdx_[2];
     TLorentzVector metVec_;
+    int njet_;
+    int nbjet_;
 
         // Output for public member fcns
     bool outPreSelection_;
@@ -131,6 +142,13 @@ void ZWW::reset(){
     jetPhi_.clear();
     jetM_.  clear();
     jetTag_.clear();
+    met_          = zwwDefault;
+    metPhi_       = zwwDefault;
+    njet_         = zwwDefault;
+    nbjet_        = zwwDefault;
+    st_           = zwwDefault;
+    minMt_        = zwwDefault;
+    minDeltaPhi_  = zwwDefault;
 
         // Buffer
     lepVec_.clear();
@@ -145,11 +163,7 @@ void ZWW::reset(){
     zaLepIdx_[1] = zwwDefault;
     zbLepIdx_[0] = zwwDefault;
     zbLepIdx_[1] = zwwDefault;
-    flagZ1SF_   = zwwDefault;
-    met_ = zwwDefault;
-    metPhi_ = zwwDefault;
-    minDeltaPhi_ = zwwDefault;
-    minMt_ = zwwDefault;
+    flagZ1SF_    = zwwDefault;
 
         // All other variables
     outPreSelection_ = false;
@@ -162,8 +176,8 @@ void ZWW::isLepOk(){
         lepPt_.size() == lepPhi_.size()&&
         lepPt_.size() == lepFl_.size()&&
         lepPt_.size() == lepCh_.size()&&
-        lepPt_.size() == lepId_.size()&&
-        lepPt_[3]!=zwwDefault){
+        lepPt_.size() == lepId_.size()){
+//        lepPt_[3]!=zwwDefault){
         isLepOk_ = true;
     }
     else{
@@ -193,8 +207,9 @@ void ZWW::isMETOk(){
 }
 
 void ZWW::isAllOk(){
-    isAllOk_ = isLepOk_*isJetOk_*isMETOk_;
+        isAllOk_ = isLepOk_*isJetOk_*isMETOk_;
 }
+
 
 void ZWW::setLepton(std::vector<float> pt,
                     std::vector<float> eta,
@@ -220,6 +235,8 @@ void ZWW::setLepton(std::vector<float> pt,
             lepVec_.push_back(buffVec);
         }
         setZ0LepIdx_();
+        setZ1LepIdx_();
+        setZaZbLepIdx_();
     }
 }
 
@@ -234,10 +251,6 @@ void ZWW::setJet(std::vector<float> pt,
     jetM_  = mass;
     jetTag_= tag;
     isJetOk();
-
-    if (isJetOk_){
-        // build buffer here!
-    }
 }
 
 void ZWW::setMET(float met, float phi){
@@ -252,7 +265,7 @@ void ZWW::setZ0LepIdx_(){
     z0LepIdx_[1] = zwwDefault;
     if ( isLepOk_ ){
         float buffBias;
-        float bestBias = 9999;
+        float bestBias = -1*zwwDefault;
         for(int iL=0; iL < 4; iL++){
             for(int jL=iL+1; jL < 4; jL++){
                 if (lepCh_[iL] + lepCh_[jL] != 0 ){
@@ -272,11 +285,12 @@ void ZWW::setZ0LepIdx_(){
     }
 }
 
+
 void ZWW::setZ1LepIdx_(){
     z1LepIdx_[0] = zwwDefault;
     z1LepIdx_[1] = zwwDefault;
     if (isLepOk_){
-        if (z0LepIdx_[0]!=zwwDefault && z0LepIdx_[1]!=zwwDefault){
+        if (z0LepIdx_[0]!=zwwDefault){
             for(int iL=0; iL< 4 ; iL++){
                 if (iL != z0LepIdx_[0] && iL != z0LepIdx_[1]){
                     if(z1LepIdx_[0] == zwwDefault){
@@ -291,8 +305,7 @@ void ZWW::setZ1LepIdx_(){
     }
 }
     
-
-void ZWW::setZaZbLepIdx_(){                                                                                                                                                                              
+void ZWW::setZaZbLepIdx_(){
     zaLepIdx_[0] = zwwDefault;
     zaLepIdx_[1] = zwwDefault;
     zbLepIdx_[0] = zwwDefault;
@@ -327,13 +340,13 @@ bool ZWW::preSelection(){
     if ( isAllOk_ ){
         
         if ( lepCh_[0]+lepCh_[1]+lepCh_[2]+lepCh_[3]  == 0 
-            && lepId_[3] > 0.5
-            && lepPt_[0] > 25
-            && lepPt_[1] > 15
-            && lepPt_[2] > 10 
-            && lepPt_[3] > 10 
-            && lepPt_[4] < 10 ){
-            outPreSelection_ = true;
+             && lepId_[3] > 0.5
+             && lepPt_[0] > 25
+             && lepPt_[1] > 15
+             && lepPt_[2] > 10 
+             && lepPt_[3] > 10 
+             && lepPt_[4] < 10 ){
+             outPreSelection_ = true;
         }
 
         return outPreSelection_;
@@ -343,8 +356,9 @@ bool ZWW::preSelection(){
 }
 
 //lepton variables
+
 float ZWW::mllll_zh4l(){
-    if (isLepOk_){
+    if (isAllOk_){
         return (lepVec_[0]+lepVec_[1]+lepVec_[2]+lepVec_[3]).M();
     }
     else {
@@ -353,39 +367,56 @@ float ZWW::mllll_zh4l(){
 }
 
 
-float ZWW::z0Mass_zh4l(){
-    if (isLepOk_){
-        if (z0LepIdx_[0]!=zwwDefault){
-            return (lepVec_[z0LepIdx_[0]]+lepVec_[z0LepIdx_[1]]).M();
+float ZWW::pfmetPhi_zh4l(){
+    if (isAllOk_){
+        return metPhi_;
+    }
+    else{
+        return zwwDefault;
+    }
+}
+
+float ZWW::zMass_zh4l(int zLepIdx_[2]){
+    if (isAllOk_){
+        if (zLepIdx_[0]!=zwwDefault){
+            return (lepVec_[zLepIdx_[0]]+lepVec_[zLepIdx_[1]]).M();
         }
         else{
-            setZ0LepIdx_();
-            if (z0LepIdx_[0]!=zwwDefault){
-                return (lepVec_[z0LepIdx_[0]]+lepVec_[z0LepIdx_[1]]).M();
-                }
-            else{
-                return zwwDefault;
-            }
+            return zwwDefault;
         }
     }
     else{
         return zwwDefault;
     }
+}
+
+
+
+float ZWW::z0Mass_zh4l(){
+    return zMass_zh4l(z0LepIdx_);
 }
 
 float ZWW::z1Mass_zh4l(){
-    if (isLepOk_){
-        if (z1LepIdx_[0]!=zwwDefault){
-            return (lepVec_[z1LepIdx_[0]]+lepVec_[z1LepIdx_[1]]).M();
+    return zMass_zh4l(z1LepIdx_);
+}
+
+float ZWW::zaMass_zh4l(){
+    return zMass_zh4l(zaLepIdx_);
+}
+
+
+float ZWW::zbMass_zh4l(){
+    return zMass_zh4l(zbLepIdx_);
+}
+
+
+float ZWW::zDeltaR_zh4l(int zLepIdx_[2]){
+    if(isAllOk_){
+        if (zLepIdx_[0]!=zwwDefault){
+            return  lepVec_[zLepIdx_[0]].DeltaR(lepVec_[zLepIdx_[1]]);
         }
         else{
-            setZ1LepIdx_();
-            if (z1LepIdx_[0]!=zwwDefault){
-                return (lepVec_[z1LepIdx_[0]]+lepVec_[z1LepIdx_[1]]).M();
-                }
-            else{
-                return zwwDefault;
-            }
+            return zwwDefault;
         }
     }
     else{
@@ -393,40 +424,29 @@ float ZWW::z1Mass_zh4l(){
     }
 }
 
-float ZWW::zaMass_zh4l(){
-    if (isLepOk_){
-        if (zaLepIdx_[0]!=zwwDefault){
-            return (lepVec_[zaLepIdx_[0]]+lepVec_[zaLepIdx_[1]]).M();
-        }
-        else{
-            setZaZbLepIdx_();
-            if (zaLepIdx_[0]!=zwwDefault){
-                return (lepVec_[zaLepIdx_[0]]+lepVec_[zbLepIdx_[1]]).M();
-                }
-            else{
-                return zwwDefault;
-            }
-        }
-    }
-    else{
-        return zwwDefault;
-    }
+float ZWW::zaDeltaR_zh4l(){
+    return zDeltaR_zh4l(zaLepIdx_);
 }
- 
- 
-float ZWW::zbMass_zh4l(){
-    if (isLepOk_){
-        if (zbLepIdx_[0]!=zwwDefault){
-            return (lepVec_[zbLepIdx_[0]]+lepVec_[zbLepIdx_[1]]).M();
+
+float ZWW::zbDeltaR_zh4l(){
+    return zDeltaR_zh4l(zbLepIdx_);
+}
+
+float ZWW::z0DeltaR_zh4l(){
+    return zDeltaR_zh4l(z1LepIdx_);
+}
+
+float ZWW::z1DeltaR_zh4l(){
+    return zDeltaR_zh4l(z1LepIdx_);
+}
+
+float ZWW::zDeltaPhi_zh4l(int zLepIdx_[2]){
+    if (isAllOk_){
+        if (zLepIdx_[0]!=zwwDefault){
+            return (lepVec_[zLepIdx_[0]].DeltaPhi(lepVec_[zLepIdx_[1]]));
         }
         else{
-            setZaZbLepIdx_();
-            if (zbLepIdx_[0]!=zwwDefault){
-                return (lepVec_[zbLepIdx_[0]]+lepVec_[zbLepIdx_[1]]).M();
-                }
-            else{
-                return zwwDefault;
-            }
+            return zwwDefault;
         }
     }
     else{
@@ -436,97 +456,29 @@ float ZWW::zbMass_zh4l(){
 
 
 float ZWW::z0DeltaPhi_zh4l(){
-    if (isLepOk_){
-        if (z0LepIdx_[0]!=zwwDefault){
-            return (lepVec_[z0LepIdx_[0]].DeltaPhi(lepVec_[z0LepIdx_[1]]));
-        }
-        else{
-            setZ0LepIdx_();
-            if (z0LepIdx_[0]!=zwwDefault){
-                return (lepVec_[z0LepIdx_[0]].DeltaPhi(lepVec_[z0LepIdx_[1]]));
-                }
-            else{
-                return zwwDefault;
-            }
-        }
-    }
-    else{
-        return zwwDefault;
-    }
+    return zDeltaPhi_zh4l(z0LepIdx_);
 }
 
 float ZWW::z1DeltaPhi_zh4l(){
-    if (isLepOk_){
-        if (z1LepIdx_[0]!=zwwDefault){
-            return (lepVec_[z1LepIdx_[0]].DeltaPhi(lepVec_[z1LepIdx_[1]]));
-        }
-        else{
-            setZ1LepIdx_();
-            if (z1LepIdx_[0]!=zwwDefault){
-                return (lepVec_[z1LepIdx_[0]].DeltaPhi(lepVec_[z1LepIdx_[1]]));
-            }
-            else{
-                return zwwDefault;
-            }
-        }
-    }
-    else{
-        return zwwDefault;
-    }
+    return zDeltaPhi_zh4l(z1LepIdx_);
 }
 
 float ZWW::zaDeltaPhi_zh4l(){
-    if (isLepOk_){
-        if (zaLepIdx_[0]!=zwwDefault){
-            return (lepVec_[zaLepIdx_[0]].DeltaPhi(lepVec_[zaLepIdx_[1]]));
-        }
-        else{
-            setZaZbLepIdx_();
-            if (zaLepIdx_[0]!=zwwDefault){
-                return (lepVec_[zaLepIdx_[0]].DeltaPhi(lepVec_[zaLepIdx_[1]]));
-            }
-            else{
-                return zwwDefault;
-            }
-        }
-    }
-    else{
-        return zwwDefault;
-    }
+    return zDeltaPhi_zh4l(zaLepIdx_);
 }
-
-
 
 float ZWW::zbDeltaPhi_zh4l(){
-    if (isLepOk_){
-        if (zaLepIdx_[0]!=zwwDefault){
-            return (lepVec_[zbLepIdx_[0]].DeltaPhi(lepVec_[zbLepIdx_[1]]));
-        }
-        else{
-            setZaZbLepIdx_();
-            if (zbLepIdx_[0]!=zwwDefault){
-                return (lepVec_[zbLepIdx_[0]].DeltaPhi(lepVec_[zbLepIdx_[1]]));
-            }
-            else{
-                return zwwDefault;
-            }
-        }
-    }
-    else{
-        return zwwDefault;
-    }
+    return zDeltaPhi_zh4l(zbLepIdx_);
 }
 
+
 float ZWW::minDeltaPhi_zh4l(){
-    if(isLepOk_){
+    if (isAllOk_){
         minDeltaPhi_ = -1*zwwDefault;
         for(int iL=0; iL < 4; iL++){
             for(int jL=iL+1; jL < 4; jL++){
                 if (lepCh_[iL] != lepCh_[jL]){
                     minDeltaPhi_ =(fabs(minDeltaPhi_) < fabs(lepVec_[iL].DeltaPhi(lepVec_[jL]))) ? minDeltaPhi_: lepVec_[iL].DeltaPhi(lepVec_[jL]);
-                }
-                else{
-                    continue;
                 }
             }
         }
@@ -539,7 +491,7 @@ float ZWW::minDeltaPhi_zh4l(){
 
 
 float ZWW::chllll_zh4l(){
-    if (isLepOk_){
+    if (isAllOk_){
        return lepCh_[0]+lepCh_[1]+lepCh_[2]+lepCh_[3];       
     }
     else{
@@ -548,7 +500,7 @@ float ZWW::chllll_zh4l(){
 }
 
 float ZWW::minMt_zh4l(){
-    if (isLepOk_ && isMETOk_){
+    if (isAllOk_){
         minMt_ = -1*zwwDefault;
         for(int iL=0; iL< 4 ; iL++){
             minMt_ = (minMt_< sqrt(2*lepVec_[iL].Pt()*met_*(1-cos(lepVec_[iL].Phi()-metPhi_)))) ? minMt_:sqrt(2*lepVec_[iL].Pt()*met_*(1-cos(lepVec_[iL].Phi()-metPhi_)));
@@ -560,55 +512,39 @@ float ZWW::minMt_zh4l(){
     }
 }
 
-float ZWW::lep1Mt_zh4l(){
-    if (isLepOk_ && isMETOk_){
-        return sqrt(2*lepVec_[0].Pt()*met_*(1-cos(lepVec_[0].Phi()-metPhi_)));
+
+float ZWW::lepMt_zh4l(int iL){
+    if (isAllOk_){
+        return sqrt(2*lepVec_[iL].Pt()*met_*(1-cos(lepVec_[iL].Phi()-metPhi_)));
     }
     else{
         return zwwDefault;
     }
+}
+
+float ZWW::lep1Mt_zh4l(){
+    return lepMt_zh4l(0);
 }
 
 float ZWW::lep2Mt_zh4l(){
-    if (isLepOk_ && isMETOk_){
-        return sqrt(2*lepVec_[1].Pt()*met_*(1-cos(lepVec_[1].Phi()-metPhi_)));
-    }
-    else{
-        return zwwDefault;
-    }
+    return lepMt_zh4l(1);
 }
 
 float ZWW::lep3Mt_zh4l(){
-    if (isLepOk_ && isMETOk_){
-        return sqrt(2*lepVec_[2].Pt()*met_*(1-cos(lepVec_[2].Phi()-metPhi_)));
-    }
-    else{
-        return zwwDefault;
-    }
+    return lepMt_zh4l(2);
 }
 
 float ZWW::lep4Mt_zh4l(){
-    if (isLepOk_ && isMETOk_){
-        return sqrt(2*lepVec_[3].Pt()*met_*(1-cos(lepVec_[3].Phi()-metPhi_)));
-    }
-    else{
-        return zwwDefault;
-    }
+    return lepMt_zh4l(3);
 }
 
 float ZWW::z1Mt_zh4l(){
-    if(isLepOk_ && isMETOk_){
+    if(isAllOk_){
         if (z1LepIdx_[0]!=zwwDefault){
             return sqrt(2*(lepVec_[z1LepIdx_[0]]+lepVec_[z1LepIdx_[1]]).Pt()*met_*(1-cos((lepVec_[z1LepIdx_[0]]+lepVec_[z1LepIdx_[1]]).Phi()-metPhi_)));
         }
         else{
-            setZ1LepIdx_();
-            if (z1LepIdx_[0]!=zwwDefault){
-                return sqrt(2*(lepVec_[z1LepIdx_[0]]+lepVec_[z1LepIdx_[1]]).Pt()*met_*(1-cos((lepVec_[z1LepIdx_[0]]+lepVec_[z1LepIdx_[1]]).Phi()-metPhi_)));
-            }
-            else{
-                return zwwDefault;
-            }
+            return zwwDefault;
         }
     }
     else{
@@ -617,7 +553,7 @@ float ZWW::z1Mt_zh4l(){
 }
 
 float ZWW::flagZ1SF_zh4l(){
-    if(isLepOk_){
+    if(isAllOk_){
         if (z1LepIdx_[0]!=zwwDefault){
             if(abs(lepFl_[z1LepIdx_[0]]) == abs(lepFl_[z1LepIdx_[1]])){
                 flagZ1SF_ = 1;
@@ -629,84 +565,11 @@ float ZWW::flagZ1SF_zh4l(){
             }
         }
         else{
-            setZ1LepIdx_();
-            if (z1LepIdx_[0]!=zwwDefault){
-                if(abs(lepFl_[z1LepIdx_[0]]) == abs(lepFl_[z1LepIdx_[1]])){
-                    flagZ1SF_ = 1;
-                    return flagZ1SF_;
-                }
-                else{
-                    flagZ1SF_= 0;
-                    return flagZ1SF_;
-                }
-            }
-            else{
-                return zwwDefault;
-            }
+            return zwwDefault;
         }
     }
     else{
         return zwwDefault;
     }
 }
-
-float ZWW::z1DeltaR_zh4l(){
-    if(isLepOk_){
-        if (z1LepIdx_[0]!=zwwDefault){
-            return  lepVec_[z1LepIdx_[0]].DeltaR(lepVec_[z1LepIdx_[1]]);
-        }
-        else{
-            setZ1LepIdx_();
-            if (z1LepIdx_[0]!=zwwDefault){
-                return  lepVec_[z1LepIdx_[0]].DeltaR(lepVec_[z1LepIdx_[1]]);
-            }
-            else{
-                return zwwDefault;
-            }
-        }
-    }
-    else{
-        return zwwDefault;
-    }
-}
-
-float ZWW::zaDeltaR_zh4l(){
-     if(isLepOk_){
-         if (zaLepIdx_[0]!=zwwDefault){
-             return  lepVec_[zaLepIdx_[0]].DeltaR(lepVec_[zaLepIdx_[1]]);
-         }   
-         else{
-             setZaZbLepIdx_();
-             if (zaLepIdx_[0]!=zwwDefault){
-                 return lepVec_[zaLepIdx_[0]].DeltaR(lepVec_[zaLepIdx_[1]]);
-             }
-             else{
-                 return zwwDefault;
-             }
-         }
-     }
-     else{
-         return zwwDefault;
-     }
-}       
-             
-float ZWW::zbDeltaR_zh4l(){
-    if(isLepOk_){
-        if (zbLepIdx_[0]!=zwwDefault){
-            return  lepVec_[zbLepIdx_[0]].DeltaR(lepVec_[zbLepIdx_[1]]);
-        }   
-        else{
-            setZaZbLepIdx_();
-            if (zbLepIdx_[0]!=zwwDefault){
-                return  lepVec_[zbLepIdx_[0]].DeltaR(lepVec_[zbLepIdx_[1]]);
-            }
-            else{
-                return zwwDefault;
-            }
-        }   
-    }       
-    else{   
-        return zwwDefault;
-    }       
-}       
 
