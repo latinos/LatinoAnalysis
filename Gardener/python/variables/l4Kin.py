@@ -139,12 +139,11 @@ class L4KinFiller(TreeCloner):
             ZWW.setMET(met, metphi)
  
             ZWW.isAllOk()
-            if ZWW.preSelection():
             # now fill the variables like "mll", "dphill", ...
-                for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
-                    bvariable[0] = getattr(ZWW, bname)()
-                otree.Fill()
-                savedentries+=1
+            for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+                bvariable[0] = getattr(ZWW, bname)()
+            otree.Fill()
+            savedentries+=1
 
         self.disconnect()
         print '- Eventloop completed'
