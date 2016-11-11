@@ -477,7 +477,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'], #,'BWEwkSinglet_JHUGen698'],
+                  'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet'], #,'BWEwkSinglet_JHUGen698'],
+                  'excludeSample' : ['DY1JetsToLL','QCD_Pt_30to80_bcToE'],
                 },
 
   'puWbaseWFix' :     {
@@ -491,14 +492,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2loose','l2kin','l3kin'],
+                  'subTargets' : ['do_l2loose','l2kin','l3kin','l4kin'],
                 },
 
   'l2vloose'  :       {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2vloose','l2kin','l3kin'],
+                  'subTargets' : ['do_l2vloose','l2kin','l3kin','l4kin'],
                 },
 
 
@@ -516,7 +517,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','BWEwkSinglet'],
+                  'subTargets' : ['do_l2vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet'],
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50',
@@ -524,6 +525,8 @@ Steps= {
  			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
                                   'TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
+                                  'TTTo2L2Nu_ext1','ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top','TTJets', 
                                  ] ,
                 },
 
@@ -544,7 +547,7 @@ Steps= {
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
                                   'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched',
                                   ####
-                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE',#'QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
                                   'TT','TTJets',
@@ -569,7 +572,7 @@ Steps= {
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
                                   'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched',
                                   ####
-                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE',##'QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
                                   'TT','TTJets',
@@ -616,7 +619,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin','l4kin'],
                 },
 
   'bSFKinFix'    : {
@@ -670,7 +673,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin','l3kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
                   'XonlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' ,
@@ -794,7 +797,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESup','bPogSF','l2kin','l3kin'],
+                  'subTargets' : ['do_JESup','bPogSF','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -902,7 +905,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESdo','bPogSF','l2kin','l3kin'],
+                  'subTargets' : ['do_JESdo','bPogSF','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -1011,7 +1014,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESMaxup','bPogSF','l2kin','l3kin'],
+                  'subTargets' : ['do_JESMaxup','bPogSF','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -1165,6 +1168,15 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
+
 
                                ],               
                 },
@@ -1173,7 +1185,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESMaxdo','bPogSF','l2kin','l3kin'],
+                  'subTargets' : ['do_JESMaxdo','bPogSF','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -1327,6 +1339,14 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
 
                                
 
@@ -1338,7 +1358,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin'],
+                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -1491,6 +1511,14 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
 
                                
 
@@ -1501,7 +1529,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin'],
+                  'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -1656,6 +1684,14 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
 
                                
 
@@ -1667,7 +1703,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin'],
+                  'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -1822,6 +1858,14 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
 
                                
 
@@ -1832,7 +1876,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin'],
+                  'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -1986,6 +2030,14 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
 
                                
 
@@ -1998,7 +2050,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METup','l2kin','l3kin'],
+                  'subTargets' : ['do_METup','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2151,6 +2203,14 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
 
                                
 
@@ -2162,7 +2222,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METdo','l2kin','l3kin'],
+                  'subTargets' : ['do_METdo','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2315,6 +2375,14 @@ Steps= {
                                   'monoH_2HDM_MZp-800_MA0-400',
                                   'monoH_2HDM_MZp-800_MA0-500',
                                   'monoH_2HDM_MZp-800_MA0-600',
+                                  'monoH_2HDM_MZp-1000_MA0-300',
+                                  'monoH_2HDM_MZp-1200_MA0-300',
+                                  'monoH_2HDM_MZp-1400_MA0-300',
+                                  'monoH_2HDM_MZp-1700_MA0-300',
+                                  'monoH_2HDM_MZp-2000_MA0-300',
+                                  'monoH_2HDM_MZp-2500_MA0-300',
+                                  'monoH_2HDM_MZp-600_MA0-300',
+                                  'monoH_2HDM_MZp-800_MA0-300',
 
                                
 
@@ -2675,6 +2743,14 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l3kinfiller --cmssw RPLME_CMSSW'
+               },
+
+
+  'l4kin'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l4kinfiller --cmssw RPLME_CMSSW'
                },
 
 
