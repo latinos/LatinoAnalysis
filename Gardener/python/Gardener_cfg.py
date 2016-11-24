@@ -478,7 +478,6 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   'subTargets' : ['do_l2loose','puadder','pu2p6','pu4p3','pu6p3','puW63mb','puW69mb','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet'], #,'BWEwkSinglet_JHUGen698'],
-                  'excludeSample' : ['DY1JetsToLL','QCD_Pt_30to80_bcToE'],
                 },
 
   'puWbaseWFix' :     {
@@ -545,9 +544,9 @@ Steps= {
                                   'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
                                   ####
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
-                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched',
+                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
                                   ####
-                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE',#'QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
                                   'TT','TTJets',
@@ -570,9 +569,9 @@ Steps= {
                                   'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
                                   ####
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
-                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched',
+                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
                                   ####
-                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE',##'QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
                                   'TT','TTJets',
@@ -711,6 +710,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -831,6 +831,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -939,6 +940,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1051,6 +1053,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1222,6 +1225,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -1395,6 +1399,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -1566,6 +1571,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1740,6 +1746,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
 
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -1914,6 +1921,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -2087,6 +2095,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -2259,6 +2268,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
                                   'GluGluHToWWTo2L2Nu_M135',
@@ -2439,6 +2449,13 @@ Steps= {
                   'command'    : 'gardener.py fakeWeights ',
                 } ,
 
+  'fakeW12fb_v2'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py fakeWeights ',
+                } ,
+
 
   'puadder'   : {
                   'isChain'    : False ,
@@ -2537,6 +2554,7 @@ Steps= {
                                   'GluGluHToZZTo4L_M125',
                                   'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
                                   'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # WW
                                   'WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown' 
                                   # High Mass ggH
@@ -2964,11 +2982,11 @@ Steps= {
                    'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
                  } ,
 
-   'dymvaGGH' :   {
+   'dymvaGGHv2' :   {
                    'isChain'    : True ,
                    'do4MC'      : True ,
                    'do4Data'    : True ,
-                   'subTargets' : ['wwvarfiller','do_dymvaGGH'],
+                   'subTargets' : ['l2kin','do_dymvaGGH'],
                   },
 
    'wwvarfiller' : {
@@ -3115,6 +3133,12 @@ Steps= {
                   'command'    : 'gardener.py chFlipProba',
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50'],
                   },
+
+  'sfSel'    : {  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'(metTtrk > 20 || metPfType1 > 20) && ptll > 30 && std_vector_lepton_flavour[0] == -std_vector_lepton_flavour[1] && mll > 12 && std_vector_lepton_pt[0] > 20 && std_vector_lepton_pt[1] > 10 \' ',
+           },
 
 
   'dymvaSel' : {  'isChain'    : False ,

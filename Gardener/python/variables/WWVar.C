@@ -460,7 +460,7 @@ float WW::jetpt1_cut(){
   return J1.Pt();
  }
  else {
-  return -9999.0;
+  return -1.0;
  }
 }
 
@@ -469,7 +469,7 @@ float WW::dphilljet_cut(){
   return fabs( (L1+L2).DeltaPhi(J1) );
  }
  else {
-  return -9999.0;
+  return -1.0;
  }
 }
 
@@ -478,7 +478,7 @@ float WW::dphijet1met_cut(){
   return fabs(J1.DeltaPhi(MET));
  }
  else {
-  return -9999.0;
+  return -1.0;
  }
 }
 
