@@ -364,9 +364,10 @@ class L1SelFiller(TreeCloner):
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.373                       and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]                 and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<1        and
-                         (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.165 + \
-                         self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.060 + \
-                         self.itree.std_vector_lepton_trackIso[ilepton] ) / self.itree.std_vector_lepton_pt[ilepton] < 0.0354
+                         (self.itree.std_vector_lepton_chargedHadronIso[ilepton] \
+                           +max(self.itree.std_vector_lepton_neutralHadronIso[ilepton] +  \
+                                self.itree.std_vector_lepton_photonIso[ilepton] -  \
+                                self.itree.jetRho*std_vector_electron_effectiveArea[ilepton],0))/std_vector_lepton_pt[ilepton]   <  0.0354
                          )
                  )
                  or 
@@ -382,9 +383,10 @@ class L1SelFiller(TreeCloner):
                          abs(self.itree.std_vector_lepton_dz[ilepton])< 0.602                           and
                          self.itree.std_vector_electron_passConversionVeto[ilepton]                     and
                          self.itree.std_vector_electron_expectedMissingInnerHits[ilepton]<1             and
-                         (self.itree.std_vector_electron_ecalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.132 + \
-                         self.itree.std_vector_electron_hcalPFClusterIso[ilepton] - self.itree.jetRhoCalo * 0.131 + \
-                         self.itree.std_vector_lepton_trackIso[ilepton] ) / self.itree.std_vector_lepton_pt[ilepton] < 0.0646
+                         (self.itree.std_vector_lepton_chargedHadronIso[ilepton] \
+                           +max(self.itree.std_vector_lepton_neutralHadronIso[ilepton] +  \
+                                self.itree.std_vector_lepton_photonIso[ilepton] -  \
+                                self.itree.jetRho*std_vector_electron_effectiveArea[ilepton],0))/std_vector_lepton_pt[ilepton]   <  0.0646
                          )
                  ))
                  
