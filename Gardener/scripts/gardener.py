@@ -88,6 +88,8 @@ from LatinoAnalysis.Gardener.variables.pdfUncertainty             import PdfUnce
 from LatinoAnalysis.Gardener.variables.BWEwkSingletReweighter     import BWEwkSingletReweighter
 # PDF and scale uncertainty
 from LatinoAnalysis.Gardener.variables.pdfAndScaleUncertainty     import PdfAndScaleUncertaintyTreeMaker
+# GenPT for the top
+from LatinoAnalysis.Gardener.variables.TopGenPt                   import TopGenPt
 
 if __name__ == '__main__':
 
@@ -192,6 +194,10 @@ if __name__ == '__main__':
 
 # EWK bw weights
     modules['BWEwkSingletReweighter'] = BWEwkSingletReweighter()
+
+# Top gen pt for reweighting
+    modules['TopGenPt'] = TopGenPt()
+    
 
 
     gardener_cli( modules )
