@@ -1039,6 +1039,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1211,6 +1212,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1385,6 +1387,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1557,6 +1560,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1732,6 +1736,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -1907,6 +1912,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -2081,6 +2087,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -2255,6 +2262,7 @@ Steps= {
                                   'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                                   'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu',
                                   'Wg_MADGRAPHMLM','WZTo3LNu_mllmin01',
+                                  'ggZZ2e2t', 'ggZZ4t', 'ggZZ4m', 'ggZZ2m2t', 'ggZZ2e2m', 'ggZZ4e',
                                   # VVV
                                   'WZZ','ZZZ','WWZ','WWW',
                                   # Higgs 
@@ -2982,7 +2990,7 @@ Steps= {
                    'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
                  } ,
 
-   'dymvaGGHv2' :   {
+   'dymvaGGHv3' :   {
                    'isChain'    : True ,
                    'do4MC'      : True ,
                    'do4Data'    : True ,

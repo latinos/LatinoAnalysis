@@ -285,8 +285,8 @@ void WW::checkIfOk() {
    if (_jetspt.at(ijet) > 0.) numJet ++;
   }
   
-  //---- if 2 jets
-  if (numJet >=2) {
+  //---- if 1 jets
+  if (numJet >=1) {
    _jetOk = numJet;
   }
   
