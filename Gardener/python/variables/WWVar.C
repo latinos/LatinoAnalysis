@@ -32,6 +32,7 @@ public:
  void setMET   (float met, float metphi);
  void setUMET  (float met, float metphi);
  void setTkMET (float met, float metphi);
+ void setSumET (float summet);
  
  //! functions
  float recoil();
@@ -113,7 +114,7 @@ private:
  TLorentzVector UMET;
  TLorentzVector J1, J2;
  float pid1, pid2;
- float SumEt ;
+ float _SumEt ;
  TLorentzVector TkMET;
  
  bool _isOk;
@@ -165,7 +166,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
   float metx = met*cos(metphi);
   float mety = met*sin(metphi);
   UMET.SetPxPyPzE(metx, mety, 0., met);
-  SumEt = metsum;
+  _SumEt = metsum;
   _isOk =  true;
  }
  else {
@@ -312,6 +313,12 @@ void WW::setTkMET(float met, float metphi) {
  TkMET.SetPtEtaPhiM(met, 0, metphi, 0.);
  _isTkMET = true;
 }
+
+
+void WW::setSumET(float sumet) {
+  _SumEt = sumet;  
+}
+
 
 
 
@@ -572,7 +579,7 @@ float WW::pfmet(){
 float WW::PfMetDivSumMet(){
 
  if (_isOk) {
-  return MET.Pt()/sqrt(SumEt);
+  return MET.Pt()/sqrt(_SumEt);
  }
  else {
   return -9999.0;

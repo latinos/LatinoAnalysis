@@ -437,6 +437,10 @@ Kinematic variables
 
     gardener.py l2kinfiller --cmssw=763    eos/user/a/amassiro/HWW2015/ICHEP/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_GluGluHToWWTo2L2NuPowheg_M125.root    output.root
 
+    gardener.py  l2kinfiller --cmssw=ICHEP2016  test.root      test.l2kin.root
+    
+    
+    
     
 Jet Energy Scale
 ====
@@ -669,11 +673,3 @@ Module: BWEwkSingletReweighter
     -p , --fileNameFormat, file name format to determine production process and mass, default="latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+).root")
 
   Code to produce the pickle files in https://github.com/lenzip/LineshapeTools. Currently these are produced for the default cprime and BRnew intervals and steps only.
-
-
-Top Gen Pt
-====
-
-Module: TopGenPt
-  
-  This module adds the gen level quark op and antiquark top pT to the tree, to be used for Pt Reweighting according top the recipe in https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
