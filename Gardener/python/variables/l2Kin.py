@@ -167,24 +167,34 @@ class L2KinFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
 
-            WW = ROOT.WW()
-            WW.setLeptons(itree.std_vector_lepton_pt, itree.std_vector_lepton_eta, itree.std_vector_lepton_phi, itree.std_vector_lepton_flavour)
-            WW.setJets   (itree.std_vector_jet_pt,       itree.std_vector_jet_eta,    itree.std_vector_jet_phi,    itree.std_vector_jet_mass)
-            
+            pt1  = itree.std_vector_lepton_pt[0]
+            pt2  = itree.std_vector_lepton_pt[1]
+            phi1 = itree.std_vector_lepton_pt[0]
+            phi2 = itree.std_vector_lepton_pt[1]
+            eta1 = itree.std_vector_lepton_eta[0]
+            eta2 = itree.std_vector_lepton_eta[1]
+
             if self.cmssw == '74x' :
-
-                met = itree.pfType1Met          # formerly pfType1Met
-                metphi = itree.pfType1Metphi    # formerly pfType1Metphi
-
-            else : 
-                met = itree.metPfType1      
-                metphi = itree.metPfType1Phi
-                WW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
-            
-            WW.setMET(met, metphi)
+  
+              met = itree.pfType1Met          # formerly pfType1Met
+              metphi = itree.pfType1Metphi    # formerly pfType1Metphi
+              metsum = 0.1 
  
-            WW.checkIfOk()
+            else : 
+              met    = itree.metPfType1
+              metphi = itree.metPfType1Phi
+              metsum = itree.metPfType1SumEt
 
+            jetpt1   = itree.std_vector_jet_pt[0]
+            jetpt2   = itree.std_vector_jet_pt[1]
+            jeteta1  = itree.std_vector_jet_eta[0]
+            jeteta2  = itree.std_vector_jet_eta[1]
+            jetphi1  = itree.std_vector_jet_phi[0]
+            jetphi2  = itree.std_vector_jet_phi[1]
+            jetmass1 = itree.std_vector_jet_mass[0]
+            jetmass2 = itree.std_vector_jet_mass[1]
+
+            WW = ROOT.WW(pt1, pt2, eta1, eta2, phi1, phi2, met, metphi, metsum, jetpt1, jetpt2, jeteta1, jeteta2, jetphi1, jetphi2, jetmass1, jetmass2)
  
             # now fill the variables like "mll", "dphill", ...
             for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
