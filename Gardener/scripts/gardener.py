@@ -48,6 +48,7 @@ from LatinoAnalysis.Gardener.variables.dymvaGGHVar                import DymvaGG
 from LatinoAnalysis.Gardener.variables.chargeFlipWeight           import chargeFlipWeight
 # mucca
 from LatinoAnalysis.Gardener.variables.muccaMvaVar                import MuccaMvaVarFiller   
+from LatinoAnalysis.Gardener.variables.muccaMonoHVar              import MuccaMonoHVarFiller   
 # mrww
 from LatinoAnalysis.Gardener.variables.MrWWVar                    import MrWWVarFiller   
 
@@ -146,6 +147,7 @@ if __name__ == '__main__':
 
 # mucca
     modules['muccaMvaVarFiller']   = MuccaMvaVarFiller()
+    modules['muccaMonoHVarFiller'] = MuccaMonoHVarFiller()
 
 # mrWW
     modules['mrWWvarfiller']   = MrWWVarFiller()

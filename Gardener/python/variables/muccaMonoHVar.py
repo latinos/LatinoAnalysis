@@ -23,32 +23,31 @@ import math
 #                                                                                                                
 #
 
-class MuccaMvaVarFiller(TreeCloner):
+class MuccaMonoHVarFiller(TreeCloner):
 
     def __init__(self):
         pass
 
 
-    def createMuccaMVA(self):
-        self.getMuccaMVAV = ROOT.TMVA.Reader();
+    def createMuccaMonoH(self):
+        self.getMuccaMonoH = ROOT.TMVA.Reader();
         
         # the order is important for TMVA!
-        self.getMuccaMVAV.AddVariable("std_vector_lepton_pt[0]", (self.var1))
-        self.getMuccaMVAV.AddVariable("std_vector_lepton_pt[1]", (self.var2))
-        self.getMuccaMVAV.AddVariable("mll",                     (self.var3))
-        self.getMuccaMVAV.AddVariable("mR",                      (self.var4))
-        self.getMuccaMVAV.AddVariable("ptll",                    (self.var5))
-        self.getMuccaMVAV.AddVariable("mth",                     (self.var6))
-        self.getMuccaMVAV.AddVariable("mtw1",                    (self.var7))
-        self.getMuccaMVAV.AddVariable("mtw2",                    (self.var8))
-        self.getMuccaMVAV.AddVariable("dphill",                  (self.var9))
-        self.getMuccaMVAV.AddVariable("drll",                    (self.var10))
-        self.getMuccaMVAV.AddVariable("dphilmet1",               (self.var11))
-        self.getMuccaMVAV.AddVariable("dphilmet2",               (self.var12))
-        self.getMuccaMVAV.AddVariable("dphilmet",                (self.var13))
-        self.getMuccaMVAV.AddVariable("mpmet",                   (self.var14))
-        self.getMuccaMVAV.AddVariable("metPfType1",              (self.var15))
-        self.getMuccaMVAV.AddVariable("metTtrk",                 (self.var16))
+        self.getMuccaMonoH.AddVariable("std_vector_lepton_pt[0]", (self.var1))
+        self.getMuccaMonoH.AddVariable("std_vector_lepton_pt[1]", (self.var2))
+        self.getMuccaMonoH.AddVariable("mll",                     (self.var3))
+        self.getMuccaMonoH.AddVariable("ptll",                    (self.var4))
+        self.getMuccaMonoH.AddVariable("mth",                     (self.var5))
+        self.getMuccaMonoH.AddVariable("mtw1",                    (self.var6))
+        self.getMuccaMonoH.AddVariable("mtw2",                    (self.var7))
+        self.getMuccaMonoH.AddVariable("dphill",                  (self.var8))
+        self.getMuccaMonoH.AddVariable("drll",                    (self.var9))
+        self.getMuccaMonoH.AddVariable("dphilmet1",               (self.var10))
+        self.getMuccaMonoH.AddVariable("dphilmet2",               (self.var11))
+        self.getMuccaMonoH.AddVariable("dphilmet",                (self.var12))
+        self.getMuccaMonoH.AddVariable("mpmet",                   (self.var13))
+        self.getMuccaMonoH.AddVariable("metPfType1",              (self.var14))
+        self.getMuccaMonoH.AddVariable("metTtrk",                 (self.var15))
 
         # I need to declare the spectator ... for some strange ROOT reasons ...
         #self.getMuccaMVAV.AddSpectator("std_vector_jet_pt[0]",   (self.var17))
@@ -56,7 +55,7 @@ class MuccaMvaVarFiller(TreeCloner):
         # mva trainined xml
         baseCMSSW = os.getenv('CMSSW_BASE')
         #self.getMuccaMVAV.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/mucca/TMVAClassification_BDTG.weights.bkg" + self.kind + ".xml")
-        self.getMuccaMVAV.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_5/src/MUCCA/Optimization/Weights-WW/TMVAClassification_BDTG4.weights.xml")
+        self.getMuccaMonoH.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_5/src/MUCCA/Optimization/Weights-TTbar/TMVAClassification_BDT4.weights.xml")
 
 
     def help(self):
@@ -81,7 +80,7 @@ class MuccaMvaVarFiller(TreeCloner):
 
     def process(self,**kwargs):
 
-        self.getMuccaMVAV = None
+        self.getMuccaMonoH = None
 
         self.var1  = array.array('f',[0])
         self.var2  = array.array('f',[0])
@@ -98,7 +97,6 @@ class MuccaMvaVarFiller(TreeCloner):
         self.var13 = array.array('f',[0])
         self.var14 = array.array('f',[0])
         self.var15 = array.array('f',[0])
-        self.var16 = array.array('f',[0])
         #self.var17 = array.array('f',[0])
         
         tree  = kwargs['tree']
@@ -114,7 +112,7 @@ class MuccaMvaVarFiller(TreeCloner):
 
         self.otree.Branch('muccamva'+ self.kind,  muccamva,  'muccamva' + self.kind + '/F')
 
-        self.createMuccaMVA()
+        self.createMuccaMonoH()
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -140,26 +138,25 @@ class MuccaMvaVarFiller(TreeCloner):
             pt2 = itree.std_vector_lepton_pt[1]
             
             if pt1>0 and pt2>0 : 
-            
+
               self.var1[0]   =  itree.std_vector_lepton_pt[0]
               self.var2[0]   =  itree.std_vector_lepton_pt[1]
               self.var3[0]   =  itree.mll
-              self.var4[0]   =  itree.mR
-              self.var5[0]   =  itree.ptll
-              self.var6[0]   =  itree.mth
-              self.var7[0]   =  itree.mtw1
-              self.var8[0]   =  itree.mtw2
-              self.var9[0]   =  itree.dphill
-              self.var10[0]  =  itree.drll
-              self.var11[0]  =  itree.dphilmet1
-              self.var12[0]  =  itree.dphilmet2
-              self.var13[0]  =  itree.dphilmet
-              self.var14[0]  =  itree.mpmet
-              self.var15[0]  =  itree.metPfType1
-              self.var16[0]  =  itree.metTtrk
+              self.var4[0]   =  itree.ptll
+              self.var5[0]   =  itree.mth
+              self.var6[0]   =  itree.mtw1
+              self.var7[0]   =  itree.mtw2
+              self.var8[0]   =  itree.dphill
+              self.var9[0]   =  itree.drll
+              self.var10[0]  =  itree.dphilmet1
+              self.var11[0]  =  itree.dphilmet2
+              self.var12[0]  =  itree.dphilmet
+              self.var13[0]  =  itree.mpmet
+              self.var14[0]  =  itree.metPfType1
+              self.var15[0]  =  itree.metTtrk
               #self.var17[0]  =  itree.std_vector_jet_pt[0]
               
-              muccamva[0] = self.getMuccaMVAV.EvaluateMVA("BDT")
+              muccamva[0] = self.getMuccaMonoH.EvaluateMVA("BDT")
               
             otree.Fill()
             
