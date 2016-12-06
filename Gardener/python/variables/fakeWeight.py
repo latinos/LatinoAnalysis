@@ -44,23 +44,23 @@ class FakeWeightFiller(TreeCloner):
     def checkOptions(self,opts):
 	cmssw_base = os.getenv('CMSSW_BASE')
 
-        self.fileMuPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonPR_Run2016_HWW12fb.root')
-        self.fileElPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/ElePR_Run2016_HWW12fb.root')
+        self.fileMuPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonPR_Run2016_HWW12fb.root')
+        self.fileElPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/ElePR_Run2016_HWW12fb.root')
 
         self.MuPR = self._getRootObj(self.fileMuPR, 'h_Muon_signal_pt_eta_bin')
         self.ElPR = self._getRootObj(self.fileElPR, 'h_Ele_signal_pt_eta_bin')
 
-        self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonFR_Run2016_HWW12fb_jet10.root')
-        self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonFR_Run2016_HWW12fb_jet15.root')
-        self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonFR_Run2016_HWW12fb_jet20.root')
-        self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonFR_Run2016_HWW12fb_jet25.root')
-        self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonFR_Run2016_HWW12fb_jet30.root')
-        self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonFR_Run2016_HWW12fb_jet35.root')
-        self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/MuonFR_Run2016_HWW12fb_jet45.root')
+        self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet10.root')
+        self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet15.root')
+        self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet20.root')
+        self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet25.root')
+        self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet30.root')
+        self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet35.root')
+        self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet45.root')
                                                                                                                         
-        self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/EleFR_Run2016_HWW12fb_jet25.root')
-        self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/EleFR_Run2016_HWW12fb_jet35.root')
-        self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb/EleFR_Run2016_HWW12fb_jet45.root')
+        self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet25.root')
+        self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet35.root')
+        self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet45.root')
 
         self.MuFR_jet10 = self._getRootObj(self.fileMuFR_jet10, 'FR_pT_eta_EWKcorr')
         self.MuFR_jet15 = self._getRootObj(self.fileMuFR_jet15, 'FR_pT_eta_EWKcorr')
