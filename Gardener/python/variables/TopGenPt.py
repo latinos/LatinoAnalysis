@@ -87,7 +87,7 @@ class TopGenPt(TreeCloner):
           #for bname, bvector in newbranchesVecotor.iteritems():
           #    bvector.clear()
                 
-          print "----------------"
+          
           ilTop=-1;
           ilAntiTop=-1;
           inTop = -1;
