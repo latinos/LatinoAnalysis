@@ -3404,7 +3404,7 @@ Steps= {
                    'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
                  } ,
 
-   'dymvaGGHv3' :   {
+   'dymvaGGH' :   {
                    'isChain'    : True ,
                    'do4MC'      : True ,
                    'do4Data'    : True ,
