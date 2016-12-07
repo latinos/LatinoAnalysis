@@ -3532,8 +3532,16 @@ Steps= {
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50'],
 
            },
+i
 
-  'vbsSel'    : {
+  'vbfSel':  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['chFlipProba2j','do_vbsSel'], 
+           },
+
+  'do_vbsSel'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
@@ -3547,6 +3555,15 @@ Steps= {
                   'command'    : 'gardener.py chFlipProba',
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50'],
                   },
+
+  'chFlipProba2j' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py chFlipProba --njets 2',
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1'],
+                  },
+
 
   'sfSel'    : {  'isChain'    : False ,
                   'do4MC'      : True  ,
