@@ -196,8 +196,7 @@ class TopGenPt(TreeCloner):
  
            
           for bname, bvariable in newbranchesVecotor.iteritems():              
-              print "....."
-              print "bname", bname,"bvariable[0]",bvariable, LHEquark_top_pt 
+
               if(bname == "LHEquark_top_pt"): 
                   bvariable[0] = LHEquark_top_pt  
                   numTOP=numTOP+1                 
