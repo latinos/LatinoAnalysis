@@ -30,7 +30,6 @@ public:
  void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  
  void setMET   (float met, float metphi);
- void setUMET  (float met, float metphi);
  void setTkMET (float met, float metphi);
  void setSumET (float summet);
  
@@ -111,7 +110,6 @@ private:
  //! variables
  TLorentzVector L1,L2,L3;
  TLorentzVector MET;
- TLorentzVector UMET;
  TLorentzVector J1, J2;
  float pid1, pid2;
  float _SumEt ;
@@ -162,10 +160,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  if (pt1>0 && pt2>0) {
   L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
   L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
-  MET.SetPxPyPzE(met, 0., metphi, 0.);
-  float metx = met*cos(metphi);
-  float mety = met*sin(metphi);
-  UMET.SetPxPyPzE(metx, mety, 0., met);
+  MET.SetPtEtaPhiM(met, 0., metphi, 0.);
   _SumEt = metsum;
   _isOk =  true;
  }
@@ -300,12 +295,6 @@ void WW::checkIfOk() {
 
 void WW::setMET(float met, float metphi) {
  MET.SetPtEtaPhiM(met, 0, metphi, 0.);
-}
-
-void WW::setUMET(float met, float metphi) {
- float metx = met* cos(metphi);
- float mety = met* sin(metphi);
- UMET.SetPxPyPzE(metx, mety, 0., met);
 }
 
 
@@ -590,7 +579,7 @@ float WW::PfMetDivSumMet(){
 float WW::upara(){
 
  if (_isOk) {
-  TLorentzVector utv = (-UMET-(L1+L2));
+  TLorentzVector utv = (-MET-(L1+L2));
   float ut = utv.P();
   float uphi = utv.DeltaPhi(L1+L2);
   return ut*cos(uphi);
@@ -603,7 +592,7 @@ float WW::upara(){
 float WW::uperp(){
 
  if (_isOk) {
-  TLorentzVector utv = (-UMET-(L1+L2));
+  TLorentzVector utv = (-MET-(L1+L2));
   float ut = utv.P();
   float uphi = utv.DeltaPhi(L1+L2);
   return ut*sin(uphi);
