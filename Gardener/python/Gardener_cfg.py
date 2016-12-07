@@ -3534,11 +3534,11 @@ Steps= {
            },
 i
 
-  'vbfSel':  {
+  'vbsSel':  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['chFlipProba2j','do_vbsSel'], 
+                  'subTargets' : ['do_vbsSel','chFlipProba2j'], 
            },
 
   'do_vbsSel'    : {
