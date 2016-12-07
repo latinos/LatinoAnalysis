@@ -1266,7 +1266,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
-
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
                                   # stop
 
                                   'latino_T2bW',
@@ -1470,6 +1471,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
 
                                   # stop
@@ -1676,6 +1679,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -1882,6 +1887,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
 
                                   # stop
@@ -2090,6 +2097,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2297,6 +2306,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2504,6 +2515,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2710,6 +2723,8 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M1000',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
+                                  'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD ',
+                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -3532,9 +3547,8 @@ Steps= {
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50'],
 
            },
-i
 
-  'vbsSel':  {
+  'vbsSel'    : {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
