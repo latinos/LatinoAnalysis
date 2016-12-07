@@ -3533,6 +3533,13 @@ Steps= {
 
            },
 
+  'vbsSel'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && njet>=2 && mjj>100 \' '
+           },
+
   'chFlipProba' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,

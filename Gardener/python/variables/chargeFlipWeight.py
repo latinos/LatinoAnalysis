@@ -18,13 +18,23 @@ class chargeFlipWeight(TreeCloner):
         return '''Add lepton ee-0S to ee-SS charge flip probality taken form data.'''
 
     def addOptions(self,parser):
-        pass
+        description = self.help()
+        group = optparse.OptionGroup(parser,self.label, description)
+        group.add_option('-j', '--njets',  dest='njets',  help='Minimum number of jets',  default='0')
+        parser.add_option_group(group)
+        return group
+
 
     def checkOptions(self,opts):
 
+	self.njets = opts.njets	
         cmssw_base = os.getenv('CMSSW_BASE')
-        self.chFlipEeFileName = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/chFlip/DY_SSoverOS_2Dweight_inclusive.root'
-        self.chFlipEeHistName = 'DY_leptoneta2D_weight'
+        if self.njets == 0:
+            self.chFlipEeFileName = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/chFlip/DY_SSoverOS_2Dweight_inclusive.root'
+            self.chFlipEeHistName = 'DY_leptoneta2D_weight'
+        else:
+            self.chFlipEeFileName = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/chFlip/DY_SSoverOS_2Dweight_2jet_tripleCharge_MCsubtr.root'
+            self.chFlipEeHistName = 'data_leptonabseta2D_weight' 
 
         self.chFlipEeFile = self._openRootFile(self.chFlipEeFileName)
         self.chFlipEeHist = self._getRootObj(self.chFlipEeFile,self.chFlipEeHistName) 
@@ -77,6 +87,10 @@ class chargeFlipWeight(TreeCloner):
             eta2  = itree.std_vector_lepton_eta[1]
             flav1 = itree.std_vector_lepton_flavour[0]
             flav2 = itree.std_vector_lepton_flavour[1]
+ 
+            if self.njets > 0:
+                eta1 = abs(eta1)
+                eta2 = abs(eta2)
 
             if pt1>0 and pt2>0 and (flav1*flav2) == (-11.*11) : chFlipProba[0] = self._getHistoValue(self.chFlipEeHist,eta1,eta2)
                
