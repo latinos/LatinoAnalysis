@@ -95,6 +95,7 @@ parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , de
 parser.add_option("-c" , "--cmssw" , dest="cmssw"     , help="CMSSW version" , default='763' , type='string' )
 parser.add_option("-C" , "--chain" , dest="chain"     , help="Chain several steps" , default=False, action="store_true")
 parser.add_option("-a" , "--allSamples" , dest="ignoreOnlySamples",  help="ignoreOnlySamples"  , default=False  , action="store_true")
+parser.add_option("-M" , "--forceMerge" , dest="forceMerge", help="Force Merge Big Sample in Hadd" , default=False  , action="store_true")
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -385,7 +386,7 @@ for iProd in prodList :
             iKey = iTarget
 
           if options.redo or not 'latino_'+iKey+'.root' in FileExistList :
-            if not iKey in Steps['hadd']['bigSamples'] : 
+            if not iKey in Steps['hadd']['bigSamples'] or options.forceMerge: 
               if not iKey in targetGroupList:
                 targetGroupList[iKey] = []
               targetGroupList[iKey].append(targetList[iTarget])             
