@@ -662,6 +662,7 @@ for iProd in prodList :
           command += ' 2>&1 > /dev/null \n' 
         else:
           command += ' 2>&1 | tee '+logFile+' \n'  
+        print '--------------------------------', options.pretend
         if options.pretend : print command
         else :
           if  options.runBatch: jobs.Add(stepBatch,iTarget,command)
