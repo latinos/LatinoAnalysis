@@ -271,8 +271,7 @@ Productions= {
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         # 12.X fb-1
-                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_271036-276811_63mb_24Aug.
-root',
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_271036-276811_63mb_24Aug.root',
                        },
 
   '07Jun2016_Run2016B_PromptReco' : {
