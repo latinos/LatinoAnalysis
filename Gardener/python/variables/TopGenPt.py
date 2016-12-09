@@ -88,6 +88,7 @@ class TopGenPt(TreeCloner):
           #    bvector.clear()
                 
           #print "----------------"
+          
           ilTop=-1;
           ilAntiTop=-1;
           inTop = -1;
@@ -201,6 +202,7 @@ class TopGenPt(TreeCloner):
                   bvariable[0] = LHEquark_top_pt  
                   numTOP=numTOP+1                 
                   #print "TOP: bvariable[0]",bvariable[0], LHEquark_top_pt, "numtop=", numTOP 
+                 
 
               elif(bname == "LHEnumTOP"): 
                   #numTOP=numTOP+1  
@@ -210,6 +212,7 @@ class TopGenPt(TreeCloner):
                   bvariable[0] = LHEquark_antitop_pt  
                   numAntiTOP=numAntiTOP+1
                   #print "ANTITOP: bvariable[0]",bvariable[0], LHEquark_antitop_pt 
+                  
 
               if(bname == "LHEnumANTITOP"): 
                   #numTOP=numTOP+1  
