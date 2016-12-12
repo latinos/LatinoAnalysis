@@ -125,7 +125,12 @@ class batchJobs :
         if 'iihe' in os.uname()[1] : 
           queue='localgrid@cream02'
           QSOPT=''
-          jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          nTry=0
+          while nTry < 5 : 
+            nTry+=1
+            jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+            print 'TRY #:', nTry , '--> Jobid : ' , jobid
+            if jobid == 0 : nTry = 999
 
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
