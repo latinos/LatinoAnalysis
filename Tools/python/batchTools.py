@@ -8,7 +8,7 @@ import os.path
 from LatinoAnalysis.Tools.userConfig  import *
 
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',useBatchDir=True,wDir=''):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir=''):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -20,6 +20,9 @@ class batchJobs :
      self.prodName = prodName
      self.subDir   = jobDir+'/'+baseName+'__'+prodName
      if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)     
+
+     print stepList 
+     print batchSplit
 
      # Init Steps
      for iStep in stepList:
@@ -48,6 +51,7 @@ class batchJobs :
      SCRAMARCH=os.environ["SCRAM_ARCH"]
      for jName in self.jobsList:
        jFile = open(self.subDir+'/'+jName+'.sh','w')
+       if usePython : pFile = open(self.subDir+'/'+jName+'.py','w') 
        jFile.write('#!/bin/bash\n')
        if 'cern' in os.uname()[1]:
          jFile.write('#$ -N '+jName+'\n')
@@ -67,6 +71,7 @@ class batchJobs :
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
        jFile.close()
+       if usePython : pFile.close()
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
      # Create Proxy at IIHE
@@ -80,6 +85,29 @@ class batchJobs :
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      jFile.write(command+'\n')
      jFile.close()
+
+   def InitPy (self,command):
+
+     os.system('cd '+self.subDir)
+     for jName in self.jobsList:
+       pFile = open(self.subDir+'/'+jName+'.py','a')
+       pFile.write(command+'\n')
+       pFile.close()
+
+   def AddPy2Sh(self):
+     for jName in self.jobsList: 
+       jFile = open(self.subDir+'/'+jName+'.sh','a')
+       command = 'python '+self.subDir+'/'+jName+'.py'
+       jFile.write(command+'\n')
+       jFile.close()
+
+   def AddPy (self,iStep,iTarget,command):
+     jName= self.jobsDic[iStep][iTarget]
+     print 'Adding to ',self.subDir+'/'+jName
+     pFile = open(self.subDir+'/'+jName+'.py','a')
+     pFile.write(command+'\n')
+     pFile.close()
+
 
    def Sub(self,queue='8nh'): 
      os.system('cd '+self.subDir)
