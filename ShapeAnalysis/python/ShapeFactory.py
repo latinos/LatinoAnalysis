@@ -1021,6 +1021,8 @@ class ShapeFactory:
       eoususer='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select'
       if 'eosuser.cern.ch' in path: 
         if os.system(eoususer+' ls '+path.split('/eosuser.cern.ch/')[1]) == 0 : return True
+      if 'eoscms.cern.ch' in path:
+        if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]) == 0 : return True 
       return False 
     # _____________________________________________________________________________
     def _testIiheFile(self,path): 
@@ -1032,7 +1034,7 @@ class ShapeFactory:
         for path in files:
             doesFileExist = True
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-            if "eos.cern.ch" in path or "eosuser.cern.ch" in path:
+            if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
               if not self._testEosFile(path):
                 print 'File '+path+' doesn\'t exists'
                 doesFileExist = False
