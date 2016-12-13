@@ -10,19 +10,28 @@
 #include <vector>
 
  struct XYshiftDB{
-   string section;
-   int ptclType;
-   vector<string> mBinVar;
-   vector<int> mParVar;
-   string mFormula;
-   double metXetaMin;
-   double metXetaMax;
-   double metYetaMin;
-   double metYetaMax;
-   vector<double> metXparameters;
-   vector<double> metYparameters;
-   //TF1* formula_x;
-   //TF1* formula_y;
+   string sample;
+   vector<double> mParVar;
+   string parFormula_X0_0;
+   string parFormula_X1_0;
+   string parFormula_X1_1;
+   string parFormula_Y0_0;
+   string parFormula_Y1_0;
+   string parFormula_Y1_1;
+   double varMin;
+   double varMax;
+   vector<double> X0_0ftnParameters;
+   vector<double> X1_0ftnParameters;
+   vector<double> X1_1ftnParameters;
+   vector<double> Y0_0ftnParameters;
+   vector<double> Y1_0ftnParameters;
+   vector<double> Y1_1ftnParameters;
+   TF1* paraFtn_X0_0;
+   TF1* paraFtn_X1_0;
+   TF1* paraFtn_X1_1;
+   TF1* paraFtn_Y0_0;
+   TF1* paraFtn_Y1_0;
+   TF1* paraFtn_Y1_1;
  }myDB;
 
   void handleError(const std::string& fClass, const std::string& fMessage)
@@ -118,19 +127,12 @@ public:
 
  void printPara();
  void CalcXYshiftCorr(
-	double hEtaPlus_counts,
-	double hEtaMinus_counts,
-	double h0Barrel_counts,
-	double h0EndcapPlus_counts,
-	double h0EndcapMinus_counts,
-	double gammaBarrel_counts,
-	double gammaEndcapPlus_counts,
-	double gammaEndcapMinus_counts,
-	double hHFPlus_counts,
-	double hHFMinus_counts,
-	double egammaHFPlus_counts,
-	double egammaHFMinus_counts,
+     string sample,
+	double nVtx,
+	double pfMet,
 	double &corx, double &cory);
+
+ int ParVar();
  
  //! check
  //void checkIfOk();
@@ -145,42 +147,14 @@ private:
  void BuildFormula();
 
  XYshiftDB tmpDB;
- TF1* formula_hEtaPlus_x;
- TF1* formula_hEtaPlus_y;
-
- TF1* formula_hEtaMinus_x;
- TF1* formula_hEtaMinus_y;
-
- TF1* formula_h0Barrel_x;
- TF1* formula_h0Barrel_y;
-
- TF1* formula_h0EndcapPlus_x;
- TF1* formula_h0EndcapPlus_y;
-
- TF1* formula_h0EndcapMinus_x;
- TF1* formula_h0EndcapMinus_y;
-
- TF1* formula_gammaBarrel_x;
- TF1* formula_gammaBarrel_y;
-
- TF1* formula_gammaEndcapPlus_x;
- TF1* formula_gammaEndcapPlus_y;
-
- TF1* formula_gammaEndcapMinus_x;
- TF1* formula_gammaEndcapMinus_y;
-
- TF1* formula_hHFPlus_x;
- TF1* formula_hHFPlus_y;
-
- TF1* formula_hHFMinus_x;
- TF1* formula_hHFMinus_y;
-
- TF1* formula_egammaHFPlus_x;
- TF1* formula_egammaHFPlus_y;
-
- TF1* formula_egammaHFMinus_x;
- TF1* formula_egammaHFMinus_y;
-
+ double ChangeFtnPointY;
+ double ChangeFtnPointX;
+ TF1* corrFormula_X0;
+ TF1* corrFormula_X1;
+ TF1* corrFormula_Y0;
+ TF1* corrFormula_Y1;
+ double par_X0_0, par_X1_0, par_X1_1;
+ double par_Y0_0, par_Y1_0, par_Y1_1;
 
  float _met;
  float _met_phi;
@@ -189,6 +163,10 @@ private:
 
 //! constructor
 metXYshift::metXYshift(string paraFile) {
+  corrFormula_X0 = new TF1("corrFormula_X0","[0]*x");
+  corrFormula_X1 = new TF1("corrFormula_X1","[0]+[1]*x");
+  corrFormula_Y0 = new TF1("corrFormula_Y0","[0]*x");
+  corrFormula_Y1 = new TF1("corrFormula_Y1","[0]+[1]*x");
   //cout<<"Parameter file is: "<<paraFile<<endl;
   std::ifstream input(paraFile.c_str());
   if( !input )
@@ -200,58 +178,85 @@ metXYshift::metXYshift(string paraFile) {
 
   v_XYshiftDB.clear();
 
-  myDB.section="";
-  myDB.ptclType=0;
-  myDB.mBinVar.clear();
+  myDB.sample="";
   myDB.mParVar.clear();
-  myDB.mFormula="";
-  myDB.metXparameters.clear();
-  myDB.metYparameters.clear();
+  myDB.parFormula_X0_0="";
+  myDB.parFormula_X1_0="";
+  myDB.parFormula_X1_1="";
+  myDB.parFormula_Y0_0="";
+  myDB.parFormula_Y1_0="";
+  myDB.parFormula_Y1_1="";
+
+  myDB.X0_0ftnParameters.clear();
+  myDB.X1_0ftnParameters.clear();
+  myDB.X1_1ftnParameters.clear();
+  myDB.Y0_0ftnParameters.clear();
+  myDB.Y1_0ftnParameters.clear();
+  myDB.Y1_1ftnParameters.clear();
+
+  myDB.paraFtn_X0_0=0;
+  myDB.paraFtn_X1_0=0;
+  myDB.paraFtn_X1_1=0;
+  myDB.paraFtn_Y0_0=0;
+  myDB.paraFtn_Y1_0=0;
+  myDB.paraFtn_Y1_1=0;
 
   std::string line;
   std::string currentDefinitions = "";
   cout<<"getline from input file"<<endl;
-  myDB.section = "";
+  myDB.sample = "";
   while (std::getline(input,line))
   {
-    std::string section = getSection(line);
+    std::string sample = getSection(line);
     std::string tmp = getDefinitions(line);
-    //cout<<"section is : "<<section<<endl;
-    // catch section and save previous DB
-    if (!section.empty() && tmp.empty())
+    //cout<<"sample is : "<<sample<<endl;
+    // catch sample and save previous DB
+    if (!sample.empty() && tmp.empty())
     {
-      if(!myDB.section.empty()) // there is a previous DB filled.
+      if(!myDB.sample.empty()) // there is a previous DB filled.
       {
+	BuildFormula();
 	v_XYshiftDB.push_back(myDB);
-        myDB.section="";
-        myDB.ptclType=0;
-        myDB.mBinVar.clear();
+
+        myDB.sample="";
         myDB.mParVar.clear();
-        myDB.mFormula="";
-	myDB.metXetaMin=0;
-	myDB.metXetaMax=0;
-	myDB.metYetaMin=0;
-	myDB.metYetaMax=0;
-	myDB.metXparameters.clear();
-	myDB.metYparameters.clear();
+        myDB.parFormula_X0_0="";
+        myDB.parFormula_X1_0="";
+        myDB.parFormula_X1_1="";
+        myDB.parFormula_Y0_0="";
+        myDB.parFormula_Y1_0="";
+        myDB.parFormula_Y1_1="";
+	myDB.X0_0ftnParameters.clear();
+	myDB.X1_0ftnParameters.clear();
+	myDB.X1_1ftnParameters.clear();
+	myDB.Y0_0ftnParameters.clear();
+	myDB.Y1_0ftnParameters.clear();
+	myDB.Y1_1ftnParameters.clear();
+	myDB.paraFtn_X0_0=0;
+	myDB.paraFtn_X1_0=0;
+	myDB.paraFtn_X1_1=0;
+	myDB.paraFtn_Y0_0=0;
+	myDB.paraFtn_Y1_0=0;
+	myDB.paraFtn_Y1_1=0;
       }
-      myDB.section = section;
+      myDB.sample = sample;
       continue;
     }
     if (!tmp.empty())
     {
       currentDefinitions = tmp;
+      //cout<<"Definitions input: "<<currentDefinitions<<endl;
       Definitions(currentDefinitions);
       continue;
     }
-    if( myDB.section != "")
+    if( myDB.sample != "")
     {
       Record(line);
     }
   }
-  v_XYshiftDB.push_back(myDB); // last section to be filled
-
   BuildFormula();
+  v_XYshiftDB.push_back(myDB); // last sample to be filled
+
 }
 
 void metXYshift::Definitions(const std::string& fLine)
@@ -260,30 +265,29 @@ void metXYshift::Definitions(const std::string& fLine)
   // corrType N_bin binVa.. var formula
   if (!tokens.empty())
   { 
-    if (tokens.size() < 6) 
+    if (tokens.size() < 8) 
     {
       std::stringstream sserr;
-      sserr<<"(line "<<fLine<<"): Great than or equal to 6 expected tokens:"<<tokens.size();
+      sserr<<"(line "<<fLine<<"): Great than or equal to 8 expected tokens:"<<tokens.size();
       handleError("metXYshift::Definitions",sserr.str());
     }
-    // No. of Bin Variable
-    myDB.ptclType = getSigned(tokens[0]);
-    unsigned nBinVar = getUnsigned(tokens[1]);
-    for(unsigned i=0;i<nBinVar;i++)
-    {
-      myDB.mBinVar.push_back(tokens[i+2]);
-    }
     // Num.o of Parameterization Variable
-    unsigned nParVar = getUnsigned(tokens[nBinVar+2]);
+    unsigned nParVar = getUnsigned(tokens[0]);
     for(unsigned i=0;i<nParVar;i++)
     {
-      myDB.mParVar.push_back(getSigned(tokens[nBinVar+3+i]));
+      myDB.mParVar.push_back(getSigned(tokens[1+i]));
     }
-    myDB.mFormula = tokens[nParVar+nBinVar+3];
-    if (tokens.size() != nParVar+nBinVar+4 ) 
+    myDB.parFormula_X0_0 = tokens[1+nParVar];
+    myDB.parFormula_X1_0 = tokens[2+nParVar];
+    myDB.parFormula_X1_1 = tokens[3+nParVar];
+    myDB.parFormula_Y0_0 = tokens[4+nParVar];
+    myDB.parFormula_Y1_0 = tokens[5+nParVar];
+    myDB.parFormula_Y1_1 = tokens[6+nParVar];
+
+    if (tokens.size() != nParVar+7 ) 
     {
       std::stringstream sserr;
-      sserr<<"(line "<<fLine<<"): token size should be:"<<nParVar+nBinVar+3<<" but it is "<<tokens.size();
+      sserr<<"(line "<<fLine<<"): token size should be:"<<nParVar+7<<" but it is "<<tokens.size();
       handleError("Definitions",sserr.str());
     }
   }
@@ -295,45 +299,82 @@ void metXYshift::Record(const std::string& fLine)
   std::vector<std::string> tokens = getTokens(fLine);
   if (!tokens.empty())
   { 
-    if (tokens.size() < 5) 
+    if (tokens.size() < 6) 
     {
       std::stringstream sserr;
       sserr<<"(line "<<fLine<<"): "<<"three tokens expected, "<<tokens.size()<<" provided.";
       handleError("metXYshift::Record",sserr.str());
     }
     string Axis = tokens[0];
-    if(Axis == "X")
+    myDB.varMin=getFloat(tokens[1]);
+    myDB.varMax=getFloat(tokens[2]);
+    unsigned nPar0 = getUnsigned(tokens[3]);
+    if(Axis == "X0") // one para ftn
     {
-      myDB.metXetaMin = getFloat(tokens[1]);
-      myDB.metXetaMax = getFloat(tokens[2]);
+      ChangeFtnPointX = myDB.varMax;
+      for(unsigned i(0); i< nPar0 ;i++)
+      {
+	myDB.X0_0ftnParameters.push_back(getFloat(tokens[4+i]));
+      }
+      if(tokens.size()-4 != nPar0)
+      {
+        std::stringstream sserr;
+        sserr<<"X0_0 total token size: "<<tokens.size();
+	handleError("metXYshift::Record",sserr.str());
+      }
     }
-    else if(Axis == "Y")
+    else if(Axis == "X1")
     {
-      //myDB.formula_y = new TF1("corrPy", myDB.mFormula.c_str());
-      myDB.metYetaMin = getFloat(tokens[1]);
-      myDB.metYetaMax = getFloat(tokens[2]);
+      for(unsigned i(0); i< nPar0 ;i++)
+      {
+	myDB.X1_0ftnParameters.push_back(getFloat(tokens[4+i]));
+      }
+      unsigned nPar1 = getUnsigned(tokens[4+nPar0]);
+      for(unsigned i(0); i<nPar1; i++)
+      {
+	myDB.X1_1ftnParameters.push_back(getFloat(tokens[5+nPar0+i]));
+      }
+      if(tokens.size()-5 != nPar0 + nPar1)
+      {
+        std::stringstream sserr;
+        sserr<<"X1_1 total token size: "<<tokens.size();
+	handleError("metXYshift::Record",sserr.str());
+      }
+    }
+    else if(Axis == "Y0") // one para ftn
+    {
+      ChangeFtnPointY = myDB.varMax;
+      for(unsigned i(0); i< nPar0 ;i++)
+      {
+	myDB.Y0_0ftnParameters.push_back(getFloat(tokens[4+i]));
+      }
+      if(tokens.size()-4 != nPar0)
+      {
+        std::stringstream sserr;
+        sserr<<"Y0_0 total token size: "<<tokens.size();
+	handleError("metXYshift::Record",sserr.str());
+      }
+    }
+    else if(Axis == "Y1")
+    {
+      for(unsigned i(0); i< nPar0 ;i++)
+      {
+	myDB.Y1_0ftnParameters.push_back(getFloat(tokens[4+i]));
+      }
+      unsigned nPar1 = getUnsigned(tokens[4+nPar0]);
+      for(unsigned i(0); i<nPar1; i++)
+      {
+	myDB.Y1_1ftnParameters.push_back(getFloat(tokens[5+nPar0+i]));
+      }
+      if(tokens.size()-5 != nPar0 + nPar1)
+      {
+        std::stringstream sserr;
+        sserr<<"Y1_1 total token size: "<<tokens.size();
+	handleError("metXYshift::Record",sserr.str());
+      }
+      //myDB.paraFtn_y = new TF1("corrPy", myDB.parFormula.c_str());
     }else handleError("Record","record is not for met X or Y");
 
-    unsigned nParam = getUnsigned(tokens[2+1]);
-    if (nParam != tokens.size()-(2+2)) 
-    {
-      std::stringstream sserr;
-      sserr<<"(line "<<fLine<<"): "<<tokens.size()-(2+1)<<" parameters, but nParam="<<nParam<<".";
-      handleError("metXYshift::Record",sserr.str());
-    }
-    for (unsigned i = (2+2); i < tokens.size(); ++i)
-    {
-      if(Axis == "X")
-      {
-	myDB.metXparameters.push_back(getFloat(tokens[i]));
-        //myDB.formula_x->SetParameter( i,getFloat(tokens[i]) );
-      }
-      if(Axis == "Y")
-      {
-	myDB.metYparameters.push_back(getFloat(tokens[i]));
-        //myDB.formula_y->SetParameter( i,getFloat(tokens[i]) );
-      }
-    }
   }
 }
       
@@ -342,248 +383,168 @@ void metXYshift::Record(const std::string& fLine)
 //! set functions
 
 void metXYshift::printPara() {
+  cout<<"ChangeFtnPointX:"<<ChangeFtnPointX<<" ChangeFtnPointY:"<<ChangeFtnPointY<<endl;
   for(unsigned i(0);i<v_XYshiftDB.size();i++)
   {
     XYshiftDB tmpDB=v_XYshiftDB[i];
-    cout<<tmpDB.section<<endl;
-    cout<<"ptclType: "<<tmpDB.ptclType<<" parVar: "<<tmpDB.mParVar[0]
-      <<" formula: "<<tmpDB.mFormula<<endl;
-    cout<<"X "<<tmpDB.metXetaMin<<" "<<tmpDB.metXetaMax<<" "<<endl;
-    for(unsigned j(0);j<tmpDB.metXparameters.size();j++)
+    cout<<tmpDB.sample<<endl;
+    cout<<" parVar: "<<tmpDB.mParVar[0]
+      <<" paraFtn_X0_0: "<<tmpDB.parFormula_X0_0
+      <<" paraFtn_X1_0: "<<tmpDB.parFormula_X1_0
+      <<" paraFtn_X1_1: "<<tmpDB.parFormula_X1_1
+      <<" paraFtn_Y0_0: "<<tmpDB.parFormula_Y0_0
+      <<" paraFtn_Y1_0: "<<tmpDB.parFormula_Y1_0
+      <<" paraFtn_Y1_1: "<<tmpDB.parFormula_Y1_1<<endl;
+    //cout<<"met range: "<<tmpDB.metMin<<" - "<<tmpDB.metMax<<endl;
+    cout<<"X parameters : ";
+    for(unsigned j(0);j<tmpDB.X0_0ftnParameters.size();j++)
     {
-      cout<<" "<<tmpDB.metXparameters[j];
+      cout<<" "<<tmpDB.X0_0ftnParameters[j];
+    }
+    for(unsigned j(0);j<tmpDB.X1_0ftnParameters.size();j++)
+    {
+      cout<<" "<<tmpDB.X1_0ftnParameters[j];
+    }
+    for(unsigned j(0);j<tmpDB.X1_1ftnParameters.size();j++)
+    {
+      cout<<" "<<tmpDB.X1_1ftnParameters[j];
     }
     cout<<endl;
-    for(unsigned j(0);j<tmpDB.metYparameters.size();j++)
+    cout<<" Para. conformation from formula: ";
+    for(unsigned j(0);j<tmpDB.paraFtn_X0_0->GetNpar();j++)
     {
-      cout<<" "<<tmpDB.metYparameters[j];
+      cout<<" "<<tmpDB.paraFtn_X0_0->GetParameter(j);
+    }
+    for(unsigned j(0);j<tmpDB.paraFtn_X1_0->GetNpar();j++)
+    {
+      cout<<" "<<tmpDB.paraFtn_X1_0->GetParameter(j);
+    }
+    for(unsigned j(0);j<tmpDB.paraFtn_X1_1->GetNpar();j++)
+    {
+      cout<<" "<<tmpDB.paraFtn_X1_1->GetParameter(j);
+    }
+    cout<<endl;
+    cout<<"Y parameters : ";
+    for(unsigned j(0);j<tmpDB.Y0_0ftnParameters.size();j++)
+    {
+      cout<<" "<<tmpDB.Y0_0ftnParameters[j];
+    }
+    for(unsigned j(0);j<tmpDB.Y1_0ftnParameters.size();j++)
+    {
+      cout<<" "<<tmpDB.Y1_0ftnParameters[j];
+    }
+    for(unsigned j(0);j<tmpDB.Y1_1ftnParameters.size();j++)
+    {
+      cout<<" "<<tmpDB.Y1_1ftnParameters[j];
+    }
+    cout<<endl;
+    cout<<" Para. conformation from formula: ";
+    for(unsigned j(0);j<tmpDB.paraFtn_Y0_0->GetNpar();j++)
+    {
+      cout<<" "<<tmpDB.paraFtn_Y0_0->GetParameter(j);
+    }
+    for(unsigned j(0);j<tmpDB.paraFtn_Y1_0->GetNpar();j++)
+    {
+      cout<<" "<<tmpDB.paraFtn_Y1_0->GetParameter(j);
+    }
+    for(unsigned j(0);j<tmpDB.paraFtn_Y1_1->GetNpar();j++)
+    {
+      cout<<" "<<tmpDB.paraFtn_Y1_1->GetParameter(j);
     }
     cout<<endl;
   }
 }
+int metXYshift::ParVar(){
+  XYshiftDB tmpDB=v_XYshiftDB[0];
+  return tmpDB.mParVar[0];
+}
 void metXYshift::CalcXYshiftCorr(
-	double hEtaPlus_counts,
-	double hEtaMinus_counts,
-	double h0Barrel_counts,
-	double h0EndcapPlus_counts,
-	double h0EndcapMinus_counts,
-	double gammaBarrel_counts,
-	double gammaEndcapPlus_counts,
-	double gammaEndcapMinus_counts,
-	double hHFPlus_counts,
-	double hHFMinus_counts,
-	double egammaHFPlus_counts,
-	double egammaHFMinus_counts,
-	double &corx, double &cory
+    string sample,
+    double shiftVar,
+    double met,
+    double &corx, double &cory
     ){
   corx = 0;
   cory = 0;
+  bool bingo(0);
   for(unsigned i(0);i<v_XYshiftDB.size();i++)
   {
     tmpDB=v_XYshiftDB[i];
-    //cout<<"tmpDB.section: "<<tmpDB.section<<endl;
-    if(tmpDB.section == "hEtaPlus")
+    //cout<<"tmpDB.sample: "<<tmpDB.sample<<endl;
+    // check met bin
+    //if(met < tmpDB.metMin || met > tmpDB.metMax ) continue;
+    if(tmpDB.sample == sample)
     {
-      //cout<<"hEtaPlus_counts: "<<hEtaPlus_counts<<endl;
-      corx -= formula_hEtaPlus_x->Eval(hEtaPlus_counts);
-      cory -= formula_hEtaPlus_y->Eval(hEtaPlus_counts);
+      par_X0_0 = tmpDB.paraFtn_X0_0->Eval(met);
+      par_X1_0 = tmpDB.paraFtn_X1_0->Eval(met);
+      par_X1_1 = tmpDB.paraFtn_X1_1->Eval(met);
+      par_Y0_0 = tmpDB.paraFtn_Y0_0->Eval(met);
+      par_Y1_0 = tmpDB.paraFtn_Y1_0->Eval(met);
+      par_Y1_1 = tmpDB.paraFtn_Y1_1->Eval(met);
+
+      corrFormula_X0->SetParameter(0,par_X0_0);
+      corrFormula_X1->SetParameter(0,par_X1_0);
+      corrFormula_X1->SetParameter(1,par_X1_1);
+      corrFormula_Y0->SetParameter(0,par_Y0_0);
+      corrFormula_Y1->SetParameter(0,par_Y1_0);
+      corrFormula_Y1->SetParameter(1,par_Y1_1);
+
+      if(shiftVar < ChangeFtnPointX){
+        corx -= corrFormula_X0->Eval(shiftVar);
+        cory -= corrFormula_Y0->Eval(shiftVar);
+      }else{
+        corx -= corrFormula_X1->Eval(shiftVar);
+        cory -= corrFormula_Y1->Eval(shiftVar);
+      }
+      //corx -= tmpDB.paraFtn_x->Eval(shiftVar);
+      //cory -= tmpDB.paraFtn_x->Eval(shiftVar);
+      //cout<<"hEtaPlus_weight: "<<hEtaPlus_weight<<endl;
       //cout<<"corx: "<<corx<<endl;
+      bingo = 1;
     }
-    else if(tmpDB.section == "hEtaMinus")
-    {
-      corx -= formula_hEtaMinus_x->Eval(hEtaMinus_counts);
-      cory -= formula_hEtaMinus_y->Eval(hEtaMinus_counts);
-    }
-    else if(tmpDB.section == "h0Barrel")
-    {
-      corx -= formula_h0Barrel_x->Eval(h0Barrel_counts);
-      cory -= formula_h0Barrel_y->Eval(h0Barrel_counts);
-    }
-    else if(tmpDB.section == "h0EndcapPlus")
-    {
-      corx -= formula_h0EndcapPlus_x->Eval(h0EndcapPlus_counts);
-      cory -= formula_h0EndcapPlus_y->Eval(h0EndcapPlus_counts);
-    }
-    else if(tmpDB.section == "h0EndcapMinus")
-    {
-      corx -= formula_h0EndcapMinus_x->Eval(h0EndcapMinus_counts);
-      cory -= formula_h0EndcapMinus_y->Eval(h0EndcapMinus_counts);
-    }
-    else if(tmpDB.section == "gammaBarrel")
-    {
-      corx -= formula_gammaBarrel_x->Eval(gammaBarrel_counts);
-      cory -= formula_gammaBarrel_y->Eval(gammaBarrel_counts);
-    }
-    else if(tmpDB.section == "gammaEndcapPlus")
-    {
-      corx -= formula_gammaEndcapPlus_x->Eval(gammaEndcapPlus_counts);
-      cory -= formula_gammaEndcapPlus_y->Eval(gammaEndcapPlus_counts);
-    }
-    else if(tmpDB.section == "gammaEndcapMinus")
-    {
-      corx -= formula_gammaEndcapMinus_x->Eval(gammaEndcapMinus_counts);
-      cory -= formula_gammaEndcapMinus_y->Eval(gammaEndcapMinus_counts);
-    }
-    else if(tmpDB.section == "hHFPlus")
-    {
-      corx -= formula_hHFPlus_x->Eval(hHFPlus_counts);
-      cory -= formula_hHFPlus_y->Eval(hHFPlus_counts);
-    }
-    else if(tmpDB.section == "hHFMinus")
-    {
-      corx -= formula_hHFMinus_x->Eval(hHFMinus_counts);
-      cory -= formula_hHFMinus_y->Eval(hHFMinus_counts);
-    }
-    else if(tmpDB.section == "egammaHFPlus")
-    {
-      corx -= formula_egammaHFPlus_x->Eval(egammaHFPlus_counts);
-      cory -= formula_egammaHFPlus_y->Eval(egammaHFPlus_counts);
-    }
-    else if(tmpDB.section == "egammaHFMinus")
-    {
-      corx -= formula_egammaHFMinus_x->Eval(egammaHFMinus_counts);
-      cory -= formula_egammaHFMinus_y->Eval(egammaHFMinus_counts);
-    }
-    else
-    {
-      std::stringstream sserr;
-      sserr<<"This section is not reserved: "<<tmpDB.section;
-      handleError("metXYshift::CalcXYshiftCorr",sserr.str());
-    }
+    else continue;
   }
+  if( !bingo)
+  {
+      std::stringstream sserr;
+      sserr<<"This sample is not reserved: "<<tmpDB.sample;
+      handleError("metXYshift::CalcXYshiftCorr",sserr.str());
+  }
+
 }
 
 void metXYshift::BuildFormula(){
-  for(unsigned i(0);i<v_XYshiftDB.size();i++)
-  {
-    tmpDB=v_XYshiftDB[i];
-    //cout<<"tmpDB.section: "<<tmpDB.section<<endl;
-    if(tmpDB.section == "hEtaPlus")
-    {
-      //cout<<"hEtaPlus_counts: "<<hEtaPlus_counts<<endl;
-      formula_hEtaPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_hEtaPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_hEtaPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_hEtaPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "hEtaMinus")
-    {
-      formula_hEtaMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_hEtaMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_hEtaMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_hEtaMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "h0Barrel")
-    {
-      formula_h0Barrel_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_h0Barrel_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_h0Barrel_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_h0Barrel_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "h0EndcapPlus")
-    {
-      formula_h0EndcapPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_h0EndcapPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_h0EndcapPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_h0EndcapPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "h0EndcapMinus")
-    {
-      formula_h0EndcapMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_h0EndcapMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_h0EndcapMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_h0EndcapMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "gammaBarrel")
-    {
-      formula_gammaBarrel_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_gammaBarrel_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_gammaBarrel_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_gammaBarrel_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "gammaEndcapPlus")
-    {
-      formula_gammaEndcapPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_gammaEndcapPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_gammaEndcapPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_gammaEndcapPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "gammaEndcapMinus")
-    {
-      formula_gammaEndcapMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_gammaEndcapMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_gammaEndcapMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_gammaEndcapMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "hHFPlus")
-    {
-      formula_hHFPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_hHFPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_hHFPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_hHFPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "hHFMinus")
-    {
-      formula_hHFMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_hHFMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_hHFMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_hHFMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "egammaHFPlus")
-    {
-      formula_egammaHFPlus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_egammaHFPlus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_egammaHFPlus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_egammaHFPlus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else if(tmpDB.section == "egammaHFMinus")
-    {
-      formula_egammaHFMinus_x = new TF1("corrPx", tmpDB.mFormula.c_str());
-      formula_egammaHFMinus_y = new TF1("corrPy", tmpDB.mFormula.c_str());
-      for(int j(0); j<tmpDB.metXparameters.size();j++)
-      {
-        formula_egammaHFMinus_x->SetParameter(j, tmpDB.metXparameters[j]);
-        formula_egammaHFMinus_y->SetParameter(j, tmpDB.metYparameters[j]);
-      }
-    }
-    else
-    {
-      std::stringstream sserr;
-      sserr<<"This section is not reserved: "<<tmpDB.section;
-      handleError("metXYshift::CalcXYshiftCorr",sserr.str());
-    }
-  }
+
+        myDB.paraFtn_X0_0 = new TF1("parFtn_x0_0", myDB.parFormula_X0_0.c_str());
+        myDB.paraFtn_X1_0 = new TF1("parFtn_x0_1", myDB.parFormula_X1_0.c_str());
+        myDB.paraFtn_X1_1 = new TF1("parFtn_x1_1", myDB.parFormula_X1_1.c_str());
+        myDB.paraFtn_Y0_0 = new TF1("parFtn_y0_0", myDB.parFormula_Y0_0.c_str());
+        myDB.paraFtn_Y1_0 = new TF1("parFtn_y1_0", myDB.parFormula_Y1_0.c_str());
+        myDB.paraFtn_Y1_1 = new TF1("parFtn_y1_1", myDB.parFormula_Y1_1.c_str());
+
+        for(int j(0); j<myDB.X0_0ftnParameters.size();j++)
+        {
+          myDB.paraFtn_X0_0->SetParameter(j, myDB.X0_0ftnParameters[j]);
+        }
+        for(int j(0); j<myDB.X1_0ftnParameters.size();j++)
+        {
+          myDB.paraFtn_X1_0->SetParameter(j, myDB.X1_0ftnParameters[j]);
+        }
+        for(int j(0); j<myDB.X1_1ftnParameters.size();j++)
+        {
+          myDB.paraFtn_X1_1->SetParameter(j, myDB.X1_1ftnParameters[j]);
+        }
+        for(int j(0); j<myDB.Y0_0ftnParameters.size();j++)
+        {
+          myDB.paraFtn_Y0_0->SetParameter(j, myDB.Y0_0ftnParameters[j]);
+        }
+        for(int j(0); j<myDB.Y1_0ftnParameters.size();j++)
+        {
+          myDB.paraFtn_Y1_0->SetParameter(j, myDB.Y1_0ftnParameters[j]);
+        }
+        for(int j(0); j<myDB.Y1_1ftnParameters.size();j++)
+        {
+          myDB.paraFtn_Y1_1->SetParameter(j, myDB.Y1_1ftnParameters[j]);
+        }
+
 }
