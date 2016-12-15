@@ -145,7 +145,15 @@ if "/eos/cms" in eosTargBaseOut:
   aquamarineLocationOut = "0.3.84-aquamarine"
   xrootdPathOut = 'root://eoscms.cern.ch/'
   
-
+# Compile all root macros before sending jobs
+if options.runBatch:
+    pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
+    for fn in os.listdir(pathRootMacro):
+        if os.path.isfile(pathRootMacro+fn) and fn.endswith('.C'):
+            try:
+                ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
+            except RuntimeError:
+                ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
 # Loop on input productions
 for iProd in prodList :
   cmssw=options.cmssw
@@ -245,6 +253,13 @@ for iProd in prodList :
           #print selectSample
         if len(options.excTree) > 0 :
           if iSample in options.excTree : selectSample=False
+        # ... From Production
+        if 'onlySample' in  Productions[iProd] and not options.ignoreOnlySamples :
+          if len(Productions[iProd]['onlySample']) > 0 :
+            if not iSample in Productions[iProd]['onlySample']: selectSample=False
+        if 'excludeSample' in Productions[iProd]:
+          if len(Productions[iProd]['excludeSample']) > 0 :
+            if iSample in Productions[iProd]['excludeSample'] : selectSample=False  
         # ... From iStep 
         if 'onlySample' in Steps[iStep] and not options.ignoreOnlySamples :
           if len(Steps[iStep]['onlySample']) > 0 :

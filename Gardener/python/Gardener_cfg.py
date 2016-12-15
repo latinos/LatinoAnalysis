@@ -607,13 +607,9 @@ Productions= {
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Rereco2016' ,
-                        'reName'  : {
-                                       'DoubleEG_Run2016B-23Sep2016-v3'          : 'Run2016B_ReReco_DoubleEG',
-                                       'DoubleMuon_Run2016B-23Sep2016-v3'        : 'Run2016B_ReReco_DoubleMuon',
-                                       'MuonEG_Run2016B-23Sep2016-v3'            : 'Run2016B_ReReco_MuonEG',
-                                       'SingleElectron_Run2016B-23Sep2016-v3'    : 'Run2016B_ReReco_SingleElectron',
-                                       'SingleMuon_Run2016B-23Sep2016-v3'        : 'Run2016B_ReReco_SingleMuon',
-                                    },
+                        'onlySample' : [
+                                       'DoubleEG_Run2016B-23Sep2016-v3', 'DoubleMuon_Run2016B-23Sep2016-v3', 'MuonEG_Run2016B-23Sep2016-v3', 'SingleElectron_Run2016B-23Sep2016-v3', 'SingleMuon_Run2016B-23Sep2016-v3'
+                                       ],
                        },
 
   'Dec2016_Run2016C_ReReco_27p6fbm1'   : {
@@ -622,13 +618,9 @@ Productions= {
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Rereco2016' ,
-                        'reName'  : {
-                                       'DoubleEG_Run2016C-23Sep2016-v1'          : 'Run2016C_ReReco_DoubleEG',
-                                       'DoubleMuon_Run2016C-23Sep2016-v1'        : 'Run2016C_ReReco_DoubleMuon',
-                                       'MuonEG_Run2016C-23Sep2016-v1'            : 'Run2016C_ReReco_MuonEG',
-                                       'SingleElectron_Run2016C-23Sep2016-v1'    : 'Run2016C_ReReco_SingleElectron',
-                                       'SingleMuon_Run2016C-23Sep2016-v1'        : 'Run2016C_ReReco_SingleMuon',
-                                    },
+                        'onlySample' : [
+                                       'DoubleEG_Run2016C-23Sep2016-v3', 'DoubleMuon_Run2016C-23Sep2016-v3', 'MuonEG_Run2016C-23Sep2016-v3', 'SingleElectron_Run2016C-23Sep2016-v3', 'SingleMuon_Run2016C-23Sep2016-v3'
+                                       ],
                        },
 
   'Dec2016_Run2016D_ReReco_27p6fbm1'   : {
@@ -637,13 +629,9 @@ Productions= {
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Rereco2016' ,
-                        'reName'  : {
-                                       'DoubleEG_Run2016D-23Sep2016-v1'          : 'Run2016D_ReReco_DoubleEG',
-                                       'DoubleMuon_Run2016D-23Sep2016-v1'        : 'Run2016D_ReReco_DoubleMuon',
-                                       'MuonEG_Run2016D-23Sep2016-v1'            : 'Run2016D_ReReco_MuonEG',
-                                       'SingleElectron_Run2016D-23Sep2016-v1'    : 'Run2016D_ReReco_SingleElectron',
-                                       'SingleMuon_Run2016D-23Sep2016-v1'        : 'Run2016D_ReReco_SingleMuon',
-                                    },
+                        'onlySample' : [
+                                       'DoubleEG_Run2016D-23Sep2016-v3', 'DoubleMuon_Run2016D-23Sep2016-v3', 'MuonEG_Run2016D-23Sep2016-v3', 'SingleElectron_Run2016D-23Sep2016-v3', 'SingleMuon_Run2016D-23Sep2016-v3'
+                                       ],
                        },
 
   'Dec2016_Run2016E_ReReco_27p6fbm1'   : {
@@ -652,13 +640,9 @@ Productions= {
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Rereco2016' ,
-                        'reName'  : {
-                                       'DoubleEG_Run2016E-23Sep2016-v1'          : 'Run2016E_ReReco_DoubleEG',
-                                       'DoubleMuon_Run2016E-23Sep2016-v1'        : 'Run2016E_ReReco_DoubleMuon',
-                                       'MuonEG_Run2016E-23Sep2016-v1'            : 'Run2016E_ReReco_MuonEG',
-                                       'SingleElectron_Run2016E-23Sep2016-v1'    : 'Run2016E_ReReco_SingleElectron',
-                                       'SingleMuon_Run2016E-23Sep2016-v1'        : 'Run2016E_ReReco_SingleMuon',
-                                    },
+                        'onlySample' : [
+                                       'DoubleEG_Run2016E-23Sep2016-v3', 'DoubleMuon_Run2016E-23Sep2016-v3', 'MuonEG_Run2016E-23Sep2016-v3', 'SingleElectron_Run2016E-23Sep2016-v3', 'SingleMuon_Run2016E-23Sep2016-v3'
+                                       ],
                        },
 
   'Dec2016_Run2016F_ReReco_27p6fbm1'   : {
@@ -667,13 +651,9 @@ Productions= {
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Rereco2016' ,
-                        'reName'  : {
-                                       'DoubleEG_Run2016F-23Sep2016-v1'          : 'Run2016F_ReReco_DoubleEG',
-                                       'DoubleMuon_Run2016F-23Sep2016-v1'        : 'Run2016F_ReReco_DoubleMuon',
-                                       'MuonEG_Run2016F-23Sep2016-v1'            : 'Run2016F_ReReco_MuonEG',
-                                       'SingleElectron_Run2016F-23Sep2016-v1'    : 'Run2016F_ReReco_SingleElectron',
-                                       'SingleMuon_Run2016F-23Sep2016-v1'        : 'Run2016F_ReReco_SingleMuon',
-                                    },
+                        'onlySample' : [
+                                       'DoubleEG_Run2016F-23Sep2016-v3', 'DoubleMuon_Run2016F-23Sep2016-v3', 'MuonEG_Run2016F-23Sep2016-v3', 'SingleElectron_Run2016F-23Sep2016-v3', 'SingleMuon_Run2016F-23Sep2016-v3'
+                                       ],
                        },
 
   'Dec2016_Run2016G_ReReco_27p6fbm1'   : {
@@ -682,13 +662,9 @@ Productions= {
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Rereco2016' ,
-                        'reName'  : {
-                                       'DoubleEG_Run2016G-23Sep2016-v1'          : 'Run2016G_ReReco_DoubleEG',
-                                       'DoubleMuon_Run2016G-23Sep2016-v1'        : 'Run2016G_ReReco_DoubleMuon',
-                                       'MuonEG_Run2016G-23Sep2016-v1'            : 'Run2016G_ReReco_MuonEG',
-                                       'SingleElectron_Run2016G-23Sep2016-v1'    : 'Run2016G_ReReco_SingleElectron',
-                                       'SingleMuon_Run2016G-23Sep2016-v1'        : 'Run2016G_ReReco_SingleMuon',
-                                    },
+                        'onlySample' : [
+                                       'DoubleEG_Run2016G-23Sep2016-v3', 'DoubleMuon_Run2016G-23Sep2016-v3', 'MuonEG_Run2016G-23Sep2016-v3', 'SingleElectron_Run2016G-23Sep2016-v3', 'SingleMuon_Run2016G-23Sep2016-v3'
+                                       ],
                        },
 
 }
