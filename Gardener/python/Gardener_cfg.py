@@ -3199,7 +3199,12 @@ Steps= {
                   'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW'
                },
 
-
+  'l2kin_metXYshift'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW --met'
+               },
 
   'l3kin'    : {
                   'isChain'    : False ,
@@ -3619,4 +3624,49 @@ Steps= {
                                    'DYJetsToLL_M-50-LO-ext1' , 
                                  ],
           },
+
+
+  'metXYshift' : {  'isChain'    : True ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : True  ,
+                    'subTargets' : ['metXYshift_MC','metXYshift_2016B','metXYshift_2016C','metXYshift_2016D'] ,
+                 },
+
+  'metXYshift_MC' : {  'isChain'    : False ,
+                       'do4MC'      : True  ,
+                       'do4Data'    : False  , 
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample DY' ,
+                    },
+
+  'metXYshift_2016B' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016BDouble' ,
+                       'onlySample' : [ 
+                                        'Run2016B_PromptReco_DoubleMuon', 'Run2016B_PromptReco_SingleElectron', 'Run2016B_PromptReco_SingleMuon',
+                                        'Run2016B_PromptReco_MuonEG' , 'Run2016B_PromptReco_DoubleEG' 
+                                      ],
+                    },
+
+  'metXYshift_2016C' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016CDouble' ,
+                       'onlySample' : [
+                                        'Run2016C_PromptReco_DoubleMuon', 'Run2016C_PromptReco_SingleElectron', 'Run2016C_PromptReco_SingleMuon',
+                                        'Run2016C_PromptReco_MuonEG' , 'Run2016C_PromptReco_DoubleEG'
+                                      ],
+                    },
+
+  'metXYshift_2016D' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016DDouble' ,
+                       'onlySample' : [
+                                        'Run2016D_PromptReco_DoubleMuon', 'Run2016D_PromptReco_SingleElectron', 'Run2016D_PromptReco_SingleMuon',
+                                        'Run2016D_PromptReco_MuonEG' , 'Run2016D_PromptReco_DoubleEG'
+                                      ],
+                    },
+
+
 }
