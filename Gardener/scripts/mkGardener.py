@@ -83,7 +83,7 @@ parser.add_option("-s","--steps",   dest="steps"   , help="list of Steps to prod
 parser.add_option("-i","--iStep",   dest="iStep"   , help="Step to restart from"                      , default='Prod' , type='string' ) 
 parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo, don't check if tree already exists"  , default=False  , action="store_true")
 parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                              , default=False  , action="store_true")
-parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs"        , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
+parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs"        , default='Target', type='string' , action='callback' , callback=list_maker('batchSplit',','))
 parser.add_option("-q", "--quiet",    dest="quiet",     help="Quiet logs"                             , default=False, action="store_true")
 parser.add_option("-n", "--dry-run",    dest="pretend", help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
 parser.add_option("-T", "--selTree",   dest="selTree" , help="Select only some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('selTree',','))
@@ -96,6 +96,7 @@ parser.add_option("-c" , "--cmssw" , dest="cmssw"     , help="CMSSW version" , d
 parser.add_option("-C" , "--chain" , dest="chain"     , help="Chain several steps" , default=False, action="store_true")
 parser.add_option("-a" , "--allSamples" , dest="ignoreOnlySamples",  help="ignoreOnlySamples"  , default=False  , action="store_true")
 parser.add_option("-M" , "--forceMerge" , dest="forceMerge", help="Force Merge Big Sample in Hadd" , default=False  , action="store_true")
+parser.add_option("-u" , "--user" , dest="user", help="Set user directory" , default='xjanssen')
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -144,7 +145,15 @@ if "/eos/cms" in eosTargBaseOut:
   aquamarineLocationOut = "0.3.84-aquamarine"
   xrootdPathOut = 'root://eoscms.cern.ch/'
   
-
+# Compile all root macros before sending jobs
+if options.runBatch:
+    pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
+    for fn in os.listdir(pathRootMacro):
+        if os.path.isfile(pathRootMacro+fn) and fn.endswith('.C'):
+            try:
+                ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
+            except RuntimeError:
+                ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
 # Loop on input productions
 for iProd in prodList :
   cmssw=options.cmssw
@@ -190,9 +199,9 @@ for iProd in prodList :
   #if not options.iStep in Steps: options.iStep = 'Prod'
   if 'iihe' in os.uname()[1]:
     if options.iStep == 'Prod' :
-      fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
+      fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
     else:
-      fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep
+      fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+options.iStep
   else:
     if options.iStep == 'Prod' : 
       fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
@@ -217,9 +226,9 @@ for iProd in prodList :
       # Validate targets tree
       if 'iihe' in os.uname()[1]:
         if options.iStep == 'Prod' :
-          fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015'+'/'+iProd+'/'+iStep #+' | grep  ttDM'
+          fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015'+'/'+iProd+'/'+iStep #+' | grep  ttDM'
         else: 
-          fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015'+'/'+iProd+'/'+options.iStep+'__'+iStep
+          fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015'+'/'+iProd+'/'+options.iStep+'__'+iStep
       else:
         if options.iStep == 'Prod' :
           fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
@@ -244,6 +253,13 @@ for iProd in prodList :
           #print selectSample
         if len(options.excTree) > 0 :
           if iSample in options.excTree : selectSample=False
+        # ... From Production
+        if 'onlySample' in  Productions[iProd] and not options.ignoreOnlySamples :
+          if len(Productions[iProd]['onlySample']) > 0 :
+            if not iSample in Productions[iProd]['onlySample']: selectSample=False
+        if 'excludeSample' in Productions[iProd]:
+          if len(Productions[iProd]['excludeSample']) > 0 :
+            if iSample in Productions[iProd]['excludeSample'] : selectSample=False  
         # ... From iStep 
         if 'onlySample' in Steps[iStep] and not options.ignoreOnlySamples :
           if len(Steps[iStep]['onlySample']) > 0 :
@@ -286,9 +302,9 @@ for iProd in prodList :
                 if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
                   if 'iihe' in os.uname()[1]:
                     if options.iStep == 'Prod' :
-                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                      targetList[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                     else:
-                      targetList[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                      targetList[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                   else:
                     if options.iStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -326,9 +342,9 @@ for iProd in prodList :
 
                 if 'iihe' in os.uname()[1]:
                   if options.iStep == 'Prod' :
-                    targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
+                    targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                    targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
                 else: 
                   if options.iStep == 'Prod' :
                     targetListBaseW[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -427,9 +443,9 @@ for iProd in prodList :
                  PrevStep+=SubSteps[i]
                  if len(SubSteps)-1 > 1 and i < len(SubSteps)-2 : PrevStep+='__'
 #            if not '__' in  options.iStep :
-            fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']
+            fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']
 #            else:
-#              fileCmd = 'ls /pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+PrevStep
+#              fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+PrevStep
           else:
 #            if not '__' in  options.iStep :
             fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
@@ -642,12 +658,12 @@ for iProd in prodList :
         if not 'UEPS' == iStep :
          if 'iihe' in os.uname()[1]:
            if startingStep == 'Prod' :
-             if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
-             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
-             #command+='pwd;ls -l;srmcp file:///`pwd`/'+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+             if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
+             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+             #command+='pwd;ls -l;srmcp file:///`pwd`/'+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
            else: 
-             if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
-             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
+             if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
+             command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
          else:
            if startingStep == 'Prod' :
              command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
