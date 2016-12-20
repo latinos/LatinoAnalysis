@@ -98,6 +98,7 @@ if __name__ == '__main__':
     parser.add_option('--inputDir'       , dest='inputDir'       , help='input directory'                            , default='./data/')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None)
     parser.add_option('--doBatch'        , dest='doBatch'        , help='Run on batch'                               , default=False)
+    parser.add_option('--batchQueue'     , dest='batchQueue'     , help='Queue on batch'                             , default='')
     parser.add_option('--batchSplit'     , dest="batchSplit", help="Splitting mode for batch jobs"        , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
     parser.add_option('--doHadd'         , dest='doHadd'         , help='Hadd for batch mode'                        , default=False)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
@@ -222,7 +223,7 @@ if __name__ == '__main__':
                 jName=iStep+'_'+iTarget  
                 jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
 	    if 'knu' in os.uname()[1]:
-	      jobs.Sub('short')
+	      jobs.Sub(opt.batchQueue)
 	    else: jobs.Sub()
 
     elif opt.doHadd != 0:
