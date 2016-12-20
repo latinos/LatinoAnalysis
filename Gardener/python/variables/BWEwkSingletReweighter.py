@@ -16,13 +16,13 @@ from scipy.interpolate import interp1d
 
 class BWEwkSingletReweighter(TreeCloner):
     def __init__(self):
-      Hmass = [200, 202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232, 234, 236, 238, 240, 242, 244, 246, 248, 250, 252, 254, 256, 258, 260, 262, 264, 266, 268, 270, 272, 274, 276, 278, 280, 282, 284, 286, 288, 290, 292, 294, 296, 298, 300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 360, 370, 380, 390, 400, 420, 440, 450, 460, 480, 500, 520, 540, 550, 560, 580, 600, 620, 640, 650, 660, 680, 700, 720, 740, 750, 760, 780, 800, 820, 840, 850, 860, 880, 900, 920, 940, 950, 960, 980, 1000.]
+      Hmass = [200, 202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232, 234, 236, 238, 240, 242, 244, 246, 248, 250, 252, 254, 256, 258, 260, 262, 264, 266, 268, 270, 272, 274, 276, 278, 280, 282, 284, 286, 288, 290, 292, 294, 296, 298, 300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 360, 370, 380, 390, 400, 420, 440, 450, 460, 480, 500, 520, 540, 550, 560, 580, 600, 620, 640, 650, 660, 680, 700, 720, 740, 750, 760, 780, 800, 820, 840, 850, 860, 880, 900, 920, 940, 950, 960, 980, 1000., 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750, 1800, 1850, 1900, 1950, 2000, 2050, 2100, 2150, 2200, 2250, 2300, 2350, 2400, 2450, 2500, 2550, 2600, 2650, 2700, 2750, 2800, 2850, 2900, 2950, 3000]
 
-      HmassCPS = [200.0, 202.0, 204.0, 206.0, 208.0, 210.0, 212.0, 214.0, 216.0, 218.0, 220.0, 222.0, 224.0, 226.0, 228.0, 230.0, 232.0, 234.0, 236.0, 238.0, 240.0, 242.0, 244.0, 246.0, 248.0, 250.0, 252.0, 254.0, 256.0, 258.0, 260.0, 262.0, 264.0, 266.0, 268.0, 270.0, 272.0, 274.0, 276.0, 278.0, 280.0, 282.0, 284.0, 286.0, 288.0, 290.0, 292.0, 294.0, 296.0, 298.0, 300.0, 305.0, 310.0, 315.0, 320.0, 325.0, 330.0, 335.0, 340.0, 345.0, 350.0, 360.0, 370.0, 380.0, 390.0, 400.0, 420.0, 440.0, 450.0, 460.0, 480.0, 500.0, 520.0, 540.0, 550.0, 560.0, 580.0, 600.0, 620.0, 640.0, 650.0, 660.0, 680.0, 700.0, 720.0, 740.0, 750.0, 760.0, 780.0, 800.0, 820.0, 840.0, 850.0, 860.0, 880.0, 900.0, 920.0, 940.0, 950.0, 960.0, 980.0, 1000.0]
+      HmassCPS = [200.0, 202.0, 204.0, 206.0, 208.0, 210.0, 212.0, 214.0, 216.0, 218.0, 220.0, 222.0, 224.0, 226.0, 228.0, 230.0, 232.0, 234.0, 236.0, 238.0, 240.0, 242.0, 244.0, 246.0, 248.0, 250.0, 252.0, 254.0, 256.0, 258.0, 260.0, 262.0, 264.0, 266.0, 268.0, 270.0, 272.0, 274.0, 276.0, 278.0, 280.0, 282.0, 284.0, 286.0, 288.0, 290.0, 292.0, 294.0, 296.0, 298.0, 300.0, 305.0, 310.0, 315.0, 320.0, 325.0, 330.0, 335.0, 340.0, 345.0, 350.0, 360.0, 370.0, 380.0, 390.0, 400.0, 420.0, 440.0, 450.0, 460.0, 480.0, 500.0, 520.0, 540.0, 550.0, 560.0, 580.0, 600.0, 620.0, 640.0, 650.0, 660.0, 680.0, 700.0, 720.0, 740.0, 750.0, 760.0, 780.0, 800.0, 820.0, 840.0, 850.0, 860.0, 880.0, 900.0, 920.0, 940.0, 950.0, 960.0, 980.0, 1000.0, 1050.0, 1100.0, 1150.0, 1200.0, 1250.0, 1300.0, 1350.0, 1400.0, 1450.0, 1500.0, 1550.0, 1600.0, 1650.0, 1700.0, 1750.0, 1800.0, 1850.0, 1900.0, 1950.0, 2000.0, 2050.0, 2100.0, 2150.0, 2200.0, 2250.0, 2300.0, 2350.0, 2400.0, 2450.0, 2500.0, 2550.0, 2600.0, 2650.0, 2700.0, 2750.0, 2800.0, 2850.0, 2900.0, 2950.0, 3000.0] 
 
-      Hwidth = [1.43, 1.51, 1.59, 1.68, 1.76, 1.85, 1.93, 2.02, 2.12, 2.21, 2.31, 2.40, 2.50, 2.61, 2.71, 2.82, 2.93, 3.04, 3.16, 3.27, 3.40, 3.52, 3.64, 3.77, 3.91, 4.04, 4.18, 4.32, 4.46, 4.61, 4.76, 4.91, 5.07, 5.23, 5.39, 5.55, 5.72, 5.89, 6.07, 6.25, 6.43, 6.61, 6.80, 6.99, 7.19, 7.39, 7.59, 7.79, 8.00, 8.22, 8.43, 8.99, 9.57, 10.20, 10.80, 11.40, 12.10, 12.80, 13.50, 14.20, 15.20, 17.60, 20.20, 23.10, 26.10, 29.20, 35.90, 43.00, 46.80, 50.80, 59.10, 68.00, 77.50, 87.70, 93.00, 98.60, 110.00, 123.00, 136.00, 150.00, 158.00, 165.00, 182.00, 199.00, 217.00, 237.00, 247.00, 258.00, 280.00, 304.00, 330.00, 357.00, 371.00, 386.00, 416.00, 449.00, 484.00, 521.00, 540.00, 560.00, 602.00, 647.00];
+      Hwidth = [1.43, 1.51, 1.59, 1.68, 1.76, 1.85, 1.93, 2.02, 2.12, 2.21, 2.31, 2.40, 2.50, 2.61, 2.71, 2.82, 2.93, 3.04, 3.16, 3.27, 3.40, 3.52, 3.64, 3.77, 3.91, 4.04, 4.18, 4.32, 4.46, 4.61, 4.76, 4.91, 5.07, 5.23, 5.39, 5.55, 5.72, 5.89, 6.07, 6.25, 6.43, 6.61, 6.80, 6.99, 7.19, 7.39, 7.59, 7.79, 8.00, 8.22, 8.43, 8.99, 9.57, 10.20, 10.80, 11.40, 12.10, 12.80, 13.50, 14.20, 15.20, 17.60, 20.20, 23.10, 26.10, 29.20, 35.90, 43.00, 46.80, 50.80, 59.10, 68.00, 77.50, 87.70, 93.00, 98.60, 110.00, 123.00, 136.00, 150.00, 158.00, 165.00, 182.00, 199.00, 217.00, 237.00, 247.00, 258.00, 280.00, 304.00, 330.00, 357.00, 371.00, 386.00, 416.00, 449.00, 484.00, 521.00, 540.00, 560.00, 602.00, 647.00, 525, 550, 575, 600, 625, 650, 675, 700, 725, 750, 775, 800, 825, 850, 875, 900, 925, 950, 975, 1000, 1025, 1050, 1075, 1100, 1125, 1150, 1175, 1200, 1225, 1250, 1275, 1300, 1325, 1350, 1375, 1400, 1425, 1450, 1475, 1500];
 
-      HwidthCPS = [1.42, 1.5, 1.57, 1.65, 1.73, 1.81, 1.89, 1.97, 2.05, 2.14, 2.23, 2.32, 2.41, 2.5, 2.6, 2.7, 2.8, 2.9, 3.01, 3.12, 3.24, 3.36, 3.48, 3.61, 3.74, 3.87, 4.0, 4.13, 4.27, 4.42, 4.56, 4.71, 4.86, 5.01, 5.17, 5.33, 5.5, 5.66, 5.83, 6.01, 6.18, 6.36, 6.55, 6.73, 6.92, 7.12, 7.31, 7.51, 7.72, 7.93, 8.14, 8.68, 9.25, 9.83, 10.45, 11.08, 11.74, 12.43, 13.14, 13.88, 14.89, 17.08, 19.31, 21.63, 24.06, 26.6, 32.03, 37.94, 41.08, 44.35, 51.27, 58.7, 66.67, 75.16, 79.62, 84.2, 93.79, 103.93, 114.63, 125.88, 131.72, 137.69, 150.06, 162.97, 176.43, 190.43, 197.63, 204.96, 220.01, 235.57, 251.63, 268.17, 276.62, 285.18, 302.65, 320.55, 338.88, 357.62, 367.14, 376.75, 396.26, 416.12]
+      HwidthCPS = [1.42, 1.5, 1.57, 1.65, 1.73, 1.81, 1.89, 1.97, 2.05, 2.14, 2.23, 2.32, 2.41, 2.5, 2.6, 2.7, 2.8, 2.9, 3.01, 3.12, 3.24, 3.36, 3.48, 3.61, 3.74, 3.87, 4.0, 4.13, 4.27, 4.42, 4.56, 4.71, 4.86, 5.01, 5.17, 5.33, 5.5, 5.66, 5.83, 6.01, 6.18, 6.36, 6.55, 6.73, 6.92, 7.12, 7.31, 7.51, 7.72, 7.93, 8.14, 8.68, 9.25, 9.83, 10.45, 11.08, 11.74, 12.43, 13.14, 13.88, 14.89, 17.08, 19.31, 21.63, 24.06, 26.6, 32.03, 37.94, 41.08, 44.35, 51.27, 58.7, 66.67, 75.16, 79.62, 84.2, 93.79, 103.93, 114.63, 125.88, 131.72, 137.69, 150.06, 162.97, 176.43, 190.43, 197.63, 204.96, 220.01, 235.57, 251.63, 268.17, 276.62, 285.18, 302.65, 320.55, 338.88, 357.62, 367.14, 376.75, 396.26, 416.12, 467.24, 520.26, 574.94, 631.07, 688.46, 746.93, 806.33, 866.54, 927.43, 988.91, 1050.89, 1100.0, 1100.0, 1100.0, 1100.0, 900.0, 1100.0, 1100.0, 1100.0, 1000.0, 1100.0, 1050.0, 1075.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0, 1100.0] 
       
       self.g = ROOT.TH1D("g","SM Higgs width",len(Hmass)-1,numpy.array(Hmass));
       self.gCPS = ROOT.TH1D("gCPS","SM Higgs width CPS",len(HmassCPS)-1,numpy.array(HmassCPS));
@@ -51,8 +51,7 @@ class BWEwkSingletReweighter(TreeCloner):
         group.add_option('-w' , '--globalshiftfileGG', dest='shiftfileGG',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for GG.", default="data/BWShifts_ggH.pkl") 
         group.add_option('-k' , '--globalshiftfileVBF', dest='shiftfileVBF',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for VBF.", default="data/BWShifts_VBF.pkl") 
         group.add_option('-d' , '--decayWeightsFile', dest='decayWeightsFile',   help="pickle file containing the JHU derived decay weights for WW", default="data/decayWeightsWW.pkl") 
-        group.add_option('-p' , '--fileNameFormat', dest='fileNameFormat',   help="file name format to determine production process and mass", default="latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+).root") 
-
+        group.add_option('-p' , '--fileNameFormat', dest='fileNameFormat',   help="file name format to determine production process and mass", default="latino_(GluGlu|VBF)HToWWTo2L2Nu(_JHUGen698|)_M([0-9]+).root") 
         parser.add_option_group(group)
         return group
 
@@ -107,7 +106,7 @@ class BWEwkSingletReweighter(TreeCloner):
         ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"/interface/");
         ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"MSSW_BASE/src/");
         ROOT.gSystem.Load("libZZMatrixElementMELA.so");
-        ROOT.gSystem.Load(cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_7p0.so");
+        ROOT.gSystem.Load(cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_702.so");
         try:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaReweighterWW.C+g')
         except RuntimeError:
@@ -149,9 +148,12 @@ class BWEwkSingletReweighter(TreeCloner):
           print pattern.group(1), "is an unknown production process"
           return
         
-        self.mH  = float(pattern.group(2))
+        self.isNewJHU = pattern.group(2)
+        #print "ciaoooo", self.isNewJHU
+        self.mH  = float(pattern.group(3))
         self.gsm = self.g.GetBinContent(self.g.FindBin(self.mH))
-        print "Mass", self.mH, " with SM width", self.gsm
+        self.gsmCPS = self.gCPS.GetBinContent(self.gCPS.FindBin(self.mH))
+        print "Mass", self.mH, " with SM width", self.gsm, " and CPS width ", self.gsmCPS
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
@@ -209,12 +211,20 @@ class BWEwkSingletReweighter(TreeCloner):
             shifts = pickle.load(shiftfile_stream)
             #print shifts[str(int(self.mH))]
 
-        with open (self.decayWeightsFile) as decayWeightsFile:
-          allparams = pickle.load(decayWeightsFile)
-          decayWeightFunction = interp1d(**allparams[str(int(self.mH))]["decayWeight"])
-          minmass = min(allparams[str(int(self.mH))]["decayWeight"]['x'])
-          maxmass = max(allparams[str(int(self.mH))]["decayWeight"]['x'])
-          print "decay weights for mass", str(int(self.mH)), " available between", minmass, " and", maxmass 
+        # only with the old JHU samples, which did not have proper decay weights for WW, we need to load the decay weights file.
+        if "JHUGen698" in self.isNewJHU:
+          print "This is new JHU, good for you."
+          shiftfile = shiftfile.replace(".pkl", "_JHU698.pkl")
+        else:
+          print "This is old JHU, good for you."
+        print "using the following shiftfile:", shiftfile
+        if self.isNewJHU=="":
+          with open (self.decayWeightsFile) as decayWeightsFile:
+            allparams = pickle.load(decayWeightsFile)
+            decayWeightFunction = interp1d(**allparams[str(int(self.mH))]["decayWeight"])
+            minmass = min(allparams[str(int(self.mH))]["decayWeight"]['x'])
+            maxmass = max(allparams[str(int(self.mH))]["decayWeight"]['x'])
+            print "decay weights for mass", str(int(self.mH)), " available between", minmass, " and", maxmass 
 
 
         # MELA reweighter
@@ -237,6 +247,7 @@ class BWEwkSingletReweighter(TreeCloner):
                 print i,'events processed :: ', nentries
             
             mass = itree.higgsLHEmass
+            #mass = itree.higgsLHEMass
             fourMomenta=[]
             ids=[]
 
@@ -258,14 +269,27 @@ class BWEwkSingletReweighter(TreeCloner):
       
             CPSweight = 1.
             if self.undoCPS:
-              CPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
+              if "JHUGen698" in self.isNewJHU:
+                # in this case the sample already has the correct decay weights for WW
+                # we just need to undo the pure CPS part and restore the SM width
+                CPSweight = self.FixedBreightWigner(mass, self.mH, self.gsmCPS)/self.FixedBreightWigner(mass, self.mH, self.gsm)
+              else:
+                # in this case the sample was done with BOTH CPS width and average decay weights, so we need to undo both
+                # using the corresponding POWHEG-passarino code.
+                CPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
             shift = 1.
-            if mass < minmass:
-              decayWeight = decayWeightFunction(minmass)
-            elif mass > maxmass:  
-              decayWeight = decayWeightFunction(maxmass)
-            else:   
-              decayWeight = decayWeightFunction(mass)
+            # with the new JHU decay weights are alreay in the samplem, no need to apply them here
+            if "JHUGen698" in self.isNewJHU:
+              decayWeight = 1.
+            # with old JHU samples we need to apply the decay weights  
+            else:  
+              if mass < minmass:
+                decayWeight = decayWeightFunction(minmass)
+              elif mass > maxmass:  
+                decayWeight = decayWeightFunction(maxmass)
+              else:   
+                decayWeight = decayWeightFunction(mass)
+            #print decayWeight    
             for cprime in rangecprime:
               for BRnew in rangeBRnew:
                 name = 'cprime'+str(cprime)+"BRnew"+str(BRnew)
@@ -276,24 +300,24 @@ class BWEwkSingletReweighter(TreeCloner):
                   shift = shifts[str(int(self.mH))]["cprime"+str(cprime)]["brnew"+str(BRnew)]["weight"]
                 self.oldBranchesToBeModifiedSimpleVariable[name][0] = (1./shift)*decayWeight*self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsm)/CPSweight
                 mela.setMelaHiggsMassWidth(self.mH, gprime)
-                weightInterference = mela.weightStoI((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                #weightInterferenceHonly = mela.weightStoI_H((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                #weightInterferenceBonly = mela.weightStoI_B((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                weightInterferenceHB = mela.weightStoI_HB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                weightBackground   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                weightSignalH   = mela.weightStoH((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
-                self.oldBranchesToBeModifiedSimpleVariable[name+"_I"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterference
-                #self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Honly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHonly
-                #self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Bonly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceBonly
-                self.oldBranchesToBeModifiedSimpleVariable[name+"_I_HB"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHB
-                self.oldBranchesToBeModifiedSimpleVariable[name+"_B"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightBackground
-                self.oldBranchesToBeModifiedSimpleVariable[name+"_H"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightSignalH
+#                weightInterference = mela.weightStoI((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+#                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+#                #weightInterferenceHonly = mela.weightStoI_H((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+#                #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+#                #weightInterferenceBonly = mela.weightStoI_B((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+#                #                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+#                weightInterferenceHB = mela.weightStoI_HB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+#                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+#                weightBackground   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+#                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+#                weightSignalH   = mela.weightStoH((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+#                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
+#                self.oldBranchesToBeModifiedSimpleVariable[name+"_I"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterference
+#                #self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Honly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHonly
+#                #self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Bonly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceBonly
+#                self.oldBranchesToBeModifiedSimpleVariable[name+"_I_HB"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHB
+#                self.oldBranchesToBeModifiedSimpleVariable[name+"_B"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightBackground
+#                self.oldBranchesToBeModifiedSimpleVariable[name+"_H"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightSignalH
 
 
               
