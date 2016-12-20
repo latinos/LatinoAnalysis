@@ -1021,21 +1021,32 @@ class ShapeFactory:
       eoususer='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select'
       if 'eosuser.cern.ch' in path: 
         if os.system(eoususer+' ls '+path.split('/eosuser.cern.ch/')[1]) == 0 : return True
+      if 'eoscms.cern.ch' in path:
+        if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]) == 0 : return True 
       return False 
-
+    # _____________________________________________________________________________
+    def _testIiheFile(self,path): 
+      if 'maite.iihe.ac.be' in path: 
+        return os.path.exists(path.split('dcap://maite.iihe.ac.be/')[1])
     # _____________________________________________________________________________
     def _buildchain(self, treeName, files, skipMissingFiles):
         listTrees = []
         for path in files:
             doesFileExist = True
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-            if "eos.cern.ch" not in path and "eosuser.cern.ch" not in path:
-              if not os.path.exists(path):
+            if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
+              if not self._testEosFile(path):
                 print 'File '+path+' doesn\'t exists'
                 doesFileExist = False
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
+            elif "maite.iihe.ac.be" in path:
+              if not self._testIiheFile(path):
+                print 'File '+path+' doesn\'t exists'
+                doesFileExist = False
+                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')                
             else:
-              if not self._testEosFile(path):
+              if not os.path.exists(path):
+                print 'File '+path+' doesn\'t exists'
                 doesFileExist = False
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
             if doesFileExist :

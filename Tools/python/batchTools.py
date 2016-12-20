@@ -8,7 +8,7 @@ import os.path
 from LatinoAnalysis.Tools.userConfig  import *
 
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',useBatchDir=True,wDir=''):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir=''):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -20,6 +20,9 @@ class batchJobs :
      self.prodName = prodName
      self.subDir   = jobDir+'/'+baseName+'__'+prodName
      if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)     
+
+     print stepList 
+     print batchSplit
 
      # Init Steps
      for iStep in stepList:
@@ -48,18 +51,26 @@ class batchJobs :
      SCRAMARCH=os.environ["SCRAM_ARCH"]
      for jName in self.jobsList:
        jFile = open(self.subDir+'/'+jName+'.sh','w')
+       if usePython : pFile = open(self.subDir+'/'+jName+'.py','w') 
        jFile.write('#!/bin/bash\n')
        if 'cern' in os.uname()[1]:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+       elif 'knu' in os.uname()[1]:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('#$ -q all.q\n')
+         jFile.write('#$ -cwd\n')
        else:
-         jFile.write('export X509_USER_PROXY=/user/xjanssen/.proxy\n')
+         jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
-       jFile.write('ulimit -c 0\n')
+       if 'knu' in os.uname()[1]:
+	 pass
+       else:
+	 jFile.write('ulimit -c 0\n')
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
@@ -67,12 +78,13 @@ class batchJobs :
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
        jFile.close()
+       if usePython : pFile.close()
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
      # Create Proxy at IIHE
      if 'iihe'  in os.uname()[1]:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
-       os.system('cp $X509_USER_PROXY /user/xjanssen/.proxy')
+       os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -80,6 +92,29 @@ class batchJobs :
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      jFile.write(command+'\n')
      jFile.close()
+
+   def InitPy (self,command):
+
+     os.system('cd '+self.subDir)
+     for jName in self.jobsList:
+       pFile = open(self.subDir+'/'+jName+'.py','a')
+       pFile.write(command+'\n')
+       pFile.close()
+
+   def AddPy2Sh(self):
+     for jName in self.jobsList: 
+       jFile = open(self.subDir+'/'+jName+'.sh','a')
+       command = 'python '+self.subDir+'/'+jName+'.py'
+       jFile.write(command+'\n')
+       jFile.close()
+
+   def AddPy (self,iStep,iTarget,command):
+     jName= self.jobsDic[iStep][iTarget]
+     print 'Adding to ',self.subDir+'/'+jName
+     pFile = open(self.subDir+'/'+jName+'.py','a')
+     pFile.write(command+'\n')
+     pFile.close()
+
 
    def Sub(self,queue='8nh'): 
      os.system('cd '+self.subDir)
@@ -97,8 +132,19 @@ class batchJobs :
         if 'iihe' in os.uname()[1] : 
           queue='localgrid@cream02'
           QSOPT=''
-          jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          nTry=0
+          while nTry < 5 : 
+            nTry+=1
+            jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+            print 'TRY #:', nTry , '--> Jobid : ' , jobid
+            if jobid == 0 : nTry = 999
+            else:  os.system('rm '+jidFile)
 
+	elif 'knu' in os.uname()[1]:
+          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)

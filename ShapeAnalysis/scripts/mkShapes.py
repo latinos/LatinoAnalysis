@@ -19,6 +19,12 @@ import subprocess
 import threading, Queue
 from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory
 
+# Common Tools & batch
+from LatinoAnalysis.Tools.userConfig  import *
+from LatinoAnalysis.Tools.commonTools import *
+from LatinoAnalysis.Tools.batchTools  import *
+
+
 # ----------------------------------------------------- Worker --------------------------------------
 
 class Worker(threading.Thread):
@@ -92,6 +98,8 @@ if __name__ == '__main__':
     parser.add_option('--inputDir'       , dest='inputDir'       , help='input directory'                            , default='./data/')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None)
     parser.add_option('--doBatch'        , dest='doBatch'        , help='Run on batch'                               , default=False)
+    parser.add_option('--batchQueue'     , dest='batchQueue'     , help='Queue on batch'                             , default='')
+    parser.add_option('--batchSplit'     , dest="batchSplit", help="Splitting mode for batch jobs"        , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
     parser.add_option('--doHadd'         , dest='doHadd'         , help='Hadd for batch mode'                        , default=False)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=os.sysconf('SC_NPROCESSORS_ONLN'))
@@ -156,8 +164,105 @@ if __name__ == '__main__':
     if   opt.doBatch != 0:
             print "~~~~~~~~~~~ Running mkShape on Batch Queue"
 
+            # Create Jobs Dictionary
+            
+            batchSplit=''
+ 
+            # ... Cuts
+            stepList=[]
+            if 'Cuts' in opt.batchSplit :
+              batchSplit='Steps'   
+              for iCut in cuts: stepList.append(iCut)
+            else:
+              stepList=['ALL']  
+          
+            # ... Samples
+            targetList=[]
+            if 'Samples' in opt.batchSplit :
+              if 'Cuts' in opt.batchSplit : batchSplit+=','
+              batchSplit+='Targets'
+              for iSample in samples : targetList.append(iSample)
+            else:  
+              targetList=['ALL']
+
+            # ...Check job status and remove duplicates
+            for iStep in stepList:
+              for iTarget in targetList:
+                pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+iTarget+'.jid'
+                #print pidFile
+                if os.path.isfile(pidFile) :
+                  print '--> Job Running already : '+iStep+'__'+iTarget
+                  exit()  
+            
+            bpostFix='' 
+            jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,batchSplit,bpostFix,True)            
+
+            jobs.AddPy2Sh()
+            jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n")
+            jobs.InitPy("factory = ShapeFactory()")
+            jobs.InitPy("factory._energy    = '"+str(opt.energy)+"'")
+            jobs.InitPy("factory._lumi      = "+str(opt.lumi))
+            jobs.InitPy("factory._tag       = '"+str(opt.tag)+"'")
+            jobs.InitPy("\n")
+
+            outputDir=os.getcwd()+'/'+opt.outputDir 
+
+            for cut_k,cut_v in cuts.iteritems(): 
+           
+              cuts_new = {}
+              cuts_new[cut_k] = cut_v
+
+              for sam_k,sam_v in samples.iteritems():
+                samples_new = {}
+                samples_new[sam_k] = sam_v
+
+                iStep='ALL'
+                if 'Cuts' in opt.batchSplit : iStep=cut_k  
+                iTarget='ALL'  
+                if 'Samples' in opt.batchSplit : iTarget = sam_k
+                jName=iStep+'_'+iTarget  
+                jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
+	    if 'knu' in os.uname()[1]:
+	      jobs.Sub(opt.batchQueue)
+	    else: jobs.Sub()
+
     elif opt.doHadd != 0:
             print "~~~~~~~~~~~ mkShape on Batch : Hadd"
+
+            # ... Cuts
+            stepList=[]
+            if 'Cuts' in opt.batchSplit :
+              batchSplit='Steps'
+              for iCut in cuts: stepList.append(iCut)
+            else:
+              stepList=['ALL']
+
+            # ... Samples
+            targetList=[]
+            if 'Samples' in opt.batchSplit :
+              if 'Cuts' in opt.batchSplit : batchSplit+=','
+              batchSplit+='Targets'
+              for iSample in samples : targetList.append(iSample)
+            else:
+              targetList=['ALL']
+
+            # ...Check job status and create command
+            outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root' 
+            command = 'hadd -f '+outputFile
+            allDone=True
+            for iStep in stepList:
+              for iTarget in targetList:
+                pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+iTarget+'.jid'
+                if os.path.isfile(pidFile) :
+                  print '--> Job Running Still: '+iStep+'__'+iTarget
+                  allDone=False
+                iFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'_'+iStep+'_'+iTarget+'.root' 
+                if not os.path.isfile(iFile) :
+                  print '--> Missing root file: '+iFile 
+                  allDone=False
+                command+=' '+iFile
+            
+            if allDone: os.system(command)
 
     elif opt.doThreads != 0:
 
