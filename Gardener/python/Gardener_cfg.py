@@ -599,6 +599,74 @@ Productions= {
                                     },
                        },
 
+#  2016 ReReco DATA: 29October2016_RerecoData Tag
+
+  'Dec2016_Run2016B_ReReco_27p6fbm1'   : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Rereco2016' ,
+                        'onlySample' : [
+                                       'DoubleEG_Run2016B-23Sep2016-v3', 'DoubleMuon_Run2016B-23Sep2016-v3', 'MuonEG_Run2016B-23Sep2016-v3', 'SingleElectron_Run2016B-23Sep2016-v3', 'SingleMuon_Run2016B-23Sep2016-v3'
+                                       ],
+                       },
+
+  'Dec2016_Run2016C_ReReco_27p6fbm1'   : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Rereco2016' ,
+                        'onlySample' : [
+                                       'DoubleEG_Run2016C-23Sep2016-v3', 'DoubleMuon_Run2016C-23Sep2016-v3', 'MuonEG_Run2016C-23Sep2016-v3', 'SingleElectron_Run2016C-23Sep2016-v3', 'SingleMuon_Run2016C-23Sep2016-v3'
+                                       ],
+                       },
+
+  'Dec2016_Run2016D_ReReco_27p6fbm1'   : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Rereco2016' ,
+                        'onlySample' : [
+                                       'DoubleEG_Run2016D-23Sep2016-v3', 'DoubleMuon_Run2016D-23Sep2016-v3', 'MuonEG_Run2016D-23Sep2016-v3', 'SingleElectron_Run2016D-23Sep2016-v3', 'SingleMuon_Run2016D-23Sep2016-v3'
+                                       ],
+                       },
+
+  'Dec2016_Run2016E_ReReco_27p6fbm1'   : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Rereco2016' ,
+                        'onlySample' : [
+                                       'DoubleEG_Run2016E-23Sep2016-v3', 'DoubleMuon_Run2016E-23Sep2016-v3', 'MuonEG_Run2016E-23Sep2016-v3', 'SingleElectron_Run2016E-23Sep2016-v3', 'SingleMuon_Run2016E-23Sep2016-v3'
+                                       ],
+                       },
+
+  'Dec2016_Run2016F_ReReco_27p6fbm1'   : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Rereco2016' ,
+                        'onlySample' : [
+                                       'DoubleEG_Run2016F-23Sep2016-v3', 'DoubleMuon_Run2016F-23Sep2016-v3', 'MuonEG_Run2016F-23Sep2016-v3', 'SingleElectron_Run2016F-23Sep2016-v3', 'SingleMuon_Run2016F-23Sep2016-v3'
+                                       ],
+                       },
+
+  'Dec2016_Run2016G_ReReco_27p6fbm1'   : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py',
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/23Sep2016/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Rereco2016' ,
+                        'onlySample' : [
+                                       'DoubleEG_Run2016G-23Sep2016-v3', 'DoubleMuon_Run2016G-23Sep2016-v3', 'MuonEG_Run2016G-23Sep2016-v3', 'SingleElectron_Run2016G-23Sep2016-v3', 'SingleMuon_Run2016G-23Sep2016-v3'
+                                       ],
+                       },
+
 }
 
 
@@ -3199,7 +3267,12 @@ Steps= {
                   'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW'
                },
 
-
+  'l2kin_metXYshift'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW --met'
+               },
 
   'l3kin'    : {
                   'isChain'    : False ,
@@ -3619,4 +3692,49 @@ Steps= {
                                    'DYJetsToLL_M-50-LO-ext1' , 
                                  ],
           },
+
+
+  'metXYshift' : {  'isChain'    : True ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : True  ,
+                    'subTargets' : ['metXYshift_MC','metXYshift_2016B','metXYshift_2016C','metXYshift_2016D'] ,
+                 },
+
+  'metXYshift_MC' : {  'isChain'    : False ,
+                       'do4MC'      : True  ,
+                       'do4Data'    : False  , 
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample DY' ,
+                    },
+
+  'metXYshift_2016B' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016BDouble' ,
+                       'onlySample' : [ 
+                                        'Run2016B_PromptReco_DoubleMuon', 'Run2016B_PromptReco_SingleElectron', 'Run2016B_PromptReco_SingleMuon',
+                                        'Run2016B_PromptReco_MuonEG' , 'Run2016B_PromptReco_DoubleEG' 
+                                      ],
+                    },
+
+  'metXYshift_2016C' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016CDouble' ,
+                       'onlySample' : [
+                                        'Run2016C_PromptReco_DoubleMuon', 'Run2016C_PromptReco_SingleElectron', 'Run2016C_PromptReco_SingleMuon',
+                                        'Run2016C_PromptReco_MuonEG' , 'Run2016C_PromptReco_DoubleEG'
+                                      ],
+                    },
+
+  'metXYshift_2016D' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016DDouble' ,
+                       'onlySample' : [
+                                        'Run2016D_PromptReco_DoubleMuon', 'Run2016D_PromptReco_SingleElectron', 'Run2016D_PromptReco_SingleMuon',
+                                        'Run2016D_PromptReco_MuonEG' , 'Run2016D_PromptReco_DoubleEG'
+                                      ],
+                    },
+
+
 }

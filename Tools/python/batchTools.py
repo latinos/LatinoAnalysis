@@ -62,7 +62,7 @@ class batchJobs :
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
        else:
-         jFile.write('export X509_USER_PROXY=/user/xjanssen/.proxy\n')
+         jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
@@ -84,7 +84,7 @@ class batchJobs :
      # Create Proxy at IIHE
      if 'iihe'  in os.uname()[1]:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
-       os.system('cp $X509_USER_PROXY /user/xjanssen/.proxy')
+       os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -138,6 +138,7 @@ class batchJobs :
             jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             print 'TRY #:', nTry , '--> Jobid : ' , jobid
             if jobid == 0 : nTry = 999
+            else:  os.system('rm '+jidFile)
 
 	elif 'knu' in os.uname()[1]:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
