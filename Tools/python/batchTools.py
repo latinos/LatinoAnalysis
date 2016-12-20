@@ -57,13 +57,20 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+       elif 'knu' in os.uname()[1]:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('#$ -q all.q\n')
+         jFile.write('#$ -cwd\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/xjanssen/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
-       jFile.write('ulimit -c 0\n')
+       if 'knu' in os.uname()[1]:
+	 pass
+       else:
+	 jFile.write('ulimit -c 0\n')
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
@@ -132,6 +139,11 @@ class batchJobs :
             print 'TRY #:', nTry , '--> Jobid : ' , jobid
             if jobid == 0 : nTry = 999
 
+	elif 'knu' in os.uname()[1]:
+          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)

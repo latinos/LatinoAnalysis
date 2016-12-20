@@ -221,8 +221,9 @@ if __name__ == '__main__':
                 if 'Samples' in opt.batchSplit : iTarget = sam_k
                 jName=iStep+'_'+iTarget  
                 jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
-
-            jobs.Sub()
+	    if 'knu' in os.uname()[1]:
+	      jobs.Sub('short')
+	    else: jobs.Sub()
 
     elif opt.doHadd != 0:
             print "~~~~~~~~~~~ mkShape on Batch : Hadd"
