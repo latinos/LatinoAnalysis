@@ -3221,10 +3221,10 @@ Steps= {
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M800',
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M900',
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M1000',
-                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
-                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
-                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
-                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
 
                                   # ... VBF High Mass
                                   'VBFHToWWTo2L2Nu_JHUGen698_M200',
@@ -3245,12 +3245,12 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_JHUGen698_M800',
                                   'VBFHToWWTo2L2Nu_JHUGen698_M900',
                                   'VBFHToWWTo2L2Nu_JHUGen698_M1000', 
-                                  #'VBFHToWWTo2L2Nu_JHUGen698_M1500', 
-                                  #'VBFHToWWTo2L2Nu_JHUGen698_M2000', 
-                                  #'VBFHToWWTo2L2Nu_JHUGen698_M2500', 
-                                  #'VBFHToWWTo2L2Nu_JHUGen698_M3000', 
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M1500', 
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M2000', 
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M2500', 
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M3000', 
                                  ],
-                  'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_JHUGen698_M([0-9]+)*" --undoCPS=False',
+                  'command'    : 'gardener.py BWEwkSingletReweighter ',
                  },
 
   'l2sel'    : {
