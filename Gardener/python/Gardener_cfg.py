@@ -3507,6 +3507,14 @@ Steps= {
                    'subTargets' : ['l2kin','do_dymvaGGH'],
                   },
 
+   'dymvaGGHv2' :   {
+                   'isChain'    : True ,
+                   'do4MC'      : True ,
+                   'do4Data'    : True ,
+                   'subTargets' : ['metXYshift_MC','metXYshift_2016B','metXYshift_2016C','metXYshift_2016D','l2kin_metXYshift','do_dymvaGGH'],
+                  },
+
+
    'wwvarfiller' : {
                    'isChain'    : False ,
                    'do4MC'      : True ,
