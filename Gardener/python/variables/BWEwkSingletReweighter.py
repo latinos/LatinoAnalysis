@@ -106,7 +106,7 @@ class BWEwkSingletReweighter(TreeCloner):
         ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"/interface/");
         ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"MSSW_BASE/src/");
         ROOT.gSystem.Load("libZZMatrixElementMELA.so");
-        ROOT.gSystem.Load(cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_702b2.so");
+        ROOT.gSystem.Load(cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_702b3.so");
         try:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaReweighterWW.C+g')
         except RuntimeError:
