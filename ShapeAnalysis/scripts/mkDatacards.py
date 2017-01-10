@@ -107,6 +107,7 @@ class DatacardFactory:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = self._fileIn.Get(shapeName)
               # get the integral == rate from histogram
+              #print " shapeName = ", shapeName
               yieldsBkg[sampleName] = histo.Integral()
               self._outFile.cd()
               histo.Write()

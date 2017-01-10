@@ -477,7 +477,7 @@ class ShapeFactory:
                             # take histogram --> outputsHisto
                             outputsHistoUp = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp")
                             outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
-                            print "########### DEBUG: scaleHistoStatBBB sample", sampleName
+                            #print "########### DEBUG: scaleHistoStatBBB sample", sampleName
                             self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization, zeroMC)
                             self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization, zeroMC)
 
@@ -997,8 +997,20 @@ class ShapeFactory:
         inputs = {}
         treeName = 'latino'
         for process,filenames in samples.iteritems():
-          tree = self._buildchain(treeName,[ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
+          
+          # if the filenames start with "###" the folder will be reset
+          # and the name of the tree will start directly from the "filename" listed
+          # disregarding any "inputDir" given
+          #    This is useful in case we need to use multiple eos folders,
+          #    some of them under iteos, some under the standard eos          
+          
+          
+          #                                            use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
+          tree = self._buildchain(treeName, [ (inputDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames],      skipMissingFiles)
+          #tree = self._buildchain(treeName, [ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
+
           inputs[process] = tree
+          
           # FIXME: add possibility to add Friend Trees for new variables   
          
         return inputs
@@ -1024,10 +1036,12 @@ class ShapeFactory:
       if 'eoscms.cern.ch' in path:
         if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]) == 0 : return True 
       return False 
+
     # _____________________________________________________________________________
     def _testIiheFile(self,path): 
       if 'maite.iihe.ac.be' in path: 
         return os.path.exists(path.split('dcap://maite.iihe.ac.be/')[1])
+
     # _____________________________________________________________________________
     def _buildchain(self, treeName, files, skipMissingFiles):
         listTrees = []
@@ -1054,4 +1068,6 @@ class ShapeFactory:
               tree.Add(path)
               listTrees.append(tree)
         return listTrees
+
+
 
