@@ -378,6 +378,19 @@ WW EWK corrections
        output.root
 
     
+    
+
+WZ EWK corrections
+====
+
+    eosmount eos
+    cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WZTo3LNu.root   /tmp/amassiro/
+           
+    gardener.py wzEWKcorrections \
+       /tmp/amassiro/latino_WZTo3LNu.root \
+       /tmp/amassiro/latino_WZTo3LNu_test.root
+
+    
 
     
        
