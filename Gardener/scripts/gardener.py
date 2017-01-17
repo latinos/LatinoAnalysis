@@ -38,6 +38,7 @@ from LatinoAnalysis.Gardener.variables.qq2vvEWKcorrectionsWeight  import qq2vvEW
 
 # qqWZ and qqZZ corrections
 from LatinoAnalysis.Gardener.variables.qq2wzEWKcorrectionsWeight  import qq2wzEWKcorrectionsWeightFiller
+from LatinoAnalysis.Gardener.variables.qq2zzEWKcorrectionsWeight  import qq2zzEWKcorrectionsWeightFiller
 
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
@@ -162,8 +163,9 @@ if __name__ == '__main__':
 # add ewk re-weight for ww
     modules['wwEWKcorrections']      =  qq2vvEWKcorrectionsWeightFiller()
 
-# add ewk re-weight for wz
+# add ewk re-weight for wz and zz
     modules['wzEWKcorrections']      =  qq2wzEWKcorrectionsWeightFiller()
+    modules['zzEWKcorrections']      =  qq2zzEWKcorrectionsWeightFiller()
 
 # add bpog SF
     modules['btagPogScaleFactors']   = btagPogScaleFactors()
