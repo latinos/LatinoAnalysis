@@ -184,62 +184,80 @@ class qq2wzEWKcorrectionsWeightFiller(TreeCloner):
             else :
               # W>lv  and   Z>ll
  
-              if (abs(temp_idv1) == (abs(idl1)+1)) :
-                    
-                ptl1  = temp_ptl1
-                etal1 = temp_etal1
-                phil1 = temp_phil1
-                idl1  = temp_idl1
+              # assign the 3 leptons and the neutrino to the correct vector boson
+              #
+              # 1) the neutrino is hte first position
+              #
+              ptv1  = temp_ptv1
+              etav1 = temp_etav1
+              phiv1 = temp_phiv1
+              idv1  = temp_idv1
+              #
+              # 2) look for a lepton with the correct charge and the invariant mass close to W
+              #
+              v1 = ROOT.TLorentzVector()
+              v1.SetPtEtaPhiM(ptv1, etav1, phiv1, 0)
+                
+              if (abs(idv1) == (abs(temp_idl1)+1)) :
+                
+                l1 = ROOT.TLorentzVector()
+                l1.SetPtEtaPhiM(temp_ptl1, temp_etal1, temp_phil1, 0)
+                
+                mass = (l1+v1).M()                
+                #print " mass = ", mass
+                
+                if abs (mass - 80.385) < 3 :
+                  
+                  ptl1  = temp_ptl1
+                  etal1 = temp_etal1
+                  phil1 = temp_phil1
+                  idl1  = temp_idl1
+                  
+                  ptl2  = temp_ptl2
+                  etal2 = temp_etal2
+                  phil2 = temp_phil2
+                  idl2  = temp_idl2
+                 
+                  ptv2  = temp_ptl3
+                  etav2 = temp_etal3
+                  phiv2 = temp_phil3
+                  idv2  = temp_idl3    
+                                 
 
-                ptv1  = temp_ptv1
-                etav1 = temp_etav1
-                phiv1 = temp_phiv1
-                idv1  = temp_idv1
+                
+              elif (abs(idv1) == (abs(temp_idl2)+1)) :
+                
+                l1 = ROOT.TLorentzVector()
+                l1.SetPtEtaPhiM(temp_ptl2, temp_etal2, temp_phil2, 0)
+                
+                mass = (l1+v1).M()                
+                #print " mass 2 = ", mass
+                
+                if abs (mass - 80.385) < 3 :
+                  
+                  ptl1  = temp_ptl2
+                  etal1 = temp_etal2
+                  phil1 = temp_phil2
+                  idl1  = temp_idl2
+                  
+                  ptl2  = temp_ptl1
+                  etal2 = temp_etal1
+                  phil2 = temp_phil1
+                  idl2  = temp_idl1
+                 
+                  ptv2  = temp_ptl3
+                  etav2 = temp_etal3
+                  phiv2 = temp_phil3
+                  idv2  = temp_idl3    
 
-                ptl2  = temp_ptl2
-                etal2 = temp_etal2
-                phil2 = temp_phil2
-                idl2  = temp_idl2
-               
-                ptv2  = temp_ptl3
-                etav2 = temp_etal3
-                phiv2 = temp_phil3
-                idv2  = temp_idl3    
-             
-              elif (abs(temp_idv2) == (abs(idl1)+1)) :
+
+              else :
                       
-                ptl1  = temp_ptl2
-                etal1 = temp_etal2
-                phil1 = temp_phil2
-                idl1  = temp_idl2
-
-                ptv1  = temp_ptv2
-                etav1 = temp_etav2
-                phiv1 = temp_phiv2
-                idv1  = temp_idv2
-               
-                ptl2  = temp_ptl1
-                etal2 = temp_etal1
-                phil2 = temp_phil1
-                idl2  = temp_idl1
-               
-                ptv2  = temp_ptl3
-                etav2 = temp_etal3
-                phiv2 = temp_phil3
-                idv2  = temp_idl3    
-             
-              elif (abs(temp_idv3) == (abs(idl1)+1)) :
-
                 ptl1  = temp_ptl3
                 etal1 = temp_etal3
                 phil1 = temp_phil3
                 idl1  = temp_idl3
-                      
-                ptv1  = temp_ptv3
-                etav1 = temp_etav3
-                phiv1 = temp_phiv3
-                idv1  = temp_idv3
-               
+
                 ptl2  = temp_ptl1
                 etal2 = temp_etal1
                 phil2 = temp_phil1
@@ -248,10 +266,10 @@ class qq2wzEWKcorrectionsWeightFiller(TreeCloner):
                 ptv2  = temp_ptl2
                 etav2 = temp_etal2
                 phiv2 = temp_phil2
-                idv2  = temp_idl2   
+                idv2  = temp_idl2    
+             
+            #print " ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2, ptv1, etav1, phiv1, idv1, ptv2, etav2, phiv2, idv2, x1, x2, id1, id2 = ", ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2, ptv1, etav1, phiv1, idv1, ptv2, etav2, phiv2, idv2, x1, x2, id1, id2
             
-                        
-  
             results_value_and_error = qq2wvEWKcorrections.getqq2WVEWKCorr(ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2, ptv1, etav1, phiv1, idv1, ptv2, etav2, phiv2, idv2, x1, x2, id1, id2,    1)
             ewkWZ[0] = results_value_and_error[0]
             ewkWZuncertainty[0] = results_value_and_error[1]
