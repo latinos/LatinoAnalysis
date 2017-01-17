@@ -116,6 +116,7 @@ if __name__ == '__main__':
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=os.sysconf('SC_NPROCESSORS_ONLN'))
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
+    parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -254,7 +255,7 @@ if __name__ == '__main__':
               #jobs.Sub(opt.batchQueue)
             #else:
             #print " opt.batchQueue = ", opt.batchQueue
-            jobs.Sub(opt.batchQueue)
+            jobs.Sub(opt.batchQueue,options.IiheWallTime)
 
 
     elif opt.doHadd != 0:
