@@ -51,7 +51,7 @@ class BWEwkSingletReweighter(TreeCloner):
         group.add_option('-w' , '--globalshiftfileGG', dest='shiftfileGG',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for GG.", default="data/BWShifts_ggH.pkl") 
         group.add_option('-k' , '--globalshiftfileVBF', dest='shiftfileVBF',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for VBF.", default="data/BWShifts_VBF.pkl") 
         group.add_option('-d' , '--decayWeightsFile', dest='decayWeightsFile',   help="pickle file containing the JHU derived decay weights for WW", default="data/decayWeightsWW.pkl") 
-        group.add_option('-p' , '--fileNameFormat', dest='fileNameFormat',   help="file name format to determine production process and mass", default="latino_(GluGlu|VBF)HToWWTo2L2Nu(_JHUGen698|)_M([0-9]+).root") 
+        group.add_option('-p' , '--fileNameFormat', dest='fileNameFormat',   help="file name format to determine production process and mass", default="latino_(GluGlu|VBF)HToWWTo2L2Nu(_JHUGen698|)_M([0-9]+)*.root") 
         parser.add_option_group(group)
         return group
 

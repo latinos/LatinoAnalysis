@@ -116,7 +116,7 @@ class batchJobs :
      pFile.close()
 
 
-   def Sub(self,queue='8nh'): 
+   def Sub(self,queue='8nh',IiheWallTime='168:00:00'): 
      os.system('cd '+self.subDir)
      for jName in self.jobsList:
         print self.subDir+'/'+jName
@@ -131,7 +131,7 @@ class batchJobs :
         print 'Submit',jName, ' on ', queue
         if 'iihe' in os.uname()[1] : 
           queue='localgrid@cream02'
-          QSOPT=''
+          QSOPT='-l walltime='+IiheWallTime
           nTry=0
           while nTry < 5 : 
             nTry+=1

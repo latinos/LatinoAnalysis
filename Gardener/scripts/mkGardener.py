@@ -97,6 +97,8 @@ parser.add_option("-C" , "--chain" , dest="chain"     , help="Chain several step
 parser.add_option("-a" , "--allSamples" , dest="ignoreOnlySamples",  help="ignoreOnlySamples"  , default=False  , action="store_true")
 parser.add_option("-M" , "--forceMerge" , dest="forceMerge", help="Force Merge Big Sample in Hadd" , default=False  , action="store_true")
 parser.add_option("-u" , "--user" , dest="user", help="Set user directory" , default='xjanssen')
+parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00")
+
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -691,8 +693,8 @@ for iProd in prodList :
         targetListKeep=targetList
       else:
         print "Gone batching ..."
-        if options.runBatch and not options.pretend: jobs.Sub(options.queue)
+        if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
 
   if options.chain :
     print "Gone batching for Chain ..."
-    if options.runBatch and not options.pretend: jobs.Sub(options.queue)
+    if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
