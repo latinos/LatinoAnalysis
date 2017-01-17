@@ -128,7 +128,7 @@ class batchJobs :
         jFile.write('mv '+jidFile+' '+jidFile.replace('.jid','.done') )
         jFile.close()
         jidFile=self.subDir+'/'+jName+'.jid'
-        print 'Submit',jName
+        print 'Submit',jName, ' on ', queue
         if 'iihe' in os.uname()[1] : 
           queue='localgrid@cream02'
           QSOPT=''
