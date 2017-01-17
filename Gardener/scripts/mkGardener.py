@@ -97,7 +97,7 @@ parser.add_option("-C" , "--chain" , dest="chain"     , help="Chain several step
 parser.add_option("-a" , "--allSamples" , dest="ignoreOnlySamples",  help="ignoreOnlySamples"  , default=False  , action="store_true")
 parser.add_option("-M" , "--forceMerge" , dest="forceMerge", help="Force Merge Big Sample in Hadd" , default=False  , action="store_true")
 parser.add_option("-u" , "--user" , dest="user", help="Set user directory" , default='xjanssen')
-parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00")
+parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
 
 
 # Parse options and Filter
