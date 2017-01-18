@@ -758,6 +758,8 @@ Steps= {
                   'do4Data'    : False,
                   'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],#,'TopGenPt'],
                   'onlySample' : [
+			          ####
+			          'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WW-LO', 'ZZ',
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
                                   ####
@@ -770,7 +772,8 @@ Steps= {
                                   'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
-                                  'TT','TTJets',
+                                  'TTTo2L2Nu', 'TTTo2L2Nu_ext1', 'TT', 'TTJets', 'TTToSemiLeptonic', 'ST_tW_top', 'ST_tW_antitop', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top'
+
  
                                  ] ,
 
@@ -3800,38 +3803,5 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \' std_vector_jet_pt[0]>20 && std_vector_jet_pt[1]>20 && std_vector_jet_pt[2]>20 \' ',
            },
-	
-  'l1loose3jets'    : {
-                  'isChain'    : True ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True  ,
-                  'subTargets' : ['l1loose','3jetsSel'],
-               },
-	
-
-  'MCl1loose3jets' :       {
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : ['MCl1loose','3jetsSel'],
-                  'onlySample' : [
-			          ####
-			          'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WW-LO', 'ZZ',
-                                  #### DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
-                                  ####
-                                  'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
-                                  'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
-                                  ####
-			          'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
-                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
-                                  ####
-                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
-                                  'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
-                                  ####
-                                  'TTTo2L2Nu_ext1', 'TT', 'TTJets', 'TTToSemiLeptonic', 'ST_tW_top', 'ST_tW_antitop', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top'
-                                 ] ,
-                },
-
 	
 }
