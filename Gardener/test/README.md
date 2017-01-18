@@ -352,22 +352,6 @@ WW NNLO+NNLL scales and uncertainty
 
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/latino_WWTo2L2Nu.root  /tmp/amassiro/
            
-    gardener.py wwEWKcorrections \
-       ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root \
-       output.root
-    
-    gardener.py wwEWKcorrections \
-       /tmp/amassiro/latino_WWTo2L2Nu.root \
-       output.root
-
-       
-     
-
-WW EWK corrections
-====
-
-    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/latino_WWTo2L2Nu.root  /tmp/amassiro/
-           
     gardener.py wwNLLcorrections \
        --cmssw=763   \
        ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root \
@@ -377,6 +361,27 @@ WW EWK corrections
        /tmp/amassiro/latino_WWTo2L2Nu.root \
        output.root
 
+    
+    
+WW EWK corrections
+====
+
+    scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/21Oct_25ns_MC/mcwghtcount__MC__l2selFix__hadd__bSFL2Eff/latino_WWTo2L2Nu.root  /tmp/amassiro/
+           
+    gardener.py wwEWKcorrections \
+       ../LatinoTrees/AnalysisStep/test/latino_stepB_numEvent100.root \
+       output.root
+    
+    gardener.py wwEWKcorrections \
+       /tmp/amassiro/latino_WWTo2L2Nu.root \
+       output.root
+
+       
+    cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WWTo2L2Nu.root   /tmp/amassiro/
+
+    gardener.py wwEWKcorrections \
+       /tmp/amassiro/latino_WWTo2L2Nu.root \
+       /tmp/amassiro/latino_WWTo2L2Nu_test.root        
     
     
 
@@ -390,13 +395,26 @@ WZ and ZZ EWK corrections
        /tmp/amassiro/latino_WZTo3LNu.root \
        /tmp/amassiro/latino_WZTo3LNu_test.root
 
+
+    cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WZTo2L2Q__part0.root   /tmp/amassiro/
+       
+    gardener.py wzEWKcorrections \
+       /tmp/amassiro/latino_WZTo2L2Q__part0.root \
+       /tmp/amassiro/latino_WZTo2L2Q__part0_test.root
+
+       
     cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_ZZTo2L2Nu.root   /tmp/amassiro/
+    cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_ZZTo2L2Q__part0.root   /tmp/amassiro/
+    
     
     gardener.py zzEWKcorrections \
        /tmp/amassiro/latino_ZZTo2L2Nu.root \
        /tmp/amassiro/latino_ZZTo2L2Nu_test.root
 
-    
+    gardener.py zzEWKcorrections \
+       /tmp/amassiro/latino_ZZTo2L2Q__part0.root \
+       /tmp/amassiro/latino_ZZTo2L2Q__part0_test.root
+
 
     
        

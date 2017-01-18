@@ -78,6 +78,7 @@ class qq2zzEWKcorrectionsWeightFiller(TreeCloner):
             temp_phil4 = itree.std_vector_LHElepton_phi[3]
             temp_idl4 = itree.std_vector_LHElepton_id[3]
 
+
             temp_ptv1 = itree.std_vector_LHEneutrino_pt[0]
             temp_etav1 = itree.std_vector_LHEneutrino_eta[0]
             temp_phiv1 = itree.std_vector_LHEneutrino_phi[0]
@@ -97,7 +98,27 @@ class qq2zzEWKcorrectionsWeightFiller(TreeCloner):
             temp_etav4 = itree.std_vector_LHEneutrino_eta[3]
             temp_phiv4 = itree.std_vector_LHEneutrino_phi[3]
             temp_idv4  = itree.std_vector_LHEneutrino_id[3]
+
+
+            temp_ptq1 = itree.std_vector_LHEparton_pt[0]
+            temp_etaq1 = itree.std_vector_LHEparton_eta[0]
+            temp_phiq1 = itree.std_vector_LHEparton_phi[0]
+            temp_idq1  = itree.std_vector_LHEparton_id[0]
+            
+            temp_ptq2 = itree.std_vector_LHEparton_pt[1]
+            temp_etaq2 = itree.std_vector_LHEparton_eta[1]
+            temp_phiq2 = itree.std_vector_LHEparton_phi[1]
+            temp_idq2  = itree.std_vector_LHEparton_id[1]
                   
+            temp_ptq3 = itree.std_vector_LHEparton_pt[2]
+            temp_etaq3 = itree.std_vector_LHEparton_eta[2]
+            temp_phiq3 = itree.std_vector_LHEparton_phi[2]
+            temp_idq3  = itree.std_vector_LHEparton_id[2]
+
+            temp_ptq4 = itree.std_vector_LHEparton_pt[3]
+            temp_etaq4 = itree.std_vector_LHEparton_eta[3]
+            temp_phiq4 = itree.std_vector_LHEparton_phi[3]
+            temp_idq4  = itree.std_vector_LHEparton_id[3]                  
  
             x1 = itree.pdfx1
             x2 = itree.pdfx2
@@ -257,6 +278,31 @@ class qq2zzEWKcorrectionsWeightFiller(TreeCloner):
               etav2 = temp_etav2
               phiv2 = temp_phiv2
               idv2  = temp_idv2   
+
+
+
+            if temp_ptl1 > 0 and temp_ptq1 > 0 :
+              # Z>ll and Z>qq
+              
+              ptl1  = temp_ptl1
+              etal1 = temp_etal1
+              phil1 = temp_phil1
+              idl1  = temp_idl1
+              
+              ptv1  = temp_ptl2
+              etav1 = temp_etal2
+              phiv1 = temp_phil2
+              idv1  = temp_idl2
+              
+              ptl2  = temp_ptq1
+              etal2 = temp_etaq1
+              phil2 = temp_phiq1
+              idl2  = temp_idq1
+             
+              ptv2  = temp_ptq2
+              etav2 = temp_etaq2
+              phiv2 = temp_phiq2
+              idv2  = temp_idq2   
 
 
 

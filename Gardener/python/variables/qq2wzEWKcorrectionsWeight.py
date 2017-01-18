@@ -88,6 +88,19 @@ class qq2wzEWKcorrectionsWeightFiller(TreeCloner):
             temp_etav3 = itree.std_vector_LHEneutrino_eta[2]
             temp_phiv3 = itree.std_vector_LHEneutrino_phi[2]
             temp_idv3  = itree.std_vector_LHEneutrino_id[2]
+
+
+
+            temp_ptq1 = itree.std_vector_LHEparton_pt[0]
+            temp_etaq1 = itree.std_vector_LHEparton_eta[0]
+            temp_phiq1 = itree.std_vector_LHEparton_phi[0]
+            temp_idq1  = itree.std_vector_LHEparton_id[0]
+            
+            temp_ptq2 = itree.std_vector_LHEparton_pt[1]
+            temp_etaq2 = itree.std_vector_LHEparton_eta[1]
+            temp_phiq2 = itree.std_vector_LHEparton_phi[1]
+            temp_idq2  = itree.std_vector_LHEparton_id[1]
+                  
                   
  
             x1 = itree.pdfx1
@@ -180,6 +193,30 @@ class qq2wzEWKcorrectionsWeightFiller(TreeCloner):
                 idv2  = temp_idv2   
              
                       
+            elif temp_ptq1 > 0 :
+
+              # W>qq  and   Z>ll
+
+              ptl1  = temp_ptq1
+              etal1 = temp_etaq1
+              phil1 = temp_phiq1
+              idl1  = temp_idq1
+              
+              ptv1  = temp_ptq2
+              etav1 = temp_etaq2
+              phiv1 = temp_phiq2
+              idv1  = temp_idq2
+              
+              ptl2  = temp_ptl1
+              etal2 = temp_etal1
+              phil2 = temp_phil1
+              idl2  = temp_idl1
+             
+              ptv2  = temp_ptl2
+              etav2 = temp_etal2
+              phiv2 = temp_phil2
+              idv2  = temp_idl2   
+
               
             else :
               # W>lv  and   Z>ll
