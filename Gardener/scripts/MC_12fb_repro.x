@@ -95,6 +95,8 @@
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_12pXfbm1_repro  -s hadd -i MCl1loose__EpTCorr -S Target -b
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_12pXfbm1_repro  -s fakeSel -i MCl1loose__EpTCorr -S Target -b
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_12pXfbm1_repro  -s hadd -i MCl1loose__EpTCorr__fakeSel -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_12pXfbm1_repro  -s 3jetsSel -i MCl1loose__EpTCorr -S Target -b
+./mkGardener.py -p  07Jun2016_spring16_mAODv2_12pXfbm1_repro  -s hadd -i MCl1loose__EpTCorr__3jetsSel -S Target -b -E TTJets
 
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_12pXfbm1_repro  -s MCl1vloose -S Target -b
 ./mkGardener.py -p  07Jun2016_spring16_mAODv2_12pXfbm1_repro  -s EpTCorr -i MCl1vloose -S Target -b
