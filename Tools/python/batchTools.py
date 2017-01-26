@@ -157,7 +157,7 @@ class batchJobs :
      #print 'Adding to ',self.subDir+'/'+jName  
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      if 'iihe' in os.uname()[1] :
-        jFile.write('gfal-copy '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
+        jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
      else :
         jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' '+outputFile+'\n')
      jFile.close()
