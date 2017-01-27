@@ -301,32 +301,35 @@ class ShapeFactory:
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
                 # "massage" the list of nuisances accordingly
                 for nuisanceName, nuisance in nuisances.iteritems():         
-                  #print " nuisanceName = ", nuisanceName
-                  if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                    #print " nuisance = ", nuisance
-                    if 'samples' in nuisance.keys():
-                      if sampleName in nuisance['samples'].keys() :
-                        #print " stat nuisances for ", sampleName
-                        if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
-                          print 'In principle nothing to be done here ... just wait'
-                        if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
-                          # add N ad hoc nuisances, one for each bin
-                          for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                            if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
-                              #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
-                              #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
-                              mynuisances['ibin_' + str(iBin) + '_stat'] = {
-                                'samples'  : {   sampleName : '1.00', },
-                              }
-                            else :  # otherwise just add the new sample in the list of samples to be considered
-                              mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
-                  else :
-                    if nuisanceName not in mynuisances.keys() :
-                      if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
-                        pass
-                        #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
-                      else :
-                        mynuisances[nuisanceName] = nuisances[nuisanceName]
+
+                  if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) :   # run only if this nuisance will affect the phase space defined in "cut"
+                    
+                    #print " nuisanceName = ", nuisanceName
+                    if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                      #print " nuisance = ", nuisance
+                      if 'samples' in nuisance.keys():
+                        if sampleName in nuisance['samples'].keys() :
+                          #print " stat nuisances for ", sampleName
+                          if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+                            print 'In principle nothing to be done here ... just wait'
+                          if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                            # add N ad hoc nuisances, one for each bin
+                            for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                              if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
+                                #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
+                                #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
+                                mynuisances['ibin_' + str(iBin) + '_stat'] = {
+                                  'samples'  : {   sampleName : '1.00', },
+                                }
+                              else :  # otherwise just add the new sample in the list of samples to be considered
+                                mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
+                    else :
+                      if nuisanceName not in mynuisances.keys() :
+                        if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
+                          pass
+                          #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
+                        else :
+                          mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
                 # prepare the reference distribution
                 #if len(tgrMC_vy) == 0:
@@ -351,7 +354,10 @@ class ShapeFactory:
                   
                   histoUp = None
                   histoDown = None
-                  
+ 
+                  if not ( ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) ) :   # run only if this nuisance will affect the phase space defined in "cut"
+                    is_this_nuisance_to_be_considered = False
+ 
                   if is_this_nuisance_to_be_considered :
                     shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
                     #print "loading shape variation", shapeNameUp
