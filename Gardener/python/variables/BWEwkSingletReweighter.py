@@ -206,10 +206,6 @@ class BWEwkSingletReweighter(TreeCloner):
         else:
           print "Unknown process", productionProcess
           return
-        if shiftfile != "":
-          with open (shiftfile) as shiftfile_stream:
-            shifts = pickle.load(shiftfile_stream)
-            #print shifts[str(int(self.mH))]
 
         # only with the old JHU samples, which did not have proper decay weights for WW, we need to load the decay weights file.
         if "JHUGen698" in self.isNewJHU:
@@ -225,6 +221,11 @@ class BWEwkSingletReweighter(TreeCloner):
             minmass = min(allparams[str(int(self.mH))]["decayWeight"]['x'])
             maxmass = max(allparams[str(int(self.mH))]["decayWeight"]['x'])
             print "decay weights for mass", str(int(self.mH)), " available between", minmass, " and", maxmass 
+        if shiftfile != "":
+          with open (shiftfile) as shiftfile_stream:
+            shifts = pickle.load(shiftfile_stream)
+            #print shifts[str(int(self.mH))]
+
 
 
         # MELA reweighter
@@ -237,7 +238,7 @@ class BWEwkSingletReweighter(TreeCloner):
 
         #----------------------------------------------------------------------------------------------------
         print '- Starting eventloop'
-        step = 5000
+        step = 5000 
 
         for i in xrange(nentries):
 
@@ -296,7 +297,7 @@ class BWEwkSingletReweighter(TreeCloner):
                 name = 'cprime'+str(cprime)+"BRnew"+str(BRnew)
                 kprime = cprime**2;
                 #overallweight = kprime*(1-BRnew) 
-                gprime = self.Gprime(self.mH, kprime, BRnew);
+                gprime = self.Gprime(self.mH, kprime, BRnew)
                 if shiftfile != "":
                   shift = shifts[str(int(self.mH))]["cprime"+str(cprime)]["brnew"+str(BRnew)]["weight"]
                 self.oldBranchesToBeModifiedSimpleVariable[name][0] = (1./shift)*decayWeight*self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsm)/CPSweight
