@@ -40,6 +40,9 @@ class IdIsoSFFiller(TreeCloner):
         group.add_option( '--isoideleAlt', dest='idIsoScaleFactorsFileElectronAlternative', help='file with scale factors for isolation and id for electrons, alternative',     default=None)
         group.add_option( '--isoideleAltLumiRatio', dest='idIsoScaleFactorsFileElectronAlternativeLumiRatio', help='Luminosity ratio between first period and the whole', type='float'  ,    default=-1.0)
 
+        # new feature introduced for Full2016 (Jan 2017)
+        group.add_option( '--idEleKind'   , dest='idEleKind',            help='kind of electron id. This will allow to pick up the correct electron SF and give the right name',  default=None)   # e.g. "cut_WP_Tight80X"
+
         parser.add_option_group(group)
         return group
 
@@ -49,6 +52,8 @@ class IdIsoSFFiller(TreeCloner):
        
         # ~~~~
         idIsoScaleFactors = {}
+
+        self.idEleKind = opts.idEleKind
 
         cmssw_base = os.getenv('CMSSW_BASE')
         if opts.idScaleFactorsFileMu == None :
@@ -63,7 +68,11 @@ class IdIsoSFFiller(TreeCloner):
 
         if opts.idIsoScaleFactorsFileElectron == None :
           if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/electrons.txt'   
-          else :                          opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt' 
+          elif opts.cmssw == "Full2016" :
+            if self.idEleKind != None :
+              opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_' + self.idEleKind + '.txt'  
+          else :  
+              opts.idIsoScaleFactorsFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/electrons_Moriond76x.txt' 
         
         if opts.tkSCFileElectron == None :
           if opts.cmssw == "ICHEP2016" : 
@@ -71,6 +80,10 @@ class IdIsoSFFiller(TreeCloner):
       #      opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016/egammaEffi_nVtx.txt_SF2D.root'
           else :
             opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/eleRECO.txt.egamma_SF2D.root'
+ 
+          if opts.cmssw == "Full2016" :
+            opts.tkSCFileElectron = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/electron_Reco_egammaEffi.txt_EGM2D.root'
+
  
         if opts.cmssw == "ICHEP2016" :  opts.idIsoScaleFactorsFileElectronAlternative = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/electrons_firstPart.txt'   
  
@@ -81,6 +94,7 @@ class IdIsoSFFiller(TreeCloner):
         print "opts.tkSCFileElectron = ", opts.tkSCFileElectron
         print "opts.idIsoScaleFactorsFileElectron = ", opts.idIsoScaleFactorsFileElectron
         print "opts.idIsoScaleFactorsFileElectronAlternative = ", opts.idIsoScaleFactorsFileElectronAlternative
+        print "opts.idEleKind = ", opts.idEleKind
         
         file_idScaleFactorsFileMu  = open (opts.idScaleFactorsFileMu)
         file_isoTightScaleFactorsFileMu  = open (opts.isoTightScaleFactorsFileMu)
@@ -383,6 +397,14 @@ class IdIsoSFFiller(TreeCloner):
            'std_vector_lepton_idisoLooseW_Syst'                              
            ]
         
+
+        
+        if self.idEleKind != None :
+          self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind )
+          self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind + '_Up')
+          self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind + '_Down' )
+
+        
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
 
 
@@ -392,15 +414,6 @@ class IdIsoSFFiller(TreeCloner):
         self.otree.Branch('std_vector_lepton_recoW_Up',bvector_reco_Up)
         bvector_reco_Down =  ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_lepton_recoW_Down',bvector_reco_Down)
-
-        bvector_idiso =  ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_lepton_idisoW',bvector_idiso)
-        bvector_idiso_Up =  ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_lepton_idisoW_Up',bvector_idiso_Up)
-        bvector_idiso_Down =  ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_lepton_idisoW_Down',bvector_idiso_Down)
-        bvector_idiso_Syst =  ROOT.std.vector(float) ()
-        self.otree.Branch('std_vector_lepton_idisoW_Syst',bvector_idiso_Syst)
             
         bvector_idisoLoose =  ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_lepton_idisoLooseW',bvector_idisoLoose)
@@ -410,6 +423,27 @@ class IdIsoSFFiller(TreeCloner):
         self.otree.Branch('std_vector_lepton_idisoLooseW_Down',bvector_idisoLoose_Down)
         bvector_idisoLoose_Syst =  ROOT.std.vector(float) ()
         self.otree.Branch('std_vector_lepton_idisoLooseW_Syst',bvector_idisoLoose_Syst)
+            
+
+        if self.idEleKind != None :
+          bvector_idiso_eleUserDefined =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW' + self.idEleKind, bvector_idiso_eleUserDefined)
+          bvector_idiso_eleUserDefined_Up =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW' + self.idEleKind + '_Up', bvector_idiso_eleUserDefined_Up)
+          bvector_idiso_eleUserDefined_Down =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW' + self.idEleKind + '_Down', bvector_idiso_eleUserDefined_Down)
+          bvector_idiso_eleUserDefined_Syst =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW' + self.idEleKind + '_Syst', bvector_idiso_eleUserDefined_Syst)
+
+        else :
+          bvector_idiso =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW',bvector_idiso)
+          bvector_idiso_Up =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW_Up',bvector_idiso_Up)
+          bvector_idiso_Down =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW_Down',bvector_idiso_Down)
+          bvector_idiso_Syst =  ROOT.std.vector(float) ()
+          self.otree.Branch('std_vector_lepton_idisoW_Syst',bvector_idiso_Syst)
             
             
         nentries = self.itree.GetEntries()
@@ -433,15 +467,24 @@ class IdIsoSFFiller(TreeCloner):
             bvector_reco_Up.clear()
             bvector_reco_Down.clear()
 
-            bvector_idiso.clear()
-            bvector_idiso_Up.clear()
-            bvector_idiso_Down.clear()
-            bvector_idiso_Syst.clear()
-
             bvector_idisoLoose.clear()
             bvector_idisoLoose_Up.clear()
             bvector_idisoLoose_Down.clear()
             bvector_idisoLoose_Syst.clear()
+            
+            if self.idEleKind != None :
+              bvector_idiso_eleUserDefined.clear()
+              bvector_idiso_eleUserDefined_Up.clear()
+              bvector_idiso_eleUserDefined_Down.clear()
+              bvector_idiso_eleUserDefined_Syst.clear()
+            
+            else :
+              bvector_idiso.clear()
+              bvector_idiso_Up.clear()
+              bvector_idiso_Down.clear()
+              bvector_idiso_Syst.clear()
+  
+              
 
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
              
@@ -455,30 +498,54 @@ class IdIsoSFFiller(TreeCloner):
               elif abs (flavour) == 13 :
                 kindLep = 'mu'
  
-              #                                                              is tight lepton? 1=tight, 0=loose
-              w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   0,     itree.nvtx)
-             
-              #if kindLep == 'ele' : print " kindLep, pt, eta, w, ", kindLep, "  ", pt, "  ", eta, "  ", w
-              
-              bvector_idiso.push_back(w)
-              bvector_idiso_Up.push_back(w+error_w_up)
-              bvector_idiso_Down.push_back(w-error_w_lo)             
-              bvector_idiso_Syst.push_back(w+error_w_syst)             
+ 
+              # use the user defined names for id/iso
+              if self.idEleKind != None :
+                ##                                                              is tight lepton? 1=tight, 0=loose 
+                w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   0,     itree.nvtx)
+               
+                #if kindLep == 'ele' : print " kindLep, pt, eta, w, ", kindLep, "  ", pt, "  ", eta, "  ", w
+                
+                bvector_idiso_eleUserDefined.push_back(w)
+                bvector_idiso_eleUserDefined_Up.push_back(w+error_w_up)
+                bvector_idiso_eleUserDefined_Down.push_back(w-error_w_lo)             
+                bvector_idiso_eleUserDefined_Syst.push_back(w+error_w_syst)             
 
+              else :
+               
+                #                                                              is tight lepton? 1=tight, 0=loose
+                w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   0,     itree.nvtx)
+               
+                #if kindLep == 'ele' : print " kindLep, pt, eta, w, ", kindLep, "  ", pt, "  ", eta, "  ", w
+                
+                bvector_idiso.push_back(w)
+                bvector_idiso_Up.push_back(w+error_w_up)
+                bvector_idiso_Down.push_back(w-error_w_lo)             
+                bvector_idiso_Syst.push_back(w+error_w_syst)             
+  
+  
+              # the reco and loose (mu) ones are always defined 
+              # even if the userDefined electron id is set
+              # FIXME: possible improvements: 
+              #             - split electrons and muons? -> but then needed to be handled properly in mkShape
+              #             - create a matrix of all combinations: different muons id : different electron id -> tihs will absorb the "loose" ad hoc implementation
+  
               w, error_w_lo, error_w_up, error_w_syst = self._getWeight (kindLep, pt, eta, 1,                   1,     itree.nvtx)
              
               bvector_reco.push_back(w)
               bvector_reco_Up.push_back(w+error_w_up)
               bvector_reco_Down.push_back(w-error_w_lo)             
-
-
+  
+  
+  
               loose_w, error_loose_w_lo, error_loose_w_up, error_loose_w_syst = self._getWeight (kindLep, pt, eta, 0,       0,     itree.nvtx)
-             
+              
               bvector_idisoLoose.push_back(loose_w)
               bvector_idisoLoose_Up.push_back(loose_w+error_loose_w_up)
               bvector_idisoLoose_Down.push_back(loose_w-error_loose_w_lo)             
               bvector_idisoLoose_Syst.push_back(loose_w+error_loose_w_syst)             
-
+  
+                
 
             otree.Fill()
             savedentries+=1
