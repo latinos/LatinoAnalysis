@@ -251,6 +251,12 @@ def remoteFileSize(inputFile):
     else :
         return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
 
+def batchTest():
+    jobs = batchTools('Test','Test',['Test'],['Test'],['Step','Target'])
+    jobs.Add('Test','Test','echo Hello World')
+    jobs.Add('Test','Test','sleep 120')
+    jobs.Sub()
+
 #jobs = batchJobs('Gardening','21Oct_25ns',['MCInit','l2sel'],['WW','Top'],['Step','Target'])
 #jobs.Add('MCInit','WW','Hello')
 #jobs.Sub('8nm')

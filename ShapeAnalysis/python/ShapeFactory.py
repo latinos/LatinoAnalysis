@@ -371,7 +371,7 @@ class ShapeFactory:
         
         #---- now plot and save into output root file
         for cutName, cut in self._cuts.iteritems():
-          print "HERE supercut = ", supercut
+          #print "HERE supercut = ", supercut
           print "cut = ", cutName, " :: ", cut
 
           # create the list of events -> speed up!          
@@ -615,7 +615,7 @@ class ShapeFactory:
         inputs        :   the list of input files for this particular sample
         '''
         self._logger.info('filter Trees to speed up')
-        print "_filterTrees cut = ",cut
+        #print "_filterTrees cut = ",cut
         numTree = 0
 
         for tree in inputs:
