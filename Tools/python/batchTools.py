@@ -145,6 +145,8 @@ class batchJobs :
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        elif 'ifca' in os.uname()[1] :
+           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Gardening -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
@@ -193,6 +195,10 @@ def batchStatus():
             iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid  | awk \'{print $5}\' ').read()
             if 'Q' in iStat : Pend[iStep]+=1
             else: Runn[iStep]+=1
+          elif 'ifca' in os.uname()[1] :
+             iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Gardening  | awk \'{print $5}\' ').read()
+             if 'Q' in iStat : Pend[iStep]+=1
+             else: Runn[iStep]+=1
           else:
             iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
             if 'PEND' in iStat : Pend[iStep]+=1
@@ -252,7 +258,7 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
 
 def batchTest():
-    jobs = batchTools('Test','Test',['Test'],['Test'],['Step','Target'])
+    jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])
     jobs.Add('Test','Test','echo Hello World')
     jobs.Add('Test','Test','sleep 120')
     jobs.Sub()
