@@ -160,6 +160,8 @@ class batchJobs :
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      if 'iihe' in os.uname()[1] :
         jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
+     elif 'ifca' in os.uname()[1] :
+        jFile.write('cp /gpfs/gaes/cms' +inputFile+ ' /gpfs/gaes/cms'+outputFile+'\n')
      else :
         jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' /eos/cms'+outputFile+'\n')
      jFile.close()
@@ -240,6 +242,8 @@ def lsListCommand(inputDir):
     "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
     if 'iihe' in os.uname()[1] :
         return "ls -1 /pnfs/iihe/cms" + inputDir
+    elif 'ifca' in os.uname()[1] :
+        return "ls -1 /gpfs/gaes/cms" + inputDir
     else :
         return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDirinputDir
     
@@ -247,6 +251,8 @@ def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"
     if 'iihe' in os.uname()[1] :
         return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
+    elif 'ifca' in os.uname()[1] :
+       return "/gpfs/gaes/cms" + inputFile
     else :
         return inputFile
     
@@ -254,6 +260,8 @@ def remoteFileSize(inputFile):
     "Returns file size in byte for file on remote server (/store/.../*.root)"
     if 'iihe' in os.uname()[1] :
         return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'ifca' in os.uname()[1] :
+        return subprocess.check_output("ls -l /gpfs/gaes/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
         return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
 
