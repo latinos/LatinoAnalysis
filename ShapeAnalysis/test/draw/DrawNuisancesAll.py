@@ -28,6 +28,7 @@ if __name__ == '__main__':
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
     parser.add_option('--samplesFile'    , dest='samplesFile'    , help='file with samples'                          , default=None )
     parser.add_option('--cutName'        , dest='cutName'        , help='cut names'                                  , default=None )
+    parser.add_option('--splitStat'      , dest='splitStat'      , help='draw statistics one bin per plot'           , default=None )
     parser.add_option('--dryRun'         , dest='dryRun'         , help='allow a dry run only '                      , default=None )
 
 
@@ -41,6 +42,7 @@ if __name__ == '__main__':
     print " samplesFile =         ", opt.samplesFile
     print " outputDirPlots =      ", opt.outputDirPlots
     print " cutName =             ", opt.cutName
+    print " splitStat =           ", opt.splitStat
     print " dryRun  =             ", opt.dryRun
     
     
@@ -101,29 +103,34 @@ if __name__ == '__main__':
               texOutputFile.write('\\\\')
             texOutputFile.write('\n')
 
-
         else :
           if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
             if 'samples' in nuisance.keys():
               if sampleName in nuisance['samples'].keys() :
-                for iBin in range(1, nbins): # max number of bins
-                  nameDown = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_' + str(iBin) + '_stat' + 'Down'
-                  nameUp   = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_' + str(iBin) + '_stat' + 'Up'
-                  # print " nameUp = ", nameUp
-                  # e.g.  CMS_hww2l2v_13TeV_of1j_ggH_hww_ibin_1_stat
-                  
-                  if nameDown in ROOTinputFile.GetListOfKeys() :
-                    print ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
-                    if opt.dryRun == None :
-                      os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
-  
-                    texOutputFile.write('\\includegraphics[width=0.10\\textwidth]{Figs/Nuisance/'+ opt.outputDirPlots + '/cc_' + nameUp +'.png}')
+                if opt.splitStat == None :  
+                  nameDown = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_'
+                  nameUp   = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_'
+                  print ('root -b -q DrawNuisancesStat.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+                  if opt.dryRun == None :
+                    os.system ('root -b -q DrawNuisancesStat.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+
+                else :
+                  for iBin in range(1, nbins): # max number of bins
+                    print iBin
+                    nameDown = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_' + str(iBin) + '_stat' + 'Down'
+                    nameUp   = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_' + str(iBin) + '_stat' + 'Up'         
+                    if nameDown in ROOTinputFile.GetListOfKeys() :
+                      print ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+                      if opt.dryRun == None :
+                        os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+                      
+                  texOutputFile.write('\\includegraphics[width=0.10\\textwidth]{Figs/Nuisance/'+ opt.outputDirPlots + '/cc_' + nameUp +'.png}')
                     
-                    counterNuisance += 1
-                    if counterNuisance >= 9 :
-                      counterNuisance = 0
-                      texOutputFile.write('\\\\')
-                    texOutputFile.write('\n')
+                  counterNuisance += 1
+                  if counterNuisance >= 9 :
+                    counterNuisance = 0
+                    texOutputFile.write('\\\\')
+                  texOutputFile.write('\n')
             
   
       texOutputFile.write('\\\\ \n')      
