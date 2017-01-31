@@ -1149,7 +1149,7 @@ float WW::mT2(){
   double mT2 = 0.;
 
   double met = 10;
-  double PI = 3.14159266;
+  double xPI = 3.14159266;
 
   const int nParametri = 2;
   TMinuit minuit(nParametri);
@@ -1162,7 +1162,7 @@ float WW::mT2(){
   double par[nParametri]={met/2.,0.0};
   double stepSize[nParametri]={met/100.,0.001};
   double minVal[nParametri]={met/100.,0.0};
-  double maxVal[nParametri]={30.*met,2.*PI};
+  double maxVal[nParametri]={30.*met,2.*xPI};
   string parName[nParametri]={"met1","metphi1"};
   for (int i=0; i<nParametri; i++){
    minuit.DefineParameter(i,parName[i].c_str(),par[i],stepSize[i],minVal[i],maxVal[i]);

@@ -36,6 +36,10 @@ from LatinoAnalysis.Gardener.variables.lepScaleCorrector          import LeptonP
 from LatinoAnalysis.Gardener.variables.wwNLLcorrectionWeight      import wwNLLcorrectionWeightFiller
 from LatinoAnalysis.Gardener.variables.qq2vvEWKcorrectionsWeight  import qq2vvEWKcorrectionsWeightFiller
 
+# qqWZ and qqZZ corrections
+from LatinoAnalysis.Gardener.variables.qq2wzEWKcorrectionsWeight  import qq2wzEWKcorrectionsWeightFiller
+from LatinoAnalysis.Gardener.variables.qq2zzEWKcorrectionsWeight  import qq2zzEWKcorrectionsWeightFiller
+
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
 from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
@@ -165,8 +169,12 @@ if __name__ == '__main__':
 
 # add nll re-weight for ww
     modules['wwNLLcorrections']      =  wwNLLcorrectionWeightFiller()
+# add ewk re-weight for ww
     modules['wwEWKcorrections']      =  qq2vvEWKcorrectionsWeightFiller()
 
+# add ewk re-weight for wz and zz
+    modules['wzEWKcorrections']      =  qq2wzEWKcorrectionsWeightFiller()
+    modules['zzEWKcorrections']      =  qq2zzEWKcorrectionsWeightFiller()
 
 # add bpog SF
     modules['btagPogScaleFactors']   = btagPogScaleFactors()

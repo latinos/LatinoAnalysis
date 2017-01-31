@@ -57,7 +57,19 @@ class Worker(threading.Thread):
         infile += "factory._lumi      = "+str(lumi)+"\n"
         infile += "factory._tag       = '"+str(tag)+"'\n"
 
-        infile += "factory.makeNominals('"+inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts)+","+str(samples)+","+str(nuisances)+",'"+supercut+"',"+str(number)+")\n"
+        #infile += "factory.makeNominals('"+inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts)+","+str(samples)+","+str(nuisances)+",'"+supercut+"',"+str(number)+")\n"
+
+        infile += "factory.makeNominals(   \n"
+        infile += "     '" + inputDir+"',    \n"
+        infile += "     '"+outputDir+"',     \n"
+        infile += "      "+str(variables)+", \n"
+        infile += "      "+str(cuts)+",      \n"
+        infile += "      "+str(samples)+",   \n"
+        infile += "      "+str(nuisances)+", \n"
+        infile += "     '"+supercut+"',      \n"
+        infile += "      "+str(number)+")    \n"
+
+
         sub_file = open("sub"+str(number)+".py","w")
         sub_file.write(infile)
         sub_file.close()
@@ -98,11 +110,13 @@ if __name__ == '__main__':
     parser.add_option('--inputDir'       , dest='inputDir'       , help='input directory'                            , default='./data/')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None)
     parser.add_option('--doBatch'        , dest='doBatch'        , help='Run on batch'                               , default=False)
-    parser.add_option('--batchSplit'     , dest="batchSplit", help="Splitting mode for batch jobs"        , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
+    parser.add_option('--batchQueue'     , dest='batchQueue'     , help='Queue on batch'                             , default='')
+    parser.add_option('--batchSplit'     , dest="batchSplit"     , help="Splitting mode for batch jobs"              , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
     parser.add_option('--doHadd'         , dest='doHadd'         , help='Hadd for batch mode'                        , default=False)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=os.sysconf('SC_NPROCESSORS_ONLN'))
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
+    parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -217,12 +231,32 @@ if __name__ == '__main__':
 
                 iStep='ALL'
                 if 'Cuts' in opt.batchSplit : iStep=cut_k  
-                iTarget='ALL'  
+                
+                iTarget='ALL'
                 if 'Samples' in opt.batchSplit : iTarget = sam_k
-                jName=iStep+'_'+iTarget  
-                jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
+                
+                jName = iStep + '_' + iTarget
+                
+                instructions_for_configuration_file  = ""
+                instructions_for_configuration_file += "factory.makeNominals(   \n"
+                instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
+                instructions_for_configuration_file += "     '" + outputDir + "',     \n"
+                instructions_for_configuration_file += "      " + str(variables) + ", \n"
+                instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
+                instructions_for_configuration_file += "      " + str(samples_new) + ",   \n"
+                instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
+                instructions_for_configuration_file += "     '" + supercut + "',      \n"
+                instructions_for_configuration_file += "     '" + jName + "')    \n"
 
-            jobs.Sub()
+                #jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
+                jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
+                    
+            #if 'knu' in os.uname()[1]:
+              #jobs.Sub(opt.batchQueue)
+            #else:
+            #print " opt.batchQueue = ", opt.batchQueue
+            jobs.Sub(opt.batchQueue,opt.IiheWallTime)
+
 
     elif opt.doHadd != 0:
             print "~~~~~~~~~~~ mkShape on Batch : Hadd"

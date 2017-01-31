@@ -110,7 +110,8 @@ float qq2vvEWKcorrections::getqq2WWEWKCorr(
  //                        float Energy = 8000.
 ) {
  
- float Energy = 8000.;
+//  float Energy = 8000.;
+ float Energy = 6500.;   //---- 13 TeV ??? Was this wrong before?
  // Create lepton and neutrino vectors
  TLorentzVector l1;
  TLorentzVector l2;

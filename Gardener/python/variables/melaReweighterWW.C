@@ -138,7 +138,7 @@ float MelaReweighterWW::weightStoI(bool isVBF, const int& id_l1,  const int& id_
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //
   _mela->computeP(meSpow, false);
-
+    
   //float meS;
   //_mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF : TVar::ZZGG);
   // Added here -- U. Sarica
@@ -167,8 +167,7 @@ float MelaReweighterWW::weightStoI(bool isVBF, const int& id_l1,  const int& id_
     _mela->computeP(meHBI, false);
   else
     _mela->computeProdP(meHBI, false);
-  
-
+   
 
   //float meB;
   //_mela->setProcess(TVar::bkgWW, TVar::MCFM, isVBF ? TVar::JJVBF : TVar::ZZGG);

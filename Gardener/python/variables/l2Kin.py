@@ -32,6 +32,7 @@ class L2KinFiller(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763', type='string')
+        group.add_option("-m" , "--met" , dest="met", help="PFMET correction" , default=False  , action="store_true")
         parser.add_option_group(group)
         return group
 
@@ -39,6 +40,8 @@ class L2KinFiller(TreeCloner):
 
         self.cmssw = opts.cmssw
         print " cmssw = ", self.cmssw
+        self.met = opts.met
+        print " MET CORR = ", self.met
 
                     
     def process(self,**kwargs):
@@ -175,19 +178,22 @@ class L2KinFiller(TreeCloner):
             if self.cmssw == '74x' :
                 met = itree.pfType1Met          # formerly pfType1Met
                 metphi = itree.pfType1Metphi    # formerly pfType1Metphi
+                sumet  = 0.000000001
 
             else : 
+              if self.met :
+                met = itree.corrMetPfType1
+                metphi = itree.corrMetPfType1Phi
+                sumet = itree.metPfType1SumEt
+              else:
                 met = itree.metPfType1      
                 metphi = itree.metPfType1Phi
-                WW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
                 sumet = itree.metPfType1SumEt
+
+              WW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
                 
-            WW.setSumET(sumet)
-                
-                
-            
             WW.setMET(met, metphi)
- 
+            WW.setSumET(sumet)
             WW.checkIfOk()
 
  

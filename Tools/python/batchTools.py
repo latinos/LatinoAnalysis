@@ -21,8 +21,8 @@ class batchJobs :
      self.subDir   = jobDir+'/'+baseName+'__'+prodName
      if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)     
 
-     print stepList 
-     print batchSplit
+     #print stepList 
+     #print batchSplit
 
      # Init Steps
      for iStep in stepList:
@@ -57,13 +57,20 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+       elif 'knu' in os.uname()[1]:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('#$ -q all.q\n')
+         jFile.write('#$ -cwd\n')
        else:
-         jFile.write('export X509_USER_PROXY=/user/xjanssen/.proxy\n')
+         jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
-       jFile.write('ulimit -c 0\n')
+       if 'knu' in os.uname()[1]:
+	 pass
+       else:
+	 jFile.write('ulimit -c 0\n')
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
@@ -77,11 +84,11 @@ class batchJobs :
      # Create Proxy at IIHE
      if 'iihe'  in os.uname()[1]:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
-       os.system('cp $X509_USER_PROXY /user/xjanssen/.proxy')
+       os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
-     print 'Adding to ',self.subDir+'/'+jName  
+     #print 'Adding to ',self.subDir+'/'+jName  
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      jFile.write(command+'\n')
      jFile.close()
@@ -109,7 +116,7 @@ class batchJobs :
      pFile.close()
 
 
-   def Sub(self,queue='8nh'): 
+   def Sub(self,queue='8nh',IiheWallTime='168:00:00'): 
      os.system('cd '+self.subDir)
      for jName in self.jobsList:
         print self.subDir+'/'+jName
@@ -121,21 +128,39 @@ class batchJobs :
         jFile.write('mv '+jidFile+' '+jidFile.replace('.jid','.done') )
         jFile.close()
         jidFile=self.subDir+'/'+jName+'.jid'
-        print 'Submit',jName
+        print 'Submit',jName, ' on ', queue
         if 'iihe' in os.uname()[1] : 
           queue='localgrid@cream02'
-          QSOPT=''
+          QSOPT='-l walltime='+IiheWallTime
           nTry=0
           while nTry < 5 : 
             nTry+=1
             jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             print 'TRY #:', nTry , '--> Jobid : ' , jobid
             if jobid == 0 : nTry = 999
+            else:  os.system('rm '+jidFile)
 
+	elif 'knu' in os.uname()[1]:
+          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+
+   def AddCopy (self,iStep,iTarget,inputFile,outputFile):
+     "Copy file from local to remote server (outputFile = /store/...)"
+     
+     jName= self.jobsDic[iStep][iTarget]
+     #print 'Adding to ',self.subDir+'/'+jName  
+     jFile = open(self.subDir+'/'+jName+'.sh','a') 
+     if 'iihe' in os.uname()[1] :
+        jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
+     else :
+        jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' /eos/cms'+outputFile+'\n')
+     jFile.close()
 
 def batchStatus():
     fileCmd = 'ls '+jobDir
@@ -204,6 +229,33 @@ def batchClean():
         os.rmdir(jobDir+'/'+iDir) 
       except :
         print 'Some jobs still ongoing in: '+ iDir
+
+def lsListCommand(inputDir):
+    "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
+    if 'iihe' in os.uname()[1] :
+        return "ls -1 /pnfs/iihe/cms" + inputDir
+    else :
+        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDirinputDir
+    
+def rootReadPath(inputFile):
+    "Returns path to read a root file (/store/.../*.root) on the remote server"
+    if 'iihe' in os.uname()[1] :
+        return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
+    else :
+        return inputFile
+    
+def remoteFileSize(inputFile):
+    "Returns file size in byte for file on remote server (/store/.../*.root)"
+    if 'iihe' in os.uname()[1] :
+        return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    else :
+        return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
+
+def batchTest():
+    jobs = batchTools('Test','Test',['Test'],['Test'],['Step','Target'])
+    jobs.Add('Test','Test','echo Hello World')
+    jobs.Add('Test','Test','sleep 120')
+    jobs.Sub()
 
 #jobs = batchJobs('Gardening','21Oct_25ns',['MCInit','l2sel'],['WW','Top'],['Step','Target'])
 #jobs.Add('MCInit','WW','Hello')
