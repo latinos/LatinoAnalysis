@@ -371,6 +371,7 @@ class ShapeFactory:
         
         #---- now plot and save into output root file
         for cutName, cut in self._cuts.iteritems():
+          print "HERE supercut = ", supercut
           print "cut = ", cutName, " :: ", cut
 
           # create the list of events -> speed up!          
@@ -614,11 +615,12 @@ class ShapeFactory:
         inputs        :   the list of input files for this particular sample
         '''
         self._logger.info('filter Trees to speed up')
-
+        print "_filterTrees cut = ",cut
         numTree = 0
 
         for tree in inputs:
           globalCut = "(" + cut + ") * (" + global_weight + ")"  
+          #print "_filterTrees globalCut = ",globalCut
           # if weights vector is not given, do not apply file dependent weights
           if len(weights) != 0 :
             # if weight is not given for a given root file, '-', do not apply file dependent weight for that root file
@@ -634,11 +636,13 @@ class ShapeFactory:
           #myList = ROOT.TEntryList(tree)
           tree.Draw('>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName, globalCut, "entrylist");
           #gDirectory = ROOT.gROOT.GetGlobal("gDirectory")
+          #gDirectory.Print()
           #myList = gDirectory.Get("myList")
+          #myList.Print("all")
           # apply the list
+          #print " BEFORE List --> ", tree.GetEntries()
           tree.SetEntryList(myList)
-          
-          #print " --> ", tree.GetEntries()
+          #print " AFTER List --> ", tree.GetEntries()
           
           numTree += 1
 
