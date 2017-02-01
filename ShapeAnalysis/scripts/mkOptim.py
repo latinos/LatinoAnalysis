@@ -15,6 +15,8 @@ if __name__ == '__main__':
     parser.add_option('--outputDirDatacard' , dest='outputDirDatacard' , help='output directory'                          , default='./')   
     parser.add_option('--combineLocation'   , dest='combineLocation'   , help='Combine CMSSW Directory'                   , default='./')   
     parser.add_option('--fomList'           , dest='fomList'           , help='List of Gigure of Merit'  , default=['SExpPre'] , type='string' , action='callback' , callback=list_maker('fomList',','))
+    parser.add_option('--combcfg'           , dest='combcfg'           , help='Combination disctionnary'                  , default='NONE')
+
  
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -38,16 +40,30 @@ if __name__ == '__main__':
     # Create Needed dictionnary
 
     variables = {}
-    if os.path.exists(opt.variablesFile) :
-      handle = open(opt.variablesFile,'r')
-      exec(handle)
-      handle.close()
-
     cuts = {}
-    if os.path.exists(opt.cutsFile) :
-      handle = open(opt.cutsFile,'r')
+
+    # And COMBINATION 
+    combs = {}
+    if os.path.exists(opt.combcfg) :
+      handle = open(opt.combcfg,'r')
       exec(handle)
       handle.close()
+      variables['comb'] = {}
+      for iComb in combs : cuts[iComb] = {}
+       
+    # ELSE use default set of cards and cuts 
+    else:
+
+      if os.path.exists(opt.variablesFile) :
+        handle = open(opt.variablesFile,'r')
+        exec(handle)
+        handle.close()
+
+      if os.path.exists(opt.cutsFile) :
+        handle = open(opt.cutsFile,'r')
+        exec(handle)
+        handle.close()
+
 
     for iVar in variables :
       for iCut in cuts:
