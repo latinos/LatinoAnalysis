@@ -1,51 +1,75 @@
+//histo_monoH_600_300_CMS_monoH_MVA_em_monoH_600_300_ibin_23_statUp
+//histo_monoH_600_300
 
-void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./" ) {
+void DrawNuisancesStat(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./") {
  
  gStyle->SetOptStat(0);
  
  gStyle->SetPadTopMargin(0.21);
  
- TCanvas* cc = new TCanvas("cc","",800,600);
- 
  TFile* file = new TFile (inputRootFile.c_str(),"READ");
 
  TH1F* hNominal = (TH1F*) file->Get(histoNominal.c_str());
  hNominal->SetTitle("");
- TH1F* hUp = (TH1F*) file->Get(histo_up.c_str());
- TH1F* hDo = (TH1F*) file->Get(histo_down.c_str());
-
  hNominal->SetLineColor(kBlue);
  hNominal->SetLineWidth(5);
-
- hUp->SetLineColor(kRed);
- hUp->SetLineWidth(2);
- hUp->SetLineStyle(2);
  
- hDo->SetLineColor(kMagenta);
- hDo->SetLineWidth(2);
- hDo->SetLineStyle(2);
- 
- Float_t max = hNominal->GetMaximum();
- if (hUp->GetMaximum() > max)
-   max = hUp->GetMaximum();
- if (hDo->GetMaximum() > max)
-   max = hDo->GetMaximum();
-
- hNominal->GetYaxis()->SetRangeUser(0,max*1.2);
-
- hNominal->Draw("histo");
- hUp->Draw("histo same");
- hDo->Draw("histo same");
+ TH1F* hUpTot = (TH1F*) hNominal->Clone("Up");
+ hUpTot -> SetTitle("StatUp");
+ TH1F* hDoTot = (TH1F*) hNominal->Clone("Do");
+ hDoTot -> SetTitle("StatDown");
  
  TLegend* leg = new TLegend(0.1,0.8,0.9,0.99);
  leg->SetFillColor(kWhite);
  leg->AddEntry(hNominal,histoNominal.c_str(),"l");
- leg->AddEntry(hUp,histo_up.c_str(),"l");
- leg->AddEntry(hDo,histo_down.c_str(),"l");
- leg->Draw();
+ leg->AddEntry(hUpTot,"StatUp","l");
+ leg->AddEntry(hDoTot,"StatDown","l");
  
+ std::string my_histo_up   = histo_up;
+ std::string my_histo_down = histo_down;
+
+ //Building StatUp and StatDo Tot Histograms
+ for (int i = 1; i < hNominal->GetNbinsX()+1; i++) {
+   
+   my_histo_up   = histo_up;
+   my_histo_up += std::to_string(i);
+   my_histo_up += "_statUp";
+   
+   my_histo_down = histo_down;
+   my_histo_down += std::to_string(i);
+   my_histo_down += "_statDown";
+   
+   TH1F* hUp = (TH1F*) file->Get(my_histo_up.c_str());
+   TH1F* hDo = (TH1F*) file->Get(my_histo_down.c_str());
+
+   hUpTot->SetBinContent(i, hUp->GetBinContent(i));
+   hDoTot->SetBinContent(i, hDo->GetBinContent(i));
+ }
+
+ hUpTot->SetLineColor(kRed);
+ hDoTot->SetLineColor(kMagenta);
+
+ hUpTot->SetLineWidth(2);
+ hUpTot->SetLineStyle(2);
+
+ hDoTot->SetLineWidth(2);
+ hDoTot->SetLineStyle(2);
+
+ Float_t max = hNominal->GetMaximum();
+ if (hUpTot->GetMaximum() > max)
+   max = hUpTot->GetMaximum();
+ if (hDoTot->GetMaximum() > max)
+   max = hDoTot->GetMaximum();
+ 
+ hNominal->GetYaxis()->SetRangeUser(0,max*1.2);
+
+ TCanvas* cc = new TCanvas("cc","",800,600);
+ cc->cd();
+ hNominal->Draw("histo");
+ hUpTot  ->Draw("histo,same");
+ hDoTot  ->Draw("histo,same");
+ leg     ->Draw("same");
  gPad->SetGrid();
- 
  
  //---- ratio plot
  TCanvas* ccRatio = new TCanvas("ccRatio","",800,600);
@@ -61,8 +85,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
   hReferenceRatio->SetBinContent(iBin+1, 1.);
  }
  
- TH1F* hRatioUp = (TH1F*) hUp->Clone("Up");
- TH1F* hRatioDo = (TH1F*) hDo->Clone("Do");
+ TH1F* hRatioUp = (TH1F*) hUpTot->Clone("Up");
+ TH1F* hRatioDo = (TH1F*) hDoTot->Clone("Do");
  
  for (int iBin = 0; iBin < hReferenceRatio->GetNbinsX(); iBin++) {
    float ratio = 1;
@@ -97,12 +121,9 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  leg->Draw(); 
  gPad->SetGrid();
  
+ gPad->SetGrid();
  
  TString name;
- // name = Form ("%s/cratio_%s.png", outputDirPlots.c_str(), histo_up.c_str());
- // ccRatio->SaveAs( name.Data() );
- // name = Form ("%s/cc_%s.png", outputDirPlots.c_str(), histo_up.c_str());
- // cc->SaveAs( name.Data() );
 
  TCanvas* ccFull = new TCanvas("ccFull","",800,800);
  TPad*    pad1   = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
@@ -119,8 +140,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  pad1 -> cd();
 
  hNominal -> Draw("histo");
- hUp      -> Draw("histo same");
- hDo      -> Draw("histo same");
+ hUpTot   -> Draw("histo same");
+ hDoTot   -> Draw("histo same");
 
  leg  -> Draw(); 
  gPad -> SetGrid();

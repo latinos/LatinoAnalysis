@@ -145,6 +145,8 @@ class batchJobs :
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        elif 'ifca' in os.uname()[1] :
+          jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
@@ -158,6 +160,8 @@ class batchJobs :
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      if 'iihe' in os.uname()[1] :
         jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
+     elif 'ifca' in os.uname()[1] :
+        jFile.write('mv '+inputFile+' '+outputFile+'\n')
      else :
         jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' '+outputFile+'\n')
      jFile.close()
@@ -190,7 +194,11 @@ def batchStatus():
         if os.path.isfile(jidFile):
 #         print jidFile
           if 'iihe' in os.uname()[1] :
-            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid  | awk \'{print $5}\' ').read()
+            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
+            if 'Q' in iStat : Pend[iStep]+=1
+            else: Runn[iStep]+=1
+          elif 'ifca' in os.uname()[1] :
+            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
             if 'Q' in iStat : Pend[iStep]+=1
             else: Runn[iStep]+=1
           else:
@@ -234,8 +242,10 @@ def lsListCommand(inputDir):
     "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
     if 'iihe' in os.uname()[1] :
         return "ls -1 /pnfs/iihe/cms" + inputDir
+    elif 'ifca' in os.uname()[1] :
+        return "ls " + inputDir
     else :
-        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDirinputDir
+        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
     
 def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"
@@ -248,11 +258,13 @@ def remoteFileSize(inputFile):
     "Returns file size in byte for file on remote server (/store/.../*.root)"
     if 'iihe' in os.uname()[1] :
         return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'ifca' in os.uname()[1] :
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
         return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
 
 def batchTest():
-    jobs = batchTools('Test','Test',['Test'],['Test'],['Step','Target'])
+    jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])
     jobs.Add('Test','Test','echo Hello World')
     jobs.Add('Test','Test','sleep 120')
     jobs.Sub()
