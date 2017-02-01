@@ -258,7 +258,7 @@ def remoteFileSize(inputFile):
     "Returns file size in byte for file on remote server (/store/.../*.root)"
     if 'iihe' in os.uname()[1] :
         return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
-    if 'ifca' in os.uname()[1] :
+    elif 'ifca' in os.uname()[1] :
         return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
         return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
