@@ -5,8 +5,6 @@ import os.path
 
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 
-#from HWWAnalysis.ShapeAnalysis.triggerEffCombiner import TriggerEff
-
 #___.    __                __________              _________                          ___________              __                       
 #\_ |___/  |______     ____\______   \____   ____ /   _____/ ____ _____ _______   ____\_   _____/____    _____/  |_  ___________  ______
 # | __ \   __\__  \   / ___\|     ___/  _ \ / ___\\_____  \_/ ___\\__  \\_  __ \_/ __ \|    __) \__  \ _/ ___\   __\/  _ \_  __ \/  ___/
@@ -31,15 +29,13 @@ class allBtagPogScaleFactors(TreeCloner):
         group.add_option('-c','--cmssw',dest='cmssw',help='cmssw version req for met vars',default='763')
         return group
 
-    #def checkOptions(self,opts):
-    #    pass
     def checkOptions(self,opts):
-    #def _readSF (self):
-        #ROOT.gSystem.Load('libCondFormatsBTagObjects') 
         cmssw_base = os.getenv('CMSSW_BASE')
         effFile = "data/efficiencyMCFile76X_all.py"
         if opts.cmssw == "ICHEP2016":
           effFile = "data/efficiencyMCFile80X_all.py"
+        if opts.cmssw == "Rereco2016":
+          effFile = "data/efficiencyMCFile80X_all.py" ##FIXME USE NEW MC EFFICIENCY FILE
 
         efficienciesMC_CMVA = {}
         efficienciesMC_CSV = {}
@@ -65,11 +61,6 @@ class allBtagPogScaleFactors(TreeCloner):
         self.mineta = 0
         self.maxeta = 2.4
         
-        wpl = 0
-        wpm = 1
-        wpt = 2
-        wps = 3
-
         #compile code to read scale factors
         self.cmssw = opts.cmssw
 
@@ -78,91 +69,68 @@ class allBtagPogScaleFactors(TreeCloner):
         if self.cmssw == "ICHEP2016":
           self.cmvaSfFile = "cMVAv2_ICHEP2016.csv"
           self.csvSfFile  = "CSVv2_ICHEP2016.csv"
+        if self.cmssw == "Rereco2016":
+          self.cmvaSfFile = 'cMVAv2_Moriond17.csv'  ## cMVAv2_Moriond17.csv == cMVAv2_Moriond17_BtoH.csv
+          self.csvSfFile = 'CSVv2_Moriond17.csv'  ## CSVv2_Moriond17.csv == CSVv2_Moriond17_BtoH.csv
+          #self.cmvaSfFile_BtoF = "cMVAv2_Moriond17_BtoF.csv"
+          #self.cmvaSfFile_GtoH = "cMVAv2_Moriond17_GtoH.csv"
+          #self.csvSfFile_BtoF  = "CSVv2_Moriond17_BtoF.csv"
+          #self.csvSfFile_GtoH  = "CSVv2_Moriond17_GtoH.csv"
 
-        #ROOT.gROOT.ProcessLine(".L "+cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandaloneStandalone.cc+')
-        try:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc+g')
-        except RuntimeError:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc++g')
-        #ROOT.gROOT.ProcessLine('.L BTagCalibrationStandaloneStandalone.cc+') 
         print "CMVA scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile
         print "CSVv2 scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile
-        ### Readers for cMVAv2 re-shaping (1 nominal + 9 Up variations + 9 Down variations)
-        self.calibCMVA = ROOT.BTagCalibrationStandalone("cMVAv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
-        if self.cmssw != "ICHEP2016": 
-          self.readerCentralCMVAshape = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "central")
-          self.readerCentralCMVAshape_up_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_jes")
-          self.readerCentralCMVAshape_down_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_jes")
-          self.readerCentralCMVAshape_up_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_lf")
-          self.readerCentralCMVAshape_down_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_lf")
-          self.readerCentralCMVAshape_up_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_hfstats1")
-          self.readerCentralCMVAshape_down_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_hfstats1")
-          self.readerCentralCMVAshape_up_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_hfstats2")
-          self.readerCentralCMVAshape_down_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_hfstats2")
-          self.readerCentralCMVAshape_up_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_cferr1")
-          self.readerCentralCMVAshape_down_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_cferr1")
-          self.readerCentralCMVAshape_up_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_cferr2")
-          self.readerCentralCMVAshape_down_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_cferr2")
-          self.readerCentralCMVAshape_up_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_hf")
-          self.readerCentralCMVAshape_down_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_hf")
-          self.readerCentralCMVAshape_up_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_lfstats1")
-          self.readerCentralCMVAshape_down_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_lfstats1")
-          self.readerCentralCMVAshape_up_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "up_lfstats2")
-          self.readerCentralCMVAshape_down_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, wps, "iterativefit", "down_lfstats2")
 
-        ### Readers for CSVv2 re-shaping (1 nominal + 9 Up variations + 9 Down variations)
-        self.calibCSV  = ROOT.BTagCalibrationStandalone("CSVv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile)
-        if self.cmssw != "ICHEP2016":  
-          self.readerCentralCSVshape = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "central")
-          self.readerCentralCSVshape_up_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_jes")
-          self.readerCentralCSVshape_down_jes = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_jes")
-          self.readerCentralCSVshape_up_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_lf")
-          self.readerCentralCSVshape_down_lf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_lf")
-          self.readerCentralCSVshape_up_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_hfstats1")
-          self.readerCentralCSVshape_down_hfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_hfstats1")
-          self.readerCentralCSVshape_up_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_hfstats2")
-          self.readerCentralCSVshape_down_hfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_hfstats2")
-          self.readerCentralCSVshape_up_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_cferr1")
-          self.readerCentralCSVshape_down_cferr1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_cferr1")
-          self.readerCentralCSVshape_up_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_cferr2")
-          self.readerCentralCSVshape_down_cferr2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_cferr2")
-          self.readerCentralCSVshape_up_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_hf")
-          self.readerCentralCSVshape_down_hf = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_hf")
-          self.readerCentralCSVshape_up_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_lfstats1")
-          self.readerCentralCSVshape_down_lfstats1 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_lfstats1")
-          self.readerCentralCSVshape_up_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "up_lfstats2")
-          self.readerCentralCSVshape_down_lfstats2 = ROOT.BTagCalibrationStandaloneReader(self.calibCSV, wps, "iterativefit", "down_lfstats2")
+        ROOT.gSystem.Load('libCondFormatsBTauObjects')
+        ROOT.gSystem.Load('libCondToolsBTau')
 
-        ### Readers for CMVA and CSV working point based 
-
+        self.wpreshape = 3 
         self.wps = ["L", "M", "T"]
         self.taggers=["CMVA", "CSV"]
-        self.flavors=["udsg", "bc"]  
+        self.loadflavors=[0,1,2] # 0 is for b flavour, 1: FLAV_C, 2: FLAV_UDSG
+        self.flavors=["udsg","bc"]
         self.variations=["central", "up", "down"]
+        self.reshape_variations = ["central","up_jes","up_lf","up_hfstats1","up_hfstats2","up_cferr1","up_cferr2","up_hf","up_lfstats1","up_lfstats2","down_jes","down_lf","down_hfstats1","down_hfstats2","down_cferr1","down_cferr2","down_hf","down_lfstats1","down_lfstats2"]
+
+        self.calibs = {}
+        for tagger in self.taggers:
+          if tagger == "CMVA":
+            self.calibs[tagger] = ROOT.BTagCalibration("cMVAv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
+          elif tagger == "CSV":
+            self.calibs[tagger] = ROOT.BTagCalibration("CSVv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile)
+          else:
+            print "Error: tagger not found!"
+            break
+
+        self.reshape_sys = getattr(ROOT, 'vector<string>')()
+        for var in self.reshape_variations:
+          if var == "central": continue
+          self.reshape_sys.push_back(var)
+
+        self.reshape_readers = {}
+        for tagger in self.taggers:
+          self.reshape_readers[tagger] = ROOT.BTagCalibrationReader(self.wpreshape, "central", self.reshape_sys)
+          for flavor in self.loadflavors:
+            self.reshape_readers[tagger].load(self.calibs[tagger],flavor,"iterativefit")
+
+        self.v_sys = getattr(ROOT, 'vector<string>')()
+        self.v_sys.push_back("up")
+        self.v_sys.push_back("down")
         self.readers = {}
-        self.readers["CMVA"]={}
-        self.readers["CSV"]={}
-        for iwp,wp in enumerate(self.wps):
-          self.readers["CMVA"][wp] = {}
-          self.readers["CSV"][wp]  = {}
-          for flavor in self.flavors:
-            self.readers["CMVA"][wp][flavor] = {}
-            self.readers["CSV"][wp][flavor] = {}
-            if flavor == "bc":
-              sampleCMVA = "ttbar"
-              sampleCSV  = "mujets"
-            else:
-              sampleCMVA = "incl"
-              sampleCSV  ="incl"
-            if self.cmssw == "ICHEP2016":
-              sampleCMVA = "hww"
-              sampleCSV = "hww"
-            for variation in self.variations:
-              self.readers["CMVA"][wp][flavor][variation] = ROOT.BTagCalibrationStandaloneReader(self.calibCMVA, iwp, sampleCMVA, variation)
-              self.readers["CSV"][wp][flavor][variation]  = ROOT.BTagCalibrationStandaloneReader(self.calibCSV,  iwp, sampleCSV,  variation)
-    
-
-
+        for tagger in self.taggers:
+          self.readers[tagger] = {}
+          for iwp,wp in enumerate(self.wps):
+            self.readers[tagger][wp] = ROOT.BTagCalibrationReader(iwp, "central", self.v_sys)
+            for flavor in self.loadflavors:
+              if flavor == 0 or flavor == 1: # b or c
+                sampleCMVA = "ttbar"
+                sampleCSV  = "mujets"
+              else:
+                sampleCMVA = "incl"
+                sampleCSV  ="incl"
+              if tagger == "CMVA":
+                self.readers[tagger][wp].load(self.calibs[tagger],flavor,sampleCMVA) 
+              if tagger == "CSV":
+                self.readers[tagger][wp].load(self.calibs[tagger],flavor,sampleCSV)
 
     def _getEffMC (self, algo, wp, kindJet, pt, eta):
 
@@ -236,29 +204,8 @@ class allBtagPogScaleFactors(TreeCloner):
         self.connect(tree,input)
 
         #self._readSF()        
-        branchlist = ["bPogSF", "bPogSFUp", "bPogSFDown",
-                           "bPogSF_CMVAreshape",
-                           "bPogSF_CMVAreshape_up_jes", "bPogSF_CMVAreshape_down_jes",
-                           "bPogSF_CMVAreshape_up_lf", "bPogSF_CMVAreshape_down_lf",
-                           "bPogSF_CMVAreshape_up_hf", "bPogSF_CMVAreshape_down_hf",
-                           "bPogSF_CMVAreshape_up_hfstats1", "bPogSF_CMVAreshape_down_hfstats1",
-                           "bPogSF_CMVAreshape_up_hfstats2", "bPogSF_CMVAreshape_down_hfstats2",
-                           "bPogSF_CMVAreshape_up_lfstats1", "bPogSF_CMVAreshape_down_lfstats1",
-                           "bPogSF_CMVAreshape_up_lfstats2", "bPogSF_CMVAreshape_down_lfstats2",
-                           "bPogSF_CMVAreshape_up_cferr1", "bPogSF_CMVAreshape_down_cferr1",
-                           "bPogSF_CMVAreshape_up_cferr2", "bPogSF_CMVAreshape_down_cferr2",
-                           "bPogSF_CSVreshape",
-                           "bPogSF_CSVreshape_up_jes", "bPogSF_CSVreshape_down_jes",
-                           "bPogSF_CSVreshape_up_lf", "bPogSF_CSVreshape_down_lf",
-                           "bPogSF_CSVreshape_up_hf", "bPogSF_CSVreshape_down_hf",
-                           "bPogSF_CSVreshape_up_hfstats1", "bPogSF_CSVreshape_down_hfstats1",
-                           "bPogSF_CSVreshape_up_hfstats2", "bPogSF_CSVreshape_down_hfstats2",
-                           "bPogSF_CSVreshape_up_lfstats1", "bPogSF_CSVreshape_down_lfstats1",
-                           "bPogSF_CSVreshape_up_lfstats2", "bPogSF_CSVreshape_down_lfstats2",
-                           "bPogSF_CSVreshape_up_cferr1", "bPogSF_CSVreshape_down_cferr1",
-                           "bPogSF_CSVreshape_up_cferr2", "bPogSF_CSVreshape_down_cferr2",
+        branchlist = ["bPogSF", "bPogSFUp", "bPogSFDown"]
 
-                          ] 
         for tagger in self.taggers:
           for wp in self.wps:            
             for variation in self.variations:
@@ -272,7 +219,14 @@ class allBtagPogScaleFactors(TreeCloner):
                   suffix = "_"+flavor+"_"+variation
                   namebranch = 'bPogSF_'+tagger+wp+suffix
                   branchlist.append(namebranch)
-  
+ 
+        for tagger in self.taggers:
+          for rvariation in self.reshape_variations:
+            if rvariation == "central":
+              namebranch = "bPogSF_"+tagger+"reshape"
+            else:
+              namebranch = "bPogSF_"+tagger+"reshape_"+rvariation
+            branchlist.append(namebranch)
 
 
         self.clone(output, branchlist)         
@@ -313,90 +267,18 @@ class allBtagPogScaleFactors(TreeCloner):
         self.otree.Branch('bPogSFUp',bPogSFUp,'bPogSFUp/F') 
         bPogSFDown = numpy.ones(1, dtype=numpy.float32)
         self.otree.Branch('bPogSFDown',bPogSFDown,'bPogSFDown/F')   
-        if self.cmssw != "ICHEP2016": 
-          # Re-shaping weights for cMVAv2
-        
-          bPogSF_CMVAreshape = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape',bPogSF_CMVAreshape,'bPogSF_CMVAreshape/F')
-          bPogSF_CMVAreshape_up_jes = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_jes',bPogSF_CMVAreshape_up_jes,'bPogSF_CMVAreshape_up_jes/F')
-          bPogSF_CMVAreshape_down_jes = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_jes',bPogSF_CMVAreshape_down_jes,'bPogSF_CMVAreshape_down_jes/F')
-          bPogSF_CMVAreshape_up_lf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_lf',bPogSF_CMVAreshape_up_lf,'bPogSF_CMVAreshape_up_lf/F')
-          bPogSF_CMVAreshape_down_lf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_lf',bPogSF_CMVAreshape_down_lf,'bPogSF_CMVAreshape_down_lf/F')
-          bPogSF_CMVAreshape_up_hf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_hf',bPogSF_CMVAreshape_up_hf,'bPogSF_CMVAreshape_up_hf/F')
-          bPogSF_CMVAreshape_down_hf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_hf',bPogSF_CMVAreshape_down_hf,'bPogSF_CMVAreshape_down_hf/F')
-          bPogSF_CMVAreshape_up_hfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_hfstats1',bPogSF_CMVAreshape_up_hfstats1,'bPogSF_CMVAreshape_up_hfstats1/F')
-          bPogSF_CMVAreshape_down_hfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_hfstats1',bPogSF_CMVAreshape_down_hfstats1,'bPogSF_CMVAreshape_down_hfstats1/F')
-          bPogSF_CMVAreshape_up_hfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_hfstats2',bPogSF_CMVAreshape_up_hfstats2,'bPogSF_CMVAreshape_up_hfstats2/F')
-          bPogSF_CMVAreshape_down_hfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_hfstats2',bPogSF_CMVAreshape_down_hfstats2,'bPogSF_CMVAreshape_down_hfstats2/F')
-          bPogSF_CMVAreshape_up_lfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_lfstats1',bPogSF_CMVAreshape_up_lfstats1,'bPogSF_CMVAreshape_up_lfstats1/F')
-          bPogSF_CMVAreshape_down_lfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_lfstats1',bPogSF_CMVAreshape_down_lfstats1,'bPogSF_CMVAreshape_down_lfstats1/F')
-          bPogSF_CMVAreshape_up_lfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_lfstats2',bPogSF_CMVAreshape_up_lfstats2,'bPogSF_CMVAreshape_up_lfstats2/F')
-          bPogSF_CMVAreshape_down_lfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_lfstats2',bPogSF_CMVAreshape_down_lfstats2,'bPogSF_CMVAreshape_down_lfstats2/F')
-          bPogSF_CMVAreshape_up_cferr1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_cferr1',bPogSF_CMVAreshape_up_cferr1,'bPogSF_CMVAreshape_up_cferr1/F')
-          bPogSF_CMVAreshape_down_cferr1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_cferr1',bPogSF_CMVAreshape_down_cferr1,'bPogSF_CMVAreshape_down_cferr1/F')
-          bPogSF_CMVAreshape_up_cferr2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_up_cferr2',bPogSF_CMVAreshape_up_cferr2,'bPogSF_CMVAreshape_up_cferr2/F')
-          bPogSF_CMVAreshape_down_cferr2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CMVAreshape_down_cferr2',bPogSF_CMVAreshape_down_cferr2,'bPogSF_CMVAreshape_down_cferr2/F')
 
-
-          # Re-shaping weights for CSVv2
-
-          bPogSF_CSVreshape = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape',bPogSF_CSVreshape,'bPogSF_CSVreshape/F')
-          bPogSF_CSVreshape_up_jes = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_jes',bPogSF_CSVreshape_up_jes,'bPogSF_CSVreshape_up_jes/F')
-          bPogSF_CSVreshape_down_jes = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_jes',bPogSF_CSVreshape_down_jes,'bPogSF_CSVreshape_down_jes/F')
-          bPogSF_CSVreshape_up_lf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_lf',bPogSF_CSVreshape_up_lf,'bPogSF_CSVreshape_up_lf/F')
-          bPogSF_CSVreshape_down_lf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_lf',bPogSF_CSVreshape_down_lf,'bPogSF_CSVreshape_down_lf/F')
-          bPogSF_CSVreshape_up_hf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_hf',bPogSF_CSVreshape_up_hf,'bPogSF_CSVreshape_up_hf/F')
-          bPogSF_CSVreshape_down_hf = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_hf',bPogSF_CSVreshape_down_hf,'bPogSF_CSVreshape_down_hf/F')
-          bPogSF_CSVreshape_up_hfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_hfstats1',bPogSF_CSVreshape_up_hfstats1,'bPogSF_CSVreshape_up_hfstats1/F')
-          bPogSF_CSVreshape_down_hfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_hfstats1',bPogSF_CSVreshape_down_hfstats1,'bPogSF_CSVreshape_down_hfstats1/F')
-          bPogSF_CSVreshape_up_hfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_hfstats2',bPogSF_CSVreshape_up_hfstats2,'bPogSF_CSVreshape_up_hfstats2/F')
-          bPogSF_CSVreshape_down_hfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_hfstats2',bPogSF_CSVreshape_down_hfstats2,'bPogSF_CSVreshape_down_hfstats2/F')
-          bPogSF_CSVreshape_up_lfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_lfstats1',bPogSF_CSVreshape_up_lfstats1,'bPogSF_CSVreshape_up_lfstats1/F')
-          bPogSF_CSVreshape_down_lfstats1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_lfstats1',bPogSF_CSVreshape_down_lfstats1,'bPogSF_CSVreshape_down_lfstats1/F')
-          bPogSF_CSVreshape_up_lfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_lfstats2',bPogSF_CSVreshape_up_lfstats2,'bPogSF_CSVreshape_up_lfstats2/F')
-          bPogSF_CSVreshape_down_lfstats2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_lfstats2',bPogSF_CSVreshape_down_lfstats2,'bPogSF_CSVreshape_down_lfstats2/F')
-          bPogSF_CSVreshape_up_cferr1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_cferr1',bPogSF_CSVreshape_up_cferr1,'bPogSF_CSVreshape_up_cferr1/F')
-          bPogSF_CSVreshape_down_cferr1 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_cferr1',bPogSF_CSVreshape_down_cferr1,'bPogSF_CSVreshape_down_cferr1/F')
-          bPogSF_CSVreshape_up_cferr2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_up_cferr2',bPogSF_CSVreshape_up_cferr2,'bPogSF_CSVreshape_up_cferr2/F')
-          bPogSF_CSVreshape_down_cferr2 = numpy.ones(1, dtype=numpy.float32)
-          self.otree.Branch('bPogSF_CSVreshape_down_cferr2',bPogSF_CSVreshape_down_cferr2,'bPogSF_CSVreshape_down_cferr2/F')
-
+        # Re-shaping weights
+        bPogSF_reshape = {}
+        for tagger in self.taggers:
+          bPogSF_reshape[tagger] = {}
+          for rvariation in self.reshape_variations:
+            bPogSF_reshape[tagger][rvariation] = numpy.ones(1, dtype=numpy.float32)
+            if rvariation == "central":
+              namebranch = "bPogSF_"+tagger+"reshape"
+            else:
+              namebranch = "bPogSF_"+tagger+"reshape_"+rvariation
+            self.otree.Branch(namebranch,bPogSF_reshape[tagger][rvariation],namebranch+'/F')
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -412,51 +294,12 @@ class allBtagPogScaleFactors(TreeCloner):
             ## print event count
             if i > 0 and i%step == 0.:
               print i,'events processed.'
-  
+
             self.resetCounters()
-            if self.cmssw != "ICHEP2016":  
-              # CMVA reshaper
-   
-              bPogSF_CMVAreshape[0]        = 1.
-              bPogSF_CMVAreshape_up_jes[0] = 1.
-              bPogSF_CMVAreshape_down_jes[0] = 1.
-              bPogSF_CMVAreshape_up_lf[0] = 1.
-              bPogSF_CMVAreshape_down_lf[0] = 1.
-              bPogSF_CMVAreshape_up_hf[0] = 1.
-              bPogSF_CMVAreshape_down_hf[0] = 1.
-              bPogSF_CMVAreshape_up_hfstats1[0] = 1.
-              bPogSF_CMVAreshape_down_hfstats1[0] = 1.
-              bPogSF_CMVAreshape_up_hfstats2[0] = 1.
-              bPogSF_CMVAreshape_down_hfstats2[0] = 1.
-              bPogSF_CMVAreshape_up_lfstats1[0] = 1.
-              bPogSF_CMVAreshape_down_lfstats1[0] = 1.
-              bPogSF_CMVAreshape_up_lfstats2[0] = 1.
-              bPogSF_CMVAreshape_down_lfstats2[0] = 1.
-              bPogSF_CMVAreshape_up_cferr1[0] = 1.
-              bPogSF_CMVAreshape_down_cferr1[0] = 1.
-              bPogSF_CMVAreshape_up_cferr2[0] = 1.
-              bPogSF_CMVAreshape_down_cferr2[0] = 1.
-
-              bPogSF_CSVreshape[0]        = 1.
-              bPogSF_CSVreshape_up_jes[0] = 1.
-              bPogSF_CSVreshape_down_jes[0] = 1.
-              bPogSF_CSVreshape_up_lf[0] = 1.
-              bPogSF_CSVreshape_down_lf[0] = 1.
-              bPogSF_CSVreshape_up_hf[0] = 1.
-              bPogSF_CSVreshape_down_hf[0] = 1.
-              bPogSF_CSVreshape_up_hfstats1[0] = 1.
-              bPogSF_CSVreshape_down_hfstats1[0] = 1.
-              bPogSF_CSVreshape_up_hfstats2[0] = 1.
-              bPogSF_CSVreshape_down_hfstats2[0] = 1.
-              bPogSF_CSVreshape_up_lfstats1[0] = 1.
-              bPogSF_CSVreshape_down_lfstats1[0] = 1.
-              bPogSF_CSVreshape_up_lfstats2[0] = 1.
-              bPogSF_CSVreshape_down_lfstats2[0] = 1.
-              bPogSF_CSVreshape_up_cferr1[0] = 1.
-              bPogSF_CSVreshape_down_cferr1[0] = 1.
-              bPogSF_CSVreshape_up_cferr2[0] = 1.
-              bPogSF_CSVreshape_down_cferr2[0] = 1.
-
+  
+            for tagger in self.taggers:
+              for rvariation in self.reshape_variations: 
+                bPogSF_reshape[tagger][rvariation][0] = 1.
 
             njet 	  = 0
 
@@ -469,195 +312,101 @@ class allBtagPogScaleFactors(TreeCloner):
               csv    = itree.std_vector_jet_csvv2ivf [iJet]
               tagged = {}
               tagged["CMVA"]={}
-              tagged["CMVA"]["L"] = itree.std_vector_jet_cmvav2 [iJet] > -0.715
-              tagged["CMVA"]["M"] = itree.std_vector_jet_cmvav2 [iJet] > 0.185
-              tagged["CMVA"]["T"] = itree.std_vector_jet_cmvav2 [iJet] > 0.875
               tagged["CSV"]={}
-              tagged["CSV"]["L"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.460
-              tagged["CSV"]["M"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.800
-              tagged["CSV"]["T"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.935  
+              if self.cmssw == "Rereco2016":
+                tagged["CMVA"]["L"] = itree.std_vector_jet_cmvav2 [iJet] > -0.5884 
+                tagged["CMVA"]["M"] = itree.std_vector_jet_cmvav2 [iJet] > 0.4432 
+                tagged["CMVA"]["T"] = itree.std_vector_jet_cmvav2 [iJet] > 0.9432 
+
+                tagged["CSV"]["L"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.5426 
+                tagged["CSV"]["M"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.8484 
+                tagged["CSV"]["T"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.9535
+              else:
+                tagged["CMVA"]["L"] = itree.std_vector_jet_cmvav2 [iJet] > -0.715
+                tagged["CMVA"]["M"] = itree.std_vector_jet_cmvav2 [iJet] > 0.185
+                tagged["CMVA"]["T"] = itree.std_vector_jet_cmvav2 [iJet] > 0.875
+
+                tagged["CSV"]["L"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.460
+                tagged["CSV"]["M"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.800
+                tagged["CSV"]["T"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.935 
              
-              if pt > self.minpt and abs(eta) < self.maxeta:
+              if pt < self.minpt or abs(eta) > self.maxeta: continue
 
-                kindJet = 'b' # ele or mu
+              kindJet = 'b' # ele or mu
+              idJet = 0
+              if abs (flavour) == 4 : 
+                kindJet = 'c'
+                idJet = 1
+              elif abs (flavour) == 0 :
+                kindJet = 'l'
+                idJet = 2
+              elif flavour == 5:
+                kindJet = 'b'
                 idJet = 0
-                if abs (flavour) == 4 : 
-                  kindJet = 'c'
-                  idJet = 1
-                elif abs (flavour) == 0 :
-                  kindJet = 'l'
-                  idJet = 2
-                elif flavour == 5:
-                  kindJet = 'b'
-                  idJet = 0
-                else:
-                  print "BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5"
-                #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet 
-                #print "~~~~~~~~~~~~~~~~ jet ", njet
-                if self.cmssw != "ICHEP2016": 
-                  sfCMVAshape = self.readerCentralCMVAshape.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape[0] *= sfCMVAshape
-                  #print "CMVA : idJet = ", idJet, " pt = ", pt, " eta = ", eta, " cmva = ", cmva, " SF = ", sfCMVAshape, " weight = ", bPogSF_CMVAreshape[0]
+              else:
+                print "BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5"
+              #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet 
+              #print "~~~~~~~~~~~~~~~~ jet ", njet
 
-                  sfCMVAshape_up_jes = self.readerCentralCMVAshape_up_jes.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_jes[0] *= sfCMVAshape_up_jes
-                  sfCMVAshape_down_jes = self.readerCentralCMVAshape_down_jes.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_jes[0] *= sfCMVAshape_down_jes
+              reshapeSF = {}
+              for tagger in self.taggers:
+                reshapeSF[tagger] = {}
+                for rvariation in self.reshape_variations:
+                  if tagger == "CMVA":
+                    reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,cmva)
+                  if tagger == "CSV":
+                    reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,csv)
+                  bPogSF_reshape[tagger][rvariation][0] *=reshapeSF[tagger][rvariation]
 
-                  #print "CMVA JES UP: idJet = ", idJet, " pt = ", pt, " eta = ", eta, " cmva = ", cmva, " SF = ", sfCMVAshape_up_jes, " weight = ", bPogSF_CMVAreshape_up_jes[0]
+              effMC = {}
+              sf = {}
+              if (idJet != 2):
+                thisflavor = "bc"
+              else:
+                thisflavor = "udsg"
+              
+              #get the SF
+              for tagger in self.taggers:
+                effMC[tagger]={}
+                sf[tagger]={}
+                for wp in self.wps:
+                  effMC[tagger][wp]=self._getEffMC(tagger, wp, kindJet, pt, abs(eta))
+                  sf[tagger][wp]={}
+                  for variation in self.variations:
+                    sf[tagger][wp][variation] = self.readers[tagger][wp].eval_auto_bounds(variation,idJet,eta,pt)
+                    #print "~~ tagger : ", tagger, " wp = ", wp, " variation = ", variation, " sf = ", sf[tagger][wp][variation]
 
-                  sfCMVAshape_up_lf = self.readerCentralCMVAshape_up_lf.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_lf[0] *= sfCMVAshape_up_lf
-                  sfCMVAshape_down_lf = self.readerCentralCMVAshape_down_lf.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_lf[0] *= sfCMVAshape_down_lf
-
-                  sfCMVAshape_up_hf = self.readerCentralCMVAshape_up_hf.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_hf[0] *= sfCMVAshape_up_hf
-                  sfCMVAshape_down_hf = self.readerCentralCMVAshape_down_hf.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_hf[0] *= sfCMVAshape_down_hf
-
-                  sfCMVAshape_up_hfstats1 = self.readerCentralCMVAshape_up_hfstats1.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_hfstats1[0] *= sfCMVAshape_up_hfstats1
-                  sfCMVAshape_down_hfstats1 = self.readerCentralCMVAshape_down_hfstats1.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_hfstats1[0] *= sfCMVAshape_down_hfstats1
-
-                  sfCMVAshape_up_hfstats2 = self.readerCentralCMVAshape_up_hfstats2.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_hfstats2[0] *= sfCMVAshape_up_hfstats2
-                  sfCMVAshape_down_hfstats2 = self.readerCentralCMVAshape_down_hfstats2.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_hfstats2[0] *= sfCMVAshape_down_hfstats2
-
-                  sfCMVAshape_up_lfstats1 = self.readerCentralCMVAshape_up_lfstats1.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_lfstats1[0] *= sfCMVAshape_up_lfstats1
-                  sfCMVAshape_down_lfstats1 = self.readerCentralCMVAshape_down_lfstats1.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_lfstats1[0] *= sfCMVAshape_down_lfstats1
-
-                  sfCMVAshape_up_lfstats2 = self.readerCentralCMVAshape_up_lfstats2.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_lfstats2[0] *= sfCMVAshape_up_lfstats2
-                  sfCMVAshape_down_lfstats2 = self.readerCentralCMVAshape_down_lfstats2.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_lfstats2[0] *= sfCMVAshape_down_lfstats2
-
-                  sfCMVAshape_up_cferr1 = self.readerCentralCMVAshape_up_cferr1.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_cferr1[0] *= sfCMVAshape_up_cferr1
-                  sfCMVAshape_down_cferr1 = self.readerCentralCMVAshape_down_cferr1.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_cferr1[0] *= sfCMVAshape_down_cferr1
-
-                  sfCMVAshape_up_cferr2 = self.readerCentralCMVAshape_up_cferr2.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_up_cferr2[0] *= sfCMVAshape_up_cferr2
-                  sfCMVAshape_down_cferr2 = self.readerCentralCMVAshape_down_cferr2.evaluate(idJet, eta, pt, cmva)
-                  bPogSF_CMVAreshape_down_cferr2[0] *= sfCMVAshape_down_cferr2
-
-
-
-
-                  sfCSVshape = self.readerCentralCSVshape.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape[0] *= sfCSVshape
-                  #print "CSV : idJet = ", idJet, " pt = ", pt, " eta = ", eta, " csv = ", csv, " SF = ", sfCSVshape, " weight = ", bPogSF_CSVreshape[0]
-
-                  sfCSVshape_up_jes = self.readerCentralCSVshape_up_jes.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_jes[0] *= sfCSVshape_up_jes
-                  sfCSVshape_down_jes = self.readerCentralCSVshape_down_jes.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_jes[0] *= sfCSVshape_down_jes
-
-                  sfCSVshape_up_lf = self.readerCentralCSVshape_up_lf.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_lf[0] *= sfCSVshape_up_lf
-                  sfCSVshape_down_lf = self.readerCentralCSVshape_down_lf.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_lf[0] *= sfCSVshape_down_lf
-
-                  sfCSVshape_up_hf = self.readerCentralCSVshape_up_hf.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_hf[0] *= sfCSVshape_up_hf
-                  sfCSVshape_down_hf = self.readerCentralCSVshape_down_hf.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_hf[0] *= sfCSVshape_down_hf
-
-                  sfCSVshape_up_hfstats1 = self.readerCentralCSVshape_up_hfstats1.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_hfstats1[0] *= sfCSVshape_up_hfstats1
-                  sfCSVshape_down_hfstats1 = self.readerCentralCSVshape_down_hfstats1.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_hfstats1[0] *= sfCSVshape_down_hfstats1
-
-                  sfCSVshape_up_hfstats2 = self.readerCentralCSVshape_up_hfstats2.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_hfstats2[0] *= sfCSVshape_up_hfstats2
-                  sfCSVshape_down_hfstats2 = self.readerCentralCSVshape_down_hfstats2.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_hfstats2[0] *= sfCSVshape_down_hfstats2
-
-                  sfCSVshape_up_lfstats1 = self.readerCentralCSVshape_up_lfstats1.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_lfstats1[0] *= sfCSVshape_up_lfstats1
-                  sfCSVshape_down_lfstats1 = self.readerCentralCSVshape_down_lfstats1.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_lfstats1[0] *= sfCSVshape_down_lfstats1
-
-                  sfCSVshape_up_lfstats2 = self.readerCentralCSVshape_up_lfstats2.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_lfstats2[0] *= sfCSVshape_up_lfstats2
-                  sfCSVshape_down_lfstats2 = self.readerCentralCSVshape_down_lfstats2.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_lfstats2[0] *= sfCSVshape_down_lfstats2
-
-                  sfCSVshape_up_cferr1 = self.readerCentralCSVshape_up_cferr1.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_cferr1[0] *= sfCSVshape_up_cferr1
-                  sfCSVshape_down_cferr1 = self.readerCentralCSVshape_down_cferr1.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_cferr1[0] *= sfCSVshape_down_cferr1
-
-                  sfCSVshape_up_cferr2 = self.readerCentralCSVshape_up_cferr2.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_up_cferr2[0] *= sfCSVshape_up_cferr2
-                  sfCSVshape_down_cferr2 = self.readerCentralCSVshape_down_cferr2.evaluate(idJet, eta, pt, csv)
-                  bPogSF_CSVreshape_down_cferr2[0] *= sfCSVshape_down_cferr2
-
-                effMC = {}
-                sf = {}
-                if (idJet != 2):
-                  thisflavor = "bc"
-                else:
-                  thisflavor = "udsg"
-                
-                #get the SF
-                for tagger in self.taggers:
-                  effMC[tagger]={}
-                  sf[tagger]={}
-                  for wp in self.wps:
-                    effMC[tagger][wp]=self._getEffMC(tagger, wp, kindJet, pt, abs(eta))
-                    sf[tagger][wp]={}
-                    for variation in self.variations:
-                      # b/c
-                      if (idJet != 2) :
-                        sf[tagger][wp][variation] = self.readers[tagger][wp]["bc"][variation].evaluate(idJet, eta, pt)
-                        if (pt < 30) and variation != "central":
-                          #double the uncertainty for b/c jets below 30 GeV
-                          sf[tagger][wp][variation] = 2*(self.readers[tagger][wp]["bc"][variation].evaluate(idJet, eta, pt) - \
-                                                         sf[tagger][wp]["central"]) + \
-                                                        sf[tagger][wp]["central"]  
-                      # udsg
-                      else:
-                        sf[tagger][wp][variation] = self.readers[tagger][wp]["udsg"][variation].evaluate(idJet, eta, pt) 
-
-                #use the SF to determine event probabilities
-                for tagger in self.taggers:
-                  for wp in self.wps:
-                    if tagged[tagger][wp]:
-                      self.pMC[tagger][wp] = self.pMC[tagger][wp]*effMC[tagger][wp]
+              #use the SF to determine event probabilities
+              for tagger in self.taggers:
+                for wp in self.wps:
+                  if tagged[tagger][wp]:
+                    self.pMC[tagger][wp] = self.pMC[tagger][wp]*effMC[tagger][wp]
+                  else:
+                    self.pMC[tagger][wp] = self.pMC[tagger][wp]*(1.-effMC[tagger][wp])
+                  for variation in self.variations:
+                    if tagged[tagger][wp]:  
+                      self.pData[tagger][wp][variation]["undef"] = self.pData[tagger][wp][variation]["undef"]*effMC[tagger][wp]*sf[tagger][wp][variation]
                     else:
-                      self.pMC[tagger][wp] = self.pMC[tagger][wp]*(1.-effMC[tagger][wp])
-                    for variation in self.variations:
-                      if tagged[tagger][wp]:  
-                        self.pData[tagger][wp][variation]["undef"] = self.pData[tagger][wp][variation]["undef"]*effMC[tagger][wp]*sf[tagger][wp][variation]
-                      else:
-                        self.pData[tagger][wp][variation]["undef"] = self.pData[tagger][wp][variation]["undef"]*(1.-effMC[tagger][wp]*sf[tagger][wp][variation])
-                      if variation != "central":
-                        for flavor in self.flavors:
-                          #if the flavor of this jet is the same as the flavor for which we are computing
-                          #the variation, then we need the varied SF
-                          #otherwise we take the central SF  
-                          if thisflavor == flavor:
-                            flavorsf = sf[tagger][wp][variation]
-                          else:
-                            flavorsf = sf[tagger][wp]["central"]    
-                          if tagged[tagger][wp]:  
-                            self.pData[tagger][wp][variation][flavor] = self.pData[tagger][wp][variation][flavor]*effMC[tagger][wp]*flavorsf
-                          else:
-                            self.pData[tagger][wp][variation][flavor] = self.pData[tagger][wp][variation][flavor]*(1.-effMC[tagger][wp]*flavorsf)
+                      self.pData[tagger][wp][variation]["undef"] = self.pData[tagger][wp][variation]["undef"]*(1.-effMC[tagger][wp]*sf[tagger][wp][variation])
+                    if variation != "central":
+                      for flavor in self.flavors:
+                        #if the flavor of this jet is the same as the flavor for which we are computing
+                        #the variation, then we need the varied SF
+                        #otherwise we take the central SF  
+                        if thisflavor == flavor:
+                          flavorsf = sf[tagger][wp][variation]
+                        else:
+                          flavorsf = sf[tagger][wp]["central"]    
+                        if tagged[tagger][wp]:  
+                          self.pData[tagger][wp][variation][flavor] = self.pData[tagger][wp][variation][flavor]*effMC[tagger][wp]*flavorsf
+                        else:
+                          self.pData[tagger][wp][variation][flavor] = self.pData[tagger][wp][variation][flavor]*(1.-effMC[tagger][wp]*flavorsf)
 
-                njet += 1
-                #print "flavour, effMC, sf", flavour, effMC, sf
+              njet += 1
+              #print "flavour, effMC, sf", flavour, effMC, sf
 
             #print "pData, pMC", pData, pMC
 
-            #print "bPogSF_CMVAreshape[0] = ", bPogSF_CMVAreshape[0]
-            #print "bPogSF_CMVAreshape_up_jes[0] = ", bPogSF_CMVAreshape_up_jes[0]
             for tagger in self.taggers:
               for wp in self.wps:
                 for variation in self.variations:

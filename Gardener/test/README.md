@@ -464,6 +464,17 @@ Module: idisofiller
     gardener.py  idisofiller   --cmssw=ICHEP2016 --isoideleAltLumiRatio=0.079  /tmp/amassiro/latino_DYJetsToLL_M-50_0000__part0.root  \
          /tmp/amassiro/latino_DYJetsToLL_M-50_0000__part0_newidiso.root
     
+
+    
+    cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_WWTo2L2Nu.root   /tmp/amassiro/
+
+    gardener.py  idisofiller   --cmssw=Full2016     \
+                               --idEleKind=cut_WP_Tight80X    \
+                               /tmp/amassiro/latino_WWTo2L2Nu.root  \
+                               /tmp/amassiro/latino_WWTo2L2Nu.idisotest.root
+    
+
+    
     
     
 Kinematic variables

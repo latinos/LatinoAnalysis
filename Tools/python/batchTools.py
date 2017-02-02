@@ -3,6 +3,7 @@ import sys, re, os, os.path
 import subprocess
 import string
 import os.path
+import socket
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
@@ -21,8 +22,8 @@ class batchJobs :
      self.subDir   = jobDir+'/'+baseName+'__'+prodName
      if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)     
 
-     print stepList 
-     print batchSplit
+     #print stepList 
+     #print batchSplit
 
      # Init Steps
      for iStep in stepList:
@@ -53,10 +54,13 @@ class batchJobs :
        jFile = open(self.subDir+'/'+jName+'.sh','w')
        if usePython : pFile = open(self.subDir+'/'+jName+'.py','w') 
        jFile.write('#!/bin/bash\n')
-       if 'cern' in os.uname()[1]:
+       if 'cern' in os.uname()[1] :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+       elif "pi.infn.it" in socket.getfqdn():  
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
        elif 'knu' in os.uname()[1]:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
@@ -74,6 +78,10 @@ class batchJobs :
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
+         elif "pi.infn.it" in socket.getfqdn():
+           jFile.write("mkdir /tmp/$LSB_JOBID \n")
+           jFile.write("cd /tmp/$LSB_JOBID \n")
+           jFile.write("pwd \n")
          else:
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
@@ -85,10 +93,12 @@ class batchJobs :
      if 'iihe'  in os.uname()[1]:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
+     if "pi.infn.it" in socket.getfqdn():  
+       os.system('cp $X509_USER_PROXY /home/users/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
-     print 'Adding to ',self.subDir+'/'+jName  
+     #print 'Adding to ',self.subDir+'/'+jName  
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      jFile.write(command+'\n')
      jFile.close()
@@ -145,10 +155,31 @@ class batchJobs :
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        elif 'ifca' in os.uname()[1] :
+          jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+        elif "pi.infn.it" in socket.getfqdn():
+          queue="cms"
+          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+
+   def AddCopy (self,iStep,iTarget,inputFile,outputFile):
+     "Copy file from local to remote server (outputFile = /store/...)"
+     
+     jName= self.jobsDic[iStep][iTarget]
+     #print 'Adding to ',self.subDir+'/'+jName  
+     jFile = open(self.subDir+'/'+jName+'.sh','a') 
+     if 'iihe' in os.uname()[1] :
+        jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
+     elif 'ifca' in os.uname()[1] :
+        jFile.write('mv '+inputFile+' '+outputFile+'\n')
+     elif "pi.infn.it" in socket.getfqdn():   
+        jFile.write('lcg-cp '+inputFile+' srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms'+outputFile+'\n')
+     else :
+        jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' /eos/cms'+outputFile+'\n')
+     jFile.close()
 
 def batchStatus():
     fileCmd = 'ls '+jobDir
@@ -178,7 +209,11 @@ def batchStatus():
         if os.path.isfile(jidFile):
 #         print jidFile
           if 'iihe' in os.uname()[1] :
-            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid  | awk \'{print $5}\' ').read()
+            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
+            if 'Q' in iStat : Pend[iStep]+=1
+            else: Runn[iStep]+=1
+          elif 'ifca' in os.uname()[1] :
+            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
             if 'Q' in iStat : Pend[iStep]+=1
             else: Runn[iStep]+=1
           else:
@@ -217,6 +252,43 @@ def batchClean():
         os.rmdir(jobDir+'/'+iDir) 
       except :
         print 'Some jobs still ongoing in: '+ iDir
+
+def lsListCommand(inputDir):
+    "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
+    if 'iihe' in os.uname()[1] :
+        return "ls -1 /pnfs/iihe/cms" + inputDir
+    elif 'ifca' in os.uname()[1] :
+        return "ls " + inputDir
+    elif "pi.infn.it" in socket.getfqdn():
+        return "ls /gpfs/ddn/srm/cms/" + inputDir
+    else :
+        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
+    
+def rootReadPath(inputFile):
+    "Returns path to read a root file (/store/.../*.root) on the remote server"
+    if 'iihe' in os.uname()[1] :
+        return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
+    elif "pi.infn.it" in socket.getfqdn():
+      return "/gpfs/ddn/srm/cms/" + inputFile
+    else :
+        return inputFile
+    
+def remoteFileSize(inputFile):
+    "Returns file size in byte for file on remote server (/store/.../*.root)"
+    if 'iihe' in os.uname()[1] :
+        return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'ifca' in os.uname()[1] :
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "pi.infn.it" in socket.getfqdn():
+        return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    else :
+        return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
+
+def batchTest():
+    jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])
+    jobs.Add('Test','Test','echo Hello World')
+    jobs.Add('Test','Test','sleep 120')
+    jobs.Sub()
 
 #jobs = batchJobs('Gardening','21Oct_25ns',['MCInit','l2sel'],['WW','Top'],['Step','Target'])
 #jobs.Add('MCInit','WW','Hello')
