@@ -163,7 +163,7 @@ class batchJobs :
      elif 'ifca' in os.uname()[1] :
         jFile.write('mv '+inputFile+' '+outputFile+'\n')
      else :
-        jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' '+outputFile+'\n')
+        jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' /eos/cms'+outputFile+'\n')
      jFile.close()
 
 def batchStatus():
