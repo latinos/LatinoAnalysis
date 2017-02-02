@@ -126,13 +126,13 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-
     print " configuration file = ", opt.pycfg
     print " lumi =               ", opt.lumi
     
     print " inputDir =           ", opt.inputDir
     print " outputDir =          ", opt.outputDir
  
+    print "batchSplit: ",opt.batchSplit
     
     #TFormula.SetMaxima(1000000,10000,10000000)
 
@@ -199,6 +199,8 @@ if __name__ == '__main__':
               targetList=['ALL']
 
             # ...Check job status and remove duplicates
+	    print "stepList", stepList
+	    print "targetList", targetList
             for iStep in stepList:
               for iTarget in targetList:
                 pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+iTarget+'.jid'
@@ -220,42 +222,107 @@ if __name__ == '__main__':
 
             outputDir=os.getcwd()+'/'+opt.outputDir 
 
-            for cut_k,cut_v in cuts.iteritems(): 
-           
-              cuts_new = {}
-              cuts_new[cut_k] = cut_v
 
-              for sam_k,sam_v in samples.iteritems():
-                samples_new = {}
-                samples_new[sam_k] = sam_v
+            if 'Cuts' in opt.batchSplit and 'Samples' in opt.batchSplit:
+              iStep='ALL'
+              iTarget='ALL'
+              for cut_k,cut_v in cuts.iteritems():
+                cuts_new = {}
+                cuts_new[cut_k] = cut_v
+                for sam_k,sam_v in samples.iteritems():
+                  samples_new = {}
+                  samples_new[sam_k] = sam_v
 
-                iStep='ALL'
-                if 'Cuts' in opt.batchSplit : iStep=cut_k  
+                  iStep=cut_k  
                 
-                iTarget='ALL'
-                if 'Samples' in opt.batchSplit : iTarget = sam_k
+                  iTarget = sam_k
+                
+                  jName = iStep + '_' + iTarget
+
+                  instructions_for_configuration_file  = ""
+                  instructions_for_configuration_file += "factory.makeNominals(   \n"
+                  instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
+                  instructions_for_configuration_file += "     '" + outputDir + "',     \n"
+                  instructions_for_configuration_file += "      " + str(variables) + ", \n"
+                  instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
+                  instructions_for_configuration_file += "      " + str(samples_new) + ",   \n"
+                  instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
+                  instructions_for_configuration_file += "     '" + supercut + "',      \n"
+                  instructions_for_configuration_file += "     '" + jName + "')    \n"
+
+                  #jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
+                  jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
+
+            elif 'Cuts' in opt.batchSplit and not 'Samples' in opt.batchSplit:
+              iStep='ALL'
+              iTarget='ALL'
+              for cut_k,cut_v in cuts.iteritems():
+                cuts_new = {}
+                cuts_new[cut_k] = cut_v
+
+                iStep=cut_k  
                 
                 jName = iStep + '_' + iTarget
-                
+
                 instructions_for_configuration_file  = ""
                 instructions_for_configuration_file += "factory.makeNominals(   \n"
                 instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
                 instructions_for_configuration_file += "     '" + outputDir + "',     \n"
                 instructions_for_configuration_file += "      " + str(variables) + ", \n"
                 instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
+                instructions_for_configuration_file += "      " + str(samples) + ",   \n"
+                instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
+                instructions_for_configuration_file += "     '" + supercut + "',      \n"
+                instructions_for_configuration_file += "     '" + jName + "')    \n"
+
+                jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
+            elif not 'Cuts' in opt.batchSplit and 'Samples' in opt.batchSplit:
+              iStep='ALL'
+              iTarget='ALL'
+              for sam_k,sam_v in samples.iteritems():
+                samples_new = {}
+                samples_new[sam_k] = sam_v
+
+                iTarget = sam_k
+                
+                jName = iStep + '_' + iTarget
+
+                instructions_for_configuration_file  = ""
+                instructions_for_configuration_file += "factory.makeNominals(   \n"
+                instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
+                instructions_for_configuration_file += "     '" + outputDir + "',     \n"
+                instructions_for_configuration_file += "      " + str(variables) + ", \n"
+                instructions_for_configuration_file += "      " + str(cuts) + ",      \n"
                 instructions_for_configuration_file += "      " + str(samples_new) + ",   \n"
                 instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
                 instructions_for_configuration_file += "     '" + supercut + "',      \n"
                 instructions_for_configuration_file += "     '" + jName + "')    \n"
 
-                #jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
                 jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
+	    else :
+              iStep='ALL'
+              iTarget='ALL'
+                
+              jName = iStep + '_' + iTarget
+
+              instructions_for_configuration_file  = ""
+              instructions_for_configuration_file += "factory.makeNominals(   \n"
+              instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
+              instructions_for_configuration_file += "     '" + outputDir + "',     \n"
+              instructions_for_configuration_file += "      " + str(variables) + ", \n"
+              instructions_for_configuration_file += "      " + str(cuts) + ",      \n"
+              instructions_for_configuration_file += "      " + str(samples) + ",   \n"
+              instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
+              instructions_for_configuration_file += "     '" + supercut + "',      \n"
+              instructions_for_configuration_file += "     '" + jName + "')    \n"
+
+              jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
                     
             #if 'knu' in os.uname()[1]:
               #jobs.Sub(opt.batchQueue)
             #else:
             #print " opt.batchQueue = ", opt.batchQueue
-            jobs.Sub(opt.batchQueue,options.IiheWallTime)
+            jobs.Sub(opt.batchQueue,opt.IiheWallTime)
 
 
     elif opt.doHadd != 0:

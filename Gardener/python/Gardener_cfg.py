@@ -254,6 +254,16 @@ Productions= {
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_271036-276811_63mb_24Aug.root',
                        },
 
+  '07Jun2016_spring16_mAODv2_12pXfbm1_KNU'   : {# To be used @ KNU T3 farm @@@@@@@@@@@@@@@@@@@22
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod_v2.py' ,
+                        'dir'     : 'HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        # 12.X fb-1
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_805_271036-276811_63mb_24Aug.root',
+                       },
+
   '07Jun2016_spring16_mAODv2_12pXfbm1_repro'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_spring16_miniaod_v2.py' ,
@@ -698,7 +708,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet'],#,'TopGenPt'],
+                  'subTargets' : ['do_l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
   'puWbaseWFix' :     {
@@ -737,7 +747,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet'],#,'TopGenPt'],
+                  'subTargets' : ['do_l2vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','TopGenPt'],
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50',
@@ -756,10 +766,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],#,'TopGenPt'],
+                  'subTargets' : ['l1loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                   'onlySample' : [
-			          ####
-			          'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WW-LO', 'ZZ',
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
                                   ####
@@ -772,8 +780,7 @@ Steps= {
                                   'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
-                                  'TTTo2L2Nu', 'TTTo2L2Nu_ext1', 'TT', 'TTJets', 'TTToSemiLeptonic', 'ST_tW_top', 'ST_tW_antitop', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top'
-
+                                  'TT','TTJets',
  
                                  ] ,
 
@@ -783,7 +790,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet'],#,'TopGenPt'],
+                  'subTargets' : ['l1vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -807,7 +814,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_WgStarsel','puadder','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables'],
                   'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 
@@ -3194,7 +3201,17 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_M800',
                                   'VBFHToWWTo2L2Nu_M900',
                                   'VBFHToWWTo2L2Nu_M1000', 
+                                 ],
+                  'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+)*"',
+                 },
 
+
+  'BWEwkSinglet_JHUGen698' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+      
+                  'onlySample' : [
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M200',
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M210',
@@ -3214,10 +3231,11 @@ Steps= {
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M800',
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M900',
                                   'GluGluHToWWTo2L2Nu_JHUGen698_M1000',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
+                                  #'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
+
                                   # ... VBF High Mass
                                   'VBFHToWWTo2L2Nu_JHUGen698_M200',
                                   'VBFHToWWTo2L2Nu_JHUGen698_M210',
@@ -3236,74 +3254,14 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_JHUGen698_M750',
                                   'VBFHToWWTo2L2Nu_JHUGen698_M800',
                                   'VBFHToWWTo2L2Nu_JHUGen698_M900',
-                                  'VBFHToWWTo2L2Nu_JHUGen698_M1000',
-                                  'VBFHToWWTo2L2Nu_JHUGen698_M1500',
-                                  'VBFHToWWTo2L2Nu_JHUGen698_M2000',
-                                  'VBFHToWWTo2L2Nu_JHUGen698_M2500',
-                                  'VBFHToWWTo2L2Nu_JHUGen698_M3000',
-
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M1000', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M1500', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M2000', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M2500', 
+                                  #'VBFHToWWTo2L2Nu_JHUGen698_M3000', 
                                  ],
-                  'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu(_JHUGen698|)_M([0-9]+)*" ',
-                  #'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+)*"',
+                  'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_JHUGen698_M([0-9]+)*" --undoCPS=False',
                  },
-
-
-#  'BWEwkSinglet_JHUGen698' : {
-#                  'isChain'    : False ,
-#                  'do4MC'      : True ,
-#                  'do4Data'    : False,
-#      
-#                  'onlySample' : [
-#                                  # ... ggH High Mass
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M200',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M210',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M230',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M250',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M270',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M300',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M350',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M400',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M450',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M500',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M550',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M600',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M650',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M700',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M750',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M800',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M900',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1000',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
-#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
-#
-#                                  # ... VBF High Mass
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M200',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M210',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M230',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M250',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M270',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M300',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M350',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M400',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M450',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M500',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M550',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M600',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M650',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M700',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M750',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M800',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M900',
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M1000', 
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M1500', 
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M2000', 
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M2500', 
-#                                  'VBFHToWWTo2L2Nu_JHUGen698_M3000', 
-#                                 ],
-#                  'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_JHUGen698_M([0-9]+)*"',
-#                 },
 
   'l2sel'    : {
                   'isChain'    : False ,
@@ -3426,7 +3384,6 @@ Steps= {
                                   'DYJetsToLL_M-50-LO-ext1',
                                   'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1',
                                   'DYJetsToEE_Pow',
-                                  'DY1JetsToLL',
                                  ],
                },
 
@@ -3559,14 +3516,6 @@ Steps= {
                    'do4Data'    : True ,
                    'subTargets' : ['l2kin','do_dymvaGGH'],
                   },
-
-   'dymvaGGHv2' :   {
-                   'isChain'    : True ,
-                   'do4MC'      : True ,
-                   'do4Data'    : True ,
-                   'subTargets' : ['metXYshift_MC','metXYshift_2016B','metXYshift_2016C','metXYshift_2016D','l2kin_metXYshift','do_dymvaGGH'],
-                  },
-
 
    'wwvarfiller' : {
                    'isChain'    : False ,
@@ -3797,11 +3746,5 @@ Steps= {
                                       ],
                     },
 
-  '3jetsSel'    : {  
-	          'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True  ,
-                  'command'    : 'gardener.py filter -f \' std_vector_jet_pt[0]>20 && std_vector_jet_pt[1]>20 && std_vector_jet_pt[2]>20 \' ',
-           },
-	
+
 }

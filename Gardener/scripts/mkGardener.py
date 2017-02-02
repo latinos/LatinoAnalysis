@@ -97,8 +97,6 @@ parser.add_option("-C" , "--chain" , dest="chain"     , help="Chain several step
 parser.add_option("-a" , "--allSamples" , dest="ignoreOnlySamples",  help="ignoreOnlySamples"  , default=False  , action="store_true")
 parser.add_option("-M" , "--forceMerge" , dest="forceMerge", help="Force Merge Big Sample in Hadd" , default=False  , action="store_true")
 parser.add_option("-u" , "--user" , dest="user", help="Set user directory" , default='xjanssen')
-parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
-
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -127,7 +125,11 @@ if options.outputTarget != None:
 
 print "eosProdBase    = ", eosProdBase
 print "eosTargBaseIn  = ", eosTargBaseIn
-print "eosTargBaseOut = ", eosTargBaseOut  
+print "eosTargBaseOut = ", eosTargBaseOut 
+
+if 'knu' in os.uname()[1]:
+  inDirBase = options.inputTarget
+  outDirBase = options.outputTarget
 
 #hack to be able to stat both files under /eos/cms and /eos/user
  
@@ -149,13 +151,14 @@ if "/eos/cms" in eosTargBaseOut:
   
 # Compile all root macros before sending jobs
 if options.runBatch:
-    pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
-    for fn in os.listdir(pathRootMacro):
-        if os.path.isfile(pathRootMacro+fn) and fn.endswith('.C'):
-            try:
-                ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
-            except RuntimeError:
-                ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
+  print "Batch mode"
+  pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
+  for fn in os.listdir(pathRootMacro):
+    if os.path.isfile(pathRootMacro+fn) and fn.endswith('.C'):
+      try:
+        ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
+      except RuntimeError:
+        ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
 # Loop on input productions
 for iProd in prodList :
   cmssw=options.cmssw
@@ -204,16 +207,20 @@ for iProd in prodList :
       fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
     else:
       fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+options.iStep
+  elif 'knu' in os.uname()[1]:
+    if options.iStep == 'Prod' :
+      fileCmd = 'ls ' + inDirBase + prodDir+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
+    else:
+      fileCmd = 'ls ' + inDirBase + prodDir+'/'+options.iStep
   else:
     if options.iStep == 'Prod' : 
       fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
     else:
       fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+options.iStep
-  print fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
-  print FileInList
+  print "Listing input files: ", FileInList
 
   isFirstinChain = True
   replaceStep=''
@@ -231,6 +238,11 @@ for iProd in prodList :
           fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015'+'/'+iProd+'/'+iStep #+' | grep  ttDM'
         else: 
           fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015'+'/'+iProd+'/'+options.iStep+'__'+iStep
+      elif 'knu' in os.uname()[1]:
+        if options.iStep == 'Prod' :
+          fileCmd = 'ls ' + inDirBase + prodDir+'/'+options.iStep #+' | grep  ttDM'
+        else: 
+          fileCmd = 'ls ' + inDirBase + prodDir+'/'+options.iStep
       else:
         if options.iStep == 'Prod' :
           fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
@@ -284,7 +296,6 @@ for iProd in prodList :
           #    if not iTree in FileExistList and selectSample: targetList[iSample] = 'NOSPLIT'
         #else: 
         #if 'ttDM' in iSample: print iSample, selectSample 
-         
         for iFile in FileInList:
             #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in FileExistList 
             if options.redo or not iFile in FileExistList :
@@ -307,17 +318,23 @@ for iProd in prodList :
                       targetList[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                     else:
                       targetList[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                  elif 'knu' in os.uname()[1]:
+                    if options.iStep == 'Prod' :
+                      targetList[iKey] = inDirBase + prodDir+Productions[iProd]['dirExt'] + '/' +iFile 
+                    else:
+                      targetList[iKey] = inDirBase + prodDir+'/'+options.iStep + '/' +iFile
                   else:
                     if options.iStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                     else:
                       targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iStep+'/'+iFile
-      #print targetList  
+      #print "targetList: ", targetList  
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
       #if  iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
       if not Productions[iProd]['isData']: 
         targetListBaseW = copy.deepcopy(targetList)
+	#print "printing targetListBaseW", targetListBaseW
         lSample = []
         for iTarget in targetListBaseW.keys(): 
           if   '_000' in iTarget :
@@ -326,7 +343,7 @@ for iProd in prodList :
           elif '__part' in iTarget:
             aSample = iTarget.split('__part')[0]
             if not aSample in lSample : lSample.append(aSample)
-        #print lSample  
+        #print "lSample", lSample  
         for iSample in lSample:
           #print iSample
           for iFile in FileInList:
@@ -341,12 +358,16 @@ for iProd in prodList :
               if not iKey in targetListBaseW.keys():
                 print 'Re-Adding split tree: ', iKey, iFile
 
-
                 if 'iihe' in os.uname()[1]:
                   if options.iStep == 'Prod' :
                     targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile
                   else:
                     targetListBaseW[iKey] = '/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+options.iStep+'/'+iFile
+                elif 'knu' in os.uname()[1]:
+                  if options.iStep == 'Prod' :
+                    targetListBaseW[iKey] = inDirBase + prodDir+Productions[iProd]['dirExt']+'/'+iFile 
+                  else:
+                    targetListBaseW[iKey] = inDirBase + prodDir+'/'+options.iStep+'/'+iFile
                 else: 
                   if options.iStep == 'Prod' :
                     targetListBaseW[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -355,7 +376,7 @@ for iProd in prodList :
 
      
 
-      startingStep = options.iStep       
+      startingStep = options.iStep
       if options.chain :
         if not isFirstinChain: 
           print "Gone hacking targetList for chain"
@@ -375,10 +396,21 @@ for iProd in prodList :
       print targetList
       #for i in targetList : print i
       #quit() 
-
       # Create Output Directory on eos
       if 'iihe' in os.uname()[1]:
         print 'Using LCG ...'
+      elif 'knu' in os.uname()[1]:
+        if iStep == 'UEPS' :
+          for iUEPS in Steps[iStep]['cpMap'] :
+	    outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iUEP
+            os.system('mkdir -p '+outDir)  
+        else:
+          if startingStep == 'Prod' :
+	    outDir = outDirBase+'/'+iProd+'/'+iStep
+            os.system('mkdir -p '+ outDir)
+          else:
+	    outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iStep
+            os.system('mkdir -p '+ outDir)
       else:
         if iStep == 'UEPS' :
           for iUEPS in Steps[iStep]['cpMap'] :
@@ -422,7 +454,8 @@ for iProd in prodList :
           pidFile+='__'+iTarget
           if not startingStep == 'Prod' : pidFile+='____'+startingStep
           pidFile+='.jid'
-          if os.path.isfile(pidFile) : 
+          if os.path.isfile(pidFile) :
+	    print "pidFile", pidFile
             print '--> Job Running already : '+iTarget
             keysToDel.append(iTarget)
       for iTarget in keysToDel:
@@ -475,7 +508,6 @@ for iProd in prodList :
             del targetList[iTarget]
 
       print targetList
-
       # Create Jobs Dictionary
       list=[]
       list.append(iStep)
@@ -521,16 +553,16 @@ for iProd in prodList :
         oriTree = inTree
         wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
-        if   options.runBatch: command=''
+        if   options.runBatch and not 'knu' in os.uname()[1]: command=''
         else:  
-          if 'iihe' in os.uname()[1]:
+          if 'iihe' or 'knu' in os.uname()[1]:
             command='cd '+wDir+' ; '
           else:       
             command='cd /tmp/'+os.getlogin()+' ; '
 
         # Special hadd command
         if iStep == 'hadd' :
-          if 'iihe' in os.uname()[1]:
+          if 'iihe' or 'knu' in os.uname()[1]:
             command='cd '+wDir+' ; '
           else:
             command+='cd /tmp/'+os.getlogin()+' ; '
@@ -611,7 +643,6 @@ for iProd in prodList :
 
         # Fix CMSSW flag
         command = command.replace('RPLME_CMSSW',cmssw)
-
         # Fix baseW if needed
         if Productions[iProd]['isData'] : baseW = '1.'
         elif iStep == 'baseW' or ( 'isChain' in Steps[iStep] and Steps[iStep]['isChain'] and 'baseW' in Steps[iStep]['subTargets'] ): 
@@ -657,6 +688,7 @@ for iProd in prodList :
         # else:
         #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+startingStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
         #lse:
+
         if not 'UEPS' == iStep :
          if 'iihe' in os.uname()[1]:
            if startingStep == 'Prod' :
@@ -666,15 +698,17 @@ for iProd in prodList :
            else: 
              if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
              command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
+	 elif 'knu' in os.uname()[1]:
+	   command+= 'rm -f ' +outDir+'/'+outTree
+	   command+= '; mv ' +wDir+'/'+outTree+' '+outDir+'/'
          else:
            if startingStep == 'Prod' :
              command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
            else:
              command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
-        for iGarbage in GarbageCollector: 
-          command+='; rm '+iGarbage
-
+        #for iGarbage in GarbageCollector: 
+	  #command+='; rm '+iGarbage
         logFile=wDir+'/log__'+iTarget+'.log'
         if options.quiet :
           command += ' 2>&1 > /dev/null \n' 
@@ -684,7 +718,8 @@ for iProd in prodList :
         if options.pretend : print command
         else :
           if  options.runBatch: jobs.Add(stepBatch,iTarget,command)
-          else:                 os.system(command) 
+          else:
+	    os.system(command) 
 
       if options.chain :
         isFirstinChain = False
@@ -693,8 +728,8 @@ for iProd in prodList :
         targetListKeep=targetList
       else:
         print "Gone batching ..."
-        if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
+        if options.runBatch and not options.pretend: jobs.Sub(options.queue)
 
   if options.chain :
     print "Gone batching for Chain ..."
-    if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
+    if options.runBatch and not options.pretend: jobs.Sub(options.queue)
