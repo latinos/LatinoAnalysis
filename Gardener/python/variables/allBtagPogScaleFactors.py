@@ -288,10 +288,9 @@ class allBtagPogScaleFactors(TreeCloner):
         otree     = self.otree
 
         print '- Starting eventloop'
-        step = 1
+        step = 5000
         for i in xrange(nentries):
             itree.GetEntry(i)
-            if i==10: break
             ## print event count
             if i > 0 and i%step == 0.:
               print i,'events processed.'
@@ -354,17 +353,9 @@ class allBtagPogScaleFactors(TreeCloner):
                 reshapeSF[tagger] = {}
                 for rvariation in self.reshape_variations:
                   if tagger == "CMVA":
-                    try:
-                      reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,cmva)
-                    except:
-                      print "EXCEPTION!!!"
-                      continue
+                    reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,cmva)
                   if tagger == "CSV":
-                    try:
-                      reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,csv)
-                    except:
-                      print "EXCEPTION!!!"
-                      continue
+                    reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,csv)
                   bPogSF_reshape[tagger][rvariation][0] *=reshapeSF[tagger][rvariation]
 
               effMC = {}
