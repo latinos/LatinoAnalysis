@@ -3,6 +3,7 @@ import sys, re, os, os.path
 import subprocess
 import string
 import os.path
+import socket
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
@@ -53,10 +54,13 @@ class batchJobs :
        jFile = open(self.subDir+'/'+jName+'.sh','w')
        if usePython : pFile = open(self.subDir+'/'+jName+'.py','w') 
        jFile.write('#!/bin/bash\n')
-       if 'cern' in os.uname()[1]:
+       if 'cern' in os.uname()[1] :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+       elif "pi.infn.it" in socket.getfqdn():  
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
        elif 'knu' in os.uname()[1]:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
@@ -74,6 +78,10 @@ class batchJobs :
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
+         elif "pi.infn.it" in socket.getfqdn():
+           jFile.write("mkdir /tmp/$LSB_JOBID \n")
+           jFile.write("cd /tmp/$LSB_JOBID \n")
+           jFile.write("pwd \n")
          else:
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
@@ -85,6 +93,8 @@ class batchJobs :
      if 'iihe'  in os.uname()[1]:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
+     if "pi.infn.it" in socket.getfqdn():  
+       os.system('cp $X509_USER_PROXY /home/users/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -147,6 +157,9 @@ class batchJobs :
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         elif 'ifca' in os.uname()[1] :
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+        elif "pi.infn.it" in socket.getfqdn():
+          queue="cms"
+          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
@@ -162,6 +175,8 @@ class batchJobs :
         jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
      elif 'ifca' in os.uname()[1] :
         jFile.write('mv '+inputFile+' '+outputFile+'\n')
+     elif "pi.infn.it" in socket.getfqdn():   
+        jFile.write('lcg-cp '+inputFile+' srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms'+outputFile+'\n')
      else :
         jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' '+outputFile+'\n')
      jFile.close()
@@ -244,6 +259,8 @@ def lsListCommand(inputDir):
         return "ls -1 /pnfs/iihe/cms" + inputDir
     elif 'ifca' in os.uname()[1] :
         return "ls " + inputDir
+    elif "pi.infn.it" in socket.getfqdn():
+        return "ls /gpfs/ddn/srm/cms/" + inputDir
     else :
         return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
     
@@ -251,6 +268,8 @@ def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"
     if 'iihe' in os.uname()[1] :
         return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
+    elif "pi.infn.it" in socket.getfqdn():
+      return "/gpfs/ddn/srm/cms/" + inputFile
     else :
         return inputFile
     
@@ -260,6 +279,8 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif 'ifca' in os.uname()[1] :
         return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "pi.infn.it" in socket.getfqdn():
+        return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
         return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
 
