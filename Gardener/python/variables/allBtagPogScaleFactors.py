@@ -346,7 +346,7 @@ class allBtagPogScaleFactors(TreeCloner):
                 idJet = 0
               else:
                 print "BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5"
-              print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet 
+              #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet 
               #print "~~~~~~~~~~~~~~~~ jet ", njet
 
               reshapeSF = {}
@@ -355,14 +355,12 @@ class allBtagPogScaleFactors(TreeCloner):
                 for rvariation in self.reshape_variations:
                   if tagger == "CMVA":
                     try:
-                      ####reshapeSF[tagger][rvariation] = self.reshape_readers[tagger][rvariation].evaluate(idJet, eta, pt, cmva)
                       reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,cmva)
                     except:
                       print "EXCEPTION!!!"
                       continue
                   if tagger == "CSV":
                     try:
-                      ####reshapeSF[tagger][rvariation] = self.reshape_readers[tagger][rvariation].evaluate(idJet, eta, pt, csv)
                       reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,csv)
                     except:
                       print "EXCEPTION!!!"
@@ -385,7 +383,7 @@ class allBtagPogScaleFactors(TreeCloner):
                   sf[tagger][wp]={}
                   for variation in self.variations:
                     sf[tagger][wp][variation] = self.readers[tagger][wp].eval_auto_bounds(variation,idJet,eta,pt)
-                    print "~~ tagger : ", tagger, " wp = ", wp, " variation = ", variation, " sf = ", sf[tagger][wp][variation]
+                    #print "~~ tagger : ", tagger, " wp = ", wp, " variation = ", variation, " sf = ", sf[tagger][wp][variation]
 
               #use the SF to determine event probabilities
               for tagger in self.taggers:
