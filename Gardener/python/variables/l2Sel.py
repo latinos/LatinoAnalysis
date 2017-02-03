@@ -963,6 +963,7 @@ class L2SelFiller(TreeCloner):
 
         self.namesOfSpecialSimpleVariable = [
            'metFilter',
+           'dmZllRecoMuon'
         ]
         
         
@@ -1321,7 +1322,21 @@ class L2SelFiller(TreeCloner):
                   if itree.std_vector_trigger_special[metfilters] == 0. : pass_met_filters = 0.  
                   #print " i: ", i, " :: metfilters ", metfilters, " --> ", itree.std_vector_trigger_special[metfilters]
                 self.oldBranchesToBeModifiedSpecialSimpleVariable['metFilter'][0] = pass_met_filters
-               
+                
+              # closest loose di-muon mass to Z
+              if self.cmssw == 'Full2016' :
+                dmll = 9999.
+                for i1 in xrange(len(itree.std_vector_lepton_pt)) :
+                    for i2 in xrange(i1+1, len(itree.std_vector_lepton_pt)) :
+                        if itree.std_vector_lepton_pt[i2] < 10. :
+                            break
+                            
+                        # check opposite charge and same flavour muons
+                        if abs(itree.std_vector_lepton_flavour[i1]) == 13. and itree.std_vector_lepton_flavour[i1] == -1. * itree.std_vector_lepton_flavour[i2] :
+                            dmll_temp = abs( math.sqrt(2*itree.std_vector_lepton_pt[i1]*itree.std_vector_lepton_pt[i2]*(math.cosh(itree.std_vector_lepton_eta[i1]-itree.std_vector_lepton_eta[i2]) - math.cos(itree.std_vector_lepton_phi[i1]-itree.std_vector_lepton_phi[i2])) ) - 91.1876 )
+                            if dmll_temp < dmll :
+                                dmll = dmll_temp
+                self.oldBranchesToBeModifiedSpecialSimpleVariable['dmZllRecoMuon'][0] = dmll
 
               # apply selections to reduce trees size:
               #   - self.selection
