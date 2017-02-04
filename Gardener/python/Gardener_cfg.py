@@ -677,6 +677,127 @@ Productions= {
                                        ],
                        },
 
+######## 2016 Rereco DATA : 6JAn2017_RogueOne_v6 
+
+  'Dec2016_Run2016B_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016B-23Sep2016-v3',
+                                        'DoubleMuon_Run2016B-23Sep2016-v3',
+                                        'MuonEG_Run2016B-23Sep2016-v3',
+                                        'SingleElectron_Run2016B-23Sep2016-v3',
+                                        'SingleMuon_Run2016B-23Sep2016-v3',
+#                                       'MET_Run2016B-23Sep2016-v3',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016C_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016C-23Sep2016-v1',
+                                        'DoubleMuon_Run2016C-23Sep2016-v1',
+                                        'MuonEG_Run2016C-23Sep201C-v1',
+                                        'SingleElectron_Run2016C-23Sep2016-v1',
+                                        'SingleMuon_Run2016C-23Sep2016-v1',
+#                                       'MET_Run2016C-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016D_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016D-23Sep2016-v1',
+                                        'DoubleMuon_Run2016D-23Sep2016-v1',
+                                        'MuonEG_Run2016D-23Sep201C-v1',
+                                        'SingleElectron_Run2016D-23Sep2016-v1',
+                                        'SingleMuon_Run2016D-23Sep2016-v1',
+#                                       'MET_Run2016D-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016E_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016E-23Sep2016-v1',
+                                        'DoubleMuon_Run2016E-23Sep2016-v1',
+                                        'MuonEG_Run2016E-23Sep201C-v1',
+                                        'SingleElectron_Run2016E-23Sep2016-v1',
+                                        'SingleMuon_Run2016E-23Sep2016-v1',
+#                                       'MET_Run2016E-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016F_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016F-23Sep2016-v1',
+                                        'DoubleMuon_Run2016F-23Sep2016-v1',
+                                        'MuonEG_Run2016F-23Sep201C-v1',
+                                        'SingleElectron_Run2016F-23Sep2016-v1',
+                                        'SingleMuon_Run2016F-23Sep2016-v1',
+#                                       'MET_Run2016F-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016G_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016G-23Sep2016-v1',
+                                        'DoubleMuon_Run2016G-23Sep2016-v1',
+                                        'MuonEG_Run2016G-23Sep201C-v1',
+                                        'SingleElectron_Run2016G-23Sep2016-v1',
+                                        'SingleMuon_Run2016G-23Sep2016-v1',
+#                                       'MET_Run2016G-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016H_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco_RunH.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016H-PromptReco-v2',
+                                        'DoubleMuon_Run2016H-PromptReco-v2',
+                                        'MuonEG_Run2016H-PromptReco-v2',
+                                        'SingleElectron_Run2016H-PromptReco-v2',
+                                        'SingleMuon_Run2016H-PromptReco-v2',
+#                                       'MET_Run2016H-PromptReco-v2',
+                                        'DoubleEG_Run2016H-PromptReco-v3',
+                                        'DoubleMuon_Run2016H-PromptReco-v3',
+                                        'MuonEG_Run2016H-PromptReco-v3',
+                                        'SingleElectron_Run2016H-PromptReco-v3',
+                                        'SingleMuon_Run2016H-PromptReco-v3',
+#                                       'MET_Run2016H-PromptReco-v3',
+                                       ],
+                       },
+
+
 }
 
 
@@ -711,13 +832,6 @@ Steps= {
                   'subTargets' : ['do_l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
-  'puWbaseWFix' :     {
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : ['puadder','baseW','genVariables']
-                },
-
   'l2loose'  :       {
                   'isChain'    : True ,
                   'do4MC'      : False ,
@@ -732,6 +846,19 @@ Steps= {
                   'subTargets' : ['do_l2vloose','l2kin','l3kin','l4kin'],
                 },
 
+  'l2looseCut'  :       {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin'],
+                },
+
+  'l2vlooseCut'  :       {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin'],
+                },
 
 
 # 'l1loose16'  :       {
@@ -747,7 +874,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','TopGenPt'],
+                  'subTargets' : ['do_l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','TopGenPt'],
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50',
@@ -766,7 +893,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -790,7 +917,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['l1vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                   'onlySample' : [
                                   #### DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
@@ -3314,6 +3441,27 @@ Steps= {
                   'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1'
                },
 
+  'do_l2loose_Cut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW --selection 1 --idEleKind cut_WP_Tight80X'
+               },
+
+  'do_l2vloose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1'
+               },
+
+  'do_l2vloose_Cut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1 --idEleKind cut_WP_Tight80X'
+               },
+
 
   'l2tight'    : {
                   'isChain'    : False ,
@@ -3329,11 +3477,25 @@ Steps= {
                   'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
+  'l1looseCut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW --idEleKind cut_WP_Tight80X'
+               },
+
   'l1vloose'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l1selfiller --kind 4 --cmssw RPLME_CMSSW'
+               },
+
+  'l1vlooseCut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l1selfiller --kind 4 --cmssw RPLME_CMSSW --idEleKind cut_WP_Tight80X'
                },
 
 

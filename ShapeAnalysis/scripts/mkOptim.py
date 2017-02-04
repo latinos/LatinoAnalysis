@@ -41,32 +41,33 @@ if __name__ == '__main__':
 
     variables = {}
     cuts = {}
+    if os.path.exists(opt.cutsFile) :
+      handle = open(opt.cutsFile,'r')
+      exec(handle)
+      handle.close()
 
     # And COMBINATION 
     combs = {}
+    cutsVal = {} 
     if os.path.exists(opt.combcfg) :
       handle = open(opt.combcfg,'r')
       exec(handle)
       handle.close()
       variables['comb'] = {}
-      for iComb in combs : cuts[iComb] = {}
+      for iComb in combs : cutsVal[iComb] = {}
        
     # ELSE use default set of cards and cuts 
     else:
-
+      
       if os.path.exists(opt.variablesFile) :
         handle = open(opt.variablesFile,'r')
         exec(handle)
         handle.close()
+      for iCut in cuts : cutsVal[iCut] = {}
 
-      if os.path.exists(opt.cutsFile) :
-        handle = open(opt.cutsFile,'r')
-        exec(handle)
-        handle.close()
-
-
+   
     for iVar in variables :
-      for iCut in cuts:
+      for iCut in cutsVal:
           print iVar,iCut
           datacardDir=opt.outputDirDatacard+'/'+iCut+'/'+iVar
           command= 'cd '+opt.combineLocation+' ; eval `scramv1 runtime -sh` ; cd - ;'
