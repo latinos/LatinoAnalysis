@@ -781,7 +781,7 @@ class L1SelFiller(TreeCloner):
              #
              if abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5:
                 if self.itree.std_vector_lepton_eleIdHLT[ilepton] :
-                    isThisALooseLepton = 1
+                    isThisAVeryLooseLepton = 1
                     
             elif self.cmssw == 'Rereco2016' :               
              #
