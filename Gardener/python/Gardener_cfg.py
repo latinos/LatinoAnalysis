@@ -1107,6 +1107,14 @@ Steps= {
                   'subTargets' : ['bPogSF','TrigEff','IdIsoSC']
                     }, 
 
+  'LepSFCut'    :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['TrigEff_Cut','IdIsoSC_Cut']
+                    },
+
+
   'puextra'      :   {
                   'isChain'    : True ,
                   'do4MC'      : True ,
@@ -3612,18 +3620,32 @@ Steps= {
                # brilcalc lumi --begin  273158 --end 273726 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
                # 0.497 /fb
 
+  'IdIsoSC_Cut'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.0135 --cmssw=RPLME_CMSSW --idEleKind=cut_WP_Tight80X'
+               },
+
 
   'TrigEff'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0483937   --cmssw=RPLME_CMSSW'
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0483937   --cmssw=RPLME_CMSSW' 
                }, 
                # the number is 0.595/fb / XXX/fb 
                # then 0.595 / 2.6 = 0.23
                # then 0.595 / 4.0 = 0.15
                # then 0.595 / (2.791 + 1.546 + 1.549 + 0.378) = 0.595 / 6.264 = 0.095
                # then 0.595 / 12.2950 =    0.0483937
+
+  'TrigEff_Cut'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0135   --cmssw=RPLME_CMSSW'
+               },
 
 
   'hadd'     : {
