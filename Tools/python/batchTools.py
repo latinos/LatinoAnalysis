@@ -65,16 +65,17 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+         jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/proxy.cert\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
-       if 'knu' in os.uname()[1]:
-	 pass
-       else:
-	 jFile.write('ulimit -c 0\n')
+ #      if 'knu' in os.uname()[1]:
+ #        pass
+ #      else:
+       jFile.write('ulimit -c 0\n')
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
@@ -82,6 +83,8 @@ class batchJobs :
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
+         elif "knu" in os.uname()[1]:
+           jFile.write("cd /tmp/$LSB_JOBID \n")
          else:
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
@@ -95,6 +98,8 @@ class batchJobs :
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
      if "pi.infn.it" in socket.getfqdn():  
        os.system('cp $X509_USER_PROXY /home/users/'+os.environ["USER"]+'/.proxy')
+     if "knu" in os.uname()[1]:  
+       os.system('cp $X509_USER_PROXY /u/user/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -153,6 +158,7 @@ class batchJobs :
 	elif 'knu' in os.uname()[1]:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+	  queue='cms'
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         elif 'ifca' in os.uname()[1] :
@@ -177,6 +183,8 @@ class batchJobs :
         jFile.write('mv '+inputFile+' '+outputFile+'\n')
      elif "pi.infn.it" in socket.getfqdn():   
         jFile.write('lcg-cp '+inputFile+' srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms'+outputFile+'\n')
+     elif 'knu' in os.uname()[1] :
+        jFile.write('gfal-copy '+inputFile+' srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=/pnfs/knu.ac.kr/data/cms/'+outputFile+'\n')
      else :
         jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' /eos/cms'+outputFile+'\n')
      jFile.close()
@@ -261,6 +269,8 @@ def lsListCommand(inputDir):
         return "ls " + inputDir
     elif "pi.infn.it" in socket.getfqdn():
         return "ls /gpfs/ddn/srm/cms/" + inputDir
+    elif "knu" in os.uname()[1]:
+        return "ls /pnfs/knu.ac.kr/data/cms/" + inputDir
     else :
         return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
     
@@ -270,6 +280,8 @@ def rootReadPath(inputFile):
         return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
     elif "pi.infn.it" in socket.getfqdn():
       return "/gpfs/ddn/srm/cms/" + inputFile
+    elif 'knu' in os.uname()[1] :
+      return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
     else :
         return inputFile
     
@@ -281,6 +293,8 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "pi.infn.it" in socket.getfqdn():
         return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "knu" in os.uname()[1]:
+        return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
         return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
 
