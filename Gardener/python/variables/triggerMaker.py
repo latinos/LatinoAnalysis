@@ -2,6 +2,7 @@ import optparse
 import numpy
 import ROOT
 import os.path
+import copy
 
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 
@@ -18,9 +19,20 @@ from LatinoAnalysis.Gardener.gardening import TreeCloner
 
 class triggerCalculator():
     def __init__ (self,Trigger,cmssw,iPeriod,isData=False):
-       print "-------- triggerCalculator init() ---------", cmssw , iPeriod
+       print "-------- triggerCalculator init() ---------", cmssw , iPeriod , isData
 
-       if isData: print ' DATA NOT YET IMPLEMTED '
+       if isData: 
+         self.EleMu     = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['EleMu']) 
+         self.DoubleMu  = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['DoubleMu']) 
+         self.SingleMu  = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['SingleMu']) 
+         self.DoubleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['DoubleEle']) 
+         self.SingleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['SingleEle']) 
+         print 'EleMu     = ' , self.EleMu
+         print 'DoubleMu  = ' , self.DoubleMu
+         print 'SingleMu  = ' , self.SingleMu
+         print 'DoubleEle = ' , self.DoubleEle
+         print 'SingleEle = ' , self.SingleEle
+
        else:
          self.list_triggers = {}
          cmssw_base = os.getenv('CMSSW_BASE')
@@ -604,6 +616,32 @@ class triggerCalculator():
 
           return 1, 1, 1 
 
+    def _getTrigDecision(self,vector_trigger,isData):
+   
+        if isData :
+          #print 'IMPLEMENT ME'
+          #print len(vector_trigger)   
+          #print self.EleMu
+          EleMu     = 0
+          DoubleMu  = 0
+          SingleMu  = 0
+          DoubleEle = 0
+          SingleEle = 0 
+          for iTrig in self.EleMu      : 
+            if vector_trigger[iTrig] > 0 : EleMu      = 1
+          for iTrig in self.DoubleMu   : 
+            if vector_trigger[iTrig] > 0 : DoubleMu   = 1
+          for iTrig in self.SingleMu   : 
+            if vector_trigger[iTrig] > 0 : SingleMu   = 1
+          for iTrig in self.DoubleEle  : 
+            if vector_trigger[iTrig] > 0 : DoubleEle  = 1
+          for iTrig in self.SingleEle  : 
+            if vector_trigger[iTrig] > 0 : SingleEle  = 1
+
+          return EleMu , DoubleMu , SingleMu , DoubleEle , SingleEle
+ 
+        return 0, 0, 0 , 0, 0
+ 
 class triggerMaker(TreeCloner):
 
     def __init__(self):
@@ -621,15 +659,16 @@ class triggerMaker(TreeCloner):
 
         group.add_option('-c', '--cmssw' , dest='cmssw'   , help='cmssw version (naming convention may change)', default='763', type='string')
         group.add_option('-p', '--pycfg' , dest='pycfg'   , help='Python Config describing the trigger' , default='DEFAULT' , type='string')
-#       group.add_option('-d', '--isdata', dest='isData'  , help='False=MC / True=Data' , default=False )
+        group.add_option('-d', '--isdata', dest='isData'  , help='False=MC / True=Data' , default=False  , action="store_true")
 
         parser.add_option_group(group)
         return group 
 
     def checkOptions(self,opts):
  
+        self.isData=opts.isData
         cmssw_base = os.getenv('CMSSW_BASE')
-
+        
         # Define Luminosity and run periods              
         if opts.pycfg == "DEFAULT" : opts.pycfg = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/Trigger_cfg.py'
         print 'Loading Trigger config : ' , opts.pycfg
@@ -664,7 +703,7 @@ class triggerMaker(TreeCloner):
         print self.fPeriods
         print '---------------------' 
         self.triggerCalculators = []
-        for iPeriod in Trigger[opts.cmssw] : self.triggerCalculators.append(triggerCalculator(Trigger,opts.cmssw,iPeriod))
+        for iPeriod in Trigger[opts.cmssw] : self.triggerCalculators.append(triggerCalculator(Trigger,opts.cmssw,iPeriod,self.isData))
 
     def _getRunPeriod(self,run): 
         
@@ -764,11 +803,14 @@ class triggerMaker(TreeCloner):
             self.branches['iRunPeriod'][0] = self.runPeriod 
            
             if self.isData :
-              self.branches['trig_SnglEle']       [0] = 1.0
-              self.branches['trig_SnglMu']        [0] = 1.0
-              self.branches['trig_DbleEle']       [0] = 1.0
-              self.branches['trig_DbleMu']        [0] = 1.0
-              self.branches['trig_EleMu']         [0] = 1.0
+
+              self.branches['trig_EleMu']         [0] , \
+              self.branches['trig_DbleMu']        [0] , \
+              self.branches['trig_SnglMu']        [0] , \
+              self.branches['trig_DbleEle']       [0] , \
+              self.branches['trig_SnglEle']       [0] = \
+              self.triggerCalculators[self.runPeriod-1]._getTrigDecision(itree.std_vector_trigger,self.isData)
+
 
             else: 
 
