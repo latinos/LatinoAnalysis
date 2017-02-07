@@ -3647,6 +3647,13 @@ Steps= {
                   'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0135   --cmssw=RPLME_CMSSW'
                },
 
+  'TrigMaker'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW'
+                 },
+ 
 
   'hadd'     : {
                   'isChain'    : False ,
@@ -3654,7 +3661,7 @@ Steps= {
                   'do4Data'    : True  ,
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
-                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1',
+                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
                                   'DYJetsToEE_Pow',
                                   'DY1JetsToLL',
                                   #'TTJets',

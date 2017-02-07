@@ -10,6 +10,7 @@ from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 
 # trigger efficiencies
 from LatinoAnalysis.Gardener.variables.efficiencies               import EffTrgFiller
+from LatinoAnalysis.Gardener.variables.triggerMaker               import triggerMaker
 
 # id/isolation scale factors
 from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
@@ -125,7 +126,7 @@ if __name__ == '__main__':
 
 # trigger efficiency
     modules['efftfiller']       = EffTrgFiller()
-
+    modules['trigMaker']        = triggerMaker()
 
 # id/isolation scale factors
     modules['idisofiller'] = IdIsoSFFiller()

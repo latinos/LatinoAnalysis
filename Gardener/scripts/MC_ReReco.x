@@ -4,6 +4,7 @@
 ./mkGardener.py -p  Dec2016_summer16_mAODv2 -s MCl2looseCut -S Target -b -E DYJetsToLL_M-50_HT-1200to1500
 ./mkGardener.py -p  Dec2016_summer16_mAODv2 -s hadd -i MCl2looseCut -S Target -b
 #./mkGardener.py -p  Dec2016_summer16_mAODv2 -s bSFLepEffCut,l2tight,vbsSel -C -i MCl2looseCut__hadd -S Target -b
+./mkGardener.py -p  Dec2016_summer16_mAODv2 -s LepSFCut,l2tight -C -i MCl2looseCut__hadd -S Target -b -T TTTo2L2Nu,WWTo2L2Nu
 
 # L2 vloose
 
