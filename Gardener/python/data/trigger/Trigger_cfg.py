@@ -25,7 +25,7 @@ Trigger['Full2015'] =  { 1  :  { 'begin' : 1 , 'end' : 999999 , 'lumi' :  5.0 ,
 
 # --------------------------- ICHEP2016 ---------------------------------
 
-Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0.497 ,
+Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0.632 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -85,7 +85,7 @@ Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  
 
 # --------------------------- Full2016 ---------------------------------
 
-Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0.497 ,
+Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0.632 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -112,7 +112,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'SingleEle' = [ 93  , 112 ] ,
                                               } ,
                                 },
-                          2  :  { 'begin' : 274094 , 'end' : 277165 , 'lumi' : 11.798  ,
+                          2  :  { 'begin' : 274094 , 'end' : 277165 , 'lumi' : 15.3515  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -139,7 +139,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                               } ,
                                 },
                           # https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem                                  
-                          3  :  { 'begin' : 277166 , 'end' : 278272 , 'lumi' : 11.798  ,
+                          3  :  { 'begin' : 277166 , 'end' : 278272 , 'lumi' : 2.114  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -165,7 +165,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'SingleEle' = [ 93  , 112 ] ,
                                               } ,
                                 },
-                          4  :  { 'begin' : 278273 , 'end' : 281612 , 'lumi' : 11.798  ,
+                          4  :  { 'begin' : 278273 , 'end' : 281612 , 'lumi' : 9.818  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -191,7 +191,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'SingleEle' = [ 93  , 112 ] ,
                                               } ,
                                 },
-                          5  :  { 'begin' : 281613 , 'end' : 284044 , 'lumi' : 11.798  ,
+                          5  :  { 'begin' : 281613 , 'end' : 284044 , 'lumi' : 8.857  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
