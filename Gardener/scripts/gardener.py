@@ -10,6 +10,7 @@ from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 
 # trigger efficiencies
 from LatinoAnalysis.Gardener.variables.efficiencies               import EffTrgFiller
+from LatinoAnalysis.Gardener.variables.triggerMaker               import triggerCalculator
 from LatinoAnalysis.Gardener.variables.triggerMaker               import triggerMaker
 
 # id/isolation scale factors
