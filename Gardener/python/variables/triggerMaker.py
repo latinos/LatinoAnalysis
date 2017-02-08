@@ -101,6 +101,8 @@ class triggerCalculator():
 
          self.EMTFBug = Trigger[cmssw][iPeriod]['EMTFBug']
          print 'EMTF Bug : ' ,self.EMTFBug
+
+         self.trkSFMu = copy.deepcopy(Trigger[cmssw][iPeriod]['trkSFMu'])
  
          self.minpt_mu = 10
          self.maxpt_mu = 200
@@ -262,6 +264,36 @@ class triggerCalculator():
           eff_dbl_2_trailingleg , low_eff_dbl_2_trailingleg , high_eff_dbl_2_trailingleg  = self._getEff (pt2, eta2, doubleLegLowPtB)
           eff_sgl_1             , low_eff_sgl_1             , high_eff_sgl_1              = self._getEff (pt1, eta1, singleLegA)
           eff_sgl_2             , low_eff_sgl_2             , high_eff_sgl_2              = self._getEff (pt2, eta2, singleLegB)
+
+          # Tracker Muon SF
+
+          if abs(kindLep1) == 13 :
+
+             eff_sgl_1       *=  self.trkSFMu[0] 
+             high_eff_sgl_1  *=  self.trkSFMu[1]
+             low_eff_sgl_1   *=  self.trkSFMu[2]
+              
+             eff_dbl_1_leadingleg           *=  self.trkSFMu[0]
+             high_eff_dbl_1_leadingleg      *=  self.trkSFMu[1]
+             low_eff_dbl_1_leadingleg       *=  self.trkSFMu[2]
+
+             eff_dbl_1_trailingleg          *=  self.trkSFMu[0]
+             high_eff_dbl_1_trailingleg     *=  self.trkSFMu[1]
+             low_eff_dbl_1_trailingleg      *=  self.trkSFMu[0]
+
+          if abs(kindLep2) == 13 :
+
+             eff_sgl_2       *=  self.trkSFMu[0]
+             high_eff_sgl_2  *=  self.trkSFMu[1]
+             low_eff_sgl_2   *=  self.trkSFMu[2]
+
+             eff_dbl_2_leadingleg           *=  self.trkSFMu[0]
+             high_eff_dbl_2_leadingleg      *=  self.trkSFMu[1]
+             low_eff_dbl_2_leadingleg       *=  self.trkSFMu[2]
+
+             eff_dbl_2_trailingleg          *=  self.trkSFMu[0]
+             high_eff_dbl_2_trailingleg     *=  self.trkSFMu[1]
+             low_eff_dbl_2_trailingleg      *=  self.trkSFMu[0]
 
           # Event Efficiency
 
@@ -576,6 +608,77 @@ class triggerCalculator():
           s2  , low_s2  , high_s2   = self._getEff(pt2, eta2, single2)
           s3  , low_s3  , high_s3   = self._getEff(pt3, eta3, single3)
 
+
+          # Tracker Muon SF
+
+          if abs(kindLep1) == 13 :
+
+             s1        *= self.trkSFMu[0]
+             high_s1   *= self.trkSFMu[1]
+             low_s1    *= self.trkSFMu[2]
+
+             l1t2      *= self.trkSFMu[0]
+             high_l1t2 *= self.trkSFMu[1]
+             low_l1t2  *= self.trkSFMu[2]
+
+             l1t3      *= self.trkSFMu[0]
+             high_l1t3 *= self.trkSFMu[1]
+             low_l1t3  *= self.trkSFMu[2]
+
+             t1l2      *= self.trkSFMu[0]
+             high_t1l2 *= self.trkSFMu[1]
+             low_t1l2  *= self.trkSFMu[2]
+
+             t1l3      *= self.trkSFMu[0]
+             high_t1l3 *= self.trkSFMu[1]
+             low_t1l3  *= self.trkSFMu[2]
+
+          if abs(kindLep2) == 13 :
+
+             s2       *=  self.trkSFMu[0]
+             high_s2  *=  self.trkSFMu[1]
+             low_s2   *=  self.trkSFMu[2]
+
+             l2t1      *= self.trkSFMu[0]
+             high_l2t1 *= self.trkSFMu[1]
+             low_l2t1  *= self.trkSFMu[2]
+
+             l2t3      *= self.trkSFMu[0]
+             high_l2t3 *= self.trkSFMu[1]
+             low_l2t3  *= self.trkSFMu[2]
+
+             t2l1      *= self.trkSFMu[0]
+             high_t2l1 *= self.trkSFMu[1]
+             low_t2l1  *= self.trkSFMu[2]
+
+             t2l3      *= self.trkSFMu[0]
+             high_t2l3 *= self.trkSFMu[1]
+             low_t2l3  *= self.trkSFMu[2]
+
+
+          if abs(kindLep3) == 13 :
+
+             s3       *=  self.trkSFMu[0]
+             high_s3  *=  self.trkSFMu[1]
+             low_s3   *=  self.trkSFMu[2]
+
+             l3t1      *= self.trkSFMu[0]
+             high_l3t1 *= self.trkSFMu[1]
+             low_l3t1  *= self.trkSFMu[2]
+
+             l3t2      *= self.trkSFMu[0]
+             high_l3t2 *= self.trkSFMu[1]
+             low_l3t2  *= self.trkSFMu[2]
+
+             t3l1      *= self.trkSFMu[0]
+             high_t3l1 *= self.trkSFMu[1]
+             low_t3l1  *= self.trkSFMu[2]
+
+             t3l2      *= self.trkSFMu[0]
+             high_t3l2 *= self.trkSFMu[1]
+             low_t3l2  *= self.trkSFMu[2]
+
+
           ### SINGLE TRIGGERS ARE NOT YET INCLUDED ###
           ### XJ (6th July 2016: Putting single back)
 
@@ -641,7 +744,22 @@ class triggerCalculator():
           return EleMu , DoubleMu , SingleMu , DoubleEle , SingleEle
  
         return 0, 0, 0 , 0, 0
+
+   def _dPhi(phi1,phi2) :
+        return 90.
  
+   def _getEMTFBugVeto(self,vetor_kind,vector_pt,vector_eta,vector_phi):
+
+        if self.EMTFBug:
+          vPhi = []
+          for iLep in range(0,len(vector_kind)-1):
+            if abs(vector_kind[iLep]) == 13 and vector_pt[iLep] >= 10. and abs(vector_eta[iLep]) >= 1.24 : vPhi.append(vector_phi[iLep])
+            if len(vPhi) >= 2 :
+              for iLep1 in range(0,len(vPhi)-1):
+                for iLep2 in range(0,len(vPhi)-1):
+                  if not iLep1 == iLep2 and self._dPhi(vPhi(iLep1),vPhi(iLep2)) <= 80. : return 0.
+        return 1.
+
 class triggerMaker(TreeCloner):
 
     def __init__(self):
@@ -733,6 +851,7 @@ class triggerMaker(TreeCloner):
         if self.isData :
           self.namesBranches = [
            'iRunPeriod',
+           'veto_EMTFBug',
            'trig_SnglEle',
            'trig_SnglMu',
            'trig_DbleEle',
@@ -744,6 +863,7 @@ class triggerMaker(TreeCloner):
 
           self.namesBranches = [
            'iRunPeriod',
+           'veto_EMTFBug',
            'effTrigW',
            'effTrigW_Up',
            'effTrigW_Down',
@@ -801,7 +921,11 @@ class triggerMaker(TreeCloner):
             # Get run period
             self.runPeriod = self._getRunPeriod(itree.run) 
             self.branches['iRunPeriod'][0] = self.runPeriod 
-           
+
+            # Compute the veto for the EMTF Bug in 2016
+            self.branches['veto_EMTFBug'] = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta,itree.std_vector_lepton_phi)
+
+            # DATA = compute trigger "bits" oer dataset 
             if self.isData :
 
               self.branches['trig_EleMu']         [0] , \
@@ -811,7 +935,7 @@ class triggerMaker(TreeCloner):
               self.branches['trig_SnglEle']       [0] = \
               self.triggerCalculators[self.runPeriod-1]._getTrigDecision(itree.std_vector_trigger,self.isData)
 
-
+            # MC = compute efficiencies
             else: 
 
               self.branches['effTrigW']       [0] = 1.0
