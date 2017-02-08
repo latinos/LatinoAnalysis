@@ -10,6 +10,8 @@ from LatinoAnalysis.Gardener.variables.pileup  import PUpper
 
 # trigger efficiencies
 from LatinoAnalysis.Gardener.variables.efficiencies               import EffTrgFiller
+from LatinoAnalysis.Gardener.variables.triggerMaker               import triggerCalculator
+from LatinoAnalysis.Gardener.variables.triggerMaker               import triggerMaker
 
 # id/isolation scale factors
 from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
@@ -84,6 +86,7 @@ from LatinoAnalysis.Gardener.variables.jetScaleUncertainty        import JESTree
 # bpog sfale factors
 from LatinoAnalysis.Gardener.variables.btagPogScaleFactors        import btagPogScaleFactors
 from LatinoAnalysis.Gardener.variables.allBtagPogScaleFactors     import allBtagPogScaleFactors
+from LatinoAnalysis.Gardener.variables.allBtagPogScaleFactorsICHEP     import allBtagPogScaleFactorsICHEP
 # lepton pT scale uncertainty and resolution
 from LatinoAnalysis.Gardener.variables.lepScaleUncertainty        import LeppTScalerTreeMaker
 from LatinoAnalysis.Gardener.variables.lepResolutionUncertainty   import LeptonResolutionTreeMaker
@@ -124,7 +127,7 @@ if __name__ == '__main__':
 
 # trigger efficiency
     modules['efftfiller']       = EffTrgFiller()
-
+    modules['trigMaker']        = triggerMaker()
 
 # id/isolation scale factors
     modules['idisofiller'] = IdIsoSFFiller()
@@ -179,6 +182,7 @@ if __name__ == '__main__':
 # add bpog SF
     modules['btagPogScaleFactors']   = btagPogScaleFactors()
     modules['allBtagPogScaleFactors'] = allBtagPogScaleFactors()
+    modules['allBtagPogScaleFactorsICHEP'] = allBtagPogScaleFactorsICHEP()
 
 # generic tool
     modules['tlorentzvectorfiller']  = TLorentzVectorCreator()

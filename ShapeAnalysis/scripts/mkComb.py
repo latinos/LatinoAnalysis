@@ -52,6 +52,7 @@ if __name__ == '__main__':
 
     for iComb in combs :
       print iComb
+      print combs[iComb]
       combDir  = opt.outputDirDatacard+'/'+iComb
       if not os.path.exists(combDir)                : os.mkdir(combDir)
       if not os.path.exists(combDir+'/comb')        : os.mkdir(combDir+'/comb')
@@ -71,17 +72,3 @@ if __name__ == '__main__':
       os.system('rm '+combFile +'.tmp')
  
 
-#    for iVar in variables :
-#      for iCut in cuts:
-#          print iVar,iCut
-#          datacardDir=opt.outputDirDatacard+'/'+iCut+'/'+iVar
-#          command= 'cd '+opt.combineLocation+' ; eval `scramv1 runtime -sh` ; cd - ;'
-#          command+='cd '+datacardDir+' ;'
-#          for iFOM in opt.fomList:
-#            if iFOM in fomDic:
-#              command+='combine datacard.txt '+fomDic[iFOM]+' -m 0 -n _'+iVar+'_'+iCut+' > '+iFOM+'_'+iVar+'_'+iCut+';'
-#          command+='cd - ; eval `scramv1 runtime -sh`'
-#          os.system(command)
-          
- 
-          

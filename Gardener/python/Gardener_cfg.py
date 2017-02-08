@@ -795,6 +795,141 @@ Productions= {
                                        ],
                        },
 
+######## 2016 Rereco DATA : 6JAn2017_RogueOne_v6 
+
+  'Dec2016_Run2016B_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016B-23Sep2016-v3',
+                                        'DoubleMuon_Run2016B-23Sep2016-v3',
+                                        'MuonEG_Run2016B-23Sep2016-v3',
+                                        'SingleElectron_Run2016B-23Sep2016-v3',
+                                        'SingleMuon_Run2016B-23Sep2016-v3',
+#                                       'MET_Run2016B-23Sep2016-v3',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016C_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016C-23Sep2016-v1',
+                                        'DoubleMuon_Run2016C-23Sep2016-v1',
+                                        'MuonEG_Run2016C-23Sep201C-v1',
+                                        'SingleElectron_Run2016C-23Sep2016-v1',
+                                        'SingleMuon_Run2016C-23Sep2016-v1',
+#                                       'MET_Run2016C-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016D_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016D-23Sep2016-v1',
+                                        'DoubleMuon_Run2016D-23Sep2016-v1',
+                                        'MuonEG_Run2016D-23Sep201C-v1',
+                                        'SingleElectron_Run2016D-23Sep2016-v1',
+                                        'SingleMuon_Run2016D-23Sep2016-v1',
+#                                       'MET_Run2016D-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016E_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016E-23Sep2016-v1',
+                                        'DoubleMuon_Run2016E-23Sep2016-v1',
+                                        'MuonEG_Run2016E-23Sep201C-v1',
+                                        'SingleElectron_Run2016E-23Sep2016-v1',
+                                        'SingleMuon_Run2016E-23Sep2016-v1',
+#                                       'MET_Run2016E-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016F_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016F-23Sep2016-v1',
+                                        'DoubleMuon_Run2016F-23Sep2016-v1',
+                                        'MuonEG_Run2016F-23Sep201C-v1',
+                                        'SingleElectron_Run2016F-23Sep2016-v1',
+                                        'SingleMuon_Run2016F-23Sep2016-v1',
+#                                       'MET_Run2016F-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016G_ReReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_ReReco.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016G-23Sep2016-v1',
+                                        'DoubleMuon_Run2016G-23Sep2016-v1',
+                                        'MuonEG_Run2016G-23Sep201C-v1',
+                                        'SingleElectron_Run2016G-23Sep2016-v1',
+                                        'SingleMuon_Run2016G-23Sep2016-v1',
+#                                       'MET_Run2016G-23Sep2016-v1',   
+                                       ],
+                       },
+
+  'Dec2016_Run2016H_PromptReco' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco_RunH.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016H-PromptReco-v2',
+                                        'DoubleMuon_Run2016H-PromptReco-v2',
+                                        'MuonEG_Run2016H-PromptReco-v2',
+                                        'SingleElectron_Run2016H-PromptReco-v2',
+                                        'SingleMuon_Run2016H-PromptReco-v2',
+#                                       'MET_Run2016H-PromptReco-v2',
+                                        'DoubleEG_Run2016H-PromptReco-v3',
+                                        'DoubleMuon_Run2016H-PromptReco-v3',
+                                        'MuonEG_Run2016H-PromptReco-v3',
+                                        'SingleElectron_Run2016H-PromptReco-v3',
+                                        'SingleMuon_Run2016H-PromptReco-v3',
+#                                       'MET_Run2016H-PromptReco-v3',
+                                       ],
+                       },
+
+
+#### Summer16 MC: Rogueone_v5  
+
+  'Dec2016_summer16_mAODv2'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2017/6Jan_RogueOne/MC/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
+                       },
+
+
+
 }
 
 
@@ -829,12 +964,13 @@ Steps= {
                   'subTargets' : ['do_l2loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
-  'puWbaseWFix' :     {
+  'MCl2looseCut' :       {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['puadder','baseW','genVariables']
+                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
+
 
   'l2loose'  :       {
                   'isChain'    : True ,
@@ -850,6 +986,19 @@ Steps= {
                   'subTargets' : ['do_l2vloose','l2kin','l3kin','l4kin'],
                 },
 
+  'l2looseCut'  :       {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin'],
+                },
+
+  'l2vlooseCut'  :       {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True,
+                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin'],
+                },
 
 
 # 'l1loose16'  :       {
@@ -865,7 +1014,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','TopGenPt'],
+                  'subTargets' : ['do_l2vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','BWEwkSinglet','TopGenPt'],
 		  'onlySample' : [ 
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50',
@@ -878,16 +1027,34 @@ Steps= {
                                  ] ,
                 },
 
+  'MCl2vlooseCut' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'], #,'BWEwkSinglet','TopGenPt'],
+                  'onlySample' : [
+                                  # VBS
+                                  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50','DYJetsToLL_M-50-LO-ext1',
+                                  'WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_QCD_aQGC',
+                                  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
+                                  'WLLJJToLNu_M-60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet','WZJJ_EWK_QCD','tZq_ll','ZZJJTo4L_EWK',
+                                  'TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
+                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
+                                  'TTTo2L2Nu_ext1','ST_t-channel_antitop','ST_t-channel_top',
+                                  'ST_tW_antitop','ST_tW_top','TTJets',
+                                  'ggZZ4e','ggZZ4m','ggZZ4t','ggZZ2e2m','ggZZ2e2t','ggZZ2m2t',
+                                 ] ,
+                },
 
 
   'MCl1loose' :       {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1loose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['l1loose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                   'onlySample' : [
                                   #### DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   ####
                                   'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
                                   'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
@@ -904,20 +1071,68 @@ Steps= {
 
                 },
 
+  'MCl1looseCut' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['l1looseCut','puadder','baseW','wwNLL','genVariables','genMatchVariables'], #,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'onlySample' : [
+                                  #### DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
+                                  ####
+                                  'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
+                                  'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
+                                  ####
+                                  'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched','QCD_Pt-50to80_EMEnriched_ext1',
+                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
+                                  ####
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
+                                  ####
+                                  'TT','TTJets',
+
+                                 ] ,
+
+                },
+
+
   'MCl1vloose' :       {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['l1vloose','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['l1vloose','puadder','baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                   'onlySample' : [
                                   #### DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',',DYJetsToLL_M-50-LO',
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO',
                                   ####
                                   'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
                                   'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
                                   ####
                                   'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched',
+                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
+                                  ####
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
+                                  ####
+                                  'TT','TTJets',
+                                 ] ,
+                },
+
+  'MCl1vlooseCut' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['l1vlooseCut','puadder','baseW','wwNLL','genVariables','genMatchVariables'], # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'onlySample' : [
+                                  #### DY 
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
+                                  'DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO',
+                                  ####
+                                  'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
+                                  'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
+                                  ####
+                                  'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched','QCD_Pt-50to80_EMEnriched_ext1',
                                   'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
                                   ####
                                   'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
@@ -1009,6 +1224,14 @@ Steps= {
                   'do4Data'    : False ,
                   'subTargets' : ['bPogSF','TrigEff','IdIsoSC']
                     }, 
+
+  'LepSFCut'    :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['TrigEff_Cut','IdIsoSC_Cut']
+                    },
+
 
   'puextra'      :   {
                   'isChain'    : True ,
@@ -3432,6 +3655,27 @@ Steps= {
                   'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1'
                },
 
+  'do_l2loose_Cut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 2 --cmssw RPLME_CMSSW --selection 1 --idEleKind cut_WP_Tight80X'
+               },
+
+  'do_l2vloose'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1'
+               },
+
+  'do_l2vloose_Cut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1 --idEleKind cut_WP_Tight80X'
+               },
+
 
   'l2tight'    : {
                   'isChain'    : False ,
@@ -3447,11 +3691,25 @@ Steps= {
                   'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW'
                },
 
+  'l1looseCut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l1selfiller --kind 2 --cmssw RPLME_CMSSW --idEleKind cut_WP_Tight80X'
+               },
+
   'l1vloose'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l1selfiller --kind 4 --cmssw RPLME_CMSSW'
+               },
+
+  'l1vlooseCut'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l1selfiller --kind 4 --cmssw RPLME_CMSSW --idEleKind cut_WP_Tight80X'
                },
 
 
@@ -3480,12 +3738,19 @@ Steps= {
                # brilcalc lumi --begin  273158 --end 273726 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
                # 0.497 /fb
 
+  'IdIsoSC_Cut'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.0135 --cmssw=RPLME_CMSSW --idEleKind=cut_WP_Tight80X'
+               },
+
 
   'TrigEff'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0483937   --cmssw=RPLME_CMSSW'
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0483937   --cmssw=RPLME_CMSSW' 
                }, 
                # the number is 0.595/fb / XXX/fb 
                # then 0.595 / 2.6 = 0.23
@@ -3493,6 +3758,27 @@ Steps= {
                # then 0.595 / (2.791 + 1.546 + 1.549 + 0.378) = 0.595 / 6.264 = 0.095
                # then 0.595 / 12.2950 =    0.0483937
 
+  'TrigEff_Cut'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0135   --cmssw=RPLME_CMSSW'
+               },
+
+  'TrigMaker'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW'
+                 },
+
+ 'TrigMakerData'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW -d'
+                 },
+ 
 
   'hadd'     : {
                   'isChain'    : False ,
@@ -3500,7 +3786,7 @@ Steps= {
                   'do4Data'    : True  ,
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
-                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1',
+                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
                                   'DYJetsToEE_Pow',
                                   'DY1JetsToLL',
                                   #'TTJets',

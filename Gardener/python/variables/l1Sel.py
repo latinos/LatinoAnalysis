@@ -34,6 +34,8 @@ class L1SelFiller(TreeCloner):
         group.add_option('-k', '--kind',  dest='kind',  help='Kind of lepton identification to be applied [default is loose leptons]',  default='2')
         group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763', type='string')
         group.add_option('-s', '--selection', dest='selection', help='apply some selections, like pt cuts', default=0)
+        # new feature introduced for Full2016 (Jan 2017)
+        group.add_option( '--idEleKind' , dest='idEleKind', help='kind of electron id', default=None) # e.g. "cut_WP_Tight80X"
         parser.add_option_group(group)
         return group
 
@@ -49,7 +51,9 @@ class L1SelFiller(TreeCloner):
 
         self.selection = opts.selection
         print " selection = ", self.selection
-
+        
+        self.idEleKind = opts.idEleKind
+        print " idEleKind = ", self.idEleKind
 
     def changeOrder(self, vectorname, vector, goodleptonslist) :
         # vector is already linked to the otree branch
@@ -109,7 +113,7 @@ class L1SelFiller(TreeCloner):
     def isLooseLepton(self, ilepton) :
        
        # denominator of fakes definition
-       
+      
        isThisALooseLepton = 0
        
        if self.itree.std_vector_lepton_pt[ilepton] > 0 :
@@ -154,8 +158,16 @@ class L1SelFiller(TreeCloner):
                  ))
                 ) : 
                   isThisALooseLepton = 1
+                  
+           elif self.cmssw == 'Full2016' :                 
+             # HLT safe
+             #
+             if abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5:
+                if self.itree.std_vector_lepton_eleIdHLT[ilepton] :
+                    isThisALooseLepton = 1
 
-           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' :               
+                  
+           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' :  # temp fix for Rereco so it doesn't crash on 74X variables               
              #
              # see https://indico.cern.ch/event/491507/contributions/2192817/attachments/1285452/1911768/EGM_HLTsafeCuts_31May16.pdf
              #
@@ -198,7 +210,7 @@ class L1SelFiller(TreeCloner):
                  ))
                 ) : 
                   isThisALooseLepton = 1
-           
+                  
            else : # 74X cmssw release
              if (
                 abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 
@@ -261,7 +273,7 @@ class L1SelFiller(TreeCloner):
                   ) :
                isThisALooseLepton = 1.0
                
-           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' :               
+           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' or self.cmssw == 'Full2016':               
              if ( self.itree.std_vector_lepton_isTightMuon[ilepton] == 1 
                   and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.4
                   and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
@@ -270,8 +282,7 @@ class L1SelFiller(TreeCloner):
                   and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                   and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
                   ) :
-               isThisALooseLepton = 1.0
-               
+               isThisALooseLepton = 1.0               
            else : 
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                   and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.4
@@ -306,7 +317,22 @@ class L1SelFiller(TreeCloner):
                   and self.itree.std_vector_electron_hcalPFClusterIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.25 
                  ) :
                isThisATightLepton = 1
-
+               
+           elif self.cmssw == 'Full2016' :                 
+              if abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5:               
+                 if self.idEleKind == 'cut_WP_Tight80X':
+                     #Tight cut WP + HLT + triple charge + missing hits veto + d0 and dz recommendation               
+                    if ( self.itree.std_vector_lepton_eleIdTight[ilepton] and self.itree.std_vector_lepton_eleIdHLT[ilepton]
+                        and self.itree.std_vector_electron_tripleChargeAgreement[ilepton] 
+                        and self.itree.std_vector_electron_expectedMissingInnerHits[ilepton] < 1 
+                        and abs(self.itree.std_vector_lepton_d0[ilepton]) < ( 0.05 + 0.05*(abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479) )
+                        and abs(self.itree.std_vector_lepton_dz[ilepton]) < ( 0.1  + 0.1 *(abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479) ) 
+                       ):
+                            isThisATightLepton = 1
+                 else :
+                    if self.itree.std_vector_lepton_eleIdMvaWp80[ilepton] :
+                        isThisATightLepton = 1
+                    
            elif self.cmssw == 'ICHEP2016' :               
              #
              # see https://indico.cern.ch/event/491507/contributions/2192817/attachments/1285452/1911768/EGM_HLTsafeCuts_31May16.pdf
@@ -392,7 +418,7 @@ class L1SelFiller(TreeCloner):
                  
                 ) : 
                   isThisATightLepton = 1
-             
+
            elif self.cmssw == 'Rereco2016' :               
              #
              # Tight + HLT + d0 and dz recommendation
@@ -446,7 +472,7 @@ class L1SelFiller(TreeCloner):
                  ))                
                 ) : 
                   isThisATightLepton = 1
-           
+                  
            else :
              # id definition
              if ( self.itree.std_vector_lepton_eleIdTight[ilepton] == 1
@@ -475,7 +501,7 @@ class L1SelFiller(TreeCloner):
            else:
                muonIso = 0
            
-           if self.cmssw == '763' :
+           if self.cmssw == '763':
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
                 and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
@@ -485,8 +511,8 @@ class L1SelFiller(TreeCloner):
                 and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
                 ) :
                isThisATightLepton = 1
-
-           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' :
+               
+           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' or self.cmssw == 'Full2016' :
              if ( self.itree.std_vector_lepton_isTightMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
                 and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
@@ -495,8 +521,7 @@ class L1SelFiller(TreeCloner):
                 and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                 and self.itree.std_vector_lepton_trackIso[ilepton]/self.itree.std_vector_lepton_pt[ilepton] < 0.4
                 ) :
-               isThisATightLepton = 1
-
+               isThisATightLepton = 1               
            else :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
@@ -562,7 +587,7 @@ class L1SelFiller(TreeCloner):
                 ) : 
                   isThisAWgsLepton = 1
 
-           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' :               
+           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' or self.cmssw == 'Full2016' :               
              #
              # see https://indico.cern.ch/event/491507/contributions/2192817/attachments/1285452/1911768/EGM_HLTsafeCuts_31May16.pdf
              #
@@ -669,7 +694,7 @@ class L1SelFiller(TreeCloner):
                                      self.itree.std_vector_lepton_eta[ilepton], self.itree.std_vector_lepton_phi[ilepton],
                                      0.3) :
                    pt_to_be_removed_from_overlap += self.itree.std_vector_lepton_pt[jlepton]
-           
+          
            if self.cmssw == '763' :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
@@ -680,7 +705,7 @@ class L1SelFiller(TreeCloner):
                 ) :
                isThisAWgsLepton = 1
 
-           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' :
+           elif self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' or self.cmssw == 'Full2016' :
              if ( self.itree.std_vector_lepton_isTightMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
                 and abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
@@ -689,7 +714,6 @@ class L1SelFiller(TreeCloner):
                 and abs(self.itree.std_vector_lepton_dz[ilepton]) < 0.1          # formerly std_vector_lepton_BestTrackdz
                 ) :
                isThisAWgsLepton = 1
-
            else :
              if ( self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1 
                 and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] + muonIso - pt_to_be_removed_from_overlap) / self.itree.std_vector_lepton_pt[ilepton] < 0.15
@@ -752,6 +776,13 @@ class L1SelFiller(TreeCloner):
                 ) : 
                         isThisAVeryLooseLepton = 1
                         
+            elif self.cmssw == 'Full2016' :                 
+             # HLT safe
+             #
+             if abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11 and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.5:
+                if self.itree.std_vector_lepton_eleIdHLT[ilepton] :
+                    isThisAVeryLooseLepton = 1
+                    
             elif self.cmssw == 'Rereco2016' :               
              #
              # HLT + very loose d0 and dz cuts
@@ -790,7 +821,7 @@ class L1SelFiller(TreeCloner):
                             )
                     ))                
                   ) : 
-                  isThisAVeryLooseLepton = 1 
+                  isThisAVeryLooseLepton = 1
                   
             else:      
                 if (
@@ -837,13 +868,27 @@ class L1SelFiller(TreeCloner):
                                     self.itree.std_vector_lepton_photonIso[ilepton] -  \
                                     0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton],0))/self.itree.std_vector_lepton_pt[ilepton]   <  1.0
                 ) :
-                    isThisAVeryLooseLepton = 1   
-            else:
+                    isThisAVeryLooseLepton = 1 
+                    
+            elif self.cmssw == 'Full2016' : 
+                if ( abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
+                    and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.4
+                    and self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1
+                    #and abs(self.itree.std_vector_lepton_d0[ilepton]) < 0.5          # formerly std_vector_lepton_BestTrackdxy
+                    #and abs(self.itree.std_vector_lepton_dz[ilepton]) < 1.          # formerly std_vector_lepton_BestTrackdz
+                    and (self.itree.std_vector_lepton_chargedHadronIso[ilepton] \
+                            +max(self.itree.std_vector_lepton_neutralHadronIso[ilepton] +  \
+                                    self.itree.std_vector_lepton_photonIso[ilepton] -  \
+                                    0.5 * self.itree.std_vector_lepton_sumPUPt[ilepton],0))/self.itree.std_vector_lepton_pt[ilepton]   <  0.6
+                ) :
+                    isThisAVeryLooseLepton = 1 
+                
+            else:            
                 if ( abs(self.itree.std_vector_lepton_flavour[ilepton]) == 13
                         and abs(self.itree.std_vector_lepton_eta[ilepton]) < 2.4
                         and abs(self.itree.std_vector_lepton_d0[ilepton]) < 0.5          # formerly std_vector_lepton_BestTrackdxy
                         and abs(self.itree.std_vector_lepton_dz[ilepton]) < 1.          # formerly std_vector_lepton_BestTrackdz
-                    ) :
+                ) :
                     isThisAVeryLooseLepton = 1
            
        return isThisAVeryLooseLepton
@@ -1198,7 +1243,7 @@ class L1SelFiller(TreeCloner):
               #print "goodJets: ", goodJets
               #print "goodPuppiJets: ", goodPuppiJets
 
-              if self.cmssw == '763' or self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' : 
+              if self.cmssw == '763' or self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' or self.cmssw == 'Full2016' : 
                 met = itree.metPfType1      
                 metphi = itree.metPfType1Phi
               else : 
@@ -1230,7 +1275,7 @@ class L1SelFiller(TreeCloner):
               WW.setJets(new_std_vector_jet_pt, new_std_vector_jet_eta)
 
 
-              if self.cmssw == '763'  or self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' : 
+              if self.cmssw == '763'  or self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' or self.cmssw == 'Full2016' : 
                   met = itree.metPfType1      
                   metphi = itree.metPfType1Phi
                   WW.setTkMET(itree.metTtrk, itree.metTtrkPhi) # before in 74x we were missing this variable  
@@ -1284,5 +1329,6 @@ class L1SelFiller(TreeCloner):
         self.disconnect()
         print '- Eventloop completed'
         print '   Saved: ', savedentries, ' events'
+
 
 
