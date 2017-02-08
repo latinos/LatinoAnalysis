@@ -331,7 +331,7 @@ Productions= {
   '21Jun2016_v2_Run2016B_PromptReco_KNU' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
-                        'dir'     : 'HWW6p3/21Jun2016_Run2016B_PromptReco/',
+                        'dir'     : 'HWW6p3/21Jun2016_v2_Run2016B_PromptReco/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         'reName'  : {

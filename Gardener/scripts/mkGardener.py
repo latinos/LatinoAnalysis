@@ -551,7 +551,9 @@ for iProd in prodList :
         #print targetList[iTarget] 
         inTree = targetList[iTarget]  # Pointing to File in case of Split
         oriTree = inTree
-        wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
+	if'knu' in os.uname()[1]:
+	  wDir  =workDir+'/Gardening__'+iProd+'__'+iStep+'__'+startingStep
+	else: wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
         if   options.runBatch and not 'knu' in os.uname()[1]: command=''
         else:  
