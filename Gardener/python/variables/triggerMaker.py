@@ -20,6 +20,8 @@ from LatinoAnalysis.Gardener.gardening import TreeCloner
 class triggerCalculator():
     def __init__ (self,Trigger,cmssw,iPeriod,isData=False):
        print "-------- triggerCalculator init() ---------", cmssw , iPeriod , isData
+       self.EMTFBug = Trigger[cmssw][iPeriod]['EMTFBug']
+       print 'EMTF Bug : ' ,self.EMTFBug
 
        if isData: 
          self.EleMu     = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['EleMu']) 
@@ -99,8 +101,6 @@ class triggerCalculator():
          print 'DZ Eff MuEle     = ' , self.DZEff_MuEle    
          print 'DZ Eff EleMu     = ' , self.DZEff_EleMu
 
-         self.EMTFBug = Trigger[cmssw][iPeriod]['EMTFBug']
-         print 'EMTF Bug : ' ,self.EMTFBug
 
          self.trkSFMu = copy.deepcopy(Trigger[cmssw][iPeriod]['trkSFMu'])
  
@@ -745,19 +745,29 @@ class triggerCalculator():
  
         return 0, 0, 0 , 0, 0
 
-   def _dPhi(phi1,phi2) :
-        return 90.
+    def _dPhi(self,phi1,phi2):
+       PI=3.14159265359
+       dphi=abs(phi1-phi2)*180./PI
+       if dphi>180 : dphi=360-dphi
+       return dphi
  
-   def _getEMTFBugVeto(self,vetor_kind,vector_pt,vector_eta,vector_phi):
+    def _getEMTFBugVeto(self,vector_kind,vector_pt,vector_eta,vector_phi):
 
         if self.EMTFBug:
           vPhi = []
-          for iLep in range(0,len(vector_kind)-1):
-            if abs(vector_kind[iLep]) == 13 and vector_pt[iLep] >= 10. and abs(vector_eta[iLep]) >= 1.24 : vPhi.append(vector_phi[iLep])
-            if len(vPhi) >= 2 :
-              for iLep1 in range(0,len(vPhi)-1):
-                for iLep2 in range(0,len(vPhi)-1):
-                  if not iLep1 == iLep2 and self._dPhi(vPhi(iLep1),vPhi(iLep2)) <= 80. : return 0.
+          vEta = []
+          for iLep in range(0,len(vector_kind)):
+            if abs(vector_kind[iLep]) == 13 and vector_pt[iLep] >= 10. and abs(vector_eta[iLep]) >= 1.24 :
+              #print "Fill", iLep, vector_kind[iLep] , vector_eta[iLep]
+              vEta.append(vector_eta[iLep])
+              vPhi.append(vector_phi[iLep])
+          if len(vPhi) >= 2 :
+            for iLep1 in range(0,len(vPhi)):
+              #print "A ",iLep1 , vEta[iLep1] , vPhi[iLep1]
+              for iLep2 in range(0,len(vPhi)):
+                if not iLep1 == iLep2 and vEta[iLep1]*vEta[iLep2] > 0 :
+                  #print "B ", iLep2 , vEta[iLep2] , vPhi[iLep2]
+                  if self._dPhi(vPhi[iLep1],vPhi[iLep2]) < 80. : return 0.
         return 1.
 
 class triggerMaker(TreeCloner):
@@ -923,7 +933,9 @@ class triggerMaker(TreeCloner):
             self.branches['iRunPeriod'][0] = self.runPeriod 
 
             # Compute the veto for the EMTF Bug in 2016
-            self.branches['veto_EMTFBug'] = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta,itree.std_vector_lepton_phi)
+            vEMTF = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta,itree.std_vector_lepton_phi)
+            self.branches['veto_EMTFBug'] = vEMTF
+            print vEMTF
 
             # DATA = compute trigger "bits" oer dataset 
             if self.isData :
