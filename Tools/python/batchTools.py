@@ -84,7 +84,7 @@ class batchJobs :
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
          elif 'ifca' in os.uname()[1]:
-           jFile.write("cd /gpfs/gaes/cms/"+os.getlogin()+" \n") 
+           jFile.write("cd /gpfs/gaes/cms/ \n") 
          else:
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
