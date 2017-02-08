@@ -328,6 +328,20 @@ Productions= {
                                        'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
                                     },
                        },
+  '21Jun2016_v2_Run2016B_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW6p3/21Jun2016_v2_Run2016B_PromptReco/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016B-PromptReco-v2'            : 'Run2016B_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016B-PromptReco-v2'    : 'Run2016B_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
+                                    },
+                       },
 
 
   '21Jun2016_v2_Run2016B_PromptReco_repro' : {
@@ -360,6 +374,20 @@ Productions= {
                                        'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
                                     },
                        },
+  '05Jul2016_Run2016B_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW6p3/05Jul2016_Run2016B_PromptReco/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016B-PromptReco-v2'            : 'Run2016B_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016B-PromptReco-v2'    : 'Run2016B_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
+                                    },
+                       },
 
   '05Jul2016_Run2016B_PromptReco_repro' : {
                         'isData'  : True ,
@@ -381,6 +409,21 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jul08/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016B
+                                       'DoubleEG_Run2016B-PromptReco-v2'          : 'Run2016B_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016B-PromptReco-v2'            : 'Run2016B_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016B-PromptReco-v2'    : 'Run2016B_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016B-PromptReco-v2'        : 'Run2016B_PromptReco_SingleMuon',
+                                    },
+                       },
+  '08Jul2016_Run2016B_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW6p3/08Jul2016_Run2016B_PromptReco/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         'reName'  : {
@@ -425,6 +468,21 @@ Productions= {
                                        'SingleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_SingleMuon',
                                     },
                        },
+  '08Jul2016_Run2016C_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW6p3/08Jul2016_Run2016C_PromptReco/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016C
+                                       'DoubleEG_Run2016C-PromptReco-v2'          : 'Run2016C_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016C-PromptReco-v2'            : 'Run2016C_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016C-PromptReco-v2'    : 'Run2016C_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_SingleMuon',
+                                    },
+                       },
 
   '08Jul2016_Run2016C_PromptReco_repro' : {
                         'isData'  : True ,
@@ -447,6 +505,21 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jul11_NoL1T/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016C
+                                       'DoubleEG_Run2016C-PromptReco-v2'          : 'Run2016C_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016C-PromptReco-v2'            : 'Run2016C_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016C-PromptReco-v2'    : 'Run2016C_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_SingleMuon',
+                                    },
+                       },
+  '11Jul2016_Run2016C_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW12fb/11Jul2016_Run2016C_PromptReco/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         'reName'  : {
@@ -491,6 +564,21 @@ Productions= {
                                        'SingleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_SingleMuon',
                                     },
                        },
+  '15Jul2016_Run2016C_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW12fb/15Jul2016_Run2016C_PromptReco/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016C
+                                       'DoubleEG_Run2016C-PromptReco-v2'          : 'Run2016C_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016C-PromptReco-v2'            : 'Run2016C_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016C-PromptReco-v2'    : 'Run2016C_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_SingleMuon',
+                                    },
+                       },
 
   '15Jul2016_Run2016C_PromptReco_repro' : {
                         'isData'  : True ,
@@ -513,6 +601,21 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jul15_DCSONLY/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016D
+                                       'DoubleEG_Run2016D-PromptReco-v2'          : 'Run2016D_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016D-PromptReco-v2'        : 'Run2016D_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016D-PromptReco-v2'            : 'Run2016D_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016D-PromptReco-v2'    : 'Run2016D_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016D-PromptReco-v2'        : 'Run2016D_PromptReco_SingleMuon',
+                                    },
+                       },
+  '15Jul2016_Run2016D_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW12fb/15Jul2016_Run2016D_PromptReco/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         'reName'  : {
@@ -547,6 +650,21 @@ Productions= {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Jul26/data/25ns/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016D
+                                       'DoubleEG_Run2016D-PromptReco-v2'          : 'Run2016D_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016D-PromptReco-v2'        : 'Run2016D_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016D-PromptReco-v2'            : 'Run2016D_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016D-PromptReco-v2'    : 'Run2016D_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016D-PromptReco-v2'        : 'Run2016D_PromptReco_SingleMuon',
+                                    },
+                       },
+  '26Jul2016_Run2016D_PromptReco_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
+                        'dir'     : 'HWW12fb/26Jul2016_Run2016D_PromptReco/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'ICHEP2016' ,
                         'reName'  : {
@@ -1106,6 +1224,14 @@ Steps= {
                   'do4Data'    : False ,
                   'subTargets' : ['bPogSF','TrigEff','IdIsoSC']
                     }, 
+
+  'LepSFCut'    :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['TrigEff_Cut','IdIsoSC_Cut']
+                    },
+
 
   'puextra'      :   {
                   'isChain'    : True ,
@@ -3612,12 +3738,19 @@ Steps= {
                # brilcalc lumi --begin  273158 --end 273726 -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt
                # 0.497 /fb
 
+  'IdIsoSC_Cut'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.0135 --cmssw=RPLME_CMSSW --idEleKind=cut_WP_Tight80X'
+               },
+
 
   'TrigEff'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0483937   --cmssw=RPLME_CMSSW'
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0483937   --cmssw=RPLME_CMSSW' 
                }, 
                # the number is 0.595/fb / XXX/fb 
                # then 0.595 / 2.6 = 0.23
@@ -3625,6 +3758,27 @@ Steps= {
                # then 0.595 / (2.791 + 1.546 + 1.549 + 0.378) = 0.595 / 6.264 = 0.095
                # then 0.595 / 12.2950 =    0.0483937
 
+  'TrigEff_Cut'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py efftfiller  --fixMuonTriggerLumiRatio=0.0135   --cmssw=RPLME_CMSSW'
+               },
+
+  'TrigMaker'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW'
+                 },
+
+ 'TrigMakerData'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW -d'
+                 },
+ 
 
   'hadd'     : {
                   'isChain'    : False ,
@@ -3632,7 +3786,7 @@ Steps= {
                   'do4Data'    : True  ,
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
-                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1',
+                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
                                   'DYJetsToEE_Pow',
                                   'DY1JetsToLL',
                                   #'TTJets',
