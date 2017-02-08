@@ -252,7 +252,7 @@ for iProd in prodList :
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileExistList=string.split(out)
-      print FileExistList
+      print "FileExistList: ", FileExistList
       #print samples
       #print samples.keys()
       for iSample in samples : 
@@ -393,7 +393,7 @@ for iProd in prodList :
       #   isNotFirstinChain = False
       #   targetList = targetListChain
       #targetListChain=targetList
-      print targetList
+      print "targetList check 1: ", targetList
       #for i in targetList : print i
       #quit() 
       # Create Output Directory on eos
@@ -507,7 +507,7 @@ for iProd in prodList :
             print '--> HADD: Some jobs stil running/not done : '+iTarget 
             del targetList[iTarget]
 
-      print targetList
+      print "targetList check 2: ", targetList
       # Create Jobs Dictionary
       list=[]
       list.append(iStep)
@@ -715,7 +715,7 @@ for iProd in prodList :
         else:
           command += ' 2>&1 | tee '+logFile+' \n'  
         print '--------------------------------', options.pretend
-        if options.pretend : print command
+	if options.pretend : print "The command is : ", command
         else :
           if  options.runBatch: jobs.Add(stepBatch,iTarget,command)
           else:
