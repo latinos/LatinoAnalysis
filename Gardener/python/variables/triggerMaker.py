@@ -923,7 +923,7 @@ class triggerMaker(TreeCloner):
             self.branches['iRunPeriod'][0] = self.runPeriod 
 
             # Compute the veto for the EMTF Bug in 2016
-            self.branches['veto_EMTFBug'] = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta)
+            self.branches['veto_EMTFBug'] = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta,itree.std_vector_lepton_phi)
 
             # DATA = compute trigger "bits" oer dataset 
             if self.isData :
