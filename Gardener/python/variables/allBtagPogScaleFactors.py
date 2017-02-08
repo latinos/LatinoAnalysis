@@ -34,11 +34,12 @@ class allBtagPogScaleFactors(TreeCloner):
         effFile = "data/efficiencyMCFile76X_all.py"
         if opts.cmssw == "ICHEP2016":
           effFile = "data/efficiencyMCFile80X_all.py"
-        if opts.cmssw == "Rereco2016":
-          effFile = "data/efficiencyMCFile80X_all.py" ##FIXME USE NEW MC EFFICIENCY FILE
+        if opts.cmssw == "Full2016":
+          effFile = "data/efficiencyMCFileFull2016.py"
 
         efficienciesMC_CMVA = {}
         efficienciesMC_CSV = {}
+        efficienciesMC_DeepCSV = {}
 
         efffile_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+effFile
 
@@ -54,6 +55,7 @@ class allBtagPogScaleFactors(TreeCloner):
 
         self.efficiencyMC_CMVA = efficienciesMC_CMVA
         self.efficiencyMC_CSV = efficienciesMC_CSV
+        self.efficiencyMC_DeepCSV = efficienciesMC_DeepCSV
 
         self.minpt = 20
         self.maxpt = 290 
@@ -66,30 +68,33 @@ class allBtagPogScaleFactors(TreeCloner):
 
         self.cmvaSfFile = 'cMVAv2.csv'
         self.csvSfFile = 'CSVv2.csv'
+        self.deepCSVSfFile = 'deepCSV.csv'
         if self.cmssw == "ICHEP2016":
           self.cmvaSfFile = "cMVAv2_ICHEP2016.csv"
           self.csvSfFile  = "CSVv2_ICHEP2016.csv"
-        if self.cmssw == "Rereco2016":
-          self.cmvaSfFile = 'cMVAv2_Moriond17.csv'  ## cMVAv2_Moriond17.csv == cMVAv2_Moriond17_BtoH.csv
-          self.csvSfFile = 'CSVv2_Moriond17.csv'  ## CSVv2_Moriond17.csv == CSVv2_Moriond17_BtoH.csv
-          #self.cmvaSfFile_BtoF = "cMVAv2_Moriond17_BtoF.csv"
-          #self.cmvaSfFile_GtoH = "cMVAv2_Moriond17_GtoH.csv"
-          #self.csvSfFile_BtoF  = "CSVv2_Moriond17_BtoF.csv"
-          #self.csvSfFile_GtoH  = "CSVv2_Moriond17_GtoH.csv"
+        if self.cmssw == "Full2016":
+          self.cmvaSfFile = 'cMVAv2_Moriond17_B_H.csv'
+          self.csvSfFile = 'CSVv2_Moriond17_B_H.csv'
+          self.deepCSVSfFile = 'DeepCSV_Moriond17_B_H.csv'
 
         print "CMVA scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile
         print "CSVv2 scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile
+        print "DeepCSV scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.deepCSVSfFile
 
         ROOT.gSystem.Load('libCondFormatsBTauObjects')
         ROOT.gSystem.Load('libCondToolsBTau')
 
         self.wpreshape = 3 
         self.wps = ["L", "M", "T"]
-        self.taggers=["CMVA", "CSV"]
         self.loadflavors=[0,1,2] # 0 is for b flavour, 1: FLAV_C, 2: FLAV_UDSG
         self.flavors=["udsg","bc"]
         self.variations=["central", "up", "down"]
         self.reshape_variations = ["central","up_jes","up_lf","up_hfstats1","up_hfstats2","up_cferr1","up_cferr2","up_hf","up_lfstats1","up_lfstats2","down_jes","down_lf","down_hfstats1","down_hfstats2","down_cferr1","down_cferr2","down_hf","down_lfstats1","down_lfstats2"]
+
+        if self.cmssw == "Full2016":
+          self.taggers=["CMVA", "CSV", "deepCSV"]
+        else:
+          self.taggers=["CMVA", "CSV"]
 
         self.calibs = {}
         for tagger in self.taggers:
@@ -97,6 +102,8 @@ class allBtagPogScaleFactors(TreeCloner):
             self.calibs[tagger] = ROOT.BTagCalibration("cMVAv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
           elif tagger == "CSV":
             self.calibs[tagger] = ROOT.BTagCalibration("CSVv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile)
+          elif tagger == "deepCSV":
+            self.calibs[tagger] = ROOT.BTagCalibration("DeepCSV", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.deepCSVSfFile)
           else:
             print "Error: tagger not found!"
             break
@@ -108,6 +115,7 @@ class allBtagPogScaleFactors(TreeCloner):
 
         self.reshape_readers = {}
         for tagger in self.taggers:
+          if tagger == "deepCSV": continue
           self.reshape_readers[tagger] = ROOT.BTagCalibrationReader(self.wpreshape, "central", self.reshape_sys)
           for flavor in self.loadflavors:
             self.reshape_readers[tagger].load(self.calibs[tagger],flavor,"iterativefit")
@@ -124,13 +132,17 @@ class allBtagPogScaleFactors(TreeCloner):
               if flavor == 0 or flavor == 1: # b or c
                 sampleCMVA = "ttbar"
                 sampleCSV  = "mujets"
+                sampleDeepCSV = "mujets"
               else:
                 sampleCMVA = "incl"
-                sampleCSV  ="incl"
+                sampleCSV  = "incl"
+                sampleDeepCSV = "incl"
               if tagger == "CMVA":
                 self.readers[tagger][wp].load(self.calibs[tagger],flavor,sampleCMVA) 
               if tagger == "CSV":
                 self.readers[tagger][wp].load(self.calibs[tagger],flavor,sampleCSV)
+              if tagger == "deepCSV":
+                self.readers[tagger][wp].load(self.calibs[tagger],flavor,sampleDeepCSV)
 
     def _getEffMC (self, algo, wp, kindJet, pt, eta):
 
@@ -178,6 +190,23 @@ class allBtagPogScaleFactors(TreeCloner):
             # default ... it should never happen!
             print " default ???", pt, eta, kindJet
             return 1.0
+
+        elif algo == "deepCSV":
+          if (kindJet,wp) in self.efficiencyMC_DeepCSV.keys() :
+            # get the efficiency
+            for point in self.efficiencyMC_DeepCSV[(kindJet,wp)] :
+              #   pt           eta          eff 
+              # (( 0.0, 10.0), (0.0, 1.5), 0.980 ),
+              if ( pt  >= point[0][0] and pt  < point[0][1] and
+                   eta >= point[1][0] and eta < point[1][1] ) :
+                  #print "kindJet, wp = ", kindJet, " ", wp
+                  #print "pt, eta, SF = ", pt, " ", eta, " ", point[2]
+                  return point[2]
+
+            # default ... it should never happen!
+            print " default ???", pt, eta, kindJet
+            return 1.0
+
         else: 
           print "ERROR: algo ", algo, " is not available. Please specify a correct algo."  
           print "Available algos are 'CMVA' and 'CSV'."
@@ -221,6 +250,7 @@ class allBtagPogScaleFactors(TreeCloner):
                   branchlist.append(namebranch)
  
         for tagger in self.taggers:
+          if tagger == "deepCSV": continue
           for rvariation in self.reshape_variations:
             if rvariation == "central":
               namebranch = "bPogSF_"+tagger+"reshape"
@@ -271,6 +301,7 @@ class allBtagPogScaleFactors(TreeCloner):
         # Re-shaping weights
         bPogSF_reshape = {}
         for tagger in self.taggers:
+          if tagger == "deepCSV": continue
           bPogSF_reshape[tagger] = {}
           for rvariation in self.reshape_variations:
             bPogSF_reshape[tagger][rvariation] = numpy.ones(1, dtype=numpy.float32)
@@ -298,6 +329,7 @@ class allBtagPogScaleFactors(TreeCloner):
             self.resetCounters()
   
             for tagger in self.taggers:
+              if tagger == "deepCSV": continue
               for rvariation in self.reshape_variations: 
                 bPogSF_reshape[tagger][rvariation][0] = 1.
 
@@ -313,7 +345,8 @@ class allBtagPogScaleFactors(TreeCloner):
               tagged = {}
               tagged["CMVA"]={}
               tagged["CSV"]={}
-              if self.cmssw == "Rereco2016":
+              tagged["deepCSV"]={}
+              if self.cmssw == "Full2016":
                 tagged["CMVA"]["L"] = itree.std_vector_jet_cmvav2 [iJet] > -0.5884 
                 tagged["CMVA"]["M"] = itree.std_vector_jet_cmvav2 [iJet] > 0.4432 
                 tagged["CMVA"]["T"] = itree.std_vector_jet_cmvav2 [iJet] > 0.9432 
@@ -321,6 +354,10 @@ class allBtagPogScaleFactors(TreeCloner):
                 tagged["CSV"]["L"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.5426 
                 tagged["CSV"]["M"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.8484 
                 tagged["CSV"]["T"] = itree.std_vector_jet_csvv2ivf [iJet] > 0.9535
+
+                tagged["deepCSV"]["L"] = itree.std_vector_jet_DeepCSVB [iJet] > 0.2219
+                tagged["deepCSV"]["M"] = itree.std_vector_jet_DeepCSVB [iJet] > 0.6324
+                tagged["deepCSV"]["T"] = itree.std_vector_jet_DeepCSVB [iJet] > 0.8958
               else:
                 tagged["CMVA"]["L"] = itree.std_vector_jet_cmvav2 [iJet] > -0.715
                 tagged["CMVA"]["M"] = itree.std_vector_jet_cmvav2 [iJet] > 0.185
@@ -350,6 +387,7 @@ class allBtagPogScaleFactors(TreeCloner):
 
               reshapeSF = {}
               for tagger in self.taggers:
+                if tagger == "deepCSV": continue
                 reshapeSF[tagger] = {}
                 for rvariation in self.reshape_variations:
                   if tagger == "CMVA":
