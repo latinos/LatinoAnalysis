@@ -19,6 +19,7 @@ Trigger['Full2015'] =  { 1  :  { 'begin' : 1 , 'end' : 999999 , 'lumi' :  5.0 ,
                                                'MuEle'     : 1.0   ,
                                                'EleMu'     : 1.0   ,
                                              } ,
+                                 'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
                                  'EMTFBug':  False , 
                                },
                        },
@@ -44,6 +45,7 @@ Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  True , 
+                                  'trkSFMu':  [ 0.99 , 0.99 , 0.98 ] , # tracker SF_muons [ cent , up , down ]
                                   'DATA'   :  {
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -70,6 +72,7 @@ Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  True , 
+                                  'trkSFMu':  [ 0.99 , 0.99 , 0.98 ] , # tracker SF_muons [ cent , up , down ]
                                   'DATA'   :  { 
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -104,6 +107,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  True , 
+                                  'trkSFMu':  [ 0.99 , 0.99 , 0.98 ] , # tracker SF_muons [ cent , up , down ]
                                   'DATA'   :  {
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -130,6 +134,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  True , 
+                                  'trkSFMu':  [ 0.99 , 0.99 , 0.98 ] , # tracker SF_muons [ cent , up , down ]
                                   'DATA'   :  { 
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -157,6 +162,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  False , 
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
                                   'DATA'   :  { 
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -183,6 +189,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  False , 
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
                                   'DATA'   :  { 
                                                 'EleMu'     : [ 57 , 97 ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -209,6 +216,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  False , 
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
                                   'DATA'   :  { 
                                                 'EleMu'     : [ 57 , 97 ] ,
                                                 'DoubleMu'  : [ 10 , 100] ,
