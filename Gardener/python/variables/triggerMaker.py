@@ -3,6 +3,7 @@ import numpy
 import ROOT
 import os.path
 import copy
+import math
 
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 
@@ -750,6 +751,13 @@ class triggerCalculator():
        dphi=abs(phi1-phi2)*180./PI
        if dphi>180 : dphi=360-dphi
        return dphi
+
+    def _phiCSC(self,pt,eta,phi,charge):
+    # Approxiamtion from <andrewbrink@gmail.com> valid for pT>10 GeV
+    # L1T phi = GEN phi + (GEN charge) x (1/GEN pT) x [10.48 - 5.1412 x GEN theta + 0.02308 x (GEN theta)^2]
+        theta = 2. * math.atan ( math.exp(-1.*eta) )
+        phiCSC = phi + charge * (1./pt) * ( 10.48 - 5.1412 * theta + 0.02308 * theta * theta ) 
+        return phiCSC
  
     def _getEMTFBugVeto(self,vector_kind,vector_pt,vector_eta,vector_phi):
 
@@ -760,6 +768,10 @@ class triggerCalculator():
             if abs(vector_kind[iLep]) == 13 and vector_pt[iLep] >= 10. and abs(vector_eta[iLep]) >= 1.24 :
               #print "Fill", iLep, vector_kind[iLep] , vector_eta[iLep]
               vEta.append(vector_eta[iLep])
+              ch = 0.0 
+              if    vector_kind[iLep] == 13 : ch =  1.0
+              else :                          ch = -1.0
+              phiCSC = self._phiCSC(vector_pt[iLep],vector_eta[iLep],vector_phi[iLep],ch)
               vPhi.append(vector_phi[iLep])
           if len(vPhi) >= 2 :
             for iLep1 in range(0,len(vPhi)):
@@ -919,7 +931,7 @@ class triggerMaker(TreeCloner):
 
         print '- Starting eventloop'
         step = 5000
-        nentries = 5000
+        #nentries = 5000
         for i in xrange(nentries):
             itree.GetEntry(i)
 
@@ -935,7 +947,7 @@ class triggerMaker(TreeCloner):
             # Compute the veto for the EMTF Bug in 2016
             vEMTF = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta,itree.std_vector_lepton_phi)
             self.branches['veto_EMTFBug'] = vEMTF
-            print vEMTF
+            #print vEMTF
 
             # DATA = compute trigger "bits" oer dataset 
             if self.isData :
