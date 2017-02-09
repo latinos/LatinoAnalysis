@@ -84,7 +84,8 @@ class batchJobs :
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
          elif 'ifca' in os.uname()[1]:
-           jFile.write("cd /gpfs/gaes/cms/ \n") 
+           jFile.write("mkdir /tmp/"+os.environ["USER"]+"/latinos \n") 
+           jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
          else:
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
@@ -279,6 +280,8 @@ def rootReadPath(inputFile):
         return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
     elif "pi.infn.it" in socket.getfqdn():
       return "/gpfs/ddn/srm/cms/" + inputFile
+    elif 'ifca' in os.uname()[1] :
+      return "/gpfs/gaes/cms/" + inputFile
     elif 'knu' in os.uname()[1] :
       return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
     else :
