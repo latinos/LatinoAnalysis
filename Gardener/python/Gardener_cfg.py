@@ -1236,7 +1236,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
-                  'subTargets' : ['bPogSF','TrigMakerMC','IdIsoSC']
+                  'subTargets' : ['bPogSF','TrigMakerMC','IdIsoSC_Cut']
                     },
   
 

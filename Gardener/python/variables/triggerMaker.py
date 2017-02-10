@@ -37,6 +37,18 @@ class triggerCalculator():
          print 'SingleEle = ' , self.SingleEle
 
        else:
+         if 'MC' in Trigger[cmssw][iPeriod] :
+           self.EleMu     = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['EleMu'])
+           self.DoubleMu  = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['DoubleMu'])
+           self.SingleMu  = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['SingleMu'])
+           self.DoubleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['DoubleEle'])
+           self.SingleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['SingleEle'])
+           print 'EleMu     = ' , self.EleMu
+           print 'DoubleMu  = ' , self.DoubleMu
+           print 'SingleMu  = ' , self.SingleMu
+           print 'DoubleEle = ' , self.DoubleEle
+           print 'SingleEle = ' , self.SingleEle
+
          self.list_triggers = {}
          cmssw_base = os.getenv('CMSSW_BASE')
          print "DoubleEleLegHigPt : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleEleLegHigPt']
@@ -721,16 +733,15 @@ class triggerCalculator():
           return 1, 1, 1 
 
     def _getTrigDecision(self,vector_trigger,isData):
+
+        EleMu     = 0
+        DoubleMu  = 0
+        SingleMu  = 0
+        DoubleEle = 0
+        SingleEle = 0
+
    
         if isData :
-          #print 'IMPLEMENT ME'
-          #print len(vector_trigger)   
-          #print self.EleMu
-          EleMu     = 0
-          DoubleMu  = 0
-          SingleMu  = 0
-          DoubleEle = 0
-          SingleEle = 0 
           for iTrig in self.EleMu      : 
             if vector_trigger[iTrig] > 0 : EleMu      = 1
           for iTrig in self.DoubleMu   : 
@@ -742,9 +753,8 @@ class triggerCalculator():
           for iTrig in self.SingleEle  : 
             if vector_trigger[iTrig] > 0 : SingleEle  = 1
 
-          return EleMu , DoubleMu , SingleMu , DoubleEle , SingleEle
+        return EleMu , DoubleMu , SingleMu , DoubleEle , SingleEle
  
-        return 0, 0, 0 , 0, 0
 
     def _dPhi(self,phi1,phi2):
        PI=3.14159265359
@@ -779,6 +789,7 @@ class triggerCalculator():
               for iLep2 in range(0,len(vPhi)):
                 if not iLep1 == iLep2 and vEta[iLep1]*vEta[iLep2] > 0 :
                   #print "B ", iLep2 , vEta[iLep2] , vPhi[iLep2]
+                  #print self._dPhi(vPhi[iLep1],vPhi[iLep2])
                   if self._dPhi(vPhi[iLep1],vPhi[iLep2]) < 80. : return 0.
         return 1.
 
@@ -946,7 +957,7 @@ class triggerMaker(TreeCloner):
 
             # Compute the veto for the EMTF Bug in 2016
             vEMTF = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta,itree.std_vector_lepton_phi)
-            self.branches['veto_EMTFBug'] = vEMTF
+            self.branches['veto_EMTFBug'] [0] = vEMTF
             #print vEMTF
 
             # DATA = compute trigger "bits" oer dataset 
