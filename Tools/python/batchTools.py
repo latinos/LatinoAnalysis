@@ -65,7 +65,7 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
-         jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/proxy.cert\n')
+         jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
@@ -86,6 +86,10 @@ class batchJobs :
          elif 'ifca' in os.uname()[1]:
            jFile.write("mkdir /tmp/"+os.environ["USER"]+"/latinos \n") 
            jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
+         elif 'knu' in os.uname()[1]:
+           jFile.write('cd '+jobDir+'/'+baseName+'__'+prodName+'\n')
+           #jFile.write("mkdir /tmp/"+os.environ["USER"]+"/latinos \n") 
+           #jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
          else:
            jFile.write('cd - \n')
        else              : jFile.write('cd '+wDir+' \n')
@@ -100,7 +104,7 @@ class batchJobs :
      if "pi.infn.it" in socket.getfqdn():  
        os.system('cp $X509_USER_PROXY /home/users/'+os.environ["USER"]+'/.proxy')
      if "knu" in os.uname()[1]:  
-       os.system('cp $X509_USER_PROXY /u/user/'+os.environ["USER"]+'/.proxy')
+       os.system('cp /tmp/x509up_u$UID /u/user/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -159,6 +163,7 @@ class batchJobs :
 	elif 'knu' in os.uname()[1]:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+          queue='short'
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         elif 'ifca' in os.uname()[1] :
