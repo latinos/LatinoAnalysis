@@ -47,7 +47,7 @@ class BWEwkSingletReweighter(TreeCloner):
         group.add_option('-s', '--cprimestep', dest='cprimestep', help="c' step",          default=0.1, type='float')
         group.add_option('-l', '--brnewmin' , dest='brnewmin' ,   help="BRnew minimum value", default=0.,  type='float')
         group.add_option('-n', '--brnewmax' , dest='brnewmax' ,   help="BRnew maximum value", default=1.,  type='float')
-        group.add_option('-q' , '--brnewstep', dest='brnewstep',   help="BRnew step",          default=0.1, type='float') 
+        group.add_option('-q' , '--brnewstep', dest='brnewstep',   help="BRnew step",          default=0.5, type='float') 
         group.add_option('-w' , '--globalshiftfileGG', dest='shiftfileGG',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for GG.", default="data/BWShifts_ggH.pkl") 
         group.add_option('-k' , '--globalshiftfileVBF', dest='shiftfileVBF',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for VBF.", default="data/BWShifts_VBF.pkl") 
         group.add_option('-d' , '--decayWeightsFile', dest='decayWeightsFile',   help="pickle file containing the JHU derived decay weights for WW", default="data/decayWeightsWW.pkl") 
