@@ -300,6 +300,7 @@ for iProd in prodList :
             #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in FileExistList 
             if options.redo or not iFile in FileExistList :
               if selectSample and iSample.replace('_25ns','') in iFile:
+                #if 'MuonEG' in iFile : print iFile
                 iKey = iFile.replace('latino_','').replace('.root','')
                 if '_000' in iKey :
                   aSample = iKey.split('_000')[0]

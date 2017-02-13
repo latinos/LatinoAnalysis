@@ -822,7 +822,7 @@ Productions= {
                         'onlySample' : [
                                         'DoubleEG_Run2016C-23Sep2016-v1',
                                         'DoubleMuon_Run2016C-23Sep2016-v1',
-                                        'MuonEG_Run2016C-23Sep201C-v1',
+                                        'MuonEG_Run2016C-23Sep2016-v1',
                                         'SingleElectron_Run2016C-23Sep2016-v1',
                                         'SingleMuon_Run2016C-23Sep2016-v1',
 #                                       'MET_Run2016C-23Sep2016-v1',   
@@ -838,7 +838,7 @@ Productions= {
                         'onlySample' : [
                                         'DoubleEG_Run2016D-23Sep2016-v1',
                                         'DoubleMuon_Run2016D-23Sep2016-v1',
-                                        'MuonEG_Run2016D-23Sep201C-v1',
+                                        'MuonEG_Run2016D-23Sep2016-v1',
                                         'SingleElectron_Run2016D-23Sep2016-v1',
                                         'SingleMuon_Run2016D-23Sep2016-v1',
 #                                       'MET_Run2016D-23Sep2016-v1',   
@@ -854,7 +854,7 @@ Productions= {
                         'onlySample' : [
                                         'DoubleEG_Run2016E-23Sep2016-v1',
                                         'DoubleMuon_Run2016E-23Sep2016-v1',
-                                        'MuonEG_Run2016E-23Sep201C-v1',
+                                        'MuonEG_Run2016E-23Sep2016-v1',
                                         'SingleElectron_Run2016E-23Sep2016-v1',
                                         'SingleMuon_Run2016E-23Sep2016-v1',
 #                                       'MET_Run2016E-23Sep2016-v1',   
@@ -870,7 +870,7 @@ Productions= {
                         'onlySample' : [
                                         'DoubleEG_Run2016F-23Sep2016-v1',
                                         'DoubleMuon_Run2016F-23Sep2016-v1',
-                                        'MuonEG_Run2016F-23Sep201C-v1',
+                                        'MuonEG_Run2016F-23Sep2016-v1',
                                         'SingleElectron_Run2016F-23Sep2016-v1',
                                         'SingleMuon_Run2016F-23Sep2016-v1',
 #                                       'MET_Run2016F-23Sep2016-v1',   
@@ -886,7 +886,7 @@ Productions= {
                         'onlySample' : [
                                         'DoubleEG_Run2016G-23Sep2016-v1',
                                         'DoubleMuon_Run2016G-23Sep2016-v1',
-                                        'MuonEG_Run2016G-23Sep201C-v1',
+                                        'MuonEG_Run2016G-23Sep2016-v1',
                                         'SingleElectron_Run2016G-23Sep2016-v1',
                                         'SingleMuon_Run2016G-23Sep2016-v1',
 #                                       'MET_Run2016G-23Sep2016-v1',   
