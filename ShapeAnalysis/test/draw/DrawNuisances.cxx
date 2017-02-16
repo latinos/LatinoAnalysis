@@ -1,5 +1,5 @@
 
-void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./" ) {
+void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./", std::string drawYields = "0" ) {
  
  gStyle->SetOptStat(0);
  
@@ -39,9 +39,21 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  
  TLegend* leg = new TLegend(0.1,0.8,0.9,0.99);
  leg->SetFillColor(kWhite);
- leg->AddEntry(hNominal,histoNominal.c_str(),"l");
- leg->AddEntry(hUp,histo_up.c_str(),"l");
- leg->AddEntry(hDo,histo_down.c_str(),"l");
+ if (drawYields == "1"){
+   char legString[80];
+   sprintf(legString,"%s: %4.2f",histoNominal.c_str(),hNominal->Integral());
+   leg->AddEntry(hNominal,legString,"l");
+   sprintf(legString,"%s: %4.2f (%4.2f %%)",histo_up.c_str(), hUp->Integral(), 100 * (hUp->Integral() - hNominal->Integral()) / hNominal->Integral());
+   leg->AddEntry(hUp,legString,"l");
+   sprintf(legString,"%s: %4.2f (%4.2f %%)",histo_down.c_str(), hDo->Integral(), 100 * (hDo->Integral() - hNominal->Integral()) / hNominal->Integral());
+   leg->AddEntry(hDo,legString,"l");
+ }
+ else{
+   leg->AddEntry(hNominal,histoNominal.c_str(),"l");
+   leg->AddEntry(hUp,histo_up.c_str(),"l");
+   leg->AddEntry(hDo,histo_down.c_str(),"l");
+ }
+
  leg->Draw();
  
  gPad->SetGrid();

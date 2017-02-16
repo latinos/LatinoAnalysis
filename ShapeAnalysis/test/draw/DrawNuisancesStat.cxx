@@ -1,7 +1,7 @@
 //histo_monoH_600_300_CMS_monoH_MVA_em_monoH_600_300_ibin_23_statUp
 //histo_monoH_600_300
 
-void DrawNuisancesStat(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./") {
+void DrawNuisancesStat(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./", std::string drawYields = "0") {
  
  gStyle->SetOptStat(0);
  
@@ -18,12 +18,6 @@ void DrawNuisancesStat(std::string inputRootFile, std::string histoNominal, std:
  hUpTot -> SetTitle("StatUp");
  TH1F* hDoTot = (TH1F*) hNominal->Clone("Do");
  hDoTot -> SetTitle("StatDown");
- 
- TLegend* leg = new TLegend(0.1,0.8,0.9,0.99);
- leg->SetFillColor(kWhite);
- leg->AddEntry(hNominal,histoNominal.c_str(),"l");
- leg->AddEntry(hUpTot,"StatUp","l");
- leg->AddEntry(hDoTot,"StatDown","l");
  
  std::string my_histo_up   = histo_up;
  std::string my_histo_down = histo_down;
@@ -62,6 +56,25 @@ void DrawNuisancesStat(std::string inputRootFile, std::string histoNominal, std:
    max = hDoTot->GetMaximum();
  
  hNominal->GetYaxis()->SetRangeUser(0,max*1.2);
+
+ char legString[80];
+
+ TLegend* leg = new TLegend(0.1,0.8,0.9,0.99);
+ leg->SetFillColor(kWhite);
+ if (drawYields == "1"){
+   sprintf(legString,"%s: %4.2f",histoNominal.c_str(),hNominal->Integral());
+   leg->AddEntry(hNominal,legString,"l");
+   sprintf(legString,"StatUp: %4.2f (%4.2f %%)",hUpTot->Integral(), 100 * (hUpTot->Integral() - hNominal->Integral()) / hNominal->Integral());
+   leg->AddEntry(hUpTot,legString,"l");
+   sprintf(legString,"StatDown: %4.2f (%4.2f %%)",hDoTot->Integral(), 100 * (hDoTot->Integral() - hNominal->Integral()) / hNominal->Integral());
+   leg->AddEntry(hDoTot,legString,"l");
+ }
+ else{
+   leg->AddEntry(hNominal,histoNominal.c_str(),"l");
+   leg->AddEntry(hUpTot,"StatUp","l");
+   leg->AddEntry(hDoTot,"StatDown","l");
+}
+
 
  TCanvas* cc = new TCanvas("cc","",800,600);
  cc->cd();
