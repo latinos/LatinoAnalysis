@@ -6,7 +6,7 @@
 ./mkGardener.py -p Dec2016_Run2016D_ReReco -s l2looseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016E_ReReco -s l2looseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016F_ReReco -s l2looseCut -S Target -b
-./mkGardener.py -p Dec2016_Run2016G_ReReco -s l2looseCut -S Target -b
+./mkGardener.py -p Dec2016_Run2016G_ReReco -s l2looseCut -S Target -b -E MuonEG_Run2016G-23Sep2016-v1
 ./mkGardener.py -p Dec2016_Run2016H_PromptReco -s l2looseCut -S Target -b
 
 ./mkGardener.py -p Dec2016_Run2016B_ReReco -s hadd -i l2looseCut -S Target -b
@@ -41,7 +41,7 @@
 ./mkGardener.py -p Dec2016_Run2016D_ReReco -s l2vlooseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016E_ReReco -s l2vlooseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016F_ReReco -s l2vlooseCut -S Target -b
-./mkGardener.py -p Dec2016_Run2016G_ReReco -s l2vlooseCut -S Target -b
+./mkGardener.py -p Dec2016_Run2016G_ReReco -s l2vlooseCut -S Target -b -E MuonEG_Run2016G-23Sep2016-v1
 ./mkGardener.py -p Dec2016_Run2016H_PromptReco -s l2vlooseCut -S Target -b
 
 ./mkGardener.py -p Dec2016_Run2016B_ReReco -s hadd -i l2vlooseCut -S Target -b 
@@ -76,7 +76,7 @@
 ./mkGardener.py -p Dec2016_Run2016D_ReReco -s l1looseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016E_ReReco -s l1looseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016F_ReReco -s l1looseCut -S Target -b
-./mkGardener.py -p Dec2016_Run2016G_ReReco -s l1looseCut -S Target -b
+./mkGardener.py -p Dec2016_Run2016G_ReReco -s l1looseCut -S Target -b -E MuonEG_Run2016G-23Sep2016-v1
 ./mkGardener.py -p Dec2016_Run2016H_PromptReco -s l1looseCut -S Target -b
 
 ./mkGardener.py -p Dec2016_Run2016B_ReReco -s fakeSel -i l1looseCut -S Target -b
@@ -102,7 +102,7 @@
 ./mkGardener.py -p Dec2016_Run2016D_ReReco -s l1vlooseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016E_ReReco -s l1vlooseCut -S Target -b
 ./mkGardener.py -p Dec2016_Run2016F_ReReco -s l1vlooseCut -S Target -b
-./mkGardener.py -p Dec2016_Run2016G_ReReco -s l1vlooseCut -S Target -b
+./mkGardener.py -p Dec2016_Run2016G_ReReco -s l1vlooseCut -S Target -b -E MuonEG_Run2016G-23Sep2016-v1
 ./mkGardener.py -p Dec2016_Run2016H_PromptReco -s l1vlooseCut -S Target -b
 
 ./mkGardener.py -p Dec2016_Run2016B_ReReco -s fakeSel -i l1vlooseCut -S Target -b
