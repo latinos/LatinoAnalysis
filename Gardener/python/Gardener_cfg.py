@@ -1027,6 +1027,18 @@ Productions= {
                                        ],
                        },
 
+  'Feb2017_Run2016G_RemAOD_Dec2016Fix' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                       ],
+                       },
+
+
   'Feb2017_Run2016H_RemAOD' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD_RunH.py' ,
@@ -3929,6 +3941,8 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
+                  'SizeMethod' : False , 
+                  'SizeMax'    : 5e9 , 
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
                                   'WZTo2L2Q','TTToSemiLepton','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
