@@ -442,10 +442,10 @@ for iProd in prodList :
           if not Steps['hadd']['SizeMethod'] :
            if options.redo or not 'latino_'+iKey+'.root' in FileExistList :
             if not iKey in Steps['hadd']['bigSamples'] or options.forceMerge: 
-              if not iKey in targetGroupList:
-                targetGroupList[iKey] = []
+              if not iKey in targetGroupList: targetGroupList[iKey] = []
               targetGroupList[iKey].append(targetList[iTarget])             
             else:
+              if not os.path.basename(targetList[iTarget]) in FileExistList :
                targetGroupList[iTarget] = []           
                targetGroupList[iTarget].append(targetList[iTarget])             
           else:
@@ -473,7 +473,6 @@ for iProd in prodList :
          
         targetList = targetGroupList 
         #print targetList
-      
       # Check job in not already running before allowing it ? 
       keysToDel=[] 
       for iTarget in targetList:
@@ -493,8 +492,6 @@ for iProd in prodList :
         #print targetList
         keysToDel=[]
         for iTarget in targetList:
-          print '-------------------' , iTarget
-          print targetList[iTarget]
           FileTarget=[]
           #for jFile in targetList[iTarget] : 
           #  FileTarget.append(os.path.basename(jFile))
