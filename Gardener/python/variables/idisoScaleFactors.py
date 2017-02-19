@@ -159,8 +159,9 @@ class IdIsoSFFiller(TreeCloner):
           ptmax = h2.GetYaxis().GetBinCenter(nbins)
 
         # eta on x-axis, pt on y-axis
-        if (pt <= 20.) : #because reco histo starts from 20 GeV and no dependency on PT.
-          pt = pt+20
+        ptmin = h2.GetYaxis().GetXmin()
+        if (pt < ptmin) : #because reco histo starts from 20 GeV and no dependency on PT.
+          pt = ptmin
 
         value = h2.GetBinContent(h2.FindBin(eta, min(pt, ptmax)))
         error = h2.GetBinError  (h2.FindBin(eta, min(pt, ptmax)))
