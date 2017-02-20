@@ -158,12 +158,12 @@ if __name__ == '__main__':
                     print 'R = ',R,' +- ',ER
                     print 'k = ',k,' +- ',Ek
                     Nout = DYCalc.N_DY(R , Nin , k , Neu, Nvv )
-                    print 'Nout= ' , Nout 
-                    hTmp.Scale( Nout / hTmp.GetIntegral() )
+                    nHis = (hTmp.Integral())
+                    print 'Nout= ' , Nout , '(Nout_MC = ',nHis,' )' 
+                    hTmp.Scale( Nout / nHis  )
               hTmp.Write()
                
               #print baseDir,subDir,hName.split('_')[1]
-
 #    for iDYestim in DYestim :
 #      print iDYestim
 
