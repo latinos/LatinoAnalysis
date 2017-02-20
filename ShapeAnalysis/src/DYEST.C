@@ -47,13 +47,26 @@
 
 using namespace std;
 
+float N_DY(float R , float Nin , float k , float Neu, float Nvv ){
+  return R * ( Nin - (k * Neu * 0.5) - Nvv);
+}
+
+float ER_in(){
+  return 
+}
+float EN_DY(float R , float Nin , float k , float Neu, float Nvv, float ER, float ENin, float Ek, float ENeu, float ENvv ){
+  return  N_DY()*sqrt( pow((ER/R),2) + pow((( sqrt( pow(ENin,2) + pow(ENvv,2) + pow((0.5*Neu*k*sqrt(pow((ENeu/Neu),2)+pow((Ek/k),2))),2)) )/( Nin - (k * Neu * 0.5) - Nvv )),2));
+}
+
+
 class DY{
 public:
    //contructor
-   DY(TFile *KffFile, TFile *RFile);
-   virtual ~DY() {}
+   DY(TString sKffFile, TString sRFile);
+   ~DY(); 
    
    //functions
+   void  Print();
    float k_MC_ee_0j(); 
    float Ek_MC_ee_0j(); 
    float k_MC_uu_0j(); 
@@ -101,9 +114,13 @@ private:
    float N_DY_R_1j_df_out;
    float EN_DY_R_1j_ee_in;
    float EN_DY_R_1j_uu_in;
+   TFile *KffFile ;
+   TFile *RFile ;
 };
 
-DY::DY(TFile *KffFile, TFile *RFile){
+DY::DY(TString sKffFile, TString sRFile){
+   KffFile = new TFile(sKffFile,"READ");
+   RFile   = new TFile(sRFile,"READ");
    histos["DY_k_0j_ee_in"]  = (TH1F*)KffFile->Get("0j_ee_in/events/histo_DY");
    histos["DY_k_0j_ee_out"] = (TH1F*)KffFile->Get("0j_ee_out/events/histo_DY");
    histos["DY_k_0j_uu_in"]  = (TH1F*)KffFile->Get("0j_uu_in/events/histo_DY");
@@ -153,6 +170,14 @@ DY::DY(TFile *KffFile, TFile *RFile){
    N_DY_R_1j_df_out = histos["DY_R_1j_df_out"]->Integral();
    EN_DY_R_1j_ee_in = histos["DY_R_1j_ee_in"]->GetBinError(1);
    EN_DY_R_1j_uu_in = histos["DY_R_1j_uu_in"]->GetBinError(1);
+}
+DY::~DY(){
+   RFile->Close();
+   KffFile->Close();
+}
+
+void DY::Print(){
+   cout << N_DY_R_0j_ee_in <<endl;
 }
 
 float DY::k_MC_ee_0j(){
