@@ -1503,9 +1503,9 @@ class ShapeFactory:
                     weight_X_tgrMCOverMC.Write()
                     weight_X_tgrDataOverMC.Write()
                     if (len(mynuisances.keys())!=0):
-                      weight_X_tgrMC.Write()
+                      weight_X_tgrMC.Write("weight_X_tgrMC")
                     if weight_X_tgrData.GetN() != 0:
-                      weight_X_tgrData.Write()
+                      weight_X_tgrData.Write("weight_X_tgrData")
                     if weight_X_thsBackground.GetNhists() != 0:
                       weight_X_thsBackground.Write()
                     if weight_X_thsSignal.GetNhists() != 0:

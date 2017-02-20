@@ -1,0 +1,531 @@
+#!/usr/bin/env python
+
+import json
+import sys
+from sys import exit
+import ROOT
+import optparse
+import LatinoAnalysis.Gardener.hwwtools as hwwtools
+import os.path
+import string
+import logging
+import LatinoAnalysis.Gardener.odict as odict
+import traceback
+from array import array
+from collections import OrderedDict
+import math
+
+#import os.path
+
+
+
+# ----------------------------------------------------- ShapeFactory --------------------------------------
+
+class ShapeFactory:
+    _logger = logging.getLogger('ShapeFactory')
+ 
+    # _____________________________________________________________________________
+    def __init__(self):
+
+        outputDirPlots = {}
+        self._outputDirPlots = outputDirPlots
+        
+
+    # _____________________________________________________________________________
+    def makeCombinedPlot(self, outputDirPlots, cutsToMerge, plot, legend, groupPlot):
+
+
+        print "=========================="
+        print "==== makeCombinedPlot ===="
+        print "=========================="
+        
+        self.defineStyle()
+        
+        self._outputDirPlots = outputDirPlots
+
+        os.system ("mkdir " + outputDirPlots + "/") 
+        
+        ROOT.TH1.SetDefaultSumw2(True)
+        
+        dataColor = 1
+
+
+        ROOT.gROOT.cd()
+
+        list_thsData       = {}
+        list_thsSignal     = {}
+        list_thsBackground = {}
+
+        tcanvas            = ROOT.TCanvas( "cc" + "_combined_" + "_" + self._variable,      "cc"     , 800, 600 )
+        tcanvasRatio       = ROOT.TCanvas( "ccRatio" + "_combined_" + "_" + self._variable, "ccRatio", 800, 800 )
+
+
+        list_files = {}
+        for cutName, cutConfig in cutsToMerge.iteritems(): 
+          temp_file = ROOT.TFile(cutConfig['rootFile'], "READ")
+          list_files[cutName] = temp_file
+          
+        # loop over all the cuts (= phase spaces) you want to merge in one
+        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+          for cutName, cutConfig in cutsToMerge.iteritems():         
+            print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
+            #print 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
+            name_histogram = 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
+            
+            if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] == 1 :
+              if sampleNameGroup not in list_thsSignal.keys() :
+                list_thsSignal [sampleNameGroup] = list_files[cutName].Get(name_histogram)
+                print 'type = ',  type( list_thsSignal [sampleNameGroup]  )
+              else :
+                list_thsSignal [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
+            else :
+              if sampleNameGroup not in list_thsBackground.keys() :
+                list_thsBackground [sampleNameGroup] = list_files[cutName].Get(name_histogram)
+                #print 'type = ', type( list_thsBackground [sampleNameGroup]  )
+              else :
+                list_thsBackground [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
+             
+        for cutName, cutConfig in cutsToMerge.iteritems():         
+          name_histogram = 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + cutName + '_' +  self._variable + '_slice_0'
+          if 'DATA' not in list_thsData.keys() :
+            list_thsData ['DATA'] = list_files[cutName].Get(name_histogram)
+          else :
+            list_thsData ['DATA'].Add( list_files[cutName].Get(name_histogram) )
+             
+        
+        # now that all the histograms are merged, let's merge the TGraphs
+        tgrData  = ROOT.TGraphAsymmErrors()
+        tgrMC  = ROOT.TGraphAsymmErrors()
+        #weight_X_tgrData
+        #weight_X_tgrMC
+        for cutName, cutConfig in cutsToMerge.iteritems():    
+          temp_graph = list_files[cutName].Get("weight_X_tgrMC")
+          #print 'type = ', type( temp_graph )
+
+          if tgrMC.GetN() == 0 :
+            for iBin in range(temp_graph.GetN()) :
+              tgrMC.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
+              tgrMC.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+          
+          else :
+            for iBin in range(temp_graph.GetN()) :
+              x_temp = tgrMC.GetX()[iBin]
+              y_temp = tgrMC.GetY()[iBin]
+              exl_temp = tgrMC.GetErrorXlow(iBin)
+              exh_temp = tgrMC.GetErrorXhigh(iBin)
+              eyl_temp = tgrMC.GetErrorYlow(iBin)
+              eyh_temp = tgrMC.GetErrorYhigh(iBin)
+              
+              tgrMC.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  + y_temp )
+              tgrMC.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin), eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin), eyh_temp)  )
+ 
+        for cutName, cutConfig in cutsToMerge.iteritems():    
+          temp_graph = list_files[cutName].Get("weight_X_tgrData")
+          #print 'type = ', type( temp_graph )
+
+          if tgrData.GetN() == 0 :
+            for iBin in range(temp_graph.GetN()) :
+              tgrData.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
+              tgrData.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+          
+          else :
+            for iBin in range(temp_graph.GetN()) :
+              x_temp = tgrData.GetX()[iBin]
+              y_temp = tgrData.GetY()[iBin]
+              exl_temp = tgrData.GetErrorXlow(iBin)
+              exh_temp = tgrData.GetErrorXhigh(iBin)
+              eyl_temp = tgrData.GetErrorYlow(iBin)
+              eyh_temp = tgrData.GetErrorYhigh(iBin)
+              
+              tgrData.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  + y_temp )
+              tgrData.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin), eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin), eyh_temp)  )
+  
+  
+        #
+        # merge to create the THStack
+        #
+        weight_X_thsData       = ROOT.THStack ("weight_X_thsData",      "weight_X_thsData")
+        weight_X_thsSignal     = ROOT.THStack ("weight_X_thsSignal",    "weight_X_thsSignal")
+        weight_X_thsBackground = ROOT.THStack ("weight_X_thsBackground","weight_X_thsBackground")
+
+        for sampleName, histo in list_thsBackground.iteritems():
+          weight_X_thsBackground.Add(histo)
+        for sampleName, histo in list_thsSignal.iteritems():
+          weight_X_thsSignal.Add(histo)
+          # the signal is added on top of the background
+          # the signal has to be the last one in the dictionary!
+          # make it sure in plot.py
+          weight_X_thsBackground.Add(histo)
+
+        #
+        # prepare ratio plot
+        #
+        tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
+        for iBin in range( tgrMCOverMC.GetN() ) :
+          tgrMCOverMC.SetPoint     (iBin, tgrMC.GetX()[iBin], 1.)
+          tgrMCOverMC.SetPointError(iBin, tgrMC.GetErrorXlow(iBin), tgrMC.GetErrorXhigh(iBin), self.Ratio(tgrMC.GetErrorYlow(iBin), tgrMC.GetY()[iBin]), self.Ratio(tgrMC.GetErrorYhigh(iBin), tgrMC.GetY()[iBin]))     
+
+
+        tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
+        for iBin in range( tgrDataOverMC.GetN() ) :
+          tgrDataOverMC.SetPoint     (iBin, tgrData.GetX()[iBin],   self.Ratio(tgrData.GetY()[iBin] ,tgrMC.GetY()[iBin] ) )
+          tgrDataOverMC.SetPointError(iBin,  tgrData.GetErrorXlow(iBin), tgrData.GetErrorXhigh(iBin), self.Ratio(tgrData.GetErrorYlow(iBin), tgrMC.GetY()[iBin]), self.Ratio(tgrData.GetErrorYhigh(iBin), tgrMC.GetY()[iBin]) )
+                                      
+
+        #---- the Legend
+        tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+        tlegend.SetFillColor(0)
+        tlegend.SetLineColor(0)
+        tlegend.SetShadowColor(0)
+         
+        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+          if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] == 1 :
+            tlegend.AddEntry( list_thsSignal [sampleNameGroup] ,     sampleConfiguration['nameHR'], "F")          
+          else :
+            tlegend.AddEntry( list_thsBackground [sampleNameGroup] , sampleConfiguration['nameHR'], "F")
+       
+        tlegend.AddEntry( tgrData , 'Data', "EPL")
+       
+        tlegend.AddEntry(tgrMC, "Systematics", "F")
+
+        tlegend.SetNColumns(2)
+        tlegend.Draw()
+        
+        
+        #change the CMS_lumi variables (see CMS_lumi.py)
+        import LatinoAnalysis.ShapeAnalysis.CMS_lumi as CMS_lumi
+        CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
+        CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
+        CMS_lumi.lumi_13TeV = "100 fb^{-1}"
+        CMS_lumi.writeExtraText = 1
+        CMS_lumi.extraText = "Preliminary"
+        CMS_lumi.relPosX = 0.12
+        CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+        if 'sqrt' in legend.keys() :
+          CMS_lumi.lumi_sqrtS = legend['sqrt']
+        if 'lumi' in legend.keys() :
+          CMS_lumi.lumi_13TeV = legend['lumi']
+        
+        # Simple example of macro: plot with CMS name and lumi text
+        #  (this script does not pretend to work in all configurations)
+        # iPeriod = 1*(0/1 7 TeV) + 2*(0/1 8 TeV)  + 4*(0/1 13 TeV) 
+        # For instance: 
+        #               iPeriod = 3 means: 7 TeV + 8 TeV
+        #               iPeriod = 7 means: 7 TeV + 8 TeV + 13 TeV 
+        #               iPeriod = 0 means: free form (uses lumi_sqrtS)
+        iPeriod = 4
+        iPos  = 0
+        CMS_lumi.CMS_lumi(tcanvas, iPeriod, iPos)    
+
+    
+        
+        #
+        # now plot
+        #
+        
+        
+        # - recalculate the maxY
+        maxYused = 1.2 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+
+        # FIXME these hardcoded numbers
+        minYused = 1.
+        nbinY = 5
+        minXused = 0
+        
+        
+        
+        print " maxYused = ", maxYused
+        
+        weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + self._variable
+        weight_X_tcanvasRatio = ROOT.TCanvas(weight_X_canvasRatioNameTemplate, "weight_X_tcanvasRatio", 800, 800 )
+
+
+        variableName = self._variable
+        weight_X_tcanvasRatio.cd()
+        canvasPad1Name = 'weight_X_pad1_' + variableName
+        weight_X_pad1 = ROOT.TPad(canvasPad1Name,canvasPad1Name, 0, 1-0.72, 1, 1)
+        weight_X_pad1.SetTopMargin(0.098)
+        weight_X_pad1.SetBottomMargin(0.000) 
+        weight_X_pad1.Draw()
+        
+        weight_X_pad1.cd()
+        weight_X_canvasFrameDistroName = 'weight_X_frame_distro_' + variableName
+        weight_X_frameDistro = weight_X_pad1.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_canvasFrameDistroName)
+        
+        ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+        xAxisDistro = weight_X_frameDistro.GetXaxis()
+        xAxisDistro.SetNdivisions(6,5,0)
+
+        #if 'xaxis' in variable.keys() : 
+          #weight_X_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+        #else :
+          #weight_X_frameDistro.GetXaxis().SetTitle(variableName)
+        weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+        weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
+
+        weight_X_thsBackground.Draw("hist same")
+           
+        weight_X_thsSignal.Draw("hist same noclear")
+        
+        tgrMC.SetLineColor(12)
+        tgrMC.SetFillColor(12)
+        tgrMC.SetFillStyle(3004)
+        tgrMC.Draw("2")
+
+        ##     - then the DATA  
+        tgrData.Draw("P0")
+   
+        tlegend.Draw()
+  
+        CMS_lumi.CMS_lumi(weight_X_tcanvasRatio, iPeriod, iPos)    
+
+        ## draw back all the axes            
+        weight_X_pad1.RedrawAxis()
+
+            
+        weight_X_tcanvasRatio.cd()
+        canvasPad2Name = 'weight_X_weight_X_pad2_' + variableName
+        weight_X_pad2 = ROOT.TPad(canvasPad2Name,canvasPad2Name,0,0,1,1-0.72)
+        weight_X_pad2.SetTopMargin(0.000)
+        weight_X_pad2.SetBottomMargin(0.392)
+        weight_X_pad2.Draw()
+        #weight_X_pad2.cd().SetGrid()
+        weight_X_pad2.cd()
+        
+        weight_X_canvasFrameRatioName = 'weight_X_frame_ratio_' + variableName
+        weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameRatioName)
+        ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+        xAxisDistro = weight_X_frameRatio.GetXaxis()
+        xAxisDistro.SetNdivisions(6,5,0)
+
+        #if 'xaxis' in variable.keys() : 
+          #weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
+        #else :
+          #weight_X_frameRatio.GetXaxis().SetTitle(variableName)
+        weight_X_frameRatio.GetYaxis().SetTitle("Data/Expected")
+        weight_X_frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
+        self.Pad2TAxis(weight_X_frameRatio)
+        
+        #if (len(mynuisances.keys())!=0):
+        tgrMCOverMC.SetLineColor(12)
+        tgrMCOverMC.SetFillColor(12)
+        tgrMCOverMC.SetFillStyle(3004)
+        tgrMCOverMC.Draw("2") 
+            
+        tgrDataOverMC.Draw("P0")
+
+       
+
+        oneLine2 = ROOT.TLine(weight_X_frameRatio.GetXaxis().GetXmin(), 1,  weight_X_frameRatio.GetXaxis().GetXmax(), 1);
+        oneLine2.SetLineStyle(3)
+        oneLine2.SetLineWidth(3)
+        oneLine2.Draw("same")
+
+        ## draw back all the axes            
+        weight_X_pad2.RedrawAxis()
+        
+        weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
+        weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
+        
+         
+                    
+    
+    
+    
+        
+
+
+   # _____________________________________________________________________________
+   # --- squared sum
+    def Pad2TAxis(self, hist):
+         xaxis = hist.GetXaxis()
+         xaxis.SetLabelFont ( 42)
+         xaxis.SetLabelOffset( 0.025)
+         xaxis.SetLabelSize ( 0.1)
+         xaxis.SetNdivisions ( 505)
+         xaxis.SetTitleFont ( 42)
+         xaxis.SetTitleOffset( 1.35)   
+         xaxis.SetTitleSize ( 0.11)
+       
+         yaxis = hist.GetYaxis()
+         yaxis.CenterTitle ( )
+         yaxis.SetLabelFont ( 42)
+         yaxis.SetLabelOffset( 0.02)
+         yaxis.SetLabelSize ( 0.1)
+         yaxis.SetNdivisions ( 505)
+         yaxis.SetTitleFont ( 42)
+         yaxis.SetTitleOffset( .6)
+         yaxis.SetTitleSize ( 0.11)
+ 
+ 
+ 
+   # _____________________________________________________________________________
+   # --- squared sum
+    def SumQ(self, A, B):
+       return math.sqrt(A*A + B*B)
+
+   # _____________________________________________________________________________
+   # --- Ratio: if denominator is zero, then put 0!
+    def Ratio(self, A, B):
+       if B == 0:
+         #print "divide by 0"
+         return 0.
+       else :
+         return A / B
+ 
+   ## _____________________________________________________________________________
+   ## --- poissonian error bayesian 1sigma band
+   ##                                      1/0   1/0
+    #def GetPoissError(self, numberEvents, down, up):
+       #alpha = (1-0.6827)
+       #L = 0
+       #if numberEvents!=0 : 
+         #L = ROOT.Math.gamma_quantile (alpha/2,numberEvents,1.)
+       #U = 0
+       #if numberEvents==0 :
+         #U = ROOT.Math.gamma_quantile_c (alpha,numberEvents+1,1.) 
+         ##print "u = ", U
+       #else :
+         #U = ROOT.Math.gamma_quantile_c (alpha/2,numberEvents+1,1.)
+         
+       ## the error
+       #L = numberEvents - L
+       #if numberEvents > 0 :
+         #U = U - numberEvents
+       ##else :
+         ##U = 1.14 # --> bayesian interval Poisson with 0 events observed
+         ##1.14790758039 from 10 lines above
+         
+       #if up and not down :
+         #return U
+       #if down and not up :
+         #return L
+       #if up and down :
+         #return (L,U)
+                  
+   # _____________________________________________________________________________
+    def GetMaximumIncludingErrors(self, histo):
+        maxWithErrors = 0.
+        for iBin in range(1, histo.GetNbinsX()+1):
+          binHeight = histo.GetBinContent (iBin) + histo.GetBinError (iBin)
+          if binHeight > maxWithErrors :
+            maxWithErrors = binHeight
+      
+        return maxWithErrors;
+
+   # _____________________________________________________________________________
+    def GetMinimum(self, histo):
+        minimum = -1.
+        for iBin in range(1, histo.GetNbinsX()+1):
+          binHeight = histo.GetBinContent (iBin)
+          if binHeight < minimum or minimum<0:
+            minimum = binHeight
+      
+        return minimum;
+ 
+ 
+    # _____________________________________________________________________________
+    def defineStyle(self):
+
+        print "=================="
+        import LatinoAnalysis.ShapeAnalysis.tdrStyle as tdrStyle
+        tdrStyle.setTDRStyle()
+        
+        ROOT.TGaxis.SetExponentOffset(-0.08, 0.00,"y")
+
+        
+   
+
+
+if __name__ == '__main__':
+    print '''
+--------------------------------------------------------------------------------------------------
+
+   _ \   |         |         \  |         |                
+  |   |  |   _ \   __|      |\/ |   _` |  |  /   _ \   __| 
+  ___/   |  (   |  |        |   |  (   |    <    __/  |    
+ _|     _| \___/  \__|     _|  _| \__,_| _|\_\ \___| _|   
+ 
+--------------------------------------------------------------------------------------------------
+'''    
+    usage = 'usage: %prog [options]'
+    parser = optparse.OptionParser(usage)
+
+    parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
+    parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
+    parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
+    parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
+    parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
+    parser.add_option('--inputCutsList'  , dest='inputCutsList'  , help='input cuts list with histograms already weighted', default='input_cuts_merge.py')
+    parser.add_option('--variable'       , dest='variable'       , help='input variable', default='myVariable')
+          
+    # read default parsing options as well
+    hwwtools.addOptions(parser)
+    hwwtools.loadOptDefaults(parser)
+    (opt, args) = parser.parse_args()
+
+    sys.argv.append( '-b' )
+    ROOT.gROOT.SetBatch()
+
+
+    print " configuration file = ", opt.pycfg
+    print " lumi =               ", opt.lumi
+    
+    print " variable =           ", opt.variable
+
+    print " inputCutsList  =     ", opt.inputCutsList
+    print " outputDirPlots =     ", opt.outputDirPlots
+    
+    print " minLogC   =          ", opt.minLogC
+    print " maxLogC   =          ", opt.maxLogC
+
+    print " minLogCratio   =          ", opt.minLogCratio
+    print " maxLogCratio   =          ", opt.maxLogCratio
+
+    opt.minLogC = float(opt.minLogC)
+    opt.maxLogC = float(opt.maxLogC)
+
+    opt.minLogCratio = float(opt.minLogCratio)
+    opt.maxLogCratio = float(opt.maxLogCratio)
+
+    if not opt.debug:
+        pass
+    elif opt.debug == 2:
+        print 'Logging level set to DEBUG (%d)' % opt.debug
+        logging.basicConfig( level=logging.DEBUG )
+    elif opt.debug == 1:
+        print 'Logging level set to INFO (%d)' % opt.debug
+        logging.basicConfig( level=logging.INFO )
+
+      
+    factory = ShapeFactory()
+    factory._energy    = opt.energy
+    factory._lumi      = opt.lumi
+    
+    factory._minLogC = opt.minLogC 
+    factory._maxLogC = opt.maxLogC 
+    factory._minLogCratio = opt.minLogCratio
+    factory._maxLogCratio = opt.maxLogCratio
+
+    factory._variable = opt.variable
+    
+    cutsToMerge = {}
+    if os.path.exists(opt.inputCutsList) :
+      handle = open(opt.inputCutsList,'r')
+      exec(handle)
+      handle.close()
+    
+    groupPlot = OrderedDict()
+    plot = {}
+    legend = {}
+    if os.path.exists(opt.plotFile) :
+      handle = open(opt.plotFile,'r')
+      exec(handle)
+      handle.close()
+   
+   
+    factory.makeCombinedPlot( opt.outputDirPlots, cutsToMerge, plot, legend, groupPlot)
+    
+    print '... and now closing ...'
+        
+       
