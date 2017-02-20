@@ -6,7 +6,6 @@ import LatinoAnalysis.Gardener.hwwtools as hwwtools
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
 
-def 
 
 if __name__ == '__main__':
 
@@ -108,9 +107,63 @@ if __name__ == '__main__':
     print ' ----- K_ff -------'
     print K_ff 
 
-    # Apply Rinout and K_ff
+    # ------------------- Apply Rinout and K_ff --------------------
+    DYCalc = ROOT.DYCalc()
+    # Create Ouput file 
+    outputFile = ROOT.TFile.Open( opt.outputFile , "RECREATE")
 
-    inputFile =  opt.inputFile
-    for iDYestim in DYestim :
-      print iDYestim
+    # Read Input file
+    inputFile  = ROOT.TFile.Open( opt.inputFile  , "READ")
+    for key in inputFile.GetListOfKeys() : 
+      if key.IsFolder() : 
+        baseDir = key.GetName()
+        outputFile.mkdir(baseDir) 
+        inputFile.cd(baseDir)
+        for skey in ROOT.gDirectory.GetListOfKeys() :
+          if skey.IsFolder():
+            subDir = skey.GetName() 
+            outputFile.mkdir(baseDir+'/'+subDir)
+            inputFile.cd(baseDir+'/'+subDir)
+            for hkey in ROOT.gDirectory.GetListOfKeys() :
+              hName = hkey.GetName() 
+              outputFile.cd(baseDir+'/'+subDir)
+              hTmp = inputFile.Get(baseDir+'/'+subDir+'/'+hName).Clone()
+              for iDYestim in DYestim :
+                if baseDir == iDYestim : #and 'histo_'+DYestim[iDYestim]['Hist'] in hName : 
+                  #nUnderscore=len(DYestim[iDYestim]['Hist'].split('_') 
+                  sName=''
+                  for i in range( 1, len(DYestim[iDYestim]['Hist'].split('_'))+1 ) : 
+                    if len(hName.split('_')) >= len(DYestim[iDYestim]['Hist'].split('_'))+1 : 
+                      if i==1 : sName+= hName.split('_')[i]
+                      else    : sName+= '_' + hName.split('_')[i]
+                  if sName == DYestim[iDYestim]['Hist'] :
+                    print '--------- DY' , baseDir , hName , len(DYestim[iDYestim]['Hist'].split('_'))
+                    try : Nin = inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_DATA').GetBinContent(1)
+                    except : Nin = 0
+                    try : Neu = inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_DATA').GetBinContent(1)
+                    except : Neu = 0 
+                    try : Nvv = inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_VZ').GetBinContent(1)
+                    except : Nvv = 0
+                    try : Nvv+= inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_Vg').GetBinContent(1)
+                    except : Nvv+= 0
+                    try : Nvv+= inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_VgS').GetBinContent(1)
+                    except : Nvv+= 0
+                    print 'Nin = ' , Nin , ' Neu = ' , Neu , ' Nvv = ' , Nvv
+                    rinout = DYestim[iDYestim]['rinout']
+                    tag = DYestim[iDYestim]['njet']+DYestim[iDYestim]['flavour']
+                    R  = Rinout[rinout][tag]['val']
+                    ER = Rinout[rinout][tag]['err']
+                    k  = K_ff[rinout][tag]['val']
+                    Ek = K_ff[rinout][tag]['err']
+                    print 'R = ',R,' +- ',ER
+                    print 'k = ',k,' +- ',Ek
+                    Nout = DYCalc.N_DY(R , Nin , k , Neu, Nvv )
+                    print 'Nout= ' , Nout 
+                    hTmp.Scale( Nout / hTmp.GetIntegral() )
+              hTmp.Write()
+               
+              #print baseDir,subDir,hName.split('_')[1]
+
+#    for iDYestim in DYestim :
+#      print iDYestim
 

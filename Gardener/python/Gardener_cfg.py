@@ -1113,7 +1113,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
 
@@ -1135,14 +1135,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
   'l2vlooseCut'  :       {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
 
@@ -1176,7 +1176,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'], #,'BWEwkSinglet','TopGenPt'],
+                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'], #,'BWEwkSinglet','TopGenPt'],
                   'onlySample' : [
                                   # VBS
                                   'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50','DYJetsToLL_M-50-LO-ext1',

@@ -47,11 +47,20 @@
 
 using namespace std;
 
-float N_DY(float R , float Nin , float k , float Neu, float Nvv ){
+class DYCalc{
+public:
+   //contructor
+   DYCalc() {};
+   virtual ~DYCalc() {};
+   float N_DY(float R , float Nin , float k , float Neu, float Nvv );
+   float EN_DY(float R , float Nin , float k , float Neu, float Nvv, float ER, float ENin, float Ek, float ENeu, float ENvv );
+};
+
+float DYCalc::N_DY(float R , float Nin , float k , float Neu, float Nvv ){
   return R * ( Nin - (k * Neu * 0.5) - Nvv);
 }
 
-float EN_DY(float R , float Nin , float k , float Neu, float Nvv, float ER, float ENin, float Ek, float ENeu, float ENvv ){
+float DYCalc::EN_DY(float R , float Nin , float k , float Neu, float Nvv, float ER, float ENin, float Ek, float ENeu, float ENvv ){
   return  N_DY(R, Nin, k, Neu, Nvv)*sqrt( pow((ER/R),2) + pow((( sqrt( pow(ENin,2) + pow(ENvv,2) + pow((0.5*Neu*k*sqrt(pow((ENeu/Neu),2)+pow((Ek/k),2))),2)) )/( Nin - (k * Neu * 0.5) - Nvv )),2));
 }
 
