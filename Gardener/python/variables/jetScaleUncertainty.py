@@ -99,6 +99,8 @@ class JESTreeMaker(TreeCloner):
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWVar.C++g')
 
         # Load jes uncertainty
+        if self.cmssw == 'Full2016':
+            jecUnc = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer16_23Sep2016V4_MC_Uncertainty_AK4PFchs.txt"))
         if self.cmssw == 'ICHEP2016':
             jecUncSpring16V1 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV1_MC_Uncertainty_AK4PFchs.txt"))
 	    jecUncSpring16V6 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
@@ -121,6 +123,10 @@ class JESTreeMaker(TreeCloner):
             
             for i in range(itree.std_vector_jet_pt.size()):
                 if itree.std_vector_jet_pt[i] > 0:
+                    if self.cmssw == 'Full2016':
+                        jecUnc.setJetEta(itree.std_vector_jet_eta[i])
+                        jecUnc.setJetPt(itree.std_vector_jet_pt[i])
+                        unc = jecUnc.getUncertainty(True)
                     if self.cmssw == 'ICHEP2016':
                         jecUncSpring16V1.setJetEta(itree.std_vector_jet_eta[i])
                         jecUncSpring16V1.setJetPt(itree.std_vector_jet_pt[i])
