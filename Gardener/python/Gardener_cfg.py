@@ -3941,7 +3941,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'SizeMethod' : False , 
+                  'SizeMethod' : True , 
                   'SizeMax'    : 5e9 , 
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
