@@ -48,7 +48,16 @@ class LeppTScalerTreeMaker(TreeCloner):
         self.cmssw=opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
 
-        if opts.cmssw == 'ICHEP2016' :
+        if opts.cmssw == 'Full2016' :
+          if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
+              if opts.lepFlavourToChange == 'ele' :
+                  opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_el_80_remAOD.py'
+              elif opts.lepFlavourToChange == 'mu' :
+                  opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_80_remAOD.py'
+              else:
+                  print "please select mu or ele"      
+
+        elif opts.cmssw == 'ICHEP2016' :
           if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
               if opts.lepFlavourToChange == 'ele' :
                   opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_el_80_prompt.py'
