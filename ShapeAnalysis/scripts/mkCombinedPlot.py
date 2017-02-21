@@ -72,40 +72,82 @@ class ShapeFactory:
             #print 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
             name_histogram = 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
             
-            if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] == 1 :
-              if sampleNameGroup not in list_thsSignal.keys() :
-                list_thsSignal [sampleNameGroup] = list_files[cutName].Get(name_histogram)
-                print 'type = ',  type( list_thsSignal [sampleNameGroup]  )
-              else :
-                list_thsSignal [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
+            if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
+              if list_files[cutName].Get(name_histogram) :
+                if sampleNameGroup not in list_thsSignal.keys() :
+                  list_thsSignal [sampleNameGroup] = list_files[cutName].Get(name_histogram)
+                  print 'type = ',  type( list_thsSignal [sampleNameGroup]  )
+                else :
+                  list_thsSignal [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
             else :
-              if sampleNameGroup not in list_thsBackground.keys() :
-                list_thsBackground [sampleNameGroup] = list_files[cutName].Get(name_histogram)
-                #print 'type = ', type( list_thsBackground [sampleNameGroup]  )
-              else :
-                list_thsBackground [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
+              if list_files[cutName].Get(name_histogram) :
+                if sampleNameGroup not in list_thsBackground.keys() :
+                  list_thsBackground [sampleNameGroup] = list_files[cutName].Get(name_histogram)
+                  #print 'type = ', type( list_thsBackground [sampleNameGroup]  )
+                else :
+                  list_thsBackground [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
              
         for cutName, cutConfig in cutsToMerge.iteritems():         
           name_histogram = 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + cutName + '_' +  self._variable + '_slice_0'
-          if 'DATA' not in list_thsData.keys() :
-            list_thsData ['DATA'] = list_files[cutName].Get(name_histogram)
-          else :
-            list_thsData ['DATA'].Add( list_files[cutName].Get(name_histogram) )
-             
+          if list_files[cutName].Get(name_histogram) :
+            if 'DATA' not in list_thsData.keys() :
+              list_thsData ['DATA'] = list_files[cutName].Get(name_histogram)
+            else :
+              list_thsData ['DATA'].Add( list_files[cutName].Get(name_histogram) )
+           
+           
+        #
+        # fix x-axis range of histograms
+        #
+        
+        list_thsData ['DATA'] = self.FixBins(list_thsData ['DATA'])
+        print " max = ", (list_thsData ['DATA']).GetBinCenter(list_thsData['DATA'].GetNbinsX()+1)
+        for histoname, histo in list_thsSignal.iteritems():
+          histo = self.FixBins(histo)          
+          #print " max = ", histo.GetBinCenter(histo.GetNbinsX())
+        for histoname, histo in list_thsBackground.iteritems():
+          histo = self.FixBins(histo)
+          #print " max = ", histo.GetBinCenter(histo.GetNbinsX())
+   
+   
+        #
+        # prepare the signal TGraphAsymmErrors
+        #
+
+        tgrSig  = ROOT.TGraphAsymmErrors()
+        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+          if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :  
+            temp_histo = list_thsSignal[sampleNameGroup]
+            if tgrSig.GetN() == 0 :
+              for iBin in range(temp_histo.GetNbinsX()) :
+                tgrSig.SetPoint      (iBin, temp_histo.GetBinCenter(iBin+1),temp_histo.GetBinContent(iBin+1) )
+                tgrSig.SetPointError (iBin, temp_histo.GetBinWidth(iBin+1) /2., temp_histo.GetBinWidth(iBin+1) /2., 0. , 0. )
+            
+            else :
+              for iBin in range(temp_histo.GetNbinsX()) :
+                x_temp = tgrSig.GetX()[iBin]
+                y_temp = tgrSig.GetY()[iBin]
+                exl_temp = tgrSig.GetErrorXlow(iBin)
+                exh_temp = tgrSig.GetErrorXhigh(iBin)
+                
+                tgrSig.SetPoint      (iBin, x_temp, temp_histo.GetBinContent(iBin+1) + y_temp )
+                tgrSig.SetPointError (iBin, exl_temp, exh_temp, 0., 0. )
+  
+        
         
         # now that all the histograms are merged, let's merge the TGraphs
         tgrData  = ROOT.TGraphAsymmErrors()
         tgrMC  = ROOT.TGraphAsymmErrors()
-        #weight_X_tgrData
-        #weight_X_tgrMC
+
         for cutName, cutConfig in cutsToMerge.iteritems():    
           temp_graph = list_files[cutName].Get("weight_X_tgrMC")
-          #print 'type = ', type( temp_graph )
-
+          
           if tgrMC.GetN() == 0 :
             for iBin in range(temp_graph.GetN()) :
-              tgrMC.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
-              tgrMC.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+              #tgrMC.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
+              #tgrMC.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+              tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
+              tgrMC.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2., temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
           
           else :
             for iBin in range(temp_graph.GetN()) :
@@ -125,8 +167,10 @@ class ShapeFactory:
 
           if tgrData.GetN() == 0 :
             for iBin in range(temp_graph.GetN()) :
-              tgrData.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
-              tgrData.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+              #tgrData.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
+              #tgrData.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+              tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
+              tgrData.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2.,  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
           
           else :
             for iBin in range(temp_graph.GetN()) :
@@ -158,6 +202,22 @@ class ShapeFactory:
           weight_X_thsBackground.Add(histo)
 
         #
+        # the signal is added on top of the background
+        #
+        for iBin in range( tgrMC.GetN() ) :
+          x_temp = tgrMC.GetX()[iBin]
+          y_temp = tgrMC.GetY()[iBin]
+          exl_temp = tgrMC.GetErrorXlow(iBin)
+          exh_temp = tgrMC.GetErrorXhigh(iBin)
+          eyl_temp = tgrMC.GetErrorYlow(iBin)
+          eyh_temp = tgrMC.GetErrorYhigh(iBin)
+
+          tgrMC.SetPoint      (iBin, x_temp, tgrSig.GetY()[iBin]  + y_temp )
+          tgrMC.SetPointError (iBin, exl_temp, exh_temp, eyl_temp , eyh_temp )
+      
+          
+
+        #
         # prepare ratio plot
         #
         tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
@@ -179,7 +239,7 @@ class ShapeFactory:
         tlegend.SetShadowColor(0)
          
         for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-          if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] == 1 :
+          if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
             tlegend.AddEntry( list_thsSignal [sampleNameGroup] ,     sampleConfiguration['nameHR'], "F")          
           else :
             tlegend.AddEntry( list_thsBackground [sampleNameGroup] , sampleConfiguration['nameHR'], "F")
@@ -225,15 +285,18 @@ class ShapeFactory:
         
         
         # - recalculate the maxY
-        maxYused = 1.2 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+        maxYused = 1.5 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
 
         # FIXME these hardcoded numbers
         minYused = 1.
         nbinY = 5
-        minXused = 0
+        minXused = (list_thsData ['DATA']).GetBinLowEdge(1) 
+        maxXused = (list_thsData ['DATA']).GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) ) /2.
         
         
         
+        print " minXused = ", minXused
+        print " maxXused = ", maxXused,  " = ", (list_thsData ['DATA']).GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) , " + ", (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) )
         print " maxYused = ", maxYused
         
         weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + self._variable
@@ -250,7 +313,8 @@ class ShapeFactory:
         
         weight_X_pad1.cd()
         weight_X_canvasFrameDistroName = 'weight_X_frame_distro_' + variableName
-        weight_X_frameDistro = weight_X_pad1.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_canvasFrameDistroName)
+        #weight_X_frameDistro = weight_X_pad1.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_canvasFrameDistroName)
+        weight_X_frameDistro = weight_X_pad1.DrawFrame(minXused, 0.0, maxXused, maxYused, weight_X_canvasFrameDistroName)
         
         ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
         xAxisDistro = weight_X_frameDistro.GetXaxis()
@@ -260,6 +324,12 @@ class ShapeFactory:
           #weight_X_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
         #else :
           #weight_X_frameDistro.GetXaxis().SetTitle(variableName)
+        weight_X_frameDistro.GetXaxis().SetTitle(factory._variableHR)
+                
+    #factory._minvariable = opt.minvariable
+    #factory._maxvariable = opt.maxvariable
+
+        
         weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
         weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
 
@@ -293,7 +363,7 @@ class ShapeFactory:
         weight_X_pad2.cd()
         
         weight_X_canvasFrameRatioName = 'weight_X_frame_ratio_' + variableName
-        weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameRatioName)
+        weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, weight_X_canvasFrameRatioName)
         ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
         xAxisDistro = weight_X_frameRatio.GetXaxis()
         xAxisDistro.SetNdivisions(6,5,0)
@@ -331,8 +401,26 @@ class ShapeFactory:
                     
     
     
+   # _____________________________________________________________________________
+   # --- fix binning
     
+    def FixBins(self, histo):
         
+        nbins = histo.GetXaxis().GetNbins()
+        alpha = (self._maxvariable - self._minvariable) / ( histo.GetBinLowEdge(nbins+1) +  histo.GetBinLowEdge(nbins) - histo.GetBinLowEdge(1))
+        
+        #print " alpha =", alpha
+        
+        hnew = ROOT.TH1F("new_" + histo.GetTitle(),"",nbins, self._minvariable , self._maxvariable)
+        for ibin in range (0, nbins+1) :
+          y = histo.GetBinContent(ibin)
+          x = histo.GetXaxis().GetBinCenter(ibin)
+          xnew =  alpha*x
+          hnew.Fill(xnew,y)
+        
+        return hnew
+        
+   
 
 
    # _____________________________________________________________________________
@@ -458,6 +546,9 @@ if __name__ == '__main__':
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputCutsList'  , dest='inputCutsList'  , help='input cuts list with histograms already weighted', default='input_cuts_merge.py')
     parser.add_option('--variable'       , dest='variable'       , help='input variable', default='myVariable')
+    parser.add_option('--variableHR'     , dest='variableHR'     , help='input variable name', default='myVariable')
+    parser.add_option('--minvariable'    , dest='minvariable'    , help='input variable min', default=0.   ,    type=float)
+    parser.add_option('--maxvariable'    , dest='maxvariable'    , help='input variable max', default=10.  ,    type=float)
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -472,6 +563,9 @@ if __name__ == '__main__':
     print " lumi =               ", opt.lumi
     
     print " variable =           ", opt.variable
+    print " variableHR =         ", opt.variableHR
+    print " minvariable =        ", opt.minvariable
+    print " maxvariable =        ", opt.maxvariable
 
     print " inputCutsList  =     ", opt.inputCutsList
     print " outputDirPlots =     ", opt.outputDirPlots
@@ -508,6 +602,10 @@ if __name__ == '__main__':
     factory._maxLogCratio = opt.maxLogCratio
 
     factory._variable = opt.variable
+    factory._variableHR = opt.variableHR
+    factory._minvariable = 1.* opt.minvariable
+    factory._maxvariable = 1.* opt.maxvariable
+   
     
     cutsToMerge = {}
     if os.path.exists(opt.inputCutsList) :
