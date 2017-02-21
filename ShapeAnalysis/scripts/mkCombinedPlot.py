@@ -61,42 +61,102 @@ class ShapeFactory:
 
 
         list_files = {}
+        list_files_weights_sig = {}
+        list_files_integral_sig = {}
+        list_files_weight_integral_sig = {}
+        
         for cutName, cutConfig in cutsToMerge.iteritems(): 
           print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
           temp_file = ROOT.TFile(cutConfig['rootFile'], "READ")
           list_files[cutName] = temp_file
+          list_files_weights_sig [cutName] = temp_file.Get("histo_global_normalization").GetBinContent(1) 
+
+        # loop over all the cuts (= phase spaces) you want to merge in one
+        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+          for cutName, cutConfig in cutsToMerge.iteritems():         
+            nameToBeUsed = cutName
+            if 'cutUsed' in cutConfig.keys() :
+              nameToBeUsed = cutConfig['cutUsed']
+            
+            name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+            
+            if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
+              if list_files[cutName].Get(name_histogram) :
+                
+                if cutName not in list_files_integral_sig :
+                  list_files_integral_sig[cutName] =  (list_files[cutName].Get(name_histogram)).Integral() 
+                else :
+                  list_files_integral_sig[cutName] += (list_files[cutName].Get(name_histogram)).Integral() 
+                
+
+        #
+        # divide by the signal rate
+        # save this value to later scale everything
+        #
+        
+        totalIntegralSig = 0.
+        totalWeightIntegralSig = 0.
+         
+        for cutName, cutConfig in cutsToMerge.iteritems():         
+          totalIntegralSig       += list_files_integral_sig[cutName] 
+          totalWeightIntegralSig += (list_files_integral_sig[cutName] / list_files_weights_sig [cutName])
+          list_files_weight_integral_sig[cutName] = (list_files_integral_sig[cutName] / list_files_weights_sig [cutName])
+          
+ 
+
           
         # loop over all the cuts (= phase spaces) you want to merge in one
         for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
           for cutName, cutConfig in cutsToMerge.iteritems():         
             #print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
             #print 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
-            name_histogram = 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
+            
+            global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+
+
+            nameToBeUsed = cutName
+            if 'cutUsed' in cutConfig.keys() :
+              nameToBeUsed = cutConfig['cutUsed']
+            
+            name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
             
             if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
               if list_files[cutName].Get(name_histogram) :
                 if sampleNameGroup not in list_thsSignal.keys() :
-                  list_thsSignal [sampleNameGroup] = list_files[cutName].Get(name_histogram)
+                  list_thsSignal [sampleNameGroup] = list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName)
+                  list_thsSignal [sampleNameGroup].Scale ( 1. * global_scale_factor )
+                  
                   #print 'type = ',  type( list_thsSignal [sampleNameGroup]  )
                 else :
-                  list_thsSignal [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
+                  list_thsSignal [sampleNameGroup].Add( list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName), 1. * global_scale_factor )
             else :
               if list_files[cutName].Get(name_histogram) :
                 if sampleNameGroup not in list_thsBackground.keys() :
-                  list_thsBackground [sampleNameGroup] = list_files[cutName].Get(name_histogram)
+                  list_thsBackground [sampleNameGroup] = list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName)
+                  list_thsBackground [sampleNameGroup].Scale ( 1. * global_scale_factor )
                   #print 'type = ', type( list_thsBackground [sampleNameGroup]  )
                 else :
-                  list_thsBackground [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
+                  list_thsBackground [sampleNameGroup].Add( list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName) , 1. * global_scale_factor )
+             
              
         for cutName, cutConfig in cutsToMerge.iteritems():         
-          name_histogram = 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + cutName + '_' +  self._variable + '_slice_0'
+
+          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+
+          nameToBeUsed = cutName
+          if 'cutUsed' in cutConfig.keys() :
+            nameToBeUsed = cutConfig['cutUsed']
+
+          name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
           if list_files[cutName].Get(name_histogram) :
             if 'DATA' not in list_thsData.keys() :
-              list_thsData ['DATA'] = list_files[cutName].Get(name_histogram)
+              list_thsData ['DATA'] = list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName)
+              list_thsData ['DATA'].Scale ( 1. * global_scale_factor )
             else :
-              list_thsData ['DATA'].Add( list_files[cutName].Get(name_histogram) )
+              list_thsData ['DATA'].Add( list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName) , 1. * global_scale_factor )
            
-           
+        
+         
         #
         # fix x-axis range of histograms
         #
@@ -121,7 +181,7 @@ class ShapeFactory:
             temp_histo = list_thsSignal[sampleNameGroup]
             if tgrSig.GetN() == 0 :
               for iBin in range(temp_histo.GetNbinsX()) :
-                tgrSig.SetPoint      (iBin, temp_histo.GetXaxis().GetBinCenter(iBin+1),temp_histo.GetBinContent(iBin+1) )
+                tgrSig.SetPoint      (iBin, temp_histo.GetXaxis().GetBinCenter(iBin+1), temp_histo.GetBinContent(iBin+1) )
                 tgrSig.SetPointError (iBin, temp_histo.GetBinWidth(iBin+1) /2., temp_histo.GetBinWidth(iBin+1) /2., 0. , 0. )
             
             else :
@@ -143,12 +203,14 @@ class ShapeFactory:
         for cutName, cutConfig in cutsToMerge.iteritems():    
           temp_graph = list_files[cutName].Get("weight_X_tgrMC")
           
+          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+          
           if tgrMC.GetN() == 0 :
             for iBin in range(temp_graph.GetN()) :
               #tgrMC.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
               #tgrMC.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
-              tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
-              tgrMC.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2., temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+              tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]  * global_scale_factor )
+              tgrMC.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2., temp_graph.GetErrorYlow(iBin)  * global_scale_factor, temp_graph.GetErrorYhigh(iBin)  * global_scale_factor )
           
           else :
             for iBin in range(temp_graph.GetN()) :
@@ -159,19 +221,23 @@ class ShapeFactory:
               eyl_temp = tgrMC.GetErrorYlow(iBin)
               eyh_temp = tgrMC.GetErrorYhigh(iBin)
               
-              tgrMC.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  + y_temp )
-              tgrMC.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin), eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin), eyh_temp)  )
+              tgrMC.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  * global_scale_factor  + y_temp )
+              tgrMC.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor, eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor, eyh_temp)  )
  
         for cutName, cutConfig in cutsToMerge.iteritems():    
           temp_graph = list_files[cutName].Get("weight_X_tgrData")
           #print 'type = ', type( temp_graph )
 
+          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+
+          print " global_scale_factor = ", global_scale_factor
+
           if tgrData.GetN() == 0 :
             for iBin in range(temp_graph.GetN()) :
               #tgrData.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
               #tgrData.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
-              tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
-              tgrData.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2.,  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
+              tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]    * global_scale_factor  )
+              tgrData.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2.,  temp_graph.GetErrorYlow(iBin)    * global_scale_factor , temp_graph.GetErrorYhigh(iBin)    * global_scale_factor  )
           
           else :
             for iBin in range(temp_graph.GetN()) :
@@ -182,8 +248,8 @@ class ShapeFactory:
               eyl_temp = tgrData.GetErrorYlow(iBin)
               eyh_temp = tgrData.GetErrorYhigh(iBin)
               
-              tgrData.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  + y_temp )
-              tgrData.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin), eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin), eyh_temp)  )
+              tgrData.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]   * global_scale_factor   + y_temp )
+              tgrData.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor, eyl_temp), self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor, eyh_temp) )
   
   
         #
@@ -327,9 +393,6 @@ class ShapeFactory:
           #weight_X_frameDistro.GetXaxis().SetTitle(variableName)
         weight_X_frameDistro.GetXaxis().SetTitle(factory._variableHR)
                 
-    #factory._minvariable = opt.minvariable
-    #factory._maxvariable = opt.maxvariable
-
         
         weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
         weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
@@ -368,11 +431,6 @@ class ShapeFactory:
         ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
         xAxisDistro = weight_X_frameRatio.GetXaxis()
         xAxisDistro.SetNdivisions(6,5,0)
-
-        #if 'xaxis' in variable.keys() : 
-          #weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
-        #else :
-          #weight_X_frameRatio.GetXaxis().SetTitle(variableName)
           
         weight_X_frameRatio.GetXaxis().SetTitle(factory._variableHR)
         weight_X_frameRatio.GetYaxis().SetTitle("Data/Expected")
