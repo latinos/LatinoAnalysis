@@ -62,13 +62,14 @@ class ShapeFactory:
 
         list_files = {}
         for cutName, cutConfig in cutsToMerge.iteritems(): 
+          print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
           temp_file = ROOT.TFile(cutConfig['rootFile'], "READ")
           list_files[cutName] = temp_file
           
         # loop over all the cuts (= phase spaces) you want to merge in one
         for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
           for cutName, cutConfig in cutsToMerge.iteritems():         
-            print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
+            #print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
             #print 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
             name_histogram = 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
             
@@ -76,7 +77,7 @@ class ShapeFactory:
               if list_files[cutName].Get(name_histogram) :
                 if sampleNameGroup not in list_thsSignal.keys() :
                   list_thsSignal [sampleNameGroup] = list_files[cutName].Get(name_histogram)
-                  print 'type = ',  type( list_thsSignal [sampleNameGroup]  )
+                  #print 'type = ',  type( list_thsSignal [sampleNameGroup]  )
                 else :
                   list_thsSignal [sampleNameGroup].Add( list_files[cutName].Get(name_histogram) )
             else :
@@ -101,13 +102,13 @@ class ShapeFactory:
         #
         
         list_thsData ['DATA'] = self.FixBins(list_thsData ['DATA'])
-        print " max = ", (list_thsData ['DATA']).GetBinCenter(list_thsData['DATA'].GetNbinsX()+1)
+        #print " max = ", (list_thsData ['DATA']).GetXaxis().GetBinCenter(list_thsData['DATA'].GetNbinsX()+1)
         for histoname, histo in list_thsSignal.iteritems():
-          histo = self.FixBins(histo)          
-          #print " max = ", histo.GetBinCenter(histo.GetNbinsX())
+          list_thsSignal[histoname] = self.FixBins(histo)          
+          #print " max = ", histo.GetXaxis().GetBinCenter(histo.GetNbinsX())
         for histoname, histo in list_thsBackground.iteritems():
-          histo = self.FixBins(histo)
-          #print " max = ", histo.GetBinCenter(histo.GetNbinsX())
+          list_thsBackground[histoname] = self.FixBins(histo)
+          #print " max = ", histo.GetXaxis().GetBinCenter(histo.GetNbinsX())
    
    
         #
@@ -120,7 +121,7 @@ class ShapeFactory:
             temp_histo = list_thsSignal[sampleNameGroup]
             if tgrSig.GetN() == 0 :
               for iBin in range(temp_histo.GetNbinsX()) :
-                tgrSig.SetPoint      (iBin, temp_histo.GetBinCenter(iBin+1),temp_histo.GetBinContent(iBin+1) )
+                tgrSig.SetPoint      (iBin, temp_histo.GetXaxis().GetBinCenter(iBin+1),temp_histo.GetBinContent(iBin+1) )
                 tgrSig.SetPointError (iBin, temp_histo.GetBinWidth(iBin+1) /2., temp_histo.GetBinWidth(iBin+1) /2., 0. , 0. )
             
             else :
@@ -146,7 +147,7 @@ class ShapeFactory:
             for iBin in range(temp_graph.GetN()) :
               #tgrMC.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
               #tgrMC.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
-              tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
+              tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
               tgrMC.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2., temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
           
           else :
@@ -169,7 +170,7 @@ class ShapeFactory:
             for iBin in range(temp_graph.GetN()) :
               #tgrData.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
               #tgrData.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
-              tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
+              tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin] )
               tgrData.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2.,  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
           
           else :
@@ -233,7 +234,7 @@ class ShapeFactory:
                                       
 
         #---- the Legend
-        tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+        tlegend = ROOT.TLegend(0.20, 0.60, 0.80, 0.85)
         tlegend.SetFillColor(0)
         tlegend.SetLineColor(0)
         tlegend.SetShadowColor(0)
@@ -285,18 +286,18 @@ class ShapeFactory:
         
         
         # - recalculate the maxY
-        maxYused = 1.5 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+        maxYused = 1.1 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
 
         # FIXME these hardcoded numbers
         minYused = 1.
         nbinY = 5
-        minXused = (list_thsData ['DATA']).GetBinLowEdge(1) 
-        maxXused = (list_thsData ['DATA']).GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) ) /2.
+        minXused = (list_thsData ['DATA']).GetXaxis().GetBinLowEdge(1) 
+        maxXused = (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) ) /2.
         
         
         
         print " minXused = ", minXused
-        print " maxXused = ", maxXused,  " = ", (list_thsData ['DATA']).GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) , " + ", (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) )
+        print " maxXused = ", maxXused,  " = ", (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) , " + ", (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) )
         print " maxYused = ", maxYused
         
         weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + self._variable
@@ -372,6 +373,8 @@ class ShapeFactory:
           #weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
         #else :
           #weight_X_frameRatio.GetXaxis().SetTitle(variableName)
+          
+        weight_X_frameRatio.GetXaxis().SetTitle(factory._variableHR)
         weight_X_frameRatio.GetYaxis().SetTitle("Data/Expected")
         weight_X_frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
         self.Pad2TAxis(weight_X_frameRatio)
@@ -407,16 +410,22 @@ class ShapeFactory:
     def FixBins(self, histo):
         
         nbins = histo.GetXaxis().GetNbins()
-        alpha = (self._maxvariable - self._minvariable) / ( histo.GetBinLowEdge(nbins+1) +  histo.GetBinLowEdge(nbins) - histo.GetBinLowEdge(1))
+        alpha = (self._maxvariable - self._minvariable) / ( histo.GetXaxis().GetBinLowEdge(nbins+1) +  histo.GetXaxis().GetBinWidth(nbins+1)/2 - histo.GetXaxis().GetBinLowEdge(1))
         
-        #print " alpha =", alpha
+        #print " alpha = ", alpha
+        #print " histo.GetTitle() = ", histo.GetTitle()
+        #print " histo.GetName() = ", histo.GetName()
         
-        hnew = ROOT.TH1F("new_" + histo.GetTitle(),"",nbins, self._minvariable , self._maxvariable)
+        hnew = ROOT.TH1F("new_" + histo.GetName(),"",nbins, self._minvariable , self._maxvariable)
         for ibin in range (0, nbins+1) :
           y = histo.GetBinContent(ibin)
           x = histo.GetXaxis().GetBinCenter(ibin)
-          xnew =  alpha*x
+          xnew =  alpha*x + self._minvariable
           hnew.Fill(xnew,y)
+        
+        hnew.SetFillColor(histo.GetFillColor())
+        hnew.SetLineColor(histo.GetLineColor())
+        hnew.SetFillStyle(histo.GetFillStyle())
         
         return hnew
         
