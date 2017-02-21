@@ -70,6 +70,7 @@ class ShapeFactory:
           temp_file = ROOT.TFile(cutConfig['rootFile'], "READ")
           list_files[cutName] = temp_file
           list_files_weights_sig [cutName] = temp_file.Get("histo_global_normalization").GetBinContent(1) 
+          # global_normalization = totalSig / totalWeightedIntegralSig
 
         # loop over all the cuts (= phase spaces) you want to merge in one
         for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
@@ -102,7 +103,8 @@ class ShapeFactory:
           totalWeightIntegralSig += (list_files_integral_sig[cutName] / list_files_weights_sig [cutName])
           list_files_weight_integral_sig[cutName] = (list_files_integral_sig[cutName] / list_files_weights_sig [cutName])
           
- 
+        print " totalIntegralSig =       ", totalIntegralSig
+        print " totalWeightIntegralSig = ", totalWeightIntegralSig
 
           
         # loop over all the cuts (= phase spaces) you want to merge in one
@@ -111,7 +113,7 @@ class ShapeFactory:
             #print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
             #print 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
             
-            global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+            global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_weight_integral_sig[cutName] / list_files_integral_sig[cutName]
 
 
             nameToBeUsed = cutName
@@ -141,13 +143,15 @@ class ShapeFactory:
              
         for cutName, cutConfig in cutsToMerge.iteritems():         
 
-          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_weight_integral_sig[cutName] / list_files_integral_sig[cutName]
 
           nameToBeUsed = cutName
           if 'cutUsed' in cutConfig.keys() :
             nameToBeUsed = cutConfig['cutUsed']
 
           name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+          print " data:: ", name_histogram
+          
           if list_files[cutName].Get(name_histogram) :
             if 'DATA' not in list_thsData.keys() :
               list_thsData ['DATA'] = list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName)
@@ -198,12 +202,13 @@ class ShapeFactory:
         
         # now that all the histograms are merged, let's merge the TGraphs
         tgrData  = ROOT.TGraphAsymmErrors()
-        tgrMC  = ROOT.TGraphAsymmErrors()
+        tgrMC    = ROOT.TGraphAsymmErrors()
+        tgrMC_noSig  = ROOT.TGraphAsymmErrors()
 
         for cutName, cutConfig in cutsToMerge.iteritems():    
           temp_graph = list_files[cutName].Get("weight_X_tgrMC")
           
-          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_weight_integral_sig[cutName] / list_files_integral_sig[cutName]
           
           if tgrMC.GetN() == 0 :
             for iBin in range(temp_graph.GetN()) :
@@ -228,9 +233,9 @@ class ShapeFactory:
           temp_graph = list_files[cutName].Get("weight_X_tgrData")
           #print 'type = ', type( temp_graph )
 
-          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_integral_sig[cutName] / list_files_weight_integral_sig[cutName]
+          global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_weight_integral_sig[cutName] / list_files_integral_sig[cutName]
 
-          print " global_scale_factor = ", global_scale_factor
+          print " global_scale_factor]", cutName, "] = ", global_scale_factor
 
           if tgrData.GetN() == 0 :
             for iBin in range(temp_graph.GetN()) :
@@ -271,6 +276,9 @@ class ShapeFactory:
         #
         # the signal is added on top of the background
         #
+        
+        tgrMC_noSig = tgrMC.Clone("tgrMC_noSig")
+        
         for iBin in range( tgrMC.GetN() ) :
           x_temp = tgrMC.GetX()[iBin]
           y_temp = tgrMC.GetY()[iBin]
@@ -356,7 +364,7 @@ class ShapeFactory:
 
         # FIXME these hardcoded numbers
         minYused = 1.
-        nbinY = 5
+        #nbinY = 5
         minXused = (list_thsData ['DATA']).GetXaxis().GetBinLowEdge(1) 
         maxXused = (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) ) /2.
         
@@ -458,8 +466,98 @@ class ShapeFactory:
         weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
         weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
         
+        
+        ###
+        #
+        # background subtracted plot
+        #
+        
+        tgrData_bkgSubtracted  = ROOT.TGraphAsymmErrors()
+        tgrBkg_bkgSubtracted   = ROOT.TGraphAsymmErrors()
+        
+        maxYused = 0
+        minYused = 100
+        
+        for iBin in range( tgrMC_noSig.GetN() ) :
+          x_temp = tgrMC_noSig.GetX()[iBin]
+          y_temp = tgrMC_noSig.GetY()[iBin]
+          exl_temp = tgrMC_noSig.GetErrorXlow(iBin)
+          exh_temp = tgrMC_noSig.GetErrorXhigh(iBin)
+          eyl_temp = tgrMC_noSig.GetErrorYlow(iBin)
+          eyh_temp = tgrMC_noSig.GetErrorYhigh(iBin)
+
+          tgrData_bkgSubtracted.SetPoint      (iBin, x_temp, tgrData.GetY()[iBin] - y_temp )
+          tgrData_bkgSubtracted.SetPointError (iBin, exl_temp, exh_temp, tgrData.GetErrorYlow(iBin) , tgrData.GetErrorYhigh(iBin) )
+
+          tgrBkg_bkgSubtracted.SetPoint      (iBin, x_temp, 0 )
+          tgrBkg_bkgSubtracted.SetPointError (iBin, exl_temp, exh_temp, eyl_temp, eyh_temp)
+
+          if maxYused < (tgrData.GetY()[iBin] - y_temp) :
+            maxYused = tgrData.GetY()[iBin] - y_temp
+            
+          if minYused > (tgrData.GetY()[iBin] - y_temp) :
+            minYused = tgrData.GetY()[iBin] - y_temp
+        
+        maxYused *= 1.9
+        if minYused < 0:
+          #minYused *= 1.9
+          minYused *= 1.9
+          minYused -= totalIntegralSig/4.
+        
+        print " minYused = ", minYused
+        
+        bkgSub_weight_X_canvasRatioNameTemplate = 'cratio_bkgSub_weight_X_' + self._variable
+        bkgSub_weight_X_tcanvasRatio = ROOT.TCanvas(bkgSub_weight_X_canvasRatioNameTemplate, "bkgSub_weight_X_tcanvasRatio", 800, 600 )
+
+        bkgSub_weight_X_tcanvasRatio.cd()
+        bkgSub_canvasPad1Name = 'bkgSub_weight_X_pad1_' + variableName
+        bkgSub_weight_X_pad1 = ROOT.TPad(bkgSub_canvasPad1Name,bkgSub_canvasPad1Name, 0, 0, 1, 1)
+        #bkgSub_weight_X_pad1.SetTopMargin(0.098)
+        #bkgSub_weight_X_pad1.SetBottomMargin(0.002) 
+        bkgSub_weight_X_pad1.Draw()
+        
          
-                    
+        bkgSub_weight_X_pad1.cd()
+        bkgSub_weight_X_canvasFrameDistroName = 'bkgSub_weight_X_frame_distro_' + variableName
+        bkgSub_weight_X_frameDistro = bkgSub_weight_X_pad1.DrawFrame(minXused, minYused, maxXused, maxYused, bkgSub_weight_X_canvasFrameDistroName)
+        
+        ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+        bkgSub_xAxisDistro = bkgSub_weight_X_frameDistro.GetXaxis()
+        bkgSub_xAxisDistro.SetNdivisions(6,5,0)
+
+        bkgSub_weight_X_frameDistro.GetXaxis().SetTitle(factory._variableHR)
+                
+        
+        bkgSub_weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events bkg subtracted")
+        bkgSub_weight_X_frameDistro.GetYaxis().SetRangeUser( minYused, maxYused )
+
+        ##     - the background         
+        tgrBkg_bkgSubtracted.SetLineColor(12)
+        tgrBkg_bkgSubtracted.SetFillColor(12)
+        tgrBkg_bkgSubtracted.SetFillStyle(3004)
+        tgrBkg_bkgSubtracted.Draw("2")
+
+        ##     - the signal         
+        #tgrSig.Draw("histo")
+        weight_X_thsSignal.Draw("hist same noclear")
+
+        ##     - then the DATA  
+        tgrData_bkgSubtracted.Draw("P0")
+   
+   
+        CMS_lumi.CMS_lumi(bkgSub_weight_X_tcanvasRatio, iPeriod, iPos)    
+
+        ## draw back all the axes            
+        bkgSub_weight_X_pad1.RedrawAxis()
+            
+        
+        bkgSub_weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + bkgSub_weight_X_canvasRatioNameTemplate + ".png")
+        bkgSub_weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + bkgSub_weight_X_canvasRatioNameTemplate + ".root")
+        
+
+                  
+                  
+                  
     
     
    # _____________________________________________________________________________
