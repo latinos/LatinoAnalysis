@@ -188,7 +188,7 @@ Trigger['Full2016'] =  {
                                 },
                           # Run>=278273: Switch to DZ version of E-Mu triggers
                           # OLD: 4  :  { 'begin' : 278273 , 'end' : 281612 , 'lumi' : 9.818  ,
-                          4  :  { 'begin' : 278273 , 'end' : 278808 , 'lumi' : 9.818  ,
+                          4  :  { 'begin' : 278273 , 'end' : 278808 , 'lumi' : 2.041  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -215,10 +215,11 @@ Trigger['Full2016'] =  {
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
                                 },
+                          # No change of trigger, same as period 4
                           # END of HIP problem -> Muon ID/ISO SF change
                           #    Run2016G |   278820 | 280385
                           #    Run2016H |   280919 |
-                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 9.818  ,
+                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 7.540  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
