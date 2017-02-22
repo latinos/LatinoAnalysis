@@ -942,7 +942,7 @@ Productions= {
                                         'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
                                         'MuonEG_Run2016B-03Feb2017_ver2-v2',
                                         'SingleElectron_Run2016B-03Feb2017_ver2-v2',
-                                        'SingleMuon_Run2016B-03Feb2017-ver2r-v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
                                         'MET_Run2016B-03Feb2017_ver2-v2',   
                                        ],
                        },
