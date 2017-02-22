@@ -292,6 +292,9 @@ def rootReadPath(inputFile):
 def remoteFileSize(inputFile):
     "Returns file size in byte for file on remote server (/store/.../*.root)"
     if 'iihe' in os.uname()[1] :
+      if "/pnfs" in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
         return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif 'ifca' in os.uname()[1] :
         return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)

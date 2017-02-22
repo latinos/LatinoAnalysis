@@ -1027,6 +1027,18 @@ Productions= {
                                        ],
                        },
 
+  'Feb2017_Run2016G_RemAOD_Dec2016Fix' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                       ],
+                       },
+
+
   'Feb2017_Run2016H_RemAOD' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD_RunH.py' ,
@@ -1101,7 +1113,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
 
@@ -1123,14 +1135,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
   'l2vlooseCut'  :       {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
 
@@ -1164,14 +1176,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'], #,'BWEwkSinglet','TopGenPt'],
+                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'], #,'BWEwkSinglet','TopGenPt'],
                   'onlySample' : [
                                   # VBS
                                   'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50','DYJetsToLL_M-50-LO-ext1',
                                   'WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_QCD_aQGC','WpWpJJ_EWK_aQGC',
                                   'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
                                   'WLLJJToLNu_M-60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet',
-                                  'WZJJ_EWK_QCD','tZq_ll','ZZJJTo4L_EWK', 'ZZTo4L', 'WZTo3Lnu',
+                                  'WZJJ_EWK_QCD','tZq_ll','ZZJJTo4L_EWK', 'ZZTo4L', 'WZTo3LNu',
                                   'TTToSemiLepton','TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
                                   'TTTo2L2Nu_ext1','TTTo2L2Nu','ST_t-channel_antitop','ST_t-channel_top',
@@ -3929,6 +3941,8 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
+                  'SizeMethod' : True , 
+                  'SizeMax'    : 5e9 , 
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
                                   'WZTo2L2Q','TTToSemiLepton','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',

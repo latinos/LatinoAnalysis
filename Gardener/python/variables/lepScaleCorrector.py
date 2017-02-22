@@ -51,7 +51,14 @@ class LeptonPtCorrector(TreeCloner):
          
         self.cmssw = opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
-        if opts.cmssw == 'ICHEP2016' :
+        if opts.cmssw == 'Full2016' :
+          if opts.FileWithPtScaleDataEle == None :
+            opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/Moriond17_23Jan_ele_scales.dat'
+          print " opts.FileWithPtScaleDataEle = " , opts.FileWithPtScaleDataEle
+          if opts.FileWithPtSmearingMCEle == None :
+            opts.FileWithPtSmearingMCEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/Moriond17_23Jan_ele_smearings.dat'
+          print " opts.FileWithPtSmearingMCEle = " , opts.FileWithPtSmearingMCEle
+        elif opts.cmssw == 'ICHEP2016' :
           if opts.FileWithPtScaleDataEle == None :
             opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_DCS05July_plus_Golden22_scales.dat'
             #opts.FileWithPtScaleDataEle = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_corrections/80X_28JunPrompt_2016_scales.dat'

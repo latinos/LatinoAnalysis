@@ -97,6 +97,7 @@ parser.add_option("-C" , "--chain" , dest="chain"     , help="Chain several step
 parser.add_option("-a" , "--allSamples" , dest="ignoreOnlySamples",  help="ignoreOnlySamples"  , default=False  , action="store_true")
 parser.add_option("-M" , "--forceMerge" , dest="forceMerge", help="Force Merge Big Sample in Hadd" , default=False  , action="store_true")
 parser.add_option("-u" , "--user" , dest="user", help="Set user directory" , default='xjanssen')
+parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
 
 # Parse options and Filter
 (options, args) = parser.parse_args()
@@ -298,8 +299,8 @@ for iProd in prodList :
         #if 'ttDM' in iSample: print iSample, selectSample 
         for iFile in FileInList:
             #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in FileExistList 
-            if options.redo or not iFile in FileExistList :
-              if selectSample and iSample.replace('_25ns','') in iFile:
+            if options.redo or not iFile in FileExistList or iStep == 'hadd' :
+              if selectSample and iSample.replace('_25ns','') in iFile :
                 #if 'MuonEG' in iFile : print iFile
                 iKey = iFile.replace('latino_','').replace('.root','')
                 if '_000' in iKey :
@@ -425,6 +426,7 @@ for iProd in prodList :
       # For hadd Step, regroup Files
       if iStep == 'hadd' :
         targetGroupList ={}
+        targetGroupSize ={}
         for iTarget in targetList.keys():
           if '_000' in iTarget :
             iKey = iTarget.split('_000')[0]
@@ -436,17 +438,42 @@ for iProd in prodList :
           else:
             iKey = iTarget
 
-          if options.redo or not 'latino_'+iKey+'.root' in FileExistList :
+          #print iKey , iTarget , remoteFileSize(targetList[iTarget])
+
+          if not Steps['hadd']['SizeMethod'] :
+           if options.redo or not 'latino_'+iKey+'.root' in FileExistList :
             if not iKey in Steps['hadd']['bigSamples'] or options.forceMerge: 
-              if not iKey in targetGroupList:
-                targetGroupList[iKey] = []
+              if not iKey in targetGroupList: targetGroupList[iKey] = []
               targetGroupList[iKey].append(targetList[iTarget])             
             else:
-              targetGroupList[iTarget] = []           
-              targetGroupList[iTarget].append(targetList[iTarget])             
+              if not os.path.basename(targetList[iTarget]) in FileExistList :
+               targetGroupList[iTarget] = []           
+               targetGroupList[iTarget].append(targetList[iTarget])             
+          else:
+           if not iKey in targetGroupSize: targetGroupSize[iKey] = {}
+           targetGroupSize[iKey][iTarget]=float(remoteFileSize(targetList[iTarget])) 
 
+        # default is 5GB per hadd
+        if Steps['hadd']['SizeMethod'] :
+         for iKey in targetGroupSize:
+          iPart=0
+          tSize=0
+          for (iTarget, iSize) in sorted(targetGroupSize[iKey].items()) :
+            tSize+=iSize
+            if tSize > Steps['hadd']['SizeMax']:
+              iPart += 1
+              tSize = iSize
+            jKey  = iKey+'__part'+str(iPart) 
+            iFile = 'latino_'+iKey+'__part'+str(iPart)+'.root'
+            if options.redo or not iFile in FileExistList : 
+               #print iTarget, iSize , iFile
+               if not jKey in targetGroupList: targetGroupList[jKey] = []
+               targetGroupList[jKey].append(targetList[iTarget])  
+          if iPart == 0 :
+            targetGroupList[iKey] = targetGroupList.pop(jKey)
+         
         targetList = targetGroupList 
-
+        #print targetList
       # Check job in not already running before allowing it ? 
       keysToDel=[] 
       for iTarget in targetList:
@@ -466,10 +493,21 @@ for iProd in prodList :
         #print targetList
         keysToDel=[]
         for iTarget in targetList:
-          #print targetList[iTarget]
           FileTarget=[]
-          for jFile in targetList[iTarget] : 
-            FileTarget.append(os.path.basename(jFile))
+          #for jFile in targetList[iTarget] : 
+          #  FileTarget.append(os.path.basename(jFile))
+          filePattern = targetList[iTarget][0].split('.root')[0]
+          if    '_000'   in filePattern : filePattern = filePattern.split('_000')[0]+'_000*.root'
+          elif  '__part' in filePattern : filePattern = filePattern.split('__part')[0]+'__part*.root'
+          else: filePattern += '.root'
+          if 'iihe' in os.uname()[1]:
+            fileCmd = 'ls '+ filePattern
+          else:
+            fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls ' + filePattern    
+          proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+          out, err = proc.communicate()
+          FileTarget=string.split(out)
+
 
           if 'iihe' in os.uname()[1]:
             PrevStep='' 
@@ -497,14 +535,14 @@ for iProd in prodList :
           out, err = proc.communicate()
           FileOriList=string.split(out)
           haddTest=True
-          #print FileOriList
-          #print FileTarget
+          FileTargetStrip=[]
+          for jFile in FileTarget : FileTargetStrip.append(os.path.basename(jFile))  
           for jFile in FileOriList:
-            if not (os.path.basename(jFile)) in FileTarget : haddTest=False
+            if not (os.path.basename(jFile)) in FileTargetStrip : haddTest=False
           if not haddTest : keysToDel.append(iTarget)
         for iTarget in keysToDel:
           iKey = iTarget.split('_000')[0].split('__part')[0]
-          if not iKey in Steps['hadd']['bigSamples'] :
+          if not iKey in Steps['hadd']['bigSamples'] or Steps['hadd']['SizeMethod']:
             print '--> HADD: Some jobs stil running/not done : '+iTarget 
             del targetList[iTarget]
 
@@ -731,8 +769,8 @@ for iProd in prodList :
         targetListKeep=targetList
       else:
         print "Gone batching ..."
-        if options.runBatch and not options.pretend: jobs.Sub(options.queue)
+        if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
 
   if options.chain :
     print "Gone batching for Chain ..."
-    if options.runBatch and not options.pretend: jobs.Sub(options.queue)
+    if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
