@@ -103,7 +103,7 @@ class JESTreeMaker(TreeCloner):
             jecUnc = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer16_23Sep2016V4_MC_Uncertainty_AK4PFchs.txt"))
         if self.cmssw == 'ICHEP2016':
             jecUncSpring16V1 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV1_MC_Uncertainty_AK4PFchs.txt"))
-	    jecUncSpring16V6 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
+            jecUncSpring16V6 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
         else:
             jecUncFall15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Fall15_25nsV2_MC_Uncertainty_AK4PFchs.txt"))
             jecUncSummer15 = ROOT.JetCorrectionUncertainty(os.path.expandvars("${CMSSW_BASE}/src/LatinoAnalysis/Gardener/input/Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt"))
@@ -118,8 +118,9 @@ class JESTreeMaker(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
                 
-            # scale jet pt
+            # scale jet 4-vector
             jetPtUp = []
+            jetMassUp = []
             
             for i in range(itree.std_vector_jet_pt.size()):
                 if itree.std_vector_jet_pt[i] > 0:
@@ -132,16 +133,16 @@ class JESTreeMaker(TreeCloner):
                         jecUncSpring16V1.setJetPt(itree.std_vector_jet_pt[i])
                         unc = jecUncSpring16V1.getUncertainty(True)
 
-			if self.maxUncertainty:
+                        if self.maxUncertainty:
                             jecUncSpring16V6.setJetEta(itree.std_vector_jet_eta[i])
                             jecUncSpring16V6.setJetPt(itree.std_vector_jet_pt[i])
                             unc = max(unc,jecUncSpring16V6.getUncertainty(True))
 
-			    if abs(itree.std_vector_jet_eta[i]) > 2.5:
-				if itree.std_vector_jet_pt[i] > 150:
+                            if abs(itree.std_vector_jet_eta[i]) > 2.5:
+                                if itree.std_vector_jet_pt[i] > 150:
                                     unc *= 2
-				elif itree.std_vector_jet_pt[i] > 50:
-				    unc *= 1 + (itree.std_vector_jet_pt[i] - 50 ) / 100.
+                                elif itree.std_vector_jet_pt[i] > 50:
+                                    unc *= 1 + (itree.std_vector_jet_pt[i] - 50 ) / 100.
                     else:
                         jecUncSummer15.setJetEta(itree.std_vector_jet_eta[i])
                         jecUncSummer15.setJetPt(itree.std_vector_jet_pt[i])
@@ -153,6 +154,7 @@ class JESTreeMaker(TreeCloner):
                             unc = max(unc,jecUncFall15.getUncertainty(True))
 
                     jetPtUp.append(itree.std_vector_jet_pt[i]*(1 + (self.kind) * unc))
+                    jetMassUp.append(itree.std_vector_jet_mass[i]*(1 + (self.kind) * unc))
                 else:
                     break
                 
@@ -160,9 +162,14 @@ class JESTreeMaker(TreeCloner):
                         
             for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
                 bvector.clear()
-                if 'jet_pt' in bname:
+                if bname == 'std_vector_jet_pt' :
                     for i in range( len(jetOrderUp) ) :
                         bvector.push_back ( jetPtUp[jetOrderUp[i]] )
+                    for i in range( len(getattr(self.itree, bname)) - len(jetOrderUp) ) :
+                        bvector.push_back ( -9999. )
+                elif bname == 'std_vector_jet_mass' :
+                    for i in range( len(jetOrderUp) ) :
+                        bvector.push_back ( jetMassUp[jetOrderUp[i]] )
                     for i in range( len(getattr(self.itree, bname)) - len(jetOrderUp) ) :
                         bvector.push_back ( -9999. )
                 else:

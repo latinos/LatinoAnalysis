@@ -142,6 +142,7 @@ class Pruner(TreeCloner):
     def __init__(self):
         self.filter = ''
         self.drops = []
+        self.droplist = []
         self.keeps = []
         self.dryrun = False
 
@@ -151,22 +152,24 @@ class Pruner(TreeCloner):
     def addOptions(self,parser):
         description=self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-f','--filter',dest='filter', help='cut string as undestood by TTree::Draw', default='')
-        group.add_option('-d','--drop',  dest='drops',  help='drops the variables while cloning', action='append',default=[])
-        group.add_option('-k','--keep'  ,dest='keeps',  help='keeps the variables while cloning', action='append',default=[])
-        group.add_option('-n','--dryrun',dest='dryrun', help='do nothing, just count', action='store_true')
+        group.add_option('-f','--filter',   dest='filter',   help='cut string as undestood by TTree::Draw', default='')
+        group.add_option('-d','--drop',     dest='drops',    help='drops the variables while cloning', action='append',default=[])
+        group.add_option('--droplist', dest='droplist', help='drops the variables listed in a config file', action='append',default=[])
+        group.add_option('-k','--keep',     dest='keeps',    help='keeps the variables while cloning', action='append',default=[])
+        group.add_option('-n','--dryrun',   dest='dryrun',   help='do nothing, just count', action='store_true')
         
         parser.add_option_group(group)
         return group
 
     def checkOptions(self, opts ):
-        if not opts.filter and not opts.drops and not opts.keeps:
+        if not opts.filter and not opts.drops and not opts.droplist and not opts.keeps:
             raise ValueError('No filter defined?!?')
 
-        self.filter = getattr(opts,'filter')
-        self.dryrun = getattr(opts,'dryrun')
-        self.drops  = getattr(opts,'drops')
-        self.keeps  = getattr(opts,'keeps')
+        self.filter   = getattr(opts,'filter')
+        self.dryrun   = getattr(opts,'dryrun')
+        self.drops    = getattr(opts,'drops')
+        self.droplist = getattr(opts,'droplist')
+        self.keeps    = getattr(opts,'keeps')
 
     def process(self, **kwargs ):
         print 'Filtering \''+self.filter+'\''
@@ -221,8 +224,15 @@ class Pruner(TreeCloner):
 
         # do we want to support wildcards? with fnmatch?
         # complicated because here we can't access the input tree
-        else: #if not self.keeps
+        elif self.drops :
             self.clone(output, self.drops)
+
+        else: #if not self.keeps and not self.drops
+            with open(str(self.droplist[0])) as file_list:
+                lines = file_list.readlines()
+                lines = [x.strip() for x in lines]
+                
+                self.clone(output, lines)
 
         itree = self.itree
         otree = self.otree
