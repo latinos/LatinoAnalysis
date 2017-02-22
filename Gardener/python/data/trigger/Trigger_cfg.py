@@ -131,7 +131,7 @@ Trigger['Full2016'] =  {
                                               } ,
                                 },
                           # L1 EMFT Bug ( https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem )
-                          2  :  { 'begin' : 274094 , 'end' : 277165 , 'lumi' : 15.3515  ,
+                          2  :  { 'begin' : 274095 , 'end' : 277165 , 'lumi' : 15.3515  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
