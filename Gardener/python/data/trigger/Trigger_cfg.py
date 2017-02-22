@@ -88,7 +88,21 @@ Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  
 
 # --------------------------- Full2016 ---------------------------------
 
-Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0.632 ,
+#   ------------------------------
+#     dataset | from run | to run
+#   ----------+----------+--------
+#    Run2016B |   272007 | 275376
+#    Run2016C |   275657 | 276283
+#    Run2016D |   276315 | 276811
+#    Run2016E |   276831 | 277420
+#    Run2016F |   277772 | 278808
+#    Run2016G |   278820 | 280385
+#    Run2016H |   280919 |
+#   ------------------------------
+
+Trigger['Full2016'] =  { 
+                          # Lower Muon efficiency at begin of 2016 + L1 EMTF Bug ( https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem )
+                          1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0.632 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -116,6 +130,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
                                 },
+                          # L1 EMFT Bug ( https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem )
                           2  :  { 'begin' : 274094 , 'end' : 277165 , 'lumi' : 15.3515  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
@@ -143,7 +158,7 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
                                 },
-                          # https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem                                  
+                          # Run>=277166: L1 EMTF Bug fixed ( https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem )
                           3  :  { 'begin' : 277166 , 'end' : 278272 , 'lumi' : 2.114  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
@@ -171,7 +186,9 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
                                 },
-                          4  :  { 'begin' : 278273 , 'end' : 281612 , 'lumi' : 9.818  ,
+                          # Run>=278273: Switch to DZ version of E-Mu triggers
+                          # OLD: 4  :  { 'begin' : 278273 , 'end' : 281612 , 'lumi' : 9.818  ,
+                          4  :  { 'begin' : 278273 , 'end' : 278808 , 'lumi' : 9.818  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
@@ -198,7 +215,38 @@ Trigger['Full2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
                                 },
-                          5  :  { 'begin' : 281613 , 'end' : 284044 , 'lumi' : 8.857  ,
+                          # END of HIP problem -> Muon ID/ISO SF change
+                          #    Run2016G |   278820 | 280385
+                          #    Run2016H |   280919 |
+                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 9.818  ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
+                                                'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
+                                                'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
+                                                'DoubleMuLegHigPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt' ,
+                                                'DoubleMuLegLowPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt' ,
+                                                'SingleMu'          : 'ICHEP2016fullLumi/HLT_MuSingle.txt' ,
+                                                'MuEleLegHigPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt' ,
+                                                'MuEleLegLowPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegLowPt.txt' ,
+                                                'EleMuLegHigPt'     : 'ICHEP2016fullLumi/HLT_EleMuLegHigPt.txt' ,
+                                                'EleMuLegLowPt'     : 'ICHEP2016fullLumi/HLT_EleMuLegLowPt.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 'DoubleEle' : 0.993 ,
+                                                'DoubleMu'  : 1.0   ,
+                                                'MuEle'     : 0.961 ,
+                                                'EleMu'     : 0.942 ,
+                                              } ,
+                                  'EMTFBug':  False ,
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 57 , 97 ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
+                                },
+                          # Run>=281613: Switch to version of Double Mu triggers
+                          6  :  { 'begin' : 281613 , 'end' : 284044 , 'lumi' : 8.857  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
                                                 'DoubleEleLegLowPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegLowPt.txt' ,
                                                 'SingleEle'         : 'ICHEP2016fullLumi/HLT_EleSingle.txt' ,
