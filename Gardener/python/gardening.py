@@ -244,12 +244,14 @@ class Pruner(TreeCloner):
         elif self.drops :
             self.clone(output, self.drops)
 
-        else: #if not self.keeps and not self.drops
+        elif len(self.droplist>0): #if not self.keeps and not self.drops
             with open(str(self.droplist[0])) as file_list:
                 lines = file_list.readlines()
                 lines = [x.strip() for x in lines]
                 
                 self.clone(output, lines)
+        else:
+            self.clone(output, [])
 
         itree = self.itree
         otree = self.otree
