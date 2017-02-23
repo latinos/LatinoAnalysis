@@ -942,7 +942,7 @@ Productions= {
                                         'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
                                         'MuonEG_Run2016B-03Feb2017_ver2-v2',
                                         'SingleElectron_Run2016B-03Feb2017_ver2-v2',
-                                        'SingleMuon_Run2016B-03Feb2017-ver2_v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
                                         'MET_Run2016B-03Feb2017_ver2-v2',   
                                        ],
                        },
@@ -4246,7 +4246,7 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'command'    : 'gardener.py chFlipProba --njets 2',
-                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1','DYJetsToLL_M-50-LO-ext1','TTTo2L2Nu'],
                   },
 
 
