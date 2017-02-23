@@ -144,6 +144,7 @@ class Pruner(TreeCloner):
         self.drops = []
         self.droplist = []
         self.keeps = []
+        self.keeplist = []
         self.dryrun = False
 
     def help(self):
@@ -154,15 +155,16 @@ class Pruner(TreeCloner):
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-f','--filter',   dest='filter',   help='cut string as undestood by TTree::Draw', default='')
         group.add_option('-d','--drop',     dest='drops',    help='drops the variables while cloning', action='append',default=[])
-        group.add_option('--droplist', dest='droplist', help='drops the variables listed in a config file', action='append',default=[])
+        group.add_option('--droplist',      dest='droplist', help='drops the variables listed in a config file', action='append',default=[])
         group.add_option('-k','--keep',     dest='keeps',    help='keeps the variables while cloning', action='append',default=[])
+        group.add_option('--keeplist',      dest='keeplist', help='keeps the variables listed in a config file', action='append',default=[])
         group.add_option('-n','--dryrun',   dest='dryrun',   help='do nothing, just count', action='store_true')
         
         parser.add_option_group(group)
         return group
 
     def checkOptions(self, opts ):
-        if not opts.filter and not opts.drops and not opts.droplist and not opts.keeps:
+        if not opts.filter and not opts.drops and not opts.droplist and not opts.keeps and not opts.keeplist:
             raise ValueError('No filter defined?!?')
 
         self.filter   = getattr(opts,'filter')
@@ -170,6 +172,7 @@ class Pruner(TreeCloner):
         self.drops    = getattr(opts,'drops')
         self.droplist = getattr(opts,'droplist')
         self.keeps    = getattr(opts,'keeps')
+        self.keeplist = getattr(opts,'keeplist')
 
     def process(self, **kwargs ):
         print 'Filtering \''+self.filter+'\''
@@ -190,7 +193,9 @@ class Pruner(TreeCloner):
             return
 
         #algebra to revert the 'keeps' options
-        if self.keeps:
+
+        # List all branches in the tree
+        if self.keeps or self.keeplist:
             tl = ROOT.TObjArray(self.itree.GetListOfBranches())
             branches = ROOT.std.vector( ROOT.TString )()
             cont = 0
@@ -201,24 +206,36 @@ class Pruner(TreeCloner):
                 nBranch = tl.At(cont).GetName()
                 branches.push_back(nBranch)
             
+            # List all the branches you want to keep
             keeps_string = ROOT.std.vector( ROOT.TString )()
-            keeps_string += self.keeps
+            if self.keeps:
+                keeps_string += self.keeps
+            elif self.keeplist:
+                with open(str(self.keeplist[0])) as file_list:
+                    lines = file_list.readlines()
+                    lines = [x.strip() for x in lines]
+                    keeps_string += lines
+
             if (keeps_string.at(0) == "*"):
                 print 'You are keeping all the branches, I will not do anything'
                 return
                 
             missingBranch = 0
             for q in xrange(keeps_string.size()):
+                checkBranchExists = 0
                 for j in xrange(branches.size()):
                     if (keeps_string.at(q)==branches.at(j)):
                         print 'keep this:', keeps_string.at(q)
                         branches.erase(branches.begin()+j)
                         missingBranch += 1
+                        checkBranchExists = 1
                         break
-                    
-            if (missingBranch < keeps_string.size()):
-                print 'I cannot find one or more branches you want to keep, or you inserted the same branch twice. Please check.'
-                return
+                if checkBranchExists == 0:
+                    print 'I cannot find branch ' + str(keeps_string.at(q)) + '. Be aware that you may create an empty tree!'
+
+            # if (missingBranch < keeps_string.size()):
+            #     print 'I cannot find one or more branches you want to keep, or you inserted the same branch twice. Please check.'
+            #     return
 
             self.clone(output, branches)                     
 
