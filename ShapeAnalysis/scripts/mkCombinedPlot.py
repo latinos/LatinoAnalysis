@@ -180,6 +180,8 @@ class ShapeFactory:
         #
 
         tgrSig  = ROOT.TGraphAsymmErrors()
+        tgrSig.SetLineColor(ROOT.kRed)
+        
         for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
           if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :  
             temp_histo = list_thsSignal[sampleNameGroup]
@@ -540,10 +542,31 @@ class ShapeFactory:
         ##     - the signal         
         #tgrSig.Draw("histo")
         weight_X_thsSignal.Draw("hist same noclear")
-
+        
         ##     - then the DATA  
         tgrData_bkgSubtracted.Draw("P0")
    
+
+
+        #---- the Legend
+        tlegend_bkgsub = ROOT.TLegend(0.70, 0.70, 0.90, 0.85)
+        tlegend_bkgsub.SetFillColor(0)
+        tlegend_bkgsub.SetLineColor(0)
+        tlegend_bkgsub.SetShadowColor(0)
+         
+        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+          if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
+            tlegend_bkgsub.AddEntry( tgrSig ,  sampleConfiguration['nameHR'], "L")          
+       
+        tlegend_bkgsub.AddEntry( tgrData_bkgSubtracted , 'data - backgrounds', "EPL")
+       
+        tlegend_bkgsub.AddEntry(tgrBkg_bkgSubtracted, "Bkg uncertainty", "F")
+
+        tlegend_bkgsub.SetNColumns(1)
+        tlegend_bkgsub.Draw()
+
+
+
    
         CMS_lumi.CMS_lumi(bkgSub_weight_X_tcanvasRatio, iPeriod, iPos)    
 
