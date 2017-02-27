@@ -52,9 +52,54 @@ public:
    //contructor
    DYCalc() {};
    virtual ~DYCalc() {};
+   float k_MC(TString sFile , TString sNum , TString sDen);
+   float Ek_MC(TString sFile , TString sNum , TString sDen);
+   float R_outin_MC(TString sFile , TString sNum , TString sDen);
+   float ER_outin_MC(TString sFile , TString sNum , TString sDen);
    float N_DY(float R , float Nin , float k , float Neu, float Nvv );
    float EN_DY(float R , float Nin , float k , float Neu, float Nvv, float ER, float ENin, float Ek, float ENeu, float ENvv );
 };
+
+
+float DYCalc::k_MC(TString sFile , TString sNum , TString sDen){
+   TFile *KffFile = new TFile(sFile,"READ");
+   float Num = ((TH1F*) KffFile->Get(sNum))->Integral();
+   float Den = ((TH1F*) KffFile->Get(sDen))->Integral();
+   KffFile->Close();
+   return sqrt( Num / Den );
+}
+
+float DYCalc::Ek_MC(TString sFile , TString sNum , TString sDen){
+   TFile *KffFile = new TFile(sFile,"READ");
+   float Num = ((TH1F*) KffFile->Get(sNum))->Integral();
+   float Den = ((TH1F*) KffFile->Get(sDen))->Integral();
+   float ENum = ((TH1F*) KffFile->Get(sNum))->GetBinError(1);
+   float EDen = ((TH1F*) KffFile->Get(sDen))->GetBinError(1);
+   KffFile->Close();
+   return 0.5 * sqrt( pow((ENum/Num),2) + pow((EDen/Den),2) ) * k_MC(sFile , sNum , sDen);
+}
+
+float DYCalc::R_outin_MC(TString sFile , TString sNum , TString sDen){
+   TFile *RFile = new TFile(sFile,"READ");
+   map<string,TH1F*> histos;
+   histos["DY_R_out"] = (TH1F*)RFile->Get(sNum);
+   histos["DY_R_in"]  = (TH1F*)RFile->Get(sDen);
+   float R = histos["DY_R_out"]->Integral()/histos["DY_R_in"]->Integral() ;
+   RFile->Close();
+   return R ;
+}
+
+float DYCalc::ER_outin_MC(TString sFile , TString sNum , TString sDen){
+   TFile *RFile = new TFile(sFile,"READ");
+   map<string,TH1F*> histos;
+   histos["DY_R_out"] = (TH1F*)RFile->Get(sNum);
+   histos["DY_R_in"]  = (TH1F*)RFile->Get(sDen);
+   TH1F* HR_outin_MC  = new TH1F("HR_outin_MC","HR_outin_MC",1,0,2);
+   HR_outin_MC->Divide(histos["DY_R_out"],histos["DY_R_in"],1,1,"b");
+   float ER = HR_outin_MC->GetBinError(1);
+   RFile->Close();
+   return ER;   
+}
 
 float DYCalc::N_DY(float R , float Nin , float k , float Neu, float Nvv ){
   return R * ( Nin - (k * Neu * 0.5) - Nvv);
@@ -62,8 +107,12 @@ float DYCalc::N_DY(float R , float Nin , float k , float Neu, float Nvv ){
 
 float DYCalc::EN_DY(float R , float Nin , float k , float Neu, float Nvv, float ER, float ENin, float Ek, float ENeu, float ENvv ){
   return  N_DY(R, Nin, k, Neu, Nvv)*sqrt( pow((ER/R),2) + pow((( sqrt( pow(ENin,2) + pow(ENvv,2) + pow((0.5*Neu*k*sqrt(pow((ENeu/Neu),2)+pow((Ek/k),2))),2)) )/( Nin - (k * Neu * 0.5) - Nvv )),2));
+
+
+
 }
 
+/*
 
 class DY{
 public:
@@ -265,3 +314,5 @@ float DY::ER_outin_MC_1j_uu(){
    HER_outin_MC_1j_uu->Divide(histos["DY_R_1j_uu_out"],histos["DY_R_1j_uu_in"],1,1,"b");
    return HER_outin_MC_1j_uu->GetBinError(1);
 }
+
+*/
