@@ -470,8 +470,13 @@ for iProd in prodList :
                if not jKey in targetGroupList: targetGroupList[jKey] = []
                targetGroupList[jKey].append(targetList[iTarget])  
           if iPart == 0 :
-            targetGroupList[iKey] = targetGroupList.pop(jKey)
-         
+            iFile = 'latino_'+iKey+'.root'
+            if options.redo or not iFile in FileExistList :         
+              targetGroupList[iKey] = targetGroupList.pop(jKey)
+            else:
+              #print iFile, " exist"
+              del targetGroupList[jKey]
+
         targetList = targetGroupList 
         #print targetList
       # Check job in not already running before allowing it ? 
@@ -700,7 +705,7 @@ for iProd in prodList :
           baseWInfo = {}
           baseW = GetBaseW(oriTreeList,iTargetOri,id_iTarget,Productions[iProd]['isData'],xsDB,baseWInfo,cmssw)
           if baseW == '-1' : 
-             xsDB.Print()
+             #xsDB.Print()
              exit()
           print baseWInfo
           f = open(wDir+'/baseWInfo.txt', 'a')
