@@ -1296,8 +1296,14 @@ class ShapeFactory:
 
 
 
-
-                    global_normalization = totalBkg / totalWeightedIntegralBkg
+                    # 
+                    # gloabal scale factor so that the total number of events is such that
+                    # the expected signal events is unchanged
+                    #
+                    #global_normalization = totalBkg / totalWeightedIntegralBkg
+                    global_normalization = totalSig / totalWeightedIntegralSig
+                    
+                    
                     for histo in weight_X_list_Data:
                        histo.Scale(global_normalization)
                     for histo in weight_X_list_Background:
@@ -1500,6 +1506,10 @@ class ShapeFactory:
                     # save also all the TH1F separately for later combination
                     temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root", "UPDATE")
                    
+                    histo_global_normalization = ROOT.TH1F("histo_global_normalization", "", 1, 0, 1)
+                    histo_global_normalization.Fill(0.5, global_normalization)
+                    histo_global_normalization.Write()
+                    
                     weight_X_tgrMCOverMC.Write()
                     weight_X_tgrDataOverMC.Write()
                     if (len(mynuisances.keys())!=0):

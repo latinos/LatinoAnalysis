@@ -942,7 +942,7 @@ Productions= {
                                         'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
                                         'MuonEG_Run2016B-03Feb2017_ver2-v2',
                                         'SingleElectron_Run2016B-03Feb2017_ver2-v2',
-                                        'SingleMuon_Run2016B-03Feb2017-ver2_v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
                                         'MET_Run2016B-03Feb2017_ver2-v2',   
                                        ],
                        },
@@ -2156,7 +2156,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+#                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepElepTup','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2363,7 +2364,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  #'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepElepTdo','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2573,7 +2575,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  #'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepMupTup','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2782,7 +2785,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  #'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepMupTdo','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -3941,7 +3945,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'SizeMethod' : False , 
+                  'SizeMethod' : True , 
                   'SizeMax'    : 5e9 , 
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
@@ -4246,7 +4250,7 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'command'    : 'gardener.py chFlipProba --njets 2',
-                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1','DYJetsToLL_M-50-LO-ext1','TTTo2L2Nu'],
                   },
 
 
