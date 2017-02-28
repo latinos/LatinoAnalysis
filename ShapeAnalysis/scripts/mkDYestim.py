@@ -122,6 +122,8 @@ if __name__ == '__main__':
                   if sName == DYestim[iDYestim]['DYProc'] :
                     if hTmp.Integral() == 0 : 
                        print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!',hName
+                       print '!!!!!!!!!!!!!!!!!!!!! Only works for 1 bin, see below !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                       print '!!!!!!!!!!!!!!!!!!!!! nBin = ',hTmp.GetNbinsX()
                        for iBin in range(1,hTmp.GetNbinsX()+1) : 
                           hTmp.SetBinContent(iBin,1.)
                           hTmp.SetBinError(iBin,1.)
@@ -174,6 +176,7 @@ if __name__ == '__main__':
                       Acc  = hAcc.Integral()
                       EAcc = hAcc.GetBinError(1)
                       if 'asyst' in DYestim[iDYestim] : EAcc = math.sqrt(pow(EAcc,2)+pow(DYestim[iDYestim]['asyst'],2)) 
+                    print 'Acc = ',Acc," +- ",EAcc
                     # Central value or systematics not related to DY ESTIM
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                       Scale = Nout / nHis 
@@ -185,8 +188,8 @@ if __name__ == '__main__':
                         BinError = hTmp.GetBinError(iBin)
                         NewBinError = BinError*abs(Scale)*Acc
                         hTmp.SetBinError(iBin,NewBinError)
-                        print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent 
-                        print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError 
+                        #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent 
+                        #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError 
                     # Compute Syst Error
                     if hName == 'histo_'+DYestim[iDYestim]['DYProc']:
                       print '---  UP  ---' 
@@ -200,8 +203,8 @@ if __name__ == '__main__':
                         BinError = hUp.GetBinError(iBin)
                         NewBinError = BinError*abs(Scale)*(Acc+EAcc)
                         hUp.SetBinError(iBin,NewBinError)
-                        print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
-                        print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
+                        #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
+                        #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
                       hUp.Write()
                       print '---  DOWN  ---'
                       outputFile.cd(baseDir+'/'+subDir)
@@ -214,12 +217,9 @@ if __name__ == '__main__':
                         BinError = hDo.GetBinError(iBin)
                         NewBinError = BinError*abs(Scale)*(Acc-EAcc)
                         hDo.SetBinError(iBin,NewBinError)
-                        print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
-                        print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
+                        #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
+                        #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
                       hDo.Write()
 
               hTmp.Write()
-              #print baseDir,subDir,hName.split('_')[1]
-#    for iDYestim in DYestim :
-#      print iDYestim
 

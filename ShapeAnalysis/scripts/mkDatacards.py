@@ -491,7 +491,7 @@ if __name__ == '__main__':
     parser.add_option('--inputFile'          , dest='inputFile'         , help='input directory'                            , default='./input.root')
     parser.add_option('--structureFile'      , dest='structureFile'     , help='file with datacard configurations'          , default=None )
     parser.add_option('--nuisancesFile'      , dest='nuisancesFile'     , help='file with nuisances configurations'         , default=None )
-    parser.add_option('--cutList'            , dest="cutList"           , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cutList',','))
+    parser.add_option('--cardList'            , dest="cardList"           , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
 
           
     # read default parsing options as well
@@ -536,10 +536,10 @@ if __name__ == '__main__':
       handle = open(opt.cutsFile,'r')
       exec(handle)
       handle.close()
-    if len(opt.cutList)>0:
+    if len(opt.cardList)>0:
       cut2del = []
       for iCut in cuts:
-        if not iCut in opt.cutList : cut2del.append(iCut)
+        if not iCut in opt.cardList : cut2del.append(iCut)
       for iCut in cut2del : del cuts[iCut]   
  
     samples = {}
