@@ -1164,7 +1164,7 @@ Steps= {
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50',
                                   'WmWmJJ_EWK_powheg',
- 			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
+ 			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
                                   'TTToSemiLepton','TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
                                   'TTTo2L2Nu_ext1','ST_t-channel_antitop','ST_t-channel_top',
@@ -1181,7 +1181,7 @@ Steps= {
                                   # VBS
                                   'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50','DYJetsToLL_M-50-LO-ext1',
                                   'WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_QCD_aQGC','WpWpJJ_EWK_aQGC',
-                                  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
+                                  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
                                   'WLLJJToLNu_M-60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet',
                                   'WZJJ_EWK_QCD','tZq_ll','ZZJJTo4L_EWK', 'ZZTo4L', 'WZTo3LNu',
                                   'TTToSemiLepton','TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
@@ -1511,7 +1511,7 @@ Steps= {
                                   'WWTo2L2Nu_CUETDown',
                                   'WWTo2L2Nu_CUETUp',
  			  # VBS
- 			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
+ 			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
                           'WGJJ','EWKZ2Jets','TTToSemiLepton',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
@@ -1849,7 +1849,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
                                   # stop
 
                                   'latino_T2bW',
@@ -2054,7 +2054,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
 
                                   # stop
@@ -2263,7 +2263,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2472,7 +2472,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
 
                                   # stop
@@ -2683,7 +2683,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2893,7 +2893,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -3102,7 +3102,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -3310,7 +3310,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 

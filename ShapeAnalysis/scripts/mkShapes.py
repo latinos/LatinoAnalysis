@@ -348,6 +348,7 @@ if __name__ == '__main__':
             # ...Check job status and create command
             outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root' 
             command = 'hadd -f '+outputFile
+            cleanup = ''
             allDone=True
             for iStep in stepList:
               for iTarget in targetList:
@@ -360,8 +361,10 @@ if __name__ == '__main__':
                   print '--> Missing root file: '+iFile 
                   allDone=False
                 command+=' '+iFile
-            
-            if allDone: os.system(command)
+                cleanup+='rm '+iFile+' ; '
+            if allDone: 
+              os.system(command)
+              if not opt.doNotCleanup: os.system(cleanup)
 
     elif opt.doThreads != 0:
 
