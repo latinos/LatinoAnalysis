@@ -166,8 +166,9 @@ if __name__ == '__main__':
                     Acc  = 1.
                     EAcc = 0.
                     if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
-                      hNum = Get(DYestim[iDYestim]['AccNum']).Clone()
-                      hDen = Get(DYestim[iDYestim]['AccDen']).Clone()
+                      hNum = inputFile.Get(DYestim[iDYestim]['AccNum']).Clone()
+                      print  DYestim[iDYestim]['AccDen']    
+                      hDen = inputFile.Get(DYestim[iDYestim]['AccDen']).Clone()
                       hAcc = hNum.Clone("hAcc")
                       hAcc.Reset()                      
                       hAcc.Divide(hNum,hDen,1,1,"b") 
