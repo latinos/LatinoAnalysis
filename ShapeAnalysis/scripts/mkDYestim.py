@@ -169,14 +169,13 @@ if __name__ == '__main__':
                     EAcc = 0.
                     if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
                       hNum = inputFile.Get(DYestim[iDYestim]['AccNum']).Clone()
-                      print  DYestim[iDYestim]['AccDen']    
                       hDen = inputFile.Get(DYestim[iDYestim]['AccDen']).Clone()
                       hAcc = hNum.Clone("hAcc")
                       hAcc.Reset()                      
                       hAcc.Divide(hNum,hDen,1,1,"b") 
                       Acc  = hAcc.Integral()
                       EAcc = hAcc.GetBinError(1)
-                      if 'asyst' in DYestim[iDYestim] : EAcc = math.sqrt(pow(EAcc,2)+pow(DYestim[iDYestim]['asyst'],2)) 
+                    if 'asyst' in DYestim[iDYestim] : EAcc = math.sqrt(pow(EAcc,2)+pow(DYestim[iDYestim]['asyst'],2)) 
                     print 'Acc = ',Acc," +- ",EAcc
                     # Central value or systematics not related to DY ESTIM
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
