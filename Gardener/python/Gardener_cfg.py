@@ -4150,6 +4150,126 @@ Steps= {
                    'command'    : 'gardener.py muccaMvaVarFiller --kind 5'
                  } ,
 
+  # MUCCA for monoH
+  # 2HDM model em
+  
+  'mucca_2HDMadapt_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMadapt_em" --training="BDT4" --channel="em" --model="2HDM"'
+        }  ,
+  
+  'mucca_2HDMadaptFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMadaptFull_em" --training="BDT4" --channel="em" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgrad_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMgrad_em" --training="BDTG4" --channel="em" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMgradFull_em" --training="BDTG4" --channel="em" --model="2HDM"'
+        } ,
+  
+  # 2HDM model sf
+  
+  'mucca_2HDMadapt_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMadapt_sf" --training="BDT4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMadaptFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMadaptFull_sf" --training="BDT4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgrad_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMgrad_sf" --training="BDTG4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMgradFull_sf" --training="BDTG4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  # Zbar model em
+  
+  'mucca_Zbaradapt_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbaradapt_em" --training="BDT4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbaradaptFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbaradaptFull_em" --training="BDT4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_Zbargrad_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbargrad_em" --training="BDTG4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbargradFull_em" --training="BDTG4" --channel="em" --model="Zbar"'
+        } ,
+  
+  # Zbar model sf
+  
+  'mucca_Zbaradapt_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbaradapt_sf" --training="BDT4" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbaradaptFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbaradaptFull_sf" --training="BDT4" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_Zbargrad_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbargrad_sf" --training="BDTG4" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbargradFull_sf" --training="BDTG4" --channel="sf" --model="Zbar"'
+        } ,
 
 
 
