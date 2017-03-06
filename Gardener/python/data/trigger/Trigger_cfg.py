@@ -109,7 +109,7 @@ Trigger['Full2016'] =  {
                                                 'SingleEle'         : 'Full2016/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_2016_cut_WP_Tight80X.txt' ,
                                                 'DoubleMuLegHigPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegHigPt_BeforeRun274094.txt' ,
                                                 'DoubleMuLegLowPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegLowPt_BeforeRun274094.txt' ,
-                                                'SingleMu'          : 'ICHEP2016fullLumi/HLT_MuSingle_BeforeRun274094.txt' ,
+                                                'SingleMu'          : 'Full2016/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegHigPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegHigPt_BeforeRun274094.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016/HLT_DoubleEleLegLowPt_2016_cut_WP_Tight80X.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,
@@ -122,7 +122,7 @@ Trigger['Full2016'] =  {
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  True , 
-                                  'trkSFMu':  [ 0.99 , 0.99 , 0.98 ] , # tracker SF_muons [ cent , up , down ]
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -138,7 +138,7 @@ Trigger['Full2016'] =  {
                                                 'SingleEle'         : 'Full2016/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_2016_cut_WP_Tight80X.txt' ,
                                                 'DoubleMuLegHigPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt' ,
                                                 'DoubleMuLegLowPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt' ,
-                                                'SingleMu'          : 'ICHEP2016fullLumi/HLT_MuSingle.txt' ,
+                                                'SingleMu'          : 'Full2016/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegHigPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016/HLT_DoubleEleLegLowPt_2016_cut_WP_Tight80X.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,
@@ -150,7 +150,7 @@ Trigger['Full2016'] =  {
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  True , 
-                                  'trkSFMu':  [ 0.99 , 0.99 , 0.98 ] , # tracker SF_muons [ cent , up , down ]
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  { 
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -166,7 +166,7 @@ Trigger['Full2016'] =  {
                                                 'SingleEle'         : 'Full2016/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_2016_cut_WP_Tight80X.txt' ,
                                                 'DoubleMuLegHigPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt' ,
                                                 'DoubleMuLegLowPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt' ,
-                                                'SingleMu'          : 'ICHEP2016fullLumi/HLT_MuSingle.txt' ,
+                                                'SingleMu'          : 'Full2016/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegHigPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016/HLT_DoubleEleLegLowPt_2016_cut_WP_Tight80X.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,
@@ -178,7 +178,7 @@ Trigger['Full2016'] =  {
                                                 'EleMu'     : 1.0   ,
                                               } ,
                                   'EMTFBug':  False , 
-                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  { 
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -195,7 +195,7 @@ Trigger['Full2016'] =  {
                                                 'SingleEle'         : 'Full2016/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_2016_cut_WP_Tight80X.txt' ,
                                                 'DoubleMuLegHigPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt' ,
                                                 'DoubleMuLegLowPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt' ,
-                                                'SingleMu'          : 'ICHEP2016fullLumi/HLT_MuSingle.txt' ,
+                                                'SingleMu'          : 'Full2016/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegHigPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016/HLT_DoubleEleLegLowPt_2016_cut_WP_Tight80X.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,
@@ -203,11 +203,11 @@ Trigger['Full2016'] =  {
                                               } ,
                                   'DZEff'  :  { 'DoubleEle' : 0.993 ,
                                                 'DoubleMu'  : 1.0   ,
-                                                'MuEle'     : 0.961 ,
-                                                'EleMu'     : 0.942 ,
+                                                'MuEle'     : 0.958 ,
+                                                'EleMu'     : 0.958 ,
                                               } ,
                                   'EMTFBug':  False , 
-                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  { 
                                                 'EleMu'     : [ 57 , 97 ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -226,7 +226,7 @@ Trigger['Full2016'] =  {
                                                 'SingleEle'         : 'Full2016/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_2016_cut_WP_Tight80X.txt' ,
                                                 'DoubleMuLegHigPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt' ,
                                                 'DoubleMuLegLowPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt' ,
-                                                'SingleMu'          : 'ICHEP2016fullLumi/HLT_MuSingle.txt' ,
+                                                'SingleMu'          : 'Full2016/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'MuEleLegHigPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016/HLT_DoubleEleLegLowPt_2016_cut_WP_Tight80X.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,
@@ -234,11 +234,11 @@ Trigger['Full2016'] =  {
                                               } ,
                                   'DZEff'  :  { 'DoubleEle' : 0.993 ,
                                                 'DoubleMu'  : 1.0   ,
-                                                'MuEle'     : 0.961 ,
-                                                'EleMu'     : 0.942 ,
+                                                'MuEle'     : 0.958 ,
+                                                'EleMu'     : 0.958 ,
                                               } ,
                                   'EMTFBug':  False ,
-                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
                                                 'EleMu'     : [ 57 , 97 ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
@@ -247,26 +247,26 @@ Trigger['Full2016'] =  {
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
                                 },
-                          # Run>=281613: Switch to version of Double Mu triggers
+                          # Run>=281613: Switch to DZ version of Double Mu triggers
                           6  :  { 'begin' : 281613 , 'end' : 284044 , 'lumi' : 8.606  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016/HLT_DoubleEleLegLowPt_2016_cut_WP_Tight80X.txt' ,
                                                 'SingleEle'         : 'Full2016/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_2016_cut_WP_Tight80X.txt' ,
                                                 'DoubleMuLegHigPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegHigPt.txt' ,
                                                 'DoubleMuLegLowPt'  : 'ICHEP2016fullLumi/HLT_DoubleMuLegLowPt.txt' ,
-                                                'SingleMu'          : 'ICHEP2016fullLumi/HLT_MuSingle.txt' ,
+                                                'SingleMu'          : 'Full2016/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'MuEleLegHigPt'     : 'ICHEP2016fullLumi/HLT_MuEleLegHigPt.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016/HLT_DoubleEleLegLowPt_2016_cut_WP_Tight80X.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,
                                                 'EleMuLegLowPt'     : 'ICHEP2016fullLumi/HLT_EleMuLegLowPt.txt' ,
                                               } ,
                                   'DZEff'  :  { 'DoubleEle' : 0.993 ,
-                                                'DoubleMu'  : 0.994 ,
-                                                'MuEle'     : 0.961 ,
-                                                'EleMu'     : 0.942 ,
+                                                'DoubleMu'  : 0.993 ,
+                                                'MuEle'     : 0.958 ,
+                                                'EleMu'     : 0.958 ,
                                               } ,
                                   'EMTFBug':  False , 
-                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ]
+                                  'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  { 
                                                 'EleMu'     : [ 57 , 97 ] ,
                                                 'DoubleMu'  : [ 10 , 100] ,
