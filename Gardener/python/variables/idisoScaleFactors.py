@@ -62,12 +62,40 @@ class IdIsoSFFiller(TreeCloner):
         if opts.idScaleFactorsFileMu == None :
           if opts.cmssw == "ICHEP2016" :  opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/muons.txt'  
           else :                          opts.idScaleFactorsFileMu =        cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_Moriond76x.txt'
+
         if opts.isoTightScaleFactorsFileMu == None :
           if opts.cmssw == "ICHEP2016" :  opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/muons_iso_tight.txt'  
           else :                          opts.isoTightScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_tight_Moriond76x.txt'
         if opts.isoLooseScaleFactorsFileMu == None :
           if opts.cmssw == "ICHEP2016" :  opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/ICHEP2016fullLumi/muons_iso_loose.txt'  
           else :                          opts.isoLooseScaleFactorsFileMu = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/muons_iso_loose_Moriond76x.txt'
+
+        if opts.cmssw == "Full2016" :
+          self.IdMuMinRun    = []
+          self.IdMuMaxRun    = []
+          self.IdMuFileData  = []
+          self.IdMuFileMC    = []
+          self.IdMuMinRun    .append(1)
+          self.IdMuMaxRun    .append(4)
+          self.IdMuFileData  .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016BCDEF_PTvsETA_HWW.txt')
+          self.IdMuFileMC    .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt')
+          self.IdMuMinRun    .append(5)
+          self.IdMuMaxRun    .append(6)
+          self.IdMuFileData  .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016GH_PTvsETA_HWW.txt')
+          self.IdMuFileMC    .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt')
+
+          self.IsoMuMinRun   = []
+          self.IsoMuMaxRun   = []
+          self.IsoMuFileData = []
+          self.IsoMuFileMC   = []
+          self.IsoMuMinRun   .append(1)
+          self.IsoMuMaxRun   .append(4)
+          self.IsoMuFileData .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016BCDEF_PTvsETA_HWW.txt')
+          self.IsoMuFileMC   .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt')
+          self.IsoMuMinRun   .append(5)
+          self.IsoMuMaxRun   .append(6)
+          self.IsoMuFileData .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016GH_PTvsETA_HWW.txt')
+          self.IsoMuFileMC   .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt')       
 
         # Muon tracking efficiency
         self.tkMuFile = []
@@ -129,12 +157,30 @@ class IdIsoSFFiller(TreeCloner):
         self.idIsoScaleFactors['ele']    =    [line.rstrip().split()    for line in file_idIsoScaleFactorsFileElectron     if '#' not in line]
         if opts.cmssw == "ICHEP2016" : 
           self.idIsoScaleFactors['eleAlt'] =    [line.rstrip().split()    for line in file_idIsoScaleFactorsFileElectronAlternative     if '#' not in line]
-        
-        self.idIsoScaleFactors['mu']    =    [line.rstrip().split()    for line in file_idScaleFactorsFileMu              if '#' not in line]
+        if opts.cmssw == "Full2016" :
+          for iRun in range(0,len(self.IdMuMinRun)) :
+            tag = 'mu_Run'+str(iRun)
+            print 'ID Run: ',iRun, tag
+            print 'DATA: ' , self.IdMuFileData[iRun]
+            print 'MC  : ' , self.IdMuFileMC[iRun] 
+            self.idIsoScaleFactors[tag+'_DATA'] = [line.rstrip().split()    for line in open(self.IdMuFileData[iRun])   if '#' not in line]
+            self.idIsoScaleFactors[tag+'_MC']   = [line.rstrip().split()    for line in open(self.IdMuFileMC[iRun])     if '#' not in line]
+            self.idIsoScaleFactors['mu']    = []
+        else: 
+          self.idIsoScaleFactors['mu']    =    [line.rstrip().split()    for line in file_idScaleFactorsFileMu              if '#' not in line]
 
         self.isoScaleFactors = {}
-        self.isoScaleFactors['muTight']   =    [line.rstrip().split()    for line in file_isoTightScaleFactorsFileMu        if '#' not in line]
-        self.isoScaleFactors['muLoose']   =    [line.rstrip().split()    for line in file_isoLooseScaleFactorsFileMu        if '#' not in line]
+        if opts.cmssw == "Full2016":
+          for iRun in range(0,len(self.IsoMuMinRun)) :
+            tag = 'muTight_Run'+str(iRun)
+            print 'Iso Run: ',iRun, tag
+            print 'DATA: ' , self.IsoMuFileData[iRun]
+            print 'MC  : ' , self.IsoMuFileMC[iRun]
+            self.isoScaleFactors[tag+'_DATA'] = [line.rstrip().split()    for line in open(self.IsoMuFileData[iRun])   if '#' not in line]
+            self.isoScaleFactors[tag+'_MC']   = [line.rstrip().split()    for line in open(self.IsoMuFileMC[iRun])     if '#' not in line]
+        else:
+          self.isoScaleFactors['muTight']   =    [line.rstrip().split()    for line in file_isoTightScaleFactorsFileMu        if '#' not in line]
+          self.isoScaleFactors['muLoose']   =    [line.rstrip().split()    for line in file_isoLooseScaleFactorsFileMu        if '#' not in line]
 
         self.tkMuRootFile = []
         self.tkMuGraph    = []
@@ -352,11 +398,6 @@ class IdIsoSFFiller(TreeCloner):
           
           
             elif kindLep == 'mu' :
-              kindTight = ""
-              if tight == 1 :
-                kindTight = "muTight"
-              else :
-                kindTight = "muLoose"
                
               # Tracker Mu Eff
               tkSC     = 1. 
@@ -373,57 +414,145 @@ class IdIsoSFFiller(TreeCloner):
                 # 1% error to cover eta dependence
                 tkSC_err = 0.01
 
-              # ID/Iso
-              for point in self.isoScaleFactors[kindTight] : 
-                iso_scaleFactor = 1
-                iso_error_scaleFactor_up = 0
-                iso_error_scaleFactor_do = 0
+              # ID/Iso (after Full2016)
+              if self.cmssw == "Full2016" : 
+                if tight == 0 : return 1. ,  0. , 0. , 0. 
+                #... Iso
+                nRun = 0
+                for iRun in range(0,len(self.IsoMuMinRun)):
+                  if runPeriod >= self.IsoMuMinRun[iRun] and runPeriod <= self.IsoMuMaxRun[iRun] : nRun = iRun
+                tag = 'muTight_Run'+str(nRun)
+                for point in self.isoScaleFactors[tag+'_DATA'] : 
+                  if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
+                       pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
+                     dataIso = point
+                     break
+                for point in self.isoScaleFactors[tag+'_MC'] :
+                  if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
+                       pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
+                     MCIso = point
+                     break
+
+                data = float(dataIso[4])
+                mc   = float(MCIso[4])
+                sigma_up_data = float(dataIso[5])
+                sigma_up_mc   = float(MCIso[5])
+
+                sigma_do_data = float(dataIso[6])
+                sigma_do_mc   = float(MCIso[6])              
+
+                iso_scaleFactor = data / mc
+                iso_error_scaleFactor_up = (data + sigma_up_data) / (mc - sigma_do_mc)  - iso_scaleFactor
+                iso_error_scaleFactor_do = iso_scaleFactor -   (data - sigma_do_data) / (mc + sigma_up_mc)
+
+                #... ID 
+                nRun = 0
+                for iRun in range(0,len(self.IdMuMinRun)):
+                  if runPeriod >= self.IdMuMinRun[iRun] and runPeriod <= self.IdMuMaxRun[iRun] : nRun = iRun
+                tag = 'mu_Run'+str(nRun)
+                for point in self.idIsoScaleFactors[tag+'_DATA'] :
+                  if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
+                       pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
+                     dataId = point
+                     break
+                for point in self.idIsoScaleFactors[tag+'_MC'] :
+                  if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
+                       pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
+                     MCId = point
+                     break
+
+                data = float(dataId[4])
+                mc   = float(MCId[4])
+                sigma_up_data = float(dataId[5])
+                sigma_up_mc   = float(MCId[5])
+
+                sigma_do_data = float(dataId[6])
+                sigma_do_mc   = float(MCId[6])
+
+                scaleFactor = data / mc
+                error_scaleFactor_up = (data + sigma_up_data) / (mc - sigma_do_mc)  - scaleFactor
+                error_scaleFactor_do = scaleFactor -   (data - sigma_do_data) / (mc + sigma_up_mc)
+
+                #print nRun,pt,eta,scaleFactor,iso_scaleFactor
+                # multiply for isolation scale factor
+                #  -> sum in quadrature the relative uncertainties
+                error_scaleFactor_up = scaleFactor * iso_scaleFactor * math.sqrt(error_scaleFactor_up*error_scaleFactor_up/scaleFactor/scaleFactor +  iso_error_scaleFactor_up*iso_error_scaleFactor_up/iso_scaleFactor/iso_scaleFactor)
+                error_scaleFactor_do = scaleFactor * iso_scaleFactor * math.sqrt(error_scaleFactor_do*error_scaleFactor_do/scaleFactor/scaleFactor +  iso_error_scaleFactor_do*iso_error_scaleFactor_do/iso_scaleFactor/iso_scaleFactor)
+                scaleFactor *= iso_scaleFactor
+                      
+                #                                                             no systematic uncertainty for the time being
+                #print  scaleFactor, error_scaleFactor_do, error_scaleFactor_up, 0.0
+
+                #  idiso * reco scale factors
+                if tkSC != 0 and wantOnlyRecoEff == 2:
+                      # sum in quadrature the relative uncertainty
+                      error_scaleFactor = scaleFactor * math.sqrt(error_scaleFactor/scaleFactor*error_scaleFactor/scaleFactor + tkSC_err/tkSC*tkSC_err/tkSC )
+                      # now scale by the correction factor
+                      scaleFactor *= tkSC
+                      error_scaleFactor *= tkSC
+                      error_syst_scaleFactor *= tkSC
+
+                return scaleFactor, error_scaleFactor_do, error_scaleFactor_up, 0.0
+          
+              # default ... it should never happen!
+
+              # ID/Iso (before Full2016)
+              else:
+                kindTight = ""
+                if tight == 1 :
+                  kindTight = "muTight"
+                else :
+                  kindTight = "muLoose"
+                for point in self.isoScaleFactors[kindTight] : 
+                  iso_scaleFactor = 1
+                  iso_error_scaleFactor_up = 0
+                  iso_error_scaleFactor_do = 0
+                  
+                  if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
+                       pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
+                      data = float(point[4])
+                      mc   = float(point[7])
+            
+                      sigma_up_data = float(point[5])
+                      sigma_up_mc   = float(point[8])
+            
+                      sigma_do_data = float(point[6])
+                      sigma_do_mc   = float(point[9])
+                      
+                      iso_scaleFactor = data / mc
+                      iso_error_scaleFactor_up = (data + sigma_up_data) / (mc - sigma_do_mc)  - iso_scaleFactor
+                      iso_error_scaleFactor_do = iso_scaleFactor -   (data - sigma_do_data) / (mc + sigma_up_mc)  
+               
+                      break
                 
-                if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
-                     pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
-                    data = float(point[4])
-                    mc   = float(point[7])
-          
-                    sigma_up_data = float(point[5])
-                    sigma_up_mc   = float(point[8])
-          
-                    sigma_do_data = float(point[6])
-                    sigma_do_mc   = float(point[9])
-                    
-                    iso_scaleFactor = data / mc
-                    iso_error_scaleFactor_up = (data + sigma_up_data) / (mc - sigma_do_mc)  - iso_scaleFactor
-                    iso_error_scaleFactor_do = iso_scaleFactor -   (data - sigma_do_data) / (mc + sigma_up_mc)  
-             
-                    break
-              
-             
-              for point in self.idIsoScaleFactors[kindLep] : 
-               #            eta       |      pt     | eff_data   stat up   stat down |  eff_mc   stat up   stat down  |      other nuisances
-               #       -2.500  -2.000  10.000  20.000  0.358   0.009        0.009       0.286   0.002       0.009          0.094   0.048   0.071   0.127   -1      -1
-          
-                if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
-                     pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
-                    data = float(point[4])
-                    mc   = float(point[7])
-          
-                    sigma_up_data = float(point[5])
-                    sigma_up_mc   = float(point[8])
-          
-                    sigma_do_data = float(point[6])
-                    sigma_do_mc   = float(point[9])
-                    
-                    scaleFactor = data / mc
-                    error_scaleFactor_up = (data + sigma_up_data) / (mc - sigma_do_mc)  - scaleFactor
-                    error_scaleFactor_do = scaleFactor -   (data - sigma_do_data) / (mc + sigma_up_mc)  
-                    
-                    # multiply for isolation scale factor
-                    #  -> sum in quadrature the relative uncertainties
-                    error_scaleFactor_up = scaleFactor * iso_scaleFactor * math.sqrt(error_scaleFactor_up*error_scaleFactor_up/scaleFactor/scaleFactor +  iso_error_scaleFactor_up*iso_error_scaleFactor_up/iso_scaleFactor/iso_scaleFactor)
-                    error_scaleFactor_do = scaleFactor * iso_scaleFactor * math.sqrt(error_scaleFactor_do*error_scaleFactor_do/scaleFactor/scaleFactor +  iso_error_scaleFactor_do*iso_error_scaleFactor_do/iso_scaleFactor/iso_scaleFactor)
-                    scaleFactor *= iso_scaleFactor
-                    
-                    #                                                             no systematic uncertainty for the time being
-                    return scaleFactor, error_scaleFactor_do, error_scaleFactor_up, 0.0
+               
+                for point in self.idIsoScaleFactors[kindLep] : 
+                 #            eta       |      pt     | eff_data   stat up   stat down |  eff_mc   stat up   stat down  |      other nuisances
+                 #       -2.500  -2.000  10.000  20.000  0.358   0.009        0.009       0.286   0.002       0.009          0.094   0.048   0.071   0.127   -1      -1
+            
+                  if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
+                       pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
+                      data = float(point[4])
+                      mc   = float(point[7])
+            
+                      sigma_up_data = float(point[5])
+                      sigma_up_mc   = float(point[8])
+            
+                      sigma_do_data = float(point[6])
+                      sigma_do_mc   = float(point[9])
+                      
+                      scaleFactor = data / mc
+                      error_scaleFactor_up = (data + sigma_up_data) / (mc - sigma_do_mc)  - scaleFactor
+                      error_scaleFactor_do = scaleFactor -   (data - sigma_do_data) / (mc + sigma_up_mc)  
+                      
+                      # multiply for isolation scale factor
+                      #  -> sum in quadrature the relative uncertainties
+                      error_scaleFactor_up = scaleFactor * iso_scaleFactor * math.sqrt(error_scaleFactor_up*error_scaleFactor_up/scaleFactor/scaleFactor +  iso_error_scaleFactor_up*iso_error_scaleFactor_up/iso_scaleFactor/iso_scaleFactor)
+                      error_scaleFactor_do = scaleFactor * iso_scaleFactor * math.sqrt(error_scaleFactor_do*error_scaleFactor_do/scaleFactor/scaleFactor +  iso_error_scaleFactor_do*iso_error_scaleFactor_do/iso_scaleFactor/iso_scaleFactor)
+                      scaleFactor *= iso_scaleFactor
+                      
+                      #                                                             no systematic uncertainty for the time being
+                      return scaleFactor, error_scaleFactor_do, error_scaleFactor_up, 0.0
           
               # default ... it should never happen!
               #print " default mu ???"
