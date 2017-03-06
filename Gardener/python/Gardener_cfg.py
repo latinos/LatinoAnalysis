@@ -1328,7 +1328,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
   'bSFKinFix'    : {
