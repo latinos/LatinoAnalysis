@@ -3472,6 +3472,13 @@ Steps= {
                   'command'    : 'gardener.py puadder --data=RPLME_puData --HistName=pileup --branch=puW --kind=trpu '
                 } ,
 
+  'puRunPer'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py puadder --data=RPLME_puData --HistName=pileup --branch=puW --kind=trpu --run --cmssw RPLME_CMSSW'
+                } ,
+
   'pu2p6'   : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
