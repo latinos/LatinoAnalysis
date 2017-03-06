@@ -811,7 +811,7 @@ class triggerMaker(TreeCloner):
         group.add_option('-c', '--cmssw' , dest='cmssw'   , help='cmssw version (naming convention may change)', default='763', type='string')
         group.add_option('-p', '--pycfg' , dest='pycfg'   , help='Python Config describing the trigger' , default='DEFAULT' , type='string')
         group.add_option('-d', '--isdata', dest='isData'  , help='False=MC / True=Data' , default=False  , action="store_true")
-        group.add_option('-r', '--keeprun', dest='keepRun', help='False=Redo run period / True=Keep run period' , default=False  , action="store_true")
+        group.add_option('-k', '--keeprun', dest='keepRun', help='False=Redo run period / True=Keep run period' , default=False  , action="store_true")
 
         parser.add_option_group(group)
         return group 
