@@ -1385,7 +1385,12 @@ Steps= {
                   'subTargets' : ['bPogSF','TrigMakerMC','IdIsoSC_Cut']
                     },
   
-
+  'bSFL2pTEffCut' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                    },
 
   'puextra'      :   {
                   'isChain'    : True ,
