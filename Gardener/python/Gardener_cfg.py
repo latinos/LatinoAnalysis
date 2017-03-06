@@ -3940,6 +3940,13 @@ Steps= {
                   'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW'
                  },
 
+  'TrigMakerMCkeepRun'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW --keeprun'
+                 },
+
   'TrigMakerData'    : {
                   'isChain'    : False ,
                   'do4MC'      : False  ,
