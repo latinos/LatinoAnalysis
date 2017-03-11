@@ -65,7 +65,7 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
-         jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/proxy.cert\n')
+         jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
@@ -100,8 +100,8 @@ class batchJobs :
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
      if "pi.infn.it" in socket.getfqdn():  
        os.system('cp $X509_USER_PROXY /home/users/'+os.environ["USER"]+'/.proxy')
-     if "knu" in os.uname()[1]:  
-       os.system('cp $X509_USER_PROXY /u/user/'+os.environ["USER"]+'/.proxy')
+     if "knu" in os.uname()[1]: 
+       os.system('cp /tmp/x509up_u$UID /u/user/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -160,6 +160,7 @@ class batchJobs :
 	elif 'knu' in os.uname()[1]:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+	  queue='cms'
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         elif 'ifca' in os.uname()[1] :
@@ -286,11 +287,14 @@ def rootReadPath(inputFile):
     elif 'knu' in os.uname()[1] :
       return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
     else :
-        return inputFile
+        return "/eos/cms" + inputFile
     
 def remoteFileSize(inputFile):
     "Returns file size in byte for file on remote server (/store/.../*.root)"
     if 'iihe' in os.uname()[1] :
+      if "/pnfs" in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
         return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif 'ifca' in os.uname()[1] :
         return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
@@ -299,7 +303,7 @@ def remoteFileSize(inputFile):
     elif "knu" in os.uname()[1]:
         return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
-        return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d ' ' -f 4', shell=True)
+        return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d \' \' -f 4', shell=True)
 
 def batchTest():
     jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])

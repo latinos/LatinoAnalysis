@@ -234,14 +234,17 @@ class HiggsXSection:
      elif 'HWminusJ' in SampleName : ProdMode = 'HWminus'
      elif 'ttH'      in SampleName : ProdMode = 'ttH'  
      # Alternative JCP gg->H samples
-     elif 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : ProdMode = 'ggH'
+     elif 'VBF_H0' in SampleName and '_ToWWTo2L2Nu' in SampleName : ProdMode = 'vbfH'  
+     elif 'H0'     in SampleName and '_ToWWTo2L2Nu' in SampleName : ProdMode = 'ggH'  
+     #elif 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : ProdMode = 'ggH'
      HiggsMass   = 0.
      if 'Mlarge' in SampleName : HiggsMass = '0.0'
      elif '_M' in SampleName : HiggsMass = SampleName.split('_M')[1]
      if '_' in str(HiggsMass) : HiggsMass = HiggsMass.split('_')[0]
      #if 'large' in HiggsMass : ProdMode = 'unknown'
      # Alternative JCP gg->H samples
-     if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : HiggsMass = 125.0
+     if 'H0'     in SampleName and '_ToWWTo2L2Nu' in SampleName : HiggsMass = 125.0
+     #if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : HiggsMass = 125.0
      if not ProdMode == 'unknown' :
        if float(HiggsMass) <= 130 : 
          HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
@@ -261,7 +264,8 @@ class HiggsXSection:
      if 'HJetTobb'    in SampleName : DecayMode = 'H_bb'
      if 'HJetToNonbb' in SampleName : DecayMode = 'H_bb'
      # Alternative JCP gg->H samples
-     if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : DecayMode = 'H_WW'
+     if 'H0'     in SampleName and '_ToWWTo2L2Nu' in SampleName : DecayMode = 'H_WW'
+     #if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : DecayMode = 'H_WW'
      #if 'large' in HiggsMass : DecayMode = 'unknown'
      if not DecayMode == 'unknown' :
        if float(HiggsMass) <= 130 :

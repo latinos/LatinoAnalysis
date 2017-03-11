@@ -55,10 +55,7 @@ from LatinoAnalysis.Gardener.variables.chargeFlipWeight           import chargeF
 # mucca
 from LatinoAnalysis.Gardener.variables.muccaMvaVar                import MuccaMvaVarFiller
 from LatinoAnalysis.Gardener.variables.muccaMonoHVar              import MuccaMonoHVarFiller
-from LatinoAnalysis.Gardener.variables.mucca2HDMVar               import Mucca2HDMVarFiller
-from LatinoAnalysis.Gardener.variables.mucca2HDMFullVar           import Mucca2HDMFullVarFiller
-from LatinoAnalysis.Gardener.variables.muccaZbarVar               import MuccaZbarVarFiller
-from LatinoAnalysis.Gardener.variables.muccaZbarFullVar           import MuccaZbarFullVarFiller
+from LatinoAnalysis.Gardener.variables.muccaMonoHFullVar          import MuccaMonoHFullVarFiller
 
 # mrww
 from LatinoAnalysis.Gardener.variables.MrWWVar                    import MrWWVarFiller   
@@ -158,12 +155,9 @@ if __name__ == '__main__':
     modules['chFlipProba']      = chargeFlipWeight()
 
 # mucca
-    modules['muccaMvaVarFiller']      = MuccaMvaVarFiller()
-    modules['muccaMonoHVarFiller']    = MuccaMonoHVarFiller()
-    modules['mucca2HDMVarFiller']     = Mucca2HDMVarFiller()
-    modules['mucca2HDMFullVarFiller'] = Mucca2HDMFullVarFiller()
-    modules['muccaZbarVarFiller']     = MuccaZbarVarFiller()
-    modules['muccaZbarFullVarFiller'] = MuccaZbarFullVarFiller()
+    modules['muccaMvaVarFiller']       = MuccaMvaVarFiller()
+    modules['muccaMonoHVarFiller']     = MuccaMonoHVarFiller()
+    modules['muccaMonoHFullVarFiller'] = MuccaMonoHFullVarFiller()
 
 # mrWW
     modules['mrWWvarfiller']   = MrWWVarFiller()

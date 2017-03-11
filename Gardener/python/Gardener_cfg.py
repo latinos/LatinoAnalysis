@@ -929,6 +929,151 @@ Productions= {
                        },
 
 
+######## 2016 ReMiniAOD DATA : Feb2017_TheGreatWall_v5 
+
+  'Feb2017_Run2016B_RemAOD' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016B-03Feb2017_ver2-v2',
+                                        'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        'MuonEG_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleElectron_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        'MET_Run2016B-03Feb2017_ver2-v2',   
+                                       ],
+                       },
+
+  'Feb2017_Run2016C_RemAOD' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016C-03Feb2017-v1',
+                                        'DoubleMuon_Run2016C-03Feb2017-v1',
+                                        'MuonEG_Run2016C-03Feb2017-v1',
+                                        'SingleElectron_Run2016C-03Feb2017-v1',
+                                        'SingleMuon_Run2016C-03Feb2017-v1',
+                                        'MET_Run2016C-03Feb2017-v1',   
+                                       ],
+                       },
+
+  'Feb2017_Run2016D_RemAOD' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016D-03Feb2017-v1',
+                                        'DoubleMuon_Run2016D-03Feb2017-v1',
+                                        'MuonEG_Run2016D-03Feb2017-v1',
+                                        'SingleElectron_Run2016D-03Feb2017-v1',
+                                        'SingleMuon_Run2016D-03Feb2017-v1',
+                                        'MET_Run2016D-03Feb2017-v1',   
+                                       ],
+                       },
+
+  'Feb2017_Run2016E_RemAOD' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016E-03Feb2017-v1',
+                                        'DoubleMuon_Run2016E-03Feb2017-v1',
+                                        'MuonEG_Run2016E-03Feb2017-v1',
+                                        'SingleElectron_Run2016E-03Feb2017-v1',
+                                        'SingleMuon_Run2016E-03Feb2017-v1',
+                                        'MET_Run2016E-03Feb2017-v1',   
+                                       ],
+                       },
+
+  'Feb2017_Run2016F_RemAOD' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016F-03Feb2017-v1',
+                                        'DoubleMuon_Run2016F-03Feb2017-v1',
+                                        'MuonEG_Run2016F-03Feb2017-v1',
+                                        'SingleElectron_Run2016F-03Feb2017-v1',
+                                        'SingleMuon_Run2016F-03Feb2017-v1',
+                                        'MET_Run2016F-03Feb2017-v1',   
+                                       ],
+                       },
+
+  'Feb2017_Run2016G_RemAOD' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016G-03Feb2017-v1',
+                                        'DoubleMuon_Run2016G-03Feb2017-v1',
+                                        'MuonEG_Run2016G-03Feb2017-v1',
+                                        'SingleElectron_Run2016G-03Feb2017-v1',
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                        'MET_Run2016G-03Feb2017-v1',   
+                                       ],
+                       },
+
+  'Feb2017_Run2016G_RemAOD_Dec2016Fix' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                       ],
+                       },
+
+
+  'Feb2017_Run2016H_RemAOD' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD_RunH.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'MET_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleEG_Run2016H-03Feb2017_ver3-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver3-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver3-v1',
+                                        'MET_Run2016H-03Feb2017_ver3-v1',
+                                       ],
+                       },
+
+
+#### Summer16 MC: Feb2017_TheGreatWall_v5  
+
+  'Feb2017_summer16'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/MC/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
+                       },
+
 
 }
 
@@ -968,7 +1113,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
 
@@ -990,14 +1135,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
   'l2vlooseCut'  :       {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
 
@@ -1019,8 +1164,8 @@ Steps= {
 			   	  # VBS
 				  'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50',
                                   'WmWmJJ_EWK_powheg',
- 			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
-                                  'TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
+ 			  	  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
+                                  'TTToSemiLepton','TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
                                   'TTTo2L2Nu_ext1','ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top','TTJets', 
@@ -1031,16 +1176,17 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin'], #,'BWEwkSinglet','TopGenPt'],
+                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'], #,'BWEwkSinglet','TopGenPt'],
                   'onlySample' : [
                                   # VBS
                                   'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50','DYJetsToLL_M-50-LO-ext1',
-                                  'WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_QCD_aQGC',
-                                  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
-                                  'WLLJJToLNu_M-60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet','WZJJ_EWK_QCD','tZq_ll','ZZJJTo4L_EWK',
-                                  'TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
+                                  'WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_QCD_aQGC','WpWpJJ_EWK_aQGC',
+                                  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD','WGJJ',
+                                  'WLLJJToLNu_M-60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet','WLLJJToLNu_M-4To60_EWK_4F','WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet','WLLJJToLNu_M-4To50_QCD_2Jet','WLLJJToLNu_M-4To50_QCD_3Jet',
+                                  'WZJJ_EWK_QCD','tZq_ll','ZZJJTo4L_EWK', 'ZZTo4L', 'WZTo3LNu',
+                                  'TTToSemiLepton','TTToSemiLeptonic','DY2JetsToLL','DY3JetsToLL','DY4JetsToLL','DYJetsToLL_M-50-LO','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM',
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
-                                  'TTTo2L2Nu_ext1','ST_t-channel_antitop','ST_t-channel_top',
+                                  'TTTo2L2Nu_ext1','TTTo2L2Nu','ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top','TTJets',
                                   'ggZZ4e','ggZZ4m','ggZZ4t','ggZZ2e2m','ggZZ2e2t','ggZZ2m2t',
                                  ] ,
@@ -1182,7 +1328,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin','l4kin','do_dymvaGGH'],
                 },
 
   'bSFKinFix'    : {
@@ -1239,7 +1385,12 @@ Steps= {
                   'subTargets' : ['bPogSF','TrigMakerMC','IdIsoSC_Cut']
                     },
   
-
+  'bSFL2pTEffCut' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                    },
 
   'puextra'      :   {
                   'isChain'    : True ,
@@ -1365,8 +1516,8 @@ Steps= {
                                   'WWTo2L2Nu_CUETDown',
                                   'WWTo2L2Nu_CUETUp',
  			  # VBS
- 			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
-                          'WGJJ','EWKZ2Jets','TTToSemiLeptonic',
+ 			  'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
+                          'WGJJ','EWKZ2Jets','TTToSemiLepton',
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                  ] ,
@@ -1703,7 +1854,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
                                   # stop
 
                                   'latino_T2bW',
@@ -1908,7 +2059,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
 
                                   # stop
@@ -2010,7 +2161,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+#                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepElepTup','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2116,7 +2268,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2217,7 +2369,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  #'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepElepTdo','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2324,7 +2477,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
 
                                   # stop
@@ -2427,7 +2580,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  #'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepMupTup','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2534,7 +2688,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2636,7 +2790,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  #'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
+                  'subTargets' : ['do_LepMupTdo','TrigMakerMC','IdIsoSC_Cut','l2kin','l3kin','l4kin'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2743,7 +2898,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -2952,7 +3107,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -3160,7 +3315,7 @@ Steps= {
                                   # VBF 
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
                                   'WGJJ', 'WLLJJToLNu_M-4to60_EWK_QCD', 'WLLJJToLNu_M-60_EWK_QCD', 'WpWpJJ_EWK_QCD',
-                                  'WW_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
+                                  'WW_DoubleScattering','WWTo2L2Nu_DoubleScattering', 'WmWmJJ_EWK_powheg', 'WpWpJJ_EWK', 'WpWpJJ_QCD', 
 
                                   # stop
 
@@ -3320,6 +3475,13 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'command'    : 'gardener.py puadder --data=RPLME_puData --HistName=pileup --branch=puW --kind=trpu '
+                } ,
+
+  'puRunPer'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py puadder --data=RPLME_puData --HistName=pileup --branch=puW --kind=trpu --run --cmssw RPLME_CMSSW'
                 } ,
 
   'pu2p6'   : {
@@ -3499,7 +3661,7 @@ Steps= {
                                    'TTJets',
                                    'TTTo2L2Nu_alphaS01108',
                                    'TTTo2L2Nu_ext1',
-                                   'TTToSemiLeptonic',
+                                   'TTToSemiLepton','TTToSemiLeptonic',
                                    'TTToSemiLeptonic_alphaS01108',
                                  ],
                   },
@@ -3783,6 +3945,13 @@ Steps= {
                   'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW'
                  },
 
+  'TrigMakerMCkeepRun'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW --keeprun'
+                 },
+
   'TrigMakerData'    : {
                   'isChain'    : False ,
                   'do4MC'      : False  ,
@@ -3795,9 +3964,11 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
+                  'SizeMethod' : True , 
+                  'SizeMax'    : 5e9 , 
                   'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1',
-                                  'WZTo2L2Q','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
+                                  'WZTo2L2Q','TTToSemiLepton','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
                                   'DYJetsToEE_Pow',
                                   'DY1JetsToLL',
                                   #'TTJets',
@@ -3998,6 +4169,126 @@ Steps= {
                    'command'    : 'gardener.py muccaMvaVarFiller --kind 5'
                  } ,
 
+  # MUCCA for monoH
+  # 2HDM model em
+  
+  'mucca_2HDMadapt_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMadapt_em" --training="BDT4" --channel="em" --model="2HDM"'
+        }  ,
+  
+  'mucca_2HDMadaptFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMadaptFull_em" --training="BDT4" --channel="em" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgrad_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMgrad_em" --training="BDTG4" --channel="em" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMgradFull_em" --training="BDTG4" --channel="em" --model="2HDM"'
+        } ,
+  
+  # 2HDM model sf
+  
+  'mucca_2HDMadapt_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMadapt_sf" --training="BDT4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMadaptFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMadaptFull_sf" --training="BDT4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgrad_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMgrad_sf" --training="BDTG4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="2HDMgradFull_sf" --training="BDTG4" --channel="sf" --model="2HDM"'
+        } ,
+  
+  # Zbar model em
+  
+  'mucca_Zbaradapt_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbaradapt_em" --training="BDT4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbaradaptFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbaradaptFull_em" --training="BDT4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_Zbargrad_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbargrad_em" --training="BDTG4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbargradFull_em" --training="BDTG4" --channel="em" --model="Zbar"'
+        } ,
+  
+  # Zbar model sf
+  
+  'mucca_Zbaradapt_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbaradapt_sf" --training="BDT4" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbaradaptFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbaradaptFull_sf" --training="BDT4" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_Zbargrad_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFiller --signal="Zbargrad_sf" --training="BDTG4" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFiller --signal="ZbargradFull_sf" --training="BDTG4" --channel="sf" --model="Zbar"'
+        } ,
 
 
 
@@ -4098,7 +4389,7 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'command'    : 'gardener.py chFlipProba --njets 2',
-                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1'],
+                  'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1','DYJetsToLL_M-50-LO-ext1','TTTo2L2Nu'],
                   },
 
 

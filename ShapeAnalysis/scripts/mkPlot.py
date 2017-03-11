@@ -1143,8 +1143,14 @@ class ShapeFactory:
                     # is the expected signal + background yield
                     # --> or only background ?
                     #
-                    totalBkg = thsBackground.GetStack().Last().Integral()
-                    totalSig = thsSignal.GetStack().Last().Integral()
+                    if len(groupPlot.keys()) == 0:          
+                      totalBkg = thsBackground.GetStack().Last().Integral()
+                      totalSig = thsSignal.GetStack().Last().Integral()
+                    else :
+                      totalBkg = thsBackground_grouped.GetStack().Last().Integral()
+                      totalSig = thsSignal_grouped.GetStack().Last().Integral()
+
+                      
                     totalBkgSig = totalBkg + totalSig
                     
                     totalWeightedIntegralBkg = 0.
@@ -1159,10 +1165,19 @@ class ShapeFactory:
                       integral_bkg = 0.
                       #for ibin in range( thsBackground.GetStack().Last().GetNbinsX() )
                       for ibin in range( nbinY ) :
-                        integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+                        if len(groupPlot.keys()) == 0:          
+                          integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+                        else :
+                          integral_bkg += thsBackground_grouped.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
                       integral_sig = 0.
-                      for ibin in range( thsSignal.GetStack().Last().GetNbinsX() ) :
-                        integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+                      
+                      if len(groupPlot.keys()) == 0:          
+                        for ibin in range( thsSignal.GetStack().Last().GetNbinsX() ) :
+                          integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+                      else :
+                        for ibin in range( thsSignal_grouped.GetStack().Last().GetNbinsX() ) :
+                          integral_sig += thsSignal_grouped.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+                      
                       # this is because the signal was added into the background  stack before    
                       integral_bkg = integral_bkg - integral_sig
                       weight = 1
@@ -1171,57 +1186,124 @@ class ShapeFactory:
                       else :
                         weight = 1
                       weight_X_list_weights.append(weight)
-                              
-                      for ihisto in range(thsBackground.GetNhists()) :
-                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
-                         histo.SetFillColor( ((thsBackground.GetHists().At(ihisto))).GetFillColor())
-                         histo.SetFillStyle( ((thsBackground.GetHists().At(ihisto))).GetFillStyle())
-                         histo.SetLineColor( ((thsBackground.GetHists().At(ihisto))).GetLineColor())
-                         histo.SetLineWidth( ((thsBackground.GetHists().At(ihisto))).GetLineWidth())
-                         
-                         for ibin in range( nbinY ) :
-                           histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
-                         
-                         if sliceX != 0:
-                           weight_X_list_Background[ihisto].Add(histo)
-                         else :
-                           weight_X_list_Background.append(histo)
+                      
+                      
+                      if len(groupPlot.keys()) == 0:          
 
-                         # the minus signal is because the signal was added into the background stack before  
-                         if ihisto < (thsBackground.GetNhists() - thsSignal.GetNhists()) :
-                           totalWeightedIntegralBkg += histo.Integral()
+                          for ihisto in range(thsBackground.GetNhists()) :
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
+                             histo.SetFillColor( ((thsBackground.GetHists().At(ihisto))).GetFillColor())
+                             histo.SetFillStyle( ((thsBackground.GetHists().At(ihisto))).GetFillStyle())
+                             histo.SetLineColor( ((thsBackground.GetHists().At(ihisto))).GetLineColor())
+                             histo.SetLineWidth( ((thsBackground.GetHists().At(ihisto))).GetLineWidth())
+                             
+                             for ibin in range( nbinY ) :
+                               histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                             
+                             if sliceX != 0:
+                               weight_X_list_Background[ihisto].Add(histo)
+                             else :
+                               weight_X_list_Background.append(histo)
+                          
+                             # the minus signal is because the signal was added into the background stack before  
+                             if ihisto < (thsBackground.GetNhists() - thsSignal.GetNhists()) :
+                               totalWeightedIntegralBkg += histo.Integral()
+                          
+                             
+                          for ihisto in range(thsSignal.GetNhists()) :
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             histo.SetFillColor( ((thsSignal.GetHists().At(ihisto))).GetFillColor())
+                             histo.SetFillStyle( ((thsSignal.GetHists().At(ihisto))).GetFillStyle())
+                             histo.SetLineColor( ((thsSignal.GetHists().At(ihisto))).GetLineColor())
+                             histo.SetLineWidth( ((thsSignal.GetHists().At(ihisto))).GetLineWidth())
+                             
+                             for ibin in range( nbinY ) :
+                               histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                          
+                             if sliceX != 0:
+                               weight_X_list_Signal[ihisto].Add(histo)
+                             else :
+                               weight_X_list_Signal.append(histo)
+                               
+                             totalWeightedIntegralSig += histo.Integral()
+                          
+                          
+                          for ihisto in range(thsData.GetNhists()) :
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             for ibin in range( nbinY ) :
+                               histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                             
+                             if sliceX != 0:
+                               weight_X_list_Data[ihisto].Add(histo)
+                             else :
+                               weight_X_list_Data.append(histo)
+                             #weight_X_list_Data.append(histo)  ## aaaargh!
+                      
+                      else :
 
-                         
-                      for ihisto in range(thsSignal.GetNhists()) :
-                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
-                         histo.SetFillColor( ((thsSignal.GetHists().At(ihisto))).GetFillColor())
-                         histo.SetFillStyle( ((thsSignal.GetHists().At(ihisto))).GetFillStyle())
-                         histo.SetLineColor( ((thsSignal.GetHists().At(ihisto))).GetLineColor())
-                         histo.SetLineWidth( ((thsSignal.GetHists().At(ihisto))).GetLineWidth())
-                         
-                         for ibin in range( nbinY ) :
-                           histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                          for ihisto in range(thsBackground_grouped.GetNhists()) :
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground_grouped.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
+                             histo.SetFillColor( ((thsBackground_grouped.GetHists().At(ihisto))).GetFillColor())
+                             histo.SetFillStyle( ((thsBackground_grouped.GetHists().At(ihisto))).GetFillStyle())
+                             histo.SetLineColor( ((thsBackground_grouped.GetHists().At(ihisto))).GetLineColor())
+                             histo.SetLineWidth( ((thsBackground_grouped.GetHists().At(ihisto))).GetLineWidth())
+                             
+                             for ibin in range( nbinY ) :
+                               histo.SetBinContent(ibin+1, weight * ( ((thsBackground_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                             
+                             if sliceX != 0:
+                               weight_X_list_Background[ihisto].Add(histo)
+                             else :
+                               weight_X_list_Background.append(histo)
+                          
+                             # the minus signal is because the signal was added into the background stack before  
+                             if ihisto < (thsBackground_grouped.GetNhists() - thsSignal_grouped.GetNhists()) :
+                               totalWeightedIntegralBkg += histo.Integral()
+                          
+                             
+                          for ihisto in range(thsSignal_grouped.GetNhists()) :
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal_grouped.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             histo.SetFillColor( ((thsSignal_grouped.GetHists().At(ihisto))).GetFillColor())
+                             histo.SetFillStyle( ((thsSignal_grouped.GetHists().At(ihisto))).GetFillStyle())
+                             histo.SetLineColor( ((thsSignal_grouped.GetHists().At(ihisto))).GetLineColor())
+                             histo.SetLineWidth( ((thsSignal_grouped.GetHists().At(ihisto))).GetLineWidth())
+                             
+                             for ibin in range( nbinY ) :
+                               histo.SetBinContent(ibin+1, weight * ( ((thsSignal_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                          
+                             if sliceX != 0:
+                               weight_X_list_Signal[ihisto].Add(histo)
+                             else :
+                               weight_X_list_Signal.append(histo)
+                               
+                             totalWeightedIntegralSig += histo.Integral()
+                          
+                          
+                          
+                          
+                          for ihisto in range(thsData.GetNhists()) :
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             for ibin in range( nbinY ) :
+                               histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                             
+                             if sliceX != 0:
+                               weight_X_list_Data[ihisto].Add(histo)
+                             else :
+                               weight_X_list_Data.append(histo)
+                             #weight_X_list_Data.append(histo)  ## aaaargh!
+ 
 
-                         if sliceX != 0:
-                           weight_X_list_Signal[ihisto].Add(histo)
-                         else :
-                           weight_X_list_Signal.append(histo)
-                           
-                         totalWeightedIntegralSig += histo.Integral()
 
-             
-                      for ihisto in range(thsData.GetNhists()) :
-                         histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
-                         for ibin in range( nbinY ) :
-                           histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
-                         
-                         if sliceX != 0:
-                           weight_X_list_Data[ihisto].Add(histo)
-                         else :
-                           weight_X_list_Data.append(histo)
-                         weight_X_list_Data.append(histo)
 
-                    global_normalization = totalBkg / totalWeightedIntegralBkg
+
+                    # 
+                    # gloabal scale factor so that the total number of events is such that
+                    # the expected signal events is unchanged
+                    #
+                    #global_normalization = totalBkg / totalWeightedIntegralBkg
+                    global_normalization = totalSig / totalWeightedIntegralSig
+                    
+                    
                     for histo in weight_X_list_Data:
                        histo.Scale(global_normalization)
                     for histo in weight_X_list_Background:
@@ -1419,6 +1501,34 @@ class ShapeFactory:
                     
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
+                    
+                    
+                    # save also all the TH1F separately for later combination
+                    temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root", "UPDATE")
+                   
+                    histo_global_normalization = ROOT.TH1F("histo_global_normalization", "", 1, 0, 1)
+                    histo_global_normalization.Fill(0.5, global_normalization)
+                    histo_global_normalization.Write()
+                    
+                    weight_X_tgrMCOverMC.Write()
+                    weight_X_tgrDataOverMC.Write()
+                    if (len(mynuisances.keys())!=0):
+                      weight_X_tgrMC.Write("weight_X_tgrMC")
+                    if weight_X_tgrData.GetN() != 0:
+                      weight_X_tgrData.Write("weight_X_tgrData")
+                    if weight_X_thsBackground.GetNhists() != 0:
+                      weight_X_thsBackground.Write()
+                    if weight_X_thsSignal.GetNhists() != 0:
+                      weight_X_thsSignal.Write()
+                      
+                    for histo in weight_X_list_Data:
+                       histo.Write()
+                    for histo in weight_X_list_Background:
+                       histo.Write()
+                    for histo in weight_X_list_Signal:
+                       histo.Write()
+                    
+                    temp_file.Close()
                     
                     
                     # log Y axis

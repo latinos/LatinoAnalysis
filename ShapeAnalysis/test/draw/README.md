@@ -11,6 +11,11 @@ On top of mkPlot.py code
     r99t DrawNuisances.cxx\(\"/afs/cern.ch/user/a/amassiro/Framework/CMSSW_7_6_3/src/PlotsConfigurations/Configurations/ggHMoriond/datacards/hww2l2v_13TeV_of0j/mllVSmth/datacard.txt\",\"histo_ggH_hww\",\"histo_ggH_hww_CMS_PSUp\",\"histo_ggH_hww_CMS_PSDown\"\)
     
     
+Run for WW analysis:
+
+    python DrawNuisancesAll.py --inputFile /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_5/src/PlotsConfigurations/Configurations/WW/datacards/ww_Incl_em/HT/shapes/histos_ww_Incl_em.root --outputDirPlots nuisancesPlotsWW --nuisancesFile /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_5/src/PlotsConfigurations/Configurations/WW/nuisances_lxbatch.py --samplesFile   /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_5/src/PlotsConfigurations/Configurations/WW/samples_lxbatch.py --cutName ww_Incl_em
+
+
 Run on all:
 
     python DrawNuisancesAll.py

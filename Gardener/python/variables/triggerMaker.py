@@ -811,6 +811,7 @@ class triggerMaker(TreeCloner):
         group.add_option('-c', '--cmssw' , dest='cmssw'   , help='cmssw version (naming convention may change)', default='763', type='string')
         group.add_option('-p', '--pycfg' , dest='pycfg'   , help='Python Config describing the trigger' , default='DEFAULT' , type='string')
         group.add_option('-d', '--isdata', dest='isData'  , help='False=MC / True=Data' , default=False  , action="store_true")
+        group.add_option('-k', '--keeprun', dest='keepRun', help='False=Redo run period / True=Keep run period' , default=False  , action="store_true")
 
         parser.add_option_group(group)
         return group 
@@ -833,6 +834,7 @@ class triggerMaker(TreeCloner):
         if '76' in opts.cmssw : opts.cmssw = 'Full2015' 
     
         # Compute Lumi fractions
+        self.keepRun  = opts.keepRun 
         self.nPeriods = len(Trigger.keys())
         LumiTot=0.
         for iPeriod in Trigger[opts.cmssw] : LumiTot += Trigger[opts.cmssw][iPeriod]['lumi']
@@ -850,6 +852,7 @@ class triggerMaker(TreeCloner):
         print '------- Cfg for : ', opts.cmssw
         print Trigger[opts.cmssw]
         print '--------Lumi Frac -----------' 
+        print 'Keep Run Period: ',self.keepRun
         print self.runPeriods
         print self.fPeriods
         print '---------------------' 
@@ -883,7 +886,6 @@ class triggerMaker(TreeCloner):
 
         if self.isData :
           self.namesBranches = [
-           'iRunPeriod',
            'veto_EMTFBug',
            'trig_SnglEle',
            'trig_SnglMu',
@@ -895,7 +897,6 @@ class triggerMaker(TreeCloner):
         else: 
 
           self.namesBranches = [
-           'iRunPeriod',
            'veto_EMTFBug',
            'effTrigW',
            'effTrigW_Up',
@@ -909,6 +910,7 @@ class triggerMaker(TreeCloner):
            'effTrigW_DbleMu',
            'effTrigW_EleMu',
            ]
+        if not self.keepRun : self.namesBranches.append('iRunPeriod')
 
         # clone the tree
         self.clone(output, self.namesBranches)
@@ -952,8 +954,11 @@ class triggerMaker(TreeCloner):
 
 
             # Get run period
-            self.runPeriod = self._getRunPeriod(itree.run) 
-            self.branches['iRunPeriod'][0] = self.runPeriod 
+            if not self.keepRun :
+              self.runPeriod = self._getRunPeriod(itree.run) 
+              self.branches['iRunPeriod'][0] = self.runPeriod 
+            else:
+              self.runPeriod = int(itree.iRunPeriod)
 
             # Compute the veto for the EMTF Bug in 2016
             vEMTF = self.triggerCalculators[self.runPeriod-1]._getEMTFBugVeto(itree.std_vector_lepton_flavour,itree.std_vector_lepton_pt,itree.std_vector_lepton_eta,itree.std_vector_lepton_phi)
