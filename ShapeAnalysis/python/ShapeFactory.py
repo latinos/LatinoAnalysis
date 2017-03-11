@@ -632,16 +632,20 @@ class ShapeFactory:
           # clear list
           tree.SetEntryList(0)
           # get the list
-          myList = ROOT.TEntryList('myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName,"")
+          myList = ROOT.TEventList('myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName,"")
+          #myList = ROOT.TEntryList('myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName,"")
           #myList = ROOT.TEntryList(tree)
-          tree.Draw('>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName, globalCut, "entrylist");
+          #tree.Draw('>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName, globalCut, "entrylist");
+          tree.Draw('>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName, globalCut);
+          #myList.Print("all")
           #gDirectory = ROOT.gROOT.GetGlobal("gDirectory")
           #gDirectory.Print()
           #myList = gDirectory.Get("myList")
           #myList.Print("all")
           # apply the list
           #print " BEFORE List --> ", tree.GetEntries()
-          tree.SetEntryList(myList)
+          #tree.SetEntryList(myList)
+          tree.SetEventList(myList)
           #print " AFTER List --> ", tree.GetEntries()
           
           numTree += 1
