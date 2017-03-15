@@ -543,7 +543,9 @@ for iProd in prodList :
           FileTargetStrip=[]
           for jFile in FileTarget : FileTargetStrip.append(os.path.basename(jFile))  
           for jFile in FileOriList:
-            if not (os.path.basename(jFile)) in FileTargetStrip : haddTest=False
+            if not (os.path.basename(jFile)) in FileTargetStrip : 
+                print jFile , os.path.basename(jFile) , iTarget
+                haddTest=False
           if not haddTest : keysToDel.append(iTarget)
         for iTarget in keysToDel:
           iKey = iTarget.split('_000')[0].split('__part')[0]

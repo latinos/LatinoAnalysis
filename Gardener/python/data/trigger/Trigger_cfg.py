@@ -91,13 +91,13 @@ Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  
 #   ------------------------------
 #     dataset | from run | to run
 #   ----------+----------+--------
-#    Run2016B |   272007 | 275376
-#    Run2016C |   275657 | 276283
-#    Run2016D |   276315 | 276811
-#    Run2016E |   276831 | 277420
-#    Run2016F |   277772 | 278808
-#    Run2016G |   278820 | 280385
-#    Run2016H |   280919 |
+#    Run2016B |   272007 | 275376  -> 5.788 /fb                             f_BCDEF = 0.294
+#    Run2016C |   275657 | 276283  -> 2.573 /fb                             f_BCDEF = 0.130
+#    Run2016D |   276315 | 276811  -> 4.248 /fb                             f_BCDEF = 0.215
+#    Run2016E |   276831 | 277420  -> 4.009 /fb                             f_BCDEF = 0.203
+#    Run2016F |   277772 | 278808  -> 3.102 /fb -> B+C+D+E+F : 19.720 / fb  f_BCDEF = 0.157
+#    Run2016G |   278820 | 280385  -> 7.540 /fb
+#    Run2016H |   280919 |         -> 8.606 /fb --> G+H: 16.146 /fb
 #    Total lumi: 35.867 /fb (brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt -u /fb)
 #   ------------------------------
 
