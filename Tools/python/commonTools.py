@@ -118,3 +118,29 @@ class xsectionDB:
 #db = xsectionDB('1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ')
 #print db.get(20001)
 
+
+#######
+
+def getSampleFiles(inputDir,Sample):
+
+    print Dir,Sample
+    
+
+
+
+
+    if 'iihe' in os.uname()[1] :
+        lsCmd='ls '
+        if not '/pnfs' in inputDir : Dir = '/pnfs/iihe/cms/' + inputDir
+        else:                        Dir = inputDir
+        
+    elif 'ifca' in os.uname()[1] :
+        return "ls /gpfs/gaes/cms/" + inputDir
+        else:                        Dir = inputDir  
+#   elif "pi.infn.it" in socket.getfqdn():
+#       return "ls /gpfs/ddn/srm/cms/" + inputDir
+#   elif "knu" in os.uname()[1]:
+#       return "ls /pnfs/knu.ac.kr/data/cms/" + inputDir
+#   else :
+#       return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
+
