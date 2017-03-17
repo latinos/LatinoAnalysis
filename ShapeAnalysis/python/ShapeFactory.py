@@ -390,7 +390,7 @@ class ShapeFactory:
           #    -> this should speed up!
           #
           for nuisanceName, nuisance in nuisances.iteritems():
-            if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cut in nuisance['cuts']) ) :
+            if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) :
               print "nuisanceName = ", nuisanceName, " ---> ", nuisance
               if 'kind' in nuisance :
                 if nuisance['kind'] == 'tree' :
@@ -451,7 +451,7 @@ class ShapeFactory:
               # - uniform method 2
               # - bin by bin (in selected bins)
               for nuisanceName, nuisance in nuisances.iteritems():
-                if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cut in nuisance['cuts']) ) :   # run only if this nuisance will affect the phase space defined in "cut"
+                if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) :   # run only if this nuisance will affect the phase space defined in "cut"
                   if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                     #print "nuisance[type] = ", nuisance ['type']
                     if 'samples' in nuisance.keys():
@@ -502,7 +502,7 @@ class ShapeFactory:
               # - weight based nuisances: "kind = 'weight'"
               # - tree based nuisances:   "kind = 'tree'"
               for nuisanceName, nuisance in nuisances.iteritems():
-                if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cut in nuisance['cuts']) ) :   # run only if this nuisance will affect the phase space defined in "cut"
+                if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) :   # run only if this nuisance will affect the phase space defined in "cut"
 
                   if 'kind' in nuisance :
                     if nuisance['kind'] == 'weight' :
