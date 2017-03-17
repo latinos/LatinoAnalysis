@@ -1390,6 +1390,8 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'XonlySample' : [
+'DYJetsToLL_M-50','DYJetsToLL_M-10to50','WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_aQGC','WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WWTo2L2Nu_DoubleScattering','WGJJ','WLLJJToLNu_M-60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet','WLLJJToLNu_M-4To60_EWK_4F','WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet','WLLJJToLNu_M-4To50_QCD_2Jet','WLLJJToLNu_M-4To50_QCD_3Jet','tZq_ll','ZZJJTo4L_EWK', 'ZZTo4L', 'WZTo3LNu','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM','TTTo2L2Nu','ST_t-channel_antitop','ST_t-channel_top','ST_tW_antitop','ST_tW_top','ggZZ4e','ggZZ4m','ggZZ4t','ggZZ2e2m','ggZZ2e2t','ggZZ2m2t']
                     },
 
   'bSFL1pTEffCut' : {
