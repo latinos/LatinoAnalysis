@@ -610,10 +610,10 @@ for iProd in prodList :
 
         # Special hadd command
         if iStep == 'hadd' :
-          if 'iihe' or 'knu' in os.uname()[1]:
-            command='cd '+wDir+' ; '
-          else:
-            command+='cd /tmp/'+os.getlogin()+' ; '
+#          if 'iihe' or 'knu' in os.uname()[1]:
+#            command='cd '+wDir+' ; '
+#          else:
+#            command+='cd /tmp/'+os.getlogin()+' ; '
             
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           if len(targetList[iTarget]) == 1 :
@@ -626,6 +626,7 @@ for iProd in prodList :
             for iFile in targetList[iTarget] : command += iFile+' '
             command += ' ; ' 
             GarbageCollector.append(outTree)
+            command += 'hadd_return=$?; ' 
 
         # Special UEPS directories
         elif iStep == 'UEPS' :
@@ -736,6 +737,10 @@ for iProd in prodList :
         # else:
         #   command+='xrdcp '+outTree+' root://eosuser.cern.ch/'+eosTargBase+'/'+iProd+'/'+startingStep+'__'+iStep+'/Split/latino_'+iTarget+'__part'+iPart+'_Out.root'
         #lse:
+        # add hadd return code check
+
+        if iStep == 'hadd':
+            command+='if (( hadd_return == 0 )); then '
 
         if not 'UEPS' == iStep :
          if 'iihe' in os.uname()[1]:
@@ -762,6 +767,11 @@ for iProd in prodList :
           command += ' 2>&1 > /dev/null \n' 
         else:
           command += ' 2>&1 | tee '+logFile+' \n'  
+          
+        # add hadd return code check
+        if iStep == 'hadd':
+            command+='fi'
+
         print '--------------------------------', options.pretend
 	if options.pretend : print "The command is : ", command
         else :
