@@ -208,6 +208,7 @@ void ZWW::isMETOk(){
 
 void ZWW::isAllOk(){
         isAllOk_ = isLepOk_*isJetOk_*isMETOk_;
+        isAllOk_ = preSelection();
 }
 
 
@@ -433,7 +434,7 @@ float ZWW::zbDeltaR_zh4l(){
 }
 
 float ZWW::z0DeltaR_zh4l(){
-    return zDeltaR_zh4l(z1LepIdx_);
+    return zDeltaR_zh4l(z0LepIdx_);
 }
 
 float ZWW::z1DeltaR_zh4l(){
