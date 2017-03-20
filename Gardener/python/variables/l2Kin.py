@@ -94,6 +94,7 @@ class L2KinFiller(TreeCloner):
            'njet',
           
 	   'mllWgSt',
+	   'drllWgSt',
            'mllThird',
            'mllOneThree',
            'mllTwoThree',
