@@ -5,6 +5,15 @@
 ./mkGardener.py -p  Feb2017_summer16 -s hadd -i MCl2looseCut -S Target -b
 ./mkGardener.py -p  Feb2017_summer16 -s bSFL2pTEffCut,l2tight,vbsSel -C -i MCl2looseCut__hadd -S Target -b
 
+./mkGardener.py -p  Feb2017_summer16 -s JESup -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s JESdo -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s METup -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s METdo -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s LepElepTup -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s LepElepTdo -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s LepMupTup -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s LepMupTdo -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+
 # L2 vloose
 
 ./mkGardener.py -p  Feb2017_summer16 -s MCl2vlooseCut -S Target -b 
