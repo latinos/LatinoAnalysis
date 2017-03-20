@@ -4377,11 +4377,25 @@ Steps= {
                   'subTargets' : ['do_vbsSel','chFlipProba2j'], 
            },
 
+  'tightVbsSel'    : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_tightVbsSel','chFlipProba2j'],
+           },
+
   'do_vbsSel'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \' std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && njet>=2 && mjj>100 \' '
+           },
+
+  'do_tightVbsSel'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>20 && std_vector_lepton_pt[2]<10 && njet>=2 && mjj>500 && detajj > 2.5 \' '
            },
 
   'chFlipProba' : {
