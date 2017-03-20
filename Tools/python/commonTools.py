@@ -118,3 +118,77 @@ class xsectionDB:
 #db = xsectionDB('1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ')
 #print db.get(20001)
 
+
+#######
+
+def getSampleFiles(inputDir,Sample,absPath=False):
+
+    
+
+    #### SETUP DISK ACCESS ####
+
+    xrootdPath=''
+    # ... IIHE
+    if 'iihe' in os.uname()[1] :
+      lsCmd='ls '
+      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+         Dir = '/pnfs/iihe/cms/' + inputDir
+      else:                        
+         Dir = inputDir
+      #if '/pnfs/' in inputDir : xrootdPath='dcap://maite.iihe.ac.be'
+
+    # ... CERN
+    elif 'cern' in os.uname()[1] : 
+      if not '/eos/' in  inputDir and '/store/' in inpuDir:
+         Dir = '/eos/cms/' + inputDir
+      else:                          
+         Dir = inputDir
+      if   '/eos/cms/' in inputDir:
+      #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '
+         xrootdPath='root://eoscms.cern.ch/'
+      elif '/eos/user/' in inputDir:
+      #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/eos.select ls '
+         xrootdPath='root://eosuser.cern.ch/'     
+      lsCmd='ls ' 
+    
+    # ... IFCA   
+    elif 'ifca' in os.uname()[1] :
+      lsCmd='ls '
+      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+        Dir = '/gpfs/gaes/cms/' + inputDir 
+      else:
+        Dir = inputDir
+
+    # ... PISA         
+    elif "pi.infn.it" in socket.getfqdn():
+      lsCmd='ls '
+      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+        Dir = '/gpfs/ddn/srm/cms/' + inputDir 
+      else:
+        Dir = inputDir
+
+    # ... KNU
+    elif "knu" in os.uname()[1]:
+      lsCmd='ls '
+      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+        Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
+      else:
+        Dir = inputDir 
+
+    # ... DEFAULT: local mounted disk
+    else :
+      lsCmd='ls '
+      Dir = inputDir
+
+    #print xrootdPath, Dir , lsCmd , Sample
+
+    ##### Now get the files for Sample
+    fileCmd = lsCmd+Dir+'/latino_'+Sample+'.root '+Dir+'/latino_'+Sample+'__part*.root'
+    proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+    out,err = proc.communicate()
+    Files   = string.split(out)
+    FileTarget = []
+    for iFile in Files:
+      if absPath : FileTarget.append('###'+iFile)
+      else       : FileTarget.append(os.path.basename(iFile)) 
+    return FileTarget
