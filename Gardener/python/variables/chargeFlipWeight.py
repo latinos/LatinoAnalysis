@@ -33,7 +33,7 @@ class chargeFlipWeight(TreeCloner):
             self.chFlipEeFileName = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/chFlip/DY_SSoverOS_2Dweight_inclusive.root'
             self.chFlipEeHistName = 'DY_leptoneta2D_weight'
         else:
-            self.chFlipEeFileName = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/chFlip/DY_SSoverOS_2Dweight_2jet_MCsubtr_Full2016.root'
+            self.chFlipEeFileName = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/chFlip/DY_SSoverOS_2Dweight_2jet_MCsubtr_Feb2017.root'
             self.chFlipEeHistName = 'data_leptonabseta2D_weight' 
 
         self.chFlipEeFile = self._openRootFile(self.chFlipEeFileName)
