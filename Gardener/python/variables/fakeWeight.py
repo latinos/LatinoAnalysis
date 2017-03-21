@@ -37,30 +37,59 @@ class FakeWeightFiller(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
+        group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763', type='string')
+        # new feature introduced for Full2016 (Jan 2017)
+        group.add_option( '--idEleKind' , dest='idEleKind', help='kind of electron id', default=None) # e.g. "cut_WP_Tight80X"
+
         parser.add_option_group(group)
         return group
 
 
     def checkOptions(self,opts):
 	cmssw_base = os.getenv('CMSSW_BASE')
+        self.cmssw = opts.cmssw
+        print " cmssw = ", self.cmssw
+        self.idEleKind = opts.idEleKind
+        print " idEleKind = ", self.idEleKind
 
-        self.fileMuPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonPR_Run2016_HWW12fb.root')
-        self.fileElPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/ElePR_Run2016_HWW12fb.root')
+        if self.cmssw == 'Full2016' and self.idEleKind in ['cut_WP_Tight80X'] :   
+
+          self.fileMuPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonPR_Run2016_HWW12fb.root')
+          self.fileElPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/ElePR_'+self.idEleKind+'_Run2016_HWW12fb.root')
+
+          self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonFR_Run2016_HWW12fb_jet10.root')
+          self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonFR_Run2016_HWW12fb_jet15.root')
+          self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonFR_Run2016_HWW12fb_jet20.root')
+          self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonFR_Run2016_HWW12fb_jet25.root')
+          self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonFR_Run2016_HWW12fb_jet30.root')
+          self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonFR_Run2016_HWW12fb_jet35.root')
+          self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/MuonFR_Run2016_HWW12fb_jet45.root')
+
+          self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/EleFR_'+self.idEleKind+'_Run2016_HWW12fb_jet25.root')
+          self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/EleFR_'+self.idEleKind+'_Run2016_HWW12fb_jet35.root')
+          self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW36fb/EleFR_'+self.idEleKind+'_Run2016_HWW12fb_jet45.root')
+
+        elif self.cmssw == 'ICHEP2016' : 
+
+
+          self.fileMuPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonPR_Run2016_HWW12fb.root')
+          self.fileElPR = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/ElePR_Run2016_HWW12fb.root')
+
+          self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet10.root')
+          self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet15.root')
+          self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet20.root')
+          self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet25.root')
+          self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet30.root')
+          self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet35.root')
+          self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet45.root')
+                                                                                                                        
+          self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet25.root')
+          self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet35.root')
+          self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet45.root')
+
 
         self.MuPR = self._getRootObj(self.fileMuPR, 'h_Muon_signal_pt_eta_bin')
         self.ElPR = self._getRootObj(self.fileElPR, 'h_Ele_signal_pt_eta_bin')
-
-        self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet10.root')
-        self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet15.root')
-        self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet20.root')
-        self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet25.root')
-        self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet30.root')
-        self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet35.root')
-        self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/MuonFR_Run2016_HWW12fb_jet45.root')
-                                                                                                                        
-        self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet25.root')
-        self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet35.root')
-        self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/HWW12.9fb_repro/EleFR_Run2016_HWW12fb_jet45.root')
 
         self.MuFR_jet10 = self._getRootObj(self.fileMuFR_jet10, 'FR_pT_eta_EWKcorr')
         self.MuFR_jet15 = self._getRootObj(self.fileMuFR_jet15, 'FR_pT_eta_EWKcorr')
