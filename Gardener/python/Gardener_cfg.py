@@ -3497,6 +3497,13 @@ Steps= {
                   'command'    : 'gardener.py fakeWeights ',
                 } ,
 
+  'fakeWCut' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py fakeWeights --cmssw RPLME_CMSSW --idEleKind cut_WP_Tight80X',
+                } ,
+
 
   'puadder'   : {
                   'isChain'    : False ,
