@@ -2175,7 +2175,7 @@ Steps= {
                 },
 
 
-  'LepElepTupCut':  {
+  'LepElepTCutup':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
@@ -2384,7 +2384,7 @@ Steps= {
                                  ] ,
               },
 
-  'LepElepTdoCut':  {
+  'LepElepTCutdo':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
@@ -2596,7 +2596,7 @@ Steps= {
               },
 
 
-  'LepMupTupCut':  {
+  'LepMupTCutup':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
@@ -2808,7 +2808,7 @@ Steps= {
                                  ] ,
               },
 
-  'LepMupTdoCut':  {
+  'LepMupTCutdo':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
