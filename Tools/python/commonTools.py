@@ -183,10 +183,15 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     #print xrootdPath, Dir , lsCmd , Sample
 
     ##### Now get the files for Sample
-    fileCmd = lsCmd+Dir+'/latino_'+Sample+'.root '+Dir+'/latino_'+Sample+'__part*.root'
+    fileCmd = lsCmd+Dir+'/latino_'+Sample+'.root'
     proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out,err = proc.communicate()
     Files   = string.split(out)
+    if len(Files) == 0 :
+      fileCmd = lsCmd+Dir+'/latino_'+Sample+'__part*.root'
+      proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+      out,err = proc.communicate()
+      Files   = string.split(out)
     if len(Files) == 0 :
       print 'ERROR: No files found for smaple ',Sample,' in directory ',Dir
       exit() 
