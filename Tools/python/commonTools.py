@@ -187,6 +187,9 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out,err = proc.communicate()
     Files   = string.split(out)
+    if len(Files) == 0 :
+      print 'ERROR: No files found for smaple ',Sample,' in directory ',Dir
+      exit() 
     FileTarget = []
     for iFile in Files:
       if absPath : FileTarget.append('###'+iFile)
