@@ -364,7 +364,7 @@ if __name__ == '__main__':
                 cleanup+='rm '+iFile+' ; '
             if allDone: 
               os.system(command)
-              #if not opt.doNotCleanup: os.system(cleanup)
+              if not opt.doNotCleanup: os.system(cleanup)
 
     elif opt.doThreads != 0:
 
