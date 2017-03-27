@@ -38,6 +38,7 @@ public:
  float jetpt1_cut();
  float jetpt2_cut();
  float dphilljet_cut();
+ float dphilljetjet_cut();
  float dphijet1met_cut();
  float dphijet2met_cut();
  float PfMetDivSumMet();
@@ -91,6 +92,7 @@ public:
  float dphijet1met();  
  float dphijet2met();  
  float dphijjmet();    
+ float dphijjmet_cut();    
  float dphilep1jet1(); 
  float dphilep1jet2(); 
  float dphilep2jet1(); 
@@ -512,6 +514,14 @@ float WW::dphilljetjet(){
  }
 }
 
+float WW::dphilljetjet_cut(){
+ if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+   return  fabs( (L1+L2).DeltaPhi(J1+J2) );
+ }
+ else {
+  return -9999.0;
+ }
+}
 
 float WW::dphilmet(){ 
  if (_isOk) {
@@ -962,6 +972,14 @@ float WW::dphijjmet(){
   } 
 }
 
+float WW::dphijjmet_cut(){
+  if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+    return fabs((J1+J2).DeltaPhi(MET));
+  }
+  else {
+    return -9999.0;
+  }
+}
 
 float WW::dphilep1jet1(){
  if (_isOk && _jetOk >= 1) {
