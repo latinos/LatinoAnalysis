@@ -122,8 +122,10 @@ class L2KinFiller(TreeCloner):
 
            'recoil',
            'jetpt1_cut',
+           'jetpt2_cut',
            'dphilljet_cut',
            'dphijet1met_cut',
+           'dphijet2met_cut',
            'PfMetDivSumMet',
            'upara',
            'uperp',
