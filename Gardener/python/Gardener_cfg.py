@@ -2174,15 +2174,6 @@ Steps= {
                                  ] ,
                 },
 
-  'FIX' :  {
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : [ 'TrigMakerMCkeepRun','IdIsoSC_Cut' ] ,
-                  'onlySample': [ 'WpWpJJ_EWK' ]
-           }, 
-
-
   'LepElepTCutup':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,

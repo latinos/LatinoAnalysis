@@ -944,7 +944,6 @@ class triggerMaker(TreeCloner):
 
         print '- Starting eventloop'
         step = 5000
-        #nentries = 5000
         for i in xrange(nentries):
             itree.GetEntry(i)
 
