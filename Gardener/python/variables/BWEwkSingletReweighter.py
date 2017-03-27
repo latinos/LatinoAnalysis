@@ -51,7 +51,7 @@ class BWEwkSingletReweighter(TreeCloner):
         group.add_option('-w' , '--globalshiftfileGG', dest='shiftfileGG',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for GG.", default="data/BWShifts_ggH.pkl") 
         group.add_option('-k' , '--globalshiftfileVBF', dest='shiftfileVBF',   help="pickle file containing the global shifts due to reweighting (to preserve integral) for VBF.", default="data/BWShifts_VBF.pkl") 
         group.add_option('-d' , '--decayWeightsFile', dest='decayWeightsFile',   help="pickle file containing the JHU derived decay weights for WW", default="data/decayWeightsWW.pkl") 
-        group.add_option('-p' , '--fileNameFormat', dest='fileNameFormat',   help="file name format to determine production process and mass", default="latino_(GluGlu|VBF)HToWWTo2L2Nu(_JHUGen698|)_M([0-9]+)*.root") 
+        group.add_option('-p' , '--fileNameFormat', dest='fileNameFormat',   help="file name format to determine production process and mass", default="latino_(GluGlu|VBF)HToWWTo2L2Nu(_JHUGen698|)_M([0-9]+).*\.root") 
         parser.add_option_group(group)
         return group
 
@@ -106,7 +106,7 @@ class BWEwkSingletReweighter(TreeCloner):
         ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"/interface/");
         ROOT.gSystem.AddIncludePath("-I"+cmssw_base+"/src/");
         ROOT.gSystem.Load("libZZMatrixElementMELA.so");
-        ROOT.gSystem.Load(cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_702b3.so");
+        ROOT.gSystem.Load(cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_703.so");
         try:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaReweighterWW.C+g')
         except RuntimeError:
