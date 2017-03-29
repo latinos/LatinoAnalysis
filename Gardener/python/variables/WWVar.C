@@ -497,8 +497,8 @@ float WW::dphijet1met_cut(){
 }
 
 float WW::dphijet2met_cut(){
- if (_isOk && _jetOk >= 1 && J1.Pt()>15.0 ) {
-  return fabs(J1.DeltaPhi(MET));
+ if (_isOk && _jetOk >= 1 && J2.Pt()>15.0 ) {
+  return fabs(J2.DeltaPhi(MET));
  }
  else {
   return -1.0;
@@ -519,7 +519,7 @@ float WW::dphilljetjet_cut(){
    return  fabs( (L1+L2).DeltaPhi(J1+J2) );
  }
  else {
-  return -9999.0;
+  return -1.0;
  }
 }
 
@@ -977,7 +977,7 @@ float WW::dphijjmet_cut(){
     return fabs((J1+J2).DeltaPhi(MET));
   }
   else {
-    return -9999.0;
+    return -1.0;
   }
 }
 
