@@ -1113,7 +1113,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaHiggs'] # ,'BWEwkSinglet','BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
 
@@ -1135,14 +1135,14 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_l2loose_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                 },
 
   'l2vlooseCut'  :       {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True,
-                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_l2vloose_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                 },
 
 
@@ -1176,7 +1176,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaGGH'], #,'BWEwkSinglet','TopGenPt'],
+                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaHiggs'], #,'BWEwkSinglet','TopGenPt'],
                   'onlySample' : [
                                   # VBS
                                   'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50','DYJetsToLL_M-50-LO-ext1',
@@ -1328,7 +1328,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                 },
 
   'bSFKinFix'    : {
@@ -1389,7 +1389,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
-                  'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'XonlySample' : [
 'DYJetsToLL_M-50','DYJetsToLL_M-10to50','WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_aQGC','WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WWTo2L2Nu_DoubleScattering','WGJJ','WLLJJToLNu_M-60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet','WLLJJToLNu_M-4To60_EWK_4F','WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet','WLLJJToLNu_M-4To50_QCD_2Jet','WLLJJToLNu_M-4To50_QCD_3Jet','tZq_ll','ZZJJTo4L_EWK', 'ZZTo4L', 'WZTo3LNu','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM','TTTo2L2Nu','ST_t-channel_antitop','ST_t-channel_top','ST_tW_antitop','ST_tW_top','ggZZ4e','ggZZ4m','ggZZ4t','ggZZ2e2m','ggZZ2e2t','ggZZ2m2t']
                     },
@@ -1538,7 +1538,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESup','bPogSF','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_JESup','bPogSF','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -1651,7 +1651,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESdo','bPogSF','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_JESdo','bPogSF','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -2179,7 +2179,7 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
 #                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepElepTup','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_LepElepTup','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2388,7 +2388,7 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   #'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepElepTdo','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_LepElepTdo','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2600,7 +2600,7 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   #'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepMupTup','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_LepMupTup','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -2812,7 +2812,7 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   #'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepMupTdo','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_LepMupTdo','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -3024,7 +3024,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METup','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_METup','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -3234,7 +3234,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METdo','l2kin','l3kin','l4kin','do_dymvaGGH'],
+                  'subTargets' : ['do_METdo','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                   'onlySample' : [
                                   # DY 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
@@ -4158,18 +4158,11 @@ Steps= {
                    'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
                  } ,
 
-   'dymvaGGH' :   {
+   'dymvaHiggs' :   {
                    'isChain'    : True ,
                    'do4MC'      : True ,
                    'do4Data'    : True ,
-                   'subTargets' : ['l2kin','do_dymvaGGH'],
-                  },
-
-   'dymva2j' :   {
-                   'isChain'    : True ,
-                   'do4MC'      : True ,
-                   'do4Data'    : True ,
-                   'subTargets' : ['l2kin','do_dymva2j'],
+                   'subTargets' : ['l2kin','do_dymvaHiggs'],
                   },
 
    'wwvarfiller' : {
@@ -4179,22 +4172,13 @@ Steps= {
                    'command'    : 'gardener.py wwvarfiller',
                    },
 
-   'do_dymva2j'  : {
+   'do_dymvaHiggs'  : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : True ,
-                   'command'    : 'gardener.py dymvaVar2jFiller',
+                   'command'    : 'gardener.py dymvaHiggsFiller',
                 },
-
-
-   'do_dymvaGGH'  : {
-                   'isChain'    : False ,
-                   'do4MC'      : True  ,
-                   'do4Data'    : True ,
-                   'command'    : 'gardener.py dymvaGGHVarFiller',
-                },
-  
-  
+ 
    'Mucca'       :  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
