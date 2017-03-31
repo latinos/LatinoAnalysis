@@ -4165,12 +4165,26 @@ Steps= {
                    'subTargets' : ['l2kin','do_dymvaGGH'],
                   },
 
+   'dymva2j' :   {
+                   'isChain'    : True ,
+                   'do4MC'      : True ,
+                   'do4Data'    : True ,
+                   'subTargets' : ['l2kin','do_dymva2j'],
+                  },
+
    'wwvarfiller' : {
                    'isChain'    : False ,
                    'do4MC'      : True ,
                    'do4Data'    : True ,
                    'command'    : 'gardener.py wwvarfiller',
                    },
+
+   'do_dymva2j'  : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py dymvaVar2jFiller',
+                },
 
 
    'do_dymvaGGH'  : {
