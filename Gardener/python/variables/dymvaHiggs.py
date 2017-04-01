@@ -184,7 +184,7 @@ class DymvaHiggsFiller(TreeCloner):
         dymvavbf      = numpy.ones(1, dtype=numpy.float32)
 
         self.otree.Branch('dymvaggh',  dymvaggh,  'dymvaggh/F')
-        self.otree.Branch('dymvavbf',  dymvaggh,  'dymvaggh/F')
+        self.otree.Branch('dymvavbf',  dymvavbf,  'dymvavbf/F')
 
         self.createDYMVA()
 
@@ -219,7 +219,7 @@ class DymvaHiggsFiller(TreeCloner):
  
             if pt1>0 and pt2>0 : 
               
-              if jetpt1< 30.0 :
+              if jetpt1< 30.0 and jetpt2< 30.0 :
 
                     # nvtx/F:mth/F:ptll/F:projtkmet/F:projpfmet/F:jetpt1_cut/F:uperp/F:upara/F:mtw1/F:PfMetDivSumMet/F:metPuppi/F:dphillmet/F:recoil/F:dphilljet_cut/F:dphilmet1/F:mpmet/
                     self.var0j1[0] = itree.nvtx
@@ -237,7 +237,7 @@ class DymvaHiggsFiller(TreeCloner):
  
                     dymvaggh[0] = self.getDYMVAV0j.EvaluateMVA("BDT")
 
-              elif jetpt2< 30.0 :
+              if jetpt1>= 30.0 and jetpt2< 30.0 :
 
                     # ptll/F:mth/F:mpmet/F:projtkmet/F:projpfmet/F:upara/F:jetpt1_cut/F:PfMetDivSumMet/F:dphilljet_cut/F:nvtx/F:metPuppi/F:dphijet1met_cut/F
                     self.var1j1[0]  = itree.mpmet
@@ -253,7 +253,7 @@ class DymvaHiggsFiller(TreeCloner):
 
                     dymvaggh[0] = self.getDYMVAV1j.EvaluateMVA("BDT")
 
-              elif jetpt1>= 30.0 and jetpt2>= 30.0 :
+              if jetpt1>= 30.0 and jetpt2>= 30.0 :
 
                     # projtkmet/F:projpfmet/F:PfMetDivSumMet/F:nvtx/F:metPuppi/F:dphijet1met_cut/F:mth/F:ptll/F:jetpt2_cut/F:upara/F:dphijet2met_cut/F:dphilljetjet_cut/F
                     self.var2jggH1[0]  = itree.projtkmet
