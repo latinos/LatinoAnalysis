@@ -268,4 +268,18 @@ def getBaseW(directory,Samples = [] ):
     print 'baseW: xs,N -> W', xs[0], nEvt , baseW , ' nTot= ', nTot
     return str(baseW)
 
+#### Print samples dic:
+ 
+def printSampleDic(sampleDic):
+
+    for iKey in sampleDic:
+      print '----> Sample: '+iKey
+      print 'globalWeight = '+sampleDic[iKey]['weight'] 
+      for iEntry in range(len(sampleDic[iKey]['name'])) :
+        print 'file = '+sampleDic[iKey]['name'][iEntry]
+        if 'weights' in sampleDic[iKey] :
+          print 'weight = '+sampleDic[iKey]['weights'][iEntry]  
+
+
+
  
