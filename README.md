@@ -10,7 +10,7 @@ We produce simple ROOT trees from the data and MC miniAOD datasets. To limit the
 
 # 2. Latino trees post-processing
 
-As calibrations, efficiencies, NLO weights, etc, are often coming a bit late, we have a second processing step based on the previous trees, that allows us to modify the 4-vectors of objects (like leptons and jets) and recompute event kinematics, plugin efficiencies, add any weights. This same post-processing is used to apply systematics like scale uncertainties (lepton, MET, jets) that require to modify the 4-vectors of objects. Once we have all the outputs of the second step we can also derive skimmed ROOT trees applying different selections, to reduce the size as deemed for a given analysis. The code used at this level is documented here,
+As calibrations, efficiencies, NLO weights, etc, are often coming a bit late, we have a second processing step based on the previous trees, that allows us to modify the 4-vectors of objects (like leptons and jets) and recompute event kinematics, plugin efficiencies, add weights. This same post-processing is used to apply systematics like scale uncertainties (leptons, MET, jets) that require to modify the 4-vectors of objects. Once we have all the outputs of the second step we derive skimmed ROOT trees applying different selections, to reduce the size as deemed for a given analysis. The code used at this level is documented here,
 
     https://github.com/latinos/LatinoAnalysis/tree/master/Gardener
 
