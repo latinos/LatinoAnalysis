@@ -1113,7 +1113,7 @@ samples4Syst = [
 
                  # VV (including WW) 
                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
-                 'WZTo3LNu','WZ','WZTo2L2Q',
+                 'WZTo3LNu','WZ','WZTo2L2Q','WZTo3LNu_mllmin01',
                  'ZZ','ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu', 'Wg_MADGRAPHMLM', 'Zg' ,
 
@@ -1286,7 +1286,7 @@ samples4Syst = [
                  'monoH_ZpBaryonic_MZp-995_MChi-500',
 
 
-                ] ,
+                ] 
 
 
 Steps= {
@@ -1318,7 +1318,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaHiggs','BWEwkSinglet'] #,'BWEwkSinglet_JHUGen698','TopGenPt'],
+                  'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaHiggs','BWEwkSinglet','wwEWK','wzEWK','zzEWK'] #,'BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
 
@@ -1381,7 +1381,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaHiggs','BWEwkSinglet'], #,'TopGenPt'],
+                  'subTargets' : ['do_l2vloose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaHiggs','BWEwkSinglet','wwEWK','wzEWK','zzEWK'], #,'TopGenPt'],
                   'onlySample' : [
                                   # VBS
                                   'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-10to50','DYJetsToLL_M-50-LO-ext1',
@@ -1498,7 +1498,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables'],
+                  'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','wwEWK','wzEWK','zzEWK'],
                   'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 
@@ -1961,6 +1961,31 @@ Steps= {
                   'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' --cmssw RPLME_CMSSW'
                 },
 
+  'wwEWK'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'onlySample' : ['WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown'] ,
+                  'command'    : 'gardener.py wwEWKcorrections' ,
+                } ,
+
+  'wzEWK'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'onlySample' : ['WZ', 'WZTo1L1Nu2Q', 'WZTo1L3Nu', 'WZTo2L2Q', 'WZTo3LNu', 'WZTo3LNu_mllmin01', 'WZTo3LNu_mllmin01_ext1', ],
+                  'command'    : 'gardener.py wzEWKcorrections' ,
+                } ,
+
+  'zzEWK'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'onlySample' : ['ZZ', 'ZZTo2L2Nu', 'ZZTo2L2Q', 'ZZTo4L',],
+                  'command'    : 'gardener.py zzEWKcorrections' ,
+                } ,
+
+
   'genVariables'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1996,7 +2021,8 @@ Steps= {
                                   # WW ewk
                                   'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop','WpWmJJ_EWK_noTop',
                                   # WW
-                                  'WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown' 
+                                  'WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown' ,
+                                  'WWTo2L2Nu_DoubleScattering',
 
                                   
                  # Higgs 

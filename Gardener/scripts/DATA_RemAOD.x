@@ -6,18 +6,10 @@ for Run in B C D E F G H; do
   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s l2looseCut -S Target -b
   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s hadd -i l2looseCut -S Target -b
   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s EpTCorr,TrigMakerData,l2tight,vbsSel -C -i l2looseCut__hadd -S Target -b
- 
-  # Fix 
-  ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s dymvaHiggs -i l2looseCut__hadd__EpTCorr -S Target -b
-  ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s dymvaHiggs -i l2looseCut__hadd__EpTCorr__TrigMakerData -S Target -b
-  ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s dymvaHiggs -i l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight -S Target -b
   
   # FakeWCut
   
   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s fakeWCut -i l2looseCut__hadd__EpTCorr__TrigMakerData -S Target -b
-
-  # Fix
-  ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s dymvaHiggs -i l2looseCut__hadd__EpTCorr__TrigMakerData__fakeWCut -S Target -b
   
   # L2 vloose Cut
   
