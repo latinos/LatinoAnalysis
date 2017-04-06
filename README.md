@@ -31,6 +31,8 @@ The first step is reading the post-processed latino trees and producing histogra
                 --batchSplit=Cuts,Samples \
                 --doBatch=True \
                 --batchQueue=8nh
+                
+    mkBatch.py --status
 
 Once the previous jobs have finished we hadd the outputs,
 
