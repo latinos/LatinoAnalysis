@@ -29,7 +29,10 @@ The first step is reading the post-processed latino trees and producing histogra
     mkShapes.py --pycfg=configuration.py \
                 --inputDir=/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight \
                 --batchSplit=Cuts,Samples \
-                --doBatch=True
+                --doBatch=True \
+                --batchQueue=8nh
+                
+    mkBatch.py --status
 
 Once the previous jobs have finished we hadd the outputs,
 
