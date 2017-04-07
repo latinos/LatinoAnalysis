@@ -1285,6 +1285,17 @@ samples4Syst = [
                  'monoH_ZpBaryonic_MZp-50_MChi-50',
                  'monoH_ZpBaryonic_MZp-995_MChi-500',
 
+                 'monoH_2HDM_MZp-2500_MA0-700',
+                 'monoH_2HDM_MZp-2500_MA0-600',
+                 'monoH_2HDM_MZp-1200_MA0-300',
+                 'monoH_2HDM_MZp-2000_MA0-400',
+                 'monoH_2HDM_MZp-1200_MA0-500',
+                 'monoH_2HDM_MZp-1700_MA0-400',
+                 'monoH_2HDM_MZp-800_MA0-600',
+                 'monoH_2HDM_MZp-2500_MA0-800',
+                 'monoH_2HDM_MZp-800_MA0-500',
+                 'monoH_2HDM_MZp-1700_MA0-500',
+                 'monoH_2HDM_MZp-2500_MA0-500',
 
                 ] 
 
