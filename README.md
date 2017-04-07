@@ -45,6 +45,17 @@ And we make some data/MC comparison plots,
 
     mkPlot.py --inputFile=rootFile/plots_WW.root \
               --showIntegralLegend=1
+              
+Move or copy the plots to the web,
+
+    mkdir $HOME/www/latino; pushd $HOME/www/latino
+    wget https://raw.githubusercontent.com/latinos/PlotsConfigurations/master/index.php
+    popd
+    cp plotWW/*png $HOME/www/latino/.
+    
+Time to check and share the result.
+
+    https://piedra.web.cern.ch/piedra/latino/
 
 # 4. Tutorials
 
