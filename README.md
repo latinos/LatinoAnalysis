@@ -54,7 +54,7 @@ To move or copy the plots to the web,
     popd
     cp plotWW/*png $HOME/www/latino/.
     
-Time to check and share the result.
+Time to check and share the results.
 
     https://piedra.web.cern.ch/piedra/latino/
 
