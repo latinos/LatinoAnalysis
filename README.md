@@ -16,15 +16,15 @@ As calibrations, efficiencies, NLO weights, etc, are often coming a bit late, we
 
 # 3. Analysis
 
-We have some python code that is used to produce plots, study backgrounds and produce data cards for computing significance and limits,
+The following python code is used to produce plots, study backgrounds and produce data cards for computing significance and limits,
 
     https://github.com/latinos/PlotsConfigurations
 
-As a starting point one can try the following WW configuration,
+As a starting point one can try this WW configuration,
 
     https://github.com/latinos/PlotsConfigurations/tree/master/Configurations/ControlRegions/WW/Full2016
 
-The first step is reading the post-processed latino trees and producing histograms for several variables and phase spaces,
+The first step reads the post-processed latino trees and produces histograms for several variables and phase spaces,
 
     mkShapes.py --pycfg=configuration.py \
                 --inputDir=/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight \
@@ -41,14 +41,15 @@ Once the previous jobs have finished we hadd the outputs,
                 --batchSplit=Cuts,Samples \
                 --doHadd=True
 
-And we make some data/MC comparison plots,
+Now we are ready to make data/MC comparison plots,
 
     mkPlot.py --inputFile=rootFile/plots_WW.root \
               --showIntegralLegend=1
               
-Move or copy the plots to the web,
+To move or copy the plots to the web,
 
-    mkdir $HOME/www/latino; pushd $HOME/www/latino
+    mkdir $HOME/www/latino
+    pushd $HOME/www/latino
     wget https://raw.githubusercontent.com/latinos/PlotsConfigurations/master/index.php
     popd
     cp plotWW/*png $HOME/www/latino/.
