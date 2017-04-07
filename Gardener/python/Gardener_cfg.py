@@ -1973,7 +1973,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'onlySample' : ['WZ', 'WZTo1L1Nu2Q', 'WZTo1L3Nu', 'WZTo2L2Q', 'WZTo3LNu', 'WZTo3LNu_mllmin01', 'WZTo3LNu_mllmin01_ext1', ],
+                  'onlySample' : ['WZTo1L1Nu2Q', 'WZTo1L3Nu', 'WZTo2L2Q', 'WZTo3LNu', 'WZTo3LNu_mllmin01', 'WZTo3LNu_mllmin01_ext1', ],
                   'command'    : 'gardener.py wzEWKcorrections' ,
                 } ,
 
@@ -1981,7 +1981,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'onlySample' : ['ZZ', 'ZZTo2L2Nu', 'ZZTo2L2Q', 'ZZTo4L',],
+                  'onlySample' : ['ZZTo2L2Nu', 'ZZTo2L2Q', ],
                   'command'    : 'gardener.py zzEWKcorrections' ,
                 } ,
 

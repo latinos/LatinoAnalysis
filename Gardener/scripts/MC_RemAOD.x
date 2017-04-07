@@ -1,40 +1,20 @@
 
 # L2 loose
 
-#./mkGardener.py -p  Feb2017_summer16 -s MCl2looseCut -S Target -b 
-#./mkGardener.py -p  Feb2017_summer16 -s hadd -i MCl2looseCut -S Target -b
-#./mkGardener.py -p  Feb2017_summer16 -s bSFL2pTEffCut,l2tight -C -i MCl2looseCut__hadd -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s MCl2looseCut -S Target -b 
+./mkGardener.py -p  Feb2017_summer16 -s hadd -i MCl2looseCut -S Target -b
+./mkGardener.py -p  Feb2017_summer16 -s bSFL2pTEffCut,l2tight -C -i MCl2looseCut__hadd -S Target -b
 
-#for iSkim in vbsSel ; do
-#  echo ${iSkim}
-#  ./mkGardener.py -p  Feb2017_summer16 -s ${iSkim} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
-#done
+for iSkim in wwSel topSel vh3lSel sfSel vbsSel ; do
+  echo ${iSkim}
+  ./mkGardener.py -p  Feb2017_summer16 -s ${iSkim} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+done
 
-#for iSyst in JESup JESdo METup METdo LepElepTCutup LepElepTCutdo LepMupTCutup LepMupTCutdo ;  do
-#  ./mkGardener.py -p  Feb2017_summer16 -s ${iSyst} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
-#  for iSkim in vbsSel ; do
-#    ./mkGardener.py -p  Feb2017_summer16 -s ${iSkim} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__${iSyst} -S Target -b
-#  done
-#done
-
-
-# wwEWK
-#for iEWK in wwEWK wzEWK zzEWK ; do
-#  ./mkGardener.py -p  Feb2017_summer16 -s ${iEWK} -i MCl2looseCut -S Target -b
-#  ./mkGardener.py -p  Feb2017_summer16 -s ${iEWK} -i MCl2looseCut__hadd -S Target -b
-#  ./mkGardener.py -p  Feb2017_summer16 -s ${iEWK} -i MCl2looseCut__hadd__bSFL2pTEffCut -S Target -b
-#  ./mkGardener.py -p  Feb2017_summer16 -s ${iEWK} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
-#  for iSyst in JESup JESdo METup METdo LepElepTCutup LepElepTCutdo LepMupTCutup LepMupTCutdo ;  do
-#    ./mkGardener.py -p  Feb2017_summer16 -s ${iEWK} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__${iSyst} -S Target -b
-#  done
-#done
-
-./mkGardener.py -p  Feb2017_summer16 -s baseW -i MCl2looseCut -S Target -b -T DYJetsToLL_M-5to50_HT-70to100,DYJetsToLL_M-50_HT-70to100
-./mkGardener.py -p  Feb2017_summer16 -s baseW -i MCl2looseCut__hadd -S Target -b -T DYJetsToLL_M-5to50_HT-70to100,DYJetsToLL_M-50_HT-70to100
-./mkGardener.py -p  Feb2017_summer16 -s baseW -i MCl2looseCut__hadd__bSFL2pTEffCut -S Target -b -T DYJetsToLL_M-5to50_HT-70to100,DYJetsToLL_M-50_HT-70to100
-./mkGardener.py -p  Feb2017_summer16 -s baseW -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b -T DYJetsToLL_M-5to50_HT-70to100,DYJetsToLL_M-50_HT-70to100
 for iSyst in JESup JESdo METup METdo LepElepTCutup LepElepTCutdo LepMupTCutup LepMupTCutdo ;  do
-  ./mkGardener.py -p  Feb2017_summer16 -s baseW -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__${iSyst} -S Target -b -T DYJetsToLL_M-5to50_HT-70to100,DYJetsToLL_M-50_HT-70to100
+  ./mkGardener.py -p  Feb2017_summer16 -s ${iSyst} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight -S Target -b
+  for iSkim in wwSel topSel vh3lSel sfSel vbsSel ; do
+    ./mkGardener.py -p  Feb2017_summer16 -s ${iSkim} -i MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__${iSyst} -S Target -b
+  done
 done
 
 ## L2 vloose
