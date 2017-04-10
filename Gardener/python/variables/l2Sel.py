@@ -687,13 +687,17 @@ class L2SelFiller(TreeCloner):
     
            # isolation cone removal
            pt_to_be_removed_from_overlap = 0
+	   if self.itree.std_vector_lepton_isMediumMuon[ilepton] == 1:
+	     isoConSize = 0.4
+	   else:
+	     isoConSize = 0.4
     
            for jlepton in xrange(len(self.itree.std_vector_lepton_pt)) :
              if jlepton != ilepton :
                if self.itree.std_vector_lepton_pt[jlepton] > 0 :                 
                  if self.isAcloseToB(self.itree.std_vector_lepton_eta[jlepton], self.itree.std_vector_lepton_phi[jlepton],
                                      self.itree.std_vector_lepton_eta[ilepton], self.itree.std_vector_lepton_phi[ilepton],
-                                     0.3) :
+                                     isoConSize) :
                    pt_to_be_removed_from_overlap += self.itree.std_vector_lepton_pt[jlepton]
           
            if self.cmssw == '763' :
