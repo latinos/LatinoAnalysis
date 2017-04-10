@@ -183,12 +183,103 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     #print xrootdPath, Dir , lsCmd , Sample
 
     ##### Now get the files for Sample
-    fileCmd = lsCmd+Dir+'/latino_'+Sample+'.root '+Dir+'/latino_'+Sample+'__part*.root'
+    fileCmd = lsCmd+Dir+'/latino_'+Sample+'.root'
     proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out,err = proc.communicate()
     Files   = string.split(out)
+    if len(Files) == 0 :
+      fileCmd = lsCmd+Dir+'/latino_'+Sample+'__part*.root'
+      proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+      out,err = proc.communicate()
+      Files   = string.split(out)
+    if len(Files) == 0 :
+      print 'ERROR: No files found for smaple ',Sample,' in directory ',Dir
+      exit() 
     FileTarget = []
     for iFile in Files:
       if absPath : FileTarget.append('###'+iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
     return FileTarget
+
+#### samples Weights
+
+def addSampleWeight(sampleDic,key,Sample,Weight):
+
+
+    ### Add Weights in sampleDic if needed
+    if not 'weights' in sampleDic[key] :
+      sampleDic[key]['weights'] = []
+    if len(sampleDic[key]['weights']) == 0 :
+      for iEntry in range(len(sampleDic[key]['name'])) : sampleDic[key]['weights'].append('(1.)')
+
+    ### Now add the actual weight
+    for iEntry in range(len(sampleDic[key]['name'])):
+      name = sampleDic[key]['name'][iEntry].replace('latino_','').replace('.root','').split('__part')[0]
+      if name == Sample: 
+        sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
+      
+
+#### BaseW across sample _ext
+
+def getBaseW(directory,Samples = [] ):
+
+    ### Count #evt
+
+    nEvt = 0
+    nTot = 0
+    nPos = 0
+    nNeg = 0
+
+    for iSample in Samples : 
+      Files = getSampleFiles(directory,iSample,True)
+      for iFile in Files :
+        #print 'Opening: ', iFile.replace('###','')
+        fileIn = ROOT.TFile.Open(iFile.replace('###',''), "READ")
+        h_mcWeightPos = fileIn.Get('mcWeightPos')
+        h_mcWeightNeg = fileIn.Get('mcWeightNeg')
+        if h_mcWeightPos.__nonzero__() and h_mcWeightNeg.__nonzero__() :
+             nEvt += h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
+             nPos += h_mcWeightPos.GetBinContent(1)
+             nNeg += h_mcWeightNeg.GetBinContent(1)
+             #print 'Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1)
+        else:
+             nEvt += fileIn.Get('totalEvents').GetBinContent(1)
+             nPos += fileIn.Get('totalEvents').GetBinContent(1)
+        nTot += fileIn.Get('totalEvents').GetBinContent(1)
+        fileIn.Close()
+ 
+    ### Get XS
+    xsDB = xsectionDB()
+    CMSSW=os.environ["CMSSW_BASE"]
+    xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    xsDB.readPython(xsFile)
+    xsDB.readYR('YR4prel','13TeV')
+    xs = []
+    for iSample in Samples :
+      xs.append( xsDB.get(iSample) )
+    print xs
+    for iEntry in range(len(xs)):
+      if not xs[iEntry] == xs[0] : 
+        print 'ERROR: getBaseW: Trying to mix samples with different x-section'
+        exit()
+
+    ### And now get the baseW
+    baseW = float(xs[0])*1000./nEvt
+    print 'baseW: xs,N -> W', xs[0], nEvt , baseW , ' nTot= ', nTot
+    return str(baseW)
+
+#### Print samples dic:
+ 
+def printSampleDic(sampleDic):
+
+    for iKey in sampleDic:
+      print '----> Sample: '+iKey
+      print 'globalWeight = '+sampleDic[iKey]['weight'] 
+      for iEntry in range(len(sampleDic[iKey]['name'])) :
+        print 'file = '+sampleDic[iKey]['name'][iEntry]
+        if 'weights' in sampleDic[iKey] :
+          print 'weight = '+sampleDic[iKey]['weights'][iEntry]  
+
+
+
+ 

@@ -628,8 +628,9 @@ class IdIsoSFFiller(TreeCloner):
           self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind )
           self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind + '_Up')
           self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind + '_Down' )
+          self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind + '_Syst' )
 
-        
+        print self.namesOldBranchesToBeModifiedVector 
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
 
 

@@ -405,7 +405,8 @@ WZ and ZZ EWK corrections
        
     cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_ZZTo2L2Nu.root   /tmp/amassiro/
     cp /tmp/amassiro/eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_ZZTo2L2Q__part0.root   /tmp/amassiro/
-    
+    cp /eos/cms//store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__wwSel/latino_ZZTo2L2Nu.root   /tmp/amassiro/
+    cp /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_ZZTo2L2Nu.root   /tmp/amassiro/
     
     gardener.py zzEWKcorrections \
        /tmp/amassiro/latino_ZZTo2L2Nu.root \

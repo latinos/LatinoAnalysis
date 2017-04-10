@@ -36,8 +36,11 @@ public:
  //! functions
  float recoil();
  float jetpt1_cut();
+ float jetpt2_cut();
  float dphilljet_cut();
+ float dphilljetjet_cut();
  float dphijet1met_cut();
+ float dphijet2met_cut();
  float PfMetDivSumMet();
  float upara();
  float uperp();
@@ -89,6 +92,7 @@ public:
  float dphijet1met();  
  float dphijet2met();  
  float dphijjmet();    
+ float dphijjmet_cut();    
  float dphilep1jet1(); 
  float dphilep1jet2(); 
  float dphilep2jet1(); 
@@ -465,6 +469,15 @@ float WW::jetpt1_cut(){
  }
 }
 
+float WW::jetpt2_cut(){
+ if (_isOk && _jetOk >= 2 && J2.Pt()>15.0) {
+  return J2.Pt();
+ }
+ else {
+  return -1.0;
+ }
+}
+
 float WW::dphilljet_cut(){ 
  if (_isOk && _jetOk >= 1 && J1.Pt()>15.0 ) {
   return fabs( (L1+L2).DeltaPhi(J1) );
@@ -483,6 +496,15 @@ float WW::dphijet1met_cut(){
  }
 }
 
+float WW::dphijet2met_cut(){
+ if (_isOk && _jetOk >= 1 && J2.Pt()>15.0 ) {
+  return fabs(J2.DeltaPhi(MET));
+ }
+ else {
+  return -1.0;
+ }
+}
+
 float WW::dphilljetjet(){ 
  if (_isOk && _jetOk >= 2) {
    return  fabs( (L1+L2).DeltaPhi(J1+J2) );
@@ -492,6 +514,14 @@ float WW::dphilljetjet(){
  }
 }
 
+float WW::dphilljetjet_cut(){
+ if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+   return  fabs( (L1+L2).DeltaPhi(J1+J2) );
+ }
+ else {
+  return -1.0;
+ }
+}
 
 float WW::dphilmet(){ 
  if (_isOk) {
@@ -942,6 +972,14 @@ float WW::dphijjmet(){
   } 
 }
 
+float WW::dphijjmet_cut(){
+  if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+    return fabs((J1+J2).DeltaPhi(MET));
+  }
+  else {
+    return -1.0;
+  }
+}
 
 float WW::dphilep1jet1(){
  if (_isOk && _jetOk >= 1) {

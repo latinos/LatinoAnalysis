@@ -303,7 +303,7 @@ def remoteFileSize(inputFile):
     elif "knu" in os.uname()[1]:
         return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
-        return subprocess.check_output("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select fileinfo " + inputFile + ' | grep "Size:" | cut -d \' \' -f 4', shell=True)
+        return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
 
 def batchTest():
     jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])

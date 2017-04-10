@@ -909,11 +909,15 @@ class triggerMaker(TreeCloner):
            'effTrigW_DbleEle',
            'effTrigW_DbleMu',
            'effTrigW_EleMu',
-           ]
+          ]
+          self.namesOldBranchesToBeModifiedVector = [
+           'std_vector_TrgEmulator'
+          ]
+
         if not self.keepRun : self.namesBranches.append('iRunPeriod')
 
         # clone the tree
-        self.clone(output, self.namesBranches)
+        self.clone(output, self.namesBranches + self.namesOldBranchesToBeModifiedVector)
 
         self.branches = {}
         for bname in self.namesBranches:
@@ -927,10 +931,6 @@ class triggerMaker(TreeCloner):
             self.otree.Branch(bname,bvariable,bname+'/F')
 
         if not self.isData :
-          self.namesOldBranchesToBeModifiedVector = [
-           'std_vector_TrgEmulator'
-          ]
-
           bvector_TrgEmulator =  ROOT.std.vector(bool) ()
           self.otree.Branch('std_vector_TrgEmulator',bvector_TrgEmulator)
 
@@ -944,7 +944,6 @@ class triggerMaker(TreeCloner):
 
         print '- Starting eventloop'
         step = 5000
-        #nentries = 5000
         for i in xrange(nentries):
             itree.GetEntry(i)
 
