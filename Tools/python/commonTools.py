@@ -3,6 +3,7 @@ import sys, re, os, os.path, string
 import subprocess
 from cookielib import CookieJar
 from urllib2 import build_opener, HTTPCookieProcessor
+import socket
 
 from LatinoAnalysis.Tools.HiggsXSection  import *
 
