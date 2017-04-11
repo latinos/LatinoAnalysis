@@ -223,7 +223,7 @@ for iProd in prodList :
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
-  #print "Listing input files: ", FileInList
+  print "Listing input files: ", FileInList
 
   isFirstinChain = True
   replaceStep=''
@@ -255,7 +255,7 @@ for iProd in prodList :
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileExistList=string.split(out)
-      #print "FileExistList: ", FileExistList
+      print "FileExistList: ", FileExistList
       #print samples
       #print samples.keys()
       for iSample in samples : 
@@ -335,7 +335,7 @@ for iProd in prodList :
                       targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iniStep+'/'+iFile
 
       #print "targetList: ", targetList  
-"""
+
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
       #if  iStep in ['mcwghtcount'] and not Productions[iProd]['isData']: 
@@ -797,4 +797,3 @@ for iProd in prodList :
     print "Gone batching for Chain ..."
     if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
 
-"""

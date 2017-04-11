@@ -7,16 +7,16 @@ for Run in B C D E F G H; do
 # ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s hadd -i l2looseCut -S Target -b
 # ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s EpTCorr,TrigMakerData,l2tight -C -i l2looseCut__hadd -S Target -b
  
-  for iSkim in wwSel topSel vh3lSel sfSel vbsSel ; do
-    ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s ${iSkim} -i l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight -S Target -b
-  done
+# for iSkim in wwSel topSel vh3lSel sfSel vbsSel ; do
+#   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s ${iSkim} -i l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight -S Target -b
+# done
  
   # FakeWCut
   
-# ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s fakeWCut -i l2looseCut__hadd__EpTCorr__TrigMakerData -S Target -b
-  for iSkim in wwSel topSel vh3lFakeSel sfSel vbsSel ; do
-    ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s ${iSkim} -i l2looseCut__hadd__EpTCorr__TrigMakerData__fakeWCut -S Target -b
-  done
+  ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s fakeWCut -i l2looseCut__hadd__EpTCorr__TrigMakerData -S Target -b
+# for iSkim in wwSel topSel vh3lFakeSel sfSel vbsSel ; do
+#   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s ${iSkim} -i l2looseCut__hadd__EpTCorr__TrigMakerData__fakeWCut -S Target -b
+# done
  
   # L2 vloose Cut
   
