@@ -298,6 +298,8 @@ class L2SelFiller(TreeCloner):
       
 
 
+    ###########################
+    # tight lepton definition
 
     def isTightLepton(self, ilepton) :
 
@@ -330,10 +332,22 @@ class L2SelFiller(TreeCloner):
                         and abs(self.itree.std_vector_lepton_dz[ilepton]) < ( 0.1  + 0.1 *(abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479) ) 
                        ):
                             isThisATightLepton = 1
+                            
+                            #print " ilepton = ", ilepton
+                            #print "          1)  ", self.itree.std_vector_lepton_eleIdTight[ilepton] 
+                            #print "          2)  ", self.itree.std_vector_lepton_eleIdHLT[ilepton] 
+                            #print "          3)  ", self.itree.std_vector_electron_tripleChargeAgreement[ilepton] 
+                            #print "          4)  ", self.itree.std_vector_electron_expectedMissingInnerHits[ilepton] < 1  
+                            #print "          5)  ", abs(self.itree.std_vector_lepton_d0[ilepton]) < ( 0.05 + 0.05*(abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479) )
+                            #print "          6)  ", abs(self.itree.std_vector_lepton_dz[ilepton]) < ( 0.1  + 0.1 *(abs(self.itree.std_vector_lepton_eta[ilepton]) > 1.479) )
+                            
                  else :
                     if self.itree.std_vector_lepton_eleIdMvaWp80[ilepton] :
                         isThisATightLepton = 1
-                    
+              else :
+                if (abs(self.itree.std_vector_lepton_flavour[ilepton]) == 11) : 
+                  print "but what? It should never happen, electrons with eta>2.5 ", self.itree.std_vector_lepton_flavour[ilepton]
+                
            elif self.cmssw == 'ICHEP2016' :               
              #
              # see https://indico.cern.ch/event/491507/contributions/2192817/attachments/1285452/1911768/EGM_HLTsafeCuts_31May16.pdf
@@ -1147,7 +1161,13 @@ class L2SelFiller(TreeCloner):
                 if WgsTag == 1 :
                   isGoodLepton = True
 
+              # Wg* lepton definition (end)
               ##########################################
+
+              ##########################################
+              # Very loose lepton definition (VBS?)
+              #    - remove from isolation cone the lepton pt component
+              #
 
               if self.kind == 4 :
                
@@ -1155,9 +1175,16 @@ class L2SelFiller(TreeCloner):
                 
                 if VeryLooseTag == 1 :
                   isGoodLepton = True
- 
+
+              # Very loose lepton definition (end)
+              ##########################################
+
+
+              #
               # now check if we found 2 leptons        
-                             
+              #   if not found, skip to the end and do not save the event
+              #
+               
               if isGoodLepton :
                 if goodLep1 < 0: 
                   goodLep1 = iLep

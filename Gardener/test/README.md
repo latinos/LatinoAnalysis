@@ -36,6 +36,12 @@ How to filter events and update some collections:
                 -r   /media/data/amassiro/LatinoTrees/25ns/05Aug2015/  \
                      /media/data/amassiro/LatinoTrees/WW/
               
+
+    gardener.py l2selfiller --kind 2 --cmssw Full2016 --selection 1 --idEleKind cut_WP_Tight80X   \
+              /eos/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/MC/LatinoTrees/latino_GluGluWWTo2L2Nu_MCFM__part0.root  \
+              /tmp/amassiro/mytest.root
+              
+              
               
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/25ns/21Oct2015/mcwghtcount__MC__l2sel/latino_GluGluHToWWTo2L2Nu_M125.root /tmp/amassiro/          
     scp amassiro@cmsneu.cern.ch:/media/data/amassiro/LatinoTrees/25ns/21Oct2015/mcwghtcount__MC__l2sel/latino_WZTo3LNu.root /tmp/amassiro/          
