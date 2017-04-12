@@ -4,6 +4,7 @@ import json
 import sys
 import ROOT
 import optparse
+import copy
 #import hwwinfo
 #import hwwsamples
 #import hwwtools
@@ -74,14 +75,15 @@ class Worker(threading.Thread):
         sub_file.write(infile)
         sub_file.close()
 
-        print 'task initiated --> '+str(cuts.keys())+' , '+str(samples.keys())
+        theKey=samples.keys()[0]
+        print 'task initiated --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
 
         logfile = open("log/log" + str(number) + "_" + str(cuts.keys()[0]) + "_" + str(samples.keys()[0]) + ".txt","w")
         command = "python "+sub_file.name
         process = subprocess.Popen(command, shell=True, stdout=logfile, stderr=logfile)
         process.wait()
         self.status = process.returncode
-        print 'task finished with exit code '+str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())
+        print 'task finished with exit code '+str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
         self.queue.task_done()
       except Queue.Empty, e:
         break
@@ -183,7 +185,7 @@ if __name__ == '__main__':
  
             # ... Cuts
             stepList=[]
-            if 'Cuts' in opt.batchSplit :
+            if 'Cuts' in opt.batchSplit or "AsMuchAsPossible" in opt.batchSplit:
               batchSplit='Steps'   
               for iCut in cuts: stepList.append(iCut)
             else:
@@ -195,6 +197,24 @@ if __name__ == '__main__':
               if 'Cuts' in opt.batchSplit : batchSplit+=','
               batchSplit+='Targets'
               for iSample in samples : targetList.append(iSample)
+            elif 'AsMuchAsPossible' in opt.batchSplit :
+              batchSplit+=',Targets'
+              for sam_k,sam_v in samples.iteritems():
+                filenumber=0
+                #handle the case in which the configuration specifies how many files per job to run
+                if "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
+                  filesPerJob = sam_v["FilesPerJob"]
+                  fileListPerJob=[]
+                  iCurJob=0
+                  for filenumber, filename in enumerate(sam_v['name']) :
+                    if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
+                      targetList.append(sam_k+str(iCurJob))
+                      iCurJob+=1
+                      fileListPerJob=[]
+                    fileListPerJob.append(filename)
+                      
+                else:
+                  targetList.append(sam_k)
             else:  
               targetList=['ALL']
 
@@ -222,8 +242,69 @@ if __name__ == '__main__':
 
             outputDir=os.getcwd()+'/'+opt.outputDir 
 
+            if "AsMuchAsPossible" in opt.batchSplit:
+              iStep='ALL'
+              iTarget='ALL'
+              for cut_k,cut_v in cuts.iteritems():
+                cuts_new = {}
+                cuts_new[cut_k] = cut_v
+                for sam_k,sam_v in samples.iteritems():
+                  thisSampleWeights=[]
+                  if 'weights' in sam_v.keys():
+                    thisSampleWeights=copy.deepcopy(sam_v['weights'])
 
-            if 'Cuts' in opt.batchSplit and 'Samples' in opt.batchSplit:
+                  if "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
+                    filesPerJob = sam_v["FilesPerJob"]
+                    fileListPerJob=[]
+                    weightListPerJob=[]
+                    iCurJob = 0  
+                    for filenumber, filename in enumerate(sam_v['name']) :
+                      if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
+                        samples_new = {}
+                        samples_new[sam_k] = copy.deepcopy(sam_v)
+                        samples_new[sam_k]['name'] = fileListPerJob 
+                        if len(thisSampleWeights) != 0:
+                          samples_new[sam_k]['weights'] = weightListPerJob
+                        iStep=cut_k
+                        iTarget = sam_k+str(iCurJob)
+                        jName = iStep + '_' + iTarget
+                        instructions_for_configuration_file  = ""
+                        instructions_for_configuration_file += "factory.makeNominals(   \n"
+                        instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
+                        instructions_for_configuration_file += "     '" + outputDir + "',     \n"
+                        instructions_for_configuration_file += "      " + str(variables) + ", \n"
+                        instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
+                        instructions_for_configuration_file += "      " + str(samples_new) + ",   \n"
+                        instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
+                        instructions_for_configuration_file += "     '" + supercut + "',      \n"
+                        instructions_for_configuration_file += "     '" + jName + "')    \n"
+                        jobs.AddPy (iStep, iTarget, instructions_for_configuration_file) 
+                        fileListPerJob=[]
+                        weightListPerJob=[]
+                        iCurJob = iCurJob+1
+                      fileListPerJob.append(filename)
+                      if len(thisSampleWeights) != 0:
+                        weightListPerJob.append(thisSampleWeights[filenumber])
+                  else:
+                    samples_new = {}
+                    samples_new[sam_k] = sam_v
+                    iStep=cut_k
+                    iTarget = sam_k
+                    jName = iStep + '_' + iTarget
+                    instructions_for_configuration_file  = ""
+                    instructions_for_configuration_file += "factory.makeNominals(   \n"
+                    instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
+                    instructions_for_configuration_file += "     '" + outputDir + "',     \n"
+                    instructions_for_configuration_file += "      " + str(variables) + ", \n"
+                    instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
+                    instructions_for_configuration_file += "      " + str(samples_new) + ",   \n"
+                    instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
+                    instructions_for_configuration_file += "     '" + supercut + "',      \n"
+                    instructions_for_configuration_file += "     '" + jName + "')    \n"
+                    jobs.AddPy (iStep, iTarget, instructions_for_configuration_file) 
+
+
+            elif 'Cuts' in opt.batchSplit and 'Samples' in opt.batchSplit:
               iStep='ALL'
               iTarget='ALL'
               for cut_k,cut_v in cuts.iteritems():
@@ -330,7 +411,7 @@ if __name__ == '__main__':
 
             # ... Cuts
             stepList=[]
-            if 'Cuts' in opt.batchSplit :
+            if 'Cuts' in opt.batchSplit or "AsMuchAsPossible" in opt.batchSplit:
               batchSplit='Steps'
               for iCut in cuts: stepList.append(iCut)
             else:
@@ -342,13 +423,32 @@ if __name__ == '__main__':
               if 'Cuts' in opt.batchSplit : batchSplit+=','
               batchSplit+='Targets'
               for iSample in samples : targetList.append(iSample)
+            elif 'AsMuchAsPossible' in opt.batchSplit :
+              batchSplit+=',Targets'
+              for sam_k,sam_v in samples.iteritems():
+                filenumber=0
+                #handle the case in which the configuration specifies how many files per job to run
+                if "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
+                  filesPerJob = sam_v["FilesPerJob"]
+                  fileListPerJob=[]
+                  iCurJob=0
+                  for filenumber, filename in enumerate(sam_v['name']) :
+                    if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
+                      targetList.append(sam_k+str(iCurJob))
+                      iCurJob+=1
+                      fileListPerJob=[]
+                    fileListPerJob.append(filename)
+
+                else:
+                  targetList.append(sam_k)
             else:
-              targetList=['ALL']
+              targetList=['ALL'] 
 
             # ...Check job status and create command
-            outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root' 
-            command = 'hadd -f '+outputFile
-            cleanup = ''
+            outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root'
+            fileList = [] 
+#            command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; hadd -f '+outputFile
+            cleanup = 'cd '+os.getcwd()+'/'+opt.outputDir+'; rm '
             allDone=True
             for iStep in stepList:
               for iTarget in targetList:
@@ -356,16 +456,37 @@ if __name__ == '__main__':
                 if os.path.isfile(pidFile) :
                   print '--> Job Running Still: '+iStep+'__'+iTarget
                   allDone=False
-                iFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'_'+iStep+'_'+iTarget+'.root' 
-                if not os.path.isfile(iFile) :
+                iFile='plots_'+opt.tag+'_'+iStep+'_'+iTarget+'.root' 
+                if not os.path.isfile(os.getcwd()+'/'+opt.outputDir+'/'+iFile) :
                   print '--> Missing root file: '+iFile 
                   allDone=False
-                command+=' '+iFile
-                cleanup+='rm '+iFile+' ; '
-            if allDone: 
-              os.system(command)
-              if not opt.doNotCleanup: os.system(cleanup)
+                fileList.append(iFile)
+#                command+=' '+iFile
+#                cleanup+='rm '+iFile+' ; '
+            if allDone:
+              number = len(fileList)
+              if number > 500:
+                print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
+              for istart in range(0,int(float(number)/500+1)):
+                  command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
+                  command += 'hadd -f temp'+str(istart)+'.root'
+                  for i in range(istart*500,(istart+1)*500):
+                    if i>=number: break
+                    command += " "+fileList[i]
+                    cleanup += " "+fileList[i]
+#                  print command
+                  os.system(command)
+              os.system("cd "+os.getcwd()+"/"+opt.outputDir+"; "+"hadd -f plots_"+opt.tag+".root temp*")
+#              print "cd "+os.getcwd()+"/"+opt.outputDir+"; "+"hadd plots_"+opt.tag+".root temp*"
+              cleanup += " temp*"
+              if not opt.doNotCleanup: os.system(cleanup) 
 
+
+
+#              os.system(command)
+#              if not opt.doNotCleanup: os.system(cleanup)
+#              os.system('cd ..')
+ 
     elif opt.doThreads != 0:
 
             print "~~~~~~~~~~~ Running mkShape in multi-threading mode..."
@@ -396,11 +517,33 @@ if __name__ == '__main__':
               cuts_new[cut_k] = cut_v
 
               for sam_k,sam_v in samples.iteritems():
-                samples_new = {}
-                samples_new[sam_k] = sam_v
-
-                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
-                number += 1
+                thisSampleWeights=[]
+                if 'weights' in sam_v.keys():
+                  thisSampleWeights=copy.deepcopy(sam_v['weights'])
+                if "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
+                  filesPerJob = sam_v["FilesPerJob"]
+                  fileListPerJob=[]
+                  weightListPerJob=[]
+                  iCurJob = 0
+                  for filenumber, filename in enumerate(sam_v['name']) :
+                    if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
+                      samples_new = {}
+                      samples_new[sam_k] = copy.deepcopy(sam_v)
+                      samples_new[sam_k]['name'] = fileListPerJob
+                      if len(thisSampleWeights) != 0:
+                        samples_new[sam_k]['weights'] = weightListPerJob   
+                      queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                      number += 1
+                      fileListPerJob=[]
+                      weightListPerJob=[]
+                    fileListPerJob.append(filename)
+                    if len(thisSampleWeights) != 0:
+                      weightListPerJob.append(thisSampleWeights[filenumber])
+                else:
+                  samples_new = {}
+                  samples_new[sam_k] = copy.deepcopy(sam_v)
+                  queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                  number += 1
             queue.join()
 
             command = ""
