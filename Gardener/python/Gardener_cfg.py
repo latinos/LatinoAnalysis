@@ -2948,6 +2948,13 @@ Steps= {
           },
 
 
+   'SkimSF'   :  {  'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : True  ,
+                    'command'    : 'gardener.py filter -f \' mll > 12 && std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && (abs(std_vector_lepton_flavour[1]) == 13 || (std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>13)) && metTtrk > 20 && (dymvaggh>0.6 || dymvavbf>0.6) \' ' ,
+                 },
+
+
   'metXYshift' : {  'isChain'    : True ,
                     'do4MC'      : True  ,
                     'do4Data'    : True  ,
