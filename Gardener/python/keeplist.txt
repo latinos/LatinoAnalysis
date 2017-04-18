@@ -1,3 +1,12 @@
+std_vector_lepton_idisoWcut_WP_Tight80X_Up
+std_vector_lepton_idisoWcut_WP_Tight80X_Down
+trig_EleMu 
+trig_DbleMu
+trig_SnglMu
+trig_DbleEle
+trig_SnglEle
+std_vector_lepton_idisoWcut_WP_Tight80X
+veto_EMTFBug
 std_vector_lepton_pt               
 std_vector_jet_pt                  
 std_vector_lepton_recoW            
@@ -49,15 +58,14 @@ fakeW2l2jMuUp
 fakeW2l2jMuDown                    
 fakeW2l2jstatMuUp                  
 fakeW2l2jstatMuDown                
-bPogSF                             
+bPogSF
+bPogSF_CMVAL                             
 bPogSF_CMVAL_bc_up                 
 bPogSF_CMVAL_bc_down               
 bPogSF_CMVAL_udsg_up               
 bPogSF_CMVAL_udsg_down             
 effTrigW                           
 effTrigW_Up                        
-effTrigW_Up                        
-effTrigW_Down                      
 effTrigW_Down                      
 GEN_weight_SM                      
 std_vector_lepton_idisoW           
@@ -74,3 +82,4 @@ Gen_ZGstar_MomId
 std_vector_trigger                 
 event                              
 metPuppi
+std_vector_trigger_special
