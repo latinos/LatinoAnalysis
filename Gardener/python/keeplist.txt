@@ -1,3 +1,4 @@
+std_vector_lepton_idisoWcut_WP_Tight80X
 std_vector_lepton_idisoWcut_WP_Tight80X_Up
 std_vector_lepton_idisoWcut_WP_Tight80X_Down
 trig_EleMu 
@@ -5,7 +6,6 @@ trig_DbleMu
 trig_SnglMu
 trig_DbleEle
 trig_SnglEle
-std_vector_lepton_idisoWcut_WP_Tight80X
 veto_EMTFBug
 std_vector_lepton_pt               
 std_vector_jet_pt                  
@@ -83,3 +83,6 @@ std_vector_trigger
 event                              
 metPuppi
 std_vector_trigger_special
+ht
+dymvaggh
+nvtx
