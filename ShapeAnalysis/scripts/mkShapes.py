@@ -207,11 +207,11 @@ if __name__ == '__main__':
                   fileListPerJob=[]
                   iCurJob=0
                   for filenumber, filename in enumerate(sam_v['name']) :
+                    fileListPerJob.append(filename)
                     if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
                       targetList.append(sam_k+str(iCurJob))
                       iCurJob+=1
                       fileListPerJob=[]
-                    fileListPerJob.append(filename)
                       
                 else:
                   targetList.append(sam_k)
@@ -259,6 +259,7 @@ if __name__ == '__main__':
                     weightListPerJob=[]
                     iCurJob = 0  
                     for filenumber, filename in enumerate(sam_v['name']) :
+                      fileListPerJob.append(filename)
                       if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
                         samples_new = {}
                         samples_new[sam_k] = copy.deepcopy(sam_v)
@@ -282,7 +283,6 @@ if __name__ == '__main__':
                         fileListPerJob=[]
                         weightListPerJob=[]
                         iCurJob = iCurJob+1
-                      fileListPerJob.append(filename)
                       if len(thisSampleWeights) != 0:
                         weightListPerJob.append(thisSampleWeights[filenumber])
                   else:
@@ -433,11 +433,11 @@ if __name__ == '__main__':
                   fileListPerJob=[]
                   iCurJob=0
                   for filenumber, filename in enumerate(sam_v['name']) :
+                    fileListPerJob.append(filename)
                     if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
                       targetList.append(sam_k+str(iCurJob))
                       iCurJob+=1
                       fileListPerJob=[]
-                    fileListPerJob.append(filename)
 
                 else:
                   targetList.append(sam_k)
@@ -526,6 +526,7 @@ if __name__ == '__main__':
                   weightListPerJob=[]
                   iCurJob = 0
                   for filenumber, filename in enumerate(sam_v['name']) :
+                    fileListPerJob.append(filename)
                     if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
                       samples_new = {}
                       samples_new[sam_k] = copy.deepcopy(sam_v)
@@ -536,7 +537,6 @@ if __name__ == '__main__':
                       number += 1
                       fileListPerJob=[]
                       weightListPerJob=[]
-                    fileListPerJob.append(filename)
                     if len(thisSampleWeights) != 0:
                       weightListPerJob.append(thisSampleWeights[filenumber])
                 else:
