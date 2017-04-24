@@ -14,9 +14,9 @@ for Run in B C D E F G H; do
   # FakeWCut
   
   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s fakeWCut -i l2looseCut__hadd__EpTCorr__TrigMakerData -S Target -b
-# for iSkim in wwSel topSel vh3lFakeSel sfSel vbsSel ; do
-#   ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s ${iSkim} -i l2looseCut__hadd__EpTCorr__TrigMakerData__fakeWCut -S Target -b
-# done
+  for iSkim in wwSel topSel vh3lFakeSel sfSel vbsSel ; do
+    ./mkGardener.py -p Feb2017_Run2016${Run}_RemAOD -s ${iSkim} -i l2looseCut__hadd__EpTCorr__TrigMakerData__fakeWCut -S Target -b
+  done
  
   # L2 vloose Cut
   

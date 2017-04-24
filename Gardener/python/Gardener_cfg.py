@@ -1105,7 +1105,7 @@ samples4Syst = [
                  'DYJetsToTT_MuEle_M-50' , 'DYJetsToTT_MuEle_M-50_ext1' ,   
 
                  # Top
-                 'TTTo2L2Nu','TT','TTTo2L2Nu_ext1',
+                 'TTTo2L2Nu','TT','TTTo2L2Nu_ext1','TT_TuneCUETP8M2T4',
                  'ST_s-channel' , 
                  'ST_t-channel_antitop','ST_t-channel_top',
                  'ST_tW_antitop','ST_tW_top',
