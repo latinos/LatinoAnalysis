@@ -1,7 +1,7 @@
 
-eosProdBase= '/eos/cms/'
-eosTargBaseIn = '/eos/user/x/xjanssen/HWW2015/'
-eosTargBaseOut= '/eos/user/x/xjanssen/HWW2015/'
+ProdBase= '/eos/cms/'
+TargBaseIn = '/eos/user/x/xjanssen/HWW2015/'
+TargBaseOut= '/eos/user/x/xjanssen/HWW2015/'
 
 
 # ---- production to run on
@@ -1074,6 +1074,15 @@ Productions= {
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
                        },
 
+  'Feb2017_summer16_KNU'   : { ## KNU test
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'dir'     : 'LatinoProduction/Test',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                        'puData'  : '/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
+                       },
 
 }
 

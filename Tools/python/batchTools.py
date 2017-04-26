@@ -263,18 +263,37 @@ def batchClean():
       except :
         print 'Some jobs still ongoing in: '+ iDir
 
-def lsListCommand(inputDir):
+def lsListCommand(inputDir, iniStep = 'Prod'):
     "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
     if 'iihe' in os.uname()[1] :
-        return "ls -1 /pnfs/iihe/cms" + inputDir
+      if '/pnfs/iihe/cms' in inputDir:
+        usedDir = inputDir.split('/pnfs/iihe/cms')[1]
+      else:
+	usedDir = inputDir
+      return "ls -1 /pnfs/iihe/cms" + usedDir
     elif 'ifca' in os.uname()[1] :
-        return "ls /gpfs/gaes/cms/" + inputDir
+      if '/gpfs/gaes/cms/' in inputDir:
+	usedDir = inputDir.split('/gpfs/gaes/cms/')[1]
+      else:
+	usedDir = inputDir
+      return "ls /gpfs/gaes/cms/" + usedDir
     elif "pi.infn.it" in socket.getfqdn():
-        return "ls /gpfs/ddn/srm/cms/" + inputDir
+      if '/gpfs/ddn/srm/cms/' in inputDir:
+	usedDir = inputDir.split('/gpfs/ddn/srm/cms/')[1]
+      else:
+	usedDir = inputDir
+      return "ls /gpfs/ddn/srm/cms/" + usedDir
     elif "knu" in os.uname()[1]:
-        return "ls /pnfs/knu.ac.kr/data/cms/" + inputDir
+      if '/pnfs/knu.ac.kr/data/cms/' in inputDir:
+	usedDir = inputDir.split('/pnfs/knu.ac.kr/data/cms/')[1]
+      else:
+	usedDir = inputDir
+      return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
     else :
+      if iniStep == 'Prod' :
         return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
+      else:
+        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls " + inputDir
     
 def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"

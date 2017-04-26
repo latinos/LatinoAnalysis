@@ -21,7 +21,7 @@ from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSF
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
 from LatinoAnalysis.Gardener.variables.l1Sel                      import L1SelFiller
-from LatinoAnalysis.Gardener.variables.LeptonSel                  import LeptonSel
+#from LatinoAnalysis.Gardener.variables.LeptonSel                  import LeptonSel
 
 # kinematic variables
 from LatinoAnalysis.Gardener.variables.l2Kin                      import L2KinFiller
@@ -185,7 +185,7 @@ if __name__ == '__main__':
 # apply selections and update variables
     modules['l2selfiller']     = L2SelFiller()
     modules['l1selfiller']     = L1SelFiller()
-    modules['lepSel']          = LeptonSel()
+#    modules['lepSel']          = LeptonSel()
 
 # update kinematic variables
     modules['l2kinfiller']     = L2KinFiller()
