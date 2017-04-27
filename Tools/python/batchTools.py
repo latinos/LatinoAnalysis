@@ -63,8 +63,6 @@ class batchJobs :
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
        elif 'knu' in os.uname()[1]:
          jFile.write('#$ -N '+jName+'\n')
-         jFile.write('#$ -q all.q\n')
-         jFile.write('#$ -cwd\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
