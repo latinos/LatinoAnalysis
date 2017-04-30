@@ -2,7 +2,7 @@
 
 ####################### Electrons ##################################
 
-ElectonWP = {}
+ElectronWP = {}
 
 # --------------------------- 2015  - 74x --------------------------
 
@@ -12,7 +12,7 @@ ElectonWP = {}
 
 # --------------------------- Full2016 -----------------------------
 
-ElectonWP['Full2016'] = {
+ElectronWP['Full2016'] = {
 
 ## ------------  
 #'LooseObjWP' : { 
@@ -79,6 +79,13 @@ MuonWP    = {}
 
 MuonWP['Full2016'] = {
 
+ 'Variables' : {
+
+        'muonIso' : 'max( itree.std_vector_lepton_photonIso[] + itree.std_vector_lepton_neutralHadronIso[] - 0.5 * itree.std_vector_lepton_sumPUPt[] , 0 )'
+
+
+               }, 
+
 ## ------------  
 #'LooseObjWP' : { 
 #                } ,
@@ -93,8 +100,8 @@ MuonWP['Full2016'] = {
                                    'abs(itree.std_vector_lepton_eta[]) < 2.4' , 
                                    'itree.std_vector_lepton_isTightMuon[] == 1' ,
                                    'abs(itree.std_vector_lepton_dz[]) < 0.1' ,
-                                   'itree.std_vector_lepton_chargedHadronIso[] + muonIso) / self.itree.std_vector_lepton_pt[] < 0.4',
-                                   'itree.std_vector_lepton_trackIso[]/self.itree.std_vector_lepton_pt[] < 0.4' ,
+                                   '(itree.std_vector_lepton_chargedHadronIso[] + muonIso) / itree.std_vector_lepton_pt[] < 0.4',
+                                   'itree.std_vector_lepton_trackIso[]/itree.std_vector_lepton_pt[] < 0.4' ,
                                  ] ,
                                  # dxy for pT < 20 GeV
                                  'itree.std_vector_lepton_pt[] <= 20.0' :
@@ -121,8 +128,8 @@ MuonWP['Full2016'] = {
                                    'abs(itree.std_vector_lepton_eta[]) < 2.4' ,
                                    'itree.std_vector_lepton_isTightMuon[] == 1' ,
                                    'abs(itree.std_vector_lepton_dz[]) < 0.1' ,
-                                   'itree.std_vector_lepton_chargedHadronIso[] + muonIso) / self.itree.std_vector_lepton_pt[] < 0.15',
-                                   'itree.std_vector_lepton_trackIso[]/self.itree.std_vector_lepton_pt[] < 0.4' ,
+                                   '(itree.std_vector_lepton_chargedHadronIso[] + muonIso) / itree.std_vector_lepton_pt[] < 0.15',
+                                   'itree.std_vector_lepton_trackIso[]/itree.std_vector_lepton_pt[] < 0.4' ,
                                  ] ,
                                  # dxy for pT < 20 GeV
                                  'itree.std_vector_lepton_pt[] <= 20.0' :
