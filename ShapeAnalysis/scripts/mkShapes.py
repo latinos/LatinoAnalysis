@@ -21,7 +21,7 @@ import threading, Queue
 from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory
 
 # Common Tools & batch
-from LatinoAnalysis.Tools.userConfig  import *
+#from LatinoAnalysis.Tools.userConfig  import *
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 
@@ -83,7 +83,17 @@ class Worker(threading.Thread):
         process = subprocess.Popen(command, shell=True, stdout=logfile, stderr=logfile)
         process.wait()
         self.status = process.returncode
-        print 'task finished with exit code '+str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
+        #print 'task finished with exit code '+str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
+        
+        if (self.status) == 0 :
+          print 'task finished with exit code ' +str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
+        else :
+          print 'task finished with exit code ' + '\x1b[0;30;41m' +  '   ' + str(self.status) +  '   ' +  '\x1b[0m' + '   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
+
+
+
+
+
         self.queue.task_done()
       except Queue.Empty, e:
         break
