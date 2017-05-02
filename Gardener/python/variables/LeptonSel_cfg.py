@@ -14,6 +14,12 @@ ElectronWP = {}
 
 ElectronWP['Full2016'] = {
 
+ 'Variables' : {
+
+        'relPFIsoRhoCorr' : '(itree.std_vector_lepton_chargedHadronIso[] + max(itree.std_vector_lepton_neutralHadronIso[]+itree.std_vector_lepton_photonIso[]-itree.jetRho*itree.std_vector_electron_effectiveArea[],0))/itree.std_vector_lepton_pt[]',
+
+               },
+
 ## ------------  
 #'LooseObjWP' : { 
 #          'HLTsafe' : { 
@@ -67,7 +73,103 @@ ElectronWP['Full2016'] = {
                                   ] ,
                              } ,
 
-                 } ,
+         'mva_80p_Iso2015':  {
+                               # Common cuts 
+                               'True' :
+                                  [
+                                    'abs(itree.std_vector_lepton_eta[]) < 2.5' ,
+                                    'itree.std_vector_lepton_eleIdHLT[]',
+                                    'itree.std_vector_lepton_eleIdMvaWp80[]',
+                                  ] ,
+                               # Barrel
+                                'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.05' ,
+                                    'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                    'relPFIsoRhoCorr < 0.0354',
+                                  ] ,
+                                # EndCap
+                                'abs(itree.std_vector_lepton_eta[]) > 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.1' ,
+                                    'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                    'relPFIsoRhoCorr < 0.0646',
+                                  ] ,
+                             } ,
+
+         'mva_80p_Iso2016':  {
+                               # Common cuts 
+                               'True' :
+                                  [
+                                    'abs(itree.std_vector_lepton_eta[]) < 2.5' ,
+                                    'itree.std_vector_lepton_eleIdHLT[]',
+                                    'itree.std_vector_lepton_eleIdMvaWp80[]',
+                                  ] ,
+                               # Barrel
+                                'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.05' ,
+                                    'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                    'relPFIsoRhoCorr < 0.05880',
+                                  ] ,
+                                # EndCap
+                                'abs(itree.std_vector_lepton_eta[]) > 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.1' ,
+                                    'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                    'relPFIsoRhoCorr < 0.0571',
+                                  ] ,
+                             } ,
+
+         'mva_90p_Iso2015':  {
+                               # Common cuts 
+                               'True' :
+                                  [
+                                    'abs(itree.std_vector_lepton_eta[]) < 2.5' ,
+                                    'itree.std_vector_lepton_eleIdHLT[]',
+                                    'itree.std_vector_lepton_eleIdMvaWp90[]',
+                                  ] ,
+                               # Barrel
+                                'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.05' ,
+                                    'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                    'relPFIsoRhoCorr < 0.0354',
+                                  ] ,
+                                # EndCap
+                                'abs(itree.std_vector_lepton_eta[]) > 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.1' ,
+                                    'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                    'relPFIsoRhoCorr < 0.0646',
+                                  ] ,
+                             } ,
+
+         'mva_90p_Iso2016':  {
+                               # Common cuts 
+                               'True' :
+                                  [
+                                    'abs(itree.std_vector_lepton_eta[]) < 2.5' ,
+                                    'itree.std_vector_lepton_eleIdHLT[]',
+                                    'itree.std_vector_lepton_eleIdMvaWp90[]',
+                                  ] ,
+                               # Barrel
+                                'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.05' ,
+                                    'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                    'relPFIsoRhoCorr < 0.05880',
+                                  ] ,
+                                # EndCap
+                                'abs(itree.std_vector_lepton_eta[]) > 1.479' :
+                                  [
+                                    'itree.std_vector_lepton_d0[] < 0.1' ,
+                                    'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                    'relPFIsoRhoCorr < 0.0571',
+                                  ] ,
+                             } ,
+
+                 } 
 
  # ------------ 
  'WgStarObjWP' : {
