@@ -107,25 +107,31 @@ class LeptonSel(TreeCloner):
         self.nMinLep=int(opts.nMinLep) 
 
         # Create Elecron WP
-        self.FakeObjElectronWPs = {}
-        self.TightObjElectronWPs = {}
+        self.VetoObjElectronWPs   = {}
+        self.FakeObjElectronWPs   = {}
+        self.TightObjElectronWPs  = {}
         self.WgStarObjElectronWPs = {}
  
         if self.cmssw in ElectronWP :
+          if 'VetoObjWP' in ElectronWP[self.cmssw] :
+            for iWP in ElectronWP[self.cmssw]['VetoObjWP']   : self.VetoObjElectronWPs[iWP]   = LeptonWP(self.cmssw,ElectronWP,'VetoObjWP',iWP)
           if 'FakeObjWP' in ElectronWP[self.cmssw] : 
-            for iWP in ElectronWP[self.cmssw]['FakeObjWP']  : self.FakeObjElectronWPs[iWP] = LeptonWP(self.cmssw,ElectronWP,'FakeObjWP',iWP)
+            for iWP in ElectronWP[self.cmssw]['FakeObjWP']   : self.FakeObjElectronWPs[iWP]   = LeptonWP(self.cmssw,ElectronWP,'FakeObjWP',iWP)
           if 'TightObjWP' in ElectronWP[self.cmssw] :
-            for iWP in ElectronWP[self.cmssw]['TightObjWP'] : self.TightObjElectronWPs[iWP] = LeptonWP(self.cmssw,ElectronWP,'TightObjWP',iWP)
+            for iWP in ElectronWP[self.cmssw]['TightObjWP']  : self.TightObjElectronWPs[iWP]  = LeptonWP(self.cmssw,ElectronWP,'TightObjWP',iWP)
           if 'WgStarObjWP' in ElectronWP[self.cmssw] :
             for iWP in ElectronWP[self.cmssw]['WgStarObjWP'] : self.WgStarObjElectronWPs[iWP] = LeptonWP(self.cmssw,ElectronWP,'WgStarObjWP',iWP)
 
 
         # Create Muon WP
-        self.FakeObjMuonWPs = {}
-        self.TightObjMuonWPs = {}
+        self.VetoObjMuonWPs   = {}
+        self.FakeObjMuonWPs   = {}
+        self.TightObjMuonWPs  = {}
         self.WgStarObjMuonWPs = {}
 
         if self.cmssw in MuonWP :
+          if 'VetoObjWP' in MuonWP[self.cmssw] :
+            for iWP in MuonWP[self.cmssw]['VetoObjWP']  : self.VetoObjMuonWPs[iWP] = LeptonWP(self.cmssw,MuonWP,'VetoObjWP',iWP)
           if 'FakeObjWP' in MuonWP[self.cmssw] :
             for iWP in MuonWP[self.cmssw]['FakeObjWP']  : self.FakeObjMuonWPs[iWP] = LeptonWP(self.cmssw,MuonWP,'FakeObjWP',iWP)
           if 'TightObjWP' in MuonWP[self.cmssw] :
@@ -152,9 +158,12 @@ class LeptonSel(TreeCloner):
 
         self.connect(tree,input)
 
-        # Clone Tree
+        # Lepton Tags container
+        LeptonTags = {}
+        # And target variables:
         self.namesNewBranchesVector = [] 
         self.namesNewBranchesVector.append('std_vector_lepton_isLooseLepton')
+        self.namesNewBranchesVector.append('std_vector_lepton_isWgsLepton')
         for iWP in self.TightObjElectronWPs : self.namesNewBranchesVector.append('std_vector_electron_isTightLepton_'+iWP)
         for iWP in self.TightObjMuonWPs     : self.namesNewBranchesVector.append('std_vector_muon_isTightLepton_'+iWP)
         print self.namesNewBranchesVector
@@ -174,8 +183,6 @@ class LeptonSel(TreeCloner):
         itree     = self.itree
         otree     = self.otree
 
-        # Lepton Tags container
-        LeptonTags = {}
 
         # Loop
         nentries = self.itree.GetEntries()
@@ -198,6 +205,7 @@ class LeptonSel(TreeCloner):
 
             # Gep Letpon Tags: 
 
+            LeptonTags ['Veto']   = []
             LeptonTags ['Loose']  = []
             LeptonTags ['WgStar'] = []
             for iWP in self.TightObjElectronWPs : LeptonTags['electron_'+iWP] = []
@@ -208,24 +216,40 @@ class LeptonSel(TreeCloner):
               
                # Electron
                if    abs(self.itree.std_vector_lepton_flavour[iLep]) == 11 :
-                 for iWP in self.FakeObjElectronWPs  : LeptonTags ['Loose']         .append( self.FakeObjElectronWPs[iWP].passWP(self.itree,iLep) )
-                 for iWP in self.WgStarObjElectronWPs: LeptonTags ['WgStar']        .append( self.WgStarObjElectronWPs[iWP].passWP(self.itree,iLep) )
+                 if len(self.VetoObjElectronWPs)   == 0 : LeptonTags ['Veto']   .append( 0 ) 
+                 else :  
+                   for iWP in self.VetoObjElectronWPs   : LeptonTags ['Veto']   .append( self.VetoObjElectronWPs[iWP].passWP(self.itree,iLep) )
+                 if len(self.FakeObjElectronWPs)   == 0 : LeptonTags ['Loose']  .append( 0 )
+                 else :                                   
+                   for iWP in self.FakeObjElectronWPs   : LeptonTags ['Loose']  .append( self.FakeObjElectronWPs[iWP].passWP(self.itree,iLep) )
+                 if len(self.WgStarObjElectronWPs) == 0 : LeptonTags ['WgStar'] .append( 0 )
+                 else :                                  
+                   for iWP in self.WgStarObjElectronWPs : LeptonTags ['WgStar'] .append( self.WgStarObjElectronWPs[iWP].passWP(self.itree,iLep) ) 
                  for iWP in self.TightObjElectronWPs : LeptonTags ['electron_'+iWP] .append( self.TightObjElectronWPs[iWP].passWP(self.itree,iLep) )
                  # ... and 0 for muons
                  for iWP in self.TightObjMuonWPs : LeptonTags['muon_'+iWP] .append( 0 )
- 
+                  
+
                # Muon
                elif  abs(self.itree.std_vector_lepton_flavour[iLep]) == 13 :
-                 for iWP in self.FakeObjMuonWPs  : LeptonTags ['Loose']     .append( self.FakeObjMuonWPs[iWP].passWP(self.itree,iLep) )
-                 for iWP in self.WgStarObjMuonWPs: LeptonTags ['WgStar']    .append( self.WgStarObjMuonWPs[iWP].passWP(self.itree,iLep) )
+                 if len(self.VetoObjMuonWPs)   == 0 : LeptonTags ['Veto']   .append( 0 )
+                 else :
+                   for iWP in self.VetoObjMuonWPs   : LeptonTags ['Veto']   .append( self.VetoObjMuonWPs[iWP].passWP(self.itree,iLep) )
+                 if len(self.FakeObjMuonWPs)   == 0 : LeptonTags ['Loose']  .append( 0 )
+                 else :
+                   for iWP in self.FakeObjMuonWPs   : LeptonTags ['Loose']  .append( self.FakeObjMuonWPs[iWP].passWP(self.itree,iLep) )
+                 if len(self.WgStarObjMuonWPs) == 0 : LeptonTags ['WgStar'] .append( 0 )
+                 else :
+                   for iWP in self.WgStarObjMuonWPs : LeptonTags ['WgStar'] .append( self.WgStarObjMuonWPs[iWP].passWP(self.itree,iLep) )
                  for iWP in self.TightObjMuonWPs : LeptonTags ['muon_'+iWP] .append( self.TightObjMuonWPs[iWP].passWP(self.itree,iLep) )
                  # ... and 0 for electrons
                  for iWP in self.TightObjElectronWPs : LeptonTags['electron_'+iWP] .append( 0 )
  
                # ... and 0 if not a lepton
                else:  
-                 for iWP in self.FakeObjMuonWPs       : LeptonTags ['Loose']         .append( 0 )
-                 for iWP in self.WgStarObjMuonWPs     : LeptonTags ['WgStar']        .append( 0 )
+                 LeptonTags ['Veto']   .append( 0 )
+                 LeptonTags ['Loose']  .append( 0 )
+                 LeptonTags ['WgStar'] .append( 0 )
                  for iWP in self.TightObjElectronWPs  : LeptonTags ['electron_'+iWP] .append( 0 )
                  for iWP in self.TightObjMuonWPs      : LeptonTags ['muon_'+iWP]     .append( 0 ) 
 
@@ -239,6 +263,8 @@ class LeptonSel(TreeCloner):
               exit() 
             if LeptonTags [CleanTag].count(1) >= self.nMinLep :   
 
+
+              # Compute Veto and/or save Veto lepton pt,eta,phi,kind
 
               # Lepton cleaning
                
