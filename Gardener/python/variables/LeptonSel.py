@@ -7,6 +7,8 @@ from LatinoAnalysis.Gardener.gardening import TreeCloner
 import ROOT
 import optparse
 import os
+import numpy
+from collections import OrderedDict
 
 class LeptonWP():
 
@@ -105,6 +107,7 @@ class LeptonSel(TreeCloner):
 
         self.kindLep=int(opts.kindLep)
         self.nMinLep=int(opts.nMinLep) 
+        self.pTLeptCut = [18.0,8.0]  # Only applied up to nMinLep
 
         # Create Elecron WP
         self.VetoObjElectronWPs   = {}
@@ -149,6 +152,34 @@ class LeptonSel(TreeCloner):
           print 'ERROR: Can not handle more than 1 WgStarObj definition'
           exit()
 
+
+    def changeOrder(self, vectorname, vector, goodleptonslist) :
+        # vector is already linked to the otree branch
+        # vector name is the "name" of that vector to be modified
+        
+        #for i in range( len(getattr(self.otree, vectorname)) ) :
+          #pass
+          #print " --> before ", vectorname, "[", i, "] = ", getattr(self.otree, vectorname)[i]
+
+        # take vector and clone vector
+        # equivalent of: temp_vector = itree."vector"
+        temp_vector = getattr(self.itree, vectorname)
+        # remix the order of vector picking from the clone
+        for i in range( len(goodleptonslist) ) :
+          #print " --> [", i, " :: ", len(goodleptonslist) ,"] :::>> ", len(temp_vector), " --> ", goodleptonslist[i]      
+          # otree."vectorname"[i] = temp_vector[goodleptonslist[i]] <--- that is the "itree" in the correct position
+          # setattr(self.otree, vector + "[" + str(i) + "]", temp_vector[ goodleptonslist[i] ])
+          vector.push_back ( temp_vector[ goodleptonslist[i] ] )
+          #vector.push_back ( 10000. )
+        # set the default value for the remaining
+        for i in range( len(temp_vector) - len(goodleptonslist) ) :
+          vector.push_back ( -9999. )
+          
+        #for i in range( len(getattr(self.otree, vectorname)) ) :
+          #pass
+          #print " --> after[ " , len(goodleptonslist), "] ", vectorname, "[", i, "] = ", getattr(self.otree, vectorname)[i]
+
+
     def process(self,**kwargs):
 
 
@@ -166,18 +197,81 @@ class LeptonSel(TreeCloner):
         self.namesNewBranchesVector.append('std_vector_lepton_isWgsLepton')
         for iWP in self.TightObjElectronWPs : self.namesNewBranchesVector.append('std_vector_electron_isTightLepton_'+iWP)
         for iWP in self.TightObjMuonWPs     : self.namesNewBranchesVector.append('std_vector_muon_isTightLepton_'+iWP)
-        print self.namesNewBranchesVector
-        self.clone(output,"")
 
-        # new brances as std_vector
+        # Veto lepton 4-vectors        
+        self.namesNewBranchesVector.append('std_vector_vetolepton_pt')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_eta')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_phi')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_flavour')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_cleanId')
+
+        # Get list of jet and lepton std_vector branches from tree
+        self.namesOldBranchesToBeModifiedVector = []
+        vectorsToChange = ['std_vector_lepton_','std_vector_electron_','std_vector_muon_','std_vector_jet_','std_vector_puppijet_']
+        for b in self.itree.GetListOfBranches():
+          branchName = b.GetName()
+          for subString in vectorsToChange:
+            if subString in branchName: self.namesOldBranchesToBeModifiedVector.append(branchName)
+
+        # And same for soem float varaibles linked to jets with the structure "std_vector_jet_"NAME to be migrated to "jet"NAME"+number.
+        # e.g. jetpt1, jeteta1, jetpt2, jeteta2, ...
+        self.jetVariables = [
+            'pt',
+            'eta',
+            'phi',
+            'mass',
+            #'mva',
+            #'id',
+            'tche'
+            # NChgQC, ChgptCut1, NHM, NNeutralptCut, PhM, bjpb, ... ?
+            # jetRho ?
+            ]
+        self.jetVarList = []
+        # maximum number of "single jet" variables to be saved
+        maxnjets = 2 # 7 --> everything is available in form of std::vector -> these will be deprecated
+        for jetVar in self.jetVariables:
+          for i in xrange(maxnjets):
+            self.jetVarList.append("jet"+jetVar+str(i+1))
+
+        # AND some variables we compute in this code like veto leptons
+        self.namesOfSpecialSimpleVariable = [
+           'metFilter',
+           'dmZllRecoMuon'
+        ]
+
+
+        # NOW WE CAN CLONE THE TREE
+        self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOfSpecialSimpleVariable + self.jetVarList + self.namesNewBranchesVector)
+
+        # NOW CONNECT ALL NEW/TO BE MODIFIED BRANCEHES 
+
+        # ... New Branches: lepton Tags and veto leptons 4-vectors 
         self.newBranchesVector = {}
         for bname in self.namesNewBranchesVector:
           bvector =  ROOT.std.vector(float) ()
           self.newBranchesVector[bname] = bvector
+        for bname, bvector in self.newBranchesVector.iteritems(): self.otree.Branch(bname,bvector)        
 
-        # now actually connect the branches
-        for bname, bvector in self.newBranchesVector.iteritems():
-          self.otree.Branch(bname,bvector)
+        # ... Old Branches: lepton and jets std_vector
+        self.oldBranchesToBeModifiedVector = {}
+        for bname in self.namesOldBranchesToBeModifiedVector:
+          bvector =  ROOT.std.vector(float) ()
+          self.oldBranchesToBeModifiedVector[bname] = bvector
+        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems(): self.otree.Branch(bname,bvector)
+
+        # .... jet Variables
+        self.jetVarDic = OrderedDict()
+        for bname in self.jetVarList:
+          bvariable = numpy.ones(1, dtype=numpy.float32)
+          self.jetVarDic[bname] = bvariable
+        for bname, bvariable in self.jetVarDic.iteritems(): self.otree.Branch(bname,bvariable,bname+'/F') 
+
+        # ... Special variables
+        self.oldBranchesToBeModifiedSpecialSimpleVariable = {}
+        for bname in self.namesOfSpecialSimpleVariable:
+          bvariable = numpy.ones(1, dtype=numpy.float32)
+          self.oldBranchesToBeModifiedSpecialSimpleVariable[bname] = bvariable
+        for bname, bvariable in self.oldBranchesToBeModifiedSpecialSimpleVariable.iteritems():  self.otree.Branch(bname,bvariable,bname+'/F')
 
         # input tree and output tree
         itree     = self.itree
@@ -197,8 +291,6 @@ class LeptonSel(TreeCloner):
         for i in xrange(nentries):
 
             itree.GetEntry(i)
-
-#           print self.passWP(0)
 
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
@@ -261,13 +353,63 @@ class LeptonSel(TreeCloner):
             else:
               print 'ERROR: kindLep unavailable : ',self.kindLep
               exit() 
-            if LeptonTags [CleanTag].count(1) >= self.nMinLep :   
 
+            # Lepton Cuts
+            kLepCut = True
+            # ... at least nLeptons
+            if LeptonTags [CleanTag].count(1) < self.nMinLep :   kLepCut = False
+            # ... pT cuts
+            if kLepCut:
+              jLep = 0
+              for iLep in range(len(LeptonTags[CleanTag])) :
+                if LeptonTags[CleanTag][iLep] :
+                  if jLep < len(self.pTLeptCut) and jLep < self.nMinLep : 
+                    if itree.std_vector_lepton_pt[iLep] < self.pTLeptCut[jLep] : kLepCut = False
+                  jLep+=1
 
-              # Compute Veto and/or save Veto lepton pt,eta,phi,kind
+            # Now we can start cleaning the leptons and fill the tree?
+            if kLepCut :   
 
+              maxNumLeptons = len(itree.std_vector_lepton_pt)
+
+              # Clean All vectors
+              for bname, bvector in self.newBranchesVector.iteritems()             : bvector.clear()
+              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems() : bvector.clear()
+
+              # Link to good leptons
+              goodLepLinks = []
+              goodLeps = []
+              jLep = 0 
+              for iLep in range(len(LeptonTags[CleanTag])) :
+                if LeptonTags[CleanTag][iLep] == 1 : 
+                  goodLeps.append(iLep) 
+                  goodLepLinks.append(jLep)
+                  jLep+=1
+                else:
+                  goodLepLinks.append(-1)
+
+              # Compute Veto and/or save Veto lepton pt,eta,phi,flavour +link to position in CleanTag
+              for iLep in range(len(LeptonTags['Veto'])) :
+                if LeptonTags['Veto'][iLep] == 1 :                 
+                  for bname, bvector in self.newBranchesVector.iteritems() :
+                    if ("vector_vetolepton_pt"      in bname) : bvector.push_back(itree.std_vector_lepton_pt[iLep])
+                    if ("vector_vetolepton_eta"     in bname) : bvector.push_back(itree.std_vector_lepton_eta[iLep])
+                    if ("vector_vetolepton_phi"     in bname) : bvector.push_back(itree.std_vector_lepton_phi[iLep])
+                    if ("vector_vetolepton_flavour" in bname) : bvector.push_back(itree.std_vector_lepton_flavour[iLep])
+                    if ("vector_vetolepton_cleanId" in bname) : bvector.push_back(goodLepLinks[iLep])
+              for remainingLep in range( maxNumLeptons - len(otree.std_vector_vetolepton_cleanId) ) :
+                  for bname, bvector in self.newBranchesVector.iteritems() :
+                    if ("vector_vetolepton_pt"      in bname) : bvector.push_back( -9999. )
+                    if ("vector_vetolepton_eta"     in bname) : bvector.push_back( -9999. )
+                    if ("vector_vetolepton_phi"     in bname) : bvector.push_back( -9999. )
+                    if ("vector_vetolepton_flavour" in bname) : bvector.push_back( -9999. )
+                    if ("vector_vetolepton_cleanId" in bname) : bvector.push_back( -9999. )
+          
               # Lepton cleaning
-               
+              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+                 if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname): self.changeOrder( bname, bvector, goodLeps )              
+           
+ 
               # jet cleaning
 
 #
