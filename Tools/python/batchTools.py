@@ -63,8 +63,6 @@ class batchJobs :
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
        elif 'knu' in os.uname()[1]:
          jFile.write('#$ -N '+jName+'\n')
-         jFile.write('#$ -q all.q\n')
-         jFile.write('#$ -cwd\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
@@ -263,18 +261,37 @@ def batchClean():
       except :
         print 'Some jobs still ongoing in: '+ iDir
 
-def lsListCommand(inputDir):
+def lsListCommand(inputDir, iniStep = 'Prod'):
     "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
     if 'iihe' in os.uname()[1] :
-        return "ls -1 /pnfs/iihe/cms" + inputDir
+      if '/pnfs/iihe/cms' in inputDir:
+        usedDir = inputDir.split('/pnfs/iihe/cms')[1]
+      else:
+	usedDir = inputDir
+      return "ls -1 /pnfs/iihe/cms" + usedDir
     elif 'ifca' in os.uname()[1] :
-        return "ls /gpfs/gaes/cms/" + inputDir
+      if '/gpfs/gaes/cms/' in inputDir:
+	usedDir = inputDir.split('/gpfs/gaes/cms/')[1]
+      else:
+	usedDir = inputDir
+      return "ls /gpfs/gaes/cms/" + usedDir
     elif "pi.infn.it" in socket.getfqdn():
-        return "ls /gpfs/ddn/srm/cms/" + inputDir
+      if '/gpfs/ddn/srm/cms/' in inputDir:
+	usedDir = inputDir.split('/gpfs/ddn/srm/cms/')[1]
+      else:
+	usedDir = inputDir
+      return "ls /gpfs/ddn/srm/cms/" + usedDir
     elif "knu" in os.uname()[1]:
-        return "ls /pnfs/knu.ac.kr/data/cms/" + inputDir
+      if '/pnfs/knu.ac.kr/data/cms/' in inputDir:
+	usedDir = inputDir.split('/pnfs/knu.ac.kr/data/cms/')[1]
+      else:
+	usedDir = inputDir
+      return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
     else :
+      if iniStep == 'Prod' :
         return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
+      else:
+        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls " + inputDir
     
 def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"
@@ -301,6 +318,9 @@ def remoteFileSize(inputFile):
     elif "pi.infn.it" in socket.getfqdn():
         return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "knu" in os.uname()[1]:
+      if '/pnfs' in inputFile:
+	return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
         return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
         return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
