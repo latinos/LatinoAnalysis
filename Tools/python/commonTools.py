@@ -131,12 +131,13 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     xrootdPath=''
     # ... IIHE
     if 'iihe' in os.uname()[1] :
+      absPath=True
       lsCmd='ls '
       if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
          Dir = '/pnfs/iihe/cms/' + inputDir
       else:                        
          Dir = inputDir
-      #if '/pnfs/' in inputDir : xrootdPath='dcap://maite.iihe.ac.be'
+      if '/pnfs/' in inputDir :  xrootdPath='dcap://maite.iihe.ac.be/'
 
     # ... CERN
     elif 'cern' in os.uname()[1] : 
@@ -198,7 +199,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
       exit() 
     FileTarget = []
     for iFile in Files:
-      if absPath : FileTarget.append('###'+iFile)
+      if absPath : FileTarget.append('###'+xrootdPath+iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
     return FileTarget
 

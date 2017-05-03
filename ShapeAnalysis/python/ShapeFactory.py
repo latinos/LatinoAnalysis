@@ -1074,7 +1074,7 @@ class ShapeFactory:
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
             elif "maite.iihe.ac.be" in path:
               if not self._testIiheFile(path):
-                print 'File '+path+' doesn\'t exists'
+                print 'File '+path+' doesn\'t exists @ IIHE'
                 doesFileExist = False
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')                
             else:
