@@ -102,6 +102,10 @@ from LatinoAnalysis.Gardener.variables.pdfAndScaleUncertainty     import PdfAndS
 # GenPT for the top
 from LatinoAnalysis.Gardener.variables.TopGenPt                   import TopGenPt
 
+# ggH uncertainty LHCXSWG
+from LatinoAnalysis.Gardener.variables.ggHUncertainty             import ggHUncertaintyMaker
+
+
 if __name__ == '__main__':
 
     print "gardener"
@@ -216,6 +220,11 @@ if __name__ == '__main__':
 # Top gen pt for reweighting
     modules['TopGenPt'] = TopGenPt()
     
+# ggH uncertainty LHCXSWG
+    modules['ggHUncertainty'] = ggHUncertaintyMaker()
+
+
+
 
 
     gardener_cli( modules )

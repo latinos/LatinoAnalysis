@@ -734,5 +734,19 @@ Top Gen Pt
 ====
 
 Module: TopGenPt
-  
+
   This module adds the gen level quark op and antiquark top pT to the tree, to be used for Pt Reweighting according top the recipe in https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+
+                    
+                     
+Higgs ggH uncertainties
+====
+
+Add event weights for nuisances according to the 2017 interim prescription of the LHCXSWG
+
+    gardener.py  ggHUncertainty \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root   \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root  
+              
+                
+                
