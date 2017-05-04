@@ -471,6 +471,7 @@ class LeptonSel(TreeCloner):
                       if self.jetIsLepton(itree.std_vector_puppijet_eta[iJet],itree.std_vector_puppijet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
                           isLepton = True;
                   if not isLepton:
+                    if abs(itree.std_vector_puppijet_eta[iJet]) <= self.jetCleaning_absEta :
                       goodPuppiJets.append(iJet)
 
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
