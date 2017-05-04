@@ -7,6 +7,8 @@ from LatinoAnalysis.Gardener.gardening import TreeCloner
 import ROOT
 import optparse
 import os
+import numpy
+from collections import OrderedDict
 
 class LeptonWP():
 
@@ -103,8 +105,16 @@ class LeptonSel(TreeCloner):
           print 'ERROR: No WP'
           exit()  
 
+        # Lepton cleaning options
         self.kindLep=int(opts.kindLep)
         self.nMinLep=int(opts.nMinLep) 
+        self.pTLeptCut = [18.0,8.0]  # Only applied up to nMinLep
+
+        # Jet cleaning options
+        self.jetCleaning_minpTLep = 10.
+        self.jetCleaning_dRmax    = 0.3
+        self.jetCleaning_dR2max   = self.jetCleaning_dRmax * self.jetCleaning_dRmax
+        self.jetCleaning_absEta   = 5.0
 
         # Create Elecron WP
         self.VetoObjElectronWPs   = {}
@@ -149,6 +159,44 @@ class LeptonSel(TreeCloner):
           print 'ERROR: Can not handle more than 1 WgStarObj definition'
           exit()
 
+
+    def changeOrder(self, vectorname, vector, goodleptonslist) :
+        # vector is already linked to the otree branch
+        # vector name is the "name" of that vector to be modified
+        
+        #for i in range( len(getattr(self.otree, vectorname)) ) :
+          #pass
+          #print " --> before ", vectorname, "[", i, "] = ", getattr(self.otree, vectorname)[i]
+
+        # take vector and clone vector
+        # equivalent of: temp_vector = itree."vector"
+        temp_vector = getattr(self.itree, vectorname)
+        # remix the order of vector picking from the clone
+        for i in range( len(goodleptonslist) ) :
+          #print " --> [", i, " :: ", len(goodleptonslist) ,"] :::>> ", len(temp_vector), " --> ", goodleptonslist[i]      
+          # otree."vectorname"[i] = temp_vector[goodleptonslist[i]] <--- that is the "itree" in the correct position
+          # setattr(self.otree, vector + "[" + str(i) + "]", temp_vector[ goodleptonslist[i] ])
+          vector.push_back ( temp_vector[ goodleptonslist[i] ] )
+          #vector.push_back ( 10000. )
+        # set the default value for the remaining
+        for i in range( len(temp_vector) - len(goodleptonslist) ) :
+          vector.push_back ( -9999. )
+          
+        #for i in range( len(getattr(self.otree, vectorname)) ) :
+          #pass
+          #print " --> after[ " , len(goodleptonslist), "] ", vectorname, "[", i, "] = ", getattr(self.otree, vectorname)[i]
+
+    def jetIsLepton(self, jetEta, jetPhi, lepEta, lepPhi) :
+        #dR = ROOT.TMath.Sqrt( ROOT.TMath.Power(lepEta - jetEta, 2) + ROOT.TMath.Power(ROOT.TMath.Abs(ROOT.TMath.Abs(lepPhi - jetPhi)-ROOT.TMath.Pi())-ROOT.TMath.Pi(), 2) )
+        dPhi = ROOT.TMath.Abs(lepPhi - jetPhi)
+        if dPhi > ROOT.TMath.Pi() :
+          dPhi = 2*ROOT.TMath.Pi() - dPhi
+        dR2 = (lepEta - jetEta) * (lepEta - jetEta) + dPhi * dPhi
+        if dR2 < self.jetCleaning_dR2max :
+            return True
+        else:
+            return False
+
     def process(self,**kwargs):
 
 
@@ -166,18 +214,81 @@ class LeptonSel(TreeCloner):
         self.namesNewBranchesVector.append('std_vector_lepton_isWgsLepton')
         for iWP in self.TightObjElectronWPs : self.namesNewBranchesVector.append('std_vector_electron_isTightLepton_'+iWP)
         for iWP in self.TightObjMuonWPs     : self.namesNewBranchesVector.append('std_vector_muon_isTightLepton_'+iWP)
-        print self.namesNewBranchesVector
-        self.clone(output,"")
 
-        # new brances as std_vector
+        # Veto lepton 4-vectors        
+        self.namesNewBranchesVector.append('std_vector_vetolepton_pt')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_eta')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_phi')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_flavour')
+        self.namesNewBranchesVector.append('std_vector_vetolepton_cleanId')
+
+        # Get list of jet and lepton std_vector branches from tree
+        self.namesOldBranchesToBeModifiedVector = []
+        vectorsToChange = ['std_vector_lepton_','std_vector_electron_','std_vector_muon_','std_vector_jet_','std_vector_puppijet_']
+        for b in self.itree.GetListOfBranches():
+          branchName = b.GetName()
+          for subString in vectorsToChange:
+            if subString in branchName: self.namesOldBranchesToBeModifiedVector.append(branchName)
+
+        # And same for soem float varaibles linked to jets with the structure "std_vector_jet_"NAME to be migrated to "jet"NAME"+number.
+        # e.g. jetpt1, jeteta1, jetpt2, jeteta2, ...
+        self.jetVariables = [
+            'pt',
+            'eta',
+            'phi',
+            'mass',
+            #'mva',
+            #'id',
+            'tche'
+            # NChgQC, ChgptCut1, NHM, NNeutralptCut, PhM, bjpb, ... ?
+            # jetRho ?
+            ]
+        self.jetVarList = []
+        # maximum number of "single jet" variables to be saved
+        maxnjets = 2 # 7 --> everything is available in form of std::vector -> these will be deprecated
+        for jetVar in self.jetVariables:
+          for i in xrange(maxnjets):
+            self.jetVarList.append("jet"+jetVar+str(i+1))
+
+        # AND some variables we compute in this code like veto leptons
+        self.namesOfSpecialSimpleVariable = [
+           'metFilter',
+           'dmZllRecoMuon'
+        ]
+
+
+        # NOW WE CAN CLONE THE TREE
+        self.clone(output,self.namesOldBranchesToBeModifiedVector + self.namesOfSpecialSimpleVariable + self.jetVarList + self.namesNewBranchesVector)
+
+        # NOW CONNECT ALL NEW/TO BE MODIFIED BRANCEHES 
+
+        # ... New Branches: lepton Tags and veto leptons 4-vectors 
         self.newBranchesVector = {}
         for bname in self.namesNewBranchesVector:
           bvector =  ROOT.std.vector(float) ()
           self.newBranchesVector[bname] = bvector
+        for bname, bvector in self.newBranchesVector.iteritems(): self.otree.Branch(bname,bvector)        
 
-        # now actually connect the branches
-        for bname, bvector in self.newBranchesVector.iteritems():
-          self.otree.Branch(bname,bvector)
+        # ... Old Branches: lepton and jets std_vector
+        self.oldBranchesToBeModifiedVector = {}
+        for bname in self.namesOldBranchesToBeModifiedVector:
+          bvector =  ROOT.std.vector(float) ()
+          self.oldBranchesToBeModifiedVector[bname] = bvector
+        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems(): self.otree.Branch(bname,bvector)
+
+        # .... jet Variables
+        self.jetVarDic = OrderedDict()
+        for bname in self.jetVarList:
+          bvariable = numpy.ones(1, dtype=numpy.float32)
+          self.jetVarDic[bname] = bvariable
+        for bname, bvariable in self.jetVarDic.iteritems(): self.otree.Branch(bname,bvariable,bname+'/F') 
+
+        # ... Special variables
+        self.oldBranchesToBeModifiedSpecialSimpleVariable = {}
+        for bname in self.namesOfSpecialSimpleVariable:
+          bvariable = numpy.ones(1, dtype=numpy.float32)
+          self.oldBranchesToBeModifiedSpecialSimpleVariable[bname] = bvariable
+        for bname, bvariable in self.oldBranchesToBeModifiedSpecialSimpleVariable.iteritems():  self.otree.Branch(bname,bvariable,bname+'/F')
 
         # input tree and output tree
         itree     = self.itree
@@ -193,12 +304,9 @@ class LeptonSel(TreeCloner):
         print '- Starting eventloop'
         step = 5000
 
-        nentries = 50
         for i in xrange(nentries):
 
             itree.GetEntry(i)
-
-#           print self.passWP(0)
 
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
@@ -253,7 +361,6 @@ class LeptonSel(TreeCloner):
                  for iWP in self.TightObjElectronWPs  : LeptonTags ['electron_'+iWP] .append( 0 )
                  for iWP in self.TightObjMuonWPs      : LeptonTags ['muon_'+iWP]     .append( 0 ) 
 
-            print LeptonTags
 
             # At least nLeptons of kindLep or throw away the event
             if   self.kindLep == 2 : CleanTag = 'Loose'
@@ -261,24 +368,139 @@ class LeptonSel(TreeCloner):
             else:
               print 'ERROR: kindLep unavailable : ',self.kindLep
               exit() 
-            if LeptonTags [CleanTag].count(1) >= self.nMinLep :   
 
+            # Lepton Cuts
+            kLepCut = True
+            # ... at least nLeptons
+            if LeptonTags [CleanTag].count(1) < self.nMinLep :   kLepCut = False
+            # ... pT cuts
+            if kLepCut:
+              jLep = 0
+              for iLep in range(len(LeptonTags[CleanTag])) :
+                if LeptonTags[CleanTag][iLep] :
+                  if jLep < len(self.pTLeptCut) and jLep < self.nMinLep : 
+                    if itree.std_vector_lepton_pt[iLep] < self.pTLeptCut[jLep] : kLepCut = False
+                  jLep+=1
 
-              # Compute Veto and/or save Veto lepton pt,eta,phi,kind
+            # Now we can start cleaning the leptons and fill the tree?
+            if kLepCut :   
 
+              maxNumLeptons = len(itree.std_vector_lepton_pt)
+
+              # Clean All vectors
+              for bname, bvector in self.newBranchesVector.iteritems()             : bvector.clear()
+              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems() : bvector.clear()
+
+              # Link to good leptons
+              goodLepLinks = []
+              goodLeps = []
+              jLep = 0 
+              for iLep in range(len(LeptonTags[CleanTag])) :
+                if LeptonTags[CleanTag][iLep] == 1 : 
+                  goodLeps.append(iLep) 
+                  goodLepLinks.append(jLep)
+                  jLep+=1
+                else:
+                  goodLepLinks.append(-1)
+
+              # Compute Veto and/or save Veto lepton pt,eta,phi,flavour +link to position in CleanTag
+              for iLep in range(len(LeptonTags['Veto'])) :
+                if LeptonTags['Veto'][iLep] == 1 :                 
+                  for bname, bvector in self.newBranchesVector.iteritems() :
+                    if ("std_vector_vetolepton_pt"      == bname) : bvector.push_back(itree.std_vector_lepton_pt[iLep])
+                    if ("std_vector_vetolepton_eta"     == bname) : bvector.push_back(itree.std_vector_lepton_eta[iLep])
+                    if ("std_vector_vetolepton_phi"     == bname) : bvector.push_back(itree.std_vector_lepton_phi[iLep])
+                    if ("std_vector_vetolepton_flavour" == bname) : bvector.push_back(itree.std_vector_lepton_flavour[iLep])
+                    if ("std_vector_vetolepton_cleanId" == bname) : bvector.push_back(goodLepLinks[iLep])
+              for remainingLep in range( maxNumLeptons - len(otree.std_vector_vetolepton_cleanId) ) :
+                  for bname, bvector in self.newBranchesVector.iteritems() :
+                    if ("std_vector_vetolepton_pt"      == bname) : bvector.push_back( -9999. )
+                    if ("std_vector_vetolepton_eta"     == bname) : bvector.push_back( -9999. )
+                    if ("std_vector_vetolepton_phi"     == bname) : bvector.push_back( -9999. )
+                    if ("std_vector_vetolepton_flavour" == bname) : bvector.push_back( -9999. )
+                    if ("std_vector_vetolepton_cleanId" == bname) : bvector.push_back( -9999. )
+          
               # Lepton cleaning
-               
+              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+                 if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname): self.changeOrder( bname, bvector, goodLeps )              
+
+              # Save Lepton tags for cleaned leptons
+              for bname, bvector in self.newBranchesVector.iteritems():
+                # Fake Obj
+                if ("std_vector_lepton_isLooseLepton" == bname) : 
+                  for iLep in goodLeps : bvector.push_back(LeptonTags['Loose'][iLep])
+                  for remainingLep in range( maxNumLeptons - len(goodLeps) ) : bvector.push_back ( -9999. )
+                # WgStar Obj
+                if ("std_vector_lepton_isWgsLepton" == bname) : 
+                  for iLep in goodLeps : bvector.push_back(LeptonTags['WgStar'][iLep])
+                  for remainingLep in range( maxNumLeptons - len(goodLeps) ) : bvector.push_back ( -9999. )
+                # Tight Electron
+                for iWP in self.TightObjElectronWPs :
+                  lTag = 'electron_'+iWP
+                  vTag = 'std_vector_electron_isTightLepton_'+iWP
+                  if vTag == bname :
+                    for iLep in goodLeps : bvector.push_back(LeptonTags[lTag][iLep])
+                    for remainingLep in range( maxNumLeptons - len(goodLeps) ) : bvector.push_back ( -9999. )
+                # Tight Muons
+                for iWP in self.TightObjMuonWPs :
+                  lTag = 'muon_'+iWP
+                  vTag = 'std_vector_muon_isTightLepton_'+iWP
+                  if vTag == bname :
+                    for iLep in goodLeps : bvector.push_back(LeptonTags[lTag][iLep])
+                    for remainingLep in range( maxNumLeptons - len(goodLeps) ) : bvector.push_back ( -9999. )
+
               # jet cleaning
+              goodJets = []
+              for iJet in xrange(len(itree.std_vector_jet_pt)) :
+                isLepton = False;
+                for iLep in goodLeps :
+                  if itree.std_vector_lepton_pt[iLep] < self.jetCleaning_minpTLep:
+                    break;
+                  if self.jetIsLepton(itree.std_vector_jet_eta[iJet],itree.std_vector_jet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
+                    isLepton = True;
+                if not isLepton:
+                  if abs(itree.std_vector_jet_eta[iJet]) <= self.jetCleaning_absEta :
+                    goodJets.append(iJet)
 
-#
-#             for bname, bvector in self.newBranchesVector.iteritems():
-#                bvector.clear()
-#                if bname == 'std_vector_lepton_isLooseLepton' :
-#                  bvector.push_back (LooseTag)
-#                if bname == 'std_vector_lepton_isTightLepton' :
-#                  bvector.push_back (TightTag)
+              goodPuppiJets = []
+              for iJet in xrange(len(itree.std_vector_puppijet_pt)) :
+                  isLepton = False;
+                  for iLep in goodLeps :
+                      if itree.std_vector_lepton_pt[iLep] < self.jetCleaning_minpTLep:
+                          break;
+                      if self.jetIsLepton(itree.std_vector_puppijet_eta[iJet],itree.std_vector_puppijet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
+                          isLepton = True;
+                  if not isLepton:
+                    if abs(itree.std_vector_puppijet_eta[iJet]) <= self.jetCleaning_absEta :
+                      goodPuppiJets.append(iJet)
 
-  
+              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+                   if (("vector_jet" in bname) or (("vector_puppijet") in bname)) and not (("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname)):
+                       if "vector_puppijet" in bname:
+                           self.changeOrder( bname, bvector, goodPuppiJets)
+                       else:
+                           self.changeOrder( bname, bvector, goodJets)
+         
+              # refill the single jet variables
+              counter = 0
+              varCounter = 0
+              for bname, bvariable in self.jetVarDic.iteritems():
+                  bvariable[0] = (getattr(self.otree, 'std_vector_jet_'+self.jetVariables[varCounter]))[counter]
+                  counter += 1
+                  if counter == maxnjets:
+                      varCounter += 1
+                      counter = 0
+ 
+              # met filters: "bool" (as weight)  -- This is used prior to Full2016 Only I think (Xavier)
+              if self.cmssw == '763' or self.cmssw == 'ICHEP2016' or self.cmssw == 'Rereco2016' or self.cmssw == 'Full2016' :
+                pass_met_filters = 1.
+                #print " min =", min( 8 , len(itree.std_vector_trigger_special) )
+                for metfilters in range( min( 8 , len(itree.std_vector_trigger_special) ) ) :
+                  if itree.std_vector_trigger_special[metfilters] == 0. : pass_met_filters = 0.
+                  #print " i: ", i, " :: metfilters ", metfilters, " --> ", itree.std_vector_trigger_special[metfilters]
+                self.oldBranchesToBeModifiedSpecialSimpleVariable['metFilter'][0] = pass_met_filters
+
+ 
               savedentries+=1     
               otree.Fill()
 

@@ -2339,6 +2339,14 @@ Steps= {
                   'command'    : 'gardener.py l4kinfiller --cmssw RPLME_CMSSW'
                },
 
+  
+  'lepSel'       : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py lepSel -k 2 -n 2 --cmssw RPLME_CMSSW '
+               },
+
 
   'do_l2loose'    : {
                   'isChain'    : False ,
