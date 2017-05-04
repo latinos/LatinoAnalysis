@@ -42,6 +42,7 @@ ElectronWP['Full2016'] = {
                                  [
                                    'abs(itree.std_vector_lepton_eta[]) < 2.5' ,
                                    'itree.std_vector_lepton_eleIdHLT[] ' ,
+                                   'itree.std_vector_electron_expectedMissingInnerHits[] < 1',
                                  ] ,             
                        } ,
 
@@ -62,14 +63,14 @@ ElectronWP['Full2016'] = {
                                 # Barrel
                                 'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
                                   [
-                                    'itree.std_vector_lepton_d0[] < 0.05' ,
-                                    'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
                                   ] ,
                                 # EndCap
                                 'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                   [
-                                    'itree.std_vector_lepton_d0[] < 0.1' ,
-                                    'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                   ] ,
                              } ,
 
@@ -87,14 +88,14 @@ ElectronWP['Full2016'] = {
                                 # Barrel
                                 'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
                                   [
-                                    'itree.std_vector_lepton_d0[] < 0.05' ,
-                                    'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
                                   ] ,
                                 # EndCap
                                 'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                   [
-                                    'itree.std_vector_lepton_d0[] < 0.1' ,
-                                    'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                   ] ,
                              } ,
 
@@ -111,15 +112,15 @@ ElectronWP['Full2016'] = {
                                 # Barrel
                                  'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.05' ,
-                                     'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
                                      'relPFIsoRhoCorr < 0.0354',
                                    ] ,
                                  # EndCap
                                  'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.1' ,
-                                     'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0646',
                                    ] ,
                               } ,
@@ -136,15 +137,15 @@ ElectronWP['Full2016'] = {
                                 # Barrel
                                  'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.05' ,
-                                     'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
                                      'relPFIsoRhoCorr < 0.05880',
                                    ] ,
                                  # EndCap
                                  'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.1' ,
-                                     'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0571',
                                    ] ,
                               } ,
@@ -161,15 +162,15 @@ ElectronWP['Full2016'] = {
                                 # Barrel
                                  'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.05' ,
-                                     'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
                                      'relPFIsoRhoCorr < 0.0354',
                                    ] ,
                                  # EndCap
                                  'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.1' ,
-                                     'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0646',
                                    ] ,
                               } ,
@@ -186,15 +187,15 @@ ElectronWP['Full2016'] = {
                                 # Barrel
                                  'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.05' ,
-                                     'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
                                      'relPFIsoRhoCorr < 0.05880',
                                    ] ,
                                  # EndCap
                                  'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                    [
-                                     'itree.std_vector_lepton_d0[] < 0.1' ,
-                                     'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0571',
                                    ] ,
                               } ,
@@ -217,14 +218,14 @@ ElectronWP['Full2016'] = {
                                 # Barrel
                                 'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
                                   [
-                                    'itree.std_vector_lepton_d0[] < 0.05' ,
-                                    'itree.std_vector_lepton_dz[] < 0.1'  ,
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
                                   ] ,
                                 # EndCap
                                 'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                   [
-                                    'itree.std_vector_lepton_d0[] < 0.1' ,
-                                    'itree.std_vector_lepton_dz[] < 0.2'  ,
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                   ] ,
                              } ,
 

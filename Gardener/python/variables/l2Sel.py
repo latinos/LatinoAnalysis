@@ -1373,7 +1373,8 @@ class L2SelFiller(TreeCloner):
               #   - self.selection
               #      1 = pt>18/8 for two leading leptons
               saveEvent = 1
-              if self.selection == 1 :
+              #if self.selection == 1 :
+              if int(self.selection) == 1 :
                 if new_std_vector_lepton_pt.at(0) > 18 and new_std_vector_lepton_pt.at(1) > 8 :
                   saveEvent = 1
                 else :

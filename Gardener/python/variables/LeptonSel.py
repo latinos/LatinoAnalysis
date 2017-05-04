@@ -105,13 +105,16 @@ class LeptonSel(TreeCloner):
           print 'ERROR: No WP'
           exit()  
 
+        # Lepton cleaning options
         self.kindLep=int(opts.kindLep)
         self.nMinLep=int(opts.nMinLep) 
         self.pTLeptCut = [18.0,8.0]  # Only applied up to nMinLep
+
+        # Jet cleaning options
         self.jetCleaning_minpTLep = 10.
         self.jetCleaning_dRmax    = 0.3
         self.jetCleaning_dR2max   = self.jetCleaning_dRmax * self.jetCleaning_dRmax
-
+        self.jetCleaning_absEta   = 4.7
 
         # Create Elecron WP
         self.VetoObjElectronWPs   = {}
@@ -301,7 +304,6 @@ class LeptonSel(TreeCloner):
         print '- Starting eventloop'
         step = 5000
 
-        nentries = 50
         for i in xrange(nentries):
 
             itree.GetEntry(i)
@@ -440,7 +442,7 @@ class LeptonSel(TreeCloner):
                     for iLep in goodLeps : bvector.push_back(LeptonTags[lTag][iLep])
                     for remainingLep in range( maxNumLeptons - len(goodLeps) ) : bvector.push_back ( -9999. )
                 # Tight Muons
-                for iWP in self.TightObjElectronWPs :
+                for iWP in self.TightObjMuonWPs :
                   lTag = 'muon_'+iWP
                   vTag = 'std_vector_muon_isTightLepton_'+iWP
                   if vTag == bname :
