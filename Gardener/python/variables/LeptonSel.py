@@ -114,7 +114,7 @@ class LeptonSel(TreeCloner):
         self.jetCleaning_minpTLep = 10.
         self.jetCleaning_dRmax    = 0.3
         self.jetCleaning_dR2max   = self.jetCleaning_dRmax * self.jetCleaning_dRmax
-        self.jetCleaning_absEta   = 4.7
+        self.jetCleaning_absEta   = 5.0
 
         # Create Elecron WP
         self.VetoObjElectronWPs   = {}
@@ -459,7 +459,8 @@ class LeptonSel(TreeCloner):
                   if self.jetIsLepton(itree.std_vector_jet_eta[iJet],itree.std_vector_jet_phi[iJet],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
                     isLepton = True;
                 if not isLepton:
-                  goodJets.append(iJet)
+                  if abs(itree.std_vector_jet_eta[iJet]) <= self.jetCleaning_absEta :
+                    goodJets.append(iJet)
 
               goodPuppiJets = []
               for iJet in xrange(len(itree.std_vector_puppijet_pt)) :
