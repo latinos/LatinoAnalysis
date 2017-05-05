@@ -253,7 +253,7 @@ class LeptonSel(TreeCloner):
         # AND some variables we compute in this code like veto leptons
         self.namesOfSpecialSimpleVariable = [
            'metFilter',
-           'dmZllRecoMuon'
+           'dmZll_vetoLep'
         ]
 
 
@@ -500,6 +500,20 @@ class LeptonSel(TreeCloner):
                   #print " i: ", i, " :: metfilters ", metfilters, " --> ", itree.std_vector_trigger_special[metfilters]
                 self.oldBranchesToBeModifiedSpecialSimpleVariable['metFilter'][0] = pass_met_filters
 
+              # closest veto di-lepton mass to Z
+              if self.cmssw == 'Full2016' :
+                dmll = 9999.
+                for i1 in xrange(len(otree.std_vector_vetolepton_pt)) :
+                    for i2 in xrange(i1+1, len(otree.std_vector_vetolepton_pt)) :
+                        if otree.std_vector_vetolepton_pt[i2] < 10. :
+                            break
+                            
+                        # check opposite charge and same flavour
+                        if otree.std_vector_vetolepton_flavour[i1] == -1. * otree.std_vector_lepton_flavour[i2] :
+                            dmll_temp = fabs( math.sqrt(2*otree.std_vector_vetolepton_pt[i1]*otree.std_vector_vetolepton_pt[i2]*(math.cosh(otree.std_vector_vetolepton_eta[i1]-otree.std_vector_vetolepton_eta[i2]) - math.cos(otree.std_vector_vetolepton_phi[i1]-otree.std_vector_vetolepton_phi[i2])) ) - 91.1876 )
+                            if dmll_temp < dmll :
+                                dmll = dmll_temp
+                self.oldBranchesToBeModifiedSpecialSimpleVariable['dmZll_vetoLep'][0] = dmll
  
               savedentries+=1     
               otree.Fill()
