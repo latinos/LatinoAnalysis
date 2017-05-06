@@ -114,6 +114,8 @@ class ggHUncertaintyMaker(TreeCloner) :
             if itree.std_vector_partonGen_pt[ijet] > 30 :
               Njets30 += 1
           
+          #if int(Njets30) > 1 :
+            #print " int(Njets30) = ", int(Njets30)
       
           allUnc = ggHUncertainty.qcd_ggF_uncertSF_2017 (int(Njets30), itree.HTXS_ptHiggs, int(itree.HTXS_stage1_pTjet30GeV))
 
