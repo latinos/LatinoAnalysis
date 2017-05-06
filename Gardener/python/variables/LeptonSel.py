@@ -510,7 +510,7 @@ class LeptonSel(TreeCloner):
                             
                         # check opposite charge and same flavour
                         if otree.std_vector_vetolepton_flavour[i1] == -1. * otree.std_vector_lepton_flavour[i2] :
-                            dmll_temp = fabs( math.sqrt(2*otree.std_vector_vetolepton_pt[i1]*otree.std_vector_vetolepton_pt[i2]*(math.cosh(otree.std_vector_vetolepton_eta[i1]-otree.std_vector_vetolepton_eta[i2]) - math.cos(otree.std_vector_vetolepton_phi[i1]-otree.std_vector_vetolepton_phi[i2])) ) - 91.1876 )
+                            dmll_temp = abs( math.sqrt(2*otree.std_vector_vetolepton_pt[i1]*otree.std_vector_vetolepton_pt[i2]*(math.cosh(otree.std_vector_vetolepton_eta[i1]-otree.std_vector_vetolepton_eta[i2]) - math.cos(otree.std_vector_vetolepton_phi[i1]-otree.std_vector_vetolepton_phi[i2])) ) - 91.1876 )
                             if dmll_temp < dmll :
                                 dmll = dmll_temp
                 self.oldBranchesToBeModifiedSpecialSimpleVariable['dmZll_vetoLep'][0] = dmll

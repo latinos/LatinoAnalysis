@@ -1066,8 +1066,18 @@ Productions= {
 
   'Feb2017_summer16'   : {
                         'isData'  : False ,
-                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16_Feb2017.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/MC/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                        'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
+                       },
+
+  'Apr2017_summer16'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Apr2017/MC/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Full2016' ,
                         # 37.X fb-1
