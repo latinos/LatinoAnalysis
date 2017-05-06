@@ -1350,6 +1350,14 @@ Steps= {
                   'subTargets' : ['do_l2loose_Cut','puadder','baseW','wwNLL','genVariables','genMatchVariables','l2kin','l3kin','l4kin','do_dymvaHiggs','BWEwkSinglet','wwEWK','wzEWK','zzEWK'] #,'BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
+  'MCWeights' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['baseW','wwNLL','genVariables','genMatchVariables','BWEwkSinglet','wwEWK','wzEWK','zzEWK'] #,'BWEwkSinglet_JHUGen698','TopGenPt'],
+                },
+
+
 
   'l2loose'  :       {
                   'isChain'    : True ,
@@ -2344,7 +2352,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py lepSel -k 2 -n 2 --cmssw RPLME_CMSSW '
+                  'command'    : 'gardener.py lepSel -k 2 -n 1 --cmssw RPLME_CMSSW '
+               },
+
+  'lepSelVBS'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py lepSel -k 2 -n 1 --cmssw RPLME_CMSSW -w LatinoAnalysis/Gardener/python/variables/LeptonSel_cfg.py'
                },
 
 
