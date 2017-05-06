@@ -200,7 +200,7 @@ ElectronWP['Full2016'] = {
 #                                   ] ,
 #                              } ,
 # 
-#                  } ,
+                  } ,
  
  # ------------ 
  'WgStarObjWP' : {
