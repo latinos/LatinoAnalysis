@@ -2362,6 +2362,13 @@ Steps= {
                   'command'    : 'gardener.py lepSel -k 2 -n 1 --cmssw RPLME_CMSSW -w LatinoAnalysis/Gardener/python/variables/LeptonSel_cfg.py'
                },
 
+  'lep2SelVBS'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py lepSel -k 2 -n 2 --cmssw RPLME_CMSSW -w LatinoAnalysis/Gardener/python/variables/LeptonSel_cfg.py'
+               },
+
 
   'do_l2loose'    : {
                   'isChain'    : False ,
