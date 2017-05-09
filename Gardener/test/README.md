@@ -748,5 +748,15 @@ Add event weights for nuisances according to the 2017 interim prescription of th
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root   \
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root  
               
-                
+Add generic branches as formulas of other branches
+====
+
+Module: genericFormulaAdder
+
+This module adds generic expressions of of branches to the tree. The typical use is to precompute common weights.
+The new branches to ad are defined in https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/data/formulasToAdd.py
+
+    gardener.py  genericFormulaAdder \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root   \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root	
                 
