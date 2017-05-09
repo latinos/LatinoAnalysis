@@ -5,8 +5,8 @@
 #formulas = {}
 
 formulas['XSWeight'] = 'event.baseW*\
-                        event.GEN_weight_SM/abs(event.GEN_weight_SM)\
-                        '
+                        event.GEN_weight_SM/abs(event.GEN_weight_SM) \
+                        if hasattr(event, \'GEN_weight_SM\') else 1.'
 
 
 formulas['SFweight'] = 'event.puW*\
@@ -14,13 +14,13 @@ formulas['SFweight'] = 'event.puW*\
                         event.effTrigW*\
                         event.std_vector_lepton_idisoWcut_WP_Tight80X[0]*\
                         event.std_vector_lepton_idisoWcut_WP_Tight80X[1]*\
-                        event.veto_EMTFBug\
-                        '
+                        event.veto_EMTFBug \
+                        if hasattr(event, \'bPogSF_CMVAL\') else 1.'
 
 
 formulas['GenLepMatch'] = 'event.std_vector_lepton_genmatched[0]*\
-                           event.std_vector_lepton_genmatched[1]\
-                           '
+                           event.std_vector_lepton_genmatched[1] \
+                           if hasattr(event, \'std_vector_lepton_genmatched\') else 1. '
 
 METFilter_Common = '(event.std_vector_trigger_special[0]*\
                      event.std_vector_trigger_special[1]*\
