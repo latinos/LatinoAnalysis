@@ -44,6 +44,18 @@ ElectronWP['Full2016'] = {
                                    'itree.std_vector_lepton_eleIdHLT[] ' ,
                                    'itree.std_vector_electron_expectedMissingInnerHits[] < 1',
                                  ] ,             
+                                # Barrel
+                                'abs(itree.std_vector_lepton_eta[]) <= 1.479' :
+                                  [
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
+                                  ] ,
+                                # EndCap
+                                'abs(itree.std_vector_lepton_eta[]) > 1.479' :
+                                  [
+                                    'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
+                                    'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
+                                  ] ,
                        } ,
 
                  } ,
