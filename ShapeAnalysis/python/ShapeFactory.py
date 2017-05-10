@@ -1060,6 +1060,12 @@ class ShapeFactory:
     def _testIiheFile(self,path): 
       if 'maite.iihe.ac.be' in path: 
         return os.path.exists(path.split('dcap://maite.iihe.ac.be/')[1])
+    # _____________________________________________________________________________
+    def _testKnuFile(self,path):
+      if 'dcap://cluster142.knu.ac.kr' in path:
+	newPath = 'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + path.split('dcap://cluster142.knu.ac.kr')[1]
+
+
 
     # _____________________________________________________________________________
     def _buildchain(self, treeName, files, skipMissingFiles):
@@ -1076,7 +1082,9 @@ class ShapeFactory:
               if not self._testIiheFile(path):
                 print 'File '+path+' doesn\'t exists @ IIHE'
                 doesFileExist = False
-                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')                
+                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
+	    elif "cluster142.knu.ac.kr" in path:
+	      pass # already checked the file at mkShape.py
             else:
               if not os.path.exists(path):
                 print 'File '+path+' doesn\'t exists'
