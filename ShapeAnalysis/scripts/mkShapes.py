@@ -138,11 +138,11 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    InputDir = opt.inputDir
 
     print " configuration file = ", opt.pycfg
     print " lumi =               ", opt.lumi
     
+    print " inputDir =           ", opt.inputDir
     print " outputDir =          ", opt.outputDir
  
     print "batchSplit: ",opt.batchSplit
@@ -178,13 +178,6 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
-    if 'knu' in os.uname()[1] and not directory == '':
-      InputDir = directory
-      if opt.doBatch:
-	if not 'dcap://cluster142.knu.ac.kr/' in InputDir:
-	  InputDir = 'dcap://cluster142.knu.ac.kr/' + InputDir
-
-    print " InputDir =           ", InputDir
 
     nuisances = {}
     if opt.nuisancesFile == None :
@@ -292,7 +285,7 @@ if __name__ == '__main__':
                         jName = iStep + '_' + iTarget
                         instructions_for_configuration_file  = ""
                         instructions_for_configuration_file += "factory.makeNominals(   \n"
-                        instructions_for_configuration_file += "     '" + InputDir +"',    \n"
+                        instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
                         instructions_for_configuration_file += "     '" + outputDir + "',     \n"
                         instructions_for_configuration_file += "      " + str(variables) + ", \n"
                         instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
@@ -312,7 +305,7 @@ if __name__ == '__main__':
                     jName = iStep + '_' + iTarget
                     instructions_for_configuration_file  = ""
                     instructions_for_configuration_file += "factory.makeNominals(   \n"
-                    instructions_for_configuration_file += "     '" + InputDir +"',    \n"
+                    instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
                     instructions_for_configuration_file += "     '" + outputDir + "',     \n"
                     instructions_for_configuration_file += "      " + str(variables) + ", \n"
                     instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
@@ -341,7 +334,7 @@ if __name__ == '__main__':
 
                   instructions_for_configuration_file  = ""
                   instructions_for_configuration_file += "factory.makeNominals(   \n"
-                  instructions_for_configuration_file += "     '" + InputDir +"',    \n"
+                  instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
                   instructions_for_configuration_file += "     '" + outputDir + "',     \n"
                   instructions_for_configuration_file += "      " + str(variables) + ", \n"
                   instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
@@ -350,7 +343,7 @@ if __name__ == '__main__':
                   instructions_for_configuration_file += "     '" + supercut + "',      \n"
                   instructions_for_configuration_file += "     '" + jName + "')    \n"
 
-                  #jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+InputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
+                  #jobs.AddPy(iStep,iTarget,"factory.makeNominals('"+opt.inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts_new)+","+str(samples_new)+","+str(nuisances)+",'"+supercut+"','"+jName+"')\n"    )
                   jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
 
             elif 'Cuts' in opt.batchSplit and not 'Samples' in opt.batchSplit:
@@ -366,7 +359,7 @@ if __name__ == '__main__':
 
                 instructions_for_configuration_file  = ""
                 instructions_for_configuration_file += "factory.makeNominals(   \n"
-                instructions_for_configuration_file += "     '" + InputDir +"',    \n"
+                instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
                 instructions_for_configuration_file += "     '" + outputDir + "',     \n"
                 instructions_for_configuration_file += "      " + str(variables) + ", \n"
                 instructions_for_configuration_file += "      " + str(cuts_new) + ",      \n"
@@ -389,7 +382,7 @@ if __name__ == '__main__':
 
                 instructions_for_configuration_file  = ""
                 instructions_for_configuration_file += "factory.makeNominals(   \n"
-                instructions_for_configuration_file += "     '" + InputDir +"',    \n"
+                instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
                 instructions_for_configuration_file += "     '" + outputDir + "',     \n"
                 instructions_for_configuration_file += "      " + str(variables) + ", \n"
                 instructions_for_configuration_file += "      " + str(cuts) + ",      \n"
@@ -407,7 +400,7 @@ if __name__ == '__main__':
 
               instructions_for_configuration_file  = ""
               instructions_for_configuration_file += "factory.makeNominals(   \n"
-              instructions_for_configuration_file += "     '" + InputDir +"',    \n"
+              instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
               instructions_for_configuration_file += "     '" + outputDir + "',     \n"
               instructions_for_configuration_file += "      " + str(variables) + ", \n"
               instructions_for_configuration_file += "      " + str(cuts) + ",      \n"
@@ -554,14 +547,14 @@ if __name__ == '__main__':
                       samples_new[sam_k]['name'] = fileListPerJob
                       if len(thisSampleWeights) != 0:
                         samples_new[sam_k]['weights'] = weightListPerJob   
-                      queue.put( [InputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                      queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
                       number += 1
                       fileListPerJob=[]
                       weightListPerJob=[]
                 else:
                   samples_new = {}
                   samples_new[sam_k] = copy.deepcopy(sam_v)
-                  queue.put( [InputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                  queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
                   number += 1
             queue.join()
 
@@ -604,4 +597,4 @@ if __name__ == '__main__':
       factory._lumi      = opt.lumi
       factory._tag       = opt.tag
  
-      factory.makeNominals( InputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
+      factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
