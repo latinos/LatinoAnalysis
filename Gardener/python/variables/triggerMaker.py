@@ -893,6 +893,7 @@ class triggerMaker(TreeCloner):
            'trig_DbleMu',
            'trig_EleMu',
           ]
+          self.namesOldBranchesToBeModifiedVector = []
 
         else: 
 
