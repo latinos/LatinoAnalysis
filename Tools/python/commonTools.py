@@ -176,6 +176,8 @@ def getSampleFiles(inputDir,Sample,absPath=False):
         Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
       else:
         Dir = inputDir 
+      if '/pnfs/' in inputDir :  xrootdPath='dcap://cluster142.knu.ac.kr/'
+     
 
     # ... DEFAULT: local mounted disk
     else :

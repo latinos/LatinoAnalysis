@@ -1060,10 +1060,6 @@ class ShapeFactory:
     def _testIiheFile(self,path): 
       if 'maite.iihe.ac.be' in path: 
         return os.path.exists(path.split('dcap://maite.iihe.ac.be/')[1])
-    # _____________________________________________________________________________
-    def _testKnuFile(self,path):
-      if 'dcap://cluster142.knu.ac.kr' in path:
-	newPath = 'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + path.split('dcap://cluster142.knu.ac.kr')[1]
 
 
 
