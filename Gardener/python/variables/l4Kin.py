@@ -125,7 +125,7 @@ class L4KinFiller(TreeCloner):
                 print i,'events processed :: ', nentries
 
             ZWW = ROOT.ZWW()
-            ZWW.setLepton(itree.std_vector_lepton_pt, itree.std_vector_lepton_eta, itree.std_vector_lepton_phi, itree.std_vector_lepton_flavour, itree.std_vector_lepton_ch, itree.std_vector_lepton_isTightLepton)
+            ZWW.setLepton(itree.std_vector_lepton_pt, itree.std_vector_lepton_eta, itree.std_vector_lepton_phi, itree.std_vector_lepton_flavour, itree.std_vector_lepton_ch, itree.std_vector_lepton_isLooseLepton)
             ZWW.setJet(itree.std_vector_jet_pt, itree.std_vector_jet_eta,itree.std_vector_jet_phi,    itree.std_vector_jet_mass, itree.std_vector_jet_cmvav2)
             
             if self.cmssw == '80x' :
