@@ -6,14 +6,16 @@ for Run in B C D E F G H; do
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s EpTCorr,TrigMakerData -i lepSel -C -S Target -b
 
   # Fake: >= 1 loose lepton
-  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData -S Target -b 
-  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s fakeSel -i lepSel__EpTCorr__TrigMakerData -S Target -b
-  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData__fakeSel -S Target -b 
+  #./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData -S Target -b 
+  #./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s fakeSel -i lepSel__EpTCorr__TrigMakerData -S Target -b
+  #./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData__fakeSel -S Target -b 
 
   # l2loose: >= 2 loose leptons 
-  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s l2loose -i lepSel__EpTCorr__TrigMakerData -S Target -b
-  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData__l2loose -S Target -b
+  #./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s l2loose -i lepSel__EpTCorr__TrigMakerData -S Target -b
+  #./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData__l2loose -S Target -b
+ 
   
+ 
 
 ######## OLD BELOW ########
  
