@@ -1491,19 +1491,21 @@ Steps= {
 
 
 
-  'l2loose'  :       {
-                  'isChain'    : True ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True,
-                  'subTargets' : ['do_l2loose','l2kin','l3kin','l4kin'],
-                },
 
-  'l2vloose'  :       {
-                  'isChain'    : True ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True,
-                  'subTargets' : ['do_l2vloose','l2kin','l3kin','l4kin'],
-                },
+
+# 'l2loose'  :       {
+#                 'isChain'    : True ,
+#                 'do4MC'      : False ,
+#                 'do4Data'    : True,
+#                 'subTargets' : ['do_l2loose','l2kin','l3kin','l4kin'],
+#               },
+
+# 'l2vloose'  :       {
+#                 'isChain'    : True ,
+#                 'do4MC'      : False ,
+#                 'do4Data'    : True,
+#                 'subTargets' : ['do_l2vloose','l2kin','l3kin','l4kin'],
+#               },
 
   'l2looseCut'  :       {
                   'isChain'    : True ,
@@ -2536,6 +2538,15 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l2selfiller --kind 4 --cmssw RPLME_CMSSW --selection 1 --idEleKind cut_WP_Tight80X'
                },
+
+  ### This is the new version with the LepSel module !
+  'l2loose'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'std_vector_lepton_isLooseLepton[0]>0.5 && std_vector_lepton_isLooseLepton[1]>0.5\' '
+               },
+
 
 
   'l2tight'    : {
