@@ -24,12 +24,14 @@ ElectronWP['Full2016'] = {
 
 #'VetoObjWP' : { 
 #          'HLTsafe' : { 
+#                         'cuts' : { 
 #                               # Common cuts
 #                               'True' :
 #                                [
 #                                  'abs(itree.std_vector_lepton_eta[]) < 2.5' ,
 #                                  'itree.std_vector_lepton_eleIdHLT[] ' ,
 #                                ] ,             
+#                                   },
 #                      } ,
 #                } ,
   
@@ -37,6 +39,7 @@ ElectronWP['Full2016'] = {
  'FakeObjWP'  : {
 
            'HLTsafe' : { 
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                  [
@@ -56,6 +59,7 @@ ElectronWP['Full2016'] = {
                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                   ] ,
+                                   },
                        } ,
 
                  } ,
@@ -64,6 +68,7 @@ ElectronWP['Full2016'] = {
  'TightObjWP' : {
 
          'cut_WP_Tight80X' : {
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                   [
@@ -84,10 +89,18 @@ ElectronWP['Full2016'] = {
                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                   ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                                  } ,
+                         'wpSF':  {
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_cut_WP_Tight80X.txt' ,  
+                                  } ,
                              } ,
 
 
          'cut_WP_Tight80X_SS' : {
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                   [
@@ -109,10 +122,18 @@ ElectronWP['Full2016'] = {
                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                   ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                                  } ,
+                         'wpSF':  {
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_cut_WP_Tight80X_SS.txt' ,
+                                  } ,
                              } ,
 
 
           'mva_80p_Iso2015':  {
+                         'cuts' : { 
                                 # Common cuts 
                                 'True' :
                                    [
@@ -135,9 +156,17 @@ ElectronWP['Full2016'] = {
                                      'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0646',
                                    ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                                  } ,
+                         'wpSF':  {
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_80p_Iso2015.txt' ,
+                                  } ,
                               } ,
  
           'mva_80p_Iso2016':  {
+                         'cuts' : { 
                                 # Common cuts 
                                 'True' :
                                    [
@@ -160,9 +189,17 @@ ElectronWP['Full2016'] = {
                                      'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0571',
                                    ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                                  } ,
+                         'wpSF':  {
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_80p_Iso2016.txt' ,
+                                  } ,
                               } ,
  
           'mva_90p_Iso2015':  {
+                         'cuts' : { 
                                 # Common cuts 
                                 'True' :
                                    [
@@ -185,9 +222,17 @@ ElectronWP['Full2016'] = {
                                      'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0646',
                                    ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                                  } ,
+                         'wpSF':  {
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_90p_Iso2015.txt' ,
+                                  } ,
                               } ,
  
           'mva_90p_Iso2016':  {
+                         'cuts' : { 
                                 # Common cuts 
                                 'True' :
                                    [
@@ -210,6 +255,13 @@ ElectronWP['Full2016'] = {
                                      'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                      'relPFIsoRhoCorr < 0.0571',
                                    ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                                  } ,
+                         'wpSF':  {
+                                    '1-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_90p_Iso2016.txt' ,
+                                  } ,
                               } ,
  
                   } ,
@@ -218,6 +270,7 @@ ElectronWP['Full2016'] = {
  'WgStarObjWP' : {
 
          'cut_WP_Tight80X' : {
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                   [
@@ -239,6 +292,7 @@ ElectronWP['Full2016'] = {
                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
                                   ] ,
+                                  } ,
                              } ,
 
                  } ,
@@ -265,12 +319,14 @@ MuonWP['Full2016'] = {
 ## ------------  
  'VetoObjWP' : { 
       'vetoMuon' : {
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                  [
                                    'abs(itree.std_vector_lepton_eta[]) < 2.4' , 
                                    'itree.std_vector_lepton_pt[] > 10.0' ,
                                  ]
+                                  } ,
                    }
                } ,
 
@@ -278,6 +334,7 @@ MuonWP['Full2016'] = {
  'FakeObjWP'  : {
 
       'cut_Tight80x_LooseIso' : {
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                  [
@@ -297,6 +354,7 @@ MuonWP['Full2016'] = {
                                  [
                                     'abs(itree.std_vector_lepton_d0[]) < 0.02 ' ,
                                  ] ,
+                                  } ,
 
                        } ,
                  
@@ -306,6 +364,7 @@ MuonWP['Full2016'] = {
  'TightObjWP' :  {
 
       'cut_Tight80x' : {
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                  [ 
@@ -325,6 +384,23 @@ MuonWP['Full2016'] = {
                                  [
                                     'abs(itree.std_vector_lepton_d0[]) < 0.02 ' ,
                                  ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-4' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/trackerSF_Moriond17_MuoPOG_BCDEF.root' ,
+                                    '5-6' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/trackerSF_Moriond17_MuoPOG_GH.root' ,
+                                  } ,
+                         'idSF':  {
+                                    '1-4' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt' ] ,
+                                    '5-6' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016GH_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt' ] ,
+                                  } ,
+                         'isoSF':  {
+                                    '1-4' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt' ] ,
+                                    '5-6' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016GH_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt' ] , 
+                                  } ,
 
                        } ,
 
@@ -333,6 +409,7 @@ MuonWP['Full2016'] = {
  # -------------
  'WgStarObjWP' : {
      'cut_Tight80x' : { 
+                         'cuts' : { 
                                 # Common cuts
                                 'True' :
                                  [
@@ -352,7 +429,7 @@ MuonWP['Full2016'] = {
                                  [
                                     'abs(itree.std_vector_lepton_d0[]) < 0.02 ' ,
                                  ] ,
-
+                                  } ,
                        } ,
  
                  }, 

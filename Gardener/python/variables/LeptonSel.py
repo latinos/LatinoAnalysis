@@ -25,10 +25,10 @@ class LeptonWP():
           self.Variables[iVar] = WPDic[cmssw]['Variables'][iVar]
 
       self.WP = {}
-      for iCond in WPDic[cmssw][WPType][WP] :
+      for iCond in WPDic[cmssw][WPType][WP]['cuts'] :
         nCut = 0     
         Cut = ''
-        for iCut in WPDic[cmssw][WPType][WP][iCond]: 
+        for iCut in WPDic[cmssw][WPType][WP]['cuts'][iCond]: 
           if nCut != 0 : Cut += ' and '
           nCut += 1
           Cut += '(' + iCut + ')'

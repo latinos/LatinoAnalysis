@@ -1,6 +1,8 @@
 
 
 ./mkGardener.py -p Apr2017_summer16 -s lepSel -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s MCWeights -i lepSel -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s bSFLpTEffMulti -i lepSel__MCWeights -S Target -b
 
 
 

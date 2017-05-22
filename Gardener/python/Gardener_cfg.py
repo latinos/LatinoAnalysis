@@ -1777,6 +1777,14 @@ Steps= {
                   'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Cut','l2kin'],
                     },
 
+  'bSFLpTEffMulti' :   'bSFL2pTEffCut' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                    },
+
+
 
   'puextra'      :   {
                   'isChain'    : True ,
@@ -2633,6 +2641,15 @@ Steps= {
                   'do4Data'    : False  ,
                   'command'    : 'gardener.py idisofiller  --isoideleAltLumiRatio=0.0135 --cmssw=RPLME_CMSSW --idEleKind=cut_WP_Tight80X'
                },
+
+  'IdIsoSC_Multi'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py multiidiso --cmssw=RPLME_CMSSW'
+               },
+ 
+
 
 # Old trigger module
 
