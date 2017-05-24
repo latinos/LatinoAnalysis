@@ -4,8 +4,6 @@ for Run in B C D E F G H; do
   # Doing first common Lepton Selection with nLep > =1 +  pTCorr and trigger bits
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s lepSel -S Target -b
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s EpTCorr,TrigMakerData -i lepSel -C -S Target -b
-  ### Fix: 
-  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s TrigMakerData -i lepSel__EpTCorr -S Target -b   
 
   # Fake: >= 1 loose lepton
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData -S Target -b 
@@ -15,8 +13,9 @@ for Run in B C D E F G H; do
   # l2loose: >= 2 loose leptons 
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s l2loose -i lepSel__EpTCorr__TrigMakerData -S Target -b
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData__l2loose -S Target -b
- 
-  
+
+  # l2 tight >= 2 tight leptons (any WP) 
+  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s l2tightOR -i lepSel__EpTCorr__TrigMakerData__l2loose__hadd -S Target -b
  
 
 ######## OLD BELOW ########

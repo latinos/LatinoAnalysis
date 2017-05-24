@@ -1777,7 +1777,7 @@ Steps= {
                   'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Cut','l2kin'],
                     },
 
-  'bSFLpTEffMulti' :   'bSFL2pTEffCut' : {
+  'bSFLpTEffMulti' : {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
@@ -2569,8 +2569,20 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \' \
-                                                             ( std_vector_muon_isTightLepton_cut_Tight80x[0]>0.5 || std_vector_electron_isTightLepton_cut_Tight80x[0]>0.5 || std_vector_electron_isTightLepton_mva_80p_Iso2015[0]>0.5 || std_vector_electon_isTightLepton_mva_80p_Iso2016[0]>0.5 || std_vector_electon_isTightLepton_mva_90p_Iso2015[0]>0.5 || std_vector_electon_isTightLepton_mva_90p_Iso2016[0]>0.5    ) \
-                                                         &&  ( std_vector_muon_isTightLepton_cut_Tight80x[1]>0.5 || std_vector_electron_isTightLepton_cut_Tight80x[1]>0.5 || std_vector_electron_isTightLepton_mva_80p_Iso2015[1]>0.5 || std_vector_electon_isTightLepton_mva_80p_Iso2016[1]>0.5 || std_vector_electon_isTightLepton_mva_90p_Iso2015[1]>0.5 || std_vector_electon_isTightLepton_mva_90p_Iso2016[1]>0.5    ) \
+                                                             (    std_vector_muon_isTightLepton_cut_Tight80x[0]>0.5             \
+                                                               || std_vector_electron_isTightLepton_cut_WP_Tight80X[0]>0.5      \
+                                                               || std_vector_electron_isTightLepton_cut_WP_Tight80X_SS[0]>0.5   \
+                                                               || std_vector_electron_isTightLepton_mva_80p_Iso2015[0]>0.5      \
+                                                               || std_vector_electron_isTightLepton_mva_80p_Iso2016[0]>0.5      \
+                                                               || std_vector_electron_isTightLepton_mva_90p_Iso2015[0]>0.5      \
+                                                               || std_vector_electron_isTightLepton_mva_90p_Iso2016[0]>0.5    ) \
+                                                          && (    std_vector_muon_isTightLepton_cut_Tight80x[1]>0.5             \
+                                                               || std_vector_electron_isTightLepton_cut_WP_Tight80X[1]>0.5      \
+                                                               || std_vector_electron_isTightLepton_cut_WP_Tight80X_SS[1]>0.5   \
+                                                               || std_vector_electron_isTightLepton_mva_80p_Iso2015[1]>0.5      \
+                                                               || std_vector_electron_isTightLepton_mva_80p_Iso2016[1]>0.5      \
+                                                               || std_vector_electron_isTightLepton_mva_90p_Iso2015[1]>0.5      \
+                                                               || std_vector_electron_isTightLepton_mva_90p_Iso2016[1]>0.5    ) \
                                                         \' '   
                },
 
