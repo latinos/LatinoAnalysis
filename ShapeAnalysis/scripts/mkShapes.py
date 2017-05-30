@@ -188,12 +188,13 @@ if __name__ == '__main__':
         handle.close()
          
 
+    batchSplit='' # This is needed to be defined here to be used at opt.doHadd case too
     if   opt.doBatch != 0:
             print "~~~~~~~~~~~ Running mkShape on Batch Queue"
 
             # Create Jobs Dictionary
             
-            batchSplit=''
+            #batchSplit=''
  
             # ... Cuts
             stepList=[]
