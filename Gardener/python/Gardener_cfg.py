@@ -1206,6 +1206,16 @@ Productions= {
                         'puData'  : '/afs/cern.ch/user/x/xjanssen/public/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
                        },
 
+  'Apr2017_summer16_KNU'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'dir'     : 'LatinoProduction/Apr2017_HowToBeALatinLover/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                        'puData'  : '/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
+                       },
+
 
 }
 
@@ -1546,6 +1556,13 @@ Steps= {
                                   'TTTo2L2Nu_ext1','ST_t-channel_antitop','ST_t-channel_top',
                                   'ST_tW_antitop','ST_tW_top','TTJets', 
                                  ] ,
+                },
+
+  'MCl2vloose_KNU' :       {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['do_l2vloose','puadder','baseW','genVariables','genMatchVariables','l2kin','l3kin','l4kin'],
                 },
 
   'MCl2vlooseCut' :       {

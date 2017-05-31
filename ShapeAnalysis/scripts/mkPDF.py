@@ -159,8 +159,8 @@ class ShapeFactory:
 
           summaryNuisanceFileAlphaPDFqq = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_qq_' + cutName + '.py', 'w')
 
-          summaryNuisanceFileAlphaPDFqq.write("nuisances['pdf_qqbar_accept']  = { \n")
-          summaryNuisanceFileAlphaPDFqq.write("    'name'  : 'pdf_qqbar_accept', \n")
+          summaryNuisanceFileAlphaPDFqq.write("nuisances['Alphascale_pdf_qqbar_accept']  = { \n")
+          summaryNuisanceFileAlphaPDFqq.write("    'name'  : 'Alphascale_pdf_qqbar_accept', \n")
           summaryNuisanceFileAlphaPDFqq.write("    'type'  : 'lnN', \n")
           summaryNuisanceFileAlphaPDFqq.write("    'samples'  : { \n")
 
@@ -195,8 +195,8 @@ class ShapeFactory:
 
           summaryNuisanceFileAlphaPDFgg = open(self._outputDirPDF + '/summary_nuisance_alpha_pdf_gg_' + cutName + '.py', 'w')
 
-          summaryNuisanceFileAlphaPDFgg.write("nuisances['pdf_gg_accept']  = { \n")
-          summaryNuisanceFileAlphaPDFgg.write("    'name'  : 'pdf_gg_accept', \n")
+          summaryNuisanceFileAlphaPDFgg.write("nuisances['Alphascale_pdf_gg_accept']  = { \n")
+          summaryNuisanceFileAlphaPDFgg.write("    'name'  : 'Alphascale_pdf_gg_accept', \n")
           summaryNuisanceFileAlphaPDFgg.write("    'type'  : 'lnN', \n")
           summaryNuisanceFileAlphaPDFgg.write("    'samples'  : { \n")
 
