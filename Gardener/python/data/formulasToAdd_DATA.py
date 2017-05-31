@@ -12,8 +12,6 @@ METFilter_Common = '(event.std_vector_trigger_special[0]*\
                    )'
 
 METFilter_DATA   =  METFilter_Common + '*' + '(event.std_vector_trigger_special[4]*\
-                                              (not event.std_vector_trigger_special[6])*\
-                                              (not event.std_vector_trigger_special[7])*\
                                               event.std_vector_trigger_special[8]*\
                                               event.std_vector_trigger_special[9])'
 
