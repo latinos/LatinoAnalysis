@@ -5,14 +5,15 @@
 ./mkGardener.py -p Apr2017_summer16 -s bSFLpTEffMulti -i lepSel__MCWeights -S Target -b
 
 # Fake: >= 1 loose lepton
-
+./mkGardener.py -p Apr2017_summer16 -s fakeSelMC -i lepSel__MCWeights__bSFLpTEffMulti -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s hadd -i lepSel__MCWeights__bSFLpTEffMulti__fakeSelMC -S Target -b
 
 # l2loose: >= 2 loose leptons
 ./mkGardener.py -p Apr2017_summer16 -s l2loose -i lepSel__MCWeights__bSFLpTEffMulti -S Target -b
 ./mkGardener.py -p Apr2017_summer16 -s hadd -i lepSel__MCWeights__bSFLpTEffMulti__l2loose -S Target -b
 
 # l2 tight >= 2 tight leptons (any WP)
-./mkGardener.py -p Apr2017_summer16 -s  l2tightOR -i -i lepSel__MCWeights__bSFLpTEffMulti__l2loose__hadd -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s  l2tightOR -i lepSel__MCWeights__bSFLpTEffMulti__l2loose__hadd -S Target -b
 
 
 ## L2 loose
