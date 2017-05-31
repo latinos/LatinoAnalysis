@@ -2506,6 +2506,21 @@ Steps= {
                   'command'    : 'gardener.py l4kinfiller --cmssw RPLME_CMSSW'
                },
 
+  'formulasMC' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py genericFormulaAdder -f data/formulasToAdd_MC.py'
+               },
+
+
+  'formulasDATA' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py genericFormulaAdder -f data/formulasToAdd_DATA.py'
+               },
+
   
   'lepSel'       : {
                   'isChain'    : False ,

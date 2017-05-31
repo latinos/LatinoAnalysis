@@ -14,6 +14,7 @@
 
 # l2 tight >= 2 tight leptons (any WP)
 ./mkGardener.py -p Apr2017_summer16 -s  l2tightOR -i lepSel__MCWeights__bSFLpTEffMulti__l2loose__hadd -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s  formulasMC -i lepSel__MCWeights__bSFLpTEffMulti__l2loose__hadd__l2tightOR -S Target -b
 
 
 ## L2 loose

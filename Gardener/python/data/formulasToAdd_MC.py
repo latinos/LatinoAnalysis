@@ -1,6 +1,6 @@
 # formulas to be added, in python language
 # call to branches have to be in the form event.branchName
-# if you want to use logical operators, the have to be the python ones (i.e "and" not "&&")
+# if you want to use logical operators, the have to be the python ones (i.e "and" not " and ")
 
 #formulas = {}
 
@@ -43,13 +43,13 @@ for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_
                                                   std_vector_muon_idisoW_'+muWP+'[3] \
                                                   if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') and hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.' 
 
-  formulas['LepCut2l__ele_'+eleWP+'__mu_'+muWP] = '((std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5||std_vector_muon_isTightLepton_'+muWP+'[0]>0.5)&&\
-                                                    (std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5||std_vector_muon_isTightLepton_'+muWP+'[1]>0.5)) \
+  formulas['LepCut2l__ele_'+eleWP+'__mu_'+muWP] = '((std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
+                                                    (std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[1]>0.5)) \
                                                    if hasattr(event, \'std_vector_electron_isTightLepton_'+eleWP+'\') and hasattr(event, \'std_vector_muon_isTightLepton_'+muWP+'\') else 1.'
 
-  formulas['LepCut3l__ele_'+eleWP+'__mu_'+muWP] = '((std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5||std_vector_muon_isTightLepton_'+muWP+'[0]>0.5)&&\
-                                                    (std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5||std_vector_muon_isTightLepton_'+muWP+'[1]>0.5)&&\
-                                                    (std_vector_electron_isTightLepton_'+eleWP+'[2]>0.5||std_vector_muon_isTightLepton_'+muWP+'[2]>0.5)) \
+  formulas['LepCut3l__ele_'+eleWP+'__mu_'+muWP] = '((std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
+                                                    (std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[1]>0.5) and \
+                                                    (std_vector_electron_isTightLepton_'+eleWP+'[2]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[2]>0.5)) \
                                                    if hasattr(event, \'std_vector_electron_isTightLepton_'+eleWP+'\') and hasattr(event, \'std_vector_muon_isTightLepton_'+muWP+'\') else 1.'
 
   formulas['LepSF2l__ele_'+eleWP+'__Up'] = '((abs(std_vector_lepton_flavour[0]) == 11)*(std_vector_electron_idisoW_'+eleWP+'_Up[0])/(std_vector_electron_idisoW_'+eleWP+'[0])+\
