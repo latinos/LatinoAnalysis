@@ -25,13 +25,14 @@ class genericFormulaAdder(TreeCloner):
     def addOptions(self,parser):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
+        group.add_option('-f', '--fdic',   dest='FormDic', help='Formula Dictionnary', default='data/formulasToAdd_Data.py', type='string')
         parser.add_option_group(group)
 
         return group
 
 
     def checkOptions(self,opts):
-        pass
+        self.FormDic = opts.FormDic
        
        
     def process(self,**kwargs):
@@ -43,8 +44,9 @@ class genericFormulaAdder(TreeCloner):
         output = kwargs['output']
 
         cmssw_base = os.getenv('CMSSW_BASE')
-        formulasFile = "data/formulasToAdd.py"
-        formulasFile_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+formulasFile
+        #formulasFile = "data/formulasToAdd.py"
+        #formulasFile_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+formulasFile
+        formulasFile_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+self.FormDic
 
         formulas = {}
 

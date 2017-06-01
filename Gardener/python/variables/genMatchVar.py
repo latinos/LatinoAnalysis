@@ -65,7 +65,7 @@ class GenMatchVarFiller(TreeCloner):
 
         self.connect(tree,input)
 
-        self.namesOldBranchesToBeModifiedVector = ['std_vector_lepton_genmatched']
+        self.namesOldBranchesToBeModifiedVector = ['std_vector_lepton_genmatched','std_vector_lepton_promptgenmatched']
 
         # clone the tree
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
@@ -106,6 +106,7 @@ class GenMatchVarFiller(TreeCloner):
 
               # default is not matched            
               isLeptonMatched = 0
+              isLeptonPromptMatched = 0
 
               # check if the lepton is modified              
               if hasattr(itree, 'std_vector_leptonGen_pt') :
@@ -119,10 +120,15 @@ class GenMatchVarFiller(TreeCloner):
                                         self.itree.std_vector_leptonGen_eta[iGenLep], self.itree.std_vector_leptonGen_phi[iGenLep],
                                         0.3) :
                       isLeptonMatched = 1
+                      if self.itree.std_vector_leptonGen_isPrompt[iGenLep] == 1 or self.itree.std_vector_leptonGen_isDirectPromptTauDecayProduct[iGenLep] == 1 :
+                          isLeptonPromptMatched = 1
               
               # now save the variable
               for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
-                bvector.push_back ( isLeptonMatched )
+                  if "prompt" in bname :
+                    bvector.push_back ( isLeptonPromptMatched )
+                  else :
+                    bvector.push_back ( isLeptonMatched )
                 #print " itree.std_vector_lepton_pt[", iLep, "] = ", itree.std_vector_lepton_pt[iLep], "  --> ", isLeptonMatched
           
           
