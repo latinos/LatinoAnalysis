@@ -2947,6 +2947,167 @@ Steps= {
                    'command'    : 'gardener.py muccaMvaVarFiller --kind 5'
                  } ,
 
+  # MUCCA for monoH from larger training phase space
+
+  # Chain for em channel
+  
+  'muccaMonoHPSem'       :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            'mucca_2HDMadaptPS_em',
+            'mucca_2HDMadaptPSFull_em',
+            'mucca_2HDMgradPS_em',
+            'mucca_2HDMgradPSFull_em',
+            'mucca_ZbaradaptPS_em',
+            'mucca_ZbaradaptPSFull_em',
+            'mucca_ZbargradPS_em',
+            'mucca_ZbargradPSFull_em'
+            ],
+        },
+  
+  # Chain for sf channel
+  
+  'muccaMonoHPSsf'       :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            'mucca_2HDMadaptPS_sf',
+            'mucca_2HDMadaptPSFull_sf',
+            'mucca_2HDMgradPS_sf',
+            'mucca_2HDMgradPSFull_sf',
+            'mucca_ZbaradaptPS_sf',
+            'mucca_ZbaradaptPSFull_sf',
+            'mucca_ZbargradPS_sf',
+            'mucca_ZbargradPSFull_sf'
+            ],
+        },
+  
+  
+  # 2HDM model em
+  
+  'mucca_2HDMadaptPS_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="2HDMadapt_em" --training="BDT9" --channel="em" --model="2HDM"'
+        }  ,
+  
+  'mucca_2HDMadaptPSFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="2HDMadaptFull_em" --training="BDT9" --channel="em" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradPS_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="2HDMgrad_em" --training="BDTG18" --channel="em" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradPSFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="2HDMgradFull_em" --training="BDTG18" --channel="em" --model="2HDM"'
+        } ,
+  
+  # 2HDM model sf
+  
+  'mucca_2HDMadaptPS_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="2HDMadapt_sf" --training="BDT7" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMadaptPSFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="2HDMadaptFull_sf" --training="BDT7" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradPS_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="2HDMgrad_sf" --training="BDTG3" --channel="sf" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradPSFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="2HDMgradFull_sf" --training="BDTG3" --channel="sf" --model="2HDM"'
+        } ,
+  
+  # Zbar model em
+  
+  'mucca_ZbaradaptPS_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="Zbaradapt_em" --training="BDT4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbaradaptPSFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="ZbaradaptFull_em" --training="BDT4" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradPS_em'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="Zbargrad_em" --training="BDTG10" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradPSFull_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="ZbargradFull_em" --training="BDTG10" --channel="em" --model="Zbar"'
+        } ,
+  
+  # Zbar model sf
+  
+  'mucca_ZbaradaptPS_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="Zbaradapt_sf" --training="BDT8" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbaradaptPSFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="ZbaradaptFull_sf" --training="BDT8" --channel="sf" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradPS_sf'      : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHVarFillerLarge --signal="Zbargrad_sf" --training="BDTG19" --channel="sf" --model="Zbar"'
+        } ,
+
+  'mucca_ZbargradPSFull_sf'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarFillerLarge --signal="ZbargradFull_sf" --training="BDTG19" --channel="sf" --model="Zbar"'
+        } ,
+
+
+
   # MUCCA for monoH
   # Chain for em channel
   
@@ -3023,7 +3184,7 @@ Steps= {
         'do4Data'    : True ,
         'command'    : 'gardener.py muccaMonoHVarFiller --signal="2HDMadapt_sf" --training="BDT12" --channel="sf" --model="2HDM"'
         } ,
-  
+ 
   'mucca_2HDMadaptFull_sf'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,

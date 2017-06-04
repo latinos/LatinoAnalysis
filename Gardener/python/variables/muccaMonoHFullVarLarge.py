@@ -22,7 +22,7 @@ import math
 #                                                                                                                
 #
 
-class MuccaMonoHFullVarFiller(TreeCloner):
+class MuccaMonoHFullVarFillerLarge(TreeCloner):
 
     def __init__(self):
         pass
@@ -54,7 +54,7 @@ class MuccaMonoHFullVarFiller(TreeCloner):
         # mva trainined xml
         baseCMSSW = os.getenv('CMSSW_BASE')
 #        self.getMuccaMonoHFull.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/MUCCA/Optimization/Weights-" + self.model + "_TTbar_0var_" + self.channel + "/TMVAClassification_" + self.training + ".weights.xml")
-        self.getMuccaMonoHFull.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/28May2017/monoH/TMVA/plotsTMVA-" + self.model + "_TTbar_0var_em/Weights-" + self.model + "_TTbar_0var_" + self.channel + "/TMVAClassification_" + self.training + ".weights.xml")
+        self.getMuccaMonoHFull.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/30May2017/monoH/TMVA/plotsTMVA-" + self.model + "_TTbar_0var_em/Weights-" + self.model + "_TTbar_0var_" + self.channel + "/TMVAClassification_" + self.training + ".weights.xml")
 
     def help(self):
         return '''Add mucca mva variables'''
