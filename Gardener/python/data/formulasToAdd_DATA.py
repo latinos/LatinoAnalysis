@@ -30,12 +30,12 @@ formulas['bveto'] = '    ( event.std_vector_jet_pt[0] < 20 or event.std_vector_j
 
 muWP='cut_Tight80x'
 for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_Iso2016','mva_90p_Iso2015','mva_90p_Iso2016'] :
-  formulas['LepCut2l__ele_'+eleWP+'__mu_'+muWP] = '((std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
-                                                    (std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[1]>0.5)) \
+  formulas['LepCut2l__ele_'+eleWP+'__mu_'+muWP] = '((event.std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
+                                                    (event.std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[1]>0.5)) \
                                                    if hasattr(event, \'std_vector_electron_isTightLepton_'+eleWP+'\') and hasattr(event, \'std_vector_muon_isTightLepton_'+muWP+'\') else 1.'
 
-  formulas['LepCut3l__ele_'+eleWP+'__mu_'+muWP] = '((std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
-                                                    (std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[1]>0.5) and \
-                                                    (std_vector_electron_isTightLepton_'+eleWP+'[2]>0.5 or std_vector_muon_isTightLepton_'+muWP+'[2]>0.5)) \
+  formulas['LepCut3l__ele_'+eleWP+'__mu_'+muWP] = '((event.std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
+                                                    (event.std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[1]>0.5) and \
+                                                    (event.std_vector_electron_isTightLepton_'+eleWP+'[2]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[2]>0.5)) \
                                                    if hasattr(event, \'std_vector_electron_isTightLepton_'+eleWP+'\') and hasattr(event, \'std_vector_muon_isTightLepton_'+muWP+'\') else 1.'
 

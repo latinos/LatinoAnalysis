@@ -17,7 +17,11 @@ for Run in B C D E F G H; do
   # l2 tight >= 2 tight leptons (any WP) 
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s l2tightOR -i lepSel__EpTCorr__TrigMakerData__l2loose__hadd -S Target -b
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s formulasDATA -i lepSel__EpTCorr__TrigMakerData__l2loose__hadd__l2tightOR -S Target -b
- 
+
+  # Skims
+  for iSkim in wwSel for iSkim in wwSel  ; do
+    ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s ${iSkim} -i lepSel__EpTCorr__TrigMakerData__l2loose__hadd__l2tightOR__formulasDATA -S Target -b
+  done
 
 ######## OLD BELOW ########
  

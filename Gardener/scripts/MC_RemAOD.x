@@ -16,6 +16,11 @@
 ./mkGardener.py -p Apr2017_summer16 -s  l2tightOR -i lepSel__MCWeights__bSFLpTEffMulti__l2loose__hadd -S Target -b
 ./mkGardener.py -p Apr2017_summer16 -s  formulasMC -i lepSel__MCWeights__bSFLpTEffMulti__l2loose__hadd__l2tightOR -S Target -b
 
+# Skims
+for iSkim in wwSel  ; do
+  ./mkGardener.py -p Apr2017_summer16 -s  ${iSkim} -i lepSel__MCWeights__bSFLpTEffMulti__l2loose__hadd__l2tightOR__formulasMC -S Target -b
+done
+
 
 ## L2 loose
 #
