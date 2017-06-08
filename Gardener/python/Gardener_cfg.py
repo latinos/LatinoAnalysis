@@ -1273,6 +1273,9 @@ samples4Syst = [
 
                  'ggZH_HToWW_M125', # missing ggZHToTauTau
 
+                 'GluGluZH_HToWWTo2L2Nu_M120','GluGluZH_HToWWTo2L2Nu_M125','GluGluZH_HToWWTo2L2Nu_M130', # ggZH for monohiggs
+                 'HZJ_HToWWTo2L2Nu_M120','HZJ_HToWWTo2L2Nu_M125','HZJ_HToWWTo2L2Nu_M130', # ZH for monohiggs
+                 
                  # What ????
                  #'ttHJetToNonbb_M125','TTWJetsToLNu',
                  #'GluGluHToZZTo4L_M125',
@@ -1850,8 +1853,13 @@ Steps= {
                                   'ggZH_HToWW_M125', # missing ggZHToTauTau
                                   'ttHJetToNonbb_M125',
                                   'GluGluHToZZTo4L_M125',
-                                  'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT',
-                                  'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT', 
+                                  # 'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT', ## old
+                                  # 'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT',  ## old
+
+                                  'GluGluZH_HToWWTo2L2Nu_M120','GluGluZH_HToWWTo2L2Nu_M125','GluGluZH_HToWWTo2L2Nu_M130', # ggZH for monohiggs
+                                  'HZJ_HToWWTo2L2Nu_M120','HZJ_HToWWTo2L2Nu_M125','HZJ_HToWWTo2L2Nu_M130', # ZH for monohiggs
+                 
+
                                   'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
                                   # ... ggH High Mass
                                   'GluGluHToWWTo2L2Nu_M130',
@@ -2229,7 +2237,10 @@ Steps= {
                  'HWplusJ_HToTauTau_M125' , 'HWplusJ_HToWW_M125',  'HWplusJ_HToWW_LNu_M125' ,
                  'HZJ_HToTauTau_M125'     , 'HZJ_HToWW_M125', 'HZJ_HToWWTo2L2Nu_M125',
                  'bbHToWWTo2L2Nu_M125_yb2', 'bbHToWWTo2L2Nu_M125_ybyt',
-
+                                  
+                 'GluGluZH_HToWWTo2L2Nu_M120','GluGluZH_HToWWTo2L2Nu_M125','GluGluZH_HToWWTo2L2Nu_M130', # ggZH for monohiggs
+                 'HZJ_HToWWTo2L2Nu_M120','HZJ_HToWWTo2L2Nu_M125','HZJ_HToWWTo2L2Nu_M130', # ZH for monohiggs
+                 
                  'ggZH_HToWW_M125', # missing ggZHToTauTau
 
                  # What ????
