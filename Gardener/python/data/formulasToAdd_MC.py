@@ -138,13 +138,13 @@ METFilter_MC     =  METFilter_Common + '*' + '(('+METFilter_MCver+'*'+METFilter_
 formulas['METFilter_MC'] = METFilter_MC
 
 
-formulas['bveto'] = '    ( event.std_vector_jet_pt[0] < 20 or event.std_vector_jet_cmvav2[0] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[1] < 20 or event.std_vector_jet_cmvav2[1] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[2] < 20 or event.std_vector_jet_cmvav2[2] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[3] < 20 or event.std_vector_jet_cmvav2[3] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[4] < 20 or event.std_vector_jet_cmvav2[4] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[5] < 20 or event.std_vector_jet_cmvav2[5] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[6] < 20 or event.std_vector_jet_cmvav2[6] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[7] < 20 or event.std_vector_jet_cmvav2[7] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[8] < 20 or event.std_vector_jet_cmvav2[8] < -0.715 ) \
-                     and ( event.std_vector_jet_pt[9] < 20 or event.std_vector_jet_cmvav2[9] < -0.715 ) '
+formulas['bveto'] = '    ( event.std_vector_jet_pt[0] < 20 or event.std_vector_jet_cmvav2[0] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[1] < 20 or event.std_vector_jet_cmvav2[1] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[2] < 20 or event.std_vector_jet_cmvav2[2] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[3] < 20 or event.std_vector_jet_cmvav2[3] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[4] < 20 or event.std_vector_jet_cmvav2[4] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[5] < 20 or event.std_vector_jet_cmvav2[5] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[6] < 20 or event.std_vector_jet_cmvav2[6] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[7] < 20 or event.std_vector_jet_cmvav2[7] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[8] < 20 or event.std_vector_jet_cmvav2[8] < -0.5884 ) \
+                     and ( event.std_vector_jet_pt[9] < 20 or event.std_vector_jet_cmvav2[9] < -0.5884 ) '
