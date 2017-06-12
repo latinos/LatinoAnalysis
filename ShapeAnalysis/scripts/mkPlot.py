@@ -391,7 +391,6 @@ class ShapeFactory:
                            
                            # don't use  histos[sampleName], or the second "scale" will fail!!!
                            histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
-                           print "*********************", histoUp
                            histoUp.Scale(up_variation)
                     
                       elif 'samples' in nuisance.keys():
@@ -419,10 +418,8 @@ class ShapeFactory:
                                   down_variation = 2. - float(configurationNuis)
                                   up_variation   = float(configurationNuis) 
                                 
-                                #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 # don't use  histos[sampleName], or the second "scale" will fail!!!
                                 histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
-                                print "*********************", histoUp
                                 histoUp.Scale(up_variation)
                                 #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 
