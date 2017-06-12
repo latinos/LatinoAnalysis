@@ -359,13 +359,16 @@ class ShapeFactory:
                     is_this_nuisance_to_be_considered = False
  
                   if is_this_nuisance_to_be_considered :
-                    shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
-                    #print "loading shape variation", shapeNameUp
+                    ##shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
+                    shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Up"
+                    print "loading shape variation", shapeNameUp
                     histoUp = fileIn.Get(shapeNameUp)
-                    shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
-                    #print "loading shape variation", shapeNameDown
+                    ##shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
+                    shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Down"
+                    print "loading shape variation", shapeNameDown
                     histoDown = fileIn.Get(shapeNameDown)
                     if histoUp == None:
+                      print "histoUp None"
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                          if nuisance['type'] == 'lnN' :                             
                            # example:
@@ -387,7 +390,8 @@ class ShapeFactory:
                              up_variation   = float(nuisance['value']) 
                            
                            # don't use  histos[sampleName], or the second "scale" will fail!!!
-                           histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
+                           histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
+                           print "*********************", histoUp
                            histoUp.Scale(up_variation)
                     
                       elif 'samples' in nuisance.keys():
@@ -417,7 +421,8 @@ class ShapeFactory:
                                 
                                 #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 # don't use  histos[sampleName], or the second "scale" will fail!!!
-                                histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
+                                histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
+                                print "*********************", histoUp
                                 histoUp.Scale(up_variation)
                                 #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 
@@ -446,7 +451,7 @@ class ShapeFactory:
                              up_variation   = float(nuisance['value']) 
                            
                            # don't use  histos[sampleName], or the second "scale" will fail!!!
-                           histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
+                           histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
                            histoDown.Scale(down_variation)
                            
                       elif 'samples' in nuisance.keys():
@@ -472,7 +477,7 @@ class ShapeFactory:
                                   up_variation   = float(configurationNuis) 
                                 
                                 # don't use  histos[sampleName], or the second "scale" will fail!!!
-                                histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
+                                histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
                                 histoDown.Scale(down_variation)
                               #else :
                                 #print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
