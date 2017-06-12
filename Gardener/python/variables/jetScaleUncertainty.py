@@ -67,6 +67,15 @@ class JESTreeMaker(TreeCloner):
         # see: https://root.cern.ch/phpBB3/viewtopic.php?t=12507
         # this is the list of variables to be modified
         #
+        # met branches to be changed
+        if self.cmssw == '74x' :
+            self.metvar1 = 'pfType1Met'
+            self.metvar2= 'pfType1Metphi' 
+        else :
+            self.metvar1 = 'metPfType1'
+            self.metvar2= 'metPfType1Phi' 
+        self.namesOldBranchesToBeModifiedSimpleVariable = [self.metvar1,self.metvar2]
+
         self.namesOldBranchesToBeModifiedVector = []
         vectorsToChange = ['std_vector_jet_']
         for b in self.itree.GetListOfBranches():
@@ -75,8 +84,9 @@ class JESTreeMaker(TreeCloner):
                 if subString in branchName:
                     self.namesOldBranchesToBeModifiedVector.append(branchName)
 
-        # clone the tree
-        self.clone(output,self.namesOldBranchesToBeModifiedVector)
+        # clone the tree with new branches added
+        #self.clone(output,self.namesOldBranchesToBeModifiedVector)
+        self.clone(output,self.namesOldBranchesToBeModifiedVector+self.namesOldBranchesToBeModifiedSimpleVariable)
 
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
@@ -87,6 +97,15 @@ class JESTreeMaker(TreeCloner):
         for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
             self.otree.Branch(bname,bvector)
         
+        self.oldBranchesToBeModifiedSimpleVariable = {}
+        for bname in self.namesOldBranchesToBeModifiedSimpleVariable:
+          bvariable = numpy.ones(1, dtype=numpy.float32)
+          self.oldBranchesToBeModifiedSimpleVariable[bname] = bvariable
+
+        # now actually connect the branches for floats
+        for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+            self.otree.Branch(bname,bvariable,bname+'/F')         
+
         # input tree  
         itree = self.itree
 
@@ -118,6 +137,29 @@ class JESTreeMaker(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
                 
+            # prepare MET
+            if self.cmssw == '74x' :
+              oldmet = itree.pfType1Met
+              oldphi = itree.pfType1Metphi
+            else :
+              oldmet = itree.metPfType1
+              oldphi = itree.metPfType1Phi
+            met_org = ROOT.TLorentzVector()
+            met_org.SetPtEtaPhiM(oldmet, 0, oldphi, 0)
+            newmet = ROOT.TLorentzVector()
+
+            # Recommended definition of newmet
+            if self.kind == 1.0 :
+                print 'JES Up'
+                newmetmodule = itree.metPfType1JetEnUp
+                newmetphi = itree.metPfRawPhiJetEnUp
+                newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
+            elif self.kind == -1.0 :
+                print 'JES Down'
+                newmetmodule = itree.metPfType1JetEnDn
+                newmetphi = itree.metPfRawPhiJetEnDn
+                newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
+                        
             # scale jet 4-vector
             jetPtUp = []
             jetMassUp = []
@@ -174,6 +216,10 @@ class JESTreeMaker(TreeCloner):
                         bvector.push_back ( -9999. )
                 else:
                     self.changeOrder( bname, bvector, jetOrderUp)
+
+            # update met
+            self.oldBranchesToBeModifiedSimpleVariable[self.metvar1][0] = numpy.float32(newmet.Pt())
+            self.oldBranchesToBeModifiedSimpleVariable[self.metvar2][0] = numpy.float32(newmet.Phi())
 
             self.otree.Fill()
 
