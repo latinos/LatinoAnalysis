@@ -80,7 +80,7 @@ class IdIsoSFFiller(TreeCloner):
           self.IdMuFileData  .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016BCDEF_PTvsETA_HWW.txt')
           self.IdMuFileMC    .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt')
           self.IdMuMinRun    .append(5)
-          self.IdMuMaxRun    .append(6)
+          self.IdMuMaxRun    .append(7)
           self.IdMuFileData  .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016GH_PTvsETA_HWW.txt')
           self.IdMuFileMC    .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt')
 
@@ -93,7 +93,7 @@ class IdIsoSFFiller(TreeCloner):
           self.IsoMuFileData .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016BCDEF_PTvsETA_HWW.txt')
           self.IsoMuFileMC   .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt')
           self.IsoMuMinRun   .append(5)
-          self.IsoMuMaxRun   .append(6)
+          self.IsoMuMaxRun   .append(7)
           self.IsoMuFileData .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016GH_PTvsETA_HWW.txt')
           self.IsoMuFileMC   .append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt')       
 
@@ -106,7 +106,7 @@ class IdIsoSFFiller(TreeCloner):
             self.tkMuMinRun.append(1)
             self.tkMuMaxRun.append(4)
             self.tkMuMinRun.append(5)
-            self.tkMuMaxRun.append(6)
+            self.tkMuMaxRun.append(7)
             self.tkMuFile.append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/trackerSF_Moriond17_MuoPOG_BCDEF.root')
             self.tkMuFile.append(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/idiso/Full2016/trackerSF_Moriond17_MuoPOG_GH.root')
         else:

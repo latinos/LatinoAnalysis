@@ -63,7 +63,7 @@ class PUpper(TreeCloner):
             self.minRun.append(1)
             self.maxRun.append(4)
             self.minRun.append(5)
-            self.maxRun.append(6)
+            self.maxRun.append(7)
             self.datafileRun.append( self._openRootFile(CMSSW + '/src/LatinoAnalysis/Gardener/python/data/puweight/PileupHistogram_Full2016_271036-278808_69p2mb_Rereco.root' ) )
             self.datafileRun.append( self._openRootFile(CMSSW + '/src/LatinoAnalysis/Gardener/python/data/puweight/PileupHistogram_Full2016_278820-284044_69p2mb_Rereco.root' ) )
             self.datahistRun.append( self._getRootObj(self.datafileRun[0],opts.histname) )
