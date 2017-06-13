@@ -359,6 +359,19 @@ class ShapeFactory:
                     is_this_nuisance_to_be_considered = False
  
                   if is_this_nuisance_to_be_considered :
+<<<<<<< HEAD
+                    if 'name' in nuisance:
+                      shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Up"
+                    else:
+                      shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
+                    #print "loading shape variation", shapeNameUp
+                    histoUp = fileIn.Get(shapeNameUp)
+                    if 'name' in nuisance:
+                      shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Down"
+                    else:
+                      shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
+                    #print "loading shape variation", shapeNameDown
+=======
                     ##shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
                     shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Up"
                     print "loading shape variation", shapeNameUp
@@ -366,6 +379,7 @@ class ShapeFactory:
                     ##shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
                     shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Down"
                     print "loading shape variation", shapeNameDown
+>>>>>>> 981b27a3b3067962aa2fd15ecc60554e48cefac0
                     histoDown = fileIn.Get(shapeNameDown)
                     if histoUp == None:
                       print "histoUp None"
@@ -390,7 +404,14 @@ class ShapeFactory:
                              up_variation   = float(nuisance['value']) 
                            
                            # don't use  histos[sampleName], or the second "scale" will fail!!!
+<<<<<<< HEAD
+                           if 'name' in nuisance:
+                             histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
+                           else:
+                             histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
+=======
                            histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
+>>>>>>> 981b27a3b3067962aa2fd15ecc60554e48cefac0
                            histoUp.Scale(up_variation)
                     
                       elif 'samples' in nuisance.keys():
@@ -419,7 +440,14 @@ class ShapeFactory:
                                   up_variation   = float(configurationNuis) 
                                 
                                 # don't use  histos[sampleName], or the second "scale" will fail!!!
+<<<<<<< HEAD
+                                if 'name' in nuisance:
+                                  histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
+                                else:
+                                  histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
+=======
                                 histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
+>>>>>>> 981b27a3b3067962aa2fd15ecc60554e48cefac0
                                 histoUp.Scale(up_variation)
                                 #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
                                 
@@ -448,7 +476,14 @@ class ShapeFactory:
                              up_variation   = float(nuisance['value']) 
                            
                            # don't use  histos[sampleName], or the second "scale" will fail!!!
+<<<<<<< HEAD
+                           if 'name' in nuisance:
+                             histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
+                           else:
+                             histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
+=======
                            histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
+>>>>>>> 981b27a3b3067962aa2fd15ecc60554e48cefac0
                            histoDown.Scale(down_variation)
                            
                       elif 'samples' in nuisance.keys():
@@ -474,7 +509,14 @@ class ShapeFactory:
                                   up_variation   = float(configurationNuis) 
                                 
                                 # don't use  histos[sampleName], or the second "scale" will fail!!!
+<<<<<<< HEAD
+                                if 'name' in nuisance:
+                                  histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
+                                else:
+                                  histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
+=======
                                 histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
+>>>>>>> 981b27a3b3067962aa2fd15ecc60554e48cefac0
                                 histoDown.Scale(down_variation)
                               #else :
                                 #print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
