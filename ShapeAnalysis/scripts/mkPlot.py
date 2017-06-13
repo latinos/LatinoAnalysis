@@ -370,6 +370,7 @@ class ShapeFactory:
                     else:
                       shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
                     #print "loading shape variation", shapeNameDown
+                    histoDown = fileIn.Get(shapeNameDown)
 
                     if histoUp == None:
                       print "histoUp None"
