@@ -363,17 +363,16 @@ class ShapeFactory:
                       shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Up"
                     else:
                       shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
-                    #print "loading shape variation", shapeNameUp
+                    print "loading shape variation", shapeNameUp
                     histoUp = fileIn.Get(shapeNameUp)
                     if 'name' in nuisance:
                       shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Down"
                     else:
                       shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
-                    #print "loading shape variation", shapeNameDown
+                    print "loading shape variation", shapeNameDown
                     histoDown = fileIn.Get(shapeNameDown)
 
                     if histoUp == None:
-                      print "histoUp None"
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                          if nuisance['type'] == 'lnN' :                             
                            # example:
