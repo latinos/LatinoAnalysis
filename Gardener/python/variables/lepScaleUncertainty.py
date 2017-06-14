@@ -125,9 +125,9 @@ class LeppTScalerTreeMaker(TreeCloner):
             return 1.0
     
     
-    def _corMET (self,met,lpt_org,lpt):
-        newmet = met + lpt_org - lpt
-        return newmet
+    # def _corMET (self,met,lpt_org,lpt):
+    #     newmet = met + lpt_org - lpt
+    #     return newmet
     
     
     def changeOrder(self, vectorname, vector, leptonOrderList) :
@@ -157,7 +157,6 @@ class LeppTScalerTreeMaker(TreeCloner):
         savedevents = 0
 
         # met branches to be changed
-
         if self.cmssw == '74x' :
             self.metvar1 = 'pfType1Met'
             self.metvar2= 'pfType1Metphi' 
@@ -195,6 +194,7 @@ class LeppTScalerTreeMaker(TreeCloner):
         for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
                         #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')         
+
         # input tree  
         itree = self.itree
 
@@ -221,7 +221,7 @@ class LeppTScalerTreeMaker(TreeCloner):
             met_org = ROOT.TLorentzVector()
             met_org.SetPtEtaPhiM(oldmet, 0, oldphi, 0)
             newmet = ROOT.TLorentzVector()
-            newmet = met_org
+#            newmet = met_org
 
             for i in range(itree.std_vector_lepton_pt.size()):
                 #print " i = ", i, " -->  itree.std_vector_lepton_flavour[i] = ", itree.std_vector_lepton_flavour[i]
@@ -257,11 +257,34 @@ class LeppTScalerTreeMaker(TreeCloner):
                 l1_org.SetPtEtaPhiM(pt_lep,    eta_lep, phi_lep,0)
                 l1.SetPtEtaPhiM    (new_pt_lep,eta_lep,phi_lep,0)
              
-                newmet = self._corMET(newmet,l1_org,l1)
+                #newmet = self._corMET(newmet,l1_org,l1)
+
+                # Recommended definition of newmet
+                if self.lepFlavourToChange == 'ele' :
+                    if self.variation == 1.0 :
+                        print 'Elec Up'
+                        newmetmodule = itree.metPfType1ElecEnUp
+                        newmetphi = itree.metPfRawPhiElecEnUp
+                        newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
+                    elif self.variation == -1.0 :
+                        print 'Elec Down'
+                        newmetmodule = itree.metPfType1ElecEnDn
+                        newmetphi = itree.metPfRawPhiElecEnDn
+                        newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
+                elif self.lepFlavourToChange == 'mu' :
+                    if self.variation == 1.0 :
+                        print 'Muon Up'
+                        newmetmodule = itree.metPfType1MuonEnUp
+                        newmetphi = itree.metPfRawPhiMuonEnUp
+                        newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
+                    elif self.variation == -1.0 :
+                        print 'Muon Down'
+                        newmetmodule = itree.metPfType1MuonEnDn
+                        newmetphi = itree.metPfRawPhiMuonEnDn
+                        newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
+                        
 
             leptonOrder = sorted(range(len(leptonPtChanged)), key=lambda k: leptonPtChanged[k], reverse=True) 
-
-
 
 
             for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():

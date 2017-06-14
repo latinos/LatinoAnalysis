@@ -76,6 +76,7 @@ class L2KinFiller(TreeCloner):
            'mTe',
            'choiMass',
            'mR',
+           'mT2',
            'channel',
 
 

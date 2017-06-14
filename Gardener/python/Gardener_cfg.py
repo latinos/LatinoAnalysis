@@ -2879,14 +2879,14 @@ Steps= {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py metUncertainty --kind=Up --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no  '
+                   'command'    : 'gardener.py metUnclustered --kind=Up --cmssw=RPLME_CMSSW '
                  } ,
   
   'do_METdo'        : {
                    'isChain'    : False ,
                    'do4MC'      : True  ,
                    'do4Data'    : False ,
-                   'command'    : 'gardener.py metUncertainty --kind=Dn --cmssw=RPLME_CMSSW --lepton no   --jetresolution no   --unclustered no '
+                   'command'    : 'gardener.py metUnclustered --kind=Dn --cmssw=RPLME_CMSSW '
                  } ,
 
    'dymvaHiggs' :   {

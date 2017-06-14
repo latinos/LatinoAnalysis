@@ -32,6 +32,7 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         group.add_option('-k', '--kind',   dest='kind',   help='<Up|Dn> variation', default='Up', type='string')
         group.add_option('-l', '--lepton', dest='lepton', help='Include leptons in the MET uncertainty? <yes|no>', default='yes', type='string')
         group.add_option('--jetresolution', dest='jetresolution', help='Include Jet energy resolution in the MET uncertainty? <yes|no>', default='yes', type='string')
+        group.add_option('--jetscale', dest='jetscale', help='Include Jet energy scale in the MET uncertainty? <yes|no>', default='yes', type='string')
         group.add_option('--unclustered',   dest='unclustered',   help='Include unclustered pf candidates in the MET uncertainty? <yes|no>', default='yes', type='string')
         parser.add_option_group(group)
         return group
@@ -41,6 +42,7 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         self.kind   = opts.kind
         self.lepton = opts.lepton
         self.jetresolution = opts.jetresolution
+        self.jetscale = opts.jetscale
         self.unclustered = opts.unclustered
 
         # force unclustered part to 'yes' for ICHEP2016
@@ -51,6 +53,7 @@ class MetUncertaintyTreeMaker(TreeCloner) :
         print "   kind =", self.kind
         print " lepton =", self.lepton
         print " jetresolution =", self.jetresolution
+        print " jetscale =", self.jetscale
         print " unclustered =", self.unclustered
         
 
@@ -140,6 +143,10 @@ class MetUncertaintyTreeMaker(TreeCloner) :
                       metJetRes = 0.
                       phiJetRes = 0.
 
+                  if (self.jetscale == 'no') :
+                      metJetEn = 0.
+                      phiJetEn = 0.
+
                   if (self.unclustered == 'no') :
                       metUnclEn = 0.
                       phiUnclEn = 0.
@@ -171,6 +178,10 @@ class MetUncertaintyTreeMaker(TreeCloner) :
                       metElecEn = 0.
                       phiMuonEn = 0.
                       phiElecEn = 0.
+
+                  if (self.jetscale == 'no') :
+                      metJetEn = 0.
+                      phiJetEn = 0.
 
                   if (self.jetresolution == 'no') :
                       metJetRes = 0.
