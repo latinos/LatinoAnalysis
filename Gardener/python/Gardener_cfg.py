@@ -1804,6 +1804,12 @@ Steps= {
                   'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                     },
 
+  'bSFLpTEffMultiCorr' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['TrigMakerMC','puRunPer','IdIsoSC_Multi'],
+                    },
 
 
   'puextra'      :   {
