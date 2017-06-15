@@ -2755,6 +2755,22 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW -d'
                  },
+
+# Tau collection cleaning
+
+  'cleanTauData'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py cleanTau  --cmssw=RPLME_CMSSW -d'
+                 },
+
+  'cleanTauMC'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py cleanTau  --cmssw=RPLME_CMSSW '
+                 },
  
 
   'hadd'     : {
