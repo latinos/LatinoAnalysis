@@ -31,6 +31,7 @@ from LatinoAnalysis.Gardener.variables.l4Kin                      import L4KinFi
 
 # fake weights adder for W+jet sample
 from LatinoAnalysis.Gardener.variables.fakeWeight                 import FakeWeightFiller
+from LatinoAnalysis.Gardener.variables.multiFakeWeight            import multiFakeWeightFiller
 
 
 # lepton pt corrector
@@ -215,6 +216,7 @@ if __name__ == '__main__':
     
 # fake weights
     modules['fakeWeights']      = FakeWeightFiller()
+    modules['multiFakeWeights']      = multiFakeWeightFiller()
 
 # lepton pt corrector
     modules['letPtCorrector']   = LeptonPtCorrector()
