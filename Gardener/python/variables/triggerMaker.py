@@ -278,6 +278,24 @@ class triggerCalculator():
           eff_sgl_1             , low_eff_sgl_1             , high_eff_sgl_1              = self._getEff (pt1, eta1, singleLegA)
           eff_sgl_2             , low_eff_sgl_2             , high_eff_sgl_2              = self._getEff (pt2, eta2, singleLegB)
 
+          # Add 5% syst to SnglEle
+          if singleLegA == "triggerSingleEle" :
+            systdown       = eff_sgl_1 - low_eff_sgl_1
+            systdown_new   = sqrt(systdown*systdown + 0.05*0.05) 
+            low_eff_sgl_1  = max(0.,eff_sgl_1 - systdown_new)
+            systup         = high_eff_sgl_1 - eff_sgl_1
+            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            high_eff_sgl_1 = min(1.,eff_sgl_1+systup_new)
+          if singleLegB == "triggerSingleEle" :
+            systdown       = eff_sgl_2 - low_eff_sgl_2
+            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            low_eff_sgl_2  = max(0.,eff_sgl_2 - systdown_new)
+            systup         = high_eff_sgl_2 - eff_sgl_2
+            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            high_eff_sgl_2 = min(1.,eff_sgl_2+systup_new)
+
+
+
           # Tracker Muon SF
 
           if abs(kindLep1) == 13 :
@@ -620,6 +638,29 @@ class triggerCalculator():
           s1  , low_s1  , high_s1   = self._getEff(pt1, eta1, single1)
           s2  , low_s2  , high_s2   = self._getEff(pt2, eta2, single2)
           s3  , low_s3  , high_s3   = self._getEff(pt3, eta3, single3)
+
+          # Add 5% syst to SnglEle
+          if single1 == "triggerSingleEle" :
+            systdown       = s1 - low_s1
+            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            low_s1         = max(0.,s1 - systdown_new)
+            systup         = high_s1 - s1
+            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            high_s1        = min(1.,s1+systup_new)
+          if single2 == "triggerSingleEle" :
+            systdown       = s2 - low_s2
+            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            low_s2         = max(0.,s2 - systdown_new)
+            systup         = high_s2 - s2
+            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            high_s2        = min(1.,s2+systup_new)
+          if single3 == "triggerSingleEle" :
+            systdown       = s3 - low_s3
+            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            low_s3         = max(0.,s3 - systdown_new)
+            systup         = high_s3 - s3
+            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            high_s3        = min(1.,s3+systup_new)
 
 
           # Tracker Muon SF

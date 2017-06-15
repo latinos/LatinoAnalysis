@@ -60,6 +60,22 @@ class MetUnclusteredTreeMaker(TreeCloner) :
             dphi = 2*ROOT.TMath.Pi() - dphi
         return dphi
 
+    # Strange algebra to be able to use raw phi angles
+    def sgn_deltaphi(self, phi1, phi2) :
+        dphi = phi1 - phi2
+        if abs(dphi) > ROOT.TMath.Pi() :
+            dphi = dphi - 2*ROOT.TMath.Pi()
+        return dphi
+
+    # here I want to properly sum metphi and delta(metphi)
+    def sum_deltaphi(self, phi, dphi) :
+        result = phi + dphi
+        if result < -ROOT.TMath.Pi() :
+            result = result + 2*ROOT.TMath.Pi()
+        elif result > ROOT.TMath.Pi() :
+            result = result - 2*ROOT.TMath.Pi()
+        return result
+
     def process(self,**kwargs) :
         tree   = kwargs['tree']
         input  = kwargs['input']
@@ -124,19 +140,18 @@ class MetUnclusteredTreeMaker(TreeCloner) :
 
               if self.kind == 'Up' :
                   newmetmodule[0] = itree.metPfType1UnclEnUp
-                  newmetphi[0] = itree.metPfRawPhiUnclEnUp
-                  print 'Up: ' + str(itree.metPfType1UnclEnUp)
-
+                  myDelta = self.sgn_deltaphi(itree.metPfRawPhiUnclEnUp, itree.metPfRawPhi)
+                  newmetphi[0] = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
+                  # print 'oldphi: ', itree.metPfType1Phi, 'deltaPhi: ', myDelta, 'recalc phi: ', newmetphi[0], 'recomm phi: ', itree.metPfType1PhiUnclEnUp
+                  
               elif self.kind == 'Dn' :
                   newmetmodule[0] = itree.metPfType1UnclEnDn
-                  newmetphi[0] = itree.metPfRawPhiUnclEnDn
-                  print 'Down: ' + str(itree.metPfType1UnclEnDn)
-
-              #newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
-
+                  myDelta = self.sgn_deltaphi(itree.metPfRawPhiUnclEnDn, itree.metPfRawPhi)
+                  newmetphi[0] = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
+                  # print 'oldphi: ', itree.metPfType1Phi, 'deltaPhi: ', myDelta, 'recalc phi: ', newmetphi[0], 'recomm phi: ', itree.metPfType1PhiUnclEnDn
 
           # if (i > 0 and i%step == 0.) :
-          #     print i,'events processed ::', nentries, 'oldmet:', oldmet, 'newmet:', newmet[0], 'oldphi:', oldphi, 'newphi:', newphi[0]
+          # print i,'events processed ::', nentries, 'oldmet:', oldmet, 'newmet:', newmet[0], 'oldphi:', oldphi, 'newphi:', newphi[0]
               
           self.otree.Fill()
           savedentries+=1

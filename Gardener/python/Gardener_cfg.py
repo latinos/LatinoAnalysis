@@ -1804,6 +1804,12 @@ Steps= {
                   'subTargets' : ['do_lpTCorrMC','bPogSF','TrigMakerMC','puRunPer','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs'],
                     },
 
+  'bSFLpTEffMultiCorr' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['TrigMakerMC','puRunPer','IdIsoSC_Multi'],
+                    },
 
 
   'puextra'      :   {
@@ -2748,6 +2754,22 @@ Steps= {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py trigMaker  --cmssw=RPLME_CMSSW -d'
+                 },
+
+# Tau collection cleaning
+
+  'cleanTauData'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py cleanTau  --cmssw=RPLME_CMSSW -d'
+                 },
+
+  'cleanTauMC'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py cleanTau  --cmssw=RPLME_CMSSW '
                  },
  
 

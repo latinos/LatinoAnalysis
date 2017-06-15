@@ -100,6 +100,23 @@ class LeppTScalerTreeMaker(TreeCloner):
         self.maxeta = 2.5
 
 
+    # Strange algebra to be able to use raw phi angles
+    def sgn_deltaphi(self, phi1, phi2) :
+        dphi = phi1 - phi2
+        if abs(dphi) > ROOT.TMath.Pi() :
+            dphi = dphi - 2*ROOT.TMath.Pi()
+        return dphi
+
+    # here I want to properly sum metphi and delta(metphi)
+    def sum_deltaphi(self, phi, dphi) :
+        result = phi + dphi
+        if result < -ROOT.TMath.Pi() :
+            result = result + 2*ROOT.TMath.Pi()
+        elif result > ROOT.TMath.Pi() :
+            result = result - 2*ROOT.TMath.Pi()
+        return result
+
+
     def _getScale (self, kindLep, pt, eta):
         # fix underflow and overflow
         if pt < self.minpt:
@@ -264,23 +281,31 @@ class LeppTScalerTreeMaker(TreeCloner):
                     if self.variation == 1.0 :
                         print 'Elec Up'
                         newmetmodule = itree.metPfType1ElecEnUp
-                        newmetphi = itree.metPfRawPhiElecEnUp
+                        #newmetphi = itree.metPfRawPhiElecEnUp
+                        myDelta = self.sgn_deltaphi(itree.metPfRawPhiElecEnUp, itree.metPfRawPhi)
+                        newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                     elif self.variation == -1.0 :
                         print 'Elec Down'
                         newmetmodule = itree.metPfType1ElecEnDn
-                        newmetphi = itree.metPfRawPhiElecEnDn
+                        #newmetphi = itree.metPfRawPhiElecEnDn
+                        myDelta = self.sgn_deltaphi(itree.metPfRawPhiElecEnDn, itree.metPfRawPhi)
+                        newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                 elif self.lepFlavourToChange == 'mu' :
                     if self.variation == 1.0 :
                         print 'Muon Up'
                         newmetmodule = itree.metPfType1MuonEnUp
-                        newmetphi = itree.metPfRawPhiMuonEnUp
+                        #newmetphi = itree.metPfRawPhiMuonEnUp
+                        myDelta = self.sgn_deltaphi(itree.metPfRawPhiMuonEnUp, itree.metPfRawPhi)
+                        newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                     elif self.variation == -1.0 :
                         print 'Muon Down'
                         newmetmodule = itree.metPfType1MuonEnDn
-                        newmetphi = itree.metPfRawPhiMuonEnDn
+                        #newmetphi = itree.metPfRawPhiMuonEnDn
+                        myDelta = self.sgn_deltaphi(itree.metPfRawPhiMuonEnDn, itree.metPfRawPhi)
+                        newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                         
 
