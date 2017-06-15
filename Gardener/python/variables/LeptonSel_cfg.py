@@ -96,7 +96,7 @@ ElectronWP['Full2016'] = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_cut_WP_Tight80X.txt' ,  
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_WP1/',
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_ele_cut_WP_Tight80X/',
                              } ,
 
 
@@ -130,7 +130,7 @@ ElectronWP['Full2016'] = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_cut_WP_Tight80X_SS.txt' ,
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_WP2/',
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_ele_cut_WP_Tight80X_SS/',
                              } ,
 
 
@@ -165,7 +165,7 @@ ElectronWP['Full2016'] = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_80p_Iso2015.txt' ,
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_WP3/',
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_ele_mva_80p_Iso2015/',
                               } ,
  
           'mva_80p_Iso2016':  {
@@ -199,7 +199,7 @@ ElectronWP['Full2016'] = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_80p_Iso2016.txt' ,
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_WP4/',
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_ele_mva_80p_Iso2016/',
                               } ,
  
           'mva_90p_Iso2015':  {
@@ -233,7 +233,7 @@ ElectronWP['Full2016'] = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_90p_Iso2015.txt' ,
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_WP5/',
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_ele_mva_90p_Iso2015/',
                               } ,
  
           'mva_90p_Iso2016':  {
@@ -267,7 +267,7 @@ ElectronWP['Full2016'] = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_90p_Iso2016.txt' ,
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_WP6/',
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_ele_mva_90p_Iso2016/',
                               } ,
  
                   } ,
@@ -407,7 +407,7 @@ MuonWP['Full2016'] = {
                                     '5-7' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016GH_PTvsETA_HWW.txt' ,
                                               'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt' ] , 
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_WP1/',
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/36fb_muon/',
 
                        } ,
 
