@@ -50,6 +50,21 @@ class JESTreeMaker(TreeCloner):
         for i in range( len(temp_vector) - len(jetOrderList) ) :
             vector.push_back ( -9999. )
         
+    # Strange algebra to be able to use raw phi angles
+    def sgn_deltaphi(self, phi1, phi2) :
+        dphi = phi1 - phi2
+        if abs(dphi) > ROOT.TMath.Pi() :
+            dphi = dphi - 2*ROOT.TMath.Pi()
+        return dphi
+
+    # here I want to properly sum metphi and delta(metphi)
+    def sum_deltaphi(self, phi, dphi) :
+        result = phi + dphi
+        if result < -ROOT.TMath.Pi() :
+            result = result + 2*ROOT.TMath.Pi()
+        elif result > ROOT.TMath.Pi() :
+            result = result - 2*ROOT.TMath.Pi()
+        return result
 
 
     def process(self,**kwargs):
@@ -150,14 +165,18 @@ class JESTreeMaker(TreeCloner):
 
             # Recommended definition of newmet
             if self.kind == 1.0 :
-                print 'JES Up'
+                # print 'JES Up'
                 newmetmodule = itree.metPfType1JetEnUp
-                newmetphi = itree.metPfRawPhiJetEnUp
+                # newmetphi = itree.metPfRawPhiJetEnUp
+                myDelta = self.sgn_deltaphi(itree.metPfRawPhiJetEnUp, itree.metPfRawPhi)
+                newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                 newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
             elif self.kind == -1.0 :
-                print 'JES Down'
+                # print 'JES Down'
                 newmetmodule = itree.metPfType1JetEnDn
-                newmetphi = itree.metPfRawPhiJetEnDn
+                # newmetphi = itree.metPfRawPhiJetEnDn
+                myDelta = self.sgn_deltaphi(itree.metPfRawPhiJetEnDn, itree.metPfRawPhi)
+                newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                 newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                         
             # scale jet 4-vector
