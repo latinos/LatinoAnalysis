@@ -5,6 +5,7 @@
 ./mkGardener.py -p Apr2017_summer16 -s bSFLpTEffMulti -i lepSel__MCWeights -S Target -b
 
 ./mkGardener.py -p Apr2017_summer16 -s bSFLpTEffMultiCorr -i lepSel__MCWeights__bSFLpTEffMulti -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s cleanTauMC -i lepSel__MCWeights__bSFLpTEffMulti__bSFLpTEffMultiCorr -S Target -b
 
 # Fake: >= 1 loose lepton
 ./mkGardener.py -p Apr2017_summer16 -s fakeSelMC -i lepSel__MCWeights__bSFLpTEffMulti -S Target -b

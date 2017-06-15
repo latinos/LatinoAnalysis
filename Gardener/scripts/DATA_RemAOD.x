@@ -6,6 +6,7 @@ for Run in B C D E F G H; do
 # ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s EpTCorr,TrigMakerData -i lepSel -C -S Target -b
 
   ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s TrigMakerData -i lepSel__EpTCorr -S Target -b
+  ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s cleanTauData  -i lepSel__EpTCorr__TrigMakerData -S Target -b
 
   # Fake: >= 1 loose lepton
 # ./mkGardener.py -p Apr2017_Run2016${Run}_RemAOD -s hadd    -i lepSel__EpTCorr__TrigMakerData -S Target -b 

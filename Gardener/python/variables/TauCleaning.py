@@ -18,7 +18,7 @@ import numpy
 import math
 from collections import OrderedDict
 
-class TauClaning(TreeCloner):
+class TauCleaning(TreeCloner):
 
     def __init__(self):
        pass
@@ -30,7 +30,7 @@ class TauClaning(TreeCloner):
        description = self.help()
        group = optparse.OptionGroup(parser,self.label, description)
        group.add_option('-c', '--cmssw',   dest='cmssw', help='cmssw version (naming convention may change)', default='Full2016', type='string')
-       group.add_option('-d', '--isdata' , dest='isData' , help='True for data' default=False  , action="store_true")
+       group.add_option('-d', '--isdata' , dest='isData' , help='True for data', default=False  , action="store_true")
 
     def checkOptions(self,opts): 
        self.cmssw = opts.cmssw
@@ -151,7 +151,7 @@ class TauClaning(TreeCloner):
             tightTag = []
             for iTau in xrange(len(itree.std_vector_tau_pt)) :
                isLepton = False;
-               if abs(itree.std_vector_tau_eta[iJet]) <= self.tauCleaning_absEta :
+               if abs(itree.std_vector_tau_eta[iTau]) <= self.tauCleaning_absEta :
                  for iLep in xrange(len(itree.std_vector_lepton_pt)) :
                    if itree.std_vector_lepton_pt[iLep] < self.tauCleaning_minpTLep:
                      break;
