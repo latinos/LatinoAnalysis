@@ -15,7 +15,7 @@ from LatinoAnalysis.Gardener.variables.triggerMaker               import trigger
 
 # id/isolation scale factors
 from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
-#from LatinoAnalysis.Gardener.variables.multiIdisoScaleFactors     import MultiIdIsoSFFiller
+from LatinoAnalysis.Gardener.variables.multiIdisoScaleFactors     import MultiIdIsoSFFiller
 
 
 # selections
@@ -138,7 +138,7 @@ if __name__ == '__main__':
 
 # id/isolation scale factors
     modules['idisofiller'] = IdIsoSFFiller()
-#    modules['multiidiso']  = MultiIdIsoSFFiller()
+    modules['multiidiso']  = MultiIdIsoSFFiller()
 
 # specific variables for MC
 

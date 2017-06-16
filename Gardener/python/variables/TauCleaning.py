@@ -145,6 +145,9 @@ class TauCleaning(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
 
+            # Clean All vectors
+            for bname, bvector in self.newBranchesVector.iteritems()             : bvector.clear()
+            for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems() : bvector.clear()
 
             # Cleaning against Loose leptons (electron/muon)
             goodTaus = []
@@ -173,6 +176,7 @@ class TauCleaning(TreeCloner):
             for remainingTau in range( maxNumTau - len(otree.std_vector_tau_isTight) ) : 
               for bname, bvector in self.newBranchesVector.iteritems() :
                 if ("std_vector_tau_isTight" == bname) : bvector.push_back(0.)
+
 
             # Add SF (kill Tau) --> rejection of 5% +- 5% of tau
             if not self.isData :
