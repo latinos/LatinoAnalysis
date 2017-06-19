@@ -19,7 +19,8 @@ formulas['METFilter_DATA'] = METFilter_DATA
 
 
 import os
-btagfile = "btagging.py"
+cmssw_base = os.getenv('CMSSW_BASE')
+btagfile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/btagging.py'
 
 if os.path.exists(btagfile) :
   handle = open(btagfile,'r')

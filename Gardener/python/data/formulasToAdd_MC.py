@@ -211,7 +211,8 @@ METFilter_MC     =  METFilter_Common + '*' + '(('+METFilter_MCver+'*'+METFilter_
 formulas['METFilter_MC'] = METFilter_MC
 
 import os
-btagfile = "btagging.py"
+cmssw_base = os.getenv('CMSSW_BASE')
+btagfile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/btagging.py'
 
 if os.path.exists(btagfile) :
   handle = open(btagfile,'r')
