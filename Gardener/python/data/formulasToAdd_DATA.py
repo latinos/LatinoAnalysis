@@ -17,16 +17,31 @@ METFilter_DATA   =  METFilter_Common + '*' + '(event.std_vector_trigger_special[
 
 formulas['METFilter_DATA'] = METFilter_DATA
 
-formulas['bveto'] = '    ( event.std_vector_jet_pt[0] < 20 or event.std_vector_jet_cmvav2[0] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[1] < 20 or event.std_vector_jet_cmvav2[1] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[2] < 20 or event.std_vector_jet_cmvav2[2] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[3] < 20 or event.std_vector_jet_cmvav2[3] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[4] < 20 or event.std_vector_jet_cmvav2[4] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[5] < 20 or event.std_vector_jet_cmvav2[5] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[6] < 20 or event.std_vector_jet_cmvav2[6] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[7] < 20 or event.std_vector_jet_cmvav2[7] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[8] < 20 or event.std_vector_jet_cmvav2[8] < -0.5884 ) \
-                     and ( event.std_vector_jet_pt[9] < 20 or event.std_vector_jet_cmvav2[9] < -0.5884 ) '
+
+import os
+btagfile = "btagging.py"
+
+if os.path.exists(btagfile) :
+  handle = open(btagfile,'r')
+  exec(handle)
+  handle.close()
+else:
+  print "!!! ERROR file ", btagfile, " does not exist."
+
+for name,btags in tagger.iteritems():
+  for wp in btags:
+    if 'algo' in wp: continue
+    formulas['bveto_'+name+wp] = '    ( event.std_vector_jet_pt[0] < 20 or event.std_vector_jet_'+btags['algo']+'[0] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[1] < 20 or event.std_vector_jet_'+btags['algo']+'[1] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[2] < 20 or event.std_vector_jet_'+btags['algo']+'[2] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[3] < 20 or event.std_vector_jet_'+btags['algo']+'[3] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[4] < 20 or event.std_vector_jet_'+btags['algo']+'[4] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[5] < 20 or event.std_vector_jet_'+btags['algo']+'[5] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[6] < 20 or event.std_vector_jet_'+btags['algo']+'[6] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[7] < 20 or event.std_vector_jet_'+btags['algo']+'[7] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[8] < 20 or event.std_vector_jet_'+btags['algo']+'[8] < '+str(btags[wp])+' ) \
+                                  and ( event.std_vector_jet_pt[9] < 20 or event.std_vector_jet_'+btags['algo']+'[9] < '+str(btags[wp])+' ) '
+
 
 muWP='cut_Tight80x'
 for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_Iso2016','mva_90p_Iso2015','mva_90p_Iso2016'] :
