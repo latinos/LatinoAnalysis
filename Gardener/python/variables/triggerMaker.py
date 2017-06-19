@@ -281,17 +281,17 @@ class triggerCalculator():
           # Add 5% syst to SnglEle
           if singleLegA == "triggerSingleEle" :
             systdown       = eff_sgl_1 - low_eff_sgl_1
-            systdown_new   = sqrt(systdown*systdown + 0.05*0.05) 
+            systdown_new   = math.sqrt(systdown*systdown + 0.05*0.05) 
             low_eff_sgl_1  = max(0.,eff_sgl_1 - systdown_new)
             systup         = high_eff_sgl_1 - eff_sgl_1
-            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            systup_new     = math.sqrt(systup*systup + 0.05*0.05) 
             high_eff_sgl_1 = min(1.,eff_sgl_1+systup_new)
           if singleLegB == "triggerSingleEle" :
             systdown       = eff_sgl_2 - low_eff_sgl_2
-            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            systdown_new   = math.sqrt(systdown*systdown + 0.05*0.05)
             low_eff_sgl_2  = max(0.,eff_sgl_2 - systdown_new)
             systup         = high_eff_sgl_2 - eff_sgl_2
-            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            systup_new     = math.sqrt(systup*systup + 0.05*0.05) 
             high_eff_sgl_2 = min(1.,eff_sgl_2+systup_new)
 
 
@@ -642,24 +642,24 @@ class triggerCalculator():
           # Add 5% syst to SnglEle
           if single1 == "triggerSingleEle" :
             systdown       = s1 - low_s1
-            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            systdown_new   = math.sqrt(systdown*systdown + 0.05*0.05)
             low_s1         = max(0.,s1 - systdown_new)
             systup         = high_s1 - s1
-            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            systup_new     = math.sqrt(systup*systup + 0.05*0.05) 
             high_s1        = min(1.,s1+systup_new)
           if single2 == "triggerSingleEle" :
             systdown       = s2 - low_s2
-            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            systdown_new   = math.sqrt(systdown*systdown + 0.05*0.05)
             low_s2         = max(0.,s2 - systdown_new)
             systup         = high_s2 - s2
-            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            systup_new     = math.sqrt(systup*systup + 0.05*0.05) 
             high_s2        = min(1.,s2+systup_new)
           if single3 == "triggerSingleEle" :
             systdown       = s3 - low_s3
-            systdown_new   = sqrt(systdown*systdown + 0.05*0.05)
+            systdown_new   = math.sqrt(systdown*systdown + 0.05*0.05)
             low_s3         = max(0.,s3 - systdown_new)
             systup         = high_s3 - s3
-            systup_new     = sqrt(systup*systup + 0.05*0.05) 
+            systup_new     = math.sqrt(systup*systup + 0.05*0.05) 
             high_s3        = min(1.,s3+systup_new)
 
 
