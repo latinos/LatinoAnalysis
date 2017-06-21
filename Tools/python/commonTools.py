@@ -197,7 +197,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
       out,err = proc.communicate()
       Files   = string.split(out)
     if len(Files) == 0 :
-      print 'ERROR: No files found for smaple ',Sample,' in directory ',Dir
+      print 'ERROR: No files found for sample ',Sample,' in directory ',Dir
       exit() 
     FileTarget = []
     for iFile in Files:
