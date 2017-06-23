@@ -18,7 +18,7 @@
 ./mkGardener.py -p Apr2017_summer16 -s  formulasMC -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR -S Target -b
 
 # Skims
-for iSkim in wwSel topSel vh3lSel sfSel vbsSel ; do
+for iSkim in wwSel topSel vh3lSel sfSel vbsSel ssSel ; do
   ./mkGardener.py -p Apr2017_summer16 -s  ${iSkim} -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC -S Target -b
 done
 

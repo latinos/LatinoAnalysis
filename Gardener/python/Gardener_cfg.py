@@ -3472,6 +3472,20 @@ Steps= {
                   'command'    : 'gardener.py filter -f \' std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && njet>=2 && mjj>100 \' '
            },
 
+  'ssSel'        :  {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' mll>12  \
+                                                           && std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>10 \
+                                                           && std_vector_lepton_pt[2]<10 \
+                                                           && metPfType1 > 20 \
+                                                           && ptll > 30 \
+                                                           && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] > 0) \
+                                                        \' '
+           },
+
+
   'do_tightVbsSel'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
