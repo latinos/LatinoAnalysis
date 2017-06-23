@@ -938,8 +938,8 @@ class ShapeFactory:
             tcanvas.RedrawAxis()
             
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".C")
+            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
+            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".C")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".eps")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
              
@@ -1117,11 +1117,12 @@ class ShapeFactory:
             pad2.SetGrid()
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
+            #tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
             
             
             # log Y axis
-            frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+            #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+            frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
             pad1.SetLogy(0)
@@ -1518,7 +1519,7 @@ class ShapeFactory:
                     weight_X_pad2.RedrawAxis()
                     
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
+                    #weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
                     
                     
                     # save also all the TH1F separately for later combination
