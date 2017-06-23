@@ -57,6 +57,6 @@ for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_
 
   formulas['LepCut4l__ele_'+eleWP+'__mu_'+muWP] = '((event.std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
                                                     (event.std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[1]>0.5) and \
-                                                    (event.std_vector_electron_isTightLepton_'+eleWP+'[2]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[2]>0.5)) \
+                                                    (event.std_vector_electron_isTightLepton_'+eleWP+'[2]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[2]>0.5) and \
                                                     (event.std_vector_electron_isTightLepton_'+eleWP+'[3]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[3]>0.5)) \
                                                    if hasattr(event, \'std_vector_electron_isTightLepton_'+eleWP+'\') and hasattr(event, \'std_vector_muon_isTightLepton_'+muWP+'\') else 1.'

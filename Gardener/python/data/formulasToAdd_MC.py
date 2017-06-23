@@ -15,27 +15,25 @@ formulas['SFweight2l'] = 'event.puW*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
                           event.veto_EMTFBug \
-                          if hasattr(event, \'bPogSF_CMVAL\') else 1.'
+                          if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
 
 formulas['SFweight3l'] = 'event.puW*\
-                          event.bPogSF_CMVAL*\
                           event.effTrigW3l*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
                           event.std_vector_lepton_recoW[2]*\
                           event.veto_EMTFBug \
-                          if hasattr(event, \'bPogSF_CMVAL\') else 1.'
+                          if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
 
 # !!!!! We don't have the trigger formula implemented for 4l !!!! -> Use 3l but not correct
 formulas['SFweight4l'] = 'event.puW*\
-                          event.bPogSF_CMVAL*\
                           event.effTrigW3l*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
                           event.std_vector_lepton_recoW[2]*\
                           event.std_vector_lepton_recoW[3]*\
                           event.veto_EMTFBug \
-                          if hasattr(event, \'bPogSF_CMVAL\') else 1.'
+                          if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
 
 muWP='cut_Tight80x'
 for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_Iso2016','mva_90p_Iso2015','mva_90p_Iso2016'] :
