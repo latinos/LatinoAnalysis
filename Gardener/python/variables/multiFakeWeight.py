@@ -457,7 +457,6 @@ class multiFakeWeightFiller(TreeCloner):
 
         # Loop
         nentries = self.itree.GetEntries()
-        nentries = 50
         print 'Total number of entries: ',nentries
         savedentries = 0
 

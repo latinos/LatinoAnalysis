@@ -52,20 +52,28 @@ for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_
    formulas['fakeW2l_'+Tag]            = '(event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
 
    formulas['fakeW2l_'+Tag+'_EleUp']   = '  (event.fakeW_'+Tag+'_2l0jElUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jElUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jElUp*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
    formulas['fakeW2l_'+Tag+'_EleDown'] = '  (event.fakeW_'+Tag+'_2l0jElDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jElDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jElDown*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
    formulas['fakeW2l_'+Tag+'_MuUp']    = '  (event.fakeW_'+Tag+'_2l0jMuUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jMuUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jMuUp*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
    formulas['fakeW2l_'+Tag+'_MuDown']  = '  (event.fakeW_'+Tag+'_2l0jMuDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jMuDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jMuDown*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
 
    formulas['fakeW2l_'+Tag+'_statEleUp']   = '  (event.fakeW_'+Tag+'_2l0jstatElUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatElUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatElUp*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
    formulas['fakeW2l_'+Tag+'_statEleDown'] = '  (event.fakeW_'+Tag+'_2l0jstatElDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatElDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatElDown*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
    formulas['fakeW2l_'+Tag+'_statMuUp']    = '  (event.fakeW_'+Tag+'_2l0jstatMuUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatMuUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatMuUp*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
    formulas['fakeW2l_'+Tag+'_statMuDown']  = '  (event.fakeW_'+Tag+'_2l0jstatMuDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatMuDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatMuDown*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
 
