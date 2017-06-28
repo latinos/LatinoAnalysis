@@ -3395,8 +3395,31 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py filter --keeplist $PWD/keeplist.txt '
+                  'command'    : 'gardener.py filter --keeplist /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/LatinoAnalysis/Gardener/python/keeplist.txt'
            },
+
+# Chain for monoh_wwsel and monoh_sfsel
+  'monoHwwSel'       :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            'wwSel',
+            'monohSel'
+            ],
+        },
+
+
+  'monoHsfSel'       :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            'sfSel',
+            'monohSel'
+            ],
+        },
+
 
 ###/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/LatinoAnalysis/Gardener/python/keeplist.txt '
 
