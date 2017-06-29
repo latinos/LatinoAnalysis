@@ -392,9 +392,16 @@ class allBtagPogScaleFactors(TreeCloner):
                 for rvariation in self.reshape_variations:
                   if tagger == "CMVA":
                     reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,cmva)
+                    if reshapeSF[tagger][rvariation] == 0:
+                      reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds("central",idJet,eta,pt,cmva)
                   if tagger == "CSV":
                     reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds(rvariation,idJet,eta,pt,csv)
-                  bPogSF_reshape[tagger][rvariation][0] *=reshapeSF[tagger][rvariation]
+                    if reshapeSF[tagger][rvariation] == 0:
+                      reshapeSF[tagger][rvariation] = self.reshape_readers[tagger].eval_auto_bounds("central",idJet,eta,pt,csv)
+                  #print "idJet = ", idJet, " eta = ", eta, " pt = ", pt, " discr = ", cmva
+                  #print "Tagger = ", tagger, " Variation = ", rvariation, " scale factor = ", reshapeSF[tagger][rvariation]
+                  #print "bPogSF reshape = ", reshapeSF[tagger][rvariation]
+                  bPogSF_reshape[tagger][rvariation][0] *= reshapeSF[tagger][rvariation]
 
               effMC = {}
               sf = {}
