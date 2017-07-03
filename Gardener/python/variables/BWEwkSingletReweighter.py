@@ -301,6 +301,9 @@ class BWEwkSingletReweighter(TreeCloner):
                 if shiftfile != "":
                   shift = shifts[str(int(self.mH))]["cprime"+str(cprime)]["brnew"+str(BRnew)]["weight"]
                 self.oldBranchesToBeModifiedSimpleVariable[name][0] = (1./shift)*decayWeight*self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsm)/CPSweight
+                # tmp fix without interference calculation for VBF
+                if productionProcess=="VBF":
+                  continue
                 mela.setMelaHiggsMassWidth(self.mH, gprime)
                 weightInterference = mela.weightStoI((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
                                                      fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3])
