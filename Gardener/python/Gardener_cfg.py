@@ -484,6 +484,22 @@ Productions= {
                                     },
                        },
 
+  'XYshiftTest_Data' : {
+                        'isData'  : True ,
+                        'samples' : 'PlotsConfigurations/Configurations/ControlRegions/MetXYshift/Full2016/samples_data_2016_PromptReco.py',
+                        'dir'     : 'LatinoProduction/XYshiftTestTrees/',
+                        'dirExt'  : 'Data' ,
+                        'cmssw'   : 'ICHEP2016' ,
+                        'reName'  : {
+                                       # Run2016C
+                                       'DoubleEG_Run2016C-PromptReco-v2'          : 'Run2016C_PromptReco_DoubleEG',
+                                       'DoubleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_DoubleMuon',
+                                       'MuonEG_Run2016C-PromptReco-v2'            : 'Run2016C_PromptReco_MuonEG',
+                                       'SingleElectron_Run2016C-PromptReco-v2'    : 'Run2016C_PromptReco_SingleElectron',
+                                       'SingleMuon_Run2016C-PromptReco-v2'        : 'Run2016C_PromptReco_SingleMuon',
+                                    },
+                       },
+
   '08Jul2016_Run2016C_PromptReco_repro' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_PromptReco.py',
