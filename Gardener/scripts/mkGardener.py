@@ -209,9 +209,9 @@ prodDirExt = ''
 #if options.cmssw == '763' :
 
 
-print "ProdBase    = ", ProdBase
-print "InputBase   = ", InputBase
-print "OutputBase  = ", OutputBase
+#print "ProdBase    = ", ProdBase
+#print "InputBase   = ", InputBase
+#print "OutputBase  = ", OutputBase
 
 
 
@@ -358,7 +358,7 @@ for iProd in prodList :
         #if 'ttDM' in iSample: print iSample, selectSample 
         for iFile in InitFileNameAll:
             #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in OutFileExistList 
-            if options.redo or not iFile in OutFileExistList or iStep == 'hadd' :
+            if options.redo or not iFile in OutFileExistList or iStep == 'hadd' : # Passing existing outFiles w/o redo option **********
               #print iSample 
               if selectSample and iSample.replace('_25ns','') in iFile :
                 #if 'MuonEG' in iFile : print iFile
@@ -631,10 +631,10 @@ for iProd in prodList :
         inputKeyDirFile = InputDirFileList[inputKey]  # Pointing to File in case of Split
 	wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
-        if   options.runBatch : command=''
+        if   options.runBatch and not 'knu' in os.uname()[1] : command=''
         else:  
           if 'iihe' or 'knu' in os.uname()[1]:
-            command='cd '+wDir+' ; '
+	    command='cd '+wDir+' ; ' # knu case: always works in wDir.
           else:       
             command='cd /tmp/'+os.getlogin()+' ; '
 
@@ -649,10 +649,12 @@ for iProd in prodList :
             
           outTree ='latino_'+inputKey+'__'+iStep+'.root'
           if len(InputDirFileList[inputKey]) == 1 :
-            if not  'iihe' in os.uname()[1]:
-              command += 'xrdcp '+InputDirFileList[inputKey][0]+' '+outTree+' ; ' 
-            else:
+            if 'iihe' in os.uname()[1]:
               outTree = 'srm://maite.iihe.ac.be:8443'+InputDirFileList[inputKey][0]
+	    elif 'knu' in os.uname()[1]:
+              command += 'cp '+InputDirFileList[inputKey][0]+' '+outTree+' ; ' 
+            else:
+              command += 'xrdcp '+InputDirFileList[inputKey][0]+' '+outTree+' ; ' 
           else:
             command += 'hadd -f '+outTree+' ' 
             for iFile in InputDirFileList[inputKey] : command += iFile+' '
@@ -775,8 +777,11 @@ for iProd in prodList :
 	  command+= fileMan.getCopyCommand(iStep, options.redo, outTree, inputKey)
 	#print 'command', command
 
-        #for iGarbage in GarbageCollector: 
-	  #command+='; rm '+iGarbage
+        # Cleaning output files after installation
+	if 'knu' in os.uname()[1]:
+          for iGarbage in GarbageCollector: 
+	    command+='; rm -f '+iGarbage
+
         logFile=wDir+'/log__'+inputKey+'.log'
         if options.quiet :
           command += ' 2>&1 > /dev/null \n' 
@@ -806,3 +811,4 @@ for iProd in prodList :
   if options.chain :
     print "Gone batching for Chain ..."
     if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
+
