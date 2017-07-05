@@ -718,7 +718,8 @@ for iProd in prodList :
         # single Target
         else:
           outTree ='latino_'+inputKey+'__'+iStep+'.root'
-          command+=Steps[iStep]['command']+' '+inputKeyDirFile+' '+outTree +' ; '
+	  print inputKeyDirFile, outTree
+          command+=Steps[iStep]['command']+' '+rootReadPath(inputKeyDirFile.split('/data/cms')[1])+' '+outTree +' ; '
           GarbageCollector.append(outTree)
 
         # Fix CMSSW flag;
@@ -811,4 +812,3 @@ for iProd in prodList :
   if options.chain :
     print "Gone batching for Chain ..."
     if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
-
