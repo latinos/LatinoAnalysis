@@ -473,6 +473,7 @@ class multiFakeWeightFiller(TreeCloner):
        
             # Prepare leptons 
             Leptons = {}
+            for iTag in self.FakeWeights: Leptons[iTag] = {} 
             selectedLepton = 0
             for iLep in xrange(len(itree.std_vector_lepton_pt)) :
 
@@ -487,6 +488,7 @@ class multiFakeWeightFiller(TreeCloner):
                   kindLep = 'ele'
                 elif abs (flavour) == 13 :
                   kindLep = 'mu'
+
 
                 # consider only leptons with pt>10 GeV
                 if pt > 10 \
@@ -504,7 +506,6 @@ class multiFakeWeightFiller(TreeCloner):
                        exec ('IsTightLepton = itree.std_vector_electron_isTightLepton_'+eleWP+'[iLep]')
                      elif abs (flavour) == 13 :
                        exec ('IsTightLepton = itree.std_vector_muon_isTightLepton_'+muWP+'[iLep]')
-                     Leptons[iTag] = {} 
                      Leptons[iTag][selectedLepton] = [kindLep, pt, eta, IsTightLepton]
 
                    selectedLepton += 1
@@ -512,55 +513,55 @@ class multiFakeWeightFiller(TreeCloner):
             # Now compute the fakes 
             for iTag in self.FakeWeights:
 
-               self.fakeVar['fakeW_'+iTag+'_2l0j']          [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet20', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l0jMuUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet30', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l0jMuDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet10', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l0jElUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet20', 'ElFR_jet45', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l0jElDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet20', 'ElFR_jet25', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l0jstatMuUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet20', 'ElFR_jet35', 'MuUp')
-               self.fakeVar['fakeW_'+iTag+'_2l0jstatMuDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet20', 'ElFR_jet35', 'MuDown')
-               self.fakeVar['fakeW_'+iTag+'_2l0jstatElUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet20', 'ElFR_jet35', 'ElUp')
-               self.fakeVar['fakeW_'+iTag+'_2l0jstatElDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet20', 'ElFR_jet35', 'ElDown')
+               self.fakeVar['fakeW_'+iTag+'_2l0j']          [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l0jMuUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet30', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l0jMuDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet10', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l0jElUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet45', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l0jElDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet25', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l0jstatMuUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet35', 'MuUp')
+               self.fakeVar['fakeW_'+iTag+'_2l0jstatMuDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet35', 'MuDown')
+               self.fakeVar['fakeW_'+iTag+'_2l0jstatElUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet35', 'ElUp')
+               self.fakeVar['fakeW_'+iTag+'_2l0jstatElDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet35', 'ElDown')
      
-               self.fakeVar['fakeW_'+iTag+'_2l1j']          [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l1jMuUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l1jMuDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet15', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l1jElUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet45', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l1jElDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet25', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l1jstatMuUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'MuUp')
-               self.fakeVar['fakeW_'+iTag+'_2l1jstatMuDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'MuDown')
-               self.fakeVar['fakeW_'+iTag+'_2l1jstatElUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'ElUp')
-               self.fakeVar['fakeW_'+iTag+'_2l1jstatElDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'ElDown')
+               self.fakeVar['fakeW_'+iTag+'_2l1j']          [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l1jMuUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l1jMuDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet15', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l1jElUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet45', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l1jElDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet25', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l1jstatMuUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'MuUp')
+               self.fakeVar['fakeW_'+iTag+'_2l1jstatMuDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'MuDown')
+               self.fakeVar['fakeW_'+iTag+'_2l1jstatElUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'ElUp')
+               self.fakeVar['fakeW_'+iTag+'_2l1jstatElDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'ElDown')
 
-               self.fakeVar['fakeW_'+iTag+'_2l2j']          [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l2jMuUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet45', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l2jMuDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l2jElUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet45', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l2jElDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet25', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_2l2jstatMuUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'MuUp')
-               self.fakeVar['fakeW_'+iTag+'_2l2jstatMuDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'MuDown')
-               self.fakeVar['fakeW_'+iTag+'_2l2jstatElUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'ElUp')
-               self.fakeVar['fakeW_'+iTag+'_2l2jstatElDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'ElDown')
+               self.fakeVar['fakeW_'+iTag+'_2l2j']          [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l2jMuUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet45', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l2jMuDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l2jElUp']      [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet45', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l2jElDown']    [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet25', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_2l2jstatMuUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'MuUp')
+               self.fakeVar['fakeW_'+iTag+'_2l2jstatMuDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'MuDown')
+               self.fakeVar['fakeW_'+iTag+'_2l2jstatElUp']  [0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'ElUp')
+               self.fakeVar['fakeW_'+iTag+'_2l2jstatElDown'][0] = self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'ElDown')
 
-               self.fakeVar['fakeW_'+iTag+'_3l']            [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_3lMuUp']        [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet45', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_3lMuDown']      [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_3lElUp']        [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet45', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_3lElDown']      [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet25', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_3lstatMuUp']    [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'MuUp')
-               self.fakeVar['fakeW_'+iTag+'_3lstatMuDown']  [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'MuDown')
-               self.fakeVar['fakeW_'+iTag+'_3lstatElUp']    [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'ElUp')
-               self.fakeVar['fakeW_'+iTag+'_3lstatElDown']  [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'ElDown')
+               self.fakeVar['fakeW_'+iTag+'_3l']            [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_3lMuUp']        [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet45', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_3lMuDown']      [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_3lElUp']        [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet45', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_3lElDown']      [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet25', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_3lstatMuUp']    [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'MuUp')
+               self.fakeVar['fakeW_'+iTag+'_3lstatMuDown']  [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'MuDown')
+               self.fakeVar['fakeW_'+iTag+'_3lstatElUp']    [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'ElUp')
+               self.fakeVar['fakeW_'+iTag+'_3lstatElDown']  [0] = self.FakeWeights[iTag]['fakeW']._get3lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'ElDown')
 
-               self.fakeVar['fakeW_'+iTag+'_4l']            [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_4lMuUp']        [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet45', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_4lMuDown']      [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_4lElUp']        [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet45', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_4lElDown']      [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet25', 'Nominal')
-               self.fakeVar['fakeW_'+iTag+'_4lstatMuUp']    [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'MuUp')
-               self.fakeVar['fakeW_'+iTag+'_4lstatMuDown']  [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'MuDown')
-               self.fakeVar['fakeW_'+iTag+'_4lstatElUp']    [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'ElUp')
-               self.fakeVar['fakeW_'+iTag+'_4lstatElDown']  [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons, 'MuFR_jet35', 'ElFR_jet35', 'ElDown')
+               self.fakeVar['fakeW_'+iTag+'_4l']            [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_4lMuUp']        [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet45', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_4lMuDown']      [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet25', 'ElFR_jet35', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_4lElUp']        [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet45', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_4lElDown']      [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet25', 'Nominal')
+               self.fakeVar['fakeW_'+iTag+'_4lstatMuUp']    [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'MuUp')
+               self.fakeVar['fakeW_'+iTag+'_4lstatMuDown']  [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'MuDown')
+               self.fakeVar['fakeW_'+iTag+'_4lstatElUp']    [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'ElUp')
+               self.fakeVar['fakeW_'+iTag+'_4lstatElDown']  [0] = self.FakeWeights[iTag]['fakeW']._get4lWeight(Leptons[iTag], 'MuFR_jet35', 'ElFR_jet35', 'ElDown')
 
 
             savedentries+=1

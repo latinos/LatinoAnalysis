@@ -118,7 +118,7 @@ class LeptonSel(TreeCloner):
         # Lepton cleaning options
         self.kindLep=int(opts.kindLep)
         self.nMinLep=int(opts.nMinLep) 
-        self.pTLeptCut = [18.0,8.0]  # Only applied up to nMinLep
+        self.pTLeptCut = [8.0,8.0]  # Only applied up to nMinLep
 
         # Jet cleaning options
         self.jetCleaning_minpTLep = 10.
