@@ -2,6 +2,7 @@ import optparse
 import numpy
 import ROOT
 import os.path
+import re 
 
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 
@@ -270,6 +271,8 @@ class EffTrgFiller(TreeCloner):
             eta[0] = self.mineta_mu
           if eta[0] > self.maxeta_mu:
             eta[0] = self.maxeta_mu
+        
+        return pt[0], eta[0]
 
 
 
@@ -669,7 +672,7 @@ class EffTrgFiller(TreeCloner):
           
           pt1 = vpt1[0]
           pt2 = vpt2[0]
-          pt3 = vpt2[0]
+          pt3 = vpt3[0]
           eta1 = veta1[0]
           eta2 = veta2[0]
           eta3 = veta3[0]
@@ -887,6 +890,132 @@ class EffTrgFiller(TreeCloner):
 
           return 1, 1, 1 
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # _getNlWeight
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def _getNlWeight(self, nLep):
+        def _curriedWeight(*args):
+            if len(args)%3 != 0:
+                print "ERROR!! For each leg, 'kindLep pt eta' should be provides. Bad number of arguments."
+                return 1, 1, 1
+            toss_a_coin = 1.
+            if self.cmssw == "ICHEP2016" : 
+                toss_a_coin = ROOT.gRandom.Rndm()
+
+            # Start from here!
+            kindLep = [ args[i*3+0] for i in range(nLep) ]
+            pt      = [ args[i*3+1] for i in range(nLep) ]
+            eta     = [ args[i*3+2] for i in range(nLep) ]
+
+            if  any([ p < -20 for p in kindLep ]):
+                return 1,1,1
+
+            for iLep in range(nLep):
+                pt[iLep], eta[iLep] = self._fixOverflowUnderflow(kindLep[iLep],pt[iLep:iLep+1],eta[iLep:iLep+1])
+
+            dz_eff_ee = 0.995 
+            dz_eff_em = 1.00
+            dz_eff_mm = 0.95
+            if self.cmssw == "ICHEP2016" : 
+                dz_eff_mm = 1.00
+
+            single = {}
+            for iLep in range(nLep):
+                keyname = 'single{0}'.format(iLep)
+                single[keyname] = {}
+                single[keyname]['whichTrigger'] = "triggerSingleMu"
+                if toss_a_coin < self.fixMuonTriggerLumiRatio:
+                    single[keyname]['whichTrigger'] = "triggerSpecialSingleMu"
+                if abs(kindLep[iLep]) == 11:
+                    single[keyname]['whichTrigger'] = "triggerSingleEle"
+                single[keyname]['pt']           = pt [iLep]
+                single[keyname]['eta']          = eta[iLep]
+
+            double = {}
+            for iLep in range(nLep):
+                for jLep in range(iLep+1,nLep):
+                    if abs(kindLep[iLep]) == abs(kindLep[jLep]):
+                        flavorKey1 = "DoubleEle" if abs(kindLep[iLep]) == 11 else "DoubleMu"
+                        flavorKey2 = ""
+                        dz_eff    = dz_eff_ee if abs(kindLep[iLep]) == 11 else dz_eff_mm
+                        specialKey = ""
+                    else:
+                        if abs(kindLep[0]) ==13:
+                            flavorKey1 = "Mu"
+                            flavorKey2 = "Ele"
+                        else :
+                            flavorKey1 = "Ele"
+                            flavorKey2 = "Mu"
+                        dz_eff    = dz_eff_em
+                        specialKey = "" if toss_a_coin > self.fixMuonTriggerLumiRatio else "Special"
+                    keyname = 'lead{0}trail{1}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{1}{2}LegHigPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [iLep] 
+                    double[keyname]['eta']          = eta[iLep]
+                    double[keyname]['dz_eff']       = dz_eff
+                    keyname = 'lead{1}trail{0}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{2}{1}LegHigPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [jLep] 
+                    double[keyname]['eta']          = eta[jLep]
+                    double[keyname]['dz_eff']       = dz_eff
+                    keyname = 'trail{0}lead{1}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{2}{1}LegLowPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [iLep]
+                    double[keyname]['eta']          = eta[iLep]
+                    double[keyname]['dz_eff']       = dz_eff
+                    keyname = 'trail{1}lead{0}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{1}{2}LegLowPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [jLep]
+                    double[keyname]['eta']          = eta[jLep]
+                    double[keyname]['dz_eff']       = dz_eff
+
+            getEff = {}
+            for keyname in double.keys():
+                getEff[keyname] = {}
+                getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(double[keyname]['pt'],double[keyname]['eta'],double[keyname]['whichTrigger'])
+            for keyname in single.keys():
+                getEff[keyname] = {}
+                getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(single[keyname]['pt'],single[keyname]['eta'],single[keyname]['whichTrigger'])
+
+
+            # Correction factors for hig/mid/low
+            if self.cmssw == "ICHEP2016" : 
+                for iLep in range(nLep):
+                    if abs(kindLep[iLep])==13:
+                        for keyname in double.keys():
+                            if re.search("^(lead|trail)([0-9]+)(lead|trail)([0-9]+)$",keyname).group(2) == str(iLep):
+                                getEff[keyname]['eff']      *= 0.99
+                                getEff[keyname]['eff_low']  *= 0.98
+                                getEff[keyname]['eff_high'] *= 0.99
+                        for keyname in single.keys():
+                            if re.search("^single([0-9]+)$",keyname).group(1) == str(iLep):
+                                getEff[keyname]['eff']      *= 0.99
+                                getEff[keyname]['eff_low']  *= 0.98
+                                getEff[keyname]['eff_high'] *= 0.99
+
+            def eff_sng_dbl(errEff):
+                
+                eff_dbl_inv = 1
+                eff_sng_inv = 1
+                eff  =  {}
+                for iLep in range(nLep):
+                    for jLep in range(iLep+1,nLep):
+                        eff['eff'+str(iLep)+str(jLep)] = {}
+                        eff['eff'+str(iLep)+str(jLep)][errEff] = ( getEff['lead'+str(iLep)+'trail'+str(jLep)][errEff]*getEff['trail'+str(jLep)+'lead'+str(iLep)][errEff] 
+                                                               + ( 1 - getEff['lead'+str(iLep)+'trail'+str(jLep)][errEff]*getEff['trail'+str(jLep)+'lead'+str(iLep)][errEff])*getEff['lead'+str(jLep)+'trail'+str(iLep)][errEff]*getEff['trail'+str(iLep)+'lead'+str(jLep)][errEff]) * double['trail'+str(iLep)+'lead'+str(jLep)]['dz_eff']
+                        eff_dbl_inv = eff_dbl_inv * (1-eff['eff'+str(iLep)+str(jLep)][errEff])
+                for iLep in range(nLep):
+                    eff_sng_inv = eff_sng_inv * (1-getEff['single'+str(iLep)][errEff])
+
+                return 1. - (eff_dbl_inv)*(eff_sng_inv)
+
+            return eff_sng_dbl('eff'), eff_sng_dbl('eff_low'), eff_sng_dbl('eff_high')
+
+        return _curriedWeight
 
     def process(self,**kwargs):
         tree  = kwargs['tree']
@@ -908,6 +1037,9 @@ class EffTrgFiller(TreeCloner):
            'effTrigW3l',
            'effTrigW3l_Up',
            'effTrigW3l_Down',
+           'effTrigW4l',
+           'effTrigW4l_Up',
+           'effTrigW4l_Down',
            'effTrigW_SnglEle',
            'effTrigW_SnglMu',
            'effTrigW_DbleEle',
@@ -959,6 +1091,9 @@ class EffTrgFiller(TreeCloner):
             self.branches['effTrigW3l']     [0] = 1.0
             self.branches['effTrigW3l_Up']  [0] = 1.0
             self.branches['effTrigW3l_Down'][0] = 1.0
+            self.branches['effTrigW4l']     [0] = 1.0
+            self.branches['effTrigW4l_Up']  [0] = 1.0
+            self.branches['effTrigW4l_Down'][0] = 1.0
             self.branches['effTrigW_SnglEle'][0] = 1.0
             self.branches['effTrigW_SnglMu'][0] = 1.0
             self.branches['effTrigW_DbleEle'][0] = 1.0
@@ -999,6 +1134,17 @@ class EffTrgFiller(TreeCloner):
               self.branches['effTrigW3l']     [0] = 0.0
               self.branches['effTrigW3l_Down'][0] = 0.0
               self.branches['effTrigW3l_Up']  [0] = 0.0
+
+            if itree.std_vector_lepton_flavour.size() >= 4 :
+                self.branches['effTrigW4l'][0], self.branches['effTrigW4l_Down'][0], self.branches['effTrigW4l_Up'][0] = \
+                    self._getNlWeight(4)(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
+                                         itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1],
+                                         itree.std_vector_lepton_flavour[2], itree.std_vector_lepton_pt[2], itree.std_vector_lepton_eta[2],
+                                         itree.std_vector_lepton_flavour[3], itree.std_vector_lepton_pt[3], itree.std_vector_lepton_eta[3])
+            else :
+              self.branches['effTrigW4l']     [0] = 0.0
+              self.branches['effTrigW4l_Down'][0] = 0.0
+              self.branches['effTrigW4l_Up']  [0] = 0.0
 
             otree.Fill()
             savedentries+=1
