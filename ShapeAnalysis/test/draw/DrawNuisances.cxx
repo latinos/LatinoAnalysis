@@ -62,8 +62,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  //---- ratio plot
  TCanvas* ccRatio = new TCanvas("ccRatio","",800,600);
  TH1F* hReferenceRatio = (TH1F*) hNominal->Clone("Reference");
- hReferenceRatio->SetMaximum(1.5);
- hReferenceRatio->SetMinimum(0.5);
+ hReferenceRatio->SetMaximum(1.3);
+ hReferenceRatio->SetMinimum(0.7);
  hReferenceRatio->SetLineColor(kBlue);
  hReferenceRatio->SetLineWidth(5);
  
