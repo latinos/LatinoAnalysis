@@ -30,6 +30,7 @@ class LawnMower:
         variables = {}
         self._variables = variables
 
+        
  
     # _____________________________________________________________________________
     def makePostFitPlot(self):
@@ -42,15 +43,23 @@ class LawnMower:
         
         
         process = "ggH_hww"
-        cut = "hww2l2v_13TeV_em_pm_0j"
+        #self._cut = "hww2l2v_13TeV_em_pm_0j"
         
         fileIn = ROOT.TFile(self._inputFileCombine, "READ")
+
+
+        self._outFile = ROOT.TFile.Open( self._outputFileName, 'update')  # need to append in an existing file if more cuts/variables are wanted
+
+        self._outFile.mkdir ( self._cut )
+        self._outFile.mkdir ( self._cut + "/" + self._variable)
+
+        self._outFile.cd ( self._cut + "/" + self._variable )
 
         
         #post_RooArgSet = ROOT.RooArgSet()
         post_RooArgSet = fileIn.Get("norm_fit_s") 
         
-        name = cut + "/" + process
+        name = self._cut + "/" + process
         normalization = post_RooArgSet
         
         print " name = ", name 
@@ -61,9 +70,69 @@ class LawnMower:
           norm_post =  post_RooArgSet.find(name)
 
           print " integral = ", norm_post.getVal()
-          
 
+        template_histogram = 0
         
+        for samples_key,samples_values in self._samples.iteritems():
+           if samples_key == "DATA" :
+             fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
+
+             self._outFile.cd ( self._cut + "/" + self._variable )
+
+             histo = fileInJustForDATA.Get(self._cut + "/" + self._variable + "/histo_" + samples_key)      
+             histo.SetName  ('histo_' + samples_key)
+             histo.SetTitle ('histo_' + samples_key)
+             histo.Write()              
+             
+             template_histogram = histo.Clone ("template")
+
+
+        #print " template_histogram = " , template_histogram
+         
+        for samples_key,samples_values in self._samples.iteritems():
+
+           print " samples_key = ", samples_key
+           
+           if samples_key != "DATA" :
+             histo = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + samples_key)      
+             print "shapes_fit_s" + "/" + self._cut + "/" + samples_key
+             
+             histo.SetName  ('histo_' + samples_key)
+             histo.SetTitle ('histo_' + samples_key)
+             
+             # fix the binning copying from "DATA" binning, if available
+             if (template_histogram != 0) :
+               histo = self._ChangeBin(histo, template_histogram)
+             
+             histo.Write()              
+
+             
+     
+        
+    # _____________________________________________________________________________
+    def _ChangeBin(self, myhisto, templatehisto): 
+
+        nx = templatehisto.GetNbinsX()
+        
+        binLowEdge = []
+
+        for iBin in range(1, nx+1):
+          binLowEdge.append(templatehisto.GetXaxis().GetBinLowEdge(iBin))
+        binLowEdge.append(templatehisto.GetXaxis().GetBinLowEdge(nx+1))
+        #print " binLowEdge = ", binLowEdge
+
+        new_histo = ROOT.TH1F("temporary","",nx,array('d',binLowEdge))
+          
+        for iBin in range(1, nx+1):
+          new_histo.SetBinContent(iBin, myhisto.GetBinContent(iBin))
+          new_histo.SetBinError(iBin, myhisto.GetBinError(iBin))
+          
+        new_histo.SetName  (myhisto.GetName())
+        new_histo.SetTitle (myhisto.GetTitle())
+        
+        return new_histo
+        
+
         
 
 
@@ -84,7 +153,12 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--inputFileCombine'      , dest='inputFileCombine'      , help='input file with roofit results, mlfit'                 , default='input.root')
+    parser.add_option('--inputFileCombine'      , dest='inputFileCombine'      , help='input file with roofit results, mlfit'                          , default='input.root')
+    parser.add_option('--outputFile'            , dest='outputFile'            , help='output file with histograms, same format as mkShape.py output'  , default='output.root')
+    parser.add_option('--variable'              , dest='variable'              , help='variable name'  , default='mll')
+    parser.add_option('--cut'                   , dest='cut'                   , help='cut name'  , default='0j')
+    parser.add_option('--inputFile'             , dest='inputFile'             , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
+          
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -95,6 +169,11 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
     print " inputFileCombine      =          ", opt.inputFileCombine
+    print " inputFile (for DATA)  =          ", opt.inputFile
+    print " outputFile            =          ", opt.outputFile
+    print " variable              =          ", opt.variable
+    print " cut                   =          ", opt.cut
+
 
     if not opt.debug:
         pass
@@ -107,9 +186,25 @@ if __name__ == '__main__':
 
     factory = LawnMower()
     factory._inputFileCombine = opt.inputFileCombine
+    factory._outputFileName   = opt.outputFile
+    factory._variable         = opt.variable
+    factory._cut              = opt.cut
+    
+
+    samples = OrderedDict()
+    if os.path.exists(opt.samplesFile) :
+      handle = open(opt.samplesFile,'r')
+      exec(handle)
+      handle.close()
+
+    factory._samples = samples
+    
+    factory._inputFile = opt.inputFile
     
     factory.makePostFitPlot()
     
     print '... and now closing ...'
         
+       
+       
        
