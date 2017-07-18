@@ -17,9 +17,9 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  hNominal->SetLineColor(kBlue);
  hNominal->SetLineWidth(5);
 
- hUp->SetLineColor(kRed);
+ hUp->SetLineColor(kGreen+2);
  hUp->SetLineWidth(2);
- hUp->SetLineStyle(2);
+ hUp->SetLineStyle(3);
  
  hDo->SetLineColor(kMagenta);
  hDo->SetLineWidth(2);
@@ -62,8 +62,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  //---- ratio plot
  TCanvas* ccRatio = new TCanvas("ccRatio","",800,600);
  TH1F* hReferenceRatio = (TH1F*) hNominal->Clone("Reference");
- hReferenceRatio->SetMaximum(1.3);
- hReferenceRatio->SetMinimum(0.7);
+ hReferenceRatio->SetMaximum(1.1);
+ hReferenceRatio->SetMinimum(0.9);
  hReferenceRatio->SetLineColor(kBlue);
  hReferenceRatio->SetLineWidth(5);
  
@@ -86,8 +86,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
    hRatioUp -> SetBinError  (iBin+1, 0.);
 //    if (den != 0) hRatioUp -> SetBinError  (iBin+1, 1./den * hRatioUp->GetBinError(iBin+1));
  }
-  hRatioUp->SetLineColor(kRed);
-  hRatioUp->SetLineWidth(2);
+  hRatioUp->SetLineColor(kGreen+2);
+  hRatioUp->SetLineWidth(3);
  
  for (int iBin = 0; iBin < hReferenceRatio->GetNbinsX(); iBin++) {
   float ratio = 1;
