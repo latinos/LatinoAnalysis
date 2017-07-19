@@ -171,7 +171,7 @@ class LawnMower:
           
         for iBin in range(1, nx+1):
           new_histo.SetBinContent(iBin, myhisto.GetBinContent(iBin))
-          new_histo.SetBinError(iBin, myhisto.GetBinError(iBin))
+          new_histo.SetBinError  (iBin, myhisto.GetBinError(iBin))
           
         new_histo.SetName  (myhisto.GetName())
         new_histo.SetTitle (myhisto.GetTitle())
