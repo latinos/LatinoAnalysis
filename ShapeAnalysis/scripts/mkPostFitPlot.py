@@ -106,6 +106,52 @@ class LawnMower:
              
              histo.Write()              
 
+        #
+        # total signal and total background, and total
+        #
+        
+        #
+        # total signal
+        histo_total_signal = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + "total_signal")      
+        
+        histo_total_signal.SetName  ('histo_' + 'total_signal')
+        histo_total_signal.SetTitle ('histo_' + 'total_signal')
+        
+        # fix the binning copying from "DATA" binning, if available
+        if (template_histogram != 0) :
+          histo_total_signal = self._ChangeBin(histo_total_signal, template_histogram)
+        
+        histo_total_signal.Write()              
+
+        #
+        # total background
+        histo_total_background = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + "total_background")      
+        
+        histo_total_background.SetName  ('histo_' + 'total_background')
+        histo_total_background.SetTitle ('histo_' + 'total_background')
+        
+        # fix the binning copying from "DATA" binning, if available
+        if (template_histogram != 0) :
+          histo_total_background = self._ChangeBin(histo_total_background, template_histogram)
+        
+        histo_total_background.Write()              
+        
+        #
+        # total
+        histo_total = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + "total")      
+        
+        histo_total.SetName  ('histo_' + 'total')
+        histo_total.SetTitle ('histo_' + 'total')
+        
+        # fix the binning copying from "DATA" binning, if available
+        if (template_histogram != 0) :
+          histo_total = self._ChangeBin(histo_total, template_histogram)
+        
+        histo_total.Write()              
+        
+        
+        
+        
              
      
         
