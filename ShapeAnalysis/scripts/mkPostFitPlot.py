@@ -64,6 +64,17 @@ class LawnMower:
         
         print " name = ", name 
         
+        if self._kind == 's' :
+          folder_fit_name = "shapes_fit_s"   # signal + background
+        elif  self._kind == 'b' :
+          folder_fit_name = "shapes_fit_b"   # background only fit
+        elif  self._kind == 'p' :
+          folder_fit_name = "shapes_prefit"   # prefit
+        else :
+          print " Seriously? What do you want from me? "
+          return 
+          
+        
         if (post_RooArgSet.find(name)) :
           print "found "
           
@@ -94,8 +105,8 @@ class LawnMower:
            print " samples_key = ", samples_key
            
            if samples_key != "DATA" :
-             histo = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + samples_key)      
-             print "shapes_fit_s" + "/" + self._cut + "/" + samples_key
+             histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + samples_key)      
+             print folder_fit_name + "/" + self._cut + "/" + samples_key
              
              histo.SetName  ('histo_' + samples_key)
              histo.SetTitle ('histo_' + samples_key)
@@ -112,7 +123,7 @@ class LawnMower:
         
         #
         # total signal
-        histo_total_signal = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + "total_signal")      
+        histo_total_signal = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_signal")      
         
         histo_total_signal.SetName  ('histo_' + 'total_signal')
         histo_total_signal.SetTitle ('histo_' + 'total_signal')
@@ -125,7 +136,7 @@ class LawnMower:
 
         #
         # total background
-        histo_total_background = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + "total_background")      
+        histo_total_background = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_background")      
         
         histo_total_background.SetName  ('histo_' + 'total_background')
         histo_total_background.SetTitle ('histo_' + 'total_background')
@@ -138,7 +149,7 @@ class LawnMower:
         
         #
         # total
-        histo_total = fileIn.Get("shapes_fit_s" + "/" + self._cut + "/" + "total")      
+        histo_total = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total")      
         
         histo_total.SetName  ('histo_' + 'total')
         histo_total.SetTitle ('histo_' + 'total')
@@ -204,6 +215,7 @@ if __name__ == '__main__':
     parser.add_option('--variable'              , dest='variable'              , help='variable name'  , default='mll')
     parser.add_option('--cut'                   , dest='cut'                   , help='cut name'  , default='0j')
     parser.add_option('--inputFile'             , dest='inputFile'             , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
+    parser.add_option('--kind'                  , dest='kind'                  , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default='s')
           
           
     # read default parsing options as well
@@ -219,7 +231,7 @@ if __name__ == '__main__':
     print " outputFile            =          ", opt.outputFile
     print " variable              =          ", opt.variable
     print " cut                   =          ", opt.cut
-
+    print " kind                  =          ", opt.kind
 
     if not opt.debug:
         pass
@@ -235,7 +247,10 @@ if __name__ == '__main__':
     factory._outputFileName   = opt.outputFile
     factory._variable         = opt.variable
     factory._cut              = opt.cut
+    factory._kind             = opt.kind
     
+
+
 
     samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
