@@ -657,16 +657,35 @@ class ShapeFactory:
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
             
+            
+            #
+            # if there is an histogram called 'histo_total'
+            # it means that post-fit plots are provided, 
+            # and we can neglect about the nuisances as "quadrature sum" here
+            # and use directly the error bars (so far symmetric
+            # see https://hypernews.cern.ch/HyperNews/CMS/get/higgs-combination/995.html )
+            # from the histogram itself
+            #
+            special_shapeName = cutName+"/"+variableName+'/histo_total' 
+            histo_total = fileIn.Get(special_shapeName)
+            print ' --> ', histo_total
+              
             if len(mynuisances.keys()) != 0:
               tgrMC = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMC.SetPoint     (iBin, tgrData_vx[iBin], tgrMC_vy[iBin])
-                tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
+                if histo_total != 0 :
+                  tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
+                else :
+                  tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
               
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
-                tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                if histo_total != 0 :
+                  tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                else :
+                  tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                 
                          
             
@@ -1378,8 +1397,12 @@ class ShapeFactory:
                         eylow = 0
                         eyhigh = 0
                         if len(nuisances_err_do) != 0:
-                          eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[ibin + sliceX * nbinY]
-                          eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[ibin + sliceX * nbinY]
+                          if histo_total != 0 :
+                            eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(ibin + sliceX * nbinY + 1)
+                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(ibin + sliceX * nbinY + 1)
+                          else :                        
+                            eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[ibin + sliceX * nbinY]
+                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[ibin + sliceX * nbinY]
                         
                         if sliceX != 0 :
                           y += weight_X_tgrMC.GetY()[ibin]
