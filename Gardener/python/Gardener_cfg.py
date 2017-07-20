@@ -1986,7 +1986,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESup','bPogSF','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_JESup','bPogSF','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
                 },
 
@@ -1994,7 +1994,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_JESdo','bPogSF','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_JESdo','bPogSF','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
                 },
 
@@ -2015,40 +2015,40 @@ Steps= {
                   'onlySample' : samples4Syst
                 },
 
-  'LepElepTCutup':  {
+  'LepElepTup':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
 #                  'subTargets' : ['do_LepElepTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepElepTup','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_LepElepTup','TrigMakerMCkeepRun','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
               },
 
-  'LepElepTCutdo':  {
+  'LepElepTdo':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   #'subTargets' : ['do_LepElepTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepElepTdo','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_LepElepTdo','TrigMakerMCkeepRun','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
               },
 
 
-  'LepMupTCutup':  {
+  'LepMupTup':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   #'subTargets' : ['do_LepMupTup','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepMupTup','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_LepMupTup','TrigMakerMCkeepRun','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
               },
 
-  'LepMupTCutdo':  {
+  'LepMupTdo':  {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   #'subTargets' : ['do_LepMupTdo','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'subTargets' : ['do_LepMupTdo','TrigMakerMCkeepRun','IdIsoSC_Cut','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_LepMupTdo','TrigMakerMCkeepRun','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
               },
                   
@@ -2058,7 +2058,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METup','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_METup','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
               },
 
@@ -2066,7 +2066,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_METdo','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                  'subTargets' : ['do_METdo','l2kin','l3kin','l4kin','do_dymvaHiggs','formulasMC'],
                   'onlySample' : samples4Syst
               },
 
@@ -2694,7 +2694,7 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py filter -f \'std_vector_lepton_isLooseLepton[0]>0.5 && std_vector_lepton_isLooseLepton[1]>0.5\' '
+                  'command'    : 'gardener.py filter -f \'std_vector_lepton_pt[0] > 18.0 && std_vector_lepton_isLooseLepton[0]>0.5 && std_vector_lepton_isLooseLepton[1]>0.5\' '
                },
 
 
