@@ -28,7 +28,7 @@ done
 # Systematics
 
 for iSyst in JESup JESdo METup METdo LepElepTup LepElepTdo LepMupTup LepMupTdo ;  do
-  ./mkGardener.py -p  Feb2017_summer16 -s ${iSyst} -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC -S Target -b
+  ./mkGardener.py -p  Apr2017_summer16 -s ${iSyst} -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC -S Target -b
   for iSkim in wwSel topSel vh3lSel sfSel vbsSel ssSel ; do
     ./mkGardener.py -p Apr2017_summer16 -s  ${iSkim} -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__${iSyst} -S Target -b
   done
