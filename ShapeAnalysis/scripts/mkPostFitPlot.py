@@ -42,27 +42,21 @@ class LawnMower:
         print " self.inputFileCombine " , self._inputFileCombine
         
         
-        process = "ggH_hww"
-        #self._cut = "hww2l2v_13TeV_em_pm_0j"
-        
         fileIn = ROOT.TFile(self._inputFileCombine, "READ")
 
 
         self._outFile = ROOT.TFile.Open( self._outputFileName, 'update')  # need to append in an existing file if more cuts/variables are wanted
 
-        self._outFile.mkdir ( self._cut )
-        self._outFile.mkdir ( self._cut + "/" + self._variable)
+        self._outFile.mkdir ( self._cutNameInOriginal )
+        self._outFile.mkdir ( self._cutNameInOriginal + "/" + self._variable)
 
-        self._outFile.cd ( self._cut + "/" + self._variable )
+        self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
 
         
         #post_RooArgSet = ROOT.RooArgSet()
-        post_RooArgSet = fileIn.Get("norm_fit_s") 
-        
-        name = self._cut + "/" + process
+        post_RooArgSet = fileIn.Get("norm_fit_s")      
         normalization = post_RooArgSet
         
-        print " name = ", name 
         
         if self._kind == 's' :
           folder_fit_name = "shapes_fit_s"   # signal + background
@@ -73,24 +67,17 @@ class LawnMower:
         else :
           print " Seriously? What do you want from me? "
           return 
-          
-        
-        if (post_RooArgSet.find(name)) :
-          print "found "
-          
-          norm_post =  post_RooArgSet.find(name)
-
-          print " integral = ", norm_post.getVal()
-
+       
+       
         template_histogram = 0
         
         for samples_key,samples_values in self._samples.iteritems():
            if samples_key == "DATA" :
              fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
-             self._outFile.cd ( self._cut + "/" + self._variable )
+             self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
 
-             histo = fileInJustForDATA.Get(self._cut + "/" + self._variable + "/histo_" + samples_key)      
+             histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key)      
              histo.SetName  ('histo_' + samples_key)
              histo.SetTitle ('histo_' + samples_key)
              histo.Write()              
@@ -214,6 +201,7 @@ if __name__ == '__main__':
     parser.add_option('--outputFile'            , dest='outputFile'            , help='output file with histograms, same format as mkShape.py output'  , default='output.root')
     parser.add_option('--variable'              , dest='variable'              , help='variable name'  , default='mll')
     parser.add_option('--cut'                   , dest='cut'                   , help='cut name'  , default='0j')
+    parser.add_option('--cutNameInOriginal'     , dest='cutNameInOriginal'     , help='cut name as appears in cuts.py'  , default='')
     parser.add_option('--inputFile'             , dest='inputFile'             , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
     parser.add_option('--kind'                  , dest='kind'                  , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default='s')
           
@@ -233,6 +221,11 @@ if __name__ == '__main__':
     print " cut                   =          ", opt.cut
     print " kind                  =          ", opt.kind
 
+    if opt.cutNameInOriginal == '' :
+      opt.cutNameInOriginal = opt.cut
+    print " cutNameInOriginal     =          ", opt.cutNameInOriginal
+
+
     if not opt.debug:
         pass
     elif opt.debug == 2:
@@ -243,13 +236,12 @@ if __name__ == '__main__':
         logging.basicConfig( level=logging.INFO )
 
     factory = LawnMower()
-    factory._inputFileCombine = opt.inputFileCombine
-    factory._outputFileName   = opt.outputFile
-    factory._variable         = opt.variable
-    factory._cut              = opt.cut
+    factory._inputFileCombine  = opt.inputFileCombine
+    factory._outputFileName    = opt.outputFile
+    factory._variable          = opt.variable
+    factory._cut               = opt.cut
+    factory._cutNameInOriginal = opt.cutNameInOriginal
     factory._kind             = opt.kind
-    
-
 
 
     samples = OrderedDict()
