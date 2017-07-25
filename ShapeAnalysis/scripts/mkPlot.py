@@ -669,12 +669,13 @@ class ShapeFactory:
             special_shapeName = cutName+"/"+variableName+'/histo_total' 
             histo_total = fileIn.Get(special_shapeName)
             print ' --> ', histo_total
-              
+
+            
             if len(mynuisances.keys()) != 0:
               tgrMC = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMC.SetPoint     (iBin, tgrData_vx[iBin], tgrMC_vy[iBin])
-                if histo_total != 0 :
+                if histo_total != None :
                   tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
                   tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
@@ -682,7 +683,7 @@ class ShapeFactory:
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
-                if histo_total != 0 :
+                if histo_total != None :
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
                 else :
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
@@ -1397,7 +1398,7 @@ class ShapeFactory:
                         eylow = 0
                         eyhigh = 0
                         if len(nuisances_err_do) != 0:
-                          if histo_total != 0 :
+                          if histo_total != None :
                             eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(ibin + sliceX * nbinY + 1)
                             eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(ibin + sliceX * nbinY + 1)
                           else :                        
