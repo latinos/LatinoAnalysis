@@ -60,8 +60,9 @@ class DymvaHiggsFiller(TreeCloner):
         self.getDYMVAV1j.AddVariable("metPuppi",          (self.var1j8))
         self.getDYMVAV1j.AddVariable("dphijet1met_cut",   (self.var1j9))
         self.getDYMVAV1j.AddVariable("uperp",             (self.var1j10))
- 
-        # 2jggH: projtkmet/F:projpfmet/F:PfMetDivSumMet/F:nvtx/F:metPuppi/F:dphijet1met_cut/F:mth/F:ptll/F:jetpt2_cut/F:upara/F:dphijet2met_cut/F:dphilljetjet_cut/F
+
+
+        # 2jggH: projtkmet/F:projpfmet/F:PfMetDivSumMet/F:nvtx/F:metPuppi/F:dphijet1met_cut/F:mth/F:ptll/F:jetpt2_cut/F:upara/F:dphilljetjet_cut/F:mtw2/F 
         self.getDYMVAV2jggH.AddVariable("projtkmet",         (self.var2jggH1))
         self.getDYMVAV2jggH.AddVariable("projpfmet",         (self.var2jggH2))
         self.getDYMVAV2jggH.AddVariable("PfMetDivSumMet",    (self.var2jggH3))
@@ -72,10 +73,10 @@ class DymvaHiggsFiller(TreeCloner):
         self.getDYMVAV2jggH.AddVariable("ptll",              (self.var2jggH8))
         self.getDYMVAV2jggH.AddVariable("jetpt2_cut",        (self.var2jggH9))
         self.getDYMVAV2jggH.AddVariable("upara",             (self.var2jggH10))
-        self.getDYMVAV2jggH.AddVariable("dphijet2met_cut",   (self.var2jggH11))
-        self.getDYMVAV2jggH.AddVariable("dphilljetjet_cut",  (self.var2jggH12))
+        self.getDYMVAV2jggH.AddVariable("dphilljetjet_cut",  (self.var2jggH11))
+        self.getDYMVAV2jggH.AddVariable("mtw2",              (self.var2jggH12))
 
-        # 2jVBF:  projtkmet/F:projpfmet/F:PfMetDivSumMet/F:nvtx/F:dphijet1met_cut/F:mth/F:dphilljetjet_cut/F:dphijjmet_cut/F:mpmet/F
+        # 2jVBF:  projtkmet/F:projpfmet/F:PfMetDivSumMet/F:nvtx/F:dphijet1met_cut/F:mth/F:dphilljetjet_cut/F:jetpt2_cut/F:dphijet2met_cut/F:mtw2/F
         self.getDYMVAV2jVBF.AddVariable("projtkmet",         (self.var2jVBF1))
         self.getDYMVAV2jVBF.AddVariable("projpfmet",         (self.var2jVBF2))
         self.getDYMVAV2jVBF.AddVariable("PfMetDivSumMet",    (self.var2jVBF3))
@@ -83,8 +84,9 @@ class DymvaHiggsFiller(TreeCloner):
         self.getDYMVAV2jVBF.AddVariable("dphijet1met_cut",   (self.var2jVBF5))
         self.getDYMVAV2jVBF.AddVariable("mth",               (self.var2jVBF6))
         self.getDYMVAV2jVBF.AddVariable("dphilljetjet_cut",  (self.var2jVBF7))
-        self.getDYMVAV2jVBF.AddVariable("dphijjmet_cut",     (self.var2jVBF8))
-        self.getDYMVAV2jVBF.AddVariable("mpmet",             (self.var2jVBF9))
+        self.getDYMVAV2jVBF.AddVariable("jetpt2_cut",        (self.var2jVBF8))
+        self.getDYMVAV2jVBF.AddVariable("dphijet2met_cut",   (self.var2jVBF9))
+        self.getDYMVAV2jVBF.AddVariable("mtw2",              (self.var2jVBF10))
 
 
         # dymva trainined xml
@@ -95,7 +97,7 @@ class DymvaHiggsFiller(TreeCloner):
         self.getDYMVAV0j.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/dymva/UATmva_DYmva_0j_BDTG_12Var.weights.xml")
         self.getDYMVAV1j.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/dymva/UATmva_DYmva_1j_BDTG_10Var.weights.xml")
         self.getDYMVAV2jggH.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/dymva/UATmva_DYmva_2j_BDTG_12Var.weights.xml")
-        self.getDYMVAV2jVBF.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/dymva/UATmva_DYmva_VBF2j_BDTG_9Var.weights.xml")
+        self.getDYMVAV2jVBF.BookMVA("BDT",baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/dymva/UATmva_DYmva_VBF2j_BDTG_10Var.weights.xml")
 
     def help(self):
         return '''Add dy mva variables'''
@@ -266,8 +268,8 @@ class DymvaHiggsFiller(TreeCloner):
                     self.var2jggH8[0]  = itree.ptll
                     self.var2jggH9[0]  = itree.jetpt2_cut
                     self.var2jggH10[0] = itree.upara
-                    self.var2jggH11[0] = itree.dphijet2met_cut
-                    self.var2jggH12[0] = itree.dphilljetjet_cut
+                    self.var2jggH11[0] = itree.dphilljetjet_cut
+                    self.var2jggH12[0] = itree.mtw2
 
                     dymvaggh[0] = self.getDYMVAV2jggH.EvaluateMVA("BDT")
 
@@ -280,8 +282,9 @@ class DymvaHiggsFiller(TreeCloner):
                     self.var2jVBF5[0]  = itree.dphijet1met_cut
                     self.var2jVBF6[0]  = itree.mth
                     self.var2jVBF7[0]  = itree.dphilljetjet_cut
-                    self.var2jVBF8[0]  = itree.dphijjmet_cut
-                    self.var2jVBF9[0]  = itree.mpmet
+                    self.var2jVBF8[0]  = itree.jetpt2_cut
+                    self.var2jVBF9[0]  = itree.dphijet2met_cut
+                    self.var2jVBF10[0]  = itree.mtw2
 
                     dymvavbf[0] = self.getDYMVAV2jVBF.EvaluateMVA("BDT")
 
