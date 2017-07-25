@@ -38,7 +38,8 @@ class HiggsXSection:
       self._br = {}
       self._br['W2lv'] = 0.108*3.0
       self._br['W2QQ'] = 0.676
-      self._br['Z2ll'] = 0.337*3.0
+      self._br['Z2ll'] = 0.033658
+
 
    def readYR(self,YRversion,energy,model='sm'):
       if not YRversion in ['YR2','YR3','YR4prel','YR4'] : return

@@ -3554,7 +3554,7 @@ Steps= {
            },
 
 
-  'ssSel' :  {
+  'BADssSel' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
@@ -3562,7 +3562,7 @@ Steps= {
            },
 
 
-  'do_ssSel'        :  {
+  'ssSel'        :  {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
