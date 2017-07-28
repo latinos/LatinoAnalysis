@@ -101,6 +101,47 @@ class Worker(threading.Thread):
         print "Error: %s" % str(e)
 
 
+def getEffectiveBaseW(histo, lumi):
+
+  ### returns the effective baseW
+  baseW = histo.Integral()/histo.GetEntries()/lumi if histo.GetEntries()>0 else 0.
+  return baseW
+
+#BUGFIX by Andrea: adding central distribution to variables in the function
+def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
+  integral = 0.
+  integralVaried = 0.
+
+  # how to handle the case when you have a bin with 0 MC
+  # if the flag is activated, put the equivalent FC coverage 1.64 * 1 MC for the up variation
+  basew = getEffectiveBaseW(histo, lumi)
+  #print "###DEBUG: Effective baseW = ", basew
+  for iBin in range(1, histo.GetNbinsX()+1):
+    error = histo.GetBinError(iBin)
+    value = histo.GetBinContent(iBin)
+    integral += value
+    if iBin == iBinToChange :
+      if zeroMCerror==1:
+        if value == 0:
+          #print "###DEBUG: 0 MC stat --> value = ", value, " error = ", error
+          if direction == 1:
+            #print "###DEBUG: lumi = ", float(lumi), " basew = ", basew
+            newvalue = 1.64*float(lumi)*basew
+            #print "###DEBUG: new value up = ", newvalue
+          else:
+            newvalue = 0
+        else:
+          newvalue = value + direction * error
+      else:
+        newvalue = value + direction * error
+    else :
+      newvalue = value
+    integralVaried += newvalue
+    hvaried.SetBinContent(iBin, newvalue)
+#BUGFIX by Andrea: The modified histograms now have the new values computed starting from the nominal ones
+
+
+
 if __name__ == '__main__':
     print '''
 --------------------------------------------------------------------------------------------------
@@ -489,11 +530,47 @@ if __name__ == '__main__':
                     cleanup += " "+fileList[i]
 #                  print command
                   os.system(command)
-              os.system("cd "+os.getcwd()+"/"+opt.outputDir+"; "+"hadd -f plots_"+opt.tag+".root temp*")
-#              print "cd "+os.getcwd()+"/"+opt.outputDir+"; "+"hadd plots_"+opt.tag+".root temp*"
+              os.chdir(os.getcwd()+"/"+opt.outputDir)
+              os.system("hadd -f plots_"+opt.tag+".root temp*")
               cleanup += " temp*"
               if not opt.doNotCleanup: os.system(cleanup) 
-
+           
+            ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option 
+            if 'AsMuchAsPossible' in opt.batchSplit :
+              #os.chdir(os.getcwd()+"/"+opt.outputDir)
+              filein=ROOT.TFile('plots_'+opt.tag+'.root', 'update')
+              for sample in samples.keys():
+                if sample == "DATA":
+                  continue
+                zeroMCerror = 0
+                if sample in nuisances['stat']['samples'].keys():
+                  if 'zeroMCError' in nuisances['stat']['samples'][sample].keys():
+                    if nuisances['stat']['samples'][sample]['zeroMCError'] == '1':
+                      zeroMCerror = 1
+                if zeroMCerror == 1:
+                  print "special treatment of 0 MC events active for sample", sample
+                for cut in cuts.keys():
+                  for variable in variables.keys():
+                    hcentral = filein.Get(cut+"/"+variable+"/histo_"+sample)
+                    if hcentral == None:
+                      print "Warning, missing", sample, cut, variable
+                      continue
+                    for ibin in range(1, hcentral.GetNbinsX()+1):
+                      filein.cd(cut+"/"+variable)
+                      hup = filein.Get(cut+"/"+variable+"/histo_"+sample+"_ibin_" + str(ibin) + "_statUp")
+                      hdo = filein.Get(cut+"/"+variable+"/histo_"+sample+"_ibin_" + str(ibin) + "_statDown")
+                      if hup == None:
+                        print "Adding previously missing", hcentral.GetName()+ "_ibin_" + str(ibin) + "_statUp"
+                        hup = hcentral.Clone(hcentral.GetName()+ "_ibin_" + str(ibin) + "_statUp")
+                      if hdo ==None:
+                        print "Adding previously missing", hcentral.GetName()+ "_ibin_" + str(ibin) + "_statDown"
+                        hdo = hcentral.Clone(hcentral.GetName()+ "_ibin_" + str(ibin) + "_statDown")
+                      scaleHistoStat(hcentral, hup,  1, ibin, opt.lumi, zeroMCerror)
+                      scaleHistoStat(hcentral, hdo, -1, ibin, opt.lumi, zeroMCerror)
+                      #BUGFIX by Andrea: hcentral is now the firt variable in the function
+                      #original text: scaleHistoStat(hup,  1, ibin, lumi, zeroMCerror)
+                      hup.Write("",ROOT.TObject.kOverwrite)
+                      hdo.Write("",ROOT.TObject.kOverwrite)
 
 
 #              os.system(command)
