@@ -149,14 +149,13 @@ class ShapeFactory:
               for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
                 for sampleName, sample in self._samples.iteritems():
                   if sampleName == sampleNuisName :
-                    list_of_trees_to_connect_up[sampleNuisName] = self._samples[sampleNuisName]['name']
-                    list_of_trees_to_connect_do[sampleNuisName] = self._samples[sampleNuisName]['name']
+                    list_of_trees_to_connect[sampleNuisName] = [os.path.basename(s) if '###' in s else s for s in self._samples[sampleNuisName]['name']]
 
               #                                                                                                        skipMissingFiles                
-              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect_up, nuisance['folderUp']  , True)
-              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect_do, nuisance['folderDown'], True)
+              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect, nuisance['folderUp']  , True)
+              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect, nuisance['folderDown'], True)
               
-              #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect_up  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
+              #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
 
 
