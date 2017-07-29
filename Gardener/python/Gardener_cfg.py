@@ -1722,7 +1722,8 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','wwEWK','wzEWK','zzEWK'],
+                  #OLD 'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','wwEWK','wzEWK','zzEWK'],
+                  'subTargets' : ['baseW','do_WgStarsel']
                   'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 
@@ -1736,11 +1737,22 @@ Steps= {
                   'do4Data'    : True,
                   'subTargets' : ['do_WgStarsel'],
                   'onlySample' : [
+                                   # 2015
                                    'Run2015C_16Dec2015_DoubleMuon' , 'Run2015C_16Dec2015_SingleElectron' , 'Run2015C_16Dec2015_SingleMuon',
                                    'Run2015D_16Dec2015_DoubleMuon' , 'Run2015D_16Dec2015_SingleElectron' , 'Run2015D_16Dec2015_SingleMuon',
+                                   # 2016 (ICHEP)
                                    'Run2016B_PromptReco_DoubleMuon', 'Run2016B_PromptReco_SingleElectron', 'Run2016B_PromptReco_SingleMuon',
                                    'Run2016C_PromptReco_DoubleMuon', 'Run2016C_PromptReco_SingleElectron', 'Run2016C_PromptReco_SingleMuon',
                                    'Run2016D_PromptReco_DoubleMuon', 'Run2016D_PromptReco_SingleElectron', 'Run2016D_PromptReco_SingleMuon',
+                                   # 2016 (Full)
+                                   'DoubleMuon_Run2016B-03Feb2017_ver2-v2' , 'SingleElectron_Run2016B-03Feb2017_ver2-v2' , 'SingleMuon_Run2016B-03Feb2017_ver2-v2' ,
+                                   'DoubleMuon_Run2016C-03Feb2017-v1'      , 'SingleElectron_Run2016C-03Feb2017-v1'      , 'SingleMuon_Run2016C-03Feb2017-v1'      ,
+                                   'DoubleMuon_Run2016D-03Feb2017-v1'      , 'SingleElectron_Run2016D-03Feb2017-v1'      , 'SingleMuon_Run2016D-03Feb2017-v1'      ,
+                                   'DoubleMuon_Run2016E-03Feb2017-v1'      , 'SingleElectron_Run2016E-03Feb2017-v1'      , 'SingleMuon_Run2016E-03Feb2017-v1'      ,
+                                   'DoubleMuon_Run2016F-03Feb2017-v1'      , 'SingleElectron_Run2016F-03Feb2017-v1'      , 'SingleMuon_Run2016F-03Feb2017-v1'      ,
+                                   'DoubleMuon_Run2016G-03Feb2017-v1'      , 'SingleElectron_Run2016G-03Feb2017-v1'      , 'SingleMuon_Run2016G-03Feb2017-v1'      ,
+                                   'DoubleMuon_Run2016H-03Feb2017_ver2-v1' , 'SingleElectron_Run2016H-03Feb2017_ver2-v1' , 'SingleMuon_Run2016H-03Feb2017_ver2-v1' ,
+                                   'DoubleMuon_Run2016H-03Feb2017_ver3-v1' , 'SingleElectron_Run2016H-03Feb2017_ver3-v1' , 'SingleMuon_Run2016H-03Feb2017_ver3-v1' ,
                                  ]
                 },
 
@@ -2769,7 +2781,8 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py l2selfiller --kind 3 --cmssw RPLME_CMSSW'
+                  #OLD'command'    : 'gardener.py l2selfiller --kind 3 --cmssw RPLME_CMSSW'
+                  'command'    : 'gardener.py lepSel -k 3 -n 2 --cmssw RPLME_CMSSW '
                },
 
 
