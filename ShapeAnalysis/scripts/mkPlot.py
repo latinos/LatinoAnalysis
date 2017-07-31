@@ -1735,6 +1735,9 @@ if __name__ == '__main__':
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
+
+    parser.add_option('--onlyVariable'   , dest='onlyVariable'   , help='draw only one variable (may be needed in post-fit plots)'          , default=None)
+    parser.add_option('--onlyCut'        , dest='onlyCut'        , help='draw only one cut phase space (may be needed in post-fit plots)'   , default=None)
    
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
     parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
@@ -1805,7 +1808,37 @@ if __name__ == '__main__':
       handle = open(opt.cutsFile,'r')
       exec(handle)
       handle.close()
+   
+   
+    # check if only one cut or only one variable
+    # is requested, and filter th elist of cuts and variables
+    # using this piece of information
     
+    if opt.onlyVariable != None :
+      list_to_remove = []
+      for variableName, variable in variables.iteritems():
+         if variableName != opt.onlyVariable :
+           list_to_remove.append(variableName)
+      for toRemove in list_to_remove:
+        del variables[toRemove]
+           
+      print  " variables = ", variables
+      
+
+    if opt.onlyCut != None :
+      list_to_remove = []
+      for cutName, cutExtended in cuts.iteritems():
+         if cutName != opt.onlyCut :
+           list_to_remove.append(cutName)
+      for toRemove in list_to_remove:
+        del cuts[toRemove]
+
+      print  " cuts = ", cuts
+
+   
+   
+   
+   
     #samples = {}
     samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
