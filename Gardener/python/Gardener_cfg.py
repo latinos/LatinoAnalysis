@@ -1723,7 +1723,7 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : False,
                   #OLD 'subTargets' : ['do_WgStarsel','puadder','pu2p6','pu4p3','pu6p3','baseW','wwNLL','genVariables','genMatchVariables','wwEWK','wzEWK','zzEWK'],
-                  'subTargets' : ['baseW','do_WgStarsel']
+                  'subTargets' : ['baseW','do_WgStarsel'],
                   'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 
