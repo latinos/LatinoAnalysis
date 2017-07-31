@@ -206,19 +206,18 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
     
-    supercut = '1'
-    cuts = {}
-    if os.path.exists(opt.cutsFile) :
-      handle = open(opt.cutsFile,'r')
-      exec(handle)
-      handle.close()
-    
     samples = {}
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
 
+    supercut = '1'
+    cuts = {}
+    if os.path.exists(opt.cutsFile) :
+      handle = open(opt.cutsFile,'r')
+      exec(handle)
+      handle.close()
 
     nuisances = {}
     if opt.nuisancesFile == None :
@@ -569,10 +568,12 @@ if __name__ == '__main__':
                       scaleHistoStat(hcentral, hdo, -1, ibin, opt.lumi, zeroMCerror)
                       #BUGFIX by Andrea: hcentral is now the firt variable in the function
                       #original text: scaleHistoStat(hup,  1, ibin, lumi, zeroMCerror)
+                      print "Saviing histogram ", cut+"/"+variable+"/histo_"+sample+"_ibin_" + str(ibin) + "_statUp"
                       hup.Write("",ROOT.TObject.kOverwrite)
+                      print "Saving histogram ", cut+"/"+variable+"/histo_"+sample+"_ibin_" + str(ibin) + "_statDown"
                       hdo.Write("",ROOT.TObject.kOverwrite)
 
-
+              print "All done!"
 #              os.system(command)
 #              if not opt.doNotCleanup: os.system(cleanup)
 #              os.system('cd ..')
