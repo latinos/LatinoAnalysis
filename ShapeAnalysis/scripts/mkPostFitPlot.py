@@ -214,6 +214,7 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
+    print " configuration file    =          ", opt.pycfg
     print " inputFileCombine      =          ", opt.inputFileCombine
     print " inputFile (for DATA)  =          ", opt.inputFile
     print " outputFile            =          ", opt.outputFile
