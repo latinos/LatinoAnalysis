@@ -1796,7 +1796,13 @@ if __name__ == '__main__':
     factory._minLogCratio = opt.minLogCratio
     factory._maxLogCratio = opt.maxLogCratio
 
-    
+    #samples = {}
+    samples = OrderedDict()
+    if os.path.exists(opt.samplesFile) :
+      handle = open(opt.samplesFile,'r')
+      exec(handle)
+      handle.close()
+   
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
@@ -1834,18 +1840,8 @@ if __name__ == '__main__':
         del cuts[toRemove]
 
       print  " cuts = ", cuts
-
    
-   
-   
-   
-    #samples = {}
-    samples = OrderedDict()
-    if os.path.exists(opt.samplesFile) :
-      handle = open(opt.samplesFile,'r')
-      exec(handle)
-      handle.close()
-    
+        
     groupPlot = OrderedDict()
     plot = {}
     legend = {}
