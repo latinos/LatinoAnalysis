@@ -525,6 +525,12 @@ if __name__ == '__main__':
     factory._tag       = opt.tag
     
     # ~~~~
+    samples = {}
+    if os.path.exists(opt.samplesFile) :
+      handle = open(opt.samplesFile,'r')
+      exec(handle)
+      handle.close()
+
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
@@ -542,12 +548,7 @@ if __name__ == '__main__':
         if not iCut in opt.cardList : cut2del.append(iCut)
       for iCut in cut2del : del cuts[iCut]   
  
-    samples = {}
-    if os.path.exists(opt.samplesFile) :
-      handle = open(opt.samplesFile,'r')
-      exec(handle)
-      handle.close()
-   
+  
     # ~~~~
     structure = {}
     if opt.structureFile == None :
