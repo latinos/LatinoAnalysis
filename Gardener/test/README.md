@@ -748,6 +748,23 @@ Add event weights for nuisances according to the 2017 interim prescription of th
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root   \
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root  
               
+              
+ Higgs ggH re-weighter to MINLO
+====
+
+Add event weight to scale POWHEG to MINLO to macth kinematic distributions.
+Source: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsWG/SignalModelingTools
+
+
+    gardener.py  ggHtoMINLO \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root   \
+                /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root  
+              
+              
+              
+              
+              
+              
 Add generic branches as formulas of other branches
 ====
 

@@ -107,6 +107,8 @@ from LatinoAnalysis.Gardener.variables.TopGenPt                   import TopGenP
 
 # ggH uncertainty LHCXSWG
 from LatinoAnalysis.Gardener.variables.ggHUncertainty             import ggHUncertaintyMaker
+# ggH reweighting to MINLO
+from LatinoAnalysis.Gardener.variables.ggHToMINLO                 import ggHtoMINLOMaker
 
 # generic formula adder
 from LatinoAnalysis.Gardener.variables.genericFormulaAdder        import genericFormulaAdder
@@ -231,6 +233,9 @@ if __name__ == '__main__':
     
 # ggH uncertainty LHCXSWG
     modules['ggHUncertainty'] = ggHUncertaintyMaker()
+
+# ggH reweighting to MINLO
+    modules['ggHtoMINLO'] = ggHtoMINLOMaker()
 
 # generic formula adder
     modules['genericFormulaAdder'] = genericFormulaAdder()
