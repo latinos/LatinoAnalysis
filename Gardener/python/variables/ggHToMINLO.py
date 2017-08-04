@@ -88,12 +88,12 @@ class ggHtoMINLOMaker(TreeCloner) :
         for i in xrange(nentries) :
           itree.GetEntry(i)
 
-          self.weightVariables[0] = 1.
+          weight2MINLO[0] = 1.
           
-          Njets30 = 0.
-          for ijet in range(itree.std_vector_partonGen_pt.size()) :
-            if itree.std_vector_partonGen_pt[ijet] > 30 :
-              Njets30 += 1
+          #Njets30 = 0.
+          #for ijet in range(itree.std_vector_partonGen_pt.size()) :
+            #if itree.std_vector_partonGen_pt[ijet] > 30 :
+              #Njets30 += 1
           
           Njets30_HTXS = 0.
           for ijet in range(itree.std_vector_HTXS_ptjet25GeV.size()) :
@@ -104,16 +104,19 @@ class ggHtoMINLOMaker(TreeCloner) :
             #print " Njets30_HTXS = ", Njets30_HTXS, " ::  Njets30 = ", Njets30
             
           
+          
           if (Njets30_HTXS==0):
-            self.weightVariables[0] = graph_weights_0jet.Eval(min(itree.HTXS_ptHiggs,125.0))
+            weight2MINLO[0] = graph_weights_0jet.Eval( min(itree.HTXS_ptHiggs,125.0) )
           elif (Njets30_HTXS==1):
-            self.weightVariables[0] = graph_weights_1jet.Eval(min(itree.HTXS_ptHiggs,625.0))
+            weight2MINLO[0] = graph_weights_1jet.Eval( min(itree.HTXS_ptHiggs,625.0) )
           elif (Njets30_HTXS==2):
-            self.weightVariables[0] = graph_weights_2jet.Eval(min(itree.HTXS_ptHiggs,800.0))
+            weight2MINLO[0] = graph_weights_2jet.Eval( min(itree.HTXS_ptHiggs,800.0) )
           elif (Njets30_HTXS>=3):
-            self.weightVariables[0] = graph_weights_3jet.Eval(min(itree.HTXS_ptHiggs,925.0))
+            weight2MINLO[0] = graph_weights_3jet.Eval( min(itree.HTXS_ptHiggs,925.0) )
           else:
-            self.weightVariables[0] = 1.0
+            weight2MINLO[0] = 1.0
+
+          #print " Njets30_HTXS = " , Njets30_HTXS , " --> weight2MINLO[0] = ", weight2MINLO[0]
        
           self.otree.Fill()
           savedentries+=1
