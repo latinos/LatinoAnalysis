@@ -87,6 +87,8 @@ class batchJobs :
 ###        jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
          else:
            jFile.write('cd - \n')
+           ### the following makes the .sh script exit if an error is thrown after the "set -e" command
+           jFile.write('set -e \n')
        else              : jFile.write('cd '+wDir+' \n')
        jFile.close()
        if usePython : pFile.close()
