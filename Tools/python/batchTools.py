@@ -188,7 +188,7 @@ class batchJobs :
      elif 'knu' in os.uname()[1] :
         jFile.write('gfal-copy '+inputFile+' srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=/pnfs/knu.ac.kr/data/cms/'+outputFile+'\n')
      else :
-        jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' /eos/cms'+outputFile+'\n')
+        jFile.write('cp '+inputFile+ " " + outputFile+'\n')
      jFile.close()
 
 def batchStatus():
@@ -291,9 +291,9 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
     else :
       if iniStep == 'Prod' :
-        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
+        return " ls " + inputDir
       else:
-        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls " + inputDir
+        return "ls " + inputDir
     
 def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"
@@ -306,7 +306,7 @@ def rootReadPath(inputFile):
     elif 'knu' in os.uname()[1] :
       return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
     else :
-        return "/eos/cms" + inputFile
+        return  inputFile
     
 def remoteFileSize(inputFile):
     "Returns file size in byte for file on remote server (/store/.../*.root)"
@@ -325,7 +325,7 @@ def remoteFileSize(inputFile):
       else:
         return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
-        return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
 
 def batchTest():
     jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])

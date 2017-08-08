@@ -113,8 +113,8 @@ CMSSW=os.environ["CMSSW_BASE"]
 #  print Steps['bPogSF']['command']  
 
 #if options.cmssw == '763' :
-eosTargBaseIn = '/eos/user/j/jlauwers/HWW2015/'
-eosTargBaseOut= '/eos/user/j/jlauwers/HWW2015/'
+eosTargBaseIn = '/eos/user/j/jgarciaf/'
+eosTargBaseOut= '/eos/user/j/jgarciaf/'
 
 # eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
@@ -215,9 +215,9 @@ for iProd in prodList :
       fileCmd = 'ls ' + inDirBase + prodDir+'/'+options.iniStep
   else:
     if options.iniStep == 'Prod' : 
-      fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+      fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
     else:
-      fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+options.iniStep
+      fileCmd = 'ls '+eosTargBaseIn+'/'+iProd+'/'+options.iniStep
 
   #print "fileCmd is: ", fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
@@ -248,9 +248,9 @@ for iProd in prodList :
           fileCmd = 'ls ' + inDirBase + prodDir+'/'+options.iniStep+'__'+iStep
       else:
         if options.iniStep == 'Prod' :
-          fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
+          fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
         else:
-          fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select ls '+eosTargBaseOut+'/'+iProd+'/'+options.iniStep+'__'+iStep
+          fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+options.iniStep+'__'+iStep
       print fileCmd
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
@@ -332,7 +332,7 @@ for iProd in prodList :
                     if options.iniStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                     else:
-                      targetList[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iniStep+'/'+iFile
+                      targetList[iKey] = eosTargBaseIn+'/'+iProd+'/'+options.iniStep+'/'+iFile
 
       #print "targetList: ", targetList  
 
@@ -379,7 +379,7 @@ for iProd in prodList :
                   if options.iniStep == 'Prod' :
                     targetListBaseW[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                   else:
-                    targetListBaseW[iKey] = xrootdPathIn+eosTargBaseIn+'/'+iProd+'/'+options.iniStep+'/'+iFile 
+                    targetListBaseW[iKey] = eosTargBaseIn+'/'+iProd+'/'+options.iniStep+'/'+iFile 
 
      
 
@@ -421,12 +421,12 @@ for iProd in prodList :
       else:
         if iStep == 'UEPS' :
           for iUEPS in Steps[iStep]['cpMap'] :
-            os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iUEPS)  
+            os.system('mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iUEPS)  
         else:
           if startingStep == 'Prod' :
-            os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
+            os.system('mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
           else:
-            os.system('/afs/cern.ch/project/eos/installation/'+aquamarineLocationOut+'/bin/eos.select mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep)
+            os.system('mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep)
 
       # For hadd Step, regroup Files
       if iStep == 'hadd' :
@@ -513,7 +513,7 @@ for iProd in prodList :
           if 'iihe' in os.uname()[1]:
             fileCmd = 'ls '+ filePattern
           else:
-            fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls ' + filePattern    
+            fileCmd = 'ls ' + filePattern    
           proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
           out, err = proc.communicate()
           FileTarget=string.split(out)
@@ -532,7 +532,7 @@ for iProd in prodList :
 #              fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+PrevStep
           else:
 #            if not '__' in  options.iniStep :
-            fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationProd+'/bin/eos.select ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+            fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
 #            else:
 #              fileCmd = '/afs/cern.ch/project/eos/installation/'+aquamarineLocationIn+'/bin/eos.select ls '+eosTargBaseIn+'/'+iProd+'/'+PrevStep
 
@@ -761,9 +761,9 @@ for iProd in prodList :
 	   command+= '; mv ' +wDir+'/'+outTree+' '+outDir+'/'
          else:
            if startingStep == 'Prod' :
-             command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+             command+='xrdcp -f '+outTree+' '+ eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
            else:
-             command+='xrdcp -f '+outTree+' '+xrootdPathOut+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
+             command+='xrdcp -f '+outTree+' '+ eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
         #for iGarbage in GarbageCollector: 
 	  #command+='; rm '+iGarbage
