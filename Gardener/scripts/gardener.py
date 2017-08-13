@@ -95,13 +95,13 @@ from LatinoAnalysis.Gardener.variables.metUncertainty             import MetUnce
 from LatinoAnalysis.Gardener.variables.metUnclustered             import MetUnclusteredTreeMaker
 from LatinoAnalysis.Gardener.variables.metXYshift                 import MetXYshiftTreeMaker
 # QCD uncertainty
-from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
+#from LatinoAnalysis.Gardener.variables.qcdUncertainty             import QcdUncertaintyTreeMaker
 # PDF uncertainty
-from LatinoAnalysis.Gardener.variables.pdfUncertainty             import PdfUncertaintyTreeMaker
+#from LatinoAnalysis.Gardener.variables.pdfUncertainty             import PdfUncertaintyTreeMaker
 # EWK singlet reweighter
 from LatinoAnalysis.Gardener.variables.BWEwkSingletReweighter     import BWEwkSingletReweighter
 # PDF and scale uncertainty
-from LatinoAnalysis.Gardener.variables.pdfAndScaleUncertainty     import PdfAndScaleUncertaintyTreeMaker
+#from LatinoAnalysis.Gardener.variables.pdfAndScaleUncertainty     import PdfAndScaleUncertaintyTreeMaker
 # GenPT for the top
 from LatinoAnalysis.Gardener.variables.TopGenPt                   import TopGenPt
 
@@ -211,9 +211,9 @@ if __name__ == '__main__':
     modules['leptonResolution']       = LeptonResolutionTreeMaker()
     modules['metUncertainty']         = MetUncertaintyTreeMaker()
     modules['metUnclustered']         = MetUnclusteredTreeMaker()
-    modules['pdfUncertainty']         = PdfUncertaintyTreeMaker()
-    modules['qcdUncertainty']         = QcdUncertaintyTreeMaker()
-    modules['pdfAndScaleUncertainty'] = PdfAndScaleUncertaintyTreeMaker()
+    #modules['pdfUncertainty']         = PdfUncertaintyTreeMaker()
+    #modules['qcdUncertainty']         = QcdUncertaintyTreeMaker()
+    #modules['pdfAndScaleUncertainty'] = PdfAndScaleUncertaintyTreeMaker()
     
     
 # fake weights
