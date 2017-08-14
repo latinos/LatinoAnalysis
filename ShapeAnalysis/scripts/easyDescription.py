@@ -28,6 +28,8 @@ if __name__ == '__main__':
 
     parser.add_option('--inputFileSamples'      , dest='inputFileSamples'      , help='input file with samples'                 , default=None)
     parser.add_option('--outputFileSamples'     , dest='outputFileSamples'     , help='output file with samples expanded'       , default=None)
+    parser.add_option('--inputFileNuisances'    , dest='inputFileNuisances'    , help='input file with nuisances'               , default=None)
+    parser.add_option('--outputFileNuisances'   , dest='outputFileNuisances'   , help='output file with nuisances expanded'     , default=None)
     #parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with samples'                 , default=None)
           
     # read default parsing options as well
@@ -39,7 +41,13 @@ if __name__ == '__main__':
 
     print "#   inputFileSamples  =               ", opt.inputFileSamples
     print "#   outputFileSamples =               ", opt.outputFileSamples
-                                                        
+    print "#   inputFileNuisances  =               ", opt.inputFileNuisances
+    print "#   outputFileNuisances =               ", opt.outputFileNuisances
+                    
+    #                
+    # unfold Samples
+    #
+    
     if opt.inputFileSamples != None :
       samples = OrderedDict()
       if os.path.exists(opt.inputFileSamples) :
@@ -60,7 +68,7 @@ if __name__ == '__main__':
       # samples
       #
       
-      printSampleDic (samples)
+      #printSampleDic (samples)
        
         
       if opt.outputFileSamples != None :
@@ -112,6 +120,72 @@ if __name__ == '__main__':
         
         
         
+
+                    
+    #                
+    # unfold Nuisances
+    #
+    
+    if opt.inputFileNuisances != None :
+      nuisances = OrderedDict()
+      if os.path.exists(opt.inputFileNuisances) :
+        handle = open(opt.inputFileNuisances,'r')
+        exec(handle)
+        handle.close()
+
+       
+        
+      if opt.outputFileNuisances != None :
+        
+        fileOutNuisances = open(opt.outputFileNuisances,"w") 
+
+        fileOutNuisances.write("# \n")
+        fileOutNuisances.write("# Expanded version of samples.py \n")
+        fileOutNuisances.write("# \n")
+        
+        #print " nuisances = ", nuisances
+         
+        for nuisanceName, nuisance in nuisances.iteritems():
+          
+          fileOutNuisances.write("nuisances[\'" + nuisanceName + "\'] = { \n") 
+
+          if 'name' in nuisance :
+            fileOutNuisances.write("     \'name\'  :   '" + nuisance['name'] + "' ,\n")
+
+          if 'kind' in nuisance :
+            fileOutNuisances.write("     \'kind\'  :   '" + nuisance['kind'] + "' ,\n")
+
+          if 'type' in nuisance :
+            fileOutNuisances.write("     \'type\'  :   '" + nuisance['type'] + "' ,\n")
+
+          if 'samples' in nuisance :
+            fileOutNuisances.write("     \'samples\'  :  { \n")
+            for samples in nuisance['samples'] :
+              fileOutNuisances.write("            '" + str(samples) + "',\n")        
+            fileOutNuisances.write("     },  \n")
+
+          if 'cuts' in nuisance :
+            fileOutNuisances.write("     \'cuts\'  :  [ \n")
+            for cuts in nuisance['cuts'] :
+              fileOutNuisances.write("            '" + str(cuts) + "',\n")        
+            fileOutNuisances.write("     ],  \n")
+
+
+          if 'folderUp' in nuisance :
+            fileOutNuisances.write("     \'folderUp\'    :   '" + nuisance['folderUp'] + "' ,\n")
+
+          if 'folderDown' in nuisance :
+            fileOutNuisances.write("     \'folderDown\'  :   '" + nuisance['folderDown'] + "' ,\n")
+
+
+          fileOutNuisances.write("}  \n") 
+          fileOutNuisances.write("   \n ") 
+
+          
+        fileOutNuisances.close() 
+
+           
+
         
         
         
@@ -120,4 +194,9 @@ if __name__ == '__main__':
 # How to use it:
 #
 # easyDescription.py   --inputFileSamples=../../PlotsConfigurations/Configurations/ggH/Full2016/samples.py   --outputFileSamples=test.py
+# easyDescription.py   --inputFileSamples=../../PlotsConfigurations/Configurations/ggH/Full2016/samples.py  --inputFileNuisances=../../PlotsConfigurations/Configurations/ggH/Full2016/nuisances.py   --outputFileNuisances=testNuisances.py
 #
+#  NB: the "samples" file has to be defined, because some global variables are defined there (e.g. NLep)
+#
+
+
