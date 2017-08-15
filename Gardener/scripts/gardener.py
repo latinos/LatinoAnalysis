@@ -110,6 +110,11 @@ from LatinoAnalysis.Gardener.variables.ggHUncertainty             import ggHUnce
 # ggH reweighting to MINLO
 from LatinoAnalysis.Gardener.variables.ggHToMINLO                 import ggHtoMINLOMaker
 
+# VH reweighting for anomalous HHH coupling
+from LatinoAnalysis.Gardener.variables.reweightHHH                import genReweightHHHMaker
+
+
+
 # generic formula adder
 from LatinoAnalysis.Gardener.variables.genericFormulaAdder        import genericFormulaAdder
 
@@ -236,6 +241,10 @@ if __name__ == '__main__':
 
 # ggH reweighting to MINLO
     modules['ggHtoMINLO'] = ggHtoMINLOMaker()
+
+# VH reweighting for anomalous HHH coupling
+    modules['reweightHHH'] = genReweightHHHMaker()
+
 
 # generic formula adder
     modules['genericFormulaAdder'] = genericFormulaAdder()

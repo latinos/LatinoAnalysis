@@ -761,7 +761,26 @@ Source: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsWG/SignalModelingTools
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root  
               
               
+
+ Higgs VH re-weighter for anomalous HHH coupling
+====
+
+Add event weight to allow scaling with anomalous EWK HHH coupling.
+
+    gardener.py  reweightHHH \
+                --productionkind=wph  \
+                /tmp/amassiro/latino_HWplusJ_HToWW_M125.root   \
+                /tmp/amassiro/latino_HWplusJ_HToWW_M125.root.TEST.root  
               
+     gardener.py  reweightHHH \
+                --productionkind=zh  \
+                /tmp/amassiro/latino_HZJ_HToWWTo2L2Nu_M125.root   \
+                /tmp/amassiro/latino_HZJ_HToWWTo2L2Nu_M125.root.TEST.root  
+              
+              
+         
+         
+         
               
               
               
