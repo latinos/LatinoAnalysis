@@ -87,6 +87,8 @@ class batchJobs :
 ###        jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
          else:
            jFile.write('cd - \n')
+           ### the following makes the .sh script exit if an error is thrown after the "set -e" command
+           jFile.write('set -e \n')
        else              : jFile.write('cd '+wDir+' \n')
        jFile.close()
        if usePython : pFile.close()
@@ -186,7 +188,7 @@ class batchJobs :
      elif 'knu' in os.uname()[1] :
         jFile.write('gfal-copy '+inputFile+' srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=/pnfs/knu.ac.kr/data/cms/'+outputFile+'\n')
      else :
-        jFile.write('/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select cp '+inputFile+' /eos/cms'+outputFile+'\n')
+        jFile.write('cp '+inputFile+ " " + outputFile+'\n')
      jFile.close()
 
 def batchStatus():
@@ -289,9 +291,9 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
     else :
       if iniStep == 'Prod' :
-        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls " + inputDir
+        return " ls " + inputDir
       else:
-        return "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select ls " + inputDir
+        return "ls " + inputDir
     
 def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"

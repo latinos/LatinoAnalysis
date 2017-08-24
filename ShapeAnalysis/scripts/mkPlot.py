@@ -964,7 +964,7 @@ class ShapeFactory:
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
              
             # log Y axis
-            frame.GetYaxis().SetRangeUser( max( self._minLogC, minYused), self._maxLogC * maxYused )
+            frame.GetYaxis().SetRangeUser( min( self._minLogC, minYused), self._maxLogC * maxYused )
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".eps")
@@ -1034,7 +1034,7 @@ class ShapeFactory:
               frameDistro.GetXaxis().SetTitle(variableName)
             frameDistro.GetYaxis().SetTitle("Events")
             #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
-            frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
+            frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 
 
             if len(groupPlot.keys()) == 0:          
@@ -1474,7 +1474,7 @@ class ShapeFactory:
                     else :
                       weight_X_frameDistro.GetXaxis().SetTitle(variableName)
                     weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
-                    weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
+                    weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
             
                     if weight_X_thsBackground.GetNhists() != 0:
                       weight_X_thsBackground.Draw("hist same")
@@ -1575,7 +1575,7 @@ class ShapeFactory:
                     
                     
                     # log Y axis
-                    weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, maxYused/1000), 10 * maxYused )
+                    weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
                     weight_X_pad1.SetLogy()
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
                     weight_X_pad1.SetLogy(0)

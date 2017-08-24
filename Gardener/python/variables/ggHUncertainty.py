@@ -109,10 +109,16 @@ class ggHUncertaintyMaker(TreeCloner) :
           ggH_pT120 [0] = 1.
           ggH_qmtop [0] = 1.
       
+          #Njets30 = 0.
+          #for ijet in range(itree.std_vector_partonGen_pt.size()) :
+            #if itree.std_vector_partonGen_pt[ijet] > 30 :
+              #Njets30 += 1
+
           Njets30 = 0.
-          for ijet in range(itree.std_vector_partonGen_pt.size()) :
-            if itree.std_vector_partonGen_pt[ijet] > 30 :
+          for ijet in range(itree.std_vector_HTXS_ptjet25GeV.size()) :
+            if itree.std_vector_HTXS_ptjet25GeV[ijet] > 30 :
               Njets30 += 1
+
           
           #if int(Njets30) > 1 :
             #print " int(Njets30) = ", int(Njets30)
