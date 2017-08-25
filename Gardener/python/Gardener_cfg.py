@@ -1108,10 +1108,40 @@ Productions= {
                                        ],
                        },
 
+  'Apr2017_Run2016B_RemAOD_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/LatinoTree/TreeForPostProc/Apr2017/data/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016B-03Feb2017_ver2-v2',
+                                        'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        'MuonEG_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleElectron_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        'MET_Run2016B-03Feb2017_ver2-v2',   
+                                       ],
+                       },
   'Apr2017_Run2016C_RemAOD' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Apr2017/data/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016C-03Feb2017-v1',
+                                        'DoubleMuon_Run2016C-03Feb2017-v1',
+                                        'MuonEG_Run2016C-03Feb2017-v1',
+                                        'SingleElectron_Run2016C-03Feb2017-v1',
+                                        'SingleMuon_Run2016C-03Feb2017-v1',
+                                        'MET_Run2016C-03Feb2017-v1',   
+                                       ],
+                       },
+  'Apr2017_Run2016C_RemAOD_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/LatinoTree/TreeForPostProc/Apr2017/data/' ,
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Full2016' ,
                         'onlySample' : [
@@ -1139,11 +1169,41 @@ Productions= {
                                         'MET_Run2016D-03Feb2017-v1',   
                                        ],
                        },
+  'Apr2017_Run2016D_RemAOD_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/LatinoTree/TreeForPostProc/Apr2017/data/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016D-03Feb2017-v1',
+                                        'DoubleMuon_Run2016D-03Feb2017-v1',
+                                        'MuonEG_Run2016D-03Feb2017-v1',
+                                        'SingleElectron_Run2016D-03Feb2017-v1',
+                                        'SingleMuon_Run2016D-03Feb2017-v1',
+                                        'MET_Run2016D-03Feb2017-v1',   
+                                       ],
+                       },
 
   'Apr2017_Run2016E_RemAOD' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Apr2017/data/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016E-03Feb2017-v1',
+                                        'DoubleMuon_Run2016E-03Feb2017-v1',
+                                        'MuonEG_Run2016E-03Feb2017-v1',
+                                        'SingleElectron_Run2016E-03Feb2017-v1',
+                                        'SingleMuon_Run2016E-03Feb2017-v1',
+                                        'MET_Run2016E-03Feb2017-v1',   
+                                       ],
+                       },
+  'Apr2017_Run2016E_RemAOD_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/LatinoTree/TreeForPostProc/Apr2017/data/' ,
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Full2016' ,
                         'onlySample' : [
@@ -1172,10 +1232,42 @@ Productions= {
                                        ],
                        },
 
+  'Apr2017_Run2016F_RemAOD_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/LatinoTree/TreeForPostProc/Apr2017/data/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016F-03Feb2017-v1',
+                                        'DoubleMuon_Run2016F-03Feb2017-v1',
+                                        'MuonEG_Run2016F-03Feb2017-v1',
+                                        'SingleElectron_Run2016F-03Feb2017-v1',
+                                        'SingleMuon_Run2016F-03Feb2017-v1',
+                                        'MET_Run2016F-03Feb2017-v1',   
+                                       ],
+                       },
+
   'Apr2017_Run2016G_RemAOD' : {
                         'isData'  : True ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
                         'dir'     : '/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Apr2017/data/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016G-03Feb2017-v1',
+                                        'DoubleMuon_Run2016G-03Feb2017-v1',
+                                        'MuonEG_Run2016G-03Feb2017-v1',
+                                        'SingleElectron_Run2016G-03Feb2017-v1',
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                        'MET_Run2016G-03Feb2017-v1',   
+                                       ],
+                       },
+
+  'Apr2017_Run2016G_RemAOD_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD.py' ,
+                        'dir'     : '/LatinoTree/TreeForPostProc/Apr2017/data/' ,
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Full2016' ,
                         'onlySample' : [
@@ -1210,6 +1302,27 @@ Productions= {
                                        ],
                        },
 
+  'Apr2017_Run2016H_RemAOD_KNU' : {
+                        'isData'  : True ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_data_2016_Re-miniAOD_RunH.py' ,
+                        'dir'     : '/LatinoTree/TreeForPostProc/Apr2017/data/' ,
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'MET_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleEG_Run2016H-03Feb2017_ver3-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver3-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver3-v1',
+                                        'MET_Run2016H-03Feb2017_ver3-v1',
+                                       ],
+                       },
 
 #### Summer16 MC: Apr2017_HowToBeALatinLover  
   'Apr2017_summer16'   : {
@@ -1225,7 +1338,7 @@ Productions= {
   'Apr2017_summer16_KNU'   : {
                         'isData'  : False ,
                         'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
-                        'dir'     : 'LatinoProduction/Apr2017_HowToBeALatinLover/',
+                        'dir'     : 'LatinoTree/TreeForPostProc/Apr2017/MC/',
                         'dirExt'  : 'LatinoTrees' ,
                         'cmssw'   : 'Full2016' ,
                         # 37.X fb-1
@@ -1745,14 +1858,14 @@ Steps= {
                                    'Run2016C_PromptReco_DoubleMuon', 'Run2016C_PromptReco_SingleElectron', 'Run2016C_PromptReco_SingleMuon',
                                    'Run2016D_PromptReco_DoubleMuon', 'Run2016D_PromptReco_SingleElectron', 'Run2016D_PromptReco_SingleMuon',
                                    # 2016 (Full)
-                                   'DoubleMuon_Run2016B-03Feb2017_ver2-v2' , 'SingleElectron_Run2016B-03Feb2017_ver2-v2' , 'SingleMuon_Run2016B-03Feb2017_ver2-v2' ,
-                                   'DoubleMuon_Run2016C-03Feb2017-v1'      , 'SingleElectron_Run2016C-03Feb2017-v1'      , 'SingleMuon_Run2016C-03Feb2017-v1'      ,
-                                   'DoubleMuon_Run2016D-03Feb2017-v1'      , 'SingleElectron_Run2016D-03Feb2017-v1'      , 'SingleMuon_Run2016D-03Feb2017-v1'      ,
-                                   'DoubleMuon_Run2016E-03Feb2017-v1'      , 'SingleElectron_Run2016E-03Feb2017-v1'      , 'SingleMuon_Run2016E-03Feb2017-v1'      ,
-                                   'DoubleMuon_Run2016F-03Feb2017-v1'      , 'SingleElectron_Run2016F-03Feb2017-v1'      , 'SingleMuon_Run2016F-03Feb2017-v1'      ,
-                                   'DoubleMuon_Run2016G-03Feb2017-v1'      , 'SingleElectron_Run2016G-03Feb2017-v1'      , 'SingleMuon_Run2016G-03Feb2017-v1'      ,
-                                   'DoubleMuon_Run2016H-03Feb2017_ver2-v1' , 'SingleElectron_Run2016H-03Feb2017_ver2-v1' , 'SingleMuon_Run2016H-03Feb2017_ver2-v1' ,
-                                   'DoubleMuon_Run2016H-03Feb2017_ver3-v1' , 'SingleElectron_Run2016H-03Feb2017_ver3-v1' , 'SingleMuon_Run2016H-03Feb2017_ver3-v1' ,
+                                   'DoubleMuon_Run2016B-03Feb2017_ver2-v2' , 'SingleElectron_Run2016B-03Feb2017_ver2-v2' , 'SingleMuon_Run2016B-03Feb2017_ver2-v2' , 'DoubleEG_Run2016B-03Feb2017_ver2-v2', 'MuonEG_Run2016B-03Feb2017_ver2-v2',
+                                   'DoubleMuon_Run2016C-03Feb2017-v1'      , 'SingleElectron_Run2016C-03Feb2017-v1'      , 'SingleMuon_Run2016C-03Feb2017-v1'      , 'DoubleEG_Run2016C-03Feb2017-v1', 'MuonEG_Run2016C-03Feb2017-v1',
+                                   'DoubleMuon_Run2016D-03Feb2017-v1'      , 'SingleElectron_Run2016D-03Feb2017-v1'      , 'SingleMuon_Run2016D-03Feb2017-v1'      , 'DoubleEG_Run2016D-03Feb2017-v1', 'MuonEG_Run2016D-03Feb2017-v1',
+                                   'DoubleMuon_Run2016E-03Feb2017-v1'      , 'SingleElectron_Run2016E-03Feb2017-v1'      , 'SingleMuon_Run2016E-03Feb2017-v1'      , 'DoubleEG_Run2016E-03Feb2017-v1', 'MuonEG_Run2016E-03Feb2017-v1',
+                                   'DoubleMuon_Run2016F-03Feb2017-v1'      , 'SingleElectron_Run2016F-03Feb2017-v1'      , 'SingleMuon_Run2016F-03Feb2017-v1'      , 'DoubleEG_Run2016F-03Feb2017-v1', 'MuonEG_Run2016F-03Feb2017-v1',
+                                   'DoubleMuon_Run2016G-03Feb2017-v1'      , 'SingleElectron_Run2016G-03Feb2017-v1'      , 'SingleMuon_Run2016G-03Feb2017-v1'      , 'DoubleEG_Run2016G-03Feb2017-v1', 'MuonEG_Run2016G-03Feb2017-v1',
+                                   'DoubleMuon_Run2016H-03Feb2017_ver2-v1' , 'SingleElectron_Run2016H-03Feb2017_ver2-v1' , 'SingleMuon_Run2016H-03Feb2017_ver2-v1' , 'DoubleEG_Run2016H-03Feb2017_ver2-v1', 'MuonEG_Run2016H-03Feb2017_ver2-v1',
+                                   'DoubleMuon_Run2016H-03Feb2017_ver3-v1' , 'SingleElectron_Run2016H-03Feb2017_ver3-v1' , 'SingleMuon_Run2016H-03Feb2017_ver3-v1' , 'DoubleEG_Run2016H-03Feb2017_ver3-v1', 'MuonEG_Run2016H-03Feb2017_ver3-v1',
                                  ]
                 },
 
@@ -2894,6 +3007,7 @@ Steps= {
                                   #'TTJets',
                                  ],
                },
+
 
   'UEPS'     : {
                   'isChain'    : False ,
