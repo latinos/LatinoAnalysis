@@ -3476,10 +3476,10 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'command'    : 'gardener.py filter --keeplist $PWD/keeplist.txt '
+                  'command'    : 'gardener.py filter --keeplist /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/LatinoAnalysis/Gardener/python/keeplist_new.txt'
            },
 
-###/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/LatinoAnalysis/Gardener/python/keeplist.txt '
+### /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/LatinoAnalysis/Gardener/python/keeplist.txt '
 
 
   'vh3lSel'   : {
