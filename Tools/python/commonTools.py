@@ -104,7 +104,7 @@ class xsectionDB:
     def get(self,iSample):
       if self._useYR :
         Higgs = self._HiggsXS.GetHiggsXS4Sample(self._YRVersion,self._YREnergy,iSample)
-        print Higgs
+        #print Higgs
         if not Higgs['xs'] == 0. : return str(Higgs['xs'])
 
       if iSample in self.xsections : 
@@ -261,7 +261,7 @@ def getBaseW(directory,Samples = [] ):
     xs = []
     for iSample in Samples :
       xs.append( xsDB.get(iSample) )
-    print xs
+    #print xs
     for iEntry in range(len(xs)):
       if not xs[iEntry] == xs[0] : 
         print 'ERROR: getBaseW: Trying to mix samples with different x-section'
@@ -269,7 +269,7 @@ def getBaseW(directory,Samples = [] ):
 
     ### And now get the baseW
     baseW = float(xs[0])*1000./nEvt
-    print 'baseW: xs,N -> W', xs[0], nEvt , baseW , ' nTot= ', nTot
+    #print 'baseW: xs,N -> W', xs[0], nEvt , baseW , ' nTot= ', nTot
     return str(baseW)
 
 #### Print samples dic:

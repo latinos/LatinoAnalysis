@@ -67,6 +67,13 @@ class ShapeFactory:
         self._variables = variables
         self._samples   = samples
         self._cuts      = cuts
+
+        #in case some variables need a compiled function 
+        for variableName, variable in self._variables.iteritems():
+          if variable.has_key('linesToAdd'):
+            linesToAdd = variable['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
         
         print " supercut = ", supercut
         
