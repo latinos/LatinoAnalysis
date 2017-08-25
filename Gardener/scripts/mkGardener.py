@@ -115,7 +115,6 @@ CMSSW=os.environ["CMSSW_BASE"]
 #if options.cmssw == '763' :
 eosTargBaseIn = '/eos/user/j/jgarciaf/'
 eosTargBaseOut= '/eos/user/j/jgarciaf/'
-
 # eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
   eosTargBaseIn=options.inputTarget
@@ -131,6 +130,7 @@ print "eosTargBaseOut = ", eosTargBaseOut
 if 'knu' in os.uname()[1]:
   inDirBase = options.inputTarget
   outDirBase = options.outputTarget
+  Steps['hadd']['SizeMax']= 1e9 
 
 #hack to be able to stat both files under /eos/cms and /eos/user
  
@@ -212,7 +212,7 @@ for iProd in prodList :
     if options.iniStep == 'Prod' :
       fileCmd = 'ls ' + inDirBase + prodDir+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
     else:
-      fileCmd = 'ls ' + inDirBase + prodDir+'/'+options.iniStep
+      fileCmd = 'ls ' + inDirBase +iProd+ '/'+options.iniStep
   else:
     if options.iniStep == 'Prod' : 
       fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
@@ -245,7 +245,7 @@ for iProd in prodList :
         if options.iniStep == 'Prod' :
           fileCmd = 'ls ' + inDirBase + prodDir+'/'+iProd #+' | grep  ttDM'
         else: 
-          fileCmd = 'ls ' + inDirBase + prodDir+'/'+options.iniStep+'__'+iStep
+          fileCmd = 'ls ' + inDirBase + iProd+'/'+options.iniStep+'__'+iStep
       else:
         if options.iniStep == 'Prod' :
           fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
@@ -327,7 +327,7 @@ for iProd in prodList :
                     if options.iniStep == 'Prod' :
                       targetList[iKey] = inDirBase + prodDir+Productions[iProd]['dirExt'] + '/' +iFile 
                     else:
-                      targetList[iKey] = inDirBase + prodDir+'/'+options.iniStep + '/' +iFile
+                      targetList[iKey] = inDirBase + iProd+'/'+options.iniStep + '/' +iFile
                   else:
                     if options.iniStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -374,7 +374,7 @@ for iProd in prodList :
                   if options.iniStep == 'Prod' :
                     targetListBaseW[iKey] = inDirBase + prodDir+Productions[iProd]['dirExt']+'/'+iFile 
                   else:
-                    targetListBaseW[iKey] = inDirBase + prodDir+'/'+options.iniStep+'/'+iFile
+                    targetListBaseW[iKey] = inDirBase + iProd+'/'+options.iniStep+'/'+iFile
                 else: 
                   if options.iniStep == 'Prod' :
                     targetListBaseW[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -510,7 +510,7 @@ for iProd in prodList :
           if    '_000'   in filePattern : filePattern = filePattern.split('_000')[0]+'_000*.root'
           elif  '__part' in filePattern : filePattern = filePattern.split('__part')[0]+'__part*.root'
           else: filePattern += '.root'
-          if 'iihe' in os.uname()[1]:
+          if 'iihe' or 'knu' in os.uname()[1]:
             fileCmd = 'ls '+ filePattern
           else:
             fileCmd = 'ls ' + filePattern    
@@ -622,13 +622,22 @@ for iProd in prodList :
             
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
           if len(targetList[iTarget]) == 1 :
-            if not  'iihe' in os.uname()[1]:
-              command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
-            else:
+            if 'iihe' in os.uname()[1]:
               outTree = 'srm://maite.iihe.ac.be:8443'+targetList[iTarget][0]
+	    elif 'knu' in os.uname()[1]:
+	      if options.runBatch :
+		command += 'gfal-copy '+rootReadPath(targetList[iTarget][0].split('/data/cms')[1]) + ' '+outTree+' ; '
+	      else: command += 'cp '+targetList[iTarget][0]+' '+outTree+' ; ' 
+            else:
+              command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
           else:
             command += 'hadd -f '+outTree+' ' 
-            for iFile in targetList[iTarget] : command += iFile+' '
+            for iFile in targetList[iTarget] :
+	      if '/pnfs/knu.ac.kr/data/cms' in iFile :
+	        if options.runBatch :
+		  command += rootReadPath(iFile.split('/data/cms')[1])+' '
+		else: command += iFile+' '
+	      else: command += iFile+' '
             command += ' ; ' 
             GarbageCollector.append(outTree)
             command += 'hadd_return=$?; ' 
@@ -682,7 +691,9 @@ for iProd in prodList :
             if selectSample : 
               inTree=finalTree              
               outTree ='latino_'+iTarget+'__'+iName+'.root'
-              command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
+	      if '/pnfs/knu.ac.kr/data/cms' in inTree :
+		command+=Steps[iSubStep]['command']+' '+rootReadPath(inTree.split('/data/cms')[1])+' '+outTree +' ; '
+	      else: command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
               finalTree=outTree
               GarbageCollector.append(outTree)
 
@@ -692,7 +703,10 @@ for iProd in prodList :
         # single Target
         else:
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
-          command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
+	  if '/pnfs/knu.ac.kr/data/cms' in inTree :
+            command+=Steps[iStep]['command']+' '+rootReadPath(inTree.split('/data/cms')[1])+' '+outTree +' ; '
+	  else: command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
+
           GarbageCollector.append(outTree)
 
         # Fix CMSSW flag
@@ -757,8 +771,13 @@ for iProd in prodList :
              if options.redo: command+='srmrm '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
              command+='lcg-cp '+outTree+' '+'srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
 	 elif 'knu' in os.uname()[1]:
-	   command+= 'rm -f ' +outDir+'/'+outTree
-	   command+= '; mv ' +wDir+'/'+outTree+' '+outDir+'/'
+	   if startingStep == 'Prod' :
+	     if options.redo: command+='gfal-rm '+'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + outDirBase+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root;'
+	     command+='gfal-copy '+outTree+' '+'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + outDirBase + iProd+'/'+iStep+'/latino_'+iTarget+'.root'
+           else: 
+	     if options.redo: command+='gfal-rm '+'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + outDirBase + iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
+	     command+='gfal-copy '+outTree+' '+'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + outDirBase+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
+
          else:
            if startingStep == 'Prod' :
              command+='xrdcp -f '+outTree+' '+ eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
@@ -796,4 +815,3 @@ for iProd in prodList :
   if options.chain :
     print "Gone batching for Chain ..."
     if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
-
