@@ -1485,15 +1485,21 @@ samples4Syst = [
                  'VBFHToWWTo2L2Nu_JHUGen698_M2500' ,        
                  'VBFHToWWTo2L2Nu_JHUGen698_M3000' ,        
 
-                 # VBF 
-                 'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
-                 # VBS
+                 # VBS SS
                  'WmWmJJ_EWK_powheg','WpWpJJ_EWK_powheg','WpWpJJ_EWK_aQGC','WpWpJJ_EWK',
                  'WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WGJJ','WLLJJToLNu_M-60_EWK_4F',
                  'WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet',
                  'WLLJJToLNu_M-4To60_EWK_4F','WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet',
                  'WLLJJToLNu_M-4To50_QCD_2Jet','WLLJJToLNu_M-4To50_QCD_3Jet','tZq_ll','ZZJJTo4L_EWK', 'ZZTo4L',                                   
                  'WZTo3LNu','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM','TTTo2L2Nu','ggZZ4e','ggZZ4m','ggZZ4t','ggZZ2e2m','ggZZ2e2t','ggZZ2m2t',
+
+                 # VBS OS
+                 'WpWmJJ_EWK',
+                 'WpWmJJ_EWK_noTop',
+                 'WpWmJJ_EWK_QCD_noHiggs',
+                 'WpWmJJ_EWK_QCD_noTop',
+                 'WpWmJJ_EWK_QCD_noTop_noHiggs',
+                 'WpWmJJ_QCD_noTop',
 
 
                  # ttDM
@@ -3767,6 +3773,7 @@ Steps= {
                  },
 
 
+                  
   'metXYshift' : {  'isChain'    : True ,
                     'do4MC'      : True  ,
                     'do4Data'    : True  ,
@@ -3775,39 +3782,101 @@ Steps= {
 
   'metXYshift_MC' : {  'isChain'    : False ,
                        'do4MC'      : True  ,
-                       'do4Data'    : False  , 
-                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample DY' ,
+                       'do4Data'    : False  , # default --cmssw 763
+                       'command'    : 'gardener.py metXYshift  --paraFile multPhiCorr_23Aug2017_V1_Summer16DY_M50_pfType1.txt ' ,
                     },
 
   'metXYshift_2016B' : {  'isChain'    : False ,
                        'do4MC'      : False  ,
                        'do4Data'    : True   ,
-                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016BDouble' ,
-                       'onlySample' : [ 
-                                        'Run2016B_PromptReco_DoubleMuon', 'Run2016B_PromptReco_SingleElectron', 'Run2016B_PromptReco_SingleMuon',
-                                        'Run2016B_PromptReco_MuonEG' , 'Run2016B_PromptReco_DoubleEG' 
-                                      ],
+                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile multPhiCorr_23Aug2017_V1_MuonEG_Run2016B_pfType1.txt ' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016B-03Feb2017_ver2-v2',
+                                        'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        'MuonEG_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleElectron_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
+                                       ],
                     },
 
   'metXYshift_2016C' : {  'isChain'    : False ,
                        'do4MC'      : False  ,
                        'do4Data'    : True   ,
-                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016CDouble' ,
-                       'onlySample' : [
-                                        'Run2016C_PromptReco_DoubleMuon', 'Run2016C_PromptReco_SingleElectron', 'Run2016C_PromptReco_SingleMuon',
-                                        'Run2016C_PromptReco_MuonEG' , 'Run2016C_PromptReco_DoubleEG'
-                                      ],
+                       'command'    : 'gardener.py metXYshift  --paraFile multPhiCorr_23Aug2017_V1_MuonEG_Run2016C_pfType1.txt ' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016C-03Feb2017-v1',
+                                        'DoubleMuon_Run2016C-03Feb2017-v1',
+                                        'MuonEG_Run2016C-03Feb2017-v1',
+                                        'SingleElectron_Run2016C-03Feb2017-v1',
+                                        'SingleMuon_Run2016C-03Feb2017-v1',
+                                       ],
                     },
 
   'metXYshift_2016D' : {  'isChain'    : False ,
                        'do4MC'      : False  ,
                        'do4Data'    : True   ,
-                       'command'    : 'gardener.py metXYshift --cmssw 763 --paraFile metXYshiftPara_MoriondV1_ftnalPar.txt --sample Run2016DDouble' ,
-                       'onlySample' : [
-                                        'Run2016D_PromptReco_DoubleMuon', 'Run2016D_PromptReco_SingleElectron', 'Run2016D_PromptReco_SingleMuon',
-                                        'Run2016D_PromptReco_MuonEG' , 'Run2016D_PromptReco_DoubleEG'
-                                      ],
+                       'command'    : 'gardener.py metXYshift --paraFile multPhiCorr_23Aug2017_V1_MuonEG_Run2016D_pfType1.txt ' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016D-03Feb2017-v1',
+                                        'DoubleMuon_Run2016D-03Feb2017-v1',
+                                        'MuonEG_Run2016D-03Feb2017-v1',
+                                        'SingleElectron_Run2016D-03Feb2017-v1',
+                                        'SingleMuon_Run2016D-03Feb2017-v1',
+                                       ],
                     },
 
+  'metXYshift_2016E' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --paraFile multPhiCorr_23Aug2017_V1_MuonEG_Run2016E_pfType1.txt ' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016E-03Feb2017-v1',
+                                        'DoubleMuon_Run2016E-03Feb2017-v1',
+                                        'MuonEG_Run2016E-03Feb2017-v1',
+                                        'SingleElectron_Run2016E-03Feb2017-v1',
+                                        'SingleMuon_Run2016E-03Feb2017-v1',
+                                       ],
+                    },
+  'metXYshift_2016F' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --paraFile multPhiCorr_23Aug2017_V1_MuonEG_Run2016F_pfType1.txt ' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016F-03Feb2017-v1',
+                                        'DoubleMuon_Run2016F-03Feb2017-v1',
+                                        'MuonEG_Run2016F-03Feb2017-v1',
+                                        'SingleElectron_Run2016F-03Feb2017-v1',
+                                        'SingleMuon_Run2016F-03Feb2017-v1',
+                                       ],
+                    },
 
+  'metXYshift_2016G' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --paraFile multPhiCorr_23Aug2017_V1_MuonEG_Run2016G_pfType1.txt ' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016G-03Feb2017-v1',
+                                        'DoubleMuon_Run2016G-03Feb2017-v1',
+                                        'MuonEG_Run2016G-03Feb2017-v1',
+                                        'SingleElectron_Run2016G-03Feb2017-v1',
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                       ],
+                    },
+  'metXYshift_2016H' : {  'isChain'    : False ,
+                       'do4MC'      : False  ,
+                       'do4Data'    : True   ,
+                       'command'    : 'gardener.py metXYshift --paraFile multPhiCorr_23Aug2017_V1_MuonEG_Run2016H_v2and3_pfType1.txt ' ,
+                        'onlySample' : [
+                                        'DoubleEG_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleEG_Run2016H-03Feb2017_ver3-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver3-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver3-v1',
+                                       ],
+                    },
 }

@@ -537,7 +537,7 @@ if __name__ == '__main__':
             ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option 
             if 'AsMuchAsPossible' in opt.batchSplit :
               ## do this only if we want to add the MC stat nuisances in the old way
-              if not nuisances['stat']['samples']=={} :
+              if 'stat' in nuisances.keys()  and  not nuisances['stat']['samples']=={} :
                 #os.chdir(os.getcwd()+"/"+opt.outputDir)
                 filein=ROOT.TFile('plots_'+opt.tag+'.root', 'update')
                 for sample in samples.keys():
