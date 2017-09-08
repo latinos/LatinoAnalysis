@@ -243,9 +243,9 @@ for iProd in prodList :
           fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015'+'/'+iProd+'/'+options.iniStep+'__'+iStep
       elif 'knu' in os.uname()[1]:
         if options.iniStep == 'Prod' :
-          fileCmd = 'ls ' + inDirBase + prodDir+'/'+iProd #+' | grep  ttDM'
+          fileCmd = 'ls ' + outDirBase + prodDir+'/'+iProd #+' | grep  ttDM'
         else: 
-          fileCmd = 'ls ' + inDirBase + iProd+'/'+options.iniStep+'__'+iStep
+          fileCmd = 'ls ' + outDirBase + iProd+'/'+options.iniStep+'__'+iStep
       else:
         if options.iniStep == 'Prod' :
           fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
@@ -256,7 +256,7 @@ for iProd in prodList :
       out, err = proc.communicate()
       FileExistList=string.split(out)
       print "FileExistList: ", FileExistList
-      #print samples
+      #print 'samples',samples
       #print samples.keys()
       for iSample in samples : 
         # Tree selector
@@ -264,8 +264,7 @@ for iProd in prodList :
         # ... from options
         if len(options.selTree) > 0 :
           #if 'DYJetsToLL_M-50' in iSample : print iSample
-          #print  iSample
-          #print options.selTree
+          #print 'iSample', iSample ,'selTree',options.selTree
           if not iSample in options.selTree: selectSample=False
           #print selectSample
         if len(options.excTree) > 0 :
@@ -316,7 +315,7 @@ for iProd in prodList :
                   #if iSample.replace('_25ns','') in iTarget : iTargetOri = iSample
                 else:
                   aSample = iKey
-                #print aSample , iSample
+                print 'aSample', aSample ,'iSample', iSample
                 if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
                   if 'iihe' in os.uname()[1]:
                     if options.iniStep == 'Prod' :
@@ -745,6 +744,8 @@ for iProd in prodList :
         if 'puData' in Productions[iProd] : puData = Productions[iProd]['puData']
         if 'iihe' in os.uname()[1]:
           puData=puData.replace('/afs/cern.ch/user/x/xjanssen/public','/user/xjanssen/HWW2015/pudata')
+        #if 'knu' in os.uname()[1]:
+        #  puData='/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root'
         print 'PU Data : ', puData
         command = command.replace('RPLME_puData',puData)  
 
