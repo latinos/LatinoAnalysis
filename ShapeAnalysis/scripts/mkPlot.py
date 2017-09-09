@@ -311,7 +311,11 @@ class ShapeFactory:
 
                 elif plot[sampleName]['isSignal'] == 2 or plot[sampleName]['isSignal'] == 3 :
                   #print "SigSup histo: ", histos[sampleName]
-                  sigSupList.append(histos[sampleName])
+                  if  variable['divideByBinWidth'] == 1:
+                    histos[sampleName].Scale(1,"width")
+                    sigSupList.append(histos[sampleName])
+                  else:
+                    sigSupList.append(histos[sampleName])
                   if plot[sampleName]['isSignal'] == 3 :
                     #print "sigForAdditionalRatio histo: ", histos[sampleName]
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]

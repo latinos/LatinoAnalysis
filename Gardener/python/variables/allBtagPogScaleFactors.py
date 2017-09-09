@@ -27,6 +27,7 @@ class allBtagPogScaleFactors(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-c','--cmssw',dest='cmssw',help='cmssw version req for met vars',default='763')
+        group.add_option('-a','--auxiliaryFile',dest='auxiliaryFile',help='auxiliary friend tree',default=None)
         return group
 
     def checkOptions(self,opts):
@@ -37,6 +38,8 @@ class allBtagPogScaleFactors(TreeCloner):
         if opts.cmssw == "Full2016":
           effFile = "data/efficiencyMCFileFull2016.py"
 
+        self.auxiliaryFile = opts.auxiliaryFile
+        
         efficienciesMC_CMVA = {}
         efficienciesMC_CSV = {}
         efficienciesMC_DeepCSV = {}
@@ -231,6 +234,9 @@ class allBtagPogScaleFactors(TreeCloner):
         output = kwargs['output']
 
         self.connect(tree,input)
+
+        if self.auxiliaryFile != None:
+          self.itree.AddFriend(tree, self.auxiliaryFile)  
 
         #self._readSF()        
         branchlist = ["bPogSF", "bPogSFUp", "bPogSFDown"]

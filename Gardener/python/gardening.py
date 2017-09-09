@@ -72,7 +72,7 @@ class TreeCloner(object):
           pObj = self.ifile.Get(iObj)
           if not pObj.ClassName() == 'TTree' and not iObj in ['totalEvents','totalEventsTriggers','mcWeightExplainedOrdered'] and not iObj in histos2Create :
             self.histos2keep.append(iObj)
-
+    
     def clone(self,output,branches=[]):
 
         self.ofile = self._openRootFile(output, 'recreate')
@@ -82,6 +82,14 @@ class TreeCloner(object):
             b.SetStatus(0)
 
         self.otree = self.itree.CloneTree(0)
+
+        ## BUT keep all branches "active" in the old tree
+        self.itree.SetBranchStatus('*'  ,1)
+    
+    def makeNewTree(self,output,branches=[]):
+        self.ofile = self._openRootFile(output, 'recreate')
+
+        self.otree = ROOT.TTree(self.itree.GetName(), self.itree.GetTitle())
 
         ## BUT keep all branches "active" in the old tree
         self.itree.SetBranchStatus('*'  ,1)
