@@ -3599,6 +3599,17 @@ Steps= {
                   'command'    : 'gardener.py filter --keeplist /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/LatinoAnalysis/Gardener/python/keeplist_new.txt'
            },
 
+  'sfSel__monohSel'  :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            'sfSel',
+            'monohSel'
+            ],
+        },
+  
+
 ### /afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/LatinoAnalysis/Gardener/python/keeplist.txt '
 
 
