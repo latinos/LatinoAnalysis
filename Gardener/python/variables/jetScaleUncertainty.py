@@ -23,7 +23,6 @@ class JESTreeMaker(TreeCloner):
         group.add_option('-k', '--kind',   dest='kind', help='Kind of variation: -1, +1, +0.5, ...', default=1.0)
         group.add_option('-m', '--maxUncertainty',   dest='maxUncertainty', help='Use maximum of JES uncertainties', default=False, action="store_true")
         group.add_option('-c', '--cmssw', dest='cmssw', help='cmssw version (naming convention may change)', default='763', type='string')
-        group.add_option('-x', '--saveOnlyModifiedBranches', dest='saveOnlyModifiedBranches', help='whether to save only the modified branches of the whole tree (default=false)', default=False, action="store_true")
         parser.add_option_group(group)
         return group
 
@@ -38,7 +37,6 @@ class JESTreeMaker(TreeCloner):
         print " Using maximum of JES uncertainties = ", self.maxUncertainty
 
         self.cmssw = opts.cmssw
-        self.saveOnlyModifiedBranches = opts.saveOnlyModifiedBranches
         print " cmssw = ", self.cmssw
 
     def changeOrder(self, vectorname, vector, jetOrderList) :
@@ -103,10 +101,7 @@ class JESTreeMaker(TreeCloner):
 
         # clone the tree with new branches added
         #self.clone(output,self.namesOldBranchesToBeModifiedVector)
-        if not self.saveOnlyModifiedBranches:
-          self.clone(output,self.namesOldBranchesToBeModifiedVector+self.namesOldBranchesToBeModifiedSimpleVariable)
-        else:
-          self.makeNewTree(output,self.namesOldBranchesToBeModifiedVector+self.namesOldBranchesToBeModifiedSimpleVariable) 
+        self.clone(output,self.namesOldBranchesToBeModifiedVector+self.namesOldBranchesToBeModifiedSimpleVariable)
 
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
