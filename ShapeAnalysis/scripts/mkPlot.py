@@ -827,12 +827,18 @@ class ShapeFactory:
                 else:
                   frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
               else:
-                frame.GetYaxis().SetTitle("Events")
+                if 'yaxis' in variable.keys() : 
+                  frame.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frame.GetYaxis().SetTitle("Events")                  
             else :
               if variable["divideByBinWidth"] == 1:
                 frame.GetYaxis().SetTitle("dN/d"+variableName)             
               else:
-                frame.GetYaxis().SetTitle("Events")
+                if 'yaxis' in variable.keys() : 
+                  frame.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frame.GetYaxis().SetTitle("Events")
 
             #
             #  - now draw
@@ -1103,13 +1109,19 @@ class ShapeFactory:
                 else:
                   frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
               else:
-                frameDistro.GetYaxis().SetTitle("Events")
+                if 'yaxis' in variable.keys() : 
+                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frameDistro.GetYaxis().SetTitle("Events")
             else :
               frameDistro.GetXaxis().SetTitle(variableName)
               if variable["divideByBinWidth"] == 1:
                 frameDistro.GetYaxis().SetTitle("dN/d"+variableName)
               else:
-                frameDistro.GetYaxis().SetTitle("Events")
+                if 'yaxis' in variable.keys() : 
+                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frameDistro.GetYaxis().SetTitle("Events")
             #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
             frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 
