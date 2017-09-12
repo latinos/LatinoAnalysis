@@ -1395,7 +1395,7 @@ samples4Syst = [
 
                  # Higgs 
                  'GluGluHToTauTau_M125' , 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
-                 'GluGluHToWWTo2L2Nu_alternative_M125',
+                 'GluGluHToWWTo2L2Nu_alternative_M125', 'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS' ,
                  'VBFHToTauTau_M125' , 'VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125',
                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125', 'HWminusJ_HToWW_LNu_M125' ,
                  'HWplusJ_HToTauTau_M125' , 'HWplusJ_HToWW_M125',  'HWplusJ_HToWW_LNu_M125' ,
@@ -3023,6 +3023,7 @@ Steps= {
                                     'GluGluHToWWTo2L2Nu_M125_CUETDown' , 'VBFHToWWTo2L2Nu_M125_CUETDown' , 'WWTo2L2Nu_CUETDown' ,
                                     'GluGluHToWWTo2L2Nu_M125_CUETUp'   , 'VBFHToWWTo2L2Nu_M125_CUETUp'   , 'WWTo2L2Nu_CUETUp'   ,
                                     'GluGluHToWWTo2L2NuHerwigPS_M125'  , 'VBFHToWWTo2L2NuHerwigPS_M125'  , 'WWTo2L2NuHerwigPS'  ,
+                                    'GluGluHToWWTo2L2Nu_M125_herwigpp'
                                  ] ,
                   'cpMap' : {
                               'UEdo' : { 
@@ -3037,6 +3038,7 @@ Steps= {
                                        },
                               'PS'   : {    
                                           'GluGluHToWWTo2L2NuHerwigPS_M125'  : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
+                                          'GluGluHToWWTo2L2Nu_M125_herwigpp' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'], 
                                           'VBFHToWWTo2L2NuHerwigPS_M125'     : ['VBFHToWWTo2L2Nu_M125'] ,
                                           'WWTo2L2NuHerwigPS'                : ['WWTo2L2Nu'] ,
                                        },
@@ -3738,6 +3740,30 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \'(metTtrk > 20 || metPfType1 > 20) && ptll > 30 && std_vector_lepton_flavour[0] == -std_vector_lepton_flavour[1] && mll > 12 && std_vector_lepton_pt[0] > 20 && std_vector_lepton_pt[1] > 10 \' ',
            },
+
+  'sfTightSel' :  {  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'(metTtrk > 20 || metPfType1 > 20) && ptll > 30 && std_vector_lepton_flavour[0] == -std_vector_lepton_flavour[1] && mll > 12 && std_vector_lepton_pt[0] > 20 && std_vector_lepton_pt[1] > 10  && ( ( std_vector_jet_pt[1]<=30 && dymvaggh > 0.6 ) || ( std_vector_jet_pt[1]> 30 && ( dymvaggh > 0.6 || dymvavbf > 0.6 ) ) )  \' ',
+           },
+
+
+  'sfmvaSel' : {  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'    (metTtrk > 20 || metPfType1 > 20)   \
+                                                           && ptll > 30   \
+                                                           && mll > 12    \
+                                                           && ( std_vector_lepton_flavour[0]*std_vector_lepton_flavour[1] ) < 0   \
+                                                           && std_vector_lepton_pt[0] > 20    \
+                                                           && std_vector_lepton_pt[1] > 10    \
+                                                           && std_vector_lepton_pt[2] < 10      \
+                                                           && (abs(std_vector_lepton_flavour[1]) == 13 || (std_vector_lepton_pt[0]>25 && std_vector_lepton_pt[1]>13) )    \
+                                                           && (    ( std_vector_jet_pt[1]<=30 && dymvaggh > 0.6 )   \
+                                                                || ( std_vector_jet_pt[1]> 30 && ( dymvaggh > 0.6 || dymvavbf > 0.6 ) ) )   \
+                                                         \' ',
+           },
+
 
 
   'dymvaSel' : {  'isChain'    : False ,
