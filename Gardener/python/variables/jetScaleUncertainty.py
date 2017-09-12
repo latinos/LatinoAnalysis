@@ -107,6 +107,7 @@ class JESTreeMaker(TreeCloner):
         for bname in self.namesOldBranchesToBeModifiedVector:
             bvector =  ROOT.std.vector(float) ()
             self.oldBranchesToBeModifiedVector[bname] = bvector
+             
 
         # now actually connect the branches
         for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():

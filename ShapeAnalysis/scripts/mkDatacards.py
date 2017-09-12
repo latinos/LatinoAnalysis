@@ -39,6 +39,12 @@ class DatacardFactory:
         self.signals = []
         ## list of [background processes]
         self.backgrounds = []
+
+        ## list of [signal processes]
+        self.all_signals = []
+        ## list of [background processes]
+        self.all_backgrounds = []
+
         ## data
         self.data = []        
         ## list of [(name of uncert, type of nuisance, list of samples affected, with value, additional value [in case of gmN])]
@@ -64,11 +70,11 @@ class DatacardFactory:
         # divide the list of samples among signal, background and data
         for sampleName, sample in self._samples.iteritems():
           if structureFile[sampleName]['isSignal'] == 1 :
-            self.signals.append(sampleName)
+            self.all_signals.append(sampleName)
           if structureFile[sampleName]['isData'] == 1 :
             self.data.append(sampleName)
           if structureFile[sampleName]['isSignal'] == 0 and structureFile[sampleName]['isData'] == 0:
-            self.backgrounds.append(sampleName)
+            self.all_backgrounds.append(sampleName)
           
         if not os.path.isdir (self._outputDirDatacard + "/") :
           os.mkdir (self._outputDirDatacard + "/")
@@ -78,6 +84,28 @@ class DatacardFactory:
           print "cut = ", cutName, " :: ", cuts[cutName]
           os.system ("rm -rf " + self._outputDirDatacard + "/" + cutName) 
           os.mkdir (self._outputDirDatacard + "/" + cutName)
+          
+          #
+          # prepare the signals and background list of samples
+          # after removing the ones not to be used in this specific phase space
+          #
+          self.signals = []
+          for sampleName in self.all_signals :
+            if 'removeFromCuts' in structureFile[sampleName].keys() and cutName in structureFile[sampleName]['removeFromCuts'] :
+              # remove from the list
+              print ' remove ', sampleName, ' from ', cutName
+            else :
+              self.signals.append (sampleName)
+
+          self.backgrounds = []
+          for sampleName in self.all_backgrounds :
+            if 'removeFromCuts' in structureFile[sampleName].keys() and cutName in structureFile[sampleName]['removeFromCuts'] :
+              # remove from the list
+              print ' remove ', sampleName, ' from ', cutName
+            else :
+              self.backgrounds.append (sampleName)
+          
+          
           # loop over variables
           for variableName, variable in self._variables.iteritems():
             print "  variableName = ", variableName

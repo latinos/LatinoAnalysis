@@ -42,6 +42,19 @@ class TreeCloner(object):
         self.ohistoMcWeightExplainedOrdered = None
         self.histos2keep = []
 
+    def addMainOptions(self,parser):
+        description=self.help()
+        group = optparse.OptionGroup(parser,self.label, description)
+        group.add_option('-a','--auxiliaryFile',dest='auxiliaryFile',help='auxiliary friend tree',default=None)
+        group.add_option('-x', '--saveOnlyModifiedBranches', dest='saveOnlyModifiedBranches', help='whether to save only the modified branches of the whole tree (default=false)', default=False, action="store_true")
+        parser.add_option_group(group)
+        return group
+
+    def checkMainOptions(self, opts ):
+        self.auxiliaryFile  = opts.auxiliaryFile
+        self.saveOnlyModifiedBranches = opts.saveOnlyModifiedBranches
+  
+
     def _openRootFile(self,path, option=''):
         f =  ROOT.TFile.Open(path,option)
         if not f.__nonzero__() or not f.IsOpen():
@@ -72,7 +85,11 @@ class TreeCloner(object):
           pObj = self.ifile.Get(iObj)
           if not pObj.ClassName() == 'TTree' and not iObj in ['totalEvents','totalEventsTriggers','mcWeightExplainedOrdered'] and not iObj in histos2Create :
             self.histos2keep.append(iObj)
-
+        
+        if self.auxiliaryFile != None:
+          print "Using auxiliary file ", self.auxiliaryFile
+          self.itree.AddFriend(self.itree.GetName(), self.auxiliaryFile)
+    
     def clone(self,output,branches=[]):
 
         self.ofile = self._openRootFile(output, 'recreate')
@@ -81,12 +98,15 @@ class TreeCloner(object):
             if b.GetName() not in branches: continue
             b.SetStatus(0)
 
-        self.otree = self.itree.CloneTree(0)
+        #decide whether to actually clone or make a new tree with only the modified branches
+        if not self.saveOnlyModifiedBranches:
+          self.otree = self.itree.CloneTree(0)
+        else:
+          self.otree = ROOT.TTree(self.itree.GetName(), self.itree.GetTitle())
 
         ## BUT keep all branches "active" in the old tree
         self.itree.SetBranchStatus('*'  ,1)
-
-
+    
     def disconnect(self,keepTreeMC=False,cleanUp=True):
         self.ofile.cd()
         self.otree.Write()
@@ -639,6 +659,7 @@ def gardener_cli( modules ):
         
         print 'Help for module',module+':'
         modules[module].help()
+        modules[module].addMainOptions(parser)
         modules[module].addOptions(parser)
         parser.print_help()
         sys.exit(0)
@@ -650,6 +671,7 @@ def gardener_cli( modules ):
         sys.exit(0)
 
     module = modules[modname]
+    groupMain = module.addMainOptions(parser)
     group = module.addOptions(parser)
 
     sys.argv.remove(modname)
@@ -661,6 +683,7 @@ def gardener_cli( modules ):
     sys.argv.append('-b')
 
     try:
+        module.checkMainOptions(opt)        
         module.checkOptions(opt)
     except Exception as e:
         print 'Error in module',module.label
