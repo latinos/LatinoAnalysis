@@ -45,14 +45,16 @@ class TreeCloner(object):
     def addMainOptions(self,parser):
         description=self.help()
         group = optparse.OptionGroup(parser,self.label, description)
-        group.add_option('-a','--auxiliaryFile',dest='auxiliaryFile',help='auxiliary friend tree',default=None)
-        group.add_option('-x', '--saveOnlyModifiedBranches', dest='saveOnlyModifiedBranches', help='whether to save only the modified branches of the whole tree (default=false)', default=False, action="store_true")
+        group.add_option('--auxiliaryFile',dest='auxiliaryFile',help='auxiliary friend tree',default=None)
+        group.add_option('--saveOnlyModifiedBranches', dest='saveOnlyModifiedBranches', help='whether to save only the modified branches of the whole tree (default=false)', default=False, action="store_true")
+        group.add_option('--eventListForFriend', dest='eventListForFriend', help='file containing the input list to be applied to the friend', default=None)
         parser.add_option_group(group)
         return group
 
     def checkMainOptions(self, opts ):
         self.auxiliaryFile  = opts.auxiliaryFile
         self.saveOnlyModifiedBranches = opts.saveOnlyModifiedBranches
+        self.eventListForFriend = opts.eventListForFriend
   
 
     def _openRootFile(self,path, option=''):
@@ -88,8 +90,15 @@ class TreeCloner(object):
         
         if self.auxiliaryFile != None:
           print "Using auxiliary file ", self.auxiliaryFile
-          self.itree.AddFriend(self.itree.GetName(), self.auxiliaryFile)
-    
+          self.friendFile = self._openRootFile(self.auxiliaryFile)
+          self.friendTree = self._getRootObj(self.friendFile, self.itree.GetName())  
+          if self.eventListForFriend !=None:
+            self.friendFileList = self._openRootFile(self.eventListForFriend)
+            self.elist = self._getRootObj(self.friendFileList,"prunerlist")
+            self.itree.SetEventList(self.elist)
+          self.itree.AddFriend(self.friendTree) 
+          #self.itree.AddFriend(self.itree.GetName(), self.auxiliaryFile)
+
     def clone(self,output,branches=[]):
 
         self.ofile = self._openRootFile(output, 'recreate')
@@ -109,6 +118,11 @@ class TreeCloner(object):
     
     def disconnect(self,keepTreeMC=False,cleanUp=True):
         self.ofile.cd()
+        #remove the friends before wrinting out
+        friends = self.otree.GetListOfFriends() or []
+        while friends and friends.GetSize() > 0:
+          self.otree.RemoveFriend(friends.At(0).GetTree())
+          friends = self.otree.GetListOfFriends() or []  
         self.otree.Write()
         # additional trees and histograms not to be lost ...
         if self.itreeMC.__nonzero__() and keepTreeMC : 
@@ -178,8 +192,8 @@ class Pruner(TreeCloner):
         group.add_option('--droplist',      dest='droplist', help='drops the variables listed in a config file', action='append',default=[])
         group.add_option('-k','--keep',     dest='keeps',    help='keeps the variables while cloning', action='append',default=[])
         group.add_option('--keeplist',      dest='keeplist', help='keeps the variables listed in a config file', action='append',default=[])
+        group.add_option('--eventListOutput',   dest='eventListOutput',   help='whether the selected event list is to be written to file', default=False, action='store_true')
         group.add_option('-n','--dryrun',   dest='dryrun',   help='do nothing, just count', action='store_true')
-        
         parser.add_option_group(group)
         return group
 
@@ -193,6 +207,7 @@ class Pruner(TreeCloner):
         self.droplist = getattr(opts,'droplist')
         self.keeps    = getattr(opts,'keeps')
         self.keeplist = getattr(opts,'keeplist')
+        self.eventListOutput = getattr(opts,'eventListOutput')
 
     def process(self, **kwargs ):
         print 'Filtering \''+self.filter+'\''
@@ -283,6 +298,11 @@ class Pruner(TreeCloner):
             itree.GetEntry(evlist.GetEntry(i))
 
             otree.Fill()
+
+        if self.eventListOutput:
+          ofileeventlist = ROOT.TFile("eventlist_"+output, "recreate")
+          ofileeventlist.cd()
+          evlist.Write()
 
         self.disconnect()
         print '- Eventloop completed'
