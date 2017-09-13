@@ -47,7 +47,7 @@ class TreeCloner(object):
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('--auxiliaryFile',dest='auxiliaryFile',help='auxiliary friend tree',default=None)
         group.add_option('--saveOnlyModifiedBranches', dest='saveOnlyModifiedBranches', help='whether to save only the modified branches of the whole tree (default=false)', default=False, action="store_true")
-        group.add_option('--eventListForFriend', dest='eventListForFriend', help='file containing the input list to be applied to the friend', default=None)
+        group.add_option('--eventListForFriend', dest='eventListForFriend', help='whether to load an event list from the pruner when reading the friend tree', default=False, action="store_true")
         parser.add_option_group(group)
         return group
 
@@ -92,9 +92,8 @@ class TreeCloner(object):
           print "Using auxiliary file ", self.auxiliaryFile
           self.friendFile = self._openRootFile(self.auxiliaryFile)
           self.friendTree = self._getRootObj(self.friendFile, self.itree.GetName())  
-          if self.eventListForFriend !=None:
-            self.friendFileList = self._openRootFile(self.eventListForFriend)
-            self.elist = self._getRootObj(self.friendFileList,"prunerlist")
+          if self.eventListForFriend :
+            self.elist = self._getRootObj(self.ifile,"prunerlist")
             self.itree.SetEventList(self.elist)
           self.itree.AddFriend(self.friendTree) 
           #self.itree.AddFriend(self.itree.GetName(), self.auxiliaryFile)
@@ -300,8 +299,9 @@ class Pruner(TreeCloner):
             otree.Fill()
 
         if self.eventListOutput:
-          ofileeventlist = ROOT.TFile("eventlist_"+output, "recreate")
-          ofileeventlist.cd()
+          #ofileeventlist = ROOT.TFile("eventlist_"+output, "recreate")
+          #ofileeventlist.cd()
+          self.ofile.cd()
           evlist.Write()
 
         self.disconnect()
