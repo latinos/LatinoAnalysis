@@ -456,7 +456,7 @@ if __name__ == '__main__':
               #jobs.Sub(opt.batchQueue)
             #else:
             #print " opt.batchQueue = ", opt.batchQueue
-            jobs.Sub(opt.batchQueue,opt.IiheWallTime)
+            jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
 
 
     elif opt.doHadd != 0:

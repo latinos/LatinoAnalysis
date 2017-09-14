@@ -103,6 +103,7 @@ if __name__ == '__main__':
     for key in inputFile.GetListOfKeys() : 
       if key.IsFolder() : 
         baseDir = key.GetName()
+        print '---> folder: ',baseDir
         outputFile.mkdir(baseDir) 
         inputFile.cd(baseDir)
         for skey in ROOT.gDirectory.GetListOfKeys() :
@@ -114,8 +115,10 @@ if __name__ == '__main__':
               hName = hkey.GetName() 
               outputFile.cd(baseDir+'/'+subDir)
               hTmp = inputFile.Get(baseDir+'/'+subDir+'/'+hName).Clone()
+              iDYestimKeep = 'NONE'
               for iDYestim in DYestim :
                 if baseDir == iDYestim : 
+                  iDYestimKeep = iDYestim
                   sName=''
                   for i in range( 1, len(DYestim[iDYestim]['DYProc'].split('_'))+1 ) : 
                     if len(hName.split('_')) >= len(DYestim[iDYestim]['DYProc'].split('_'))+1 : 
@@ -188,7 +191,7 @@ if __name__ == '__main__':
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                       Scale = Nout / nHis 
                       print 'Nout= ' , Nout , ' +- ',Eout, '(Nout_MC = ',nHis,') -> Scale = ',Scale 
-                      print 'Nout*Acc= ' , Nout*Acc 
+                      print 'Nout*Acc= ' , Nout*Acc , iDYestim
                       for iBin in range(0,hTmp.GetNbinsX()+2) :
                         BinContent = hTmp.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*Acc
@@ -234,6 +237,8 @@ if __name__ == '__main__':
                         #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
                       hDo.Write()
 
-              if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
+              if iDYestimKeep == 'NONE': hTmp.Write()
+              else:
+               if not ( hName == 'histo_'+DYestim[iDYestimKeep]['DYProc']+'_'+DYestim[iDYestimKeep]['NPname']+'Up' or hName == 'histo_'+DYestim[iDYestimKeep]['DYProc']+'_'+DYestim[iDYestimKeep]['NPname']+'Down' ) :
                 hTmp.Write()
 
