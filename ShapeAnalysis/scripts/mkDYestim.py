@@ -59,6 +59,8 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
+    print RAndKff
+
     # Load C  
     cmssw_base = os.getenv('CMSSW_BASE')
     try:
@@ -101,6 +103,7 @@ if __name__ == '__main__':
     for key in inputFile.GetListOfKeys() : 
       if key.IsFolder() : 
         baseDir = key.GetName()
+        print '---> folder: ',baseDir
         outputFile.mkdir(baseDir) 
         inputFile.cd(baseDir)
         for skey in ROOT.gDirectory.GetListOfKeys() :
@@ -112,14 +115,17 @@ if __name__ == '__main__':
               hName = hkey.GetName() 
               outputFile.cd(baseDir+'/'+subDir)
               hTmp = inputFile.Get(baseDir+'/'+subDir+'/'+hName).Clone()
+              iDYestimKeep = 'NONE'
               for iDYestim in DYestim :
                 if baseDir == iDYestim : 
+                  iDYestimKeep = iDYestim
                   sName=''
                   for i in range( 1, len(DYestim[iDYestim]['DYProc'].split('_'))+1 ) : 
                     if len(hName.split('_')) >= len(DYestim[iDYestim]['DYProc'].split('_'))+1 : 
                       if i==1 : sName+= hName.split('_')[i]
                       else    : sName+= '_' + hName.split('_')[i]
                   if sName == DYestim[iDYestim]['DYProc'] :
+                   if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                     if hTmp.Integral() == 0 : 
                        print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!',hName
                        print '!!!!!!!!!!!!!!!!!!!!! Only works for 1 bin, see below !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
@@ -138,8 +144,11 @@ if __name__ == '__main__':
                     Nvv = 0
                     ENvv = 0
                     for iMC in DYestim[iDYestim]['SFinMC'] : 
-                      Nvv+= inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).Integral()
-                      ENvv= ENvv + pow(inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).GetBinError(1),2)
+                      try:
+                        Nvv+= inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).Integral()
+                        ENvv= ENvv + pow(inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).GetBinError(1),2)
+                      except:
+                        print "Empty"
                     ENvv = math.sqrt(ENvv)   
                     Nvvdf = 0
                     ENvvdf = 0
@@ -161,6 +170,7 @@ if __name__ == '__main__':
                     print 'k = ',k,' +- ',Ek
                     print 'Nin =',Nin,' Neu = ',Neu,' Nvv = ',Nvv
                     Nout = DYCalc.N_DY(R , Nin , k , Neu, Nvv )
+                    #print R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv
                     Eout = DYCalc.EN_DY(R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv )
                     NUp  = Nout+Eout
                     NDo  = Nout-Eout
@@ -181,12 +191,14 @@ if __name__ == '__main__':
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                       Scale = Nout / nHis 
                       print 'Nout= ' , Nout , ' +- ',Eout, '(Nout_MC = ',nHis,') -> Scale = ',Scale 
+                      print 'Nout*Acc= ' , Nout*Acc , iDYestim
                       for iBin in range(0,hTmp.GetNbinsX()+2) :
                         BinContent = hTmp.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*Acc
                         hTmp.SetBinContent(iBin,NewBinContent)
                         BinError = hTmp.GetBinError(iBin)
                         NewBinError = BinError*abs(Scale)*Acc
+                        NewBinError = 0.
                         hTmp.SetBinError(iBin,NewBinError)
                         #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent 
                         #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError 
@@ -196,12 +208,14 @@ if __name__ == '__main__':
                       outputFile.cd(baseDir+'/'+subDir)
                       Scale = NUp / nHis
                       print 'NUp= ' , NUp , '(Nout_MC = ',nHis,') -> Scale = ',Scale
+                      print 'Nup*Acc = ' , NUp*(Acc+EAcc)
                       for iBin in range(0,hUp.GetNbinsX()+2) :
                         BinContent = hUp.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*(Acc+EAcc)
                         hUp.SetBinContent(iBin,NewBinContent)
                         BinError = hUp.GetBinError(iBin)
                         NewBinError = BinError*abs(Scale)*(Acc+EAcc)
+                        NewBinError = 0.
                         hUp.SetBinError(iBin,NewBinError)
                         #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
                         #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
@@ -210,16 +224,21 @@ if __name__ == '__main__':
                       outputFile.cd(baseDir+'/'+subDir)
                       Scale = NDo / nHis
                       print 'NDo= ' , NDo , '(Nout_MC = ',nHis,') -> Scale = ',Scale
+                      print 'NDo*Acc= ' , NDo*(Acc-EAcc)
                       for iBin in range(0,hDo.GetNbinsX()+2) :
                         BinContent = hDo.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*(Acc-EAcc)
                         hDo.SetBinContent(iBin,NewBinContent)
                         BinError = hDo.GetBinError(iBin)
                         NewBinError = BinError*abs(Scale)*(Acc-EAcc)
+                        NewBinError = 0.
                         hDo.SetBinError(iBin,NewBinError)
                         #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
                         #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
                       hDo.Write()
 
-              hTmp.Write()
+              if iDYestimKeep == 'NONE': hTmp.Write()
+              else:
+               if not ( hName == 'histo_'+DYestim[iDYestimKeep]['DYProc']+'_'+DYestim[iDYestimKeep]['NPname']+'Up' or hName == 'histo_'+DYestim[iDYestimKeep]['DYProc']+'_'+DYestim[iDYestimKeep]['NPname']+'Down' ) :
+                hTmp.Write()
 

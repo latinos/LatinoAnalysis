@@ -98,6 +98,9 @@ class ShapeFactory:
           print "cut = ", cutName, " :: ", cuts[cutName]
           for variableName, variable in self._variables.iteritems():
             print "variableName = ", variableName
+
+            if not "divideByBinWidth" in variable.keys():
+              variable["divideByBinWidth"] = 0
   
             tcanvas            = ROOT.TCanvas( "cc" + cutName + "_" + variableName,      "cc"     , 800, 600 )
             tcanvasRatio       = ROOT.TCanvas( "ccRatio" + cutName + "_" + variableName, "ccRatio", 800, 800 )
@@ -211,7 +214,12 @@ class ShapeFactory:
      
 
               if plot[sampleName]['isData'] == 1 :  
-                thsData.Add(histos[sampleName])
+                if variable['divideByBinWidth'] == 1:
+                  histos[sampleName].Scale(1,"width")
+                  thsData.Add(histos[sampleName])
+                else:
+                  thsData.Add(histos[sampleName])
+
 
 
               # data style
@@ -250,8 +258,12 @@ class ShapeFactory:
                     tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
                     #print " plot[", sampleName, "].keys() = ", plot[sampleName].keys()
                     if ('isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3) and not ('isBlind' in plot[sampleName].keys() and plot[sampleName]['isBlind'] == 1) :
-                      tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
-                      tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
+                      if variable['divideByBinWidth'] == 1:
+                        tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 0, 1) / histos[sampleName].GetBinWidth (iBin) )
+                        tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 1, 0) / histos[sampleName].GetBinWidth (iBin) )
+                      else:
+                        tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
+                        tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     else :
                       tgrData_evy_up.append( 0 )
                       tgrData_evy_do.append( 0 )
@@ -262,8 +274,12 @@ class ShapeFactory:
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                     if 'isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] == 3 :
-                      tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
-                      tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
+                      if variable['divideByBinWidth'] == 1:
+                        tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 0, 1) / histos[sampleName].GetBinWidth (iBin))
+                        tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 1, 0) / histos[sampleName].GetBinWidth (iBin))
+                      else:
+                        tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
+                        tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     
                     
 
@@ -286,16 +302,30 @@ class ShapeFactory:
                 #histos[sampleName].Scale(self._lumi)  ---> NO! They are already scaled to luminosity in mkShape!
                 
                 if plot[sampleName]['isSignal'] == 1 :
-                  thsSignal.Add(histos[sampleName])
+                  if variable['divideByBinWidth'] == 1:
+                    histos[sampleName].Scale(1,"width")
+                    thsSignal.Add(histos[sampleName])
+                  else:
+                    thsSignal.Add(histos[sampleName])
+
+
                 elif plot[sampleName]['isSignal'] == 2 or plot[sampleName]['isSignal'] == 3 :
                   #print "SigSup histo: ", histos[sampleName]
-                  sigSupList.append(histos[sampleName])
+                  if  variable['divideByBinWidth'] == 1:
+                    histos[sampleName].Scale(1,"width")
+                    sigSupList.append(histos[sampleName])
+                  else:
+                    sigSupList.append(histos[sampleName])
                   if plot[sampleName]['isSignal'] == 3 :
                     #print "sigForAdditionalRatio histo: ", histos[sampleName]
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                 else :
-                  thsBackground.Add(histos[sampleName])
                   nexpected += histos[sampleName].Integral(-1,-1)
+                  if variable['divideByBinWidth'] == 1:
+                    histos[sampleName].Scale(1,"width")
+                    thsBackground.Add(histos[sampleName])
+                  else:
+                    thsBackground.Add(histos[sampleName])
                   #print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
@@ -517,7 +547,12 @@ class ShapeFactory:
                       if histoUp != None:  
                         histoUp.Scale( float(plot[sampleName]['cuts'][cutName]) )
 
-                  
+                  if variable["divideByBinWidth"] == 1:
+                    if histoUp != None:
+                      histoUp.Scale(1,"width")
+                    if histoDown != None:
+                      histoDown.Scale(1,"width")
+ 
                   # now, even if not considered this nuisance, I need to add it, 
                   # so that in case is "empty" it will add the nominal value
                   # for this sample that is not affected by the nuisance
@@ -785,9 +820,25 @@ class ShapeFactory:
             # setup axis names
             if 'xaxis' in variable.keys() : 
               frame.GetXaxis().SetTitle(variable['xaxis'])
+              if variable["divideByBinWidth"] == 1:
+                if "GeV" in variable['xaxis']: 
+                  ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
+                  frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+                else:
+                  frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
+              else:
+                if 'yaxis' in variable.keys() : 
+                  frame.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frame.GetYaxis().SetTitle("Events")                  
             else :
-              frame.GetXaxis().SetTitle(variableName)
-            frame.GetYaxis().SetTitle("Events")
+              if variable["divideByBinWidth"] == 1:
+                frame.GetYaxis().SetTitle("dN/d"+variableName)             
+              else:
+                if 'yaxis' in variable.keys() : 
+                  frame.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frame.GetYaxis().SetTitle("Events")
 
             #
             #  - now draw
@@ -858,13 +909,19 @@ class ShapeFactory:
                       if self._showIntegralLegend == 0 :
                         tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
                       else :
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        if variable["divideByBinWidth"] == 1:
+                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width") 
+                        else:
+                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                         tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "F")
                     else :
-                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      if variable["divideByBinWidth"] == 1:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                      else:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "F")
                
               for sampleName, sample in reversedSamples.iteritems():
@@ -873,13 +930,19 @@ class ShapeFactory:
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      if variable["divideByBinWidth"] == 1:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                      else:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      if variable["divideByBinWidth"] == 1:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                      else:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
@@ -888,7 +951,10 @@ class ShapeFactory:
                 if self._showIntegralLegend == 0 :
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
-                  nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1)
+                  if variable["divideByBinWidth"] == 1:
+                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1,"width")
+                  else:
+                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1)
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
               for sampleName, sample in reversedSamples.iteritems():
@@ -897,14 +963,20 @@ class ShapeFactory:
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      if variable["divideByBinWidth"] == 1:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                      else:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName , "EPL")
                     else :
-                      nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                      if variable["divideByBinWidth"] == 1:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                      else:
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
@@ -1028,11 +1100,28 @@ class ShapeFactory:
             xAxisDistro = frameDistro.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
 
-            if 'xaxis' in variable.keys() : 
+            if 'xaxis' in variable.keys() :
               frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+              if variable["divideByBinWidth"] == 1:
+                if "GeV" in variable['xaxis']: 
+                  ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
+                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+                else:
+                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
+              else:
+                if 'yaxis' in variable.keys() : 
+                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frameDistro.GetYaxis().SetTitle("Events")
             else :
               frameDistro.GetXaxis().SetTitle(variableName)
-            frameDistro.GetYaxis().SetTitle("Events")
+              if variable["divideByBinWidth"] == 1:
+                frameDistro.GetYaxis().SetTitle("dN/d"+variableName)
+              else:
+                if 'yaxis' in variable.keys() : 
+                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frameDistro.GetYaxis().SetTitle("Events")
             #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
             frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 

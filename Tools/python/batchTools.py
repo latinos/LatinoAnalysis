@@ -134,7 +134,7 @@ class batchJobs :
      pFile.close()
 
 
-   def Sub(self,queue='8nh',IiheWallTime='168:00:00'): 
+   def Sub(self,queue='8nh',IiheWallTime='168:00:00',optTodo=False): 
      os.system('cd '+self.subDir)
      for jName in self.jobsList:
         print self.subDir+'/'+jName
@@ -151,12 +151,16 @@ class batchJobs :
           queue='localgrid@cream02'
           QSOPT='-l walltime='+IiheWallTime
           nTry=0
-          while nTry < 5 : 
+          while nTry < 3 : 
             nTry+=1
             jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             print 'TRY #:', nTry , '--> Jobid : ' , jobid
             if jobid == 0 : nTry = 999
             else:  os.system('rm '+jidFile)
+          if not jobid == 0 and optTodo :
+            todoFile = open(self.subDir+'/'+jName+'.todo','w')
+            todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+            todoFile.close()
 
 	elif 'knu' in os.uname()[1]:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
@@ -262,6 +266,27 @@ def batchClean():
         os.rmdir(jobDir+'/'+iDir) 
       except :
         print 'Some jobs still ongoing in: '+ iDir
+
+def batchResub(Dir):
+    if Dir == 'ALL' :
+      fileCmd = 'ls '+jobDir
+      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+      out, err = proc.communicate()
+      DirList=string.split(out)
+    else:
+      DirList=[Dir]
+    for iDir in DirList:
+      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.todo'
+      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+      out, err = proc.communicate()
+      FileList=string.split(out)
+      for iFile in FileList:
+        jidFile=iFile.replace('.todo','.jid')
+        if 'iihe' in os.uname()[1] :
+          jobid=os.system('bash '+iFile)
+          print 'Submitting ' , iFile
+          if jobid == 0 : os.system('rm '+iFile)
+          else          : os.system('rm '+jidFile)
 
 def lsListCommand(inputDir, iniStep = 'Prod'):
     "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
