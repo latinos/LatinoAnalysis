@@ -87,21 +87,31 @@ class MetXYshiftTreeMaker(TreeCloner) :
 
 	#print "cmssw_base =", cmssw_base
         # Create branches for otree, the ones that will be modified
-        self.metVariables = [ 'corrMetPfType1', 'corrMetPfType1Phi', 'corrMetPfRaw', 'corrMetPfRawPhi' ]
+        if self.cmssw == '74x' :
+            self.branchNamesToBeModifAdded = [ 'pfType1Met', 'pfType1Metphi','orgMetPfType1', 'orgMetPfType1Phi' ]
+        else :
+            self.branchNamesToBeModifAdded = [ 'metPfType1', 'metPfType1Phi','orgMetPfType1', 'orgMetPfType1Phi' ]
+
         
         # Clone the tree with new branches added
-        self.clone(output, self.metVariables)
+        self.clone(output, self.branchNamesToBeModifAdded)
       
         # Now actually connect the branches
         corrMetPfType1 = numpy.ones(1, dtype=numpy.float32)
         corrMetPfType1Phi = numpy.ones(1, dtype=numpy.float32)
-        corrMetPfRaw = numpy.ones(1, dtype=numpy.float32)
-        corrMetPfRawPhi = numpy.ones(1, dtype=numpy.float32)
+        orgMetPfType1 = numpy.ones(1, dtype=numpy.float32)
+        orgMetPfType1Phi = numpy.ones(1, dtype=numpy.float32)
 
-        self.otree.Branch('corrMetPfType1', corrMetPfType1, 'corrMetPfType1/F')
-        self.otree.Branch('corrMetPfType1Phi', corrMetPfType1Phi, 'corrMetPfType1Phi/F')
-        self.otree.Branch('corrMetPfRaw', corrMetPfType1, 'corrMetPfRaw/F')
-        self.otree.Branch('corrMetPfRawPhi', corrMetPfType1Phi, 'corrMetPfRawPhi/F')
+
+        if self.cmssw == '74x' :
+            self.otree.Branch('pfType1Met',   corrMetPfType1, 'pfType1Met/F')
+            self.otree.Branch('pfType1Metphi',corrMetPfType1Phi,'pfType1Metphi/F')
+        else :
+            self.otree.Branch('metPfType1',   corrMetPfType1, 'metPfType1/F')
+            self.otree.Branch('metPfType1Phi',corrMetPfType1Phi,'metPfType1Phi/F')
+
+        self.otree.Branch('orgMetPfType1',   orgMetPfType1, 'orgMetPfType1/F')
+        self.otree.Branch('orgMetPfType1Phi',orgMetPfType1Phi, 'orgMetPfType1Phi/F')
 
         # Input tree  
         itree = self.itree
@@ -113,17 +123,10 @@ class MetXYshiftTreeMaker(TreeCloner) :
         corx = ROOT.Double(0)
         cory = ROOT.Double(0)
 
-        oldMetPfType1 = ROOT.Double(0)
-        oldMetPfType1Phi = ROOT.Double(0)
         corrMetPfType1_x = ROOT.Double(0)
         corrMetPfType1_y = ROOT.Double(0)
 	corrMetPftype1_2d = TVector2()
 
-        oldMetPfRaw = ROOT.Double(0)
-        oldMetPfRawPhi = ROOT.Double(0)
-        corrMetPfRaw_x = ROOT.Double(0)
-        corrMetPfRaw_y = ROOT.Double(0)
-	corrMetPfRaw_2d = TVector2()
 
         nGoodVtx = ROOT.Double(0)
 
@@ -137,18 +140,18 @@ class MetXYshiftTreeMaker(TreeCloner) :
 
           # 76x ----------------------------------------------------------------
           if self.cmssw >= 763 :
-              oldMetPfType1    = itree.metPfType1
-              oldMetPfType1Phi    = itree.metPfType1Phi
-	      oldMetPfRaw      = itree.metPfRaw
-	      oldMetPfRawPhi   = itree.metPfRawPhi
+              orgMetPfType1[0]    = itree.metPfType1
+              orgMetPfType1Phi[0]    = itree.metPfType1Phi
+	      #oldMetPfRaw      = itree.metPfRaw
+	      #oldMetPfRawPhi   = itree.metPfRawPhi
 
 
           # 74x ----------------------------------------------------------------
           else :
-              oldMetPfType1 = itree.pfType1Met
-              oldMetPfType1Phi = itree.pfType1Metphi
-	      oldMetPfRaw      = itree.metPfRaw
-	      oldMetPfRawPhi   = itree.metPfRawPhi
+              orgMetPfType1[0] = itree.pfType1Met
+              orgMetPfType1Phi[0] = itree.pfType1Metphi
+	      #oldMetPfRaw      = itree.metPfRaw
+	      #oldMetPfRawPhi   = itree.metPfRawPhi
 # order (as in SkimEventProducer.h) for std_vector_ptc_...
 #              enum {hEtaPlus, hEtaMinus, h0Barrel, h0EndcapPlus, h0EndcapMinus,
 #              gammaBarrel, gammaEndcapPlus, gammaEndcapMinus,
@@ -160,50 +163,42 @@ class MetXYshiftTreeMaker(TreeCloner) :
 	  #for iCata in xrange(len(itree.std_vector_ptc_counts)):
 	  #  print self.itree.std_vector_ptc_counts[iCata], self.itree.std_vector_ptc_sumPt[iCata], self.itree.std_vector_ptc_metX[iCata], self.itree.std_vector_ptc_metY[iCata]
 
-          MetXYshift.setEvtInfo(oldMetPfType1, oldMetPfType1Phi, nGoodVtx)
-	  #MetXYshift.setPtcInfo(itree.std_vector_ptc_counts, itree.std_vector_ptc_sumPt, itree.std_vector_ptc_metX, itree.std_vector_ptc_metY) 
+          MetXYshift.setEvtInfo(orgMetPfType1, orgMetPfType1Phi, nGoodVtx)
 
 	  MetXYshift.CalcXYshiftCorr(corx, cory)
-	  #print "pfMet, phi, correction x, y:",oldMetPfType1, oldMetPfType1Phi, corx, cory
           #################################
 	  # Correction of PfType1
           #################################
-	  #print 'corx: ', corx, ' cory: ', cory
-	  oldMetPfType1_x = oldMetPfType1*math.cos(oldMetPfType1Phi)
-	  oldMetPfType1_y = oldMetPfType1*math.sin(oldMetPfType1Phi)
+	  orgMetPfType1_x = orgMetPfType1*math.cos(orgMetPfType1Phi)
+	  orgMetPfType1_y = orgMetPfType1*math.sin(orgMetPfType1Phi)
 
-	  #print '=========================='
-	  #print 'old xy ', oldMetPfType1_x, oldMetPfType1_y
-	  corrMetPfType1_x = corx + oldMetPfType1_x
-	  corrMetPfType1_y = cory + oldMetPfType1_y
-	  #print 'new xy ', corrMetPfType1_x, corrMetPfType1_y
+	  corrMetPfType1_x = corx + orgMetPfType1_x
+	  corrMetPfType1_y = cory + orgMetPfType1_y
 	  corrMetPftype1_2d.Set(corrMetPfType1_x, corrMetPfType1_y)
 	  #corrPftype1Met_2d = TVector2(corrMetPfType1_x, corrMetPfType1_y)
-	  corrMetPfType1[0] = oldMetPfType1
+	  corrMetPfType1[0] = orgMetPfType1
 	  #corrMetPfType1[0] = corrMetPftype1_2d.Mod()
 	  corrMetPfType1Phi[0] = corrMetPftype1_2d.Phi()
 	  corrMetPfType1Phi[0] = self.phiLessPi(corrMetPfType1Phi)
 	  #print 'old met:', oldMetPfType1, 'old phi: ',oldMetPfType1Phi
 	  #print 'new met:', corrMetPfType1[0], 'new phi: ',corrMetPfType1Phi[0]
 
-	  #corrMetPfType1 = math.sqrt(corrMetPfType1_x * corrMetPfType1_x + corrMetPfType1_y*corrMetPfType1_y)
-	  #corrMetPfType1Phi = math.asin(corrMetPfType1_y / corrMetPfType1 )
 
-	  #print 'oldMet, phi: ', oldMetPfType1, oldMetPfType1Phi
+	  #print 'oldMet, phi: ', orgMetPfType1[0], orgMetPfType1Phi[0]  
 	  #print 'newMet, phi: ', corrMetPfType1[0], corrMetPfType1Phi[0]
 
           #################################
 	  # Correction of PfRaw
           #################################
-	  oldMetPfRaw_x = oldMetPfRaw*math.cos(oldMetPfRawPhi)
-	  oldMetPfRaw_y = oldMetPfRaw*math.sin(oldMetPfRawPhi)
+	  #oldMetPfRaw_x = oldMetPfRaw*math.cos(oldMetPfRawPhi)
+	  #oldMetPfRaw_y = oldMetPfRaw*math.sin(oldMetPfRawPhi)
 
-	  corrMetPfRaw_x = corx + oldMetPfRaw_x
-	  corrMetPfRaw_y = cory + oldMetPfRaw_y
-	  corrMetPfRaw_2d.Set(corrMetPfRaw_x, corrMetPfRaw_y)
-	  corrMetPfRaw[0] = corrMetPfRaw_2d.Mod()
-	  corrMetPfRawPhi[0] = corrMetPfRaw_2d.Phi()
-	  corrMetPfRawPhi[0] = self.phiLessPi(corrMetPfRawPhi)
+	  #corrMetPfRaw_x = corx + oldMetPfRaw_x
+	  #corrMetPfRaw_y = cory + oldMetPfRaw_y
+	  #corrMetPfRaw_2d.Set(corrMetPfRaw_x, corrMetPfRaw_y)
+	  #corrMetPfRaw[0] = corrMetPfRaw_2d.Mod()
+	  #corrMetPfRawPhi[0] = corrMetPfRaw_2d.Phi()
+	  #corrMetPfRawPhi[0] = self.phiLessPi(corrMetPfRawPhi)
 
 
           #if (i > 0 and i%step == 0.) :

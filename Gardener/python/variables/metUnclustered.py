@@ -63,7 +63,9 @@ class MetUnclusteredTreeMaker(TreeCloner) :
     # Strange algebra to be able to use raw phi angles
     def sgn_deltaphi(self, phi1, phi2) :
         dphi = phi1 - phi2
-        if abs(dphi) > ROOT.TMath.Pi() :
+        if dphi < -ROOT.TMath.Pi() :
+            dphi = dphi + 2*ROOT.TMath.Pi()
+        elif dphi > ROOT.TMath.Pi() :
             dphi = dphi - 2*ROOT.TMath.Pi()
         return dphi
 
