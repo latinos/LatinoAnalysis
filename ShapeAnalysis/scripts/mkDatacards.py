@@ -571,11 +571,20 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
     if len(opt.cardList)>0:
+      try:
+        newCuts = []
+        for iCut in opt.cardList:
+          for iOptim in optim:
+            newCuts.append(iCut+'_'+iOptim)
+        opt.cardList = newCuts
+        print opt.cardList
+      except:
+        print "No optim dictionary"
       cut2del = []
       for iCut in cuts:
         if not iCut in opt.cardList : cut2del.append(iCut)
       for iCut in cut2del : del cuts[iCut]   
- 
+
   
     # ~~~~
     structure = {}
