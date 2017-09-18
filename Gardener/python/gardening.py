@@ -92,10 +92,13 @@ class TreeCloner(object):
           print "Using auxiliary file ", self.auxiliaryFile
           self.friendFile = self._openRootFile(self.auxiliaryFile)
           self.friendTree = self._getRootObj(self.friendFile, self.itree.GetName())  
+          self.friendTreeSkimmed = self.friendTree
           if self.eventListForFriend :
             self.elist = self._getRootObj(self.ifile,"prunerlist")
-            self.itree.SetEventList(self.elist)
-          self.itree.AddFriend(self.friendTree) 
+            self.friendTree.SetEventList(self.elist)
+            ROOT.gROOT.cd()
+            self.friendTreeSkimmed = self.friendTree.CopyTree("")
+          self.itree.AddFriend(self.friendTreeSkimmed) 
           #self.itree.AddFriend(self.itree.GetName(), self.auxiliaryFile)
 
     def clone(self,output,branches=[]):

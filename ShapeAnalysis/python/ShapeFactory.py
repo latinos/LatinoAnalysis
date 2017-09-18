@@ -157,10 +157,13 @@ class ShapeFactory:
                 for sampleName, sample in self._samples.iteritems():
                   if sampleName == sampleNuisName :
                     list_of_trees_to_connect[sampleNuisName] = [os.path.basename(s) if '###' in s else s for s in self._samples[sampleNuisName]['name']]
-
+              
+              friendsDir = None
+              if 'unskimmedFriendTreeDir' in nuisance.keys():
+                friendsDir = nuisance['unskimmedFriendTreeDir']
               #                                                                                                        skipMissingFiles                
-              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect, nuisance['folderUp']  , True)
-              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect, nuisance['folderDown'], True)
+              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect, nuisance['folderUp']  , True, friendsDir)
+              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect, nuisance['folderDown'], True, friendsDir)
               
               #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
@@ -412,7 +415,6 @@ class ShapeFactory:
                         newSampleWeightDo = sample ['weight'] + '* (' + configurationNuis[1] + ')'
                         #print " nuisanceName = ", nuisanceName, " sampleName = ", sampleName, " newSampleWeightUp = ", newSampleWeightUp
                         #print " nuisanceName = ", nuisanceName, " sampleName = ", sampleName, " newSampleWeightDo = ", newSampleWeightDo
-          
                         #print " nuisance:sample = ", sample
                         if 'weights' in sample.keys() :
                           self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName]  , cutName, newSampleNameUp)
@@ -1018,7 +1020,7 @@ class ShapeFactory:
        
  
     # _____________________________________________________________________________
-    def _connectInputs(self, samples, inputDir, skipMissingFiles):
+    def _connectInputs(self, samples, inputDir, skipMissingFiles, friendsDir = None):
         inputs = {}
         treeName = 'latino'
         for process,filenames in samples.iteritems():
@@ -1033,7 +1035,16 @@ class ShapeFactory:
           #                                            use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
           tree = self._buildchain(treeName, [ (inputDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames],      skipMissingFiles)
           #tree = self._buildchain(treeName, [ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
-
+          if friendsDir != None:
+            eventlists = self._geteventlists("prunerlist",  tree)
+            friendTrees = self._buildchain(treeName, [ (friendsDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames], False)
+            ifriend = 0
+            for friendTree in friendTrees:
+              friendTree.SetEventList(eventlists[ifriend])
+              ROOT.gROOT.cd()
+              print "Skimming tree accroring to selection stored in prunerlist"
+              friendTreeSkimmed = friendTree.CopyTree("")
+              tree[ifriend].AddFriend(friendTreeSkimmed)
           inputs[process] = tree
           
           # FIXME: add possibility to add Friend Trees for new variables   
@@ -1098,5 +1109,14 @@ class ShapeFactory:
               listTrees.append(tree)
         return listTrees
 
+    # _____________________________________________________________________________
+    def _geteventlists(self, listName, trees):
+      lists = []
+      for tree in trees:
+        filein = tree.GetFile()
+        evlist = filein.Get(listName)
+        lists.append(evlist)
 
+      return lists
+        
 
