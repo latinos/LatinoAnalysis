@@ -81,6 +81,7 @@ parser = OptionParser(usage="usage: %prog [options]")
 parser.add_option("-p","--prods",   dest="prods"   , help="List of production to run on"              , default=[]     , type='string' , action='callback' , callback=list_maker('prods',','))
 parser.add_option("-s","--steps",   dest="steps"   , help="list of Steps to produce"                  , default=[]     , type='string' , action='callback' , callback=list_maker('steps',','))
 parser.add_option("-i","--iniStep",   dest="iniStep"   , help="Step to restart from"                      , default='Prod' , type='string' ) 
+parser.add_option(     "--friendStep",dest="friendStep"   , help="step to use as auxiliary input file (default None)"    , default=None , type='string' ) 
 parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo, don't check if tree already exists"  , default=False  , action="store_true")
 parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                              , default=False  , action="store_true")
 parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs"        , default='Target', type='string' , action='callback' , callback=list_maker('batchSplit',','))
@@ -680,13 +681,12 @@ for iProd in prodList :
               if not Steps[iSubStep]['do4MC'] : selectSample=False
 
 
-            #print iSubStep , selectSample
 
             if cStep == 1 :
               iName=iSubStep
             else:
               iName+='__'+iSubStep
-
+            
             if selectSample : 
               inTree=finalTree              
               outTree ='latino_'+iTarget+'__'+iName+'.root'
@@ -710,6 +710,8 @@ for iProd in prodList :
 
         # Fix CMSSW flag
         command = command.replace('RPLME_CMSSW',cmssw)
+        if options.friendStep != None:
+          command = command.replace('RPLME_AUX',targetList[iTarget].replace(options.iniStep, options.friendStep))
         # Fix baseW if needed
         if Productions[iProd]['isData'] : baseW = '1.'
         elif iStep == 'baseW' or ( 'isChain' in Steps[iStep] and Steps[iStep]['isChain'] and 'baseW' in Steps[iStep]['subTargets'] ): 
