@@ -3209,6 +3209,22 @@ Steps= {
                    'command'    : 'gardener.py muccaMvaVarFiller --kind 5'
                  } ,
 
+  # MUCCA for monoH high mass training
+
+  # Chain for em channel
+  
+  'muccaMonoHem_high'       :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            'mucca_2HDMadaptFull_high_em',
+            'mucca_2HDMgradFull_high_em',
+            'mucca_ZbaradaptFull_high_em',
+            'mucca_ZbargradFull_high_em'
+            ],
+        },
+  
   # MUCCA for monoH from larger training phase space
 
   # Chain for em channel
@@ -3407,6 +3423,19 @@ Steps= {
             ],
         },
   
+  # Chain for em channel high mass
+  
+  'muccaMonoH_high_em'       :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            'mucca_2HDMadaptFull_high_em',
+            'mucca_2HDMgradFull_high_em',
+            'mucca_ZbaradaptFull_high_em',
+            'mucca_ZbargradFull_high_em'
+            ],
+        },
   
   # 2HDM model em
   
@@ -3529,6 +3558,39 @@ Steps= {
         } ,
 
 
+  # 2HDM model high mass em
+
+  'mucca_2HDMadaptFull_high_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_high_em" --training="BDT7" --channel="em" --model="2HDM"'
+        } ,
+  
+  'mucca_2HDMgradFull_high_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMgradFull_high_em" --training="BDTG18" --channel="em" --model="2HDM"'
+        } ,
+  
+
+  # Zbar model high mass em
+
+  'mucca_ZbaradaptFull_high_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_high_em" --training="BDT7" --channel="em" --model="Zbar"'
+        } ,
+  
+  'mucca_ZbargradFull_high_em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbargradFull_high_em" --training="BDTG19" --channel="em" --model="Zbar"'
+        } ,
+  
 
    # fix datasets names
   'fixdataset_Herwig_nuisance':  {
