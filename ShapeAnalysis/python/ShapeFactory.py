@@ -447,9 +447,9 @@ class ShapeFactory:
               
               # create histogram: already the "hadd" of possible sub-contributions
               if 'weights' in sample.keys() :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold, cutName, variableName)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold, cutName, variableName, sample)
               else :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold, cutName, variableName)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold, cutName, variableName, sample)
                
               outputsHisto.Write()              
               
@@ -526,14 +526,14 @@ class ShapeFactory:
                           
                           
                           if 'weights' in sample.keys() :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName, sample)
                           else :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName, sample)
             
                           if 'weights' in sample.keys() :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName)
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName, sample)
                           else :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName)
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName, sample)
             
                           # now save to the root file
                           outputsHistoUp.Write()
@@ -558,14 +558,14 @@ class ShapeFactory:
                           #print " ===> ", variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold
                            
                           if 'weights' in sample.keys() :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName, sample)
                           else :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName, sample)
             
                           if 'weights' in sample.keys() :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName)
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName, sample)
                           else :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName)
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName, sample)
             
             
                           # check if I need to symmetrize:
@@ -661,7 +661,7 @@ class ShapeFactory:
 
           
     # _____________________________________________________________________________
-    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold, cutName, variableName):       
+    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold, cutName, variableName, sample):       
         '''
         var           :   the variable to plot
         rng           :   the variable to plot
@@ -727,10 +727,21 @@ class ShapeFactory:
         hTotalFinal.SetName('histo_' + sampleName)
         
         # fix negative (almost never happening)
-        # don't do it here, because you may have interference that is actually negative!
-        #for ibin in range(1, hTotalFina.GetNbinsX()+1)
+        # don't do it here by default, because you may have interference that is actually negative!
+        # do this only if triggered: use with caution!
+        # This also checks that only in specific phase spaces this is activated, "cutName"
+        #
+        # To be used with caution -> do not use this option if you don't know what you are playing with
+        #
+        if 'suppressNegative' in sample.keys() and cutName in sample['suppressNegative'] :        
+          self._fixNegativeBinAndError(hTotalFinal)
+          self._fixNegativeBinAndError(hTotalFinal)
+
+        # for ibin in range(1, hTotalFina.GetNbinsX()+1)
           #if hTotalFinal.GetBinContent(ibin) < 0 :
             #hTotalFinal.SetBinContent(ibin, 0) 
+        
+
         
         return hTotalFinal
 
@@ -912,6 +923,23 @@ class ShapeFactory:
         for ibin in range(1, histoNew.GetNbinsX()+1) :
           if histoNew.GetBinContent(ibin) * histoReference.GetBinContent(ibin) < 0 :
             histoNew.SetBinContent(ibin, 0) 
+
+    # _____________________________________________________________________________
+    def _fixNegativeBinAndError(self, histogram_to_be_fixed):
+        # if a histogram has a bin < 0
+        # then put the gin content to 0
+        # and also if a histogram has uncertainties that go <0, 
+        # then put the uncertainty to the maximum allowed
+       
+        for ibin in range(1, histogram_to_be_fixed.GetNbinsX()+1) :
+          if histogram_to_be_fixed.GetBinContent(ibin)  < 0 :
+            histogram_to_be_fixed.SetBinContent(ibin, 0) 
+
+        # the SetBinError does not allow asymmetric -> fine, maximum uncertainty set
+        for ibin in range(1, histogram_to_be_fixed.GetNbinsX()+1) :
+          if histogram_to_be_fixed.GetBinContent(ibin) - histogram_to_be_fixed.GetBinErrorLow(ibin)  < 0 :
+            histogram_to_be_fixed.SetBinError(ibin, histogram_to_be_fixed.GetBinContent(ibin))   
+
 
     # _____________________________________________________________________________
     def _getBaseW(self, histo):
