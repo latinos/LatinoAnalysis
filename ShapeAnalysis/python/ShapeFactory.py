@@ -447,9 +447,9 @@ class ShapeFactory:
               
               # create histogram: already the "hadd" of possible sub-contributions
               if 'weights' in sample.keys() :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold, cutName, variableName, sample)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], sample ['weights'], cut, sampleName, inputs[sampleName], doFold, cutName, variableName, sample, True)
               else :
-                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold, cutName, variableName, sample)
+                outputsHisto = self._draw( variable['name'], variable['range'], sample ['weight'], [],                 cut, sampleName, inputs[sampleName], doFold, cutName, variableName, sample, True)
                
               outputsHisto.Write()              
               
@@ -526,15 +526,21 @@ class ShapeFactory:
                           
                           
                           if 'weights' in sample.keys() :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName, sample)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName, sample, False)
                           else :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName, sample)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputs[sampleName], doFold, cutName, variableName, sample, False)
             
                           if 'weights' in sample.keys() :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName, sample)
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName, sample, False)
                           else :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName, sample)
-            
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputs[sampleName], doFold, cutName, variableName, sample, False)
+
+                  
+                          if 'suppressNegativeNuisances' in sample.keys() and ( cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) :        
+                            # fix negative bins not consistent
+                            self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                            self._fixNegativeBin(outputsHistoDo, outputsHisto)
+
                           # now save to the root file
                           outputsHistoUp.Write()
                           outputsHistoDo.Write()
@@ -558,14 +564,14 @@ class ShapeFactory:
                           #print " ===> ", variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold
                            
                           if 'weights' in sample.keys() :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName, sample)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, sample ['weights'], cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName, sample, False)
                           else :
-                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName, sample)
+                            outputsHistoUp = self._draw( variable['name'], variable['range'], newSampleWeightUp, [],                 cut, newSampleNameUp , inputsNuisanceUp[nuisanceName][sampleName], doFold, cutName, variableName, sample, False)
             
                           if 'weights' in sample.keys() :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName, sample)
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, sample ['weights'], cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName, sample, False)
                           else :
-                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName, sample)
+                            outputsHistoDo = self._draw( variable['name'], variable['range'], newSampleWeightDo, [],                 cut, newSampleNameDo , inputsNuisanceDown[nuisanceName][sampleName], doFold, cutName, variableName, sample, False)
             
             
                           # check if I need to symmetrize:
@@ -574,6 +580,11 @@ class ShapeFactory:
                           #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
                           if 'symmetrize' in nuisance:
                             self._symmetrize(outputsHistoUp, outputsHistoDo)
+
+                          if 'suppressNegativeNuisances' in sample.keys() and ( cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) :        
+                            # fix negative bins not consistent
+                            self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                            self._fixNegativeBin(outputsHistoDo, outputsHisto)
             
                           # now save to the root file
                           outputsHistoUp.Write()
@@ -661,7 +672,7 @@ class ShapeFactory:
 
           
     # _____________________________________________________________________________
-    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold, cutName, variableName, sample):       
+    def _draw(self, var, rng, global_weight, weights, cut, sampleName, inputs, doFold, cutName, variableName, sample, fixZeros):       
         '''
         var           :   the variable to plot
         rng           :   the variable to plot
@@ -733,7 +744,7 @@ class ShapeFactory:
         #
         # To be used with caution -> do not use this option if you don't know what you are playing with
         #
-        if 'suppressNegative' in sample.keys() and ( cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) :        
+        if fixZeros and 'suppressNegative' in sample.keys() and ( cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) :        
           self._fixNegativeBinAndError(hTotalFinal)
           self._fixNegativeBinAndError(hTotalFinal)
 
@@ -922,7 +933,7 @@ class ShapeFactory:
        
         for ibin in range(1, histoNew.GetNbinsX()+1) :
           if histoNew.GetBinContent(ibin) * histoReference.GetBinContent(ibin) < 0 :
-            histoNew.SetBinContent(ibin, 0) 
+            histoNew.SetBinContent(ibin, histoReference.GetBinContent(ibin) * 0.0001)  # do not put 0 to avoid bogus pogus ...
 
     # _____________________________________________________________________________
     def _fixNegativeBinAndError(self, histogram_to_be_fixed):
