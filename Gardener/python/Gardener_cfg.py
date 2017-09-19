@@ -2129,6 +2129,22 @@ Steps= {
                   'onlySample' : samples4Syst
                 },
 
+  'FJESup'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['Fdo_JESup','FbPogSF','Fl2kin','Fl3kin','Fl4kin','Fdo_dymvaHiggs','FformulasMC'],
+                  'onlySample' : samples4Syst
+                },
+
+  'FJESdo'     :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'subTargets' : ['Fdo_JESdo','FbPogSF','Fl2kin','Fl3kin','Fl4kin','Fdo_dymvaHiggs','FformulasMC'],
+                  'onlySample' : samples4Syst
+                }, 
+
 
   'JESMaxup'     :  {
                   'isChain'    : True ,
@@ -2710,6 +2726,13 @@ Steps= {
                   'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW'
                },
 
+  'Fl2kin'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l2kinfiller --cmssw RPLME_CMSSW --auxiliaryFile=RPLME_AUX'
+  },
+
   'l2kin_metXYshift'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2725,6 +2748,13 @@ Steps= {
                },
 
 
+  'Fl3kin'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l3kinfiller --cmssw RPLME_CMSSW --auxiliaryFile=RPLME_AUX'
+               },  
+
   'l4kin'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2732,11 +2762,25 @@ Steps= {
                   'command'    : 'gardener.py l4kinfiller --cmssw RPLME_CMSSW'
                },
 
+  'Fl4kin'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py l4kinfiller --cmssw RPLME_CMSSW --auxiliaryFile=RPLME_AUX'
+               },
+
   'formulasMC' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'command'    : 'gardener.py genericFormulaAdder -f data/formulasToAdd_MC.py'
+               },
+
+  'FformulasMC' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py genericFormulaAdder -f data/formulasToAdd_MC.py --auxiliaryFile=RPLME_AUX'
                },
 
 
@@ -3067,12 +3111,27 @@ Steps= {
                   'command'    : 'gardener.py JESTreeMaker -k 1 --cmssw=RPLME_CMSSW'
                 } ,
 
+   'Fdo_JESup'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py JESTreeMaker -k 1 --cmssw=RPLME_CMSSW --saveOnlyModifiedBranches'
+                } , 
+
   'do_JESdo'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'command'    : 'gardener.py JESTreeMaker -k -1 --cmssw=RPLME_CMSSW'
                 } ,
+
+   'Fdo_JESdo'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'command'    : 'gardener.py JESTreeMaker -k -1 --cmssw=RPLME_CMSSW --saveOnlyModifiedBranches'
+                } ,
+
   
   'do_JESMaxup'    : {
                   'isChain'    : False ,
@@ -3097,6 +3156,15 @@ Steps= {
                   # --> switch to multiple bTag algo SF:
                   'command'    : 'gardener.py allBtagPogScaleFactors --cmssw=RPLME_CMSSW'
               },
+
+  'FbPogSF'   :{
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  #'command'    : 'gardener.py btagPogScaleFactors '
+                  # --> switch to multiple bTag algo SF:
+                  'command'    : 'gardener.py allBtagPogScaleFactors --cmssw=RPLME_CMSSW --auxiliaryFile=RPLME_AUX'
+              }, 
 
   'do_LepElepTup'    : {
                    'isChain'    : False ,
@@ -3159,6 +3227,13 @@ Steps= {
                    'do4MC'      : True  ,
                    'do4Data'    : True ,
                    'command'    : 'gardener.py dymvaHiggsFiller',
+                },
+  
+   'Fdo_dymvaHiggs'  : {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'command'    : 'gardener.py dymvaHiggsFiller --auxiliaryFile=RPLME_AUX',
                 },
  
    'Mucca'       :  {
@@ -3592,6 +3667,13 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && metPfType1 > 20 && ptll > 30 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*13) \' '
+           },
+
+  'FwwSel'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && metPfType1 > 20 && ptll > 30 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*13) \'  --eventListOutput --auxiliaryFile=RPLME_AUX'
            },
 
   'monohSel'    : {
