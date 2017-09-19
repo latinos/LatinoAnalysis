@@ -733,7 +733,7 @@ class ShapeFactory:
         #
         # To be used with caution -> do not use this option if you don't know what you are playing with
         #
-        if 'suppressNegative' in sample.keys() and cutName in sample['suppressNegative'] :        
+        if 'suppressNegative' in sample.keys() and ( cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) :        
           self._fixNegativeBinAndError(hTotalFinal)
           self._fixNegativeBinAndError(hTotalFinal)
 
