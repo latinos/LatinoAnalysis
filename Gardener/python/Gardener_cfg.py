@@ -1636,24 +1636,7 @@ Steps= {
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'subTargets' : ['wwNLL','genVariables','genMatchVariables','BWEwkSinglet','wwEWK','wzEWK','zzEWK','ggHUnc'] #,'BWEwkSinglet_JHUGen698','TopGenPt'],
-                },
-
-  'MCWeightsCorr'  :       {
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  'subTargets' : ['ggHUnc','genMatchVariables','BWEwkSinglet']
-                },
-
-
-
-  'MCFix' :  {
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False,
-                  #'subTargets' : ['baseW','bPogSF','ggHUnc','formulasMC'],
-                  'subTargets' : ['baseW','formulasMC'],
+                  'subTargets' : ['wwNLL','genVariables','genMatchVariables','BWEwkSinglet','wwEWK','wzEWK','zzEWK','ggHUnc','ggHtoMINLO'] #,'BWEwkSinglet_JHUGen698','TopGenPt'],
                 },
 
 
