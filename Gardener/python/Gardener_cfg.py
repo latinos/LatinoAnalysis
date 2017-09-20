@@ -2535,6 +2535,21 @@ Steps= {
                   'command'    : 'gardener.py ggHUncertainty' ,
                 } ,
 
+  'ggHtoMINLO' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'onlySample' : [
+                                   'GluGluHToWWTo2L2Nu_M125',
+                                   'GluGluHToWWTo2L2NuPowheg_M125',
+                                   'GluGluHToWWTo2L2Nu_alternative_M125',
+                                   'GluGluHToWWTo2L2NuAMCNLO_M125',
+                                   'GluGluHToWWTo2L2Nu_M125_CUETDown',
+                                   'GluGluHToWWTo2L2Nu_M125_CUETUp',
+                                   'GluGluHToWWTo2L2Nu_M125_herwigpp',
+                                 ],
+                  'command'    : 'gardener.py ggHtoMINLO' ,
+                } ,
 
 
   'TopGenPt' :   {
