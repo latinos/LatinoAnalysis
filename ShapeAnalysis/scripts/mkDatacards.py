@@ -123,25 +123,52 @@ class DatacardFactory:
             yieldsSig  = {}
             yieldsBkg  = {}
             yieldsData = {}
-            
+
+            # Bin to be killed
+            #killBinSig = {}  
+            #killBinBkg = {}  
             
             for sampleName in self.signals:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = self._fileIn.Get(shapeName)
+             # print sampleName     
+             # if 'removeNegNomVal' in structureFile[sampleName] and structureFile[sampleName]['removeNegNomVal'] :
+             #   for iBin in range(0,histo.GetNbinsX()+2) :
+             #     BinContent = histo.GetBinContent(iBin)
+             #     if BinContent < 0.1 and not BinContent == 0:
+             #       print 'Killing Bin :' , sampleName , iBin , BinContent
+             #       if not sampleName in killBinSig : killBinSig[sampleName] = []
+             #       killBinSig[sampleName].append(iBin)
+             #       histo.SetBinContent(iBin,0.)
               # get the integral == rate from histogram
               yieldsSig[sampleName] = histo.Integral()
+             # print yieldsSig[sampleName]
               self._outFile.cd()
               histo.Write()
+
+
               
             for sampleName in self.backgrounds:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = self._fileIn.Get(shapeName)
               # get the integral == rate from histogram
-              print " shapeName = ", shapeName
+            #  print " shapeName = ", shapeName
+            #  if 'removeNegNomVal' in structureFile[sampleName] and structureFile[sampleName]['removeNegNomVal'] :
+            #    for iBin in range(0,histo.GetNbinsX()+2) :
+            #      BinContent = histo.GetBinContent(iBin)
+            #      if BinContent < 0.3 and not BinContent == 0:
+            #        print 'Killing Bin :' , sampleName , iBin , BinContent
+            #        if not sampleName in killBinBkg : killBinBkg[sampleName] = []
+            #        killBinBkg[sampleName].append(iBin)
+            #        histo.SetBinContent(iBin,0.)
               yieldsBkg[sampleName] = histo.Integral()
+            #  print yieldsBkg[sampleName]
               self._outFile.cd()
               histo.Write()
-            
+           
+            #print killBinSig
+            #print killBinBkg 
+            #exit()
             for sampleName in self.data:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = self._fileIn.Get(shapeName)

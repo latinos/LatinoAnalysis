@@ -79,7 +79,10 @@ if __name__ == '__main__':
       Rinout[iRAndKff] = {}
       K_ff[iRAndKff] = {}
 
+      print iRAndKff
+
       for iRegion in RAndKff[iRAndKff]['Regions']: 
+        print iRegion
 #       print iRegion ,' k = ' , DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen']),' +/- ', DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
 #       print iRegion ,' R = ' , DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen']),' +/- ', DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
         K_ff[iRAndKff][iRegion] = {}
@@ -103,7 +106,7 @@ if __name__ == '__main__':
     for key in inputFile.GetListOfKeys() : 
       if key.IsFolder() : 
         baseDir = key.GetName()
-        print '---> folder: ',baseDir
+        #print '---> folder: ',baseDir
         outputFile.mkdir(baseDir) 
         inputFile.cd(baseDir)
         for skey in ROOT.gDirectory.GetListOfKeys() :
@@ -127,10 +130,12 @@ if __name__ == '__main__':
                   if sName == DYestim[iDYestim]['DYProc'] :
                    if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                     if hTmp.Integral() == 0 : 
+                       nHisDummy = 0
                        print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!',hName
                        print '!!!!!!!!!!!!!!!!!!!!! Only works for 1 bin, see below !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
                        print '!!!!!!!!!!!!!!!!!!!!! nBin = ',hTmp.GetNbinsX()
                        for iBin in range(1,hTmp.GetNbinsX()+1) : 
+                          nHisDummy += 1.
                           hTmp.SetBinContent(iBin,1.)
                           hTmp.SetBinError(iBin,1.)
                     if hName == 'histo_'+DYestim[iDYestim]['DYProc']:
@@ -173,8 +178,10 @@ if __name__ == '__main__':
                     #print R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv
                     Eout = DYCalc.EN_DY(R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv )
                     NUp  = Nout+Eout
-                    NDo  = Nout-Eout
+                    # Protect against error giving negative yield
+                    NDo  = max(Nout-Eout,Nout*0.000000001)
                     nHis = inputFile.Get(baseDir+'/'+subDir+'/histo_'+DYestim[iDYestim]['DYProc']).Integral()
+                    if nHis == 0 : nHis = nHisDummy
                     Acc  = 1.
                     EAcc = 0.
                     if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
