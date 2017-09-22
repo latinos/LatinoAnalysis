@@ -500,7 +500,6 @@ class ShapeFactory:
                               # fix negative bins not consistent
                               self._fixNegativeBin(outputsHistoUp, outputsHisto)
                               self._fixNegativeBin(outputsHistoDo, outputsHisto)
-                              
                               # save the new two histograms in final root file
                               outputsHistoUp.Write()
                               outputsHistoDo.Write()

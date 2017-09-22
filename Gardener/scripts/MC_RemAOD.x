@@ -5,6 +5,7 @@
 ./mkGardener.py -p Apr2017_summer16 -s bSFLpTEffMulti -i lepSel__MCWeights -S Target -b
 ./mkGardener.py -p Apr2017_summer16 -s cleanTauMC -i lepSel__MCWeights__bSFLpTEffMulti -S Target -b
 
+
 # Fake: >= 1 loose lepton
 ./mkGardener.py -p Apr2017_summer16 -s fakeSelMC -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC -S Target -b
 ./mkGardener.py -p Apr2017_summer16 -s hadd -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__fakeSelMC -S Target -b
@@ -23,6 +24,23 @@ for iSkim in wwSel topSel vh3lSel sfSel vbsSel ssSel dymvaSel_2j dymvaSel sfmvaS
 done
 
 
+# ggHtoMINLO Fix
+./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR -S Target -b
+./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC -S Target -b
+for iSkim in wwSel topSel vh3lSel sfSel vbsSel ssSel dymvaSel_2j dymvaSel sfmvaSel ; do
+  ./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__${iSkim} -S Target -b
+done
+for iSyst in JESup JESdo METup METdo LepElepTup LepElepTdo LepMupTup LepMupTdo;  do
+  ./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__${iSyst} -S Target -b
+  for iSkim in wwSel topSel vh3lSel sfSel vbsSel ssSel dymvaSel_2j dymvaSel sfmvaSel ; do
+    ./mkGardener.py -p Apr2017_summer16 -s ggHtoMINLO -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__${iSyst}__${iSkim} -S Target -b
+  done
+done
 
 # Systematics
 
