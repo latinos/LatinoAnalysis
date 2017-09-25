@@ -129,11 +129,17 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
             newvalue = 1.64*float(lumi)*basew
             #print "###DEBUG: new value up = ", newvalue
           else:
-            newvalue = 0
+            #newvalue = 0
+            #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
+            newvalue = float(lumi)*basew * 0.0001
         else:
           newvalue = value + direction * error
+          #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
+          if newvalue == 0 : newvalue = value * 0.0001
       else:
         newvalue = value + direction * error
+        #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
+        if newvalue == 0 : newvalue = value * 0.0001
     else :
       newvalue = value
     integralVaried += newvalue

@@ -175,7 +175,7 @@ class batchJobs :
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+		  #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
    def AddCopy (self,iStep,iTarget,inputFile,outputFile):
      "Copy file from local to remote server (outputFile = /store/...)"
@@ -267,7 +267,7 @@ def batchClean():
       except :
         print 'Some jobs still ongoing in: '+ iDir
 
-def batchResub(Dir):
+def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
     if Dir == 'ALL' :
       fileCmd = 'ls '+jobDir
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
@@ -275,7 +275,10 @@ def batchResub(Dir):
       DirList=string.split(out)
     else:
       DirList=[Dir]
+
     for iDir in DirList:
+
+      # This is for big crunch of jobs that were planned ahead
       fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.todo'
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
@@ -287,6 +290,72 @@ def batchResub(Dir):
           print 'Submitting ' , iFile
           if jobid == 0 : os.system('rm '+iFile)
           else          : os.system('rm '+jidFile)
+
+      # Do some search fo missing jobs ?
+      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.sh'
+      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+      out, err = proc.communicate()
+      FileList=string.split(out)
+      for iFile in FileList:
+        jidFile=iFile.replace('.sh','.jid') 
+        doneFile=iFile.replace('.sh','.done') 
+        todoFile=iFile.replace('.sh','.todo')
+        redoFile=iFile.replace('.sh','.redo')
+        if not os.path.isfile(jidFile) and not os.path.isfile(doneFile) and not  os.path.isfile(todoFile) and not os.path.isfile(redoFile) :
+          os.system('touch '+redoFile)
+
+      # Here we resub jobs that were manually killed for which we have a .redo file 
+      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.redo'
+      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+      out, err = proc.communicate()
+      FileList=string.split(out)
+      for iFile in FileList:
+        subDir = os.path.dirname(iFile)
+        jName  = os.path.basename(iFile).split('.')[0]
+        print subDir , ' ---> ', jName
+        jobFile=subDir+'/'+jName+'.sh'
+        errFile=subDir+'/'+jName+'.err'
+        outFile=subDir+'/'+jName+'.out'
+        jidFile=subDir+'/'+jName+'.jid'
+        print 'Submit',jName, ' on ', queue
+
+        if os.path.isfile(jidFile) : 
+          os.system('echo rm '+jidFile)
+
+        if 'iihe' in os.uname()[1] :
+          queue='localgrid@cream02'
+          QSOPT='-l walltime='+IiheWallTime
+          nTry=0
+          while nTry < 3 :
+            nTry+=1
+            jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+            print 'TRY #:', nTry , '--> Jobid : ' , jobid
+            if jobid == 0 : nTry = 999
+            else:  os.system('rm '+jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+          if not jobid == 0 and optTodo :
+            todoFile = open(self.subDir+'/'+jName+'.todo','w')
+            todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+            todoFile.close()
+        elif 'knu' in os.uname()[1]:
+          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        elif 'ifca' in os.uname()[1] :
+          jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+        elif "pi.infn.it" in socket.getfqdn():
+          queue="cms"
+          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+        else:
+          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+                  #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+
 
 def lsListCommand(inputDir, iniStep = 'Prod'):
     "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"

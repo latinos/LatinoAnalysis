@@ -531,7 +531,6 @@ class ShapeFactory:
                               # fix negative bins not consistent
                               self._fixNegativeBin(outputsHistoUp, outputsHisto)
                               self._fixNegativeBin(outputsHistoDo, outputsHisto)
-                              
                               # save the new two histograms in final root file
                               outputsHistoUp.Write()
                               outputsHistoDo.Write()
@@ -968,7 +967,11 @@ class ShapeFactory:
         # same sign, because combine cannot handle it otherwise!
        
         for ibin in range(1, histoNew.GetNbinsX()+1) :
+          # Why ? 
           if histoNew.GetBinContent(ibin) * histoReference.GetBinContent(ibin) < 0 :
+            histoNew.SetBinContent(ibin, histoReference.GetBinContent(ibin) * 0.0001)  # do not put 0 to avoid bogus pogus ...
+          # I think this is correct fix to our BOGUS problem
+	  if histoNew.GetBinContent(ibin) == 0 and not histoReference.GetBinContent(ibin) == 0 :
             histoNew.SetBinContent(ibin, histoReference.GetBinContent(ibin) * 0.0001)  # do not put 0 to avoid bogus pogus ...
 
     # _____________________________________________________________________________
