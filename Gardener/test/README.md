@@ -795,4 +795,36 @@ The new branches to ad are defined in https://github.com/latinos/LatinoAnalysis/
     gardener.py  genericFormulaAdder \
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root   \
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root	
+		
+		
+Slimmed version of systematic trees
+====
+
+Since Sept 2017 it is possible to compute a slimmed version of the systematic trees, holding only the varied branches. These trees need to be used together with the nominal tree, from which all non varied branches are taken, using the TTree friend mechanism in ROOT.
+
+All gardener modules have been provided with two new options:
+
+     --saveOnlyModifiedBranches: will outupu only the branches that are touched by the gardener module
+     --auxiliaryFile: this option allows any gardener module to load an auxiliary file holding branches that are not in the main tree, e.g. when the main tree has been produced with the --saveOnlyModifiedBranches
+     
+Suppose you want to produce the JESup variation of a give file latino_XXX.root. The list of commands to issue would be:
+
+     gardener.py JESTreeMaker -k 1 --saveOnlyModifiedBranches latino_XXX.root latino_XXX_JESup.root
+     gardener.py allBtagPogScaleFactors --auxiliaryFile=latino_XXX.root latino_XXX_JESup.root latino_XXX_JESup_bPog.root
+     gardener.py l2kinfiller --auxiliaryFile=latino_XXX.root latino_XXX_JESup_bPog.root latino_XXX_JESup_bPog_l2kin.root
+     
+The final latino_XXX_JESup_bPog_l2kin.root in this example will hold all the branches modified by the three modules run, and only those ones. All other untouched branches can be taken from the nominal latino_XXX.root.
+
+An usage example in an analysis code would be the following:
+
+     TFile* file_syst = new TFile("latino_XXX_JESup_bPog_l2kin.root");
+     TTree* latino_syst = (TTree*) file_syst->Get("latino");
+     TFile* file_nominal = new TFile("latino_XXX.root");
+     TTree* latino_nominal = (TTree*) file_nominal->Get("latino");
+     latino_syst->AddFriend(latino_nominal);
+     // now you can draw whatever variable you like, you will get the systematic variation JESup for that variable
+     
+     
+
+	
                 
