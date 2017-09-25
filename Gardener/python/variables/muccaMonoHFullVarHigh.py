@@ -54,9 +54,9 @@ class MuccaMonoHFullVarHighFiller(TreeCloner):
         # mva trainined xml
         baseCMSSW = os.getenv('CMSSW_BASE')
 
-        self.getMuccaMonoHFullHigh.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/19Sep2017/monoH/TMVA/plotsTMVA-2HDM_TTbar_0var_em_high/Weights-" + self.model + "_TTbar_0var_" + self.channel + "_high/TMVAClassification_" + self.training + ".weights.xml")
+        self.getMuccaMonoHFullHigh.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/MUCCA/Optimization/Weights-" + self.model + "_TTbar_0var_" + self.channel + "_" + self.mass + "/TMVAClassification_" + self.training + ".weights.xml")
 
-#/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/19Sep2017/monoH/TMVA/plotsTMVA-2HDM_TTbar_0var_em_high/Weights-2HDM_TTbar_0var_em_high
+#/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/24Sep2017/monoH/TMVA/Weights-2HDM_TTbar_0var_em_high
 
     def help(self):
         return '''Add mucca mva variables'''
@@ -67,9 +67,10 @@ class MuccaMonoHFullVarHighFiller(TreeCloner):
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-k', '--kind',     dest='kind',     help='Which background training to be used', default='1')
         group.add_option('-s', '--signal',   dest='signal',   help='Variable name',                        default='2HDMadaptTTbar_em')
-        group.add_option('--training', dest='training', help='Training',                             default='BDT7')
+        group.add_option('--training', dest='training', help='Training',                                   default='BDT7')
         group.add_option('-c', '--channel',  dest='channel',  help='Channel',                              default='em')
         group.add_option('-m', '--model',    dest='model',    help='Signal Model',                         default='2HDM')
+        group.add_option('-p', '--mass',     dest='mass',     help='Signal Mass Point',                    default='low')
         parser.add_option_group(group)
         return group
         pass
@@ -88,7 +89,8 @@ class MuccaMonoHFullVarHighFiller(TreeCloner):
         print " channel  = ", self.channel
         self.model       = opts.model
         print " model  = ", self.model
-
+        self.mass        = opts.mass
+        print " mass  = ", self.mass
 
     def process(self,**kwargs):
 
