@@ -136,12 +136,25 @@ class ShapeFactory:
           #print 'sample[name] = ', sample['name']
               
         #                                                                 skipMissingFiles
-        inputs = self._connectInputs( list_of_trees_to_connect, inputDir, False)
+        inputs, evlists = self._connectInputs( list_of_trees_to_connect, inputDir, False)
                    
+        # Sept 2017
+        # Tree kind nuisances can be hanndled in two ways:
+        # usual way: a full tree for the variation up and a full tree for the variation down
+        # This behavior is activated by the presence in the nuisances.py file of the tags 'folderUp' and 'folderDown'
+        # alternative way: a combination of trees holding only the varied branches and the central tree for all the unvaried branches.
+        # This behavior is activated by the presence in the nuisances.py file of the tags: 'unskimmedFolderUp', 'unskimmedFolderDown', 'unskimmedFriendTreeDir'.
+        # Note that one has to use trees before skimming. The skimming can be applied on top is the additional tags 'skimListFolderUp' and 'skimListFolderDown'
+        # are present. These tags hold the path to the directories holding the files holding the "prunerlist" event list
+
+
+
 
         # connect nuisances trees
         inputsNuisanceUp   = {}
         inputsNuisanceDown = {}
+        evlistsNuisanceUp = {}
+        evlistsNuisanceDown = {}
 
         for nuisanceName, nuisance in nuisances.iteritems():
           if nuisanceName == "stat":
@@ -158,12 +171,30 @@ class ShapeFactory:
                   if sampleName == sampleNuisName :
                     list_of_trees_to_connect[sampleNuisName] = [os.path.basename(s) if '###' in s else s for s in self._samples[sampleNuisName]['name']]
               
-              friendsDir = None
+              unskimmedFriendsDir = None
+              unskimmedFolderUp = None
+              unskimmedFolderDown = None
+              skimListFolderUp = None
+              skimListFolderDown = None
+              
               if 'unskimmedFriendTreeDir' in nuisance.keys():
-                friendsDir = nuisance['unskimmedFriendTreeDir']
-              #                                                                                                        skipMissingFiles                
-              inputsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect, nuisance['folderUp']  , True, friendsDir)
-              inputsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect, nuisance['folderDown'], True, friendsDir)
+                unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
+              if 'unskimmedFolderUp' in nuisance.keys():
+                unskimmedFolderUp = nuisance['unskimmedFolderUp']
+              if 'unskimmedFolderDown' in nuisance.keys():
+                unskimmedFolderDown = nuisance['unskimmedFolderDown']
+              if 'skimListFolderUp' in nuisance.keys():
+                skimListFolderUp = nuisance['skimListFolderUp']
+              if 'skimListFolderDown' in nuisance.keys():
+                skimListFolderDown = nuisance['skimListFolderDown']   
+
+              if unskimmedFriendsDir == None: 
+                #                                                                                                        skipMissingFiles                
+                inputsNuisanceUp[nuisanceName], evlistsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect, nuisance['folderUp']  , True )
+                inputsNuisanceDown[nuisanceName], evlistsNuisanceDown[nuisanceName] = self._connectInputs( list_of_trees_to_connect, nuisance['folderDown'], True )
+              else:
+                inputsNuisanceUp[nuisanceName], evlistsNuisanceUp[nuisanceName]   = self._connectInputs( list_of_trees_to_connect, nuisance['unskimmedFolderUp']  , True, unskimmedFriendsDir, skimListFolderUp)
+                inputsNuisanceDown[nuisanceName], evlistsNuisanceDown[nuisanceName]   = self._connectInputs( list_of_trees_to_connect, nuisance['unskimmedFolderDown']  , True, unskimmedFriendsDir, skimListFolderDown)
               
               #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
@@ -417,14 +448,14 @@ class ShapeFactory:
                         #print " nuisanceName = ", nuisanceName, " sampleName = ", sampleName, " newSampleWeightDo = ", newSampleWeightDo
                         #print " nuisance:sample = ", sample
                         if 'weights' in sample.keys() :
-                          self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName]  , cutName, newSampleNameUp)
+                          self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName]  , cutName, newSampleNameUp, evlistsNuisanceUp[nuisanceName][sampleName])
                         else :                                                                                                                                            
-                          self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName]  , cutName, newSampleNameUp)
+                          self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceUp[nuisanceName][sampleName]  , cutName, newSampleNameUp, evlistsNuisanceUp[nuisanceName][sampleName])
           
                         if 'weights' in sample.keys() :
-                          self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceDown[nuisanceName][sampleName], cutName, newSampleNameDo)
+                          self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputsNuisanceDown[nuisanceName][sampleName], cutName, newSampleNameDo, evlistsNuisanceDown[nuisanceName][sampleName])
                         else :                                                                                              
-                          self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceDown[nuisanceName][sampleName], cutName, newSampleNameDo)
+                          self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputsNuisanceDown[nuisanceName][sampleName], cutName, newSampleNameDo, evlistsNuisanceDown[nuisanceName][sampleName])
         
   
           # now let's start with all the variables ...
@@ -626,7 +657,7 @@ class ShapeFactory:
 
 
     # _____________________________________________________________________________
-    def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName):       
+    def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName, evlists = []):       
         '''
         global_weight :   the global weight for the samples
         weights       :   the wieghts 'root file' dependent
@@ -637,7 +668,7 @@ class ShapeFactory:
         #print "_filterTrees cut = ",cut
         numTree = 0
 
-        for tree in inputs:
+        for itree, tree in enumerate(inputs):
           globalCut = "(" + cut + ") * (" + global_weight + ")"  
           #print "_filterTrees globalCut = ",globalCut
           # if weights vector is not given, do not apply file dependent weights
@@ -649,8 +680,13 @@ class ShapeFactory:
           #print " '>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName = ", '>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName
           #print " ::: ", tree.GetEntries(),
           # clear list
+          # GIULIO do not clear the pruner list
           tree.SetEntryList(0)
           # get the list
+          if len(evlists):
+            print "applying the following event list to the input tree", tree.GetFile().GetName()
+            evlists[itree].Print()
+            tree.SetEventList(evlists[itree])
           myList = ROOT.TEventList('myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName,"")
           #myList = ROOT.TEntryList('myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName,"")
           #myList = ROOT.TEntryList(tree)
@@ -666,7 +702,7 @@ class ShapeFactory:
           #tree.SetEntryList(myList)
           tree.SetEventList(myList)
           #print " AFTER List --> ", tree.GetEntries()
-          
+          print "filtered."   
           numTree += 1
 
 
@@ -1059,9 +1095,11 @@ class ShapeFactory:
        
  
     # _____________________________________________________________________________
-    def _connectInputs(self, samples, inputDir, skipMissingFiles, friendsDir = None):
+    def _connectInputs(self, samples, inputDir, skipMissingFiles, friendsDir = None, skimListDir = None):
         inputs = {}
+        lists = {}
         treeName = 'latino'
+        print "doing", inputDir
         for process,filenames in samples.iteritems():
           
           # if the filenames start with "###" the folder will be reset
@@ -1072,23 +1110,32 @@ class ShapeFactory:
           
           
           #                                            use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
-          tree = self._buildchain(treeName, [ (inputDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames],      skipMissingFiles)
-          #tree = self._buildchain(treeName, [ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
+          lists[process] = []
+          trees = self._buildchain(treeName, [ (inputDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames],      skipMissingFiles)
+          # if we specify a friends tree directory we need to load the friend treaes and attch them 
           if friendsDir != None:
-            eventlists = self._geteventlists("prunerlist",  tree)
             friendTrees = self._buildchain(treeName, [ (friendsDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames], False)
             ifriend = 0
             for friendTree in friendTrees:
-              friendTree.SetEventList(eventlists[ifriend])
-              ROOT.gROOT.cd()
-              print "Skimming tree accroring to selection stored in prunerlist"
-              friendTreeSkimmed = friendTree.CopyTree("")
-              tree[ifriend].AddFriend(friendTreeSkimmed)
-          inputs[process] = tree
+              # consistency check. The friend must have the same number of entries as the tree
+              if friendTree.GetEntries() != trees[ifriend].GetEntries():
+                raise RuntimeError('tree '+trees[ifriend].GetFile().GetName()+" and friend tree "+friendTree.GetFile().GetName()+" have different number of entries. you may have messed up your configuration")
+ 
+              trees[ifriend].AddFriend(friendTree)
+          #if we specify a directory with skim event lists we need to load them and skim    
+          if skimListDir != None:
+            eventlists = self._geteventlists("prunerlist",  [(skimListDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames])
+            lists[process] = eventlists
+            for itree, tree in enumerate(trees):
+              print eventlists[itree]
+              eventlists[itree].Print()
+              tree.SetEventList(eventlists[itree])
+              
+          inputs[process] = trees
           
           # FIXME: add possibility to add Friend Trees for new variables   
          
-        return inputs
+        return inputs, lists
 
     # _____________________________________________________________________________
     def _disconnectInputs(self,inputs):
@@ -1149,11 +1196,32 @@ class ShapeFactory:
         return listTrees
 
     # _____________________________________________________________________________
-    def _geteventlists(self, listName, trees):
+    def _geteventlists(self, listName, files):
       lists = []
-      for tree in trees:
-        filein = tree.GetFile()
-        evlist = filein.Get(listName)
+      if not hasattr(self, 'filesToKeepAround'):
+        self.filesToKeepAround = []
+      for path in files:
+        doesFileExist = True
+        self._logger.debug('     '+str(os.path.exists(path))+' '+path)
+        if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
+          if not self._testEosFile(path):
+            print 'File '+path+' doesn\'t exists'
+            doesFileExist = False
+            raise RuntimeError('File '+path+' doesn\'t exists')
+        elif "maite.iihe.ac.be" in path:
+          if not self._testIiheFile(path):
+            print 'File '+path+' doesn\'t exists @ IIHE'
+            doesFileExist = False
+            raise RuntimeError('File '+path+' doesn\'t exists')
+        elif "cluster142.knu.ac.kr" in path:
+          pass # already checked the file at mkShape.py
+        else:
+          if not os.path.exists(path):
+            print 'File '+path+' doesn\'t exists'
+            doesFileExist = False
+            raise RuntimeError('File '+path+' doesn\'t exists')
+        self.filesToKeepAround.append(ROOT.TFile(path))
+        evlist = self.filesToKeepAround[-1].Get(listName)
         lists.append(evlist)
 
       return lists

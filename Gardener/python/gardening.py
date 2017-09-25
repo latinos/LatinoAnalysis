@@ -229,6 +229,12 @@ class Pruner(TreeCloner):
             print 'Dryrun: eventloops skipped'
             return
 
+        if self.eventListOutput:
+          self.ofile = self._openRootFile(output, 'recreate')
+          self.ofile.cd()
+          evlist.Write()
+          print '- Eventloop completed'
+          return 
         #algebra to revert the 'keeps' options
 
         # List all branches in the tree
@@ -301,11 +307,8 @@ class Pruner(TreeCloner):
 
             otree.Fill()
 
-        if self.eventListOutput:
           #ofileeventlist = ROOT.TFile("eventlist_"+output, "recreate")
           #ofileeventlist.cd()
-          self.ofile.cd()
-          evlist.Write()
 
         self.disconnect()
         print '- Eventloop completed'
