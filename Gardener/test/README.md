@@ -804,7 +804,7 @@ Since Sept 2017 it is possible to compute a slimmed version of the systematic tr
 
 All gardener modules have been provided with two new options:
 
-     --saveOnlyModifiedBranches: will outupu only the branches that are touched by the gardener module
+     --saveOnlyModifiedBranches: will output only the branches that are touched by the gardener module
      --auxiliaryFile: this option allows any gardener module to load an auxiliary file holding branches that are not in the main tree, e.g. when the main tree has been produced with the --saveOnlyModifiedBranches
      
 Suppose you want to produce the JESup variation of a give file latino_XXX.root. The list of commands to issue would be:
@@ -812,6 +812,7 @@ Suppose you want to produce the JESup variation of a give file latino_XXX.root. 
      gardener.py JESTreeMaker -k 1 --saveOnlyModifiedBranches latino_XXX.root latino_XXX_JESup.root
      gardener.py allBtagPogScaleFactors --auxiliaryFile=latino_XXX.root latino_XXX_JESup.root latino_XXX_JESup_bPog.root
      gardener.py l2kinfiller --auxiliaryFile=latino_XXX.root latino_XXX_JESup_bPog.root latino_XXX_JESup_bPog_l2kin.root
+     ...
      
 The final latino_XXX_JESup_bPog_l2kin.root in this example will hold all the branches modified by the three modules run, and only those ones. All other untouched branches can be taken from the nominal latino_XXX.root.
 
@@ -826,11 +827,11 @@ An usage example in an analysis code would be the following:
      
  If you are using mkShapes.py all of this is done automatically onece the nuisances.py is configured properly, see below.
  
- Skim do not play well with the Friend tree mechanism, because once you filter the tree with modified branches for the systematic variation unders study, you lose the syncronization with the tree holding the unmodified branches. An option has been added to the Pruner gardener module to output only an event list of the selected events. For example, if you want to do a wwSel skim of the JESup variation, following the previous example, you could do something like:
+ Skim do not play well with the Friend tree mechanism, because once you filter the tree with modified branches for the systematic variation unders study, you loose the syncronization with the tree holding the unmodified branches. An option has been added to the Pruner gardener module to output only an event list of the selected events. For example, if you want to do a wwSel skim of the JESup variation, following the previous example, you could do something like:
  
      gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && metPfType1 > 20 && ptll > 30 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*13) \'  --eventListOutput --auxiliaryFile latino_XXX.root latino_XXX_JESup_bPog_l2kin.root latino_XXX_JESup_bPog_l2kin_wwSel.root
      
-The --eventListOutput option tells the Puner module to only output the TEventList of the selected entries for the JESup variation. Indded latino_XXX_JESup_bPog_l2kin_wwSel.root does not contain any tree, it only contains a TEventList.
+The --eventListOutput option tells the Pruner module to only output the TEventList of the selected entries for the JESup variation. Indeed latino_XXX_JESup_bPog_l2kin_wwSel.root does not contain any tree, it only contains a TEventList.
 
 So, if you want to get the wwSel skim of the JESup variation of nominal file  latino_XXX.root, you have to do something like the following:
 
@@ -849,7 +850,7 @@ Again, if you are using mkShapes.py, this is done internally provided nuisances.
 Usage of friend trees in mkShapes.py
 ===
 
-Suppose you have produced the slimmed version of JES systematic trees, as descrived above, and that you want to run on the wwSel skim.
+
 The configuration you would normally use with full trees in nuisances.py is something like:
 
 	nuisances['jes']  = {
@@ -877,8 +878,8 @@ The configuration you would normally use with full trees in nuisances.py is some
                 'folderDown' : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__JESdo'+skim,
 	}
 
+Suppose you have produced the slimmed version of JES systematic trees, as descrived above, and that you want to run on the wwSel skim. The configuration of nuisances.py changes to:
 
-If you want to use the slimmed version of systematic trees, you have to use instead.
 
 	nuisances['jes']  = {
                 'name'  : 'scale_j',
@@ -908,7 +909,9 @@ If you want to use the slimmed version of systematic trees, you have to use inst
                 'skimListFolderDown': xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESdo'+skim
 	}
 
-where 'unskimmedFolderUp/Down' is the location of the full (i.e. unskimmed) tree for the Up/Down variation (the file latino_XXX_JESup_bPog_l2kin.root in the examples above); 'unskimmedFriendTreeDir' is the location of the nominal file to be used for all unmodified branches (the file latino_XXX.root in the examples above); 'skimListFolderUp/Down' is the location of the files containing the TEventList's of events passing the wwSel skim (the file latino_XXX_JESup_bPog_l2kin_wwSel.root in the explicit examples above). If you do not want to run on a skim, simply drop 'skimListFolderUp/Down'.
+where 'unskimmedFolderUp/Down' is the location of the full (i.e. unskimmed) tree for the Up/Down variation (the file latino_XXX_JESup_bPog_l2kin.root in the examples above); 'unskimmedFriendTreeDir' is the location of the nominal unskimmed file to be used for all unmodified branches (the file latino_XXX.root in the examples above); 'skimListFolderUp/Down' is the location of the files containing the TEventList's of events passing the wwSel skim (the file latino_XXX_JESup_bPog_l2kin_wwSel.root in the explicit examples above). 
+
+If you do not want to run on a skim, simply drop 'skimListFolderUp/Down'.
 
 	
                 
