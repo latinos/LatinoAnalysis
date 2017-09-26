@@ -847,9 +847,68 @@ So, if you want to get the wwSel skim of the JESup variation of nominal file  la
 Again, if you are using mkShapes.py, this is done internally provided nuisances.py is configured properly.     
 
 Usage of friend trees in mkShapes.py
-====
+===
 
-     
+Suppose you have produced the slimmed version of JES systematic trees, as descrived above, and that you want to run on the wwSel skim.
+The configuration you would normally use with full trees in nuisances.py is something like:
+
+	nuisances['jes']  = {
+                'name'  : 'scale_j',
+                'kind'  : 'tree',
+                'type'  : 'shape',
+                'samples'  : {
+                   'ggWW' :['1', '1'],
+                   'WW' :  ['1', '1'],
+                   'DY' :  ['1', '1'],
+                   'top' : ['1', '1'],
+                   'VZ' :  ['1', '1'],
+                   'VVV' : ['1', '1'],
+                   'Vg' : ['1', '1'],
+                   'VgS': ['1', '1'],
+                   'ggH_hww' : ['1', '1'],
+                   'qqH_hww' : ['1', '1'],
+                   'WH_hww' :  ['1', '1'],
+                   'ZH_hww' :  ['1', '1'],
+                   'ggZH_hww':  ['1', '1'],
+                   'bbH_hww' : ['1', '1'],
+                   'H_htt' : ['1', '1'],
+                },
+                'folderUp'   : 	xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__JESup'+skim,
+                'folderDown' : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__JESdo'+skim,
+	}
+
+
+If you want to use the slimmed version of systematic trees, you have to use instead.
+
+	nuisances['jes']  = {
+                'name'  : 'scale_j',
+                'kind'  : 'tree',
+                'type'  : 'shape',
+                'samples'  : {
+                   'ggWW' :['1', '1'],
+                   'WW' :  ['1', '1'],
+                   'DY' :  ['1', '1'],
+                   'top' : ['1', '1'],
+                   'VZ' :  ['1', '1'],
+                   'VVV' : ['1', '1'],
+                   'Vg' : ['1', '1'],
+                   'VgS': ['1', '1'],
+                   'ggH_hww' : ['1', '1'],
+                   'qqH_hww' : ['1', '1'],
+                   'WH_hww' :  ['1', '1'],
+                   'ZH_hww' :  ['1', '1'],
+                   'ggZH_hww':  ['1', '1'],
+                   'bbH_hww' : ['1', '1'],
+                   'H_htt' : ['1', '1'],
+                },
+                'unskimmedFolderUp'   : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__JESup',
+                'unskimmedFolderDown' : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__JESdo',
+                'unskimmedFriendTreeDir' : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC',
+                'skimListFolderUp': xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESup'+skim,
+                'skimListFolderDown': xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESdo'+skim
+	}
+
+where 'unskimmedFolderUp/Down' is the location of the full (i.e. unskimmed) tree for the Up/Down variation (the file latino_XXX_JESup_bPog_l2kin.root in the examples above); 'unskimmedFriendTreeDir' is the location of the nominal file to be used for all unmodified branches (the file latino_XXX.root in the examples above); 'skimListFolderUp/Down' is the location of the files containing the TEventList's of events passing the wwSel skim (the file latino_XXX_JESup_bPog_l2kin_wwSel.root in the explicit examples above). If you do not want to run on a skim, simply drop 'skimListFolderUp/Down'.
 
 	
                 
