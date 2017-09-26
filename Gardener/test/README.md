@@ -824,6 +824,29 @@ An usage example in an analysis code would be the following:
      latino_syst->AddFriend(latino_nominal);
      // now you can draw whatever variable you like, you will get the systematic variation JESup for that variable
      
+ If you are using mkShapes.py all of this is done automatically onece the nuisances.py is configured properly, see below.
+ 
+ Skim do not play well with the Friend tree mechanism, because once you filter the tree with modified branches for the systematic variation unders study, you lose the syncronization with the tree holding the unmodified branches. An option has been added to the Pruner gardener module to output only an event list of the selected events. For example, if you want to do a wwSel skim of the JESup variation, following the previous example, you could do something like:
+ 
+     gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && metPfType1 > 20 && ptll > 30 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*13) \'  --eventListOutput --auxiliaryFile latino_XXX.root latino_XXX_JESup_bPog_l2kin.root latino_XXX_JESup_bPog_l2kin_wwSel.root
+     
+The --eventListOutput option tells the Puner module to only output the TEventList of the selected entries for the JESup variation. Indded latino_XXX_JESup_bPog_l2kin_wwSel.root does not contain any tree, it only contains a TEventList.
+
+So, if you want to get the wwSel skim of the JESup variation of nominal file  latino_XXX.root, you have to do something like the following:
+
+     TFile* file_syst = new TFile("latino_XXX_JESup_bPog_l2kin.root");
+     TTree* latino_syst = (TTree*) file_syst->Get("latino");
+     TFile* file_nominal = new TFile("latino_XXX.root");
+     TTree* latino_nominal = (TTree*) file_nominal->Get("latino");
+     latino_syst->AddFriend(latino_nominal);
+     
+     TFile* file_evlist = new TFile("latino_XXX_JESup_bPog_l2kin_wwSel.root");
+     TEventList * evlist = (TEventList*) file_evlist->Get("prunerlist");
+     latino_syst->SetEventList(evlist);
+     
+Again, if you are using mkShapes.py, this is done internally provided nuisances.py is configured properly.     
+     TEventList* 
+
      
 
 	
