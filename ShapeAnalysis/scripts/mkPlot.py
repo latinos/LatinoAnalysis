@@ -984,10 +984,10 @@ class ShapeFactory:
                   
             if len(mynuisances.keys()) != 0:
                 if self._showIntegralLegend == 0 :
-                    tlegend.AddEntry(tgrMC, "Systematics", "F")
+                    tlegend.AddEntry(tgrMC, "All MC", "F")
                 else :
                     print " nexpected  = ", nexpected
-                    tlegend.AddEntry(tgrMC, "Systematics [" + str(round(nexpected,1)) + "]", "F")
+                    tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
