@@ -334,7 +334,7 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
             else:  os.system('rm '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           if not jobid == 0 and optTodo :
-            todoFile = open(self.subDir+'/'+jName+'.todo','w')
+            todoFile = open(self+'/'+jName+'.todo','w')
             todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             todoFile.close()
         elif 'knu' in os.uname()[1]:
@@ -342,18 +342,22 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
+          else: os.system('rm '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
         elif 'ifca' in os.uname()[1] :
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
+          else: os.system('rm '+jidFile)
         elif "pi.infn.it" in socket.getfqdn():
           queue="cms"
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
+          else: os.system('rm '+jidFile)
         else:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
+          else: os.system('rm '+jidFile)
                   #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
 
