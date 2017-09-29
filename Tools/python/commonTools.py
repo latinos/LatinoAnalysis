@@ -219,6 +219,7 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
     ### Now add the actual weight
     for iEntry in range(len(sampleDic[key]['name'])):
       name = sampleDic[key]['name'][iEntry].replace('latino_','').replace('.root','').split('__part')[0]
+      if '/' in name : name = os.path.basename(name)
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       

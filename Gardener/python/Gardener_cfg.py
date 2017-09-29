@@ -1407,7 +1407,7 @@ samples4Syst = [
                  'GluGluZH_HToWWTo2L2Nu_M120','GluGluZH_HToWWTo2L2Nu_M125','GluGluZH_HToWWTo2L2Nu_M130', # ggZH for monohiggs
                  'HZJ_HToWWTo2L2Nu_M120','HZJ_HToWWTo2L2Nu_M125','HZJ_HToWWTo2L2Nu_M130', # ZH for monohiggs
 
-                 'ttHJetToNonbb_M125',
+                 'ttHJetToNonbb_M125','ttHToNonbb_M125',
                  
                  # What ????
                  #'ttHJetToNonbb_M125','TTWJetsToLNu',
