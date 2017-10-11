@@ -328,12 +328,19 @@ class triggerCalculator():
 
           # Event Efficiency
 
-          evt_eff =   eff_sgl_1 + eff_sgl_2 -    \
-                      eff_sgl_1*eff_sgl_2 +   \
-                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
-                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
-                      dz_eff
+          #evt_eff =   eff_sgl_1 + eff_sgl_2 -    \
+          #            eff_sgl_1*eff_sgl_2 +   \
+          #            (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
+          #            (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg) *  \
+          #            dz_eff
 
+         
+          eff_double = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)
+
+
+          evt_eff =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))*    \
+                      dz_eff          
+ 
           # Single lepton only
 
           #                   ele                    ele
@@ -359,7 +366,7 @@ class triggerCalculator():
           if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
             eff_tl *= dz_eff
             eff_lt *= dz_eff
-            evt_eff_dbleEle = eff_tl + (1-eff_tl) * eff_lt
+            evt_eff_dbleEle = eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg #eff_tl + (1-eff_tl) * eff_lt
             evt_eff_dbleMu  = 0.0
             evt_eff_EleMu   = 0.0
           #                   mu                     mu
@@ -367,7 +374,7 @@ class triggerCalculator():
             eff_tl *= dz_eff
             eff_lt *= dz_eff
             evt_eff_dbleEle = 0.0
-            evt_eff_dbleMu  = eff_tl + (1-eff_tl) * eff_lt
+            evt_eff_dbleMu  = eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg #eff_tl + (1-eff_tl) * eff_lt
             evt_eff_EleMu   = 0.0
           #                   mu                     ele       
           if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
@@ -458,11 +465,11 @@ class triggerCalculator():
           eff_sgl_1             = high_eff_sgl_1
           eff_sgl_2             = high_eff_sgl_2
 
-          evt_eff_error_up =   eff_sgl_1 + eff_sgl_2 -    \
-                      eff_sgl_1*eff_sgl_2 +   \
-                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
-                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
-                      dz_eff
+          eff_double_up = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)
+
+
+          evt_eff_error_up =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))*    \
+                                          dz_eff
 
           # and low variation ...
           eff_dbl_1_leadingleg  = low_eff_dbl_1_leadingleg
@@ -472,11 +479,11 @@ class triggerCalculator():
           eff_sgl_1             = low_eff_sgl_1
           eff_sgl_2             = low_eff_sgl_2
 
-          evt_eff_error_low =   eff_sgl_1 + eff_sgl_2 -    \
-                      eff_sgl_1*eff_sgl_2 +   \
-                      (1-eff_sgl_1-(1-eff_sgl_1)*eff_sgl_2) *  \
-                      (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg) * eff_dbl_1_leadingleg*eff_dbl_2_trailingleg) *  \
-                      dz_eff
+          eff_double_low = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)
+
+
+          evt_eff_error_low =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))*    \
+                               dz_eff
 
           return evt_eff, evt_eff_error_low, evt_eff_error_up ,  evt_eff_snglEle , evt_eff_snglMu , evt_eff_dbleEle , evt_eff_dbleMu , evt_eff_EleMu , TrgEmulator
         else :
