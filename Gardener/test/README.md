@@ -795,4 +795,123 @@ The new branches to ad are defined in https://github.com/latinos/LatinoAnalysis/
     gardener.py  genericFormulaAdder \
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.root   \
                 /tmp/amassiro/latino_GluGluHToWWTo2L2NuPowheg_M125.TEST.root	
+		
+		
+Slimmed version of systematic trees
+====
+
+Since Sept 2017 it is possible to compute a slimmed version of the systematic trees, holding only the varied branches. These trees need to be used together with the nominal tree, from which all non varied branches are taken, using the TTree friend mechanism in ROOT.
+
+All gardener modules have been provided with two new options:
+
+     --saveOnlyModifiedBranches: will output only the branches that are touched by the gardener module
+     --auxiliaryFile: this option allows any gardener module to load an auxiliary file holding branches that are not in the main tree, e.g. when the main tree has been produced with the --saveOnlyModifiedBranches
+     
+Suppose you want to produce the JESup variation of a give file latino_XXX.root. The list of commands to issue would be:
+
+     gardener.py JESTreeMaker -k 1 --saveOnlyModifiedBranches latino_XXX.root latino_XXX_JESup.root
+     gardener.py allBtagPogScaleFactors --auxiliaryFile=latino_XXX.root latino_XXX_JESup.root latino_XXX_JESup_bPog.root
+     gardener.py l2kinfiller --auxiliaryFile=latino_XXX.root latino_XXX_JESup_bPog.root latino_XXX_JESup_bPog_l2kin.root
+     ...
+     
+The final latino_XXX_JESup_bPog_l2kin.root in this example will hold all the branches modified by the three modules run, and only those ones. All other untouched branches can be taken from the nominal latino_XXX.root.
+
+An usage example in an analysis code would be the following:
+
+     TFile* file_syst = new TFile("latino_XXX_JESup_bPog_l2kin.root");
+     TTree* latino_syst = (TTree*) file_syst->Get("latino");
+     TFile* file_nominal = new TFile("latino_XXX.root");
+     TTree* latino_nominal = (TTree*) file_nominal->Get("latino");
+     latino_syst->AddFriend(latino_nominal);
+     // now you can draw whatever variable you like, you will get the systematic variation JESup for that variable
+     
+ If you are using mkShapes.py all of this is done automatically onece the nuisances.py is configured properly, see below.
+ 
+ Skim do not play well with the Friend tree mechanism, because once you filter the tree with modified branches for the systematic variation unders study, you loose the syncronization with the tree holding the unmodified branches. An option has been added to the Pruner gardener module to output only an event list of the selected events. For example, if you want to do a wwSel skim of the JESup variation, following the previous example, you could do something like:
+ 
+     gardener.py filter -f \' mll>12 && std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && std_vector_lepton_pt[2]<10 && metPfType1 > 20 && ptll > 30 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*13) \'  --eventListOutput --auxiliaryFile latino_XXX.root latino_XXX_JESup_bPog_l2kin.root latino_XXX_JESup_bPog_l2kin_wwSel.root
+     
+The --eventListOutput option tells the Pruner module to only output the TEventList of the selected entries for the JESup variation. Indeed latino_XXX_JESup_bPog_l2kin_wwSel.root does not contain any tree, it only contains a TEventList.
+
+So, if you want to get the wwSel skim of the JESup variation of nominal file  latino_XXX.root, you have to do something like the following:
+
+     TFile* file_syst = new TFile("latino_XXX_JESup_bPog_l2kin.root");
+     TTree* latino_syst = (TTree*) file_syst->Get("latino");
+     TFile* file_nominal = new TFile("latino_XXX.root");
+     TTree* latino_nominal = (TTree*) file_nominal->Get("latino");
+     latino_syst->AddFriend(latino_nominal);
+     
+     TFile* file_evlist = new TFile("latino_XXX_JESup_bPog_l2kin_wwSel.root");
+     TEventList * evlist = (TEventList*) file_evlist->Get("prunerlist");
+     latino_syst->SetEventList(evlist);
+     
+Again, if you are using mkShapes.py, this is done internally provided nuisances.py is configured properly.     
+
+Usage of friend trees in mkShapes.py
+===
+
+
+The configuration you would normally use with full trees in nuisances.py is something like:
+
+	nuisances['jes']  = {
+                'name'  : 'scale_j',
+                'kind'  : 'tree',
+                'type'  : 'shape',
+                'samples'  : {
+                   'ggWW' :['1', '1'],
+                   'WW' :  ['1', '1'],
+                   'DY' :  ['1', '1'],
+                   'top' : ['1', '1'],
+                   'VZ' :  ['1', '1'],
+                   'VVV' : ['1', '1'],
+                   'Vg' : ['1', '1'],
+                   'VgS': ['1', '1'],
+                   'ggH_hww' : ['1', '1'],
+                   'qqH_hww' : ['1', '1'],
+                   'WH_hww' :  ['1', '1'],
+                   'ZH_hww' :  ['1', '1'],
+                   'ggZH_hww':  ['1', '1'],
+                   'bbH_hww' : ['1', '1'],
+                   'H_htt' : ['1', '1'],
+                },
+                'folderUp'   : 	xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__JESup'+skim,
+                'folderDown' : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__JESdo'+skim,
+	}
+
+Suppose you have produced the slimmed version of JES systematic trees, as descrived above, and that you want to run on the wwSel skim. The configuration of nuisances.py changes to:
+
+
+	nuisances['jes']  = {
+                'name'  : 'scale_j',
+                'kind'  : 'tree',
+                'type'  : 'shape',
+                'samples'  : {
+                   'ggWW' :['1', '1'],
+                   'WW' :  ['1', '1'],
+                   'DY' :  ['1', '1'],
+                   'top' : ['1', '1'],
+                   'VZ' :  ['1', '1'],
+                   'VVV' : ['1', '1'],
+                   'Vg' : ['1', '1'],
+                   'VgS': ['1', '1'],
+                   'ggH_hww' : ['1', '1'],
+                   'qqH_hww' : ['1', '1'],
+                   'WH_hww' :  ['1', '1'],
+                   'ZH_hww' :  ['1', '1'],
+                   'ggZH_hww':  ['1', '1'],
+                   'bbH_hww' : ['1', '1'],
+                   'H_htt' : ['1', '1'],
+                },
+                'unskimmedFolderUp'   : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESup',
+                'unskimmedFolderDown' : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESdo',
+                'unskimmedFriendTreeDir' : xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC',
+                'skimListFolderUp': xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESup'+skim,
+                'skimListFolderDown': xrootdPath+treeBaseDir+'Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESdo'+skim
+	}
+
+where 'unskimmedFolderUp/Down' is the location of the full (i.e. unskimmed) tree for the Up/Down variation (the file latino_XXX_JESup_bPog_l2kin.root in the examples above); 'unskimmedFriendTreeDir' is the location of the nominal unskimmed file to be used for all unmodified branches (the file latino_XXX.root in the examples above); 'skimListFolderUp/Down' is the location of the files containing the TEventList's of events passing the wwSel skim (the file latino_XXX_JESup_bPog_l2kin_wwSel.root in the explicit examples above). 
+
+If you do not want to run on a skim, simply drop 'skimListFolderUp/Down'.
+
+	
                 
