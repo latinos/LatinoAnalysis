@@ -16,7 +16,7 @@ from LatinoAnalysis.Gardener.variables.triggerMaker               import trigger
 # id/isolation scale factors
 from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
 from LatinoAnalysis.Gardener.variables.multiIdisoScaleFactors     import MultiIdIsoSFFiller
-
+from LatinoAnalysis.Gardener.variables.LeptonEtaPtCorrFactors     import LeptonEtaPtCorrFactors
 
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
@@ -146,6 +146,7 @@ if __name__ == '__main__':
 # id/isolation scale factors
     modules['idisofiller'] = IdIsoSFFiller()
     modules['multiidiso']  = MultiIdIsoSFFiller()
+    modules['etaptlepsf']  = LeptonEtaPtCorrFactors()
 
 # specific variables for MC
 
