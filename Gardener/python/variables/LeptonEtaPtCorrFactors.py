@@ -76,14 +76,16 @@ class LeptonEtaPtCorrFactors(TreeCloner):
         if self.cmssw in ElectronWP :
           if 'TightObjWP' in ElectronWP[self.cmssw] :
             for iWP in ElectronWP[self.cmssw]['TightObjWP']  :
-              self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totRecErr_'+iWP+'_Up')
-              self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totRecErr_'+iWP+'_Down')
+              self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totSF_'+iWP)
+              self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totSF_'+iWP+'_Up')
+              self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totSF_'+iWP+'_Down')
 
         if self.cmssw in MuonWP :
           if 'TightObjWP' in MuonWP[self.cmssw] :
             for iWP in MuonWP[self.cmssw]['TightObjWP'] :
-              self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totRecErr_'+iWP+'_Up')
-              self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totRecErr_'+iWP+'_Down')
+              self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totSF_'+iWP)
+              self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totSF_'+iWP+'_Up')
+              self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totSF_'+iWP+'_Down')
 
         # NOW WE CAN CLONE THE TREE
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
@@ -171,39 +173,41 @@ class LeptonEtaPtCorrFactors(TreeCloner):
                 if 'TightObjWP' in ElectronWP[self.cmssw] :
                   for iWP in ElectronWP[self.cmssw]['TightObjWP']  :
                     if   abs (flavour) == 11 :
-                      # FIXME How to get them in python ?????
-                      eIdIso_Cent = 1.
-                      eIdIso_Up   = 0.
-                      eIdIso_Down = 0. 
-                      eIdIso_Syst = 0.
+                      exec ('eIdIso_Cent = itree.std_vector_electron_idisoW_'+iWP+'['+iLep+']')
+                      exec ('eIdIso_Up   = itree.std_vector_electron_idisoW_'+iWP+'_Up['+iLep+'] - eIdIso_Cent')
+                      exec ('eIdIso_Down = eIdIso_Cent - itree.std_vector_electron_idisoW_'+iWP+'_Down['+iLep+']')
+                      exec ('eIdIso_Syst = itree.std_vector_electron_idisoW_'+iWP+'_Syst['+iLep+'] - eIdIso_Cent')
                       # --> Total Error
                       eTot_Cent = eReco_Cent * eIdIso_Cent * etaW * ptW 
                       eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eEta_Up,2)   + math.pow(ePt_Up,2) )
                       eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) + math.pow(eEta_Down,2) + math.pow(ePt_Down,2) )
-                      self.oldBranchesToBeModifiedVector['std_vector_electron_totRecErr_'+iWP+'_Up']   .push_back(eTot_Cent+eTot_Up)
-                      self.oldBranchesToBeModifiedVector['std_vector_electron_totRecErr_'+iWP+'_Down'] .push_back(eTot_Cent-eTot_Down)
+                      self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP]         .push_back(eTot_Cent)
+                      self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP+'_Up']   .push_back(eTot_Cent+eTot_Up)
+                      self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP+'_Down'] .push_back(eTot_Cent-eTot_Down)
                     else:
-                      self.oldBranchesToBeModifiedVector['std_vector_electron_totRecErr_'+iWP+'_Up']   .push_back(1.)
-                      self.oldBranchesToBeModifiedVector['std_vector_electron_totRecErr_'+iWP+'_Down'] .push_back(1.)
+                      self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP]         .push_back(1.)
+                      self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP+'_Up']   .push_back(1.)
+                      self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP+'_Down'] .push_back(1.)
               # Muons
               if self.cmssw in MuonWP :
                 if 'TightObjWP' in MuonWP[self.cmssw] :
                   for iWP in MuonWP[self.cmssw]['TightObjWP'] :
                     if   abs (flavour) == 13. :
-                      # FIXME How to get them in python ?????
-                      eIdIso_Cent = 1.
-                      eIdIso_Up   = 0.
-                      eIdIso_Down = 0.
-                      eIdIso_Syst = 0.
+                      exec ('eIdIso_Cent = itree.std_vector_muon_idisoW_'+iWP+'['+iLep+']')
+                      exec ('eIdIso_Up   = itree.std_vector_muon_idisoW_'+iWP+'_Up['+iLep+'] - eIdIso_Cent')
+                      exec ('eIdIso_Down = eIdIso_Cent - itree.std_vector_muon_idisoW_'+iWP+'_Down['+iLep+']')
+                      exec ('eIdIso_Syst = itree.std_vector_muon_idisoW_'+iWP+'_Syst['+iLep+'] - eIdIso_Cent')
                       # --> Total Error
                       eTot_Cent = eReco_Cent * eIdIso_Cent * etaW * ptW
                       eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eEta_Up,2)   + math.pow(ePt_Up,2) )
                       eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) + math.pow(eEta_Down,2) + math.pow(ePt_Down,2) )
-                      self.oldBranchesToBeModifiedVector['std_vector_muon_totRecErr_'+iWP+'_Up']   .push_back(eTot_Cent+eTot_Up)
-                      self.oldBranchesToBeModifiedVector['std_vector_muon_totRecErr_'+iWP+'_Down'] .push_back(eTot_Cent-eTot_Down)
+                      self.oldBranchesToBeModifiedVector['std_vector_muon_totSF_'+iWP]         .push_back(eTot_Cent)
+                      self.oldBranchesToBeModifiedVector['std_vector_muon_totSF_'+iWP+'_Up']   .push_back(eTot_Cent+eTot_Up)
+                      self.oldBranchesToBeModifiedVector['std_vector_muon_totSF_'+iWP+'_Down'] .push_back(eTot_Cent-eTot_Down)
                     else:
-                      self.oldBranchesToBeModifiedVector['std_vector_muon_totRecErr_'+iWP+'_Up']   .push_back(1.)
-                      self.oldBranchesToBeModifiedVector['std_vector_muon_totRecErr_'+iWP+'_Down'] .push_back(1.)
+                      self.oldBranchesToBeModifiedVector['std_vector_muon_totSF_'+iWP]         .push_back(1.)
+                      self.oldBranchesToBeModifiedVector['std_vector_muon_totSF_'+iWP+'_Up']   .push_back(1.)
+                      self.oldBranchesToBeModifiedVector['std_vector_muon_totSF_'+iWP+'_Down'] .push_back(1.)
 
             otree.Fill()
             savedentries+=1
