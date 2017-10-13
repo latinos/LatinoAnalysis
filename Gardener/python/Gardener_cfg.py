@@ -2514,8 +2514,9 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'onlySample' : [
-                                   'GluGluHToWWTo2L2Nu_M125',
-                                   'GluGluHToWWTo2L2NuPowheg_M125', 
+                                   #'GluGluHToWWTo2L2Nu_M125',
+                                   #'GluGluHToWWTo2L2NuPowheg_M125', 
+                                   'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS',
                                  ],
                   'command'    : 'gardener.py ggHUncertainty' ,
                 } ,
