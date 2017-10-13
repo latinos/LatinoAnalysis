@@ -2980,6 +2980,13 @@ Steps= {
                   'do4Data'    : False  ,
                   'command'    : 'gardener.py multiidiso --cmssw=RPLME_CMSSW'
                },
+
+  'etaptlepsf' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py etaptlepsf --cmssw=RPLME_CMSSW'
+               },
  
 
 

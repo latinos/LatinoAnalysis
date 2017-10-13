@@ -1,4 +1,4 @@
-import opt parse
+import optparse
 import numpy
 import ROOT
 import os.path
@@ -50,6 +50,8 @@ class LeptonEtaPtCorrFactors(TreeCloner):
           handle = open(self.WPdic,'r')
           exec(handle)
           handle.close()
+          self.ElectronWP = ElectronWP
+          self.MuonWP = MuonWP
         else:
           print 'ERROR: No WP'
           exit()
@@ -73,16 +75,16 @@ class LeptonEtaPtCorrFactors(TreeCloner):
           'std_vector_lepton_ptW_Down' ,
         ]
 
-        if self.cmssw in ElectronWP :
-          if 'TightObjWP' in ElectronWP[self.cmssw] :
-            for iWP in ElectronWP[self.cmssw]['TightObjWP']  :
+        if self.cmssw in self.ElectronWP :
+          if 'TightObjWP' in self.ElectronWP[self.cmssw] :
+            for iWP in self.ElectronWP[self.cmssw]['TightObjWP']  :
               self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totSF_'+iWP)
               self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totSF_'+iWP+'_Up')
               self.namesOldBranchesToBeModifiedVector.append('std_vector_electron_totSF_'+iWP+'_Down')
 
-        if self.cmssw in MuonWP :
-          if 'TightObjWP' in MuonWP[self.cmssw] :
-            for iWP in MuonWP[self.cmssw]['TightObjWP'] :
+        if self.cmssw in self.MuonWP :
+          if 'TightObjWP' in self.MuonWP[self.cmssw] :
+            for iWP in self.MuonWP[self.cmssw]['TightObjWP'] :
               self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totSF_'+iWP)
               self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totSF_'+iWP+'_Up')
               self.namesOldBranchesToBeModifiedVector.append('std_vector_muon_totSF_'+iWP+'_Down')
@@ -169,14 +171,14 @@ class LeptonEtaPtCorrFactors(TreeCloner):
               eReco_Up   = itree.std_vector_lepton_recoW_Up [iLep] - eReco_Cent
               eReco_Down = eReco_Cent                              - itree.std_vector_lepton_recoW_Down  [iLep]
               # ... Electrons
-              if self.cmssw in ElectronWP :
-                if 'TightObjWP' in ElectronWP[self.cmssw] :
-                  for iWP in ElectronWP[self.cmssw]['TightObjWP']  :
+              if self.cmssw in self.ElectronWP :
+                if 'TightObjWP' in self.ElectronWP[self.cmssw] :
+                  for iWP in self.ElectronWP[self.cmssw]['TightObjWP']  :
                     if   abs (flavour) == 11 :
-                      exec ('eIdIso_Cent = itree.std_vector_electron_idisoW_'+iWP+'['+iLep+']')
-                      exec ('eIdIso_Up   = itree.std_vector_electron_idisoW_'+iWP+'_Up['+iLep+'] - eIdIso_Cent')
-                      exec ('eIdIso_Down = eIdIso_Cent - itree.std_vector_electron_idisoW_'+iWP+'_Down['+iLep+']')
-                      exec ('eIdIso_Syst = itree.std_vector_electron_idisoW_'+iWP+'_Syst['+iLep+'] - eIdIso_Cent')
+                      exec ('eIdIso_Cent = itree.std_vector_electron_idisoW_'+iWP+'['+str(iLep)+']')
+                      exec ('eIdIso_Up   = itree.std_vector_electron_idisoW_'+iWP+'_Up['+str(iLep)+'] - eIdIso_Cent')
+                      exec ('eIdIso_Down = eIdIso_Cent - itree.std_vector_electron_idisoW_'+iWP+'_Down['+str(iLep)+']')
+                      exec ('eIdIso_Syst = itree.std_vector_electron_idisoW_'+iWP+'_Syst['+str(iLep)+'] - eIdIso_Cent')
                       # --> Total Error
                       eTot_Cent = eReco_Cent * eIdIso_Cent * etaW * ptW 
                       eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eEta_Up,2)   + math.pow(ePt_Up,2) )
@@ -189,14 +191,14 @@ class LeptonEtaPtCorrFactors(TreeCloner):
                       self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP+'_Up']   .push_back(1.)
                       self.oldBranchesToBeModifiedVector['std_vector_electron_totSF_'+iWP+'_Down'] .push_back(1.)
               # Muons
-              if self.cmssw in MuonWP :
-                if 'TightObjWP' in MuonWP[self.cmssw] :
-                  for iWP in MuonWP[self.cmssw]['TightObjWP'] :
+              if self.cmssw in self.MuonWP :
+                if 'TightObjWP' in self.MuonWP[self.cmssw] :
+                  for iWP in self.MuonWP[self.cmssw]['TightObjWP'] :
                     if   abs (flavour) == 13. :
-                      exec ('eIdIso_Cent = itree.std_vector_muon_idisoW_'+iWP+'['+iLep+']')
-                      exec ('eIdIso_Up   = itree.std_vector_muon_idisoW_'+iWP+'_Up['+iLep+'] - eIdIso_Cent')
-                      exec ('eIdIso_Down = eIdIso_Cent - itree.std_vector_muon_idisoW_'+iWP+'_Down['+iLep+']')
-                      exec ('eIdIso_Syst = itree.std_vector_muon_idisoW_'+iWP+'_Syst['+iLep+'] - eIdIso_Cent')
+                      exec ('eIdIso_Cent = itree.std_vector_muon_idisoW_'+iWP+'['+str(iLep)+']')
+                      exec ('eIdIso_Up   = itree.std_vector_muon_idisoW_'+iWP+'_Up['+str(iLep)+'] - eIdIso_Cent')
+                      exec ('eIdIso_Down = eIdIso_Cent - itree.std_vector_muon_idisoW_'+iWP+'_Down['+str(iLep)+']')
+                      exec ('eIdIso_Syst = itree.std_vector_muon_idisoW_'+iWP+'_Syst['+str(iLep)+'] - eIdIso_Cent')
                       # --> Total Error
                       eTot_Cent = eReco_Cent * eIdIso_Cent * etaW * ptW
                       eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eEta_Up,2)   + math.pow(ePt_Up,2) )
