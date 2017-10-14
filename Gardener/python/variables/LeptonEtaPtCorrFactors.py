@@ -128,13 +128,31 @@ class LeptonEtaPtCorrFactors(TreeCloner):
               pt  = itree.std_vector_lepton_pt [iLep]
               eta = itree.std_vector_lepton_eta [iLep]
               flavour = itree.std_vector_lepton_flavour [iLep]
-
-
+          
               # Electron Eta Weights
               if   abs (flavour) == 11 :
-                etaW      = 1.
+                #****************************************
+                #Minimizer is Linear
+                #Chi2                      =      1663.99
+                #NDf                       =           28
+                #p0                        =      1.01583   +/-   0.000881267 
+                #p1                        =   -0.0190406   +/-   0.00151742  
+                #p2                        =   0.00696095   +/-   0.00106056  
+                #p3                        =    0.0156002   +/-   0.00105578  
+                #p4                        =  -0.00658065   +/-   0.000205578 
+                #p5                        =  -0.00313692   +/-   0.000158679 
+
+                # this is a one sided correction
+                # we correct the central value
+                # variation up is without the correction
+                etaW      = 1.01583 \
+                            - 0.0190406*eta \
+                            + 0.00696095*(eta**2) \
+                            + 0.0156002*(eta**3) \
+                            - 0.00658065*(eta**4) \
+                            - 0.00313692*(eta**5)
                 etaW_Up   = 1.
-                etaW_Down = 1.
+                etaW_Down = etaW
 
               # Muon Eta Weights  
               if   abs (flavour) == 13 :
@@ -148,9 +166,16 @@ class LeptonEtaPtCorrFactors(TreeCloner):
    
               # Electron Pt Weights 
               if   abs (flavour) == 11 :
+                # 10% symmetric error if pt < 25
                 ptW      = 1.
-                ptW_Up   = 1.
-                ptW_Down = 1.
+                if pt < 25.:
+                  ptW_Up = 1.1
+                else:
+                  ptW_Up   = 1.
+                if pt < 25.:
+                  ptW_Down = 0.9 
+                else:
+                  ptW_Down = 1.
 
               # Muon Pt Weights 
               if   abs (flavour) == 13 :
