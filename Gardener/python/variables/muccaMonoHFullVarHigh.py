@@ -56,7 +56,8 @@ class MuccaMonoHFullVarHighFiller(TreeCloner):
 
         self.getMuccaMonoHFullHigh.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/MUCCA/Optimization/Weights-" + self.model + "_TTbar_0var_" + self.channel + "_" + self.mass + "/TMVAClassification_" + self.training + ".weights.xml")
 
-#/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/24Sep2017/monoH/TMVA/Weights-2HDM_TTbar_0var_em_high
+        # /afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/15Oct2017/monoH/TMVA/plots_TMVA-2HDM_TTbar_0var_em_600_300/Weights-2HDM_TTbar_0var_em_600_300/TMVAClassification_BDT7.weights.xml
+
 
     def help(self):
         return '''Add mucca mva variables'''
