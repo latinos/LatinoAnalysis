@@ -53,6 +53,13 @@ Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  
                                                 'DoubleEle' : [ 46 ] ,
                                                 'SingleEle' : [ 0  , 56 ] ,
                                               } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [  6 , 8  ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 42 , 43 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 0  , 56 ] ,
+                                              } ,
                                 },
                           2  :  { 'begin' : 274094 , 'end' : 999999 , 'lumi' : 11.798  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'ICHEP2016fullLumi/HLT_DoubleEleLegHigPt.txt' ,
@@ -80,6 +87,14 @@ Trigger['ICHEP2016'] =  { 1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  
                                                 'DoubleEle' : [ 46 ] ,
                                                 'SingleEle' : [ 0  , 56 ] ,
                                               } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [  6 , 8  ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 42 , 43 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 0  , 56 ] ,
+                                              } ,
+
                                 },
                         }
         
@@ -130,6 +145,14 @@ Trigger['Full2016'] =  {
                                                 'DoubleEle' : [ 46 ] ,
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [  6 , 8  ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
+
                                 },
                           # L1 EMFT Bug ( https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem )
                           2  :  { 'begin' : 274095 , 'end' : 277165 , 'lumi' : 15.005  ,
@@ -152,6 +175,13 @@ Trigger['Full2016'] =  {
                                   'EMTFBug':  True , 
                                   'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  { 
+                                                'EleMu'     : [  6 , 8  ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
+                                  'MC'     :  {
                                                 'EleMu'     : [  6 , 8  ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
                                                 'SingleMu'  : [ 44 , 45 ] ,
@@ -186,6 +216,13 @@ Trigger['Full2016'] =  {
                                                 'DoubleEle' : [ 46 ] ,
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [  6 , 8  ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
                                 },
                           # Run>=278273: Switch to DZ version of E-Mu triggers
                           # OLD: 4  :  { 'begin' : 278273 , 'end' : 281612 , 'lumi' : 9.818  ,
@@ -209,6 +246,13 @@ Trigger['Full2016'] =  {
                                   'EMTFBug':  False , 
                                   'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  { 
+                                                'EleMu'     : [ 57 , 97 ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
+                                  'MC'     :  {
                                                 'EleMu'     : [ 57 , 97 ] ,
                                                 'DoubleMu'  : [ 11 , 13 ] ,
                                                 'SingleMu'  : [ 44 , 45 ] ,
@@ -246,6 +290,13 @@ Trigger['Full2016'] =  {
                                                 'DoubleEle' : [ 46 ] ,
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 57 , 97 ] ,
+                                                'DoubleMu'  : [ 11 , 13 ] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
                                 },
                           # Run>=281613: Switch to DZ version of Double Mu triggersA : Lumi 8.606 - 0.860 = 7.746 (to accomodate space for pseudo period 7)
                           6  :  { 'begin' : 281613 , 'end' : 284042 , 'lumi' : 7.746  ,
@@ -274,6 +325,14 @@ Trigger['Full2016'] =  {
                                                 'DoubleEle' : [ 46 ] ,
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 57 , 97 ] ,
+                                                'DoubleMu'  : [ 10 , 12] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
+
                                 }, 
                           # Run>=281613: Switch to DZ version of Double Mu triggers ... Few LS where HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL is seeded by L1_Mu23_EG10 
                           # Attributed to last run as a trick to switch to the lower efficiency
@@ -303,6 +362,14 @@ Trigger['Full2016'] =  {
                                                 'DoubleEle' : [ 46 ] ,
                                                 'SingleEle' : [ 93  , 112 ] ,
                                               } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 57 , 97 ] ,
+                                                'DoubleMu'  : [ 10 , 12] ,
+                                                'SingleMu'  : [ 44 , 45 ] ,
+                                                'DoubleEle' : [ 46 ] ,
+                                                'SingleEle' : [ 93  , 112 ] ,
+                                              } ,
+
                                 },
         
                         }

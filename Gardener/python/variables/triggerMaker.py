@@ -777,7 +777,7 @@ class triggerCalculator():
 
           return 1, 1, 1 
 
-    def _getTrigDecision(self,vector_trigger,isData):
+    def _getTrigDecision(self,vector_trigger):
 
         EleMu     = 0
         DoubleMu  = 0
@@ -786,17 +786,16 @@ class triggerCalculator():
         SingleEle = 0
 
    
-        if isData :
-          for iTrig in self.EleMu      : 
-            if vector_trigger[iTrig] > 0 : EleMu      = 1
-          for iTrig in self.DoubleMu   : 
-            if vector_trigger[iTrig] > 0 : DoubleMu   = 1
-          for iTrig in self.SingleMu   : 
-            if vector_trigger[iTrig] > 0 : SingleMu   = 1
-          for iTrig in self.DoubleEle  : 
-            if vector_trigger[iTrig] > 0 : DoubleEle  = 1
-          for iTrig in self.SingleEle  : 
-            if vector_trigger[iTrig] > 0 : SingleEle  = 1
+        for iTrig in self.EleMu      : 
+          if vector_trigger[iTrig] > 0 : EleMu      = 1
+        for iTrig in self.DoubleMu   : 
+          if vector_trigger[iTrig] > 0 : DoubleMu   = 1
+        for iTrig in self.SingleMu   : 
+          if vector_trigger[iTrig] > 0 : SingleMu   = 1
+        for iTrig in self.DoubleEle  : 
+          if vector_trigger[iTrig] > 0 : DoubleEle  = 1
+        for iTrig in self.SingleEle  : 
+          if vector_trigger[iTrig] > 0 : SingleEle  = 1
 
         return EleMu , DoubleMu , SingleMu , DoubleEle , SingleEle
  
@@ -944,6 +943,11 @@ class triggerMaker(TreeCloner):
 
           self.namesBranches = [
            'veto_EMTFBug',
+           'trig_SnglEle',
+           'trig_SnglMu',
+           'trig_DbleEle',
+           'trig_DbleMu',
+           'trig_EleMu',
            'effTrigW',
            'effTrigW_Up',
            'effTrigW_Down',
@@ -1010,18 +1014,17 @@ class triggerMaker(TreeCloner):
             self.branches['veto_EMTFBug'] [0] = vEMTF
             #print vEMTF
 
-            # DATA = compute trigger "bits" oer dataset 
-            if self.isData :
+            # DATA and MC = compute trigger "bits" oer dataset 
 
-              self.branches['trig_EleMu']         [0] , \
-              self.branches['trig_DbleMu']        [0] , \
-              self.branches['trig_SnglMu']        [0] , \
-              self.branches['trig_DbleEle']       [0] , \
-              self.branches['trig_SnglEle']       [0] = \
-              self.triggerCalculators[self.runPeriod-1]._getTrigDecision(itree.std_vector_trigger,self.isData)
+            self.branches['trig_EleMu']         [0] , \
+            self.branches['trig_DbleMu']        [0] , \
+            self.branches['trig_SnglMu']        [0] , \
+            self.branches['trig_DbleEle']       [0] , \
+            self.branches['trig_SnglEle']       [0] = \
+            self.triggerCalculators[self.runPeriod-1]._getTrigDecision(itree.std_vector_trigger)
 
             # MC = compute efficiencies
-            else: 
+            if not self.isData : 
 
               self.branches['effTrigW']       [0] = 1.0
               self.branches['effTrigW_Up']    [0] = 1.0
