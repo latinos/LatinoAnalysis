@@ -59,6 +59,7 @@ from LatinoAnalysis.Gardener.variables.chargeFlipWeight           import chargeF
 from LatinoAnalysis.Gardener.variables.muccaMvaVar                import MuccaMvaVarFiller
 from LatinoAnalysis.Gardener.variables.muccaMonoHVar              import MuccaMonoHVarFiller
 from LatinoAnalysis.Gardener.variables.muccaMonoHFullVar          import MuccaMonoHFullVarFiller
+from LatinoAnalysis.Gardener.variables.muccaMonoHFullVarHigh      import MuccaMonoHFullVarHighFiller
 
 # mrww
 from LatinoAnalysis.Gardener.variables.MrWWVar                    import MrWWVarFiller   
@@ -177,6 +178,7 @@ if __name__ == '__main__':
     modules['muccaMvaVarFiller']       = MuccaMvaVarFiller()
     modules['muccaMonoHVarFiller']     = MuccaMonoHVarFiller()
     modules['muccaMonoHFullVarFiller'] = MuccaMonoHFullVarFiller()
+    modules['muccaMonoHFullVarHighFiller'] = MuccaMonoHFullVarHighFiller()
 
 # mrWW
     modules['mrWWvarfiller']   = MrWWVarFiller()

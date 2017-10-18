@@ -4,6 +4,8 @@ eosTargBaseIn = '/eos/user/x/xjanssen/HWW2015/'
 eosTargBaseOut= '/eos/user/x/xjanssen/HWW2015/'
 
 
+
+
 # ---- production to run on
 # .... .... this is defined by mkGardener in "-p" "--prods" option
 
@@ -3302,9 +3304,9 @@ Steps= {
         'do4Data'    : True ,
         'subTargets' : [
             'mucca_2HDMadaptFull_high_em',
-            'mucca_2HDMgradFull_high_em',
             'mucca_ZbaradaptFull_high_em',
-            'mucca_ZbargradFull_high_em'
+            # 'mucca_2HDMgradFull_high_em',
+            # 'mucca_ZbargradFull_high_em'
             ],
         },
   
@@ -3628,169 +3630,165 @@ Steps= {
 
 
   # Chain for em channel trained on Apr2017 trees
-  
+  # 2HDMmasses = {'600','800','1000','1200','1400','1700','2000','2500'}
+  # Zbarmasses = {'10','20','50','100','200','300','500','1000','2000','10000'}
+
   'muccaMonoH_Apr2017_em'       :  {
         'isChain'    : True ,
         'do4MC'      : True ,
         'do4Data'    : True ,
         'subTargets' : [
-            # New
-            '2HDMadNem',
-            '2HDMgrNem',
-            'ZbaradNem',
-            'ZbargrNem',
-            # Low
-            '2HDMadLem',
-            '2HDMgrLem',
-            'ZbaradLem',
-            'ZbargrLem',
-            # High
-            '2HDMadHem',
-            '2HDMgrHem',
-            'ZbaradHem',
-            'ZbargrHem',
-            # SuperHigh
-            '2HDMadSHem',
-            '2HDMgrSHem',
-            'ZbaradSHem',
-            'ZbargrSHem'
+            # 2HDM
+            '2HDM600em',
+            '2HDM800em',
+            '2HDM1000em',
+            '2HDM1200em',
+            '2HDM1400em',
+            '2HDM1700em',
+            '2HDM2000em',
+            '2HDM2500em',
+            # Zbar
+            'Zbar10em',
+            'Zbar20em',
+            'Zbar50em',
+            'Zbar100em',
+            'Zbar200em',
+            'Zbar300em',
+            'Zbar500em',
+            'Zbar1000em',
+            'Zbar2000em',
+            'Zbar10000em'
             ],
         },
   
   # 2HDM model trained on Apr2017 trees
-
-  # new
-
-  '2HDMadNem'    : {
+  
+  '2HDM600em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_new_em" --training="BDT7" --channel="em" --model="2HDM" --mass="new"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_600_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="600_300"'
         } ,
-  
-  '2HDMgrNem'    : {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMgradFull_new_em" --training="BDTG18" --channel="em" --model="2HDM"  --mass="new"'
-        } ,
-  
 
-  # low
+  '2HDM800em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_800_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="800_300"'
+        } ,
 
-  '2HDMadLem'    : {
+    '2HDM1000em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_low_em" --training="BDT7" --channel="em" --model="2HDM" --mass="low"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_1000_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="1000_300"'
         } ,
-  
-  '2HDMgrLem'    : {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMgradFull_low_em" --training="BDTG18" --channel="em" --model="2HDM"  --mass="low"'
-        } ,
-  
 
-  # high
+  '2HDM1200em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_1200_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="1200_300"'
+        } ,
 
-  '2HDMadHem'    : {
+  '2HDM1400em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_high_em" --training="BDT7" --channel="em" --model="2HDM" --mass="high"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_1400_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="1400_300"'
         } ,
-  
-  '2HDMgrHem'    : {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMgradFull_high_em" --training="BDTG18" --channel="em" --model="2HDM"  --mass="high"'
-        } ,
-  
 
-  # superHigh
+  '2HDM1700em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_1700_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="1700_300"'
+        } ,
 
-  '2HDMadSHem'    : {
+  '2HDM2000em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_superHigh_em" --training="BDT7" --channel="em" --model="2HDM" --mass="superHigh"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_2000_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="2000_300"'
         } ,
-  
-  '2HDMgrSHem'    : {
+
+  '2HDM2500em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMgradFull_superHigh_em" --training="BDTG18" --channel="em" --model="2HDM"  --mass="superHigh"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_2500_300_em" --training="BDT7" --channel="em" --model="2HDM" --mass="2500_300"'
         } ,
-  
 
   # Zbar model trained on Apr2017 trees
 
-  # new
-
-  'ZbaradNem'    : {
+  'Zbar10em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_new_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="new"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_10_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="10_1"'
         } ,
   
-  'ZbargrNem'    : {
+  'Zbar20em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbargradFull_new_em" --training="BDTG19" --channel="em" --model="Zbar"  --mass="new"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_20_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="20_1"'
         } ,
   
-  # low
-
-  'ZbaradLem'    : {
+  'Zbar50em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_low_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="low"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_50_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="50_1"'
         } ,
   
-  'ZbargrLem'    : {
+  'Zbar100em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbargradFull_low_em" --training="BDTG19" --channel="em" --model="Zbar"  --mass="low"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_100_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="100_1"'
         } ,
   
-  # high
-
-  'ZbaradHem'    : {
+  'Zbar200em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_high_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="high"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_200_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="200_1"'
         } ,
   
-  'ZbargrHem'    : {
+  'Zbar300em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbargradFull_high_em" --training="BDTG19" --channel="em" --model="Zbar"  --mass="high"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_300_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="300_1"'
         } ,
   
-  # superHigh
-
-  'ZbaradSHem'    : {
+  'Zbar500em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_superHigh_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="superHigh"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_500_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="500_1"'
         } ,
   
-  'ZbargrSHem'    : {
+  'Zbar1000em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
         'do4Data'    : True ,
-        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbargradFull_superHigh_em" --training="BDTG19" --channel="em" --model="Zbar"  --mass="superHigh"'
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_1000_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="1000_1"'
+        } ,
+  
+  'Zbar2000em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_2000_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="2000_1"'
+        } ,
+  
+  'Zbar10000em'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_10000_1_em" --training="BDT7" --channel="em" --model="Zbar"  --mass="10000_1"'
         } ,
   
 
