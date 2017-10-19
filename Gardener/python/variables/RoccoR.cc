@@ -289,14 +289,15 @@ void RocOne::init(std::string filename, int iTYPE, int iSYS, int iMEM){
 }
 
 double RocOne::kScaleDT(int Q, double pt, double eta, double phi) const{
-    int H=getBin(eta, NETA, BETA);
-    int F=getBin(phi, NPHI, MPHI, DPHI);
-    double m=M[DT][H][F];
-    double a=A[DT][H][F];
-    double d=D[DT][H];
+    //int H=getBin(eta, NETA, BETA);
+    //int F=getBin(phi, NPHI, MPHI, DPHI);
+    //double m=M[DT][H][F];
+    //double a=A[DT][H][F];
+    //double d=D[DT][H];
 
-    double k=d/(m+Q*a*pt);
-    return k;
+    //double k=d/(m+Q*a*pt);
+    //return k;
+      return 1.5;		
 }
 
 
