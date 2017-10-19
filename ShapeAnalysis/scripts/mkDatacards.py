@@ -295,43 +295,75 @@ class DatacardFactory:
                              
                     elif nuisance ['type'] == 'shape' :
                       card.write(("CMS_" + (nuisance['name'])).ljust(80-20))
-                      card.write((nuisance ['type']).ljust(20))
-                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                        card.write(''.join([('1.000').ljust(columndef) for name in self.signals      ]))
-                        card.write(''.join([('1.000').ljust(columndef) for name in self.backgrounds  ]))
-                        card.write('\n')
-                      else :
-                        # apply only to selected samples
-                        for sampleName in self.signals:
-                          if sampleName in nuisance['samples'].keys() :
-                            card.write(('1.000').ljust(columndef))                          
-                            # save the nuisance histograms in the root file
-                            self._saveHisto(cutName+"/"+variableName+'/',
-                                             'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                             'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
-                                             )
-                            self._saveHisto(cutName+"/"+variableName+'/',
-                                             'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                             'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
-                                             )
-                          else :
-                            card.write(('-').ljust(columndef))
-                        for sampleName in self.backgrounds:
-                          if sampleName in nuisance['samples'].keys() :
-                            card.write(('1.000').ljust(columndef))
-                            # save the nuisance histograms in the root file
-                            self._saveHisto(cutName+"/"+variableName+'/',
-                                             'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                             'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
-                                             )
-                            self._saveHisto(cutName+"/"+variableName+'/',
-                                             'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                             'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
-                                             )
-                          else :
-                            card.write(('-').ljust(columndef))
-                    
-                  # new line at the end of any nuisance that is *not* stat ... because in that case it's already done on its own
+                      if 'AsLnN' in nuisance.keys() and  float(nuisance ['AsLnN']) >= 1:
+                        print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
+                        card.write(('lnN').ljust(20))
+                        allSelectedSamples = self.signals + self.backgrounds  
+                        for sampleName in allSelectedSamples:
+                          if ('all' in nuisance.keys() and nuisance ['all'] == 1) or \
+                             sampleName in nuisance['samples'].keys() :  
+                            histo     = self._getHisto(cutName+"/"+variableName+'/', 
+                                                       'histo_' + sampleName)
+                            histoUp   = self._getHisto(cutName+"/"+variableName+'/', 
+                                                       'histo_' + sampleName + '_' + (nuisance['name']) + "Up") 
+                            histoDown = self._getHisto(cutName+"/"+variableName+'/',
+                                                       'histo_' + sampleName + '_' + (nuisance['name']) + "Down")
+
+                            histoIntegral = histo.Integral()
+                            histoUpIntegral = histoUp.Integral()
+                            histoDownIntegral = histoDown.Integral()
+                            if histoIntegral > 0:
+                              diffUp = (histoUpIntegral - histoIntegral)/histoIntegral/float(nuisance ['AsLnN'])
+                              diffDo = (histoDownIntegral - histoIntegral)/histoIntegral/float(nuisance ['AsLnN'])
+                            else: 
+                              diffUp = 0.
+                              diffDo = 0.
+            
+                            lnNUp = 1. + diffUp
+                            lnNDo = 1. + diffDo
+                              
+                            card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
+                          else:
+                            card.write(('-').ljust(columndef)) 
+
+                      else:  
+                        card.write((nuisance ['type']).ljust(20))
+                        if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                          card.write(''.join([('1.000').ljust(columndef) for name in self.signals      ]))
+                          card.write(''.join([('1.000').ljust(columndef) for name in self.backgrounds  ]))
+                          card.write('\n')
+                        else :
+                          # apply only to selected samples
+                          for sampleName in self.signals:
+                            if sampleName in nuisance['samples'].keys() :
+                              card.write(('1.000').ljust(columndef))                          
+                              # save the nuisance histograms in the root file
+                              self._saveHisto(cutName+"/"+variableName+'/',
+                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                               )
+                              self._saveHisto(cutName+"/"+variableName+'/',
+                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                               )
+                            else :
+                              card.write(('-').ljust(columndef))
+                          for sampleName in self.backgrounds:
+                            if sampleName in nuisance['samples'].keys() :
+                              card.write(('1.000').ljust(columndef))
+                              # save the nuisance histograms in the root file
+                              self._saveHisto(cutName+"/"+variableName+'/',
+                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                               )
+                              self._saveHisto(cutName+"/"+variableName+'/',
+                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                               )
+                            else :
+                              card.write(('-').ljust(columndef))
+                      
+                    # new line at the end of any nuisance that is *not* stat ... because in that case it's already done on its own
                   card.write('\n')
                  
                   
@@ -513,7 +545,10 @@ class DatacardFactory:
        histo.Write()
        
 
-
+    def _getHisto(self, folderName, histoName):
+      shapeName = folderName + histoName
+      histo = self._fileIn.Get(shapeName)
+      return histo
 
 
 

@@ -53,8 +53,9 @@ class MuccaMonoHFullVarFiller(TreeCloner):
        
         # mva trainined xml
         baseCMSSW = os.getenv('CMSSW_BASE')
-#        self.getMuccaMonoHFull.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/work/CMSSW_8_0_26_patch1/src/MUCCA/Optimization/Weights-" + self.model + "_TTbar_0var_" + self.channel + "/TMVAClassification_" + self.training + ".weights.xml")
-        self.getMuccaMonoHFull.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/28May2017/monoH/TMVA/plotsTMVA-" + self.model + "_TTbar_0var_em/Weights-" + self.model + "_TTbar_0var_" + self.channel + "/TMVAClassification_" + self.training + ".weights.xml")
+        
+        # /afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/15Oct2017/monoH/TMVA/plots_TMVA-2HDM_TTbar_0var_em_600_300/Weights-2HDM_TTbar_0var_em_600_300/TMVAClassification_BDT7.weights.xml
+        self.getMuccaMonoHFull.BookMVA("BDT","/afs/cern.ch/user/n/ntrevisa/www/figuresLxplus/15Oct2017/monoH/TMVA/plots_TMVA-" + self.model + "_TTbar_0var_em/Weights-" + self.model + "_TTbar_0var_" + self.channel + "/TMVAClassification_" + self.training + ".weights.xml")
 
     def help(self):
         return '''Add mucca mva variables'''

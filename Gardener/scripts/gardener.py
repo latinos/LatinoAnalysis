@@ -16,7 +16,7 @@ from LatinoAnalysis.Gardener.variables.triggerMaker               import trigger
 # id/isolation scale factors
 from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSFFiller
 from LatinoAnalysis.Gardener.variables.multiIdisoScaleFactors     import MultiIdIsoSFFiller
-
+from LatinoAnalysis.Gardener.variables.LeptonEtaPtCorrFactors     import LeptonEtaPtCorrFactors
 
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
@@ -59,6 +59,7 @@ from LatinoAnalysis.Gardener.variables.chargeFlipWeight           import chargeF
 from LatinoAnalysis.Gardener.variables.muccaMvaVar                import MuccaMvaVarFiller
 from LatinoAnalysis.Gardener.variables.muccaMonoHVar              import MuccaMonoHVarFiller
 from LatinoAnalysis.Gardener.variables.muccaMonoHFullVar          import MuccaMonoHFullVarFiller
+from LatinoAnalysis.Gardener.variables.muccaMonoHFullVarHigh      import MuccaMonoHFullVarHighFiller
 
 # mrww
 from LatinoAnalysis.Gardener.variables.MrWWVar                    import MrWWVarFiller   
@@ -146,6 +147,7 @@ if __name__ == '__main__':
 # id/isolation scale factors
     modules['idisofiller'] = IdIsoSFFiller()
     modules['multiidiso']  = MultiIdIsoSFFiller()
+    modules['etaptlepsf']  = LeptonEtaPtCorrFactors()
 
 # specific variables for MC
 
@@ -176,6 +178,7 @@ if __name__ == '__main__':
     modules['muccaMvaVarFiller']       = MuccaMvaVarFiller()
     modules['muccaMonoHVarFiller']     = MuccaMonoHVarFiller()
     modules['muccaMonoHFullVarFiller'] = MuccaMonoHFullVarFiller()
+    modules['muccaMonoHFullVarHighFiller'] = MuccaMonoHFullVarHighFiller()
 
 # mrWW
     modules['mrWWvarfiller']   = MrWWVarFiller()
