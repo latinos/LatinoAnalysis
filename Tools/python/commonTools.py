@@ -178,6 +178,16 @@ def getSampleFiles(inputDir,Sample,absPath=False):
         Dir = inputDir 
       if '/pnfs/' in inputDir :  xrootdPath='dcap://cluster142.knu.ac.kr/'
      
+    # ... KISTI
+    elif "sdfarm" in os.uname()[1]:
+      lsCmd='ls '
+      if not '/xrootd/' in inputDir and '/store/' in inpuDir: 
+        Dir = '/xrootd/' + inputDir
+      else:
+        Dir = inputDir 
+      if '/xrootd/' in Dir :
+	#xrootdPath='root://cms-xrdr.sdfarm.kr/'
+	xrootdPath='root://cms-xrdr.sdfarm.kr:1094//'
 
     # ... DEFAULT: local mounted disk
     else :
@@ -201,7 +211,11 @@ def getSampleFiles(inputDir,Sample,absPath=False):
       exit() 
     FileTarget = []
     for iFile in Files:
-      if absPath : FileTarget.append('###'+xrootdPath+iFile)
+      if absPath :
+	if "sdfarm" in os.uname()[1]:
+	  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
+	  FileTarget.append('###'+xrootdPath+iFile)
+	else : FileTarget.append('###'+xrootdPath+iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
     return FileTarget
 

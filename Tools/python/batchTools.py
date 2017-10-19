@@ -64,6 +64,10 @@ class batchJobs :
        elif 'knu' in os.uname()[1]:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
+       elif 'sdfarm' in os.uname()[1]:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
+         jFile.write('export X509_USER_PROXY=/cms/ldap_home/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
@@ -85,6 +89,8 @@ class batchJobs :
 ###      elif 'ifca' in os.uname()[1]:
 ###        jFile.write("mkdir -p /tmp/"+os.environ["USER"]+"/latinos \n") 
 ###        jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
+         elif 'sdfarm' in os.uname()[1]:
+           jFile.write('cd '+self.subDir+'\n')
          else:
            jFile.write('cd - \n')
            ### the following makes the .sh script exit if an error is thrown after the "set -e" command
@@ -103,6 +109,8 @@ class batchJobs :
      if "knu" in os.uname()[1]: 
        os.system('cp $X509_USER_PROXY /u/user/'+os.environ["USER"]+'/.proxy')
        #os.system('cp /tmp/x509up_u$UID /u/user/'+os.environ["USER"]+'/.proxy')
+     if "sdfarm" in os.uname()[1]: 
+       os.system('cp $X509_USER_PROXY /cms/ldap_home/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -167,6 +175,22 @@ class batchJobs :
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        elif 'sdfarm' in os.uname()[1]:
+          jdsFileName=self.subDir+'/'+jName+'.jds'
+          jdsFile = open(jdsFileName,'w')
+          #jdsFile = open(self.subDir+'/'+jName+'.jds','w')
+          jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+          jdsFile.write('universe = vanilla\n')
+          jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
+          jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
+          jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+          #jdsFile.write('should_transfer_files = YES\n')
+          #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
+          #jdsFile.write('transfer_input_files = '+jName+'.sh\n')
+          jdsFile.write('queue\n')
+          jdsFile.close()
+	  #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
+          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
         elif 'ifca' in os.uname()[1] :
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
         elif "pi.infn.it" in socket.getfqdn():
@@ -191,6 +215,8 @@ class batchJobs :
         jFile.write('lcg-cp '+inputFile+' srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms'+outputFile+'\n')
      elif 'knu' in os.uname()[1] :
         jFile.write('gfal-copy '+inputFile+' srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=/pnfs/knu.ac.kr/data/cms/'+outputFile+'\n')
+     elif 'sdfarm' in os.uname()[1] :
+        jFile.write('gfal-copy -p '+inputFile+' srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/'+outputFile+'\n')
      else :
         jFile.write('cp '+inputFile+ " " + outputFile+'\n')
      jFile.close()
@@ -338,12 +364,25 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
             todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             todoFile.close()
         elif 'knu' in os.uname()[1]:
-          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
-          #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
-          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+        elif 'sdfarm' in os.uname()[1]:
+          jdsFileName=self.subDir+'/'+jName+'.jds'
+          jdsFile = open(self.subDir+'/'+jName+'.jds','w')
+          jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+          jdsFile.write('universe = vanilla\n')
+          jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
+          jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
+          jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+          #jdsFile.write('should_transfer_files = YES\n')
+          #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
+          #jdsFile.write('transfer_input_files = '+jName+'.sh\n')
+          jdsFile.write('queue\n')
+          jdsFile.close()
+          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+          else: os.system('rm '+jidFile)
         elif 'ifca' in os.uname()[1] :
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
@@ -387,6 +426,12 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       else:
 	usedDir = inputDir
       return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
+    elif "sdfarm" in os.uname()[1]:
+      if '/xrootd/' in inputDir:
+	usedDir = inputDir.split('/xrootd/')[1]
+      else:
+	usedDir = inputDir
+      return "ls /xrootd/" + usedDir
     else :
       if iniStep == 'Prod' :
         return " ls " + inputDir
@@ -403,6 +448,8 @@ def rootReadPath(inputFile):
       return "/gpfs/gaes/cms/" + inputFile
     elif 'knu' in os.uname()[1] :
       return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
+    elif 'sdfarm' in os.uname()[1] :
+      return "root://cms-xrdr.sdfarm.kr:1094//xrd" + inputFile
     else :
         return "/eos/cms" + inputFile
     
@@ -422,6 +469,11 @@ def remoteFileSize(inputFile):
 	return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
       else:
         return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "sdfarm" in os.uname()[1]:
+      if '/xrootd' in inputFile:
+	return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /xrootd/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
         return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
 

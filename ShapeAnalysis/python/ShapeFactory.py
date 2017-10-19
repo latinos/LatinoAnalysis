@@ -1167,6 +1167,17 @@ class ShapeFactory:
       if 'maite.iihe.ac.be' in path: 
         return os.path.exists(path.split('dcap://maite.iihe.ac.be/')[1])
 
+    def _test_sdfarm_File(self,path): 
+      if 'cms-xrdr.sdfarm.kr' in path:
+	if 'xrd//store' in path:
+	  cmd = 'gfal-ls -l srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/store/'+path.split('xrd//store/')[1]
+	elif 'xrd/store' in path:
+	  cmd = 'gfal-ls -l srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/store/'+path.split('xrd/store/')[1]
+	else : return False
+	print 'checking ', cmd
+	if os.system(cmd) == 0 : return True 
+	else: return False
+      else: return False
 
 
     # _____________________________________________________________________________
@@ -1187,6 +1198,11 @@ class ShapeFactory:
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
 	    elif "cluster142.knu.ac.kr" in path:
 	      pass # already checked the file at mkShape.py
+            elif "sdfarm" in path:
+              if not self._test_sdfarm_File(path):
+                print 'File '+path+' doesn\'t exists @ sdfarm.kr'
+                doesFileExist = False
+                if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
             else:
               if not os.path.exists(path):
                 print 'File '+path+' doesn\'t exists'
