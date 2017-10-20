@@ -216,12 +216,12 @@ for iProd in prodList :
       fileCmd = 'ls ' + inDirBase +iProd+ '/'+options.iniStep
   else:
     if options.iniStep == 'Prod' : 
-   #   fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
-      fileCmd = 'ls '+eosTargBaseIn
+      fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+      #fileCmd = 'ls '+eosTargBaseIn
     else:
       fileCmd = 'ls '+eosTargBaseIn+'/'+iProd+'/'+options.iniStep
 
-  print "fileCmd is: ", fileCmd
+  #print "fileCmd is: ", fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
