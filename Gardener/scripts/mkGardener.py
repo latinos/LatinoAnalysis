@@ -114,8 +114,8 @@ CMSSW=os.environ["CMSSW_BASE"]
 #  print Steps['bPogSF']['command']  
 
 #if options.cmssw == '763' :
-eosTargBaseIn = '/eos/user/j/jgarciaf/'
-eosTargBaseOut= '/eos/user/j/jgarciaf/'
+#eosTargBaseIn = '/eos/user/j/jgarciaf/'
+#eosTargBaseOut= '/eos/user/j/jgarciaf/'
 # eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
   eosTargBaseIn=options.inputTarget
@@ -216,11 +216,12 @@ for iProd in prodList :
       fileCmd = 'ls ' + inDirBase +iProd+ '/'+options.iniStep
   else:
     if options.iniStep == 'Prod' : 
-      fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+   #   fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+      fileCmd = 'ls '+eosTargBaseIn
     else:
       fileCmd = 'ls '+eosTargBaseIn+'/'+iProd+'/'+options.iniStep
 
-  #print "fileCmd is: ", fileCmd
+  print "fileCmd is: ", fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
