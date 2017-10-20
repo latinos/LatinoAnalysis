@@ -2374,6 +2374,21 @@ Steps= {
                   'command'    : 'gardener.py zzEWKcorrections' ,
                 } ,
 
+'dorochesterMC'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'onlySample' : ['DYJetsToTT_MuEle_M-50'] ,   # test module with just one sample 
+                  'command'    : 'gardener.py rochester --d 0 --cmssw RPLME_CMSSW' ,
+                } ,
+
+'dorochesterData'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py rochester --d 1 --cmssw RPLME_CMSSW' ,
+                } ,
+
 
   'genVariables'  : {
                   'isChain'    : False ,

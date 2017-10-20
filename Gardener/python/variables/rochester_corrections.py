@@ -38,8 +38,7 @@ class rochester_corr(TreeCloner):
         except RuntimeError:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/RoccoR.cc++g')
        
-        rochester_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/rcdata.2016.v3'
-        print "scale factors from", rochester_path
+        
        
 
     def process(self,**kwargs):
@@ -70,7 +69,11 @@ class rochester_corr(TreeCloner):
           self.oldBranchesToBeModifiedVector[bname] = bvector
         for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems(): self.otree.Branch(bname,bvector)
 
-        rc=ROOT.RoccoR("rochester_path")
+        cmssw_base = os.getenv('CMSSW_BASE')
+        rochester_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/rcdata.2016.v3'
+        print "scale factors from", rochester_path
+        rc=ROOT.RoccoR(rochester_path)
+
         # Loop
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries
@@ -108,18 +111,18 @@ class rochester_corr(TreeCloner):
                     charge = int(flavour/abs(flavour))
                     nl =int(itree.std_vector_muon_NValidHitsInTrk [iLep])
                     u1 =random.random()
-                    print charge, pt, eta, phi, nl, genpt, u1
+                    #print charge, pt, eta, phi, nl, genpt, u1
 
                    
                     if self.isdata == 1 :
                         #for each data muon in the loop, use this function to get a scale factor for its momentum
-                        dataSF = rc.kScaleDT(charge,pt,eta,phi,s,m)
+                        dataSF = rc.kScaleDT(charge,pt,eta,phi)
                         #dataSF= 1.5
                         newpt= pt*dataSF
                         self.oldBranchesToBeModifiedVector['std_vector_lepton_pt'] .push_back(newpt)
                         self.oldBranchesToBeModifiedVector['std_vector_muon_pt'] .push_back(newpt)
-                        if i%step == 0.:
-                            print dataSF
+                        #if i%step == 0.:
+                        #    print dataSF
                     else :
                         #for MC, if matched gen-level muon (genPt) is available, use this function
                         mcSF = rc.kScaleFromGenMC(charge, pt, eta, phi, nl, genpt, u1)
@@ -127,8 +130,8 @@ class rochester_corr(TreeCloner):
                         newpt= pt*mcSF
                         self.oldBranchesToBeModifiedVector['std_vector_lepton_pt'] .push_back(newpt)
                         self.oldBranchesToBeModifiedVector['std_vector_muon_pt'] .push_back(newpt)
-                        if i%step == 0.:
-                            print mcSF
+                        #if i%step == 0.:
+                        #    print mcSF
                        
                 else:
                     self.oldBranchesToBeModifiedVector['std_vector_lepton_pt'] .push_back(pt)

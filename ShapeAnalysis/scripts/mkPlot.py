@@ -1030,7 +1030,7 @@ class ShapeFactory:
             tcanvas.RedrawAxis()
             
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
+            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".C")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".eps")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
@@ -1226,7 +1226,7 @@ class ShapeFactory:
             pad2.SetGrid()
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
-            #tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
             
             
             # log Y axis
@@ -1632,7 +1632,7 @@ class ShapeFactory:
                     weight_X_pad2.RedrawAxis()
                     
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
-                    #weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
                     
                     
                     # save also all the TH1F separately for later combination

@@ -289,15 +289,13 @@ void RocOne::init(std::string filename, int iTYPE, int iSYS, int iMEM){
 }
 
 double RocOne::kScaleDT(int Q, double pt, double eta, double phi) const{
-    //int H=getBin(eta, NETA, BETA);
-    //int F=getBin(phi, NPHI, MPHI, DPHI);
-    //double m=M[DT][H][F];
-    //double a=A[DT][H][F];
-    //double d=D[DT][H];
-
-    //double k=d/(m+Q*a*pt);
-    //return k;
-      return 1.5;		
+    int H=getBin(eta, NETA, BETA);
+    int F=getBin(phi, NPHI, MPHI, DPHI);
+    double m=M[DT][H][F];
+    double a=A[DT][H][F];
+    double d=D[DT][H];
+    double k=d/(m+Q*a*pt);
+    return k;
 }
 
 
@@ -348,7 +346,9 @@ RoccoR::init(std::string dirname){
     std::string tag;
     int si;
     int sn;
+    cout<<"INIT: "<<in.is_open()<<" "<<filename.c_str()<<endl;
     while(std::getline(in, s)){
+      
 	std::stringstream ss(s); 
 	ss >> tag >> si >> sn; 
 	std::vector<RocOne> v;
