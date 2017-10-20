@@ -51,7 +51,7 @@ class ChainSawFactory:
     # a datacard for each "cut" and each "variable" will be produced, in separate sub-folders, names after "cut/variable"
     # _____________________________________________________________________________
 
-    def mkChainSaw (self, outputDirDatacard, variables, cuts, samples, nuisances, threshold) :
+    def mkChainSaw (self, outputDirDatacard, variables, cuts, samples, nuisances, nuisancesToPrune, threshold) :
 
         self._variables = variables
         self._samples   = samples
@@ -62,11 +62,11 @@ class ChainSawFactory:
  
         # loop over cuts  
         for cutName in self._cuts :
-          print "cut = ", cutName, " :: ", cuts[cutName]
+          print "cut = ", cutName #, " :: ", cuts[cutName]
   
           # loop over variables
           for variableName, variable in self._variables.iteritems():
-            print "variable = ", variableName, " :: ", variable
+            print "variable = ", variableName  #, " :: ", variable
 
             tagNameToAppearInDatacard = cutName
             
@@ -106,30 +106,36 @@ class ChainSawFactory:
                 #print " nameTempUp = ", nameTempUp
                 
                 if nameTempUp in histograms.keys() and  nameTempDown in histograms.keys() : 
-                   
+                  
+                  
                   histo_nominal = histograms[nameTemp] 
                   histo_up   = histograms[nameTempUp] 
                   histo_down = histograms[nameTempDown] 
                   
-                  # maximum change in statistical uncertainty
-                  max_change_stat_uncertainty = 0.4
-                                  
-                  for ibin in range( histo_nominal.GetNbinsX() ) :
-                    nominal_uncertainty  = histo_nominal.GetBinError(ibin+1)
-                    var_up_uncertainty   = histo_up.GetBinError(ibin+1)
-                    var_down_uncertainty = histo_down.GetBinError(ibin+1)
-                  
-                    if (nominal_uncertainty != 0) and ( abs((var_up_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
-                      #print " correct : ", histo_nominal.GetBinContent(ibin+1), " ---> var_up_uncertainty =", var_up_uncertainty, "  ; nominal_uncertainty = ", nominal_uncertainty, " => ", abs((var_up_uncertainty / nominal_uncertainty)-1),
-                      #print "    ---> ", histo_up.GetBinContent(ibin+1),
-                      histo_up.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
-                      #print "    ---> ", histo_up.GetBinContent(ibin+1),
-                      #print "    --> ", str(sampleName) , "   ",  (nuisance['name']),
-                      #print " ibin = ", ibin
-                      
-       
-                    if (nominal_uncertainty != 0) and ( abs((var_down_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
-                      histo_down.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
+                  # morph everytime if if the list is not given 
+                  # if the list is given, morph only if part of the list
+                  if len (nuisancesToPrune) == 0 or ( len (nuisancesToPrune) != 0 and (nuisanceName in nuisancesToPrune) ) :
+
+                    # maximum change in statistical uncertainty
+                    #max_change_stat_uncertainty = 0.4
+                    max_change_stat_uncertainty = threshold
+                                    
+                    for ibin in range( histo_nominal.GetNbinsX() ) :
+                      nominal_uncertainty  = histo_nominal.GetBinError(ibin+1)
+                      var_up_uncertainty   = histo_up.GetBinError(ibin+1)
+                      var_down_uncertainty = histo_down.GetBinError(ibin+1)
+                    
+                      if (nominal_uncertainty != 0) and ( abs((var_up_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
+                        #print " correct : ", histo_nominal.GetBinContent(ibin+1), " ---> var_up_uncertainty =", var_up_uncertainty, "  ; nominal_uncertainty = ", nominal_uncertainty, " => ", abs((var_up_uncertainty / nominal_uncertainty)-1),
+                        #print "    ---> ", histo_up.GetBinContent(ibin+1),
+                        histo_up.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
+                        #print "    ---> ", histo_up.GetBinContent(ibin+1),
+                        #print "    --> ", str(sampleName) , "   ",  (nuisance['name']),
+                        #print " ibin = ", ibin
+                        
+                    
+                      if (nominal_uncertainty != 0) and ( abs((var_down_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
+                        histo_down.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
                   
                   histo_up.Write()
                   histo_down.Write()
@@ -146,112 +152,6 @@ class ChainSawFactory:
                 
                 
  
- 
-    #nuisancesToPrune = {}
-    #if os.path.exists(nameFileConfiguration):
-      #handle = open(nameFileConfiguration,'r')
-      #exec(handle)
-      #handle.close()
-
-    #print "nuisancesToPrune = ", nuisancesToPrune
-
-    ## remove duplicates in "sampleName"
-    ## used in scaling histograms in case of "matching"
-    ## and in case the same sample name is used in several "bin"
-    ## NB: the order is not preserved, but who cares!
-    #reducedsampleName = list(set(sampleName))
-
-    # modify sample rate in root file!
-
-    #for rootFileBin in rootFiles:
-      #print "rootFile[", rootFileBin, "] = ",rootFiles[rootFileBin]
-      ## check if root file is present (the name must end with .root)
-      #matchfile = re.search(".root", rootFiles[rootFileBin])
-      #if not matchfile:
-       #continue
-      #rootFile = ROOT.TFile.Open(str(thepath)+"/"+str(rootFiles[rootFileBin]))
-
-      ## copy the default root file for bookkeeping
-      #old_root_file_name = str(thepath)+"/"+"old_"+str(rootFiles[rootFileBin])
-      #new_root_file_name = str(thepath)+"/"+str(rootFiles[rootFileBin])
-      #print " old_root_file_name = ", old_root_file_name
-      #print " new_root_file_name = ", new_root_file_name
-      
-      #os.system ("cp " + new_root_file_name + "   " + old_root_file_name ) 
-     
-      #rootFile    = ROOT.TFile.Open( old_root_file_name, "READ")
-      #rootFileNew = ROOT.TFile.Open( new_root_file_name, "RECREATE")
-      
-      ## get the histograms
-      #histograms = {}
-      #for k in rootFile.GetListOfKeys():
-        #h = k.ReadObj()
-        ## only 1d histograms supported
-        #histoName = h.GetName()
-        #match = re.search("histo_", histoName)
-        #if not match:
-          #continue
-        #histograms[h.GetName()] = h
-      ##print " histograms = ", histograms
-
-      #nuisance_to_be_removed = []
-      #nuisance_to_be_removed_sample_dependent = {}
-      #for nuisance in systematicsName :
-        #for  hr_list_nuisances_to_test, nuisance_to_test in nuisancesToPrune.iteritems() :
-          ##print " hr_list_nuisances_to_test = ", hr_list_nuisances_to_test, " -> ", nuisance_to_test
-          #matchNuisance = fnmatch.fnmatch(str(nuisance), nuisance_to_test)
-          #if matchNuisance :
-            ##print "matchNuisance[", nuisance_to_test, "] -> ", nuisance
-            ## relative variation
-            #nuisance_to_be_removed_samples = {}
-            
-            #for sample in reducedsampleName:
-              #nameTempUp   = "histo_"+str(sample)+"_"+str(nuisance)+"Up"
-              #nameTempDown = "histo_"+str(sample)+"_"+str(nuisance)+"Down"
-              #nameTemp     = "histo_"+str(sample)
-              
-              #if nameTempUp in histograms.keys() and  nameTempDown in histograms.keys() : 
-                 
-                #histo_nominal = histograms[nameTemp] 
-                #histo_up   = histograms[nameTempUp] 
-                #histo_down = histograms[nameTempDown] 
-                
-                ## maximum change in statistical uncertainty
-                #max_change_stat_uncertainty = 0.4
-                                
-                #for ibin in range( histo_nominal.GetNbinsX() ) :
-                  #nominal_uncertainty  = histo_nominal.GetBinError(ibin+1)
-                  #var_up_uncertainty   = histo_up.GetBinError(ibin+1)
-                  #var_down_uncertainty = histo_down.GetBinError(ibin+1)
-                
-                  #if (nominal_uncertainty != 0) and ( abs((var_up_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
-                    #histo_up.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
-
-                  #if (nominal_uncertainty != 0) and ( abs((var_down_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
-                    #histo_down.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
-                
-                #histo_up.Write()
-                #histo_down.Write()
-                
-          #else :  
-            #for sample in reducedsampleName:
-              #nameTempUp   = "histo_"+str(sample)+"_"+str(nuisance)+"Up"
-              #nameTempDown = "histo_"+str(sample)+"_"+str(nuisance)+"Down"
-              
-              #if nameTempUp in histograms.keys() and  nameTempDown in histograms.keys() : 
-                 
-                #histo_up   = histograms[nameTempUp] 
-                #histo_down = histograms[nameTempDown] 
-
-                #histo_up.Write()
-                #histo_down.Write()
-
-      ## finally save the nominals
-      #for sample in reducedsampleName:
-        #nameTemp     = "histo_"+str(sample)
-        #histo_nominal = histograms[nameTemp] 
-        #histo_nominal.Write()
-
 
 
 ######################################
@@ -273,7 +173,7 @@ if __name__ == '__main__':
    parser = optparse.OptionParser(usage)
 
    parser.add_option("-i", "--inputConfiguration",         dest="nameFileConfiguration",        help="name configuration file with nuisances to remove", default='blabla.py')
-   parser.add_option("-t", "--threshold",                  dest="threshold",                    help="threshold", default=0.15,  type='float')
+   parser.add_option("-t", "--threshold",                  dest="threshold",                    help="threshold", default=0.4,  type='float')
    parser.add_option('--outputDirDatacard'  ,              dest='outputDirDatacard' ,           help='output directory'                           , default='./')
    parser.add_option('--nuisancesFile'      ,              dest='nuisancesFile'     ,           help='file with nuisances configurations'         , default=None )
    parser.add_option('--cardList'        ,                 dest="cardList" ,                    help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
@@ -340,6 +240,15 @@ if __name__ == '__main__':
      handle.close()
    
    
-   factory.mkChainSaw( opt.outputDirDatacard, variables, cuts, samples, nuisances, opt.threshold)
+   
+   nuisancesToPrune = {}
+   if os.path.exists(opt.nameFileConfiguration):
+     handle = open(opt.nameFileConfiguration,'r')
+     exec(handle)
+     handle.close()
+
+   
+   
+   factory.mkChainSaw( opt.outputDirDatacard, variables, cuts, samples, nuisances, nuisancesToPrune, opt.threshold)
    
       
