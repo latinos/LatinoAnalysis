@@ -16,6 +16,8 @@
 #FIX 
 #FIX # l2 tight >= 2 tight leptons (any WP)
 #FIX ./mkGardener.py -p Apr2017_summer16 -s  l2tightOR -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd -S Target -b
+     ./mkGardener.py -p Apr2017_summer16 -s  LepTrgFix  -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR -S Target -b
+
 #FIX ./mkGardener.py -p Apr2017_summer16 -s  formulasMC -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR -S Target -b
 #FIX 
 #FIX # Skims
@@ -40,7 +42,7 @@
 #./mkGardener.py -p Apr2017_summer16 -s ggHUnc -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose -S Target -b
 #./mkGardener.py -p Apr2017_summer16 -s ggHUnc -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd -S Target -b
 #./mkGardener.py -p Apr2017_summer16 -s ggHUnc -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR -S Target -b
-./mkGardener.py -p Apr2017_summer16 -s ggHUnc -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC -S Target -b
+#./mkGardener.py -p Apr2017_summer16 -s ggHUnc -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC -S Target -b
 # Skims
 for iSkim in wwSel topSel vh3lSel sfSel vbsSel ssSel dymvaSel_2j dymvaSel sfmvaSel ; do
   ./mkGardener.py -p Apr2017_summer16 -s ggHUnc -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__${iSkim} -S Target -b

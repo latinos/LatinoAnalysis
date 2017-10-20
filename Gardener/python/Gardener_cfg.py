@@ -1962,6 +1962,12 @@ Steps= {
                   'subTargets' : ['baseW','bPogSF','ggHUnc','genMatchVariables','BWEwkSinglet']
                     },
 
+  'LepTrgFix' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : [ 'etaptlepsf' , 'TrigMakerMCkeepRun' ]
+                    },
 
   'puextra'      :   {
                   'isChain'    : True ,
