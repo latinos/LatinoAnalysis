@@ -250,7 +250,7 @@ if __name__ == '__main__':
    
    
    
-   nuisancesToPrune = {}
+   nuisancesToPrune = []
    if os.path.exists(opt.nameFileConfiguration):
      handle = open(opt.nameFileConfiguration,'r')
      exec(handle)
