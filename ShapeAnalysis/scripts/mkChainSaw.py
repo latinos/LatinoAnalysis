@@ -139,7 +139,16 @@ class ChainSawFactory:
                   
                   histo_up.Write()
                   histo_down.Write()
-                  
+              
+              # save all the histograms with different structure,
+              # as the bbb histograms and the stats
+              
+              for histoName, histo in histograms.iteritems() :
+                match = re.search("_stat", histoName)
+                if match:
+                  h.Write()
+              
+              
               # finally save the nominals
               if sampleName != "DATA" :
                 nameTemp     = "histo_" + str(sampleName)
