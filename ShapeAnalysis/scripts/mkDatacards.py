@@ -518,6 +518,16 @@ class DatacardFactory:
                             card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
                       card.write('\n')
 
+
+                if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                  if 'type' in nuisance.keys() :
+                    if nuisance['type'] == 'auto' :
+                      card.write('* autoMCStats ' + nuisance ['maxPoiss'] + '  ' + nuisance ['includeSignal'] )
+                      #  nuisance ['maxPoiss'] =  Number of threshold events for Poisson modelling
+                      #  nuisance ['includeSignal'] =  Include MC stat nuisances on signal processes (1=True, 0=False)
+                      card.write('\n')
+               
+               
                
             # now add other nuisances            
             # Are there other kind of nuisances I forgot?

@@ -23,3 +23,9 @@ Easy descriptor:
 expand samples.py into something human readable
 
     easyDescription.py
+    
+    
+Morphing of the histograms for nuisances (removing unwanted fluctuations)
+
+    mkChainSaw.py --pycfg=configuration.py 
+    
