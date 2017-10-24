@@ -4503,11 +4503,11 @@ Steps= {
             '2HDM2500em',
             # Zbar
             'Zbar10em',
-            'Zbar20em',
+            #'Zbar20em',
             'Zbar50em',
             'Zbar100em',
             'Zbar200em',
-            'Zbar300em',
+            #'Zbar300em',
             'Zbar500em',
             'Zbar1000em',
             'Zbar2000em',
@@ -4515,8 +4515,26 @@ Steps= {
             ],
         },
   
+  'muccaAll_em'       :  {
+        'isChain'    : True ,
+        'do4MC'      : True ,
+        'do4Data'    : True ,
+        'subTargets' : [
+            '2HDMAllem',
+            'ZbarAllem'
+            ],
+        },
+  
+
   # 2HDM model trained on Apr2017 trees
   
+  '2HDMAllem'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="2HDMadaptFull_All_em" --training="BDT7" --channel="em" --model="2HDM" --mass="0_0"'
+        } ,
+
   '2HDM600em'    : {
         'isChain'    : False ,
         'do4MC'      : True  ,
@@ -4574,6 +4592,13 @@ Steps= {
         } ,
 
   # Zbar model trained on Apr2017 trees
+
+  'ZbarAllem'    : {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True ,
+        'command'    : 'gardener.py muccaMonoHFullVarHighFiller --signal="ZbaradaptFull_All_em" --training="BDT7" --channel="em" --model="Zbar" --mass="0_0"'
+        } ,
 
   'Zbar10em'    : {
         'isChain'    : False ,
