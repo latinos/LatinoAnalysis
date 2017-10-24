@@ -45,6 +45,9 @@ from LatinoAnalysis.Gardener.variables.qq2vvEWKcorrectionsWeight  import qq2vvEW
 from LatinoAnalysis.Gardener.variables.qq2wzEWKcorrectionsWeight  import qq2wzEWKcorrectionsWeightFiller
 from LatinoAnalysis.Gardener.variables.qq2zzEWKcorrectionsWeight  import qq2zzEWKcorrectionsWeightFiller
 
+# rochester corrections to muon pt
+from LatinoAnalysis.Gardener.variables.rochester_corrections       import rochester_corr
+
 # new variables
 from LatinoAnalysis.Gardener.variables.WW2jVar                    import WW2jVarFiller
 from LatinoAnalysis.Gardener.variables.WWVar                      import WWVarFiller
@@ -194,6 +197,9 @@ if __name__ == '__main__':
     modules['wzEWKcorrections']      =  qq2wzEWKcorrectionsWeightFiller()
     modules['zzEWKcorrections']      =  qq2zzEWKcorrectionsWeightFiller()
 
+#add rochester weight for muon pt 
+    modules['rochester'] = rochester_corr()
+    
 # add bpog SF
     modules['btagPogScaleFactors']   = btagPogScaleFactors()
     modules['allBtagPogScaleFactors'] = allBtagPogScaleFactors()

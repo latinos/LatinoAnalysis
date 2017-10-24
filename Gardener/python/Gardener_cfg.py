@@ -1962,6 +1962,12 @@ Steps= {
                   'subTargets' : ['baseW','bPogSF','ggHUnc','genMatchVariables','BWEwkSinglet']
                     },
 
+  'LepTrgFix' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : [ 'etaptlepsf' , 'TrigMakerMCkeepRun' ]
+                    },
 
   'puextra'      :   {
                   'isChain'    : True ,
@@ -2366,6 +2372,21 @@ Steps= {
                   'do4Data'    : False ,
                   'onlySample' : ['ZZTo2L2Nu', 'ZZTo2L2Q', ],
                   'command'    : 'gardener.py zzEWKcorrections' ,
+                } ,
+
+'dorochesterMC'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'onlySample' : ['DYJetsToTT_MuEle_M-50'] ,   # test module with just one sample 
+                  'command'    : 'gardener.py rochester --d 0 --cmssw RPLME_CMSSW' ,
+                } ,
+
+'dorochesterData'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'command'    : 'gardener.py rochester --d 1 --cmssw RPLME_CMSSW' ,
                 } ,
 
 

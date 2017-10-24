@@ -10,7 +10,6 @@ formulas['XSWeight'] = 'event.baseW*\
 
 
 formulas['SFweight2l'] = 'event.puW*\
-                          event.bPogSF_CMVAL*\
                           event.effTrigW*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
@@ -25,9 +24,8 @@ formulas['SFweight3l'] = 'event.puW*\
                           event.veto_EMTFBug \
                           if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
 
-# !!!!! We don't have the trigger formula implemented for 4l !!!! -> Use 3l but not correct
 formulas['SFweight4l'] = 'event.puW*\
-                          event.effTrigW3l*\
+                          event.effTrigW4l*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
                           event.std_vector_lepton_recoW[2]*\

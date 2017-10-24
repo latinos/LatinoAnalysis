@@ -4,6 +4,7 @@ import ROOT
 import os.path
 import copy
 import math
+import re
 
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 
@@ -188,7 +189,8 @@ class triggerCalculator():
             eta[0] = self.mineta_mu
           if eta[0] > self.maxeta_mu:
             eta[0] = self.maxeta_mu
-             
+
+        return pt[0], eta[0]
 
     def _getWeight (self, kindLep1, pt1, eta1, kindLep2, pt2, eta2):
 
@@ -335,10 +337,11 @@ class triggerCalculator():
           #            dz_eff
 
          
-          eff_double = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)*dz_eff
+          eff_double = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)
 
 
-          evt_eff =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))          
+          evt_eff =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))*    \
+                      dz_eff          
  
           # Single lepton only
 
@@ -365,7 +368,7 @@ class triggerCalculator():
           if abs(kindLep1) == 11 and abs(kindLep2) == 11 :
             eff_tl *= dz_eff
             eff_lt *= dz_eff
-            evt_eff_dbleEle = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)*dz_eff #eff_tl + (1-eff_tl) * eff_lt
+            evt_eff_dbleEle = eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg #eff_tl + (1-eff_tl) * eff_lt
             evt_eff_dbleMu  = 0.0
             evt_eff_EleMu   = 0.0
           #                   mu                     mu
@@ -373,7 +376,7 @@ class triggerCalculator():
             eff_tl *= dz_eff
             eff_lt *= dz_eff
             evt_eff_dbleEle = 0.0
-            evt_eff_dbleMu  = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)*dz_eff #eff_tl + (1-eff_tl) * eff_lt
+            evt_eff_dbleMu  = eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg #eff_tl + (1-eff_tl) * eff_lt
             evt_eff_EleMu   = 0.0
           #                   mu                     ele       
           if abs(kindLep1) == 13 and abs(kindLep2) == 11 :
@@ -464,10 +467,11 @@ class triggerCalculator():
           eff_sgl_1             = high_eff_sgl_1
           eff_sgl_2             = high_eff_sgl_2
 
-          eff_double_up = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)*dz_eff
+          eff_double_up = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)
 
 
-          evt_eff_error_up =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))
+          evt_eff_error_up =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))*    \
+                                          dz_eff
 
           # and low variation ...
           eff_dbl_1_leadingleg  = low_eff_dbl_1_leadingleg
@@ -477,10 +481,11 @@ class triggerCalculator():
           eff_sgl_1             = low_eff_sgl_1
           eff_sgl_2             = low_eff_sgl_2
 
-          eff_double_low = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)*dz_eff
+          eff_double_low = (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg + eff_dbl_1_leadingleg*eff_dbl_2_trailingleg - eff_dbl_2_leadingleg*eff_dbl_1_leadingleg)
 
 
-          evt_eff_error_low =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))
+          evt_eff_error_low =   (eff_double + eff_sgl_1 * (1. - eff_dbl_2_trailingleg) + eff_sgl_2*(1. - eff_dbl_1_trailingleg))*    \
+                               dz_eff
 
           return evt_eff, evt_eff_error_low, evt_eff_error_up ,  evt_eff_snglEle , evt_eff_snglMu , evt_eff_dbleEle , evt_eff_dbleMu , evt_eff_EleMu , TrgEmulator
         else :
@@ -507,7 +512,7 @@ class triggerCalculator():
           
           pt1 = vpt1[0]
           pt2 = vpt2[0]
-          pt3 = vpt2[0]
+          pt3 = vpt3[0]
           eta1 = veta1[0]
           eta2 = veta2[0]
           eta3 = veta3[0]
@@ -602,14 +607,14 @@ class triggerCalculator():
             lead1trail2 = "triggerEleMuLegHigPt"
             trail2lead1 = "triggerEleMuLegLowPt"
             trail1lead2 = "triggerMuEleLegLowPt"
-            dz_eff_23 = self.DZEff_MuEle           
+            dz_eff_12 = self.DZEff_EleMu
 
           if abs(kindLep2) == 13 and abs(kindLep3) == 11 :
             lead2trail3 = "triggerMuEleLegHigPt"
             lead3trail2 = "triggerEleMuLegHigPt"
             trail2lead3 = "triggerEleMuLegLowPt"
             trail3lead2 = "triggerMuEleLegLowPt"
-            dz_eff_12 = self.DZEff_EleMu
+            dz_eff_23 = self.DZEff_MuEle           
 
           if abs(kindLep3) == 13 and abs(kindLep1) == 11 :
             lead3trail1 = "triggerMuEleLegHigPt"
@@ -777,6 +782,141 @@ class triggerCalculator():
 
           return 1, 1, 1 
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # _getNlWeight
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def _getNlWeight(self, nLep):
+        if nLep == 2:
+            return _getWeight
+        def _curriedWeight(*args):
+            if len(args)%3 != 0:
+                print "ERROR!! For each leg, 'kindLep pt eta' should be provides. Bad number of arguments."
+                return 1, 1, 1
+            toss_a_coin = ROOT.gRandom.Rndm()
+
+            # Start from here!
+            kindLep = [ args[i*3+0] for i in range(nLep) ]
+            pt      = [ args[i*3+1] for i in range(nLep) ]
+            eta     = [ args[i*3+2] for i in range(nLep) ]
+
+            if  any([ p < -20 for p in kindLep ]):
+                return 1,1,1
+
+            for iLep in range(nLep):
+                pt[iLep], eta[iLep] = self._fixOverflowUnderflow(kindLep[iLep],pt[iLep:iLep+1],eta[iLep:iLep+1])
+
+            dz_eff_ee = self.DZEff_DoubleEle    # 0.995 
+            dz_eff_em = self.DZEff_EleMu        # 1.00
+            dz_eff_me = self.DZEff_MuEle        # 1.00
+            dz_eff_mm = self.DZEff_DoubleMu     # 0.95
+
+            # Find all possible leg combinations
+            single = {}
+            for iLep in range(nLep):
+                keyname = 'single{0}'.format(iLep)
+                single[keyname] = {}
+                single[keyname]['whichTrigger'] = "triggerSingleMu" if abs(kindLep[iLep]) == 13 else "triggerSingleEle"
+                single[keyname]['pt']           = pt [iLep]
+                single[keyname]['eta']          = eta[iLep]
+
+            double = {}
+            for iLep in range(nLep):
+                for jLep in range(iLep+1,nLep):
+                    if abs(kindLep[iLep]) == abs(kindLep[jLep]):
+                        flavorKey1 = "DoubleEle" if abs(kindLep[iLep]) == 11 else "DoubleMu"
+                        flavorKey2 = ""
+                        dz_eff    = dz_eff_ee if abs(kindLep[iLep]) == 11 else dz_eff_mm
+                        specialKey = ""
+                    else:
+                        if abs(kindLep[iLep]) ==13:
+                            flavorKey1 = "Mu"
+                            flavorKey2 = "Ele"
+                            dz_eff = dz_eff_me
+                        else :
+                            flavorKey1 = "Ele"
+                            flavorKey2 = "Mu"
+                            dz_eff = dz_eff_em
+                        specialKey = ""
+                    keyname = 'lead{0}trail{1}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{1}{2}LegHigPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [iLep]
+                    double[keyname]['eta']          = eta[iLep]
+                    double[keyname]['dz_eff']       = dz_eff
+                    keyname = 'lead{1}trail{0}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{2}{1}LegHigPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [jLep]
+                    double[keyname]['eta']          = eta[jLep]
+                    double[keyname]['dz_eff']       = dz_eff
+                    keyname = 'trail{0}lead{1}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{2}{1}LegLowPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [iLep]
+                    double[keyname]['eta']          = eta[iLep]
+                    double[keyname]['dz_eff']       = dz_eff
+                    keyname = 'trail{1}lead{0}'.format(iLep,jLep)
+                    double[keyname]={}
+                    double[keyname]['whichTrigger'] = 'trigger{0}{1}{2}LegLowPt'.format(specialKey,flavorKey1,flavorKey2)
+                    double[keyname]['pt']           = pt [jLep]
+                    double[keyname]['eta']          = eta[jLep]
+                    double[keyname]['dz_eff']       = dz_eff
+
+            # Fill efficiency for all possible legs.
+            getEff = {}
+            for keyname in double.keys():
+                getEff[keyname] = {}
+                getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(double[keyname]['pt'],double[keyname]['eta'],double[keyname]['whichTrigger'])
+            for keyname in single.keys():
+                getEff[keyname] = {}
+                getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(single[keyname]['pt'],single[keyname]['eta'],single[keyname]['whichTrigger'])
+
+            # Add 5% syst to SnglEle
+            for keyname in single.keys():
+                if single[keyname]['whichTrigger'] == "triggerSingleEle":
+                    systdown = getEff[keyname]['eff']-getEff[keyname]['eff_low']
+                    systdown_new = math.sqrt(systdown*systdown + 0.05*0.05)
+                    getEff[keyname]['eff_low'] = max(0.,getEff[keyname]['eff']-systdown_new)
+                    systhigh = getEff[keyname]['eff_high']-getEff[keyname]['eff']
+                    systhigh_new = math.sqrt(systhigh*systhigh + 0.05*0.05)
+                    getEff[keyname]['eff_high'] = min(1.,getEff[keyname]['eff']+systhigh_new)
+
+            # Tracker Muon SF
+            for iLep in range(nLep):
+                if abs(kindLep[iLep])==13:
+                    for keyname in double.keys():
+                        if re.search("^(lead|trail)([0-9]+)(lead|trail)([0-9]+)$",keyname).group(2) == str(iLep):
+                            getEff[keyname]['eff']      *= self.trkSFMu[0]
+                            getEff[keyname]['eff_high'] *= self.trkSFMu[1]
+                            getEff[keyname]['eff_low']  *= self.trkSFMu[2]
+                    for keyname in single.keys():
+                        if re.search("^single([0-9]+)$",keyname).group(1) == str(iLep):
+                            getEff[keyname]['eff']      *= self.trkSFMu[0]
+                            getEff[keyname]['eff_high'] *= self.trkSFMu[1]
+                            getEff[keyname]['eff_low']  *= self.trkSFMu[2]
+
+            def eff_sng_dbl(errEff):
+                eff_dbl_inv = 1
+                eff_sng_inv = 1
+                eff  =  {}
+                for iLep in range(nLep):
+                    for jLep in range(iLep+1,nLep):
+                        eff['eff'+str(iLep)+str(jLep)] = {}
+                        eff['eff'+str(iLep)+str(jLep)][errEff] = ( getEff['lead'+str(iLep)+'trail'+str(jLep)][errEff]*getEff['trail'+str(jLep)+'lead'+str(iLep)][errEff] \
+                                                               + ( 1 - getEff['lead'+str(iLep)+'trail'+str(jLep)][errEff]*getEff['trail'+str(jLep)+'lead'+str(iLep)][errEff]) \
+                                                               * getEff['lead'+str(jLep)+'trail'+str(iLep)][errEff]*getEff['trail'+str(iLep)+'lead'+str(jLep)][errEff]) \
+                                                               * double['trail'+str(iLep)+'lead'+str(jLep)]['dz_eff']
+                        eff_dbl_inv = eff_dbl_inv * (1-eff['eff'+str(iLep)+str(jLep)][errEff])
+                for iLep in range(nLep):
+                    eff_sng_inv = eff_sng_inv * (1-getEff['single'+str(iLep)][errEff])
+                return 1. - (eff_dbl_inv)*(eff_sng_inv)
+
+            
+
+            return eff_sng_dbl('eff'), eff_sng_dbl('eff_low'), eff_sng_dbl('eff_high')
+
+        return _curriedWeight
+
     def _getTrigDecision(self,vector_trigger,isData):
 
         EleMu     = 0
@@ -785,7 +925,7 @@ class triggerCalculator():
         DoubleEle = 0
         SingleEle = 0
 
-   
+
         if isData :
           for iTrig in self.EleMu      : 
             if vector_trigger[iTrig] > 0 : EleMu      = 1
@@ -950,6 +1090,9 @@ class triggerMaker(TreeCloner):
            'effTrigW3l',
            'effTrigW3l_Up',
            'effTrigW3l_Down',
+           'effTrigW4l',
+           'effTrigW4l_Up',
+           'effTrigW4l_Down',
            'effTrigW_SnglEle',
            'effTrigW_SnglMu',
            'effTrigW_DbleEle',
@@ -1029,6 +1172,9 @@ class triggerMaker(TreeCloner):
               self.branches['effTrigW3l']     [0] = 1.0
               self.branches['effTrigW3l_Up']  [0] = 1.0
               self.branches['effTrigW3l_Down'][0] = 1.0
+              self.branches['effTrigW4l']     [0] = 1.0
+              self.branches['effTrigW4l_Up']  [0] = 1.0
+              self.branches['effTrigW4l_Down'][0] = 1.0
               self.branches['effTrigW_SnglEle'][0] = 1.0
               self.branches['effTrigW_SnglMu'][0] = 1.0
               self.branches['effTrigW_DbleEle'][0] = 1.0
@@ -1070,6 +1216,18 @@ class triggerMaker(TreeCloner):
                 self.branches['effTrigW3l']     [0] = 0.0
                 self.branches['effTrigW3l_Down'][0] = 0.0
                 self.branches['effTrigW3l_Up']  [0] = 0.0
+              
+              # 4-lepton trigger weight
+              if itree.std_vector_lepton_flavour.size() >= 4 :
+                  self.branches['effTrigW4l'][0], self.branches['effTrigW4l_Down'][0], self.branches['effTrigW4l_Up'][0] = \
+                    self.triggerCalculators[self.runPeriod-1]._getNlWeight(4)(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
+                                      itree.std_vector_lepton_flavour[1], itree.std_vector_lepton_pt[1], itree.std_vector_lepton_eta[1],
+                                      itree.std_vector_lepton_flavour[2], itree.std_vector_lepton_pt[2], itree.std_vector_lepton_eta[2],
+                                      itree.std_vector_lepton_flavour[3], itree.std_vector_lepton_pt[3], itree.std_vector_lepton_eta[3])
+              else :
+                self.branches['effTrigW4l']     [0] = 0.0
+                self.branches['effTrigW4l_Down'][0] = 0.0
+                self.branches['effTrigW4l_Up']  [0] = 0.0
 
             otree.Fill()
             savedentries+=1
