@@ -51,7 +51,7 @@ class ChainSawFactory:
     # a datacard for each "cut" and each "variable" will be produced, in separate sub-folders, names after "cut/variable"
     # _____________________________________________________________________________
 
-    def mkChainSaw (self, outputDirDatacard, variables, cuts, samples, nuisances, nuisancesToPrune, threshold) :
+    def mkChainSaw (self, outputDirDatacard, variables, cuts, samples, nuisances, nuisancesToPrune, threshold, MCstatThreshold) :
 
         self._variables = variables
         self._samples   = samples
@@ -99,47 +99,65 @@ class ChainSawFactory:
               # loop over nuisances
               for nuisanceName, nuisance in nuisances.iteritems():
 
-                nameTempUp   = 'histo_' + str(sampleName) + '_CMS_' + (nuisance['name']) + 'Up'
-                nameTempDown = 'histo_' + str(sampleName) + '_CMS_' + (nuisance['name']) + 'Down'
-                nameTemp     = 'histo_' + str(sampleName)
-              
-                #print " nameTempUp = ", nameTempUp
+                if 'name' in nuisance.keys() :
+                  nameTempUp   = 'histo_' + str(sampleName) + '_CMS_' + (nuisance['name']) + 'Up'
+                  nameTempDown = 'histo_' + str(sampleName) + '_CMS_' + (nuisance['name']) + 'Down'
+                  nameTemp     = 'histo_' + str(sampleName)
                 
-                if nameTempUp in histograms.keys() and  nameTempDown in histograms.keys() : 
+                  #print " nameTempUp = ", nameTempUp
                   
-                  
-                  histo_nominal = histograms[nameTemp] 
-                  histo_up   = histograms[nameTempUp] 
-                  histo_down = histograms[nameTempDown] 
-                  
-                  # morph everytime if if the list is not given 
-                  # if the list is given, morph only if part of the list
-                  if len (nuisancesToPrune) == 0 or ( len (nuisancesToPrune) != 0 and (nuisanceName in nuisancesToPrune) ) :
-
-                    # maximum change in statistical uncertainty
-                    #max_change_stat_uncertainty = 0.4
-                    max_change_stat_uncertainty = threshold
-                                    
-                    for ibin in range( histo_nominal.GetNbinsX() ) :
-                      nominal_uncertainty  = histo_nominal.GetBinError(ibin+1)
-                      var_up_uncertainty   = histo_up.GetBinError(ibin+1)
-                      var_down_uncertainty = histo_down.GetBinError(ibin+1)
+                  if nameTempUp in histograms.keys() and  nameTempDown in histograms.keys() : 
                     
-                      if (nominal_uncertainty != 0) and ( abs((var_up_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
-                        #print " correct : ", histo_nominal.GetBinContent(ibin+1), " ---> var_up_uncertainty =", var_up_uncertainty, "  ; nominal_uncertainty = ", nominal_uncertainty, " => ", abs((var_up_uncertainty / nominal_uncertainty)-1),
-                        #print "    ---> ", histo_up.GetBinContent(ibin+1),
-                        histo_up.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
-                        #print "    ---> ", histo_up.GetBinContent(ibin+1),
-                        #print "    --> ", str(sampleName) , "   ",  (nuisance['name']),
-                        #print " ibin = ", ibin
-                        
                     
-                      if (nominal_uncertainty != 0) and ( abs((var_down_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
-                        histo_down.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
-                  
-                  histo_up.Write()
-                  histo_down.Write()
-              
+                    histo_nominal = histograms[nameTemp] 
+                    histo_up   = histograms[nameTempUp] 
+                    histo_down = histograms[nameTempDown] 
+                    
+                    # morph everytime if if the list is not given 
+                    # if the list is given, morph only if part of the list
+                    if len (nuisancesToPrune) == 0 or ( len (nuisancesToPrune) != 0 and (nuisanceName in nuisancesToPrune) ) :
+  
+                      # maximum change in statistical uncertainty
+                      #max_change_stat_uncertainty = 0.4
+                      max_change_stat_uncertainty = threshold
+                                      
+                      for ibin in range( histo_nominal.GetNbinsX() ) :
+                        nominal_uncertainty  = histo_nominal.GetBinError(ibin+1)
+                        var_up_uncertainty   = histo_up.GetBinError(ibin+1)
+                        var_down_uncertainty = histo_down.GetBinError(ibin+1)
+                      
+                        if (nominal_uncertainty != 0) and ( abs((var_up_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
+                          #print " correct : ", histo_nominal.GetBinContent(ibin+1), " ---> var_up_uncertainty =", var_up_uncertainty, "  ; nominal_uncertainty = ", nominal_uncertainty, " => ", abs((var_up_uncertainty / nominal_uncertainty)-1),
+                          #print "    ---> ", histo_up.GetBinContent(ibin+1),
+                          histo_up.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
+                          #print "    ---> ", histo_up.GetBinContent(ibin+1),
+                          #print "    --> ", str(sampleName) , "   ",  (nuisance['name']),
+                          #print " ibin = ", ibin
+                          
+                      
+                        if (nominal_uncertainty != 0) and ( abs((var_down_uncertainty / nominal_uncertainty)-1) > max_change_stat_uncertainty ) :
+                          histo_down.SetBinContent (ibin+1, histo_nominal.GetBinContent(ibin+1))
+                    
+                    
+                    
+                    
+                    
+                      # now check if the nuisance variation is much smaller than the statistical variation
+                      # if yes, then suppress that specific bin
+                      if MCstatThreshold != 0 :
+                        nominal_value   = histo_nominal.GetBinContent(ibin+1)
+                        var_up_value    = histo_up.GetBinContent(ibin+1)
+                        var_down_value  = histo_down.GetBinContent(ibin+1)
+  
+                        if (nominal_uncertainty != 0) and ( abs( var_up_value - nominal_value ) <  MCstatThreshold*nominal_uncertainty ) :
+                          histo_up.SetBinContent (ibin+1, nominal_value)
+                        if (nominal_uncertainty != 0) and ( abs( var_down_value - nominal_value ) <  MCstatThreshold*nominal_uncertainty ) :
+                          histo_down.SetBinContent (ibin+1, nominal_value)
+                      
+                     
+                    histo_up.Write()
+                    histo_down.Write()
+                
               # save all the histograms with different structure,
               # as the bbb histograms and the stats
               
@@ -183,6 +201,7 @@ if __name__ == '__main__':
 
    parser.add_option("-i", "--inputConfiguration",         dest="nameFileConfiguration",        help="name configuration file with nuisances to remove", default='blabla.py')
    parser.add_option("-t", "--threshold",                  dest="threshold",                    help="threshold", default=0.4,  type='float')
+   parser.add_option("-m", "--MCstatThreshold",            dest="MCstatThreshold",              help="threshold to consider nuisance > MC statistics uncertainty", default=0.0,  type='float')
    parser.add_option('--outputDirDatacard'  ,              dest='outputDirDatacard' ,           help='output directory'                           , default='./')
    parser.add_option('--nuisancesFile'      ,              dest='nuisancesFile'     ,           help='file with nuisances configurations'         , default=None )
    parser.add_option('--cardList'        ,                 dest="cardList" ,                    help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
@@ -194,6 +213,7 @@ if __name__ == '__main__':
 
    print "opt.pycfg               = ", opt.pycfg
    print "opt.threshold           = ", opt.threshold
+   print "opt.MCstatThreshold     = ", opt.MCstatThreshold
    print "opt.inputConfiguration  = ", opt.nameFileConfiguration
    print "opt.outputDirDatacard   = ", opt.outputDirDatacard
    print "opt.nuisancesFile       = ", opt.nuisancesFile
@@ -258,6 +278,6 @@ if __name__ == '__main__':
 
    
    
-   factory.mkChainSaw( opt.outputDirDatacard, variables, cuts, samples, nuisances, nuisancesToPrune, opt.threshold)
+   factory.mkChainSaw( opt.outputDirDatacard, variables, cuts, samples, nuisances, nuisancesToPrune, opt.threshold, opt.MCstatThreshold)
    
       
