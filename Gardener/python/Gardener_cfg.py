@@ -2816,6 +2816,12 @@ Steps= {
                   'command'    : 'gardener.py zzEWKcorrections' ,
                 } ,
 
+ 'dorochester'   : { 'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : True  ,
+                     'subTargets' : ['dorochesterMC','dorochesterData','TrigMakerMCkeepRun','IdIsoSC_Multi','l2kin','l3kin','l4kin','do_dymvaHiggs'],
+                   }
+
 'dorochesterMC'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
