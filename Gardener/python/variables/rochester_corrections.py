@@ -137,7 +137,7 @@ class rochester_corr(TreeCloner):
                 flavour = itree.std_vector_lepton_flavour [iLep]
                 eta = itree.std_vector_lepton_eta [iLep]
                 phi =itree.std_vector_lepton_phi [iLep]
-                
+                newpt = pt
                 # Muons only
                 if  abs(flavour) == 13 :
                     
@@ -165,7 +165,7 @@ class rochester_corr(TreeCloner):
                         #    print mcSF
                        
                 else:
-                   leptonPtChanged.append( itree.std_vector_lepton_pt[iLep])
+                   leptonPtChanged.append(newpt)
 
                 l1 = ROOT.TLorentzVector()
                 l1_org = ROOT.TLorentzVector()

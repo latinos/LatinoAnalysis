@@ -2820,7 +2820,6 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'onlySample' : ['DYJetsToTT_MuEle_M-50'] ,   # test module with just one sample 
                   'command'    : 'gardener.py rochester --d 0 --cmssw RPLME_CMSSW' ,
                 } ,
 
