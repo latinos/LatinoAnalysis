@@ -114,8 +114,8 @@ CMSSW=os.environ["CMSSW_BASE"]
 #  print Steps['bPogSF']['command']  
 
 #if options.cmssw == '763' :
-eosTargBaseIn = '/eos/user/j/jgarciaf/'
-eosTargBaseOut= '/eos/user/j/jgarciaf/'
+#eosTargBaseIn = '/eos/user/j/jgarciaf/'
+#eosTargBaseOut= '/eos/user/j/jgarciaf/'
 # eosTargBaseIn is defined by default in Gardener/python/Gardener_cfg.py
 if options.inputTarget != None:
   eosTargBaseIn=options.inputTarget
@@ -217,6 +217,7 @@ for iProd in prodList :
   else:
     if options.iniStep == 'Prod' : 
       fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
+      #fileCmd = 'ls '+eosTargBaseIn
     else:
       fileCmd = 'ls '+eosTargBaseIn+'/'+iProd+'/'+options.iniStep
 
@@ -798,6 +799,9 @@ for iProd in prodList :
         # add hadd return code check
         if iStep == 'hadd':
             command+='fi'
+
+        # Fix dcap for IIHE
+        command = command.replace(' /pnfs/iihe',' dcap://maite.iihe.ac.be/pnfs/iihe')        
 
         print '--------------------------------', options.pretend
 	if options.pretend : print "The command is : ", command

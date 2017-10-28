@@ -10,10 +10,10 @@ formulas['XSWeight'] = 'event.baseW*\
 
 
 formulas['SFweight2l'] = 'event.puW*\
-                          event.bPogSF_CMVAL*\
                           event.effTrigW*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
+                          event.electron_etaW_2l*event.electron_ptW_2l*\
                           event.veto_EMTFBug \
                           if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
 
@@ -22,16 +22,17 @@ formulas['SFweight3l'] = 'event.puW*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
                           event.std_vector_lepton_recoW[2]*\
+                          event.electron_etaW_4l*event.electron_ptW_4l*\
                           event.veto_EMTFBug \
                           if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
 
-# !!!!! We don't have the trigger formula implemented for 4l !!!! -> Use 3l but not correct
 formulas['SFweight4l'] = 'event.puW*\
-                          event.effTrigW3l*\
+                          event.effTrigW4l*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
                           event.std_vector_lepton_recoW[2]*\
                           event.std_vector_lepton_recoW[3]*\
+                          event.electron_etaW_4l*event.electron_ptW_4l*\
                           event.veto_EMTFBug \
                           if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
 
@@ -77,101 +78,101 @@ for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_
                                                     (event.std_vector_electron_isTightLepton_'+eleWP+'[3]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[3]>0.5)) \
                                                    if hasattr(event, \'std_vector_electron_isTightLepton_'+eleWP+'\') and hasattr(event, \'std_vector_muon_isTightLepton_'+muWP+'\') else 1.'
 
-  formulas['LepSF2l__ele_'+eleWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[0])/(event.std_vector_electron_idisoW_'+eleWP+'[0])+\
+  formulas['LepSF2l__ele_'+eleWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[0])/(event.std_vector_electron_totSF_'+eleWP+'[0])+\
                                              (abs(event.std_vector_lepton_flavour[0]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[1])/(event.std_vector_electron_idisoW_'+eleWP+'[1])+\
+                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[1])/(event.std_vector_electron_totSF_'+eleWP+'[1])+\
                                              (abs(event.std_vector_lepton_flavour[1]) == 13)) \
-                                            if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') else 1.'
+                                            if hasattr(event, \'std_vector_electron_totSF_'+eleWP+'\') else 1.'
 
-  formulas['LepSF2l__ele_'+eleWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[0])/(event.std_vector_electron_idisoW_'+eleWP+'[0])+\
+  formulas['LepSF2l__ele_'+eleWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[0])/(event.std_vector_electron_totSF_'+eleWP+'[0])+\
                                              (abs(event.std_vector_lepton_flavour[0]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[1])/(event.std_vector_electron_idisoW_'+eleWP+'[1])+\
+                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[1])/(event.std_vector_electron_totSF_'+eleWP+'[1])+\
                                              (abs(event.std_vector_lepton_flavour[1]) == 13)) \
-                                            if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') else 1.'
+                                            if hasattr(event, \'std_vector_electron_totSF_'+eleWP+'\') else 1.'
 
-  formulas['LepSF3l__ele_'+eleWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[0])/(event.std_vector_electron_idisoW_'+eleWP+'[0])+\
+  formulas['LepSF3l__ele_'+eleWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[0])/(event.std_vector_electron_totSF_'+eleWP+'[0])+\
                                              (abs(event.std_vector_lepton_flavour[0]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[1])/(event.std_vector_electron_idisoW_'+eleWP+'[1])+\
+                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[1])/(event.std_vector_electron_totSF_'+eleWP+'[1])+\
                                              (abs(event.std_vector_lepton_flavour[1]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[2])/(event.std_vector_electron_idisoW_'+eleWP+'[2])+\
+                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[2])/(event.std_vector_electron_totSF_'+eleWP+'[2])+\
                                              (abs(event.std_vector_lepton_flavour[2]) == 13)) \
-                                            if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') else 1.'
+                                            if hasattr(event, \'std_vector_electron_totSF_'+eleWP+'\') else 1.'
 
-  formulas['LepSF3l__ele_'+eleWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[0])/(event.std_vector_electron_idisoW_'+eleWP+'[0])+\
+  formulas['LepSF3l__ele_'+eleWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[0])/(event.std_vector_electron_totSF_'+eleWP+'[0])+\
                                              (abs(event.std_vector_lepton_flavour[0]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[1])/(event.std_vector_electron_idisoW_'+eleWP+'[1])+\
+                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[1])/(event.std_vector_electron_totSF_'+eleWP+'[1])+\
                                              (abs(event.std_vector_lepton_flavour[1]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[2])/(event.std_vector_electron_idisoW_'+eleWP+'[2])+\
+                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[2])/(event.std_vector_electron_totSF_'+eleWP+'[2])+\
                                              (abs(event.std_vector_lepton_flavour[2]) == 13)) \
-                                            if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') else 1.'
+                                            if hasattr(event, \'std_vector_electron_totSF_'+eleWP+'\') else 1.'
 
-  formulas['LepSF4l__ele_'+eleWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[0])/(event.std_vector_electron_idisoW_'+eleWP+'[0])+\
+  formulas['LepSF4l__ele_'+eleWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[0])/(event.std_vector_electron_totSF_'+eleWP+'[0])+\
                                              (abs(event.std_vector_lepton_flavour[0]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[1])/(event.std_vector_electron_idisoW_'+eleWP+'[1])+\
+                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[1])/(event.std_vector_electron_totSF_'+eleWP+'[1])+\
                                              (abs(event.std_vector_lepton_flavour[1]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[2])/(event.std_vector_electron_idisoW_'+eleWP+'[2])+\
+                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[2])/(event.std_vector_electron_totSF_'+eleWP+'[2])+\
                                              (abs(event.std_vector_lepton_flavour[2]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[3]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Up[3])/(event.std_vector_electron_idisoW_'+eleWP+'[3])+\
+                                            ((abs(event.std_vector_lepton_flavour[3]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Up[3])/(event.std_vector_electron_totSF_'+eleWP+'[3])+\
                                              (abs(event.std_vector_lepton_flavour[3]) == 13)) \
-                                            if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') else 1.'
+                                            if hasattr(event, \'std_vector_electron_totSF_'+eleWP+'\') else 1.'
 
-  formulas['LepSF4l__ele_'+eleWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[0])/(event.std_vector_electron_idisoW_'+eleWP+'[0])+\
+  formulas['LepSF4l__ele_'+eleWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[0])/(event.std_vector_electron_totSF_'+eleWP+'[0])+\
                                              (abs(event.std_vector_lepton_flavour[0]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[1])/(event.std_vector_electron_idisoW_'+eleWP+'[1])+\
+                                            ((abs(event.std_vector_lepton_flavour[1]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[1])/(event.std_vector_electron_totSF_'+eleWP+'[1])+\
                                              (abs(event.std_vector_lepton_flavour[1]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[2])/(event.std_vector_electron_idisoW_'+eleWP+'[2])+\
+                                            ((abs(event.std_vector_lepton_flavour[2]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[2])/(event.std_vector_electron_totSF_'+eleWP+'[2])+\
                                              (abs(event.std_vector_lepton_flavour[2]) == 13)) * \
-                                            ((abs(event.std_vector_lepton_flavour[3]) == 11)*(event.std_vector_electron_idisoW_'+eleWP+'_Down[3])/(event.std_vector_electron_idisoW_'+eleWP+'[3])+\
+                                            ((abs(event.std_vector_lepton_flavour[3]) == 11)*(event.std_vector_electron_totSF_'+eleWP+'_Down[3])/(event.std_vector_electron_totSF_'+eleWP+'[3])+\
                                              (abs(event.std_vector_lepton_flavour[3]) == 13)) \
-                                            if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') else 1.'
+                                            if hasattr(event, \'std_vector_electron_totSF_'+eleWP+'\') else 1.'
 
-formulas['LepSF2l__mu_'+muWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[0])/(event.std_vector_muon_idisoW_'+muWP+'[0])+\
+formulas['LepSF2l__mu_'+muWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[0])/(event.std_vector_muon_totSF_'+muWP+'[0])+\
                                          (abs(event.std_vector_lepton_flavour[0]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[1])/(event.std_vector_muon_idisoW_'+muWP+'[1])+\
+                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[1])/(event.std_vector_muon_totSF_'+muWP+'[1])+\
                                          (abs(event.std_vector_lepton_flavour[1]) == 11)) \
-                                        if hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+                                        if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
 
-formulas['LepSF2l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[0])/(event.std_vector_muon_idisoW_'+muWP+'[0])+\
+formulas['LepSF2l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[0])/(event.std_vector_muon_totSF_'+muWP+'[0])+\
                                          (abs(event.std_vector_lepton_flavour[0]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[1])/(event.std_vector_muon_idisoW_'+muWP+'[1])+\
+                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[1])/(event.std_vector_muon_totSF_'+muWP+'[1])+\
                                          (abs(event.std_vector_lepton_flavour[1]) == 11)) \
-                                        if hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+                                        if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
                                         
-formulas['LepSF3l__mu_'+muWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[0])/(event.std_vector_muon_idisoW_'+muWP+'[0])+\
+formulas['LepSF3l__mu_'+muWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[0])/(event.std_vector_muon_totSF_'+muWP+'[0])+\
                                          (abs(event.std_vector_lepton_flavour[0]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[1])/(event.std_vector_muon_idisoW_'+muWP+'[1])+\
+                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[1])/(event.std_vector_muon_totSF_'+muWP+'[1])+\
                                          (abs(event.std_vector_lepton_flavour[1]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[2])/(event.std_vector_muon_idisoW_'+muWP+'[2])+\
+                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[2])/(event.std_vector_muon_totSF_'+muWP+'[2])+\
                                          (abs(event.std_vector_lepton_flavour[2]) == 11)) \
-                                        if hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+                                        if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
 
-formulas['LepSF3l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[0])/(event.std_vector_muon_idisoW_'+muWP+'[0])+\
+formulas['LepSF3l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[0])/(event.std_vector_muon_totSF_'+muWP+'[0])+\
                                          (abs(event.std_vector_lepton_flavour[0]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[1])/(event.std_vector_muon_idisoW_'+muWP+'[1])+\
+                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[1])/(event.std_vector_muon_totSF_'+muWP+'[1])+\
                                          (abs(event.std_vector_lepton_flavour[1]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[2])/(event.std_vector_muon_idisoW_'+muWP+'[2])+\
+                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[2])/(event.std_vector_muon_totSF_'+muWP+'[2])+\
                                          (abs(event.std_vector_lepton_flavour[2]) == 11)) \
-                                        if hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+                                        if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
 
-formulas['LepSF4l__mu_'+muWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[0])/(event.std_vector_muon_idisoW_'+muWP+'[0])+\
+formulas['LepSF4l__mu_'+muWP+'__Up'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[0])/(event.std_vector_muon_totSF_'+muWP+'[0])+\
                                          (abs(event.std_vector_lepton_flavour[0]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[1])/(event.std_vector_muon_idisoW_'+muWP+'[1])+\
+                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[1])/(event.std_vector_muon_totSF_'+muWP+'[1])+\
                                          (abs(event.std_vector_lepton_flavour[1]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[2])/(event.std_vector_muon_idisoW_'+muWP+'[2])+\
+                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[2])/(event.std_vector_muon_totSF_'+muWP+'[2])+\
                                          (abs(event.std_vector_lepton_flavour[2]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[3]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Up[3])/(event.std_vector_muon_idisoW_'+muWP+'[3])+\
+                                        ((abs(event.std_vector_lepton_flavour[3]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Up[3])/(event.std_vector_muon_totSF_'+muWP+'[3])+\
                                          (abs(event.std_vector_lepton_flavour[3]) == 11)) \
-                                        if hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+                                        if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
 
-formulas['LepSF4l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[0])/(event.std_vector_muon_idisoW_'+muWP+'[0])+\
+formulas['LepSF4l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[0])/(event.std_vector_muon_totSF_'+muWP+'[0])+\
                                          (abs(event.std_vector_lepton_flavour[0]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[1])/(event.std_vector_muon_idisoW_'+muWP+'[1])+\
+                                        ((abs(event.std_vector_lepton_flavour[1]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[1])/(event.std_vector_muon_totSF_'+muWP+'[1])+\
                                          (abs(event.std_vector_lepton_flavour[1]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[2])/(event.std_vector_muon_idisoW_'+muWP+'[2])+\
+                                        ((abs(event.std_vector_lepton_flavour[2]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[2])/(event.std_vector_muon_totSF_'+muWP+'[2])+\
                                          (abs(event.std_vector_lepton_flavour[2]) == 11)) * \
-                                        ((abs(event.std_vector_lepton_flavour[3]) == 13)*(event.std_vector_muon_idisoW_'+muWP+'_Down[3])/(event.std_vector_muon_idisoW_'+muWP+'[3])+\
+                                        ((abs(event.std_vector_lepton_flavour[3]) == 13)*(event.std_vector_muon_totSF_'+muWP+'_Down[3])/(event.std_vector_muon_totSF_'+muWP+'[3])+\
                                          (abs(event.std_vector_lepton_flavour[3]) == 11)) \
-                                        if hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+                                        if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
 
 
 formulas['GenLepMatch2l'] = 'event.std_vector_lepton_genmatched[0]*\

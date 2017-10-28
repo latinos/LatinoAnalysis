@@ -436,7 +436,7 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       if iniStep == 'Prod' :
         return " ls " + inputDir
       else:
-        return "ls " + inputDir
+        return " ls " + inputDir
     
 def rootReadPath(inputFile):
     "Returns path to read a root file (/store/.../*.root) on the remote server"
@@ -451,7 +451,8 @@ def rootReadPath(inputFile):
     elif 'sdfarm' in os.uname()[1] :
       return "root://cms-xrdr.sdfarm.kr:1094//xrd" + inputFile
     else :
-        return "/eos/cms" + inputFile
+       return "/eos/cms" + inputFile
+       # return  inputFile
     
 def remoteFileSize(inputFile):
     "Returns file size in byte for file on remote server (/store/.../*.root)"
@@ -475,7 +476,8 @@ def remoteFileSize(inputFile):
       else:
         return subprocess.check_output("ls -l /xrootd/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     else :
-        return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+       return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+       # return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
 
 def batchTest():
     jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])

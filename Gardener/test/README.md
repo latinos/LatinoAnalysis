@@ -847,6 +847,11 @@ So, if you want to get the wwSel skim of the JESup variation of nominal file  la
      
 Again, if you are using mkShapes.py, this is done internally provided nuisances.py is configured properly.     
 
+
+Example mkGardener commands:
+     mkGardener.py -p Apr2017_summer16 -s FJESSubTotalRelativedo -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC --friendStep lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC --input-target /eos/cms/store/caf/user/lenzip/test/ --output-target=/eos/cms/store/caf/user/lenzip/test/ --queue=1nd  --batch --batchSplit=Target,Steps 
+     mkGardener.py -p Apr2017_summer16 -s FwwSel -i lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__FJESSubTotalRelativedo --friendStep lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC --input-target /eos/cms/store/caf/user/lenzip/test/ --output-target=/eos/cms/store/caf/user/lenzip/test/ --queue=1nd  --batch --batchSplit=Target,Steps
+
 Usage of friend trees in mkShapes.py
 ===
 

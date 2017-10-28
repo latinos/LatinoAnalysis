@@ -466,7 +466,12 @@ if __name__ == '__main__':
 
 
     elif opt.doHadd != 0:
+      
+            print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             print "~~~~~~~~~~~ mkShape on Batch : Hadd"
+            print "     -> jobDir = ", jobDir
+            print "     -> files  = ", jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+'XXX'+'__'+'YYY'+'.jid'
+
 
             # ... Cuts
             stepList=[]
