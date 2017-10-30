@@ -180,8 +180,6 @@ class rochester_corr(TreeCloner):
                                   
                         #for MC, if matched gen-level muon (genPt) is available, use this function
                         mcSF = rc.kScaleFromGenMC(charge, pt, eta, phi, nl, matchedgenpt, u1)
-                        if mcSF < 0 :
-                            print charge, pt, eta, phi, nl, matchedgenpt, u1 , mcSF
                         #if not, then:
                         #else :
                         #    mcSF = rc.kScaleAndSmearMC(charge, pt, eta, phi, nl, u1, u2)
