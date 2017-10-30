@@ -175,11 +175,13 @@ class rochester_corr(TreeCloner):
                                dR2 = self.howCloseIsAToB(self.itree.std_vector_lepton_eta[iLep],    self.itree.std_vector_lepton_phi[iLep],
                                                     self.itree.std_vector_leptonGen_eta[iGenLep], self.itree.std_vector_leptonGen_phi[iGenLep])
                                if dR2 < minimumdR2 :
-                                   matchedgenpt = self.itree.std_vector_leptonGen_eta[iGenLep]
+                                   matchedgenpt = self.itree.std_vector_leptonGen_pt[iGenLep]
                                    minimumdR2 = dR2
                                   
                         #for MC, if matched gen-level muon (genPt) is available, use this function
                         mcSF = rc.kScaleFromGenMC(charge, pt, eta, phi, nl, matchedgenpt, u1)
+                        if mcSF < 0 :
+                            print charge, pt, eta, phi, nl, matchedgenpt, u1 , mcSF
                         #if not, then:
                         #else :
                         #    mcSF = rc.kScaleAndSmearMC(charge, pt, eta, phi, nl, u1, u2)
