@@ -800,6 +800,9 @@ for iProd in prodList :
         if iStep == 'hadd':
             command+='fi'
 
+        # Fix dcap for IIHE
+        command = command.replace(' /pnfs/iihe',' dcap://maite.iihe.ac.be/pnfs/iihe')        
+
         print '--------------------------------', options.pretend
 	if options.pretend : print "The command is : ", command
         else :

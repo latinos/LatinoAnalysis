@@ -42,6 +42,15 @@ class rochester_corr(TreeCloner):
         newmet = met + lpt_org - lpt
         return newmet
 
+    def howCloseIsAToB(self, a_Eta, a_Phi, b_Eta, b_Phi) :
+        dPhi = ROOT.TMath.Abs(b_Phi - a_Phi)
+        if dPhi > ROOT.TMath.Pi() :
+            dPhi = 2*ROOT.TMath.Pi() - dPhi
+        dR2 = (b_Eta - a_Eta) * (b_Eta - a_Eta) + dPhi * dPhi
+        #print ">> dR = ", math.sqrt(dR2), " :: ", dPhi, " (+) ", (b_Eta - a_Eta) 
+        return dR2
+       
+
     def changeOrder(self, vectorname, vector, leptonOrderList) :
         # vector is already linked to the otree branch
         # vector name is the "name" of that vector to be modified        
@@ -137,14 +146,15 @@ class rochester_corr(TreeCloner):
                 flavour = itree.std_vector_lepton_flavour [iLep]
                 eta = itree.std_vector_lepton_eta [iLep]
                 phi =itree.std_vector_lepton_phi [iLep]
-                
+                newpt = pt
                 # Muons only
                 if  abs(flavour) == 13 :
                     
                     charge = int(flavour/abs(flavour))
                     nl =int(itree.std_vector_muon_NValidHitsInTrk [iLep])
                     u1 =random.random()
-                    #print charge, pt, eta, phi, nl, genpt, u1
+                    u2 =random.random()
+                    #print charge, pt, eta, phi, nl, genpt, u1, u2
                                       
                     if self.isdata == 1 :
                         #for each data muon in the loop, use this function to get a scale factor for its momentum
@@ -155,9 +165,24 @@ class rochester_corr(TreeCloner):
                         #if i%step == 0.:
                         #    print dataSF
                     else :
-                        genpt = itree.std_vector_leptonGen_pt [iLep]                
+                        # Look for the Gen lepton that best matches 
+                        minimumdR2 = 10
+                        for iGenLep in xrange(len(itree.std_vector_leptonGen_pt)) :
+                            if self.itree.std_vector_leptonGen_pt[iGenLep] > 0 \
+                                    and  self.itree.std_vector_leptonGen_status[iGenLep] == 1 \
+                                    and  (abs(self.itree.std_vector_leptonGen_pid[iGenLep]) == 13)   : 
+                                # and if the reco lepton is close to this gen lepton
+                               dR2 = self.howCloseIsAToB(self.itree.std_vector_lepton_eta[iLep],    self.itree.std_vector_lepton_phi[iLep],
+                                                    self.itree.std_vector_leptonGen_eta[iGenLep], self.itree.std_vector_leptonGen_phi[iGenLep])
+                               if dR2 < minimumdR2 :
+                                   matchedgenpt = self.itree.std_vector_leptonGen_pt[iGenLep]
+                                   minimumdR2 = dR2
+                                  
                         #for MC, if matched gen-level muon (genPt) is available, use this function
-                        mcSF = rc.kScaleFromGenMC(charge, pt, eta, phi, nl, genpt, u1)
+                        mcSF = rc.kScaleFromGenMC(charge, pt, eta, phi, nl, matchedgenpt, u1)
+                        #if not, then:
+                        #else :
+                        #    mcSF = rc.kScaleAndSmearMC(charge, pt, eta, phi, nl, u1, u2)
                         #mcSF= 1.5
                         newpt= pt*mcSF
                         leptonPtChanged.append(newpt)
@@ -165,7 +190,7 @@ class rochester_corr(TreeCloner):
                         #    print mcSF
                        
                 else:
-                   leptonPtChanged.append( itree.std_vector_lepton_pt[iLep])
+                   leptonPtChanged.append(newpt)
 
                 l1 = ROOT.TLorentzVector()
                 l1_org = ROOT.TLorentzVector()

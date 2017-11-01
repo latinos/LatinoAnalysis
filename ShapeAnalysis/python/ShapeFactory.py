@@ -1102,6 +1102,8 @@ class ShapeFactory:
         inputs = {}
         lists = {}
         treeName = 'latino'
+	if "sdfarm" in os.uname()[1]:
+	  inputDir = inputDir.replace("xrootd","xrd")
         print "doing", inputDir
         for process,filenames in samples.iteritems():
           

@@ -171,6 +171,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
 
     # ... KNU
     elif "knu" in os.uname()[1]:
+      absPath=True
       lsCmd='ls '
       if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
         Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
@@ -180,6 +181,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
      
     # ... KISTI
     elif "sdfarm" in os.uname()[1]:
+      absPath=True
       lsCmd='ls '
       if not '/xrootd/' in inputDir and '/store/' in inpuDir: 
         Dir = '/xrootd/' + inputDir
