@@ -84,3 +84,7 @@ metPuppi
 ht
 dymvaggh
 nvtx
+puW
+effTrigW
+std_vector_lepton_recoW
+veto_EMTFBug
