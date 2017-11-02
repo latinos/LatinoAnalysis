@@ -1,4 +1,3 @@
-
 void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::string histo_up, std::string histo_down, std::string outputDirPlots = "./", std::string drawYields = "0" ) {
  
  gStyle->SetOptStat(0);
@@ -147,6 +146,21 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
 
  name = Form ("%s/cc_%s_Full.png", outputDirPlots.c_str(), histo_up.c_str());
  ccFull->SaveAs( name.Data() );
+ name = Form ("%s/cc_%s_Full.pdf", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+ name = Form ("%s/cc_%s_Full.root", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+
+ hNominal -> GetYaxis() -> SetRangeUser(0.01,max*10.);
+ pad1 -> SetLogy();  
+
+ name = Form ("%s/log_cc_%s_Full.png", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+ name = Form ("%s/log_cc_%s_Full.pdf", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+ name = Form ("%s/log_cc_%s_Full.root", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+
 }
 
 

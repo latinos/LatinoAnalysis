@@ -169,6 +169,22 @@ void DrawNuisancesStat(std::string inputRootFile, std::string histoNominal, std:
 
  name = Form ("%s/cc_%s_Full.png", outputDirPlots.c_str(), histo_up.c_str());
  ccFull->SaveAs( name.Data() );
+ ccFull->SaveAs( name.Data() );
+ name = Form ("%s/cc_%s_Full.pdf", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+ name = Form ("%s/cc_%s_Full.root", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+
+ hNominal -> GetYaxis() -> SetRangeUser(0.01,max*10.);
+ pad1 -> SetLogy();  
+
+ name = Form ("%s/log_cc_%s_Full.png", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+ name = Form ("%s/log_cc_%s_Full.pdf", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+ name = Form ("%s/log_cc_%s_Full.root", outputDirPlots.c_str(), histo_up.c_str());
+ ccFull->SaveAs( name.Data() );
+
 }
 
 
