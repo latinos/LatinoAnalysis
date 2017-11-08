@@ -167,6 +167,7 @@ class rochester_corr(TreeCloner):
                     else :
                         # Look for the Gen lepton that best matches 
                         minimumdR2 = 10
+                        matchedgenpt = -1
                         for iGenLep in xrange(len(itree.std_vector_leptonGen_pt)) :
                             if self.itree.std_vector_leptonGen_pt[iGenLep] > 0 \
                                     and  self.itree.std_vector_leptonGen_status[iGenLep] == 1 \
@@ -178,6 +179,8 @@ class rochester_corr(TreeCloner):
                                    matchedgenpt = self.itree.std_vector_leptonGen_pt[iGenLep]
                                    minimumdR2 = dR2
                                   
+                        if matchedgenpt == -1 :
+                            matchedgenpt = pt
                         #for MC, if matched gen-level muon (genPt) is available, use this function
                         mcSF = rc.kScaleFromGenMC(charge, pt, eta, phi, nl, matchedgenpt, u1)
                         #if not, then:
