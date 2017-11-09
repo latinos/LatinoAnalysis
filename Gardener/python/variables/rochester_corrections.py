@@ -73,11 +73,20 @@ class rochester_corr(TreeCloner):
      
         self.connect(tree,input)
 
-        self.namesOldBranchesToBeModifiedVector = ['std_vector_lepton_pt']
-  
+        self.namesOldBranchesToBeModifiedVector = []
+        vectorsToChange = ['std_vector_lepton_']
+        for b in self.itree.GetListOfBranches():
+	    branchName = b.GetName()
+	    for subString in vectorsToChange:
+		if subString in branchName:
+		    self.namesOldBranchesToBeModifiedVector.append(branchName)
+
         self.metvar1 = 'metPfType1'
         self.metvar2= 'metPfType1Phi' 
         self.namesOldBranchesToBeModifiedSimpleVariable = [self.metvar1,self.metvar2]
+
+        self.namesNewBranchesToBeAddedVector = ['std_vector_lepton_rochesterMCSF','std_vector_lepton_rochesterDataSF']
+
 
         #vectorsToChange = ['std_vector_lepton_','std_vector_muon_']
         #for b in self.itree.GetListOfBranches():
@@ -86,7 +95,7 @@ class rochester_corr(TreeCloner):
         #        if subString in branchName: self.namesOldBranchesToBeModifiedVector.append(branchName)
 
         # NOW WE CAN CLONE THE TREE
-        self.clone(output,self.namesOldBranchesToBeModifiedVector+self.namesOldBranchesToBeModifiedSimpleVariable)
+        self.clone(output,self.namesOldBranchesToBeModifiedVector+self.namesOldBranchesToBeModifiedSimpleVariable+self.namesNewBranchesToBeAddedVector)
 
         # NOW CONNECT ALL NEW/TO BE MODIFIED BRANCHES 
 
@@ -102,6 +111,13 @@ class rochester_corr(TreeCloner):
             bvariable = numpy.ones(1, dtype=numpy.float32)
             self.oldBranchesToBeModifiedSimpleVariable[bname] = bvariable
         for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems(): self.otree.Branch(bname,bvariable,bname+'/F') 
+
+        # New branches
+        self.newBranchesToBeAddedVector = {}
+        for bname in self.namesNewBranchesToBeAddedVector:
+          bvector =  ROOT.std.vector(float) ()
+          self.newBranchesToBeAddedVector[bname] = bvector
+        for bname, bvector in self.newBranchesToBeAddedVector.iteritems(): self.otree.Branch(bname,bvector)
 
         cmssw_base = os.getenv('CMSSW_BASE')
         rochester_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/rcdata.2016.v3'
@@ -130,7 +146,8 @@ class rochester_corr(TreeCloner):
                 print i,'events processed :: ', nentries
 
             leptonPtChanged = []
-
+            MCSFlist = []
+            DataSFlist= []
             oldmet = itree.metPfType1
             oldphi = itree.metPfType1Phi
             met_org = ROOT.TLorentzVector()
@@ -159,9 +176,12 @@ class rochester_corr(TreeCloner):
                     if self.isdata == 1 :
                         #for each data muon in the loop, use this function to get a scale factor for its momentum
                         dataSF = rc.kScaleDT(charge,pt,eta,phi)
+                        #self.newBranchesToBeAddedVector.items(std_vector_lepton_rochesterDataSF).push_back (dataSF)
+                        DataSFlist.append(dataSF)
                         #dataSF= 1.5
                         newpt= pt*dataSF
                         leptonPtChanged.append(newpt)
+                        
                         #if i%step == 0.:
                         #    print dataSF
                     else :
@@ -181,14 +201,25 @@ class rochester_corr(TreeCloner):
                                   
                         if matchedgenpt == -1 :
                             matchedgenpt = pt
+                       
                         #for MC, if matched gen-level muon (genPt) is available, use this function
                         mcSF = rc.kScaleFromGenMC(charge, pt, eta, phi, nl, matchedgenpt, u1)
+                        #self.newBranchesToBeAddedVector.items(std_vector_lepton_rochesterMCSF).push_back (mcSF)
+                        MCSFlist.append(mcSF)
+                        if mcSF < 0.5 :
+                            mcSF =1
+                        if math.isnan(mcSF) ==1 :
+                            mcSF =1
+                        #    print charge, pt, eta, phi, nl, matchedgenpt, u1
+                        #if abs(eta)>2.1 :
+                        #    print mcSF
                         #if not, then:
                         #else :
                         #    mcSF = rc.kScaleAndSmearMC(charge, pt, eta, phi, nl, u1, u2)
                         #mcSF= 1.5
                         newpt= pt*mcSF
                         leptonPtChanged.append(newpt)
+                       
                         #if i%step == 0.:
                         #    print mcSF
                        
@@ -214,6 +245,18 @@ class rochester_corr(TreeCloner):
                         bvector.push_back ( -9999. )
                 else:
                     self.changeOrder( bname, bvector, leptonOrder)
+
+            for bname, bvector in self.newBranchesToBeAddedVector.iteritems():
+                bvector.clear()
+             
+                if 'MC' in bname:
+                    for i in range( len(MCSFlist) ) :
+                        bvector.push_back ( MCSFlist[i] )
+                else:
+                    for i in range( len(DataSFlist) ) :
+                         bvector.push_back ( DataSFlist[i] )
+                  
+
 
             # update met
             self.oldBranchesToBeModifiedSimpleVariable[self.metvar1][0] = numpy.float32(newmet.Pt())
