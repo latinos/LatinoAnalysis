@@ -15,16 +15,16 @@ formulas['SFweight2l'] = 'event.puW*\
                           event.std_vector_lepton_recoW[1]*\
                           event.electron_etaW_2l*event.electron_ptW_2l*\
                           event.veto_EMTFBug \
-                          if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
+                          if hasattr(event, \'std_vector_lepton_recoW\') else 1.'
 
 formulas['SFweight3l'] = 'event.puW*\
                           event.effTrigW3l*\
                           event.std_vector_lepton_recoW[0]*\
                           event.std_vector_lepton_recoW[1]*\
                           event.std_vector_lepton_recoW[2]*\
-                          event.electron_etaW_4l*event.electron_ptW_4l*\
+                          event.electron_etaW_3l*event.electron_ptW_3l*\
                           event.veto_EMTFBug \
-                          if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
+                          if hasattr(event, \'std_vector_lepton_recoW\') else 1.'
 
 formulas['SFweight4l'] = 'event.puW*\
                           event.effTrigW4l*\
@@ -34,7 +34,7 @@ formulas['SFweight4l'] = 'event.puW*\
                           event.std_vector_lepton_recoW[3]*\
                           event.electron_etaW_4l*event.electron_ptW_4l*\
                           event.veto_EMTFBug \
-                          if hasattr(event, \'event.std_vector_lepton_recoW\') else 1.'
+                          if hasattr(event, \'std_vector_lepton_recoW\') else 1.'
 
 muWP='cut_Tight80x'
 for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_Iso2016','mva_90p_Iso2015','mva_90p_Iso2016'] :

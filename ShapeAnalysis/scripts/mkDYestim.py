@@ -46,6 +46,12 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
+    samples = {}
+    if os.path.exists(opt.samplesFile) :
+      handle = open(opt.samplesFile,'r')
+      exec(handle)
+      handle.close()
+
     cuts = {}
     if os.path.exists(opt.cutsFile) :
       handle = open(opt.cutsFile,'r')

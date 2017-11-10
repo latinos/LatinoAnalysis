@@ -340,10 +340,12 @@ class LeptonSF():
         if kindLep == 'mu' :
                 # Iso
                 tag = 'mu_iso_RR'+str(nRun)
+                print eta,pt
                 for point in self.idIsoScaleFactors[tag+'_DATA'] :
                   if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin
                        pt  >= float(point[2]) and pt  <= float(point[3]) ) :         # in other cases the set is (min, max]
                      dataIso = point
+                     print  dataIso
                      break
                 for point in self.idIsoScaleFactors[tag+'_MC'] :
                   if ( eta >= float(point[0]) and eta <= float(point[1]) and         # the "=" in both directions is only used by the overflow bin

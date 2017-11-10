@@ -1390,7 +1390,7 @@ samples4Syst = [
                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
                  'WZTo3LNu','WZ','WZTo2L2Q','WZTo3LNu_mllmin01',
                  'ZZ','ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                 'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu', 'Wg_MADGRAPHMLM', 'Zg' ,
+                 'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu', 'Wg_MADGRAPHMLM', 'Zg' , 'WZTo3LNu_mllmin01_ext1',
 
                  # VVV
                  'WZZ','ZZZ','WWZ','WWW','WWG',
@@ -3550,18 +3550,18 @@ Steps= {
                   'cpMap' : {
                               'UEdo' : { 
                                           'GluGluHToWWTo2L2Nu_M125_CUETDown' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
-                                          'VBFHToWWTo2L2Nu_M125_CUETDown'    : ['VBFHToWWTo2L2Nu_M125']    ,
+                                          'VBFHToWWTo2L2Nu_M125_CUETDown'    : ['VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125']    ,
                                           'WWTo2L2Nu_CUETDown'               : ['WWTo2L2Nu'] , 
                                        },
                               'UEup' : {
                                           'GluGluHToWWTo2L2Nu_M125_CUETUp'   : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
-                                          'VBFHToWWTo2L2Nu_M125_CUETUp'      : ['VBFHToWWTo2L2Nu_M125']    ,
+                                          'VBFHToWWTo2L2Nu_M125_CUETUp'      : ['VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125']    ,
                                           'WWTo2L2Nu_CUETUp'                 : ['WWTo2L2Nu'] ,
                                        },
                               'PS'   : {    
                                           'GluGluHToWWTo2L2NuHerwigPS_M125'  : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
                                           'GluGluHToWWTo2L2Nu_M125_herwigpp' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'], 
-                                          'VBFHToWWTo2L2NuHerwigPS_M125'     : ['VBFHToWWTo2L2Nu_M125'] ,
+                                          'VBFHToWWTo2L2NuHerwigPS_M125'     : ['VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125'] ,
                                           'WWTo2L2NuHerwigPS'                : ['WWTo2L2Nu'] ,
                                        },
                             },

@@ -32,6 +32,13 @@ if __name__ == '__main__':
 
     # Create Needed dictionnary
 
+    samples = {}
+    if os.path.exists(opt.samplesFile) :
+      handle = open(opt.samplesFile,'r')
+      exec(handle)
+      handle.close()
+
+
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
