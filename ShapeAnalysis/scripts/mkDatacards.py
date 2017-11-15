@@ -131,6 +131,7 @@ class DatacardFactory:
             for sampleName in self.signals:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = self._fileIn.Get(shapeName)
+             # print " shapeName = ", shapeName     
              # print sampleName     
              # if 'removeNegNomVal' in structureFile[sampleName] and structureFile[sampleName]['removeNegNomVal'] :
              #   for iBin in range(0,histo.GetNbinsX()+2) :
@@ -294,7 +295,17 @@ class DatacardFactory:
                             card.write(('-').ljust(columndef))
                              
                     elif nuisance ['type'] == 'shape' :
-                      card.write(("CMS_" + (nuisance['name'])).ljust(80-20))
+                      #
+                      # 'skipCMS' is a flag not to introduce "CMS" automatically in the name
+                      #      of the nuisance.
+                      #      It may be needed for combination purposes with ATLAS
+                      #      and agreed upon for all CMS analyses.
+                      #      For example: theoretical uncertainties on ggH with migration scheme 2017
+                      #
+                      if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                        card.write(("" + (nuisance['name'])).ljust(80-20))
+                      else :
+                        card.write(("CMS_" + (nuisance['name'])).ljust(80-20))
                       if 'AsLnN' in nuisance.keys() and  float(nuisance ['AsLnN']) >= 1:
                         print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
                         card.write(('lnN').ljust(20))
@@ -338,28 +349,51 @@ class DatacardFactory:
                             if sampleName in nuisance['samples'].keys() :
                               card.write(('1.000').ljust(columndef))                          
                               # save the nuisance histograms in the root file
-                              self._saveHisto(cutName+"/"+variableName+'/',
-                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
-                                               )
-                              self._saveHisto(cutName+"/"+variableName+'/',
-                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
-                                               )
+                              if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
+                                                 )
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
+                                                 )
+                              else :
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                                 )
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                                 )
+                                
                             else :
                               card.write(('-').ljust(columndef))
                           for sampleName in self.backgrounds:
                             if sampleName in nuisance['samples'].keys() :
                               card.write(('1.000').ljust(columndef))
                               # save the nuisance histograms in the root file
-                              self._saveHisto(cutName+"/"+variableName+'/',
-                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
-                                               )
-                              self._saveHisto(cutName+"/"+variableName+'/',
-                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                               'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
-                                               )
+                              if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
+                                                 )
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
+                                                 )
+                              else :
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                                 )
+                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                                 )
+
+
                             else :
                               card.write(('-').ljust(columndef))
                       
