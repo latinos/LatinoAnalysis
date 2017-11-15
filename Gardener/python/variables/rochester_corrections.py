@@ -252,11 +252,13 @@ class rochester_corr(TreeCloner):
                 if 'MC' in bname:
                     for i in range( len(MCSFlist) ) :
                         bvector.push_back ( MCSFlist[i] )
+                    for i in range( len(getattr(self.itree, 'std_vector_lepton_eta')) - len(MCSFlist) ) :
+                        bvector.push_back ( -9999. )
                 else:
                     for i in range( len(DataSFlist) ) :
-                         bvector.push_back ( DataSFlist[i] )
-                  
-
+                        bvector.push_back ( DataSFlist[i] )
+                    for i in range( len(getattr(self.itree, 'std_vector_lepton_eta')) - len(DataSFlist) ) :
+                        bvector.push_back ( -9999. )
 
             # update met
             self.oldBranchesToBeModifiedSimpleVariable[self.metvar1][0] = numpy.float32(newmet.Pt())
