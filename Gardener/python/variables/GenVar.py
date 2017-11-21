@@ -64,6 +64,8 @@ class genVariablesFiller(TreeCloner):
            'gen_llchannel',
            'gen_mlvlv',
            'lhe_mlvlv',
+           'lhe_mWp',
+           'lhe_mWm',
            ]
         
         # clone the tree
@@ -134,8 +136,8 @@ class genVariablesFiller(TreeCloner):
   
               # if LHE information is available
               if hasattr(itree, 'std_vector_LHElepton_pt') :
-                GenVar.setLHELeptons  (itree.std_vector_LHElepton_pt, itree.std_vector_LHElepton_eta, itree.std_vector_LHElepton_phi)
-                GenVar.setLHENeutrinos(itree.std_vector_LHEneutrino_pt, itree.std_vector_LHEneutrino_eta, itree.std_vector_LHEneutrino_phi)
+                GenVar.setLHELeptons  (itree.std_vector_LHElepton_pt, itree.std_vector_LHElepton_eta, itree.std_vector_LHElepton_phi, itree.std_vector_LHElepton_id)
+                GenVar.setLHENeutrinos(itree.std_vector_LHEneutrino_pt, itree.std_vector_LHEneutrino_eta, itree.std_vector_LHEneutrino_phi, itree.std_vector_LHEneutrino_id)
  
              # now fill the variables like "mll", "dphill", ...
               for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():

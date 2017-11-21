@@ -29,8 +29,8 @@ public:
  void setNeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setMET  (float met, float metphi);
  
- void setLHELeptons  (std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi);
- void setLHENeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi);
+ void setLHELeptons  (std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
+ void setLHENeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  
  //! functions
 //  float pTGenVar();
@@ -43,6 +43,8 @@ public:
  float gen_mlvlv();
  
  float lhe_mlvlv();
+ float lhe_mWp();
+ float lhe_mWm();
  
 private:
  //! variables
@@ -73,10 +75,12 @@ private:
  std::vector<float> _lhe_leptonspt;
  std::vector<float> _lhe_leptonseta;
  std::vector<float> _lhe_leptonsphi;
+ std::vector<float> _lhe_leptonsflavour;
 
  std::vector<float> _lhe_neutrinospt;
  std::vector<float> _lhe_neutrinoseta;
  std::vector<float> _lhe_neutrinosphi;
+ std::vector<float> _lhe_neutrinosflavour;
 
  
  float _met;
@@ -168,21 +172,23 @@ void GenVar::setNeutrinos(std::vector<float> invectorpt, std::vector<float> inve
 
 
 
-void GenVar::setLHELeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi) {
+void GenVar::setLHELeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
   
   _lhe_leptonspt             = invectorpt;
   _lhe_leptonseta            = invectoreta;
   _lhe_leptonsphi            = invectorphi;
+  _lhe_leptonsflavour        = invectorflavour;
   
 }
 
 
 
-void GenVar::setLHENeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi) {
+void GenVar::setLHENeutrinos(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
 
-  _lhe_neutrinospt      = invectorpt;
-  _lhe_neutrinoseta     = invectoreta;
-  _lhe_neutrinosphi     = invectorphi;
+  _lhe_neutrinospt       = invectorpt;
+  _lhe_neutrinoseta      = invectoreta;
+  _lhe_neutrinosphi      = invectorphi;
+  _lhe_neutrinosflavour  = invectorflavour;
   
 }
 
@@ -290,10 +296,69 @@ float GenVar::lhe_mlvlv(){
   
 }
 
+float GenVar::lhe_mWp(){
+  if (_lhe_leptonspt.size() > 0 ) {
+    TLorentzVector L1,L2;
+    L1.SetPtEtaPhiM(_lhe_leptonspt.at(0), _lhe_leptonseta.at(0), _lhe_leptonsphi.at(0), 0.);
+    L2.SetPtEtaPhiM(_lhe_leptonspt.at(1), _lhe_leptonseta.at(1), _lhe_leptonsphi.at(1), 0.);
 
+    TLorentzVector V1,V2;
+    V1.SetPtEtaPhiM(_lhe_neutrinospt.at(0), _lhe_neutrinoseta.at(0), _lhe_neutrinosphi.at(0), 0.);
+    V2.SetPtEtaPhiM(_lhe_neutrinospt.at(1), _lhe_neutrinoseta.at(1), _lhe_neutrinosphi.at(1), 0.);
 
+    if ( _lhe_leptonsflavour.at(0) < 0 ) {  // L1 = e+(-11) OR mu+(-13) OR tau+(-15)
+      if ( _lhe_neutrinosflavour.at(0) > 0 ) { // V1 = nue(12) OR numu(14) OR nutau(16)
+        return (L1+V1).M();
+      }
+      else {
+        return (L1+V2).M();
+      }
+    }
+    else {  //  L1 = e-(11) OR mu-(13) OR tau-(15)
+      if ( _lhe_neutrinosflavour.at(0) > 0 ) { // V1 = nue(12) OR numu(14) OR nutau(16) 
+        return (L2+V1).M();
+      }
+      else {
+        return (L2+V2).M();
+      }
+    }
+  }
+  else {
+    return -9999.0;
+  }
+}
 
+float GenVar::lhe_mWm(){
+  if (_lhe_leptonspt.size() > 0 ) {
+    TLorentzVector L1,L2;
+    L1.SetPtEtaPhiM(_lhe_leptonspt.at(0), _lhe_leptonseta.at(0), _lhe_leptonsphi.at(0), 0.);
+    L2.SetPtEtaPhiM(_lhe_leptonspt.at(1), _lhe_leptonseta.at(1), _lhe_leptonsphi.at(1), 0.);
 
+    TLorentzVector V1,V2;
+    V1.SetPtEtaPhiM(_lhe_neutrinospt.at(0), _lhe_neutrinoseta.at(0), _lhe_neutrinosphi.at(0), 0.);
+    V2.SetPtEtaPhiM(_lhe_neutrinospt.at(1), _lhe_neutrinoseta.at(1), _lhe_neutrinosphi.at(1), 0.);
+
+    if ( _lhe_leptonsflavour.at(0) < 0 ) {  // L1 = e+(-11) OR mu+(-13) OR tau+(-15)
+      if ( _lhe_neutrinosflavour.at(0) > 0 ) { // V1 = nue(12) OR numu(14) OR nutau(16)
+        return (L2+V2).M();
+      }
+      else {
+        return (L2+V1).M();
+      }
+    }
+    else {  //  L1 = e-(11) OR mu-(13) OR tau-(15)
+      if ( _lhe_neutrinosflavour.at(0) > 0 ) { // V1 = nue(12) OR numu(14) OR nutau(16) 
+        return (L1+V2).M();
+      }
+      else {
+        return (L1+V1).M();
+      }
+    }
+  }
+  else {
+    return -9999.0;
+  }
+}
 
 // 
 // float GenVar::yll(){
