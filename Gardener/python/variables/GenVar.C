@@ -297,7 +297,7 @@ float GenVar::lhe_mlvlv(){
 }
 
 float GenVar::lhe_mWp(){
-  if (_lhe_leptonspt.size() > 0 ) {
+  if ( (_lhe_leptonspt.size()>1) && (_lhe_neutrinospt.size()>1) ) {
     TLorentzVector L1,L2;
     L1.SetPtEtaPhiM(_lhe_leptonspt.at(0), _lhe_leptonseta.at(0), _lhe_leptonsphi.at(0), 0.);
     L2.SetPtEtaPhiM(_lhe_leptonspt.at(1), _lhe_leptonseta.at(1), _lhe_leptonsphi.at(1), 0.);
@@ -329,7 +329,7 @@ float GenVar::lhe_mWp(){
 }
 
 float GenVar::lhe_mWm(){
-  if (_lhe_leptonspt.size() > 0 ) {
+  if ( (_lhe_leptonspt.size()>1) && (_lhe_neutrinospt.size()>1) ) {
     TLorentzVector L1,L2;
     L1.SetPtEtaPhiM(_lhe_leptonspt.at(0), _lhe_leptonseta.at(0), _lhe_leptonsphi.at(0), 0.);
     L2.SetPtEtaPhiM(_lhe_leptonspt.at(1), _lhe_leptonseta.at(1), _lhe_leptonsphi.at(1), 0.);
