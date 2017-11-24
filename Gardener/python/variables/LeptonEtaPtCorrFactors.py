@@ -282,8 +282,8 @@ class LeptonEtaPtCorrFactors(TreeCloner):
                       exec ('eIdIso_Syst = itree.std_vector_electron_idisoW_'+iWP+'_Syst['+str(iLep)+'] - eIdIso_Cent')
                       # --> Total Error
                       eTot_Cent = eReco_Cent * eIdIso_Cent 
-                      eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   )
-                      eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) )
+                      eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eIdIso_Syst,2) )
+                      eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) + math.pow(eIdIso_Syst,2) )
                       #eTot_Cent = eReco_Cent * eIdIso_Cent * etaW * ptW 
                       #eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eEta_Up,2)   + math.pow(ePt_Up,2) )
                       #eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) + math.pow(eEta_Down,2) + math.pow(ePt_Down,2) )
@@ -305,8 +305,8 @@ class LeptonEtaPtCorrFactors(TreeCloner):
                       exec ('eIdIso_Syst = itree.std_vector_muon_idisoW_'+iWP+'_Syst['+str(iLep)+'] - eIdIso_Cent')
                       # --> Total Error
                       eTot_Cent = eReco_Cent * eIdIso_Cent 
-                      eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   )
-                      eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) )
+                      eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eIdIso_Syst,2) )
+                      eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) + math.pow(eIdIso_Syst,2) )
                       #eTot_Cent = eReco_Cent * eIdIso_Cent * etaW * ptW
                       #eTot_Up   = math.sqrt( math.pow(eReco_Up,2)   + math.pow(eIdIso_Up,2)   + math.pow(eEta_Up,2)   + math.pow(ePt_Up,2) )
                       #eTot_Down = math.sqrt( math.pow(eReco_Down,2) + math.pow(eIdIso_Down,2) + math.pow(eEta_Down,2) + math.pow(ePt_Down,2) )

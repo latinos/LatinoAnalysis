@@ -1969,6 +1969,13 @@ Steps= {
                   'subTargets' : [ 'etaptlepsf' , 'TrigMakerMCkeepRun' ]
                     },
 
+  'EleSysFix' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'subTargets' : [ 'etaptlepsf' , 'formulasMC' ]
+                }, 
+
   'puextra'      :   {
                   'isChain'    : True ,
                   'do4MC'      : True ,
@@ -2984,9 +2991,10 @@ Steps= {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'onlySample' : [
-                                   #'GluGluHToWWTo2L2Nu_M125',
-                                   #'GluGluHToWWTo2L2NuPowheg_M125', 
+                                   'GluGluHToWWTo2L2Nu_M125',
+                                   'GluGluHToWWTo2L2NuPowheg_M125', 
                                    'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS',
+                                   'GluGluHToTauTau_M125',
                                  ],
                   'command'    : 'gardener.py ggHUncertainty' ,
                 } ,
