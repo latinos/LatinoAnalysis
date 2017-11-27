@@ -833,7 +833,7 @@ if __name__ == '__main__':
         handle.close()
       if factory._variable in  variables.keys() :
         if 'range' in variables[factory._variable] :
-          binning_possibly_in_2d = variables['range']
+          binning_possibly_in_2d = variables[factory._variable]['range']
           #
           # transform 2D into 1D
           # and beg bin edges if required
