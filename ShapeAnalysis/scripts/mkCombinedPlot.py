@@ -588,25 +588,47 @@ class ShapeFactory:
     
     def FixBins(self, histo):
         
-        nbins = histo.GetXaxis().GetNbins()
-        alpha = (self._maxvariable - self._minvariable) / ( histo.GetXaxis().GetBinLowEdge(nbins+1) +  histo.GetXaxis().GetBinWidth(nbins+1)/2 - histo.GetXaxis().GetBinLowEdge(1))
         
-        #print " alpha = ", alpha
-        #print " histo.GetTitle() = ", histo.GetTitle()
-        #print " histo.GetName() = ", histo.GetName()
+        if len (self._binning) == 0 :
+         
+          nbins = histo.GetXaxis().GetNbins()
+          alpha = (self._maxvariable - self._minvariable) / ( histo.GetXaxis().GetBinLowEdge(nbins+1) +  histo.GetXaxis().GetBinWidth(nbins+1)/2 - histo.GetXaxis().GetBinLowEdge(1))
+          
+          #print " alpha = ", alpha
+          #print " histo.GetTitle() = ", histo.GetTitle()
+          #print " histo.GetName() = ", histo.GetName()
+          
+          hnew = ROOT.TH1F("new_" + histo.GetName(),"",nbins, self._minvariable , self._maxvariable)
+          for ibin in range (0, nbins+1) :
+            y = histo.GetBinContent(ibin)
+            x = histo.GetXaxis().GetBinCenter(ibin)
+            xnew =  alpha*x + self._minvariable
+            hnew.Fill(xnew,y)
+          
+          hnew.SetFillColor(histo.GetFillColor())
+          hnew.SetLineColor(histo.GetLineColor())
+          hnew.SetFillStyle(histo.GetFillStyle())
+          
+          return hnew
         
-        hnew = ROOT.TH1F("new_" + histo.GetName(),"",nbins, self._minvariable , self._maxvariable)
-        for ibin in range (0, nbins+1) :
-          y = histo.GetBinContent(ibin)
-          x = histo.GetXaxis().GetBinCenter(ibin)
-          xnew =  alpha*x + self._minvariable
-          hnew.Fill(xnew,y)
-        
-        hnew.SetFillColor(histo.GetFillColor())
-        hnew.SetLineColor(histo.GetLineColor())
-        hnew.SetFillStyle(histo.GetFillStyle())
-        
-        return hnew
+        else : 
+          #
+          # variable bin width
+          #
+          
+          nbins = histo.GetXaxis().GetNbins()
+
+          hnew = ROOT.TH1F("new_" + histo.GetName(),"", array('d', self._binning ))
+          for ibin in range (0, nbins+1) :
+            y = histo.GetBinContent(ibin)
+            x = histo.GetXaxis().GetBinCenter(ibin)
+            hnew.SetBinContent(ibin,y)
+          
+          hnew.SetFillColor(histo.GetFillColor())
+          hnew.SetLineColor(histo.GetLineColor())
+          hnew.SetFillStyle(histo.GetFillStyle())
+          
+          return hnew
         
    
 
@@ -737,6 +759,7 @@ if __name__ == '__main__':
     parser.add_option('--variableHR'     , dest='variableHR'     , help='input variable name', default='myVariable')
     parser.add_option('--minvariable'    , dest='minvariable'    , help='input variable min', default=0.   ,    type=float)
     parser.add_option('--maxvariable'    , dest='maxvariable'    , help='input variable max', default=10.  ,    type=float)
+    parser.add_option('--getVarFromFile' , dest='getVarFromFile' , help='get variable, binning and range from file. Needed for variable bin width (set to 1 to trigger this)', default=0   ,    type=int)
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -793,7 +816,51 @@ if __name__ == '__main__':
     factory._variableHR = opt.variableHR
     factory._minvariable = 1.* opt.minvariable
     factory._maxvariable = 1.* opt.maxvariable
-   
+
+
+    #
+    # get variables: needed in case you started from 2D plot
+    # and weighted it.
+    # NB: In this case minvariable and maxvariable will be overloaded
+    #
+    
+    factory._binning = []
+    if opt.getVarFromFile == 1 :
+      variables = {}
+      if os.path.exists(opt.variablesFile) :
+        handle = open(opt.variablesFile,'r')
+        exec(handle)
+        handle.close()
+      if factory._variable in  variables.keys() :
+        if 'range' in variables[factory._variable] :
+          binning_possibly_in_2d = variables['range']
+          #
+          # transform 2D into 1D
+          # and beg bin edges if required
+          #
+          
+          now_1d_binning = []
+          
+          # example A: (10, 0,100)
+          if len( binning_possibly_in_2d ) == 3 :
+            n_x =   binning_possibly_in_2d[0]
+            min_x = binning_possibly_in_2d[1]
+            max_x = binning_possibly_in_2d[2]
+            now_1d_binning = [1.*i*((max_x-min_x)/n_x + min_x) for i in range(n_x+1)  ]
+            # -->   0, 10, 20, ... , 90
+          
+          # example B: ([60,80,90,110,130,150,200],), 
+          elif len( binning_possibly_in_2d ) == 1 :
+            now_1d_binning = binning_possibly_in_2d[0]
+            
+          # example C: ([60,80,90,110,130,150,200],[10,20,30,50,70,90,150],), 
+          #   -> NB: the two variables are defined as y:x, then it's the second that we care about
+          elif len( binning_possibly_in_2d ) == 1 :
+            now_1d_binning = binning_possibly_in_2d[1]
+          
+          
+          factory._binning = now_1d_binning
+     
     
     cutsToMerge = {}
     if os.path.exists(opt.inputCutsList) :
