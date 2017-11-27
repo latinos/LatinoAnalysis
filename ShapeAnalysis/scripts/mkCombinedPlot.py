@@ -861,6 +861,8 @@ if __name__ == '__main__':
           
           factory._binning = now_1d_binning
      
+    print " binning = ", factory._binning
+    
     
     cutsToMerge = {}
     if os.path.exists(opt.inputCutsList) :
