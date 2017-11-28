@@ -281,6 +281,12 @@ if __name__ == '__main__':
        print " Please provide the datacard structure "
        #exit ()
 
+    if os.path.exists(opt.structureFile) :
+      handle = open(opt.structureFile,'r')
+      exec(handle)
+      handle.close()
+
+
     factory._structure = structure
     
     factory._inputFile = opt.inputFile
