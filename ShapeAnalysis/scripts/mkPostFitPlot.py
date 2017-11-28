@@ -219,6 +219,7 @@ if __name__ == '__main__':
     parser.add_option('--cutNameInOriginal'     , dest='cutNameInOriginal'     , help='cut name as appears in cuts.py'  , default='')
     parser.add_option('--inputFile'             , dest='inputFile'             , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
     parser.add_option('--kind'                  , dest='kind'                  , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default='s')
+    parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
     parser.add_option('--getSignalFromPrefit'   , dest='getSignalFromPrefit'   , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
           
           
@@ -278,7 +279,7 @@ if __name__ == '__main__':
     structure = {}
     if opt.structureFile == None :
        print " Please provide the datacard structure "
-       exit ()
+       #exit ()
 
     factory._structure = structure
     
