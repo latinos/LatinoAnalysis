@@ -618,7 +618,7 @@ class ShapeFactory:
           
           nbins = histo.GetXaxis().GetNbins()
 
-          hnew = ROOT.TH1F("new_" + histo.GetName(),"", array('d', self._binning ))
+          hnew = ROOT.TH1F("new_" + histo.GetName(),"", len(self._binning)-1, array('d', self._binning ))
           for ibin in range (0, nbins+1) :
             y = histo.GetBinContent(ibin)
             x = histo.GetXaxis().GetBinCenter(ibin)
@@ -855,7 +855,7 @@ if __name__ == '__main__':
             
           # example C: ([60,80,90,110,130,150,200],[10,20,30,50,70,90,150],), 
           #   -> NB: the two variables are defined as y:x, then it's the second that we care about
-          elif len( binning_possibly_in_2d ) == 1 :
+          elif len( binning_possibly_in_2d ) == 2 :
             now_1d_binning = binning_possibly_in_2d[1]
           
           
