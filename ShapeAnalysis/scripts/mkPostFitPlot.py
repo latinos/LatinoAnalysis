@@ -239,6 +239,7 @@ if __name__ == '__main__':
     print " cut                   =          ", opt.cut
     print " kind                  =          ", opt.kind
     print " getSignalFromPrefit   =          ", opt.getSignalFromPrefit
+    print " structureFile         =          ", opt.structureFile
 
 
 
