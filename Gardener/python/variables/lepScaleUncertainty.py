@@ -296,14 +296,12 @@ class LeppTScalerTreeMaker(TreeCloner):
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                 elif self.lepFlavourToChange == 'mu' :
                     if self.variation == 1.0 :
-                        print 'Muon Up'
                         newmetmodule = itree.metPfType1MuonEnUp
                         #newmetphi = itree.metPfRawPhiMuonEnUp
                         myDelta = self.sgn_deltaphi(itree.metPfRawPhiMuonEnUp, itree.metPfRawPhi)
                         newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                     elif self.variation == -1.0 :
-                        print 'Muon Down'
                         newmetmodule = itree.metPfType1MuonEnDn
                         #newmetphi = itree.metPfRawPhiMuonEnDn
                         myDelta = self.sgn_deltaphi(itree.metPfRawPhiMuonEnDn, itree.metPfRawPhi)
@@ -322,7 +320,8 @@ class LeppTScalerTreeMaker(TreeCloner):
                         bvector.push_back ( leptonPtChanged[leptonOrder[i]] )
                     for i in range( len(getattr(self.itree, bname)) - len(leptonOrder) ) :
                         bvector.push_back ( -9999. )
-                else:
+                elif not 'std_vector_lepton_rochester' in bname: 
+               # else:
                     self.changeOrder( bname, bvector, leptonOrder)
 
             # update met
