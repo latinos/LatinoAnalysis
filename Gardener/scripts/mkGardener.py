@@ -128,9 +128,9 @@ print "eosProdBase    = ", eosProdBase
 print "eosTargBaseIn  = ", eosTargBaseIn
 print "eosTargBaseOut = ", eosTargBaseOut 
 
-if 'knu' in os.uname()[1]:
-  inDirBase = options.inputTarget
-  outDirBase = options.outputTarget
+if 'knu' or 'sdfarm' in os.uname()[1]:
+  #inDirBase = options.inputTarget
+  #outDirBase = options.outputTarget
   Steps['hadd']['SizeMax']= 1e9 
 
 #hack to be able to stat both files under /eos/cms and /eos/user
@@ -209,11 +209,16 @@ for iProd in prodList :
       fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
     else:
       fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+options.iniStep
-  elif 'knu' in os.uname()[1]:
+  #elif 'knu' in os.uname()[1]:
+  #  if options.iniStep == 'Prod' :
+  #    fileCmd = 'ls ' + inDirBase + prodDir+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
+  #  else:
+  #    fileCmd = 'ls ' + inDirBase +iProd+ '/'+options.iniStep
+  elif 'sdfarm' in os.uname()[1]:
     if options.iniStep == 'Prod' :
-      fileCmd = 'ls ' + inDirBase + prodDir+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
+      fileCmd = 'ls ' + eosTargBaseIn + prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
     else:
-      fileCmd = 'ls ' + inDirBase +iProd+ '/'+options.iniStep
+      fileCmd = 'ls ' + eosTargBaseIn +iProd+ '/'+options.iniStep
   else:
     if options.iniStep == 'Prod' : 
       fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
@@ -221,7 +226,7 @@ for iProd in prodList :
     else:
       fileCmd = 'ls '+eosTargBaseIn+'/'+iProd+'/'+options.iniStep
 
-  #print "fileCmd is: ", fileCmd
+  print "input file fileCmd is: ", fileCmd
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
@@ -250,14 +255,14 @@ for iProd in prodList :
           fileCmd = 'ls ' + outDirBase + iProd+'/'+options.iniStep+'__'+iStep
       else:
         if options.iniStep == 'Prod' :
-          fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+iStep
+          fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+'Prod__'+iStep
         else:
           fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+options.iniStep+'__'+iStep
-      print fileCmd
+      print 'output file fileCmd', fileCmd
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileExistList=string.split(out)
-      print "FileExistList: ", FileExistList
+      #print "FileExistList: ", FileExistList
       #print 'samples',samples
       #print samples.keys()
       for iSample in samples : 
@@ -289,7 +294,7 @@ for iProd in prodList :
         if iStep in ['mcweights'] : # ,'mcwghtcount' ]  :
           if not 'doMCweights=True' in samples[iSample][1] : 
              selectSample=False
-        #print selectSample
+        #print 'iSample',iSample,'selectSample',selectSample
         # And Now add trees
         #if not Productions[iProd]['isData'] :
           #iTree = 'latino_'+iSample+'.root'
@@ -303,7 +308,7 @@ for iProd in prodList :
         for iFile in FileInList:
             #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in FileExistList 
             if options.redo or not iFile in FileExistList or iStep == 'hadd' :
-              #print iSample 
+              #print 'iSample', iSample, 'iFile', iFile
               if selectSample and iSample.replace('_25ns','') in iFile :
                 #if 'MuonEG' in iFile : print iFile
                 iKey = iFile.replace('latino_','').replace('.root','')
@@ -317,7 +322,7 @@ for iProd in prodList :
                   #if iSample.replace('_25ns','') in iTarget : iTargetOri = iSample
                 else:
                   aSample = iKey
-                print 'aSample', aSample ,'iSample', iSample
+		#print 'aSample',aSample,'iSample',iSample
                 if aSample.replace('_25ns','') == iSample.replace('_25ns','') :
                   if 'iihe' in os.uname()[1]:
                     if options.iniStep == 'Prod' :
@@ -329,13 +334,18 @@ for iProd in prodList :
                       targetList[iKey] = inDirBase + prodDir+Productions[iProd]['dirExt'] + '/' +iFile 
                     else:
                       targetList[iKey] = inDirBase + iProd+'/'+options.iniStep + '/' +iFile
+                  elif 'sdfarm' in os.uname()[1]:
+                    if options.iniStep == 'Prod' :
+                      targetList[iKey] = eosTargBaseIn + prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] + '/'+iFile 
+                    else:
+                      targetList[iKey] = eosTargBaseIn + iProd+'/'+options.iniStep + '/' +iFile
                   else:
                     if options.iniStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
                     else:
                       targetList[iKey] = eosTargBaseIn+'/'+iProd+'/'+options.iniStep+'/'+iFile
 
-      #print "targetList: ", targetList  
+      print "targetList: ", targetList  
 
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
@@ -376,6 +386,11 @@ for iProd in prodList :
                     targetListBaseW[iKey] = inDirBase + prodDir+Productions[iProd]['dirExt']+'/'+iFile 
                   else:
                     targetListBaseW[iKey] = inDirBase + iProd+'/'+options.iniStep+'/'+iFile
+                elif 'sdfarm' in os.uname()[1]:
+                  if options.iniStep == 'Prod' :
+                    targetListBaseW[iKey] = eosTargBaseIn + prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile 
+                  else:
+                    targetListBaseW[iKey] = eosTargBaseIn + iProd+'/'+options.iniStep+'/'+iFile
                 else: 
                   if options.iniStep == 'Prod' :
                     targetListBaseW[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -388,11 +403,19 @@ for iProd in prodList :
       if options.chain :
         if not isFirstinChain: 
           print "Gone hacking targetList for chain"
-          #print startingStep,replaceStep,previousStep
+          print startingStep,replaceStep,previousStep
+	  print 'targetList',targetList
           targetList = targetListKeep
+	  print 'targetList',targetList
           for i in targetList :
             if not replaceStep:
-              targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut).replace(startingStep,previousStep)
+	      if 'sdfarm' in os.uname()[1]:
+		if startingStep == 'Prod':
+		  delimit = prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']
+		  targetList[i] = targetList[i].split(delimit)[0] + '/'+iProd + '/'+previousStep +'/'+ targetList[i].split(delimit)[1]
+		  targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut)
+		else: targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut).replace(startingStep,previousStep)
+	      else: targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut).replace(startingStep,previousStep)
             else:
               targetList[i] =  targetList[i].replace(eosTargBaseIn,eosTargBaseOut).replace(replaceStep,previousStep)
           startingStep=previousStep
@@ -603,13 +626,11 @@ for iProd in prodList :
         #print targetList[iTarget] 
         inTree = targetList[iTarget]  # Pointing to File in case of Split
         oriTree = inTree
-	if'knu' in os.uname()[1]:
-	  wDir  =workDir+'/Gardening__'+iProd+'__'+iStep+'__'+startingStep
-	else: wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
+	wDir  =workDir+'/Gardening__'+iProd+'__'+iStep
         if not os.path.exists(wDir) : os.system('mkdir -p '+wDir) 
-        if   options.runBatch and not 'knu' in os.uname()[1]: command=''
+        if   options.runBatch : command=''
         else:  
-          if 'iihe' or 'knu' in os.uname()[1]:
+          if 'iihe' or 'knu' or 'sdfarm' in os.uname()[1]:
             command='cd '+wDir+' ; '
           else:       
             command='cd /tmp/'+os.getlogin()+' ; '
@@ -629,6 +650,10 @@ for iProd in prodList :
 	      if options.runBatch :
 		command += 'gfal-copy '+rootReadPath(targetList[iTarget][0].split('/data/cms')[1]) + ' '+outTree+' ; '
 	      else: command += 'cp '+targetList[iTarget][0]+' '+outTree+' ; ' 
+	    elif 'sdfarm' in os.uname()[1]:
+	      if options.runBatch :
+		command += 'xrdcp -f '+rootReadPath(targetList[iTarget][0].split('xrootd')[1]) + ' '+outTree+' ; '
+	      else: command += 'cp '+targetList[iTarget][0]+' '+outTree+' ; ' 
             else:
               command += 'xrdcp '+targetList[iTarget][0]+' '+outTree+' ; ' 
           else:
@@ -637,6 +662,10 @@ for iProd in prodList :
 	      if '/pnfs/knu.ac.kr/data/cms' in iFile :
 	        if options.runBatch :
 		  command += rootReadPath(iFile.split('/data/cms')[1])+' '
+		else: command += iFile+' '
+	      if 'sdfarm' in os.uname()[1] :
+	        if options.runBatch :
+		  command += rootReadPath(iFile.split('xrootd')[1])+' '
 		else: command += iFile+' '
 	      else: command += iFile+' '
             command += ' ; ' 
@@ -689,11 +718,17 @@ for iProd in prodList :
               iName+='__'+iSubStep
             
             if selectSample : 
-              inTree=finalTree              
+              inTree=finalTree
               outTree ='latino_'+iTarget+'__'+iName+'.root'
-	      if '/pnfs/knu.ac.kr/data/cms' in inTree :
+              if 'pnfs/knu.ac.kr/data/cms' in inTree:
 		command+=Steps[iSubStep]['command']+' '+rootReadPath(inTree.split('/data/cms')[1])+' '+outTree +' ; '
+              elif 'xrootd' in inTree:
+		command+=Steps[iSubStep]['command']+' '+rootReadPath(inTree.split('xrootd')[1])+' '+outTree +' ; '
 	      else: command+=Steps[iSubStep]['command']+' '+inTree+' '+outTree +' ; '  
+	      #print 'isChain-------------------------------------------'
+	      #print 'inTree', inTree
+	      #print 'outTree',outTree
+	      #print 'command',command
               finalTree=outTree
               GarbageCollector.append(outTree)
 
@@ -703,9 +738,15 @@ for iProd in prodList :
         # single Target
         else:
           outTree ='latino_'+iTarget+'__'+iStep+'.root'
-	  if '/pnfs/knu.ac.kr/data/cms' in inTree :
+	  if 'knu' in os.uname()[1]:
             command+=Steps[iStep]['command']+' '+rootReadPath(inTree.split('/data/cms')[1])+' '+outTree +' ; '
+	  elif 'sdfarm' in os.uname()[1]:
+            command+=Steps[iStep]['command']+' '+rootReadPath(inTree.split('xrootd')[1])+' '+outTree +' ; '
 	  else: command+=Steps[iStep]['command']+' '+inTree+' '+outTree +' ; '
+	  #print 'single Target-------------------------------------------'
+	  #print 'inTree', inTree
+	  #print 'outTree',outTree
+	  #print 'command',command
 
           GarbageCollector.append(outTree)
 
@@ -747,8 +788,10 @@ for iProd in prodList :
         if 'puData' in Productions[iProd] : puData = Productions[iProd]['puData']
         if 'iihe' in os.uname()[1]:
           puData=puData.replace('/afs/cern.ch/user/x/xjanssen/public','/user/xjanssen/HWW2015/pudata')
-        #if 'knu' in os.uname()[1]:
-        #  puData='/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root'
+        if 'knu' in os.uname()[1]:
+          puData='/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root'
+        if 'sdfarm' in os.uname()[1]:
+          puData=puData.replace('/afs/cern.ch/user/x/xjanssen/public','/cms/ldap_home/salee/Latino/PUdata')
         print 'PU Data : ', puData
         command = command.replace('RPLME_puData',puData)  
 
@@ -782,14 +825,21 @@ for iProd in prodList :
 	     if options.redo: command+='gfal-rm '+'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + outDirBase + iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root;'
 	     command+='gfal-copy '+outTree+' '+'srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=' + outDirBase+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
+	 elif 'sdfarm' in os.uname()[1]:
+           if startingStep == 'Prod' :
+             command+='xrdcp -f '+outTree+' '+ rootReadPath(eosTargBaseOut.split('xrootd')[1])+'/'+iProd+'/'+'Prod__'+iStep+'/latino_'+iTarget+'.root'
+           else:
+             command+='xrdcp -f '+outTree+' '+ rootReadPath(eosTargBaseOut.split('xrootd')[1])+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
          else:
            if startingStep == 'Prod' :
              command+='xrdcp -f '+outTree+' '+ eosTargBaseOut+'/'+iProd+'/'+iStep+'/latino_'+iTarget+'.root'
            else:
              command+='xrdcp -f '+outTree+' '+ eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
-        #for iGarbage in GarbageCollector: 
-	  #command+='; rm '+iGarbage
+	if 'sdfarm' in os.uname()[1]:
+          for iGarbage in GarbageCollector: 
+	    command+='; rm -f '+iGarbage
+
         logFile=wDir+'/log__'+iTarget+'.log'
         if options.quiet :
           command += ' 2>&1 > /dev/null \n' 
@@ -803,7 +853,6 @@ for iProd in prodList :
         # Fix dcap for IIHE
         command = command.replace(' /pnfs/iihe',' dcap://maite.iihe.ac.be/pnfs/iihe')        
 
-        print '--------------------------------', options.pretend
 	if options.pretend : print "The command is : ", command
         else :
           if  options.runBatch: jobs.Add(stepBatch,iTarget,command)

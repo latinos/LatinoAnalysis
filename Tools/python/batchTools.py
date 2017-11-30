@@ -89,7 +89,7 @@ class batchJobs :
 ###      elif 'ifca' in os.uname()[1]:
 ###        jFile.write("mkdir -p /tmp/"+os.environ["USER"]+"/latinos \n") 
 ###        jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
-         elif 'sdfarm' in os.uname()[1]:
+         elif 'sdfarm' or 'knu' in os.uname()[1]:
            jFile.write('cd '+self.subDir+'\n')
          else:
            jFile.write('cd - \n')
