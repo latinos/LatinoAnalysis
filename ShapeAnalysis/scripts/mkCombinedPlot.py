@@ -174,7 +174,18 @@ class ShapeFactory:
           list_thsBackground[histoname] = self.FixBins(histo)
           #print " max = ", histo.GetXaxis().GetBinCenter(histo.GetNbinsX())
    
-   
+  
+        #
+        # divide the histograms by the bin width if specified
+        #
+ 
+        if self._divideByBinWidth == True:
+          list_thsData ['DATA'].Scale(1,"width")
+          for histoname, histo in list_thsSignal.iteritems():
+            list_thsSignal[histoname].Scale(1,"width")
+          for histoname, histo in list_thsBackground.iteritems():
+            list_thsBackground[histoname].Scale(1,"width")
+
         #
         # prepare the signal TGraphAsymmErrors
         #
@@ -216,8 +227,12 @@ class ShapeFactory:
             for iBin in range(temp_graph.GetN()) :
               #tgrMC.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
               #tgrMC.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
-              tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]  * global_scale_factor )
-              tgrMC.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2., temp_graph.GetErrorYlow(iBin)  * global_scale_factor, temp_graph.GetErrorYhigh(iBin)  * global_scale_factor )
+              if self._divideByBinWidth == True:
+                tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]  * global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1) )
+                tgrMC.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2., temp_graph.GetErrorYlow(iBin)  * global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1), temp_graph.GetErrorYhigh(iBin)  * global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1) )
+              else:
+                tgrMC.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]  * global_scale_factor )
+                tgrMC.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2., temp_graph.GetErrorYlow(iBin)  * global_scale_factor, temp_graph.GetErrorYhigh(iBin)  * global_scale_factor )
           
           else :
             for iBin in range(temp_graph.GetN()) :
@@ -228,8 +243,12 @@ class ShapeFactory:
               eyl_temp = tgrMC.GetErrorYlow(iBin)
               eyh_temp = tgrMC.GetErrorYhigh(iBin)
               
-              tgrMC.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  * global_scale_factor  + y_temp )
-              tgrMC.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor, eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor, eyh_temp)  )
+              if self._divideByBinWidth == True:
+                tgrMC.SetPoint      (iBin, x_temp, (temp_graph.GetY()[iBin]  * global_scale_factor) / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1)  + y_temp )
+                tgrMC.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1), eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1), eyh_temp) )
+              else:
+                tgrMC.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  * global_scale_factor  + y_temp )
+                tgrMC.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor, eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor, eyh_temp)  )
  
         for cutName, cutConfig in cutsToMerge.iteritems():    
           temp_graph = list_files[cutName].Get("weight_X_tgrData")
@@ -243,8 +262,12 @@ class ShapeFactory:
             for iBin in range(temp_graph.GetN()) :
               #tgrData.SetPoint      (iBin, temp_graph.GetX()[iBin], temp_graph.GetY()[iBin] )
               #tgrData.SetPointError (iBin, temp_graph.GetErrorXlow(iBin), temp_graph.GetErrorXhigh(iBin),  temp_graph.GetErrorYlow(iBin), temp_graph.GetErrorYhigh(iBin) )
-              tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]    * global_scale_factor  )
-              tgrData.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2.,  temp_graph.GetErrorYlow(iBin)    * global_scale_factor , temp_graph.GetErrorYhigh(iBin)    * global_scale_factor  )
+              if self._divideByBinWidth == True:
+                tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]    * global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1)  )
+                tgrData.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2.,  temp_graph.GetErrorYlow(iBin)    * global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1) , temp_graph.GetErrorYhigh(iBin)    * global_scale_factor / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1)  )
+              else:
+                tgrData.SetPoint      (iBin, list_thsData ['DATA'].GetXaxis().GetBinCenter(iBin+1), temp_graph.GetY()[iBin]    * global_scale_factor  )
+                tgrData.SetPointError (iBin, list_thsData ['DATA'].GetBinWidth(iBin+1)/2., list_thsData ['DATA'].GetBinWidth(iBin+1)/2.,  temp_graph.GetErrorYlow(iBin)    * global_scale_factor , temp_graph.GetErrorYhigh(iBin)    * global_scale_factor  )
           
           else :
             for iBin in range(temp_graph.GetN()) :
@@ -254,9 +277,13 @@ class ShapeFactory:
               exh_temp = tgrData.GetErrorXhigh(iBin)
               eyl_temp = tgrData.GetErrorYlow(iBin)
               eyh_temp = tgrData.GetErrorYhigh(iBin)
-              
-              tgrData.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]   * global_scale_factor   + y_temp )
-              tgrData.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor, eyl_temp), self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor, eyh_temp) )
+
+              if self._divideByBinWidth == True:
+                tgrData.SetPoint      (iBin, x_temp, (temp_graph.GetY()[iBin]   * global_scale_factor) / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1)   + y_temp  )
+                tgrData.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor  / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1), eyl_temp), self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor  / list_thsData ['DATA'].GetXaxis().GetBinWidth(iBin+1), eyh_temp) )
+              else:              
+                tgrData.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]   * global_scale_factor   + y_temp )
+                tgrData.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor, eyl_temp), self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor, eyh_temp) )
   
   
         #
@@ -362,15 +389,16 @@ class ShapeFactory:
         
         
         # - recalculate the maxY
-        maxYused = 1.1 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
-
+        maxYused = 2.0 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last()) #1.1 *
         # FIXME these hardcoded numbers
         minYused = 1.
         #nbinY = 5
         minXused = (list_thsData ['DATA']).GetXaxis().GetBinLowEdge(1) 
-        maxXused = (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) ) /2.
-        
-        
+        if self._removeOverflow:
+          maxXused = (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX()-1 ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX())-1 ) /2.
+        else:      
+          maxXused = (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) ) /2.
+       
         
         print " minXused = ", minXused
         print " maxXused = ", maxXused,  " = ", (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) , " + ", (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) )
@@ -403,8 +431,10 @@ class ShapeFactory:
           #weight_X_frameDistro.GetXaxis().SetTitle(variableName)
         weight_X_frameDistro.GetXaxis().SetTitle(factory._variableHR)
                 
-        
-        weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+        if self._divideByBinWidth==True:        
+          weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events/GeV")
+        else:
+          weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
         weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
 
         weight_X_thsBackground.Draw("hist same")
@@ -704,7 +734,8 @@ class ShapeFactory:
    # _____________________________________________________________________________
     def GetMaximumIncludingErrors(self, histo):
         maxWithErrors = 0.
-        for iBin in range(1, histo.GetNbinsX()+1):
+        lastBin = histo.GetNbinsX() if self._removeOverflow==True else histo.GetNbinsX()+1
+        for iBin in range(1, lastBin):
           binHeight = histo.GetBinContent (iBin) + histo.GetBinError (iBin)
           if binHeight > maxWithErrors :
             maxWithErrors = binHeight
@@ -760,6 +791,9 @@ if __name__ == '__main__':
     parser.add_option('--minvariable'    , dest='minvariable'    , help='input variable min', default=0.   ,    type=float)
     parser.add_option('--maxvariable'    , dest='maxvariable'    , help='input variable max', default=10.  ,    type=float)
     parser.add_option('--getVarFromFile' , dest='getVarFromFile' , help='get variable, binning and range from file. Needed for variable bin width (set to 1 to trigger this)', default=0   ,    type=int)
+    parser.add_option('--divideByBinWidth' , dest='divideByBinWidth'   , help='divide the bin content by the bin width'     , action='store_true', default=False)
+    parser.add_option('--removeOverflow' , dest='removeOverflow'   , help='remove the overflow bin'     , action='store_true', default=False)
+
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -786,6 +820,11 @@ if __name__ == '__main__':
 
     print " minLogCratio   =          ", opt.minLogCratio
     print " maxLogCratio   =          ", opt.maxLogCratio
+
+    print " divideByBinWidth =        ", opt.divideByBinWidth
+
+    print " removeOverflow =        ", opt.removeOverflow
+
 
     opt.minLogC = float(opt.minLogC)
     opt.maxLogC = float(opt.maxLogC)
@@ -817,6 +856,9 @@ if __name__ == '__main__':
     factory._minvariable = 1.* opt.minvariable
     factory._maxvariable = 1.* opt.maxvariable
 
+    factory._divideByBinWidth = opt.divideByBinWidth
+
+    factory._removeOverflow = opt.removeOverflow
 
     #
     # get variables: needed in case you started from 2D plot
@@ -860,6 +902,7 @@ if __name__ == '__main__':
           
           
           factory._binning = now_1d_binning
+
      
     print " binning = ", factory._binning
     
