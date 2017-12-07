@@ -106,6 +106,9 @@ class LawnMower:
            
            #if samples_key != "DATA" :
            if not ((self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA"):
+             if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(samples_key) ):
+               print "Sample ", samples_key, " does not exist in ", fileIn
+               continue
              histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + samples_key)      
              print folder_fit_name + "/" + self._cut + "/" + samples_key
              
