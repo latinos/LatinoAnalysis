@@ -43,7 +43,7 @@ class ShapeFactory:
         # 0 is no
 
     # _____________________________________________________________________________
-    def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot, inputFileCombine, cutNameInCombine, kind) :
+    def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
 
         print "=================="
         print "==== makePlot ===="
@@ -93,20 +93,6 @@ class ShapeFactory:
         generalCounter = 0
 
         fileIn = ROOT.TFile(inputFile, "READ")
-        if not (inputFileCombine==None):
-          fileCombineIn = ROOT.TFile(inputFileCombine, "READ")
-  
-        if not (kind==None):
-          if kind == 's' :
-            folder_fit_name = "shapes_fit_s"   # signal + background
-          elif  kind == 'b' :
-            folder_fit_name = "shapes_fit_b"   # background only fit
-          elif  kind == 'p' :
-            folder_fit_name = "shapes_prefit"   # prefit
-          else :
-            print " Seriously? What do you want from me? "
-            return
-
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
           print "cut = ", cutName, " :: ", cuts[cutName]
@@ -204,10 +190,6 @@ class ShapeFactory:
             nexpected = 0
 
             for sampleName, sample in self._samples.iteritems():
-              if not (inputFileCombine==None):
-                if not (fileCombineIn.Get(folder_fit_name + "/" + cutNameInCombine).GetListOfKeys().Contains(sampleName) or sampleName=="DATA"):
-                  print "Sample ", sampleName, " does not exist in ", fileIn, " skipping..."
-                  continue
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               print '     -> shapeName = ', shapeName,
               histo = fileIn.Get(shapeName)
@@ -647,9 +629,6 @@ class ShapeFactory:
               # MC style
               if plot[sampleName]['isData'] == 0 :
                 if plot[sampleName]['isSignal'] == 1 :
-                  if not (inputFileCombine==None):
-                   if not (fileCombineIn.Get(folder_fit_name + "/" + cutNameInCombine).GetListOfKeys().Contains(sampleName) ):
-                     continue
                   thsBackground.Add(histos[sampleName])
 
             #
@@ -1837,19 +1816,18 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--scaleToPlot'     , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=2.5  ,    type=float   )
-    parser.add_option('--minLogC'         , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
-    parser.add_option('--maxLogC'         , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
-    parser.add_option('--minLogCratio'    , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
-    parser.add_option('--maxLogCratio'    , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
-    parser.add_option('--outputDirPlots'  , dest='outputDirPlots' , help='output directory'                           , default='./')
-    parser.add_option('--inputFile'       , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
-    parser.add_option('--inputFileCombine', dest='inputFileCombine' , help='input file with post-fit histograms'      , default=None)
-    parser.add_option('--nuisancesFile'   , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
-    parser.add_option('--onlyVariable'    , dest='onlyVariable'   , help='draw only one variable (may be needed in post-fit plots)'          , default=None)
-    parser.add_option('--onlyCut'         , dest='onlyCut'        , help='draw only one cut phase space (may be needed in post-fit plots)'   , default=None)
-    parser.add_option('--cutNameInCombine', dest='cutNameInCombine', help='cut name as appears in the combine file'  , default='')
-    parser.add_option('--kind'                  , dest='kind'                  , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default=None)
+    parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=2.5  ,    type=float   )
+    parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
+    parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
+    parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
+    parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
+    parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
+    parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
+    parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
+
+    parser.add_option('--onlyVariable'   , dest='onlyVariable'   , help='draw only one variable (may be needed in post-fit plots)'          , default=None)
+    parser.add_option('--onlyCut'        , dest='onlyCut'        , help='draw only one cut phase space (may be needed in post-fit plots)'   , default=None)
+   
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
     parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
@@ -1871,10 +1849,6 @@ if __name__ == '__main__':
     print " inputFile      =          ", opt.inputFile
     print " outputDirPlots =          ", opt.outputDirPlots
  
-    print " inputFileCombine  =          ", opt.inputFileCombine
-    print " cutNameInCombine  =          ", opt.cutNameInCombine
-    print " kind                  =          ", opt.kind
-
     print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
     print " showIntegralLegend = ", opt.showIntegralLegend
     
@@ -1974,10 +1948,9 @@ if __name__ == '__main__':
     elif os.path.exists(opt.nuisancesFile) :
       handle = open(opt.nuisancesFile,'r')
       exec(handle)
-      handle.close()
-
+      handle.close() 
    
-    factory.makePlot( opt.inputFile , opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot, opt.inputFileCombine, opt.cutNameInCombine, opt.kind) 
+    factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     
     print '... and now closing ...'
         
