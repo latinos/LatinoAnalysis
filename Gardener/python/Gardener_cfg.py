@@ -2993,6 +2993,7 @@ Steps= {
                   'onlySample' : [
                                    'GluGluHToWWTo2L2Nu_M125',
                                    'GluGluHToWWTo2L2NuPowheg_M125', 
+                                   'GluGluHToWWTo2L2Nu_alternative_M125',
                                    'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS',
                                    'GluGluHToTauTau_M125',
                                  ],

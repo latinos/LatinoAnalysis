@@ -512,7 +512,7 @@ if __name__ == '__main__':
             outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root'
             fileList = [] 
 #            command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; hadd -f '+outputFile
-            cleanup = 'cd '+os.getcwd()+'/'+opt.outputDir+'; rm '
+            cleanup = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
             allDone=True
             for iStep in stepList:
               for iTarget in targetList:
@@ -533,16 +533,16 @@ if __name__ == '__main__':
                 print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
               for istart in range(0,int(float(number)/500+1)):
                   command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
-                  command += 'hadd -f temp'+str(istart)+'.root'
+                  command += 'hadd -f plots_'+opt.tag+'_temp'+str(istart)+'.root'
                   for i in range(istart*500,(istart+1)*500):
                     if i>=number: break
                     command += " "+fileList[i]
-                    cleanup += " "+fileList[i]
+                    cleanup += "rm "+fileList[i]+" ; "
 #                  print command
                   os.system(command)
               os.chdir(os.getcwd()+"/"+opt.outputDir)
-              os.system("hadd -f plots_"+opt.tag+".root temp*")
-              cleanup += " temp*"
+              os.system("hadd -f plots_"+opt.tag+".root plots_"+opt.tag+"_temp*")
+              cleanup += "rm plots_"+opt.tag+"_temp*"
               if not opt.doNotCleanup: os.system(cleanup) 
            
             ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option 
