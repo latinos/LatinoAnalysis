@@ -774,7 +774,6 @@ class ShapeFactory:
 
             minYused = 1.
             maxYused = 1.
-            scaleToPlot = 2.5
             
             for sampleName, sample in self._samples.iteritems():
               if plot[sampleName]['isData'] == 1 :
@@ -782,8 +781,8 @@ class ShapeFactory:
                 minXused = histos[sampleName].GetXaxis().GetBinLowEdge(1)
                 maxXused = histos[sampleName].GetXaxis().GetBinUpEdge(histos[sampleName].GetNbinsX())
                 maxY = self.GetMaximumIncludingErrors(histos[sampleName])
-                histos[sampleName].SetMaximum(scaleToPlot * maxY)
-                maxYused = scaleToPlot * maxY
+                histos[sampleName].SetMaximum(self._scaleToPlot * maxY)
+                maxYused = self._scaleToPlot * maxY
                 minYused = self.GetMinimum(histos[sampleName])
             
             if thsBackground.GetNhists() != 0:
@@ -791,8 +790,8 @@ class ShapeFactory:
               maxY = thsBackground.GetMaximum ()
               minXused = thsBackground.GetXaxis().GetBinLowEdge(1)
               maxXused = thsBackground.GetXaxis().GetBinUpEdge(thsBackground.GetHistogram().GetNbinsX())
-              if (scaleToPlot * maxY) > maxYused :
-                maxYused = scaleToPlot * maxY
+              if (self._scaleToPlot * maxY) > maxYused :
+                maxYused = self._scaleToPlot * maxY
               minY = thsBackground.GetMinimum ()
               if (minY < minYused) :
                 minYused = minY 
@@ -803,8 +802,8 @@ class ShapeFactory:
               maxY = thsSignal.GetMaximum ()
               minXused = thsSignal.GetXaxis().GetBinLowEdge(1)
               maxXused = thsSignal.GetXaxis().GetBinUpEdge(thsSignal.GetHistogram().GetNbinsX())
-              if (scaleToPlot * maxY) > maxYused :
-                maxYused = scaleToPlot * maxY
+              if (self._scaleToPlot * maxY) > maxYused :
+                maxYused = self._scaleToPlot * maxY
               minY = thsSignal.GetMinimum ()
               if (minY < minYused) :
                 minYused = minY 
@@ -1817,6 +1816,7 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
+    parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=2.5  ,    type=float   )
     parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
     parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
     parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
@@ -1852,12 +1852,14 @@ if __name__ == '__main__':
     print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
     print " showIntegralLegend = ", opt.showIntegralLegend
     
+    print " scaleToPlot =          ", opt.scaleToPlot
     print " minLogC   =          ", opt.minLogC
     print " maxLogC   =          ", opt.maxLogC
 
     print " minLogCratio   =          ", opt.minLogCratio
     print " maxLogCratio   =          ", opt.maxLogCratio
 
+    opt.scaleToPlot = float(opt.scaleToPlot)
     opt.minLogC = float(opt.minLogC)
     opt.maxLogC = float(opt.maxLogC)
 
@@ -1880,6 +1882,7 @@ if __name__ == '__main__':
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
     factory._showIntegralLegend = opt.showIntegralLegend
     
+    factory._scaleToPlot = opt.scaleToPlot 
     factory._minLogC = opt.minLogC 
     factory._maxLogC = opt.maxLogC 
     factory._minLogCratio = opt.minLogCratio

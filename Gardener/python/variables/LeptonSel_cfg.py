@@ -17,7 +17,7 @@ ElectronWP['Full2016'] = {
   'Variables' : {
  
          'relPFIsoRhoCorr' : '(itree.std_vector_lepton_chargedHadronIso[] + max(itree.std_vector_lepton_neutralHadronIso[]+itree.std_vector_lepton_photonIso[]-itree.jetRho*itree.std_vector_electron_effectiveArea[],0))/itree.std_vector_lepton_pt[]',
-
+         'pt_to_be_removed_from_overlap' : 'self.isoConeOverlapRemoval(itree,iLep)'
                },
 
 ## ------------  
@@ -281,9 +281,10 @@ ElectronWP['Full2016'] = {
                                 'True' :
                                   [
                                     'abs(itree.std_vector_lepton_eta[]) < 2.5' ,
-                                    'itree.std_vector_lepton_eleIdHLT[]',
-                                    'itree.std_vector_lepton_eleIdTight[]',
+                                    #'itree.std_vector_lepton_eleIdHLT[]',
+                                    #'itree.std_vector_lepton_eleIdTight[]',
                                     'itree.std_vector_electron_expectedMissingInnerHits[] < 1',
+                                    'itree.std_vector_electron_passConversionVeto[]',
                                     'itree.std_vector_electron_tripleChargeAgreement[]',
                                   ] ,
                                 # Barrel
@@ -291,12 +292,24 @@ ElectronWP['Full2016'] = {
                                   [
                                     'abs(itree.std_vector_lepton_d0[]) < 0.05' ,
                                     'abs(itree.std_vector_lepton_dz[]) < 0.1'  ,
+                                    'itree.std_vector_electron_full5x5_sigmaIetaIeta[] < 0.00998',
+                                    'itree.std_vector_electron_dEtaIn[] < 0.00308',
+                                    'itree.std_vector_electron_dPhiIn[] < 0.0816',
+                                    'itree.std_vector_electron_hOverE[] < 0.0414',
+                                    'itree.std_vector_electron_ooEmooP[] < 0.0129',
+                                    '(itree.std_vector_lepton_chargedHadronIso[] -pt_to_be_removed_from_overlap + max(itree.std_vector_lepton_neutralHadronIso[]+itree.std_vector_lepton_photonIso[]-itree.jetRho*itree.std_vector_electron_effectiveArea[],0))/itree.std_vector_lepton_pt[] < 0.0588',
                                   ] ,
                                 # EndCap
                                 'abs(itree.std_vector_lepton_eta[]) > 1.479' :
                                   [
                                     'abs(itree.std_vector_lepton_d0[]) < 0.1' ,
                                     'abs(itree.std_vector_lepton_dz[]) < 0.2'  ,
+                                    'itree.std_vector_electron_full5x5_sigmaIetaIeta[] < 0.0292',
+                                    'itree.std_vector_electron_dEtaIn[] < 0.00605',
+                                    'itree.std_vector_electron_dPhiIn[] < 0.0394',
+                                    'itree.std_vector_electron_hOverE[] < 0.0641',
+                                    'itree.std_vector_electron_ooEmooP[] < 0.0129',
+                                    '(itree.std_vector_lepton_chargedHadronIso[] -pt_to_be_removed_from_overlap + max(itree.std_vector_lepton_neutralHadronIso[]+itree.std_vector_lepton_photonIso[]-itree.jetRho*itree.std_vector_electron_effectiveArea[],0))/itree.std_vector_lepton_pt[] < 0.0571',
                                   ] ,
                                   } ,
                              } ,
@@ -424,7 +437,7 @@ MuonWP['Full2016'] = {
                                    'itree.std_vector_lepton_isTightMuon[] == 1' ,
                                    'abs(itree.std_vector_lepton_dz[]) < 0.1' ,
                                    '(itree.std_vector_lepton_chargedHadronIso[] + muonIso - pt_to_be_removed_from_overlap ) / itree.std_vector_lepton_pt[] < 0.15',
-                                   'itree.std_vector_lepton_trackIso[]/itree.std_vector_lepton_pt[] < 0.4' ,
+                                   #'itree.std_vector_lepton_trackIso[]/itree.std_vector_lepton_pt[] < 0.4' ,
                                  ] ,
                                  # dxy for pT < 20 GeV
                                  'itree.std_vector_lepton_pt[] <= 20.0' :

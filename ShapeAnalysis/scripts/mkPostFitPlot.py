@@ -72,7 +72,14 @@ class LawnMower:
         template_histogram = 0
         
         for samples_key,samples_values in self._samples.iteritems():
-           if samples_key == "DATA" :
+
+           # 
+           # propagate signal from pre-fit if triggered
+           # NB: this is needed for exclusion analyses, where the fitted signal is 0
+           #     or to show the signal in the background only fit 
+           #
+           if (self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA" :
+             
              fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
              self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
@@ -85,24 +92,60 @@ class LawnMower:
              template_histogram = histo.Clone ("template")
 
 
+
+          
+
+
+
+
         #print " template_histogram = " , template_histogram
          
         for samples_key,samples_values in self._samples.iteritems():
 
            print " samples_key = ", samples_key
            
-           if samples_key != "DATA" :
-             histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + samples_key)      
-             print folder_fit_name + "/" + self._cut + "/" + samples_key
-             
-             histo.SetName  ('histo_' + samples_key)
-             histo.SetTitle ('histo_' + samples_key)
-             
-             # fix the binning copying from "DATA" binning, if available
-             if (template_histogram != 0) :
-               histo = self._ChangeBin(histo, template_histogram)
-             
-             histo.Write()              
+           copied_from_original = False
+           
+           #if samples_key != "DATA" :
+           if not ((self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA"):
+             if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(samples_key) ):
+               print "Sample ", samples_key, " does not exist in ", fileIn
+               #
+               # If for some reason this histogram is not available in the combine output
+               # get the histogram from the input root file, the output of mkShape
+               # and scale that to 0, so that it is propagated to be used by mkPlot
+               # but it will have 0 contribution, as expected (but legends and all the rest will be ok and nice)
+               #
+               # continue
+               #
+               fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
+
+               self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
+
+               histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key)      
+               histo.SetName  ('histo_' + samples_key)
+               histo.SetTitle ('histo_' + samples_key)
+               histo.Write()  
+               
+               copied_from_original = True
+
+             #
+             #
+             #
+             if not copied_from_original :  
+               
+               histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + samples_key)      
+               print folder_fit_name + "/" + self._cut + "/" + samples_key
+               
+               histo.SetName  ('histo_' + samples_key)
+               histo.SetTitle ('histo_' + samples_key)
+               
+               # fix the binning copying from "DATA" binning, if available
+               if (template_histogram != 0) :
+                 histo = self._ChangeBin(histo, template_histogram)
+               
+               histo.Write()              
+
 
         #
         # total signal and total background, and total
@@ -204,6 +247,8 @@ if __name__ == '__main__':
     parser.add_option('--cutNameInOriginal'     , dest='cutNameInOriginal'     , help='cut name as appears in cuts.py'  , default='')
     parser.add_option('--inputFile'             , dest='inputFile'             , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
     parser.add_option('--kind'                  , dest='kind'                  , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default='s')
+    parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
+    parser.add_option('--getSignalFromPrefit'   , dest='getSignalFromPrefit'   , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
           
           
     # read default parsing options as well
@@ -221,6 +266,10 @@ if __name__ == '__main__':
     print " variable              =          ", opt.variable
     print " cut                   =          ", opt.cut
     print " kind                  =          ", opt.kind
+    print " getSignalFromPrefit   =          ", opt.getSignalFromPrefit
+    print " structureFile         =          ", opt.structureFile
+
+
 
     if opt.cutNameInOriginal == '' :
       opt.cutNameInOriginal = opt.cut
@@ -242,9 +291,11 @@ if __name__ == '__main__':
     factory._variable          = opt.variable
     factory._cut               = opt.cut
     factory._cutNameInOriginal = opt.cutNameInOriginal
-    factory._kind             = opt.kind
+    factory._kind              = opt.kind
+    factory._getSignalFromPrefit = opt.getSignalFromPrefit
+    
 
-
+    # ~~~~
     samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
@@ -252,6 +303,20 @@ if __name__ == '__main__':
       handle.close()
 
     factory._samples = samples
+
+    # ~~~~
+    structure = {}
+    if opt.structureFile == None :
+       print " Please provide the datacard structure "
+       #exit ()
+
+    elif os.path.exists(opt.structureFile) :
+      handle = open(opt.structureFile,'r')
+      exec(handle)
+      handle.close()
+
+
+    factory._structure = structure
     
     factory._inputFile = opt.inputFile
     
