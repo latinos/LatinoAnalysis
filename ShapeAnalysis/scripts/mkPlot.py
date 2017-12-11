@@ -890,8 +890,10 @@ class ShapeFactory:
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
-            tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+            tlegend = ROOT.TLegend(0.2, 0.64, 0.75, 0.91)
             tlegend.SetFillColor(0)
+            tlegend.SetTextFont(42)
+            tlegend.SetTextSize(0.035)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
             reversedSamplesItems = self._samples.items()
