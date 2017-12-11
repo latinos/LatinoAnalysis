@@ -82,7 +82,7 @@ class ShapeFactory:
         list_thsBackground = {}
 
         list_thsSignal_grouped     = {}
-        list_thsSignalSup_grouped     = {}
+        list_thsSignalSup_grouped  = {}
         list_thsBackground_grouped = {}
 
         list_tcanvas               = {}
@@ -95,9 +95,9 @@ class ShapeFactory:
         fileIn = ROOT.TFile(inputFile, "READ")
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
-          print "cut = ", cutName, " :: ", cuts[cutName]
+          print "cut =", cutName, "::", cuts[cutName]
           for variableName, variable in self._variables.iteritems():
-            print "variableName = ", variableName
+            print "variableName =", variableName
 
             if not "divideByBinWidth" in variable.keys():
               variable["divideByBinWidth"] = 0
@@ -119,8 +119,6 @@ class ShapeFactory:
             histos = {}
             histos_grouped = {}
             
-            #print "here ..."
-           
             canvasNameTemplateRatio = 'ccRatio_' + cutName + "_" + variableName
             #tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
 
@@ -1842,22 +1840,19 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-
-    print " configuration file = ", opt.pycfg
-    print " lumi =               ", opt.lumi
-    
-    print " inputFile      =          ", opt.inputFile
-    print " outputDirPlots =          ", opt.outputDirPlots
- 
-    print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
-    print " showIntegralLegend = ", opt.showIntegralLegend
-    
-    print " scaleToPlot =          ", opt.scaleToPlot
-    print " minLogC   =          ", opt.minLogC
-    print " maxLogC   =          ", opt.maxLogC
-
-    print " minLogCratio   =          ", opt.minLogCratio
-    print " maxLogCratio   =          ", opt.maxLogCratio
+    print ""
+    print "          configuration file =", opt.pycfg
+    print "                        lumi =", opt.lumi
+    print "                   inputFile =", opt.inputFile
+    print "              outputDirPlots =", opt.outputDirPlots
+    print " plotNormalizedDistributions =", opt.plotNormalizedDistributions
+    print "          showIntegralLegend =", opt.showIntegralLegend
+    print "                 scaleToPlot =", opt.scaleToPlot
+    print "                     minLogC =", opt.minLogC
+    print "                     maxLogC =", opt.maxLogC
+    print "                minLogCratio =", opt.minLogCratio
+    print "                maxLogCratio =", opt.maxLogCratio
+    print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
     opt.minLogC = float(opt.minLogC)
@@ -1953,5 +1948,3 @@ if __name__ == '__main__':
     factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     
     print '... and now closing ...'
-        
-       
