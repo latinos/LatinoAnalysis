@@ -920,7 +920,8 @@ class ShapeFactory:
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
-            tlegend = ROOT.TLegend(0.2, 0.64, 0.75, 0.91)
+            #tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+            tlegend = ROOT.TLegend(0.20, 0.70, 0.80, 0.88)
             tlegend.SetFillColor(0)
             tlegend.SetTextFont(42)
             tlegend.SetTextSize(0.035)
