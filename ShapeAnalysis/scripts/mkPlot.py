@@ -82,7 +82,7 @@ class ShapeFactory:
         list_thsBackground = {}
 
         list_thsSignal_grouped     = {}
-        list_thsSignalSup_grouped     = {}
+        list_thsSignalSup_grouped  = {}
         list_thsBackground_grouped = {}
 
         list_tcanvas               = {}
@@ -97,9 +97,9 @@ class ShapeFactory:
         fileIn = ROOT.TFile(inputFile, "READ")
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
-          print "cut = ", cutName, " :: ", cuts[cutName]
+          print "cut =", cutName, "::", cuts[cutName]
           for variableName, variable in self._variables.iteritems():
-            print "variableName = ", variableName
+            print "variableName =", variableName
 
             if not "divideByBinWidth" in variable.keys():
               variable["divideByBinWidth"] = 0
@@ -125,8 +125,6 @@ class ShapeFactory:
             histos = {}
             histos_grouped = {}
             
-            #print "here ..."
-           
             canvasNameTemplateRatio = 'ccRatio_' + cutName + "_" + variableName
             canvasNameTemplateDifference = 'ccDifference_' + cutName + "_" + variableName
             #tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
@@ -922,8 +920,10 @@ class ShapeFactory:
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
-            tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
+            tlegend = ROOT.TLegend(0.2, 0.64, 0.75, 0.91)
             tlegend.SetFillColor(0)
+            tlegend.SetTextFont(42)
+            tlegend.SetTextSize(0.035)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
             reversedSamplesItems = self._samples.items()
@@ -2266,7 +2266,7 @@ class ShapeFactory:
             #print " cleaning ..."
             #thsBackground_grouped.Delete()
             
-            print " >> end: ", variableName
+            print " >> end:", variableName
             
           print " >> all end"
 
@@ -2405,7 +2405,7 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=2.5  ,    type=float   )
+    parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=3.0  ,    type=float   )
     parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
     parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
     parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
@@ -2431,22 +2431,19 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-
-    print " configuration file = ", opt.pycfg
-    print " lumi =               ", opt.lumi
-    
-    print " inputFile      =          ", opt.inputFile
-    print " outputDirPlots =          ", opt.outputDirPlots
- 
-    print " plotNormalizedDistributions = ", opt.plotNormalizedDistributions
-    print " showIntegralLegend = ", opt.showIntegralLegend
-    
-    print " scaleToPlot =          ", opt.scaleToPlot
-    print " minLogC   =          ", opt.minLogC
-    print " maxLogC   =          ", opt.maxLogC
-
-    print " minLogCratio   =          ", opt.minLogCratio
-    print " maxLogCratio   =          ", opt.maxLogCratio
+    print ""
+    print "          configuration file =", opt.pycfg
+    print "                        lumi =", opt.lumi
+    print "                   inputFile =", opt.inputFile
+    print "              outputDirPlots =", opt.outputDirPlots
+    print " plotNormalizedDistributions =", opt.plotNormalizedDistributions
+    print "          showIntegralLegend =", opt.showIntegralLegend
+    print "                 scaleToPlot =", opt.scaleToPlot
+    print "                     minLogC =", opt.minLogC
+    print "                     maxLogC =", opt.maxLogC
+    print "                minLogCratio =", opt.minLogCratio
+    print "                maxLogCratio =", opt.maxLogCratio
+    print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
     opt.minLogC = float(opt.minLogC)
@@ -2545,5 +2542,3 @@ if __name__ == '__main__':
     factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     
     print '... and now closing ...'
-        
-       
