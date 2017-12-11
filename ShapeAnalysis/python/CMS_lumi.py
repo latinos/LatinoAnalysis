@@ -122,7 +122,7 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     elif( iPosX%10==3 ):
         posX_ =  1-r - relPosX*(1-l-r)
 
-    posY_ = 1-t - relPosY*(1-t-b)
+    posY_ = 0.99 * (1-t - relPosY*(1-t-b))
 
     if( not outOfFrame ):
         if( drawLogo ):
@@ -157,6 +157,8 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
         latex.SetTextFont(extraTextFont)
         latex.SetTextSize(extraTextSize*t)
         latex.SetTextAlign(align_)
+        #latex.DrawLatex(posX_, 0.99 * posY_, extraText)      
         latex.DrawLatex(posX_, posY_, extraText)      
+
 
     #pad.Update()

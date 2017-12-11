@@ -920,8 +920,7 @@ class ShapeFactory:
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
-            #tlegend = ROOT.TLegend(0.2, 0.7, 0.8, 0.9)
-            tlegend = ROOT.TLegend(0.20, 0.70, 0.80, 0.88)
+            tlegend = ROOT.TLegend(0.20, 0.65, 0.80, 0.88)
             tlegend.SetFillColor(0)
             tlegend.SetTextFont(42)
             tlegend.SetTextSize(0.035)
@@ -1537,7 +1536,9 @@ class ShapeFactory:
                       if len(groupPlot.keys()) == 0:          
 
                           for ihisto in range(thsBackground.GetNhists()) :
-                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)                             
+                             histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
+                                      
                              histo.SetFillColor( ((thsBackground.GetHists().At(ihisto))).GetFillColor())
                              histo.SetFillStyle( ((thsBackground.GetHists().At(ihisto))).GetFillStyle())
                              histo.SetLineColor( ((thsBackground.GetHists().At(ihisto))).GetLineColor())
@@ -1558,6 +1559,8 @@ class ShapeFactory:
                              
                           for ihisto in range(thsSignal.GetNhists()) :
                              histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
+                             
                              histo.SetFillColor( ((thsSignal.GetHists().At(ihisto))).GetFillColor())
                              histo.SetFillStyle( ((thsSignal.GetHists().At(ihisto))).GetFillStyle())
                              histo.SetLineColor( ((thsSignal.GetHists().At(ihisto))).GetLineColor())
@@ -1576,6 +1579,8 @@ class ShapeFactory:
                           
                           for ihisto in range(thsData.GetNhists()) :
                              histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
+
                              for ibin in range( nbinY ) :
                                histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
@@ -1589,6 +1594,8 @@ class ShapeFactory:
 
                           for ihisto in range(thsBackground_grouped.GetNhists()) :
                              histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground_grouped.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
+                             histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
+                             
                              histo.SetFillColor( ((thsBackground_grouped.GetHists().At(ihisto))).GetFillColor())
                              histo.SetFillStyle( ((thsBackground_grouped.GetHists().At(ihisto))).GetFillStyle())
                              histo.SetLineColor( ((thsBackground_grouped.GetHists().At(ihisto))).GetLineColor())
@@ -1609,6 +1616,8 @@ class ShapeFactory:
                              
                           for ihisto in range(thsSignal_grouped.GetNhists()) :
                              histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal_grouped.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
+
                              histo.SetFillColor( ((thsSignal_grouped.GetHists().At(ihisto))).GetFillColor())
                              histo.SetFillStyle( ((thsSignal_grouped.GetHists().At(ihisto))).GetFillStyle())
                              histo.SetLineColor( ((thsSignal_grouped.GetHists().At(ihisto))).GetLineColor())
@@ -1629,6 +1638,8 @@ class ShapeFactory:
                           
                           for ihisto in range(thsData.GetNhists()) :
                              histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
+
                              for ibin in range( nbinY ) :
                                histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
@@ -1779,12 +1790,14 @@ class ShapeFactory:
                     weight_X_tgrMCMinusMC = weight_X_tgrData.Clone("tgrMCMinusMCweighted")
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrMCMinusMC.GetX()[ibin]
-                      y = 1 
+                      y = 0
                       exlow  = tgrData_evx[ibin + sliceX * nbinY]
                       exhigh = tgrData_evx[ibin + sliceX * nbinY]
                       eylow  = weight_X_tgrMC.GetErrorYlow(ibin) 
                       eyhigh = weight_X_tgrMC.GetErrorYhigh(ibin)             
                       
+                      #print " DIFF::     eylow = ", eylow, " eyhigh = ", eyhigh, " y = ", y, " x = ", x 
+
                       weight_X_tgrMCMinusMC.SetPoint      (ibin, x, y)
                       weight_X_tgrMCMinusMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
 
@@ -1793,7 +1806,11 @@ class ShapeFactory:
                     # now plot
                     #
                     # - recalculate the maxY
-                    maxYused = 1.2 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+                    maxYused = 1.45 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+
+                    # recalculate min-max X due to weighting rolling
+                    minXused = weight_X_tgrMCMinusMC.GetX()[0] - tgrData_evx[0]
+                    maxXused = weight_X_tgrMCMinusMC.GetX()[nbinY-1] + tgrData_evx[nbinY-1]
 
                     weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + cutName + '_' + variableName
             
@@ -1806,8 +1823,9 @@ class ShapeFactory:
                     
                     weight_X_pad1.cd()
                     weight_X_canvasFrameDistroName = 'weight_X_frame_distro_' + cutName + "_" + variableName
+                    weight_X_frameDistro = weight_X_pad1.DrawFrame(minXused, 0.0, maxXused, 1.0, weight_X_canvasFrameDistroName)
                     #weight_X_frameDistro = weight_X_pad1.DrawFrame(minXused, 0.0, maxXused, 1.0, weight_X_canvasFrameDistroName)
-                    weight_X_frameDistro = weight_X_pad1.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_canvasFrameDistroName)
+                    #weight_X_frameDistro = weight_X_pad1.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_canvasFrameDistroName)
                     
                     # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
                     xAxisDistro = weight_X_frameDistro.GetXaxis()
@@ -1831,10 +1849,13 @@ class ShapeFactory:
                       weight_X_tgrMC.SetFillColor(12)
                       weight_X_tgrMC.SetFillStyle(3004)
                       weight_X_tgrMC.Draw("2")
+                      #weight_X_tgrMC.Draw("P0")
+                      #print "            -------------------------> here "
            
                     #     - then the DATA  
                     if weight_X_tgrData.GetN() != 0:
                       weight_X_tgrData.Draw("P0")
+                      #print "            -------------------------> here data "
                
                     tlegend.Draw()
               
@@ -1858,9 +1879,9 @@ class ShapeFactory:
                     #weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameRatioName)
                     weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, weight_X_canvasFrameRatioName)
                     
-                    #print "                minXused = " , minXused
-                    #print "                maxXused = " , maxXused
-                    #print "                nbinY = " , nbinY
+                    print "                minXused = " , minXused
+                    print "                maxXused = " , maxXused
+                    print "                nbinY = " , nbinY
                     
                     # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
                     xAxisDistro = weight_X_frameRatio.GetXaxis()
@@ -2105,6 +2126,36 @@ class ShapeFactory:
         ROOT.TGaxis.SetExponentOffset(-0.08, 0.00,"y")
 
         
+   # _____________________________________________________________________________
+   # --- fix binning
+   #
+    def FixBins(self, histo, reference_x, reference_x_err):
+        
+        
+        #
+        # variable bin width
+        #
+
+        nbins = histo.GetXaxis().GetNbins()
+
+        binning = [ reference_x[ibin]-reference_x_err[ibin]  for ibin in range (0, nbins) ]  
+        #binning = [ reference_histo.GetXaxis().GetBinLowEdge(ibin) for ibin in reference_histo.GetNbinsX()+1 ]      
+        binning.append (reference_x[nbins-1]+reference_x_err[nbins-1])
+        #print " >>>       histo.GetName() ::", histo.GetName(), " ::> " , binning
+
+        hnew = ROOT.TH1F("new_" + histo.GetName(),"", len(binning)-1, array('d', binning ))
+        for ibin in range (0, nbins+1) :
+          y = histo.GetBinContent(ibin)
+          x = histo.GetXaxis().GetBinCenter(ibin)
+          hnew.SetBinContent(ibin,y)
+        
+        hnew.SetFillColor(histo.GetFillColor())
+        hnew.SetLineColor(histo.GetLineColor())
+        hnew.SetFillStyle(histo.GetFillStyle())
+        
+        return hnew
+      
+   
    
 
 
