@@ -1684,7 +1684,7 @@ class ShapeFactory:
             #print " cleaning ..."
             #thsBackground_grouped.Delete()
             
-            print " >> end: ", variableName
+            print " >> end:", variableName
             
           print " >> all end"
 
@@ -1816,7 +1816,7 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=2.5  ,    type=float   )
+    parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=3.0  ,    type=float   )
     parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
     parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
     parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
