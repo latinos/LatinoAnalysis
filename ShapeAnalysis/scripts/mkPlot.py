@@ -88,6 +88,8 @@ class ShapeFactory:
         list_tcanvas               = {}
         list_tcanvasRatio          = {}
         list_weight_X_tcanvasRatio = {}
+        list_tcanvasDifference          = {}
+        list_weight_X_tcanvasDifference = {}
         list_tcanvasSigVsBkg       = {}
 
         generalCounter = 0
@@ -105,12 +107,16 @@ class ShapeFactory:
             tcanvas            = ROOT.TCanvas( "cc" + cutName + "_" + variableName,      "cc"     , 800, 600 )
             tcanvasRatio       = ROOT.TCanvas( "ccRatio" + cutName + "_" + variableName, "ccRatio", 800, 800 )
             weight_X_tcanvasRatio = ROOT.TCanvas( "weight_X_tcanvasRatio" + cutName + "_" + variableName, "weight_X_tcanvasRatio", 800, 800 )
+            tcanvasDifference       = ROOT.TCanvas( "ccDifference" + cutName + "_" + variableName, "ccDifference", 800, 800 )
+            weight_X_tcanvasDifference = ROOT.TCanvas( "weight_X_tcanvasDifference" + cutName + "_" + variableName, "weight_X_tcanvasDifference", 800, 800 )
             if self._plotNormalizedDistributions :
               tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
  
             list_tcanvas                 [generalCounter] = tcanvas
             list_tcanvasRatio            [generalCounter] = tcanvasRatio
             list_weight_X_tcanvasRatio   [generalCounter] = weight_X_tcanvasRatio
+            list_tcanvasDifference            [generalCounter] = tcanvasDifference
+            list_weight_X_tcanvasDifference   [generalCounter] = weight_X_tcanvasDifference
             if self._plotNormalizedDistributions :
               list_tcanvasSigVsBkg         [generalCounter] = tcanvasSigVsBkg
 
@@ -122,6 +128,7 @@ class ShapeFactory:
             #print "here ..."
            
             canvasNameTemplateRatio = 'ccRatio_' + cutName + "_" + variableName
+            canvasNameTemplateDifference = 'ccDifference_' + cutName + "_" + variableName
             #tcanvasRatio       = ROOT.TCanvas( canvasNameTemplateRatio, variableName, 800, 800 )
 
             canvasNameTemplate = 'c_' + cutName + "_" + variableName
@@ -183,6 +190,7 @@ class ShapeFactory:
             sigSupList_grouped    = []
             # list of additional histograms to be used in the ratio plot
             sigForAdditionalRatioList    = {}
+            sigForAdditionalDifferenceList    = {}
 
             # enhanced list of nuisances, including bin-by-bin 
             mynuisances = {}
@@ -319,6 +327,7 @@ class ShapeFactory:
                   if plot[sampleName]['isSignal'] == 3 :
                     #print "sigForAdditionalRatio histo: ", histos[sampleName]
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
+                    sigForAdditionalDifferenceList[sampleName] = histos[sampleName]
                 else :
                   nexpected += histos[sampleName].Integral(-1,-1)
                   if variable['divideByBinWidth'] == 1:
@@ -688,9 +697,12 @@ class ShapeFactory:
             tgrData.SetLineColor(dataColor)
             
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
+            tgrDataMinusMC = tgrData.Clone("tgrDataMinusMC")
             for iBin in range(0, len(tgrData_vx)) : 
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+              tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+              tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
             
             
             #
@@ -716,12 +728,16 @@ class ShapeFactory:
                   tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
               
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
+              tgrMCMinusMC = tgrMC.Clone("tgrMCMinusMC")  
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
+                tgrMCMinusMC.SetPoint    (iBin, tgrData_vx[iBin], 0.)
                 if histo_total != None :
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                  tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
                 else :
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                  tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
                 
                          
             
@@ -739,6 +755,20 @@ class ShapeFactory:
               tgrDataOverMCTemp.SetMarkerSize(0.3)
               tgrRatioList[samplesToRatioName] = tgrDataOverMCTemp
               
+
+            tgrDifferenceList = {}
+            for samplesToDifferenceName, samplesToDifference in sigForAdditionalDifferenceList.iteritems() :
+              tgrDataMinusMCTemp = tgrData.Clone("tgrDataMinusMC"+samplesToDifferenceName)
+              for iBin in range(0, len(tgrData_vx)) : 
+                tgrDataMinusMCTemp.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , samplesToDifference.GetBinContent(iBin+1)) )
+                tgrDataMinusMCTemp.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
+                if variableName == 'events' :
+                   print ' >> difference[', cutName, '][', samplesToDifferenceName, ']  = ', self.Difference(tgrData_vy[0] , samplesToDifference.GetBinContent(0+1)) 
+
+              tgrDataMinusMCTemp.SetLineColor(samplesToDifference.GetLineColor())
+              tgrDataMinusMCTemp.SetMarkerColor(samplesToDifference.GetLineColor())
+              tgrDataMinusMCTemp.SetMarkerSize(0.3)
+              tgrDifferenceList[samplesToDifferenceName] = tgrDataMinusMCTemp
 
 
             groupFlag = False
@@ -1236,6 +1266,193 @@ class ShapeFactory:
             pad1.SetLogy(0)
 
 
+
+
+
+
+
+
+
+
+
+
+
+            # ~~~~~~~~~~~~~~~~~~~~
+            # plot with difference plot            
+            print "- draw with difference"
+            
+            canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName
+
+            tcanvasDifference.cd()
+            canvasPad1differenceName = 'pad1difference_' + cutName + "_" + variableName
+            pad1difference = ROOT.TPad(canvasPad1differenceName,canvasPad1differenceName, 0, 1-0.72, 1, 1)
+            pad1difference.SetTopMargin(0.098)
+            pad1difference.SetBottomMargin(0.000) 
+            pad1difference.Draw()
+            #pad1difference.cd().SetGrid()
+            
+            pad1difference.cd()
+            #print " pad1difference = ", pad1difference
+            canvasFrameDistroName = 'frame_distro_' + cutName + "_" + variableName
+            frameDistro = pad1difference.DrawFrame(minXused, 0.0, maxXused, 1.0, canvasFrameDistroName)
+            #print " pad1difference = ", pad1difference
+            
+            # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+            xAxisDistro = frameDistro.GetXaxis()
+            xAxisDistro.SetNdivisions(6,5,0)
+
+            if 'xaxis' in variable.keys() :
+              frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+              if variable["divideByBinWidth"] == 1:
+                if "GeV" in variable['xaxis']: 
+                  ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
+                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+                else:
+                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
+              else:
+                if 'yaxis' in variable.keys() : 
+                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frameDistro.GetYaxis().SetTitle("Events")
+            else :
+              frameDistro.GetXaxis().SetTitle(variableName)
+              if variable["divideByBinWidth"] == 1:
+                frameDistro.GetYaxis().SetTitle("dN/d"+variableName)
+              else:
+                if 'yaxis' in variable.keys() : 
+                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+                else :
+                  frameDistro.GetYaxis().SetTitle("Events")
+            #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
+            frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
+
+
+            if len(groupPlot.keys()) == 0:          
+              if thsBackground.GetNhists() != 0:
+                thsBackground.Draw("hist same")
+                 
+              if thsSignal.GetNhists() != 0:
+                #for ihisto in range(thsSignal.GetNhists()) :
+                  #((thsSignal.GetHists().At(ihisto))).SetFillStyle(0)
+                  #((thsSignal.GetHists().At(ihisto))).Draw("hist same")
+                thsSignal.Draw("hist same noclear")
+            else :
+              if thsBackground_grouped.GetNhists() != 0:
+                thsBackground_grouped.Draw("hist same")
+                 
+              if thsSignal_grouped.GetNhists() != 0:
+                thsSignal_grouped.Draw("hist same noclear")
+
+              if len(sigSupList_grouped) != 0:
+                for histo in sigSupList_grouped: 
+                  histo.Draw("hist same")
+           
+            if (len(mynuisances.keys())!=0):
+              tgrMC.Draw("2")
+             
+            #     - then the superimposed MC
+            if len(sigSupList) != 0 and groupFlag==False:
+              for hist in sigSupList:
+                hist.Draw("hist same")
+
+            #     - then the DATA  
+            if tgrData.GetN() != 0:
+              tgrData.Draw("P0")
+    
+            tlegend.Draw()
+            #if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
+              #flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
+              #flag_lumi.Draw()
+            #if 'sqrt' in legend.keys() and 'lumi' not in legend.keys():
+              #flag_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['sqrt'])
+              #flag_sqrt.Draw()
+            #if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
+              #flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*2.5/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
+              #flag_lumi_sqrt.Draw()
+    
+            CMS_lumi.CMS_lumi(tcanvasDifference, iPeriod, iPos)    
+
+            # draw back all the axes            
+            #frameDistro.Draw("AXIS")
+            pad1difference.RedrawAxis()
+
+                
+            tcanvasDifference.cd()
+            canvasPad2differenceName = 'pad2difference_' + cutName + "_" + variableName
+            pad2difference = ROOT.TPad(canvasPad2differenceName,canvasPad2differenceName,0,0,1,1-0.72)
+            pad2difference.SetTopMargin(0.000)
+            pad2difference.SetBottomMargin(0.392)
+            pad2difference.Draw()
+            #pad2difference.cd().SetGrid()
+            pad2difference.cd()
+            
+            #print " pad1difference = ", pad1difference
+            #print " pad2difference = ", pad2difference, " minXused = ", minXused, " maxXused = ", maxXused
+            canvasFrameDifferenceName = 'frame_difference_' + cutName + "_" + variableName
+            #print " canvasFrameDifferenceName = ", canvasFrameDifferenceName
+            frameDifference = pad2difference.DrawFrame(minXused, int ( ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY())  - 2 ), maxXused,  int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY())  + 2 ), canvasFrameDifferenceName)
+            #print " pad2difference = ", pad2difference
+            # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+            xAxisDistro = frameDifference.GetXaxis()
+            xAxisDistro.SetNdivisions(6,5,0)
+
+            if 'xaxis' in variable.keys() : 
+              frameDifference.GetXaxis().SetTitle(variable['xaxis'])
+            else :
+              frameDifference.GetXaxis().SetTitle(variableName)
+            frameDifference.GetYaxis().SetTitle("Data - Expected")
+            #frameDifference.GetYaxis().SetTitle("Data/MC")
+            #frameDifference.GetYaxis().SetRangeUser( 0.0, 2.0 )
+            #frameDifference.GetYaxis().SetRangeUser( -10, 10 )
+            frameDifference.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - 2 ),  int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + 2 ) )
+            self.Pad2TAxis(frameDifference)
+            if (len(mynuisances.keys())!=0):
+              tgrMCMinusMC.SetLineColor(12)
+              tgrMCMinusMC.SetFillColor(12)
+              tgrMCMinusMC.SetLineWidth(2)
+              tgrMCMinusMC.SetFillStyle(3004)
+              tgrMCMinusMC.Draw("2") 
+            
+            tgrDataMinusMC.Draw("P0")
+            
+            
+            #print " tgrDataMinusMC.GetMinimum()/Max = " , tgrDataMinusMC.GetMinimum(), " / " , tgrDataMinusMC.GetMaximum()
+            
+            
+            
+            for samplesToDifferenceGrName, samplesGrToDifference in tgrDifferenceList.iteritems() :
+              samplesGrToDifference.Draw("P")
+
+            
+            oneLine2 = ROOT.TLine(frameDifference.GetXaxis().GetXmin(), 0,  frameDifference.GetXaxis().GetXmax(), 0);
+            oneLine2.SetLineStyle(3)
+            oneLine2.SetLineWidth(3)
+            oneLine2.Draw("same")
+
+            # draw back all the axes            
+            #frameDifference.Draw("AXIS")
+            pad2difference.RedrawAxis()
+            pad2difference.SetGrid()
+            
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + ".png")
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + ".root")
+            
+            
+            # log Y axis
+            #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+            frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+            pad1difference.SetLogy()
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + ".png")
+            pad1difference.SetLogy(0)
+
+
+
+
+
+
+
+
+
           
             #
             # draw weighted plot
@@ -1503,8 +1720,9 @@ class ShapeFactory:
                         weight_X_tgrMC.SetPoint      (ibin, x, y)
                         weight_X_tgrMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
                     
-                    
+                    #
                     # create the weighted data over MC distribution
+                    #
                     weight_X_tgrDataOverMC = weight_X_tgrData.Clone("tgrDataOverMCweighted")
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrDataOverMC.GetX()[ibin]
@@ -1518,8 +1736,28 @@ class ShapeFactory:
                       weight_X_tgrDataOverMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
 
                       #print " Ratio:: ibin,x,y = ", ibin, ", ", x, ", ", y, ", ", eylow, ", ", eyhigh, " <-- ", weight_X_tgrData.GetY()[ibin], " / ",  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) 
+
+
+                    #
+                    # create the weighted data minus MC distribution
+                    #
+                    weight_X_tgrDataMinusMC = weight_X_tgrData.Clone("tgrDataMinusMCweighted")
+                    for ibin in range( nbinY ) :
+                      x = weight_X_tgrDataMinusMC.GetX()[ibin]
+                      y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
+                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+                      eylow  = weight_X_tgrData.GetErrorYlow(ibin) 
+                      eyhigh = weight_X_tgrData.GetErrorYhigh(ibin)                  
+                      
+                      weight_X_tgrDataMinusMC.SetPoint      (ibin, x, y)
+                      weight_X_tgrDataMinusMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
+
+
             
+                    #
                     # create the weighted MC over MC distribution
+                    #
                     weight_X_tgrMCOverMC = weight_X_tgrData.Clone("tgrMCOverMCweighted")
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrMCOverMC.GetX()[ibin]
@@ -1531,7 +1769,23 @@ class ShapeFactory:
                       
                       weight_X_tgrMCOverMC.SetPoint      (ibin, x, y)
                       weight_X_tgrMCOverMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
+
            
+                    #
+                    # create the weighted MC over MC distribution
+                    #
+                    weight_X_tgrMCMinusMC = weight_X_tgrData.Clone("tgrMCMinusMCweighted")
+                    for ibin in range( nbinY ) :
+                      x = weight_X_tgrMCMinusMC.GetX()[ibin]
+                      y = 1 
+                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
+                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+                      eylow  = weight_X_tgrMC.GetErrorYlow(ibin) 
+                      eyhigh = weight_X_tgrMC.GetErrorYhigh(ibin)             
+                      
+                      weight_X_tgrMCMinusMC.SetPoint      (ibin, x, y)
+                      weight_X_tgrMCMinusMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
+
            
                     #
                     # now plot
@@ -1599,7 +1853,13 @@ class ShapeFactory:
                     weight_X_pad2.cd()
                     
                     weight_X_canvasFrameRatioName = 'weight_X_frame_ratio_' + cutName + "_" + variableName
-                    weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameRatioName)
+                    #weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameRatioName)
+                    weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, weight_X_canvasFrameRatioName)
+                    
+                    #print "                minXused = " , minXused
+                    #print "                maxXused = " , maxXused
+                    #print "                nbinY = " , nbinY
+                    
                     # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
                     xAxisDistro = weight_X_frameRatio.GetXaxis()
                     xAxisDistro.SetNdivisions(6,5,0)
@@ -1662,11 +1922,333 @@ class ShapeFactory:
                     temp_file.Close()
                     
                     
+ 
+ 
                     # log Y axis
                     weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
                     weight_X_pad1.SetLogy()
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
                     weight_X_pad1.SetLogy(0)
+
+
+ 
+                    #
+                    # Now plot difference 
+                    #
+                    weight_X_pad2.cd()
+                    
+                    #weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, int( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ), maxXused, int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 ), weight_X_canvasFrameRatioName)
+                    weight_X_frameRatio.GetYaxis().SetRangeUser(  int( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ),  int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 ) )
+
+
+                    if (len(mynuisances.keys())!=0):
+                      weight_X_tgrMCMinusMC.SetLineColor(12)
+                      weight_X_tgrMCMinusMC.SetFillColor(12)
+                      weight_X_tgrMCMinusMC.SetFillStyle(3004)
+                      weight_X_tgrMCMinusMC.Draw("2") 
+                        
+                    weight_X_tgrDataMinusMC.Draw("P0")
+
+                    oneLine2 = ROOT.TLine(weight_X_frameRatio.GetXaxis().GetXmin(), 0,  weight_X_frameRatio.GetXaxis().GetXmax(), 0);
+                    oneLine2.SetLineStyle(3)
+                    oneLine2.SetLineWidth(3)
+                    oneLine2.Draw("same")
+
+                    weight_X_pad2.RedrawAxis()
+
+                    weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
+ 
+ 
+ 
+ 
+ 
+
+                    ##
+                    ## Now plot difference 
+                    ##
+ 
+                    ##maxYused = 1.2 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+
+                    #weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
+            
+                    #weight_X_tcanvasDifference.cd()
+                    #canvasPad1differenceName = 'weight_X_pad1difference_' + cutName + "_" + variableName
+                    #weight_X_pad1difference = ROOT.TPad(canvasPad1differenceName,canvasPad1differenceName, 0, 1-0.72, 1, 1)
+                    #weight_X_pad1difference.SetTopMargin(0.098)
+                    #weight_X_pad1difference.SetBottomMargin(0.000) 
+                    #weight_X_pad1difference.Draw()
+                    
+                    #weight_X_pad1difference.cd()
+                    #weight_X_difference_canvasFrameDistroName = 'weight_X_difference_frame_distro_' + cutName + "_" + variableName
+                    #weight_X_difference_frameDistro = weight_X_pad1difference.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_difference_canvasFrameDistroName)
+                    
+                    ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+                    #xAxisDistro = weight_X_difference_frameDistro.GetXaxis()
+                    #xAxisDistro.SetNdivisions(6,5,0)
+            
+                    #if 'xaxis' in variable.keys() : 
+                      #weight_X_difference_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+                    #else :
+                      #weight_X_difference_frameDistro.GetXaxis().SetTitle(variableName)
+                    #weight_X_difference_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+                    #weight_X_difference_frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
+            
+                    #if weight_X_thsBackground.GetNhists() != 0:
+                      #weight_X_thsBackground.Draw("hist same")
+                       
+                    #if weight_X_thsSignal.GetNhists() != 0:
+                      #weight_X_thsSignal.Draw("hist same noclear")
+                    
+                    #if (len(mynuisances.keys())!=0):
+                      #weight_X_tgrMC.SetLineColor(12)
+                      #weight_X_tgrMC.SetFillColor(12)
+                      #weight_X_tgrMC.SetFillStyle(3004)
+                      #weight_X_tgrMC.Draw("2")
+           
+                    ##     - then the DATA  
+                    #if weight_X_tgrData.GetN() != 0:
+                      #weight_X_tgrData.Draw("P0")
+               
+                    #tlegend.Draw()
+              
+                    #CMS_lumi.CMS_lumi(weight_X_tcanvasDifference, iPeriod, iPos)    
+            
+                    ## draw back all the axes            
+                    #weight_X_pad1difference.RedrawAxis()
+            
+                        
+                    #weight_X_tcanvasDifference.cd()
+                    #canvasPad2differenceName = 'weight_X_weight_X_pad2difference_' + cutName + "_" + variableName
+                    #weight_X_pad2difference = ROOT.TPad(canvasPad2differenceName,canvasPad2differenceName,0,0,1,1-0.72)
+                    #weight_X_pad2difference.SetTopMargin(0.000)
+                    #weight_X_pad2difference.SetBottomMargin(0.392)
+                    #weight_X_pad2difference.Draw()
+                    #weight_X_pad2difference.cd()
+                    
+                    #weight_X_canvasFrameDifferenceName = 'weight_X_frame_difference_' + cutName + "_" + variableName
+                    #weight_X_frameDifference = weight_X_pad2difference.DrawFrame(minXused,  0, nbinY, 2, weight_X_canvasFrameDifferenceName)
+                    
+                    
+                    #print " >> ", int ( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ), " --- " , int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 )
+                    
+                    
+                    
+                    
+                    ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+                    #xAxisDistroDiff = weight_X_frameDifference.GetXaxis()
+                    #xAxisDistroDiff.SetNdivisions(6,5,0)
+            
+                    #if 'xaxis' in variable.keys() : 
+                      #weight_X_frameDifference.GetXaxis().SetTitle(variable['xaxis'])
+                    #else :
+                      #weight_X_frameDifference.GetXaxis().SetTitle(variableName)
+                    #weight_X_frameDifference.GetYaxis().SetTitle("Data - Expected")
+                    #weight_X_frameDifference.GetYaxis().SetRangeUser( int ( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ), int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 ) )
+                    #self.Pad2TAxis(weight_X_frameDifference)
+                    
+                    #if (len(mynuisances.keys())!=0):
+                      #weight_X_tgrMCMinusMC.SetLineColor(12)
+                      #weight_X_tgrMCMinusMC.SetFillColor(12)
+                      #weight_X_tgrMCMinusMC.SetFillStyle(3004)
+                      #weight_X_tgrMCMinusMC.Draw("2") 
+
+                    #weight_X_tgrDataMinusMC.Draw("P0")
+
+ 
+                    #oneLine2 = ROOT.TLine(weight_X_frameDifference.GetXaxis().GetXmin(), 0,  weight_X_frameDifference.GetXaxis().GetXmax(), 0);
+                    #oneLine2.SetLineStyle(3)
+                    #oneLine2.SetLineWidth(3)
+                    #oneLine2.Draw("same")
+            
+                    ## draw back all the axes            
+                    #weight_X_pad2difference.RedrawAxis()
+                    
+                    #weight_X_tcanvasDifference.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
+                    #weight_X_tcanvasDifference.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
+                    
+                    
+                    ## save also all the TH1F separately for later combination
+                    #temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root", "UPDATE")
+                   
+                    #histo_global_normalization = ROOT.TH1F("histo_global_normalization", "", 1, 0, 1)
+                    #histo_global_normalization.Fill(0.5, global_normalization)
+                    #histo_global_normalization.Write()
+                    
+                    #weight_X_tgrMCMinusMC.Write()
+                    #weight_X_tgrDataMinusMC.Write()
+                    #if (len(mynuisances.keys())!=0):
+                      #weight_X_tgrMC.Write("weight_X_tgrMC")
+                    #if weight_X_tgrData.GetN() != 0:
+                      #weight_X_tgrData.Write("weight_X_tgrData")
+                    #if weight_X_thsBackground.GetNhists() != 0:
+                      #weight_X_thsBackground.Write()
+                    #if weight_X_thsSignal.GetNhists() != 0:
+                      #weight_X_thsSignal.Write()
+                      
+                    #for histo in weight_X_list_Data:
+                       #histo.Write()
+                    #for histo in weight_X_list_Background:
+                       #histo.Write()
+                    #for histo in weight_X_list_Signal:
+                       #histo.Write()
+                    
+                    #temp_file.Close()
+                    
+                    
+                    ## log Y axis
+                    #weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
+                    #weight_X_pad1difference.SetLogy()
+                    #weight_X_tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasDifferenceNameTemplate + ".png")
+                    #weight_X_pad1difference.SetLogy(0)
+ 
+ 
+ 
+                    #
+                    # now plot the difference
+                    #
+                    # - recalculate the maxY
+                    #maxYused = 1.2 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+
+                    #weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
+            
+                    #weight_X_tcanvasDifference.cd()
+                    #canvasPad1Name = 'weight_X_pad1difference_' + cutName + "_" + variableName
+                    #weight_X_pad1difference = ROOT.TPad(canvasPad1Name,canvasPad1Name, 0, 1-0.72, 1, 1)
+                    #weight_X_pad1difference.SetTopMargin(0.098)
+                    #weight_X_pad1difference.SetBottomMargin(0.000) 
+                    #weight_X_pad1difference.Draw()
+                    
+                    #weight_X_pad1difference.cd()
+                    #weight_X_canvasFrameDistroName = 'weight_X_frame_distro_' + cutName + "_" + variableName
+                    ##weight_X_frameDistro = weight_X_pad1difference.DrawFrame(minXused, 0.0, maxXused, 1.0, weight_X_canvasFrameDistroName)
+                    #weight_X_frameDistro = weight_X_pad1difference.DrawFrame(0.0, 0.0, nbinY, 1.0, weight_X_canvasFrameDistroName)
+                    
+                    ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+                    #xAxisDistro = weight_X_frameDistro.GetXaxis()
+                    #xAxisDistro.SetNdivisions(6,5,0)
+            
+                    #if 'xaxis' in variable.keys() : 
+                      #weight_X_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+                    #else :
+                      #weight_X_frameDistro.GetXaxis().SetTitle(variableName)
+                    #weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+                    #weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
+            
+                    #if weight_X_thsBackground.GetNhists() != 0:
+                      #weight_X_thsBackground.Draw("hist same")
+                       
+                    #if weight_X_thsSignal.GetNhists() != 0:
+                      #weight_X_thsSignal.Draw("hist same noclear")
+                    
+                    #if (len(mynuisances.keys())!=0):
+                      #weight_X_tgrMC.SetLineColor(12)
+                      #weight_X_tgrMC.SetFillColor(12)
+                      #weight_X_tgrMC.SetFillStyle(3004)
+                      #weight_X_tgrMC.Draw("2")
+           
+                    ##     - then the DATA  
+                    #if weight_X_tgrData.GetN() != 0:
+                      #weight_X_tgrData.Draw("P0")
+               
+                    #tlegend.Draw()
+              
+                    #CMS_lumi.CMS_lumi(weight_X_tcanvasDifference, iPeriod, iPos)    
+            
+                    ## draw back all the axes            
+                    ##weight_X_frameDistro.Draw("AXIS")
+                    #weight_X_pad1difference.RedrawAxis()
+            
+                        
+                    #weight_X_tcanvasDifference.cd()
+                    #canvasPad2Name = 'weight_X_weight_X_pad2difference_' + cutName + "_" + variableName
+                    #weight_X_pad2difference = ROOT.TPad(canvasPad2Name,canvasPad2Name,0,0,1,1-0.72)
+                    #weight_X_pad2difference.SetTopMargin(0.000)
+                    #weight_X_pad2difference.SetBottomMargin(0.392)
+                    #weight_X_pad2difference.Draw()
+                    ##weight_X_pad2difference.cd().SetGrid()
+                    #weight_X_pad2difference.cd()
+                    
+                    #weight_X_canvasFrameDifferenceName = 'weight_X_frame_difference_' + cutName + "_" + variableName
+                    #weight_X_frameDifference = weight_X_pad2difference.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameDifferenceName)
+                    ## style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+                    #xAxisDistro = weight_X_frameDifference.GetXaxis()
+                    #xAxisDistro.SetNdivisions(6,5,0)
+            
+                    #if 'xaxis' in variable.keys() : 
+                      #weight_X_frameDifference.GetXaxis().SetTitle(variable['xaxis'])
+                    #else :
+                      #weight_X_frameDifference.GetXaxis().SetTitle(variableName)
+                    #weight_X_frameDifference.GetYaxis().SetTitle("Data - Expected")
+                    #weight_X_frameDifference.GetYaxis().SetRangeUser( 0.5, 1.5 )
+                    #self.Pad2TAxis(weight_X_frameDifference)
+                    
+                    #if (len(mynuisances.keys())!=0):
+                      #weight_X_tgrMCOverMC.SetLineColor(12)
+                      #weight_X_tgrMCOverMC.SetFillColor(12)
+                      #weight_X_tgrMCOverMC.SetFillStyle(3004)
+                      #weight_X_tgrMCOverMC.Draw("2") 
+                        
+                    #weight_X_tgrDataOverMC.Draw("P0")
+ 
+ 
+                    #oneLine2 = ROOT.TLine(weight_X_frameDifference.GetXaxis().GetXmin(), 1,  weight_X_frameDifference.GetXaxis().GetXmax(), 1);
+                    #oneLine2.SetLineStyle(3)
+                    #oneLine2.SetLineWidth(3)
+                    #oneLine2.Draw("same")
+            
+                    ## draw back all the axes            
+                    ##weight_X_frameDifference.Draw("AXIS")
+                    #weight_X_pad2difference.RedrawAxis()
+                    
+                    #weight_X_tcanvasDifference.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
+                    #weight_X_tcanvasDifference.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
+                    
+                    
+                    ## save also all the TH1F separately for later combination
+                    #temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root", "UPDATE")
+                   
+                    #histo_global_normalization = ROOT.TH1F("histo_global_normalization", "", 1, 0, 1)
+                    #histo_global_normalization.Fill(0.5, global_normalization)
+                    #histo_global_normalization.Write()
+                    
+                    #weight_X_tgrMCOverMC.Write()
+                    #weight_X_tgrDataOverMC.Write()
+                    #if (len(mynuisances.keys())!=0):
+                      #weight_X_tgrMC.Write("weight_X_tgrMC")
+                    #if weight_X_tgrData.GetN() != 0:
+                      #weight_X_tgrData.Write("weight_X_tgrData")
+                    #if weight_X_thsBackground.GetNhists() != 0:
+                      #weight_X_thsBackground.Write()
+                    #if weight_X_thsSignal.GetNhists() != 0:
+                      #weight_X_thsSignal.Write()
+                      
+                    #for histo in weight_X_list_Data:
+                       #histo.Write()
+                    #for histo in weight_X_list_Background:
+                       #histo.Write()
+                    #for histo in weight_X_list_Signal:
+                       #histo.Write()
+                    
+                    #temp_file.Close()
+                    
+                    
+                    ## log Y axis
+                    #weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
+                    #weight_X_pad1difference.SetLogy()
+                    #weight_X_tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasDifferenceNameTemplate + ".png")
+                    #weight_X_pad1difference.SetLogy(0)
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
             
 
@@ -1738,6 +2320,13 @@ class ShapeFactory:
        else :
          return A / B
  
+   # _____________________________________________________________________________
+   # --- Difference
+    def Difference(self, A, B):
+       return A - B
+ 
+
+
    # _____________________________________________________________________________
    # --- poissonian error bayesian 1sigma band
    #                                      1/0   1/0
@@ -1887,6 +2476,9 @@ if __name__ == '__main__':
     factory._maxLogC = opt.maxLogC 
     factory._minLogCratio = opt.minLogCratio
     factory._maxLogCratio = opt.maxLogCratio
+
+    factory._minLogCdifference = opt.minLogCratio
+    factory._maxLogCdifference = opt.maxLogCratio
 
     #samples = {}
     samples = OrderedDict()
