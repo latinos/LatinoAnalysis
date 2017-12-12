@@ -1908,9 +1908,9 @@ class ShapeFactory:
                     #weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, nbinY, 2.0, weight_X_canvasFrameRatioName)
                     weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, 0.0, maxXused, 2.0, weight_X_canvasFrameRatioName)
                     
-                    print "                minXused = " , minXused
-                    print "                maxXused = " , maxXused
-                    print "                nbinY = " , nbinY
+                    #print "                minXused = " , minXused
+                    #print "                maxXused = " , maxXused
+                    #print "                nbinY = " , nbinY
                     
                     # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
                     xAxisDistro = weight_X_frameRatio.GetXaxis()
@@ -2011,6 +2011,7 @@ class ShapeFactory:
                       weight_X_frameRatio.GetYaxis().SetTitle("Data - Expected")
 
 
+                    self.Pad2TAxis(weight_X_frameRatio)
 
                     if (len(mynuisances.keys())!=0):
                       weight_X_tgrMCMinusMC.SetLineColor(12)
