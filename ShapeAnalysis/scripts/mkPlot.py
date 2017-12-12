@@ -699,8 +699,12 @@ class ShapeFactory:
             for iBin in range(0, len(tgrData_vx)) : 
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-              tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-              tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
+              if self._showRelativeRatio :
+                tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio( self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)),   thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+              else :
+                tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
             
             
             #
@@ -732,10 +736,16 @@ class ShapeFactory:
                 tgrMCMinusMC.SetPoint    (iBin, tgrData_vx[iBin], 0.)
                 if histo_total != None :
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
-                  tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
+                  if self._showRelativeRatio :
+                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                  else :
+                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
                 else :
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
-                  tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
+                  if self._showRelativeRatio :
+                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                  else :
+                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
                 
                          
             
@@ -1282,7 +1292,10 @@ class ShapeFactory:
             # plot with difference plot            
             print "- draw with difference"
             
-            canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName
+            if self._showRelativeRatio :
+              canvasDifferenceNameTemplate = 'cdifference_relative_' + cutName + "_" + variableName
+            else :
+              canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName
 
             tcanvasDifference.cd()
             canvasPad1differenceName = 'pad1difference_' + cutName + "_" + variableName
@@ -1386,13 +1399,15 @@ class ShapeFactory:
             pad2difference.Draw()
             #pad2difference.cd().SetGrid()
             pad2difference.cd()
-            
-            #print " pad1difference = ", pad1difference
-            #print " pad2difference = ", pad2difference, " minXused = ", minXused, " maxXused = ", maxXused
+
             canvasFrameDifferenceName = 'frame_difference_' + cutName + "_" + variableName
-            #print " canvasFrameDifferenceName = ", canvasFrameDifferenceName
-            frameDifference = pad2difference.DrawFrame(minXused, int ( ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY())  - 2 ), maxXused,  int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY())  + 2 ), canvasFrameDifferenceName)
-            #print " pad2difference = ", pad2difference
+            
+            if self._showRelativeRatio :
+              frameDifference = pad2difference.DrawFrame(minXused, -1.0 , maxXused,  1.0 , canvasFrameDifferenceName)
+            else :
+              frameDifference = pad2difference.DrawFrame(minXused, int ( ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY())  - 2 ), maxXused,  int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY())  + 2 ), canvasFrameDifferenceName)
+
+
             # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
             xAxisDistro = frameDifference.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
@@ -1401,11 +1416,13 @@ class ShapeFactory:
               frameDifference.GetXaxis().SetTitle(variable['xaxis'])
             else :
               frameDifference.GetXaxis().SetTitle(variableName)
-            frameDifference.GetYaxis().SetTitle("Data - Expected")
-            #frameDifference.GetYaxis().SetTitle("Data/MC")
-            #frameDifference.GetYaxis().SetRangeUser( 0.0, 2.0 )
-            #frameDifference.GetYaxis().SetRangeUser( -10, 10 )
-            frameDifference.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - 2 ),  int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + 2 ) )
+
+            if self._showRelativeRatio :
+              frameDifference.GetYaxis().SetTitle("#frac{Data - Expected}{Expected}")
+              frameDifference.GetYaxis().SetRangeUser(  -1.0, 1.0  )
+            else :
+              frameDifference.GetYaxis().SetTitle("Data - Expected")
+              frameDifference.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - 2 ),  int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + 2 ) )
             self.Pad2TAxis(frameDifference)
             if (len(mynuisances.keys())!=0):
               tgrMCMinusMC.SetLineColor(12)
@@ -1756,12 +1773,20 @@ class ShapeFactory:
                     #
                     weight_X_tgrDataMinusMC = weight_X_tgrData.Clone("tgrDataMinusMCweighted")
                     for ibin in range( nbinY ) :
-                      x = weight_X_tgrDataMinusMC.GetX()[ibin]
-                      y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                      x = weight_X_tgrDataMinusMC.GetX()[ibin]                      
+                      if self._showRelativeRatio :
+                        y = self.Ratio ( self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) ) , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                     
+                      else :                     
+                        y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                       exlow  = tgrData_evx[ibin + sliceX * nbinY]
                       exhigh = tgrData_evx[ibin + sliceX * nbinY]
-                      eylow  = weight_X_tgrData.GetErrorYlow(ibin) 
-                      eyhigh = weight_X_tgrData.GetErrorYhigh(ibin)                  
+
+                      if self._showRelativeRatio :
+                        eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                        eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                      else :
+                        eylow  = weight_X_tgrData.GetErrorYlow(ibin) 
+                        eyhigh = weight_X_tgrData.GetErrorYhigh(ibin)                  
                       
                       weight_X_tgrDataMinusMC.SetPoint      (ibin, x, y)
                       weight_X_tgrDataMinusMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
@@ -1793,8 +1818,12 @@ class ShapeFactory:
                       y = 0
                       exlow  = tgrData_evx[ibin + sliceX * nbinY]
                       exhigh = tgrData_evx[ibin + sliceX * nbinY]
-                      eylow  = weight_X_tgrMC.GetErrorYlow(ibin) 
-                      eyhigh = weight_X_tgrMC.GetErrorYhigh(ibin)             
+                      if self._showRelativeRatio :
+                        eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                        eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                      else :
+                        eylow  = weight_X_tgrMC.GetErrorYlow(ibin) 
+                        eyhigh = weight_X_tgrMC.GetErrorYhigh(ibin)             
                       
                       #print " DIFF::     eylow = ", eylow, " eyhigh = ", eyhigh, " y = ", y, " x = ", x 
 
@@ -1960,9 +1989,27 @@ class ShapeFactory:
                     #
                     weight_X_pad2.cd()
                     
-                    #weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, int( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ), maxXused, int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 ), weight_X_canvasFrameRatioName)
-                    weight_X_frameRatio.GetYaxis().SetRangeUser(  int( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ),  int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 ) )
-                    weight_X_frameRatio.GetYaxis().SetTitle("Data - Expected")
+                    if self._showRelativeRatio :
+                      weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, -1.0, maxXused, 1.0, weight_X_canvasFrameRatioName)
+                    else :
+                      weight_X_frameRatio = weight_X_pad2.DrawFrame(minXused, int( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ), maxXused, int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 ), weight_X_canvasFrameRatioName)
+                      
+                    # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+                    xAxisDistro = weight_X_frameRatio.GetXaxis()
+                    xAxisDistro.SetNdivisions(6,5,0)
+
+                    if 'xaxis' in variable.keys() : 
+                      weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
+                    else :
+                      weight_X_frameRatio.GetXaxis().SetTitle(variableName)
+
+                    if self._showRelativeRatio :
+                      weight_X_frameRatio.GetYaxis().SetRangeUser(  -1.0 ,  1.0 )
+                      weight_X_frameRatio.GetYaxis().SetTitle("#frac{Data - Expected}{Expected}")
+                    else :
+                      weight_X_frameRatio.GetYaxis().SetRangeUser(  int( ROOT.TMath.MinElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  - 2 ),  int ( ROOT.TMath.MaxElement(weight_X_tgrDataMinusMC.GetN(),weight_X_tgrDataMinusMC.GetY())  + 2 ) )
+                      weight_X_frameRatio.GetYaxis().SetTitle("Data - Expected")
+
 
 
                     if (len(mynuisances.keys())!=0):
@@ -1972,6 +2019,8 @@ class ShapeFactory:
                       weight_X_tgrMCMinusMC.Draw("2") 
                         
                     weight_X_tgrDataMinusMC.Draw("P0")
+                      
+                    #print " BINS = " , weight_X_tgrDataMinusMC.GetN()
 
                     oneLine2 = ROOT.TLine(weight_X_frameRatio.GetXaxis().GetXmin(), 0,  weight_X_frameRatio.GetXaxis().GetXmax(), 0);
                     oneLine2.SetLineStyle(3)
@@ -1980,7 +2029,10 @@ class ShapeFactory:
 
                     weight_X_pad2.RedrawAxis()
 
-                    weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
+                    if self._showRelativeRatio :
+                      weight_X_canvasDifferenceNameTemplate = 'cdifference_relative_weight_X_' + cutName + '_' + variableName
+                    else :
+                      weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
  
@@ -2136,8 +2188,9 @@ class ShapeFactory:
         # variable bin width
         #
 
-        nbins = histo.GetXaxis().GetNbins()
-
+        nbins = len (reference_x)
+        #print " nbins = ", nbins
+        
         binning = [ reference_x[ibin]-reference_x_err[ibin]  for ibin in range (0, nbins) ]  
         #binning = [ reference_histo.GetXaxis().GetBinLowEdge(ibin) for ibin in reference_histo.GetNbinsX()+1 ]      
         binning.append (reference_x[nbins-1]+reference_x_err[nbins-1])
@@ -2188,7 +2241,8 @@ if __name__ == '__main__':
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
     parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
-          
+    parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' , action='store_true', default=False)
+         
           
           
     # read default parsing options as well
@@ -2211,6 +2265,7 @@ if __name__ == '__main__':
     print "                     maxLogC =", opt.maxLogC
     print "                minLogCratio =", opt.minLogCratio
     print "                maxLogCratio =", opt.maxLogCratio
+    print "           showRelativeRatio =", opt.showRelativeRatio
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -2245,6 +2300,8 @@ if __name__ == '__main__':
     factory._minLogCdifference = opt.minLogCratio
     factory._maxLogCdifference = opt.maxLogCratio
 
+    factory._showRelativeRatio = opt.showRelativeRatio
+    
     #samples = {}
     samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
