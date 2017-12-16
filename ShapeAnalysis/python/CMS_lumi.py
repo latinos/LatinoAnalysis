@@ -7,11 +7,11 @@ import ROOT as rt
 #
 
 cmsText     = "CMS";
-cmsTextFont   = 61  
+cmsTextFont = 61  
 
 writeExtraText = True
-extraText   = "Preliminary"
-extraTextFont = 52 
+extraText      = "Preliminary"
+extraTextFont  = 52 
 
 #lumiTextSize     = 0.6
 lumiTextSize     = 0.9
@@ -25,8 +25,8 @@ relPosX    = 0.045
 relPosY    = 0.035
 relExtraDY = 1.2
 
-#extraOverCmsTextSize  = 0.76
-extraOverCmsTextSize  = 0.96
+extraOverCmsTextSize  = 0.76
+#extraOverCmsTextSize  = 0.96
 
 lumi_13TeV = "20.1 fb^{-1}"
 lumi_8TeV  = "19.7 fb^{-1}" 
@@ -122,7 +122,7 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     elif( iPosX%10==3 ):
         posX_ =  1-r - relPosX*(1-l-r)
 
-    posY_ = 1-t - relPosY*(1-t-b)
+    posY_ = 0.99 * (1-t - relPosY*(1-t-b))
 
     if( not outOfFrame ):
         if( drawLogo ):
@@ -157,6 +157,8 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
         latex.SetTextFont(extraTextFont)
         latex.SetTextSize(extraTextSize*t)
         latex.SetTextAlign(align_)
+        #latex.DrawLatex(posX_, 0.99 * posY_, extraText)      
         latex.DrawLatex(posX_, posY_, extraText)      
+
 
     #pad.Update()
