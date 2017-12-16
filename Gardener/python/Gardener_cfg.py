@@ -1397,7 +1397,7 @@ samples4Syst = [
 
                  # Higgs 
                  'GluGluHToTauTau_M125' , 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
-                 'GluGluHToWWTo2L2Nu_alternative_M125', 'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS' ,
+                 'GluGluHToWWTo2L2Nu_alternative_M125', 'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS' , 'GluGluHToWWTo2L2Nu_minloHJJ_M125',
                  'VBFHToTauTau_M125' , 'VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125',
                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125', 'HWminusJ_HToWW_LNu_M125' ,
                  'HWplusJ_HToTauTau_M125' , 'HWplusJ_HToWW_M125',  'HWplusJ_HToWW_LNu_M125' ,
@@ -2885,7 +2885,7 @@ Steps= {
 
                                   
                  # Higgs 
-                 'GluGluHToTauTau_M125' , 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
+                 'GluGluHToTauTau_M125' , 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125','GluGluHToWWTo2L2Nu_minloHJJ_M125',
                  'GluGluHToWWTo2L2Nu_alternative_M125',
                  'VBFHToTauTau_M125' , 'VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125',
                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125', 'HWminusJ_HToWW_LNu_M125' ,
@@ -2996,6 +2996,7 @@ Steps= {
                                    'GluGluHToWWTo2L2NuPowheg_M125', 
                                    'GluGluHToWWTo2L2Nu_alternative_M125',
                                    'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS',
+                                   'GluGluHToWWTo2L2Nu_minloHJJ_M125',
                                    'GluGluHToTauTau_M125',
                                  ],
                   'command'    : 'gardener.py ggHUncertainty' ,

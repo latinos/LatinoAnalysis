@@ -128,7 +128,7 @@ print "eosProdBase    = ", eosProdBase
 print "eosTargBaseIn  = ", eosTargBaseIn
 print "eosTargBaseOut = ", eosTargBaseOut 
 
-if 'knu' or 'sdfarm' in os.uname()[1]:
+if 'knu' in os.uname()[1] or 'sdfarm' in os.uname()[1]:
   #inDirBase = options.inputTarget
   #outDirBase = options.outputTarget
   Steps['hadd']['SizeMax']= 1e9 
