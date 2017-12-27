@@ -699,12 +699,31 @@ class ShapeFactory:
             for iBin in range(0, len(tgrData_vx)) : 
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+              
+              #
+              # data - MC :
+              #    MC could be background only
+              #    or it can include the signal.
+              #    Default is background+signal (check isSignal = 1,2,3 options).
+              #    You can activate the data - "background only" by 
+              #    using the flag "showDataMinusBkgOnly".
+              #    NB: this will change also the case of "(data - expected) / expected"
+              #
+              #
               if self._showRelativeRatio :
-                tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio( self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)),   thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-                tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                if self._showDataMinusBkgOnly :
+                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio( self.Difference(tgrData_vy[iBin] ,  tgrMC_vy[iBin]),   tgrMC_vy[iBin] ) )
+                  tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], tgrMC_vy[iBin]) , self.Ratio(tgrData_evy_up[iBin], tgrMC_vy[iBin]) )
+                else :
+                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio( self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)),   thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                  tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               else :
-                tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-                tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
+                if self._showDataMinusBkgOnly :
+                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , tgrMC_vy[iBin]   ) )
+                  tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
+                else :
+                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                  tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
             
             
             #
@@ -2242,7 +2261,8 @@ if __name__ == '__main__':
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
     parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
-    parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' , action='store_true', default=False)
+    parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' ,    action='store_true', default=False)
+    parser.add_option('--showDataMinusBkgOnly', dest='showDataMinusBkgOnly', help='draw instead of data-expected, data-expected background only' , action='store_true', default=False)
          
           
           
@@ -2267,6 +2287,7 @@ if __name__ == '__main__':
     print "                minLogCratio =", opt.minLogCratio
     print "                maxLogCratio =", opt.maxLogCratio
     print "           showRelativeRatio =", opt.showRelativeRatio
+    print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -2302,6 +2323,8 @@ if __name__ == '__main__':
     factory._maxLogCdifference = opt.maxLogCratio
 
     factory._showRelativeRatio = opt.showRelativeRatio
+    factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
+    
     
     #samples = {}
     samples = OrderedDict()
