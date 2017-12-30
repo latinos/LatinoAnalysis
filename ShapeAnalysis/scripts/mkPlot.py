@@ -1795,8 +1795,12 @@ class ShapeFactory:
                       x = weight_X_tgrDataMinusMC.GetX()[ibin]                      
                       if self._showRelativeRatio :
                         y = self.Ratio ( self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) ) , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                     
-                      else :                     
-                        y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                      else : 
+                        # if show only "data - bkg", subtract "data - (bkg+sig) + sig "
+                        if self._showDataMinusBkgOnly :
+                          y =  self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )   + weight_X_thsSignal.GetStack().Last().GetBinContent(ibin+1) 
+                        else :
+                          y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                       exlow  = tgrData_evx[ibin + sliceX * nbinY]
                       exhigh = tgrData_evx[ibin + sliceX * nbinY]
 
