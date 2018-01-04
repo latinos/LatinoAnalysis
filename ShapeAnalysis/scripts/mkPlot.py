@@ -58,6 +58,14 @@ class ShapeFactory:
         self._outputDirPlots = outputDirPlots
         os.system ("mkdir " + outputDirPlots + "/") 
         
+        #
+        # prepare plotter.html
+        #
+        text_file_html = open(self._outputDirPlots + "/" + "plotter.html", "w")
+
+        text_file_html.write("<script type=\"text/javascript\" src=\"https://root.cern.ch/js/latest/scripts/JSRootCore.js?gui\"></script>\n")
+        text_file_html.write("<div id=\"simpleGUI\" path=\"./\" files=\"\n")
+
 
         #tcanvas            = ROOT.TCanvas( "cc",      "cc"     , 800, 600 )
         #tcanvasRatio       = ROOT.TCanvas( "ccRatio", "ccRatio", 800, 800 )
@@ -1092,7 +1100,10 @@ class ShapeFactory:
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".C")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".eps")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
-             
+            
+            text_file_html.write(canvasNameTemplate + ".root;\n")
+
+            
             # log Y axis
             frame.GetYaxis().SetRangeUser( max(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
             #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
@@ -1286,7 +1297,9 @@ class ShapeFactory:
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
-            
+
+            text_file_html.write(canvasRatioNameTemplate + ".root;\n")
+
             
             # log Y axis
             #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
@@ -1474,6 +1487,7 @@ class ShapeFactory:
             tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + ".png")
             tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + ".root")
             
+            text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
             
             # log Y axis
             #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
@@ -1968,6 +1982,7 @@ class ShapeFactory:
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
                     
+                    text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
                     
                     # save also all the TH1F separately for later combination
                     temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root", "UPDATE")
@@ -2060,6 +2075,7 @@ class ShapeFactory:
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
  
+                    text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
  
  
  
@@ -2085,6 +2101,15 @@ class ShapeFactory:
           print " >> all end"
 
         print " >> all but really all "
+        
+        
+
+        #
+        # close plotter.html
+        #
+        text_file_html.write(" \"></div>                                 \"\n")
+        text_file_html.close()
+        
         
         #sys.exit(0)
 	#quit()
