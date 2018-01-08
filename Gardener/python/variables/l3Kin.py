@@ -91,6 +91,7 @@ class L3KinFiller(TreeCloner):
            'dphilmet1_wh3l',
            'dphilmet2_wh3l',
            'dphilmet3_wh3l',
+           'ptbest',
            ]
         
         # clone the tree

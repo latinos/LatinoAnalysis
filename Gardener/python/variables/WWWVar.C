@@ -69,6 +69,11 @@ public:
  float dphilmet2_wh3l();
  float dphilmet3_wh3l();
 
+ float pt12();
+ float pt13();
+ float pt23();
+ float ptbest();
+ 
 
 private:
  //! variables
@@ -354,7 +359,7 @@ void WWW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectore
   L3.SetPtEtaPhiM(_leptonspt.at(2), _leptonseta.at(2), _leptonsphi.at(2), 0); //---- NB: leptons are treated as massless
  }
  
-}
+ }invectorflavour
 */
 
 //! functions
@@ -822,3 +827,114 @@ float WWW::dphilmet3_wh3l(){
   return -9999.0;
  }
 }
+
+
+
+//---- pt di-lepton combinations
+
+float WWW::pt12(){
+  if (_isOk) {
+    return (L1+L2).Pt();
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+
+float WWW::pt13(){
+  if (_isOk) {
+    return (L1+L3).Pt();
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+float WWW::pt23(){
+  if (_isOk) {
+    return (L2+L3).Pt();
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+
+
+
+float WWW::ptbest(){
+  if (_isOk) {
+    
+    float ch1 = _leptonsflavour.at(0);
+    float ch2 = _leptonsflavour.at(1);
+    float ch3 = _leptonsflavour.at(2);
+      
+    //     1 2 3  pt ordered
+    //##   + + -       --> (2,3)  or   (1,3)
+    //##   + - -       --> (1,2)  or   (1,3)
+    //##   + - +       --> (1,2)  or   (2,3)
+    
+    //##   - + -       --> (1,2)  or   (2,3)
+    //##   - - +       --> (1,3)  or   (2,3)
+    //##   - + +       --> (1,2)  or   (1,3)
+    
+    
+    //
+    // if possible, pick the lowest pt as one of the leptons from H>WW>lvlv, due to off-shell-ness
+    //
+    //##   + + -       --> (2,3)  or   (1,3)
+    //##   + - -       -->             (1,3)
+    //##   + - +       -->             (2,3)
+    
+    //##   - + -       -->             (2,3)
+    //##   - - +       --> (1,3)  or   (2,3)
+    //##   - + +       -->             (1,3)
+    
+    
+    //
+    // in case you have 2 configurations, pick the highest pt pair
+    //
+    
+    //##   + + -       --> (2,3)  or   (1,3)   A
+    //##   + - -       -->             (1,3)   C
+    //##   + - +       -->             (2,3)   B
+    
+    //##   - + -       -->             (2,3)   B
+    //##   - - +       --> (1,3)  or   (2,3)   A
+    //##   - + +       -->             (1,3)   C
+    
+    
+    if (ch1 * ch2 > 0) {   // ---> A
+      
+      float pt23 = (L2+L3).Pt();
+      float pt13 = (L1+L3).Pt();
+      
+      if (pt13 > pt23) return pt13;
+      else return pt23;
+      
+    }
+    else {
+      // ---> B
+      if (ch1 * ch3 > 0)     
+        return (L2+L3).Pt();
+      else 
+        // ---> C
+        return (L1+L3).Pt();
+    }
+    
+    
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+
+
+
+

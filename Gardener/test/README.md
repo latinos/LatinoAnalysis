@@ -777,8 +777,13 @@ Add event weight to allow scaling with anomalous EWK HHH coupling.
                 /tmp/amassiro/latino_HZJ_HToWWTo2L2Nu_M125.root   \
                 /tmp/amassiro/latino_HZJ_HToWWTo2L2Nu_M125.root.TEST.root  
               
-              
+
+ 3-leptons kinematic
+====
          
+    gardener.py  l3kinfiller \
+                /tmp/amassiro/latino_HWplusJ_HToWW_M125.root  \
+                /tmp/amassiro/latino_HWplusJ_HToWW_M125_TEST.root
          
          
               
