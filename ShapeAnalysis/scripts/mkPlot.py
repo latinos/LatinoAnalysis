@@ -1523,6 +1523,14 @@ class ShapeFactory:
                   #  - add the weighted histogram to the final histogram, made of 'nbinY' bins
                   #
       
+                  
+                  # trick to exchange X <-> Y
+                  if self._invertXY :
+                    temp_nbinX = nbinX
+                    nbinX = nbinY
+                    nbinY = temp_nbinX
+                    
+        
                   #
                   # check if I have to remove the signal on the ackground stack here
                   #  --> ok, it works and it is correct
@@ -1909,7 +1917,11 @@ class ShapeFactory:
                       weight_X_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
                     else :
                       weight_X_frameDistro.GetXaxis().SetTitle(variableName)
+                    
                     weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+                    if self._removeWeight == True :
+                      weight_X_frameDistro.GetYaxis().SetTitle("Events")
+
                     weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
             
                     if weight_X_thsBackground.GetNhists() != 0:
@@ -2302,6 +2314,8 @@ if __name__ == '__main__':
     parser.add_option('--showDataMinusBkgOnly', dest='showDataMinusBkgOnly', help='draw instead of data-expected, data-expected background only' , action='store_true', default=False)
          
     parser.add_option('--removeWeight', dest='removeWeight', help='Remove weight S/B for PR plots, just do the sum' , action='store_true', default=False)
+
+    parser.add_option('--invertXY', dest='invertXY', help='Invert the weighting for X <-> Y. Instead of slices along Y, do slices along X' , action='store_true', default=False)
           
           
     # read default parsing options as well
@@ -2327,6 +2341,7 @@ if __name__ == '__main__':
     print "           showRelativeRatio =", opt.showRelativeRatio
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
+    print "                    invertXY =", opt.invertXY    
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -2365,7 +2380,10 @@ if __name__ == '__main__':
     factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
 
     factory._removeWeight = opt.removeWeight
+
+    factory._invertXY = opt.invertXY
     
+
     
     #samples = {}
     samples = OrderedDict()
