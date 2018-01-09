@@ -1674,7 +1674,7 @@ class ShapeFactory:
 
                              for ibin in range( nbinY ) :
                                if self._invertXY :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX ) )
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX ) ) )
                                else :
                                  histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
