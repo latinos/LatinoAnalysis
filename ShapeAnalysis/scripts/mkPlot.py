@@ -1788,15 +1788,15 @@ class ShapeFactory:
                         x = tgrData_vx[ibin]
                         #print " sliceX, ibin = ", sliceX, " , ", ibin, " -> ", tgrData_vx[ibin]
 
-                        numer_of_bin = ibin + sliceX * nbinY
+                        number_of_bin = ibin + sliceX * nbinY
                         if self._invertXY :
-                          numer_of_bin = ibin*nbinX +1 + sliceX
+                          number_of_bin = ibin*nbinX + sliceX
 
-                        y      = weight_X_list_weights[sliceX] * global_normalization * tgrData_vy[numer_of_bin]
-                        exlow  = tgrData_evx[numer_of_bin]
-                        exhigh = tgrData_evx[numer_of_bin]
-                        eylow  = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_do[numer_of_bin]
-                        eyhigh = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_up[numer_of_bin]
+                        y      = weight_X_list_weights[sliceX] * global_normalization * tgrData_vy[number_of_bin]
+                        exlow  = tgrData_evx[number_of_bin]
+                        exhigh = tgrData_evx[number_of_bin]
+                        eylow  = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_do[number_of_bin]
+                        eyhigh = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_up[number_of_bin]
                         
                         if sliceX != 0:
                           y += weight_X_tgrData.GetY()[ibin]
@@ -1817,22 +1817,22 @@ class ShapeFactory:
                       for ibin in range( nbinY ) :
                         x = tgrData_vx[ibin]
 
-                        numer_of_bin = ibin + sliceX * nbinY
+                        number_of_bin = ibin + sliceX * nbinY
                         if self._invertXY :
-                          numer_of_bin = ibin*nbinX +1 + sliceX
+                          number_of_bin = ibin*nbinX + sliceX
 
-                        y = weight_X_list_weights[sliceX] * global_normalization * tgrMC_vy[numer_of_bin]
-                        exlow  = tgrData_evx[numer_of_bin]
-                        exhigh = tgrData_evx[numer_of_bin]
+                        y = weight_X_list_weights[sliceX] * global_normalization * tgrMC_vy[number_of_bin]
+                        exlow  = tgrData_evx[number_of_bin]
+                        exhigh = tgrData_evx[number_of_bin]
                         eylow = 0
                         eyhigh = 0
                         if len(nuisances_err_do) != 0:
                           if histo_total != None :
-                            eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(numer_of_bin + 1)
-                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(numer_of_bin + 1)
+                            eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
+                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
                           else :                        
-                            eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[numer_of_bin]
-                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[numer_of_bin]
+                            eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[number_of_bin]
+                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[number_of_bin]
                         
                         if sliceX != 0 :
                           y += weight_X_tgrMC.GetY()[ibin]
@@ -1852,12 +1852,12 @@ class ShapeFactory:
                       x = weight_X_tgrDataOverMC.GetX()[ibin]
                       y = self.Ratio(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
 
-                      numer_of_bin = ibin + sliceX * nbinY
+                      number_of_bin = ibin + sliceX * nbinY
                       if self._invertXY :
-                        numer_of_bin = ibin*nbinX +1 + sliceX
+                        number_of_bin = ibin*nbinX + sliceX
 
-                      exlow  = tgrData_evx[numer_of_bin]
-                      exhigh = tgrData_evx[numer_of_bin]
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
                       eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                       eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
                       
@@ -1882,12 +1882,12 @@ class ShapeFactory:
                         else :
                           y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
 
-                      numer_of_bin = ibin + sliceX * nbinY
+                      number_of_bin = ibin + sliceX * nbinY
                       if self._invertXY :
-                        numer_of_bin = ibin*nbinX +1 + sliceX
+                        number_of_bin = ibin*nbinX + sliceX
 
-                      exlow  = tgrData_evx[numer_of_bin]
-                      exhigh = tgrData_evx[numer_of_bin]
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
 
                       if self._showRelativeRatio :
                         eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
@@ -1909,12 +1909,12 @@ class ShapeFactory:
                       x = weight_X_tgrMCOverMC.GetX()[ibin]
                       y = 1 
 
-                      numer_of_bin = ibin + sliceX * nbinY
+                      number_of_bin = ibin + sliceX * nbinY
                       if self._invertXY :
-                        numer_of_bin = ibin*nbinX +1 + sliceX
+                        number_of_bin = ibin*nbinX + sliceX
 
-                      exlow  = tgrData_evx[numer_of_bin]
-                      exhigh = tgrData_evx[numer_of_bin]
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
                       eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                       eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
                       
@@ -1930,12 +1930,12 @@ class ShapeFactory:
                       x = weight_X_tgrMCMinusMC.GetX()[ibin]
                       y = 0
 
-                      numer_of_bin = ibin + sliceX * nbinY
+                      number_of_bin = ibin + sliceX * nbinY
                       if self._invertXY :
-                        numer_of_bin = ibin*nbinX +1 + sliceX
+                        number_of_bin = ibin*nbinX + sliceX
 
-                      exlow  = tgrData_evx[numer_of_bin]
-                      exhigh = tgrData_evx[numer_of_bin]
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
                       if self._showRelativeRatio :
                         eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                         eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
