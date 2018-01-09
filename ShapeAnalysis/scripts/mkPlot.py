@@ -1580,6 +1580,14 @@ class ShapeFactory:
                         weight = integral_sig / integral_bkg
                       else :
                         weight = 1
+
+                      #
+                      # remove weight: use just 1 for each line,
+                      # meaning we are just adding the bins together
+                      #
+                      if self._removeWeight == True :
+                        weight = 1
+                        
                       weight_X_list_weights.append(weight)
                       
                       
@@ -2293,6 +2301,7 @@ if __name__ == '__main__':
     parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' ,    action='store_true', default=False)
     parser.add_option('--showDataMinusBkgOnly', dest='showDataMinusBkgOnly', help='draw instead of data-expected, data-expected background only' , action='store_true', default=False)
          
+    parser.add_option('--removeWeight', dest='removeWeight', help='Remove weight S/B for PR plots, just do the sum' , action='store_true', default=False)
           
           
     # read default parsing options as well
@@ -2317,6 +2326,7 @@ if __name__ == '__main__':
     print "                maxLogCratio =", opt.maxLogCratio
     print "           showRelativeRatio =", opt.showRelativeRatio
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
+    print "                removeWeight =", opt.removeWeight
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -2353,6 +2363,8 @@ if __name__ == '__main__':
 
     factory._showRelativeRatio = opt.showRelativeRatio
     factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
+
+    factory._removeWeight = opt.removeWeight
     
     
     #samples = {}
