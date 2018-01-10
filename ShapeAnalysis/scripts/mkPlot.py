@@ -1953,7 +1953,8 @@ class ShapeFactory:
                     # now plot
                     #
                     # - recalculate the maxY
-                    maxYused = 1.45 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+                    #     _maxLinearScale --> 1.45 in the past
+                    maxYused = self._maxLinearScale * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
 
                     # recalculate min-max X due to weighting rolling
                     minXused = weight_X_tgrMCMinusMC.GetX()[0] - tgrData_evx[0]
@@ -2365,6 +2366,7 @@ if __name__ == '__main__':
     parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
     parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
     parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
+    parser.add_option('--maxLinearScale' , dest='maxLinearScale' , help='scale factor for max Y in linear plots (1.45 magic number as default)'     , default=1.45   ,    type=float   )
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
@@ -2437,6 +2439,7 @@ if __name__ == '__main__':
     factory._maxLogC = opt.maxLogC 
     factory._minLogCratio = opt.minLogCratio
     factory._maxLogCratio = opt.maxLogCratio
+    factory._maxLinearScale = opt.maxLinearScale
 
     factory._minLogCdifference = opt.minLogCratio
     factory._maxLogCdifference = opt.maxLogCratio
