@@ -1523,6 +1523,14 @@ class ShapeFactory:
                   #  - add the weighted histogram to the final histogram, made of 'nbinY' bins
                   #
       
+                  
+                  # trick to exchange X <-> Y
+                  if self._invertXY :
+                    temp_nbinX = nbinX
+                    nbinX = nbinY
+                    nbinY = temp_nbinX
+                    
+        
                   #
                   # check if I have to remove the signal on the ackground stack here
                   #  --> ok, it works and it is correct
@@ -1561,17 +1569,36 @@ class ShapeFactory:
                       #for ibin in range( thsBackground.GetStack().Last().GetNbinsX() )
                       for ibin in range( nbinY ) :
                         if len(groupPlot.keys()) == 0:          
-                          integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+
+                          if self._invertXY :
+                            integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin*nbinX +1 + sliceX)
+                          else :
+                            integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+
                         else :
-                          integral_bkg += thsBackground_grouped.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+
+                          if self._invertXY :
+                            integral_bkg += thsBackground_grouped.GetStack().Last().GetBinContent(ibin*nbinX +1 + sliceX)
+                          else :
+                            integral_bkg += thsBackground_grouped.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+
                       integral_sig = 0.
                       
                       if len(groupPlot.keys()) == 0:          
                         for ibin in range( thsSignal.GetStack().Last().GetNbinsX() ) :
-                          integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+
+                          if self._invertXY :
+                            integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin*nbinX +1 + sliceX)
+                          else :
+                            integral_sig += thsSignal.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+
                       else :
                         for ibin in range( thsSignal_grouped.GetStack().Last().GetNbinsX() ) :
-                          integral_sig += thsSignal_grouped.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
+
+                          if self._invertXY :
+                            integral_sig += thsSignal_grouped.GetStack().Last().GetBinContent(ibin*nbinX +1 + sliceX)
+                          else :
+                            integral_sig += thsSignal_grouped.GetStack().Last().GetBinContent(ibin+1 + sliceX * nbinY)
                       
                       # this is because the signal was added into the background  stack before    
                       integral_bkg = integral_bkg - integral_sig
@@ -1580,6 +1607,14 @@ class ShapeFactory:
                         weight = integral_sig / integral_bkg
                       else :
                         weight = 1
+
+                      #
+                      # remove weight: use just 1 for each line,
+                      # meaning we are just adding the bins together
+                      #
+                      if self._removeWeight == True :
+                        weight = 1
+                        
                       weight_X_list_weights.append(weight)
                       
                       
@@ -1595,7 +1630,10 @@ class ShapeFactory:
                              histo.SetLineWidth( ((thsBackground.GetHists().At(ihisto))).GetLineWidth())
                              
                              for ibin in range( nbinY ) :
-                               histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                               if self._invertXY :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                               else :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Background[ihisto].Add(histo)
@@ -1617,7 +1655,10 @@ class ShapeFactory:
                              histo.SetLineWidth( ((thsSignal.GetHists().At(ihisto))).GetLineWidth())
                              
                              for ibin in range( nbinY ) :
-                               histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                               if self._invertXY :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                               else :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                           
                              if sliceX != 0:
                                weight_X_list_Signal[ihisto].Add(histo)
@@ -1632,7 +1673,10 @@ class ShapeFactory:
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
 
                              for ibin in range( nbinY ) :
-                               histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                               if self._invertXY :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX ) ) )
+                               else :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Data[ihisto].Add(histo)
@@ -1652,7 +1696,10 @@ class ShapeFactory:
                              histo.SetLineWidth( ((thsBackground_grouped.GetHists().At(ihisto))).GetLineWidth())
                              
                              for ibin in range( nbinY ) :
-                               histo.SetBinContent(ibin+1, weight * ( ((thsBackground_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                               if self._invertXY :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground_grouped.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                               else :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Background[ihisto].Add(histo)
@@ -1674,7 +1721,10 @@ class ShapeFactory:
                              histo.SetLineWidth( ((thsSignal_grouped.GetHists().At(ihisto))).GetLineWidth())
                              
                              for ibin in range( nbinY ) :
-                               histo.SetBinContent(ibin+1, weight * ( ((thsSignal_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                               if self._invertXY :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal_grouped.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                               else :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                           
                              if sliceX != 0:
                                weight_X_list_Signal[ihisto].Add(histo)
@@ -1691,7 +1741,10 @@ class ShapeFactory:
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
 
                              for ibin in range( nbinY ) :
-                               histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                               if self._invertXY :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                               else :
+                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Data[ihisto].Add(histo)
@@ -1734,11 +1787,16 @@ class ShapeFactory:
                       for ibin in range( nbinY ) :
                         x = tgrData_vx[ibin]
                         #print " sliceX, ibin = ", sliceX, " , ", ibin, " -> ", tgrData_vx[ibin]
-                        y      = weight_X_list_weights[sliceX] * global_normalization * tgrData_vy[ibin + sliceX * nbinY]
-                        exlow  = tgrData_evx[ibin + sliceX * nbinY]
-                        exhigh = tgrData_evx[ibin + sliceX * nbinY]
-                        eylow  = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_do[ibin + sliceX * nbinY]
-                        eyhigh = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_up[ibin + sliceX * nbinY]
+
+                        number_of_bin = ibin + sliceX * nbinY
+                        if self._invertXY :
+                          number_of_bin = ibin*nbinX + sliceX
+
+                        y      = weight_X_list_weights[sliceX] * global_normalization * tgrData_vy[number_of_bin]
+                        exlow  = tgrData_evx[number_of_bin]
+                        exhigh = tgrData_evx[number_of_bin]
+                        eylow  = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_do[number_of_bin]
+                        eyhigh = weight_X_list_weights[sliceX] * global_normalization * tgrData_evy_up[number_of_bin]
                         
                         if sliceX != 0:
                           y += weight_X_tgrData.GetY()[ibin]
@@ -1758,20 +1816,23 @@ class ShapeFactory:
                     for sliceX in range(nbinX) :
                       for ibin in range( nbinY ) :
                         x = tgrData_vx[ibin]
-                        y = weight_X_list_weights[sliceX] * global_normalization * tgrMC_vy[ibin + sliceX * nbinY]
-                        exlow  = tgrData_evx[ibin + sliceX * nbinY]
-                        exhigh = tgrData_evx[ibin + sliceX * nbinY]
-                        #print " ibin + sliceX * nbinY = " , ibin , "+", sliceX ,"*", nbinY, " = ", ibin + sliceX * nbinY
-                        #print "nuisances_err_do = ", nuisances_err_do
+
+                        number_of_bin = ibin + sliceX * nbinY
+                        if self._invertXY :
+                          number_of_bin = ibin*nbinX + sliceX
+
+                        y = weight_X_list_weights[sliceX] * global_normalization * tgrMC_vy[number_of_bin]
+                        exlow  = tgrData_evx[number_of_bin]
+                        exhigh = tgrData_evx[number_of_bin]
                         eylow = 0
                         eyhigh = 0
                         if len(nuisances_err_do) != 0:
                           if histo_total != None :
-                            eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(ibin + sliceX * nbinY + 1)
-                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(ibin + sliceX * nbinY + 1)
+                            eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
+                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
                           else :                        
-                            eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[ibin + sliceX * nbinY]
-                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[ibin + sliceX * nbinY]
+                            eylow  = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_do[number_of_bin]
+                            eyhigh = weight_X_list_weights[sliceX] * global_normalization * nuisances_err_up[number_of_bin]
                         
                         if sliceX != 0 :
                           y += weight_X_tgrMC.GetY()[ibin]
@@ -1790,8 +1851,13 @@ class ShapeFactory:
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrDataOverMC.GetX()[ibin]
                       y = self.Ratio(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
-                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
-                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+
+                      number_of_bin = ibin + sliceX * nbinY
+                      if self._invertXY :
+                        number_of_bin = ibin*nbinX + sliceX
+
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
                       eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                       eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
                       
@@ -1815,8 +1881,13 @@ class ShapeFactory:
                           y =  self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )   + weight_X_thsSignal.GetStack().Last().GetBinContent(ibin+1) 
                         else :
                           y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
-                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
-                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+
+                      number_of_bin = ibin + sliceX * nbinY
+                      if self._invertXY :
+                        number_of_bin = ibin*nbinX + sliceX
+
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
 
                       if self._showRelativeRatio :
                         eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
@@ -1837,8 +1908,13 @@ class ShapeFactory:
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrMCOverMC.GetX()[ibin]
                       y = 1 
-                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
-                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+
+                      number_of_bin = ibin + sliceX * nbinY
+                      if self._invertXY :
+                        number_of_bin = ibin*nbinX + sliceX
+
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
                       eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                       eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
                       
@@ -1853,8 +1929,13 @@ class ShapeFactory:
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrMCMinusMC.GetX()[ibin]
                       y = 0
-                      exlow  = tgrData_evx[ibin + sliceX * nbinY]
-                      exhigh = tgrData_evx[ibin + sliceX * nbinY]
+
+                      number_of_bin = ibin + sliceX * nbinY
+                      if self._invertXY :
+                        number_of_bin = ibin*nbinX + sliceX
+
+                      exlow  = tgrData_evx[number_of_bin]
+                      exhigh = tgrData_evx[number_of_bin]
                       if self._showRelativeRatio :
                         eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
                         eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
@@ -1872,7 +1953,8 @@ class ShapeFactory:
                     # now plot
                     #
                     # - recalculate the maxY
-                    maxYused = 1.45 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+                    #     _maxLinearScale --> 1.45 in the past
+                    maxYused = self._maxLinearScale * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
 
                     # recalculate min-max X due to weighting rolling
                     minXused = weight_X_tgrMCMinusMC.GetX()[0] - tgrData_evx[0]
@@ -1901,7 +1983,11 @@ class ShapeFactory:
                       weight_X_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
                     else :
                       weight_X_frameDistro.GetXaxis().SetTitle(variableName)
+                    
                     weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+                    if self._removeWeight == True :
+                      weight_X_frameDistro.GetYaxis().SetTitle("Events")
+
                     weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
             
                     if weight_X_thsBackground.GetNhists() != 0:
@@ -2280,6 +2366,7 @@ if __name__ == '__main__':
     parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
     parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
     parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
+    parser.add_option('--maxLinearScale' , dest='maxLinearScale' , help='scale factor for max Y in linear plots (1.45 magic number as default)'     , default=1.45   ,    type=float   )
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
@@ -2293,6 +2380,9 @@ if __name__ == '__main__':
     parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' ,    action='store_true', default=False)
     parser.add_option('--showDataMinusBkgOnly', dest='showDataMinusBkgOnly', help='draw instead of data-expected, data-expected background only' , action='store_true', default=False)
          
+    parser.add_option('--removeWeight', dest='removeWeight', help='Remove weight S/B for PR plots, just do the sum' , action='store_true', default=False)
+
+    parser.add_option('--invertXY', dest='invertXY', help='Invert the weighting for X <-> Y. Instead of slices along Y, do slices along X' , action='store_true', default=False)
           
           
     # read default parsing options as well
@@ -2317,6 +2407,8 @@ if __name__ == '__main__':
     print "                maxLogCratio =", opt.maxLogCratio
     print "           showRelativeRatio =", opt.showRelativeRatio
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
+    print "                removeWeight =", opt.removeWeight
+    print "                    invertXY =", opt.invertXY    
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -2347,13 +2439,19 @@ if __name__ == '__main__':
     factory._maxLogC = opt.maxLogC 
     factory._minLogCratio = opt.minLogCratio
     factory._maxLogCratio = opt.maxLogCratio
+    factory._maxLinearScale = opt.maxLinearScale
 
     factory._minLogCdifference = opt.minLogCratio
     factory._maxLogCdifference = opt.maxLogCratio
 
     factory._showRelativeRatio = opt.showRelativeRatio
     factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
+
+    factory._removeWeight = opt.removeWeight
+
+    factory._invertXY = opt.invertXY
     
+
     
     #samples = {}
     samples = OrderedDict()
