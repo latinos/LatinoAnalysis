@@ -130,7 +130,6 @@ class BWEwkSingletReweighter(TreeCloner):
         raise Exception("Internal histogram of higgs widths not initialized")
       return  self.GprimeOverGsm(k, br)*self.g.GetBinContent(self.g.FindBin(mh)) 
 
-        
     def process(self,**kwargs):
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -241,8 +240,8 @@ class BWEwkSingletReweighter(TreeCloner):
         print '- Starting eventloop'
         step = 5000 
 
-        #for i in xrange(nentries):
-        for i in xrange(1):
+        for i in xrange(nentries):
+        #for i in xrange(1):
 
             itree.GetEntry(i)
 
@@ -253,7 +252,9 @@ class BWEwkSingletReweighter(TreeCloner):
             #mass = itree.higgsLHEMass
             fourMomenta=[]
             ids=[]
-            partons = ROOT.vector('TLorentzVector')()
+            partons   = ROOT.vector('TLorentzVector')()
+            partonIDs = ROOT.vector('int')()
+
             for ilep in range(2):
               l = ROOT.TLorentzVector()
               l.SetPtEtaPhiM(itree.std_vector_LHElepton_pt[ilep], \
@@ -270,16 +271,34 @@ class BWEwkSingletReweighter(TreeCloner):
                              0.)                
               fourMomenta.append(n)
               ids.append(itree.std_vector_LHEneutrino_id[ilep])
-            
-            for ijet in range(3):
+
+            #these are the incoming partons
+            mothers = ROOT.vector('TLorentzVector')()
+            motherIDs = ROOT.vector('int')()
+            incoming1=ROOT.TLorentzVector()
+            incoming1.SetPxPyPzE(0.,0., itree.pdfx1*6500, itree.pdfx1*6500)
+            incoming2=ROOT.TLorentzVector()
+            incoming2.SetPxPyPzE(0.,0.,-itree.pdfx2*6500, itree.pdfx2*6500)
+            mothers.push_back(incoming1)
+            mothers.push_back(incoming2)
+            motherIDs.push_back(int(itree.pdfid1))
+            motherIDs.push_back(int(itree.pdfid2))
+           
+            #print "incoming:"
+            #print incoming1.Px(), incoming1.Py(), incoming1.Pz(), int(itree.pdfid1)
+            #print incoming2.Px(), incoming2.Py(), incoming2.Pz(), int(itree.pdfid2)
+
+            #print "outgoing:"
+            for ijet in range(5):
               if itree.std_vector_LHEparton_pt[ijet] > 0.:
                 parton = ROOT.TLorentzVector()
-                parton.SetPtEtaPhiM(itree.std_vector_LHEparton_pt[ilep], \
-                                    itree.std_vector_LHEparton_eta[ilep],
-                                    itree.std_vector_LHEparton_phi[ilep],
+                parton.SetPtEtaPhiM(itree.std_vector_LHEparton_pt[ijet], \
+                                    itree.std_vector_LHEparton_eta[ijet],
+                                    itree.std_vector_LHEparton_phi[ijet],
                                     0.)
                 partons.push_back(parton)                     
-
+                partonIDs.push_back(int(itree.std_vector_LHEparton_id[ijet]))
+                #print parton.Px(), parton.Py(), parton.Pz(), int(itree.std_vector_LHEparton_id[ijet])
       
             CPSweight = 1.
             if self.undoCPS:
@@ -317,30 +336,25 @@ class BWEwkSingletReweighter(TreeCloner):
                 #if productionProcess=="VBF":
                 #  continue
                 mela.setMelaHiggsMassWidth(self.mH, gprime)
-                weightInterference = mela.weightStoI((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                     partons)
-                weightInterferenceHonly = mela.weightStoI_H((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                             fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                             partons)
-                weightInterferenceBonly = mela.weightStoI_B((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                            fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                            partons)
-                weightInterferenceHB = mela.weightStoI_HB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                          fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                          partons)
-                weightBackground   = mela.weightStoB((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                     fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                     partons)
-                weightSignalH   = mela.weightStoH((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                  fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                  partons)
+                mela.setupDaughters((productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                                 fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
+                                                                 partons, partonIDs,
+                                                                 mothers, motherIDs)
+                weightInterference = mela.weightStoI()
+                weightInterferenceHonly = mela.weightStoI_H()
+                weightInterferenceBonly = mela.weightStoI_B()
+                weightInterferenceHB = mela.weightStoI_HB()
+                weightBackground   = mela.weightStoB()
+                weightSignalH   = mela.weightStoH()
+                if math.isnan(weightInterference):
+                  weightInterference=0.
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterference
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Honly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHonly
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Bonly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceBonly
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I_HB"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHB
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_B"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightBackground
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_H"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightSignalH
+                #print weightInterference,weightInterferenceHonly,weightInterferenceBonly,weightInterferenceHB,weightBackground,weightSignalH
 
 
               

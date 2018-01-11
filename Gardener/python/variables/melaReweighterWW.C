@@ -28,43 +28,30 @@ class MelaReweighterWW{
 
   void resetMCFM_EWKParameters(double Gf=1.16639E-05, double alphaEW=1./128., double mW=80.399, double mZ=91.1876, double sin2thetaW=0.23119);
 
-  float weightStoSBI(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                    const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                    const std::vector<TLorentzVector>& associated);
+  float weightStoSBI();
   
-  float weightStoI(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                      const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                      const std::vector<TLorentzVector>& associated);
+  float weightStoI();
 
-  float weightStoI_H(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                      const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                      const std::vector<TLorentzVector>& associated);
+  float weightStoI_H();
 
-  float weightStoI_B(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                      const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                      const std::vector<TLorentzVector>& associated);
+  float weightStoI_B();
 
-  float weightStoI_HB(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                      const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                      const std::vector<TLorentzVector>& associated);
+  float weightStoI_HB();
   
-  float weightStoB(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                       const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                       const std::vector<TLorentzVector>& associated);
+  float weightStoB();
 
-  float weightStoH(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                       const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                       const std::vector<TLorentzVector>& associated);
+  float weightStoH();
 
-  private:
   void setupDaughters(bool isVBF,
                       const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
                       const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                      const std::vector<TLorentzVector>& associated);
+                      const std::vector<TLorentzVector>& associated, const std::vector<int>& idsAssociated, 
+                      const std::vector<TLorentzVector>& mothers, const std::vector<int>& idMothers);
 
                       
+  private:
 
-  void recast();
+  bool recast();
 
   double _com;
   double _mpole;
@@ -75,6 +62,8 @@ class MelaReweighterWW{
   MELACandidateRecaster * _recaster;
   SimpleParticleCollection_t* _daughters;
   SimpleParticleCollection_t* _associated;
+  SimpleParticleCollection_t* _mothers;
+  bool _isVBF;
 
 };
 
@@ -83,7 +72,8 @@ _com(com),
 _mpole(mpole),
 _width(width),
 _daughters(new SimpleParticleCollection_t()),
-_associated(new SimpleParticleCollection_t())
+_associated(new SimpleParticleCollection_t()),
+_mothers(new SimpleParticleCollection_t())
 {
   //TVar::VerbosityLevel verbosity = TVar::DEBUG;
   TVar::VerbosityLevel verbosity = TVar::ERROR;
@@ -118,40 +108,41 @@ void MelaReweighterWW::resetMCFM_EWKParameters(double Gf, double alphaEW, double
   _mela->resetMCFM_EWKParameters(Gf, alphaEW, mW, mZ, sin2thetaW);
 }
 
-void MelaReweighterWW::recast(){
+bool MelaReweighterWW::recast(){
   if (_candModified)
     delete _candModified;
   MELACandidate* melaCand = _mela->getCurrentCandidate();
   _recaster->copyCandidate(melaCand, _candModified);
   _recaster->reduceJJtoQuarks(_candModified);
   _mela->setCurrentCandidate(_candModified);
+  if (std::isnan(_candModified->getSortedDaughter(0)->t()))
+    return false;
+  return true;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-float MelaReweighterWW::weightStoSBI(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                                         const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                                         const std::vector<TLorentzVector>& associated){    
+float MelaReweighterWW::weightStoSBI(){    
   
-  setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated);
+  //setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
 
   float meS;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meS, false);
   else
     _mela->computeProdDecP(meS, false);
   float meSBI;
-  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
+  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSBI, false);
   else
     _mela->computeProdDecP(meSBI, false);
@@ -162,24 +153,22 @@ float MelaReweighterWW::weightStoSBI(bool isVBF, const int& id_l1,  const int& i
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-float MelaReweighterWW::weightStoI(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                                         const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                                         const std::vector<TLorentzVector>& associated){ 
+float MelaReweighterWW::weightStoI(){
 
-  setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated);
+  //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
  
   float meSpow;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSpow, false);
   else
     _mela->computeProdDecP(meSpow, false);
     
   //float meS;
-  //_mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF : TVar::ZZGG);
+  //_mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF : TVar::ZZGG);
   // Added here -- U. Sarica
   //_mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //_mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
@@ -187,30 +176,30 @@ float MelaReweighterWW::weightStoI(bool isVBF, const int& id_l1,  const int& id_
   //_mela->computeP(meS, false);
 
   float meSBI;
-  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
+  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSBI, false);
   else
     _mela->computeProdDecP(meSBI, false);
 
   float meHBI;
-  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
+  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meHBI, false);
   else
     _mela->computeProdDecP(meHBI, false);
    
 
   //float meB;
-  //_mela->setProcess(TVar::bkgWW, TVar::MCFM, isVBF ? TVar::JJVBF : TVar::ZZGG);
-  //if (!isVBF)
+  //_mela->setProcess(TVar::bkgWW, TVar::MCFM, _isVBF ? TVar::JJVBF : TVar::ZZGG);
+  //if (!_isVBF)
   //  _mela->computeP(meB, false);
   //else
   //  _mela->computeProdDecP(meB, false);
@@ -225,39 +214,37 @@ float MelaReweighterWW::weightStoI(bool isVBF, const int& id_l1,  const int& id_
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-float MelaReweighterWW::weightStoI_H(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                                         const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                                         const std::vector<TLorentzVector>& associated){ 
+float MelaReweighterWW::weightStoI_H(){
 
-  setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated);
+  //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
  
   float meSpow;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSpow, false);
   else
     _mela->computeProdDecP(meSpow, false);
 
   float meH;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   //Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meH, false);
   else
     _mela->computeProdDecP(meH, false);
 
   float meS_Honly;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meS_Honly, false);
   else
      _mela->computeProdDecP(meS_Honly, false);
@@ -272,35 +259,33 @@ float MelaReweighterWW::weightStoI_H(bool isVBF, const int& id_l1,  const int& i
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-float MelaReweighterWW::weightStoI_B(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                                         const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                                         const std::vector<TLorentzVector>& associated){ 
+float MelaReweighterWW::weightStoI_B(){
 
-  setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated);
+  //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
  
   float meSpow;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSpow, false);
   else
     _mela->computeProdDecP(meSpow, false);
 
   float meSBI;
-  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
+  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSBI, false);
   else
     _mela->computeProdDecP(meSBI, false);
 
   float meB;
-  _mela->setProcess(TVar::bkgWW, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
-  if (!isVBF)
+  _mela->setProcess(TVar::bkgWW, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
+  if (!_isVBF)
     _mela->computeP(meB, false);
   else
     _mela->computeProdDecP(meB, false);
@@ -316,45 +301,43 @@ float MelaReweighterWW::weightStoI_B(bool isVBF, const int& id_l1,  const int& i
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-float MelaReweighterWW::weightStoI_HB(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                                         const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                                         const std::vector<TLorentzVector>& associated){ 
+float MelaReweighterWW::weightStoI_HB(){
 
-  setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated);
+  //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
  
   float meSpow;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSpow, false);
   else
     _mela->computeProdDecP(meSpow, false);
 
   float meH;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   //Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meH, false);
   else
     _mela->computeProdDecP(meH, false);
 
   float meSBI;
-  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
+  _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSBI, false);
   else
     _mela->computeProdDecP(meSBI, false);
 
   float meB;
-  _mela->setProcess(TVar::bkgWW, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
-  if (!isVBF)
+  _mela->setProcess(TVar::bkgWW, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
+  if (!_isVBF)
     _mela->computeP(meB, false);
   else
     _mela->computeProdDecP(meB, false);
@@ -370,25 +353,23 @@ float MelaReweighterWW::weightStoI_HB(bool isVBF, const int& id_l1,  const int& 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-float MelaReweighterWW::weightStoB(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                                         const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                                         const std::vector<TLorentzVector>& associated){ 
+float MelaReweighterWW::weightStoB(){
 
-  setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated);
+  //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
 
   float meS;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meS, false);
   else
     _mela->computeProdDecP(meS, false);
   float meB;
-  _mela->setProcess(TVar::bkgWW, TVar::MCFM, isVBF ? TVar::JJEW : TVar::ZZGG);
-  if (!isVBF)
+  _mela->setProcess(TVar::bkgWW, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
+  if (!_isVBF)
     _mela->computeP(meB, false);
   else
     _mela->computeProdDecP(meB, false);
@@ -399,28 +380,26 @@ float MelaReweighterWW::weightStoB(bool isVBF, const int& id_l1,  const int& id_
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-float MelaReweighterWW::weightStoH(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
-                                         const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2, 
-                                         const std::vector<TLorentzVector>& associated){ 
+float MelaReweighterWW::weightStoH(){
 
-  setupDaughters(isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated);
+  //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
  
   float meSpow;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF_S : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meSpow, false);
   else
     _mela->computeProdDecP(meSpow, false);
 
   float meH;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, isVBF ? TVar::JJVBF : TVar::ZZGG);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF : TVar::ZZGG);
   //Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
   //
-  if (!isVBF)
+  if (!_isVBF)
     _mela->computeP(meH, false);
   else
     _mela->computeProdDecP(meH, false);
@@ -438,8 +417,10 @@ float MelaReweighterWW::weightStoH(bool isVBF, const int& id_l1,  const int& id_
 
 void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& id_l2, const int& id_n1, const int& id_n2,
                     const TLorentzVector& l1, const TLorentzVector& l2, const TLorentzVector& n1, const TLorentzVector& n2,
-                    const std::vector<TLorentzVector>& associated){
-  
+                    const std::vector<TLorentzVector>& associated, const std::vector<int>& idsAssociated,
+                    const std::vector<TLorentzVector>& mothers, const std::vector<int>& idsMothers){
+ 
+  _isVBF=isVBF;
   _daughters->clear();
   _daughters->push_back(SimpleParticle_t(id_l1, l1));
   _daughters->push_back(SimpleParticle_t(id_l2, l2));
@@ -447,7 +428,14 @@ void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& 
   _daughters->push_back(SimpleParticle_t(id_n2, n2));
   _associated->clear();
   for (unsigned int i = 0; i < associated.size(); ++i){
-    _associated->push_back(SimpleParticle_t(0, associated[i]));
+    _associated->push_back(SimpleParticle_t(idsAssociated[i], associated[i]));
+  }
+  _mothers->clear();
+  bool hasOneGluon = false;
+  for (unsigned int i = 0; i < mothers.size(); ++i){
+    _mothers->push_back(SimpleParticle_t(idsMothers[i], mothers[i]));
+    if (idsMothers[i] == 22)
+      hasOneGluon = true;
   }
 
   if (_candModified != 0){
@@ -456,9 +444,47 @@ void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& 
   }
 
   _mela->resetInputEvent();
-  _mela->setInputEvent(_daughters, _associated, 0, false); 
+  //check charge        
+  double chargeIn = 0;
+  for (unsigned int i = 0; i < _mothers->size(); ++i){
+    MELAParticle p(_mothers->at(i).first, _mothers->at(i).second);
+    chargeIn+=p.charge();
+  }
+  double chargeOut = 0;
+  for (unsigned int i = 0; i < _associated->size(); ++i){
+    MELAParticle p(_associated->at(i).first, _associated->at(i).second);
+    chargeOut+=p.charge();
+  }
+  bool toRecast=true;
+  if (chargeIn != chargeOut){
+    toRecast =  false;
+    //just kill the unwanted particle
+    for (unsigned int i = 0; i < _associated->size(); ++i){
+      int id=_associated->at(i).first;
+      bool antiParticleInInitialState=false;
+      for (unsigned int j = 0; j < _mothers->size(); ++j){
+        if (id==-_mothers->at(j).first){
+          //cout << "Skipping " << id << endl;
+          antiParticleInInitialState=true;
+        }  
+      }    
+      if (antiParticleInInitialState)
+        _associated->erase(_associated->begin()+i);
+    }    
+  }  
+
+  _mela->setInputEvent(_daughters, _associated, _mothers, true); 
   if (isVBF){
-    recast();
+    bool recasted = recast();
+    if (!recasted) {
+      //just remove the gluon
+      for (unsigned int i = 0; i < _associated->size(); ++i){
+        int id=_associated->at(i).first;
+        if (id == 21)
+          _associated->erase(_associated->begin()+i);
+      }
+      _mela->setInputEvent(_daughters, _associated, _mothers, true);  
+    }
   }
 
 }                    
