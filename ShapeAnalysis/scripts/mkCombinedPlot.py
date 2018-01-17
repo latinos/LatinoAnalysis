@@ -79,8 +79,9 @@ class ShapeFactory:
             if 'cutUsed' in cutConfig.keys() :
               nameToBeUsed = cutConfig['cutUsed']
             
-            name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
-            
+            #name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+            name_histogram = 'new_h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+
             if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
               if list_files[cutName].Get(name_histogram) :
                 
@@ -120,8 +121,9 @@ class ShapeFactory:
             if 'cutUsed' in cutConfig.keys() :
               nameToBeUsed = cutConfig['cutUsed']
             
-            name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
-            
+            #name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+            name_histogram = 'new_h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+
             if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
               if list_files[cutName].Get(name_histogram) :
                 if sampleNameGroup not in list_thsSignal.keys() :
@@ -149,7 +151,9 @@ class ShapeFactory:
           if 'cutUsed' in cutConfig.keys() :
             nameToBeUsed = cutConfig['cutUsed']
 
-          name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+          #name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+          name_histogram = 'new_h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
+
           print " data:: ", name_histogram
           
           if list_files[cutName].Get(name_histogram) :
@@ -391,7 +395,7 @@ class ShapeFactory:
         # - recalculate the maxY
         maxYused = 2.0 * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last()) #1.1 *
         # FIXME these hardcoded numbers
-        minYused = 1.
+        minYused = 0.001
         #nbinY = 5
         minXused = (list_thsData ['DATA']).GetXaxis().GetBinLowEdge(1) 
         if self._removeOverflow:
@@ -793,6 +797,8 @@ if __name__ == '__main__':
     parser.add_option('--getVarFromFile' , dest='getVarFromFile' , help='get variable, binning and range from file. Needed for variable bin width (set to 1 to trigger this)', default=0   ,    type=int)
     parser.add_option('--divideByBinWidth' , dest='divideByBinWidth'   , help='divide the bin content by the bin width'     , action='store_true', default=False)
     parser.add_option('--removeOverflow' , dest='removeOverflow'   , help='remove the overflow bin'     , action='store_true', default=False)
+    parser.add_option('--invertXY' ,       dest='invertXY'       , help='invert XY axes to make Y projections'     , action='store_true', default=False)
+
 
           
     # read default parsing options as well
@@ -824,6 +830,9 @@ if __name__ == '__main__':
     print " divideByBinWidth =        ", opt.divideByBinWidth
 
     print " removeOverflow =        ", opt.removeOverflow
+
+    print " invertXY =        ", opt.invertXY
+
 
 
     opt.minLogC = float(opt.minLogC)
@@ -898,7 +907,10 @@ if __name__ == '__main__':
           # example C: ([60,80,90,110,130,150,200],[10,20,30,50,70,90,150],), 
           #   -> NB: the two variables are defined as y:x, then it's the second that we care about
           elif len( binning_possibly_in_2d ) == 2 :
-            now_1d_binning = binning_possibly_in_2d[1]
+            if opt.invertXY:
+              now_1d_binning = binning_possibly_in_2d[0]
+            else:
+              now_1d_binning = binning_possibly_in_2d[1]
           
           
           factory._binning = now_1d_binning
