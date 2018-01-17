@@ -54,7 +54,7 @@ class ShapeFactory:
 
         list_thsData       = {}
         list_thsSignal     = {}
-        list_thsBackground = {}
+        list_thsBackground = OrderedDict()
 
         tcanvas            = ROOT.TCanvas( "cc" + "_combined_" + "_" + self._variable,      "cc"     , 800, 600 )
         tcanvasRatio       = ROOT.TCanvas( "ccRatio" + "_combined_" + "_" + self._variable, "ccRatio", 800, 800 )
