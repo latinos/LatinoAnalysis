@@ -90,7 +90,8 @@ class Plow:
         # initialize, to preserve the order of the OrderedDict
         #
         for samples_key,samples_values in self._samples.iteritems():
-          self._samples_yields [samples_key] = 0
+          self._samples_yields [samples_key] = (0, 0)
+          #                                  yield, error
           
         #  
         # get data  
@@ -104,22 +105,29 @@ class Plow:
            #
            if (self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA" :
              
+             #print "self._inputFile = " , self._inputFile
+             
              fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
-             self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
-             histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key)      
-             self._samples_yields [samples_key] = histo.Integral()
+             histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key)   
+             #print " histo = ", self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key
+             
+             errorVal = ROOT.Double(0)
+             tempo = histo.IntegralAndError(-1, histo.GetNbinsX(), errorVal)
+             self._samples_yields [samples_key] = (histo.Integral(), errorVal)
+
+
 
          
         for samples_key,samples_values in self._samples.iteritems():
 
-           print " samples_key = ", samples_key
+           #print " samples_key = ", samples_key
            
            copied_from_original = False
            
            #if samples_key != "DATA" :
            if not ((self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA"):
              if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(samples_key) ):
-               print "Sample ", samples_key, " does not exist in ", fileIn
+               #print "Sample ", samples_key, " does not exist in ", fileIn
                #
                # If for some reason this histogram is not available in the combine output
                # get the histogram from the input root file, the output of mkShape
@@ -129,7 +137,7 @@ class Plow:
                # continue
                #
                
-               self._samples_yields [samples_key] = 0
+               self._samples_yields [samples_key] = (0, 0)
                
                copied_from_original = True
 
@@ -139,12 +147,14 @@ class Plow:
              if not copied_from_original :  
                
                histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + samples_key)      
-               print folder_fit_name + "/" + self._cut + "/" + samples_key
+               #print folder_fit_name + "/" + self._cut + "/" + samples_key
                
                histo.SetName  ('histo_' + samples_key)
                histo.SetTitle ('histo_' + samples_key)
 
-               self._samples_yields [samples_key] = histo.Integral()
+               errorVal = ROOT.Double(0)
+               tempo = histo.IntegralAndError(-1, histo.GetNbinsX(), errorVal)
+               self._samples_yields [samples_key] = (histo.Integral(), errorVal)
                
 
 
@@ -158,8 +168,11 @@ class Plow:
         
         histo_total_signal.SetName  ('histo_' + 'total_signal')
         histo_total_signal.SetTitle ('histo_' + 'total_signal')
-        
-        self._samples_yields_total_signal = histo_total_signal.Integral()
+
+        errorVal_sig = ROOT.Double(0)
+        tempo = histo_total_signal.IntegralAndError(-1, histo_total_signal.GetNbinsX(), errorVal_sig)        
+        self._samples_yields_total_signal = (histo_total_signal.Integral(), errorVal_sig)
+        #print "errorVal_sig = ", errorVal_sig
         
         #
         # total background
@@ -168,7 +181,10 @@ class Plow:
         histo_total_background.SetName  ('histo_' + 'total_background')
         histo_total_background.SetTitle ('histo_' + 'total_background')
         
-        self._samples_yields_total_background = histo_total_background.Integral()
+        errorVal_bkg = ROOT.Double(0) 
+        tempo = histo_total_background.IntegralAndError(-1, histo_total_background.GetNbinsX(), errorVal_bkg)        
+        self._samples_yields_total_background = (histo_total_background.Integral(), errorVal_bkg)
+        #print "errorVal_bkg = ", errorVal_bkg
         
         
         #
@@ -178,7 +194,10 @@ class Plow:
         histo_total.SetName  ('histo_' + 'total')
         histo_total.SetTitle ('histo_' + 'total')
         
-        self._samples_yields_total = histo_total.Integral()
+        errorVal_tot = ROOT.Double(0) 
+        tempo = histo_total.IntegralAndError(-1, histo_total.GetNbinsX(), errorVal_tot)        
+        self._samples_yields_total = (histo_total.Integral(), errorVal_tot)
+        #print "errorVal_tot = ", errorVal_tot
 
 
 
@@ -187,27 +206,27 @@ class Plow:
         #
 
 
-        for samples_key,samples_values in self._samples.iteritems():
+        for samples_key,samples_values in self._samples_yields.iteritems():
           if samples_key != "DATA" :
             self._outFile.write(' %13s ' % samples_key.replace('_', '-'))
-            self._outFile.write(' & %.2f \\\\  \n ' % (samples_values) )
+            self._outFile.write(' & %.2f \\\\  \n ' % (samples_values[0]) )
         self._outFile.write('\\hline\n')
 
         self._outFile.write(' Tot Sig ' )
-        self._outFile.write(' & %.2f \\\\  \n ' % (self._samples_yields_total_signal) )
+        self._outFile.write(' & %.2f $\\pm$ %.2f \\\\  \n ' % (self._samples_yields_total_signal[0], self._samples_yields_total_signal[1]) )
 
         self._outFile.write(' Tot Bkg ' )
-        self._outFile.write(' & %.2f \\\\  \n ' % (self._samples_yields_total_background) )
+        self._outFile.write(' & %.2f $\\pm$ %.2f \\\\  \n ' % (self._samples_yields_total_background[0], self._samples_yields_total_background[1]) )
 
         self._outFile.write('\\hline\n')
         self._outFile.write(' Tot    ' )
-        self._outFile.write(' & %.2f \\\\  \n ' % (self._samples_yields_total) )
+        self._outFile.write(' & %.2f $\\pm$ %.2f \\\\  \n ' % (self._samples_yields_total[0], self._samples_yields_total[1]) )
 
         self._outFile.write('\\hline\n')
-        for samples_key,samples_values in self._samples.iteritems():
+        for samples_key,samples_values in self._samples_yields.iteritems():
           if samples_key == "DATA" :
             self._outFile.write(' %13s ' % samples_key.replace('_', '-'))
-            self._outFile.write(' & %.2f \\\\  \n ' % (samples_values) )
+            self._outFile.write(' & %.2f $\\pm$ %.2f  \\\\  \n ' % (samples_values[0], math.sqrt(samples_values[0])) )
 
 
         self._outFile.write('  \\end{tabular}')
