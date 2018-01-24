@@ -249,7 +249,7 @@ float MelaReweighterWW::weightStoI_H(){
   else
      _mela->computeProdDecP(meS_Honly, false);
 
-  _mela->resetInputEvent();
+  //_mela->resetInputEvent();
 
   //std::cout << "### meS = " << meS << " meSpow = " << meSpow << " meB = " << meB << " meSBI = " << meSBI << std::endl;
   //std::cout << "### weight = " << (meSBI-meS-meB)/meSpow << std::endl;
@@ -290,7 +290,7 @@ float MelaReweighterWW::weightStoI_B(){
   else
     _mela->computeProdDecP(meB, false);
 
-  _mela->resetInputEvent();
+  //_mela->resetInputEvent();
 
   //std::cout << "### meS = " << meS << " meSpow = " << meSpow << " meB = " << meB << " meSBI = " << meSBI << std::endl;
   //std::cout << "### weight = " << (meSBI-meS-meB)/meSpow << std::endl;
@@ -342,7 +342,7 @@ float MelaReweighterWW::weightStoI_HB(){
   else
     _mela->computeProdDecP(meB, false);
 
-  _mela->resetInputEvent();
+  //_mela->resetInputEvent();
 
   //std::cout << "### meS = " << meS << " meSpow = " << meSpow << " meB = " << meB << " meSBI = " << meSBI << std::endl;
   //std::cout << "### weight = " << (meSBI-meS-meB)/meSpow << std::endl;
@@ -374,7 +374,7 @@ float MelaReweighterWW::weightStoB(){
   else
     _mela->computeProdDecP(meB, false);
 
-  _mela->resetInputEvent();
+  //_mela->resetInputEvent();
   return meB/meS;
 }
 
@@ -405,7 +405,7 @@ float MelaReweighterWW::weightStoH(){
     _mela->computeProdDecP(meH, false);
 
 
-  _mela->resetInputEvent();
+  //_mela->resetInputEvent();
 
   //std::cout << "### meS = " << meS << " meSpow = " << meSpow << " meB = " << meB << " meSBI = " << meSBI << std::endl;
   //std::cout << "### weight = " << (meSBI-meS-meB)/meSpow << std::endl;
