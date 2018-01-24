@@ -346,7 +346,7 @@ class BWEwkSingletReweighter(TreeCloner):
                 weightInterferenceHB = mela.weightStoI_HB()
                 weightBackground   = mela.weightStoB()
                 weightSignalH   = mela.weightStoH()
-                if math.isnan(weightInterference):
+                if math.isnan(weightInterference) or math.isinf(weightInterference):
                   weightInterference=0.
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterference
                 self.oldBranchesToBeModifiedSimpleVariable[name+"_I_Honly"][0] = self.oldBranchesToBeModifiedSimpleVariable[name][0]*weightInterferenceHonly
