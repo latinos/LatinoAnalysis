@@ -156,7 +156,7 @@ if options.runBatch:
   print "Batch mode"
   pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
   for fn in os.listdir(pathRootMacro):
-    if os.path.isfile(pathRootMacro+fn) and fn.endswith('.C'):
+    if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
       try:
         ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
       except RuntimeError:

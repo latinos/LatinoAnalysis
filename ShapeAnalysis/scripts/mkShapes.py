@@ -207,6 +207,7 @@ if __name__ == '__main__':
 
 
     variables = {}
+    print opt.variablesFile
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
       exec(handle)

@@ -1392,6 +1392,9 @@ samples4Syst = [
                  'ZZ','ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
                  'Wg_AMCNLOFXFX','WgStarLNuEE','WgStarLNuMuMu', 'Wg_MADGRAPHMLM', 'Zg' , 'WZTo3LNu_mllmin01_ext1',
 
+                 # qq->WW aTCG
+                 'WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600','WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf',
+
                  # VVV
                  'WZZ','ZZZ','WWZ','WWW','WWG',
 
@@ -1410,6 +1413,21 @@ samples4Syst = [
                  'HZJ_HToWWTo2L2Nu_M120','HZJ_HToWWTo2L2Nu_M125','HZJ_HToWWTo2L2Nu_M130', # ZH for monohiggs
 
                  'ttHJetToNonbb_M125','ttHToNonbb_M125',
+
+                 # Spin samples
+                  'H0L1_ToWWTo2L2Nu',
+                  'H0L1f05_ToWWTo2L2Nu',
+                  'H0M_ToWWTo2L2Nu',
+                  'H0Mf05_ToWWTo2L2Nu',
+                  'H0PH_ToWWTo2L2Nu',
+                  'H0PHf05_ToWWTo2L2Nu',
+                  'H0PM_ToWWTo2L2Nu',
+                  'VBF_H0L1_ToWWTo2L2Nu',
+                  'VBF_H0L1f05_ToWWTo2L2Nu',
+                  'VBF_H0M_ToWWTo2L2Nu',
+                  'VBF_H0Mf05_ToWWTo2L2Nu',
+                  'VBF_H0PH_ToWWTo2L2Nu',
+                  'VBF_H0PHf05_ToWWTo2L2Nu',
                  
                  # What ????
                  #'ttHJetToNonbb_M125','TTWJetsToLNu',
@@ -1989,128 +2007,6 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : True ,
                   'subTargets' : ['do_lpTCorrMC','do_lpTCorrData','bPogSF','TrigEff','IdIsoSC','l2kin','l3kin','l4kin'],
-                  'XonlySample' : [
-                                  # DY 
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3', 'DYJetsToLL_M-50-LO' ,
-                                  'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
-                                  'DYJetsToLL_M-50_HT-100to200_MLM' , 'DYJetsToLL_M-50_HT-100to200_MLM_ext' , 
-                                  'DYJetsToLL_M-50_HT-200to400_MLM' , 
-                                  'DYJetsToLL_M-50_HT-400to600_MLM' ,
-                                  'DYJetsToLL_M-50_HT-600toInf_MLM' ,
-                                  # WJets
-                                  'WJetsToLNu',
-                                  # Top
-                                  'TTTo2L2Nu','TTWJetsToLNu',
-                                  'ST_t-channel_antitop','ST_t-channel_top',
-                                  'ST_tW_antitop','ST_tW_top',
-                                  'TTToSemiLeptonic','TT',
-                                  # VV (including WW) 
-                                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
-                                  'WZTo3LNu','WZ',
-                                  'ZZ','Zg',
-                                  'ZZTo2L2Nu','ZZTo2L2Q','ZZTo4L',
-                                  'Wg_AMCNLOFXFX', 
-                                  'Wg_MADGRAPHMLM',
-                                  'WZTo2L2Q',
-                                  # VVV
-                                  'WZZ','ZZZ','WWZ','WWW',
-                                  # Higgs 
-                                  'GluGluHToTauTau_M125', 'GluGluHToWWTo2L2Nu_M125','GluGluHToWWTo2L2NuPowheg_M125',
-                                  'GluGluHToWWTo2L2Nu_alternative_M125','VBFHToWWTo2L2Nu_alternative_M125',
-                                  'HWminusJ_HToTauTau_M125', 'HWminusJ_HToWW_M125',
-                                  'HWplusJ_HToTauTau_M125', 'HWplusJ_HToWW_M125',
-                                  'HZJ_HToTauTau_M125', 'HZJ_HToWW_M125',
-                                  'VBFHToTauTau_M125', 'VBFHToWWTo2L2Nu_M125',
-                                  'ggZH_HToWW_M125', # missing ggZHToTauTau
-                                  'ttHJetToNonbb_M125',
-                                  'GluGluHToZZTo4L_M125',
-                                  # 'GluGluZH_HToWWTo2L2Nu_M120_noHLT','GluGluZH_HToWWTo2L2Nu_M125_noHLT','GluGluZH_HToWWTo2L2Nu_M130_noHLT', ## old
-                                  # 'HZJ_HToWWTo2L2Nu_M120_noHLT','HZJ_HToWWTo2L2Nu_M125_noHLT','HZJ_HToWWTo2L2Nu_M130_noHLT',  ## old
-
-                                  'GluGluZH_HToWWTo2L2Nu_M120','GluGluZH_HToWWTo2L2Nu_M125','GluGluZH_HToWWTo2L2Nu_M130', # ggZH for monohiggs
-                                  'HZJ_HToWWTo2L2Nu_M120','HZJ_HToWWTo2L2Nu_M125','HZJ_HToWWTo2L2Nu_M130', # ZH for monohiggs
-                 
-
-                                  'HWplusJ_WToLNu_HToWWTo2L2Nu_M125','HWminusJ_WToLNu_HToWWTo2L2Nu_M125',
-                                  # ... ggH High Mass
-                                  'GluGluHToWWTo2L2Nu_M130',
-                                  'GluGluHToWWTo2L2Nu_M135',
-                                  'GluGluHToWWTo2L2Nu_M140',
-                                  'GluGluHToWWTo2L2Nu_M145',
-                                  'GluGluHToWWTo2L2Nu_M150',
-                                  'GluGluHToWWTo2L2Nu_M155',
-                                  'GluGluHToWWTo2L2Nu_M160',
-                                  'GluGluHToWWTo2L2Nu_M165',
-                                  'GluGluHToWWTo2L2Nu_M170',
-                                  'GluGluHToWWTo2L2Nu_M175',
-                                  'GluGluHToWWTo2L2Nu_M180',
-                                  'GluGluHToWWTo2L2Nu_M190',
-                                  'GluGluHToWWTo2L2Nu_M200',
-                                  'GluGluHToWWTo2L2Nu_M210',
-                                  'GluGluHToWWTo2L2Nu_M230',
-                                  'GluGluHToWWTo2L2Nu_M250',
-                                  'GluGluHToWWTo2L2Nu_M270',
-                                  'GluGluHToWWTo2L2Nu_M300',
-                                  'GluGluHToWWTo2L2Nu_M350',
-                                  'GluGluHToWWTo2L2Nu_M400',
-                                  'GluGluHToWWTo2L2Nu_M450',
-                                  'GluGluHToWWTo2L2Nu_M500',
-                                  'GluGluHToWWTo2L2Nu_M550',
-                                  'GluGluHToWWTo2L2Nu_M600',
-                                  'GluGluHToWWTo2L2Nu_M650',
-                                  'GluGluHToWWTo2L2Nu_M700',
-                                  'GluGluHToWWTo2L2Nu_M750',
-                                  'GluGluHToWWTo2L2Nu_M750_NWA',
-                                  'GluGluHToWWTo2L2Nu_M800',
-                                  'GluGluHToWWTo2L2Nu_M900',
-                                  'GluGluHToWWTo2L2Nu_M1000',
-                                  # ... VBF High Mass
-                                  'VBFHToWWTo2L2Nu_M130',
-                                  'VBFHToWWTo2L2Nu_M135',
-                                  'VBFHToWWTo2L2Nu_M140',
-                                  'VBFHToWWTo2L2Nu_M145',
-                                  'VBFHToWWTo2L2Nu_M150',
-                                  'VBFHToWWTo2L2Nu_M155',
-                                  'VBFHToWWTo2L2Nu_M160',
-                                  'VBFHToWWTo2L2Nu_M165',
-                                  'VBFHToWWTo2L2Nu_M170',
-                                  'VBFHToWWTo2L2Nu_M175',
-                                  'VBFHToWWTo2L2Nu_M180',
-                                  'VBFHToWWTo2L2Nu_M190',
-                                  'VBFHToWWTo2L2Nu_M200',
-                                  'VBFHToWWTo2L2Nu_M210',
-                                  'VBFHToWWTo2L2Nu_M230',
-                                  'VBFHToWWTo2L2Nu_M250',
-                                  'VBFHToWWTo2L2Nu_M270',
-                                  'VBFHToWWTo2L2Nu_M300',
-                                  'VBFHToWWTo2L2Nu_M350',
-                                  'VBFHToWWTo2L2Nu_M400',
-                                  'VBFHToWWTo2L2Nu_M450',
-                                  'VBFHToWWTo2L2Nu_M500',
-                                  'VBFHToWWTo2L2Nu_M550',
-                                  'VBFHToWWTo2L2Nu_M600',
-                                  'VBFHToWWTo2L2Nu_M650',
-                                  'VBFHToWWTo2L2Nu_M700',
-                                  'VBFHToWWTo2L2Nu_M750',
-                                  'VBFHToWWTo2L2Nu_M750_NWA',
-                                  'VBFHToWWTo2L2Nu_M800',
-                                  'VBFHToWWTo2L2Nu_M900',
-                                  'VBFHToWWTo2L2Nu_M1000',
-                                  # PS
-                                  'GluGluHToWWTo2L2NuHerwigPS_M125','VBFHToWWTo2L2NuHerwigPS_M125','WWTo2L2NuHerwigPS',
-                                  # UE
-                                  'GluGluHToWWTo2L2Nu_M125_CUETDown',
-                                  'GluGluHToWWTo2L2Nu_M125_CUETUp',
-                                  'VBFHToWWTo2L2Nu_M125_CUETDown',
-                                  'VBFHToWWTo2L2Nu_M125_CUETUp',
-                                  'WWTo2L2Nu_CUETDown',
-                                  'WWTo2L2Nu_CUETUp',
-                          # VBS
-                          'WpWpJJ_EWK','WpWpJJ_EWK_QCD','WpWpJJ_QCD','WW_DoubleScattering','WWTo2L2Nu_DoubleScattering','WLLJJToLNu_M-4to60_EWK_QCD','WLLJJToLNu_M-60_EWK_QCD',
-                          'WGJJ','EWKZ2Jets','TTToSemiLepton',
-                                  # VBF 
-                                  'WpWmJJ_EWK_QCD_noTop','WpWmJJ_QCD_noTop', 'WpWmJJ_EWK_noTop',
-                                 ] ,
                 },
 
 
@@ -2796,7 +2692,8 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'onlySample' : ['WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown'] ,
+                  'onlySample' : ['WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown',
+                                  'WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600','WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf'] ,
                   'command'    : 'gardener.py wwNLLcorrections -m \'powheg\' --cmssw RPLME_CMSSW'
                 },
 
@@ -2804,7 +2701,8 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'onlySample' : ['WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown'] ,
+                  'onlySample' : ['WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown',
+                                  'WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600','WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf'] ,
                   'command'    : 'gardener.py wwEWKcorrections' ,
                 } ,
 
@@ -2882,6 +2780,7 @@ Steps= {
                                   # WW
                                   'WWTo2L2Nu','WWTo2L2NuHerwigPS','WWTo2L2Nu_CUETUp','WWTo2L2Nu_CUETDown' ,
                                   'WWTo2L2Nu_DoubleScattering',
+                                  'WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600','WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf' ,
 
                                   
                  # Higgs 
@@ -2897,6 +2796,22 @@ Steps= {
                  'HZJ_HToWWTo2L2Nu_M120','HZJ_HToWWTo2L2Nu_M125','HZJ_HToWWTo2L2Nu_M130', # ZH for monohiggs
                  
                  'ggZH_HToWW_M125', # missing ggZHToTauTau
+
+                 # Spin samples
+                  'H0L1_ToWWTo2L2Nu',
+                  'H0L1f05_ToWWTo2L2Nu',
+                  'H0M_ToWWTo2L2Nu',
+                  'H0Mf05_ToWWTo2L2Nu',
+                  'H0PH_ToWWTo2L2Nu',
+                  'H0PHf05_ToWWTo2L2Nu',
+                  'H0PM_ToWWTo2L2Nu',
+                  'VBF_H0L1_ToWWTo2L2Nu',
+                  'VBF_H0L1f05_ToWWTo2L2Nu',
+                  'VBF_H0M_ToWWTo2L2Nu',
+                  'VBF_H0Mf05_ToWWTo2L2Nu',
+                  'VBF_H0PH_ToWWTo2L2Nu',
+                  'VBF_H0PHf05_ToWWTo2L2Nu',
+
 
                  # What ????
                  #'ttHJetToNonbb_M125','TTWJetsToLNu',
@@ -2998,6 +2913,21 @@ Steps= {
                                    'GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS',
                                    'GluGluHToWWTo2L2Nu_minloHJJ_M125',
                                    'GluGluHToTauTau_M125',
+                 # Spin samples
+                  'H0L1_ToWWTo2L2Nu',
+                  'H0L1f05_ToWWTo2L2Nu',
+                  'H0M_ToWWTo2L2Nu',
+                  'H0Mf05_ToWWTo2L2Nu',
+                  'H0PH_ToWWTo2L2Nu',
+                  'H0PHf05_ToWWTo2L2Nu',
+                  'H0PM_ToWWTo2L2Nu',
+                  'VBF_H0L1_ToWWTo2L2Nu',
+                  'VBF_H0L1f05_ToWWTo2L2Nu',
+                  'VBF_H0M_ToWWTo2L2Nu',
+                  'VBF_H0Mf05_ToWWTo2L2Nu',
+                  'VBF_H0PH_ToWWTo2L2Nu',
+                  'VBF_H0PHf05_ToWWTo2L2Nu',
+
                                  ],
                   'command'    : 'gardener.py ggHUncertainty' ,
                 } ,
@@ -3014,6 +2944,21 @@ Steps= {
                                    'GluGluHToWWTo2L2Nu_M125_CUETDown',
                                    'GluGluHToWWTo2L2Nu_M125_CUETUp',
                                    'GluGluHToWWTo2L2Nu_M125_herwigpp',
+                 # Spin samples
+                  'H0L1_ToWWTo2L2Nu',
+                  'H0L1f05_ToWWTo2L2Nu',
+                  'H0M_ToWWTo2L2Nu',
+                  'H0Mf05_ToWWTo2L2Nu',
+                  'H0PH_ToWWTo2L2Nu',
+                  'H0PHf05_ToWWTo2L2Nu',
+                  'H0PM_ToWWTo2L2Nu',
+                  'VBF_H0L1_ToWWTo2L2Nu',
+                  'VBF_H0L1f05_ToWWTo2L2Nu',
+                  'VBF_H0M_ToWWTo2L2Nu',
+                  'VBF_H0Mf05_ToWWTo2L2Nu',
+                  'VBF_H0PH_ToWWTo2L2Nu',
+                  'VBF_H0PHf05_ToWWTo2L2Nu',
+
                                  ],
                   'command'    : 'gardener.py ggHtoMINLO' ,
                 } ,
@@ -3041,48 +2986,48 @@ Steps= {
       
                   'onlySample' : [
                                   # ... ggH High Mass
-                                  'GluGluHToWWTo2L2Nu_M200',
-                                  'GluGluHToWWTo2L2Nu_M210',
-                                  'GluGluHToWWTo2L2Nu_M230',
-                                  'GluGluHToWWTo2L2Nu_M250',
-                                  'GluGluHToWWTo2L2Nu_M270',
-                                  'GluGluHToWWTo2L2Nu_M300',
-                                  'GluGluHToWWTo2L2Nu_M350',
-                                  'GluGluHToWWTo2L2Nu_M400',
-                                  'GluGluHToWWTo2L2Nu_M450',
-                                  'GluGluHToWWTo2L2Nu_M500',
-                                  'GluGluHToWWTo2L2Nu_M550',
-                                  'GluGluHToWWTo2L2Nu_M600',
-                                  'GluGluHToWWTo2L2Nu_M650',
-                                  'GluGluHToWWTo2L2Nu_M700',
-                                  'GluGluHToWWTo2L2Nu_M750',
-                                  #'GluGluHToWWTo2L2Nu_M750_NWA',
-                                  'GluGluHToWWTo2L2Nu_M800',
-                                  'GluGluHToWWTo2L2Nu_M900',
-                                  'GluGluHToWWTo2L2Nu_M1000',
-                                  # .... and new JHU samples
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M200',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M210',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M230',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M250',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M270',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M300',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M350',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M400',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M450',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M500',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M550',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M600',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M650',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M700',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M750',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M800',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M900',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1000',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
+#                                  'GluGluHToWWTo2L2Nu_M200',
+#                                  'GluGluHToWWTo2L2Nu_M210',
+#                                  'GluGluHToWWTo2L2Nu_M230',
+#                                  'GluGluHToWWTo2L2Nu_M250',
+#                                  'GluGluHToWWTo2L2Nu_M270',
+#                                  'GluGluHToWWTo2L2Nu_M300',
+#                                  'GluGluHToWWTo2L2Nu_M350',
+#                                  'GluGluHToWWTo2L2Nu_M400',
+#                                  'GluGluHToWWTo2L2Nu_M450',
+#                                  'GluGluHToWWTo2L2Nu_M500',
+#                                  'GluGluHToWWTo2L2Nu_M550',
+#                                  'GluGluHToWWTo2L2Nu_M600',
+#                                  'GluGluHToWWTo2L2Nu_M650',
+#                                  'GluGluHToWWTo2L2Nu_M700',
+#                                  'GluGluHToWWTo2L2Nu_M750',
+#                                  #'GluGluHToWWTo2L2Nu_M750_NWA',
+#                                  'GluGluHToWWTo2L2Nu_M800',
+#                                  'GluGluHToWWTo2L2Nu_M900',
+#                                  'GluGluHToWWTo2L2Nu_M1000',
+#                                  # .... and new JHU samples
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M200',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M210',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M230',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M250',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M270',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M300',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M350',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M400',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M450',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M500',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M550',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M600',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M650',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M700',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M750',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M800',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M900',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1000',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M1500',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2000',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M2500',
+#                                  'GluGluHToWWTo2L2Nu_JHUGen698_M3000',
 
 
                                   # ... VBF High Mass
