@@ -262,18 +262,18 @@ if __name__ == '__main__':
                           hName = 'histo_'+acoupling['sigName'].replace('${iWeight}',str(acoupling['Scans']['3D'][iScan][opValX+':'+opValY+':'+opValZ]))
                           inputHistos[iX][iY].append(inputFile.Get(baseDir+'/'+subDir+'/'+hName).Clone())
                         except:
-                          try:
-                            Fix = acoupling['ScansFix']['3D'][iScan][opValX+':'+opValY+':'+opValZ]
-                            print 'Missing point: ',opValX+':'+opValY+':'+opValZ,'--> Taking: ',Fix
-                          except:
+                         #try:
+                         #  Fix = acoupling['ScansFix']['3D'][iScan][opValX+':'+opValY+':'+opValZ]
+                         #  print 'Missing point: ',opValX+':'+opValY+':'+opValZ,'--> Taking: ',Fix
+                         #except:
                             print 'Missing point: ',opValX+':'+opValY+':'+opValZ,'--> Please provide acoupling[ScansFix] !!!!'
                             exit()
-                          hName = 'histo_'+acoupling['sigName'].replace('${iWeight}',str(acoupling['Scans']['3D'][iScan][Fix]))
-                          inputHistos[iX][iY].append(inputFile.Get(baseDir+'/'+subDir+'/'+hName).Clone())
-                          nBinVar=inputHistos[iX][iY][iZ].GetNbinsX()
-                          for iBinVar in range(nBinVar):
-                            Err=inputHistos[iX][iY][iZ].GetBinContent(iBinVar+1)*0.99
-                            inputHistos[iX][iY][iZ].SetBinError(iBinVar+1,Err)
+                         #hName = 'histo_'+acoupling['sigName'].replace('${iWeight}',str(acoupling['Scans']['3D'][iScan][Fix]))
+                         #inputHistos[iX][iY].append(inputFile.Get(baseDir+'/'+subDir+'/'+hName).Clone())
+                         #nBinVar=inputHistos[iX][iY][iZ].GetNbinsX()
+                         #for iBinVar in range(nBinVar):
+                         #  Err=inputHistos[iX][iY][iZ].GetBinContent(iBinVar+1)*0.99
+                         #  inputHistos[iX][iY][iZ].SetBinError(iBinVar+1,Err)
                   nBinVar=inputHistos[0][0][0].GetNbinsX()     
                   # ... Create & Fill output histograms
                   outputHistos = []
