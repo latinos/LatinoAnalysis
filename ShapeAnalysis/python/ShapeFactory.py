@@ -75,6 +75,13 @@ class ShapeFactory:
             for line in linesToAdd:
               ROOT.gROOT.ProcessLineSync(line)
         
+        #in case some samples need a compiled function 
+        for sampleName, sample in self._samples.iteritems():
+          if sample.has_key('linesToAdd'):
+            linesToAdd = sample['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
+        
         print " supercut = ", supercut
         
         if number != 99999 :
