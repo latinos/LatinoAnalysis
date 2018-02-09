@@ -76,10 +76,12 @@ if __name__ == '__main__':
     for key in inputFile.GetListOfKeys() :
       if key.IsFolder() and key.GetName() in cuts :
         baseDir = key.GetName()
+        outputFile.mkdir(baseDir) 
         inputFile.cd(baseDir)
         for skey in ROOT.gDirectory.GetListOfKeys() :
           if skey.IsFolder() and skey.GetName() in variables :        
             subDir = skey.GetName()
+            outputFile.mkdir(baseDir+'/'+subDir)
             inputFile.cd(baseDir+'/'+subDir)
             for iVar in variables:
 
@@ -109,9 +111,11 @@ if __name__ == '__main__':
                   nBinVar=inputHistos[0].GetNbinsX()
                   # ... Create & Fill output histograms
                   outputHistos = []
-                  outputFile.cd()
+                  outputFile.mkdir(baseDir+'/'+subDir+'/'+iScan)
+                  outputFile.cd(baseDir+'/'+subDir+'/'+iScan)
                   for iBinVar in range(nBinVar): 
-                    hName = 'histo_'+subDir+'_'+iScan+'_'+str(iBinVar)
+                    #hName = 'histo_'+subDir+'_'+iScan+'_'+str(iBinVar)
+                    hName = 'bin_content_par1_'+str(iBinVar)
                     outputHistos.append( ROOT.TH1D(hName,hName,nBinOp,xMinOp,xMaxOp) )
                     SMVal=inputHistos[idxSM].GetBinContent(iBinVar+1)
                     for opVal in operatorValues :
@@ -123,8 +127,9 @@ if __name__ == '__main__':
                   # ... Fitting model
                   outputFit = []
                   for iBinVar in range(nBinVar):
-                    fName = 'fit_'+subDir+'_'+iScan+'_'+str(iBinVar) 
-                    outputFit.append( ROOT.TF1(fName,"[0]+[1]*x+[2]*x*x",xMinOp,xMaxOp) )  
+                    #fName = 'fit_'+subDir+'_'+iScan+'_'+str(iBinVar) 
+                    fName = 'bin_content_par1_'+str(iBinVar)
+                    outputFit.append( ROOT.TF1(fName,"[0]+[1]*x+[2]*x*x",xMinOp*3,xMaxOp*3) )  
                     outputHistos[iBinVar].Fit(outputFit[iBinVar],"RME")
                     #ROOT.gPad.WaitPrimitive()
                   # ... Save all  
@@ -174,9 +179,11 @@ if __name__ == '__main__':
                   nBinVar=inputHistos[0][0].GetNbinsX()     
                   # ... Create & Fill output histograms
                   outputHistos = []
-                  outputFile.cd()
+                  outputFile.mkdir(baseDir+'/'+subDir+'/'+iScan.replace(":","_"))
+                  outputFile.cd(baseDir+'/'+subDir+'/'+iScan.replace(":","_"))
                   for iBinVar in range(nBinVar):
-                    hName = 'histo_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
+                    #hName = 'histo_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
+                    hName = 'bin_content_par1_par2_'+str(iBinVar)
                     outputHistos.append( ROOT.TH2D(hName,hName,nBinOpX,xMinOpX,xMaxOpX,nBinOpY,xMinOpY,xMaxOpY) )
                     SMVal=inputHistos[idxSMX][idxSMY].GetBinContent(iBinVar+1)
                     for opValX in operatorValuesX :
@@ -190,8 +197,9 @@ if __name__ == '__main__':
                   # ... Fitting model
                   outputFit = []
                   for iBinVar in range(nBinVar):
-                    fName = 'fit_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
-                    outputFit.append( ROOT.TF2(fName,"[0]+[1]*x+[2]*y+[3]*x*x+[4]*y*y+[5]*x*y",xMinOpX,xMaxOpX,xMinOpY,xMaxOpY) )
+                    #fName = 'fit_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
+                    fName = 'bin_content_par1_par2_'+str(iBinVar)
+                    outputFit.append( ROOT.TF2(fName,"[0]+[1]*x+[2]*y+[3]*x*x+[4]*y*y+[5]*x*y",xMinOpX*3.,xMaxOpX*3.,xMinOpY*3.,xMaxOpY*3.) )
                     outputHistos[iBinVar].Fit(outputFit[iBinVar],"RME")
                     #ROOT.gPad.WaitPrimitive()
 
@@ -277,9 +285,11 @@ if __name__ == '__main__':
                   nBinVar=inputHistos[0][0][0].GetNbinsX()     
                   # ... Create & Fill output histograms
                   outputHistos = []
-                  outputFile.cd()
+                  outputFile.mkdir(baseDir+'/'+subDir+'/'+iScan.replace(":","_"))
+                  outputFile.cd(baseDir+'/'+subDir+'/'+iScan.replace(":","_"))
                   for iBinVar in range(nBinVar):
-                    hName = 'histo_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
+                    #hName = 'histo_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
+                    hName = 'bin_content_par1_par2_par3_'+str(iBinVar)
                     outputHistos.append( ROOT.TH3D(hName,hName,nBinOpX,xMinOpX,xMaxOpX,nBinOpY,xMinOpY,xMaxOpY,nBinOpZ,xMinOpZ,xMaxOpZ) )
                     SMVal=inputHistos[idxSMX][idxSMY][idxSMZ].GetBinContent(iBinVar+1)
                     for opValX in operatorValuesX :
@@ -295,8 +305,9 @@ if __name__ == '__main__':
                   # ... Fitting model
                   outputFit = []
                   for iBinVar in range(nBinVar):
-                    fName = 'fit_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
-                    outputFit.append( ROOT.TF3(fName,"[0]+[1]*x+[2]*y+[3]*x*x+[4]*y*y+[5]*x*y+[6]*z+[7]*z*z+[8]*x*z+[9]*y*z",xMinOpX,xMaxOpX,xMinOpY,xMaxOpY,xMinOpZ,xMaxOpZ) )
+                    #fName = 'fit_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
+                    fName = 'bin_content_par1_par2_par3_'+str(iBinVar)
+                    outputFit.append( ROOT.TF3(fName,"[0]+[1]*x+[2]*y+[3]*x*x+[4]*y*y+[5]*x*y+[6]*z+[7]*z*z+[8]*x*z+[9]*y*z",xMinOpX*3.,xMaxOpX*3.,xMinOpY*3.,xMaxOpY*3.,xMinOpZ*3.,xMaxOpZ*3.) )
                     outputHistos[iBinVar].Fit(outputFit[iBinVar],"RME")
 
                   # ... Save all  
