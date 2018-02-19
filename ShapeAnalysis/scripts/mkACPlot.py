@@ -115,7 +115,7 @@ if __name__ == '__main__':
                   outputFile.cd(baseDir+'/'+subDir+'/'+iScan)
                   for iBinVar in range(nBinVar): 
                     #hName = 'histo_'+subDir+'_'+iScan+'_'+str(iBinVar)
-                    hName = 'bin_content_par1_'+str(iBinVar)
+                    hName = 'bin_content_par1_'+str(iBinVar+1)
                     outputHistos.append( ROOT.TH1D(hName,hName,nBinOp,xMinOp,xMaxOp) )
                     SMVal=inputHistos[idxSM].GetBinContent(iBinVar+1)
                     for opVal in operatorValues :
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                   outputFit = []
                   for iBinVar in range(nBinVar):
                     #fName = 'fit_'+subDir+'_'+iScan+'_'+str(iBinVar) 
-                    fName = 'bin_content_par1_'+str(iBinVar)
+                    fName = 'bin_content_par1_'+str(iBinVar+1)
                     outputFit.append( ROOT.TF1(fName,"[0]+[1]*x+[2]*x*x",xMinOp*3,xMaxOp*3) )  
                     outputHistos[iBinVar].Fit(outputFit[iBinVar],"RME")
                     #ROOT.gPad.WaitPrimitive()
@@ -183,7 +183,7 @@ if __name__ == '__main__':
                   outputFile.cd(baseDir+'/'+subDir+'/'+iScan.replace(":","_"))
                   for iBinVar in range(nBinVar):
                     #hName = 'histo_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
-                    hName = 'bin_content_par1_par2_'+str(iBinVar)
+                    hName = 'bin_content_par1_par2_'+str(iBinVar+1)
                     outputHistos.append( ROOT.TH2D(hName,hName,nBinOpX,xMinOpX,xMaxOpX,nBinOpY,xMinOpY,xMaxOpY) )
                     SMVal=inputHistos[idxSMX][idxSMY].GetBinContent(iBinVar+1)
                     for opValX in operatorValuesX :
@@ -198,7 +198,7 @@ if __name__ == '__main__':
                   outputFit = []
                   for iBinVar in range(nBinVar):
                     #fName = 'fit_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
-                    fName = 'bin_content_par1_par2_'+str(iBinVar)
+                    fName = 'bin_content_par1_par2_'+str(iBinVar+1)
                     outputFit.append( ROOT.TF2(fName,"[0]+[1]*x+[2]*y+[3]*x*x+[4]*y*y+[5]*x*y",xMinOpX*3.,xMaxOpX*3.,xMinOpY*3.,xMaxOpY*3.) )
                     outputHistos[iBinVar].Fit(outputFit[iBinVar],"RME")
                     #ROOT.gPad.WaitPrimitive()
@@ -289,7 +289,7 @@ if __name__ == '__main__':
                   outputFile.cd(baseDir+'/'+subDir+'/'+iScan.replace(":","_"))
                   for iBinVar in range(nBinVar):
                     #hName = 'histo_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
-                    hName = 'bin_content_par1_par2_par3_'+str(iBinVar)
+                    hName = 'bin_content_par1_par2_par3_'+str(iBinVar+1)
                     outputHistos.append( ROOT.TH3D(hName,hName,nBinOpX,xMinOpX,xMaxOpX,nBinOpY,xMinOpY,xMaxOpY,nBinOpZ,xMinOpZ,xMaxOpZ) )
                     SMVal=inputHistos[idxSMX][idxSMY][idxSMZ].GetBinContent(iBinVar+1)
                     for opValX in operatorValuesX :
@@ -306,7 +306,7 @@ if __name__ == '__main__':
                   outputFit = []
                   for iBinVar in range(nBinVar):
                     #fName = 'fit_'+subDir+'_'+iScan.replace(":","_")+'_'+str(iBinVar)
-                    fName = 'bin_content_par1_par2_par3_'+str(iBinVar)
+                    fName = 'bin_content_par1_par2_par3_'+str(iBinVar+1)
                     outputFit.append( ROOT.TF3(fName,"[0]+[1]*x+[2]*y+[3]*x*x+[4]*y*y+[5]*x*y+[6]*z+[7]*z*z+[8]*x*z+[9]*y*z",xMinOpX*3.,xMaxOpX*3.,xMinOpY*3.,xMaxOpY*3.,xMinOpZ*3.,xMaxOpZ*3.) )
                     outputHistos[iBinVar].Fit(outputFit[iBinVar],"RME")
 
