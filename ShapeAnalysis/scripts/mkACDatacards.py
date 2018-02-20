@@ -35,13 +35,15 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
    nParam=0
    for iParam in iScan.split(":"):
      nParam+=1
-     operatorValues = sorted(set([x.split(":")[nParam-1] for x in acoupling['Scans'][iDim][iScan].keys()]),key=float)
-     operatorValuesFloat = [float(x) for x in operatorValues] 
-     idxSM  = operatorValuesFloat.index(0.)
-     binWOp = operatorValuesFloat[idxSM+1]-operatorValuesFloat[idxSM]
-     nBinOp = len(operatorValuesFloat)
-     xMinOp = operatorValuesFloat[0]-binWOp/2.
-     xMaxOp = operatorValuesFloat[nBinOp-1]+binWOp/2.
+#    operatorValues = sorted(set([x.split(":")[nParam-1] for x in acoupling['Scans'][iDim][iScan].keys()]),key=float)
+#    operatorValuesFloat = [float(x) for x in operatorValues] 
+#    idxSM  = operatorValuesFloat.index(0.)
+#    binWOp = operatorValuesFloat[idxSM+1]-operatorValuesFloat[idxSM]
+#    nBinOp = len(operatorValuesFloat)
+#    xMinOp = operatorValuesFloat[0]-binWOp/2.
+#    xMaxOp = operatorValuesFloat[nBinOp-1]+binWOp/2.
+     xMinOp = acoupling['operatorRange'][iParam][0]
+     xMaxOp = acoupling['operatorRange'][iParam][1]
      f.write('par'+str(nParam)+'Name = ' + iParam + '\n')
      f.write('par'+str(nParam)+'Low  = ' + str(xMinOp) + '\n')
      f.write('par'+str(nParam)+'High = ' + str(xMaxOp) + '\n')
@@ -225,9 +227,10 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
    rootFile = os.path.dirname(datacard_eft_ac) + '/signal_proc_' + iCut + '.root' # necessary for EFT framework
    print 'RootFile  : ',rootFile
    fOut = ROOT.TFile.Open(rootFile,'RECREATE')
-
-   fIn.cd(iCut+'/'+iVar+'/'+iScan) 
+   
+   fIn.cd(iCut+'/'+iVar+'/'+iScan.replace(":","_")) 
    keyList = ROOT.gDirectory.GetListOfKeys()
+   print keyList
    fOut.cd() 
    for key in keyList:
      obj = key.ReadObj()
@@ -238,6 +241,29 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
    # close Files
    fIn.Close()
    fOut.Close()
+
+def EFTWorkspace(iDim,iScan,iCut,iVar,datacard_dir_sm):
+
+    # Prepare EFT Workspace and Datacards
+    datacard_dir_ac = datacard_dir_sm+'_'+iScan.replace(":","_")
+    datacard_eft_ac = datacard_dir_ac+'/eftparam.txt'
+    command=AC_cmd+' --config='+datacard_eft_ac+' --basepath='+os.getcwd()+'/'+datacard_dir_ac
+    command+=' ; mv aC_'+iCut+'.txt '+datacard_dir_ac
+    command+=' ; mv '+iCut+'_ws.root '+datacard_dir_ac
+    os.system(command)
+    print command
+    # Prepare COMBINE Workspace
+    if iDim == '1D' : model = 'par1_TF1_Model'
+    if iDim == '2D' : model = 'par1par2_TF2_Model'
+    if iDim == '3D' : model = 'par1par2par3_TF3_Model'
+    command='cd '+datacard_dir_ac+' ; '
+    command+='text2workspace.py -m 125 aC_'+iCut+'.txt -P CombinedEWKAnalysis.CommonTools.ACModel:'+model+' \
+              --PO channels='+iCut+' --PO poi='+iScan.replace(":",",")+' --PO basepath=.'
+    for iOp in iScan.split(":") :
+       command+=' --PO range_'+iOp+'='+str(acoupling['operatorRange'][iOp][0])+','+str(acoupling['operatorRange'][iOp][1])
+    print command
+    os.system(command)
+
 
 
 if __name__ == '__main__':
@@ -322,23 +348,28 @@ if __name__ == '__main__':
           for iScan in acoupling['Scans']['1D']:
             # Create Inputs
             DC2EFT(dc,'1D',iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,opt.inputFile)
-            # Prepare AC Workspace and datacards
+            # Prepare AC Workspace and datacards and Combine Workspace
+            EFTWorkspace('1D',iScan,iCut,iVar,datacard_dir_sm)
+
+            # Limits
             datacard_dir_ac = datacard_dir_sm+'_'+iScan.replace(":","_")
-            datacard_eft_ac = datacard_dir_ac+'/eftparam.txt'
-            command=AC_cmd+' --config='+datacard_eft_ac+' --basepath='+datacard_dir_ac
-            command+=' ; mv aC_'+iCut+'.txt '+datacard_dir_ac
-            command+=' ; mv '+iCut+'_ws.root '+datacard_dir_ac
-            os.system(command)
+            command='cd '+datacard_dir_ac+' ; '
+            command+='combine aC_ww_0jet_em.root -M MultiDimFit -P '+iScan+' --floatOtherPOIs=0 --algo=grid --points=100 --minimizerStrategy=2 -t -1 --expectSignal=1 '
             print command
-            # Prepare COMBINE Workspace
-            command='cd '+datacard_dir_ac+' ; '  
-            command+='text2workspace.py -m 125 aC_'+iCut+'.txt -P CombinedEWKAnalysis.CommonTools.ACModel:par1_TF1_Model \
-                      --PO channels='+iCut+' --PO poi='+iScan.replace(":",",")+' --PO basepath=.'
-            print iScan , iScan.split(":")
-            for iOp in iScan.split(":") : 
-              command+=' --PO range_'+iOp+'='+str(acoupling['operatorRange'][iOp][0])+','+str(acoupling['operatorRange'][iOp][1])
+            #os.system(command) 
+
+        if '2D' in acoupling['ScanConfig'] and len(acoupling['ScanConfig']['2D']) > 0 :
+          for iScan in acoupling['Scans']['2D']:
+            # Create Inputs
+            DC2EFT(dc,'2D',iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,opt.inputFile)
+            # Prepare AC Workspace and datacards and Combine Workspace
+            EFTWorkspace('2D',iScan,iCut,iVar,datacard_dir_sm)
+
+            # Limits
+            datacard_dir_ac = datacard_dir_sm+'_'+iScan.replace(":","_")
+            command='cd '+datacard_dir_ac+' ; '
+            command+='combine aC_ww_0jet_em.root -M MultiDimFit -P '+iScan.split(":")[0]+' -P '+iScan.split(":")[1]+' --floatOtherPOIs=0 --algo=grid --points=1000 --minimizerStrategy=2 -t -1 --expectSignal=1 '
             print command
-            os.system(command)
 
 
- 
+
