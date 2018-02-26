@@ -76,15 +76,19 @@ if __name__ == '__main__':
     for key in inputFile.GetListOfKeys() :
       if key.IsFolder() and key.GetName() in cuts :
         baseDir = key.GetName()
+        print 'baseDir= ', baseDir
         outputFile.mkdir(baseDir) 
         inputFile.cd(baseDir)
         for skey in ROOT.gDirectory.GetListOfKeys() :
           if skey.IsFolder() and skey.GetName() in variables :        
             subDir = skey.GetName()
+            iVar   = subDir
+            print 'subDir= ',subDir
             outputFile.mkdir(baseDir+'/'+subDir)
             inputFile.cd(baseDir+'/'+subDir)
-            for iVar in variables:
-
+            #for iVar in variables:
+            if True:
+              print 'iVar= ',iVar
               # 1D Scan
               if '1D' in acoupling['ScanConfig'] and len(acoupling['ScanConfig']['1D']) > 0 :
                 for iScan in acoupling['Scans']['1D']:

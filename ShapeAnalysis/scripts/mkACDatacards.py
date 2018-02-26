@@ -134,38 +134,97 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
    # ... Data Name
    f.write('data_name=data_obs \n') 
 
-   # Signal shape syst
+   # Signal shape syst (UNcorrelated ONLY)
    SYST=[]
+   SYSTCORR=[]
    for iSystType in dc.content['systs']: 
      if 'shape' in iSystType:
        for iSyst in dc.content['systs'][iSystType]:
+         iCount=0
+         for iVal in dc.content['systs'][iSystType][iSyst]:
+           if not iVal == '-' : iCount+=1
          if not dc.content['systs'][iSystType][iSyst][SigPos] == '-' :
-           SYST.append('signal_'+SigName+'_'+iSyst)
+           if iCount == 1 :
+             SYST.append('signal_'+SigName+'_'+iSyst)
+           else:
+             SYSTCORR.append('SigBkgdCorr_'+SigName+'_'+iSyst)
+   if len(SYST)+len(SYSTCORR)>0 : f.write('signal_shape_syst=')  
    if len(SYST)>0 :
-     f.write('signal_shape_syst=')  
      for i in range (0,len(SYST)) : 
        f.write(SYST[i])
-       if i < len(SYST)-1 : f.write(',')
-     f.write('\n')
+       if i < len(SYST)-1 or len(SYSTCORR)>0 : f.write(',')
+   if len(SYSTCORR)>0 :
+     for i in range (0,len(SYSTCORR)) :
+       f.write(SYSTCORR[i])
+       if i < len(SYSTCORR)-1 : f.write(',')    
+   f.write('\n')
    
-   # Bkgd Shape syst
+   # Bkgd Shape syst (UNcorrelated ONLY)
    for iBkg in range(0,len(BkgPos)) : 
      iPos=BkgPos[iBkg]
      SYST=[]
+     SYSTCORR=[]
      for iSystType in dc.content['systs']:
        if 'shape' in iSystType:
          for iSyst in dc.content['systs'][iSystType]:
+           iCount=0
+           for iVal in dc.content['systs'][iSystType][iSyst]:
+             if not iVal == '-' : iCount+=1
            if not dc.content['systs'][iSystType][iSyst][iPos] == '-' :
-             SYST.append('background_'+BkgNames[iBkg]+'_'+iSyst)
+             if iCount == 1 :
+               SYST.append('background_'+BkgNames[iBkg]+'_'+iSyst)
+             else:
+               SYSTCORR.append('SigBkgdCorr_'+BkgNames[iBkg]+'_'+iSyst)
      f.write('bkg'+str(iBkg+1)+'_name=background_'+BkgNames[iBkg]+'\n')
+     if len(SYST)+len(SYSTCORR)>0 : f.write('bkg'+str(iBkg+1)+'_shape_syst=')
      if len(SYST)>0 :
-       f.write('bkg'+str(iBkg+1)+'_shape_syst=')
        for i in range (0,len(SYST)) :
          f.write(SYST[i])
-         if i < len(SYST)-1 : f.write(',')
-       f.write('\n')
+         if i < len(SYST)-1 or len(SYSTCORR)>0 : f.write(',')
+     if len(SYSTCORR)>0 :
+       for i in range (0,len(SYSTCORR)) :
+         f.write(SYSTCORR[i])
+         if i < len(SYSTCORR)-1 : f.write(',')
+     f.write('\n')
+   
+   # Correlated systematics
 
-   f.write('NSigBkg_corr_unc = 0 \n')
+   NSigBkg_corr_unc = 0
+   SYSTCORR=[]
+   for iSystType in dc.content['systs']:
+     if 'shape' in iSystType:
+       for iSyst in dc.content['systs'][iSystType]:
+         iCount=0
+         for iVal in dc.content['systs'][iSystType][iSyst]:
+           if not iVal == '-' : iCount+=1
+         if iCount > 1 : 
+           NSigBkg_corr_unc+=1
+           SYSTCORR.append(iSyst)
+
+   f.write('\n')
+   f.write('NSigBkg_corr_unc = '+str(NSigBkg_corr_unc)+' \n')
+   if len(SYSTCORR)>0 :
+     #print SYSTCORR 
+     i=0
+     for iSyst in SYSTCORR : 
+        i+=1
+        #print iSyst, i
+        f.write('correlated_SigBkg_unc'+str(i)+'_name='+iSyst+'\n')
+        #print iSyst
+        #print dc.content['systs']['shape'][iSyst]
+        HISTS=[]
+        if not dc.content['systs']['shape'][iSyst][SigPos] == '-' : HISTS.append('SigBkgdCorr_'+SigName+'_'+iSyst)
+        for iBkg in range(0,len(BkgPos)) :
+          if not dc.content['systs']['shape'][iSyst][BkgPos[iBkg]] == '-' : HISTS.append('SigBkgdCorr_'+BkgNames[iBkg]+'_'+iSyst)
+        #print HISTS
+        if len(HISTS)>0 :
+          f.write('correlated_SigBkg_unc'+str(i)+'=')
+          for j in range (0,len(HISTS)) :
+            f.write(HISTS[j])
+            if j < len(HISTS)-1 : f.write(',')
+        f.write('\n')
+        
+         
 
    # Close TEXT file 
    f.close()
@@ -192,9 +251,11 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
      if 'shape' in iSystType:
        for iSyst in dc.content['systs'][iSystType]:
          if not dc.content['systs'][iSystType][iSyst][SigPos] == '-' :
-           hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Up').Clone('signal_'+SigName+'_'+iSyst+'Up')
+           if iSyst in SYSTCORR :  prefix='SigBkgdCorr_'
+           else                 :  prefix='signal_' 
+           hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Up').Clone(prefix+SigName+'_'+iSyst+'Up')
            hTmp.Write()       
-           hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Down').Clone('signal_'+SigName+'_'+iSyst+'Down')
+           hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Down').Clone(prefix+SigName+'_'+iSyst+'Down')
            hTmp.Write()       
    fIn.Close()
 
@@ -211,9 +272,11 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
        if 'shape' in iSystType:
          for iSyst in dc.content['systs'][iSystType]:
            if not dc.content['systs'][iSystType][iSyst][iPos] == '-' :
-             hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Up').Clone('background_'+BkgNames[iBkg]+'_'+iSyst+'Up')
+             if iSyst in SYSTCORR :  prefix='SigBkgdCorr_'
+             else                 :  prefix='background_' 
+             hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Up').Clone(prefix+BkgNames[iBkg]+'_'+iSyst+'Up')
              hTmp.Write() 
-             hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Down').Clone('background_'+BkgNames[iBkg]+'_'+iSyst+'Down')
+             hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Down').Clone(prefix+BkgNames[iBkg]+'_'+iSyst+'Down')
              hTmp.Write() 
    fIn.Close()
    

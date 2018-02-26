@@ -143,7 +143,7 @@ class card():
 			# systs 
 			elif self.advance[4]:
 				parsed = False
-				for systtype in ['lnN','lnU','shape','gmN','param']:
+				for systtype in ['lnN','lnU','shape','gmN','param','rateParam']:
 					if fields[1] == systtype or fields[1][0:5] == systtype:
 						# append if new
 						if not fields[1] in self.content['systs']: self.content['systs'][fields[1]] = {}
