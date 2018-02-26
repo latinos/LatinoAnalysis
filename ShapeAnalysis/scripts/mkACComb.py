@@ -5,7 +5,18 @@ import LatinoAnalysis.Gardener.hwwtools as hwwtools
 
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
+from LatinoAnalysis.Tools.manipDataCard import card as cardTools
 
+def getiBkg( card , iSample ):
+   dc=cardTools(card)
+   iPos=0
+   Nbkg=0
+   for iProc in dc.content['block2']['processId']: 
+     if float(iProc)>0:
+       Nbkg+=1
+       if dc.content['block2']['process'][iPos] == iSample : return Nbkg
+     iPos+=1
+   return 0
 
 if __name__ == '__main__':
 
@@ -29,11 +40,11 @@ if __name__ == '__main__':
     print " Nuissances         = ", opt.nuisancesFile
     print " Combination Cfg    = ", opt.combcfg
 
-#   samples = {}
-#   if os.path.exists(opt.samplesFile) :
-#     handle = open(opt.samplesFile,'r')
-#     exec(handle)
-#     handle.close()
+    samples = {}
+    if os.path.exists(opt.samplesFile) :
+      handle = open(opt.samplesFile,'r')
+      exec(handle)
+      handle.close()
 
     variables = {}
     if os.path.exists(opt.variablesFile) :
@@ -53,14 +64,14 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
-#   nuisances = {}
-#   if opt.nuisancesFile == None :
-#      print " Please provide the nuisances structure if you want to add nuisances "
+    nuisances = {}
+    if opt.nuisancesFile == None :
+       print " Please provide the nuisances structure if you want to add nuisances "
 
-#   if os.path.exists(opt.nuisancesFile) :
-#     handle = open(opt.nuisancesFile,'r')
-#     exec(handle)
-#     handle.close()
+    if os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close()
 
     # acoupling = {}     
     h=open(opt.accfg,'r')
@@ -92,10 +103,22 @@ if __name__ == '__main__':
               os.system(cpcmd)
             command+=' > '+combFile+'.tmp '
             os.system(command)
-            os.system('cat '+combFile +'.tmp | sed "s:datacards_em/.*_'+iScan.replace(":","_")+'/::" > '+ combFile) 
+            os.system('cat '+combFile +'.tmp | sed "s:'+opt.outputDirDatacard+'/.*_'+iScan.replace(":","_")+'/::" > '+ combFile) 
 
             # Add back rateParam
 
+            for iSyst in nuisances:
+              if nuisances[iSyst]['type'] == 'rateParam' and 'cuts' in nuisances[iSyst]:
+                Test=True
+                for iCut in nuisances[iSyst]['cuts']:
+                  if not iCut in combs[iComb] : Test=False
+                if Test: 
+                  f = open(combFile,'a+')
+                  for iCut in nuisances[iSyst]['cuts']:
+                    for iSample in nuisances[iSyst]['samples']:
+                      iBkg=getiBkg( opt.outputDirDatacard+'/'+iCut+'/'+combs[iComb][iCut]+'/datacard.txt' , iSample ) 
+                      f.write(nuisances[iSyst]['name']+'   rateParam   '+iCut+'   anomalousCoupling_bkg'+str(iBkg)+'_'+iCut+'   '+str(nuisances[iSyst]['samples'][iSample])+'\n')
+                  f.close()
 
             # Create final Worspace
             if iDim == '1D' : model = 'par1_TF1_Model'
