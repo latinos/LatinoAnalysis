@@ -200,7 +200,7 @@ for iProd in prodList :
 
       if iMethod == 'gDoc'    : xsDB.readGDoc(Productions[iProd]['gDocID'])
       if iMethod == 'Python'  : xsDB.readPython(xsFile)
-      if iMethod == 'YellowR' : xsDB.readYR('YR4prel','13TeV')
+      if iMethod == 'YellowR' : xsDB.readYR('YR4','13TeV')
 
   # Find existing Input files 
   #if not options.iniStep in Steps: options.iniStep = 'Prod'

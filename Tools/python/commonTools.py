@@ -274,7 +274,7 @@ def getBaseW(directory,Samples = [] ):
     CMSSW=os.environ["CMSSW_BASE"]
     xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
     xsDB.readPython(xsFile)
-    xsDB.readYR('YR4prel','13TeV')
+    xsDB.readYR('YR4','13TeV')
     xs = []
     for iSample in Samples :
       xs.append( xsDB.get(iSample) )
