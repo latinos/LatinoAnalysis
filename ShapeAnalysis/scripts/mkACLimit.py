@@ -6,11 +6,19 @@ import LatinoAnalysis.Gardener.hwwtools as hwwtools
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
+from LatinoAnalysis.Tools.combPlots   import *
+
+# Job Splitting
+nGridPoints = {}
+nGridPoints['1D'] = 100
+nGridPoints['2D'] = 10000
+nGridSplit = {}
+nGridSplit['1D'] = 1
+nGridSplit['2D'] = 20
+
+
 
 def lim_compute():
-    nGridPoints = {}
-    nGridPoints['1D'] = '100'
-    nGridPoints['2D'] = '10000'    
 
     commands={}
     scanList=[]
@@ -19,20 +27,34 @@ def lim_compute():
         for iDim in ['1D','2D'] :
           if iDim in acoupling['ScanConfig'] and len(acoupling['ScanConfig'][iDim]) > 0 :
             for iScan in acoupling['ScanConfig'][iDim]:
-               scanList.append(iScan.replace(":","_")+'_'+iComb+'_'+iVar)
                datacard_dir_ac = os.getcwd()+'/'+opt.outputDirDatacard+'/'+iComb+'/'+iVar+'_'+iScan.replace(":","_")
-               # Expected Limits
-               command='cd '+datacard_dir_ac+' ; '
-               command+='combine aC_'+iComb+'.root -M MultiDimFit -n Exp -m 125 --floatOtherPOIs=0 --algo=grid --points='+nGridPoints[iDim]+' --minimizerStrategy=2 -t -1 --expectSignal=1 '
-               for iPOI in iScan.split(":") : command+='-P '+iPOI+' '
-               command+=' &> LogExp.txt ; cd - '
-               commands['Exp,'+iScan.replace(":","_")+'_'+iComb+'_'+iVar]= command 
-               # Observed Limits
-               command='cd '+datacard_dir_ac+' ; '
-               command+='combine aC_'+iComb+'.root -M MultiDimFit -n Obs -m 125 --floatOtherPOIs=0 --algo=grid --points='+nGridPoints[iDim]+' --minimizerStrategy=2 '
-               for iPOI in iScan.split(":") : command+='-P '+iPOI+' '
-               command+=' &> LogObs.txt ; cd - '
-               if opt.unblind: commands['Obs,'+iScan.replace(":","_")+'_'+iComb+'_'+iVar] = command
+               if opt.batch:
+                 nJobs=nGridSplit[iDim]
+                 nPointsJob=nGridPoints[iDim]/nGridSplit[iDim]
+               else:
+                 nJobs=1
+                 nPointsJob=nGridPoints[iDim]
+               for iJob in xrange(1,nGridSplit[iDim]+1):
+                 namePF=''
+                 pointPF=''
+                 if not nGridSplit[iDim] == 1:
+                   namePF='_'+str(iJob)
+                   FPoint=(iJob-1)*nPointsJob
+                   LPoint=(iJob)*nPointsJob-1
+                   pointPF=' --firstPoint '+str(FPoint)+' --lastPoint '+str(LPoint)+' '
+                 scanList.append(iScan.replace(":","_")+'_'+iComb+'_'+iVar+namePF)
+                 # Expected Limits
+                 command='cd '+datacard_dir_ac+' ; '
+                 command+='combine aC_'+iComb+'.root -M MultiDimFit -n Exp_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+namePF+' -m 125 --floatOtherPOIs=0 --algo=grid --points='+str(nGridPoints[iDim])+pointPF+' --minimizerStrategy=2 -t -1 --expectSignal=1 '
+                 for iPOI in iScan.split(":") : command+='-P '+iPOI+' '
+                 command+=' &> LogExp.txt ; cd - '
+                 commands['Exp,'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+namePF]= command 
+                 # Observed Limits
+                 command='cd '+datacard_dir_ac+' ; '
+                 command+='combine aC_'+iComb+'.root -M MultiDimFit -n Obs_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+namePF+' -m 125 --floatOtherPOIs=0 --algo=grid --points='+str(nGridPoints[iDim])+pointPF+' --minimizerStrategy=2 '
+                 for iPOI in iScan.split(":") : command+='-P '+iPOI+' '
+                 command+=' &> LogObs.txt ; cd - '
+                 if opt.unblind: commands['Obs,'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+namePF] = command
 
     if opt.batch: 
       if opt.unblind : targetList = ['Exp','Obs']
@@ -41,20 +63,87 @@ def lim_compute():
       for iJob in commands : jobs.Add(iJob.split(",")[1],iJob.split(",")[0],commands[iJob]) 
       jobs.Sub()
     else:
-      for iCommand in commands : os.system(iCommand)
+      for iJob in commands : os.system(commands[iJob])
 
 def lim_harvest():
-    print "Hello"
+    
+    for iComb in cutsVal:
+      for iVar in variables :
+        for iDim in ['1D','2D'] :
+          if iDim in acoupling['ScanConfig'] and len(acoupling['ScanConfig'][iDim]) > 0 :
+            for iScan in acoupling['ScanConfig'][iDim]:
+               datacard_dir_ac = os.getcwd()+'/'+opt.outputDirDatacard+'/'+iComb+'/'+iVar+'_'+iScan.replace(":","_")
+               if opt.batch and not nGridSplit[iDim] == 1:
+                 nJobs=nGridSplit[iDim]
+                 nPointsJob=nGridPoints[iDim]/nGridSplit[iDim]
+                 LimTypes=['Exp']
+                 if opt.unblind: LimTypes.append('Obs') 
+                 for iLim in LimTypes:
+                   srcFiles=[]
+                   for iJob in xrange(1,nGridSplit[iDim]+1): 
+                     allDone=True
+                     pidFile = jobDir+'mkACLim__'+opt.tag+'/mkACLim__'+opt.tag+'__'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'_'+str(iJob)+'__'+iLim+'.jid'
+                     if os.path.isfile(pidFile) :
+                       print '--> Job Running : ',pidFile
+                       allDone=False
+                     srcFile = datacard_dir_ac+'/higgsCombine'+iLim+'_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'_'+str(iJob)+'.MultiDimFit.mH125.root'
+                     srcFiles.append(srcFile)
+                     if not os.path.isfile(srcFile) :
+                       print '--> Missing root file: '+srcFile 
+                       allDone=False
+                     if allDone :
+                       command = 'cd '+datacard_dir_ac+' ; hadd -f higgsCombine'+iLim+'_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'.MultiDimFit.mH125.root '
+                       cleanup = ''
+                       for iFile in srcFiles:
+                         command+=' '+iFile
+                         cleanup+='rm '+iFile+' ; '
+                       os.system(command) 
+                       # os.system(cleanup)
 
 def lim_plot():
-    print "Hello"
+
+    for iComb in cutsVal:
+      for iVar in variables :
+        for iDim in ['1D','2D'] :
+          if iDim in acoupling['ScanConfig'] and len(acoupling['ScanConfig'][iDim]) > 0 :
+            for iScan in acoupling['ScanConfig'][iDim]:
+               datacard_dir_ac = os.getcwd()+'/'+opt.outputDirDatacard+'/'+iComb+'/'+iVar+'_'+iScan.replace(":","_")
+               LimFiles={}
+               LimFiles['Exp'] = datacard_dir_ac+'/higgsCombineExp_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'.MultiDimFit.mH125.root' 
+               if opt.unblind: 
+                 LimFiles['Obs'] = datacard_dir_ac+'/higgsCombineObs_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'.MultiDimFit.mH125.root'
+               print LimFiles
+               blind = not opt.unblind
+               plot=combPlot(opt.outputDirPlots,blind)
+               plotDic={}
+               plotDic['Keys'] = iScan.split(":")
+               plotDic['AxisTitle'] = []
+               plotDic['Min'] = []
+               plotDic['Max'] = []
+               plotDic['MinPlt'] = []
+               plotDic['MaxPlt'] = []
+               for iKey in plotDic['Keys'] : 
+                 plotDic['AxisTitle'].append(acoupling['operatorLatex'][iKey]) 
+                 plotDic['Min'].append(acoupling['operatorRange'][iKey][0])
+                 plotDic['Max'].append(acoupling['operatorRange'][iKey][1]) 
+                 plotDic['MinPlt'].append(acoupling['operatorPlot'][iKey][0]) 
+                 plotDic['MaxPlt'].append(acoupling['operatorPlot'][iKey][1])
+               # 2*NLL Limits:
+               plotDic['MinPlt'].append(0.)
+               plotDic['MaxPlt'].append(10.)
+
+               plotName = iScan.replace(":","_")+'_'+iComb+'_'+iVar
+               if iDim == '1D' : plot.MDF1D(plotName,plotDic,LimFiles)
+               if iDim == '2D' : plot.MDF2D(plotName,plotDic,LimFiles)
 
 if __name__ == '__main__':
+
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
     parser.add_option('--tag'            , dest='tag'            , help='Tag used for the shape file name'           , default=None)
+    parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--outputDirDatacard' , dest='outputDirDatacard' , help='output directory'                          , default='./')
     parser.add_option('--combineLocation'   , dest='combineLocation'   , help='Combine CMSSW Directory'                   , default='./')
     parser.add_option('--accfg'          , dest='accfg'          , help='AC coupling dictionary' , default='acoupling.py' , type='string' )
