@@ -18,11 +18,10 @@ gROOT.ProcessLine('.L '+os.environ['CMSSW_BASE']+'/src/LatinoAnalysis/Tools/src/
 gStyle.SetOptTitle(0)
 gStyle.SetOptStat(0)
 
-CMSText=["CMS preliminary","CMS","CMS Projection"] 
 
 class combPlot :
 
-   def __init__(self,plotsdir,blind=True,logX=False,logY=False,iTitle=0,sLumi=''):
+   def __init__(self,plotsdir,blind=True,logX=False,logY=False,sLumi='',sExtra='Preliminary'):
 
        self.blind   = blind
        self.logX    = logX
@@ -36,8 +35,8 @@ class combPlot :
        self.plotsdir= plotsdir
        os.system('mkdir -p '+self.plotsdir)
        gStyle.SetPalette(1) 
-       self.sLumi  = sLumi
-       self.iTitle = iTitle
+       self.LumiText  = sLumi
+       self.ExtraText = sExtra
 
    def SetBatch():
        gROOT.SetBatch()
@@ -104,6 +103,60 @@ class combPlot :
           return _lm, _mh, _var 
         else:
           return _lm, _mh
+
+   def addTitle(self):
+       self.c1.cd()
+ 
+       x1=0.10
+       y1=0.90
+       x2=0.99
+       y2=0.98
+       #if iCMS == 0 :
+       #  fontSize = 0.04 
+       #  if self.isSquareCanvas : fontSize = 0.027 
+       #else:
+       #  fontSize = 0.04 
+       #  if self.isSquareCanvas : fontSize = 0.033
+       fontSize = 0.04
+       if self.isSquareCanvas : fontSize = 0.033  
+ 
+       self.cmsprel = TPaveText(x1,y1,x2,y2,"brtlNDC");  
+       self.cmsprel.SetTextSize(fontSize*1.3);
+       self.cmsprel.SetFillColor(0)
+       self.cmsprel.SetFillStyle(0)
+       self.cmsprel.SetLineStyle(0)
+       self.cmsprel.SetLineWidth(0)
+       self.cmsprel.SetTextAlign(11)
+       self.cmsprel.SetTextFont(61);
+       self.cmsprel.AddText("CMS");
+       self.cmsprel.SetBorderSize(0);
+       self.cmsprel.Draw("same");
+
+       self.status = TPaveText(x1*2.1,y1*1.01,x2,y2,"brtlNDC");
+       self.status.SetTextSize(fontSize);
+       self.status.SetFillColor(0)
+       self.status.SetFillStyle(0)
+       self.status.SetLineStyle(0)
+       self.status.SetLineWidth(0)
+       self.status.SetTextAlign(11)
+       self.status.SetTextFont(52);
+       self.status.AddText(self.ExtraText)
+       self.status.SetBorderSize(0);
+       self.status.Draw("same");
+
+
+       self.lumi = TPaveText(x1,y1*1.01,x2,y2,"brtlNDC");  
+       self.lumi.SetTextSize(fontSize);
+       self.lumi.SetFillColor(0)
+       self.lumi.SetFillStyle(0)
+       self.lumi.SetLineStyle(0)
+       self.lumi.SetLineWidth(0)
+       self.lumi.SetTextAlign(31)
+       self.lumi.SetTextFont(42);
+       self.lumi.AddText(self.LumiText);
+       self.lumi.SetBorderSize(0);
+       self.lumi.Draw("same");
+       print self.LumiText 
 
    def plotHorizCurve(self,Name='Curv',vX=[],vCent=[],Color=kBlack,Style=0,Width=2,Legend='None'):
        nP    = len(vX)
@@ -429,8 +482,7 @@ class combPlot :
 
        self.plotAllObj(Lines,True)
        self.plotObjLeg(LegList,plotName,'TopLeftLarge')
-       #self.plotObjLeg(LegList,self.combinations[iComb]['legend'],'TopLeftLarge')
-       #self.addTitle(self.iTitle,self.iLumi) 
+       self.addTitle()
 
        self.c1.cd()
        pt = TPaveText(minXP+0.04*dX,1.05,minXP+0.12*dX,1.5);
@@ -553,7 +605,7 @@ class combPlot :
        self.Obj2Plot['c68__'+objNameExp]['Obj'].Draw("same")  
        self.Obj2Plot['c95__'+objNameExp]['Obj'].Draw("same")  
        self.Obj2Plot['gr0__'+objNameExp]['Obj'].Draw("samep")  
-       #self.addTitle(self.iTitle,self.iLumi) 
+       self.addTitle()
        self.c1.Update() 
        self.Save(plotName+'_Exp')
        #self.Wait()
@@ -572,7 +624,7 @@ class combPlot :
          self.Obj2Plot['c68__'+objNameObs]['Obj'].Draw("same")  
          self.Obj2Plot['c95__'+objNameObs]['Obj'].Draw("same")  
          self.Obj2Plot['gr0__'+objNameObs]['Obj'].Draw("samep")  
-         self.addTitle(self.iTitle,self.iLumi) 
+         self.addTitle()
          self.c1.Update() 
          self.Save(plotName+'_Obs')
          #self.Wait()
@@ -617,7 +669,7 @@ class combPlot :
        self.plotObjLeg(LegList,plotName,'TopLeft')
        
 
-       #self.addTitle(self.iTitle,self.iLumi) 
+       self.addTitle()
        self.c1.Update() 
        self.Save(plotName)
  

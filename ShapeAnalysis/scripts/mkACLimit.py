@@ -114,7 +114,7 @@ def lim_plot():
                  LimFiles['Obs'] = datacard_dir_ac+'/higgsCombineObs_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'.MultiDimFit.mH125.root'
                print LimFiles
                blind = not opt.unblind
-               plot=combPlot(opt.outputDirPlots,blind)
+               plot=combPlot(opt.outputDirPlots,blind,False,False,legend['lumiEnrg'])
                plotDic={}
                plotDic['Keys'] = iScan.split(":")
                plotDic['AxisTitle'] = []
@@ -167,6 +167,13 @@ if __name__ == '__main__':
     print " Combination Cfg    = ", opt.combcfg
     print " UNBLIND ?          = ", opt.unblind
 
+    groupPlot = OrderedDict()
+    plot = {}
+    legend = {}
+    if os.path.exists(opt.plotFile) :
+      handle = open(opt.plotFile,'r')
+      exec(handle)
+      handle.close()
 
 
     variables = {}
