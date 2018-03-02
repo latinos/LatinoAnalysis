@@ -116,6 +116,7 @@ def lim_plot():
                blind = not opt.unblind
                plot=combPlot(opt.outputDirPlots,blind,False,False,legend['lumiEnrg'])
                plotDic={}
+               plotDic['LegTitle'] = acoupling['combsName'][iComb] 
                plotDic['Keys'] = iScan.split(":")
                plotDic['AxisTitle'] = []
                plotDic['Min'] = []

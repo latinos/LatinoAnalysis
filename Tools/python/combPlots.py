@@ -481,7 +481,7 @@ class combPlot :
        dnllExp = self.find2DNLLScan1D(gr,1.,minXP, maxXP)
 
        self.plotAllObj(Lines,True)
-       self.plotObjLeg(LegList,plotName,'TopLeftLarge')
+       self.plotObjLeg(LegList,PlotDic['LegTitle'],'TopLeftLarge')
        self.addTitle()
 
        self.c1.cd()
@@ -647,7 +647,7 @@ class combPlot :
        self.Obj2Plot['c95__'+objNameExp]['Obj'].Draw("same")  
        self.Obj2Plot['gr0__'+objNameExp]['Obj'].SetMarkerStyle(22)
        self.Obj2Plot['gr0__'+objNameExp]['Obj'].Draw("samep")  
-       self.Obj2Plot['gr0__'+objNameExp]['Legend']= 'Exp. for SM H'
+       self.Obj2Plot['gr0__'+objNameExp]['Legend']= 'Exp. for SM'
        LegList = ['gr0__'+objNameExp,'c68__'+objNameExp,'c95__'+objNameExp]
     
        if (not self.blind ) :
@@ -666,7 +666,7 @@ class combPlot :
          LegList = ['gr0__'+objNameObs,'c68__'+objNameObs,'c95__'+objNameObs,'gr0__'+objNameExp,'c68__'+objNameExp,'c95__'+objNameExp]
        
 
-       self.plotObjLeg(LegList,plotName,'TopLeft')
+       self.plotObjLeg(LegList,PlotDic['LegTitle'],'TopLeft')
        
 
        self.addTitle()
