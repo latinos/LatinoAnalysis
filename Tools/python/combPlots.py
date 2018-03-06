@@ -426,7 +426,9 @@ class combPlot :
        # Expected         
        self.readMDF1D(LimFiles['Exp'],PlotDic,'Exp')
        objNameExp='Exp'
+       if not 'gr__Exp' in self.Obj2Plot : return
        #objNameExp=iComb+'_'+str(iEnergy)+'_'+iModel+'_'+TargetBase+Fast+'Exp'+Ext+self.postFix
+       
 
        # Observed
        if (not self.blind ) : 

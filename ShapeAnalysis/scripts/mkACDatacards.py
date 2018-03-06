@@ -13,6 +13,17 @@ import os.path
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.manipDataCard import card as cardTools
 
+def EFTClone(fIn,hNameIn,hNameOut):
+
+    hIn   = fIn.Get(hNameIn).Clone()
+    nBins = hIn.GetNbinsX()
+    hOut  = ROOT.TH1D(hNameOut,hNameOut,nBins,0,nBins);
+    for iBin in range(0,nBins+1):
+      hOut.SetBinContent(iBin,hIn.GetBinContent(iBin)) 
+      hOut.SetBinError(iBin,hIn.GetBinError(iBin))
+
+    return hOut
+
 def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
 
 
@@ -237,15 +248,15 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
    # ... Data
    fIn = ROOT.TFile.Open(datacard_dir_sm+'/'+DataFile,'READ')
    fOut.cd()
-   hTmp = fIn.Get(DataHist).Clone("data_obs")
+   hTmp = EFTClone(fIn,DataHist,"data_obs")
    hTmp.Write()
    fIn.Close()
 
    # ... Signal
    fIn = ROOT.TFile.Open(datacard_dir_sm+'/'+MCFile,'READ')
    fOut.cd()
-   hTmp = fIn.Get(MCHist.replace('$PROCESS',SigName)).Clone(SigName)
-   hTmp.SetName('diboson')
+   hTmp = EFTClone(fIn,MCHist.replace('$PROCESS',SigName),'diboson')
+   #hTmp.SetName('diboson')
    hTmp.Write()
    for iSystType in dc.content['systs']:
      if 'shape' in iSystType:
@@ -253,9 +264,9 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
          if not dc.content['systs'][iSystType][iSyst][SigPos] == '-' :
            if iSyst in SYSTCORR :  prefix='SigBkgdCorr_'
            else                 :  prefix='signal_' 
-           hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Up').Clone(prefix+SigName+'_'+iSyst+'Up')
+           hTmp = EFTClone(fIn,MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Up',prefix+SigName+'_'+iSyst+'Up')
            hTmp.Write()       
-           hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Down').Clone(prefix+SigName+'_'+iSyst+'Down')
+           hTmp = EFTClone(fIn,MCHisSyst.replace('$PROCESS',SigName).replace('$SYSTEMATIC',iSyst)+'Down',prefix+SigName+'_'+iSyst+'Down')
            hTmp.Write()       
    fIn.Close()
 
@@ -266,7 +277,7 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
    fOut.cd()
    for iBkg in range(0,len(BkgPos)) :
      iPos=BkgPos[iBkg]
-     hTmp = fIn.Get(MCHist.replace('$PROCESS',BkgNames[iBkg])).Clone('background_'+BkgNames[iBkg])
+     hTmp = EFTClone(fIn,MCHist.replace('$PROCESS',BkgNames[iBkg]),'background_'+BkgNames[iBkg])
      hTmp.Write()
      for iSystType in dc.content['systs']:
        if 'shape' in iSystType:
@@ -274,9 +285,9 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
            if not dc.content['systs'][iSystType][iSyst][iPos] == '-' :
              if iSyst in SYSTCORR :  prefix='SigBkgdCorr_'
              else                 :  prefix='background_' 
-             hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Up').Clone(prefix+BkgNames[iBkg]+'_'+iSyst+'Up')
+             hTmp = EFTClone(fIn,MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Up',prefix+BkgNames[iBkg]+'_'+iSyst+'Up')
              hTmp.Write() 
-             hTmp = fIn.Get(MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Down').Clone(prefix+BkgNames[iBkg]+'_'+iSyst+'Down')
+             hTmp = EFTClone(fIn,MCHisSyst.replace('$PROCESS',BkgNames[iBkg]).replace('$SYSTEMATIC',iSyst)+'Down',prefix+BkgNames[iBkg]+'_'+iSyst+'Down')
              hTmp.Write() 
    fIn.Close()
    
