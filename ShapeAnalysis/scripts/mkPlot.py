@@ -2262,7 +2262,17 @@ class ShapeFactory:
          L = ROOT.Math.gamma_quantile (alpha/2,numberEvents,1.)
        U = 0
        if numberEvents==0 :
-         U = ROOT.Math.gamma_quantile_c (alpha,numberEvents+1,1.) 
+         #
+         # Poisson error agreed in the CMS statistics committee
+         # see: https://hypernews.cern.ch/HyperNews/CMS/get/statistics/263.html
+         # and https://hypernews.cern.ch/HyperNews/CMS/get/HIG-16-042/32/1/1/1/1/1.html
+         # and https://twiki.cern.ch/twiki/bin/viewauth/CMS/PoissonErrorBars
+         # to avoid flip-flop.
+         # The commented version would have created 1.147 for 0 observed events
+         # while now we get 1.84 in the case of 0 observed events
+         #
+         U = ROOT.Math.gamma_quantile_c (alpha/2,numberEvents+1,1.) 
+         #U = ROOT.Math.gamma_quantile_c (alpha,numberEvents+1,1.) 
          #print "u = ", U
        else :
          U = ROOT.Math.gamma_quantile_c (alpha/2,numberEvents+1,1.)
