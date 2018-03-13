@@ -2,7 +2,7 @@
 
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
-
+from collections import OrderedDict
 
 # ROOT
 import ROOT
@@ -12,6 +12,8 @@ from ROOT import *
 from LatinoAnalysis.Tools.commonTools import *
 import LatinoAnalysis.Tools.rootlogonTDR
 
+# PlotFactory
+from LatinoAnalysis.ShapeAnalysis.PlotFactory import PlotFactory
 
 def SaveCanvas(c1,Name):
     c1.SaveAs(opt.outputDirPlots+'/'+Name+'.pdf')
@@ -245,6 +247,7 @@ def plot_plots():
       exit()
 
     # ... Clone histograms 
+    SigNames = {}
     for iCut in cuts:
       fOut.mkdir(iCut)
       for iVar in variables :
@@ -266,16 +269,27 @@ def plot_plots():
             if iDim in acoupling['PlotConfig'] and len(acoupling['PlotConfig'][iDim]) > 0 :
               for iPlot in acoupling['PlotConfig'][iDim]:
                 print '---> Creating: ',iPlot,' : ',acoupling['PlotConfig'][iDim][iPlot]
-                if iDim == '1D' : hName = 'histo_ACSig_'+iPlot+str(acoupling['PlotConfig'][iDim][iPlot][0]).replace('.','p').replace('-','m')
-                if iDim == '2D' : hName = 'histo_ACSig_'+iPlot.split(':')[0]+str(acoupling['PlotConfig'][iDim][iPlot][0]).replace('.','p').replace('-','m')+'_'+iPlot.split(':')[1]+str(acoupling['PlotConfig'][iDim][iPlot][1]).replace('.','p').replace('-','m')
+                if iDim == '1D' : 
+                   hName  = 'histo_ACSig_'+iPlot+str(acoupling['PlotConfig'][iDim][iPlot][0]).replace('.','p').replace('-','m')
+                   Legend = acoupling['operatorLatex'][iPlot]+' = '+str(acoupling['PlotConfig'][iDim][iPlot][0])+' '+acoupling['operatorUnit'][iPlot]  
+                   Color  = int(acoupling['PlotConfig'][iDim][iPlot][1]) 
+                if iDim == '2D' : 
+                   hName = 'histo_ACSig_'+iPlot.split(':')[0]+str(acoupling['PlotConfig'][iDim][iPlot][0]).replace('.','p').replace('-','m')+'_'+iPlot.split(':')[1]+str(acoupling['PlotConfig'][iDim][iPlot][1]).replace('.','p').replace('-','m')
+                   Legend = acoupling['operatorLatex'][iPlot.split(':')[0]]+' = '+str(acoupling['PlotConfig'][iDim][iPlot][0])+' '+acoupling['operatorUnit'][iPlot.split(':')[0]]+' , '+ \
+                            acoupling['operatorLatex'][iPlot.split(':')[1]]+' = '+str(acoupling['PlotConfig'][iDim][iPlot][1])+' '+acoupling['operatorUnit'][iPlot.split(':')[1]]  
+                   Color  = int(acoupling['PlotConfig'][iDim][iPlot][2]) 
+                SigNames[hName.replace('histo_','')] = {
+                                                         'Legend' : Legend ,
+                                                         'Color'  : Color
+                                                       }
                 hclone = sigObj.Clone(hName)
                 hclone.SetName(hName)
                 for iBin in range(1,hclone.GetNbinsX()+1):
                   ratio = 1
                   if iDim == '1D' : ratio = ACFits[iCut][iVar][iPlot.replace(":","_")][iBin].Eval(acoupling['PlotConfig'][iDim][iPlot][0])
                   if iDim == '2D' : ratio = ACFits[iCut][iVar][iPlot.replace(":","_")][iBin].Eval(acoupling['PlotConfig'][iDim][iPlot][0],acoupling['PlotConfig'][iDim][iPlot][1])
-                  hclone.SetBinContent(iBin,hclone.GetBinContent(iBin)*ratio)
-                  hclone.SetBinError(iBin,hclone.GetBinError(iBin)*ratio)
+                  hclone.SetBinContent(iBin,hclone.GetBinContent(iBin)*ratio-hclone.GetBinContent(iBin))
+                  hclone.SetBinError(iBin,0)
                 hclone.Print()     
                 hclone.Write() 
         fOut.cd()
@@ -287,7 +301,93 @@ def plot_plots():
 
     # (Re-)create dictionnary for plotting
 
+    samples2plot   = {}
+    plot2plot      = {}
+    groupPlot2plot = OrderedDict()   
     
+    for iSample in structure:
+      samples2plot[iSample] = {}
+
+    for iSample in plot:
+      plot2plot[iSample] = plot[iSample]
+      plot2plot[iSample]['isSignal'] = 0
+
+    for iGroup in  groupPlot:
+      groupPlot2plot[iGroup] = groupPlot[iGroup]
+      groupPlot2plot[iGroup]['isSignal'] = 0
+
+    
+#   for iSig in SigNames:
+#     print iSig , ' ' , SigNames[iSig] 
+#     samples2plot[iSig] = {}
+#     plot2plot[iSig] = { 
+#                        'color'    : SigNames[iSig]['Color'],
+#                        'isSignal' : 2,
+#                        'isData'   : 0,
+#                        'scale'    : 1. 
+#                       }
+#     groupPlot2plot[iSig] = {
+#                             'nameHR' : SigNames[iSig]['Legend'],
+#                             'isSignal' : 2,
+#                             'color': SigNames[iSig]['Color'],  #  kGreen+2
+#                             'samples'  : [iSig]
+#                            }
+
+    print samples2plot
+    print plot2plot
+    print groupPlot2plot
+
+    # Create the PlotFactory and execute it
+
+    ROOT.gROOT.SetBatch()
+
+    for iSig in SigNames:
+      print iSig , ' ' , SigNames[iSig]
+      samples2plot[iSig] = {}
+      plot2plot[iSig] = {
+                         'color'    : SigNames[iSig]['Color'],
+                         'isSignal' : 2,
+                         'isData'   : 0,
+                         'scale'    : 1.
+                        }
+      groupPlot2plot[iSig] = {
+                              'nameHR' : SigNames[iSig]['Legend'],
+                              'isSignal' : 1,
+                              'color': SigNames[iSig]['Color'],  #  kGreen+2
+                              'samples'  : [iSig]
+                             }
+
+      factory = PlotFactory()
+      factory._energy    = opt.energy
+      factory._lumi      = opt.lumi
+      factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
+      factory._showIntegralLegend = opt.showIntegralLegend
+
+      factory._scaleToPlot = opt.scaleToPlot
+      factory._minLogC = opt.minLogC
+      factory._maxLogC = opt.maxLogC
+      factory._minLogCratio = opt.minLogCratio
+      factory._maxLogCratio = opt.maxLogCratio
+      factory._maxLinearScale = opt.maxLinearScale
+
+      factory._minLogCdifference = opt.minLogCratio
+      factory._maxLogCdifference = opt.maxLogCratio
+
+      factory._showRelativeRatio = opt.showRelativeRatio
+      factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
+
+      factory._removeWeight = opt.removeWeight
+
+      factory._invertXY = opt.invertXY
+
+      factory._FigNamePF = '_'+iSig
+
+      factory.makePlot( opt.inputPlotFile.replace('.root','_ACPlots.root') ,opt.outputDirPlots+'_ACPlots', variables, cuts, samples2plot, plot2plot, nuisances, legend, groupPlot2plot)
+
+      del samples2plot[iSig]
+      del plot2plot[iSig]
+      del groupPlot2plot[iSig]
+      del factory
 
 
 if __name__ == '__main__':
@@ -306,6 +406,24 @@ if __name__ == '__main__':
     parser.add_option('--cutList'        , dest='cutList'        , help='cut list to process' , default=[], type='string' , action='callback' , callback=list_maker('cutList',','))
     parser.add_option('--varList'        , dest='varList'        , help='var list to process' , default=[], type='string' , action='callback' , callback=list_maker('varList',','))
     parser.add_option('--scanList'       , dest='scanList'        , help='scan list to process' , default=[], type='string' , action='callback' , callback=list_maker('scanList',','))
+
+    # Some options for the PlotFactory:
+    parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=3.0  ,    type=float   )
+    parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
+    parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
+    parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
+    parser.add_option('--maxLogCratio'   , dest='maxLogCratio'   , help='max Y in log ratio plots'                   , default=10    ,    type=float   )
+    parser.add_option('--maxLinearScale' , dest='maxLinearScale' , help='scale factor for max Y in linear plots (1.45 magic number as default)'     , default=1.45   ,    type=float   )
+    parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
+    parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
+
+    parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' ,    action='store_true', default=False)
+    parser.add_option('--showDataMinusBkgOnly', dest='showDataMinusBkgOnly', help='draw instead of data-expected, data-expected background only' , action='store_true', default=False)
+
+    parser.add_option('--removeWeight', dest='removeWeight', help='Remove weight S/B for PR plots, just do the sum' , action='store_true', default=False)
+
+    parser.add_option('--invertXY', dest='invertXY', help='Invert the weighting for X <-> Y. Instead of slices along Y, do slices along X' , action='store_true', default=False)
+
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -355,6 +473,8 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
+    treeBaseDir =''
+
     # Scans Preselection
     if len(opt.scanList)>0:
       dim2del=[]
@@ -374,6 +494,30 @@ if __name__ == '__main__':
 
     # Need more dictionaries for plots
     if opt.type == 'plots'  : 
+
+      print ""
+      print " plotNormalizedDistributions =", opt.plotNormalizedDistributions
+      print "          showIntegralLegend =", opt.showIntegralLegend
+      print "                 scaleToPlot =", opt.scaleToPlot
+      print "                     minLogC =", opt.minLogC
+      print "                     maxLogC =", opt.maxLogC
+      print "                minLogCratio =", opt.minLogCratio
+      print "                maxLogCratio =", opt.maxLogCratio
+      print "           showRelativeRatio =", opt.showRelativeRatio
+      print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
+      print "                removeWeight =", opt.removeWeight
+      print "                    invertXY =", opt.invertXY
+      print ""
+
+      # ~~~~
+      groupPlot = OrderedDict()
+      plot = {}
+      legend = {}
+      if os.path.exists(opt.plotFile) :
+        handle = open(opt.plotFile,'r')
+        exec(handle)
+        handle.close()
+
       # ~~~~
       structure = {}
       if opt.structureFile == None :
@@ -385,16 +529,15 @@ if __name__ == '__main__':
         exec(handle)
         handle.close()
 
-      print structure
       # ~~~~
       nuisances = {}
       if opt.nuisancesFile == None :
          print " Please provide the nuisances structure if you want to add nuisances "
-
-      if os.path.exists(opt.nuisancesFile) :
-        handle = open(opt.nuisancesFile,'r')
-        exec(handle)
-        handle.close()
+      else:
+        if os.path.exists(opt.nuisancesFile) :
+          handle = open(opt.nuisancesFile,'r')
+          exec(handle)
+          handle.close()
 
 
 

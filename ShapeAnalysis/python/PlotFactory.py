@@ -39,6 +39,8 @@ class PlotFactory:
         self._showIntegralLegend = 1
         # 0 is no
 
+        self._FigNamePF = ''
+
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
 
@@ -1092,22 +1094,22 @@ class PlotFactory:
             #frame.Draw("AXIS")
             tcanvas.RedrawAxis()
             
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".png")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".root")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".C")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + ".pdf")
+            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".png")
+            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".root")
+            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".C")
+            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".eps")
+            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".pdf")
             
-            text_file_html.write(canvasNameTemplate + ".root;\n")
+            text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
             
             # log Y axis
             frame.GetYaxis().SetRangeUser( max(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
             #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
             tcanvas.SetLogy()
-            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".png")
-            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + ".pdf")
+            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".png")
+            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".eps")
+            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".pdf")
             tcanvas.SetLogy(0)
 
 
@@ -1139,7 +1141,7 @@ class PlotFactory:
                 (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
   
               tlegend.Draw()
-              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + ".png")
+              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
          
 
             
@@ -1292,8 +1294,8 @@ class PlotFactory:
             pad2.RedrawAxis()
             pad2.SetGrid()
             
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".png")
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + ".root")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".png")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".root")
 
             text_file_html.write(canvasRatioNameTemplate + ".root;\n")
 
@@ -1302,7 +1304,7 @@ class PlotFactory:
             #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
             frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
             pad1.SetLogy()
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + ".png")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF + ".png")
             pad1.SetLogy(0)
 
 
@@ -1481,8 +1483,8 @@ class PlotFactory:
             pad2difference.RedrawAxis()
             pad2difference.SetGrid()
             
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + ".png")
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + ".root")
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".root")
             
             text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
             
@@ -1490,7 +1492,7 @@ class PlotFactory:
             #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
             frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
             pad1difference.SetLogy()
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + ".png")
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
             pad1difference.SetLogy(0)
 
 
@@ -2062,13 +2064,13 @@ class PlotFactory:
                     #weight_X_frameRatio.Draw("AXIS")
                     weight_X_pad2.RedrawAxis()
                     
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".png")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root")
                     
                     text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
                     
                     # save also all the TH1F separately for later combination
-                    temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + ".root", "UPDATE")
+                    temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root", "UPDATE")
                    
                     histo_global_normalization = ROOT.TH1F("histo_global_normalization", "", 1, 0, 1)
                     histo_global_normalization.Fill(0.5, global_normalization)
