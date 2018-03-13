@@ -288,8 +288,8 @@ def plot_plots():
                   ratio = 1
                   if iDim == '1D' : ratio = ACFits[iCut][iVar][iPlot.replace(":","_")][iBin].Eval(acoupling['PlotConfig'][iDim][iPlot][0])
                   if iDim == '2D' : ratio = ACFits[iCut][iVar][iPlot.replace(":","_")][iBin].Eval(acoupling['PlotConfig'][iDim][iPlot][0],acoupling['PlotConfig'][iDim][iPlot][1])
-                  hclone.SetBinContent(iBin,hclone.GetBinContent(iBin)*ratio-hclone.GetBinContent(iBin))
-                  hclone.SetBinError(iBin,0)
+                  hclone.SetBinContent(iBin,hclone.GetBinContent(iBin)*(ratio-1.))
+                  hclone.SetBinError(iBin,hclone.GetBinError(iBin)*(ratio-1.))
                 hclone.Print()     
                 hclone.Write() 
         fOut.cd()
