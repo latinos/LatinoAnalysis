@@ -4,6 +4,9 @@ import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 from collections import OrderedDict
 
+import os
+import os.path
+
 # ROOT
 import ROOT
 from ROOT import *
@@ -109,7 +112,7 @@ def plot_fits():
                 c1.SetBottomMargin(0.15)
 
                 if iDim == '1D' : 
-                  toPlot[iBin].GetXaxis().SetTitle(acoupling['operatorLatex'][iScan])
+                  toPlot[iBin].GetXaxis().SetTitle(acoupling['operatorLatex'][iScan]+' ['+acoupling['operatorUnit'][iScan]+']')
                   toPlot[iBin].GetXaxis().SetLabelFont (   42)
                   toPlot[iBin].GetXaxis().SetTitleFont (   42)
                   toPlot[iBin].GetXaxis().SetTitleOffset( 1.4)
@@ -124,14 +127,14 @@ def plot_fits():
                   toPlot[iBin].GetYaxis().SetLabelSize (0.040)
 
                 if iDim == '2D' :
-                  toPlot[iBin].GetXaxis().SetTitle(acoupling['operatorLatex'][iScan.split(":")[0]])
+                  toPlot[iBin].GetXaxis().SetTitle(acoupling['operatorLatex'][iScan.split(":")[0]]+' ['+acoupling['operatorUnit'][iScan.split(":")[0]]+']')
                   toPlot[iBin].GetXaxis().SetLabelFont (   42)
                   toPlot[iBin].GetXaxis().SetTitleFont (   42)
                   toPlot[iBin].GetXaxis().SetTitleOffset( 1.4)
                   toPlot[iBin].GetXaxis().SetTitleSize (0.045)
                   toPlot[iBin].GetXaxis().SetLabelSize (0.040)
  
-                  toPlot[iBin].GetYaxis().SetTitle(acoupling['operatorLatex'][iScan.split(":")[1]])
+                  toPlot[iBin].GetYaxis().SetTitle(acoupling['operatorLatex'][iScan.split(":")[1]]+' ['+acoupling['operatorUnit'][iScan.split(":")[1]]+']')
                   toPlot[iBin].GetYaxis().SetLabelFont (   42)
                   toPlot[iBin].GetYaxis().SetTitleFont (   42)
                   toPlot[iBin].GetYaxis().SetTitleOffset( 1.6)
@@ -539,7 +542,9 @@ if __name__ == '__main__':
           exec(handle)
           handle.close()
 
-
+    if opt.type == 'fits'   :
+      opt.outputDirPlots+="_ACFits"
+      if not os.path.exists(opt.outputDirPlots) : os.mkdir(opt.outputDirPlots)
 
     print " "
     print " ----------------------- Plot Type = " , opt.type , " ----------------------------"

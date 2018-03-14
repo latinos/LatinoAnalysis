@@ -788,7 +788,6 @@ class ShapeFactory:
         #
         if fixZeros and 'suppressNegative' in sample.keys() and ( cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) :        
           self._fixNegativeBinAndError(hTotalFinal)
-          self._fixNegativeBinAndError(hTotalFinal)
 
         # for ibin in range(1, hTotalFina.GetNbinsX()+1)
           #if hTotalFinal.GetBinContent(ibin) < 0 :
@@ -980,6 +979,8 @@ class ShapeFactory:
           # I think this is correct fix to our BOGUS problem
 	  if histoNew.GetBinContent(ibin) == 0 and not histoReference.GetBinContent(ibin) == 0 :
             histoNew.SetBinContent(ibin, histoReference.GetBinContent(ibin) * 0.0001)  # do not put 0 to avoid bogus pogus ...
+          if not histoNew.GetBinContent(ibin) == 0 and histoReference.GetBinContent(ibin) == 0 :
+            histoNew.SetBinContent(ibin, 0)
 
     # _____________________________________________________________________________
     def _fixNegativeBinAndError(self, histogram_to_be_fixed):

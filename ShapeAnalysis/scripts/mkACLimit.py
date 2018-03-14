@@ -124,7 +124,7 @@ def lim_plot():
                plotDic['MinPlt'] = []
                plotDic['MaxPlt'] = []
                for iKey in plotDic['Keys'] : 
-                 plotDic['AxisTitle'].append(acoupling['operatorLatex'][iKey]) 
+                 plotDic['AxisTitle'].append(acoupling['operatorLatex'][iKey]+' ['+acoupling['operatorUnit'][iKey]+']') 
                  plotDic['Min'].append(acoupling['operatorRange'][iKey][0])
                  plotDic['Max'].append(acoupling['operatorRange'][iKey][1]) 
                  plotDic['MinPlt'].append(acoupling['operatorPlot'][iKey][0]) 
@@ -167,6 +167,8 @@ if __name__ == '__main__':
     print " AC config          = ", opt.accfg
     print " Combination Cfg    = ", opt.combcfg
     print " UNBLIND ?          = ", opt.unblind
+
+    opt.outputDirPlots+='_ACLimits'
 
     groupPlot = OrderedDict()
     plot = {}
