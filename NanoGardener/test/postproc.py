@@ -8,7 +8,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import Pos
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.Grafter import *
 
-files=["/afs/cern.ch/user/l/lenzip/work/ww2018/CMSSW_9_4_4/src/8C03AD47-0613-E811-9781-0242AC1C0500.root"]
+files=["root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/8C03AD47-0613-E811-9781-0242AC1C0500.root"]
 #this takes care of converting the input files from CRAB
 #from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis
 
