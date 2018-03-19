@@ -76,9 +76,4 @@ class PromptParticlesGenVarsProducer(Module):
             self.out.fillBranch(particleType+"_"+branch, out)  
             
         return True
-
-
-# define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
-
-promptParticlesGenVarsProducer = lambda : PromptParticlesGenVarsProducer() 
  

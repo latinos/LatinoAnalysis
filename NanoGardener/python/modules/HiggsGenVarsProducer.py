@@ -30,8 +30,3 @@ class HiggsGenVarsProducer(Module):
             self.out.fillBranch("higgsGenMass", particle.mass)
         return True
 
-
-# define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
-
-higgsGenVarsProducer = lambda : HiggsGenVarsProducer() 
- 

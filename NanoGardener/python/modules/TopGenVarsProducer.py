@@ -38,9 +38,4 @@ class TopGenVarsProducer(Module):
             self.out.fillBranch("antitopGenPhi", particle.phi)
             self.out.fillBranch("antitopGenMass", particle.mass) 
         return True
-
-
-# define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
-
-topGenVarsProducer = lambda : TopGenVarsProducer() 
  
