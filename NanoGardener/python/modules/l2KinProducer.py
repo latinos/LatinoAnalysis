@@ -142,9 +142,7 @@ class l2KinProducer(Module):
         lep_phi     = ROOT.std.vector(float)(0)
         lep_flavour = ROOT.std.vector(float)(0)
         
-        #print "  -- "
         for lep in leptons :
-          #print " lep_pt ==> ", lep.pt
           lep_pt. push_back(lep.pt)
           lep_eta.push_back(lep.eta)
           lep_phi.push_back(lep.phi)
@@ -157,14 +155,7 @@ class l2KinProducer(Module):
           
           # is this really doing its job?
         
-        
-        #print " len -> " , len(lep_pt)
-        #print " leptons -> " , len(leptons)
-        
-          #print " lep = ", lep
-          #print " lep.charge = ", lep.charge
-          #print " lep.tightId = ", lep.tightId   # --> only for muons
-          
+           
           
         Jet   = Collection(event, "Jet")
         nJet = len(Jet)
@@ -182,13 +173,6 @@ class l2KinProducer(Module):
 
 
         WW = ROOT.WW()
-        #print " lep_pt ==> ", len (lep_pt)
-        #print " lep_eta ==> ", len (lep_eta)
-        #print " lep_phi ==> ", len (lep_phi)
-        #print " lep_flavour ==> ", len (lep_flavour)
-        
-        #for pt in lep_pt :
-          #print " --> ", pt
         
         WW.setLeptons(lep_pt, lep_eta, lep_phi, lep_flavour)
         WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass)
@@ -204,7 +188,6 @@ class l2KinProducer(Module):
             
             
         for nameBranches in self.newbranches :
-          #print " nameBranches = ", nameBranches, " = ", getattr(WW, nameBranches)()
           self.out.fillBranch(nameBranches  ,  getattr(WW, nameBranches)());
 
 

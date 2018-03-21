@@ -13,6 +13,20 @@ from LatinoAnalysis.NanoGardener.modules.PromptParticlesGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
 
+from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
+
+lepMergerLatino = lambda : collectionMerger(
+        input  = ["Electron","Muon"],
+        output = "Lepton", 
+        reverse = True
+        )
+
+
+
+
+from LatinoAnalysis.NanoGardener.modules.l2KinProducer import *
+
+
 
 #files=["root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/8C03AD47-0613-E811-9781-0242AC1C0500.root"]
 #files=["/afs/cern.ch/user/l/lenzip/work/ww2018/CMSSW_9_4_4/src/LatinoAnalysis/NanoGardener/test/8C03AD47-0613-E811-9781-0242AC1C0500_Skim.root"]
@@ -28,7 +42,19 @@ selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJe
 
 #p=PostProcessor(".",files,cut=selection,branchsel=None,modules=[Grafter(["baseW/F=1."]), GenericFormulaAdder('data/formulasToAdd_MC.py')],provenance=True,fwkJobReport=True)
 
-p = PostProcessor(".",files,cut=selection,branchsel=None,modules=[Grafter(["baseW/F=1."]), GenericFormulaAdder('data/formulasToAdd_MC.py'), wwNLLcorrectionWeightProducer() ],provenance=True,fwkJobReport=True)
+p = PostProcessor(".", files,
+                       cut=selection,
+                       branchsel=None,
+                       modules=[
+                         Grafter(["baseW/F=1."]),
+                         GenericFormulaAdder('data/formulasToAdd_MC.py'),
+                         wwNLLcorrectionWeightProducer(),
+                         lepMergerLatino(),
+                         l2KinProducer()
+                         ],
+                       provenance=True,
+                       fwkJobReport=True
+                       )
 
 p.run()
 
