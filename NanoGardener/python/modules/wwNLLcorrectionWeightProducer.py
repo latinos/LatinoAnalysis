@@ -66,10 +66,6 @@ class wwNLLcorrectionWeightProducer(Module):
         gen_mww     = -1
         gen_ptww    = -1
 
-
-        bla = 1.0
-        self.out.fillBranch("nllnnloW", bla)
-
         genParticles = Collection(event, "GenPart")
         
         ptV1  = -1
