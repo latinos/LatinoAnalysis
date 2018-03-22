@@ -184,6 +184,10 @@ class l2KinProducer(Module):
         
         WW.setMET(MET_pt, MET_phi)
         WW.setSumET(MET_sumEt)
+       
+        WW.setTkMET(event.TkMET_pt, event.TkMET_phi) 
+        
+        
         WW.checkIfOk()
             
             

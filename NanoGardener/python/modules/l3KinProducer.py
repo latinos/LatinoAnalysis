@@ -149,6 +149,8 @@ class l3KinProducer(Module):
         
         WWW.setMET(MET_pt, MET_phi)
 
+        WWW.setTkMET(event.TkMET_pt, event.TkMET_phi) 
+
         WWW.checkIfOk()
 
             
