@@ -25,6 +25,8 @@ lepMergerLatino = lambda : collectionMerger(
 
 
 from LatinoAnalysis.NanoGardener.modules.l2KinProducer import *
+from LatinoAnalysis.NanoGardener.modules.l3KinProducer import *
+from LatinoAnalysis.NanoGardener.modules.l4KinProducer import *
 
 
 
@@ -50,7 +52,9 @@ p = PostProcessor(".", files,
                          GenericFormulaAdder('data/formulasToAdd_MC.py'),
                          wwNLLcorrectionWeightProducer(),
                          lepMergerLatino(),
-                         l2KinProducer()
+                         l2KinProducer(),
+                         l3KinProducer(),
+                         l4KinProducer()
                          ],
                        provenance=True,
                        fwkJobReport=True
