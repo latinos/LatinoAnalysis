@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
 
-PostProcCfg = {
+PostProcSteps = {
 
 # ------------------------------------------------ CHAINS ----------------------------------------------------
 
@@ -9,26 +10,26 @@ PostProcCfg = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : 'selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"' , 
-                  'subTargets' : ['lepMergerHWW','baseW','formulasMC','l2Kin'], 
-                }
+                  'subTargets' : ['lepMergerHWW','baseW','l2Kin'], 
+                },
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
   
-# ------- MODULES: Object Handling
+## ------- MODULES: Object Handling
 
   'lepMergerHWW' : { 
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger' ,
-                  'declare'    : 'lepMergerHWW = lambda : collectionMerger( input  = ["Electron","Muon"], output = "Lepton", reverse = True' ,
+                  'declare'    : 'lepMergerHWW = lambda : collectionMerger( input  = ["Electron","Muon"], output = "Lepton", reverse = True)' ,
                   'module'     : 'lepMergerHWW()' ,
                },  
 
  
 
-# ------- MODULES: MC Weights
+## ------- MODULES: MC Weights
 
   'baseW'    : {
                   'isChain'    : False ,
@@ -44,8 +45,9 @@ PostProcCfg = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer' ,
                   'module'     : 'wwNLLcorrectionWeightProducer()',  
+               },  
 
-# ------- MODULES: Kinematic
+## ------- MODULES: Kinematic
 
   'l2Kin'    : {
                   'isChain'    : False ,
@@ -71,7 +73,7 @@ PostProcCfg = {
                   'module'     : 'l4KinProducer()' ,
                },  
 
-# ------- MODULES: Adding Formulas
+## ------- MODULES: Adding Formulas
 
   'formulasMC' : {
                   'isChain'    : False ,
@@ -79,6 +81,6 @@ PostProcCfg = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC.py\')' ,
-                 }
+                 },
 
 } 
