@@ -12,6 +12,7 @@ from LatinoAnalysis.NanoGardener.modules.HiggsGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.PromptParticlesGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
+from LatinoAnalysis.NanoGardener.modules.MetUnclustered import *
 
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
 
@@ -51,6 +52,7 @@ p = PostProcessor(".", files,
                          Grafter(["baseW/F=1."]),
                          GenericFormulaAdder('data/formulasToAdd_MC.py'),
                          wwNLLcorrectionWeightProducer(),
+                         MetUnclusteredTreeMaker(),
                          lepMergerLatino(),
                          l2KinProducer(),
                          l3KinProducer(),
