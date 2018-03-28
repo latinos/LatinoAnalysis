@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-import os, sys
+import sys, re, os, os.path, math, copy
+import string
+import subprocess
+
 
 from LatinoAnalysis.NanoGardener.framework.PostProc_cfg import *
 
@@ -9,7 +12,14 @@ class PostProcMaker():
 
      self._Steps = PostProcSteps
 
-   def mkPyCfg(self,inputRootFiles,iStep,fPyName,isData=False):
+   def getFilesFromDAS(self,dataset):
+     dasCmd='dasgoclient -query="file dataset='+dataset+'"'
+     proc=subprocess.Popen(dasCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+     out, err = proc.communicate()
+     FileList=string.split(out)
+     return FileList
+
+   def mkPyCfg(self,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False):
 
      fPy = open(fPyName,'a') 
      
@@ -62,6 +72,8 @@ class PostProcMaker():
      fPy.write('                            ],      \n') 
      fPy.write('                    provenance=True, \n')
      fPy.write('                    fwkJobReport=True, \n')
+     if not haddFileName == None :
+       fPy.write('                    haddFileName="'+haddFileName+'", \n')
      fPy.write('                 ) \n')
      fPy.write(' \n')
 
@@ -73,8 +85,18 @@ class PostProcMaker():
      fPy.close()
 
 
+# ---- Testing ----
 
+Samples = { 
+              'GluGluHToWWTo2L2Nu_M125' : '/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/NANOAODSIM'
+          }
+iSample='GluGluHToWWTo2L2Nu_M125' 
 
 pp = PostProcMaker(PostProcSteps)
-
-pp.mkPyCfg (['a','b'],'TestChain','aa.py')
+Files=pp.getFilesFromDAS(Samples[iSample]) 
+FilesXrootd=[]
+# Let's take 1 file only for test
+#for iFile in Files:
+#  FilesXrootd.append('root://cms-xrd-global.cern.ch//'+iFile)
+FilesXrootd.append('root://cms-xrd-global.cern.ch//'+Files[0])
+pp.mkPyCfg (FilesXrootd,'TestChain','aa.py','nanoLatino_'+iSample+'.root')
