@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser = optparse.OptionParser(usage)
 
     # --- Cfg
-    parser.add_option("-m","--modcfg"  ,  dest="modcfg"  , help="Module Steps Cfg" , default='LatinoAnalysis/NanoGardener/python/framework/PostProc_cfg.py' , type='string')
+    parser.add_option("-m","--modcfg"  ,  dest="modcfg"  , help="Module Steps Cfg" , default='LatinoAnalysis/NanoGardener/python/framework/StepsProd_cfg.py' , type='string')
     parser.add_option("-d","--datacfg" ,  dest="datacfg" , help="Data Prods Cfg"   , default='LatinoAnalysis/NanoGardener/python/framework/DataProd_cfg.py' , type='string')
 
     # --- What to do: 
