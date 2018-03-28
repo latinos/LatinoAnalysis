@@ -2,13 +2,15 @@
 import sys, re, os, os.path, math, copy
 from optparse import OptionParser
 from collections import OrderedDict
-
 import subprocess
-
 import optparse
+
+# Latino Tools
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 from LatinoAnalysis.Tools.commonTools import *
 
+# PostProc Class
+from LatinoAnalysis.NanoGardener.framework.PostProcMaker import *
 
 # ------------------------------------------------------- MAIN --------------------------------------------
 
@@ -79,3 +81,22 @@ if __name__ == '__main__':
 #       except RuntimeError:
 #         ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
 
+# ---------------------------------------- And Here we go:
+
+    # Loop on input productions
+    for iProd in prodList :
+
+      # Load sample DB
+      if 'samples' in Productions[iProd]: 
+        prodFile=CMSSW+'/src/'+Productions[iProd]['samples']
+        if os.path.exists(prodFile):
+          handle = open(prodFile,'r')
+          exec(handle)
+          handle.close()
+    
+      print Samples 
+      iSample='GluGluHToWWTo2L2Nu_M125'   
+      pp = PostProcMaker(Steps)
+      print Samples[iSample] 
+      Files=pp.getFilesFromDAS(Samples[iSample]['nanoAOD'])
+      print Files

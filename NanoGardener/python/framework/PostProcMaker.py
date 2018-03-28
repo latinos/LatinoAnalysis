@@ -87,16 +87,16 @@ class PostProcMaker():
 
 # ---- Testing ----
 
-Samples = { 
-              'GluGluHToWWTo2L2Nu_M125' : '/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/NANOAODSIM'
-          }
-iSample='GluGluHToWWTo2L2Nu_M125' 
+#Samples = { 
+#              'GluGluHToWWTo2L2Nu_M125' : '/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/NANOAODSIM'
+#          }
+#iSample='GluGluHToWWTo2L2Nu_M125' 
 
-pp = PostProcMaker(PostProcSteps)
-Files=pp.getFilesFromDAS(Samples[iSample]) 
-FilesXrootd=[]
-# Let's take 1 file only for test
+#pp = PostProcMaker(PostProcSteps)
+#Files=pp.getFilesFromDAS(Samples[iSample]) 
+#FilesXrootd=[]
+## Let's take 1 file only for test
 #for iFile in Files:
-#  FilesXrootd.append('root://cms-xrd-global.cern.ch//'+iFile)
-FilesXrootd.append('root://cms-xrd-global.cern.ch//'+Files[0])
-pp.mkPyCfg (FilesXrootd,'TestChain','aa.py','nanoLatino_'+iSample+'.root')
+##  FilesXrootd.append('root://cms-xrd-global.cern.ch//'+iFile)
+#FilesXrootd.append('root://cms-xrd-global.cern.ch//'+Files[0])
+#pp.mkPyCfg (FilesXrootd,'TestChain','aa.py','nanoLatino_'+iSample+'.root')
