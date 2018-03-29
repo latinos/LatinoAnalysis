@@ -10,6 +10,7 @@ from LatinoAnalysis.NanoGardener.modules.Grafter import *
 from LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder import *
 from LatinoAnalysis.NanoGardener.modules.HiggsGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.PromptParticlesGenVarsProducer import *
+from LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer import *
 from LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.MetUnclustered import *
@@ -51,12 +52,14 @@ p = PostProcessor(".", files,
                        modules=[
                          Grafter(["baseW/F=1."]),
                          GenericFormulaAdder('data/formulasToAdd_MC.py'),
-                         wwNLLcorrectionWeightProducer(),
-                         MetUnclusteredTreeMaker(),
+                         PromptParticlesGenVarsProducer(),
+                         #wwNLLcorrectionWeightProducer(),
+                         #MetUnclusteredTreeMaker(),
                          lepMergerLatino(),
-                         l2KinProducer(),
-                         l3KinProducer(),
-                         l4KinProducer()
+                         GenLeptonMatchProducer("Lepton"),
+                         #l2KinProducer(),
+                         #l3KinProducer(),
+                         #l4KinProducer()
                          ],
                        provenance=True,
                        fwkJobReport=True
