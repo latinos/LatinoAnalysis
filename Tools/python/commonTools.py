@@ -122,7 +122,7 @@ class xsectionDB:
 
 #######
 
-def getSampleFiles(inputDir,Sample,absPath=False):
+def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPostProc=False):
 
     
 
@@ -131,7 +131,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     xrootdPath=''
     # ... IIHE
     if 'iihe' in os.uname()[1] :
-      absPath=True
+      if not FromPostProc : absPath=True
       lsCmd='ls '
       if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
          Dir = '/pnfs/iihe/cms/' + inputDir
@@ -199,16 +199,16 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     #print xrootdPath, Dir , lsCmd , Sample
 
     ##### Now get the files for Sample
-    fileCmd = lsCmd+Dir+'/latino_'+Sample+'.root'
+    fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'.root'
     proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out,err = proc.communicate()
     Files   = string.split(out)
     if len(Files) == 0 :
-      fileCmd = lsCmd+Dir+'/latino_'+Sample+'__part*.root'
+      fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'__part*.root'
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
       Files   = string.split(out)
-    if len(Files) == 0 :
+    if len(Files) == 0 and not FromPostProc :
       print 'ERROR: No files found for sample ',Sample,' in directory ',Dir
       exit() 
     FileTarget = []
@@ -216,8 +216,10 @@ def getSampleFiles(inputDir,Sample,absPath=False):
       if absPath :
 	if "sdfarm" in os.uname()[1]:
 	  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
-	  FileTarget.append('###'+xrootdPath+iFile)
-	else : FileTarget.append('###'+xrootdPath+iFile)
+        if not FromPostProc :
+          FileTarget.append('###'+xrootdPath+iFile)
+        else:
+          FileTarget.append(iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
     return FileTarget
 

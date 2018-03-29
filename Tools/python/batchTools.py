@@ -141,6 +141,9 @@ class batchJobs :
      pFile.write(command+'\n')
      pFile.close()
 
+   def GetPyName (self,iStep,iTarget) :
+     jName= self.jobsDic[iStep][iTarget]
+     return self.subDir+'/'+jName+'.py' 
 
    def Sub(self,queue='8nh',IiheWallTime='168:00:00',optTodo=False): 
      os.system('cd '+self.subDir)
