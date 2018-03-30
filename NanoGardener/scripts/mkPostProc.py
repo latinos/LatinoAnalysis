@@ -45,7 +45,7 @@ if __name__ == '__main__':
     parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo, don't check if tree already exists"  , default=False  , action="store_true")
     parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                              , default=False  , action="store_true")
     parser.add_option("-c","--crab",   dest="runCrab", help="Run in batch"                              , default=False  , action="store_true")
-    parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default="8nh" , type='string' )
+    parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default=None , type='string' )
     # TODO: parser.add_option("-g","--grid",    dest="runGrid", help="Run in Grid"                              , default=False  , action="store_true")
 
 # ---------------------------------------- Config
@@ -124,6 +124,7 @@ if __name__ == '__main__':
     factory._excTree     = options.excTree
 
     # job mode = Interactive / Batch / Crab / DryRun
+    factory._redo        = options.redo
     factory._pretend     = options.pretend  
     if options.runBatch  : 
                              factory._jobMode = 'Batch'

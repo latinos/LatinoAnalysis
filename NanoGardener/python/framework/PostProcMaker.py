@@ -20,6 +20,7 @@ class PostProcMaker():
      self._cmsswBasedir = os.environ["CMSSW_BASE"] 
 
      self._aaaXrootd = 'root://cms-xrd-global.cern.ch//'
+     self._haddnano  = 'PhysicsTools/NanoAODTools/scripts/haddnano.py'
 
      # root tree prefix
      self._treeFilePrefix= 'nanoLatino_'
@@ -58,14 +59,24 @@ class PostProcMaker():
      osName = os.uname()[1]
      for iSite in self._Sites :
        if iSite in osName : self._LocalSite = iSite
-     if self._Sites == None :
+     if self._LocalSite == None :
        print 'ERROR: Unknown site : ', osName
        exit()
      print '_LocalSite  = ',self._LocalSite
      print '_TargetSite = ',self._TargetSite
 
    def configBatch(self,queue):
-     self._batchQueue = queue
+     if       queue == None                                        \
+          and 'batchQueues' in self._Sites[self._LocalSite]        \
+          and len(self._Sites[self._LocalSite]['batchQueues']) > 0  :
+       self._batchQueue = self._Sites[self._LocalSite]['batchQueues'][0]
+       print 'INFO: _batchQueue set to default = ',self._batchQueue
+     elif     'batchQueues' in self._Sites[self._LocalSite]         \
+          and len(self._Sites[self._LocalSite]['batchQueues']) > 0  :
+       if queue in self._Sites[self._LocalSite]['batchQueues'] : self._batchQueue = queue
+       else :
+         self._batchQueue = self._Sites[self._LocalSite]['batchQueues'][0]
+         print 'WARNING: Queue '+queue+' not existing -->  _batchQueue set to default = ',self._batchQueue
 
    def readSampleFile(self,iProd):
      prodFile=self._cmsswBasedir+'/src/'+self._Productions[iProd]['samples']
@@ -186,7 +197,7 @@ class PostProcMaker():
 
 # --------------- Job Jandling
 
-   def prepareJobs(self,iProd,iStep):
+   def submitJobs(self,iProd,iStep):
 
      bpostFix=''
      if not self._iniStep == 'Prod' : bpostFix='____'+self._iniStep
@@ -215,25 +226,62 @@ class PostProcMaker():
 
      # batchMode Preparation
      if self._jobMode == 'Batch':
-       self._jobs = batchJobs('NanoGardening',iProd,stepList,targetList,'Targets,Steps',bpostFix)
+       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
        self._jobs.AddPy2Sh()
+       self._jobs.Add2All('ls -l')
  
 
      for iSample in self._targetDic :
        for iFile in self._targetDic[iSample] :
          iTarget = os.path.basename(self._targetDic[iSample][iFile]).replace(self._treeFilePrefix,'').replace('.root','')
          if iTarget in targetList :
+           # Create python
            pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
-           outTree=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
-           #GarbageCollector.append(outTree)
-           self.mkPyCfg([iFile],iStep,pyFile,outTree,self._Productions[iProd]['isData'])
-           command=''
-           if self._jobMode == 'Interactive' : command='cd '+wDir+' ; python '+pyFile+' ; '
-           if self._jobMode == 'Interactive' : os.system(command)
+           outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
+           self.mkPyCfg([self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'])
+           # Stage Out command + cleaning
+           stageOutCmd  = self.mkStageOut(outFile,self._targetDic[iSample][iFile])
+           rmGarbageCmd = 'rm '+outFile+' ; rm *_Skim.root' 
+           # Interactive 
+           if   self._jobMode == 'Interactive' : 
+             command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; python '+pyFile \
+                      +' ; ls -l ; '+stageOutCmd+' ; '+rmGarbageCmd
+             if not self._pretend : os.system(command)
+             else                 : print command
+           # Batch
+           elif self._jobMode == 'Batch' : 
+             self._jobs.Add(iStep,iTarget,stageOutCmd)
+             self._jobs.Add(iStep,iTarget,rmGarbageCmd)
      
-     if self._jobMode == 'Batch': self._jobs.Sub()
+     if self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
 
+   def getStageIn(self,File):
+      # IIHE
+      if     self._LocalSite == 'iihe'                               \
+         and not self._Sites[self._LocalSite]['xrootdPath']  in File \
+         and     self._Sites[self._LocalSite]['treeBaseDir'] in File :
+        return self._Sites[self._LocalSite]['xrootdPath']+File
+      else:  
+        return File
+
+   def mkStageOut(self,prodFile,storeFile):
+      command=''
+      # IIHE
+      if   self._LocalSite == 'iihe' :
+        if self._redo : 
+          command += 'srmrm '+self._Sites[self._LocalSite]['srmPrefix']+storeFile+' ; '
+        command += 'lcg-cp '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
+      # CERN
+      #elif self._LocalSite == 'cern' :
+      
+      # MISSING STAGE OUT
+      else :
+        print 'ERROR: mkStageOut not available for _LocalSite = ',self._LocalSite
+        exit()  
+
+      return command
 
    def mkPyCfg(self,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False):
 
@@ -316,23 +364,9 @@ class PostProcMaker():
            self.mkFileDir(iProd,iStep)
            if not iStep == 'hadd' and not iStep == 'UEPS' :
              self.getTargetFiles(iProd,iStep)
-             self.prepareJobs(iProd,iStep)
+             self.submitJobs(iProd,iStep)
  
        self.Reset()
        
 
-# ---- Testing ----
 
-#Samples = { 
-#              'GluGluHToWWTo2L2Nu_M125' : '/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/NANOAODSIM'
-#          }
-#iSample='GluGluHToWWTo2L2Nu_M125' 
-
-#pp = PostProcMaker(PostProcSteps)
-#Files=pp.getFilesFromDAS(Samples[iSample]) 
-#FilesXrootd=[]
-## Let's take 1 file only for test
-#for iFile in Files:
-##  FilesXrootd.append('root://cms-xrd-global.cern.ch//'+iFile)
-#FilesXrootd.append('root://cms-xrd-global.cern.ch//'+Files[0])
-#pp.mkPyCfg (FilesXrootd,'TestChain','aa.py','nanoLatino_'+iSample+'.root')

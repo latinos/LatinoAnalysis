@@ -119,6 +119,12 @@ class batchJobs :
      jFile.write(command+'\n')
      jFile.close()
 
+   def Add2All (self,command):
+     for jName in self.jobsList:
+       jFile = open(self.subDir+'/'+jName+'.sh','a')
+       jFile.write(command+'\n')
+       jFile.close()
+
    def InitPy (self,command):
 
      os.system('cd '+self.subDir)
