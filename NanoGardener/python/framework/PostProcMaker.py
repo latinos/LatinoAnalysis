@@ -332,7 +332,10 @@ class PostProcMaker():
      fPy.write('                    modules=[        \n')
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
-         fPy.write('                          '+self._Steps[iSubStep]['module']+',\n')
+         doSubStep = False
+         if    isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
+         elif             self._Steps[iSubStep]['do4MC']   : doSubStep = True       
+         if doSubStep :  fPy.write('                          '+self._Steps[iSubStep]['module']+',\n')
      else:
        fPy.write('                          '+self._Steps[iStep]['module']+'\n') 
      fPy.write('                            ],      \n') 
