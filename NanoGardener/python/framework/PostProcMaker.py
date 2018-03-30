@@ -274,7 +274,8 @@ class PostProcMaker():
           command += 'srmrm '+self._Sites[self._LocalSite]['srmPrefix']+storeFile+' ; '
         command += 'lcg-cp '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
       # CERN
-      #elif self._LocalSite == 'cern' :
+      elif self._LocalSite == 'cern' :
+        command = 'xrdcp -f '+prodFile+' '+storeFile
       
       # MISSING STAGE OUT
       else :
