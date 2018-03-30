@@ -87,8 +87,8 @@ class l3KinProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        muons = Collection(event, "Muon")
-        electrons = Collection(event, "Electron")
+        #muons = Collection(event, "Muon")
+        #electrons = Collection(event, "Electron")
 
         
         # order in pt the collection merging muons and electrons

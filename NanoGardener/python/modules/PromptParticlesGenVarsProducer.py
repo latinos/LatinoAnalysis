@@ -14,9 +14,9 @@ class PromptParticlesGenVarsProducer(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.particleTypes = ["leptonGen", "neutrinoGen", "photonGen"]
-        intQuantities   = ["MotherPID", "MotherStatus", "pdgId"]
-        floatQuantities = ["eta", "phi", "pt"]
+        self.particleTypes = ["LeptonGen", "NeutrinoGen", "PhotonGen"]
+        intQuantities   = ["MotherPID", "MotherStatus", "pdgId", "status"]
+        floatQuantities = ["eta", "phi", "pt", "mass"]
         boolQuantities  = ["fromHardProcess", "isDirectHadronDecayProduct", "isDirectPromptTauDecayProduct", "isPrompt", "isTauDecayProduct"]
         self.allQuantities = intQuantities + floatQuantities + boolQuantities
 
@@ -63,9 +63,9 @@ class PromptParticlesGenVarsProducer(Module):
         photons.sort(  key=self.sortkey, reverse=True)
 
         for particleType in self.particleTypes:
-          if particleType == "leptonGen":
+          if particleType == "LeptonGen":
             vector = leptons
-          elif particleType == "neutrinoGen":
+          elif particleType == "NeutrinoGen":
             vector = neutrinos
           else:
             vector = photons  

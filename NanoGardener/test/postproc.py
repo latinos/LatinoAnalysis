@@ -10,6 +10,7 @@ from LatinoAnalysis.NanoGardener.modules.Grafter import *
 from LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder import *
 from LatinoAnalysis.NanoGardener.modules.HiggsGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.PromptParticlesGenVarsProducer import *
+from LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer import *
 from LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.MetUnclustered import *
@@ -28,6 +29,8 @@ lepMergerLatino = lambda : collectionMerger(
 from LatinoAnalysis.NanoGardener.modules.l2KinProducer import *
 from LatinoAnalysis.NanoGardener.modules.l3KinProducer import *
 from LatinoAnalysis.NanoGardener.modules.l4KinProducer import *
+
+from LatinoAnalysis.NanoGardener.modules.GenVarProducer import *
 
 
 
@@ -51,12 +54,17 @@ p = PostProcessor(".", files,
                        modules=[
                          Grafter(["baseW/F=1."]),
                          GenericFormulaAdder('data/formulasToAdd_MC.py'),
-                         wwNLLcorrectionWeightProducer(),
-                         MetUnclusteredTreeMaker(),
+                         PromptParticlesGenVarsProducer(),
+                         #wwNLLcorrectionWeightProducer(),
+                         #MetUnclusteredTreeMaker(),
                          lepMergerLatino(),
-                         l2KinProducer(),
-                         l3KinProducer(),
-                         l4KinProducer()
+                         GenLeptonMatchProducer("Lepton"),
+                         #
+                         GenVarProducer(),
+                         #
+                         #l2KinProducer(),
+                         #l3KinProducer(),
+                         #l4KinProducer()
                          ],
                        provenance=True,
                        fwkJobReport=True
@@ -66,3 +74,4 @@ p.run()
 
 print "DONE"
 os.system("ls -lR")
+
