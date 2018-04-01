@@ -246,7 +246,7 @@ class PostProcMaker():
            self.mkPyCfg([self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'])
            # Stage Out command + cleaning
            stageOutCmd  = self.mkStageOut(outFile,self._targetDic[iSample][iFile])
-           rmGarbageCmd = 'rm '+outFile+' ; rm *_Skim.root' 
+           rmGarbageCmd = 'rm '+outFile+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
            # Interactive 
            if   self._jobMode == 'Interactive' : 
              command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; python '+pyFile \
