@@ -97,8 +97,21 @@ class GenVarProducer(Module):
         #
         noMother = False
         for particle  in genParticles :
+          #
           # L1 = e-(11) OR mu-(13) OR tau-(15)
-          if (abs(particle.pdgId) == 11) or (abs(particle.pdgId) == 13)  or (abs(particle.pdgId) == 15) :    
+          #
+          # from SkimEvent.cc
+          #
+          #     if( !((type == 11 || type == 13) && genParticles_[gp]->status()==1 ) && !(type == 15 && genParticles_[gp]->isPromptDecayed() ) )
+          #
+          # ele or mu --> isPrompt (or isDirectPromptTauDecayProduct)
+          # tau       --> isPrompt
+          #
+          if (( (abs(particle.pdgId) == 11) or (abs(particle.pdgId) == 13)  or (abs(particle.pdgId) == 15)) and
+              #( ((abs(particle.pdgId) == 11 or abs(particle.pdgId) == 13) and ( (particle.statusFlags >> 0 & 1) or (particle.statusFlags >> 5 & 1) )) or  # isDirectPromptTauDecayProduct FIXME sure?
+              ( ((abs(particle.pdgId) == 11 or abs(particle.pdgId) == 13) and ( particle.statusFlags >> 0 & 1 )) or
+                ((abs(particle.pdgId) == 15)  and ( (particle.statusFlags >> 0 & 1)) ) )   # isPrompt FIXME sure?
+              ) :    
             leptonGen_pt. push_back(particle.pt)
             leptonGen_eta.push_back(particle.eta)
             leptonGen_phi.push_back(particle.phi)
