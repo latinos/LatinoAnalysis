@@ -157,15 +157,18 @@ class PostProcMaker():
 
      for iSample in self._Samples :
        if self.selectSample(iProd,iStep,iSample) :
-         # From central nanoAOD 
+         # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
          if self._iniStep == 'Prod' : 
-           FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromDAS(self._Samples[iSample]['nanoAOD']))
+           if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+           else:                                    dasInst = 'prod/global' 
+           FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst))
+         # From previous PostProc step
          else :
            FileDic = self.getTargetFileDic(iProd,iStep,iSample,getSampleFiles(self._sourceDir,iSample,True,'nanoLatino_',True))
          if len(FileDic) : self._targetDic[iSample] = FileDic
 
-   def getFilesFromDAS(self,dataset):
-     dasCmd='dasgoclient -query="file dataset='+dataset+'"'
+   def getFilesFromDAS(self,dataset,dasInstance='prod/global'):
+     dasCmd='dasgoclient -query="instance='+dasInstance+' file dataset='+dataset+'"'
      proc=subprocess.Popen(dasCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
      out, err = proc.communicate()
      FileList=string.split(out)
