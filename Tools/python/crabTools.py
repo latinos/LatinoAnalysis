@@ -9,6 +9,8 @@ import json
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
 
+## ----------- THIS IS THE SUBMISSION PART :
+
 class crabTool :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix=''):
 
@@ -245,4 +247,97 @@ class crabTool :
           f = open(jidFile,'w')
           f.write('CRABTask = '+taskName)
           f.close()
+
+
+## ----------- THIS IS THE POST-SUBMISSION PART : MONITORING / UNPACKING / CLEANING
+
+class crabMon :
+
+   def __init__ (self,taksFilter=[]):
+
+     self.subDir     = jobDir
+     self.taskFilter = taksFilter
+     self.taskList   = {}
+
+# ------ COMMON
+
+   def getTaskList(self):
+
+     self.taskList   = {}
+     fileCmd = 'ls '+jobDir
+     proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+     out, err = proc.communicate()
+     DirList=string.split(out)
+     for iDir in DirList:
+       fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.tid'
+       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+       out, err = proc.communicate()
+       FileList=string.split(out)
+       for iFile in FileList:
+         taskName = (os.popen('cat '+iFile+' | grep CRABTask | awk \'{print $3}\'').read()).rstrip('\r\n')
+         selectTask = False
+         if len(self.taskFilter) == 0 : selectTask = True
+         else:
+           if taskName.split(':')[1].split('_', 2)[-1] in self.taskFilter : selectTask = True
+         if selectTask:
+           self.taskList[taskName] = {}
+           self.taskList[taskName]['subDir']      = os.path.dirname(iFile)+'/'
+           self.taskList[taskName]['requestTime'] = taskName.split(':')[0]
+           self.taskList[taskName]['requestName'] = taskName.split(':')[1].split('_', 2)[-1]
+           self.taskList[taskName]['crabDir']     = 'crab_'+self.taskList[taskName]['requestName']
+           self.taskList[taskName]['tidFile']     = iFile
+           self.taskList[taskName]['pyCfg']       = iFile.replace('.tid','.py') 
+           self.taskList[taskName]['storageSite'] = (os.popen('cat '+self.taskList[taskName]['pyCfg']+'| grep storageSite | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','')
+           self.taskList[taskName]['outLFNDirBase']  = (os.popen('cat '+self.taskList[taskName]['pyCfg']+'| grep outLFNDirBase | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','') 
+
+# ------- STATUS
+
+   def getStatus(self,iTask):
+     status = os.popen('crab status -d '+self.taskList[iTask]['subDir']+self.taskList[iTask]['crabDir']).read()
+     self.currentTaskStatus = {}
+     self.currentTaskStatus['full']       = status
+     self.currentTaskStatus['crabServerStatus'] = None
+     self.currentTaskStatus['schedulerStatus']  = None
+     self.currentTaskStatus['jobsStatus']       = []
+     startJobInfo=False
+     for line in status.splitlines():
+       if 'Status on the CRAB server:' in line : self.currentTaskStatus['crabServerStatus'] = line.split(':')[1].strip() 
+       if 'Status on the scheduler:'   in line : self.currentTaskStatus['schedulerStatus']  = line.split(':')[1].strip() 
+       if not line : startJobInfo=False
+       if startJobInfo: self.currentTaskStatus['jobsStatus'].append(line.lstrip())
+       if 'Jobs status:'               in line :
+          startJobInfo=True
+          self.currentTaskStatus['jobsStatus'].append(line.split(':')[1].lstrip())
+             
+   def printStatus(self):
+     self.getTaskList()
+     for iTask in self.taskList:
+       print '------- CRAB Status for: ',self.taskList[iTask]['requestName']
+       self.getStatus(iTask)
+       print 'CRAB Server Status = ',self.currentTaskStatus['crabServerStatus']
+       print 'Scheduler Status   = ',self.currentTaskStatus['schedulerStatus']
+       print 'Job(s)    Status   : '
+       for iJob in self.currentTaskStatus['jobsStatus'] : print ' --> ',iJob
+
+# ------ UNPACKING
+
+   def unpackAll(self):
+     self.getTaskList()
+     for iTask in self.taskList:
+       print '------- UNPACKING TASK: ',self.taskList[iTask]['requestName']
+       self.unpackTask(iTask)
+
+   def unpackTask(self,iTask):
+     self.getStatus(iTask)
+     if not self.currentTaskStatus['schedulerStatus'] == 'COMPLETED':
+       print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self.currentTaskStatus['schedulerStatus'] 
+       return
+     print self.taskList[iTask]
+     # Getting list of output
+     #fileCmd = 'ls '
+     #proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+     #out, err = proc.communicate()
+     #DirList=string.split(out)
+
+# ------ CLEANING
 
