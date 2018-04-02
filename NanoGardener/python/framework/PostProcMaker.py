@@ -9,6 +9,7 @@ from LatinoAnalysis.Tools.userConfig  import *
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
+from LatinoAnalysis.Tools.crabTools  import *
 
 
 class PostProcMaker():
@@ -50,10 +51,32 @@ class PostProcMaker():
      # Samples
      self._Samples     = {}
 
+     # We need a Proxy !
+     self.checkProxy()
+
    def Reset(self) : 
 
      # Samples
      self._Samples     = {}
+
+   def checkProxy(self):
+     cmd='voms-proxy-info'
+     proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+     out, err = proc.communicate() 
+     # No Proxy at all ?
+     if 'Proxy not found' in err : 
+       print 'WARNING: No GRID proxy -> Get one first with:' 
+       print 'voms-proxy-init -voms cms -rfc --valid 168:0'         
+       exit()
+     # More than 24h ?
+     timeLeft = 0
+     for line in out.split("\n"):
+       if 'timeleft' in line : timeLeft = int(line.split(':')[1])
+
+     if timeLeft < 24 :
+       print 'WARNING: Your proxy is only valid for ',str(timeLeft),' hours -> Renew it with:' 
+       print 'voms-proxy-init -voms cms -rfc --valid 168:0'         
+       exit()
 
    def configSite(self,TargetSite=None):
      osName = os.uname()[1]
@@ -171,6 +194,10 @@ class PostProcMaker():
      dasCmd='dasgoclient -query="instance='+dasInstance+' file dataset='+dataset+'"'
      proc=subprocess.Popen(dasCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
      out, err = proc.communicate()
+     if not proc.returncode == 0 :
+       print out
+       print err
+       exit()
      FileList=string.split(out)
      return FileList
 
@@ -227,13 +254,20 @@ class PostProcMaker():
      stepList=[]
      stepList.append(iStep)
 
+     if self._jobMode == 'Interactive' :
+       print "INFO: Using Interactive command"
      # batchMode Preparation
-     if self._jobMode == 'Batch':
+     elif self._jobMode == 'Batch':
+       print "INFO: Using Local Batch"
        self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
        self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
        self._jobs.AddPy2Sh()
        self._jobs.Add2All('ls -l')
- 
+     # CRAB3 Init
+     elif self._jobMode == 'Crab':
+       print "INFO: Using CRAB3"
+       self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._crab.AddInputFile(self._cmsswBasedir+'/src/'+self._haddnano) 
 
      for iSample in self._targetDic :
        for iFile in self._targetDic[iSample] :
@@ -257,8 +291,15 @@ class PostProcMaker():
            elif self._jobMode == 'Batch' : 
              self._jobs.Add(iStep,iTarget,stageOutCmd)
              self._jobs.Add(iStep,iTarget,rmGarbageCmd)
+           elif self._jobMode == 'Crab':
+             self._crab.AddInputFile(pyFile)  
+             self._crab.AddCommand(iStep,iTarget,'python '+os.path.basename(pyFile))
+             self._crab.AddJobOutputFile(iStep,iTarget,outFile)
      
      if self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
+     if self._jobMode == 'Crab': 
+        self._crab.Print()
+        self._crab.mkCrabCfg()
 
    def getStageIn(self,File):
       # IIHE

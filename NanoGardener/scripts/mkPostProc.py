@@ -131,7 +131,7 @@ if __name__ == '__main__':
                              factory.configBatch(options.queue)
     elif options.runCrab   : factory._jobMode = 'Crab'
     else                   : factory._jobMode = 'Interactive'
-    
+   
     factory.process()    
 
 #   # Loop on input productions

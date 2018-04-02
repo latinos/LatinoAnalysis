@@ -81,6 +81,10 @@ class batchJobs :
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
+         elif 'cern' in os.uname()[1]:
+           jFile.write("mkdir /tmp/$USER/$LSB_JOBID \n")
+           jFile.write("cd /tmp/$USER/$LSB_JOBID \n")
+           jFile.write("pwd \n")
          elif "pi.infn.it" in socket.getfqdn():
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
