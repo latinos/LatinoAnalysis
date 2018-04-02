@@ -267,6 +267,7 @@ class PostProcMaker():
      elif self._jobMode == 'Crab':
        print "INFO: Using CRAB3"
        self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
        self._crab.AddInputFile(self._cmsswBasedir+'/src/'+self._haddnano) 
 
      for iSample in self._targetDic :
