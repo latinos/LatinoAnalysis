@@ -295,11 +295,16 @@ class PostProcMaker():
              self._crab.AddInputFile(pyFile)  
              self._crab.AddCommand(iStep,iTarget,'python '+os.path.basename(pyFile))
              self._crab.AddJobOutputFile(iStep,iTarget,outFile)
+             # TMP FIX to garbage command because of not working PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import 
+             rmGarbageCmd = 'rm '+outFile#+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
+             self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd],[rmGarbageCmd])
      
-     if self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
-     if self._jobMode == 'Crab': 
-        self._crab.Print()
+     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
+     elif self._jobMode == 'Crab': 
         self._crab.mkCrabCfg()
+        if not self._pretend : self._crab.Sub()
+        else                 : self._crab.Print()
+        
 
    def getStageIn(self,File):
       # IIHE

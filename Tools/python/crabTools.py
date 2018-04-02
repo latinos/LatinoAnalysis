@@ -4,6 +4,7 @@ import subprocess
 import string
 import os.path
 import socket
+import json
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
@@ -13,6 +14,25 @@ class crabTool :
 
      self._cmsswBasedir = os.environ["CMSSW_BASE"]
 
+     # CRAB Stage Out Config
+     self.storageSite   = 'T2_CH_CERN'
+     self.outLFNDirBase = '/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/'
+
+     # PostCrab Stage Out Config
+     self.UnpackCommands = {}
+     for iStep in stepList:
+       self.UnpackCommands[iStep] = {}
+       for iTarget in targetList : 
+         self.UnpackCommands[iStep][iTarget] = {}
+         self.UnpackCommands[iStep][iTarget]['Files'] = [] 
+         self.UnpackCommands[iStep][iTarget]['cpCmd'] = [] 
+         self.UnpackCommands[iStep][iTarget]['rmGarbage'] = [] 
+
+     # White/Black lists (Here we can have a default for blacklist and add later):
+     self.blacklist = ['T3_IT_Bologna', 'T3_US_UMiss']
+     self.whitelist = []
+
+     # Job dictionary
      self.inputFiles = [] 
      self.jobsDic={}
      self.jobsList=[]
@@ -20,6 +40,7 @@ class crabTool :
      self.prodName = prodName
      self.subDir   = jobDir+'/'+baseName+'__'+prodName
      if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)
+
 
      # Get the job splitting
      for iStep in stepList:
@@ -59,6 +80,17 @@ class crabTool :
      self.outputFile  = self.requestName+'__output.tar'
      self.crabCfg     = self.subDir+'/'+self.requestName+'.py'
      self.crabSh      = self.subDir+'/'+self.requestName+'.sh'
+     self.UnpackFile  = self.subDir+'/'+self.requestName+'.unpack'
+
+   def setStorage(self,storageSite,outLFNDirBase): 
+     self.storageSite   = storageSite
+     self.outLFNDirBase = outLFNDirBase
+
+   def setSiteBlackList(self,blacklist):
+     for iSite in blacklist : self.blacklist.append(iSite)  
+
+   def setSiteWhiteList(self,whitelist):
+     for iSite in whitelist : self.whitelist.append(iSite)
 
    def AddInputFile(self,File):
      self.inputFiles.append(File)
@@ -69,12 +101,20 @@ class crabTool :
    def AddJobOutputFile(self,iStep,iTarget,File):
      self.jobsDic[iStep][iTarget]['outputFiles'].append(File) 
 
+   def setUnpackCommands(self,iStep,iTarget,FileList=[],cpCmd=[],rmGarbage=[]):
+     self.UnpackCommands[iStep][iTarget]['Files']     = FileList
+     self.UnpackCommands[iStep][iTarget]['cpCmd']     = cpCmd
+     self.UnpackCommands[iStep][iTarget]['rmGarbage'] = rmGarbage
+
    def Print(self):
-     print self.crabCfg
-     print self.crabSh
-     print self.jobsDic
+     print "--> Crab Cfg    = " , self.crabCfg
+     print "--> Crab Script = " , self.crabSh
+     print "--> Unpack File = " , self.UnpackFile 
 
    def mkCrabCfg(self):
+     if len(self.jobsList) == 0 :
+       print 'INFO: No jobs to run'
+       return
      print "Creating CRAB3 config" 
      # Needed dummy FrameworkJobReport files
      self.AddInputFile(self._cmsswBasedir+'/src/LatinoAnalysis/Tools/test/FrameworkJobReport.xml')
@@ -104,34 +144,35 @@ class crabTool :
      fCfg.write('config.Data.splitting = \'EventBased\'\n') 
      fCfg.write('config.Data.outputPrimaryDataset = \''+self.baseName+'\'\n')
      fCfg.write('config.Data.totalUnits = '+str(len(self.jobsList))+'\n')
-     fCfg.write('config.Data.outLFNDirBase = \'/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/\'\n')
+     fCfg.write('config.Data.outLFNDirBase = \''+self.outLFNDirBase+'\'\n')
      # ... User
      fCfg.write('config.section_(\'User\')\n')  
      # ... Site
      fCfg.write('config.section_(\'Site\')\n')
      fCfg.write('config.Site.blacklist = [\'T3_IT_Bologna\', \'T3_US_UMiss\']\n')
-     fCfg.write('config.Site.storageSite = \'T2_CH_CERN\'\n')
+     fCfg.write('config.Site.storageSite = \''+self.storageSite+'\'\n')
      # ... Close 
      fCfg.close()
 
      # BASH script for crab
-     fSh = open(self.crabSh,'w')
-     fSh.write('set -x\n')
-     fSh.write('set -e\n')
-     fSh.write('ulimit -s unlimited\n')
-     fSh.write('ulimit -c 0 \n')
-     fSh.write('\n')
+     os.system('cp '+self._cmsswBasedir+'/src/LatinoAnalysis/Tools/test/crab_script_header.sh '+self.crabSh)
+     fSh = open(self.crabSh,'a')
      for iJob in range(1,len(self.jobsList)+1) :
        fSh.write('if [ $1 -eq '+str(iJob)+' ]; then\n')
        jName = self.jobsList[iJob-1]
-       for iCommand in self.getCommands(jName): fSh.write('  '+iCommand+'\n')
+       #for iCommand in self.getCommands(jName): fSh.write('  '+iCommand+'\n')
+       for iFile in self.getJobOutputFiles(jName): fSh.write('  touch '+iFile+'\n')
        fSh.write('  tar -cf '+self.outputFile)
        for iFile in self.getJobOutputFiles(jName): fSh.write(' '+iFile)
        fSh.write('\n') 
-       fSh.write('ls -l\n')
+       fSh.write('  ls -l\n')
+       for iGarbageCmd in self.getGarbageCmd(jName): fSh.write('  '+iGarbageCmd+'\n') 
        fSh.write('fi\n')
      fSh.close()
      os.system('chmod +x '+self.crabSh)
+
+     # Unpacker json
+     self.mkUnpack()
 
    def getCommands(self,jName):
      Commands = []
@@ -148,3 +189,60 @@ class crabTool :
          if self.jobsDic[iStep][iTarget]['jName'] == jName:
            for iFile in self.jobsDic[iStep][iTarget]['outputFiles'] : JobOutputFiles.append(iFile)
      return JobOutputFiles
+
+   def getGarbageCmd(self,jName):
+     GarbageCmd = []
+     for iStep in self.jobsDic:
+       for iTarget in self.jobsDic[iStep]:
+         if self.jobsDic[iStep][iTarget]['jName'] == jName:
+           for iGarbageCmd in self.UnpackCommands[iStep][iTarget]['rmGarbage'] : GarbageCmd.append(iGarbageCmd)
+     return GarbageCmd
+
+   def mkUnpack(self):
+     self.Unpacker = {}
+     for iJob in range(1,len(self.jobsList)+1) :
+       jName   = self.jobsList[iJob-1]
+       self.Unpacker[iJob] = {} 
+       self.Unpacker[iJob]['Files'] = []
+       self.Unpacker[iJob]['cpCmd'] = []
+       for iStep in self.jobsDic:
+         for iTarget in self.jobsDic[iStep]:
+           if self.jobsDic[iStep][iTarget]['jName'] == jName:
+             for iFile in self.UnpackCommands[iStep][iTarget]['Files'] : self.Unpacker[iJob]['Files'].append(iFile)
+             for iCmd  in self.UnpackCommands[iStep][iTarget]['cpCmd'] : self.Unpacker[iJob]['cpCmd'].append(iCmd)
+     with open(self.UnpackFile, 'w') as f: json.dump(self.Unpacker, f)
+
+   def Sub(self):
+      if len(self.jobsList) == 0 :
+        print 'INFO: No jobs to run'
+        return
+      print "Submitting to CRAB:"
+      self.Print()
+      # Submit
+      os.system('cd '+self.subDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self.crabCfg))      
+      # Check result
+      logFile = self.subDir+'/crab_'+self.requestName+'/crab.log'
+      succes=False
+      taskName=None
+      with open(logFile) as search:
+        for line in search:
+          line = line.rstrip()
+          if 'Success: Your task has been delivered to the CRAB3 server' in line : succes=True
+          if 'Task name:' in line:
+            taskName=line.split()[5]
+      print 'Success = ',succes,' --> TaskName = ',taskName
+      # Make .jid files
+      if succes:
+        # Keep the task ID
+        tidFile = self.subDir+'/'+self.requestName+'.tid'
+        f = open(tidFile,'w')
+        f.write('CRABTask = '+taskName)
+        f.close() 
+        # Create the job ID to lock
+        for iJob in range(1,len(self.jobsList)+1) :
+          jName   = self.jobsList[iJob-1]
+          jidFile = self.subDir+'/'+jName+'.jid'
+          f = open(jidFile,'w')
+          f.write('CRABTask = '+taskName)
+          f.close()
+

@@ -240,13 +240,14 @@ def batchStatus():
     out, err = proc.communicate()
     DirList=string.split(out)
     for iDir in DirList:
-      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.sh' 
+      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.sh | grep -v crab3cfg' 
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
-      FileList=string.split(out)
+      FileList=string.split(out) 
       Done={}
       Pend={}
       Runn={}
+      Crab={}
       Tota={}
       FileRuns={}
       for iFile in FileList:
@@ -256,23 +257,28 @@ def batchStatus():
         if not iStep in Done: Done[iStep] = 0
         if not iStep in Pend: Pend[iStep] = 0
         if not iStep in Runn: Runn[iStep] = 0
+        if not iStep in Crab: Crab[iStep] = 0
         if not iStep in Tota: Tota[iStep] = 0
         if not iStep in FileRuns: FileRuns[iStep] = []
         Tota[iStep]+=1
         if os.path.isfile(jidFile):
-#         print jidFile
-          if 'iihe' in os.uname()[1] :
-            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
-            if 'Q' in iStat : Pend[iStep]+=1
-            else: Runn[iStep]+=1
-          elif 'ifca' in os.uname()[1] :
-            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
-            if 'Q' in iStat : Pend[iStep]+=1
-            else: Runn[iStep]+=1
+          # check if not CRAB:
+          iCrab = os.popen('cat '+jidFile+' | awk \'{print $1}\' ').read()
+          print iCrab
+          if 'CRABTask' in iCrab : Crab[iStep]+=1 
           else:
-            iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
-            if 'PEND' in iStat : Pend[iStep]+=1
-            else: Runn[iStep]+=1 
+            if 'iihe' in os.uname()[1] :
+              iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
+              if 'Q' in iStat : Pend[iStep]+=1
+              else: Runn[iStep]+=1
+            elif 'ifca' in os.uname()[1] :
+              iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
+              if 'Q' in iStat : Pend[iStep]+=1
+              else: Runn[iStep]+=1
+            else:
+              iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
+              if 'PEND' in iStat : Pend[iStep]+=1
+              else: Runn[iStep]+=1 
           FileRuns[iStep].append(iSample)
         else:
           Done[iStep]+=1
@@ -280,7 +286,8 @@ def batchStatus():
       print iDir+' : '
       print '----------------------------'
       for iStep in Done:
-        print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
+        print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' CRAB= '+str(Crab[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
+      if Crab[iStep] > 0 : print '**** WARNING: CRAB TASK ****'
       print '   Samples not done:'
       for iStep in Done:
         print '     --> '+iStep+' : ',FileRuns[iStep]
