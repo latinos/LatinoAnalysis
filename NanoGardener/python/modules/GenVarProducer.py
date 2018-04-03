@@ -107,11 +107,18 @@ class GenVarProducer(Module):
           # ele or mu --> isPrompt (or isDirectPromptTauDecayProduct)
           # tau       --> isPrompt
           #
-          if (( (abs(particle.pdgId) == 11) or (abs(particle.pdgId) == 13)  or (abs(particle.pdgId) == 15)) and
-              #( ((abs(particle.pdgId) == 11 or abs(particle.pdgId) == 13) and ( (particle.statusFlags >> 0 & 1) or (particle.statusFlags >> 5 & 1) )) or  # isDirectPromptTauDecayProduct FIXME sure?
-              ( ((abs(particle.pdgId) == 11 or abs(particle.pdgId) == 13) and ( particle.statusFlags >> 0 & 1 )) or
-                ((abs(particle.pdgId) == 15)  and ( (particle.statusFlags >> 0 & 1)) ) )   # isPrompt FIXME sure?
-              ) :    
+          #
+          #    if (( (abs(particle.pdgId) == 11) or (abs(particle.pdgId) == 13)  or (abs(particle.pdgId) == 15)) and
+          #        #( ((abs(particle.pdgId) == 11 or abs(particle.pdgId) == 13) and ( (particle.statusFlags >> 0 & 1) or (particle.statusFlags >> 5 & 1) )) or  # isDirectPromptTauDecayProduct FIXME sure?
+          #        ( ((abs(particle.pdgId) == 11 or abs(particle.pdgId) == 13) and ( particle.statusFlags >> 0 & 1 )) or
+          #          ((abs(particle.pdgId) == 15)  and ( (particle.statusFlags >> 0 & 1)) ) )   # isPrompt FIXME sure?
+          #        ) :    
+          #
+          #
+          # gen leptons only electrons and muons (or ele/mu from prompt tau decay)
+          #
+          if (( (abs(particle.pdgId) == 11) or (abs(particle.pdgId) == 13) ) and
+              ( ( particle.statusFlags >> 0 & 1 )  or  ( particle.statusFlags >> 2 & 1 )   or  ( particle.statusFlags >> 3 & 1 )   or  ( particle.statusFlags >> 4 & 1 ) ) ) :
             leptonGen_pt. push_back(particle.pt)
             leptonGen_eta.push_back(particle.eta)
             leptonGen_phi.push_back(particle.phi)
