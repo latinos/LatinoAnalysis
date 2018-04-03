@@ -287,7 +287,6 @@ def batchStatus():
       print '----------------------------'
       for iStep in Done:
         print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' CRAB= '+str(Crab[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
-      if Crab[iStep] > 0 : print '**** WARNING: CRAB TASK ****'
       print '   Samples not done:'
       for iStep in Done:
         print '     --> '+iStep+' : ',FileRuns[iStep]

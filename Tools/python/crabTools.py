@@ -16,37 +16,43 @@ class crabTool :
 
      self._cmsswBasedir = os.environ["CMSSW_BASE"]
 
+     # Send our own code sandBox
+     self._SendSrcSandBox = True     
+
+     # Common set of bash commands for every job
+     self._ScriptHeader = None
+
      # CRAB Stage Out Config
-     self.storageSite   = 'T2_CH_CERN'
-     self.outLFNDirBase = '/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/'
+     self._storageSite   = 'T2_CH_CERN'
+     self._outLFNDirBase = '/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/'
 
      # PostCrab Stage Out Config
-     self.UnpackCommands = {}
+     self._UnpackCommands = {}
      for iStep in stepList:
-       self.UnpackCommands[iStep] = {}
+       self._UnpackCommands[iStep] = {}
        for iTarget in targetList : 
-         self.UnpackCommands[iStep][iTarget] = {}
-         self.UnpackCommands[iStep][iTarget]['Files'] = [] 
-         self.UnpackCommands[iStep][iTarget]['cpCmd'] = [] 
-         self.UnpackCommands[iStep][iTarget]['rmGarbage'] = [] 
+         self._UnpackCommands[iStep][iTarget] = {}
+         self._UnpackCommands[iStep][iTarget]['Files'] = [] 
+         self._UnpackCommands[iStep][iTarget]['cpCmd'] = [] 
+         self._UnpackCommands[iStep][iTarget]['rmGarbage'] = [] 
 
      # White/Black lists (Here we can have a default for blacklist and add later):
-     self.blacklist = ['T3_IT_Bologna', 'T3_US_UMiss']
-     self.whitelist = []
+     self._blacklist = ['T3_IT_Bologna', 'T3_US_UMiss']
+     self._whitelist = []
 
      # Job dictionary
-     self.inputFiles = [] 
-     self.jobsDic={}
-     self.jobsList=[]
-     self.baseName = baseName
-     self.prodName = prodName
-     self.subDir   = jobDir+'/'+baseName+'__'+prodName
+     self._inputFiles = [] 
+     self._jobsDic={}
+     self._jobsList=[]
+     self._baseName = baseName
+     self._prodName = prodName
+     self._subDir   = jobDir+'/'+baseName+'__'+prodName
      if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)
 
 
      # Get the job splitting
      for iStep in stepList:
-       self.jobsDic[iStep] = {}
+       self._jobsDic[iStep] = {}
        if not 'Step' in batchSplit and len(stepList)>1 :
          kStep = 'AllSteps'
          for jStep in stepList: kStep+='-'+jStep
@@ -55,21 +61,21 @@ class crabTool :
 
        # Init Targets
        for iTarget in targetList:
-         self.jobsDic[iStep][iTarget] = ''
+         self._jobsDic[iStep][iTarget] = ''
          if not 'Target' in batchSplit and len(targetList)>1 :
            kTarget = 'AllTargets'
          else:
            kTarget = iTarget
 
          jName  = baseName+'__'+prodName+'__'+kStep+'__'+kTarget+postFix
-         self.jobsDic[iStep][iTarget] = {}
-         self.jobsDic[iStep][iTarget]['jName']       = jName
-         self.jobsDic[iStep][iTarget]['Commands']    = []
-         self.jobsDic[iStep][iTarget]['outputFiles'] = []
-         if not jName in self.jobsList: self.jobsList.append(jName)
+         self._jobsDic[iStep][iTarget] = {}
+         self._jobsDic[iStep][iTarget]['jName']       = jName
+         self._jobsDic[iStep][iTarget]['Commands']    = []
+         self._jobsDic[iStep][iTarget]['outputFiles'] = []
+         if not jName in self._jobsList: self._jobsList.append(jName)
     
      # Need an unique name for the crab cfg (allow more than one pass)
-     cmd='ls '+self.subDir+'/'+baseName+'__'+prodName+'__'+kStep+postFix+'__crab3cfg_*.py'
+     cmd='ls '+self._subDir+'/'+baseName+'__'+prodName+'__'+kStep+postFix+'__crab3cfg_*.py'
      proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
      out, err = proc.communicate()
      CfgExist=string.split(out)
@@ -77,153 +83,173 @@ class crabTool :
      for iCfg in CfgExist :
        nCfg = int(iCfg.split('__crab3cfg_')[1].replace('.py',''))
        if nCfg > iCfgMax : iCfgMax = nCfg
-     self.nCfg        = iCfgMax+1 
-     self.requestName = baseName+'__'+prodName+'__'+kStep+postFix+'__crab3cfg_'+str(self.nCfg)
-     self.outputFile  = self.requestName+'__output.tar'
-     self.crabCfg     = self.subDir+'/'+self.requestName+'.py'
-     self.crabSh      = self.subDir+'/'+self.requestName+'.sh'
-     self.UnpackFile  = self.subDir+'/'+self.requestName+'.unpack'
+     self._nCfg        = iCfgMax+1 
+     self._requestName = baseName+'__'+prodName+'__'+kStep+postFix+'__crab3cfg_'+str(self._nCfg)
+     self._outputFile  = self._requestName+'__output.tar'
+     self._crabCfg     = self._subDir+'/'+self._requestName+'.py'
+     self._crabSh      = self._subDir+'/'+self._requestName+'.sh'
+     self._srcSandbox  = self._subDir+'/'+self._requestName+'__srcSandbox.tgz' 
+     self._UnpackFile  = self._subDir+'/'+self._requestName+'.unpack'
 
    def setStorage(self,storageSite,outLFNDirBase): 
-     self.storageSite   = storageSite
-     self.outLFNDirBase = outLFNDirBase
+     self._storageSite   = storageSite
+     self._outLFNDirBase = outLFNDirBase
 
    def setSiteBlackList(self,blacklist):
-     for iSite in blacklist : self.blacklist.append(iSite)  
+     for iSite in blacklist : self._blacklist.append(iSite)  
 
    def setSiteWhiteList(self,whitelist):
-     for iSite in whitelist : self.whitelist.append(iSite)
+     for iSite in whitelist : self._whitelist.append(iSite)
 
    def AddInputFile(self,File):
-     self.inputFiles.append(File)
+     self._inputFiles.append(File)
 
    def AddCommand(self,iStep,iTarget,Command):
-     self.jobsDic[iStep][iTarget]['Commands'].append(Command)
+     self._jobsDic[iStep][iTarget]['Commands'].append(Command)
 
    def AddJobOutputFile(self,iStep,iTarget,File):
-     self.jobsDic[iStep][iTarget]['outputFiles'].append(File) 
+     self._jobsDic[iStep][iTarget]['outputFiles'].append(File) 
 
    def setUnpackCommands(self,iStep,iTarget,FileList=[],cpCmd=[],rmGarbage=[]):
-     self.UnpackCommands[iStep][iTarget]['Files']     = FileList
-     self.UnpackCommands[iStep][iTarget]['cpCmd']     = cpCmd
-     self.UnpackCommands[iStep][iTarget]['rmGarbage'] = rmGarbage
+     self._UnpackCommands[iStep][iTarget]['Files']     = FileList
+     self._UnpackCommands[iStep][iTarget]['cpCmd']     = cpCmd
+     self._UnpackCommands[iStep][iTarget]['rmGarbage'] = rmGarbage
 
    def Print(self):
-     print "--> Crab Cfg    = " , self.crabCfg
-     print "--> Crab Script = " , self.crabSh
-     print "--> Unpack File = " , self.UnpackFile 
+     print "--> Crab Cfg    = " , self._crabCfg
+     print "--> Crab Script = " , self._crabSh
+     print "--> Unpack File = " , self._UnpackFile 
 
    def mkCrabCfg(self):
-     if len(self.jobsList) == 0 :
+     if len(self._jobsList) == 0 :
        print 'INFO: No jobs to run'
        return
+
+     # Create SrcSandBox
+     if self._SendSrcSandBox : 
+        self.createSrcSandBox()
+        self.AddInputFile(self._srcSandbox)
+
      print "Creating CRAB3 config" 
      # Needed dummy FrameworkJobReport files
      self.AddInputFile(self._cmsswBasedir+'/src/LatinoAnalysis/Tools/test/FrameworkJobReport.xml')
 
      # Crab3 cfg
-     fCfg = open(self.crabCfg,'w')
+     fCfg = open(self._crabCfg,'w')
      fCfg.write('from WMCore.Configuration import Configuration\n')
      fCfg.write('config = Configuration()\n')
      # ... General
      fCfg.write('config.section_(\'General\')\n') 
      fCfg.write('config.General.transferLogs = True\n') 
-     fCfg.write('config.General.requestName = \''+self.requestName+'\'\n')
+     fCfg.write('config.General.requestName = \''+self._requestName+'\'\n')
      # ... JobType
      fCfg.write('config.section_(\'JobType\')\n')
      fCfg.write('config.JobType.psetName = \''+self._cmsswBasedir+'/src/LatinoAnalysis/Tools/test/do_nothing_cfg.py'+'\'\n') 
      fCfg.write('config.JobType.pluginName = \'PrivateMC\'\n')
      fCfg.write('config.JobType.inputFiles = [')
-     for iFile in self.inputFiles: fCfg.write('\''+iFile+'\',')  
+     for iFile in self._inputFiles: fCfg.write('\''+iFile+'\',')  
      fCfg.write(']\n')
-     fCfg.write('config.JobType.outputFiles = [\''+self.outputFile+'\']\n')
-     fCfg.write('config.JobType.scriptExe = \''+self.crabSh+'\'\n')
+     fCfg.write('config.JobType.outputFiles = [\''+self._outputFile+'\']\n')
+     fCfg.write('config.JobType.scriptExe = \''+self._crabSh+'\'\n')
+     fCfg.write('config.JobType.sendPythonFolder = True\n')
      # ... Data
      fCfg.write('config.section_(\'Data\')\n')
-     fCfg.write('config.Data.outputDatasetTag = \''+self.requestName+'\'\n')
+     fCfg.write('config.Data.outputDatasetTag = \''+self._requestName+'\'\n')
      fCfg.write('config.Data.publication = False\n')
      fCfg.write('config.Data.unitsPerJob = 1\n')
      fCfg.write('config.Data.splitting = \'EventBased\'\n') 
-     fCfg.write('config.Data.outputPrimaryDataset = \''+self.baseName+'\'\n')
-     fCfg.write('config.Data.totalUnits = '+str(len(self.jobsList))+'\n')
-     fCfg.write('config.Data.outLFNDirBase = \''+self.outLFNDirBase+'\'\n')
+     fCfg.write('config.Data.outputPrimaryDataset = \''+self._baseName+'\'\n')
+     fCfg.write('config.Data.totalUnits = '+str(len(self._jobsList))+'\n')
+     fCfg.write('config.Data.outLFNDirBase = \''+self._outLFNDirBase+'\'\n')
      # ... User
      fCfg.write('config.section_(\'User\')\n')  
      # ... Site
      fCfg.write('config.section_(\'Site\')\n')
      fCfg.write('config.Site.blacklist = [\'T3_IT_Bologna\', \'T3_US_UMiss\']\n')
-     fCfg.write('config.Site.storageSite = \''+self.storageSite+'\'\n')
+     fCfg.write('config.Site.storageSite = \''+self._storageSite+'\'\n')
      # ... Close 
      fCfg.close()
 
      # BASH script for crab
-     os.system('cp '+self._cmsswBasedir+'/src/LatinoAnalysis/Tools/test/crab_script_header.sh '+self.crabSh)
-     fSh = open(self.crabSh,'a')
-     for iJob in range(1,len(self.jobsList)+1) :
+     # ... Error handler
+     os.system('cp '+self._cmsswBasedir+'/src/LatinoAnalysis/Tools/test/crab_script_header.sh '+self._crabSh)
+     fSh = open(self._crabSh,'a')
+     # Unpack srcSandBox
+     if self._srcSandbox:
+       fSh.write('tar xzf '+os.path.basename(self._srcSandbox)+' -C $CMSSW_BASE\n')
+     # ... Common Header (if provided)
+     if not self._ScriptHeader == None :
+       with open(self._ScriptHeader) as infile: fSh.write(infile.read())
+     # ... Jobs
+     for iJob in range(1,len(self._jobsList)+1) :
        fSh.write('if [ $1 -eq '+str(iJob)+' ]; then\n')
-       jName = self.jobsList[iJob-1]
-       #for iCommand in self.getCommands(jName): fSh.write('  '+iCommand+'\n')
-       for iFile in self.getJobOutputFiles(jName): fSh.write('  touch '+iFile+'\n')
-       fSh.write('  tar -cf '+self.outputFile)
+       jName = self._jobsList[iJob-1]
+       for iCommand in self.getCommands(jName): fSh.write('  '+iCommand+'\n')
+       #for iFile in self.getJobOutputFiles(jName): fSh.write('  touch '+iFile+'\n')
+       fSh.write('  tar -cf '+self._outputFile)
        for iFile in self.getJobOutputFiles(jName): fSh.write(' '+iFile)
        fSh.write('\n') 
        fSh.write('  ls -l\n')
        for iGarbageCmd in self.getGarbageCmd(jName): fSh.write('  '+iGarbageCmd+'\n') 
        fSh.write('fi\n')
      fSh.close()
-     os.system('chmod +x '+self.crabSh)
+     os.system('chmod +x '+self._crabSh)
 
      # Unpacker json
      self.mkUnpack()
 
    def getCommands(self,jName):
      Commands = []
-     for iStep in self.jobsDic:
-       for iTarget in self.jobsDic[iStep]:
-         if self.jobsDic[iStep][iTarget]['jName'] == jName:
-           for iCommand in self.jobsDic[iStep][iTarget]['Commands'] : Commands.append(iCommand)
+     for iStep in self._jobsDic:
+       for iTarget in self._jobsDic[iStep]:
+         if self._jobsDic[iStep][iTarget]['jName'] == jName:
+           for iCommand in self._jobsDic[iStep][iTarget]['Commands'] : Commands.append(iCommand)
      return Commands 
 
    def getJobOutputFiles(self,jName):
      JobOutputFiles = []
-     for iStep in self.jobsDic:
-       for iTarget in self.jobsDic[iStep]:
-         if self.jobsDic[iStep][iTarget]['jName'] == jName:
-           for iFile in self.jobsDic[iStep][iTarget]['outputFiles'] : JobOutputFiles.append(iFile)
+     for iStep in self._jobsDic:
+       for iTarget in self._jobsDic[iStep]:
+         if self._jobsDic[iStep][iTarget]['jName'] == jName:
+           for iFile in self._jobsDic[iStep][iTarget]['outputFiles'] : JobOutputFiles.append(iFile)
      return JobOutputFiles
 
    def getGarbageCmd(self,jName):
      GarbageCmd = []
-     for iStep in self.jobsDic:
-       for iTarget in self.jobsDic[iStep]:
-         if self.jobsDic[iStep][iTarget]['jName'] == jName:
-           for iGarbageCmd in self.UnpackCommands[iStep][iTarget]['rmGarbage'] : GarbageCmd.append(iGarbageCmd)
+     for iStep in self._jobsDic:
+       for iTarget in self._jobsDic[iStep]:
+         if self._jobsDic[iStep][iTarget]['jName'] == jName:
+           for iGarbageCmd in self._UnpackCommands[iStep][iTarget]['rmGarbage'] : GarbageCmd.append(iGarbageCmd)
      return GarbageCmd
 
+   def createSrcSandBox(self):
+     toExclude="--exclude='*.pyc' --exclude='*/.git*'  --exclude='*_C.so' --exclude='*_C.d' --exclude='*_C_ACLiC_dict_rdict.pcm'"
+     os.system('cd '+self._cmsswBasedir+' ; tar czf '+self._srcSandbox+' '+toExclude+' src/*') 
+
    def mkUnpack(self):
-     self.Unpacker = {}
-     for iJob in range(1,len(self.jobsList)+1) :
-       jName   = self.jobsList[iJob-1]
-       self.Unpacker[iJob] = {} 
-       self.Unpacker[iJob]['Files'] = []
-       self.Unpacker[iJob]['cpCmd'] = []
-       for iStep in self.jobsDic:
-         for iTarget in self.jobsDic[iStep]:
-           if self.jobsDic[iStep][iTarget]['jName'] == jName:
-             for iFile in self.UnpackCommands[iStep][iTarget]['Files'] : self.Unpacker[iJob]['Files'].append(iFile)
-             for iCmd  in self.UnpackCommands[iStep][iTarget]['cpCmd'] : self.Unpacker[iJob]['cpCmd'].append(iCmd)
-     with open(self.UnpackFile, 'w') as f: json.dump(self.Unpacker, f)
+     self._Unpacker = {}
+     for iJob in range(1,len(self._jobsList)+1) :
+       jName   = self._jobsList[iJob-1]
+       self._Unpacker[iJob] = {} 
+       self._Unpacker[iJob]['Files'] = []
+       self._Unpacker[iJob]['cpCmd'] = []
+       for iStep in self._jobsDic:
+         for iTarget in self._jobsDic[iStep]:
+           if self._jobsDic[iStep][iTarget]['jName'] == jName:
+             for iFile in self._UnpackCommands[iStep][iTarget]['Files'] : self._Unpacker[iJob]['Files'].append(iFile)
+             for iCmd  in self._UnpackCommands[iStep][iTarget]['cpCmd'] : self._Unpacker[iJob]['cpCmd'].append(iCmd)
+     with open(self._UnpackFile, 'w') as f: json.dump(self._Unpacker, f)
 
    def Sub(self):
-      if len(self.jobsList) == 0 :
+      if len(self._jobsList) == 0 :
         print 'INFO: No jobs to run'
         return
       print "Submitting to CRAB:"
       self.Print()
       # Submit
-      os.system('cd '+self.subDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self.crabCfg))      
+      os.system('cd '+self._subDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self._crabCfg))      
       # Check result
-      logFile = self.subDir+'/crab_'+self.requestName+'/crab.log'
+      logFile = self._subDir+'/crab_'+self._requestName+'/crab.log'
       succes=False
       taskName=None
       with open(logFile) as search:
@@ -236,14 +262,14 @@ class crabTool :
       # Make .jid files
       if succes:
         # Keep the task ID
-        tidFile = self.subDir+'/'+self.requestName+'.tid'
+        tidFile = self._subDir+'/'+self._requestName+'.tid'
         f = open(tidFile,'w')
         f.write('CRABTask = '+taskName)
         f.close() 
         # Create the job ID to lock
-        for iJob in range(1,len(self.jobsList)+1) :
-          jName   = self.jobsList[iJob-1]
-          jidFile = self.subDir+'/'+jName+'.jid'
+        for iJob in range(1,len(self._jobsList)+1) :
+          jName   = self._jobsList[iJob-1]
+          jidFile = self._subDir+'/'+jName+'.jid'
           f = open(jidFile,'w')
           f.write('CRABTask = '+taskName)
           f.close()
@@ -255,15 +281,15 @@ class crabMon :
 
    def __init__ (self,taksFilter=[]):
 
-     self.subDir     = jobDir
-     self.taskFilter = taksFilter
-     self.taskList   = {}
+     self._subDir     = jobDir
+     self._taskFilter = taksFilter
+     self._taskList   = {}
 
 # ------ COMMON
 
    def getTaskList(self):
 
-     self.taskList   = {}
+     self._taskList   = {}
      fileCmd = 'ls '+jobDir
      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
      out, err = proc.communicate()
@@ -276,63 +302,64 @@ class crabMon :
        for iFile in FileList:
          taskName = (os.popen('cat '+iFile+' | grep CRABTask | awk \'{print $3}\'').read()).rstrip('\r\n')
          selectTask = False
-         if len(self.taskFilter) == 0 : selectTask = True
+         if len(self._taskFilter) == 0 : selectTask = True
          else:
-           if taskName.split(':')[1].split('_', 2)[-1] in self.taskFilter : selectTask = True
+           if taskName.split(':')[1].split('_', 2)[-1] in self._taskFilter : selectTask = True
          if selectTask:
-           self.taskList[taskName] = {}
-           self.taskList[taskName]['subDir']      = os.path.dirname(iFile)+'/'
-           self.taskList[taskName]['requestTime'] = taskName.split(':')[0]
-           self.taskList[taskName]['requestName'] = taskName.split(':')[1].split('_', 2)[-1]
-           self.taskList[taskName]['crabDir']     = 'crab_'+self.taskList[taskName]['requestName']
-           self.taskList[taskName]['tidFile']     = iFile
-           self.taskList[taskName]['pyCfg']       = iFile.replace('.tid','.py') 
-           self.taskList[taskName]['storageSite'] = (os.popen('cat '+self.taskList[taskName]['pyCfg']+'| grep storageSite | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','')
-           self.taskList[taskName]['outLFNDirBase']  = (os.popen('cat '+self.taskList[taskName]['pyCfg']+'| grep outLFNDirBase | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','') 
+           self._taskList[taskName] = {}
+           self._taskList[taskName]['subDir']      = os.path.dirname(iFile)+'/'
+           self._taskList[taskName]['requestTime'] = taskName.split(':')[0]
+           self._taskList[taskName]['requestName'] = taskName.split(':')[1].split('_', 2)[-1]
+           self._taskList[taskName]['crabDir']     = 'crab_'+self._taskList[taskName]['requestName']
+           self._taskList[taskName]['tidFile']     = iFile
+           self._taskList[taskName]['pyCfg']       = iFile.replace('.tid','.py') 
+           self._taskList[taskName]['storageSite'] = (os.popen('cat '+self._taskList[taskName]['pyCfg']+'| grep storageSite | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','')
+           self._taskList[taskName]['outLFNDirBase']  = (os.popen('cat '+self._taskList[taskName]['pyCfg']+'| grep outLFNDirBase | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','') 
 
 # ------- STATUS
 
    def getStatus(self,iTask):
-     status = os.popen('crab status -d '+self.taskList[iTask]['subDir']+self.taskList[iTask]['crabDir']).read()
-     self.currentTaskStatus = {}
-     self.currentTaskStatus['full']       = status
-     self.currentTaskStatus['crabServerStatus'] = None
-     self.currentTaskStatus['schedulerStatus']  = None
-     self.currentTaskStatus['jobsStatus']       = []
+     status = os.popen('crab status -d '+self._taskList[iTask]['subDir']+self._taskList[iTask]['crabDir']).read()
+     self._currentTaskStatus = {}
+     self._currentTaskStatus['full']       = status
+     self._currentTaskStatus['crabServerStatus'] = None
+     self._currentTaskStatus['schedulerStatus']  = None
+     self._currentTaskStatus['jobsStatus']       = []
      startJobInfo=False
      for line in status.splitlines():
-       if 'Status on the CRAB server:' in line : self.currentTaskStatus['crabServerStatus'] = line.split(':')[1].strip() 
-       if 'Status on the scheduler:'   in line : self.currentTaskStatus['schedulerStatus']  = line.split(':')[1].strip() 
+       if 'Status on the CRAB server:' in line : self._currentTaskStatus['crabServerStatus'] = line.split(':')[1].strip() 
+       if 'Status on the scheduler:'   in line : self._currentTaskStatus['schedulerStatus']  = line.split(':')[1].strip() 
        if not line : startJobInfo=False
-       if startJobInfo: self.currentTaskStatus['jobsStatus'].append(line.lstrip())
+       if startJobInfo: self._currentTaskStatus['jobsStatus'].append(line.lstrip())
        if 'Jobs status:'               in line :
           startJobInfo=True
-          self.currentTaskStatus['jobsStatus'].append(line.split(':')[1].lstrip())
+          self._currentTaskStatus['jobsStatus'].append(line.split(':')[1].lstrip())
              
    def printStatus(self):
      self.getTaskList()
-     for iTask in self.taskList:
-       print '------- CRAB Status for: ',self.taskList[iTask]['requestName']
+     for iTask in self._taskList:
+       print '------- CRAB Status for: ',self._taskList[iTask]['requestName']
        self.getStatus(iTask)
-       print 'CRAB Server Status = ',self.currentTaskStatus['crabServerStatus']
-       print 'Scheduler Status   = ',self.currentTaskStatus['schedulerStatus']
+       print 'CRAB Server Status = ',self._currentTaskStatus['crabServerStatus']
+       print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
        print 'Job(s)    Status   : '
-       for iJob in self.currentTaskStatus['jobsStatus'] : print ' --> ',iJob
+       for iJob in self._currentTaskStatus['jobsStatus'] : print ' --> ',iJob
+       print self._currentTaskStatus['full']
 
 # ------ UNPACKING
 
    def unpackAll(self):
      self.getTaskList()
-     for iTask in self.taskList:
-       print '------- UNPACKING TASK: ',self.taskList[iTask]['requestName']
+     for iTask in self._taskList:
+       print '------- UNPACKING TASK: ',self._taskList[iTask]['requestName']
        self.unpackTask(iTask)
 
    def unpackTask(self,iTask):
      self.getStatus(iTask)
-     if not self.currentTaskStatus['schedulerStatus'] == 'COMPLETED':
-       print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self.currentTaskStatus['schedulerStatus'] 
+     if not self._currentTaskStatus['schedulerStatus'] == 'COMPLETED':
+       print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus'] 
        return
-     print self.taskList[iTask]
+     print self._taskList[iTask]
      # Getting list of output
      #fileCmd = 'ls '
      #proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)

@@ -269,6 +269,7 @@ class PostProcMaker():
        self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
        self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
        self._crab.AddInputFile(self._cmsswBasedir+'/src/'+self._haddnano) 
+       #self._crab._ScriptHeader = self._cmsswBasedir+'/src/LatinoAnalysis/NanoGardener/test/PostProc_CrabScript_Header.sh'
 
      for iSample in self._targetDic :
        for iFile in self._targetDic[iSample] :
@@ -297,8 +298,9 @@ class PostProcMaker():
              self._crab.AddCommand(iStep,iTarget,'python '+os.path.basename(pyFile))
              self._crab.AddJobOutputFile(iStep,iTarget,outFile)
              # TMP FIX to garbage command because of not working PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import 
-             rmGarbageCmd = 'rm '+outFile#+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
-             self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd],[rmGarbageCmd])
+             #rmGarbageCmd = 'rm '+outFile#+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
+             #self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd],[rmGarbageCmd])
+             self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd])
      
      if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
      elif self._jobMode == 'Crab': 

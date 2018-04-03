@@ -96,13 +96,14 @@ if __name__ == '__main__':
 
 # ---------------------------------------- Compile all root macros before sending jobs
 
-#   pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
-#   for fn in os.listdir(pathRootMacro):
-#     if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
-#       try:
-#         ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
-#       except RuntimeError:
-#         ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
+    if options.runBatch :
+      pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
+      for fn in os.listdir(pathRootMacro):
+        if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
+          try:
+            ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
+          except RuntimeError:
+            ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
 
 # ---------------------------------------- And Here we go:
 
