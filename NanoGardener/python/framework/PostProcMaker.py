@@ -143,8 +143,8 @@ class PostProcMaker():
      # fileCmd .... Directory
      fileCmd = self._Sites[self._LocalSite]['lsCmd']+' '+self._targetDir
      # fileCmd .... Files
-     if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
-     else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
+     if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
+     else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
      # fileCmd .... Exec
      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
@@ -187,7 +187,7 @@ class PostProcMaker():
            FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst))
          # From previous PostProc step
          else :
-           FileDic = self.getTargetFileDic(iProd,iStep,iSample,getSampleFiles(self._sourceDir,iSample,True,'nanoLatino_',True))
+           FileDic = self.getTargetFileDic(iProd,iStep,iSample,getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True))
          if len(FileDic) : self._targetDic[iSample] = FileDic
 
    def getFilesFromDAS(self,dataset,dasInstance='prod/global'):
@@ -310,6 +310,11 @@ class PostProcMaker():
         
 
    def getStageIn(self,File):
+      # CRAB
+      if     self._jobMode == 'Crab'    \
+         and not self._aaaXrootd in File : 
+         return self._aaaXrootd+'/store/'+File.split('/store/')[1]
+
       # IIHE
       if     self._LocalSite == 'iihe'                               \
          and not self._Sites[self._LocalSite]['xrootdPath']  in File \

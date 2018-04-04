@@ -303,6 +303,109 @@ def printSampleDic(sampleDic):
         if 'weights' in sampleDic[iKey] :
           print 'weight = '+sampleDic[iKey]['weights'][iEntry]  
 
+#### SITE COMMANDS:
+
+def getTmpDir():
+    if   'iihe' in os.uname()[1] : return '/scratch/'
+    elif 'cern' in os.uname()[1] : return '/tmp/$USER/'
+    else : return '/tmp'
+
+def srmcp2local(inFile,outFile):
+    srcFile = inFile
+    if 'iihe' in os.uname()[1] :
+      if not '/pnfs/iihe/cms' in srcFile : srcFile = '/pnfs/iihe/cms' + srcFile
+      os.system('lcg-cp srm://maite.iihe.ac.be:8443'+srcFile+' file://'+outFile)
+    elif 'cern' in os.uname()[1] :
+      if not '/eos/cms' in srcFile : srcFile = '/eos/cms' + srcFile
+      os.system('cp '+srcFile+' '+outFile)
+    else:
+      print 'ERROR: Unknown SITE for srmcp2local ->exit()'
+      exit()
+
+def lsListCommand(inputDir, iniStep = 'Prod'):
+    "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
+    if 'iihe' in os.uname()[1] :
+      if '/pnfs/iihe/cms' in inputDir:
+        usedDir = inputDir.split('/pnfs/iihe/cms')[1]
+      else:
+        usedDir = inputDir
+      return "ls -1 /pnfs/iihe/cms" + usedDir
+    elif 'cern' in os.uname()[1] :
+      if '/eos/cms' in inputDir:
+        usedDir = inputDir.split('/eos/cms')[1]
+      else:
+        usedDir = inputDir
+      return 'ls /eos/cms' + usedDir
+    elif 'ifca' in os.uname()[1] :
+      if '/gpfs/gaes/cms/' in inputDir:
+        usedDir = inputDir.split('/gpfs/gaes/cms/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /gpfs/gaes/cms/" + usedDir
+    elif "pi.infn.it" in socket.getfqdn():
+      if '/gpfs/ddn/srm/cms/' in inputDir:
+        usedDir = inputDir.split('/gpfs/ddn/srm/cms/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /gpfs/ddn/srm/cms/" + usedDir
+    elif "knu" in os.uname()[1]:
+      if '/pnfs/knu.ac.kr/data/cms/' in inputDir:
+        usedDir = inputDir.split('/pnfs/knu.ac.kr/data/cms/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
+    elif "sdfarm" in os.uname()[1]:
+      if '/xrootd/' in inputDir:
+        usedDir = inputDir.split('/xrootd/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /xrootd/" + usedDir
+    else :
+      if iniStep == 'Prod' :
+        return " ls " + inputDir
+      else:
+        return " ls " + inputDir
+    
+def rootReadPath(inputFile):
+    "Returns path to read a root file (/store/.../*.root) on the remote server"
+    if 'iihe' in os.uname()[1] :
+        return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
+    elif "pi.infn.it" in socket.getfqdn():
+      return "/gpfs/ddn/srm/cms/" + inputFile
+    elif 'ifca' in os.uname()[1] :
+      return "/gpfs/gaes/cms/" + inputFile
+    elif 'knu' in os.uname()[1] :
+      return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
+    elif 'sdfarm' in os.uname()[1] :
+      return "root://cms-xrdr.sdfarm.kr:1094//xrd" + inputFile
+    else :
+       return "/eos/cms" + inputFile
+       # return  inputFile
+    
+def remoteFileSize(inputFile):
+    "Returns file size in byte for file on remote server (/store/.../*.root)"
+    if 'iihe' in os.uname()[1] :
+      if "/pnfs" in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'ifca' in os.uname()[1] :
+        return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "pi.infn.it" in socket.getfqdn():
+        return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "knu" in os.uname()[1]:
+      if '/pnfs' in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "sdfarm" in os.uname()[1]:
+      if '/xrootd' in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /xrootd/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    else :
+       return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+       # return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
 
 
  

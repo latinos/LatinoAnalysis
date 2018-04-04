@@ -8,6 +8,7 @@ import json
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
+from LatinoAnalysis.Tools.commonTools  import *
 
 ## ----------- THIS IS THE SUBMISSION PART :
 
@@ -228,16 +229,21 @@ class crabTool :
 
    def mkUnpack(self):
      self._Unpacker = {}
+     self._Unpacker['outputPrimaryDataset']     = self._baseName
+     self._Unpacker['storageSite']              = self._storageSite
+     self._Unpacker['outLFNDirBase']            = self._outLFNDirBase
+     self._Unpacker['unpackMap']                = {} 
      for iJob in range(1,len(self._jobsList)+1) :
        jName   = self._jobsList[iJob-1]
-       self._Unpacker[iJob] = {} 
-       self._Unpacker[iJob]['Files'] = []
-       self._Unpacker[iJob]['cpCmd'] = []
+       self._Unpacker['unpackMap'][iJob]          = {} 
+       self._Unpacker['unpackMap'][iJob]['Files'] = []
+       self._Unpacker['unpackMap'][iJob]['cpCmd'] = []
        for iStep in self._jobsDic:
          for iTarget in self._jobsDic[iStep]:
            if self._jobsDic[iStep][iTarget]['jName'] == jName:
-             for iFile in self._UnpackCommands[iStep][iTarget]['Files'] : self._Unpacker[iJob]['Files'].append(iFile)
-             for iCmd  in self._UnpackCommands[iStep][iTarget]['cpCmd'] : self._Unpacker[iJob]['cpCmd'].append(iCmd)
+             self._Unpacker['unpackMap'][iJob]['jName'] = jName
+             for iFile in self._UnpackCommands[iStep][iTarget]['Files'] : self._Unpacker['unpackMap'][iJob]['Files'].append(iFile)
+             for iCmd  in self._UnpackCommands[iStep][iTarget]['cpCmd'] : self._Unpacker['unpackMap'][iJob]['cpCmd'].append(iCmd)
      with open(self._UnpackFile, 'w') as f: json.dump(self._Unpacker, f)
 
    def Sub(self):
@@ -344,7 +350,6 @@ class crabMon :
        print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
        print 'Job(s)    Status   : '
        for iJob in self._currentTaskStatus['jobsStatus'] : print ' --> ',iJob
-       print self._currentTaskStatus['full']
 
 # ------ UNPACKING
 
@@ -356,15 +361,60 @@ class crabMon :
 
    def unpackTask(self,iTask):
      self.getStatus(iTask)
+     print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
      if not self._currentTaskStatus['schedulerStatus'] == 'COMPLETED':
        print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus'] 
        return
-     print self._taskList[iTask]
-     # Getting list of output
-     #fileCmd = 'ls '
-     #proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
-     #out, err = proc.communicate()
-     #DirList=string.split(out)
+     # Retrieving Info + Unpacking map
+     self._requestName          = self._taskList[iTask]['requestName']
+     self._requestTime          = self._taskList[iTask]['requestTime']
+     self._subDir               = self._taskList[iTask]['subDir']
+     self._crabDir              = self._taskList[iTask]['crabDir']
+     self._storageSite          = self._taskList[iTask]['storageSite']
+     self._outLFNDirBase        = self._taskList[iTask]['outLFNDirBase']
+     self._tidFile              = self._taskList[iTask]['tidFile']
+     self._Unpacker             = json.load(open(self._subDir+self._requestName+'.unpack'))          
+     self._outputPrimaryDataset = self._Unpacker['outputPrimaryDataset']
+     self._storeDir             = self._outLFNDirBase+'/'+self._outputPrimaryDataset+'/'+self._requestName+'/'+self._requestTime+'/'     
+ 
+     # Loop on jobs 
+     for iJob in self._Unpacker['unpackMap']:
+        jidFile = self._subDir+self._Unpacker['unpackMap'][iJob]['jName']+'.jid'
+        iDir = "%04d" % int((int(iJob)/1000)*1000)
+        storeFile = self._storeDir+'/'+str(iDir)+'/'+self._requestName+'__output_'+iJob+'.tar'
+        # check if exist
+        lsCmd = lsListCommand(storeFile)
+        proc=subprocess.Popen(lsCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+        out, err = proc.communicate()
+        if storeFile in out : 
+          # cp to local directory 
+          tmpDir = getTmpDir()
+          storeFileLocal = tmpDir+os.path.basename(storeFile)
+          srmcp2local(storeFile,storeFileLocal)
+          # check for expected content
+          FileCheck = True
+          proc=subprocess.Popen('tar tf '+storeFileLocal, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+          out, err = proc.communicate()
+          FileList=string.split(out)
+          for iFile in self._Unpacker['unpackMap'][iJob]['Files'] :
+            if not iFile in FileList : 
+              print 'WARNING: missing output = ',iFile
+              print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
+              FileCheck = False
+          # STAGE OUT
+          if FileCheck:
+            command = 'cd '+tmpDir+ ' ; tar xf '+os.path.basename(storeFile)+' ; '
+            for cpCmd in self._Unpacker['unpackMap'][iJob]['cpCmd'] : command += cpCmd+' ; '
+            for iFile in self._Unpacker['unpackMap'][iJob]['Files'] : command += 'rm '+iFile+' ; '
+            command += 'rm '+os.path.basename(storeFile)
+            os.system(command)
+        else:
+          print 'WARNING: storeFile not found = ',storeFile
+          print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
+        # Move jidFile to DONE
+        os.system('mv '+jidFile+' '+jidFile.replace('.jid','.done'))       
+     # Move tidFile to DONE
+     os.system('mv '+self._tidFile+' '+self._tidFile.replace('.tid','.done'))       
 
 # ------ CLEANING
 
