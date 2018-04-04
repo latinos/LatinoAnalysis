@@ -143,8 +143,12 @@ class PostProcMaker():
      # fileCmd .... Directory
      fileCmd = self._Sites[self._LocalSite]['lsCmd']+' '+self._targetDir
      # fileCmd .... Files
-     if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
-     else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
+     if self._iniStep == 'Prod' :
+       if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
+       else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
+     else:
+       if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
+       else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
      # fileCmd .... Exec
      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
