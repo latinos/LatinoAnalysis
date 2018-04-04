@@ -7,6 +7,37 @@ import socket
 
 from LatinoAnalysis.Tools.HiggsXSection  import *
 
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' (or 'y' or 'n').\n")
+
 #---
 class list_maker:
     def __init__(self, var, sep=',', type=None ):
@@ -309,6 +340,18 @@ def getTmpDir():
     if   'iihe' in os.uname()[1] : return '/scratch/'
     elif 'cern' in os.uname()[1] : return '/tmp/$USER/'
     else : return '/tmp'
+
+def delDirSE(Dir):
+    inDir = Dir
+    if 'iihe' in os.uname()[1] :
+      if not '/pnfs/iihe/cms' in inDir : inDir = '/pnfs/iihe/cms' + inDir
+      os.system('echo ssh m10 rm -rf '+inDir)
+    elif 'cern' in os.uname()[1] :
+      if not '/eos/cms' in inDir : inDir = '/eos/cms' + inDir
+      os.system('rm -rf '+inDir)
+    else:
+      print 'ERROR: Unknown SITE for srmcp2local ->exit()'
+      exit()
 
 def srmcp2local(inFile,outFile):
     srcFile = inFile

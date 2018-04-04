@@ -293,7 +293,7 @@ class crabMon :
 
 # ------ COMMON
 
-   def getTaskList(self):
+   def getTaskList(self,done=False):
 
      self._taskList   = {}
      fileCmd = 'ls '+jobDir
@@ -301,7 +301,10 @@ class crabMon :
      out, err = proc.communicate()
      DirList=string.split(out)
      for iDir in DirList:
-       fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.tid'
+       if done :
+         fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*crab3cfg*.done'
+       else:
+         fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*crab3cfg*.tid'
        proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
        out, err = proc.communicate()
        FileList=string.split(out)
@@ -318,7 +321,7 @@ class crabMon :
            self._taskList[taskName]['requestName'] = taskName.split(':')[1].split('_', 2)[-1]
            self._taskList[taskName]['crabDir']     = 'crab_'+self._taskList[taskName]['requestName']
            self._taskList[taskName]['tidFile']     = iFile
-           self._taskList[taskName]['pyCfg']       = iFile.replace('.tid','.py') 
+           self._taskList[taskName]['pyCfg']       = iFile.replace('.tid','.py').replace('.done','.py') 
            self._taskList[taskName]['storageSite'] = (os.popen('cat '+self._taskList[taskName]['pyCfg']+'| grep storageSite | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','')
            self._taskList[taskName]['outLFNDirBase']  = (os.popen('cat '+self._taskList[taskName]['pyCfg']+'| grep outLFNDirBase | awk \'{print $3}\'').read()).rstrip('\r\n').replace('\'','') 
 
@@ -418,3 +421,45 @@ class crabMon :
 
 # ------ CLEANING
 
+   def cleanAll(self):
+     self.getTaskList(True)
+     for iTask in self._taskList:
+       self.cleanTask(iTask)
+
+   def cleanTask(self,iTask):
+     print '------- CLEANING TASK: ',self._taskList[iTask]['requestName']
+     self.getStatus(iTask)
+     print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
+     if not self._currentTaskStatus['schedulerStatus'] == 'COMPLETED':
+       print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus']
+       return
+     # Retrieving Info + Unpacking map
+     self._requestName          = self._taskList[iTask]['requestName']
+     self._requestTime          = self._taskList[iTask]['requestTime']
+     self._subDir               = self._taskList[iTask]['subDir']
+     self._crabDir              = self._taskList[iTask]['crabDir']
+     self._storageSite          = self._taskList[iTask]['storageSite']
+     self._outLFNDirBase        = self._taskList[iTask]['outLFNDirBase']
+     self._tidFile              = self._taskList[iTask]['tidFile']
+     self._Unpacker             = json.load(open(self._subDir+self._requestName+'.unpack'))          
+     self._outputPrimaryDataset = self._Unpacker['outputPrimaryDataset']
+     self._storeDir             = self._outLFNDirBase+'/'+self._outputPrimaryDataset+'/'+self._requestName+'/'+self._requestTime+'/'
+     self._motherDir            = self._outLFNDirBase+'/'+self._outputPrimaryDataset+'/'+self._requestName
+     if not '.done' in self._tidFile : 
+       print 'WARNING Task not UNPACKED -> SKIPPING : tidFile = ',self._tidFile 
+       return
+     
+     print ' ----------------------------------------------->'
+     if query_yes_no('DELETE '+self._storeDir+' ??? ') : 
+       delDirSE(self._storeDir)
+       lsCmd = lsListCommand(self._motherDir)
+       proc=subprocess.Popen(lsCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+       out, err = proc.communicate()
+       List=string.split(out)
+       if len(List) == 0 : delDirSE(self._motherDir)
+     if query_yes_no('DELETE '+self._requestName+' CONFIG ???') : 
+       ext2del=['.done','.sh','.py','__srcSandbox.tgz','.pyc','.unpack']
+       for iExt in ext2del: os.system('rm '+self._subDir+self._requestName+iExt)
+       for iJob in self._Unpacker['unpackMap']:
+         ext2del=['.done','.py']
+         for iExt in ext2del: os.system('rm '+self._subDir+self._Unpacker['unpackMap'][iJob]['jName']+iExt)
