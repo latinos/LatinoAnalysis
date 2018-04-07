@@ -432,6 +432,11 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
       else:
         return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'cern' in os.uname()[1] :
+      if '/eos/cms/' in inputFile:
+        return subprocess.check_output("ls -l " +inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif 'ifca' in os.uname()[1] :
         return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "pi.infn.it" in socket.getfqdn():

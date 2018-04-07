@@ -139,6 +139,7 @@ class PostProcMaker():
 
    def getTargetFileDic(self,iProd,iStep,iSample,FileList):
      FileDic = {}
+     if len(FileList) == 0 : return FileDic
 
      # fileCmd .... Directory
      fileCmd = self._Sites[self._LocalSite]['lsCmd']+' '+self._targetDir
@@ -147,6 +148,7 @@ class PostProcMaker():
        if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
      else:
+       print FileList
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
@@ -192,7 +194,7 @@ class PostProcMaker():
          # From previous PostProc step
          else :
            FileDic = self.getTargetFileDic(iProd,iStep,iSample,getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True))
-         if len(FileDic) : self._targetDic[iSample] = FileDic
+         if len(FileDic) > 0 : self._targetDic[iSample] = FileDic
 
    def getFilesFromDAS(self,dataset,dasInstance='prod/global'):
      dasCmd='dasgoclient -query="instance='+dasInstance+' file dataset='+dataset+'"'
@@ -224,10 +226,8 @@ class PostProcMaker():
      # UEPS
      else:
        for iUEPS in Steps[iStep]['cpMap'] :
-         os.system('mkdir -p '+ self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'__'+iUEPS)
-  
-  
-
+         if self._Sites[self._LocalSite]['mkDir'] : 
+           os.system('mkdir -p '+ self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'__'+iUEPS)
 
 # --------------- Job Jandling
 
@@ -388,8 +388,14 @@ class PostProcMaker():
      # Configure modules
      fPy.write('p = PostProcessor(  "."   ,          \n')
      fPy.write('                    files ,          \n')
-     fPy.write('                    cut=None ,       \n')
-     fPy.write('                    branchsel=None , \n')
+     if 'selection' in self._Steps[iStep] :
+       fPy.write('                    cut='+self._Steps[iStep]['selection']+' ,       \n')
+     else: 
+       fPy.write('                    cut=None ,       \n')
+     if 'branchsel' in self._Steps[iStep] :
+       fPy.write('                    branchsel='+self._Steps[iStep]['branchsel']+' ,       \n')
+     else:
+       fPy.write('                    branchsel=None , \n')
      fPy.write('                    modules=[        \n')
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
@@ -414,6 +420,156 @@ class PostProcMaker():
      # Close file
      fPy.close()
 
+#------------- Hadd step
+
+   def getHaddFiles(self,iProd,iStep):
+
+     self._HaddDic = {}
+
+     for iSample in self._Samples :
+       if self.selectSample(iProd,iStep,iSample) :
+         HaddDic = {}
+         # Get File List in input directory
+         # ... From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
+         if self._iniStep == 'Prod' :
+           if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+           else:                                    dasInst = 'prod/global'
+           FileInList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+         # ... From previous PostProc step
+         else :
+           FileInList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
+
+         if len(FileInList) == 0 : continue
+
+         # Check size(FileInList) == size(Initial Step File List), i.e. do not Hadd in case previous step is not done
+         # ... Only needed if from previous PostProc step
+         if not self._iniStep == 'Prod' :
+           #... if no hadd before -> Prod:
+           if not 'hadd' in self._sourceDir :
+             if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+             else:                                    dasInst = 'prod/global'
+             FileOriList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst) 
+             if not len(FileInList) == len (FileOriList) :
+               print 'WARNING: HADD not possible, missing files in _sourceDir for iSample ',iSample,' --> SKIPPING IT !!!'
+               continue
+           else:
+             print 'ERROR: HADD CASE not implemented: hadd on top of hadd !'
+             exit()
+
+         # Now Build the HADD dictionnary according to target size
+         sortDic={} 
+         if '__part' in FileInList[0]:
+           for iFile in FileInList :
+             sortDic[int(iFile.split('__part')[1].replace('.root',''))] = iFile
+         else:
+           iPart=0
+           for iFile in FileInList :
+             sortDic[iPart] = iFile
+             iPart+=1 
+
+         iPart=0
+         tSize=0
+         for iKey in sortDic : 
+           iFile = sortDic[iKey] 
+           targetFileName = (self._targetDir+self._treeFilePrefix+iSample+'__part'+str(iPart)+'.root').replace('//','/')
+           if not targetFileName in HaddDic : HaddDic[targetFileName] = [] 
+           HaddDic[targetFileName].append(iFile)
+           iSize = float(remoteFileSize(iFile))
+           tSize+=iSize
+           if tSize > self._Steps['hadd']['SizeMax']: 
+             iPart+=1
+             tSize=0
+
+         # Remove '__part0' if only 1 target file
+         if len(HaddDic) == 1 : 
+           oldKey=''
+           for iKey in HaddDic: oldKey = iKey
+           newKey = iKey.replace('__part0','')
+           HaddDic[newKey] = HaddDic.pop(iKey)          
+
+         # Check if Taget files are existing
+         if not self._redo :
+           FileOutList=getSampleFiles(self._targetDir,iSample,True,self._treeFilePrefix,True)
+           for iFile in FileOutList : 
+             if iFile.replace('//','/') in HaddDic : del HaddDic[iFile.replace('//','/')]
+
+         if len(HaddDic) > 0 : self._HaddDic[iSample] = HaddDic
+
+   def mkHadd(self,iProd,iStep):
+
+     bpostFix=''
+     if not self._iniStep == 'Prod' : bpostFix='____'+self._iniStep
+
+     # Make job directories
+     jDir = jobDir+'/NanoGardening__'+iProd
+     if not os.path.exists(jDir) : os.system('mkdir -p '+jDir)
+     wDir = workDir+'/NanoGardening__'+iProd
+     if not os.path.exists(wDir) : os.system('mkdir -p '+wDir)
+
+     # prepare targetList
+     targetList = []
+     for iSample in self._HaddDic:
+       for iFile in self._HaddDic[iSample] :
+         iTarget = os.path.basename(iFile).replace(self._treeFilePrefix,'').replace('.root','')
+         pidFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
+         if os.path.isfile(pidFile) :
+           print "pidFile", pidFile
+           print '--> Job Running already : '+iTarget
+         else: targetList.append(iTarget)
+
+     # Dummy stepList for jobs
+     stepList=[]
+     stepList.append(iStep)
+
+     if self._jobMode == 'Interactive' :
+       print "INFO: Using Interactive command"
+     # batchMode Preparation
+     elif self._jobMode == 'Batch':
+       print "INFO: Using Local Batch"
+       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
+     # CRAB3 Init
+     elif self._jobMode == 'Crab':
+       print "INFO: Using CRAB3"
+       self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
+       self._crab.AddInputFile(self._cmsswBasedir+'/src/'+self._haddnano)
+
+     for iSample in self._HaddDic:
+       for iFile in self._HaddDic[iSample] :
+         iTarget = os.path.basename(iFile).replace(self._treeFilePrefix,'').replace('.root','')
+         if iTarget in targetList :
+           outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
+           # Stage Out command + cleaning
+           stageOutCmd  = self.mkStageOut(outFile,iFile)
+           rmGarbageCmd = 'rm '+outFile
+           # Final command
+           command  = 'cd '+wDir+' ; '+self._cmsswBasedir+'/src/'+self._haddnano+' '+outFile+' '
+           for sFile in self._HaddDic[iSample][iFile] : command += self.getStageIn(iFile)+' '
+           command += ' ; ls -l ; '+stageOutCmd+' ; '+rmGarbageCmd
+           # Interactive
+           if   self._jobMode == 'Interactive' :
+             if not self._pretend : os.system(command)
+             else                 : print command                
+           # Batch
+           elif self._jobMode == 'Batch' :
+             self._jobs.Add(iStep,iTarget,command)
+           elif self._jobMode == 'Crab':
+             self._crab.AddCommand(iStep,iTarget,command)
+             self._crab.AddJobOutputFile(iStep,iTarget,outFile)
+             self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd])      
+               
+     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
+     elif self._jobMode == 'Crab':
+        self._crab.mkCrabCfg()
+        if not self._pretend : self._crab.Sub()
+        else                 : self._crab.Print()
+
+#------------- UEPS step
+
+   def mkUEPS(self,iProd,iStep):
+     print 'UEPS Step not implemented yet'
+
 #------------- Main 
 
    def process(self):
@@ -427,10 +583,16 @@ class PostProcMaker():
             or (     self._Productions[iProd]['isData'] and self._Steps[iStep]['do4Data'] ) :
            print '---------------- for Step : ',iStep
            self.mkFileDir(iProd,iStep)
-           if not iStep == 'hadd' and not iStep == 'UEPS' :
+           if   not iStep == 'hadd' and not iStep == 'UEPS' :
              self.getTargetFiles(iProd,iStep)
              self.submitJobs(iProd,iStep)
- 
+           elif iStep == 'hadd' :
+             self.getHaddFiles(iProd,iStep) 
+             self.mkHadd(iProd,iStep)
+           elif iStep == 'UEPS' :  
+             self.getTargetFiles(iProd,iStep)
+             self.mkUEPS(iProd,iStep)  
+
        self.Reset()
        
 
