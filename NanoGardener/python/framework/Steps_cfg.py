@@ -91,8 +91,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                 #'SizeMax'    : 5e9 ,
-                  'SizeMax'    : 5e2 ,
+                  'SizeMax'    : 5e9 ,
                  #'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                  #                'DYJetsToLL_M-50-LO-ext1',
                  #                'WZTo2L2Q','TTToSemiLepton','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
@@ -112,7 +111,7 @@ Steps = {
                                     'GluGluHToWWTo2L2Nu_M125_CUETDown' , 'VBFHToWWTo2L2Nu_M125_CUETDown' , 'WWTo2L2Nu_CUETDown' ,
                                     'GluGluHToWWTo2L2Nu_M125_CUETUp'   , 'VBFHToWWTo2L2Nu_M125_CUETUp'   , 'WWTo2L2Nu_CUETUp'   ,
                                     'GluGluHToWWTo2L2NuHerwigPS_M125'  , 'VBFHToWWTo2L2NuHerwigPS_M125'  , 'WWTo2L2NuHerwigPS'  ,
-                                    'GluGluHToWWTo2L2Nu_M125_herwigpp'
+                                    'GluGluHToWWTo2L2Nu_M125_herwigpp' ,
                                  ] ,
                   'cpMap' : {
                               'UEdo' : {

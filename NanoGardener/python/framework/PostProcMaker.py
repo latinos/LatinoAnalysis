@@ -225,7 +225,7 @@ class PostProcMaker():
 
      # UEPS
      else:
-       for iUEPS in Steps[iStep]['cpMap'] :
+       for iUEPS in self._Steps[iStep]['cpMap'] :
          if self._Sites[self._LocalSite]['mkDir'] : 
            os.system('mkdir -p '+ self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'__'+iUEPS)
 
@@ -327,17 +327,23 @@ class PostProcMaker():
       else:  
         return File
 
-   def mkStageOut(self,prodFile,storeFile):
+   def mkStageOut(self,prodFile,storeFile,cpMode=False):
       command=''
       # IIHE
       if   self._LocalSite == 'iihe' :
         if self._redo : 
           command += 'srmrm '+self._Sites[self._LocalSite]['srmPrefix']+storeFile+' ; '
-        command += 'lcg-cp '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
+        if not cpMode:
+          command += 'lcg-cp '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
+        else:
+          command += 'lcg-cp '+self._Sites[self._LocalSite]['srmPrefix']+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
       # CERN
       elif self._LocalSite == 'cern' :
-        command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
-      
+        if not cpMode:
+          command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
+        else: 
+          command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile      
+
       # MISSING STAGE OUT
       else :
         print 'ERROR: mkStageOut not available for _LocalSite = ',self._LocalSite
@@ -568,7 +574,29 @@ class PostProcMaker():
 #------------- UEPS step
 
    def mkUEPS(self,iProd,iStep):
-     print 'UEPS Step not implemented yet'
+
+     for iSample in self._Samples :
+       if self.selectSample(iProd,iStep,iSample) :
+         # Get File List in input directory
+         # ... From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
+         if self._iniStep == 'Prod' :
+           print 'ERROR: Can mot make UEPS Step direcectly from central (or private) nanoAOD !'
+           exit() 
+         # ... From previous PostProc step
+         else :
+           FileInList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
+
+         if len(FileInList) == 0 : continue
+
+         for iUEPS in self._Steps[iStep]['cpMap'] :
+           if iSample in self._Steps[iStep]['cpMap'][iUEPS]:
+             self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'__'+iUEPS 
+             for tSample in self._Steps[iStep]['cpMap'][iUEPS][iSample] :
+               FileOutList = getSampleFiles(self._targetDir,tSample,True,self._treeFilePrefix,True) 
+               for iFile in FileInList:
+                 tFile = self._targetDir + '/' +  os.path.basename(iFile).replace(iSample,tSample)
+                 if not tFile in FileOutList or self._redo : 
+                   os.system(self.mkStageOut(iFile,tFile,True))
 
 #------------- Main 
 
@@ -590,7 +618,6 @@ class PostProcMaker():
              self.getHaddFiles(iProd,iStep) 
              self.mkHadd(iProd,iStep)
            elif iStep == 'UEPS' :  
-             self.getTargetFiles(iProd,iStep)
              self.mkUEPS(iProd,iStep)  
 
        self.Reset()
