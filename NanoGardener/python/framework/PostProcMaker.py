@@ -527,13 +527,11 @@ class PostProcMaker():
      elif self._jobMode == 'Batch':
        print "INFO: Using Local Batch"
        self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
-       self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
      # CRAB3 Init
      elif self._jobMode == 'Crab':
        print "INFO: Using CRAB3"
        self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
        self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
-       self._crab.AddInputFile(self._cmsswBasedir+'/src/'+self._haddnano)
 
      for iSample in self._HaddDic:
        for iFile in self._HaddDic[iSample] :
@@ -544,9 +542,11 @@ class PostProcMaker():
            stageOutCmd  = self.mkStageOut(outFile,iFile)
            rmGarbageCmd = 'rm '+outFile
            # Final command
-           command  = 'cd '+wDir+' ; '+self._cmsswBasedir+'/src/'+self._haddnano+' '+outFile+' '
+           if   self._jobMode == 'Interactive' : command  = 'cd '+wDir+' ; '+self._cmsswBasedir+'/src/'+self._haddnano+' '+outFile+' '
+           else:                                 command  = '$CMSSW_BASE/src/'+self._haddnano+' '+outFile+' '     
            for sFile in self._HaddDic[iSample][iFile] : command += self.getStageIn(iFile)+' '
-           command += ' ; ls -l ; '+stageOutCmd+' ; '+rmGarbageCmd
+           command += ' ; ls -l ; '
+           if not self._jobMode == 'Crab':  command += stageOutCmd+' ; '+rmGarbageCmd
            # Interactive
            if   self._jobMode == 'Interactive' :
              if not self._pretend : os.system(command)
