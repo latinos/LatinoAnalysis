@@ -17,8 +17,9 @@ import os.path
 import math
 
 class MetUnclusteredTreeMaker(Module) :
-    def __init__(self) :
+    def __init__(self, kind="Up") :
         cmssw_base = os.getenv('CMSSW_BASE')
+        self.kind = kind
 
     def beginJob(self):
         pass
@@ -53,24 +54,23 @@ class MetUnclusteredTreeMaker(Module) :
         met_px = met.pt * math.cos(met.phi)
         met_py = met.pt * math.sin(met.phi)
 
-        met_px_UnclEnUp  = met_px + getattr(event, "MET_MetUnclustEnUpDeltaX")
-        met_py_UnclEnUp  = met_py + getattr(event, "MET_MetUnclustEnUpDeltaY")
-        met_pt_UnclEnUp  = math.sqrt(met_px_UnclEnUp**2 + met_py_UnclEnUp**2)
-        met_phi_UnclEnUp = math.atan2(met_py_UnclEnUp, met_px_UnclEnUp)
-        newmet_phi_UnclEnUp = self.FixAngle(met.phi + self.FixAngle( met_phi_UnclEnUp - getattr(event, "RawMET_phi") ))
+        if self.kind == 'Up':
+            met_px_UnclEnUp  = met_px + getattr(event, "MET_MetUnclustEnUpDeltaX")
+            met_py_UnclEnUp  = met_py + getattr(event, "MET_MetUnclustEnUpDeltaY")
+            met_pt_UnclEnUp  = math.sqrt(met_px_UnclEnUp**2 + met_py_UnclEnUp**2)
+            met_phi_UnclEnUp = math.atan2(met_py_UnclEnUp, met_px_UnclEnUp)
+            newmet_phi_UnclEnUp = self.FixAngle(met.phi + self.FixAngle( met_phi_UnclEnUp - getattr(event, "RawMET_phi") ))
 
-        met_px_UnclEnDn  = met_px - getattr(event, "MET_MetUnclustEnUpDeltaX")
-        met_py_UnclEnDn  = met_py - getattr(event, "MET_MetUnclustEnUpDeltaY")
-        met_pt_UnclEnDn  = math.sqrt(met_px_UnclEnDn**2 + met_py_UnclEnDn**2)
-        met_phi_UnclEnDn = math.atan2(met_py_UnclEnDn, met_px_UnclEnDn)
-        newmet_phi_UnclEnDn = self.FixAngle(met.phi + self.FixAngle( met_phi_UnclEnDn - getattr(event, "RawMET_phi") ))
-
-        #TODO: When/How do you use Up or Down?
-        if True: #self.kind == 'Up':
             newmetmodule = met_pt_UnclEnUp
             newmetphi = newmet_phi_UnclEnUp
 
-        else: #elif self.kind == 'Dn':
+        elif self.kind == 'Dn' or self.kind == 'Down':
+            met_px_UnclEnDn  = met_px - getattr(event, "MET_MetUnclustEnUpDeltaX")
+            met_py_UnclEnDn  = met_py - getattr(event, "MET_MetUnclustEnUpDeltaY")
+            met_pt_UnclEnDn  = math.sqrt(met_px_UnclEnDn**2 + met_py_UnclEnDn**2)
+            met_phi_UnclEnDn = math.atan2(met_py_UnclEnDn, met_px_UnclEnDn)
+            newmet_phi_UnclEnDn = self.FixAngle(met.phi + self.FixAngle( met_phi_UnclEnDn - getattr(event, "RawMET_phi") ))
+
             newmetmodule = met_pt_UnclEnDn
             newmetphi = newmet_phi_UnclEnDn
 
