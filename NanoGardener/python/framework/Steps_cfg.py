@@ -10,7 +10,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
 #                 'selection'  : 'selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"' , 
-                  'subTargets' : ['lepMergerHWW','baseW','l2Kin'], 
+                  'subTargets' : ['lepMergerHWW','baseW','l2Kin', 'btagPerJet', 'btagPerEvent'], 
                 },
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
@@ -47,6 +47,23 @@ Steps = {
                   'module'     : 'wwNLLcorrectionWeightProducer()',  
                },  
 
+  'btagPerJet': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'module'     : 'btagSFProducer(era="2016", algo="cmva")',
+                 },
+
+  'btagPerEvent': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'module'     : 'BTagEventWeightProducer()',
+        
+                }, 
+ 
 ## ------- MODULES: Kinematic
 
   'l2Kin'    : {
