@@ -16,6 +16,7 @@ from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.MetUnclustered import *
 
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
+from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import btagSFProducer
 
 lepMergerLatino = lambda : collectionMerger(
         input  = ["Electron","Muon"],
@@ -31,6 +32,7 @@ from LatinoAnalysis.NanoGardener.modules.l3KinProducer import *
 from LatinoAnalysis.NanoGardener.modules.l4KinProducer import *
 
 from LatinoAnalysis.NanoGardener.modules.GenVarProducer import *
+from LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer import *
 
 
 
@@ -65,6 +67,8 @@ p = PostProcessor(".", files,
                          #l2KinProducer(),
                          #l3KinProducer(),
                          #l4KinProducer()
+                         btagSFProducer(era='2016', algo='cmva'),
+                         BTagEventWeightProducer()
                          ],
                        provenance=True,
                        fwkJobReport=True
