@@ -51,8 +51,27 @@ class PostProcMaker():
      # Samples
      self._Samples     = {}
 
+     # BaseW
+     self._baseW       = {}
+     self.loadXSDB() 
+
      # We need a Proxy !
      self.checkProxy()
+
+
+
+#---- Load x-section DB
+   def loadXSDB(self):
+
+    # Among 'gDoc','Python','YellowR' and order Matter (Overwriting for same samples !)
+    xsMethods=['Python','YellowR']
+    xsFile=self._cmsswBasedir+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    self._xsDB = xsectionDB()
+    for iMethod in xsMethods :
+
+      if iMethod == 'gDoc'    : self._xsDB.readGDoc(Productions[iProd]['gDocID'])
+      if iMethod == 'Python'  : self._xsDB.readPython(xsFile)
+      if iMethod == 'YellowR' : self._xsDB.readYR('YR4','13TeV')
 
    def Reset(self) : 
 
@@ -283,7 +302,7 @@ class PostProcMaker():
            pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
            outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
-           self.mkPyCfg([self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'])
+           self.mkPyCfg(iSample,[self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'])
            # Stage Out command + cleaning
            stageOutCmd  = self.mkStageOut(outFile,self._targetDic[iSample][iFile])
            rmGarbageCmd = 'rm '+outFile+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
@@ -351,7 +370,7 @@ class PostProcMaker():
 
       return command
 
-   def mkPyCfg(self,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False):
+   def mkPyCfg(self,iSample,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False):
 
 
      fPy = open(fPyName,'a') 
@@ -408,9 +427,9 @@ class PostProcMaker():
          doSubStep = False
          if    isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
          elif             self._Steps[iSubStep]['do4MC']   : doSubStep = True       
-         if doSubStep :  fPy.write('                          '+self._Steps[iSubStep]['module']+',\n')
+         if doSubStep :  fPy.write('                          '+self.customizeModule(iSample,iSubStep)+',\n')
      else:
-       fPy.write('                          '+self._Steps[iStep]['module']+'\n') 
+       fPy.write('                          '+self.customizeModule(iSample,iStep)+'\n') 
      fPy.write('                            ],      \n') 
      fPy.write('                    provenance=True, \n')
      fPy.write('                    fwkJobReport=True, \n')
@@ -425,6 +444,48 @@ class PostProcMaker():
 
      # Close file
      fPy.close()
+
+#------------- MODULE CUSTOMIZATION: baseW, CMSSW_Version, ....
+
+   def computewBaseW(self,iSample):
+     if not iSample in self._baseW :
+       # Will always compute from initial nAOD files !
+       if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+       else:                                    dasInst = 'prod/global'
+       FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+       # Now compute #evts
+       genEventCount = 0
+       genEventSumw  = 0.0
+       genEventSumw2 = 0.0
+       for iFile in FileList:
+         f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
+         Runs = f.Get("Runs")
+         for iRun in Runs : 
+           genEventCount += iRun.genEventCount
+           genEventSumw  += iRun.genEventSumw
+           genEventSumw2 += iRun.genEventSumw2
+         f.Close()
+       # get the X-section and baseW
+       nEvt = genEventSumw
+       Xsec  = self._xsDB.get(iSample)
+       baseW = float(Xsec)*1000./nEvt
+       #print 'baseW: xs,N -> W', Xsec , nEvt , baseW
+       # Store Info
+       self._baseW[iSample] = { 'baseW' : baseW , 'Xsec' : Xsec }
+
+   def customizeModule(self,iSample,iStep):
+
+     module = self._Steps[iStep]['module']
+
+     # baseW
+     if iStep == 'baseW' :
+       self.computewBaseW(iSample)
+       module = module.replace('RPLME_baseW'    , str(self._baseW[iSample]['baseW']))
+       module = module.replace('RPLME_XSection' , str(self._baseW[iSample]['Xsec']))
+
+     # "CMSSW" version
+
+     return module
 
 #------------- Hadd step
 
