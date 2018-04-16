@@ -112,6 +112,13 @@ public:
  float drllOneThree();
  float drllTwoThree();
  
+ //---- for VBF training
+ float ptTOT_cut();
+ float mTOT_cut();
+ float OLV1_cut();
+ float OLV2_cut();
+ float Ceta_cut();
+ 
  
 private:
  //! variables
@@ -522,6 +529,53 @@ float WW::dphilljetjet_cut(){
   return -1.0;
  }
 }
+
+float WW::ptTOT_cut(){
+ if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+   return  fabs( (L1+L2+J1+J2+MET).Pt() );
+ }
+ else {
+  return -1.0;
+ }
+}
+
+float WW::mTOT_cut(){
+ if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+   return  fabs( (L1+L2+J1+J2+MET).M() );
+ }
+ else {
+  return -1.0;
+ }
+}
+
+float WW::OLV1_cut(){
+ if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+   return  2 * ((L1.Eta()-((J1.Eta()+J2.Eta())/2))/(J1.Eta()-J2.Eta()));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WW::OLV2_cut(){
+ if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+   return  2 * ((L2.Eta()-((J1.Eta()+J2.Eta())/2))/(J1.Eta()-J2.Eta()));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WW::Ceta_cut(){
+
+ if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
+  return (OLV1_cut()+OLV2_cut());
+ }
+ else {
+  return -9999.0;
+ }
+}
+
 
 float WW::dphilmet(){ 
  if (_isOk) {
