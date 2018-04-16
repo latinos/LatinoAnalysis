@@ -69,7 +69,7 @@ class PostProcMaker():
     self._xsDB = xsectionDB()
     for iMethod in xsMethods :
 
-      if iMethod == 'gDoc'    : self._xsDB.readGDoc(Productions[iProd]['gDocID'])
+      #OLD if iMethod == 'gDoc'    : self._xsDB.readGDoc(Productions[iProd]['gDocID'])
       if iMethod == 'Python'  : self._xsDB.readPython(xsFile)
       if iMethod == 'YellowR' : self._xsDB.readYR('YR4','13TeV')
 
@@ -484,6 +484,8 @@ class PostProcMaker():
        module = module.replace('RPLME_XSection' , str(self._baseW[iSample]['Xsec']))
 
      # "CMSSW" version
+     if 'RPLME_CMSSW' in module :
+       module = module.replace('RPLME_CMSSW',self._prodVersion)
 
      return module
 
@@ -665,6 +667,7 @@ class PostProcMaker():
 
      for iProd in self._prodList:
        print '----------- Running on production: '+iProd
+       self._prodVersion = self._Productions[iProd]['cmssw']
        self.readSampleFile(iProd) 
 
        for iStep in self._stepList:
