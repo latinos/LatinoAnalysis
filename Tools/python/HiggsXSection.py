@@ -183,9 +183,9 @@ class HiggsXSection:
        if not proc      in self._YR[YRversion][model]['xs'][energy]  : return '1.0'
         
      if    np == 'scale' :
-       if   proc == 'ZH' and YRversion in ['YR4'] and mh == 125.0 and model == 'sm' :
+       if   proc == 'ZH' and YRversion in ['YR4'] and float(mh) == 125.0 and model == 'sm' :
          return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['qqZH125'],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['qqZH125'],mh,'Scale_pos')/100.)
-       elif proc == 'ggZH' and YRversion in ['YR4'] and mh == 125.0 and model == 'sm' :
+       elif proc == 'ggZH' and YRversion in ['YR4'] and float(mh) == 125.0 and model == 'sm' :
          return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH125'],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH125'],mh,'Scale_pos')/100.)
        elif proc == 'ggZH':
          return '1.37'  # Number from Run-I CMS/ATLAS combination !
@@ -193,9 +193,9 @@ class HiggsXSection:
          return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_pos')/100.)
 
      elif  np == 'pdf' :
-       if   proc == 'ZH' and YRversion in ['YR4'] and mh == 125.0 and model == 'sm' :
+       if   proc == 'ZH' and YRversion in ['YR4'] and float(mh) == 125.0 and model == 'sm' :
          return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['qqZH125'],mh,'PDF_plus_alpha_s')/100.  )
-       elif proc == 'ggZH' and YRversion in ['YR4'] and mh == 125.0 and model == 'sm' :
+       elif proc == 'ggZH' and YRversion in ['YR4'] and float(mh) == 125.0 and model == 'sm' :
          return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH125'],mh,'PDF_plus_alpha_s')/100.  )
        elif proc == 'ggZH':
          return '1.15'  # Number from Run-I CMS/ATLAS combination !
@@ -324,6 +324,17 @@ class HiggsXSection:
      return HiggsXS
 
 ### Below some examples of usage :
+
+#HiggsXS = HiggsXSection()
+#print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ZH','125.0','pdf','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ZH','125.0','pdf','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggZH','125.0','pdf','sm')
+#print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ggZH','125.0','pdf','sm')
+
+#print HiggsXS.GetHiggsBR('YR4prel','H_WW','500.0','bsm')
+#print HiggsXS.GetHiggsBR('YR4prel','H_WW','1000.0','bsm')
+#print HiggsXS.GetHiggsBR('YR4prel','H_WW','1500.0','bsm')
+#print HiggsXS.GetHiggsBR('YR4','H_WW','125.0','bsm')
 
 #HiggsXS = HiggsXSection() 
 #print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_M125')
