@@ -25,14 +25,14 @@ class LeptonSel(Module):
     ''' 
 
     def __init__(self, cmssw, LepFilter = None, nLF = None):
-        if LepFilter not in LepFilter_dict:    raise ValueError('Non existing input tag for LepFilter, possibilities are Loose, Veto os WgStar.')
-        if len(ElectronWP['VetoObjWP']) > 1:   raise IOError('More then one Electron Veto def given in LeptonSel_cfg')
-        if len(ElectronWP['FakeObjWP']) > 1:   raise IOError('More then one Electron Loose def given in LeptonSel_cfg')
-        if len(ElectronWP['WgStarObjWP']) > 1: raise IOError('More then one Electron WgStar def given in LeptonSel_cfg')
-        if len(MuonWP['VetoObjWP']) > 1:   raise IOError('More then one Muon Veto def given in LeptonSel_cfg')
-        if len(MuonWP['FakeObjWP']) > 1:   raise IOError('More then one Muon Loose def given in LeptonSel_cfg')
-        if len(MuonWP['WgStarObjWP']) > 1: raise IOError('More then one Muon WgStar def given in LeptonSel_cfg')
         self.cmssw = cmssw
+        if LepFilter not in LepFilter_dict:    raise ValueError('Non existing input tag for LepFilter, possibilities are Loose, Veto os WgStar.')
+        if len(ElectronWP[self.cmssw]['VetoObjWP']) > 1:   raise IOError('More then one Electron Veto def given in LeptonSel_cfg')
+        if len(ElectronWP[self.cmssw]['FakeObjWP']) > 1:   raise IOError('More then one Electron Loose def given in LeptonSel_cfg')
+        if len(ElectronWP[self.cmssw]['WgStarObjWP']) > 1: raise IOError('More then one Electron WgStar def given in LeptonSel_cfg')
+        if len(MuonWP[self.cmssw]['VetoObjWP']) > 1:   raise IOError('More then one Muon Veto def given in LeptonSel_cfg')
+        if len(MuonWP[self.cmssw]['FakeObjWP']) > 1:   raise IOError('More then one Muon Loose def given in LeptonSel_cfg')
+        if len(MuonWP[self.cmssw]['WgStarObjWP']) > 1: raise IOError('More then one Muon WgStar def given in LeptonSel_cfg')
         self.LepFilter = LepFilter
         self.nLF = nLF
         self.Lep_minPt = [8.0]*self.nLF
@@ -64,9 +64,9 @@ class LeptonSel(Module):
         self.out.branch('Lepton_isVeto', 'I', lenVar='nLepton')
         self.out.branch('Lepton_isWgs', 'I', lenVar='nLepton')
         
-        for wp in ElectronWP['TightObjWP']:
+        for wp in ElectronWP[self.cmssw]['TightObjWP']:
            self.out.branch('Electron_isTight_'+wp, 'I', lenVar='nElectron')
-        for wp in MuonWP['TightObjWP']:
+        for wp in MuonWP[self.cmssw]['TightObjWP']:
            self.out.branch('Muon_isTight_'+wp, 'I', lenVar='nMuon')
         self.out.branch('Jet_isLepton', 'I', lenVar='nJet')
         if self.cmssw == 'Full2016': self.out.branch('dmZll_veto', 'F') 
@@ -105,6 +105,8 @@ class LeptonSel(Module):
         #   if self.is_SPtrigger[i]: self.SPtrigger[SPTrigNames[i]] = tree.valueReader(SPTrigNames[i])
 
         self.nLepton = tree.valueReader('nLepton')
+        #self.nElectron = tree.valueReader('nElectron')
+        #self.nMuon = tree.valueReader('nMuon')
         self.nJet = tree.valueReader('nJet')
         self._ttreereaderversion = tree._ttreereaderversion # self._ttreereaderversion must be set AFTER all calls to tree.valueReader or tree.arrayReader
 
@@ -158,6 +160,7 @@ class LeptonSel(Module):
         
         # Fast lepton filter
         if self.nLepton < self.nLF: return False
+        #if int(self.nElectron) + int(self.nMuon) < int(self.nLF): return False
 
         # Tags and variables
         Clean_Tag = LepFilter_dict[self.LepFilter]
@@ -166,10 +169,10 @@ class LeptonSel(Module):
         Lep_Tags['isVeto'] = []
         Lep_Tags['isWgs'] = []
         El_Tags = {}
-        for wp in ElectronWP['TightObjWP']:
+        for wp in ElectronWP[self.cmssw]['TightObjWP']:
            El_Tags[wp] = []
         Mu_Tags = {}
-        for wp in MuonWP['TightObjWP']:
+        for wp in MuonWP[self.cmssw]['TightObjWP']:
            Mu_Tags[wp] = []
         JC_Tag = [0]*int(self.nJet)
 
@@ -180,30 +183,30 @@ class LeptonSel(Module):
     
            # Lepton id's
            if abs(self.lepton_var['Lepton_pdgId'][iLep]) == 11:
-              for wp in ElectronWP['FakeObjWP']:
-                 if self.passWP(iLep, ElectronWP['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
+              for wp in ElectronWP[self.cmssw]['FakeObjWP']:
+                 if self.passWP(iLep, ElectronWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
                  else: Lep_Tags['isLoose'].append(0)
-              for wp in ElectronWP['VetoObjWP']:
-                 if self.passWP(iLep, ElectronWP['VetoObjWP'][wp]):   Lep_Tags['isVeto'].append(1)
+              for wp in ElectronWP[self.cmssw]['VetoObjWP']:
+                 if self.passWP(iLep, ElectronWP[self.cmssw]['VetoObjWP'][wp]):   Lep_Tags['isVeto'].append(1)
                  else: Lep_Tags['isVeto'].append(0)
-              for wp in ElectronWP['WgStarObjWP']:
-                 if self.passWP(iLep, ElectronWP['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
+              for wp in ElectronWP[self.cmssw]['WgStarObjWP']:
+                 if self.passWP(iLep, ElectronWP[self.cmssw]['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
                  else: Lep_Tags['isWgs'].append(0)
-              for wp in ElectronWP['TightObjWP']:
-                 if self.passWP(iLep, ElectronWP['TightObjWP'][wp]):  El_Tags[wp].append(1)
+              for wp in ElectronWP[self.cmssw]['TightObjWP']:
+                 if self.passWP(iLep, ElectronWP[self.cmssw]['TightObjWP'][wp]):  El_Tags[wp].append(1)
                  else: El_Tags[wp].append(0)
            elif abs(self.lepton_var['Lepton_pdgId'][iLep]) == 13:
-              for wp in MuonWP['FakeObjWP']:
-                 if self.passWP(iLep, MuonWP['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
+              for wp in MuonWP[self.cmssw]['FakeObjWP']:
+                 if self.passWP(iLep, MuonWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
                  else: Lep_Tags['isLoose'].append(0)
-              for wp in MuonWP['VetoObjWP']:
-                 if self.passWP(iLep, MuonWP['VetoObjWP'][wp]):   Lep_Tags['isVeto'].append(1)
+              for wp in MuonWP[self.cmssw]['VetoObjWP']:
+                 if self.passWP(iLep, MuonWP[self.cmssw]['VetoObjWP'][wp]):   Lep_Tags['isVeto'].append(1)
                  else: Lep_Tags['isVeto'].append(0)
-              for wp in MuonWP['WgStarObjWP']:
-                 if self.passWP(iLep, MuonWP['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
+              for wp in MuonWP[self.cmssw]['WgStarObjWP']:
+                 if self.passWP(iLep, MuonWP[self.cmssw]['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
                  else: Lep_Tags['isWgs'].append(0)
-              for wp in MuonWP['TightObjWP']:
-                 if self.passWP(iLep, MuonWP['TightObjWP'][wp]):  Mu_Tags[wp].append(1)
+              for wp in MuonWP[self.cmssw]['TightObjWP']:
+                 if self.passWP(iLep, MuonWP[self.cmssw]['TightObjWP'][wp]):  Mu_Tags[wp].append(1)
                  else: Mu_Tags[wp].append(0)
            else: raise ValueError('Unexpected pdgId in Lepton_pdgId: ' + str(self.lepton_var['Lepton_pdgId'][iLep]))
 

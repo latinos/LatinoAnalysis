@@ -4,7 +4,8 @@ put this file in LatinoAnalysis/NanoGardener/python/data/
 
 ####################### Electrons ##################################
 
-ElectronWP = {
+ElectronWP = {  
+'Full2016': {
 
 ## ------------  
 
@@ -302,6 +303,7 @@ ElectronWP = {
                              } ,
 
                  } ,
+}
 
 
 }
@@ -310,6 +312,7 @@ ElectronWP = {
 ####################### Muons ######################################
 
 MuonWP = {
+'Full2016': {
 
 ## ------------  
  'VetoObjWP' : { 
@@ -429,6 +432,7 @@ MuonWP = {
                        } ,
  
                  }, 
+}
 
 }
 
