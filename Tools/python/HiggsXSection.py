@@ -30,6 +30,7 @@ class HiggsXSection:
       self.readYR('YR3','8TeV')
       
       self.readYR('YR4','13TeV')
+      self.readYR('YR4','13TeV','bsm')
       self.readYR('YR4prel','13TeV')
       self.readYR('YR4prel','13TeV','bsm')
       
@@ -79,7 +80,7 @@ class HiggsXSection:
   
       # ... BSM (high mass NWA Higgs-like)
       if model == 'bsm' :
-        if YRversion in  ['YR4prel'] :
+        if YRversion in  ['YR4prel','YR4'] :
           if not energy in ['13TeV'] : return
           if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
           self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-ggH.txt') 
