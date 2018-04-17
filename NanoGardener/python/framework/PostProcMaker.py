@@ -65,7 +65,7 @@ class PostProcMaker():
 
     # Among 'gDoc','Python','YellowR' and order Matter (Overwriting for same samples !)
     xsMethods=['Python','YellowR']
-    xsFile=self._cmsswBasedir+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    xsFile=self._cmsswBasedir+'/src/LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections.py'
     self._xsDB = xsectionDB()
     for iMethod in xsMethods :
 
