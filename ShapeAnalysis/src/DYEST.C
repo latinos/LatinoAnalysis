@@ -107,7 +107,7 @@ float DYCalc::N_DY(float R , float Nin , float k , float Neu, float Nvv ){
 
 float DYCalc::EN_DY(float R , float Nin , float k , float Neu, float Nvv, float ER, float ENin, float Ek, float ENeu, float ENvv ){
 
-   cout <<"ERROR: " <<   R   << " " <<  Nin   << " " <<  k   << " " <<  Neu  << " " <<  Nvv  << " " <<  ER  << " " <<  ENin  << " " <<  Ek  << " " <<  ENeu  << " " <<  ENvv << endl;
+   //cout <<"ERROR: " <<   R   << " " <<  Nin   << " " <<  k   << " " <<  Neu  << " " <<  Nvv  << " " <<  ER  << " " <<  ENin  << " " <<  Ek  << " " <<  ENeu  << " " <<  ENvv << endl;
 
   /*
   Neu = 0.0001   ;

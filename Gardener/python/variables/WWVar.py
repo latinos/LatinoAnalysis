@@ -39,7 +39,7 @@ class WWVarFiller(TreeCloner):
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
-        newbranches = ['pTWW', 'HT', 'redHT', 'mT2', 'mTi', 'mTe', 'choiMass', 'dphillmet', 'jetpt1_cut', 'dphilljet_cut', 'dphijet1met_cut', 'recoil', 'PfMetDivSumMet', 'PfMetDivSumMet', 'upara', 'uperp', 'm2ljj20', 'm2ljj30']
+        newbranches = ['pTWW', 'HT', 'redHT', 'mT2', 'mTi', 'mTe', 'choiMass', 'dphillmet', 'jetpt1_cut', 'dphilljet_cut', 'dphijet1met_cut', 'recoil', 'PfMetDivSumMet', 'PfMetDivSumMet', 'upara', 'uperp', 'm2ljj20', 'm2ljj30', 'ptTOT_cut', 'mTOT_cut', 'OLV1_cut', 'OLV2_cut', 'Ceta_cut']
         self.clone(output,newbranches)
 
         pTWW    = numpy.ones(1, dtype=numpy.float32)
@@ -59,6 +59,12 @@ class WWVarFiller(TreeCloner):
         uperp           = numpy.ones(1, dtype=numpy.float32)
         m2ljj20         = numpy.ones(1, dtype=numpy.float32)
         m2ljj30         = numpy.ones(1, dtype=numpy.float32)
+        ptTOT_cut       = numpy.ones(1, dtype=numpy.float32)
+        mTOT_cut        = numpy.ones(1, dtype=numpy.float32)
+        OLV1_cut        = numpy.ones(1, dtype=numpy.float32)
+        OLV2_cut        = numpy.ones(1, dtype=numpy.float32)
+        Ceta_cut        = numpy.ones(1, dtype=numpy.float32)
+
 
         self.otree.Branch('pTWW'  , pTWW  , 'pTWW/F')
         self.otree.Branch('HT'    , HT    , 'HT/F')
@@ -77,6 +83,11 @@ class WWVarFiller(TreeCloner):
         self.otree.Branch('uperp         '    , uperp          , 'uperp/F') 
         self.otree.Branch('m2ljj20       '    , m2ljj20        , 'm2ljj20/F') 
         self.otree.Branch('m2ljj30       '    , m2ljj30        , 'm2ljj30/F') 
+        self.otree.Branch('ptTOT_cut     '    , ptTOT_cut      , 'ptTOT_cut/F')
+        self.otree.Branch('mTOT_cut      '    , mTOT_cut       , 'mTOT_cut/F')
+        self.otree.Branch('OLV1_cut      '    , OLV1_cut       , 'OLV1_cut/F')
+        self.otree.Branch('OLV2_cut      '    , OLV2_cut       , 'OLV2_cut/F')
+        self.otree.Branch('Ceta_cut      '    , Ceta_cut       , 'Ceta_cut/F')
 
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries 
@@ -187,6 +198,21 @@ class WWVarFiller(TreeCloner):
 
             #m2ljj30
             m2ljj30[0]         = WW.m2ljj30()
+
+            #ptTOT_cut
+            ptTOT_cut[0]       = WW.ptTOT_cut() 
+
+            #mTOT_cut 
+            mTOT_cut[0]        = WW.mTOT_cut()
+
+            #OLV1_cut 
+            OLV1_cut[0]        = WW.OLV1_cut()
+
+            #OLV2_cut 
+            OLV2_cut[0]        = WW.OLV2_cut()
+
+            #Ceta_cut 
+            Ceta_cut[0]        = WW.Ceta_cut()
 
 
             otree.Fill()
