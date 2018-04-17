@@ -71,6 +71,9 @@ class HiggsXSection:
           self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-WH.txt') 
           self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ZH.txt') 
           self._YR[YRversion][model]['xs'][energy]['ggZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggZH.txt') 
+          if YRversion in ['YR4'] :
+            self._YR[YRversion][model]['xs'][energy]['qqZH125'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-qqZH125.txt')
+            self._YR[YRversion][model]['xs'][energy]['ggZH125'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ggZH125.txt')
           self._YR[YRversion][model]['xs'][energy]['bbH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-bbH.txt') 
           self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
   
@@ -178,13 +181,21 @@ class HiggsXSection:
        if not proc      in self._YR[YRversion][model]['xs'][energy]  : return '1.0'
         
      if    np == 'scale' :
-       if proc == 'ggZH':
+       if   proc == 'ZH' and YRversion in ['YR4'] and mh == 125.0:
+         return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['qqZH125'],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['qqZH125'],mh,'Scale_pos')/100.)
+       elif proc == 'ggZH' and YRversion in ['YR4'] and mh == 125.0:
+         return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH125'],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH125'],mh,'Scale_pos')/100.)
+       elif proc == 'ggZH':
          return '1.37'  # Number from CMS/ATLAS combination !
        else:
          return str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_neg')/100.) + '/' + str(1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'Scale_pos')/100.)
 
      elif  np == 'pdf' :
-       if proc == 'ggZH':
+       if   proc == 'ZH' and YRversion in ['YR4'] and mh == 125.0:
+         return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['qqZH125'],mh,'PDF_plus_alpha_s')/100.  )
+       elif proc == 'ggZH' and YRversion in ['YR4'] and mh == 125.0:
+         return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['ggZH125'],mh,'PDF_plus_alpha_s')/100.  )
+       elif proc == 'ggZH':
          return '1.15'  # Number from CMS/ATLAS combination !
        else:  
          return str( 1.0+self.GetYRVal(self._YR[YRversion][model]['xs'][energy][proc],mh,'PDF_plus_alpha_s')/100.  )
