@@ -40,6 +40,7 @@ from LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer import *
 #files=["/afs/cern.ch/user/l/lenzip/work/ww2018/CMSSW_9_4_4/src/LatinoAnalysis/NanoGardener/test/8C03AD47-0613-E811-9781-0242AC1C0500_Skim.root"]
 
 #xrdcp root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/8C03AD47-0613-E811-9781-0242AC1C0500.root .
+#files=["8C03AD47-0613-E811-9781-0242AC1C0500.root"]
 files=["8C03AD47-0613-E811-9781-0242AC1C0500.root"]
 
 
