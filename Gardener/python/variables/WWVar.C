@@ -550,19 +550,19 @@ float WW::mTOT_cut(){
 
 float WW::OLV1_cut(){
  if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
-   return  2 * ((L1.Eta()-((J1.Eta()+J2.Eta())/2))/(J1.Eta()-J2.Eta()));
+   return  2 * abs(((L1.Eta()-((J1.Eta()+J2.Eta())/2))/(J1.Eta()-J2.Eta())));
  }
  else {
-  return -9999.0;
+  return -1.0;
  }
 }
 
 float WW::OLV2_cut(){
  if (_isOk && _jetOk >= 2 && J1.Pt()>15.0 && J2.Pt()>15.0) {
-   return  2 * ((L2.Eta()-((J1.Eta()+J2.Eta())/2))/(J1.Eta()-J2.Eta()));
+   return  2 * abs(((L2.Eta()-((J1.Eta()+J2.Eta())/2))/(J1.Eta()-J2.Eta())));
  }
  else {
-  return -9999.0;
+  return -1.0;
  }
 }
 
@@ -572,7 +572,7 @@ float WW::Ceta_cut(){
   return (OLV1_cut()+OLV2_cut());
  }
  else {
-  return -9999.0;
+  return -1.0;
  }
 }
 
