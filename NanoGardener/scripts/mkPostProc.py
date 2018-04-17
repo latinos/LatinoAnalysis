@@ -135,21 +135,3 @@ if __name__ == '__main__':
    
     factory.process()    
 
-#   # Loop on input productions
-#   for iProd in prodList :
-
-#     # Load sample DB
-#     if 'samples' in Productions[iProd]: 
-#       prodFile=CMSSW+'/src/'+Productions[iProd]['samples']
-#       if os.path.exists(prodFile):
-#         handle = open(prodFile,'r')
-#         exec(handle)
-#         handle.close()
-    
-#     print Samples 
-#     iSample='GluGluHToWWTo2L2Nu_M125'   
-#     pp = PostProcMaker(Steps)
-#     print Samples[iSample] 
-#     Files=pp.getFilesFromDAS(Samples[iSample]['nanoAOD'])
-#     print Files
-      

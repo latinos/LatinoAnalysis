@@ -80,11 +80,15 @@ class LawnMower:
            #
            if (self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA" :
              
+             print "THISFILE:",self._inputFile
              fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
              self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
 
+             print self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key
              histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key)      
+             print histo
+             print 'histo_' + samples_key
              histo.SetName  ('histo_' + samples_key)
              histo.SetTitle ('histo_' + samples_key)
              histo.Write()              
