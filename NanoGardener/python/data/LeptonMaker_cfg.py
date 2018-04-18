@@ -1,6 +1,3 @@
-'''
-put this file in LatinoAnalysis/NanoGardener/python/data/
-'''
 
 List_newVar = {
                'F': [

@@ -10,7 +10,6 @@ from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import ElectronWP, MuonWP, L
 
 class LeptonSel(Module):
     '''
-    put this file in LatinoAnalysis/NanoGardener/python/modules/
     Lepton selection module, 
     LepFilter = 'Loose' requires at least nLF Loose leptons per event
     Other possibilities are 'Veto', 'WgStar'
@@ -20,8 +19,7 @@ class LeptonSel(Module):
  		   - in electron var, dEtaIn and dPhiIn
                    - in muon var, track iso
     Requirement:   
-                   - Adapted arrayReader (remove error for unfound leafcounter)
-                   - Input tree needs variables added by VarMaker
+                   - Input tree needs variables added by LeptonMaker
     ''' 
 
     def __init__(self, cmssw, LepFilter = None, nLF = None):
@@ -49,7 +47,7 @@ class LeptonSel(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
-        #self.lepBr_to_clean = []
+        #self.lepBr_to_clean = []   # for when branch overwriting works
         #self.eleBr_to_clean = []
         #self.muBr_to_clean = []
         #for br in tree.GetListOfBranches():
@@ -71,7 +69,7 @@ class LeptonSel(Module):
         self.out.branch('Jet_isLepton', 'I', lenVar='nJet')
         if self.cmssw == 'Full2016': self.out.branch('dmZll_veto', 'F') 
 
-        # Cleaning branches
+        # Cleaning branches         # for when branch overwriting works
         #for name in self.lepBr_to_clean:
         #   self.out.branch(name, 'F', lenVar='nLepton')
         #for name in self.eleBr_to_clean:
@@ -105,8 +103,6 @@ class LeptonSel(Module):
         #   if self.is_SPtrigger[i]: self.SPtrigger[SPTrigNames[i]] = tree.valueReader(SPTrigNames[i])
 
         self.nLepton = tree.valueReader('nLepton')
-        #self.nElectron = tree.valueReader('nElectron')
-        #self.nMuon = tree.valueReader('nMuon')
         self.nJet = tree.valueReader('nJet')
         self._ttreereaderversion = tree._ttreereaderversion # self._ttreereaderversion must be set AFTER all calls to tree.valueReader or tree.arrayReader
 
@@ -140,7 +136,6 @@ class LeptonSel(Module):
         return pt
 
     def jetIsLepton(self, jetEta, jetPhi, lepEta, lepPhi) :
-        #dR = ROOT.TMath.Sqrt( ROOT.TMath.Power(lepEta - jetEta, 2) + ROOT.TMath.Power(ROOT.TMath.Abs(ROOT.TMath.Abs(lepPhi - jetPhi)-ROOT.TMath.Pi())-ROOT.TMath.Pi(), 2) )
         dPhi = ROOT.TMath.Abs(lepPhi - jetPhi)
         if dPhi > ROOT.TMath.Pi() :
           dPhi = 2*ROOT.TMath.Pi() - dPhi
@@ -160,7 +155,6 @@ class LeptonSel(Module):
         
         # Fast lepton filter
         if self.nLepton < self.nLF: return False
-        #if int(self.nElectron) + int(self.nMuon) < int(self.nLF): return False
 
         # Tags and variables
         Clean_Tag = LepFilter_dict[self.LepFilter]
@@ -227,7 +221,7 @@ class LeptonSel(Module):
         # Lepton cleaning
         if Clean_counter < self.nLF: return False
 
-        # MET filter
+        # MET filter (moved to TriggerMaker)
         #metF_pass = 1
         #for bit in self.SPTrigger_bits:
         #   if bit == 0: 
@@ -235,19 +229,18 @@ class LeptonSel(Module):
         #      break
         
         # dmZll
-        if self.cmssw == 'Full2016':
-           dmZll = 9999.
-           for iLep in range(int(self.nLepton)):
-              if not Lep_Tags['isVeto'][iLep] == 1: continue
-              for jLep in range(int(self.nLepton)):
-                 if not Lep_Tags['isVeto'][jLep] == 1: continue
-                 if self.lepton_var['Lepton_pt'][jLep] < 10.: break
-                 if not self.lepton_var['Lepton_pdgId'][iLep] == -1.*self.lepton_var['Lepton_pdgId'][jLep]: continue
-                 temp_dmZll = abs( math.sqrt(2*self.lepton_var['Lepton_pt'][iLep]*self.lepton_var['Lepton_pt'][jLep]*\
-                                             (math.cosh(self.lepton_var['Lepton_eta'][iLep]-self.lepton_var['Lepton_eta'][jLep]) - \
-                                              math.cos(self.lepton_var['Lepton_phi'][iLep]- self.lepton_var['Lepton_phi'][jLep]))) - 91.1876)
-                 if temp_dmZll < dmZll: dmZll = temp_dmZll
-           self.out.fillBranch('dmZll_veto', dmZll) 
+        #if self.cmssw == 'Full2016':
+        dmZll = 9999.
+        for iLep in range(int(self.nLepton)):
+           if not Lep_Tags['isVeto'][iLep] == 1: continue
+           for jLep in range(int(self.nLepton)):
+              if not Lep_Tags['isVeto'][jLep] == 1: continue
+              if self.lepton_var['Lepton_pt'][jLep] < 10.: break
+              if not self.lepton_var['Lepton_pdgId'][iLep] == -1.*self.lepton_var['Lepton_pdgId'][jLep]: continue
+              temp_dmZll = abs( math.sqrt(2*self.lepton_var['Lepton_pt'][iLep]*self.lepton_var['Lepton_pt'][jLep]*\
+                                          (math.cosh(self.lepton_var['Lepton_eta'][iLep]-self.lepton_var['Lepton_eta'][jLep]) - \
+                                           math.cos(self.lepton_var['Lepton_phi'][iLep]- self.lepton_var['Lepton_phi'][jLep]))) - 91.1876)
+              if temp_dmZll < dmZll: dmZll = temp_dmZll
 
         # Branch filling
         for key in Lep_Tags:
@@ -259,6 +252,7 @@ class LeptonSel(Module):
        
         #self.out.fillBranch('metFilter', metF_pass)
         self.out.fillBranch('Jet_isLepton', JC_Tag)
+        self.out.fillBranch('dmZll_veto', dmZll) 
 
         return True
 
