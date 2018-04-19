@@ -35,9 +35,7 @@ numpy.random.seed(seed)
 #loads the model
 baseCMSSW = os.getenv('CMSSW_BASE')
 smodel = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model1.json"
-#smodel = "/afs/cern.ch/user/l/lusanche/KERAS/run_dnn/model.json"
 sweight = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model1_weights_json.h5"
-#sweight = "/afs/cern.ch/user/l/lusanche/KERAS/run_dnn/model_weights_json.h5"
 json_file = open(smodel,'r')
 loaded_model_json = json_file.read()
 json_file.close()
@@ -52,9 +50,6 @@ loaded_model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['acc'])
 class DNNvarFiller(TreeCloner):
     def __init__(self):
        pass
-
-    def createDNNvar(self):
-        self.AddVariable("DNNvar", (self.var))
         
     def help(self):
         return '''Add DNN variable'''
@@ -66,11 +61,7 @@ class DNNvarFiller(TreeCloner):
         pass
 
     def process(self,**kwargs):
-        
-        self.getDNNvar = None
-        
-        self.var  = array.array('d',[0])
-        
+                
         tree  = kwargs['tree']
         input = kwargs['input']
         output = kwargs['output']
@@ -84,8 +75,6 @@ class DNNvarFiller(TreeCloner):
         DNNvar   = numpy.ones(1,dtype=numpy.float)
 
         self.otree.Branch('DNNvar',  DNNvar,  'DNNvar/D')
-
-        self.createDNNvar()
         
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries
@@ -122,8 +111,7 @@ class DNNvarFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed.'
 
-            self.var[0]   =  itree.DNNvar
-            DNNvar[0] = self.Y_pred[i][0]
+            DNNvar[0] = Y_pred[i][0]
              
             otree.Fill()
             
