@@ -81,7 +81,7 @@ class DNNvarFiller(TreeCloner):
         
         self.clone(output,newbranches)
 
-        DNNvar   = numpy.ones(1, dtype=numpy.float)
+        DNNvar   = numpy.ones(1,dtype=numpy.float)
 
         self.otree.Branch('DNNvar',  DNNvar,  'DNNvar/D')
 
