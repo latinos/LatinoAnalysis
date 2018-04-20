@@ -53,8 +53,8 @@ class DNNvarFiller(TreeCloner):
     def __init__(self):
        pass
 
-    def createDNNvar(self):
-        self.AddVariable("DNNvar", (self.var))
+    #def createDNNvar(self):
+    #    self.AddVariable("DNNvar", (self.var))
         
     def help(self):
         return '''Add DNN variable'''
@@ -68,8 +68,6 @@ class DNNvarFiller(TreeCloner):
     def process(self,**kwargs):
         
         self.getDNNvar = None
-        
-        self.var  = array.array('d',[0])
         
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -85,7 +83,7 @@ class DNNvarFiller(TreeCloner):
 
         self.otree.Branch('DNNvar',  DNNvar,  'DNNvar/D')
 
-        self.createDNNvar()
+        #self.createDNNvar()
         
         nentries = self.itree.GetEntries()
         print 'Total number of entries: ',nentries
@@ -122,12 +120,11 @@ class DNNvarFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed.'
 
-            self.var[0]   =  itree.DNNvar
-            DNNvar[0] = self.Y_pred[i][0]
+            DNNvar[0] = Y_pred[i][0]
              
             otree.Fill()
             
         otree.Write()
             
         self.disconnect()
-print '- Eventloop completed'
+        print '- Eventloop completed'
