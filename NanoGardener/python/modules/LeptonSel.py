@@ -6,6 +6,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import ElectronWP, MuonWP, LepFilter_dict 
+from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 #from LatinoAnalysis.NanoGardener.data.Trigger_names import SPTrigNames
 
 class LeptonSel(Module):
@@ -15,7 +16,6 @@ class LeptonSel(Module):
     Other possibilities are 'Veto', 'WgStar'
     Still missing: 
                    - puppi jet
-		   - way to delete elements from existing branches (lepton, jet cleaning)
  		   - in electron var, dEtaIn and dPhiIn
                    - in muon var, track iso
     Requirement:   
@@ -47,37 +47,43 @@ class LeptonSel(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
-        #self.lepBr_to_clean = []   # for when branch overwriting works
-        #self.eleBr_to_clean = []
-        #self.muBr_to_clean = []
-        #for br in tree.GetListOfBranches():
-        #   bname = br.GetName()
-        #   if re.match('\ALepton_', bname):    self.lepBr_to_clean.append(bname) 
-        #   if re.match('\AElectron_', bname):  self.eleBr_to_clean.append(bname)
-        #   if re.match('\AMuon_', bname):      self.muBr_to_clean.append(bname)
-        #   if re.match('\AJet_', bname):       self.jetBr_to_clean.append(bname)
-
         self.out = wrappedOutputTree
+        
+        # New Branches
         self.out.branch('Lepton_isLoose', 'I', lenVar='nLepton')
-        self.out.branch('Lepton_isVeto', 'I', lenVar='nLepton')
+        self.out.branch('VetoLepton_pt', 'F', lenVar='nVetoLepton')
+        self.out.branch('VetoLepton_eta', 'F', lenVar='nVetoLepton')
+        self.out.branch('VetoLepton_phi', 'F', lenVar='nVetoLepton')
+        self.out.branch('VetoLepton_pdgId', 'I', lenVar='nVetoLepton')
+        self.out.branch('VetoLepton_instance', 'I', lenVar='nVetoLepton')
         self.out.branch('Lepton_isWgs', 'I', lenVar='nLepton')
         
         for wp in ElectronWP[self.cmssw]['TightObjWP']:
            self.out.branch('Electron_isTight_'+wp, 'I', lenVar='nElectron')
         for wp in MuonWP[self.cmssw]['TightObjWP']:
            self.out.branch('Muon_isTight_'+wp, 'I', lenVar='nMuon')
-        self.out.branch('Jet_isLepton', 'I', lenVar='nJet')
         if self.cmssw == 'Full2016': self.out.branch('dmZll_veto', 'F') 
 
-        # Cleaning branches         # for when branch overwriting works
-        #for name in self.lepBr_to_clean:
-        #   self.out.branch(name, 'F', lenVar='nLepton')
-        #for name in self.eleBr_to_clean:
-        #   self.out.branch(name, 'F', lenVar='nElectron')
-        #for name in self.muBr_to_clean:
-        #   self.out.branch(name, 'F', lenVar='nMuon')
-        #for name in self.jetBr_to_clean:
-        #   self.out.branch(name, 'F', lenVar='nJet')
+        # Old branches to clean
+        self.lepBr_to_clean = []   
+        self.eleBr_to_clean = []
+        self.muBr_to_clean  = []
+        self.jetBr_to_clean = []
+        for br in inputTree.GetListOfBranches():
+           bname = br.GetName()
+           btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
+           if re.match('\ALepton_', bname):    
+              self.lepBr_to_clean.append(bname)
+              self.out.branch(bname, btype, lenVar='nLepton') 
+           elif re.match('\AElectron_', bname):  
+              self.eleBr_to_clean.append(bname)
+              self.out.branch(bname, btype, lenVar='nElectron') 
+           elif re.match('\AMuon_', bname):
+              self.muBr_to_clean.append(bname)
+              self.out.branch(bname, btype, lenVar='nMuon') 
+           elif re.match('\AJet_', bname):
+              self.jetBr_to_clean.append(bname)
+              self.out.branch(bname, btype, lenVar='nJet') 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -91,17 +97,11 @@ class LeptonSel(Module):
         self.jet_var = {}
         for br in b:
            bname = br.GetName()
-           if re.match('\ALepton_', bname):    self.lepton_var[bname] = tree.arrayReader(bname)
+           if re.match('\ALepton_', bname):    self.lepton_var[bname]   = tree.arrayReader(bname)
            if re.match('\AElectron_', bname):  self.electron_var[bname] = tree.arrayReader(bname)
-           if re.match('\AMuon_', bname):      self.muon_var[bname] = tree.arrayReader(bname)
-           if re.match('\AJet_', bname):       self.jet_var[bname] = tree.arrayReader(bname)
+           if re.match('\AMuon_', bname):      self.muon_var[bname]     = tree.arrayReader(bname)
+           if re.match('\AJet_', bname):       self.jet_var[bname]      = tree.arrayReader(bname)
     
-        #self.SPTrigger_bits = tree.arrayReader('SPTrigger_bits')
-
-        #self.SPtrigger = {}
-        #for i in range(len(SPTrigNames)):
-        #   if self.is_SPtrigger[i]: self.SPtrigger[SPTrigNames[i]] = tree.valueReader(SPTrigNames[i])
-
         self.nLepton = tree.valueReader('nLepton')
         self.nJet = tree.valueReader('nJet')
         self._ttreereaderversion = tree._ttreereaderversion # self._ttreereaderversion must be set AFTER all calls to tree.valueReader or tree.arrayReader
@@ -158,31 +158,73 @@ class LeptonSel(Module):
 
         # Tags and variables
         Clean_Tag = LepFilter_dict[self.LepFilter]
+        Clean_TagWP = LepFilter_dict[Clean_Tag]
         Lep_Tags = {}
         Lep_Tags['isLoose'] = []
-        Lep_Tags['isVeto'] = []
         Lep_Tags['isWgs'] = []
+        
+        VLep_Tags = {}
+        VLep_Tags['VetoLepton_pt'] = []
+        VLep_Tags['VetoLepton_eta'] = []
+        VLep_Tags['VetoLepton_phi'] = []
+        VLep_Tags['VetoLepton_pdgId'] = []
+        VLep_Tags['VetoLepton_instance'] = []
+
         El_Tags = {}
         for wp in ElectronWP[self.cmssw]['TightObjWP']:
            El_Tags[wp] = []
         Mu_Tags = {}
         for wp in MuonWP[self.cmssw]['TightObjWP']:
            Mu_Tags[wp] = []
-        JC_Tag = [0]*int(self.nJet)
 
+        # Cleaning aid
+        good_lep_idx = []
+        good_ele_idx = []
+        good_muo_idx = []
+        good_jet_idx = range(int(self.nJet))
         Clean_counter = 0
+        
+        good_ele_count = 0
+        good_muo_count = 0
+        new_lep_instance = []
 
         #------ Lepton Loop
         for iLep in range(int(self.nLepton)):
-    
+           
+           # Check lepton hygiene
+           isClean_lep = True
+           isVeto_lep = True
+           if abs(self.lepton_var['Lepton_pdgId'][iLep]) == 11:
+              for wp in ElectronWP[self.cmssw][Clean_TagWP]:
+                 if not self.passWP(iLep, ElectronWP[self.cmssw][Clean_TagWP][wp]): isClean_lep = False
+                 else:
+                    new_lep_instance.append(good_ele_count) 
+                    good_ele_count += 1
+              for wp in ElectronWP[self.cmssw]['VetoObjWP']:
+                 if not self.passWP(iLep, ElectronWP[self.cmssw]['VetoObjWP'][wp]): isVeto_lep = False
+           elif abs(self.lepton_var['Lepton_pdgId'][iLep]) == 13:
+              for wp in MuonWP[self.cmssw][Clean_TagWP]:
+                 if not self.passWP(iLep, MuonWP[self.cmssw][Clean_TagWP][wp]): isClean_lep = False
+                 else:
+                    new_lep_instance.append(good_muo_count) 
+                    good_muo_count += 1
+              for wp in MuonWP[self.cmssw]['VetoObjWP']:
+                 if not self.passWP(iLep, MuonWP[self.cmssw]['VetoObjWP'][wp]): isVeto_lep = False
+           if isVeto_lep:
+              VLep_Tags['VetoLepton_pt'].append(self.lepton_var['Lepton_pt'][iLep])
+              VLep_Tags['VetoLepton_eta'].append(self.lepton_var['Lepton_eta'][iLep])
+              VLep_Tags['VetoLepton_phi'].append(self.lepton_var['Lepton_phi'][iLep])
+              VLep_Tags['VetoLepton_pdgId'].append(self.lepton_var['Lepton_pdgId'][iLep])
+              if isClean_lep: VLep_Tags['VetoLepton_instance'].append(new_lep_instance[-1])
+              else: VLep_Tags['VetoLepton_instance'].append(-1)
+ 
+           if not isClean_lep: continue
+              
            # Lepton id's
            if abs(self.lepton_var['Lepton_pdgId'][iLep]) == 11:
               for wp in ElectronWP[self.cmssw]['FakeObjWP']:
                  if self.passWP(iLep, ElectronWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
                  else: Lep_Tags['isLoose'].append(0)
-              for wp in ElectronWP[self.cmssw]['VetoObjWP']:
-                 if self.passWP(iLep, ElectronWP[self.cmssw]['VetoObjWP'][wp]):   Lep_Tags['isVeto'].append(1)
-                 else: Lep_Tags['isVeto'].append(0)
               for wp in ElectronWP[self.cmssw]['WgStarObjWP']:
                  if self.passWP(iLep, ElectronWP[self.cmssw]['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
                  else: Lep_Tags['isWgs'].append(0)
@@ -193,9 +235,6 @@ class LeptonSel(Module):
               for wp in MuonWP[self.cmssw]['FakeObjWP']:
                  if self.passWP(iLep, MuonWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
                  else: Lep_Tags['isLoose'].append(0)
-              for wp in MuonWP[self.cmssw]['VetoObjWP']:
-                 if self.passWP(iLep, MuonWP[self.cmssw]['VetoObjWP'][wp]):   Lep_Tags['isVeto'].append(1)
-                 else: Lep_Tags['isVeto'].append(0)
               for wp in MuonWP[self.cmssw]['WgStarObjWP']:
                  if self.passWP(iLep, MuonWP[self.cmssw]['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
                  else: Lep_Tags['isWgs'].append(0)
@@ -204,56 +243,83 @@ class LeptonSel(Module):
                  else: Mu_Tags[wp].append(0)
            else: raise ValueError('Unexpected pdgId in Lepton_pdgId: ' + str(self.lepton_var['Lepton_pdgId'][iLep]))
 
-           if Lep_Tags[Clean_Tag][-1] and Clean_counter < self.nLF:
+           # Cleaning aids
+           good_lep_idx.append(iLep)
+           if   abs(self.lepton_var['Lepton_pdgId'][iLep]) == 11: good_ele_idx.append(self.lepton_var['Lepton_instance'][iLep]) 
+           elif abs(self.lepton_var['Lepton_pdgId'][iLep]) == 13: good_muo_idx.append(self.lepton_var['Lepton_instance'][iLep]) 
+           if Clean_counter < self.nLF:
               if self.lepton_var['Lepton_pt'][iLep] > self.Lep_minPt[Clean_counter]: Clean_counter += 1          
 
            # Jet lepton filter   
            if self.lepton_var['Lepton_pt'][iLep] < self.JC_minPtLep: continue
-           if not Lep_Tags[Clean_Tag][-1]: continue
            Eta_lep = self.lepton_var['Lepton_eta'][iLep]
            Phi_lep = self.lepton_var['Lepton_phi'][iLep]      
            #------ Jet Loop
-           for iJet in range(int(self.nJet)):
+           for iJet in good_jet_idx:
               Eta_jet = self.jet_var['Jet_eta'][iJet]
               Phi_jet = self.jet_var['Jet_phi'][iJet]
-              if self.jetIsLepton(Eta_jet, Phi_jet, Eta_lep, Phi_lep): JC_Tag[iJet] = 1
+              if self.jetIsLepton(Eta_jet, Phi_jet, Eta_lep, Phi_lep):
+                 if iLep in good_jet_idx: 
+                    good_jet_idx.remove(iJet)
 
         # Lepton cleaning
         if Clean_counter < self.nLF: return False
 
         # MET filter (moved to TriggerMaker)
-        #metF_pass = 1
-        #for bit in self.SPTrigger_bits:
-        #   if bit == 0: 
-        #      metF_pass = 0
-        #      break
         
         # dmZll
-        #if self.cmssw == 'Full2016':
         dmZll = 9999.
-        for iLep in range(int(self.nLepton)):
-           if not Lep_Tags['isVeto'][iLep] == 1: continue
-           for jLep in range(int(self.nLepton)):
-              if not Lep_Tags['isVeto'][jLep] == 1: continue
-              if self.lepton_var['Lepton_pt'][jLep] < 10.: break
-              if not self.lepton_var['Lepton_pdgId'][iLep] == -1.*self.lepton_var['Lepton_pdgId'][jLep]: continue
-              temp_dmZll = abs( math.sqrt(2*self.lepton_var['Lepton_pt'][iLep]*self.lepton_var['Lepton_pt'][jLep]*\
-                                          (math.cosh(self.lepton_var['Lepton_eta'][iLep]-self.lepton_var['Lepton_eta'][jLep]) - \
-                                           math.cos(self.lepton_var['Lepton_phi'][iLep]- self.lepton_var['Lepton_phi'][jLep]))) - 91.1876)
+        for i in range(len(VLep_Tags['VetoLepton_pt'])):
+           for j in range(len(VLep_Tags['VetoLepton_pt'])):
+              if i == j: continue
+              if VLep_Tags['VetoLepton_pt'][j] < 10.: break
+              if not VLep_Tags['VetoLepton_pdgId'][i] == -1.*VLep_Tags['VetoLepton_pdgId'][j]: continue
+              temp_dmZll = abs( math.sqrt(2*VLep_Tags['VetoLepton_pt'][i]*VLep_Tags['VetoLepton_pt'][j]*\
+                                          (math.cosh(VLep_Tags['VetoLepton_eta'][i]-VLep_Tags['VetoLepton_eta'][j]) - \
+                                           math.cos(VLep_Tags['VetoLepton_phi'][i]- VLep_Tags['VetoLepton_phi'][j]))) - 91.1876)
               if temp_dmZll < dmZll: dmZll = temp_dmZll
 
-        # Branch filling
+        # Filling new branches
         for key in Lep_Tags:
            self.out.fillBranch('Lepton_' + key, Lep_Tags[key])
         for key in El_Tags:
            self.out.fillBranch('Electron_isTight_' + key, El_Tags[key])
         for key in Mu_Tags:
            self.out.fillBranch('Muon_isTight_' + key, Mu_Tags[key])
-       
-        #self.out.fillBranch('metFilter', metF_pass)
-        self.out.fillBranch('Jet_isLepton', JC_Tag)
+
+        for name in VLep_Tags:
+           self.out.fillBranch(name, VLep_Tags[name])     
+ 
         self.out.fillBranch('dmZll_veto', dmZll) 
 
+        # Cleaning and filling old branches
+        for name in self.lepBr_to_clean:
+           if name == 'Lepton_instance': self.out.fillBranch(name, new_lep_instance)
+           else:
+              temp_v = []
+              if self.lepton_var[name]:
+                 if type(self.lepton_var[name][0]) is str: temp_v = [ord(self.lepton_var[name][idx]) for idx in good_lep_idx]
+                 else: temp_v = [self.lepton_var[name][idx] for idx in good_lep_idx]
+              self.out.fillBranch(name, temp_v)
+        for name in self.eleBr_to_clean:
+           temp_v = []
+           if self.electron_var[name]:
+              if type(self.electron_var[name][0]) is str: temp_v = [ord(self.electron_var[name][idx]) for idx in good_ele_idx]
+              else: temp_v = [self.electron_var[name][idx] for idx in good_ele_idx]
+           self.out.fillBranch(name, temp_v)
+        for name in self.muBr_to_clean:
+           temp_v = []
+           if self.muon_var[name]:
+              if type(self.muon_var[name][0]) is str: temp_v = [ord(self.muon_var[name][idx]) for idx in good_muo_idx]
+              else: temp_v = [self.muon_var[name][idx] for idx in good_muo_idx]
+           self.out.fillBranch(name, temp_v)
+        for name in self.jetBr_to_clean:
+           temp_v = []
+           if self.jet_var[name]:
+              if type(self.jet_var[name][0]) is str: temp_v = [ord(self.jet_var[name][idx]) for idx in good_jet_idx]
+              else: temp_v = [self.jet_var[name][idx] for idx in good_jet_idx]
+           self.out.fillBranch(name, temp_v)
+ 
         return True
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed

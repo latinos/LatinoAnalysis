@@ -4,11 +4,11 @@ List_newVar = {
                      'Lepton_pt',
                      'Lepton_eta',
                      'Lepton_phi',
-                     'Lepton_pdgId',
                      'Lepton_eCorr',
                     ],
 
                'I': [
+                     'Lepton_pdgId',
                      'Lepton_instance',
                      #'nLepton',
                      #'Trigger_bits',
