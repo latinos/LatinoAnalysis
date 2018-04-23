@@ -1,115 +1,128 @@
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 
+
 import optparse
 import os
+import os.path
+from os.path import isfile
+from subprocess import call
 import sys
-from ROOT import *
+import ROOT
+from ROOT import TMVA, TFile, TString
+import ROOT.TMVA.PyMethodBase
 import numpy
 import array
 import re
 import warnings
-import os.path
-from math import *
 import math
+from math import *
 
 #
-#     ___ \       \   |     \   |
-#     |    |    |\ \  |   |\ \  |                          _)         |      | 
-#     |    |    | \ \ |   | \ \ |      \ \   /  _` |   __|  |   _` |  __ \   |   _ \ 
-#     |    |    |  \  |   |  \  |       \ \ /  (   |  |     |  (   |  |   |  |   __/
-#    _____/    _|   \_|  _|   \_|        \_/  \__,_| _|    _| \__,_| _.__/  _| \___|
+#  __ \ \ \   /                                                     _)         |      |
+#  |   | \   /       __ `__ \ \ \   /  _` |     \ \   /  _` |   __|  |   _` |  __ \   |   _ \
+#  |   |    |        |   |   | \ \ /  (   |      \ \ /  (   |  |     |  (   |  |   |  |   __/
+# ____/    _|       _|  _|  _|  \_/  \__,_|       \_/  \__,_| _|    _| \__,_| _.__/  _| \___|
 #
-
-#For test model
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation
-from keras.layers.advanced_activations import LeakyReLU, PReLU
-from keras.optimizers import SGD, Adam, RMSprop, Adagrad, Adadelta, Adamax, Nadam
-from keras.utils import np_utils
-from keras.models import model_from_json
-
-# fix random seed for reproducibility
-seed = 7
-numpy.random.seed(seed)
-
-#loads the model
-baseCMSSW = os.getenv('CMSSW_BASE')
-smodel = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model1.json"
-#smodel = "/afs/cern.ch/user/l/lusanche/KERAS/run_dnn/model.json"
-sweight = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model1_weights_json.h5"
-#sweight = "/afs/cern.ch/user/l/lusanche/KERAS/run_dnn/model_weights_json.h5"
-json_file = open(smodel,'r')
-loaded_model_json = json_file.read()
-json_file.close()
-loaded_model = model_from_json(loaded_model_json)
-loaded_model.load_weights(sweight)
-
-opt = Adamax();
-
-#compile the model
-loaded_model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['acc'])
+#
 
 class DNNvarFiller(TreeCloner):
-    def __init__(self):
-       pass
 
-    #def createDNNvar(self):
-    #    self.AddVariable("DNNvar", (self.var))
-        
+    def __init__(self):
+        pass
+
+
+    def createVBFDNN(self):
+        print("Creating VBFDNN")
+        ROOT.TMVA.PyMethodBase.PyInitialize()
+        self.getVBFDNN  = ROOT.TMVA.Reader();
+       
+        #self.getVBFDNN.AddVariable("std_vector_lepton_pt[0]",  (self.VBFDNNvar1))
+        self.getVBFDNN.AddVariable("mjj",         (self.VBFDNNvar1))
+        #self.getVBFDNN.AddVariable("std_vector_lepton_eta[0]", (self.VBFDNNvar2))
+        self.getVBFDNN.AddVariable("mll",         (self.VBFDNNvar2))
+        #self.getVBFDNN.AddVariable("std_vector_lepton_phi[0]", (self.VBFDNNvar3))
+        self.getVBFDNN.AddVariable("drll",        (self.VBFDNNvar3))
+        #self.getVBFDNN.AddVariable("std_vector_lepton_pt[1]",  (self.VBFDNNvar4))
+        self.getVBFDNN.AddVariable("dphill",      (self.VBFDNNvar4))
+        #self.getVBFDNN.AddVariable("std_vector_lepton_eta[1]", (self.VBFDNNvar5))
+        self.getVBFDNN.AddVariable("ptTOT_cut",   (self.VBFDNNvar5))
+        #self.getVBFDNN.AddVariable("std_vector_lepton_phi[1]", (self.VBFDNNvar6))
+        self.getVBFDNN.AddVariable("mTOT_cut",    (self.VBFDNNvar6))
+        #self.getVBFDNN.AddVariable("std_vector_jet_pt[0]",     (self.VBFDNNvar7))
+        self.getVBFDNN.AddVariable("OLV1_cut",    (self.VBFDNNvar7))
+        #self.getVBFDNN.AddVariable("std_vector_jet_eta[0]",    (self.VBFDNNvar8))
+        self.getVBFDNN.AddVariable("OLV2_cut",    (self.VBFDNNvar8))
+        #self.getVBFDNN.AddVariable("std_vector_jet_phi[0]",    (self.VBFDNNvar9))
+        #self.getVBFDNN.AddVariable("std_vector_jet_pt[1]",     (self.VBFDNNvar10))
+        #self.getVBFDNN.AddVariable("std_vector_jet_eta[1]",    (self.VBFDNNvar11))
+        #self.getVBFDNN.AddVariable("std_vector_jet_phi[1]",    (self.VBFDNNvar12))
+
+        print("Setting CMSSW_BASE")
+        # trainined xml
+        baseCMSSW = os.getenv('CMSSW_BASE')
+        print("Accessing weights")
+        self.getVBFDNN.BookMVA("PyKeras",TString('/user/ddicroce/WW_sample/CMSSW_10_1_2/src/LatinoAnalysis/Gardener/python/data/vbfdnn/TMVAClassification_PyKeras.weights.xml'))
+        print("VBFDNN is created...")
+
     def help(self):
-        return '''Add DNN variable'''
+        return '''Add vbf dnn variables'''
+
 
     def addOptions(self,parser):
+        #description = self.help()
+        #group = optparse.OptionGroup(parser,self.label, description)
+        #group.add_option('-b', '--branch',   dest='branch', help='Name of something that is not used ... ', default='boh')
+        #parser.add_option_group(group)
+        #return group
         pass
+
 
     def checkOptions(self,opts):
         pass
 
     def process(self,**kwargs):
-        
-        self.getDNNvar = None
-        
+        print("Beginning")
+        self.getVBFDNN = None
+
+        print("Adding arrays")
+        self.VBFDNNvar1 = array.array('f',[0])
+        self.VBFDNNvar2 = array.array('f',[0])
+        self.VBFDNNvar3 = array.array('f',[0])
+        self.VBFDNNvar4 = array.array('f',[0])
+        self.VBFDNNvar5 = array.array('f',[0])
+        self.VBFDNNvar6 = array.array('f',[0])
+        self.VBFDNNvar7 = array.array('f',[0])
+        self.VBFDNNvar8 = array.array('f',[0])
+#        self.VBFDNNvar9 = array.array('f',[0])
+#        self.VBFDNNvar10 = array.array('f',[0])
+#        self.VBFDNNvar11 = array.array('f',[0])
+#        self.VBFDNNvar12 = array.array('f',[0])
+
+        print("Setting trees")
+
         tree  = kwargs['tree']
         input = kwargs['input']
         output = kwargs['output']
-        
-        # does that work so easily and give new variable itree and otree?
+
+        print("Connecting tree and branches")
+
         self.connect(tree,input)
-        newbranches = ['DNNvar']
-        
+        newbranches = ['vbfddn']
+
         self.clone(output,newbranches)
 
-        DNNvar   = numpy.ones(1,dtype=numpy.float)
+        vbfddn      = numpy.ones(1, dtype=numpy.float32)
 
-        self.otree.Branch('DNNvar',  DNNvar,  'DNNvar/D')
+        self.otree.Branch('vbfddn',  vbfddn,  'vbfddn/F')
 
-        #self.createDNNvar()
-        
+        self.createVBFDNN()
+
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
-        
+        print 'Total number of entries: ',nentries 
+
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
-
-        X_test = [[0 for i in range(12)] for j in range(nentries)]
-        ientry = 0
-        for i in itree:
-            X_test[ientry][0] = i.std_vector_lepton_pt[0]
-            X_test[ientry][1] = i.std_vector_lepton_eta[0]
-            X_test[ientry][2] = i.std_vector_lepton_phi[0]
-            X_test[ientry][3] = i.std_vector_lepton_pt[1]
-            X_test[ientry][4] = i.std_vector_lepton_eta[1]
-            X_test[ientry][5] = i.std_vector_lepton_phi[1]
-            X_test[ientry][6] = i.std_vector_jet_pt[0]
-            X_test[ientry][7] = i.std_vector_jet_eta[0]
-            X_test[ientry][8] = i.std_vector_jet_phi[0]
-            X_test[ientry][9] = i.std_vector_jet_pt[1]
-            X_test[ientry][10] = i.std_vector_jet_eta[1]
-            X_test[ientry][11] = i.std_vector_jet_phi[1]
-            ientry = ientry + 1
-        
-        Y_pred  = loaded_model.predict(X_test)
 
         print '- Starting eventloop'
         step = 5000
@@ -120,11 +133,46 @@ class DNNvarFiller(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed.'
 
-            DNNvar[0] = Y_pred[i][0]
-             
+            # at least 2 leptons!
+            vbfddn[0] = -9999.
+           
+            # just because it is easier to write later ...
+            pt1 = itree.std_vector_lepton_pt[0]
+            pt2 = itree.std_vector_lepton_pt[1]
+            jetpt1 = itree.std_vector_jet_pt[0]
+            jetpt2 = itree.std_vector_jet_pt[1]
+            mjj    = itree.mjj
+            detajj = itree.detajj
+ 
+            if pt1>0 and pt2>0 : 
+              
+              if jetpt1>= 30.0 and jetpt2>= 30.0 :
+
+                    self.VBFDNNvar1[0]  = itree.mjj
+                    self.VBFDNNvar2[0]  = itree.mll
+                    self.VBFDNNvar3[0]  = itree.drll
+                    self.VBFDNNvar4[0]  = itree.dphill
+                    self.VBFDNNvar5[0]  = itree.ptTOT_cut
+                    self.VBFDNNvar6[0]  = itree.mTOT_cut
+                    self.VBFDNNvar7[0]  = itree.OLV1_cut
+                    self.VBFDNNvar8[0]  = itree.OLV2_cut
+
+#                    self.VBFDNNvar1[0]  = itree.std_vector_lepton_pt[0]
+#                    self.VBFDNNvar2[0]  = itree.std_vector_lepton_eta[0]
+#                    self.VBFDNNvar3[0]  = itree.std_vector_lepton_phi[0]
+#                    self.VBFDNNvar4[0]  = itree.std_vector_lepton_pt[1]
+#                    self.VBFDNNvar5[0]  = itree.std_vector_lepton_eta[1]
+#                    self.VBFDNNvar6[0]  = itree.std_vector_lepton_phi[1]
+#                    self.VBFDNNvar7[0]  = itree.std_vector_jet_pt[0]
+#                    self.VBFDNNvar8[0]  = itree.std_vector_jet_eta[0]
+#                    self.VBFDNNvar9[0]  = itree.std_vector_jet_phi[0]
+#                    self.VBFDNNvar10[0]  = itree.std_vector_jet_pt[1]
+#                    self.VBFDNNvar11[0]  = itree.std_vector_jet_eta[1]
+#                    self.VBFDNNvar12[0]  = itree.std_vector_jet_phi[1]
+
+                    vbfddn[0] = self.getVBFDNN.EvaluateMVA("PyKeras")
+              
             otree.Fill()
-            
-        otree.Write()
             
         self.disconnect()
         print '- Eventloop completed'
