@@ -2743,6 +2743,13 @@ Steps= {
                 } ,
 
 
+  'doDNN' :{
+                'isChain'    : False ,
+                'do4MC'      : True  ,
+                'do4Data'    : True ,
+                'command'    : 'gardener.py vbfdnnvarFiller  ' ,
+   }, 
+
   'genVariables'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
