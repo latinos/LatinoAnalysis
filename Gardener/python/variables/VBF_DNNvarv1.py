@@ -28,7 +28,7 @@ class DNNvarFillerv1(TreeCloner):
 
     def createVBFDNN(self):
         print("Creating VBFDNN")
-        #ROOT.TMVA.PyMethodBase.PyInitialize()
+        ROOT.TMVA.PyMethodBase.PyInitialize()
         self.getVBFDNN  = ROOT.TMVA.Reader();
        
         self.getVBFDNN.AddVariable("mjj",         (self.VBFDNNvar1))

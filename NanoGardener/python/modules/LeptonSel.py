@@ -158,7 +158,7 @@ class LeptonSel(Module):
 
         # Tags and variables
         Clean_Tag = LepFilter_dict[self.LepFilter]
-        Clean_TagWP = 'FakeObjWP' #LepFilter_dict[Clean_Tag]
+        Clean_TagWP = LepFilter_dict[Clean_Tag]
         Lep_Tags = {}
         Lep_Tags['isLoose'] = []
         Lep_Tags['isWgs'] = []
