@@ -6,6 +6,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.data.LeptonSelLazy_cfg import ElectronWP, MuonWP, LepFilter_dict 
+from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import List_newVar, Lep_var
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 #from LatinoAnalysis.NanoGardener.data.Trigger_names import SPTrigNames
@@ -51,6 +52,15 @@ class LeptonSelLazy(Module):
         self.out = wrappedOutputTree
         
         # New Branches
+        # GIULIO: I have to create these anew, as this module is meant to be run in the same event loop as the leptonMaker.
+        # so these branches are not yed in the tree.
+        self.lepBr_to_clean = []   
+        for typ in List_newVar:
+           for var in List_newVar[typ]:
+              if 'Lepton_' in var: 
+                self.out.branch(var, typ, lenVar='nLepton')
+                self.lepBr_to_clean.append(var)
+
         self.out.branch('Lepton_isLoose', 'I', lenVar='nLepton')
         self.out.branch('VetoLepton_pt', 'F', lenVar='nVetoLepton')
         self.out.branch('VetoLepton_eta', 'F', lenVar='nVetoLepton')
@@ -66,17 +76,18 @@ class LeptonSelLazy(Module):
         if self.cmssw == 'Full2016': self.out.branch('dmZll_veto', 'F') 
 
         # Old branches to clean
-        self.lepBr_to_clean = []   
         self.eleBr_to_clean = []
         self.muBr_to_clean  = []
         self.jetBr_to_clean = []
+
         for br in inputTree.GetListOfBranches():
            bname = br.GetName()
            btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
-           if re.match('\ALepton_', bname):    
-              self.lepBr_to_clean.append(bname)
-              self.out.branch(bname, btype, lenVar='nLepton') 
-           elif re.match('\AElectron_', bname):  
+           #GIULIO: see above
+           #if re.match('\ALepton_', bname):    
+           #   self.lepBr_to_clean.append(bname)
+           #   self.out.branch(bname, btype, lenVar='nLepton') 
+           if re.match('\AElectron_', bname):  
               self.eleBr_to_clean.append(bname)
               self.out.branch(bname, btype, lenVar='nElectron') 
            elif re.match('\AMuon_', bname):
@@ -111,16 +122,15 @@ class LeptonSelLazy(Module):
         else:
            return False
     
-    def ConeOverlapPt(self, iLep, event):
-        myevt=event
+    def ConeOverlapPt(self, iLep, leptons):
         pt = 0
         cone_size = 0.4
-        for jLep in range(event.nLepton):
+        for jLep in range(len(leptons)):
            if jLep != iLep:
-              if self.isAcloseToB(myevt.Lepton_eta[jLep], myevt.Lepton_phi[jLep],
-                                  myevt.Lepton_eta[iLep], myevt.Lepton_phi[iLep],
+              if self.isAcloseToB(leptons[jLep].eta, leptons[jLep].phi,
+                                  leptons[iLep].eta, leptons[iLep].phi,
                                   cone_size) :
-                 pt += myevt.Lepton_pt[jLep]
+                 pt += leptons[jLep].pt
         return pt
 
     def jetIsLepton(self, jetEta, jetPhi, lepEta, lepPhi) :
@@ -183,7 +193,7 @@ class LeptonSelLazy(Module):
 
         #------ Lepton Loop
         for iLep in range(event.nLepton):
-           leptons[iLep].ConeOverlapPt = self.ConeOverlapPt(iLep, event)
+           leptons[iLep].ConeOverlapPt = self.ConeOverlapPt(iLep, leptons)
            # Check lepton hygiene
            isClean_lep = True
            isVeto_lep = True
