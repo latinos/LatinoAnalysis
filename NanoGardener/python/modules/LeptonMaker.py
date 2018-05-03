@@ -30,9 +30,9 @@ class LeptonMaker(Module):
         for typ in List_newVar:
            for var in List_newVar[typ]:
               if 'Lepton_' in var: self.out.branch(var, typ, lenVar='nLepton')
-              elif 'SPTrigger' in var: self.out.branch(var, typ, len(SPTrigNames))
-              elif 'Trigger' in var: self.out.branch(var, typ, len(TrigNames))
-              else: self.out.branch(var, typ)
+              #elif 'SPTrigger' in var: self.out.branch(var, typ, len(SPTrigNames))
+              #elif 'Trigger' in var: self.out.branch(var, typ, len(TrigNames))
+              #else: self.out.branch(var, typ)
         
         # Old branches to reorder
         self.list_old_br = {}

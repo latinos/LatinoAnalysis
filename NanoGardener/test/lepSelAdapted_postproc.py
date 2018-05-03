@@ -14,8 +14,8 @@ from LatinoAnalysis.NanoGardener.modules.LeptonMaker import *
 from LatinoAnalysis.NanoGardener.modules.LeptonSelAdapted import *
 
 #files=['8C03AD47-0613-E811-9781-0242AC1C0500.root']
-#files=['NANO_testFile.root']
-files=["/afs/cern.ch/user/l/lenzip/work/ww2018/CMSSW_9_4_4/src/LatinoAnalysis/NanoGardener/test/8C03AD47-0613-E811-9781-0242AC1C0500_Skim.root"]
+files=['NANO_testFile.root']
+#files=["/afs/cern.ch/user/l/lenzip/work/ww2018/CMSSW_9_4_4/src/LatinoAnalysis/NanoGardener/test/8C03AD47-0613-E811-9781-0242AC1C0500_Skim.root"]
 #this takes care of converting the input files from CRAB
 #from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis
 
