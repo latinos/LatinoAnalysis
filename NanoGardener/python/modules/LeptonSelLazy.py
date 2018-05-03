@@ -156,7 +156,7 @@ class LeptonSelLazy(Module):
 
         # Tags and variables
         Clean_Tag = LepFilter_dict[self.LepFilter]
-        Clean_TagWP = 'FakeObjWP' #LepFilter_dict[Clean_Tag]
+        Clean_TagWP = LepFilter_dict[Clean_Tag] #'FakeObjWP'
         Lep_Tags = {}
         Lep_Tags['isLoose'] = []
         Lep_Tags['isWgs'] = []
@@ -264,7 +264,7 @@ class LeptonSelLazy(Module):
               Eta_jet = jets[iJet].eta
               Phi_jet = jets[iJet].phi
               if self.jetIsLepton(Eta_jet, Phi_jet, Eta_lep, Phi_lep):
-                 if iLep in good_jet_idx: 
+                 if iJet in good_jet_idx: 
                     good_jet_idx.remove(iJet)
 
         # Lepton cleaning

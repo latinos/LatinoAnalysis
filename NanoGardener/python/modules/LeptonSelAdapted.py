@@ -257,7 +257,7 @@ class LeptonSel(Module):
               Eta_jet = jet_col[iJet]['eta']
               Phi_jet = jet_col[iJet]['phi']
               if self.jetIsLepton(Eta_jet, Phi_jet, Eta_lep, Phi_lep):
-                 if iLep in good_jet_idx: 
+                 if iJet in good_jet_idx: 
                     good_jet_idx.remove(iJet)
 
         # Lepton cleaning
