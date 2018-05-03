@@ -12,6 +12,14 @@ Steps = {
 #                 'selection'  : 'selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"' , 
                   'subTargets' : ['lepMergerHWW','baseW','l2Kin', 'btagPerJet', 'btagPerEvent'], 
                 },
+  'l1loose': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
+                  'subTargets' : ['baseW', 'leptonMaker','lepSel','l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet', 'btagPerEvent'],
+                },
+              
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
@@ -27,7 +35,24 @@ Steps = {
                   'module'     : 'lepMergerHWW()' ,
                },  
 
- 
+  'leptonMaker': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonMaker' ,
+                  'declare'    : 'leptonMaker = lambda : LeptonMaker()' ,
+                  'module'     : 'leptonMaker()' ,
+               }, 
+
+   'lepSel': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSelLazy' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSelLazy("Full2016", "Loose", 1)' ,
+                  'module'     : 'leptonSel()' ,
+               },
+             
 
 ## ------- MODULES: MC Weights
 
@@ -44,7 +69,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer' ,
-                  'module'     : 'wwNLLcorrectionWeightProducer()',  
+                  'module)'     : 'wwNLLcorrectionWeightProducer()',  
                },  
 
   'btagPerJet': {
