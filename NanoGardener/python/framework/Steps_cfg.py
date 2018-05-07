@@ -12,12 +12,12 @@ Steps = {
 #                 'selection'  : 'selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"' , 
                   'subTargets' : ['lepMergerHWW','baseW','l2Kin', 'btagPerJet', 'btagPerEvent'], 
                 },
-  'l1loose': {
+  'l1loose2016': {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
-                  'subTargets' : ['baseW', 'leptonMaker','lepSel','l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet', 'btagPerEvent'],
+                  'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2016', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2016', 'btagPerEvent'],
                 },
               
 
@@ -48,8 +48,8 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSelLazy' ,
-                  'declare'    : 'leptonSel = lambda : LeptonSelLazy("Full2016", "Loose", 1)' ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSelAdapted' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("Full2016", "Loose", 1)' ,
                   'module'     : 'leptonSel()' ,
                },
              
@@ -72,7 +72,7 @@ Steps = {
                   'module)'     : 'wwNLLcorrectionWeightProducer()',  
                },  
 
-  'btagPerJet': {
+  'btagPerJet2016': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -87,7 +87,18 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
                   'module'     : 'BTagEventWeightProducer()',
         
-                }, 
+                },
+
+  'puW2016': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer' ,
+                  'declare'    : 'pufile_mc2016="%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileup_profile_Summer16.root" % os.environ["CMSSW_BASE"]; pufile_data2016="%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/PileupData_GoldenJSON_Full2016.root" % os.environ["CMSSW_BASE"]',
+                  'module'     : 'puWeightProducer(pufile_mc2016,pufile_data2016,"pu_mc","pileup",verbose=False)',
+
+                },
+              
  
 ## ------- MODULES: Kinematic
 
