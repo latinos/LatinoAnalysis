@@ -12,13 +12,38 @@ Steps = {
 #                 'selection'  : 'selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"' , 
                   'subTargets' : ['lepMergerHWW','baseW','l2Kin', 'btagPerJet', 'btagPerEvent'], 
                 },
-  'l1loose2016': {
+  'MCl1loose2016': {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
                   'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2016', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2016', 'btagPerEvent'],
                 },
+
+  'MCl1loose2017': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' ,
+                  'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent'],
+                }, 
+    
+  'DATAl1loose2016': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
+                  'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin'],
+                },
+
+  'DATAl1loose2017': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' ,
+                  'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin'],
+                }, 
+   
               
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
@@ -80,6 +105,14 @@ Steps = {
                   'module'     : 'btagSFProducer(era="2016", algo="cmva")',
                  },
 
+  'btagPerJet2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'module'     : 'btagSFProducer(era="2017", algo="deepcsv")',
+                 },               
+
   'btagPerEvent': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -99,7 +132,15 @@ Steps = {
 
                 },
               
- 
+  'puW2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer' ,
+                  'declare'    : 'pufile_data2017="%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileup_Cert_294927-306462_13TeV_PromptReco_Collisions17_withVar.root" % os.environ["CMSSW_BASE"]',
+                  'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
+  },
+
 ## ------- MODULES: Kinematic
 
   'l2Kin'    : {
