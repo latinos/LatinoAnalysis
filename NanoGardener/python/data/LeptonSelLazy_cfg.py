@@ -434,9 +434,12 @@ MuonWP = {
 }
 
 
-
 LepFilter_dict = {
    'Loose': 'isLoose',
    'Veto': 'isVeto',
-   'WgStar': 'isWgs'
+   'WgStar': 'isWgs',
+   'isLoose': 'FakeObjWP',
+   'isVeto': 'VetoObjWP',
+   'isWgs': 'WgStarObjWP'
 }
+

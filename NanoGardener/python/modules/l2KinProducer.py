@@ -146,12 +146,13 @@ class l2KinProducer(Module):
           lep_pt. push_back(lep.pt)
           lep_eta.push_back(lep.eta)
           lep_phi.push_back(lep.phi)
+          lep_flavour.push_back(lep.pdgId)
           # 11 = ele 
           # 13 = mu
-          if lep.tightId == 0 :
-            lep_flavour.push_back(lep.charge *  11)
-          else: 
-            lep_flavour.push_back(lep.charge *  13)
+          #if lep.tightId == 0 :
+          #  lep_flavour.push_back(lep.charge *  11)
+          #else: 
+          #  lep_flavour.push_back(lep.charge *  13)
           
           # is this really doing its job?
         
