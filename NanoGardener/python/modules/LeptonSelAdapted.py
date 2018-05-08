@@ -25,7 +25,7 @@ class LeptonSel(Module):
                    - Input tree needs variables added by LeptonMaker
     ''' 
 
-    def __init__(self, cmssw, LepFilter = None, nLF = None):
+    def __init__(self, cmssw, LepFilter = 'Loose', nLF = 1):
         self.cmssw = cmssw
         if LepFilter not in ['Loose', 'Veto', 'WgStar']:   raise ValueError('Non existing input tag for LepFilter, possibilities are Loose, Veto os WgStar.')
         if len(ElectronWP[self.cmssw]['VetoObjWP']) > 1:   raise IOError('More then one Electron Veto def given in LeptonSel_cfg')
@@ -60,12 +60,12 @@ class LeptonSel(Module):
         self.out.branch('VetoLepton_pdgId', 'I', lenVar='nVetoLepton')
         self.out.branch('VetoLepton_instance', 'I', lenVar='nVetoLepton')
         self.out.branch('Lepton_isWgs', 'I', lenVar='nLepton')
+        self.out.branch('dmZll_veto', 'F') 
         
         for wp in ElectronWP[self.cmssw]['TightObjWP']:
            self.out.branch('Electron_isTight_'+wp, 'I', lenVar='nElectron')
         for wp in MuonWP[self.cmssw]['TightObjWP']:
            self.out.branch('Muon_isTight_'+wp, 'I', lenVar='nMuon')
-        if self.cmssw == 'Full2016': self.out.branch('dmZll_veto', 'F') 
 
         # Old branches to clean
         self.lepBr_to_clean = Lep_var   
