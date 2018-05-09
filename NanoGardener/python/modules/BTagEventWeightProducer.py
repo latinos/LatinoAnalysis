@@ -42,12 +42,12 @@ class BTagEventWeightProducer(Module):
         for central_or_syst in self.central_and_systs_shape_corr:
           if central_or_syst == "central":
             weight = 1.
-            for i in range(event.nJet):
-              weight = weight*event.Jet_btagSF_shape[i]
+            for i in range(event.nCleanJet):
+              weight = weight*event.Jet_btagSF_shape[event.CleanJet_jetIdx[i]]
           else:
             weight=1.
-            for i in range(event.nJet):
-              weight = weight*getattr(event, "Jet_btagSF_shape_%s" % central_or_syst)[i]
+            for i in range(event.nCleanJet):
+              weight = weight*getattr(event, "Jet_btagSF_shape_%s" % central_or_syst)[event.CleanJet_jetIdx[i]]
           self.out.fillBranch(self.branchNames_central_and_systs_shape_corr[central_or_syst], weight)   
         
         return True

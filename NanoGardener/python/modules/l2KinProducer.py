@@ -158,7 +158,7 @@ class l2KinProducer(Module):
         
            
           
-        Jet   = Collection(event, "Jet")
+        Jet   = Collection(event, "CleanJet")
         nJet = len(Jet)
 
         jet_pt    = ROOT.std.vector(float)(0)
