@@ -88,7 +88,10 @@ class LeptonSel(Module):
 
     #_____Help functions
     def passWP(self, lepton_col, electron_col, muon_col, iLep, WPdict):
-        LF_idx = lepton_col[iLep]['instance']
+        if abs(lepton_col[iLep]['pdgId']) == 11:
+           LF_idx = lepton_col[iLep]['electronIdx']
+        else:   
+           LF_idx = lepton_col[iLep]['muonIdx']
         for part in WPdict['cuts']:
            for cut in WPdict['cuts'][part]:
               if eval(part) and not eval(cut): return False

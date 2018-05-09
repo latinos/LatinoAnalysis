@@ -72,12 +72,13 @@ class LeptonMaker(Module):
         lep_dict = {}
         for lv in Lepton_var:
            lep_dict[lv] = [0]*nLep
-        lep_dict['instance'] = [0]*nLep
+        lep_dict['electronIdx'] = [-1]*nLep
+        lep_dict['muonIdx'] = [-1]*nLep
         
         jet_dict = {}
         for jv in CleanJet_var:
            jet_dict[jv] = [0]*nJt
-        jet_dict['instance'] = [0]*nJt
+        jet_dict['jetIdx'] = [0]*nJt
         
         #--- Lepton Loops
         for iLep1 in range(nLep):
@@ -100,17 +101,17 @@ class LeptonMaker(Module):
            # Now index is set, fill the vars  
            if abs(pdgId1) == 11:
               for var in lep_dict:
-                 if not 'instance' in var:
+                 if not 'Idx' in var:
                     lep_dict[var][pt_idx] = self.electron_var['Electron_'+var][iLep1]
-                 else:
+                 elif 'electronIdx' in var:
                     lep_dict[var][pt_idx] = iLep1
            elif abs(pdgId1) == 13:
               for var in lep_dict:
-                 if not 'instance' in var and not 'eCorr' in var:
+                 if not 'Idx' in var and not 'eCorr' in var:
                     lep_dict[var][pt_idx] = self.muon_var['Muon_'+var][iLep1 - nEl]
                  elif 'eCorr' in var:
                     lep_dict[var][pt_idx] = 1.
-                 else:
+                 elif 'muonIdx' in var:
                     lep_dict[var][pt_idx] = iLep1 - nEl
         
         #--- Jet Loops
@@ -125,16 +126,15 @@ class LeptonMaker(Module):
                  pt_idx += 1
            # Now index is set, fill the vars  
            for var in jet_dict:
-              if not 'instance' in var:
+              if not 'Idx' in var:
                  jet_dict[var][pt_idx] = self.jet_var['Jet_' + var][iJ1]
               else:
                  jet_dict[var][pt_idx] = iJ1
 
-
         #--- Fill branches
         for var in lep_dict:
            self.out.fillBranch('Lepton_' + var, lep_dict[var])
-           if var in VetoLepton_var + ['instance']:
+           if var in VetoLepton_var + ['electronIdx', 'muonIdx']:
               self.out.fillBranch('VetoLepton_' + var, lep_dict[var])
         for var in jet_dict:
            self.out.fillBranch( 'CleanJet_' + var, jet_dict[var])

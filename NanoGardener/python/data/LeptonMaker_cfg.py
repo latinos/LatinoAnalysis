@@ -9,7 +9,8 @@ Lepton_br = {
 
                'I': [
                      'Lepton_pdgId',
-                     'Lepton_instance',
+                     'Lepton_electronIdx',
+                     'Lepton_muonIdx',
                     ],
 
                'D': []
@@ -25,7 +26,8 @@ VetoLepton_br = {
 
                'I': [
                      'VetoLepton_pdgId',
-                     'VetoLepton_instance',
+                     'VetoLepton_electronIdx',
+                     'VetoLepton_muonIdx',
                     ],
 
                'D': []
@@ -39,7 +41,7 @@ CleanJet_br = {
                     ],
 
                'I': [
-                     'CleanJet_instance',
+                     'CleanJet_jetIdx',
                     ],
               }
 
