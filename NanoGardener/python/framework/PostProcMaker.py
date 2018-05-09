@@ -302,7 +302,8 @@ class PostProcMaker():
            pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
            outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
-           self.mkPyCfg(iSample,[self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'])
+           jsonFilter = self._Productions[iProd]['jsonFile'] if 'jsonFile' in self._Productions[iProd].keys() else None 
+           self.mkPyCfg(iSample,[self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'], jsonFilter)
            # Stage Out command + cleaning
            stageOutCmd  = self.mkStageOut(outFile,self._targetDic[iSample][iFile])
            rmGarbageCmd = 'rm '+outFile+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
@@ -370,7 +371,7 @@ class PostProcMaker():
 
       return command
 
-   def mkPyCfg(self,iSample,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False):
+   def mkPyCfg(self,iSample,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False, jsonFile=None):
 
 
      fPy = open(fPyName,'a') 
@@ -413,6 +414,8 @@ class PostProcMaker():
      # Configure modules
      fPy.write('p = PostProcessor(  "."   ,          \n')
      fPy.write('                    files ,          \n')
+     if jsonFile != None:
+       fPy.write('                    jsonInput='+jsonFile+' ,       \n')   
      if 'selection' in self._Steps[iStep] :
        fPy.write('                    cut='+self._Steps[iStep]['selection']+' ,       \n')
      else: 

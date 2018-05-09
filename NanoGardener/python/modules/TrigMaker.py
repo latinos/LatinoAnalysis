@@ -15,10 +15,11 @@ class TrigMaker(Module):
     Module works, but few checks needed  
     ''' 
 
-    def __init__(self, cmssw = 'Full2016', isData = False, seeded = False):
-        self.cmssw =  cmssw
+    def __init__(self, cmssw = 'Full2016', isData = False, keepRunP = False, seeded = False):
+        self.cmssw = cmssw
         self.isData = isData
-        self.seeded = seeded
+        self.keepRunP = keepRunP
+        self.seeded = seeded # just to be able to compare with results from the Gardener
 
         self.mu_maxPt = 200
         self.mu_minPt = 10
@@ -48,11 +49,19 @@ class TrigMaker(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
         self.out = wrappedOutputTree
-        
+
+        if self.keepRunP:
+           # Check if input tree indeed contains run_period
+           isThere = False
+           for br in inputTree.GetListOfBranches():
+              if br.GetName() == 'run_period': isThere = True
+           if not isThere: raise IOError("Input tree does not contain the 'run_period' branch. Set 'keepRunP' to False.")
+           else: self.NewVar['I'].remove('run_period')
+ 
         for typ in self.NewVar:
            for name in self.NewVar[typ]:
               if name == 'TriggerEmulator': self.out.branch(name, typ, 6)
-              else:                        self.out.branch(name, typ)
+              else:                         self.out.branch(name, typ)
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -93,8 +102,8 @@ class TrigMaker(Module):
            self.TM_runInt[RunP]  = {'b': Trigger[self.cmssw][RunP]['begin'], 'e': Trigger[self.cmssw][RunP]['end']}
            for Tname in Trigger[self.cmssw][RunP][self.typeStr]:
               self.TM_trig[RunP][Tname] = []
-              for idx in Trigger[self.cmssw][RunP][self.typeStr][Tname]:
-                 if self.is_trigger[idx]: self.TM_trig[RunP][Tname].append(tree.valueReader(TrigNames[idx]))
+              for HLT in Trigger[self.cmssw][RunP][self.typeStr][Tname]:
+                 if self.is_trigger[idx]: self.TM_trig[RunP][Tname].append(tree.valueReader(HLT))
                  else:                    self.TM_trig[RunP][Tname].append(-1)
 
            for Tname in Trigger[self.cmssw][RunP]['LegEff']:
@@ -119,14 +128,17 @@ class TrigMaker(Module):
         #self.Trigger_bits = tree.arrayReader('Trigger_bits')
 
         # Make lepton readers
-        self.lepton_var = {}
-        for br in b:
-           bname = br.GetName()
-           if re.match('\ALepton_', bname): self.lepton_var[bname] = tree.arrayReader(bname)
-        
+        #self.lepton_var = {}
+        #for br in b:
+        #   bname = br.GetName()
+        #   if re.match('\ALepton_', bname): self.lepton_var[bname] = tree.arrayReader(bname)
+        #
         self.event = tree.valueReader('event')
         self.run = tree.valueReader('run')
-        self.nLepton = tree.valueReader('nLepton')
+        #self.nLepton = tree.valueReader('nLepton')
+        
+        if self.keepRunP: self.run_p = tree.valueReader('run_period')
+
         self._ttreereaderversion = tree._ttreereaderversion # self._ttreereaderversion must be set AFTER all calls to tree.valueReader or tree.arrayReader
 
     #_____Help functions
@@ -403,15 +415,18 @@ class TrigMaker(Module):
         pt    = []
         eta   = []
         phi   = []
-        for iLep in range(int(self.nLepton)):
-           if not int(self.lepton_var['Lepton_isLoose'][iLep]) == 1: continue
-           pdgId.append(float(self.lepton_var['Lepton_pdgId'][iLep]))
-           pt.append(float(self.lepton_var['Lepton_pt'][iLep]))
-           eta.append(float(self.lepton_var['Lepton_eta'][iLep]))
-           phi.append(float(self.lepton_var['Lepton_phi'][iLep]))
 
-        nLep  = len(pt)
-        run_p = self._run_period(int(self.run), evt) 
+        lep_col = Collection(event, 'Lepton')
+        nLep  = len(lep_col)
+
+        for iLep in range(nLep):
+           pdgId.append(float(self.lep_col[iLep]['pdgId']))
+           pt.append(float(self.lep_col[iLep]['pt']))
+           eta.append(float(self.lep_col[iLep]['eta']))
+           phi.append(float(self.lep_col[iLep]['phi']))
+
+        if not self.keepRunP: run_p = self._run_period(int(self.run), evt)
+        else: run_p = int(self.run_p)
         EMTF  = self._get_EMTFbug_veto(pdgId, pt, eta, phi, run_p)
 
         # MET filter
@@ -430,8 +445,8 @@ class TrigMaker(Module):
            self.out.fillBranch('Trigger_dblEl', trig_dec['DoubleEle']) 
            self.out.fillBranch('Trigger_dblMu',  trig_dec['DoubleMu']) 
            self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
-           self.out.fillBranch('run_period', run_p) 
-           self.out.fillBranch('metFilter', metF_pass)
+           if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
+           #self.out.fillBranch('metFilter', metF_pass)
            return True
 
         # Trigger efficiencies 
@@ -477,8 +492,8 @@ class TrigMaker(Module):
 
         # Fill branches
         self.out.fillBranch('TriggerEmulator', Trig_em)
-        self.out.fillBranch('run_period', run_p) 
-        self.out.fillBranch('metFilter', metF_pass)
+        if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
+        #self.out.fillBranch('metFilter', metF_pass)
         self.out.fillBranch('EMTFbug_veto', EMTF)
         for name in eff_dict:
            self.out.fillBranch(name, eff_dict[name])

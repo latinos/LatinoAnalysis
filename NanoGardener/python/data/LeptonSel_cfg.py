@@ -13,8 +13,8 @@ ElectronWP = {
                                'True' :
                                 [
                                   'False'
-                                  #'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                  #'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1 ' ,
+                                  #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                  #'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1 ' ,
                                 ] ,             
                                    },
                        } ,
@@ -28,21 +28,21 @@ ElectronWP = {
                                 # Common cuts
                                 'True' :
                                   [
-                                   'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                   'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1 ' ,
-                                   'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
+                                   'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                   'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1 ' ,
+                                   'electron_col[LF_idx]["lostHits"] < 1',
                                   ] ,             
                                 # Barrel
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
                                   ] ,
                                 # EndCap
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                   ] ,
                                    },
                        } ,
@@ -57,22 +57,22 @@ ElectronWP = {
                                 # Common cuts
                                 'True' :
                                   [
-                                    'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                    'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1',
-                                    'self.electron_var["Electron_cutBased"][LF_idx] == 4', 
-                                    'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
+                                    'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    'electron_col[LF_idx]["cutBased"] == 4', 
+                                    'electron_col[LF_idx]["lostHits"] < 1',
                                   ] , 
                                 # Barrel
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
                                   ] ,
                                 # EndCap
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                   ] ,
                                   } ,
                          'tkSF':  { 
@@ -90,23 +90,23 @@ ElectronWP = {
                                 # Common cuts
                                 'True' :
                                   [
-                                    'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                    'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1',
-                                    'self.electron_var["Electron_cutBased"][LF_idx] == 4',
-                                    'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
-                                    'self.electron_var["Electron_tightCharge"][LF_idx] == 2',
+                                    'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    'electron_col[LF_idx]["cutBased"] == 4',
+                                    'electron_col[LF_idx]["lostHits"] < 1',
+                                    'electron_col[LF_idx]["tightCharge"] == 2',
                                   ] ,
                                 # Barrel
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
                                   ] ,
                                 # EndCap
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                   ] ,
                                   } ,
                          'tkSF':  { 
@@ -124,24 +124,24 @@ ElectronWP = {
                                 # Common cuts 
                                 'True' :
                                    [
-                                     'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                     'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1',
-                                     'self.electron_var["Electron_mvaSpring16GP_WP80"][LF_idx]',
-                                     'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                     'electron_col[LF_idx]["mvaSpring16GP_WP80"]',
+                                     'electron_col[LF_idx]["lostHits"] < 1',
                                    ] ,
                                 # Barrel
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.0354',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0354',
                                    ] ,
                                  # EndCap
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.0646',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0646',
                                    ] ,
                                   } ,
                          'tkSF':  { 
@@ -158,24 +158,24 @@ ElectronWP = {
                                 # Common cuts 
                                 'True' :
                                    [
-                                     'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                     'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1',
-                                     'self.electron_var["Electron_mvaSpring16GP_WP80"][LF_idx]',
-                                     'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                     'electron_col[LF_idx]["mvaSpring16GP_WP80"]',
+                                     'electron_col[LF_idx]["lostHits"] < 1',
                                    ] ,
                                 # Barrel
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.05880',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.05880',
                                    ] ,
                                  # EndCap
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.0571',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0571',
                                    ] ,
                                   } ,
                          'tkSF':  { 
@@ -192,24 +192,24 @@ ElectronWP = {
                                 # Common cuts 
                                 'True' :
                                    [
-                                     'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                     'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1',
-                                     'self.electron_var["Electron_mvaSpring16GP_WP90"][LF_idx]',
-                                     'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                     'electron_col[LF_idx]["mvaSpring16GP_WP90"]',
+                                     'electron_col[LF_idx]["lostHits"] < 1',
                                    ] ,
                                 # Barrel
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.0354',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0354',
                                    ] ,
                                  # EndCap
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.0646',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0646',
                                    ] ,
                                   } ,
                          'tkSF':  { 
@@ -226,24 +226,24 @@ ElectronWP = {
                                 # Common cuts 
                                 'True' :
                                    [
-                                     'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                     'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1',
-                                     'self.electron_var["Electron_mvaSpring16GP_WP90"][LF_idx]',
-                                     'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                     'electron_col[LF_idx]["mvaSpring16GP_WP90"]',
+                                     'electron_col[LF_idx]["lostHits"] < 1',
                                    ] ,
                                 # Barrel
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.05880',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.05880',
                                    ] ,
                                  # EndCap
-                                 'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                    [
-                                     'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                     'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
-                                     'self.electron_var["Electron_pfRelIso03_all"][LF_idx] < 0.0571',
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0571',
                                    ] ,
                                   } ,
                          'tkSF':  { 
@@ -265,36 +265,36 @@ ElectronWP = {
                                 # Common cuts
                                 'True' :
                                   [
-                                    'abs(self.electron_var["Electron_eta"][LF_idx]) < 2.5' ,
-                                    #'self.electron_var["Electron_cutBased_HLTPreSel"][LF_idx] == 1',
-                                    #'self.electron_var["Electron_cutBased"][LF_idx] == 4',
-                                    'ord(self.electron_var["Electron_lostHits"][LF_idx]) < 1',
-                                    'self.electron_var["Electron_convVeto"][LF_idx]',
-                                    'self.electron_var["Electron_tightCharge"][LF_idx] == 2',
+                                    'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    #'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    #'electron_col[LF_idx]["cutBased"] == 4',
+                                    'electron_col[LF_idx]["lostHits"] < 1',
+                                    'electron_col[LF_idx]["convVeto"]',
+                                    'electron_col[LF_idx]["tightCharge"] == 2',
                                   ] ,
                                 # Barrel
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) <= 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.05' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.1'  ,
-                                    'self.electron_var["Electron_sieie"][LF_idx] < 0.00998',
-                                    'self.electron_var["Electron_deltaEtaSC"][LF_idx] < 0.00308',
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                    'electron_col[LF_idx]["sieie"] < 0.00998',
+                                    'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
                                     #'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0816',
-                                    'self.electron_var["Electron_hoe"][LF_idx] < 0.0414',
-                                    'self.electron_var["Electron_eInvMinusPInv"][LF_idx] < 0.0129',
-                                    '(self.electron_var["Electron_pfRelIso03_all"][LF_idx] - self.ConeOverlapPt(iLep)/self.electron_var["Electron_pt"][LF_idx]) < 0.0588',                                  
+                                    'electron_col[LF_idx]["hoe"] < 0.0414',
+                                    'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    '(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0588',                                  
                                   ] ,
                                 # EndCap
-                                'abs(self.electron_var["Electron_eta"][LF_idx]) > 1.479' :
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
-                                    'abs(self.electron_var["Electron_dxy"][LF_idx]) < 0.1' ,
-                                    'abs(self.electron_var["Electron_dz"][LF_idx]) < 0.2'  ,
-                                    'self.electron_var["Electron_sieie"][LF_idx] < 0.0292',
-                                    'self.electron_var["Electron_deltaEtaSC"][LF_idx] < 0.00605',
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                    'electron_col[LF_idx]["sieie"] < 0.0292',
+                                    'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
                                     #'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0394',
-                                    'self.electron_var["Electron_hoe"][LF_idx] < 0.0641',
-                                    'self.electron_var["Electron_eInvMinusPInv"][LF_idx] < 0.0129',
-                                    '(self.electron_var["Electron_pfRelIso03_all"][LF_idx] - self.ConeOverlapPt(iLep)/self.electron_var["Electron_pt"][LF_idx]) < 0.0571', 
+                                    'electron_col[LF_idx]["hoe"] < 0.0641',
+                                    'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    '(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0571', 
                                   ] ,
                                   } ,
                              } ,
@@ -318,8 +318,8 @@ MuonWP = {
                                 # Common cuts
                                 'True' :
                                  [
-                                   'abs(self.muon_var["Muon_eta"][LF_idx]) < 2.4' , 
-                                   'self.muon_var["Muon_pt"][LF_idx] > 10.0' ,
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' , 
+                                   'muon_col[LF_idx]["pt"] > 10.0' ,
                                  ]
                                   } ,
                    }
@@ -333,21 +333,21 @@ MuonWP = {
                                 # Common cuts
                                 'True' :
                                  [
-                                   'abs(self.muon_var["Muon_eta"][LF_idx]) < 2.4' , 
-                                   'self.muon_var["Muon_tightId"][LF_idx] == 1' ,
-                                   'abs(self.muon_var["Muon_dz"][LF_idx]) < 0.1' ,
-                                   'self.muon_var["Muon_pfRelIso04_all"][LF_idx] < 0.4',
-                                   #'self.muon_var["Muon_trackIso"][LF_idx]/self.muon_var["Muon_pt"][LF_idx] < 0.4' ,
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' , 
+                                   'muon_col[LF_idx]["tightId"] == 1' ,
+                                   'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
+                                   'muon_col[LF_idx]["pfRelIso04_all"] < 0.4',
+                                   #'muon_col[LF_idx]["trackIso"]/muon_col[LF_idx]["pt"] < 0.4' ,
                                  ] ,
                                  # dxy for pT < 20 GeV
-                                 'self.muon_var["Muon_pt"][LF_idx] <= 20.0' :
+                                 'muon_col[LF_idx]["pt"] <= 20.0' :
                                  [
-                                    'abs(self.muon_var["Muon_dxy"][LF_idx]) < 0.01 ' ,
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.01 ' ,
                                  ] ,
                                  # dxy for pT > 20 GeV
-                                 'self.muon_var["Muon_pt"][LF_idx] > 20.0' :
+                                 'muon_col[LF_idx]["pt"] > 20.0' :
                                  [
-                                    'abs(self.muon_var["Muon_dxy"][LF_idx]) < 0.02 ' ,
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
                                  ] ,
                                   } ,
 
@@ -363,21 +363,21 @@ MuonWP = {
                                 # Common cuts
                                 'True' :
                                  [ 
-                                   'abs(self.muon_var["Muon_eta"][LF_idx]) < 2.4' ,
-                                   'self.muon_var["Muon_tightId"][LF_idx] == 1' ,
-                                   'abs(self.muon_var["Muon_dz"][LF_idx]) < 0.1' ,
-                                   'self.muon_var["Muon_pfRelIso04_all"][LF_idx] < 0.15',
-                                   #'self.muon_var["Muon_trackIso"][LF_idx]/self.muon_var["Muon_pt"][LF_idx] < 0.4' ,
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
+                                   'muon_col[LF_idx]["tightId"] == 1' ,
+                                   'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
+                                   'muon_col[LF_idx]["pfRelIso04_all"] < 0.15',
+                                   #'muon_col[LF_idx]["trackIso"]/muon_col[LF_idx]["pt"] < 0.4' ,
                                  ] ,
                                  # dxy for pT < 20 GeV
-                                 'self.muon_var["Muon_pt"][LF_idx] <= 20.0' :
+                                 'muon_col[LF_idx]["pt"] <= 20.0' :
                                  [
-                                    'abs(self.muon_var["Muon_dxy"][LF_idx]) < 0.01 ' ,
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.01 ' ,
                                  ] ,
                                  # dxy for pT > 20 GeV
-                                 'self.muon_var["Muon_pt"][LF_idx] > 20.0' :
+                                 'muon_col[LF_idx]["pt"] > 20.0' :
                                  [
-                                    'abs(self.muon_var["Muon_dxy"][LF_idx]) < 0.02 ' ,
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
                                  ] ,
                                   } ,
                          'tkSF':  { 
@@ -409,21 +409,21 @@ MuonWP = {
                                 # Common cuts
                                 'True' :
                                  [
-                                   'abs(self.muon_var["Muon_eta"][LF_idx]) < 2.4' ,
-                                   'self.muon_var["Muon_tightId"][LF_idx] == 1' ,
-                                   'abs(self.muon_var["Muon_dz"][LF_idx]) < 0.1' ,
-                                   '(self.muon_var["Muon_pfRelIso04_all"][LF_idx] - self.ConeOverlapPt(iLep)/self.muon_var["Muon_pt"][LF_idx]) < 0.15',
-                                   ##'self.muon_var["Muon_trackIso"][LF_idx]/self.muon_var["Muon_pt"][LF_idx] < 0.4' ,
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
+                                   'muon_col[LF_idx]["tightId"] == 1' ,
+                                   'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
+                                   '(muon_col[LF_idx]["pfRelIso04_all"] - self.ConeOverlapPt(lepton_col, iLep)/muon_col[LF_idx]["pt"]) < 0.15',
+                                   ##'muon_col[LF_idx]["trackIso"]/muon_col[LF_idx]["pt"] < 0.4' ,
                                  ] ,
                                  # dxy for pT < 20 GeV
-                                 'self.muon_var["Muon_pt"][LF_idx] <= 20.0' :
+                                 'muon_col[LF_idx]["pt"] <= 20.0' :
                                  [
-                                    'abs(self.muon_var["Muon_dxy"][LF_idx]) < 0.01 ' ,
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.01 ' ,
                                  ] ,
                                  # dxy for pT > 20 GeV
-                                 'self.muon_var["Muon_pt"][LF_idx] > 20.0' :
+                                 'muon_col[LF_idx]["pt"] > 20.0' :
                                  [
-                                    'abs(self.muon_var["Muon_dxy"][LF_idx]) < 0.02 ' ,
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
                                  ] ,
                                   } ,
                        } ,

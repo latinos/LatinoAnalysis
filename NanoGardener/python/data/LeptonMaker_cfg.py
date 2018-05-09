@@ -1,5 +1,5 @@
 
-List_newVar = {
+Lepton_br = {
                'F': [
                      'Lepton_pt',
                      'Lepton_eta',
@@ -9,13 +9,42 @@ List_newVar = {
 
                'I': [
                      'Lepton_pdgId',
-                     'Lepton_instance',
-                     #'nLepton',
-                     #'Trigger_bits',
-                     #'SPTrigger_bits'
+                     'Lepton_electronIdx',
+                     'Lepton_muonIdx',
                     ],
 
                'D': []
+         }
+
+VetoLepton_br = {
+               'F': [
+                     'VetoLepton_pt',
+                     'VetoLepton_eta',
+                     'VetoLepton_phi',
+                     'VetoLepton_eCorr',
+                    ],
+
+               'I': [
+                     'VetoLepton_pdgId',
+                     'VetoLepton_electronIdx',
+                     'VetoLepton_muonIdx',
+                    ],
+
+               'D': []
+         }
+
+CleanJet_br = {
+               'F': [
+                     'CleanJet_pt',
+                     'CleanJet_eta',
+                     'CleanJet_phi',
+                    ],
+
+               'I': [
+                     'CleanJet_jetIdx',
+                    ],
               }
 
-Lep_var = ['pt', 'eta', 'phi', 'pdgId', 'eCorr']
+Lepton_var = ['pt', 'eta', 'phi', 'pdgId', 'eCorr']
+VetoLepton_var = ['pt', 'eta', 'phi', 'pdgId', 'eCorr']
+CleanJet_var = ['pt', 'eta', 'phi']
