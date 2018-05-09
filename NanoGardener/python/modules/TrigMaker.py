@@ -16,7 +16,7 @@ class TrigMaker(Module):
     ''' 
 
     def __init__(self, cmssw = 'Full2016', isData = False, seeded = False):
-        self.cmssw = 'Full2016'
+        self.cmssw =  cmssw
         self.isData = isData
         self.seeded = seeded
 

@@ -326,6 +326,8 @@ class HiggsXSection:
 ### Below some examples of usage :
 
 #HiggsXS = HiggsXSection()
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_JHUGen698_M900')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_JHUGen698_M2000')
 #print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ZH','125.0','pdf','sm')
 #print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ZH','125.0','pdf','sm')
 #print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggZH','125.0','pdf','sm')
