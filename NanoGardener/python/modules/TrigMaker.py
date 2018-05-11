@@ -209,7 +209,7 @@ class TrigMaker(Module):
         eff_tl = eff[2][0]*eff[5][0]*eff_dz #eff_dz
         eff_lt = eff[3][0]*eff[4][0]*eff_dz #eff_dz
 
-        # eff_evt_v (whatever it is)
+        # More specific event efficiencies (stored in a vector hence _v)
         # eff_evt_v_map = ['sinEl', 'sinMu', 'doubleEl', 'doubleMu', 'ElMu']
         eff_evt_v = [0., 0., 0., 0., 0.]
         if abs(pdgId1) == 11 and abs(pdgId2) == 11:
@@ -280,11 +280,11 @@ class TrigMaker(Module):
            e12 = (eff12[2][i]*eff12[5][i] + (1 - eff12[2][i]*eff12[5][i])*eff12[3][i]*eff12[4][i])*eff_dz12
            e13 = (eff13[2][i]*eff13[5][i] + (1 - eff13[2][i]*eff13[5][i])*eff13[3][i]*eff13[4][i])*eff_dz13
            e23 = (eff23[2][i]*eff23[5][i] + (1 - eff23[2][i]*eff23[5][i])*eff23[3][i]*eff23[4][i])*eff_dz23
-           #eff_dbl = e12 + (1 - e12)*e13 + (1 - e12)*(1 - e13)*e23
-           eff_dbl = e12 + (1 - e12)*e13 + (1 - e12 - (1 - e12)*e13)*e23
+           eff_dbl = e12 + (1 - e12)*e13 + (1 - e12)*(1 - e13)*e23
+           #eff_dbl = e12 + (1 - e12)*e13 + (1 - e12 - (1 - e12)*e13)*e23
            eff_evt[i] = eff_dbl + (1 - eff_dbl)*eff_sng 
 
-        return eff_evt # return format: eff, error up, error down
+        return eff_evt 
 
     def _get_nlw(self, pdgId_v, pt_v, eta_v, run_p):
         if not (len(pdgId_v) == len(pt_v) and len(pt_v) == len(eta_v)):
@@ -369,10 +369,6 @@ class TrigMaker(Module):
     #_____Analyze
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
-
-        #if event._tree._ttreereaderversion > self._ttreereaderversion: # do this check at every event, as other modules might have read further branches
-        #    self.initReaders(event._tree)
-        # do NOT access other branches in python between the check/call to initReaders and the call to C++ worker code
  
         # Make your life easier
         if self.seeded: evt = eval(self.event)
@@ -396,15 +392,6 @@ class TrigMaker(Module):
            phi.append(lep_col[iLep]['phi'])
 
         EMTF  = self._get_EMTFbug_veto(pdgId, pt, eta, phi, run_p)
-
-
-        # MET filter
-        #metF_pass = 1
-        #for bit in self.SPtrigger:
-        #   if self.SPtrigger[bit] == 0: 
-        #      metF_pass = 0
-        #      break
-
         trig_dec = self._get_trigDec(run_p, event)        
  
         # Fill DATA branches
@@ -415,7 +402,6 @@ class TrigMaker(Module):
         self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
         if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
         self.out.fillBranch('EMTFbug_veto', EMTF)
-        #self.out.fillBranch('metFilter', metF_pass)
  
         # Stop here if not MC 
         if self.isData: return True
@@ -437,23 +423,11 @@ class TrigMaker(Module):
            eff_dict['TriggerEffWeight_dblMu'] = temp_evt_v[3]
            eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
 
-           #temp_evt2 = self._get_nlw(pdgId[:2], pt[:2], eta[:2], run_p)
-           #print('________vvvvvvv________')
-           #print('2lw: ', temp_evt)
-           #print('nlw: ', temp_evt2)
-           #print('_______________________')
-
         if nLep > 2:
            temp_evt = self._get_3lw(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], pdgId[2], pt[2], eta[2], run_p)
            eff_dict['TriggerEffWeight_3l']   = temp_evt[0]
            eff_dict['TriggerEffWeight_3l_d'] = temp_evt[1]
            eff_dict['TriggerEffWeight_3l_u'] = temp_evt[2]
-           
-           #temp_evt2 = self._get_nlw(pdgId[:3], pt[:3], eta[:3], run_p)
-           #print('________vvvvvvv________')
-           #print('3lw    : ', temp_evt)
-           #print('nlw    : ', temp_evt2)
-           #print('_______________________')
            
         if nLep > 3:
            temp_evt = self._get_nlw(pdgId[:4], pt[:4], eta[:4], run_p)
@@ -463,8 +437,6 @@ class TrigMaker(Module):
 
         # Fill branches
         self.out.fillBranch('TriggerEmulator', Trig_em)
-        #if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
-        #self.out.fillBranch('metFilter', metF_pass)
         for name in eff_dict:
            self.out.fillBranch(name, eff_dict[name])
 
