@@ -43,10 +43,11 @@ class LeppTScalerTreeMaker(Module) :
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.metVariables = [ 'metPfType1', 'metPfType1Phi' ]
+        self.metVariables = [ 'MET_pt', 'MET_phi' ]
         for nameBranches in self.metVariables :
             self.out.branch(nameBranches  ,  "F")
-        if 'instance' not in Lepton_var: Lepton_var.append('instance')
+        if 'electronIdx' not in Lepton_var: Lepton_var.append('electronIdx')
+        if 'muonIdx' not in Lepton_var: Lepton_var.append('muonIdx')
         for typ in Lepton_br:
             for var in Lepton_br[typ]:
                 if 'Lepton_' in var: self.out.branch(var, typ, lenVar='nLepton')
@@ -102,7 +103,10 @@ class LeppTScalerTreeMaker(Module) :
 
         lep_dict = {}
         for var in Lepton_var:
-            lep_dict[var] = [0]*nLep
+            if 'Idx' in var:
+                lep_dict[var] = [-1]*nLep
+            else:
+                lep_dict[var] = [0]*nLep
 
         # MET
         if self.lepFlavor == 'ele':
@@ -130,13 +134,19 @@ class LeppTScalerTreeMaker(Module) :
             for var in Lepton_var:
                 if 'pt' in var:
                     lep_dict[var][pt_idx] = lep.pt
-                elif 'instance' in var and not hasattr(event, 'Lepton_'+var):
-                    lep_dict[var][pt_idx] = idx
+                elif 'Idx' in var:
+                    if ('electronIdx' in var and abs(lep.pdgId) == 11) or ('muonIdx' in var and abs(lep.pdgId) == 13):
+                        if not hasattr(event, 'Lepton_'+var):
+                            lep_dict[var][pt_idx] = idx
+                        else:
+                            lep_dict[var][pt_idx] = getattr(event, 'Lepton_'+var)[idx]
+                    else:
+                        continue
                 else:
                     lep_dict[var][pt_idx] = getattr(event, 'Lepton_'+var)[idx]
 
-        self.out.fillBranch("metPfType1", newmetmodule)
-        self.out.fillBranch("metPfType1Phi", newmetphi)
+        self.out.fillBranch("MET_pt", newmetmodule)
+        self.out.fillBranch("MET_phi", newmetphi)
         for var in lep_dict:
             self.out.fillBranch('Lepton_' + var, lep_dict[var])
 
