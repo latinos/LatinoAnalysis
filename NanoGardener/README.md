@@ -2,6 +2,17 @@
 
    * NanoAOD workbook https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookNanoAOD
    * Latino NanoPostprocessing slides https://indico.cern.ch/event/718326/contributions/2955317/attachments/1625920/2589261/NanoGargener_3Apr2018.pdf
+   
+# General items to know when using nanoAOD
+
+NanoAODs are provided centrally. The current campaign for 2017 data is based on CMSSW_9_4_7.
+
+The 2017 data production goes under the name [31Mar2018](https://cmsweb.cern.ch/das/request?view=list&limit=50&instance=prod%2Fglobal&input=%2F*%2F*31Mar2018*%2FNANOAOD).
+
+The 2017 mc production goes under the name [12Apr2018](https://cmsweb.cern.ch/das/request?view=list&limit=50&instance=prod%2Fglobal&input=%2F*%2F*12Apr2018*%2FNANOAODSIM).
+
+Events are stored in NanoAOD in the "Events" TTree. This is a plain tree, similar to our old "latino" tree. Branches in that tree are auto-documented, to some extent. If you do Events->Print() you will get a short explaination for each branch. Same explanation is also available [here](https://cms-nanoaod-integration.web.cern.ch/integration/master/mc94X_doc.html).
+
 
 # Guide to latino postprocessing on NanoAOD
 
