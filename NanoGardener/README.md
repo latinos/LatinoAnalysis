@@ -43,9 +43,10 @@ This script is based on three master configuration files:
    
  Examples:
  
-     mkPostProc.py  -p summer16_nAOD_v1 -s MCl1loose2016 -b # this will submit the MCl1Loose2016 chain on all the samples defined in summer16_nAOD_v1
-     
- if you simply replace -b with -c, the submission will go trough crab.    
+     mkPostProc.py  -p summer16_nAOD_v1 -s MCl1loose2016 -b 
+ 
+ this will submit the MCl1Loose2016 chain on all the samples defined in summer16_nAOD_v1.
+ If you simply replace -b with -c, the submission will go trough crab.    
  
  Options:
      
