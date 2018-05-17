@@ -13,6 +13,12 @@ The 2017 mc production goes under the name [12Apr2018](https://cmsweb.cern.ch/da
 
 Events are stored in NanoAOD in the "Events" TTree. This is a plain tree, similar to our old "latino" tree. Branches in that tree are auto-documented, to some extent. If you do Events->Print() you will get a short explaination for each branch. Same explanation is also available [here](https://cms-nanoaod-integration.web.cern.ch/integration/master/mc94X_doc.html).
 
+## Naming conventions
+Branches in the Events tree can be either single values or vectors. Branches start with a capital letter and often have a prefix whenever more branches with the same length have to be put together to build a physics object. Example: all the muon branches start with the prefix "Muon_", see [here](https://cms-nanoaod-integration.web.cern.ch/integration/master/mc94X_doc.html#Muon). Since you have many muons in an event, an auxiliary branch "nMuon" (in general "n<prefix>") is provided holding an integer thai is the number of items in each of the "Muon_*" branches.
+  
+Branches can be cross referenced, e.g.  Muon_genPartIdx[i] is the index of the particle in the GenPart_* branches corresponding to a i-th muon.
+
+
 
 # Guide to latino postprocessing on NanoAOD
 
