@@ -74,7 +74,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSelAdapted' ,
-                  'declare'    : 'leptonSel = lambda : LeptonSel("Full2016", "Loose", 1)' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("$RPLME_CMSSW", "Loose", 1)' ,
                   'module'     : 'leptonSel()' ,
                },
              
