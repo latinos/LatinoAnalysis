@@ -32,4 +32,31 @@ is a list of objects, and one can access the pt of the first electron with somet
    * An Example script running the postprocessor is here: https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/test/postproc.py
     
 
+### Postprocessing script
+The mkPostProc.py script is provided, that automates the submission of a full postprocessing campaing. The basic idea is that this script creates one python executable similar to the example quoted above (https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/test/postproc.py), with automated definition of the input and output files and the list of modules to be run.
 
+This script is based on three master configuration files:
+
+   * Sites_cfg.py (https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Sites_cfg.py) defines the sites on which one is willing to write the output. By default, if the postprocessing is run from one of these sites, the output will go to that site.
+   * Productions_cfg.py (https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Productions_cfg.py) Defines the path to the list of samples.
+   * Steps_cfg.py (https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Steps_cfg.py) defines the different steps and the chains of steps to be run.
+   
+ Examples:
+ 
+     mkPostProc.py  -p summer16_nAOD_v1 -s MCl1loose2016 -b # this will submit the MCl1Loose2016 chain on all the samples defined in summer16_nAOD_v1
+     
+ if you simply replace -b with -c, the submission will go trough crab.    
+ 
+ Options:
+     
+         -b : submit to batch [default is interactive execution] 
+         -c : submit via crab  
+         -n : dry-run  just produce script in job directory but di not submit  
+         -T <sample1>, ... ,< sampleN > : run only on these samples 
+         -E <sample1>, ... ,< sampleN > : do not run on these samples 
+         -R : redo all jobs even if output file exist 
+         -Q < queuename > : specify queue like 8nh [default btw, see  Site_cfg.py ],   
+         Not needed by default 
+         --sitescfg  <File> : alternative site cfg
+         --modcfg <File> : alternative step/module  cfg
+         --datacfg <File> : alternative production cfg
