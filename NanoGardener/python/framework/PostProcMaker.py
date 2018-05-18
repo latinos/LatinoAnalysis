@@ -399,10 +399,12 @@ class PostProcMaker():
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
          if 'declare' in self._Steps[iSubStep] :
-           fPy.write(self._Steps[iSubStep]['declare']+'\n')
+           #fPy.write(self._Steps[iSubStep]['declare']+'\n')
+           fPy.write(self.customizeDeclare(iSubStep)+'\n')
      else:
        if 'declare' in self._Steps[iStep] :
-         fPy.write(self._Steps[iStep]['declare']+'\n') 
+         #fPy.write(self._Steps[iStep]['declare']+'\n') 
+         fPy.write(self.customizeDeclare(iSubStep)+'\n')
      fPy.write(' \n')
 
      # Files
@@ -491,6 +493,17 @@ class PostProcMaker():
        module = module.replace('RPLME_CMSSW',self._prodVersion)
 
      return module
+
+
+   def customizeDeclare(self,iStep):
+
+     delare = self._Steps[iStep]['declare']
+
+     # "CMSSW" version
+     if 'RPLME_CMSSW' in declare :
+       declare = declare.replace('RPLME_CMSSW',self._prodVersion)
+
+     return declare
 
 #------------- Hadd step
 
