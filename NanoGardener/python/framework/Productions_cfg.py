@@ -13,11 +13,11 @@ Productions = {
                           'cmssw'   : 'Full2016' ,
                         },                    
 
-   'Run2017_nAOD_v1':  {
+   'Run2017_nAOD_v1_Study2017':  {
                          'isData'  : True ,
                          'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"  % os.environ["CMSSW_BASE"]',
                          'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_nAOD_v1.py' ,
-                         'cmssw'   : 'Full2017' ,
+                         'cmssw'   : 'Study2017' ,
                    }
 
 }

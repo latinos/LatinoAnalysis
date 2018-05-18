@@ -1,7 +1,19 @@
+LepFilter_dict = {
+   'Loose': 'isLoose',
+   'Veto': 'isVeto',
+   'WgStar': 'isWgs',
+   'isLoose': 'FakeObjWP',
+   'isVeto': 'VetoObjWP',
+   'isWgs': 'WgStarObjWP'
+}
 
-####################### Electrons ##################################
+
+
+####################### Electron WP ##################################
 
 ElectronWP = {  
+
+###____________________Full2016__________________________
 'Full2016': {
 
 ## ------------  
@@ -305,10 +317,133 @@ ElectronWP = {
 
 }
 
+ElectronWP['Study2017'] = ElectronWP['Full2016']
 
-####################### Muons ######################################
+####################### Muon WP ######################################
 
 MuonWP = {
+
+###____________________Study2017_________________________
+'Study2017': {
+
+## ------------  
+ 'VetoObjWP' : { 
+      'HLTsafe' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                 [
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' , 
+                                   'muon_col[LF_idx]["pt"] > 10.0' ,
+                                 ]
+                                  } ,
+                   }
+               } ,
+
+ # ------------ 
+ 'FakeObjWP'  : {
+
+      'HLTsafe' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                 [
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' , 
+                                   #'muon_col[LF_idx]["mediumId"] == 1' ,
+                                   'muon_col[LF_idx]["pfRelIso03_all"] < 0.4',
+                                 ] ,
+                                  } ,
+
+                       } ,
+                 
+                 } ,
+
+ # ------------ 
+ 'TightObjWP' :  {
+
+      'cut_Medium80x' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                 [ 
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
+                                   'muon_col[LF_idx]["mediumId"] == 1' ,
+                                   'muon_col[LF_idx]["pfRelIso03_all"] < 0.15',
+                                 ] ,
+                                  } ,
+                       },
+      'cut_Tight80x_noDzDxy' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                 [ 
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
+                                   'muon_col[LF_idx]["tightId"] == 1' ,
+                                   'muon_col[LF_idx]["pfRelIso03_all"] < 0.15',
+                                 ] ,
+                                  } ,
+                       },
+      'cut_Tight80x' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                 [ 
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
+                                   'muon_col[LF_idx]["tightId"] == 1' ,
+                                   'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
+                                   'muon_col[LF_idx]["pfRelIso03_all"] < 0.15',
+                                   #'muon_col[LF_idx]["trackIso"]/muon_col[LF_idx]["pt"] < 0.4' ,
+                                 ] ,
+                                 # dxy for pT < 20 GeV
+                                 'muon_col[LF_idx]["pt"] <= 20.0' :
+                                 [
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.01 ' ,
+                                 ] ,
+                                 # dxy for pT > 20 GeV
+                                 'muon_col[LF_idx]["pt"] > 20.0' :
+                                 [
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
+                                 ] ,
+                                  } ,
+                         'tkSF':  { 
+                                    '1-4' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/trackerSF_Moriond17_MuoPOG_BCDEF.root' ,
+                                    '5-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/trackerSF_Moriond17_MuoPOG_GH.root' ,
+                                  } ,
+                         'idSF':  {
+                                    '1-4' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt' ] ,
+                                    '5-7' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/Tight_Run2016GH_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/TightID_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt' ] ,
+                                  } ,
+                         'isoSF':  {
+                                    '1-4' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016BCDEF_PTvsETA_HWW.txt' ] ,
+                                    '5-7' : [ 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_Run2016GH_PTvsETA_HWW.txt' ,
+                                              'LatinoAnalysis/Gardener/python/data/idiso/Full2016/ISOTight_DY_madgraphLikeRun2016GH_PTvsETA_HWW.txt' ] , 
+                                  } ,
+                         'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_muon/',
+
+                       } ,
+
+                 } ,
+
+ # -------------
+ 'WgStarObjWP' : {
+     'cut_Tight80x' : { 
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                 [
+                                   'False' ,
+                                 ] ,
+                                  } ,
+                       } ,
+ 
+                 }, 
+},
+
+###____________________Full2016__________________________
+
 'Full2016': {
 
 ## ------------  
@@ -433,13 +568,30 @@ MuonWP = {
 
 }
 
+if __name__ == '__main__':
+    print('_______________LepFilter_dict___________')
+    print(LepFilter_dict)
+    print('') 
+    print('_______________ElectronWP_______________')
+    print('')
+    for key in ElectronWP:
+        print('__________' + key + '__________')
+        print('')
+        for typ in ElectronWP[key]:
+            print('_____' + typ + '_____')
+            for entr in ElectronWP[key][typ]:
+                print(entr + ' =')
+                print(ElectronWP[key][typ][entr]['cuts'])
+            print('')
+    print('_______________MuonWP___________________')
+    print('')
+    for key in MuonWP:
+        print('__________' + key + '__________')
+        print('')
+        for typ in MuonWP[key]:
+            print('_____' + typ + '_____')
+            for entr in MuonWP[key][typ]:
+                print(entr + ' =')
+                print(MuonWP[key][typ][entr]['cuts'])
+            print('')
 
-
-LepFilter_dict = {
-   'Loose': 'isLoose',
-   'Veto': 'isVeto',
-   'WgStar': 'isWgs',
-   'isLoose': 'FakeObjWP',
-   'isVeto': 'VetoObjWP',
-   'isWgs': 'WgStarObjWP'
-}
