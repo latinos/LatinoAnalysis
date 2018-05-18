@@ -29,9 +29,9 @@ class MetUnclusteredTreeMaker(Module) :
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.metVariables = [ 'metPfType1', 'metPfType1Phi' ]
+        self.metVariables = [ 'MET_pt', 'MET_phi' ]
         for nameBranches in self.metVariables :
-          self.out.branch(nameBranches  ,  "F");
+          self.out.branch(nameBranches  ,  "F")
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -74,8 +74,8 @@ class MetUnclusteredTreeMaker(Module) :
             newmetmodule = met_pt_UnclEnDn
             newmetphi = newmet_phi_UnclEnDn
 
-        self.out.fillBranch("metPfType1", newmetmodule)
-        self.out.fillBranch("metPfType1Phi", newmetphi)
+        self.out.fillBranch("MET_pt", newmetmodule)
+        self.out.fillBranch("MET_phi", newmetphi)
 
         return True
 
