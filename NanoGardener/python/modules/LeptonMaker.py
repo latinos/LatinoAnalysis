@@ -14,8 +14,14 @@ class LeptonMaker(Module):
     put this file in LatinoAnalysis/NanoGardener/python/modules/
     Add extra variables to NANO tree
     '''
-    def __init__(self):
-        pass
+    def __init__(self, min_lep_pt = [10]):
+        self.min_lep_pt = min_lep_pt
+        self.min_lep_pt_idx = range(len(min_lep_pt))
+        print_str = ''
+        for idx in self.min_lep_pt_idx:
+            print_str += 'Lepton_pt[' + str(idx) + '] > ' + str(min_lep_pt[idx])
+            if not idx == self.min_lep_pt_idx[-1]: print_str += ', '
+        print('LeptonMaker: ' + print_str)
 
     def beginJob(self): 
         pass
@@ -69,6 +75,8 @@ class LeptonMaker(Module):
         nJt = int(self.nJet)
         nLep = nMu + nEl
 
+        if nLep < len(self.min_lep_pt): return False
+
         lep_dict = {}
         for lv in Lepton_var:
            lep_dict[lv] = [0]*nLep
@@ -98,6 +106,10 @@ class LeptonMaker(Module):
                  pt2 = self.muon_var['Muon_pt'][iLep2 - nEl]
               if pt1 < pt2:
                  pt_idx += 1
+
+           # Pt filter
+           if pt_idx in self.min_lep_pt_idx and pt1 < self.min_lep_pt[pt_idx]: return False
+           
            # Now index is set, fill the vars  
            if abs(pdgId1) == 11:
               for var in lep_dict:
