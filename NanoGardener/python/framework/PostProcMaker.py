@@ -496,8 +496,7 @@ class PostProcMaker():
 
 
    def customizeDeclare(self,iStep):
-
-     delare = self._Steps[iStep]['declare']
+     declare = self._Steps[iStep]['declare']
 
      # "CMSSW" version
      if 'RPLME_CMSSW' in declare :
