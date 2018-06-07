@@ -86,7 +86,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.Grafter' ,
-                  'module'     : 'Grafter(["baseW/F=RPLME_baseW","Xsec/F=RPLME_XSection"])',
+                  'declare'    : 'baseWFiller = lambda : Grafter(["baseW/F=RPLME_baseW","Xsec/F=RPLME_XSection"])', 
+                  'module'     : 'baseWFiller()',
                },  
 
   'wwNLL'    : {
