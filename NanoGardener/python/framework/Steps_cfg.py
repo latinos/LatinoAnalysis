@@ -111,7 +111,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'module'     : 'btagSFProducer(era="2017", algo="deepcsv")',
+                  'declare'    : 'btagSFProducer2017 = lambda : btagSFProducer(era="2017", algo="deepcsv")',
+                  'module'     : 'btagSFProducer2017()',
                  },               
 
   'btagPerEvent': {
@@ -119,6 +120,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
                   'module'     : 'BTagEventWeightProducer()',
         
                 },
@@ -149,6 +151,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
+                  'declare'    : '',
                   'module'     : 'l2KinProducer()' ,
                },  
 
@@ -157,6 +160,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l3KinProducer' ,
+                  'declare'    : '',
                   'module'     : 'l3KinProducer()' ,
                },  
 
@@ -165,6 +169,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l4KinProducer' ,
+                  'declare'    : '',
                   'module'     : 'l4KinProducer()' ,
                },  
 
@@ -175,6 +180,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC.py\')' ,
                  },
 
