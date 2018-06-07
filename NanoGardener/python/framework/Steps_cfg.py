@@ -73,8 +73,8 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSelAdapted' ,
-                  'declare'    : 'leptonSel = lambda : LeptonSel("$RPLME_CMSSW", "Loose", 1)' ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 1)' ,
                   'module'     : 'leptonSel()' ,
                },
              
