@@ -39,25 +39,31 @@ ElectronWP = {
                                 'True' :
                                   [
                                    #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
-                                   #'electron_col[LF_idx]["lostHits"] < 1',
+                                   'electron_col[LF_idx]["lostHits"] < 2',
+                                   'electron_col[LF_idx]["convVeto"] == 1',
                                    'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.013' ,
-                                   'electron_col[LF_idx]["hoe"] < 0.06' ,
-                                   'electron_col[LF_idx]["pfRelIso03_all"] < 0.06',
+                                   #'electron_col[LF_idx]["pfRelIso03_all"] < 0.06',
+                                   'electron_col[LF_idx]["dr03TkSumPt"] < 0.1',
+                                   '(electron_col[LF_idx]["dr03HcalDepth1TowerSumEt"]/electron_col[LF_idx]["pt"]) < 0.12',
                                   ] ,             
                                 # Barrel
                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                   [
-                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
-                                    #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
-                                    'abs(electron_col[LF_idx]["deltaEtaSC"]) < 0.004'  ,
-                                    'electron_col[LF_idx]["sieie"] < 0.011'  ,
+                                   #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                   #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   'abs(electron_col[LF_idx]["deltaEtaSC"]) < 0.004'  ,
+                                   'electron_col[LF_idx]["sieie"] < 0.011'  ,
+                                   'electron_col[LF_idx]["hoe"] < 0.06' ,
+                                   '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.15',
                                   ] ,
                                 # EndCap
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
-                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
-                                    #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
-                                    'electron_col[LF_idx]["sieie"] < 0.031'  ,
+                                   #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                   #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   'electron_col[LF_idx]["sieie"] < 0.03'  ,
+                                   'electron_col[LF_idx]["hoe"] < 0.07' ,
+                                   '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.13',
                                   ] ,
                                    },
                        } ,
