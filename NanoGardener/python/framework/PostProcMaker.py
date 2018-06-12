@@ -484,6 +484,7 @@ class PostProcMaker():
 
      # baseW
      if iStep == 'baseW' :
+       print "Computing baseW for",iSample  
        self.computewBaseW(iSample)
        module = module.replace('RPLME_baseW'    , str(self._baseW[iSample]['baseW']))
        module = module.replace('RPLME_XSection' , str(self._baseW[iSample]['Xsec']))

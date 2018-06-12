@@ -25,7 +25,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent'],
+                  'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent'],
                 }, 
     
   'DATAl1loose2016': {
@@ -86,8 +86,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.Grafter' ,
-                  'declare'    : 'baseWFiller = lambda : Grafter(["baseW/F=RPLME_baseW","Xsec/F=RPLME_XSection"])', 
-                  'module'     : 'baseWFiller()',
+                  'module'     : 'Grafter(["baseW/F=RPLME_baseW","Xsec/F=RPLME_XSection"])',
                },  
 
   'wwNLL'    : {

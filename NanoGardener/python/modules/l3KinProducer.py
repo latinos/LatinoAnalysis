@@ -123,6 +123,9 @@ class l3KinProducer(Module):
            
           
         Jet   = Collection(event, "CleanJet")
+        #auxiliary jet collection to access the mass
+        OrigJet   = Collection(event, "Jet")
+
         nJet = len(Jet)
 
         jet_pt     = ROOT.std.vector(float)(0)
@@ -135,8 +138,8 @@ class l3KinProducer(Module):
           jet_pt. push_back(jet.pt)
           jet_eta.push_back(jet.eta)
           jet_phi.push_back(jet.phi)
-          jet_mass.push_back(jet.mass)
-          jet_cmvav2.push_back(jet.btagCMVA)
+          jet_mass.push_back(OrigJet[jet.jetIdx].mass)
+          jet_cmvav2.push_back(OrigJet[jet.jetIdx].btagCMVA)
 
 
 
