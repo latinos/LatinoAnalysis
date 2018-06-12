@@ -104,8 +104,9 @@ class LeptonMaker(Module):
                  pt2 = self.electron_var['Electron_pt'][iLep2]
               else:
                  pt2 = self.muon_var['Muon_pt'][iLep2 - nEl]
-              if pt1 < pt2:
+              if pt1 < pt2 or (pt1==pt2 and iLep1>iLep2):
                  pt_idx += 1
+                
 
            # Pt filter
            if pt_idx in self.min_lep_pt_idx and pt1 < self.min_lep_pt[pt_idx]: return False
@@ -125,7 +126,6 @@ class LeptonMaker(Module):
                     lep_dict[var][pt_idx] = 1.
                  elif 'muonIdx' in var:
                     lep_dict[var][pt_idx] = iLep1 - nEl
-        
         #--- Jet Loops
         for iJ1 in range(nJt):
            pt_idx = 0
@@ -134,7 +134,7 @@ class LeptonMaker(Module):
            for iJ2 in range(nJt):
               if iJ2 == iJ1: continue
               pt2 = self.jet_var['Jet_pt'][iJ2]
-              if pt1 < pt2:
+              if pt1 < pt2 or (pt1==pt2 and iJ1>iJ2):
                  pt_idx += 1
            # Now index is set, fill the vars  
            for var in jet_dict:
