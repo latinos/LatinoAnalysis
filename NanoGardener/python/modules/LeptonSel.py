@@ -183,6 +183,12 @@ class LeptonSel(Module):
                  if not self.passWP(lepton_col, electron_col, muon_col, iLep, MuonWP[self.cmssw][Clean_TagWP][wp]): isClean_lep = False
               for wp in MuonWP[self.cmssw]['VetoObjWP']:
                  if not self.passWP(lepton_col, electron_col, muon_col, iLep, MuonWP[self.cmssw]['VetoObjWP'][wp]): isVeto_lep = False
+
+           # Filter illegal lepton pgdId's 
+           else: 
+              isClean_lep = False
+              isVeto_lep = False
+
            if isVeto_lep:
               good_vetlep_idx.append(iLep)
               Lep_Tags['isVeto'].append(1)
@@ -216,7 +222,6 @@ class LeptonSel(Module):
                  else: Lep_Tags['isTightMuon_' + wp].append(0)
               for wp in ElectronWP[self.cmssw]['TightObjWP']:
                  Lep_Tags['isTightElectron_' + wp].append(0)
-           else: raise ValueError('Unexpected pdgId in Lepton_pdgId: ' + str(lepton_col[iLep]['pdgId']))
 
            # Cleaning aids
            good_lep_idx.append(iLep)
