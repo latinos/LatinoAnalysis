@@ -454,10 +454,22 @@ class PostProcMaker():
 
    def computewBaseW(self,iSample):
      if not iSample in self._baseW :
-       # Will always compute from initial nAOD files !
+       # Always check #nAOD files !
        if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
        else:                                    dasInst = 'prod/global'
-       FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+       nAODFileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+       # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
+       if self._iniStep == 'Prod' :
+         if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+         else:                                    dasInst = 'prod/global'
+         FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+         # From previous PostProc step
+       else :
+         FileList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
+
+       # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
+       if not len(nAODFileList) == len(FileList) : FileList = nAODFileList
+
        # Now compute #evts
        genEventCount = 0
        genEventSumw  = 0.0
@@ -474,7 +486,7 @@ class PostProcMaker():
        nEvt = genEventSumw
        Xsec  = self._xsDB.get(iSample)
        baseW = float(Xsec)*1000./nEvt
-       #print 'baseW: xs,N -> W', Xsec , nEvt , baseW
+       print 'baseW: xs,N -> W', Xsec , nEvt , baseW
        # Store Info
        self._baseW[iSample] = { 'baseW' : baseW , 'Xsec' : Xsec }
 
