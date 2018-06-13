@@ -365,7 +365,7 @@ class crabMon :
    def unpackTask(self,iTask):
      self.getStatus(iTask)
      print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
-     if not ( self._currentTaskStatus['schedulerStatus'] == 'COMPLETED' or or self._currentTaskStatus['crabServerStatus'] == 'KILLED' ) :
+     if not ( self._currentTaskStatus['schedulerStatus'] == 'COMPLETED' or self._currentTaskStatus['crabServerStatus'] == 'KILLED' ) :
        print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus'] 
        return
      # Retrieving Info + Unpacking map
