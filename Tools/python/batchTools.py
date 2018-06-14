@@ -58,6 +58,7 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+         jFile.write('export X509_USER_PROXY=/afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
@@ -105,6 +106,14 @@ class batchJobs :
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
      # Create Proxy at IIHE
+     if 'cern'  in os.uname()[1]:
+       cmd='voms-proxy-info'
+       proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+       out, err = proc.communicate()
+       for line in out.split('\n'):
+        if "path" in line:
+          proxypath=line.split(':')[1]
+       os.system('cp '+proxypath+' /afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
      if 'iihe'  in os.uname()[1]:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
