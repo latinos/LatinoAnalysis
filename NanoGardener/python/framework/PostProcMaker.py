@@ -206,10 +206,13 @@ class PostProcMaker():
      for iSample in self._Samples :
        if self.selectSample(iProd,iStep,iSample) :
          # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
-         if self._iniStep == 'Prod' : 
-           if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-           else:                                    dasInst = 'prod/global' 
-           FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst))
+         if self._iniStep == 'Prod' :
+           if 'srmPrefix' in self._Samples[iSample]:
+             FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix']))
+           else:  
+             if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+             else:                                    dasInst = 'prod/global' 
+             FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst))
          # From previous PostProc step
          else :
            FileDic = self.getTargetFileDic(iProd,iStep,iSample,getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True))
@@ -225,6 +228,21 @@ class PostProcMaker():
        exit()
      FileList=string.split(out)
      return FileList
+
+   def getFilesFromPath(self,paths,srmprefix):
+     FileList = []
+     for path in paths:
+       command = 'gfal-ls '+srmprefix+path+ " | grep root"
+       proc=subprocess.Popen(command, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+       out, err = proc.communicate()
+       if not proc.returncode == 0 :
+         print out
+         print err
+         exit()
+       files=string.split(out)
+       for file in files:
+         FileList.append(path+"/"+file)
+     return FileList 
 
    def mkFileDir(self,iProd,iStep):
 
