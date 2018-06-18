@@ -473,14 +473,20 @@ class PostProcMaker():
    def computewBaseW(self,iSample):
      if not iSample in self._baseW :
        # Always check #nAOD files !
-       if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-       else:                                    dasInst = 'prod/global'
-       nAODFileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
-       # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
-       if self._iniStep == 'Prod' :
+       if 'srmPrefix' in self._Samples[iSample]:
+         nAODFileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
+       else:  
          if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
          else:                                    dasInst = 'prod/global'
-         FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+         nAODFileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+       # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
+       if self._iniStep == 'Prod' :
+         if 'srmPrefix' in self._Samples[iSample]:
+           FileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
+         else:   
+           if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+           else:                                    dasInst = 'prod/global'
+           FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
          # From previous PostProc step
        else :
          FileList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
@@ -547,9 +553,12 @@ class PostProcMaker():
          # Get File List in input directory
          # ... From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
          if self._iniStep == 'Prod' :
-           if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-           else:                                    dasInst = 'prod/global'
-           FileInList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
+           if 'srmPrefix' in self._Samples[iSample]:
+             FileInList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
+           else:  
+             if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+             else:                                    dasInst = 'prod/global'
+             FileInList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
          # ... From previous PostProc step
          else :
            FileInList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
@@ -561,9 +570,12 @@ class PostProcMaker():
          if not self._iniStep == 'Prod' :
            #... if no hadd before -> Prod:
            if not 'hadd' in self._sourceDir :
-             if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-             else:                                    dasInst = 'prod/global'
-             FileOriList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst) 
+             if 'srmPrefix' in self._Samples[iSample]:
+               FileOriList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
+             else:   
+               if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
+               else:                                    dasInst = 'prod/global'
+               FileOriList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst) 
              if not len(FileInList) == len (FileOriList) :
                print 'WARNING: HADD not possible, missing files in _sourceDir for iSample ',iSample,' --> SKIPPING IT !!!'
                continue
@@ -659,7 +671,7 @@ class PostProcMaker():
            # Final command
            if   self._jobMode == 'Interactive' : command  = 'cd '+wDir+' ; '+self._cmsswBasedir+'/src/'+self._haddnano+' '+outFile+' '
            else:                                 command  = '$CMSSW_BASE/src/'+self._haddnano+' '+outFile+' '     
-           for sFile in self._HaddDic[iSample][iFile] : command += self.getStageIn(iFile)+' '
+           for sFile in self._HaddDic[iSample][iFile] : command += self.getStageIn(sFile)+' '
            command += ' ; ls -l ; '
            if not self._jobMode == 'Crab':  command += stageOutCmd+' ; '+rmGarbageCmd
            # Interactive
