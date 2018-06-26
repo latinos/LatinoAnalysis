@@ -24,8 +24,8 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' ,
-                  'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent'],
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent'],
                 }, 
     
   'DATAl1loose2016': {
@@ -40,7 +40,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin'],
                 }, 
    
@@ -73,8 +73,8 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSelAdapted' ,
-                  'declare'    : 'leptonSel = lambda : LeptonSel("$RPLME_CMSSW", "Loose", 1)' ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 1)' ,
                   'module'     : 'leptonSel()' ,
                },
              
@@ -110,7 +110,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'module'     : 'btagSFProducer(era="2017", algo="deepcsv")',
+                  'declare'    : 'btagSFProducer2017 = lambda : btagSFProducer(era="2017", algo="deepcsv")',
+                  'module'     : 'btagSFProducer2017()',
                  },               
 
   'btagPerEvent': {
@@ -118,6 +119,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
                   'module'     : 'BTagEventWeightProducer()',
         
                 },
@@ -148,6 +150,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
+                  'declare'    : '',
                   'module'     : 'l2KinProducer()' ,
                },  
 
@@ -156,6 +159,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l3KinProducer' ,
+                  'declare'    : '',
                   'module'     : 'l3KinProducer()' ,
                },  
 
@@ -164,6 +168,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l4KinProducer' ,
+                  'declare'    : '',
                   'module'     : 'l4KinProducer()' ,
                },  
 
@@ -174,6 +179,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC.py\')' ,
                  },
 

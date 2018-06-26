@@ -130,7 +130,7 @@ class LeppTScalerTreeMaker(Module) :
             pt_idx = 0
             for idx2,lep2 in enumerate(leptons):
                 if idx == idx2: continue
-                if lep.pt < lep2.pt: pt_idx += 1
+                if lep.pt < lep2.pt  or (lep.pt==lep2.pt and idx>idx2): pt_idx += 1
             for var in Lepton_var:
                 if 'pt' in var:
                     lep_dict[var][pt_idx] = lep.pt

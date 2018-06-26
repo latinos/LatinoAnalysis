@@ -164,7 +164,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     if 'iihe' in os.uname()[1] :
       if not FromPostProc : absPath=True
       lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
          Dir = '/pnfs/iihe/cms/' + inputDir
       else:                        
          Dir = inputDir
@@ -172,7 +172,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
 
     # ... CERN
     elif 'cern' in os.uname()[1] : 
-      if not '/eos/' in  inputDir and '/store/' in inpuDir:
+      if not '/eos/' in  inputDir and '/store/' in inputDir:
          Dir = '/eos/cms/' + inputDir
       else:                          
          Dir = inputDir
@@ -190,7 +190,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     # ... IFCA   
     elif 'ifca' in os.uname()[1] :
       lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+      if not '/gpfs/' in inputDir and '/store/' in inputDir:
         Dir = '/gpfs/gaes/cms/' + inputDir 
       else:
         Dir = inputDir
@@ -198,7 +198,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     # ... PISA         
     elif "pi.infn.it" in socket.getfqdn():
       lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+      if not '/gpfs/' in inputDir and '/store/' in inputDir:
         Dir = '/gpfs/ddn/srm/cms/' + inputDir 
       else:
         Dir = inputDir
@@ -207,7 +207,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     elif "knu" in os.uname()[1]:
       absPath=True
       lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
         Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
       else:
         Dir = inputDir 
@@ -217,7 +217,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     elif "sdfarm" in os.uname()[1]:
       absPath=True
       lsCmd='ls '
-      if not '/xrootd/' in inputDir and '/store/' in inpuDir: 
+      if not '/xrootd/' in inputDir and '/store/' in inputDir: 
         Dir = '/xrootd/' + inputDir
       else:
         Dir = inputDir 

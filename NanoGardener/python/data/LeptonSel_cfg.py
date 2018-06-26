@@ -13,6 +13,337 @@ LepFilter_dict = {
 
 ElectronWP = {  
 
+###____________________Study2017__________________________
+'Study2017': {
+
+## ------------  
+
+ 'VetoObjWP' : { 
+           'HLTsafe' : { 
+                         'cuts' : { 
+                               # Common cuts
+                               'True' :
+                                [
+                                  'False'
+                                ] ,             
+                                   },
+                       } ,
+                 } ,
+  
+ # ------------ 
+ 'FakeObjWP'  : {
+
+           'HLTsafe' : { 
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [
+                                   #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                   'electron_col[LF_idx]["lostHits"] < 2',
+                                   'electron_col[LF_idx]["convVeto"] == 1',
+                                   'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.013' ,
+                                   #'electron_col[LF_idx]["pfRelIso03_all"] < 0.06',
+                                   'electron_col[LF_idx]["dr03TkSumPt"] < 0.1',
+                                   '(electron_col[LF_idx]["dr03HcalDepth1TowerSumEt"]/electron_col[LF_idx]["pt"]) < 0.12',
+                                  ] ,             
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [
+                                   #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                   #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   'abs(electron_col[LF_idx]["deltaEtaSC"]) < 0.004'  ,
+                                   'electron_col[LF_idx]["sieie"] < 0.011'  ,
+                                   'electron_col[LF_idx]["hoe"] < 0.06' ,
+                                   '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.15',
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [
+                                   #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                   #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   'electron_col[LF_idx]["sieie"] < 0.03'  ,
+                                   'electron_col[LF_idx]["hoe"] < 0.07' ,
+                                   '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.13',
+                                  ] ,
+                                   },
+                       } ,
+
+                 } ,
+
+ # ------------ 
+ 'TightObjWP' : {
+
+          'mvaFall17noIso_WPL':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17noIso_WPL"]',
+                                     #'electron_col[LF_idx]["lostHits"] < 1',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                              } ,
+ 
+          'mvaFall17Iso_WPL':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17Iso_WPL"]',
+                                     #'electron_col[LF_idx]["lostHits"] < 1',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                              } ,
+ 
+
+          'mvaFall17noIso':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17noIso"]',
+                                     #'electron_col[LF_idx]["lostHits"] < 1',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                              } ,
+ 
+          'mvaFall17Iso':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17Iso"]',
+                                     #'electron_col[LF_idx]["lostHits"] < 1',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                              } ,
+
+         'mvaFall17noIso_WP80' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [
+                                    #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    'electron_col[LF_idx]["mvaFall17noIso_WP80"]',
+                                    #'electron_col[LF_idx]["cutBased"] == 4', 
+                                    #'electron_col[LF_idx]["lostHits"] < 1',
+                                  ] , 
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                  ] ,
+                                  } ,
+                         #'tkSF':  { 
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                         #         } ,
+                         #'wpSF':  {
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_cut_WP_Tight80X.txt' ,  
+                         #         } ,
+                         #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_cut_WP_Tight80X/',
+                             } ,
+
+
+          'mvaFall17Iso_WP80':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17Iso_WP80"]',
+                                     #'electron_col[LF_idx]["lostHits"] < 1',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                         #'tkSF':  { 
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                         #         } ,
+                         #'wpSF':  {
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_80p_Iso2015.txt' ,
+                         #         } ,
+                         #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_mva_80p_Iso2015/',
+                              } ,
+ 
+          'mvaFall17noIso_WP90':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17noIso_WP90"]',
+                                     #'electron_col[LF_idx]["lostHits"] < 1',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                         #'tkSF':  { 
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                         #         } ,
+                         #'wpSF':  {
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_90p_Iso2015.txt' ,
+                         #         } ,
+                         #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_mva_90p_Iso2015/',
+                              } ,
+ 
+          'mvaFall17Iso_WP90':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17Iso_WP90"]',
+                                     #'electron_col[LF_idx]["lostHits"] < 1',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                         #'tkSF':  { 
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                         #         } ,
+                         #'wpSF':  {
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_mva_90p_Iso2016.txt' ,
+                         #         } ,
+                         #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_mva_90p_Iso2016/',
+                              } ,
+ 
+                  } ,
+ 
+ # ------------ 
+ 'WgStarObjWP' : {
+
+         'cut_WP_Tight80X' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [
+                                    'False'
+                                    #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    ##'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    ##'electron_col[LF_idx]["cutBased"] == 4',
+                                    #'electron_col[LF_idx]["lostHits"] < 1',
+                                    #'electron_col[LF_idx]["convVeto"]',
+                                    #'electron_col[LF_idx]["tightCharge"] == 2',
+                                  ] ,
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.00998',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0816',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0414',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0588',                                  
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.0292',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0394',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0641',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0571', 
+                                  ] ,
+                                  } ,
+                             } ,
+
+                 } ,
+},
+
 ###____________________Full2016__________________________
 'Full2016': {
 
@@ -290,7 +621,7 @@ ElectronWP = {
                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
                                     'electron_col[LF_idx]["sieie"] < 0.00998',
-                                    'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
+                                    #'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
                                     #'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0816',
                                     'electron_col[LF_idx]["hoe"] < 0.0414',
                                     'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
@@ -302,7 +633,7 @@ ElectronWP = {
                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                     'electron_col[LF_idx]["sieie"] < 0.0292',
-                                    'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
+                                    #'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
                                     #'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0394',
                                     'electron_col[LF_idx]["hoe"] < 0.0641',
                                     'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
@@ -317,7 +648,7 @@ ElectronWP = {
 
 }
 
-ElectronWP['Study2017'] = ElectronWP['Full2016']
+#ElectronWP['Study2017'] = ElectronWP['Full2016']
 
 ####################### Muon WP ######################################
 
@@ -582,7 +913,7 @@ if __name__ == '__main__':
             for entr in ElectronWP[key][typ]:
                 print(entr + ' =')
                 print(ElectronWP[key][typ][entr]['cuts'])
-            print('')
+                print('')
     print('_______________MuonWP___________________')
     print('')
     for key in MuonWP:
@@ -593,5 +924,5 @@ if __name__ == '__main__':
             for entr in MuonWP[key][typ]:
                 print(entr + ' =')
                 print(MuonWP[key][typ][entr]['cuts'])
-            print('')
+                print('')
 

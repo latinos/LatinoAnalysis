@@ -34,9 +34,9 @@ numpy.random.seed(seed)
 
 #loads the model
 baseCMSSW = os.getenv('CMSSW_BASE')
-smodel = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model1.json"
+smodel = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model_20180604.json"
 #smodel = "/afs/cern.ch/user/l/lusanche/KERAS/run_dnn/model.json"
-sweight = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model1_weights_json.h5"
+sweight = baseCMSSW+"/src/LatinoAnalysis/Gardener/python/data/vbfdnn/model_20180604_weights_json.h5"
 #sweight = "/afs/cern.ch/user/l/lusanche/KERAS/run_dnn/model_weights_json.h5"
 json_file = open(smodel,'r')
 loaded_model_json = json_file.read()
