@@ -6,7 +6,7 @@ class JECMaker(jecUncertProducer, object):
     ''' 
     def __init__(self, globalTag, types=['Total'], jetFlav='AK4PFchs'):
        super(JECMaker, self).__init__(globalTag, uncerts=types, jetFlavour=jetFlav, jetColl="CleanJet") 
-       types_str = ''
+       types_str = 'CorrectionTypes = '
        for typ in types:
            types_str += typ
            types_str += ', '
