@@ -6,15 +6,15 @@ class PtCorrApplier(Module):
     '''
     Module that applies pt corrections to a given collection
     '''
-    def __init__(self, Coll='CleanJet', CorrSrc='jecUncertTotal', UpVar=True ):
+    def __init__(self, Coll='CleanJet', CorrSrc='jecUncertTotal', kind='Up' ):
         self.CollTC = Coll
         self.CorrSrc = CorrSrc
-        self.VarType = 'Up' if UpVar else 'Dwn'
-        self.isUp = UpVar
+        self.kind = kind
+        self.isUp = True if kind == 'Up' else False
         if self.CollTC == 'CleanJet':
             self.CollBr = CleanJet_br
         else: raise ValueError('Unknown Collection: PtCorrApplier not (yet) implemented for collection ' + self.CollTC) 
-        print('PtCorrApplier: CollectionToCorrect = ' + self.CollTC + ', CorrectionsToAplly = ' + self.CorrSrc + ', CorrectionType = ' + self.VarType)
+        print('PtCorrApplier: CollectionToCorrect = ' + self.CollTC + ', CorrectionsToAplly = ' + self.CorrSrc + ', CorrectionType = ' + self.kind)
 
     def beginJob(self):
         pass
