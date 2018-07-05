@@ -1,6 +1,7 @@
+import re
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
-from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import CleanJet_br
+from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 
 class PtCorrApplier(Module):
     '''
@@ -11,9 +12,6 @@ class PtCorrApplier(Module):
         self.CorrSrc = CorrSrc
         self.kind = kind
         self.isUp = True if kind == 'Up' else False
-        if self.CollTC == 'CleanJet':
-            self.CollBr = CleanJet_br
-        else: raise ValueError('Unknown Collection: PtCorrApplier not (yet) implemented for collection ' + self.CollTC) 
         print('PtCorrApplier: CollectionToCorrect = ' + self.CollTC + ', CorrectionsToAplly = ' + self.CorrSrc + ', CorrectionType = ' + self.kind)
 
     def beginJob(self):
@@ -24,9 +22,25 @@ class PtCorrApplier(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        for typ in self.CollBr:
-            for bname in self.CollBr[typ]:
-                self.out.branch(bname, typ, lenVar='n'+self.CollTC)
+        self.CollBr = {}
+        oBrList = self.out._tree.GetListOfBranches()
+        #iBrList = inputTree.GetListOfBranches()
+        for br in oBrList:
+            bname = br.GetName()
+            btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
+            if re.match('\A'+self.CollTC+'_', bname):
+                if btype not in self.CollBr: self.CollBr[btype] = []
+                self.CollBr[btype].append(bname)
+                self.out.branch(bname, btype, lenVar='n'+self.CollTC)
+        #for br in iBrList:
+        #    bname = br.GetName()
+        #    btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
+        #    if re.match('\A'+self.CollTC+'_', bname):
+        #        if btype not in self.CollBr: self.CollBr[btype] = []
+        #        if bname in self.CollBr[btype]: continue
+        #        self.CollBr[btype].append(bname)
+        #        self.out.branch(bname, btype, lenVar='n'+self.CollTC)
+        if len(self.CollBr) < 1: raise IOError('PtCorrApplier: no branches with ' + self.CollTC+'_' +  ' found in inputTree or outputTree.')
  
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
