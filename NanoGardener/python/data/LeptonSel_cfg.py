@@ -73,6 +73,68 @@ ElectronWP = {
  # ------------ 
  'TightObjWP' : {
 
+         'TightFall17' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [
+                                    'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    'electron_col[LF_idx]["cutBased"] == 4', 
+                                    'electron_col[LF_idx]["lostHits"] < 1',
+                                  ] , 
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                  ] ,
+                                  } ,
+                         #'tkSF':  { 
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                         #         } ,
+                         #'wpSF':  {
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_cut_WP_Tight80X.txt' ,  
+                         #         } ,
+                         #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_cut_WP_Tight80X/',
+                             } ,
+
+         #'MediumFall17' : {
+         #                'cuts' : { 
+         #                       # Common cuts
+         #                       'True' :
+         #                         [
+         #                           'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+         #                           'electron_col[LF_idx]["cutBased_Fall17_V1"] >= 3', 
+         #                           'electron_col[LF_idx]["lostHits"] < 1',
+         #                         ] , 
+         #                       # Barrel
+         #                       'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+         #                         [
+         #                           'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+         #                           'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+         #                         ] ,
+         #                       # EndCap
+         #                       'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+         #                         [
+         #                           'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+         #                           'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+         #                         ] ,
+         #                         } ,
+                         #'tkSF':  { 
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/egammaEffi.txt_EGM2D.root' ,
+                         #         } ,
+                         #'wpSF':  {
+                         #           '1-7' : 'LatinoAnalysis/Gardener/python/data/idiso/Full2016/electrons_cut_WP_Tight80X.txt' ,  
+                         #         } ,
+                         #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_cut_WP_Tight80X/',
+         #                    } ,
+
           'mvaFall17noIso_WPL':  {
                          'cuts' : { 
                                 # Common cuts 
