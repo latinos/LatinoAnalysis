@@ -422,7 +422,7 @@ class PostProcMaker():
      else:
        if 'declare' in self._Steps[iStep] :
          #fPy.write(self._Steps[iStep]['declare']+'\n') 
-         fPy.write(self.customizeDeclare(iSubStep)+'\n')
+         fPy.write(self.customizeDeclare(iStep)+'\n')
      fPy.write(' \n')
 
      # Files
