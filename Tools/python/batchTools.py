@@ -90,7 +90,7 @@ class batchJobs :
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
-         elif 'ifca' or 'cloud' in os.uname()[1]:
+         elif 'ifca' in os.uname()[1]:
            jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' or 'knu' in os.uname()[1]:
            jFile.write('cd '+self.subDir+'\n')
@@ -211,7 +211,7 @@ class batchJobs :
           jdsFile.close()
 	  #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
           jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
-        elif 'ifca' or 'cloud' in os.uname()[1] :
+        elif 'ifca' in os.uname()[1] :
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
         elif "pi.infn.it" in socket.getfqdn():
           queue="cms"
@@ -229,7 +229,7 @@ class batchJobs :
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      if 'iihe' in os.uname()[1] :
         jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
-     elif 'ifca' or 'cloud' in os.uname()[1] :
+     elif 'ifca' in os.uname()[1] :
         jFile.write('mv '+inputFile+' /gpfs/gaes/cms'+outputFile+'\n')
      elif "pi.infn.it" in socket.getfqdn():   
         jFile.write('lcg-cp '+inputFile+' srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms'+outputFile+'\n')
@@ -278,7 +278,7 @@ def batchStatus():
               iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
-            elif 'ifca' or 'cloud' in os.uname()[1] :
+            elif 'ifca' in os.uname()[1] :
               iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
@@ -409,7 +409,7 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
           jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
-        elif 'ifca' or 'cloud' in os.uname()[1] :
+        elif 'ifca' in os.uname()[1] :
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
