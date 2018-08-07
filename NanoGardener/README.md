@@ -3,6 +3,10 @@
    * NanoAOD workbook https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookNanoAOD
    * Latino NanoPostprocessing slides https://indico.cern.ch/event/718326/contributions/2955317/attachments/1625920/2589261/NanoGargener_3Apr2018.pdf
    
+# Study2017 ntuples
+   * Data: /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Run2017_nAOD_v1_Study2017/DATAl1loose2017__hadd/ 
+   * MC:  /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_nAOD_v1_Study2017/MCl1loose2017__baseW__hadd/ 
+   
 # General items to know when using nanoAOD
 
 NanoAODs are provided centrally. The current campaign for 2017 data is based on CMSSW_9_4_7.
