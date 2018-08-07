@@ -354,7 +354,7 @@ def delDirSE(Dir):
       if not '/eos/cms' in inDir : inDir = '/eos/cms' + inDir
       os.system('rm -rf '+inDir)
     elif 'ifca' in os.uname()[1] : 
-      in not '/gpfs/gaes/cms' in inDir : inDir = '/gpfs/gaes/cms' + inDir
+      if not '/gpfs/gaes/cms' in inDir : inDir = '/gpfs/gaes/cms' + inDir
     else:
       print 'ERROR: Unknown SITE for srmcp2local ->exit()'
       exit()
@@ -368,7 +368,7 @@ def srmcp2local(inFile,outFile):
       if not '/eos/cms' in srcFile : srcFile = '/eos/cms' + srcFile
       os.system('cp '+srcFile+' '+outFile)
     elif  'ifca' in os.uname()[1] : 
-      in not '/gpfs/gaes/cms' in srcFile : srcFile = '/gpfs/gaes/cms' + srcFile
+      if not '/gpfs/gaes/cms' in srcFile : srcFile = '/gpfs/gaes/cms' + srcFile
       os.system('cp '+srcFile+' '+outFile)
     else:
       print 'ERROR: Unknown SITE for srmcp2local ->exit()'
