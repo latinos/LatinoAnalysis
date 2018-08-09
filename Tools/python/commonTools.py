@@ -355,6 +355,7 @@ def delDirSE(Dir):
       os.system('rm -rf '+inDir)
     elif 'ifca' in os.uname()[1] : 
       if not '/gpfs/gaes/cms' in inDir : inDir = '/gpfs/gaes/cms' + inDir
+      os.system('rm -rf '+inDir) 
     else:
       print 'ERROR: Unknown SITE for srmcp2local ->exit()'
       exit()
