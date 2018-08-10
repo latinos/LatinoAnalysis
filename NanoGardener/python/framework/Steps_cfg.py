@@ -76,8 +76,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
                   'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 1)' ,
                   'module'     : 'leptonSel()' ,
-               },
-             
+               }, 
+
+   'susyGen': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyGenVarsProducer' ,
+                  'module'     : 'SusyGenVarsProducer()' ,
+               }, 
 
 ## ------- MODULES: MC Weights
 
@@ -142,6 +149,14 @@ Steps = {
                   'declare'    : 'pufile_data2017="%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileup_Cert_294927-306462_13TeV_PromptReco_Collisions17_withVar.root" % os.environ["CMSSW_BASE"]',
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
+
+   'susyW': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyWeightsProducer' ,
+                  'module'     : 'SusyWeigthProducer()' ,
+               },
 
 ## ------- MODULES: Kinematic
 
