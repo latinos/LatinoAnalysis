@@ -380,7 +380,20 @@ class PostProcMaker():
         if not cpMode:
           command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
         else: 
-          command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile      
+          command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile     
+      # IFCA
+      elif self._LocalSite == 'ifca' : 
+         if self._TargetSite == 'ifca' or self._TargetSite == None :
+            if self._redo : 
+               command += 'rm '+storeFile+' ; ' 
+            if not cpMode:
+               command += 'cp '+prodFile+' '+storeFile
+            else:
+               print 'ERROR: mkStageOut for cpMode not yet implemented for _LocalSite = ',self._LocalSite
+               exit()
+         else :
+            print 'ERROR: mkStageOut to different site not yet implemented for _LocalSite = ',self._LocalSite
+            exit()
 
       # MISSING STAGE OUT
       else :
@@ -422,7 +435,7 @@ class PostProcMaker():
      else:
        if 'declare' in self._Steps[iStep] :
          #fPy.write(self._Steps[iStep]['declare']+'\n') 
-         fPy.write(self.customizeDeclare(iSubStep)+'\n')
+         fPy.write(self.customizeDeclare(iStep)+'\n')
      fPy.write(' \n')
 
      # Files
