@@ -6,8 +6,8 @@ SUSYCrossSections = {
     ##    https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVstopsbottom
     ##    NNLO_approx + NNLL (10-April-2018)
 
-    'StopSbottom' : { 'susyModels' : { 'T2tt' : 'ptISR', 
-                                       'T2bW' : 'njetISR',  
+    'StopSbottom' : { 'susyModels' : { 'T2tt' : '1', 
+                                       'T2bW' : '1',  
                                        },
                       'masspoints' : { '100'   :   { 'value' : '0.177E+04' , 'uncertainty' : '6.77%' },
                                        '105'   :   { 'value' : '0.145E+04' , 'uncertainty' : '6.74%' },
@@ -598,9 +598,9 @@ SUSYCrossSections = {
     ##    https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVx1x1wino
     ##    NLO-NLL (2017-06-15)
    
-    'WinoC1C1'    : { 'susyModels' : { 'TChipmWW'      : 'ptISR', 
-                                       'TChipmSlepSnu' : 'ptISR', 
-                                       'TChipmStauSnu' : 'ptISR',  
+    'WinoC1C1'    : { 'susyModels' : { 'TChipmWW'      : '1', 
+                                       'TChipmSlepSnu' : '1', 
+                                       'TChipmStauSnu' : '1',  
                                        },
                       'masspoints' : { '100'   :   { 'value' : '11611.9' , 'uncertainty' : '518.613' },
                                        '125'   :   { 'value' : '5090.52' , 'uncertainty' : '249.469' },

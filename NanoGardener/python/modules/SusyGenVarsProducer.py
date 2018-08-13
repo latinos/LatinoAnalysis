@@ -2,10 +2,10 @@ import ROOT
 import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-from LatinoAnalysis.NanoGardener.data.SusyCrossSections import SUSYCrossSections
-
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+
+from LatinoAnalysis.NanoGardener.framework.samples.susyCrossSections import SUSYCrossSections
 
 class SusyGenVarsProducer(Module):
 
@@ -36,11 +36,15 @@ class SusyGenVarsProducer(Module):
 
         if self.susyModelIsSet==False :
 
-            if 'T2tt' in inputFile.GetName() : self.susyModel = "StopSbottom"
-            elif 'T2bW' in inputFile.GetName() : self.susyModel = "StopSbottom"
-            elif 'TChipm' in inputFile.GetName() : self.susyModel = "WinoC1C1"
-            else :
-                raise Exception('Unknown SUSY model for ', inputFile.GetName())
+            self.susyProcess = ''
+
+            for process in SUSYCrossSections :
+                for susyModel in SUSYCrossSections[process]['susyModels'] :
+                    if susyModel in inputFile.GetName() :
+                        self.susyProcess = process
+
+            if self.susyProcess=='' :
+                raise Exception('SusyGenVarsProducer ERROR: SUSY process not found for', inputFile.GetName())
             
             self.susyModelIsSet = True
 
@@ -48,30 +52,30 @@ class SusyGenVarsProducer(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def getCrossSection(self, susyModel, susyMass) :
+    def getCrossSection(self, susyProcess, susyMass) :
 
         isusyMass = int(susyMass)
 
-        if str(isusyMass) in SUSYCrossSections[susyModel].keys() :
+        if str(isusyMass) in SUSYCrossSections[susyProcess]['masspoints'].keys() :
             
-            return float(SUSYCrossSections[susyModel][str(isusyMass)]['value'])
+            return float(SUSYCrossSections[susyProcess]['masspoints'][str(isusyMass)]['value'])
         
         elif isusyMass%5!=0 :
                     
             isusyMass1 = 5*(iSusyMass/5)
             isusyMass2 = 5*(iSusyMass/5+1)
                     
-            if str(isusyMass1) in SUSYCrossSections[susyModel].keys() and str(isusyMass2) in SUSYCrossSections[susyModel].keys() :
+            if str(isusyMass1) in SUSYCrossSections[susyProcess]['masspoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['masspoints'].keys() :
 
-                susyXsec1 = float(SUSYCrossSections[susyModel][str(isusyMass1)]['value'])
-                susyXsec2 = float(SUSYCrossSections[susyModel][str(isusyMass2)]['value'])
+                susyXsec1 = float(SUSYCrossSections[susyProcess]['masspoints'][str(isusyMass1)]['value'])
+                susyXsec2 = float(SUSYCrossSections[susyProcess]['masspoints'][str(isusyMass2)]['value'])
 
                 slope = -math.log(susyXsec2/susyXsec1)/(isusyMass2-isusyMass1)
                 
                 return isusyMass1*math.exp(-slope*(isusyMass-isusyMass1))
 
         
-        raise Exception('SusyGenVarsProducer ERROR: cross section not available for', self.susyModel, 'at mass =', susyMass)
+        raise Exception('SusyGenVarsProducer ERROR: cross section not available for', self.susyProcess, 'at mass =', susyMass)
 
     ###
     def analyze(self, event):
@@ -118,7 +122,7 @@ class SusyGenVarsProducer(Module):
                     (abs(particle.pdgId)==2000011 or abs(particle.pdgId)==2000013 or abs(particle.pdgId)==2000015)) : # RH sleptons
                     massSlepton = particle.mass
 
-        xSection = self.getCrossSection(self.susyModel, massPrompt)
+        xSection = self.getCrossSection(self.susyProcess, massPrompt)
         
         if nSusyParticles==2 :
             ptISR = (susyParticle1+susyParticle2).Pt()
