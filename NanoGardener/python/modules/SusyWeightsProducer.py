@@ -78,7 +78,7 @@ class SusyWeightsProducer(Module):
                         for ib in range(self.isrBins+1) :
                             reweightedNormalization += histoISR.GetBinContent(ib+1)*self.isrCorrection[ib]
 
-                        normFactor = histoISR.Integral()/reweightedNormalization
+                        normFactor = histoISR.Integral(0, self.isrBins+1)/reweightedNormalization
 
                         self.isrN.update({str(xb-1)+"-"+str(yb-1):normFactor})
                         print 'SusyWeightsProducer: overall ISR normalization factor for mass point (',str(xb-1),',',str(yb-1),'):', normFactor
