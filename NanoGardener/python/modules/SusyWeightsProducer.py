@@ -99,11 +99,11 @@ class SusyWeightsProducer(Module):
         
         baseW = 1000.*Xsec/nevents
 
-        normFactor = self.isrN[str(int(event.susyMprompt))+'-'+str(int(event.susyMLSP))]
-        for ib in range(self.isrBins+1) :
-            if getattr(event, self.isrObservable) > self.isrEdge[ib] :
-                isrBin = ib
-        isrW = normFactor*self.isrCorrection[isrBin]
+        isrW = self.isrN[str(int(event.susyMprompt))+'-'+str(int(event.susyMLSP))]
+        for ib in reversed(xrange(self.isrBins+1)) :
+            if getattr(event, self.isrObservable) >= self.isrEdge[ib] :
+                isrW *= self.isrCorrection[ib]
+                break
 
         self.out.fillBranch("baseW",   baseW)
         self.out.fillBranch("isrW",    isrW)      

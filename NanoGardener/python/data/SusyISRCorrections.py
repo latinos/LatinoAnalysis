@@ -1,7 +1,7 @@
 
 SUSYISRCorrections = {
 
-    'Full2016' : { 'njetISR' : {  'susyModels' : { 'T2tF' : '1', 
+    'Full2016' : { 'njetISR' : {  'susyModels' : { 'T2tt' : '1', 
                                                    'T2bW' : '1',  
                                                    },
                                   'correction' : {    '0' :  '1.000',
@@ -13,8 +13,7 @@ SUSYISRCorrections = {
                                                       '6' :  '0.511',
                                                       },
                                   },
-                   'ptISR'   : {  'susyModels' : { 'T2tt'        : '1', 
-                                                   'TChiWW'      : '1', 
+                   'ptISR'   : {  'susyModels' : { 'TChiWW'      : '1', 
                                                    'TChiSlepSnu' : '1', 
                                                    'TChiStauSnu' : '1',  
                                                    },

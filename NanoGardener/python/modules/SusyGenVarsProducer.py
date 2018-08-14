@@ -33,6 +33,7 @@ class SusyGenVarsProducer(Module):
         self.out.branch("susyMSlepton",  "F")
         self.out.branch("Xsec",          "F")
         self.out.branch("ptISR",         "F")
+        self.out.branch("njetISR",       "F")
 
         if self.susyModelIsSet==False :
 
@@ -56,19 +57,19 @@ class SusyGenVarsProducer(Module):
 
         isusyMass = int(susyMass)
 
-        if str(isusyMass) in SUSYCrossSections[susyProcess]['masspoints'].keys() :
+        if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
             
-            return float(SUSYCrossSections[susyProcess]['masspoints'][str(isusyMass)]['value'])
+            return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])
         
         elif isusyMass%5!=0 :
                     
             isusyMass1 = 5*(iSusyMass/5)
             isusyMass2 = 5*(iSusyMass/5+1)
                     
-            if str(isusyMass1) in SUSYCrossSections[susyProcess]['masspoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['masspoints'].keys() :
+            if str(isusyMass1) in SUSYCrossSections[susyProcess]['massPoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
 
-                susyXsec1 = float(SUSYCrossSections[susyProcess]['masspoints'][str(isusyMass1)]['value'])
-                susyXsec2 = float(SUSYCrossSections[susyProcess]['masspoints'][str(isusyMass2)]['value'])
+                susyXsec1 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass1)]['value'])
+                susyXsec2 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass2)]['value'])
 
                 slope = -math.log(susyXsec2/susyXsec1)/(isusyMass2-isusyMass1)
                 
@@ -88,6 +89,7 @@ class SusyGenVarsProducer(Module):
         massSlepton  = -1.
         xSection     = -1.
         ptISR        = -1.
+        njetISR      =  0.
 
         nSusyParticles = 0
         susyParticle1 = ROOT.TLorentzVector()
@@ -128,7 +130,52 @@ class SusyGenVarsProducer(Module):
             ptISR = (susyParticle1+susyParticle2).Pt()
         else :
             print 'SusyGenVarsProducer WARNING:', nSusyParticles, 'SUSY particles found for pt ISR computation'
- 
+
+        # Adapted from (check for updates for nanoAOD):
+        # https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L1268-L1295
+        jetColl = Collection(event, "Jet")
+
+        for jet in jetColl :
+            # https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L372-L395
+            if jet.jetId & 1 : # is loose 
+                # https://github.com/manuelfs/babymaker/blob/11e7a6f26ed6c1efcd0027c8b4219eb69a997bae/bmaker/interface/jet_met_tools.hh
+                if jet.pt>30 and abs(jet.eta)<2.4 :
+                    
+                    matched = False
+
+                    jetV = ROOT.TLorentzVector()
+                    jetV.SetPtEtaPhiM(jet.pt, jet.eta, jet.phi, jet.mass)
+                    
+                    for particle in genParticles :
+
+                        if particle.genPartIdxMother>-1 :
+
+                            matchThis = False
+
+                            motherId = abs(genParticles[particle.genPartIdxMother].pdgId) 
+
+                            if abs(particle.pdgId)==11 or abs(particle.pdgId)==13 :
+                                if motherId==15 or motherId==23 or motherId==24 or motherId==25 or motherId>1e6 :
+                                    matchThis = True
+                        
+                            if motherId<=5 : # Why not gluons?
+                                if genParticles[particle.genPartIdxMother].genPartIdxMother>-1 :
+                                    grandmotherId = abs(genParticles[genParticles[particle.genPartIdxMother].genPartIdxMother].pdgId) 
+                                    if grandmotherId==6 or grandmotherId==23 or grandmotherId==24 or grandmotherId==25 or grandmotherId>1e6 : 
+                                        matchThis = True
+
+                            if matchThis==True :
+
+                                parV = ROOT.TLorentzVector()
+                                parV.SetPtEtaPhiM(particle.pt, particle.eta, particle.phi, particle.mass)
+
+                                if jetV.DeltaR(parV)<0.3 :
+                                    matched = True
+                                    break
+
+                    if matched==False:
+                        njetISR += 1
+
         self.out.fillBranch("susyMprompt",   massPrompt)
         self.out.fillBranch("susyMstop",     massStop)
         self.out.fillBranch("susyMLSP",      massLSP)
@@ -136,6 +183,7 @@ class SusyGenVarsProducer(Module):
         self.out.fillBranch("susyMSlepton",  massSlepton)
         self.out.fillBranch("Xsec",          xSection)
         self.out.fillBranch("ptISR",         ptISR)
+        self.out.fillBranch("njetISR",       njetISR)
             
         return True
  
