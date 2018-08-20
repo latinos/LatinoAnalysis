@@ -183,55 +183,6 @@ ElectronWP = {
                                   } ,
                               } ,
  
-
-          'mvaFall17noIso':  {
-                         'cuts' : { 
-                                # Common cuts 
-                                'True' :
-                                   [
-                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
-                                     'electron_col[LF_idx]["mvaFall17noIso"]',
-                                     #'electron_col[LF_idx]["lostHits"] < 1',
-                                   ] ,
-                                # Barrel
-                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
-                                   [
-                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
-                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
-                                   ] ,
-                                 # EndCap
-                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
-                                   [
-                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
-                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
-                                   ] ,
-                                  } ,
-                              } ,
- 
-          'mvaFall17Iso':  {
-                         'cuts' : { 
-                                # Common cuts 
-                                'True' :
-                                   [
-                                     #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
-                                     'electron_col[LF_idx]["mvaFall17Iso"]',
-                                     #'electron_col[LF_idx]["lostHits"] < 1',
-                                   ] ,
-                                # Barrel
-                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
-                                   [
-                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
-                                     #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
-                                   ] ,
-                                 # EndCap
-                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
-                                   [
-                                     #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
-                                     #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
-                                   ] ,
-                                  } ,
-                              } ,
-
          'mvaFall17noIso_WP80' : {
                          'cuts' : { 
                                 # Common cuts
@@ -776,6 +727,30 @@ MuonWP = {
                                  ] ,
                                   } ,
                        },
+      'cut_Medium80x_HWWW' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                 [ 
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
+                                   'muon_col[LF_idx]["mediumId"] == 1' ,
+                                   'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
+                                   'muon_col[LF_idx]["pfRelIso03_all"] < 0.15',
+                                   #'muon_col[LF_idx]["trackIso"]/muon_col[LF_idx]["pt"] < 0.4' ,
+                                 ] ,
+                                 # dxy for pT < 20 GeV
+                                 'muon_col[LF_idx]["pt"] <= 20.0' :
+                                 [
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.01 ' ,
+                                 ] ,
+                                 # dxy for pT > 20 GeV
+                                 'muon_col[LF_idx]["pt"] > 20.0' :
+                                 [
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
+                                 ] ,
+                                  } ,
+
+                       } ,
       'cut_Tight80x_HWWW' : {
                          'cuts' : { 
                                 # Common cuts
