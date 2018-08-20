@@ -242,7 +242,7 @@ class batchJobs :
      jFile.close()
 
 def batchStatus():
-    fileCmd = 'ls '+jobDir	
+    fileCmd = 'ls '+jobDir
     proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out, err = proc.communicate()
     DirList=string.split(out)
