@@ -271,6 +271,7 @@ def batchStatus():
         if os.path.isfile(jidFile):
           # check if not CRAB:
           iCrab = os.popen('cat '+jidFile+' | awk \'{print $1}\' ').read()
+          print iCrab
           if 'CRABTask' in iCrab : Crab[iStep]+=1 
           else:
             if 'iihe' in os.uname()[1] :
