@@ -242,7 +242,7 @@ class batchJobs :
      jFile.close()
 
 def batchStatus():
-    fileCmd = 'ls '+jobDir
+    fileCmd = 'ls '+jobDir	
     proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out, err = proc.communicate()
     DirList=string.split(out)
@@ -271,16 +271,15 @@ def batchStatus():
         if os.path.isfile(jidFile):
           # check if not CRAB:
           iCrab = os.popen('cat '+jidFile+' | awk \'{print $1}\' ').read()
-          print iCrab
           if 'CRABTask' in iCrab : Crab[iStep]+=1 
           else:
             if 'iihe' in os.uname()[1] :
               iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
-            elif 'ifca' in os.uname()[1] :
-              iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
-              if 'Q' in iStat : Pend[iStep]+=1
+            elif 'ifca' in os.uname()[1] :	
+              iStat = os.popen('qstat | grep \" qw \" |  awk \'{print $1 \" '+jidFile+'\"}\' | xargs -n 2 grep | awk \'{ print $2 }\' ').read()
+	      if 'job' in iStat : Pend[iStep]+=1	
               else: Runn[iStep]+=1
             else:
               iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
