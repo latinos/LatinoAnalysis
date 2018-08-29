@@ -54,8 +54,8 @@ ElectronWP = {
                                    'electron_col[LF_idx]["pfRelIso03_all"] < 0.04',
                                    '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.15',
                                    '(electron_col[LF_idx]["dr03HcalDepth1TowerSumEt"]/electron_col[LF_idx]["pt"]) < 0.12',
-                                   #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
-                                   #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                   'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
                                   ] ,
                                 # EndCap
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
@@ -66,8 +66,8 @@ ElectronWP = {
                                    'electron_col[LF_idx]["pfRelIso03_all"] < 0.12',
                                    '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.13',
                                    '(electron_col[LF_idx]["dr03HcalDepth1TowerSumEt"]/electron_col[LF_idx]["pt"]) < 0.08',
-                                   #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
-                                   #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                   'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                   ] ,
                                    },
                        } ,
