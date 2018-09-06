@@ -338,10 +338,9 @@ class LeptonSFMaker(Module):
         lepton_col   = Collection(event, 'Lepton')
         nLep = len(lepton_col) 
         #try:
-        #    nvtx = event.PV_npvsGood #event.     => find nvtx
+        nvtx = event.PV_npvsGood #event.     => find nvtx
         #except:
         #    nvtx = event.PV_npvs
-        nvtx = event.PV_npvs
         run_period = event.run_period
 
         lep_var = {}
