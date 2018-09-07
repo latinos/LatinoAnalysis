@@ -93,8 +93,8 @@ The samples for the Full2017 postProcessing campaign are identified by the follo
      
       * Steps (example commands given for LSF running, use -c instead of -b for crab): 
          * MCl1loose2017: 
-             
-              mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -s MCl1loose2017 -b -T [comma separated list of samples]
+          
+         mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -s MCl1loose2017 -b -T [comma separated list of samples]
         
          * baseW: 
               
