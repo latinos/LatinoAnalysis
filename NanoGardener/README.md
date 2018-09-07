@@ -85,9 +85,18 @@ This script is based on three master configuration files:
 
 ### Full2017 postprocessing campaing
 
+We share the postprocessing of data and MC samples. If you run at CERN, with either crab or LSF, the output of your jobs will automatically go in the usual eos space managed by the Higgs group at the following path:
 
+   * LSF output: /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano
+   * CRAB output: /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab
+   
+If you use crab, the output stored in the above mentioned directory needs to be unpacked and moved to the standard location, which is the one for LSF output. To do so you can use the script mkCrab.py:
 
-The samples for the Full2017 postProcessing campaign are identified by the following tags:
+    mkCrab.py -s: To check the status of your tasks
+    mkCrab.py -u: to unpack a completed task from HWWNanoCrab to HWWNano
+    mkCrab.py -c: to clean a task after having unpacked it
+    
+We currently have two productions, one for data and one for MC, listed below. The Data production is going to be handled in Brussels, while the MC production needs to be shared. We propose a splitting of the samples among people according to the names proposed in the fall17 MC file list. The list of samples to run on can be specified in the commands below with the -T option and a comma separated list of sample short names, as they appear in the https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/samples/fall17_nAOD_v1.py file
 
    * Fall2017_nAOD_v1_Full2017 for MC: https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Productions_cfg.py#L43-L49
      
