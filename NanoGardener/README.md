@@ -28,8 +28,8 @@ Branches can be cross referenced, e.g.  Muon_genPartIdx[i] is the index of the p
 
 ## Installation
 
-     cmsrel CMSSW_9_4_7
-     cd CMSSW_9_4_7/src
+     cmsrel CMSSW_9_4_9
+     cd CMSSW_9_4_9/src
      cmsenv
      git clone --branch 13TeV git@github.com:latinos/setup.git LatinosSetup
      source LatinosSetup/SetupShapeOnly.sh
@@ -82,3 +82,20 @@ This script is based on three master configuration files:
          --sitescfg  <File> : alternative site cfg
          --modcfg <File> : alternative step/module  cfg
          --datacfg <File> : alternative production cfg
+
+### Full2017 postprocessing campaing
+
+
+
+The samples for the Full2017 postProcessing campaign are identified by the following tags:
+
+   * Fall2017_nAOD_v1_Full2017 for MC: https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Productions_cfg.py#L43-L49
+      * 
+      * Steps (example commands given for LSF running, use -c instead of -b for crab): 
+         * MCl1loose2017: mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -s MCl1loose2017 -b -T <comma separated list of samples>
+         * baseW: mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017 -s baseW -b -T <comma separated list of samples>
+         * hadd: mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017__baseW -s hadd -b -T <comma separated list of samples>
+   * Run2017_nAOD_v1_Full2017 https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Productions_cfg.py#L36-L41
+   
+
+   
