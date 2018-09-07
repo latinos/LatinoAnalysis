@@ -28,8 +28,8 @@ Branches can be cross referenced, e.g.  Muon_genPartIdx[i] is the index of the p
 
 ## Installation
 
-     cmsrel CMSSW_9_4_7
-     cd CMSSW_9_4_7/src
+     cmsrel CMSSW_9_4_9
+     cd CMSSW_9_4_9/src
      cmsenv
      git clone --branch 13TeV git@github.com:latinos/setup.git LatinosSetup
      source LatinosSetup/SetupShapeOnly.sh
@@ -82,3 +82,32 @@ This script is based on three master configuration files:
          --sitescfg  <File> : alternative site cfg
          --modcfg <File> : alternative step/module  cfg
          --datacfg <File> : alternative production cfg
+
+### Full2017 postprocessing campaing
+
+We share the postprocessing of data and MC samples. If you run at CERN, with either crab or LSF, the output of your jobs will automatically go in the usual eos space managed by the Higgs group at the following path:
+
+   * LSF output: /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano
+   * CRAB output: /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab
+   
+If you use crab, the output stored in the above mentioned directory needs to be unpacked and moved to the standard location, which is the one for LSF output. To do so you can use the script mkCrab.py:
+
+    mkCrab.py -s: To check the status of your tasks
+    mkCrab.py -u: to unpack a completed task from HWWNanoCrab to HWWNano
+    mkCrab.py -c: to clean a task after having unpacked it
+    
+We currently have two productions, one for data and one for MC, listed below. The Data production is going to be handled in Brussels, while the MC production needs to be shared. We propose a splitting of the samples among people according to the names proposed in the fall17 MC file list. The list of samples to run on can be specified in the commands below with the -T option and a comma separated list of sample short names, as they appear in the https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/samples/fall17_nAOD_v1.py file
+
+   * Fall2017_nAOD_v1_Full2017 for MC: https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Productions_cfg.py#L43-L49
+     
+      * Steps (example commands given for LSF running, use -c instead of -b for crab): 
+          
+    mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -s MCl1loose2017 -b -T [comma separated list of samples]     
+    mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017 -s baseW -b -T [comma separated list of samples]
+    mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017__baseW -s hadd -b -T [comma separated list of samples]
+  
+  
+   * Run2017_nAOD_v1_Full2017 https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Productions_cfg.py#L36-L41
+   
+
+   
