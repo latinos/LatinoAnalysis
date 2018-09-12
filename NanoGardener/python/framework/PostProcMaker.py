@@ -53,7 +53,6 @@ class PostProcMaker():
 
      # BaseW
      self._baseW       = {}
-     self.loadXSDB() 
 
      # We need a Proxy !
      self.checkProxy()
@@ -61,17 +60,18 @@ class PostProcMaker():
 
 
 #---- Load x-section DB
-   def loadXSDB(self):
+   def loadXSDB(self,iProd):
 
     # Among 'gDoc','Python','YellowR' and order Matter (Overwriting for same samples !)
     xsMethods=['Python','YellowR']
-    xsFile=self._cmsswBasedir+'/src/LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections.py'
+    xsFile=self._cmsswBasedir+'/src/'+self._Productions[iProd]['xsFile']
     self._xsDB = xsectionDB()
     for iMethod in xsMethods :
 
       #OLD if iMethod == 'gDoc'    : self._xsDB.readGDoc(Productions[iProd]['gDocID'])
       if iMethod == 'Python'  : self._xsDB.readPython(xsFile)
-      if iMethod == 'YellowR' : self._xsDB.readYR('YR4','13TeV')
+      #if iMethod == 'YellowR' : self._xsDB.readYR('YR4','13TeV')
+      if iMethod == 'YellowR' : self._xsDB.readYR(self._Productions[iProd]['YRver'][0],self._Productions[iProd]['YRver'][1])
 
    def Reset(self) : 
 
@@ -740,6 +740,7 @@ class PostProcMaker():
        print '----------- Running on production: '+iProd
        self._prodVersion = self._Productions[iProd]['cmssw']
        self.readSampleFile(iProd) 
+       if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
 
        for iStep in self._stepList:
          if    ( not self._Productions[iProd]['isData'] and self._Steps[iStep]['do4MC'] ) \

@@ -1,5 +1,79 @@
 Trigger = {
 
+# --------------------------- Full2017 ---------------------------------
+
+        'Full2017'  :  { 
+                          1  :  { 'begin' : 294927 , 'end' : 299367 , 'lumi' : 4.793 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : '?' ,
+                                                'DoubleEleLegLowPt' : '?' ,
+                                                'SingleEle'         : '?' ,
+                                                'DoubleMuLegHigPt'  : '?' ,
+                                                'DoubleMuLegLowPt'  : '?' ,
+                                                'SingleMu'          : '?' ,
+                                                'MuEleLegHigPt'     : '?' ,
+                                                'MuEleLegLowPt'     : '?' ,
+                                                'EleMuLegHigPt'     : '?' ,
+                                                'EleMuLegLowPt'     : '?' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : 1.0 ,
+                                                'DoubleMu'  : 0.993   ,
+                                                'MuEle'     : 0.873   ,
+                                                'EleMu'     : 0.860   ,
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+
+                                },
+                          2  :  { 'begin' : 299368 , 'end' : 306463 , 'lumi' : 37.067 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : '?' ,
+                                                'DoubleEleLegLowPt' : '?' ,
+                                                'SingleEle'         : '?' ,
+                                                'DoubleMuLegHigPt'  : '?' ,
+                                                'DoubleMuLegLowPt'  : '?' ,
+                                                'SingleMu'          : '?' ,
+                                                'MuEleLegHigPt'     : '?' ,
+                                                'MuEleLegLowPt'     : '?' ,
+                                                'EleMuLegHigPt'     : '?' ,
+                                                'EleMuLegLowPt'     : '?' ,
+                                              } ,
+                                  'DZEff'  :  { 'DoubleEle' : 1.0 ,
+                                                'DoubleMu'  : 0.993   ,
+                                                'MuEle'     : 1.0   ,
+                                                'EleMu'     : 0.86   ,
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  { 
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf' , ''] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                },
+                       },   
 # --------------------------- 2015 ---------------------------------
 
 #        'Full2015'  :  { 1  :  { 'begin' : 1 , 'end' : 999999 , 'lumi' :  5.0 ,
