@@ -308,7 +308,7 @@ class PostProcMaker():
      elif self._jobMode == 'Crab':
        print "INFO: Using CRAB3"
        self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
-       self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
+       self._crab.setStorage('T2_ES_IFCA','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
        self._crab.AddInputFile(self._cmsswBasedir+'/src/'+self._haddnano) 
        #self._crab._ScriptHeader = self._cmsswBasedir+'/src/LatinoAnalysis/NanoGardener/test/PostProc_CrabScript_Header.sh'
 
@@ -671,7 +671,7 @@ class PostProcMaker():
      elif self._jobMode == 'Crab':
        print "INFO: Using CRAB3"
        self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
-       self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
+       self._crab.setStorage('T2_ES_IFCA','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
 
      for iSample in self._HaddDic:
        for iFile in self._HaddDic[iSample] :

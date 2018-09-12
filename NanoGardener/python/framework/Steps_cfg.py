@@ -155,7 +155,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyWeightsProducer' ,
-                  'module'     : 'SusyWeigthProducer()' ,
+                  'module'     : 'SusyWeightsProducer("RPLME_CMSSW")' ,
                },
 
 ## ------- MODULES: Kinematic
