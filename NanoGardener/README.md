@@ -83,7 +83,7 @@ This script is based on three master configuration files:
          --modcfg <File> : alternative step/module  cfg
          --datacfg <File> : alternative production cfg
 
-### Full2017 postprocessing campaing
+### Full2017 postprocessing campaign
 
 We share the postprocessing of data and MC samples. If you run at CERN, with either crab or LSF, the output of your jobs will automatically go in the usual eos space managed by the Higgs group at the following path:
 
