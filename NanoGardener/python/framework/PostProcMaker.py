@@ -119,7 +119,7 @@ class PostProcMaker():
        else :
          self._batchQueue = self._Sites[self._LocalSite]['batchQueues'][0]
          print 'WARNING: Queue '+queue+' not existing -->  _batchQueue set to default = ',self._batchQueue
-       print '_batchQueue set to default = ',self._batchQueue
+       print '_batchQueue set to = ',self._batchQueue
 
    def readSampleFile(self,iProd):
      prodFile=self._cmsswBasedir+'/src/'+self._Productions[iProd]['samples']
@@ -345,7 +345,7 @@ class PostProcMaker():
              #self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd],[rmGarbageCmd])
              self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd])
      
-     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
+     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub(self._batchQueue)
      elif self._jobMode == 'Crab': 
         self._crab.mkCrabCfg()
         if not self._pretend : self._crab.Sub()
