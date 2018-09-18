@@ -119,6 +119,7 @@ class PostProcMaker():
        else :
          self._batchQueue = self._Sites[self._LocalSite]['batchQueues'][0]
          print 'WARNING: Queue '+queue+' not existing -->  _batchQueue set to default = ',self._batchQueue
+       print '_batchQueue set to default = ',self._batchQueue
 
    def readSampleFile(self,iProd):
      prodFile=self._cmsswBasedir+'/src/'+self._Productions[iProd]['samples']
