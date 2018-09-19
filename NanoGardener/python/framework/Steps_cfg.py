@@ -209,6 +209,16 @@ Steps = {
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC.py\')' ,
                  },
+   
+  'formulasDATA' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA.py\')' ,
+                 },
+
 
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------
 
