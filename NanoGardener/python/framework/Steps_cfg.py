@@ -5,17 +5,12 @@ Steps = {
 
 # ------------------------------------------------ CHAINS ----------------------------------------------------
 
-  'TestChain' : {
-                  'isChain'    : True  ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True  ,
-#                 'selection'  : 'selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"' , 
-                  'subTargets' : ['lepMergerHWW','baseW','l2Kin', 'btagPerJet', 'btagPerEvent'], 
-                },
+## ------- MC:
+
   'MCl1loose2016': {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
-                  'do4Data'    : True  ,
+                  'do4Data'    : False ,
                   'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
                   'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2016', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2016', 'btagPerEvent'],
                 },
@@ -23,14 +18,16 @@ Steps = {
   'MCl1loose2017': {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
-                  'do4Data'    : True  ,
+                  'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent'],
                 }, 
+
+## ------- DATA:
     
   'DATAl1loose2016': {
                   'isChain'    : True  ,
-                  'do4MC'      : True  ,
+                  'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin'],
@@ -38,13 +35,18 @@ Steps = {
 
   'DATAl1loose2017': {
                   'isChain'    : True  ,
-                  'do4MC'      : True  ,
+                  'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin'],
                 }, 
    
-              
+   'DATAformulas' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,           
+                  'subTargets' : ['trigData','formulasDATA'],
+                },
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
