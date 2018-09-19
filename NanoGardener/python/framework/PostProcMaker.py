@@ -415,6 +415,7 @@ class PostProcMaker():
      fPy.write('ROOT.PyConfig.IgnoreCommandLineOptions = True \n')
      fPy.write(' \n')
      fPy.write('from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor \n')
+     fPy.write('from LatinoAnalysis.NanoGardener.modules.Dummy import *\n')
      fPy.write(' \n')
 
      # Import(s) of modules
@@ -539,6 +540,7 @@ class PostProcMaker():
 
    def customizeModule(self,iSample,iStep):
 
+     if not 'module' in self._Steps[iStep] : return 'Dummy()'
      module = self._Steps[iStep]['module']
 
      # baseW
