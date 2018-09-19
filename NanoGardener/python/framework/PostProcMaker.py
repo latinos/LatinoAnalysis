@@ -415,6 +415,7 @@ class PostProcMaker():
      fPy.write('ROOT.PyConfig.IgnoreCommandLineOptions = True \n')
      fPy.write(' \n')
      fPy.write('from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor \n')
+     fPy.write('from LatinoAnalysis.NanoGardener.modules.Dummy import *\n')
      fPy.write(' \n')
 
      # Import(s) of modules
@@ -486,8 +487,10 @@ class PostProcMaker():
 
    def computewBaseW(self,iSample):
      if not iSample in self._baseW :
+       useLocal = False
        # Always check #nAOD files !
        if 'srmPrefix' in self._Samples[iSample]:
+         useLocal = True
          nAODFileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
        else:  
          if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
@@ -496,6 +499,7 @@ class PostProcMaker():
        # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
        if self._iniStep == 'Prod' :
          if 'srmPrefix' in self._Samples[iSample]:
+           useLocal = True
            FileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
          else:   
            if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
@@ -503,17 +507,23 @@ class PostProcMaker():
            FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
          # From previous PostProc step
        else :
+         useLocal = True
          FileList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
 
        # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
-       if not len(nAODFileList) == len(FileList) : FileList = nAODFileList
+       if not len(nAODFileList) == len(FileList) : 
+         FileList = nAODFileList
+         if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
 
        # Now compute #evts
        genEventCount = 0
        genEventSumw  = 0.0
        genEventSumw2 = 0.0
        for iFile in FileList:
-         f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
+         if useLocal :
+           f = ROOT.TFile.Open(iFile, "READ")
+         else:
+           f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
          Runs = f.Get("Runs")
          for iRun in Runs : 
            genEventCount += iRun.genEventCount
@@ -530,6 +540,7 @@ class PostProcMaker():
 
    def customizeModule(self,iSample,iStep):
 
+     if not 'module' in self._Steps[iStep] : return 'Dummy()'
      module = self._Steps[iStep]['module']
 
      # baseW
