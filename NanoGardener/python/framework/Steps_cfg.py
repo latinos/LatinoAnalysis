@@ -210,6 +210,35 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC.py\')' ,
                  },
 
+# ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
+
+## ------- Fake Study:
+
+  'fakeSel'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  , 
+                  'selection'  : '"(MET_pt < 20 && mtw1 < 20)"' , 
+                 },
+
+## ------- 2-Leptons: Loose / tightOR
+
+  'l2loose'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  , 
+                  'selection'  : '"(nLepton>1)"' , 
+                 },
+
+  'l2tightOR2017' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '' , 
+                 },
+
+## ------- Analysis Skims:
+
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------
 
 ## ------- HADD 
