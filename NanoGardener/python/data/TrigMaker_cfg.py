@@ -98,7 +98,7 @@ Trigger = {
                                                 'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
                                                 'SingleMu'  : [ 'HLT_IsoMu27'] ,
                                                 'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
-                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf' , ''] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
                                               } ,
                                   'MC'     :  {
                                                 'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
@@ -144,7 +144,7 @@ Trigger = {
                                                 'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
                                                 'SingleMu'  : [ 'HLT_IsoMu27'] ,
                                                 'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
-                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf' , ''] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
                                               } ,
                                   'MC'     :  {
                                                 'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
@@ -189,7 +189,7 @@ Trigger = {
                                                 'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
                                                 'SingleMu'  : [ 'HLT_IsoMu27'] ,
                                                 'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
-                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf' , ''] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
                                               } ,
                                   'MC'     :  {
                                                 'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
