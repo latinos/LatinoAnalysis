@@ -330,7 +330,7 @@ class TrigMaker(Module):
               key_name = str(i+1) + '_' + str(j+1)
               eff_dict[key_name] = {}
 
-              temp_eff, temp_eff_dz , tmp_gl = self._pair_eff(pdgId_v[i], pt_v[i], eta_v[i], pdgId_v[j], pt_v[j], eta_v[j], run_p)
+              temp_eff, temp_eff_dz , temp_eff_gl = self._pair_eff(pdgId_v[i], pt_v[i], eta_v[i], pdgId_v[j], pt_v[j], eta_v[j], run_p)
               eff_dict[key_name]['eff']     = temp_eff
               eff_dict[key_name]['eff_dz']  = temp_eff_dz
               eff_dict[key_name]['eff_gl']  = temp_eff_gl
