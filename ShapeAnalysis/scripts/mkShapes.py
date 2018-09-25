@@ -298,7 +298,7 @@ if __name__ == '__main__':
             jobs.AddPy2Sh()
             jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n")
             jobs.InitPy("factory = ShapeFactory()")
-            jobs.InitPy("factory._treeName  = "+opt.treeName)
+            jobs.InitPy("factory._treeName  = '"+opt.treeName+"'")
             jobs.InitPy("factory._energy    = '"+str(opt.energy)+"'")
             jobs.InitPy("factory._lumi      = "+str(opt.lumi))
             jobs.InitPy("factory._tag       = '"+str(opt.tag)+"'")
