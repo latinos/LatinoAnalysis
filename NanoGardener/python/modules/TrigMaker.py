@@ -120,7 +120,7 @@ class TrigMaker(Module):
     def _run_period(self, run, event_seed=None):
         if self.isData:
            for RunP in self.TM_runInt:
-              if run > self.TM_runInt[RunP]['b'] and run < self.TM_runInt[RunP]['e']: return RunP
+              if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
         toss_a_coin = get_rndm(event_seed)
         for iPeriod in range(1,len(self.RunFrac)) :
            if toss_a_coin >= self.RunFrac[iPeriod-1] and toss_a_coin < self.RunFrac[iPeriod]:
