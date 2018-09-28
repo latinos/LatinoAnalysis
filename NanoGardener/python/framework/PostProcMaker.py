@@ -470,7 +470,10 @@ class PostProcMaker():
        fPy.write('                          '+self.customizeModule(iSample,iStep)+'\n') 
      fPy.write('                            ],      \n') 
      fPy.write('                    provenance=True, \n')
-     fPy.write('                    fwkJobReport=True, \n')
+     if self._jobMode == 'Crab':
+       fPy.write('                    fwkJobReport=True, \n')
+     else: 
+       fPy.write('                    fwkJobReport=False, \n')
      if not haddFileName == None :
        fPy.write('                    haddFileName="'+haddFileName+'", \n')
      fPy.write('                 ) \n')

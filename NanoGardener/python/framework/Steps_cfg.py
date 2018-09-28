@@ -45,7 +45,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin'],
+                  'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                 }, 
    
    'DATAformulas' : {
@@ -268,14 +268,14 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  , 
-                  'selection'  : '"(nLepton>1)"' , 
+                  'selection'  : '"(nLepton>=2)"' , 
                  },
 
   'l2tightOR2017' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '" (nLepton>1 && Lepton_pt[0]>18) \
+                  'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
                                     && (    Lepton_isTightElectron_mvaFall17Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17Iso_WP90_SS[0] > 0.5     \
                                          || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5             ) \

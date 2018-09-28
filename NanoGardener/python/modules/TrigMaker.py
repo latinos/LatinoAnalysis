@@ -121,13 +121,14 @@ class TrigMaker(Module):
         if self.isData:
            for RunP in self.TM_runInt:
               if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
-        toss_a_coin = get_rndm(event_seed)
-        for iPeriod in range(1,len(self.RunFrac)) :
+        else: 
+         toss_a_coin = get_rndm(event_seed)
+         for iPeriod in range(1,len(self.RunFrac)) :
            if toss_a_coin >= self.RunFrac[iPeriod-1] and toss_a_coin < self.RunFrac[iPeriod]:
               return iPeriod
            if toss_a_coin == 1.0:
               return len(self.RunFrac)-1
-        print('strange', toss_a_coin)
+        print "Run Period undefined"
         return -1 
 
     def _get_LegEff(self, pt, eta, run_p, trig_name):
