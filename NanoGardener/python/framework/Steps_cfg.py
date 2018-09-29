@@ -47,13 +47,14 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                 }, 
-   
-   'DATAformulas' : {
-                  'isChain'    : True  ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True  ,           
-                  'subTargets' : ['trigData','formulasDATA'],
-                },
+
+#  Merged back to DATAl1loose2017 (was a tmp fix)    
+#  'DATAformulas' : {
+#                 'isChain'    : True  ,
+#                 'do4MC'      : False ,
+#                 'do4Data'    : True  ,           
+#                 'subTargets' : ['trigData','formulasDATA'],
+#               },
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
