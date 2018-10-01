@@ -83,7 +83,7 @@ This script is based on three master configuration files:
          --modcfg <File> : alternative step/module  cfg
          --datacfg <File> : alternative production cfg
 
-### Full2017 postprocessing campaing
+### Full2017 postprocessing campaign
 
 We share the postprocessing of data and MC samples. If you run at CERN, with either crab or LSF, the output of your jobs will automatically go in the usual eos space managed by the Higgs group at the following path:
 
@@ -103,8 +103,8 @@ We currently have two productions, one for data and one for MC, listed below. Th
       * Steps (example commands given for LSF running, use -c instead of -b for crab): 
           
     1) mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -s MCl1loose2017 -b -T [comma separated list of samples]     
-    2) mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017 -s baseW -b -T [comma separated list of samples]
-    3) mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017__baseW -s hadd -b -T [comma separated list of samples]
+    2) mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017 -s MCformulas -b -T [comma separated list of samples]
+    
   
   
    * Run2017_nAOD_v1_Full2017 https://github.com/latinos/LatinoAnalysis/blob/master/NanoGardener/python/framework/Productions_cfg.py#L36-L41

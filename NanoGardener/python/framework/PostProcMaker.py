@@ -119,6 +119,7 @@ class PostProcMaker():
        else :
          self._batchQueue = self._Sites[self._LocalSite]['batchQueues'][0]
          print 'WARNING: Queue '+queue+' not existing -->  _batchQueue set to default = ',self._batchQueue
+       print '_batchQueue set to = ',self._batchQueue
 
    def readSampleFile(self,iProd):
      prodFile=self._cmsswBasedir+'/src/'+self._Productions[iProd]['samples']
@@ -344,7 +345,7 @@ class PostProcMaker():
              #self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd],[rmGarbageCmd])
              self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd])
      
-     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
+     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub(self._batchQueue)
      elif self._jobMode == 'Crab': 
         self._crab.mkCrabCfg()
         if not self._pretend : self._crab.Sub()
@@ -414,6 +415,7 @@ class PostProcMaker():
      fPy.write('ROOT.PyConfig.IgnoreCommandLineOptions = True \n')
      fPy.write(' \n')
      fPy.write('from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor \n')
+     fPy.write('from LatinoAnalysis.NanoGardener.modules.Dummy import *\n')
      fPy.write(' \n')
 
      # Import(s) of modules
@@ -468,7 +470,10 @@ class PostProcMaker():
        fPy.write('                          '+self.customizeModule(iSample,iStep)+'\n') 
      fPy.write('                            ],      \n') 
      fPy.write('                    provenance=True, \n')
-     fPy.write('                    fwkJobReport=True, \n')
+     if self._jobMode == 'Crab':
+       fPy.write('                    fwkJobReport=True, \n')
+     else: 
+       fPy.write('                    fwkJobReport=False, \n')
      if not haddFileName == None :
        fPy.write('                    haddFileName="'+haddFileName+'", \n')
      fPy.write('                 ) \n')
@@ -485,8 +490,10 @@ class PostProcMaker():
 
    def computewBaseW(self,iSample):
      if not iSample in self._baseW :
+       useLocal = False
        # Always check #nAOD files !
        if 'srmPrefix' in self._Samples[iSample]:
+         useLocal = True
          nAODFileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
        else:  
          if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
@@ -495,6 +502,7 @@ class PostProcMaker():
        # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
        if self._iniStep == 'Prod' :
          if 'srmPrefix' in self._Samples[iSample]:
+           useLocal = True
            FileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
          else:   
            if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
@@ -502,17 +510,23 @@ class PostProcMaker():
            FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
          # From previous PostProc step
        else :
+         useLocal = True
          FileList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
 
        # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
-       if not len(nAODFileList) == len(FileList) : FileList = nAODFileList
+       if not len(nAODFileList) == len(FileList) : 
+         FileList = nAODFileList
+         if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
 
        # Now compute #evts
        genEventCount = 0
        genEventSumw  = 0.0
        genEventSumw2 = 0.0
        for iFile in FileList:
-         f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
+         if useLocal :
+           f = ROOT.TFile.Open(iFile, "READ")
+         else:
+           f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
          Runs = f.Get("Runs")
          for iRun in Runs : 
            genEventCount += iRun.genEventCount
@@ -529,6 +543,7 @@ class PostProcMaker():
 
    def customizeModule(self,iSample,iStep):
 
+     if not 'module' in self._Steps[iStep] : return 'Dummy()'
      module = self._Steps[iStep]['module']
 
      # baseW
