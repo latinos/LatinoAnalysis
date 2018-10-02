@@ -222,6 +222,7 @@ class LeptonSel(Module):
                  else: Lep_Tags['isTightMuon_' + wp].append(0)
               for wp in ElectronWP[self.cmssw]['TightObjWP']:
                  Lep_Tags['isTightElectron_' + wp].append(0)
+           #else: raise ValueError('Unexpected Lepton_pdgId occured: Lepton_pdgId = ' + str(lepton_col[iLep]['pdgId']))
 
            # Cleaning aids
            good_lep_idx.append(iLep)

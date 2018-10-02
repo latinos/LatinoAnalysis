@@ -383,39 +383,40 @@ class crabMon :
      # Loop on jobs 
      for iJob in self._Unpacker['unpackMap']:
         jidFile = self._subDir+self._Unpacker['unpackMap'][iJob]['jName']+'.jid'
-        iDir = "%04d" % int((int(iJob)/1000)*1000)
-        storeFile = self._storeDir+'/'+str(iDir)+'/'+self._requestName+'__output_'+iJob+'.tar'
-        # check if exist
-        lsCmd = lsListCommand(storeFile)
-        proc=subprocess.Popen(lsCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
-        out, err = proc.communicate()
-        if storeFile in out : 
-          # cp to local directory 
-          tmpDir = getTmpDir()
-          storeFileLocal = tmpDir+os.path.basename(storeFile)
-          srmcp2local(storeFile,storeFileLocal)
-          # check for expected content
-          FileCheck = True
-          proc=subprocess.Popen('tar tf '+storeFileLocal, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+        if os.path.isfile(jidFile) :
+          iDir = "%04d" % int((int(iJob)/1000)*1000)
+          storeFile = self._storeDir+'/'+str(iDir)+'/'+self._requestName+'__output_'+iJob+'.tar'
+          # check if exist
+          lsCmd = lsListCommand(storeFile)
+          proc=subprocess.Popen(lsCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
           out, err = proc.communicate()
-          FileList=string.split(out)
-          for iFile in self._Unpacker['unpackMap'][iJob]['Files'] :
-            if not iFile in FileList : 
-              print 'WARNING: missing output = ',iFile
-              print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
-              FileCheck = False
-          # STAGE OUT
-          if FileCheck:
-            command = 'cd '+tmpDir+ ' ; tar xf '+os.path.basename(storeFile)+' ; '
-            for cpCmd in self._Unpacker['unpackMap'][iJob]['cpCmd'] : command += cpCmd+' ; '
-            for iFile in self._Unpacker['unpackMap'][iJob]['Files'] : command += 'rm '+iFile+' ; '
-            command += 'rm '+os.path.basename(storeFile)
-            os.system(command)
-        else:
-          print 'WARNING: storeFile not found = ',storeFile
-          print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
-        # Move jidFile to DONE
-        os.system('mv '+jidFile+' '+jidFile.replace('.jid','.done'))       
+          if storeFile in out : 
+            # cp to local directory 
+            tmpDir = getTmpDir()
+            storeFileLocal = tmpDir+os.path.basename(storeFile)
+            srmcp2local(storeFile,storeFileLocal)
+            # check for expected content
+            FileCheck = True
+            proc=subprocess.Popen('tar tf '+storeFileLocal, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+            out, err = proc.communicate()
+            FileList=string.split(out)
+            for iFile in self._Unpacker['unpackMap'][iJob]['Files'] :
+              if not iFile in FileList : 
+                print 'WARNING: missing output = ',iFile
+                print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
+                FileCheck = False
+            # STAGE OUT
+            if FileCheck:
+              command = 'cd '+tmpDir+ ' ; tar xf '+os.path.basename(storeFile)+' ; '
+              for cpCmd in self._Unpacker['unpackMap'][iJob]['cpCmd'] : command += cpCmd+' ; '
+              for iFile in self._Unpacker['unpackMap'][iJob]['Files'] : command += 'rm '+iFile+' ; '
+              command += 'rm '+os.path.basename(storeFile)
+              os.system(command)
+          else:
+            print 'WARNING: storeFile not found = ',storeFile
+            print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
+          # Move jidFile to DONE
+          os.system('mv '+jidFile+' '+jidFile.replace('.jid','.done'))       
      # Move tidFile to DONE
      os.system('mv '+self._tidFile+' '+self._tidFile.replace('.tid','.done'))       
 

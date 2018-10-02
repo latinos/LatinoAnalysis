@@ -71,6 +71,7 @@ class batchJobs :
          jFile.write('export X509_USER_PROXY=/cms/ldap_home/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
+       jFile.write('voms-proxy-info\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
@@ -90,10 +91,8 @@ class batchJobs :
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
-# mkdir: cannot create directory `/tmp/piedra/latinos': No such file or directory
-###      elif 'ifca' in os.uname()[1]:
-###        jFile.write("mkdir -p /tmp/"+os.environ["USER"]+"/latinos \n") 
-###        jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
+         elif 'ifca' in os.uname()[1]:
+           jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' or 'knu' in os.uname()[1]:
            jFile.write('cd '+self.subDir+'\n')
          else:

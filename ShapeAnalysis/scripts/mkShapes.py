@@ -54,6 +54,7 @@ class Worker(threading.Thread):
         infile = ""
         infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n\n"
         infile += "factory = ShapeFactory()\n"
+        infile += "factory._treeName  = "+opt.treeName+"\n"
         infile += "factory._energy    = '"+str(energy)+"'\n"
         infile += "factory._lumi      = "+str(lumi)+"\n"
         infile += "factory._tag       = '"+str(tag)+"'\n"
@@ -163,6 +164,7 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
+    parser.add_option('--treeName'       , dest='treeName'       , help='Name of the tree'                           , default='latino')
     parser.add_option('--tag'            , dest='tag'            , help='Tag used for the shape file name'           , default=None)
     parser.add_option('--sigset'         , dest='sigset'         , help='Signal samples [SM]'                        , default='SM')
     parser.add_option('--outputDir'      , dest='outputDir'      , help='output directory'                           , default='./')
@@ -188,6 +190,7 @@ if __name__ == '__main__':
 
 
     print " configuration file = ", opt.pycfg
+    print " treeName           = ", opt.treeName   
     print " lumi =               ", opt.lumi
     
     print " inputDir =           ", opt.inputDir
@@ -296,6 +299,7 @@ if __name__ == '__main__':
             jobs.AddPy2Sh()
             jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n")
             jobs.InitPy("factory = ShapeFactory()")
+            jobs.InitPy("factory._treeName  = '"+opt.treeName+"'")
             jobs.InitPy("factory._energy    = '"+str(opt.energy)+"'")
             jobs.InitPy("factory._lumi      = "+str(opt.lumi))
             jobs.InitPy("factory._tag       = '"+str(opt.tag)+"'")
@@ -724,6 +728,7 @@ if __name__ == '__main__':
     else:
       print "~~~~~~~~~~~ Running mkShape in normal mode..."
       factory = ShapeFactory()
+      factory._treeName  = opt.treeName
       factory._energy    = opt.energy
       factory._lumi      = opt.lumi
       factory._tag       = opt.tag
