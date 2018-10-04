@@ -54,7 +54,7 @@ class Worker(threading.Thread):
         infile = ""
         infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n\n"
         infile += "factory = ShapeFactory()\n"
-        infile += "factory._treeName  = "+opt.treeName+"\n"
+        infile += "factory._treeName  = '"+opt.treeName+"'\n"
         infile += "factory._energy    = '"+str(energy)+"'\n"
         infile += "factory._lumi      = "+str(lumi)+"\n"
         infile += "factory._tag       = '"+str(tag)+"'\n"
