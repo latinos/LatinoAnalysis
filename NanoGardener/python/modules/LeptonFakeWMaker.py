@@ -462,8 +462,8 @@ class LeptonFakeWMaker(Module):
                    for iTag in self.FakeWeights:
                      eleWP = self.FakeWeights[iTag]['eleWP']
                      muWP  = self.FakeWeights[iTag]['muWP']
-                     if   abs (flavour) == 11 : IsTightLepton = lepton_col[iLep]['Lepton_isTightElectron_'+eleWP]
-                     elif abs (flavour) == 13 : IsTightLepton = lepton_col[iLep]['Lepton_isTightElectron_'+muWP]
+                     if   abs (flavour) == 11 : IsTightLepton = lepton_col[iLep]['isTightElectron_'+eleWP]
+                     elif abs (flavour) == 13 : IsTightLepton = lepton_col[iLep]['isTightElectron_'+muWP]
                      Leptons[iTag][selectedLepton] = [kindLep, pt, eta, IsTightLepton]
 
                    selectedLepton += 1
