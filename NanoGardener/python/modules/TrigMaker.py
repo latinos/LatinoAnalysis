@@ -225,7 +225,8 @@ class TrigMaker(Module):
         eff_evt = [0., 0., 0.]
         for i in range(3): 
            eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2]*eff_dz
-           eff_evt[i] = max(1.0,(eff_dbl[i] + eff[0][i]*eff_gl[0]*(1. - eff[5][i]*eff_gl[2]*eff_dz) + eff[1][i]*eff_gl[1]*(1. - eff[4][i]*eff_gl[2]*eff_dz)))  
+           #eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0]*(1. - eff[5][i]*eff_gl[2]*eff_dz) + eff[1][i]*eff_gl[1]*(1. - eff[4][i]*eff_gl[2]*eff_dz))
+           eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0]*(1. - eff[5][i]) + eff[1][i]*eff_gl[1]*(1. - eff[4][i]))
         
         eff_tl = eff[2][0]*eff[5][0]*eff_gl[2]*eff_dz #eff_dz
         eff_lt = eff[3][0]*eff[4][0]*eff_gl[2]*eff_dz #eff_dz
