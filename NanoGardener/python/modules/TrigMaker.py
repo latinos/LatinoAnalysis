@@ -120,14 +120,15 @@ class TrigMaker(Module):
     def _run_period(self, run, event_seed=None):
         if self.isData:
            for RunP in self.TM_runInt:
-              if run > self.TM_runInt[RunP]['b'] and run < self.TM_runInt[RunP]['e']: return RunP
-        toss_a_coin = get_rndm(event_seed)
-        for iPeriod in range(1,len(self.RunFrac)) :
+              if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
+        else: 
+         toss_a_coin = get_rndm(event_seed)
+         for iPeriod in range(1,len(self.RunFrac)) :
            if toss_a_coin >= self.RunFrac[iPeriod-1] and toss_a_coin < self.RunFrac[iPeriod]:
               return iPeriod
            if toss_a_coin == 1.0:
               return len(self.RunFrac)-1
-        print('strange', toss_a_coin)
+        print "Run Period undefined"
         return -1 
 
     def _get_LegEff(self, pt, eta, run_p, trig_name):
@@ -224,7 +225,8 @@ class TrigMaker(Module):
         eff_evt = [0., 0., 0.]
         for i in range(3): 
            eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2]*eff_dz
-           eff_evt[i] = max(1.0,(eff_dbl[i] + eff[0][i]*eff_gl[0]*(1. - eff[5][i]*eff_gl[2]*eff_dz) + eff[1][i]*eff_gl[1]*(1. - eff[4][i]*eff_gl[2]*eff_dz)))  
+           #eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0]*(1. - eff[5][i]*eff_gl[2]*eff_dz) + eff[1][i]*eff_gl[1]*(1. - eff[4][i]*eff_gl[2]*eff_dz))
+           eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0]*(1. - eff[5][i]) + eff[1][i]*eff_gl[1]*(1. - eff[4][i]))
         
         eff_tl = eff[2][0]*eff[5][0]*eff_gl[2]*eff_dz #eff_dz
         eff_lt = eff[3][0]*eff[4][0]*eff_gl[2]*eff_dz #eff_dz
