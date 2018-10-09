@@ -867,10 +867,10 @@ MuonWP = {
                                     'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
                                  ] ,
                                   } ,
-                         #'tkSF':  { 
-                         #           '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016/trackerSF_Moriond17_MuoPOG_BCDEF.root' ,
-                         #         } ,
-                         #'tkSFerror': 0.01,
+                         'tkSF':  { 
+                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muon_tracker_eff_Full2017.root' ,
+                                  } ,
+                         'tkSFerror': 0.01,
                          'idSF':  {
                                     '1-4' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muonID_cut_Tight_HWW_combined.root'],
                                   } ,
