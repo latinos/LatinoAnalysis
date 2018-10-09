@@ -40,20 +40,20 @@ class FakeWeight():
 
         # Root Files
 
-        self.fileMuPR = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonPR_Run2016_HWW36fb.root')
-        self.fileElPR = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/ElePR_Run2016_HWW36fb.root')
+        self.fileMuPR = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonPR_Run2017_HWW41fb.root')
+        self.fileElPR = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/ElePR_Run2017_HWW41fb.root')
 
-        self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2016_HWW36fb_jet10.root')
-        self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2016_HWW36fb_jet15.root')
-        self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2016_HWW36fb_jet20.root')
-        self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2016_HWW36fb_jet25.root')
-        self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2016_HWW36fb_jet30.root')
-        self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2016_HWW36fb_jet35.root')
-        self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2016_HWW36fb_jet45.root')
+        self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet10.root')
+        self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet15.root')
+        self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet20.root')
+        self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet25.root')
+        self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet30.root')
+        self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet35.root')
+        self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet45.root')
 
-        self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2016_HWW36fb_jet25.root')
-        self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2016_HWW36fb_jet35.root')
-        self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2016_HWW36fb_jet45.root')
+        self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2017_HWW41fb_jet25.root')
+        self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2017_HWW41fb_jet35.root')
+        self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2017_HWW41fb_jet45.root')
 
         # Root Histos
 
