@@ -530,7 +530,6 @@ class PostProcMaker():
            f = ROOT.TFile.Open(iFile, "READ")
          else:
            f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
-         f.Print()
          Runs = f.Get("Runs")
          for iRun in Runs : 
            genEventCount += iRun.genEventCount
