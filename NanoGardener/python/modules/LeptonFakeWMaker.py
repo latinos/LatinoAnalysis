@@ -1,6 +1,7 @@
 import ROOT
 import os
 import re
+import numpy
 import math
 import time
 import copy
@@ -40,20 +41,20 @@ class FakeWeight():
 
         # Root Files
 
-        self.fileMuPR = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonPR_Run2017_HWW41fb.root')
-        self.fileElPR = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/ElePR_Run2017_HWW41fb.root')
+        self.fileMuPR = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonPR.root')
+        self.fileElPR = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/ElePR.root')
 
-        self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet10.root')
-        self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet15.root')
-        self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet20.root')
-        self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet25.root')
-        self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet30.root')
-        self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet35.root')
-        self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_Run2017_HWW41fb_jet45.root')
+        self.fileMuFR_jet10 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_jet10.root')
+        self.fileMuFR_jet15 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_jet15.root')
+        self.fileMuFR_jet20 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_jet20.root')
+        self.fileMuFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_jet25.root')
+        self.fileMuFR_jet30 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_jet30.root')
+        self.fileMuFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_jet35.root')
+        self.fileMuFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.muDir+'/MuonFR_jet45.root')
 
-        self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2017_HWW41fb_jet25.root')
-        self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2017_HWW41fb_jet35.root')
-        self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_Run2017_HWW41fb_jet45.root')
+        self.fileElFR_jet25 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_jet25.root')
+        self.fileElFR_jet35 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_jet35.root')
+        self.fileElFR_jet45 = self._openRootFile(cmssw_base+'/src/'+self.eleDir+'/EleFR_jet45.root')
 
         # Root Histos
 
@@ -372,7 +373,7 @@ class LeptonFakeWMaker(Module):
 
         self.cmssw = cmssw     
         cmssw_base = os.getenv('CMSSW_BASE')
-        self.WPdic = cmssw_base+'/src/'+opts.WPdic
+        self.WPdic = cmssw_base+'/src/'+WPdic
         print " cmssw = ", self.cmssw
         print " WPDic = ", self.WPdic   
         if os.path.exists(self.WPdic) :
@@ -463,7 +464,7 @@ class LeptonFakeWMaker(Module):
                      eleWP = self.FakeWeights[iTag]['eleWP']
                      muWP  = self.FakeWeights[iTag]['muWP']
                      if   abs (flavour) == 11 : IsTightLepton = lepton_col[iLep]['isTightElectron_'+eleWP]
-                     elif abs (flavour) == 13 : IsTightLepton = lepton_col[iLep]['isTightElectron_'+muWP]
+                     elif abs (flavour) == 13 : IsTightLepton = lepton_col[iLep]['isTightMuon_'+muWP]
                      Leptons[iTag][selectedLepton] = [kindLep, pt, eta, IsTightLepton]
 
                    selectedLepton += 1

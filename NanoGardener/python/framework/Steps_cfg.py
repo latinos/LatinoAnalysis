@@ -211,6 +211,17 @@ Steps = {
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
 
+## ------- MODULES: Fakes
+
+  'fakeW'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonFakeWMaker',
+                  'declare'    : '',
+                  'module'     : 'LeptonFakeWMaker("RPLME_CMSSW")',
+              },
+
 ## ------- MODULES: Kinematic
 
   'l2Kin'    : {
