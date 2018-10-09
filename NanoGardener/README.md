@@ -7,6 +7,10 @@
    * Data: /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Run2017_nAOD_v1_Study2017/DATAl1loose2017__hadd/ 
    * MC:  /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_nAOD_v1_Study2017/MCl1loose2017__baseW__hadd/ 
    
+# Full 2017 ntuples
+   * Data:  /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Run2017_nAOD_v1_Full2017
+   * MC:    /eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_nAOD_v1_Full2017
+   
 # General items to know when using nanoAOD
 
 NanoAODs are provided centrally. The current campaign for 2017 data is based on CMSSW_9_4_7.

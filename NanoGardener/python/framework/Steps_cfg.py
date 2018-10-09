@@ -30,6 +30,21 @@ Steps = {
                   'subTargets' : ['baseW','trigMC','formulasMC'],
                 },             
 
+  'MCWgStar2017' : { 
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"((nElectron+nMuon)>1)"' ,
+                     'subTargets' : ['leptonMaker','WgSSel','puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent','trigMC','formulasMC'] ,
+                     'onlySample' : [
+                                  # FIXME : Check list for 2017 MC
+                                   'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
+                                   #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
+                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                   'WZTo2L2Q','WZTo3LNu_mllmin01_ext1'
+                                 ]
+                   },
+
 ## ------- DATA:
     
   'DATAl1loose2016': {
@@ -47,6 +62,14 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                 }, 
+
+    'DATAWgStar2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','WgSSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
+                   },
 
 #  Merged back to DATAl1loose2017 (was a tmp fix)    
 #  'DATAformulas' : {
@@ -87,7 +110,15 @@ Steps = {
                   'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 1)' ,
                   'module'     : 'leptonSel()' ,
                },
-             
+
+   'WgSSel' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "WgStar", 2)' ,
+                  'module'     : 'leptonSel()' ,
+               },             
 
 ## ------- MODULES: Trigger
 

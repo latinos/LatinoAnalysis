@@ -33,8 +33,9 @@ class LeptonSel(Module):
         else: self.doWgS = False
 
         #WP_file = open(WP_path, 'r')
+        cmssw_base = os.getenv('CMSSW_BASE') 
         var = {}
-        execfile(WP_path, var)
+        execfile(cmssw_base+'/src/'+WP_path, var)
         self.ElectronWP = var['ElectronWP']
         self.MuonWP = var['MuonWP']
 
