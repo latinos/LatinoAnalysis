@@ -168,7 +168,7 @@ class PostProcMaker():
        if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
      else:
-       print FileList
+       #print FileList
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
@@ -180,11 +180,14 @@ class PostProcMaker():
      toSkip=[]
      if not self._redo : 
        if  len(FileExistList) == len(FileList) : return FileDic
-       for iFile in FileExistList: toSkip.append(iFile.replace('.root','').split('__part')[1])
+       for iFile in FileExistList: 
+         if not '__part' in iFile : toSkip.append('0')
+         else                     : toSkip.append(iFile.replace('.root','').split('__part')[1])
 
      if not self._iniStep == 'Prod' :
        for iFile in FileList : 
-         iPart = iFile.replace('.root','').split('__part')[1]
+         if not '__part' in iFile : iPart = 0
+         else                     : iPart = iFile.replace('.root','').split('__part')[1]
          if not iPart in toSkip : 
            FileDic[iFile] = self._targetDir+os.path.basename(iFile)
      else :

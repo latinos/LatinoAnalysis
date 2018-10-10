@@ -32,8 +32,9 @@ class LeptonSFMaker(Module):
         self.mineta_ele = -2.4999
         self.maxeta_ele = 2.4999
 
+        cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
-        execfile(WP_path, var)
+        execfile(cmssw_base+'/src/'+WP_path, var)
         self.ElectronWP = var['ElectronWP']
         self.MuonWP = var['MuonWP']
 

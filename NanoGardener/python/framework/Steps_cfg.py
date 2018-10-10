@@ -30,6 +30,14 @@ Steps = {
                   'subTargets' : ['baseW','trigMC','formulasMC'],
                 },             
 
+  'MCWeights2017' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False  ,
+                  #'subTargets' : ['baseW','trigMC','GenLeptonMatch','LeptonSF','formulasMC'],
+                  'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
+                },             
+
   'MCWgStar2017' : { 
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -210,6 +218,35 @@ Steps = {
                   'declare'    : 'pufile_data2017="%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileup_Cert_294927-306462_13TeV_PromptReco_Collisions17_withVar.root" % os.environ["CMSSW_BASE"]',
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
+
+  'GenLeptonMatch' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer' ,
+                  'declare'    : 'GenLeptonMatch = lambda : GenLeptonMatchProducer()',
+                  'module'     : 'GenLeptonMatch()' ,
+                   },
+
+  'LeptonSF' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
+                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW")',
+                  'module'     : 'LeptonSF()',
+                   },
+
+## ------- MODULES: Fakes
+
+  'fakeW'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonFakeWMaker',
+                  'declare'    : '',
+                  'module'     : 'LeptonFakeWMaker("RPLME_CMSSW")',
+              },
 
 ## ------- MODULES: Kinematic
 
