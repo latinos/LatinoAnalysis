@@ -35,7 +35,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False  ,
                   #'subTargets' : ['baseW','GenVar','GenLeptonMatch','trigMC','LeptonSF','formulasMC'],
-                  'subTargets' : ['PromptParticlesGenVars','GenVar','GenLeptonMatch','trigMC','LeptonSF','formulasMC'],
+                  'subTargets' : ['PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF','formulasMC'],
                   #'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
                 },             
 
@@ -119,6 +119,35 @@ Steps = {
                   'declare'    : 'GenLeptonMatch = lambda : GenLeptonMatchProducer()',
                   'module'     : 'GenLeptonMatch()' ,
                    },
+
+   'HiggsGenVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HiggsGenVarsProducer' ,
+                  'declare'    : 'HiggsGenVars = lambda : HiggsGenVarsProducer()',
+                  'module'     : 'HiggsGenVars()',
+                  } ,                 
+
+   'TopGenVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer' ,
+                  'declare'    : 'TopGenVars = lambda : TopGenVarsProducer()',
+                  'module'     : 'TopGenVars()',
+                  'onlySample' : ['TTTo2L2Nu', 'TTToSemileptonic']
+                  } ,
+
+    'wwNLL' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer' ,
+                  'declare'    : 'wwNLL = lambda : wwNLLcorrectionWeightProducer()',
+                  'module'     : 'wwNLL()',
+                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down']
+                  } ,
 
 ## ------- MODULES: Object Handling
 
