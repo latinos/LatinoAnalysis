@@ -333,6 +333,16 @@ class DatacardFactory:
                             lnNUp = 1. + diffUp
                             lnNDo = 1. + diffDo
                               
+                            #  
+                            # avoid 0.00/XXX and XXX/0.00 in the lnN --> ill defined nuisance
+                            # if this happens put 0.00 ---> 1.00, meaning *no* effect of this nuisance
+                            #              Done like this because it is very likely what you are experiencing 
+                            #              is a MC fluctuation in the varied sample, that is the up/down histogram has 0 entries!
+                            #
+                            if lnNUp==0: lnNUp = 1
+                            if lnNDo==0: lnNDo = 1
+                            
+                            
                             card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
                           else:
                             card.write(('-').ljust(columndef)) 
