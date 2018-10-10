@@ -425,13 +425,13 @@ class LeptonSFMaker(Module):
                   el_wp_var[wp + '_TotSF_Up'].append(idiso_sf*reco_sf + math.sqrt(idiso_sf_up**2 + reco_sf_up**2 + idiso_sf_sys**2))
                   el_wp_var[wp + '_TotSF_Down'].append(idiso_sf*reco_sf - math.sqrt(idiso_sf_dwn**2 + reco_sf_dwn**2 + idiso_sf_sys**2))
               for wp in self.MuonWP[self.cmssw]['TightObjWP']:
-                  mu_wp_var[wp + '_IdIsoSF'].append(-1.0)
-                  mu_wp_var[wp + '_IdIsoSF_Up'].append(-1.0)
-                  mu_wp_var[wp + '_IdIsoSF_Down'].append(-1.0)
-                  mu_wp_var[wp + '_IdIsoSF_Syst'].append(-1.0)
-                  mu_wp_var[wp + '_TotSF'].append(-1.0)
-                  mu_wp_var[wp + '_TotSF_Up'].append(-1.0)
-                  mu_wp_var[wp + '_TotSF_Down'].append(-1.0)
+                  mu_wp_var[wp + '_IdIsoSF'].append(1.0)
+                  mu_wp_var[wp + '_IdIsoSF_Up'].append(0.0)
+                  mu_wp_var[wp + '_IdIsoSF_Down'].append(0.0)
+                  mu_wp_var[wp + '_IdIsoSF_Syst'].append(0.0)
+                  mu_wp_var[wp + '_TotSF'].append(reco_sf)
+                  mu_wp_var[wp + '_TotSF_Up'].append(reco_sf + reco_sf_up)
+                  mu_wp_var[wp + '_TotSF_Down'].append(reco_sf - reco_sf_dwn)
            elif abs(lepton_col[iLep]['pdgId']) == 13:
               for wp in self.MuonWP[self.cmssw]['TightObjWP']:
                   reco_sf, reco_sf_dwn, reco_sf_up = self.get_reco_SF(pdgId, pt, eta, nvtx, wp, run_period)
@@ -447,13 +447,13 @@ class LeptonSFMaker(Module):
                   mu_wp_var[wp + '_TotSF_Up'].append(idiso_sf*reco_sf + math.sqrt(idiso_sf_up**2 + reco_sf_up**2 + idiso_sf_sys**2))
                   mu_wp_var[wp + '_TotSF_Down'].append(idiso_sf*reco_sf - math.sqrt(idiso_sf_dwn**2 + reco_sf_dwn**2 + idiso_sf_sys**2))
               for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
-                  el_wp_var[wp + '_IdIsoSF'].append(-1.0)
-                  el_wp_var[wp + '_IdIsoSF_Up'].append(-1.0)
-                  el_wp_var[wp + '_IdIsoSF_Down'].append(-1.0)
-                  el_wp_var[wp + '_IdIsoSF_Syst'].append(-1.0)
-                  el_wp_var[wp + '_TotSF'].append(-1.0)
-                  el_wp_var[wp + '_TotSF_Up'].append(-1.0)
-                  el_wp_var[wp + '_TotSF_Down'].append(-1.0)
+                  el_wp_var[wp + '_IdIsoSF'].append(1.0)
+                  el_wp_var[wp + '_IdIsoSF_Up'].append(0.0)
+                  el_wp_var[wp + '_IdIsoSF_Down'].append(0.0)
+                  el_wp_var[wp + '_IdIsoSF_Syst'].append(0.0)
+                  el_wp_var[wp + '_TotSF'].append(reco_sf)
+                  el_wp_var[wp + '_TotSF_Up'].append(reco_sf + reco_sf_up)
+                  el_wp_var[wp + '_TotSF_Down'].append(reco_sf - reco_sf_dwn)
 
         # Filling branches
         for key in lep_var:

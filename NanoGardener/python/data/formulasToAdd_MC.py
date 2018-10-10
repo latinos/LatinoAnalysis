@@ -209,3 +209,18 @@ formulas['LepSF4l__mu_'+muWP+'__Do'] = '((abs(event.Lepton_pdgId[0]) == 13)*(eve
                                         ((abs(event.Lepton_pdgId[3]) == 13)*(event.Lepton_tightMuon_'+muWP+'_TotSF'+'_Down[3])/(event.Lepton_tightMuon_'+muWP+'_TotSF'+'[3])+\
                                          (abs(event.Lepton_pdgId[3]) == 11)) \
                                         if event.nLepton > 3 else 0.'
+
+formulas['GenLepMatch2l'] = 'event.Lepton_genmatched[0]*\
+                             event.Lepton_genmatched[1] \
+                             if event.nLepton > 1 else 0.'
+
+formulas['GenLepMatch3l'] = 'event.Lepton_genmatched[0]*\
+                             event.Lepton_genmatched[1]*\
+                             event.Lepton_genmatched[2] \
+                             if event.nLepton > 2 else 0.'
+
+formulas['GenLepMatch4l'] = 'event.Lepton_genmatched[0]*\
+                             event.Lepton_genmatched[1]*\
+                             event.Lepton_genmatched[2]*\
+                             event.Lepton_genmatched[3] \
+                             if event.nLepton > 3 else 0.'
