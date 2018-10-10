@@ -34,8 +34,9 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True ,
                   'do4Data'    : False  ,
-                  #'subTargets' : ['baseW','trigMC','GenLeptonMatch','LeptonSF','formulasMC'],
-                  'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
+                  #'subTargets' : ['baseW','GenVar','GenLeptonMatch','trigMC','LeptonSF','formulasMC'],
+                  'subTargets' : ['PromptParticlesGenVars','GenVar','GenLeptonMatch','trigMC','LeptonSF','formulasMC'],
+                  #'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
                 },             
 
   'MCWgStar2017' : { 
@@ -89,7 +90,36 @@ Steps = {
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
+## ------- MODULES: MC Kinematic
   
+  'PromptParticlesGenVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PromptParticlesGenVarsProducer' ,
+                  'declare'    : 'PromptParticlesGenVars = lambda : PromptParticlesGenVarsProducer()',
+                  'module'     : 'PromptParticlesGenVars()',
+                  } , 
+
+
+  'GenVar'       : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenVarProducer' ,
+                  'declare'    : 'GenVar = lambda : GenVarProducer()',
+                  'module'     : 'GenVar()' ,
+                   },
+
+  'GenLeptonMatch' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer' ,
+                  'declare'    : 'GenLeptonMatch = lambda : GenLeptonMatchProducer()',
+                  'module'     : 'GenLeptonMatch()' ,
+                   },
+
 ## ------- MODULES: Object Handling
 
   'lepMergerHWW' : { 
@@ -219,14 +249,6 @@ Steps = {
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
 
-  'GenLeptonMatch' : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer' ,
-                  'declare'    : 'GenLeptonMatch = lambda : GenLeptonMatchProducer()',
-                  'module'     : 'GenLeptonMatch()' ,
-                   },
 
   'LeptonSF' : {
                   'isChain'    : False ,
