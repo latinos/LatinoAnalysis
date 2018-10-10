@@ -25,12 +25,14 @@ class GenLeptonMatchProducer(Module):
         leptons = Collection(event, self.collection)
         genLeptons = Collection(event, "LeptonGen")
         for lepton  in leptons:
+          lepp4 = ROOT.TLorentzVector()
+          lepp4.SetPtEtaPhiM(lepton.pt, lepton.eta, lepton.phi, 0)
           lepton.isMatched = False
           lepton.isPromptMatched = False
           for genLepton in genLeptons:
             if ( abs(genLepton.pdgId) == 11 or abs(genLepton.pdgId) == 13 ) and \
                  genLepton.status == 1 and \
-                 genLepton.p4().DeltaR(lepton.p4()) < 0.3 :
+                 genLepton.p4().DeltaR(lepp4) < 0.3 :
               lepton.isMatched = True
               if genLepton.isPrompt or genLepton.isDirectPromptTauDecayProduct:
                 lepton.isPromptMatched = True
