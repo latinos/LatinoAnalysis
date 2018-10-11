@@ -108,6 +108,7 @@ We currently have two productions, one for data and one for MC, listed below. Th
           
     1) mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -s MCl1loose2017 -b -T [comma separated list of samples]     
     2) mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017 -s MCformulas -b -T [comma separated list of samples]
+    3) mkPostProc.py -p Fall2017_nAOD_v1_Full2017 -i MCl1loose2017__MCformulas -s MCWeights2017 -b -T [comma separated list of samples]
     
   
   
