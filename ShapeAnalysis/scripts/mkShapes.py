@@ -550,7 +550,7 @@ if __name__ == '__main__':
               os.system("hadd -f plots_"+opt.tag+".root plots_"+opt.tag+"_temp*")
               cleanup += "rm plots_"+opt.tag+"_temp*"
               if not opt.doNotCleanup: os.system(cleanup) 
-    if opt.doHadd != 0 or opt.redoStat != 0:       
+    elif opt.doHadd != 0 or opt.redoStat != 0:       
             ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option 
             if ('AsMuchAsPossible' in opt.batchSplit and opt.doHadd != 0) or opt.redoStat != 0:
               ## do this only if we want to add the MC stat nuisances in the old way
