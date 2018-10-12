@@ -292,7 +292,14 @@ Steps = {
 
 ## ------- MODULES: Fakes
 
-  'fakeW'   : {
+  'fakeW'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                   },
+
+  'fakeWstep'   : {
                   'isChain'    : False ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
@@ -350,6 +357,14 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA.py\')' ,
                  },
 
+  'formulasFAKE' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE.py\')' ,
+                 },
 
 # ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
 
