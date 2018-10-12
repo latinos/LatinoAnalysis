@@ -50,7 +50,8 @@ Steps = {
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
                                    #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
-                                   'WZTo2L2Q','WZTo3LNu_mllmin01_ext1'
+                                   'DYJetsToLL_M-5to50-LO','DYJetsToLL_M-50-LO-ext1',
+                                   'WZTo2L2Q','WZTo3LNu_mllmin01_ext1','WZTo3LNu',
                                  ]
                    },
 
