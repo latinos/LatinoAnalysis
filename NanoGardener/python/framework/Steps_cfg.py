@@ -44,7 +44,8 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'selection'  : '"((nElectron+nMuon)>1)"' ,
-                     'subTargets' : ['leptonMaker','WgSSel','puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent','trigMC','formulasMC'] ,
+                     'subTargets' : ['leptonMaker','WgSSel','puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent',
+                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF','formulasMC'],
                      'onlySample' : [
                                   # FIXME : Check list for 2017 MC
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
