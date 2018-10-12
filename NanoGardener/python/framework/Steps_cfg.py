@@ -34,8 +34,9 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True ,
                   'do4Data'    : False  ,
-                  #'subTargets' : ['baseW','trigMC','GenLeptonMatch','LeptonSF','formulasMC'],
-                  'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
+                  #'subTargets' : ['baseW','GenVar','GenLeptonMatch','trigMC','LeptonSF','formulasMC'],
+                  'subTargets' : ['PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF','formulasMC'],
+                  #'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
                 },             
 
   'MCWgStar2017' : { 
@@ -43,13 +44,15 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'selection'  : '"((nElectron+nMuon)>1)"' ,
-                     'subTargets' : ['leptonMaker','WgSSel','puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent','trigMC','formulasMC'] ,
+                     'subTargets' : ['leptonMaker','WgSSel','puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent',
+                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF','formulasMC'],
                      'onlySample' : [
                                   # FIXME : Check list for 2017 MC
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
                                    #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
-                                   'WZTo2L2Q','WZTo3LNu_mllmin01_ext1'
+                                   'DYJetsToLL_M-5to50-LO','DYJetsToLL_M-50-LO-ext1',
+                                   'WZTo2L2Q','WZTo3LNu_mllmin01_ext1','WZTo3LNu',
                                  ]
                    },
 
@@ -89,7 +92,65 @@ Steps = {
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
+## ------- MODULES: MC Kinematic
   
+  'PromptParticlesGenVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PromptParticlesGenVarsProducer' ,
+                  'declare'    : 'PromptParticlesGenVars = lambda : PromptParticlesGenVarsProducer()',
+                  'module'     : 'PromptParticlesGenVars()',
+                  } , 
+
+
+  'GenVar'       : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenVarProducer' ,
+                  'declare'    : 'GenVar = lambda : GenVarProducer()',
+                  'module'     : 'GenVar()' ,
+                   },
+
+  'GenLeptonMatch' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer' ,
+                  'declare'    : 'GenLeptonMatch = lambda : GenLeptonMatchProducer()',
+                  'module'     : 'GenLeptonMatch()' ,
+                   },
+
+   'HiggsGenVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HiggsGenVarsProducer' ,
+                  'declare'    : 'HiggsGenVars = lambda : HiggsGenVarsProducer()',
+                  'module'     : 'HiggsGenVars()',
+                  } ,                 
+
+   'TopGenVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer' ,
+                  'declare'    : 'TopGenVars = lambda : TopGenVarsProducer()',
+                  'module'     : 'TopGenVars()',
+                  'onlySample' : ['TTTo2L2Nu', 'TTToSemileptonic']
+                  } ,
+
+    'wwNLL' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer' ,
+                  'declare'    : 'wwNLL = lambda : wwNLLcorrectionWeightProducer()',
+                  'module'     : 'wwNLL()',
+                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down']
+                  } ,
+
 ## ------- MODULES: Object Handling
 
   'lepMergerHWW' : { 
@@ -219,14 +280,6 @@ Steps = {
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
 
-  'GenLeptonMatch' : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer' ,
-                  'declare'    : 'GenLeptonMatch = lambda : GenLeptonMatchProducer()',
-                  'module'     : 'GenLeptonMatch()' ,
-                   },
 
   'LeptonSF' : {
                   'isChain'    : False ,

@@ -17,7 +17,7 @@ METFilter_Common = '(event.Flag_goodVertices*\
 
 METFilter_DATA   =  METFilter_Common 
 
-formulas['METFilter_DATA'] = METFilter_DATA
+formulas['METFilter_MC'] = METFilter_DATA
 
 # Common Weights
 
