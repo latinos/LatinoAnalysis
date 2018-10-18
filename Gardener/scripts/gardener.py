@@ -33,6 +33,9 @@ from LatinoAnalysis.Gardener.variables.l4Kin                      import L4KinFi
 from LatinoAnalysis.Gardener.variables.fakeWeight                 import FakeWeightFiller
 from LatinoAnalysis.Gardener.variables.multiFakeWeight            import multiFakeWeightFiller
 
+# Charge Flip VBS
+from LatinoAnalysis.Gardener.variables.chargeFlipWeightVBS        import chargeFlipWeightVBS
+
 
 # lepton pt corrector
 from LatinoAnalysis.Gardener.variables.lepScaleCorrector          import LeptonPtCorrector
@@ -233,6 +236,7 @@ if __name__ == '__main__':
 # fake weights
     modules['fakeWeights']      = FakeWeightFiller()
     modules['multiFakeWeights']      = multiFakeWeightFiller()
+    modules['chargeFlipWeightVBS']      = chargeFlipWeightVBS()
 
 # lepton pt corrector
     modules['letPtCorrector']   = LeptonPtCorrector()
