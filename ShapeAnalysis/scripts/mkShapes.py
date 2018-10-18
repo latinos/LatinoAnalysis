@@ -217,7 +217,7 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
       #in case some variables need a compiled function
-      for variableName, variable in self._variables.iteritems():
+      for variableName, variable in variables.iteritems():
           if variable.has_key('linesToAdd'):
             linesToAdd = variable['linesToAdd']
             for line in linesToAdd:
