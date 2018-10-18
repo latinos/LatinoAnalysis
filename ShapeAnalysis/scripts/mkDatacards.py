@@ -410,10 +410,11 @@ class DatacardFactory:
                        
                         card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
                         card.write((nuisance ['type']).ljust(20))
+
                 
                         # write line in datacard
                         for sampleNameIterator2 in self.signals:
-                          if sampleNameIterator2 == sampleName :
+                          if sampleNameIterator2 == sampleName:
                             card.write(('1.000').ljust(columndef))
                           else :
                             card.write(('-').ljust(columndef))
@@ -441,30 +442,54 @@ class DatacardFactory:
                 
                          for iBin in range(1, histoTemplate.GetNbinsX()+1):
                        
+                
+                           tag = "_ibin_"
+                           correlate = []
+                           if 'correlate' in nuisance['samples'][sampleName].keys():
+                             #specify the sample that is source of the variation
+                             tag = "_ibin"+sampleName+"_"
+                             correlate = nuisance['samples'][sampleName]["correlate"]
+                           
                            card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(100-20))
                            card.write((nuisance ['type']).ljust(20))
-                
+
+
                            # write line in datacard
                            for sampleNameIterator2 in self.signals:
-                             if sampleNameIterator2 == sampleName :
+                            
+                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
                                card.write(('1.000').ljust(columndef))
                              else :
                                card.write(('-').ljust(columndef))
                 
                            for sampleNameIterator2 in self.backgrounds:
-                             card.write(('-').ljust(columndef))
+                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                               card.write(('1.000').ljust(columndef))
+                             else:  
+                               card.write(('-').ljust(columndef))
                 
                            card.write('\n')
                 
                            # save the nuisance histograms in the root file
                            self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + '_ibin_' + str(iBin) + '_statUp',
+                                            'histo_' + sampleName + tag + str(iBin) + '_statUp',
                                             'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
                                             )
                            self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + '_ibin_' + str(iBin) + '_statDown',
+                                            'histo_' + sampleName + tag + str(iBin) + '_statDown',
                                             'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
                                             )
+                           if correlate != []:
+                             for other in correlate: 
+                               self._saveHisto(cutName+"/"+variableName+'/',
+                                            'histo_' + other + tag + str(iBin) + '_statUp',
+                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                            )
+                               self._saveHisto(cutName+"/"+variableName+'/',
+                                            'histo_' + other + tag + str(iBin) + '_statDown',
+                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                            )
+ 
                 
                   for sampleName in self.backgrounds:
                     if sampleName in nuisance['samples'].keys() :
@@ -502,16 +527,29 @@ class DatacardFactory:
                 
                 
                          for iBin in range(1, histoTemplate.GetNbinsX()+1):
+
+        
+                           tag = "_ibin_"
+                           correlate = []
+                           if 'correlate' in nuisance['samples'][sampleName].keys():
+                             #specify the sample that is source of the variation
+                             tag = "_ibin"+sampleName+"_"
+                             print tag
+                             correlate = nuisance['samples'][sampleName]["correlate"]
+   
                        
                            card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(80-20))
                            card.write((nuisance ['type']).ljust(20))
                 
                            # write line in datacard
                            for sampleNameIterator2 in self.signals:
-                             card.write(('-').ljust(columndef))
+                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                               card.write(('1.000').ljust(columndef))
+                             else:   
+                               card.write(('-').ljust(columndef))
                 
                            for sampleNameIterator2 in self.backgrounds:
-                             if sampleNameIterator2 == sampleName :
+                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
                                card.write(('1.000').ljust(columndef))
                              else :
                                card.write(('-').ljust(columndef))
@@ -520,14 +558,23 @@ class DatacardFactory:
                 
                            # save the nuisance histograms in the root file
                            self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + '_ibin_' + str(iBin) + '_statUp',
+                                            'histo_' + sampleName + tag + str(iBin) + '_statUp',
                                             'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
                                             )
                            self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + '_ibin_' + str(iBin) + '_statDown',
+                                            'histo_' + sampleName + tag + str(iBin) + '_statDown',
                                             'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
                                             )
-                
+                           if correlate != []:
+                             for other in correlate:
+                               self._saveHisto(cutName+"/"+variableName+'/',
+                                            'histo_' + other + tag + str(iBin) + '_statUp',
+                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                            )
+                               self._saveHisto(cutName+"/"+variableName+'/',
+                                            'histo_' + other + tag + str(iBin) + '_statDown',
+                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                            ) 
                 
                 # now add the "rateParam" for the normalization
                 #  e.g.:            z_norm rateParam  htsearch zll 1 

@@ -58,6 +58,7 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('#$ -q all.q\n')
          jFile.write('#$ -cwd\n')
+         jFile.write('export X509_USER_PROXY=/afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
@@ -70,6 +71,7 @@ class batchJobs :
          jFile.write('export X509_USER_PROXY=/cms/ldap_home/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
+       jFile.write('voms-proxy-info\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
@@ -81,14 +83,16 @@ class batchJobs :
        if    useBatchDir : 
          if 'iihe' in os.uname()[1]:
            jFile.write('cd $TMPDIR \n')
+         elif 'cern' in os.uname()[1]:
+           jFile.write("mkdir /tmp/$USER/$LSB_JOBID \n")
+           jFile.write("cd /tmp/$USER/$LSB_JOBID \n")
+           jFile.write("pwd \n")
          elif "pi.infn.it" in socket.getfqdn():
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
-# mkdir: cannot create directory `/tmp/piedra/latinos': No such file or directory
-###      elif 'ifca' in os.uname()[1]:
-###        jFile.write("mkdir -p /tmp/"+os.environ["USER"]+"/latinos \n") 
-###        jFile.write("cd /tmp/"+os.environ["USER"]+"/latinos \n") 
+         elif 'ifca' in os.uname()[1]:
+           jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' or 'knu' in os.uname()[1]:
            jFile.write('cd '+self.subDir+'\n')
          else:
@@ -101,6 +105,14 @@ class batchJobs :
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
      # Create Proxy at IIHE
+     if 'cern'  in os.uname()[1]:
+       cmd='voms-proxy-info'
+       proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+       out, err = proc.communicate()
+       for line in out.split('\n'):
+        if "path" in line:
+          proxypath=line.split(':')[1]
+       os.system('cp '+proxypath+' /afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
      if 'iihe'  in os.uname()[1]:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
@@ -118,6 +130,12 @@ class batchJobs :
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
      jFile.write(command+'\n')
      jFile.close()
+
+   def Add2All (self,command):
+     for jName in self.jobsList:
+       jFile = open(self.subDir+'/'+jName+'.sh','a')
+       jFile.write(command+'\n')
+       jFile.close()
 
    def InitPy (self,command):
 
@@ -141,6 +159,9 @@ class batchJobs :
      pFile.write(command+'\n')
      pFile.close()
 
+   def GetPyName (self,iStep,iTarget) :
+     jName= self.jobsDic[iStep][iTarget]
+     return self.subDir+'/'+jName+'.py' 
 
    def Sub(self,queue='8nh',IiheWallTime='168:00:00',optTodo=False): 
      os.system('cd '+self.subDir)
@@ -227,13 +248,14 @@ def batchStatus():
     out, err = proc.communicate()
     DirList=string.split(out)
     for iDir in DirList:
-      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.sh' 
+      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.sh | grep -v crab3cfg' 
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
-      FileList=string.split(out)
+      FileList=string.split(out) 
       Done={}
       Pend={}
       Runn={}
+      Crab={}
       Tota={}
       FileRuns={}
       for iFile in FileList:
@@ -243,23 +265,28 @@ def batchStatus():
         if not iStep in Done: Done[iStep] = 0
         if not iStep in Pend: Pend[iStep] = 0
         if not iStep in Runn: Runn[iStep] = 0
+        if not iStep in Crab: Crab[iStep] = 0
         if not iStep in Tota: Tota[iStep] = 0
         if not iStep in FileRuns: FileRuns[iStep] = []
         Tota[iStep]+=1
         if os.path.isfile(jidFile):
-#         print jidFile
-          if 'iihe' in os.uname()[1] :
-            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
-            if 'Q' in iStat : Pend[iStep]+=1
-            else: Runn[iStep]+=1
-          elif 'ifca' in os.uname()[1] :
-            iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
-            if 'Q' in iStat : Pend[iStep]+=1
-            else: Runn[iStep]+=1
+          # check if not CRAB:
+          iCrab = os.popen('cat '+jidFile+' | awk \'{print $1}\' ').read()
+          print iCrab
+          if 'CRABTask' in iCrab : Crab[iStep]+=1 
           else:
-            iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
-            if 'PEND' in iStat : Pend[iStep]+=1
-            else: Runn[iStep]+=1 
+            if 'iihe' in os.uname()[1] :
+              iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
+              if 'Q' in iStat : Pend[iStep]+=1
+              else: Runn[iStep]+=1
+            elif 'ifca' in os.uname()[1] :
+              iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
+              if 'Q' in iStat : Pend[iStep]+=1
+              else: Runn[iStep]+=1
+            else:
+              iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
+              if 'PEND' in iStat : Pend[iStep]+=1
+              else: Runn[iStep]+=1 
           FileRuns[iStep].append(iSample)
         else:
           Done[iStep]+=1
@@ -267,7 +294,7 @@ def batchStatus():
       print iDir+' : '
       print '----------------------------'
       for iStep in Done:
-        print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
+        print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' CRAB= '+str(Crab[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
       print '   Samples not done:'
       for iStep in Done:
         print '     --> '+iStep+' : ',FileRuns[iStep]
@@ -400,84 +427,6 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
                   #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
 
-def lsListCommand(inputDir, iniStep = 'Prod'):
-    "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
-    if 'iihe' in os.uname()[1] :
-      if '/pnfs/iihe/cms' in inputDir:
-        usedDir = inputDir.split('/pnfs/iihe/cms')[1]
-      else:
-	usedDir = inputDir
-      return "ls -1 /pnfs/iihe/cms" + usedDir
-    elif 'ifca' in os.uname()[1] :
-      if '/gpfs/gaes/cms/' in inputDir:
-	usedDir = inputDir.split('/gpfs/gaes/cms/')[1]
-      else:
-	usedDir = inputDir
-      return "ls /gpfs/gaes/cms/" + usedDir
-    elif "pi.infn.it" in socket.getfqdn():
-      if '/gpfs/ddn/srm/cms/' in inputDir:
-	usedDir = inputDir.split('/gpfs/ddn/srm/cms/')[1]
-      else:
-	usedDir = inputDir
-      return "ls /gpfs/ddn/srm/cms/" + usedDir
-    elif "knu" in os.uname()[1]:
-      if '/pnfs/knu.ac.kr/data/cms/' in inputDir:
-	usedDir = inputDir.split('/pnfs/knu.ac.kr/data/cms/')[1]
-      else:
-	usedDir = inputDir
-      return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
-    elif "sdfarm" in os.uname()[1]:
-      if '/xrootd/' in inputDir:
-	usedDir = inputDir.split('/xrootd/')[1]
-      else:
-	usedDir = inputDir
-      return "ls /xrootd/" + usedDir
-    else :
-      if iniStep == 'Prod' :
-        return " ls " + inputDir
-      else:
-        return " ls " + inputDir
-    
-def rootReadPath(inputFile):
-    "Returns path to read a root file (/store/.../*.root) on the remote server"
-    if 'iihe' in os.uname()[1] :
-        return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
-    elif "pi.infn.it" in socket.getfqdn():
-      return "/gpfs/ddn/srm/cms/" + inputFile
-    elif 'ifca' in os.uname()[1] :
-      return "/gpfs/gaes/cms/" + inputFile
-    elif 'knu' in os.uname()[1] :
-      return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
-    elif 'sdfarm' in os.uname()[1] :
-      return "root://cms-xrdr.sdfarm.kr:1094//xrd" + inputFile
-    else :
-       return "/eos/cms" + inputFile
-       # return  inputFile
-    
-def remoteFileSize(inputFile):
-    "Returns file size in byte for file on remote server (/store/.../*.root)"
-    if 'iihe' in os.uname()[1] :
-      if "/pnfs" in inputFile:
-        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
-      else:
-        return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
-    elif 'ifca' in os.uname()[1] :
-        return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
-    elif "pi.infn.it" in socket.getfqdn():
-        return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
-    elif "knu" in os.uname()[1]:
-      if '/pnfs' in inputFile:
-	return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
-      else:
-        return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
-    elif "sdfarm" in os.uname()[1]:
-      if '/xrootd' in inputFile:
-	return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
-      else:
-        return subprocess.check_output("ls -l /xrootd/" + inputFile + " | cut -d ' ' -f 5", shell=True)
-    else :
-       return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
-       # return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
 
 def batchTest():
     jobs = batchJobs('Test','Test',['Test'],['Test'],['Step','Target'])

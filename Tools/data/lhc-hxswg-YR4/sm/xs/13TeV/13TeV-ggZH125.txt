@@ -1,0 +1,2 @@
+mH_GeV  XS_pb       Scale_pos   Scale_neg PDF_plus_alpha_s  PDF  alpha_S
+125.00  0.1227       +25.1       -18.9      2.4             1.8     1.6

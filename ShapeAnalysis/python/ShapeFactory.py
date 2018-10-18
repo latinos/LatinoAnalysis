@@ -36,6 +36,7 @@ class ShapeFactory:
         self._samples = samples
 
 
+        self._treeName = 'latino'
 
 
     # _____________________________________________________________________________
@@ -1109,7 +1110,7 @@ class ShapeFactory:
     def _connectInputs(self, samples, inputDir, skipMissingFiles, friendsDir = None, skimListDir = None):
         inputs = {}
         lists = {}
-        treeName = 'latino'
+        treeName = self._treeName
 	if "sdfarm" in os.uname()[1]:
 	  inputDir = inputDir.replace("xrootd","xrd")
         print "doing", inputDir

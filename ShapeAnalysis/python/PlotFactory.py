@@ -743,6 +743,8 @@ class PlotFactory:
             #
             special_shapeName = cutName+"/"+variableName+'/histo_total' 
             histo_total = fileIn.Get(special_shapeName)
+            if variable['divideByBinWidth'] == 1:
+              histo_total.Scale(1,"width")
             print ' --> ', histo_total
 
             

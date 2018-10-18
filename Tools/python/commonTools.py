@@ -7,6 +7,37 @@ import socket
 
 from LatinoAnalysis.Tools.HiggsXSection  import *
 
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' (or 'y' or 'n').\n")
+
 #---
 class list_maker:
     def __init__(self, var, sep=',', type=None ):
@@ -122,7 +153,7 @@ class xsectionDB:
 
 #######
 
-def getSampleFiles(inputDir,Sample,absPath=False):
+def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPostProc=False):
 
     
 
@@ -131,9 +162,9 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     xrootdPath=''
     # ... IIHE
     if 'iihe' in os.uname()[1] :
-      absPath=True
+      if not FromPostProc : absPath=True
       lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
          Dir = '/pnfs/iihe/cms/' + inputDir
       else:                        
          Dir = inputDir
@@ -141,10 +172,13 @@ def getSampleFiles(inputDir,Sample,absPath=False):
 
     # ... CERN
     elif 'cern' in os.uname()[1] : 
-      if not '/eos/' in  inputDir and '/store/' in inpuDir:
+      if not '/eos/' in  inputDir and '/store/' in inputDir:
          Dir = '/eos/cms/' + inputDir
       else:                          
          Dir = inputDir
+      if '/eos/cms/' in inputDir:
+         absPath=True
+         xrootdPath='root://eoscms.cern.ch/'
       # if   '/eos/cms/' in inputDir:
       # #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '
       #    xrootdPath='root://eoscms.cern.ch/'
@@ -156,7 +190,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     # ... IFCA   
     elif 'ifca' in os.uname()[1] :
       lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+      if not '/gpfs/' in inputDir and '/store/' in inputDir:
         Dir = '/gpfs/gaes/cms/' + inputDir 
       else:
         Dir = inputDir
@@ -164,7 +198,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     # ... PISA         
     elif "pi.infn.it" in socket.getfqdn():
       lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+      if not '/gpfs/' in inputDir and '/store/' in inputDir:
         Dir = '/gpfs/ddn/srm/cms/' + inputDir 
       else:
         Dir = inputDir
@@ -173,7 +207,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     elif "knu" in os.uname()[1]:
       absPath=True
       lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
         Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
       else:
         Dir = inputDir 
@@ -183,7 +217,7 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     elif "sdfarm" in os.uname()[1]:
       absPath=True
       lsCmd='ls '
-      if not '/xrootd/' in inputDir and '/store/' in inpuDir: 
+      if not '/xrootd/' in inputDir and '/store/' in inputDir: 
         Dir = '/xrootd/' + inputDir
       else:
         Dir = inputDir 
@@ -199,16 +233,16 @@ def getSampleFiles(inputDir,Sample,absPath=False):
     #print xrootdPath, Dir , lsCmd , Sample
 
     ##### Now get the files for Sample
-    fileCmd = lsCmd+Dir+'/latino_'+Sample+'.root'
+    fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'.root'
     proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out,err = proc.communicate()
     Files   = string.split(out)
     if len(Files) == 0 :
-      fileCmd = lsCmd+Dir+'/latino_'+Sample+'__part*.root'
+      fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'__part*.root'
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
       Files   = string.split(out)
-    if len(Files) == 0 :
+    if len(Files) == 0 and not FromPostProc :
       print 'ERROR: No files found for sample ',Sample,' in directory ',Dir
       exit() 
     FileTarget = []
@@ -216,8 +250,10 @@ def getSampleFiles(inputDir,Sample,absPath=False):
       if absPath :
 	if "sdfarm" in os.uname()[1]:
 	  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
-	  FileTarget.append('###'+xrootdPath+iFile)
-	else : FileTarget.append('###'+xrootdPath+iFile)
+        if not FromPostProc :
+          FileTarget.append('###'+xrootdPath+iFile)
+        else:
+          FileTarget.append(iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
     return FileTarget
 
@@ -301,6 +337,133 @@ def printSampleDic(sampleDic):
         if 'weights' in sampleDic[iKey] :
           print 'weight = '+sampleDic[iKey]['weights'][iEntry]  
 
+#### SITE COMMANDS:
+
+def getTmpDir():
+    if   'iihe' in os.uname()[1] : return '/scratch/'
+    elif 'cern' in os.uname()[1] : return '/tmp/$USER/'
+    elif 'ifca' in os.uname()[1] : return '/gpfs/projects/cms/'+os.environ["USER"]+'/'
+    else : return '/tmp'
+
+def delDirSE(Dir):
+    inDir = Dir
+    if 'iihe' in os.uname()[1] :
+      if not '/pnfs/iihe/cms' in inDir : inDir = '/pnfs/iihe/cms' + inDir
+      os.system('echo ssh m10 rm -rf '+inDir)
+    elif 'cern' in os.uname()[1] :
+      if not '/eos/cms' in inDir : inDir = '/eos/cms' + inDir
+      os.system('rm -rf '+inDir)
+    elif 'ifca' in os.uname()[1] : 
+      if not '/gpfs/gaes/cms' in inDir : inDir = '/gpfs/gaes/cms' + inDir
+      os.system('rm -rf '+inDir) 
+    else:
+      print 'ERROR: Unknown SITE for srmcp2local ->exit()'
+      exit()
+
+def srmcp2local(inFile,outFile):
+    srcFile = inFile
+    if 'iihe' in os.uname()[1] :
+      if not '/pnfs/iihe/cms' in srcFile : srcFile = '/pnfs/iihe/cms' + srcFile
+      os.system('lcg-cp srm://maite.iihe.ac.be:8443'+srcFile+' file://'+outFile)
+    elif 'cern' in os.uname()[1] :
+      if not '/eos/cms' in srcFile : srcFile = '/eos/cms' + srcFile
+      os.system('cp '+srcFile+' '+outFile)
+    elif  'ifca' in os.uname()[1] : 
+      if not '/gpfs/gaes/cms' in srcFile : srcFile = '/gpfs/gaes/cms' + srcFile
+      os.system('cp '+srcFile+' '+outFile)
+    else:
+      print 'ERROR: Unknown SITE for srmcp2local ->exit()'
+      exit()
+
+def lsListCommand(inputDir, iniStep = 'Prod'):
+    "Returns ls command on remote server directory (/store/...) in list format ( \n between every output )"
+    if 'iihe' in os.uname()[1] :
+      if '/pnfs/iihe/cms' in inputDir:
+        usedDir = inputDir.split('/pnfs/iihe/cms')[1]
+      else:
+        usedDir = inputDir
+      return "ls -1 /pnfs/iihe/cms" + usedDir
+    elif 'cern' in os.uname()[1] :
+      if '/eos/cms' in inputDir:
+        usedDir = inputDir.split('/eos/cms')[1]
+      else:
+        usedDir = inputDir
+      return 'ls /eos/cms' + usedDir
+    elif 'ifca' in os.uname()[1] :
+      if '/gpfs/gaes/cms/' in inputDir:
+        usedDir = inputDir.split('/gpfs/gaes/cms/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /gpfs/gaes/cms/" + usedDir
+    elif "pi.infn.it" in socket.getfqdn():
+      if '/gpfs/ddn/srm/cms/' in inputDir:
+        usedDir = inputDir.split('/gpfs/ddn/srm/cms/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /gpfs/ddn/srm/cms/" + usedDir
+    elif "knu" in os.uname()[1]:
+      if '/pnfs/knu.ac.kr/data/cms/' in inputDir:
+        usedDir = inputDir.split('/pnfs/knu.ac.kr/data/cms/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /pnfs/knu.ac.kr/data/cms/" + usedDir
+    elif "sdfarm" in os.uname()[1]:
+      if '/xrootd/' in inputDir:
+        usedDir = inputDir.split('/xrootd/')[1]
+      else:
+        usedDir = inputDir
+      return "ls /xrootd/" + usedDir
+    else :
+      if iniStep == 'Prod' :
+        return " ls " + inputDir
+      else:
+        return " ls " + inputDir
+    
+def rootReadPath(inputFile):
+    "Returns path to read a root file (/store/.../*.root) on the remote server"
+    if 'iihe' in os.uname()[1] :
+        return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
+    elif "pi.infn.it" in socket.getfqdn():
+      return "/gpfs/ddn/srm/cms/" + inputFile
+    elif 'ifca' in os.uname()[1] :
+      return "/gpfs/gaes/cms/" + inputFile
+    elif 'knu' in os.uname()[1] :
+      return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
+    elif 'sdfarm' in os.uname()[1] :
+      return "root://cms-xrdr.sdfarm.kr:1094//xrd" + inputFile
+    else :
+       return "/eos/cms" + inputFile
+       # return  inputFile
+    
+def remoteFileSize(inputFile):
+    "Returns file size in byte for file on remote server (/store/.../*.root)"
+    if 'iihe' in os.uname()[1] :
+      if "/pnfs" in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /pnfs/iihe/cms" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'cern' in os.uname()[1] :
+      if '/eos/cms/' in inputFile:
+        return subprocess.check_output("ls -l " +inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'ifca' in os.uname()[1] :
+        return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "pi.infn.it" in socket.getfqdn():
+        return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "knu" in os.uname()[1]:
+      if '/pnfs' in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /pnfs/knu.ac.kr/data/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "sdfarm" in os.uname()[1]:
+      if '/xrootd' in inputFile:
+        return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l /xrootd/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    else :
+       return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+       # return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
 
 
  
