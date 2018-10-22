@@ -43,24 +43,29 @@ class PrefCorr(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         photons = Collection(event,"Photon")
+        electrons = Collection(event,"Electron")
         jets = Collection(event,"Jet")
         prefw = 1.0
-        JetIsPhoton = []
+        JetIsEG = []
 
         # Options
-        PhotonsAreImportant = 1 # If 1, apply corrections on photons before doing corrections on jets
         UseEMpT = 0 # Set to 1 if the jet map is defined for energy deposited in ECAL (pT_EM vs pT). For jet map only, not photon!
 
-        if PhotonsAreImportant:
-          for pho in photons: # All photons. Should be only isolated photons? Only NLO effect to even separate these from jets?
-            JetIsPhoton.append(pho.jetIdx)
-            if pho.pt > 20 and abs(pho.eta) < 3.25 and abs(pho.eta) > 2: # <- Values may need to be fixed for new maps
-              prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(pho.eta, min(pho.pt, 500)))
+        for pho in photons: # All photons. Should be only isolated photons?
+          JetIsEG.append(pho.jetIdx)
+          if pho.pt > 20 and abs(pho.eta) < 3.25 and abs(pho.eta) > 2: # <- Values may need to be fixed for new maps
+            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(pho.eta, min(pho.pt, 500)))
+
+        for ele in electrons:
+          if ele.jetIdx in JetIsEG: continue
+          JetIsEG.append(ele.jetIdx)
+          if ele.pt > 20 and abs(ele.eta) < 3.25 and abs(ele.eta) > 2: # <- Values may need to be fixed for new maps
+            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(ele.eta, min(ele.pt, 500)))
 
         for jid,jet in enumerate(jets):
           jetpt = jet.pt
           if UseEMpT: jetpt *= (jet.chEmEF + jet.neEmEF)
-          if jetpt > 40 and abs(jet.eta) < 3.25 and abs(jet.eta) > 2 and (jid not in JetIsPhoton): # <- Values may need to be fixed for new maps
+          if jetpt > 40 and abs(jet.eta) < 3.25 and abs(jet.eta) > 2 and (jid not in JetIsEG): # <- Values may need to be fixed for new maps
             prefw *= 1-self.jet_map.GetBinContent(self.jet_map.FindBin(jet.eta, min(jetpt, 500)))
 
         self.out.fillBranch("PrefireWeight", prefw)
