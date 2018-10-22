@@ -8,7 +8,12 @@ import socket
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
 
-CERN_USE_CONDOR = True
+try:
+   # batchType can be set in userConfig (only relevant when running at CERN)
+   CERN_USE_CONDOR = (batchType == 'condor')
+except NameError:
+   # if batchType is not set, default to LSF
+   CERN_USE_CONDOR = False
 
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir=''):
