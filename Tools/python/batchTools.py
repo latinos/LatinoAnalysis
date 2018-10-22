@@ -199,6 +199,12 @@ class batchJobs :
 
         if 'cern' in hostName:
           if CERN_USE_CONDOR:
+            flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+            if queue not in flavours:
+              print 'Queue', queue, 'is not defined for CERN HTCondor.'
+              print 'Allowed values:', flavours
+              raise RuntimeError('Undefined queue')
+
             jdsFileName=self.subDir+'/'+jName+'.jds'
             jdsFile = open(jdsFileName,'w')
             jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
@@ -426,6 +432,12 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
         hostName = os.uname()[1]
 
         if 'cern' in hostName and CERN_USE_CONDOR:
+          flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+          if queue not in flavours:
+            print 'Queue', queue, 'is not defined for CERN HTCondor.'
+            print 'Allowed values:', flavours
+            raise RuntimeError('Undefined queue')
+
           jdsFileName=self.subDir+'/'+jName+'.jds'
           jdsFile = open(self.subDir+'/'+jName+'.jds','w')
           jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
