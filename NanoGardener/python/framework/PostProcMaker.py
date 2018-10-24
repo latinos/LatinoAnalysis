@@ -11,6 +11,13 @@ from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 from LatinoAnalysis.Tools.crabTools  import *
 
+try:
+  # CERN-specific LSF<->HTCondor switch
+  # This is temporary - CERN will soon become 100% condor
+  CERN_USE_CONDOR = (batchType == 'condor')
+except NameError:
+  # if batchType is not set, default to LSF
+  CERN_USE_CONDOR = False
 
 class PostProcMaker():
 
@@ -106,6 +113,9 @@ class PostProcMaker():
        exit()
      print '_LocalSite  = ',self._LocalSite
      print '_TargetSite = ',self._TargetSite
+
+     if self._LocalSite == 'cern' and CERN_USE_CONDOR:
+       self._Sites[self._LocalSite]['batchQueues'] = ['workday', 'espresso', 'microcentury', 'longlunch', 'tomorrow', 'testmatch', 'nextweek']
 
    def configBatch(self,queue):
      if       queue == None                                        \
