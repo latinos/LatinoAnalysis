@@ -189,6 +189,16 @@ Steps = {
                   'module'     : 'leptonSel()' ,
                },             
 
+   'jetSel'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid=0,minpt=15.0,maxeta=5.2,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(2,0,15.0,5.2,"CleanJet")' ,
+                  'module'     : 'jetSel()' ,
+               }, 
+
 ## ------- MODULES: Trigger
 
   'trigData' : { 'isChain'    : False ,
