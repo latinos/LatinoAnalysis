@@ -7,14 +7,14 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 class PrefCorr(Module):
-    def __init__(self):
+    def __init__(self, jetroot="L1prefiring_jet_2017BtoF.root", jetmapname="L1prefiring_jet_2017BtoF", photonroot="L1prefiring_photon_2017BtoF.root", photonmapname="L1prefiring_photon_2017BtoF"): # TODO PRELIMINARY MAPS
         cmssw_base = os.getenv('CMSSW_BASE')
 
-        self.photon_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/prefire_maps/L1prefiring_photon_2017BtoF.root")# TODO PRELIMINARY MAP
-        self.photon_map = self.get_root_obj(self.photon_file, "L1prefiring_photon_2017BtoF")
+        self.photon_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/prefire_maps/" + photonroot)
+        self.photon_map = self.get_root_obj(self.photon_file, photonmapname)
 
-        self.jet_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/prefire_maps/L1prefiring_jet_2017BtoF.root")# TODO PRELIMINARY MAP
-        self.jet_map = self.get_root_obj(self.jet_file, "L1prefiring_jet_2017BtoF")
+        self.jet_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/prefire_maps/" + jetroot)
+        self.jet_map = self.get_root_obj(self.jet_file, jetmapname)
 
     def open_root(self, path):
         r_file = ROOT.TFile.Open(path)
@@ -53,22 +53,21 @@ class PrefCorr(Module):
 
         for pho in photons: # All photons. Should be only isolated photons?
           JetIsEG.append(pho.jetIdx)
-          if pho.pt > 20 and abs(pho.eta) < 3.25 and abs(pho.eta) > 2: # <- Values may need to be fixed for new maps
-            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(pho.eta, min(pho.pt, 500)))
+          if pho.pt > 20 and abs(pho.eta) < 3.0 and abs(pho.eta) > 1.75: # <- Values may need to be fixed for new maps
+            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(pho.eta, min(pho.pt, 200)))
 
         for ele in electrons:
           if ele.jetIdx in JetIsEG: continue
           JetIsEG.append(ele.jetIdx)
-          if ele.pt > 20 and abs(ele.eta) < 3.25 and abs(ele.eta) > 2: # <- Values may need to be fixed for new maps
-            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(ele.eta, min(ele.pt, 500)))
+          if ele.pt > 20 and abs(ele.eta) < 3.0 and abs(ele.eta) > 1.75: # <- Values may need to be fixed for new maps
+            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(ele.eta, min(ele.pt, 200)))
 
         for jid,jet in enumerate(jets):
           jetpt = jet.pt
           if UseEMpT: jetpt *= (jet.chEmEF + jet.neEmEF)
-          if jetpt > 40 and abs(jet.eta) < 3.25 and abs(jet.eta) > 2 and (jid not in JetIsEG): # <- Values may need to be fixed for new maps
+          if jetpt > 40 and abs(jet.eta) < 3.5 and abs(jet.eta) > 1.75 and (jid not in JetIsEG): # <- Values may need to be fixed for new maps
             prefw *= 1-self.jet_map.GetBinContent(self.jet_map.FindBin(jet.eta, min(jetpt, 500)))
 
         self.out.fillBranch("PrefireWeight", prefw)
 
         return True
-
