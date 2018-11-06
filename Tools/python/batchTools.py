@@ -27,7 +27,8 @@ class batchJobs :
      self.baseName = baseName
      self.prodName = prodName
      self.subDir   = jobDir+'/'+baseName+'__'+prodName
-     if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)     
+     if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)
+     self.nThreads = 1
 
      #print stepList 
      #print batchSplit
@@ -46,6 +47,8 @@ class batchJobs :
          self.jobsDic[iStep][iTarget] = ''
          if not 'Target' in batchSplit and len(targetList)>1 :
            kTarget = 'AllTargets'
+         elif type(iTarget) is tuple:
+           kTarget = '%s%d' % iTarget
          else:
            kTarget = iTarget
    
@@ -181,88 +184,120 @@ class batchJobs :
      return self.subDir+'/'+jName+'.py' 
 
    def Sub(self,queue='8nh',IiheWallTime='168:00:00',optTodo=False): 
+     # Submit host name to identify the environment
+     hostName = os.uname()[1]
+
+     scheduler = ''
+
+     if 'cern' in hostName and CERN_USE_CONDOR:
+       flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+       if queue not in flavours:
+         print 'Queue', queue, 'is not defined for CERN HTCondor.'
+         print 'Allowed values:', flavours
+         raise RuntimeError('Undefined queue')
+
+       scheduler = 'condor'
+     elif 'sdfarm' in hostName:
+       scheduler = 'condor'
+
      os.system('cd '+self.subDir)
+
      for jName in self.jobsList:
-        print self.subDir+'/'+jName
-        jobFile=self.subDir+'/'+jName+'.sh' 
-        errFile=self.subDir+'/'+jName+'.err'
-        outFile=self.subDir+'/'+jName+'.out'
-        jidFile=self.subDir+'/'+jName+'.jid'
-        jFile = open(self.subDir+'/'+jName+'.sh','a')
-        jFile.write('mv '+jidFile+' '+jidFile.replace('.jid','.done') )
-        jFile.close()
-        jidFile=self.subDir+'/'+jName+'.jid'
-        print 'Submit',jName, ' on ', queue
+       print self.subDir+'/'+jName
+       jobFile=self.subDir+'/'+jName+'.sh' 
+       errFile=self.subDir+'/'+jName+'.err'
+       outFile=self.subDir+'/'+jName+'.out'
+       jidFile=self.subDir+'/'+jName+'.jid'
+       jFile = open(self.subDir+'/'+jName+'.sh','a')
+       jFile.write('mv '+jidFile+' '+jidFile.replace('.jid','.done') )
+       jFile.close()
+       jidFile=self.subDir+'/'+jName+'.jid'
+       print 'Submit',jName, ' on ', queue
 
-        # Submit host name to identify the environment
-        hostName = os.uname()[1]
+       if 'cern' in hostName:
+         if CERN_USE_CONDOR:
+           jdsFileName=self.subDir+'/'+jName+'.jds'
+           jdsFile = open(jdsFileName,'w')
+           jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+           jdsFile.write('universe = vanilla\n')
+           jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
+           jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
+           jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+           jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
+           jdsFile.write('+JobFlavour = "'+queue+'"\n')
+           jdsFile.write('queue\n')
+           jdsFile.close()
+           # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
+           #jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+         else:
+           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+       elif 'iihe' in hostName: 
+         queue='localgrid@cream02'
+         QSOPT='-l walltime='+IiheWallTime
+         nTry=0
+         while nTry < 3 : 
+           nTry+=1
+           jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+           print 'TRY #:', nTry , '--> Jobid : ' , jobid
+           if jobid == 0 : nTry = 999
+           else:  os.system('rm '+jidFile)
+         if not jobid == 0 and optTodo :
+           todoFile = open(self.subDir+'/'+jName+'.todo','w')
+           todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+           todoFile.close()
 
-        if 'cern' in hostName:
-          if CERN_USE_CONDOR:
-            flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
-            if queue not in flavours:
-              print 'Queue', queue, 'is not defined for CERN HTCondor.'
-              print 'Allowed values:', flavours
-              raise RuntimeError('Undefined queue')
+       elif 'knu' in hostName:
+         #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+         #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+         jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+         #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+       elif 'sdfarm' in hostName:
+         jdsFileName=self.subDir+'/'+jName+'.jds'
+         jdsFile = open(jdsFileName,'w')
+         #jdsFile = open(self.subDir+'/'+jName+'.jds','w')
+         jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+         jdsFile.write('universe = vanilla\n')
+         jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
+         jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
+         jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+         jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
+         #jdsFile.write('should_transfer_files = YES\n')
+         #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
+         #jdsFile.write('transfer_input_files = '+jName+'.sh\n')
+         jdsFile.write('queue\n')
+         jdsFile.close()
+         #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
+         # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
+         #jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+       elif 'ifca' in hostName :
+         jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+       elif "pi.infn.it" in socket.getfqdn():
+         queue="cms"
+         jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+       else:
+         #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+         jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+                 #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
-            jdsFileName=self.subDir+'/'+jName+'.jds'
-            jdsFile = open(jdsFileName,'w')
-            jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
-            jdsFile.write('universe = vanilla\n')
-            jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
-            jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
-            jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
-            jdsFile.write('+JobFlavour = "'+queue+'"\n')
-            jdsFile.write('queue\n')
-            jdsFile.close()
-            jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
-          else:
-            jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-        elif 'iihe' in hostName: 
-          queue='localgrid@cream02'
-          QSOPT='-l walltime='+IiheWallTime
-          nTry=0
-          while nTry < 3 : 
-            nTry+=1
-            jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-            print 'TRY #:', nTry , '--> Jobid : ' , jobid
-            if jobid == 0 : nTry = 999
-            else:  os.system('rm '+jidFile)
-          if not jobid == 0 and optTodo :
-            todoFile = open(self.subDir+'/'+jName+'.todo','w')
-            todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-            todoFile.close()
-
-	elif 'knu' in hostName:
-          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
-          #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
-          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
-        elif 'sdfarm' in hostName:
-          jdsFileName=self.subDir+'/'+jName+'.jds'
-          jdsFile = open(jdsFileName,'w')
-          #jdsFile = open(self.subDir+'/'+jName+'.jds','w')
-          jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
-          jdsFile.write('universe = vanilla\n')
-          jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
-          jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
-          jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
-          #jdsFile.write('should_transfer_files = YES\n')
-          #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
-          #jdsFile.write('transfer_input_files = '+jName+'.sh\n')
-          jdsFile.write('queue\n')
-          jdsFile.close()
-	  #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
-          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
-        elif 'ifca' in hostName :
-          jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
-        elif "pi.infn.it" in socket.getfqdn():
-          queue="cms"
-          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-        else:
-          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
-          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-		  #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+     # If using condor, we can submit all jobs at once and save time
+     if scheduler == 'condor':
+       jds = 'executable = '+self.subDir+'/$(JName).sh\n'
+       jds += 'universe = vanilla\n'
+       jds += 'output = '+self.subDir+'/$(JName).out\n'
+       jds += 'error = '+self.subDir+'/$(JName).err\n'
+       jds += 'log = '+self.subDir+'/$(JName).log\n'
+       jds += 'request_cpus = '+str(self.nThreads)+'\n'
+       jds += '+JobFlavour = "'+queue+'"\n'
+       jds += 'queue JName in (\n'
+       for jName in self.jobsList:
+         jds += jName + '\n'
+       jds += ')\n'
+       proc = subprocess.Popen(['condor_submit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+       out, err = proc.communicate(jds)
+       if proc.returncode != 0:
+         sys.stderr.write(err)
+         raise RuntimeError('Job submission failed.')
+       print out.strip()
 
    def AddCopy (self,iStep,iTarget,inputFile,outputFile):
      "Copy file from local to remote server (outputFile = /store/...)"
@@ -373,7 +408,9 @@ def batchClean():
       except :
         print 'Some jobs still ongoing in: '+ iDir
 
-def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
+def batchResub(Dir='ALL',queue='8nh',requestCpus=1,IiheWallTime='168:00:00',optTodo=True):
+    # jobDir imported from userConfig
+
     if Dir == 'ALL' :
       fileCmd = 'ls '+jobDir
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
@@ -382,10 +419,26 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
     else:
       DirList=[Dir]
 
+    # Submit host name to identify the environment
+    hostName = os.uname()[1]
+    scheduler = ''
+
+    if 'cern' in hostName and CERN_USE_CONDOR:
+      flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+      if queue not in flavours:
+        print 'Queue', queue, 'is not defined for CERN HTCondor.'
+        print 'Allowed values:', flavours
+        raise RuntimeError('Undefined queue')
+
+      scheduler = 'condor'
+    elif 'sdfarm' in hostName:
+      scheduler = 'condor'
+
     for iDir in DirList:
+      subDir = jobDir+'/'+iDir
 
       # This is for big crunch of jobs that were planned ahead
-      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.todo'
+      fileCmd = 'ls '+subDir+'/'+'*.todo'
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileList=string.split(out)
@@ -398,7 +451,7 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
           else          : os.system('rm '+jidFile)
 
       # Do some search fo missing jobs ?
-      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.sh'
+      fileCmd = 'ls '+subDir+'/'+'*.sh'
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileList=string.split(out)
@@ -411,7 +464,9 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
           os.system('touch '+redoFile)
 
       # Here we resub jobs that were manually killed for which we have a .redo file 
-      fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.redo'
+      jobsList = []
+
+      fileCmd = 'ls '+subDir+'/'+'*.redo'
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileList=string.split(out)
@@ -425,30 +480,25 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
         jidFile=subDir+'/'+jName+'.jid'
         print 'Submit',jName, ' on ', queue
 
+        jobsList.append(jName)
+
         if os.path.isfile(jidFile) : 
           os.system('echo rm '+jidFile)
 
-        # Submit host name to identify the environment
-        hostName = os.uname()[1]
-
         if 'cern' in hostName and CERN_USE_CONDOR:
-          flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
-          if queue not in flavours:
-            print 'Queue', queue, 'is not defined for CERN HTCondor.'
-            print 'Allowed values:', flavours
-            raise RuntimeError('Undefined queue')
-
-          jdsFileName=self.subDir+'/'+jName+'.jds'
-          jdsFile = open(self.subDir+'/'+jName+'.jds','w')
-          jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+          jdsFileName=subDir+'/'+jName+'.jds'
+          jdsFile = open(subDir+'/'+jName+'.jds','w')
+          jdsFile.write('executable = '+subDir+'/'+jName+'.sh\n')
           jdsFile.write('universe = vanilla\n')
-          jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
-          jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
-          jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+          jdsFile.write('output = '+subDir+'/'+jName+'.out\n')
+          jdsFile.write('error = '+subDir+'/'+jName+'.err\n')
+          jdsFile.write('log = '+subDir+'/'+jName+'.log\n')
+          jdsFile.write('request_cpus = '+str(requestCpus)+'\n')
           jdsFile.write('+JobFlavour = "'+queue+'"\n')
           jdsFile.write('queue\n')
           jdsFile.close()
-          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+          # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
+          #jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
         elif 'iihe' in hostName :
@@ -463,7 +513,7 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
             else:  os.system('rm '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           if not jobid == 0 and optTodo :
-            todoFile = open(self+'/'+jName+'.todo','w')
+            todoFile = open(subDir+'/'+jName+'.todo','w')
             todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             todoFile.close()
         elif 'knu' in hostName:
@@ -471,19 +521,21 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
         elif 'sdfarm' in hostName:
-          jdsFileName=self.subDir+'/'+jName+'.jds'
-          jdsFile = open(self.subDir+'/'+jName+'.jds','w')
-          jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+          jdsFileName=subDir+'/'+jName+'.jds'
+          jdsFile = open(subDir+'/'+jName+'.jds','w')
+          jdsFile.write('executable = '+subDir+'/'+jName+'.sh\n')
           jdsFile.write('universe = vanilla\n')
-          jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
-          jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
-          jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+          jdsFile.write('output = '+subDir+'/'+jName+'.out\n')
+          jdsFile.write('error = '+subDir+'/'+jName+'.err\n')
+          jdsFile.write('log = '+subDir+'/'+jName+'.log\n')
+          jdsFile.write('request_cpus = '+str(requestCpus)+'\n')
           #jdsFile.write('should_transfer_files = YES\n')
           #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
           #jdsFile.write('transfer_input_files = '+jName+'.sh\n')
           jdsFile.write('queue\n')
           jdsFile.close()
-          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+          # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
+          #jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
         elif 'ifca' in hostName:
@@ -496,12 +548,31 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
         else:
-          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
+          #print 'cd '+subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
                   #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
+      # If using condor, we can submit all jobs at once and save time
+      if scheduler == 'condor':
+        jds = 'executable = '+subDir+'/$(JName).sh\n'
+        jds += 'universe = vanilla\n'
+        jds += 'output = '+subDir+'/$(JName).out\n'
+        jds += 'error = '+subDir+'/$(JName).err\n'
+        jds += 'log = '+subDir+'/$(JName).log\n'
+        jds += 'request_cpus = '+str(requestCpus)+'\n'
+        jds += '+JobFlavour = "'+queue+'"\n'
+        jds += 'queue JName in (\n'
+        for jName in jobsList:
+          jds += jName + '\n'
+        jds += ')\n'
+        proc = subprocess.Popen(['condor_submit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        out, err = proc.communicate(jds)
+        if proc.returncode != 0:
+          sys.stderr.write(err)
+          raise RuntimeError('Job submission failed.')
+        print out.strip()
 
 
 def batchTest():
