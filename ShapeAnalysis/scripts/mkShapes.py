@@ -212,18 +212,6 @@ if __name__ == '__main__':
         print 'Logging level set to INFO (%d)' % opt.debug
         logging.basicConfig( level=logging.INFO )
 
-    variables = collections.OrderedDict()
-    if os.path.exists(opt.variablesFile) :
-      handle = open(opt.variablesFile,'r')
-      exec(handle)
-      handle.close()
-      #in case some variables need a compiled function
-      for variableName, variable in variables.iteritems():
-          if variable.has_key('linesToAdd'):
-            linesToAdd = variable['linesToAdd']
-            for line in linesToAdd:
-              ROOT.gROOT.ProcessLineSync(line)
-    
     samples = collections.OrderedDict()
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
@@ -248,6 +236,18 @@ if __name__ == '__main__':
       handle = open(opt.cutsFile,'r')
       exec(handle)
       handle.close()
+
+    variables = collections.OrderedDict()
+    if os.path.exists(opt.variablesFile) :
+      handle = open(opt.variablesFile,'r')
+      exec(handle)
+      handle.close()
+      #in case some variables need a compiled function
+      for variableName, variable in variables.iteritems():
+          if variable.has_key('linesToAdd'):
+            linesToAdd = variable['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
 
     nuisances = collections.OrderedDict()
     if opt.nuisancesFile == None :
@@ -366,7 +366,7 @@ if __name__ == '__main__':
                   tname = iTarget
                   job_targets = {iTarget: samples[iTarget]}
 
-                jName = iStep + '_' + iTarget
+                jName = iStep + '_' + tname
 
                 instructions_for_configuration_file  = ""
                 instructions_for_configuration_file += "factory.makeNominals(   \n"

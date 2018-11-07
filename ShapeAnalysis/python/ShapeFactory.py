@@ -97,16 +97,18 @@ class ShapeFactory:
 
         print " outputFileName = ", self._outputFileName
         os.system ("mkdir " + outputDir + "/")
-        self._outFile = ROOT.TFile.Open( self._outputFileName, 'recreate')
         
         ROOT.TH1.SetDefaultSumw2(True)
 
-        #---- first create structure in output root file
+        #---- first create the structure in gROOT. We'll write to a file at the end
         for cutName in self._cuts:
           print "cut = ", cutName, " :: ", self._cuts[cutName]
-          self._outFile.mkdir(cutName)
+          ROOT.gROOT.mkdir(cutName)
           for variableName in self._variables:
-            self._outFile.mkdir(cutName+"/"+variableName)
+            ROOT.gROOT.mkdir(cutName+"/"+variableName)
+
+        # Need to keep a python reference to all plot objects (otherwise python will garbage-collect)
+        _allplots = []
        
         # check if any sample is MC:
         #    if MC then add the scaling to luminosity
@@ -455,9 +457,9 @@ class ShapeFactory:
               for cutName, cut in self._cuts.iteritems():
                 cuts[(binName, cutName)] = '(%s) && (%s)' % (binCut, cut)
 
-                self._outFile.mkdir('binned/' + binName + '/' + cutName)
+                ROOT.gROOT.mkdir('binned/' + binName + '/' + cutName)
                 for variableName in self._variables:
-                  self._outFile.mkdir('binned/' + binName + '/' + cutName + '/' + variableName)
+                  ROOT.gROOT.mkdir('binned/' + binName + '/' + cutName + '/' + variableName)
           else:
             cuts = self._cuts
 
@@ -508,13 +510,16 @@ class ShapeFactory:
             print '  <variables>'
              
             for variableName, variable in self._variables.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
               print "    variable = ", variableName, " :: ", variable['name']
               print "      range:", variable['range']
 
               if binName:
-                self._outFile.cd('binned/' + binName + '/' + cutName + '/' + variableName)
+                ROOT.gROOT.cd('binned/' + binName + '/' + cutName + '/' + variableName)
               else:
-                self._outFile.cd(cutName+"/"+variableName)
+                ROOT.gROOT.cd(cutName+"/"+variableName)
               
               # create histogram
               bigName = 'histo_' + sampleName + '_' + cutName + '_' + variableName
@@ -524,6 +529,7 @@ class ShapeFactory:
               self._logger.debug('Cut:     '+cut)
 
               hTotal = self._makeshape(bigName, variable['range'])
+              _allplots.append(hTotal)
               hTotal.SetTitle(bigName)
               hTotal.SetName(bigName)
 
@@ -544,11 +550,13 @@ class ShapeFactory:
 
                 bigNameUp = 'histo_' + sampleNameUp + '_' + cutName + '_' + variableName
                 hTotalUp = self._makeshape(bigNameUp, variable['range'])
+                _allplots.append(hTotalUp)
                 hTotalUp.SetTitle(bigNameUp)
                 hTotalUp.SetName(bigNameUp)
 
                 bigNameDown = 'histo_' + sampleNameDown + '_' + cutName + '_' + variableName
                 hTotalDown = self._makeshape(bigNameDown, variable['range'])
+                _allplots.append(hTotalDown)
                 hTotalDown.SetTitle(bigNameDown)
                 hTotalDown.SetName(bigNameDown)
 
@@ -606,9 +614,12 @@ class ShapeFactory:
             print "  cut = ", cutFullName, " :: ", cut
 
             for variableName, variable in self._variables.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
               print "    variable[name]  = ", variable['name']
               bigName = 'histo_' + sampleName + '_' + cutName + '_' + variableName
-              hTotal = self._outFile.Get(dirName + '/' + variableName + '/' + bigName)
+              hTotal = ROOT.gROOT.Get(dirName + '/' + variableName + '/' + bigName)
 
               # fold if needed
               if 'fold' in variable:
@@ -619,11 +630,10 @@ class ShapeFactory:
 
               outputsHisto = self._postplot(hTotal, sampleName, doFold, cutName, sample, True)
               if outputsHisto is not hTotal:
+                _allplots.append(outputsHisto)
+                _allplots.remove(hTotal)
                 hTotal.Delete()
               
-              outputsHisto.GetDirectory().cd()
-              outputsHisto.Write()
-
               for nuisanceName, nuisance in nuisances.iteritems():
                 if sampleName not in nuisance['samples'] or \
                    ('cuts' in nuisance and cutName not in nuisance['cuts']):
@@ -647,10 +657,6 @@ class ShapeFactory:
                     # scale up/down
                     self._scaleHistoStat (outputsHistoUp,  1 )
                     self._scaleHistoStat (outputsHistoDo, -1 )
-                    # save the new two histograms in final root file
-                    outputsHisto.GetDirectory().cd()
-                    outputsHistoUp.Write()
-                    outputsHistoDo.Write()
               
                   # bin-by-bin
                   elif configurationNuis['typeStat'] == 'bbb' :
@@ -675,10 +681,6 @@ class ShapeFactory:
                       # fix negative bins not consistent
                       self._fixNegativeBin(outputsHistoUp, outputsHisto)
                       self._fixNegativeBin(outputsHistoDo, outputsHisto)
-                      # save the new two histograms in final root file
-                      outputsHisto.GetDirectory().cd()
-                      outputsHistoUp.Write()
-                      outputsHistoDo.Write()
           
                 # if nuisanceName == 'stat'
                 else:
@@ -690,15 +692,19 @@ class ShapeFactory:
                   bigNameUp = 'histo_' + sampleNameUp + '_' + cutName + '_' + variableName
                   bigNameDown = 'histo_' + sampleNameDown + '_' + cutName + '_' + variableName
 
-                  hTotalUp = self._outFile.Get(dirName+'/'+variableName+'/'+bigNameUp)
-                  hTotalDown = self._outFile.Get(dirName+'/'+variableName+'/'+bigNameDown)
+                  hTotalUp = ROOT.gROOT.Get(dirName+'/'+variableName+'/'+bigNameUp)
+                  hTotalDown = ROOT.gROOT.Get(dirName+'/'+variableName+'/'+bigNameDown)
 
                   outputsHistoUp = self._postplot(hTotalUp, sampleNameUp, doFold, cutName, sample, False)
                   outputsHistoDo = self._postplot(hTotalDown, sampleNameDown, doFold, cutName, sample, False)
 
                   if outputsHistoUp is not hTotalUp:
+                    _allplots.append(outputsHistoUp)
+                    _allplots.remove(hTotalUp)
                     hTotalUp.Delete()
                   if outputsHistoDo is not hTotalDown:
+                    _allplots.append(outputsHistoDo)
+                    _allplots.remove(hTotalDown)
                     hTotalDown.Delete()
           
                   if nuisance['kind'] == 'tree':      
@@ -713,14 +719,26 @@ class ShapeFactory:
                     # fix negative bins not consistent
                     self._fixNegativeBin(outputsHistoUp, outputsHisto)
                     self._fixNegativeBin(outputsHistoDo, outputsHisto)
-          
-                  # now save to the root file
-                  outputsHisto.GetDirectory().cd()
-                  outputsHistoUp.Write()
-                  outputsHistoDo.Write()
 
           # end of one sample
           print ''
+
+        print 'Writing histograms to', self._outputFileName
+
+        outFile = ROOT.TFile.Open(self._outputFileName, 'recreate')
+
+        def writeDirectory(indir, outdir):
+          for obj in indir.GetList():
+            if obj.IsA() == ROOT.TDirectory.Class():
+              outdir.mkdir(obj.GetName())
+              writeDirectory(obj, outdir.GetDirectory(obj.GetName()))
+            else:
+              outdir.cd()
+              obj.SetDirectory(outdir)
+              obj.Write()
+        
+        writeDirectory(ROOT.gROOT, outFile)
+        outFile.Close()
 
     # _____________________________________________________________________________
     def _symmetrize(self, hUp, hDo): 
