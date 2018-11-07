@@ -4,7 +4,7 @@ import json
 import sys
 # bypass ROOT argv parsing
 argv = sys.argv
-sys.argv = sys.argv[0:1]
+sys.argv = argv[:1]
 import ROOT
 import optparse
 import copy
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     parser.add_option('--doHadd'         , dest='doHadd'         , help='Hadd for batch mode'                        , default=False)
     parser.add_option('--redoStat'       , dest='redoStat'        , help='redo stat uncertainty'                        , default=False)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
-    parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=0)
+    parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=0, type='int')
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
           
@@ -317,13 +317,14 @@ if __name__ == '__main__':
             if opt.numThreads == 0:
               nThreads = 1
             else:
-              nThreads = opt.numThreads == 0
+              nThreads = opt.numThreads
             
             bpostFix='' 
             jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,True)
             jobs.nThreads = nThreads
 
             jobs.AddPy2Sh()
+            jobs.InitPy('from collections import OrderedDict')
             jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n")
             jobs.InitPy("factory = ShapeFactory()")
             jobs.InitPy("factory._treeName  = '"+opt.treeName+"'")
@@ -365,7 +366,7 @@ if __name__ == '__main__':
                   tname = iTarget
                   job_targets = {iTarget: samples[iTarget]}
 
-                jName = jobs.jobsDic[iStep][iTarget]
+                jName = iStep + '_' + iTarget
 
                 instructions_for_configuration_file  = ""
                 instructions_for_configuration_file += "factory.makeNominals(   \n"
@@ -452,12 +453,24 @@ if __name__ == '__main__':
 #                cleanup+='rm '+iFile+' ; '
 
             if allDone:
+              rootver = ROOT.gROOT.GetVersion()
+              rootver = float(rootver[:rootver.find('/')])
+              if rootver > 6.09:
+                # new ROOT version has multiprocess hadd
+                if opt.numThreads == 0:
+                  nThreads = 1
+                else:
+                  nThreads = opt.numThreads
+
               number = len(fileList)
               if number > 500:
                 print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
               for istart in range(0,int(float(number)/500+1)):
                   command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
-                  command += 'hadd -f plots_'+opt.tag+'_temp'+str(istart)+'.root'
+                  command += 'hadd -f'
+                  if rootver > 6.09:
+                    command += ' -j %d' % nThreads
+                  command += ' plots_'+opt.tag+'_temp'+str(istart)+'.root'
                   for i in range(istart*500,(istart+1)*500):
                     if i>=number: break
                     command += " "+fileList[i]
