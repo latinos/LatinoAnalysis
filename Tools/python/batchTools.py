@@ -2,6 +2,7 @@
 import sys, re, os, os.path
 import subprocess
 import string
+import json
 import os.path
 import socket
 
@@ -297,7 +298,31 @@ class batchJobs :
        if proc.returncode != 0:
          sys.stderr.write(err)
          raise RuntimeError('Job submission failed.')
+
        print out.strip()
+
+       matches = re.match('.*submitted to cluster ([0-9]*)\.', out.split('\n')[-2])
+       if not matches:
+         sys.stderr.write('Failed to retrieve the job id. Job submission may have failed.\n')
+         for jName in self.jobsList:
+           jidFile=self.subDir+'/'+jName+'.jid'
+           open(jidFile, 'w').close()
+       else:
+         clusterId = matches.group(1)
+         # now write the jid files
+         proc = subprocess.Popen(['condor_q', clusterId, '-l', '-attr', 'ProcId,Cmd', '-json'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+         out, err = proc.communicate()
+         try:
+           qlist = json.loads(out.strip())
+         except:
+           sys.stderr.write('Failed to retrieve job info. Job submission may have failed.\n')
+           for jName in self.jobsList:
+              jidFile=self.subDir+'/'+jName+'.jid'
+              open(jidFile, 'w').close()
+         else:
+           for qdict in qlist:
+             with open(qdict['Cmd'].replace('.sh', '.jid'), 'w') as out:
+               out.write('%s.%d\n' % (clusterId, qdict['ProcId']))
 
    def AddCopy (self,iStep,iTarget,inputFile,outputFile):
      "Copy file from local to remote server (outputFile = /store/...)"
@@ -368,7 +393,7 @@ def batchStatus():
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
             elif 'cern' in hostName and CERN_USE_CONDOR:
-              iStat = os.popen(r'cat '+jidFile+" | sed -n 's/.*submitted to cluster \([0-9]*\)\./\1/p' | xargs -n 1 condor_q | tail -n1").read()
+              iStat = os.popen(r'cat '+jidFile+" | xargs -n 1 condor_q | tail -n1").read()
               if '1 idle' in iStat: Pend[iStep]+=1
               else: Runn[iStep]+=1
             else:
@@ -573,6 +598,29 @@ def batchResub(Dir='ALL',queue='8nh',requestCpus=1,IiheWallTime='168:00:00',optT
           sys.stderr.write(err)
           raise RuntimeError('Job submission failed.')
         print out.strip()
+
+        matches = re.match('.*submitted to cluster ([0-9]*)\.', out.split('\n')[-2])
+        if not matches:
+          sys.stderr.write('Failed to retrieve the job id. Job submission may have failed.\n')
+          for jName in jobsList:
+            jidFile=subDir+'/'+jName+'.jid'
+            open(jidFile, 'w').close()
+        else:
+          clusterId = matches.group(1)
+          # now write the jid files
+          proc = subprocess.Popen(['condor_q', clusterId, '-l', '-attr', 'ProcId,Cmd', '-json'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+          out, err = proc.communicate()
+          try:
+            qlist = json.loads(out.strip())
+          except:
+            sys.stderr.write('Failed to retrieve job info. Job submission may have failed.\n')
+            for jName in jobsList:
+               jidFile=subDir+'/'+jName+'.jid'
+               open(jidFile, 'w').close()
+          else:
+            for qdict in qlist:
+              with open(qdict['Cmd'].replace('.sh', '.jid'), 'w') as out:
+                out.write('%s.%d\n' % (clusterId, qdict['ProcId']))
 
 
 def batchTest():
