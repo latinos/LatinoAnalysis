@@ -23,6 +23,14 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent'],
                 },
 
+  'MCl1loose2017v2': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent','PrefCorr2017'],
+                },
+
   'MCformulas': {
                   'isChain'    : True  ,
                   'do4MC'      : True ,
@@ -39,6 +47,11 @@ Steps = {
                   #'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
                 },             
 
+
+
+
+## ------- WgStar MC:
+
   'MCWgStar2017' : { 
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -47,7 +60,6 @@ Steps = {
                      'subTargets' : ['leptonMaker','WgSSel','puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent',
                                      'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF'],
                      'onlySample' : [
-                                  # FIXME : Check list for 2017 MC
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
                                    #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
                                    'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
@@ -73,6 +85,16 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                 }, 
+
+  'DATAl1loose2017v2': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
+                },
+
+## ------- WgStar DATA:
 
     'DATAWgStar2017' : { 
                   'isChain'    : True  ,
@@ -200,6 +222,14 @@ Steps = {
                }, 
 
 ## ------- MODULES: Trigger
+
+  'PrefCorr2017' : { 'isChain'    : False ,
+                 'do4MC'      : False ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
+                 'declare'    : 'prefCorr2017 = lambda : PrefCorr(jetroot="L1prefiring_jet_2017BtoF.root", jetmapname="L1prefiring_jet_2017BtoF", photonroot="L1prefiring_photon_2017BtoF.root", photonmapname="L1prefiring_photon_2017BtoF")',
+                 'module'     : 'prefCorr2017()',
+               },
 
   'trigData' : { 'isChain'    : False ,
                  'do4MC'      : False ,
