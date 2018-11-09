@@ -223,9 +223,10 @@ Steps = {
 
 ## ------- MODULES: Trigger
 
-  'PrefCorr2017' : { 'isChain'    : False ,
-                 'do4MC'      : False ,
-                 'do4Data'    : True  ,
+  'PrefCorr2017' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : True ,
+                 'do4Data'    : False  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
                  'declare'    : 'prefCorr2017 = lambda : PrefCorr(jetroot="L1prefiring_jet_2017BtoF.root", jetmapname="L1prefiring_jet_2017BtoF", photonroot="L1prefiring_photon_2017BtoF.root", photonmapname="L1prefiring_photon_2017BtoF")',
                  'module'     : 'prefCorr2017()',
