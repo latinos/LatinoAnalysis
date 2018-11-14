@@ -41,17 +41,11 @@ ElectronWP = {
                                 'True' :
                                   [
                                    'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
-                                   'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.013' ,
-                                   '(electron_col[LF_idx]["dr03TkSumPt"]/electron_col[LF_idx]["pt"]) < 0.08',
-                                   'electron_col[LF_idx]["convVeto"] == 1',
+                                   'electron_col[LF_idx]["cutBased"] >= 1',
                                   ] ,             
                                 # Barrel
                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                   [
-                                   'electron_col[LF_idx]["sieie"] < 0.011' ,                           
-                                   'electron_col[LF_idx]["hoe"] < 0.06' ,
-                                   '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.15 ',
-                                   '(electron_col[LF_idx]["dr03HcalDepth1TowerSumEt"]/electron_col[LF_idx]["pt"]) < 0.12 ',
                                    'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
                                    'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
                                   ] ,
@@ -59,9 +53,7 @@ ElectronWP = {
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
                                    'electron_col[LF_idx]["sieie"] < 0.03 ' ,                           
-                                   'electron_col[LF_idx]["hoe"] < 0.07 ' ,
-                                   '(electron_col[LF_idx]["dr03EcalRecHitSumEt"]/electron_col[LF_idx]["pt"]) < 0.13 ',
-                                   '(electron_col[LF_idx]["dr03HcalDepth1TowerSumEt"]/electron_col[LF_idx]["pt"]) < 0.08 ',
+                                   'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.014' ,
                                    'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
                                    'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                   ] ,
