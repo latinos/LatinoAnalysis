@@ -103,6 +103,7 @@ ElectronWP = {
                                    [
                                      'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
                                      'electron_col[LF_idx]["mvaFall17Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
                                      'electron_col[LF_idx]["tightCharge"] == 2',
                                    ] ,
                                 # Barrel
@@ -139,6 +140,7 @@ ElectronWP = {
                                   [
                                      'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
                                      'electron_col[LF_idx]["mvaFall17noIso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
                                   ] ,
                                 # Barrel
                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
