@@ -2,22 +2,23 @@
 # call to branches have to be in the form event.branchName
 # if you want to use logical operators, the have to be the python ones (i.e "and" not " and ")
 
-#formulas = {}
+formulas = {}
 
-METFilter_Common = '(event.std_vector_trigger_special[0]*\
-                     event.std_vector_trigger_special[1]*\
-                     event.std_vector_trigger_special[2]*\
-                     event.std_vector_trigger_special[3]*\
-                     event.std_vector_trigger_special[5]\
+METFilter_Common = '(event.Flag_goodVertices*\
+                     event.Flag_globalSuperTightHalo2016Filter*\
+                     event.Flag_HBHENoiseFilter*\
+                     event.Flag_HBHENoiseIsoFilter*\
+                     event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
+                     event.Flag_BadPFMuonFilter*\
+                     event.Flag_BadChargedCandidateFilter*\
+                     event.Flag_ecalBadCalibFilter\
                    )'
 
-METFilter_DATA   =  METFilter_Common + '*' + '(event.std_vector_trigger_special[4]*\
-                                              event.std_vector_trigger_special[8]*\
-                                              event.std_vector_trigger_special[9])'
+METFilter_FAKE   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
 
-formulas['METFilter_DATA'] = METFilter_DATA
+formulas['METFilter_FAKE'] = METFilter_FAKE
 
-
+'''
 import os
 cmssw_base = os.getenv('CMSSW_BASE')
 btagfile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/btagging.py'
@@ -43,37 +44,129 @@ for name,btags in tagger.iteritems():
                                   and ( event.std_vector_jet_pt[8] < 20 or event.std_vector_jet_'+btags['algo']+'[8] < '+str(btags[wp])+' ) \
                                   and ( event.std_vector_jet_pt[9] < 20 or event.std_vector_jet_'+btags['algo']+'[9] < '+str(btags[wp])+' ) '
 
+'''
 
-muWP='cut_Tight80x'
-for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_Iso2016','mva_90p_Iso2015','mva_90p_Iso2016'] :
+muWP='cut_Tight_HWWW'
+eleWPlist = ['mvaFall17Iso_WP90', 'mvaFall17Iso_WP90_SS']
+
+#muWP='cut_Tight80x'
+
+# event.nCleanJet should count the number of CleanJet's with pt above 30
+for eleWP in eleWPlist:
 
    Tag = 'ele_'+eleWP+'_mu_'+muWP
 
-   formulas['fakeW2l_'+Tag]            = '(event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))'
+   formulas['fakeW2l_'+Tag]            = ' (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                      (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))'
 
-   formulas['fakeW2l_'+Tag+'_EleUp']   = '  (event.fakeW_'+Tag+'_2l0jElUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jElUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jElUp*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
-   formulas['fakeW2l_'+Tag+'_EleDown'] = '  (event.fakeW_'+Tag+'_2l0jElDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jElDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jElDown*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
-   formulas['fakeW2l_'+Tag+'_MuUp']    = '  (event.fakeW_'+Tag+'_2l0jMuUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jMuUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jMuUp*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
-   formulas['fakeW2l_'+Tag+'_MuDown']  = '  (event.fakeW_'+Tag+'_2l0jMuDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jMuDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jMuDown*(event.njet>=2)) \
-                                          / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                          if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
+   formulas['fakeW2l_'+Tag+'_EleUp']   = ' (event.fakeW_'+Tag+'_2l0jElUp*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1jElUp*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                          (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2jElUp*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                      (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                  event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                            (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                  event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                          else 0.'
+   formulas['fakeW2l_'+Tag+'_EleDown'] = ' (event.fakeW_'+Tag+'_2l0jElDown*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1jElDown*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                            (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2jElDown*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                      (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                  event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                            (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                  event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                          else 0.'
+   formulas['fakeW2l_'+Tag+'_MuUp']    = ' (event.fakeW_'+Tag+'_2l0jMuUp*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1jMuUp*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                          (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2jMuUp*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                      (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                  event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                            (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                  event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                          else 0.'
+   formulas['fakeW2l_'+Tag+'_MuDown']  = ' (event.fakeW_'+Tag+'_2l0jMuDown*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1jMuDown*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                            (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2jMuDown*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                            event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                      (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                            event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                          if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                  event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                            (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                  event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                          else 0.'
 
-   formulas['fakeW2l_'+Tag+'_statEleUp']   = '  (event.fakeW_'+Tag+'_2l0jstatElUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatElUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatElUp*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
-   formulas['fakeW2l_'+Tag+'_statEleDown'] = '  (event.fakeW_'+Tag+'_2l0jstatElDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatElDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatElDown*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
-   formulas['fakeW2l_'+Tag+'_statMuUp']    = '  (event.fakeW_'+Tag+'_2l0jstatMuUp*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatMuUp*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatMuUp*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
-   formulas['fakeW2l_'+Tag+'_statMuDown']  = '  (event.fakeW_'+Tag+'_2l0jstatMuDown*(event.njet==0)+event.fakeW_'+Tag+'_2l1jstatMuDown*(event.njet==1)+event.fakeW_'+Tag+'_2l2jstatMuDown*(event.njet>=2)) \
-                                              / (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2))\
-                                              if not (event.fakeW_'+Tag+'_2l0j*(event.njet==0)+event.fakeW_'+Tag+'_2l1j*(event.njet==1)+event.fakeW_'+Tag+'_2l2j*(event.njet>=2)) == 0. else 0.'
+   formulas['fakeW2l_'+Tag+'_statEleUp']   = ' (event.fakeW_'+Tag+'_2l0jstatElUp*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1jstatElUp*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                  (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2jstatElUp*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                          (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                      event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                      event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                              else 0.'
+   formulas['fakeW2l_'+Tag+'_statEleDown'] = ' (event.fakeW_'+Tag+'_2l0jstatElDown*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1jstatElDown*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                    (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2jstatElDown*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                          (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                      event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                      event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                              else 0.'
+   formulas['fakeW2l_'+Tag+'_statMuUp']    = ' (event.fakeW_'+Tag+'_2l0jstatMuUp*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1jstatMuUp*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                   (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2jstatMuUp*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                          (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                      event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                      event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                              else 0.'
+   formulas['fakeW2l_'+Tag+'_statMuDown']  = ' (event.fakeW_'+Tag+'_2l0jstatMuDown*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1jstatMuDown*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                    (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2jstatMuDown*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              /(event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                          (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30))\
+                                              if not (event.fakeW_'+Tag+'_2l0j*(event.nCleanJet == 0 or event.CleanJet_pt[0] < 30)+\
+                                                      event.fakeW_'+Tag+'_2l1j*((event.nCleanJet == 1 and event.CleanJet_pt[0] >= 30) or \
+                                                                                (event.nCleanJet > 1 and event.CleanJet_pt[0] >= 30 and event.CleanJet_pt[1] < 30))+\
+                                                      event.fakeW_'+Tag+'_2l2j*(event.nCleanJet > 1 and event.CleanJet_pt[1] >= 30)) == 0. \
+                                              else 0.'
+
+
+#print(formulas)
 

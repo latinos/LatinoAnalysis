@@ -11,6 +11,13 @@ from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 from LatinoAnalysis.Tools.crabTools  import *
 
+try:
+  # CERN-specific LSF<->HTCondor switch
+  # This is temporary - CERN will soon become 100% condor
+  CERN_USE_CONDOR = (batchType == 'condor')
+except NameError:
+  # if batchType is not set, default to LSF
+  CERN_USE_CONDOR = False
 
 class PostProcMaker():
 
@@ -107,6 +114,9 @@ class PostProcMaker():
      print '_LocalSite  = ',self._LocalSite
      print '_TargetSite = ',self._TargetSite
 
+     if self._LocalSite == 'cern' and CERN_USE_CONDOR:
+       self._Sites[self._LocalSite]['batchQueues'] = ['workday', 'espresso', 'microcentury', 'longlunch', 'tomorrow', 'testmatch', 'nextweek']
+
    def configBatch(self,queue):
      if       queue == None                                        \
           and 'batchQueues' in self._Sites[self._LocalSite]        \
@@ -168,7 +178,7 @@ class PostProcMaker():
        if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
      else:
-       print FileList
+       #print FileList
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
@@ -180,11 +190,14 @@ class PostProcMaker():
      toSkip=[]
      if not self._redo : 
        if  len(FileExistList) == len(FileList) : return FileDic
-       for iFile in FileExistList: toSkip.append(iFile.replace('.root','').split('__part')[1])
+       for iFile in FileExistList: 
+         if not '__part' in iFile : toSkip.append('0')
+         else                     : toSkip.append(iFile.replace('.root','').split('__part')[1])
 
      if not self._iniStep == 'Prod' :
        for iFile in FileList : 
-         iPart = iFile.replace('.root','').split('__part')[1]
+         if not '__part' in iFile : iPart = 0
+         else                     : iPart = iFile.replace('.root','').split('__part')[1]
          if not iPart in toSkip : 
            FileDic[iFile] = self._targetDir+os.path.basename(iFile)
      else :

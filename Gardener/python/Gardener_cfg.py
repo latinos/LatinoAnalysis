@@ -4683,7 +4683,8 @@ Steps= {
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
                                   'TT','TTJets',
-
+                                  ### 
+                                  'Wg_MADGRAPHMLM' , 'GluGluHToWWTo2L2NuPowheg_M125' , 'WZTo3LNu_mllmin01' ,
                                  ] ,
            },
 
@@ -4802,6 +4803,96 @@ Steps= {
                   'subTargets' : ['do_vbsSel','chFlipProba2j'], 
            },
 
+ 'vbsLooseSel'    : {
+                  'isChain'    : False  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && njet>=2 && mjj>250 \' ' ,
+                  'onlySample' : [
+                                        #  
+                                        'DoubleEG_Run2016B-03Feb2017_ver2-v2',
+                                        'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        'MuonEG_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleElectron_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        #  
+                                        'DoubleEG_Run2016C-03Feb2017-v1',
+                                        'DoubleMuon_Run2016C-03Feb2017-v1',
+                                        'MuonEG_Run2016C-03Feb2017-v1',
+                                        'SingleElectron_Run2016C-03Feb2017-v1',
+                                        'SingleMuon_Run2016C-03Feb2017-v1',
+                                        #  
+                                        'DoubleEG_Run2016D-03Feb2017-v1',
+                                        'DoubleMuon_Run2016D-03Feb2017-v1',
+                                        'MuonEG_Run2016D-03Feb2017-v1',
+                                        'SingleElectron_Run2016D-03Feb2017-v1',
+                                        'SingleMuon_Run2016D-03Feb2017-v1',
+                                        #  
+                                        'DoubleEG_Run2016E-03Feb2017-v1',
+                                        'DoubleMuon_Run2016E-03Feb2017-v1',
+                                        'MuonEG_Run2016E-03Feb2017-v1',
+                                        'SingleElectron_Run2016E-03Feb2017-v1',
+                                        'SingleMuon_Run2016E-03Feb2017-v1',
+                                        # 
+                                        'DoubleEG_Run2016F-03Feb2017-v1',
+                                        'DoubleMuon_Run2016F-03Feb2017-v1',
+                                        'MuonEG_Run2016F-03Feb2017-v1',
+                                        'SingleElectron_Run2016F-03Feb2017-v1',
+                                        'SingleMuon_Run2016F-03Feb2017-v1', 
+                                        #  
+                                        'DoubleEG_Run2016G-03Feb2017-v1',
+                                        'DoubleMuon_Run2016G-03Feb2017-v1',
+                                        'MuonEG_Run2016G-03Feb2017-v1',
+                                        'SingleElectron_Run2016G-03Feb2017-v1',
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                        #  
+                                        'DoubleEG_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleEG_Run2016H-03Feb2017_ver3-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver3-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver3-v1',
+                                    #  Charge Flip backgrounds
+                                    'DYJetsToLL_M-10to50'   ,
+                                    'DYJetsToLL_M-50'   ,
+                                    'TTTo2L2Nu'        ,
+                                    'ST_tW_top_noHad' ,
+                                    'ST_tW_antitop_noHad' ,
+                                    'GluGluWWTo2L2Nu_MCFM',
+                                    'WWTo2L2Nu'       ,
+                                    # Other MC
+           'Zg',
+           'WGJJ',
+           'ZZTo4L',
+           'WpWpJJ_QCD',
+           'ZZZ',
+           'WZZ',
+           'WWZ',
+           'TTWJetsToLNu',
+           'TTZToLLNuNu_M-10',
+           'WWTo2L2Nu_DoubleScattering',
+           'WLLJJToLNu_M-4To60_EWK_4F'       ,
+           'WLLJJToLNu_M-60_EWK_4F'          ,
+           'WLLJJToLNu_M-4To50_QCD_0Jet'     ,
+           'WLLJJToLNu_M-4To50_QCD_1Jet'     ,
+           'WLLJJToLNu_M-4To50_QCD_2Jet'     ,
+           'WLLJJToLNu_M-4To50_QCD_3Jet'    ,
+           'WLLJJToLNu_M-50_QCD_0Jet'       ,
+           'WLLJJToLNu_M-50_QCD_1Jet'       ,
+           'WLLJJToLNu_M-50_QCD_2Jet'      ,
+           'WLLJJToLNu_M-50_QCD_3Jet'     ,
+           'tZq_ll'                      ,
+           'WpWpJJ_EWK',
+
+
+                                 ],
+           },
+
+
   'tightVbsSel'    : {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
@@ -4862,6 +4953,22 @@ Steps= {
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1','DYJetsToLL_M-50-LO-ext1','TTTo2L2Nu'],
                   },
 
+  'chargeFlipWeightVBS' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py chargeFlipWeightVBS',
+                  'onlySample' : [
+                                    'DYJetsToLL_M-10to50'   ,
+                                    'DYJetsToLL_M-50'   ,
+                                    'TTTo2L2Nu'        ,
+                                    'ST_tW_top_noHad' ,
+                                    'ST_tW_antitop_noHad' ,
+                                    'GluGluWWTo2L2Nu_MCFM',
+                                    'WWTo2L2Nu'       ,
+],
+                  },
+ 
 
   'sfSel'    : {  'isChain'    : False ,
                   'do4MC'      : True  ,

@@ -8,6 +8,13 @@ import socket
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
 
+try:
+   # batchType can be set in userConfig (only relevant when running at CERN)
+   CERN_USE_CONDOR = (batchType == 'condor')
+except NameError:
+   # if batchType is not set, default to LSF
+   CERN_USE_CONDOR = False
+
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir=''):
      # baseName   = Gardening, Plotting, ....
@@ -45,6 +52,9 @@ class batchJobs :
          jName  = baseName+'__'+prodName+'__'+kStep+'__'+kTarget+postFix
          self.jobsDic[iStep][iTarget] = jName
          if not jName in self.jobsList: self.jobsList.append(jName)
+
+     # Submit host name to identify the environment
+     hostName = os.uname()[1]
           
      # Create job and init files (loop on Steps,Targets)
      if not os.path.exists(self.subDir) : os.system('mkdir -p '+self.subDir)
@@ -54,18 +64,21 @@ class batchJobs :
        jFile = open(self.subDir+'/'+jName+'.sh','w')
        if usePython : pFile = open(self.subDir+'/'+jName+'.py','w') 
        jFile.write('#!/bin/bash\n')
-       if 'cern' in os.uname()[1] :
-         jFile.write('#$ -N '+jName+'\n')
-         jFile.write('#$ -q all.q\n')
-         jFile.write('#$ -cwd\n')
+       if 'cern' in hostName:
+         if CERN_USE_CONDOR:
+           jFile.write('#$ -N '+jName+'\n')
+         else:
+           jFile.write('#$ -N '+jName+'\n')
+           jFile.write('#$ -q all.q\n')
+           jFile.write('#$ -cwd\n')
          jFile.write('export X509_USER_PROXY=/afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
-       elif 'knu' in os.uname()[1]:
+       elif 'knu' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
-       elif 'sdfarm' in os.uname()[1]:
+       elif 'sdfarm' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
          jFile.write('export X509_USER_PROXY=/cms/ldap_home/'+os.environ["USER"]+'/.proxy\n')
@@ -76,24 +89,28 @@ class batchJobs :
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
-       if 'knu' in os.uname()[1]:
+       if 'knu' in hostName:
          pass
        else:
          jFile.write('ulimit -c 0\n')
        if    useBatchDir : 
-         if 'iihe' in os.uname()[1]:
+         if 'iihe' in hostName:
            jFile.write('cd $TMPDIR \n')
-         elif 'cern' in os.uname()[1]:
-           jFile.write("mkdir /tmp/$USER/$LSB_JOBID \n")
-           jFile.write("cd /tmp/$USER/$LSB_JOBID \n")
-           jFile.write("pwd \n")
+         elif 'cern' in hostName:
+           if CERN_USE_CONDOR:
+             jFile.write('cd $TMPDIR \n')
+             jFile.write("pwd \n")
+           else:
+             jFile.write("mkdir /tmp/$USER/$LSB_JOBID \n")
+             jFile.write("cd /tmp/$USER/$LSB_JOBID \n")
+             jFile.write("pwd \n")
          elif "pi.infn.it" in socket.getfqdn():
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
-         elif 'ifca' in os.uname()[1]:
+         elif 'ifca' in hostName:
            jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
-         elif 'sdfarm' or 'knu' in os.uname()[1]:
+         elif 'sdfarm' in hostName or 'knu' in hostName:
            jFile.write('cd '+self.subDir+'\n')
          else:
            jFile.write('cd - \n')
@@ -105,7 +122,7 @@ class batchJobs :
        os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
 
      # Create Proxy at IIHE
-     if 'cern'  in os.uname()[1]:
+     if 'cern'  in hostName:
        cmd='voms-proxy-info'
        proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
        out, err = proc.communicate()
@@ -113,15 +130,15 @@ class batchJobs :
         if "path" in line:
           proxypath=line.split(':')[1]
        os.system('cp '+proxypath+' /afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
-     if 'iihe'  in os.uname()[1]:
+     if 'iihe'  in hostName:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
      if "pi.infn.it" in socket.getfqdn():  
        os.system('cp $X509_USER_PROXY /home/users/'+os.environ["USER"]+'/.proxy')
-     if "knu" in os.uname()[1]: 
+     if "knu" in hostName: 
        os.system('cp $X509_USER_PROXY /u/user/'+os.environ["USER"]+'/.proxy')
        #os.system('cp /tmp/x509up_u$UID /u/user/'+os.environ["USER"]+'/.proxy')
-     if "sdfarm" in os.uname()[1]: 
+     if "sdfarm" in hostName: 
        os.system('cp $X509_USER_PROXY /cms/ldap_home/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
@@ -176,7 +193,32 @@ class batchJobs :
         jFile.close()
         jidFile=self.subDir+'/'+jName+'.jid'
         print 'Submit',jName, ' on ', queue
-        if 'iihe' in os.uname()[1] : 
+
+        # Submit host name to identify the environment
+        hostName = os.uname()[1]
+
+        if 'cern' in hostName:
+          if CERN_USE_CONDOR:
+            flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+            if queue not in flavours:
+              print 'Queue', queue, 'is not defined for CERN HTCondor.'
+              print 'Allowed values:', flavours
+              raise RuntimeError('Undefined queue')
+
+            jdsFileName=self.subDir+'/'+jName+'.jds'
+            jdsFile = open(jdsFileName,'w')
+            jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+            jdsFile.write('universe = vanilla\n')
+            jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
+            jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
+            jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+            jdsFile.write('+JobFlavour = "'+queue+'"\n')
+            jdsFile.write('queue\n')
+            jdsFile.close()
+            jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+          else:
+            jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+        elif 'iihe' in hostName: 
           queue='localgrid@cream02'
           QSOPT='-l walltime='+IiheWallTime
           nTry=0
@@ -191,12 +233,12 @@ class batchJobs :
             todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             todoFile.close()
 
-	elif 'knu' in os.uname()[1]:
+	elif 'knu' in hostName:
           #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
           #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
-        elif 'sdfarm' in os.uname()[1]:
+        elif 'sdfarm' in hostName:
           jdsFileName=self.subDir+'/'+jName+'.jds'
           jdsFile = open(jdsFileName,'w')
           #jdsFile = open(self.subDir+'/'+jName+'.jds','w')
@@ -212,7 +254,7 @@ class batchJobs :
           jdsFile.close()
 	  #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
           jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
-        elif 'ifca' in os.uname()[1] :
+        elif 'ifca' in hostName :
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
         elif "pi.infn.it" in socket.getfqdn():
           queue="cms"
@@ -224,19 +266,22 @@ class batchJobs :
 
    def AddCopy (self,iStep,iTarget,inputFile,outputFile):
      "Copy file from local to remote server (outputFile = /store/...)"
+
+     # Submit host name to identify the environment
+     hostName = os.uname()[1]
      
      jName= self.jobsDic[iStep][iTarget]
      #print 'Adding to ',self.subDir+'/'+jName  
      jFile = open(self.subDir+'/'+jName+'.sh','a') 
-     if 'iihe' in os.uname()[1] :
+     if 'iihe' in hostName :
         jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
-     elif 'ifca' in os.uname()[1] :
+     elif 'ifca' in hostName :
         jFile.write('mv '+inputFile+' /gpfs/gaes/cms'+outputFile+'\n')
      elif "pi.infn.it" in socket.getfqdn():   
         jFile.write('lcg-cp '+inputFile+' srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms'+outputFile+'\n')
-     elif 'knu' in os.uname()[1] :
+     elif 'knu' in hostName :
         jFile.write('gfal-copy '+inputFile+' srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=/pnfs/knu.ac.kr/data/cms/'+outputFile+'\n')
-     elif 'sdfarm' in os.uname()[1] :
+     elif 'sdfarm' in hostName :
         jFile.write('gfal-copy -p '+inputFile+' srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/'+outputFile+'\n')
      else :
         jFile.write('cp '+inputFile+ " " + outputFile+'\n')
@@ -246,6 +291,10 @@ def batchStatus():
     fileCmd = 'ls '+jobDir
     proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out, err = proc.communicate()
+
+    # Submit host name to identify the environment
+    hostName = os.uname()[1]
+
     DirList=string.split(out)
     for iDir in DirList:
       fileCmd = 'ls '+jobDir+'/'+iDir+'/'+'*.sh | grep -v crab3cfg' 
@@ -272,16 +321,20 @@ def batchStatus():
         if os.path.isfile(jidFile):
           # check if not CRAB:
           iCrab = os.popen('cat '+jidFile+' | awk \'{print $1}\' ').read()
-          print iCrab
+          #print iCrab
           if 'CRABTask' in iCrab : Crab[iStep]+=1 
           else:
-            if 'iihe' in os.uname()[1] :
+            if 'iihe' in hostName :
               iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
             elif 'ifca' in os.uname()[1] :	
               iStat = os.popen('qstat | grep \" qw \" |  awk \'{print $1 \" '+jidFile+'\"}\' | xargs -n 2 grep | awk \'{ print $2 }\' ').read()
-	      if 'job' in iStat : Pend[iStep]+=1	
+	      if 'job' in iStat : Pend[iStep]+=1
+              else: Runn[iStep]+=1
+            elif 'cern' in hostName and CERN_USE_CONDOR:
+              iStat = os.popen(r'cat '+jidFile+" | sed -n 's/.*submitted to cluster \([0-9]*\)\./\1/p' | xargs -n 1 condor_q | tail -n1").read()
+              if '1 idle' in iStat: Pend[iStep]+=1
               else: Runn[iStep]+=1
             else:
               iStat = os.popen('cat '+jidFile+' | awk \'{print $2}\' | awk -F\'<\' \'{print $2}\' | awk -F\'>\' \'{print $1}\' | xargs -n 1 bjobs | grep -v "JOBID" | awk \'{print $3}\'').read()
@@ -338,7 +391,7 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
       FileList=string.split(out)
       for iFile in FileList:
         jidFile=iFile.replace('.todo','.jid')
-        if 'iihe' in os.uname()[1] :
+        if 'iihe' in os.uname()[1]:
           jobid=os.system('bash '+iFile)
           print 'Submitting ' , iFile
           if jobid == 0 : os.system('rm '+iFile)
@@ -375,7 +428,30 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
         if os.path.isfile(jidFile) : 
           os.system('echo rm '+jidFile)
 
-        if 'iihe' in os.uname()[1] :
+        # Submit host name to identify the environment
+        hostName = os.uname()[1]
+
+        if 'cern' in hostName and CERN_USE_CONDOR:
+          flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+          if queue not in flavours:
+            print 'Queue', queue, 'is not defined for CERN HTCondor.'
+            print 'Allowed values:', flavours
+            raise RuntimeError('Undefined queue')
+
+          jdsFileName=self.subDir+'/'+jName+'.jds'
+          jdsFile = open(self.subDir+'/'+jName+'.jds','w')
+          jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+          jdsFile.write('universe = vanilla\n')
+          jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
+          jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
+          jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+          jdsFile.write('+JobFlavour = "'+queue+'"\n')
+          jdsFile.write('queue\n')
+          jdsFile.close()
+          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+          else: os.system('rm '+jidFile)
+        elif 'iihe' in hostName :
           queue='localgrid@cream02'
           QSOPT='-l walltime='+IiheWallTime
           nTry=0
@@ -390,11 +466,11 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
             todoFile = open(self+'/'+jName+'.todo','w')
             todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             todoFile.close()
-        elif 'knu' in os.uname()[1]:
+        elif 'knu' in hostName:
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
-        elif 'sdfarm' in os.uname()[1]:
+        elif 'sdfarm' in hostName:
           jdsFileName=self.subDir+'/'+jName+'.jds'
           jdsFile = open(self.subDir+'/'+jName+'.jds','w')
           jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
@@ -410,7 +486,7 @@ def batchResub(Dir='ALL',queue='8nh',IiheWallTime='168:00:00',optTodo=True):
           jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
-        elif 'ifca' in os.uname()[1] :
+        elif 'ifca' in hostName:
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)

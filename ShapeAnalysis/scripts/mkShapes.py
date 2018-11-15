@@ -54,7 +54,7 @@ class Worker(threading.Thread):
         infile = ""
         infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n\n"
         infile += "factory = ShapeFactory()\n"
-        infile += "factory._treeName  = "+opt.treeName+"\n"
+        infile += "factory._treeName  = '"+opt.treeName+"'\n"
         infile += "factory._energy    = '"+str(energy)+"'\n"
         infile += "factory._lumi      = "+str(lumi)+"\n"
         infile += "factory._tag       = '"+str(tag)+"'\n"
@@ -216,13 +216,25 @@ if __name__ == '__main__':
       handle = open(opt.variablesFile,'r')
       exec(handle)
       handle.close()
+      #in case some variables need a compiled function
+      for variableName, variable in variables.iteritems():
+          if variable.has_key('linesToAdd'):
+            linesToAdd = variable['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
     
     samples = {}
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
-
+      #in case some samples need a compiled function
+      for sampleName, sample in samples.iteritems():
+          if sample.has_key('linesToAdd'):
+            linesToAdd = sample['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
+   
     supercut = '1'
     cuts = {}
     if os.path.exists(opt.cutsFile) :
@@ -550,7 +562,7 @@ if __name__ == '__main__':
               os.system("hadd -f plots_"+opt.tag+".root plots_"+opt.tag+"_temp*")
               cleanup += "rm plots_"+opt.tag+"_temp*"
               if not opt.doNotCleanup: os.system(cleanup) 
-    if opt.doHadd != 0 or opt.redoStat != 0:       
+    elif opt.doHadd != 0 or opt.redoStat != 0:       
             ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option 
             if ('AsMuchAsPossible' in opt.batchSplit and opt.doHadd != 0) or opt.redoStat != 0:
               ## do this only if we want to add the MC stat nuisances in the old way

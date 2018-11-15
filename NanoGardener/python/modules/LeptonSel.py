@@ -5,7 +5,7 @@ import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
-from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import ElectronWP, MuonWP, LepFilter_dict 
+from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import LepFilter_dict 
 from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import Lepton_br, Lepton_var 
 from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import VetoLepton_br, VetoLepton_var 
 from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import CleanJet_br, CleanJet_var 
@@ -26,22 +26,34 @@ class LeptonSel(Module):
                    - Input tree needs variables added by LeptonMaker
     ''' 
 
-    def __init__(self, cmssw, LepFilter = 'Loose', nLF = 1):
+    def __init__(self, cmssw, LepFilter = 'Loose', nLF = 1, WP_path = 'LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py'):
         self.cmssw = cmssw
         if LepFilter not in ['Loose', 'Veto', 'WgStar']:   raise ValueError('Non existing input tag for LepFilter, possibilities are Loose, Veto os WgStar.')
-        if len(ElectronWP[self.cmssw]['VetoObjWP']) > 1:   raise IOError('More then one Electron Veto def given in LeptonSel_cfg')
-        if len(ElectronWP[self.cmssw]['FakeObjWP']) > 1:   raise IOError('More then one Electron Loose def given in LeptonSel_cfg')
-        if len(ElectronWP[self.cmssw]['WgStarObjWP']) > 1: raise IOError('More then one Electron WgStar def given in LeptonSel_cfg')
-        if len(MuonWP[self.cmssw]['VetoObjWP']) > 1:   raise IOError('More then one Muon Veto def given in LeptonSel_cfg')
-        if len(MuonWP[self.cmssw]['FakeObjWP']) > 1:   raise IOError('More then one Muon Loose def given in LeptonSel_cfg')
-        if len(MuonWP[self.cmssw]['WgStarObjWP']) > 1: raise IOError('More then one Muon WgStar def given in LeptonSel_cfg')
+        if LepFilter == 'WgStar': self.doWgS = True
+        else: self.doWgS = False
+
+        #WP_file = open(WP_path, 'r')
+        cmssw_base = os.getenv('CMSSW_BASE') 
+        var = {}
+        execfile(cmssw_base+'/src/'+WP_path, var)
+        self.ElectronWP = var['ElectronWP']
+        self.MuonWP = var['MuonWP']
+
+        if len(self.ElectronWP[self.cmssw]['VetoObjWP']) > 1:   raise IOError('More then one Electron Veto def given in LeptonSel_cfg')
+        if len(self.ElectronWP[self.cmssw]['FakeObjWP']) > 1:   raise IOError('More then one Electron Loose def given in LeptonSel_cfg')
+        if len(self.ElectronWP[self.cmssw]['WgStarObjWP']) > 1: raise IOError('More then one Electron WgStar def given in LeptonSel_cfg')
+        if len(self.MuonWP[self.cmssw]['VetoObjWP']) > 1:   raise IOError('More then one Muon Veto def given in LeptonSel_cfg')
+        if len(self.MuonWP[self.cmssw]['FakeObjWP']) > 1:   raise IOError('More then one Muon Loose def given in LeptonSel_cfg')
+        if len(self.MuonWP[self.cmssw]['WgStarObjWP']) > 1: raise IOError('More then one Muon WgStar def given in LeptonSel_cfg')
         self.LepFilter = LepFilter
         self.nLF = nLF
         self.Lep_minPt = [8.0]*self.nLF
         self.JC_maxdR = 0.3 
         self.JC_minPtLep = 10.
         self.JC_absEta   = 5.0
-        print('LeptonSel: only saving events with at least ' + str(self.nLF) + ' ' + self.LepFilter + ' lepton(s)')
+
+        print('LeptonSel: keeping only '+ self.LepFilter + ' lepton(s), and saving only events with at least ' + str(self.nLF) + ' ' + self.LepFilter + ' lepton(s)')
+
 
     def beginJob(self): 
         pass
@@ -56,12 +68,12 @@ class LeptonSel(Module):
         # New Branches
         self.out.branch('Lepton_isLoose', 'I', lenVar='nLepton')
         self.out.branch('Lepton_isVeto', 'I', lenVar='nLepton')
-        self.out.branch('Lepton_isWgs', 'I', lenVar='nLepton')
+        if self.doWgS: self.out.branch('Lepton_isWgs', 'I', lenVar='nLepton')
         self.out.branch('dmZll_veto', 'F') 
         
-        for wp in ElectronWP[self.cmssw]['TightObjWP']:
+        for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightElectron_'+wp, 'I', lenVar='nLepton')
-        for wp in MuonWP[self.cmssw]['TightObjWP']:
+        for wp in self.MuonWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightMuon_'+wp, 'I', lenVar='nLepton')
 
         # Old branches to clean
@@ -106,17 +118,66 @@ class LeptonSel(Module):
            return True
         else:
            return False
+
+    def passWgS(self, lepton_col, electron_col, muon_col):
+        nLep = len(lepton_col)
+        passWG = [True]*nLep
+        
+        # First check the ID
+        for iLep in range(nLep):
+            if abs(lepton_col[iLep]['pdgId']) == 11:
+                for wp in self.ElectronWP[self.cmssw]['WgStarObjWP']: 
+                    WPdict = self.ElectronWP[self.cmssw]['WgStarObjWP'][wp]
+            else:
+                for wp in self.MuonWP[self.cmssw]['WgStarObjWP']: 
+                    WPdict = self.MuonWP[self.cmssw]['WgStarObjWP'][wp]
+            if not self.passWP(lepton_col, electron_col, muon_col, iLep, WPdict): passWG[iLep] = False
+
+        # Now check the isolation     
+        looping = True
+        while looping:
+            looping = False
+            for iLep in range(nLep):
+                if not passWG[iLep]: continue
+                if abs(lepton_col[iLep]['pdgId']) == 11:
+                    LF_idx = lepton_col[iLep]['electronIdx']
+                    curr_col = electron_col
+                    for wp in self.ElectronWP[self.cmssw]['WgStarObjWP']: 
+                        WPdict = self.ElectronWP[self.cmssw]['WgStarObjWP'][wp]
+                else:
+                    LF_idx = lepton_col[iLep]['muonIdx']
+                    curr_col = muon_col
+                    for wp in self.MuonWP[self.cmssw]['WgStarObjWP']: 
+                        WPdict = self.MuonWP[self.cmssw]['WgStarObjWP'][wp]
+                pt = 0
+                #FIX ME
+                cone_size = WPdict['iso'][1]
+                for jLep in range(nLep):
+                    if not passWG[jLep]: continue
+                    if iLep == jLep: continue
+                    if self.isAcloseToB(lepton_col[jLep]['eta'], lepton_col[jLep]['phi'], lepton_col[iLep]['eta'], lepton_col[iLep]['phi'], cone_size) :
+                        pt += lepton_col[jLep]['pt']
+                rel_pt = pt/lepton_col[iLep]['pt']
+                mod_iso = curr_col[LF_idx][WPdict['iso'][0]] - rel_pt
+                for part in WPdict['cuts_iso']:
+                    cut_val = eval(WPdict['cuts_iso'][part][0])
+                    if cut_val is not None:
+                        if not (mod_iso < cut_val): 
+                            passWG[iLep] = False
+                            # Only keep looping if something changed
+                            looping = True
+        return passWG
     
-    def ConeOverlapPt(self, lepton_col, iLep):
-        pt = 0
-        cone_size = 0.4
-        for jLep in range(len(lepton_col)):
-           if jLep != iLep:
-              if self.isAcloseToB(lepton_col[jLep]['eta'], lepton_col[jLep]['phi'],
-                                  lepton_col[iLep]['eta'], lepton_col[iLep]['phi'],
-                                  cone_size) :
-                 pt += lepton_col[jLep]['pt']
-        return pt
+    #def ConeOverlapPt(self, lepton_col, iLep):
+    #    pt = 0
+    #    cone_size = 0.4
+    #    for jLep in range(len(lepton_col)):
+    #       if jLep != iLep:
+    #          if self.isAcloseToB(lepton_col[jLep]['eta'], lepton_col[jLep]['phi'],
+    #                              lepton_col[iLep]['eta'], lepton_col[iLep]['phi'],
+    #                              cone_size) :
+    #             pt += lepton_col[jLep]['pt']
+    #    return pt
 
     def jetIsLepton(self, jetEta, jetPhi, lepEta, lepPhi) :
         dPhi = ROOT.TMath.Abs(lepPhi - jetPhi)
@@ -147,18 +208,17 @@ class LeptonSel(Module):
         # Fast lepton filter
         if nLep < self.nLF: return False
 
-
         # Tags and variables
         Clean_Tag = LepFilter_dict[self.LepFilter]
         Clean_TagWP = LepFilter_dict[Clean_Tag]
+
         Lep_Tags = {}
         Lep_Tags['isLoose'] = []
         Lep_Tags['isVeto'] = []
-        Lep_Tags['isWgs'] = []
         
-        for wp in ElectronWP[self.cmssw]['TightObjWP']:
+        for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
            Lep_Tags['isTightElectron_' + wp] = []
-        for wp in MuonWP[self.cmssw]['TightObjWP']:
+        for wp in self.MuonWP[self.cmssw]['TightObjWP']:
            Lep_Tags['isTightMuon_' + wp] = []
 
         # Cleaning aid
@@ -167,6 +227,10 @@ class LeptonSel(Module):
         good_jet_idx = range(nJet)
         Clean_counter = 0
 
+        if self.doWgS:
+            Lep_Tags['isWgs'] = []
+            Lep_Wgs = self.passWgS(lepton_col, electron_col, muon_col)
+
         #------ Lepton Loop
         for iLep in range(nLep):
            
@@ -174,15 +238,19 @@ class LeptonSel(Module):
            isClean_lep = True
            isVeto_lep = True
            if abs(lepton_col[iLep]['pdgId']) == 11:
-              for wp in ElectronWP[self.cmssw][Clean_TagWP]:
-                 if not self.passWP(lepton_col, electron_col, muon_col, iLep, ElectronWP[self.cmssw][Clean_TagWP][wp]): isClean_lep = False
-              for wp in ElectronWP[self.cmssw]['VetoObjWP']:
-                 if not self.passWP(lepton_col, electron_col, muon_col, iLep, ElectronWP[self.cmssw]['VetoObjWP'][wp]): isVeto_lep = False
+              if self.doWgS: isClean_lep = Lep_Wgs[iLep]
+              else:
+                for wp in self.ElectronWP[self.cmssw][Clean_TagWP]:
+                   if not self.passWP(lepton_col, electron_col, muon_col, iLep, self.ElectronWP[self.cmssw][Clean_TagWP][wp]): isClean_lep = False
+              for wp in self.ElectronWP[self.cmssw]['VetoObjWP']:
+                 if not self.passWP(lepton_col, electron_col, muon_col, iLep, self.ElectronWP[self.cmssw]['VetoObjWP'][wp]): isVeto_lep = False
            elif abs(lepton_col[iLep]['pdgId']) == 13:
-              for wp in MuonWP[self.cmssw][Clean_TagWP]:
-                 if not self.passWP(lepton_col, electron_col, muon_col, iLep, MuonWP[self.cmssw][Clean_TagWP][wp]): isClean_lep = False
-              for wp in MuonWP[self.cmssw]['VetoObjWP']:
-                 if not self.passWP(lepton_col, electron_col, muon_col, iLep, MuonWP[self.cmssw]['VetoObjWP'][wp]): isVeto_lep = False
+              if self.doWgS: isClean_lep = Lep_Wgs[iLep]
+              else:
+                for wp in self.MuonWP[self.cmssw][Clean_TagWP]:
+                   if not self.passWP(lepton_col, electron_col, muon_col, iLep, self.MuonWP[self.cmssw][Clean_TagWP][wp]): isClean_lep = False
+              for wp in self.MuonWP[self.cmssw]['VetoObjWP']:
+                 if not self.passWP(lepton_col, electron_col, muon_col, iLep, self.MuonWP[self.cmssw]['VetoObjWP'][wp]): isVeto_lep = False
 
            # Filter illegal lepton pgdId's 
            else: 
@@ -198,29 +266,24 @@ class LeptonSel(Module):
            if not isClean_lep: continue
               
            # Lepton id's
+           if self.doWgS: Lep_Tags['isWgs'].append(1)
            if abs(lepton_col[iLep]['pdgId']) == 11:
-              for wp in ElectronWP[self.cmssw]['FakeObjWP']:
-                 if self.passWP(lepton_col, electron_col, muon_col, iLep, ElectronWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
+              for wp in self.ElectronWP[self.cmssw]['FakeObjWP']:
+                 if self.passWP(lepton_col, electron_col, muon_col, iLep, self.ElectronWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
                  else: Lep_Tags['isLoose'].append(0)
-              for wp in ElectronWP[self.cmssw]['WgStarObjWP']:
-                 if self.passWP(lepton_col, electron_col, muon_col, iLep, ElectronWP[self.cmssw]['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
-                 else: Lep_Tags['isWgs'].append(0)
-              for wp in ElectronWP[self.cmssw]['TightObjWP']:
-                 if self.passWP(lepton_col, electron_col, muon_col, iLep, ElectronWP[self.cmssw]['TightObjWP'][wp]):  Lep_Tags['isTightElectron_' + wp].append(1)
+              for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
+                 if self.passWP(lepton_col, electron_col, muon_col, iLep, self.ElectronWP[self.cmssw]['TightObjWP'][wp]):  Lep_Tags['isTightElectron_' + wp].append(1)
                  else: Lep_Tags['isTightElectron_' + wp].append(0)
-              for wp in MuonWP[self.cmssw]['TightObjWP']:
+              for wp in self.MuonWP[self.cmssw]['TightObjWP']:
                  Lep_Tags['isTightMuon_' + wp].append(0)
            elif abs(lepton_col[iLep]['pdgId']) == 13:
-              for wp in MuonWP[self.cmssw]['FakeObjWP']:
-                 if self.passWP(lepton_col, electron_col, muon_col, iLep, MuonWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
+              for wp in self.MuonWP[self.cmssw]['FakeObjWP']:
+                 if self.passWP(lepton_col, electron_col, muon_col, iLep, self.MuonWP[self.cmssw]['FakeObjWP'][wp]):   Lep_Tags['isLoose'].append(1)
                  else: Lep_Tags['isLoose'].append(0)
-              for wp in MuonWP[self.cmssw]['WgStarObjWP']:
-                 if self.passWP(lepton_col, electron_col, muon_col, iLep, MuonWP[self.cmssw]['WgStarObjWP'][wp]): Lep_Tags['isWgs'].append(1)
-                 else: Lep_Tags['isWgs'].append(0)
-              for wp in MuonWP[self.cmssw]['TightObjWP']:
-                 if self.passWP(lepton_col, electron_col, muon_col, iLep, MuonWP[self.cmssw]['TightObjWP'][wp]):  Lep_Tags['isTightMuon_' + wp].append(1)
+              for wp in self.MuonWP[self.cmssw]['TightObjWP']:
+                 if self.passWP(lepton_col, electron_col, muon_col, iLep, self.MuonWP[self.cmssw]['TightObjWP'][wp]):  Lep_Tags['isTightMuon_' + wp].append(1)
                  else: Lep_Tags['isTightMuon_' + wp].append(0)
-              for wp in ElectronWP[self.cmssw]['TightObjWP']:
+              for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
                  Lep_Tags['isTightElectron_' + wp].append(0)
            #else: raise ValueError('Unexpected Lepton_pdgId occured: Lepton_pdgId = ' + str(lepton_col[iLep]['pdgId']))
 

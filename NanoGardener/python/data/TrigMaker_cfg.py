@@ -4,12 +4,12 @@ Trigger = {
 
 
 #ERA	       Absolute Run Number	
-#                From Run To Run  Lumi (/fb)	
-#Run2017B	297020	299329	   4.794 
-#Run2017C	299337	302029	   9.633
-#Run2017D	302030	303434	   4.248
-#Run2017E	303435	304826	   9.315
-#Run2017F	304911	306462	  13.540
+#                From Run To Run  Lumi (/fb)  Run Preiod	
+#Run2017B	297020	299329	   4.794      -> 1
+#Run2017C	299337	302029	   9.633      -> 2
+#Run2017D	302030	303434	   4.248      -> 3
+#Run2017E	303435	304826	   9.315      -> 3 (no change in triger eff->lump together D+E)
+#Run2017F	304911	306462	  13.540      -> 4
 # TOTAL                           41.529
 
 #brilcalc lumi --normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json -i /afs/cern.ch/cms/CAF
@@ -18,7 +18,7 @@ Trigger = {
  
 
 
-        'Full2017'  :  {  
+        'Full2017v2'  :  {  
                           # Run B 
                           1  :  { 'begin' : 297020 , 'end' : 299329 , 'lumi' : 4.793 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_Run2017B.txt' ,
