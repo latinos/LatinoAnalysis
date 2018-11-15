@@ -88,10 +88,10 @@ ElectronWP = {
                                    ] ,
                                   } ,
                          'tkSF':  { 
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root',
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root',
                                   } ,
                          'wpSF':  {
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoHWW.txt' ,
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoHWW.txt' ,
                                   } ,
                          'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017/',
                               } ,
@@ -120,10 +120,10 @@ ElectronWP = {
                                    ] ,
                                   } ,
                          'tkSF':  { 
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root' ,
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root' ,
                                   } ,
                          'wpSF':  {
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoSSHWW.txt' ,
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoSSHWW.txt' ,
                                   } ,
                          'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017/',
                               } ,
@@ -266,10 +266,10 @@ ElectronWP = {
                                    ] ,
                                   } ,
                          'tkSF':  { 
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root',
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root',
                                   } ,
                          'wpSF':  {
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoHWW.txt' ,
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoHWW.txt' ,
                                   } ,
                          'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017/',
                               } ,
@@ -298,10 +298,10 @@ ElectronWP = {
                                    ] ,
                                   } ,
                          'tkSF':  { 
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root' ,
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_combined.root' ,
                                   } ,
                          'wpSF':  {
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoSSHWW.txt' ,
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoSSHWW.txt' ,
                                   } ,
                          'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017/',
                               } ,
@@ -1035,14 +1035,14 @@ MuonWP = {
                                  ] ,
                                   } ,
                          'tkSF':  { 
-                                    '1-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muon_tracker_eff_Full2017.root' ,
+                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muon_tracker_eff_Full2017.root' ,
                                   } ,
                          'tkSFerror': 0.01,
                          'idSF':  {
-                                    '1-4' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muonID_cut_Tight_HWW_combined.root'],
+                                    '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muonID_cut_Tight_HWW_combined.root'],
                                   } ,
                          'isoSF': {
-                                    '1-4' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muonISO_cut_Tight_HWW_combined.root'],
+                                    '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muonISO_cut_Tight_HWW_combined.root'],
                                   } ,
                          'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017/',
 
