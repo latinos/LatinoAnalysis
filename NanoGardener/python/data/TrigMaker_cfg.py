@@ -8,15 +8,13 @@ Trigger = {
 #Run2017B	297020	299329	   4.794      -> 1
 #Run2017C	299337	302029	   9.633      -> 2
 #Run2017D	302030	303434	   4.248      -> 3
-#Run2017E	303435	304826	   9.315      -> 3 (no change in triger eff->lump together D+E)
-#Run2017F	304911	306462	  13.540      -> 4
+#Run2017E	303435	304826	   9.315      -> 4 
+#Run2017F	304911	306462	  13.540      -> 5
 # TOTAL                           41.529
 
 #brilcalc lumi --normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json -i /afs/cern.ch/cms/CAF
 #/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt -u /fb
 # --begin 299337 --end  302029
- 
-
 
         'Full2017v2'  :  {  
                           # Run B 
@@ -109,11 +107,9 @@ Trigger = {
                                               } ,
                                 },
 
-                          # Run D+E
                           # Run2017D       302030  303434     4.248
-                          # Run2017E       303435  304826     9.315
 
-                          3  :  { 'begin' : 302030 , 'end' : 304826  , 'lumi' : 13.563 ,
+                          3  :  { 'begin' : 302030 , 'end' : 303434  , 'lumi' : 4.248 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_Run2017CDE.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2017/Ele23_Ele12_leg2_pt_eta_efficiency_Run2017CDE.txt' ,
                                                 'SingleEle'         : 'Full2017/Ele35_pt_eta_efficiency_Run2017CDE.txt' ,
@@ -155,10 +151,53 @@ Trigger = {
                                               } ,
                                 },
 
+                          # Run2017E       303435  304826     9.315
+
+                          4  :  { 'begin' : 303435 , 'end' : 304826  , 'lumi' : 9.315 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_Run2017CDE.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2017/Ele23_Ele12_leg2_pt_eta_efficiency_Run2017CDE.txt' ,
+                                                'SingleEle'         : 'Full2017/Ele35_pt_eta_efficiency_Run2017CDE.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency.txt' ,
+                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2017/Mu23_Ele12_MuLeg_pt_eta_efficiency.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2017/Mu23_Ele12_EleLeg_pt_eta_efficiency_Run2017CDE.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2017/Mu12_Ele23_EleLeg_pt_eta_efficiency_Run2017CDE.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2017/Mu12_Ele23_MuLeg_pt_eta_efficiency.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 'DoubleEle' : 1.0 ,
+                                                'DoubleMu'  : 0.993   ,
+                                                'MuEle'     : 1.0   ,
+                                                'EleMu'     : 0.86   ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : 1.0  ,
+                                                'DoubleMu'  : 1.0  ,
+                                                'MuEle'     : 1.0  ,
+                                                'EleMu'     : 1.0  ,
+                                                'SingleEle' : 1.0  ,
+                                                'SingleMu'  : 1.0  ,
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code?'
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                },
 
                           # Run2017F       304911  306462    13.540
 
-                          4  :  { 'begin' : 304911 , 'end' : 306462  , 'lumi' : 13.540 ,
+                          5  :  { 'begin' : 304911 , 'end' : 306462  , 'lumi' : 13.540 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_Run2017F.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2017/Ele23_Ele12_leg2_pt_eta_efficiency_Run2017F.txt' ,
                                                 'SingleEle'         : 'Full2017/Ele35_pt_eta_efficiency_Run2017F.txt' ,

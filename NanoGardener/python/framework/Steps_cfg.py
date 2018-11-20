@@ -364,6 +364,26 @@ Steps = {
                   'module'     : 'LeptonFakeWMaker("RPLME_CMSSW")',
               },
 
+## ------- MODULES: Rochester corrections
+
+  'rochesterMC'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False)',
+                  'module'     : 'rochesterMC()',
+              },
+
+  'rochesterDATA'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True)',
+                  'module'     : 'rochesterDATA()',
+              },
+
 ## ------- MODULES: Kinematic
 
   'l2Kin'    : {
