@@ -210,7 +210,7 @@ class batchJobs :
        outFile=self.subDir+'/'+jName+'.out'
        jidFile=self.subDir+'/'+jName+'.jid'
        jFile = open(self.subDir+'/'+jName+'.sh','a')
-       jFile.write('mv '+jidFile+' '+jidFile.replace('.jid','.done') )
+       jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
        jFile.close()
        jidFile=self.subDir+'/'+jName+'.jid'
        print 'Submit',jName, ' on ', queue
@@ -293,6 +293,7 @@ class batchJobs :
        for jName in self.jobsList:
          jds += jName + '\n'
        jds += ')\n'
+
        proc = subprocess.Popen(['condor_submit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
        out, err = proc.communicate(jds)
        if proc.returncode != 0:
