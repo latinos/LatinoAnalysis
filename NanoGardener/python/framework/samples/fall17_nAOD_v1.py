@@ -73,7 +73,8 @@ Samples['HZJ_HToWWTo2L2Nu_ZTo2L_M125'] = {'nanoAOD': '/HZJ_HToWWTo2L2Nu_ZTo2L_M1
 Samples['HZJ_HToWW_M120']     = {'nanoAOD' :'/HZJ_HToWW_M120_13TeV_powheg_jhu714_pythia8_TuneCP5/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
 Samples['HZJ_HToWW_M130']     = {'nanoAOD' :'/HZJ_HToWW_M130_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
 Samples['HZJ_HToTauTau_M125']     = {'nanoAOD' :'/ZHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
-
+#### ttH Inclusive ======== 
+Samples['ttHToNonbb_M125']     = {'nanoAOD' :'/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Alicia
