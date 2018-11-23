@@ -34,6 +34,8 @@ Samples['WWTo2L2Nu']       = {'nanoAOD': '/WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_1
 Samples['WWTo2L2Nu_CP5Up'] = {'nanoAOD' :'/WWTo2L2Nu_NNPDF31_TuneCP5Up_13TeV-powheg-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
 Samples['WWTo2L2Nu_CP5Down'] = {'nanoAOD' :'/WWTo2L2Nu_NNPDF31_TuneCP5Down_13TeV-powheg-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
 Samples['WW-LO']           = {'nanoAOD' :'/WW_TuneCP5_13TeV-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
+Samples['ZGToLLG']         = {'nanoAOD' :'/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
+
 
 #Signals
 Samples['VBFHToWWTo2L2NuPowheg_M125_private']   = {'srmPrefix' : 'srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms', 'paths' :['/store/user/lenzip/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUGen_pythia8/2018May8_nanoAODmerged/180613_141155/0000/'] }
