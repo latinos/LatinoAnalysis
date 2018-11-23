@@ -115,7 +115,7 @@ class PostProcMaker():
      print '_TargetSite = ',self._TargetSite
 
      if self._LocalSite == 'cern' and CERN_USE_CONDOR:
-       self._Sites[self._LocalSite]['batchQueues'] = ['workday', 'espresso', 'microcentury', 'longlunch', 'tomorrow', 'testmatch', 'nextweek']
+       self._Sites[self._LocalSite]['batchQueues'] = ['tomorrow', 'espresso', 'microcentury', 'longlunch', 'workday', 'testmatch', 'nextweek']
 
    def configBatch(self,queue):
      if       queue == None                                        \
