@@ -5,6 +5,13 @@ Steps = {
 
 # ------------------------------------------------ CHAINS ----------------------------------------------------
 
+  'MCnofilter' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['leptonMaker'],
+                 },
+
 ## ------- MC:
 
   'MCl1loose2016': {
