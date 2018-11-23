@@ -17,7 +17,7 @@ class rochester_corr(Module):
     Add a scale factor from 2017 Rochester corrections                                                                                                                                                             
     '''
 
-    def __init__(self,isdata = False , lepColl="Lepton",metColls=['MET']):
+    def __init__(self,isdata = False , lepColl="Lepton",metColls=['MET','PuppiMET','RawMET','TkMET']):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.isdata = isdata
         print "Loading macros from "+cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR.cc"

@@ -101,6 +101,13 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                 },
 
+  'DATACorr2017' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['rochesterDATA','jetSel','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
+                },
+
 ## ------- WgStar DATA:
 
     'DATAWgStar2017' : { 
@@ -223,8 +230,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
-                  # jetid=2,pujetid=0,minpt=15.0,maxeta=5.2,jetColl="CleanJet"
-                  'declare'    : 'jetSel = lambda : JetSel(2,0,15.0,5.2,"CleanJet")' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=5.2,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(2,"loose",15.0,5.2,"CleanJet")' ,
                   'module'     : 'jetSel()' ,
                }, 
 

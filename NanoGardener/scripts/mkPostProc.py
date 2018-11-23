@@ -104,6 +104,13 @@ if __name__ == '__main__':
             ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
           except RuntimeError:
             ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
+      pathRootMacro = CMSSW + '/src/LatinoAnalysis/NanoGardener/python/modules/'
+      for fn in os.listdir(pathRootMacro):
+        if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
+          try:
+            ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
+          except RuntimeError:
+            ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
 
 # ---------------------------------------- And Here we go:
 
