@@ -1,9 +1,21 @@
 #!/usr/bin/env python
 
+## --------------------------------- Some predefined sequence Chains -----------------------------------------
+
+PU2017Seq=['puW2017B','puW2017C','puW2017D','puW2017E','puW2017F','puW2017perEra']   
+
+# -------------------------------------------- HERE WE GO ----------------------------------------------------
 
 Steps = {
 
 # ------------------------------------------------ CHAINS ----------------------------------------------------
+
+  'puW2017Test': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['trigMC'] + PU2017Seq ,
+                 }, 
 
   'MCnofilter' : {
                   'isChain'    : True  ,
@@ -316,6 +328,18 @@ Steps = {
         
                 },
 
+
+  'LeptonSF' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
+                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW")',
+                  'module'     : 'LeptonSF()',
+                   },
+
+## ------- Pile-Up weights
+
   'puW2016': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -335,15 +359,63 @@ Steps = {
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
 
-
-  'LeptonSF' : {
+  'puW2017B': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
-                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW")',
-                  'module'     : 'LeptonSF()',
-                   },
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer' ,
+                  'declare'    : 'pufile_data2017B="%s/src/LatinoAnalysis/NanoGardener/python/data/PUweights/2017/PU_2017B.root" % os.environ["CMSSW_BASE"]',
+                  'module'     : 'puWeightProducer("auto",pufile_data2017B,"pu_mc","pileup",verbose=False,name="puW2017B",doSysVar=False)',
+  },
+
+
+  'puW2017C': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer' ,
+                  'declare'    : 'pufile_data2017C="%s/src/LatinoAnalysis/NanoGardener/python/data/PUweights/2017/PU_2017C.root" % os.environ["CMSSW_BASE"]',
+                  'module'     : 'puWeightProducer("auto",pufile_data2017C,"pu_mc","pileup",verbose=False,name="puW2017C",doSysVar=False)',
+  },
+
+
+  'puW2017D': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer' ,
+                  'declare'    : 'pufile_data2017D="%s/src/LatinoAnalysis/NanoGardener/python/data/PUweights/2017/PU_2017D.root" % os.environ["CMSSW_BASE"]',
+                  'module'     : 'puWeightProducer("auto",pufile_data2017D,"pu_mc","pileup",verbose=False,name="puW2017D",doSysVar=False)',
+  },
+
+
+  'puW2017E': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer' ,
+                  'declare'    : 'pufile_data2017E="%s/src/LatinoAnalysis/NanoGardener/python/data/PUweights/2017/PU_2017E.root" % os.environ["CMSSW_BASE"]',
+                  'module'     : 'puWeightProducer("auto",pufile_data2017E,"pu_mc","pileup",verbose=False,name="puW2017E",doSysVar=False)',
+  },
+
+  'puW2017F': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer' ,
+                  'declare'    : 'pufile_data2017F="%s/src/LatinoAnalysis/NanoGardener/python/data/PUweights/2017/PU_2017F.root" % os.environ["CMSSW_BASE"]',
+                  'module'     : 'puWeightProducer("auto",pufile_data2017F,"pu_mc","pileup",verbose=False,name="puW2017F",doSysVar=False)',
+  },
+
+  'puW2017perEra' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_puW2017.py\')' ,
+                 },
+
 
 ## ------- MODULES: Fakes
 
@@ -550,3 +622,5 @@ Steps = {
                },
 
 } 
+
+
