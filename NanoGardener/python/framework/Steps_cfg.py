@@ -101,11 +101,11 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                 },
 
-  'DATACorr2017' : {
+  'DATACorr2017test' : {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['rochesterDATA','jetSel','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
+                  'subTargets' : ['rochesterDATA','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
                 },
 
 ## ------- WgStar DATA:
