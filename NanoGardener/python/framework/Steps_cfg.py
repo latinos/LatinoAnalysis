@@ -51,6 +51,7 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent','PrefCorr2017'],
                 },
 
+
   'MCformulas': {
                   'isChain'    : True  ,
                   'do4MC'      : True ,
@@ -62,8 +63,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True ,
                   'do4Data'    : False  ,
-                  #'subTargets' : ['baseW','GenVar','GenLeptonMatch','trigMC','LeptonSF','formulasMC'],
-                  'subTargets' : ['PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF','formulasMC'],
+                  'subTargets' : ['PrefCorr2017','jetSel','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF','formulasMC'],
                   #'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
                 },             
 
