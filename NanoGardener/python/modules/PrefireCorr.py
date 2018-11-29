@@ -7,7 +7,10 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 class PrefCorr(Module):
-    def __init__(self, jetroot="L1prefiring_jet_2017BtoF.root", jetmapname="L1prefiring_jet_2017BtoF", photonroot="L1prefiring_photon_2017BtoF.root", photonmapname="L1prefiring_photon_2017BtoF"): # TODO PRELIMINARY MAPS
+    def __init__(self, jetroot="L1prefiring_jetpt_2017BtoF.root", jetmapname="L1prefiring_jetpt_2017BtoF", photonroot="L1prefiring_photonpt_2017BtoF.root", photonmapname="L1prefiring_photonpt_2017BtoF", variation=0, UseEMpT=0):
+# Variation: -1 = Down, 0 = Nominal, 1 = Up
+# UseEMpT: Set to 1 if the jet map is defined for energy deposited in ECAL (pT_EM vs pT). For jet map only, not photon!
+
         cmssw_base = os.getenv('CMSSW_BASE')
 
         self.photon_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/prefire_maps/" + photonroot)
@@ -15,6 +18,9 @@ class PrefCorr(Module):
 
         self.jet_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/prefire_maps/" + jetroot)
         self.jet_map = self.get_root_obj(self.jet_file, jetmapname)
+
+        self.variation = variation
+        self.UseEMpT = UseEMpT
 
     def open_root(self, path):
         r_file = ROOT.TFile.Open(path)
@@ -42,32 +48,70 @@ class PrefCorr(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        photons = Collection(event,"Photon")
-        electrons = Collection(event,"Electron")
         jets = Collection(event,"Jet")
         prefw = 1.0
-        JetIsEG = []
 
         # Options
-        UseEMpT = 0 # Set to 1 if the jet map is defined for energy deposited in ECAL (pT_EM vs pT). For jet map only, not photon!
+        self.JetMinPt = 20 # Min/Max Values may need to be fixed for new maps
+        self.JetMaxPt = 500
+        self.JetMinEta = 2.0
+        self.JetMaxEta = 3.0
+        self.PhotonMinPt = 20
+        self.PhotonMaxPt = 500
+        self.PhotonMinEta = 2.0
+        self.PhotonMaxEta = 3.0
 
-        for pho in photons: # All photons. Should be only isolated photons?
-          JetIsEG.append(pho.jetIdx)
-          if pho.pt > 20 and abs(pho.eta) < 3.0 and abs(pho.eta) > 1.75: # <- Values may need to be fixed for new maps
-            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(pho.eta, min(pho.pt, 200)))
+        for jid,jet in enumerate(jets): # First loop over all jets
+          jetpf = 1.0
+          PhotonInJet = []
 
-        for ele in electrons:
-          if ele.jetIdx in JetIsEG: continue
-          JetIsEG.append(ele.jetIdx)
-          if ele.pt > 20 and abs(ele.eta) < 3.0 and abs(ele.eta) > 1.75: # <- Values may need to be fixed for new maps
-            prefw *= 1-self.photon_map.GetBinContent(self.photon_map.FindBin(ele.eta, min(ele.pt, 200)))
-
-        for jid,jet in enumerate(jets):
           jetpt = jet.pt
-          if UseEMpT: jetpt *= (jet.chEmEF + jet.neEmEF)
-          if jetpt > 40 and abs(jet.eta) < 3.5 and abs(jet.eta) > 1.75 and (jid not in JetIsEG): # <- Values may need to be fixed for new maps
-            prefw *= 1-self.jet_map.GetBinContent(self.jet_map.FindBin(jet.eta, min(jetpt, 500)))
+          if self.UseEMpT: jetpt *= (jet.chEmEF + jet.neEmEF)
 
+          if jetpt >= self.JetMinPt and abs(jet.eta) <= self.JetMaxEta and abs(jet.eta) >= self.JetMinEta:
+            jetpf *= 1-self.GetPrefireProbability(self.jet_map, jet.eta, jetpt, self.JetMaxPt)
+
+          phopf = self.EGvalue(event, jid)
+          prefw *= min(jetpf,phopf) # The higher prefire-probablity between the jet and the lower-pt photon(s)/elecron(s) from the jet is chosen
+
+        prefw *= self.EGvalue(event, -1) # Then loop over all photons/electrons not associated to jets
         self.out.fillBranch("PrefireWeight", prefw)
-
         return True
+
+    def EGvalue(self, event, jid):
+      photons = Collection(event,"Photon")
+      electrons = Collection(event,"Electron")
+      phopf = 1.0
+      PhotonInJet = []
+
+      for pid,pho in enumerate(photons):
+        if pho.jetIdx == jid:
+          if pho.pt >= self.PhotonMinPt and abs(pho.eta) <= self.PhotonMaxEta and abs(pho.eta) >= self.PhotonMinEta:
+            phopf_temp = 1-self.GetPrefireProbability(self.photon_map, pho.eta, pho.pt, self.PhotonMaxPt)
+
+            elepf_temp = 1.0
+            if pho.electronIdx > -1: # What if the electron corresponding to the photon would return a different value?
+              if event.Electron_pt[pho.electronIdx] >= self.PhotonMinPt and abs(event.Electron_eta[pho.electronIdx]) <= self.PhotonMaxEta and abs(event.Electron_eta[pho.electronIdx]) >= self.PhotonMinEta:
+                elepf_temp = 1-self.GetPrefireProbability(self.photon_map, event.Electron_eta[pho.electronIdx], event.Electron_pt[pho.electronIdx], self.PhotonMaxPt)
+
+            phopf *= min(phopf_temp, elepf_temp) # The higher prefire-probablity between the photon and corresponding electron is chosen
+            PhotonInJet.append(pid)
+
+      for ele in electrons:
+        if ele.jetIdx == jid and (ele.photonIdx not in PhotonInJet):
+          if ele.pt >= self.PhotonMinPt and abs(ele.eta) <= self.PhotonMaxEta and abs(ele.eta) >= self.PhotonMinEta:
+            phopf *= 1-self.GetPrefireProbability(self.photon_map, ele.eta, ele.pt, self.PhotonMaxPt)
+
+      return phopf
+
+    def GetPrefireProbability(self, Map, eta, pt, maxpt):
+      bin = Map.FindBin(eta, min(pt, maxpt-0.01))
+      pref_prob = Map.GetBinContent(bin)
+
+      # Choose larger uncertainty between 20% of prefire rate and bin statistical uncertainty
+      if self.variation == 1: 
+        pref_prob = min(max(pref_prob + Map.GetBinError(bin), (1+0.2) * pref_prob), 1.0)
+      if self.variation == -1:
+        pref_prob = max(min(pref_prob - Map.GetBinError(bin), (1-0.2) * pref_prob), 0.0)
+      return pref_prob
+
