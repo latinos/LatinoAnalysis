@@ -2,7 +2,8 @@
 
 ## --------------------------------- Some predefined sequence Chains -----------------------------------------
 
-PU2017Seq=['puW2017B','puW2017C','puW2017D','puW2017E','puW2017F','puW2017perEra']   
+#PU2017Seq=['puW2017B','puW2017C','puW2017D','puW2017E','puW2017F','puW2017perEra']   
+PU2017Seq=['puW']
 
 # -------------------------------------------- HERE WE GO ----------------------------------------------------
 
@@ -339,6 +340,15 @@ Steps = {
                    },
 
 ## ------- Pile-Up weights
+
+  'puW'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.runDependentPuW' ,
+                  'declare'    : 'puWeight = lambda : runDependentPuW("RPLME_CMSSW")',
+                  'module'     : 'puWeight()', 
+             } , 
 
   'puW2016': {
                   'isChain'    : False ,
