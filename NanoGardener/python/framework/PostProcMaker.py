@@ -527,9 +527,12 @@ class PostProcMaker():
          FileList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
 
        # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
-       if not len(nAODFileList) == len(FileList) : 
-         FileList = nAODFileList
-         if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
+#      if not len(nAODFileList) == len(FileList) : 
+#        print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
+#        print nAODFileList
+#        print FileList
+#        FileList = nAODFileList
+#        if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
 
        # Now compute #evts
        genEventCount = 0
