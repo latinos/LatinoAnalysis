@@ -133,9 +133,13 @@ class L2KinFiller(TreeCloner):
            'upara',
            'uperp',
            'm2ljj20',
-           'm2ljj30'
-
-           
+           'm2ljj30',
+# for VBF training
+           'ptTOT_cut',
+           'mTOT_cut',
+           'OLV1_cut',
+           'OLV2_cut',
+           'Ceta_cut'
            ]
         
         # clone the tree
