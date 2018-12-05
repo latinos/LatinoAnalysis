@@ -59,8 +59,8 @@ from LatinoAnalysis.Gardener.variables.DMVar                      import DMVarFi
 from LatinoAnalysis.Gardener.variables.XWWVar                     import XWWVarFiller
 from LatinoAnalysis.Gardener.variables.dymvaVar                   import DymvaVarFiller
 from LatinoAnalysis.Gardener.variables.dymvaHiggs                 import DymvaHiggsFiller
-from LatinoAnalysis.Gardener.variables.VBF_DNNvar                 import DNNvarFiller
-from LatinoAnalysis.Gardener.variables.VBF_DNNvarv1               import DNNvarFillerv1
+#from LatinoAnalysis.Gardener.variables.VBF_DNNvar                 import DNNvarFiller
+#from LatinoAnalysis.Gardener.variables.VBF_DNNvarv1               import DNNvarFillerv1
 
 from LatinoAnalysis.Gardener.variables.chargeFlipWeight           import chargeFlipWeight
 # mucca
@@ -178,8 +178,8 @@ if __name__ == '__main__':
     modules['xwwvarfiller']     = XWWVarFiller()
     modules['dymvaVarFiller']   = DymvaVarFiller()
     modules['dymvaHiggsFiller'] = DymvaHiggsFiller()
-    modules['vbfdnnvarFiller']  = DNNvarFiller()
-    modules['vbfdnnvarFillerv1']= DNNvarFillerv1()
+  #  modules['vbfdnnvarFiller']  = DNNvarFiller()
+ #   modules['vbfdnnvarFillerv1']= DNNvarFillerv1()
 
 # Charge Flip
     modules['chFlipProba']      = chargeFlipWeight()
