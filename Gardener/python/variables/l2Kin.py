@@ -139,7 +139,10 @@ class L2KinFiller(TreeCloner):
            'mTOT_cut',
            'OLV1_cut',
            'OLV2_cut',
-           'Ceta_cut'
+           'Ceta_cut',
+#whss
+           'mlljj20_whss',
+           'mlljj30_whss'
            ]
         
         # clone the tree
