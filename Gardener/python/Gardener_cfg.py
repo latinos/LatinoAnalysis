@@ -1385,6 +1385,7 @@ samples4Syst = [
                  'ST_t-channel_antitop','ST_t-channel_top',
                  'ST_tW_antitop','ST_tW_top',
                  'ST_tW_antitop_noHad' , 'ST_tW_antitop_noHad_ext1' , 'ST_tW_top_noHad' , 'ST_tW_top_noHad_ext1' ,
+                 'TTZjets',
 
                  # VV (including WW) 
                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
