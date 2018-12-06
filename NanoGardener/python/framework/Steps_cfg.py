@@ -145,6 +145,13 @@ Steps = {
                   'subTargets' : ['rochesterDATA','jetSel','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
                 },
 
+  'DATACorr2017step2' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['CleanJetCut','l2Kin'],
+                },
+
 ## ------- WgStar DATA:
 
     'DATAWgStar2017' : { 
@@ -271,6 +278,16 @@ Steps = {
                   'declare'    : 'jetSel = lambda : JetSel(2,"loose",15.0,4.7,"CleanJet")' ,
                   'module'     : 'jetSel()' ,
                }, 
+
+   'CleanJetCut' : {
+                 'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.CopyCleanJet',
+                  'declare'    : 'cleanJetCut = lambda : (newcollectionname="CleanJetCut", cuts=["eta>2.65","eta<3.139"])',
+                  'module'     : 'cleanJetCut()',
+               }, 
+
 
 ## ------- MODULES: Trigger
 
