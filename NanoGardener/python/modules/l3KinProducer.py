@@ -1,40 +1,28 @@
-#
+# vim: set sts=4 sw=4 fdm=syntax fdl=2 et:
 #
 #     | ___ /   |  / _)         
 #     |   _ \   ' /   |  __ \   
 #     |    ) |  . \   |  |   |  
 #    _| ____/  _|\_\ _| _|  _|  
-#                                                                                    
 #
 #
-
-
-
 
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
 
-
-import os.path
-
-
+import math
+from itertools import combinations
 
 class l3KinProducer(Module):
+    l3KinDefault = -9999
+
     def __init__(self):
+        pass
 
-        # change this part into correct path structure... 
-        cmssw_base = os.getenv('CMSSW_BASE')
-        try:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWWVar.C+g')
-        except RuntimeError:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWWVar.C++g')
-
-
-      
     def beginJob(self):
         pass
 
@@ -43,130 +31,164 @@ class l3KinProducer(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.newbranches = [
-           'mllmin3l',
-           'zveto_3l',
-           'pt1',
-           'pt2',
-           'pt3',
-           'eta1',
-           'eta2',
-           'eta3',
-           'phi1',
-           'phi2',
-           'phi3',
-   #        'channel',
-           'drllmin3l',
-           'njet_3l',
-           'nbjet_3l',
-           'chlll',
-           'pfmet',
-           'mlll',
-           'flagOSSF',
-           'mtwww',
-           'mtw1_wh3l',
-           'mtw2_wh3l',
-           'mtw3_wh3l',
-           'minmtw_wh3l',
-           'mindphi_lmet',
-           'dphilllmet',
-           'ptlll',
-           'pTWWW',
-           'dphilmet1_wh3l',
-           'dphilmet2_wh3l',
-           'dphilmet3_wh3l',
-           'ptbest'
-        ]
-        
-        for nameBranches in self.newbranches :
-          self.out.branch(nameBranches  ,  "F");
+        self.newbranches = {
+            'WH3l_ZVeto'     : (["F"], {}),
+            'WH3l_flagOSSF'  : (["O"], {}),
+            'WH3l_njet'      : (["I"], {}),
+            'WH3l_nbjet'     : (["I"], {}),
+            'WH3l_mtlmet'    : (["F"], {'n':3}),
+            'WH3l_dphilmet'  : (["F"], {'n':3}),
+            'WH3l_mOSll'     : (["F"], {'n':3}),
+            'WH3l_drOSll'    : (["F"], {'n':3}),
+            'WH3l_ptOSll'    : (["F"], {'n':3}),
+            'WH3l_chlll'     : (["I"], {}),
+            'WH3l_mlll'      : (["F"], {}),
+            'WH3l_ptlll'     : (["F"], {}),
+            'WH3l_ptWWW'     : (["F"], {}),
+            'WH3l_mtWWW'     : (["F"], {}),
+            'WH3l_dphilllmet': (["F"], {}),
+        }
+
+        for nameBranchKey, newBranchOpt in self.newbranches.items() :
+            self.out.branch(nameBranchKey, *newBranchOpt[0], **newBranchOpt[1]);
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
+    def _WH3l_isOk(self):
+        """If a good WH3l candidate event?"""
+        if len(self.Lepton_4vecId) < 3:
+            return False
+        sign = lambda a: 1 if a >= 0 else -1
+        if abs(sum([sign(l[1]) for l in self.Lepton_4vecId])) > 1:
+            return False
+        return True
+
+    def WH3l_ZVeto(self):
+        """Return min mass difference in OSSF lepton pairs"""
+        if not self.WH3l_isOk:
+            return -1*self.l3KinDefault
+
+        Zmass=91.1876
+        minmllDiffToZ = -1*self.l3KinDefault
+        for iLep, jLep in combinations(self.Lepton_4vecId,2):
+            if iLep[1]+jLep[1] == 0:
+                mllDiffToZ = abs((iLep[0]+jLep[0]).M()-Zmass)
+                minmllDiffToZ = mllDiffToZ if mllDiffToZ < minmllDiffToZ else minmllDiffToZ
+        return minmllDiffToZ
+
+    def WH3l_flagOSSF(self):
+        """Return True if OSSF lepton pair is found"""
+        if not self.WH3l_isOk:
+            return False
+
+        for iLep, jLep in combinations(self.Lepton_4vecId,2):
+            if iLep[1]+jLep[1] == 0:
+                return True
+
+        return False
+
+    def WH3l_njet(self):
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return sum([ 1 if j.pt > 40 and abs(j.eta) < 4.7 else 0 for j in self.CleanJet ])
+    
+    def WH3l_nbjet(self):
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return sum([ 1 if j.pt > 20 and j.pt < 40 and abs(j.eta) < 4.7 and self.Jet[j.jetIdx].btagCMVA > -0.5884 else 0 for j in self.CleanJet ])
+
+    def WH3l_mtlmet(self):
+        """https://en.wikipedia.org/wiki/Transverse_mass with m_lepton=0, m_met=0. """
+        if not self.WH3l_isOk:
+            return [self.l3KinDefault]*3
+        calc_mtlmet = lambda lvec, mvec: math.sqrt(2 * lvec.Pt() * mvec.Pt() * (1 - math.cos(abs(lvec.DeltaPhi(mvec))))) if lvec.Pt() > 0 else self.l3KinDefault
+        return [ calc_mtlmet(l[0], self.MET) for l in self.Lepton_4vecId ]
+
+    def WH3l_dphilmet(self):
+        """Return dphi between lepton and MET"""
+        if not self.WH3l_isOk:
+            return [self.l3KinDefault]*3
+        return [ abs(l[0].DeltaPhi(self.MET)) for l in self.Lepton_4vecId ]
+
+    def WH3l_mOSll(self):
+        """Return mass of OS lepton pair"""
+        if not self.WH3l_isOk:
+            return [self.l3KinDefault]*3
+        return [ (iLep[0]+jLep[0]).M() if iLep[1]*jLep[1] < 0 else self.l3KinDefault for iLep, jLep in combinations(self.Lepton_4vecId,2)]
+
+    def WH3l_drOSll(self):
+        """Return dr of OS lepton pair"""
+        if not self.WH3l_isOk:
+            return [self.l3KinDefault]*3
+        return [ iLep[0].DeltaR(jLep[0]) if iLep[1]*jLep[1] < 0 else self.l3KinDefault for iLep, jLep in combinations(self.Lepton_4vecId,2)]
+
+    def WH3l_ptOSll(self):
+        """Return pt of OS lepton pair"""
+        if not self.WH3l_isOk:
+            return [self.l3KinDefault]*3
+        return [ (iLep[0]+jLep[0]).Pt() if iLep[1]*jLep[1] < 0 else self.l3KinDefault for iLep, jLep in combinations(self.Lepton_4vecId,2)]
+
+    def WH3l_chlll(self):
+        """Return charge sum of leptons"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        sign = lambda a: 1 if a >= 0 else -1
+        return sum([ sign(l[1]) for l in self.Lepton_4vecId])
+
+    def WH3l_mlll(self):
+        """Return invariant of leptons"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return (self.Lepton_4vecId[0][0]+self.Lepton_4vecId[1][0]+self.Lepton_4vecId[2][0]).M()
+
+    def WH3l_ptlll(self):
+        """Return pt of leptons"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return (self.Lepton_4vecId[0][0]+self.Lepton_4vecId[1][0]+self.Lepton_4vecId[2][0]).Pt()
+
+    def WH3l_ptWWW(self):
+        """Return pt of WH"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return (self.Lepton_4vecId[0][0]+self.Lepton_4vecId[1][0]+self.Lepton_4vecId[2][0]+self.MET).Pt()
+
+    def WH3l_mtWWW(self):
+        """Return mt of WH"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return math.sqrt(2*self.WH3l_ptlll()*self.MET.Pt()*(1. - math.cos(self.WH3l_dphilllmet())))
+
+    def WH3l_dphilllmet(self):
+        """Return mt of WH"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return abs((self.Lepton_4vecId[0][0]+self.Lepton_4vecId[1][0]+self.Lepton_4vecId[2][0]).DeltaPhi(self.MET))
+
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        #muons = Collection(event, "Muon")
-        #electrons = Collection(event, "Electron")
-
-        
-        # order in pt the collection merging muons and electrons
+        # Order in pt the collection merging muons and electrons
         # lepMerger must be already called
-        leptons = Collection(event, "Lepton")
+        Lepton = Collection(event, "Lepton")
+        self.Lepton_4vecId = []
+        for iLep in range(3):
+            if len(Lepton) > iLep:
+                self.Lepton_4vecId.append( (ROOT.TLorentzVector(), Lepton[iLep].pdgId) )
+                self.Lepton_4vecId[-1][0].SetPtEtaPhiM(Lepton[iLep].pt, Lepton[iLep].eta, Lepton[iLep].phi, 0)
 
-        #leptons = electrons
-        nLep = len(leptons)
-        
-        
-        lep_pt      = ROOT.std.vector(float)(0)
-        lep_eta     = ROOT.std.vector(float)(0)
-        lep_phi     = ROOT.std.vector(float)(0)
-        lep_flavour = ROOT.std.vector(float)(0)
-        lep_ch      = ROOT.std.vector(float)(0)
-        
-        for lep in leptons :
-          lep_pt. push_back(lep.pt)
-          lep_eta.push_back(lep.eta)
-          lep_phi.push_back(lep.phi)
-          lep_ch.push_back(-lep.pdgId/abs(lep.pdgId))
-          lep_flavour.push_back(lep.pdgId)
-          # 11 = ele 
-          # 13 = mu
-          #if lep.tightId == 0 :
-          #  lep_flavour.push_back(lep.charge *  11)
-          #else: 
-          #  lep_flavour.push_back(lep.charge *  13)
-          
-          # is this really doing its job?
-        
-           
-          
-        Jet   = Collection(event, "CleanJet")
+        self.MET = ROOT.TLorentzVector()
+        self.MET.SetPtEtaPhiM(event.MET_pt, 0, event.MET_phi, 0)
+
+        self.CleanJet = Collection(event, "CleanJet")
         #auxiliary jet collection to access the mass
-        OrigJet   = Collection(event, "Jet")
+        self.Jet = Collection(event, "Jet")
 
-        nJet = len(Jet)
+        self.WH3l_isOk = self._WH3l_isOk()
 
-        jet_pt     = ROOT.std.vector(float)(0)
-        jet_eta    = ROOT.std.vector(float)(0)
-        jet_phi    = ROOT.std.vector(float)(0)
-        jet_mass   = ROOT.std.vector(float)(0)
-        jet_cmvav2 = ROOT.std.vector(float)(0)
-
-        for jet in Jet :
-          jet_pt. push_back(jet.pt)
-          jet_eta.push_back(jet.eta)
-          jet_phi.push_back(jet.phi)
-          jet_mass.push_back(OrigJet[jet.jetIdx].mass)
-          jet_cmvav2.push_back(OrigJet[jet.jetIdx].btagCMVA)
-
-
-
-        WWW = ROOT.WWW()
-
-        WWW.setLeptons(lep_pt, lep_eta, lep_phi, lep_ch, lep_flavour)
-        WWW.setJets(jet_pt, jet_eta, jet_phi, jet_mass, jet_cmvav2)
-         
-        MET_phi   = event.MET_phi
-        MET_pt    = event.MET_pt
-        
-        WWW.setMET(MET_pt, MET_phi)
-
-        WWW.setTkMET(event.TkMET_pt, event.TkMET_phi) 
-
-        WWW.checkIfOk()
-
-            
-        for nameBranches in self.newbranches :
-          self.out.fillBranch(nameBranches  ,  getattr(WWW, nameBranches)());
-
+        for nameBranchKey in self.newbranches.keys():
+            self.out.fillBranch(nameBranchKey, getattr(self, nameBranchKey)());
 
         return True
-
-
-
-
-
-
 
