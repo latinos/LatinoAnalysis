@@ -527,8 +527,11 @@ class PostProcMaker():
          FileList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
 
        # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
-#      if not len(nAODFileList) == len(FileList) : 
-#        print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
+       if not len(nAODFileList) == len(FileList) : 
+         print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
+#        print ' EXIT !!!!'
+#        exit()
+
 #        print nAODFileList
 #        print FileList
 #        FileList = nAODFileList

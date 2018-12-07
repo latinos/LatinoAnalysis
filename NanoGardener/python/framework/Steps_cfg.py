@@ -58,7 +58,7 @@ Steps = {
                   'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL',
                                   'trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
-                    }
+                    },
 
 
   'MCCorr2017test' : { 
