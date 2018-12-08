@@ -105,7 +105,11 @@ class TrigMaker(Module):
                   temp_file.close()
 
            for Tname in Trigger[self.cmssw][RunP]['GlEff']:
-              self.TM_GlEff[RunP][Tname] = Trigger[self.cmssw][RunP]['GlEff'][Tname]
+              self.TM_GlEff[RunP][Tname] = [] 
+              self.TM_GlEff[RunP][Tname].append(Trigger[self.cmssw][RunP]['GlEff'][Tname][0])
+              self.TM_GlEff[RunP][Tname].append(Trigger[self.cmssw][RunP]['GlEff'][Tname][0]-Trigger[self.cmssw][RunP]['GlEff'][Tname][1])
+              self.TM_GlEff[RunP][Tname].append(min(1.,Trigger[self.cmssw][RunP]['GlEff'][Tname][0]+Trigger[self.cmssw][RunP]['GlEff'][Tname][1]))
+
 
         # Set some run/event specific var
         self.total_lum = 0.
@@ -263,29 +267,29 @@ class TrigMaker(Module):
         eff_dbl = [0., 0., 0.]
         eff_evt = [0., 0., 0.]
         for i in range(3): 
-           eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2]*eff_dz[i]
-           eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0]*(1. - eff[5][i]) + eff[1][i]*eff_gl[1]*(1. - eff[4][i]))
+           eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2][i]*eff_dz[i]
+           eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0][i]*(1. - eff[5][i]) + eff[1][i]*eff_gl[1][i]*(1. - eff[4][i]))
         
-        eff_tl = eff[2][0]*eff[5][0]*eff_gl[2]*eff_dz[0] #eff_dz
-        eff_lt = eff[3][0]*eff[4][0]*eff_gl[2]*eff_dz[0] #eff_dz
+        eff_tl = eff[2][0]*eff[5][0]*eff_gl[2][0]*eff_dz[0] #eff_dz
+        eff_lt = eff[3][0]*eff[4][0]*eff_gl[2][0]*eff_dz[0] #eff_dz
 
         # More specific event efficiencies (stored in a vector hence _v)
         # eff_evt_v_map = ['sinEl', 'sinMu', 'doubleEl', 'doubleMu', 'ElMu']
         eff_evt_v = [0., 0., 0., 0., 0.]
         if abs(pdgId1) == 11 and abs(pdgId2) == 11:
-           eff_evt_v[0] = eff[0][0]*eff_gl[0] + (1 - eff[0][0]*eff_gl[0])*eff[1][0]*eff_gl[1]
-           eff_evt_v[2] = (eff[4][0]*eff[3][0] + eff[2][0]*eff[5][0] - eff[3][0]*eff[2][0])*eff_gl[2]*eff_dz[0]
+           eff_evt_v[0] = eff[0][0]*eff_gl[0][0] + (1 - eff[0][0]*eff_gl[0][0])*eff[1][0]*eff_gl[1][0]
+           eff_evt_v[2] = (eff[4][0]*eff[3][0] + eff[2][0]*eff[5][0] - eff[3][0]*eff[2][0])*eff_gl[2][0]*eff_dz[0]
         elif abs(pdgId1) == 13 and abs(pdgId2) == 13:
-           eff_evt_v[1] = eff[0][0]*eff_gl[0] + (1 - eff[0][0]*eff_gl[0])*eff[1][0]*eff_gl[1]
-           eff_evt_v[3] = (eff[4][0]*eff[3][0] + eff[2][0]*eff[5][0] - eff[3][0]*eff[2][0])*eff_gl[2]*eff_dz[0]
+           eff_evt_v[1] = eff[0][0]*eff_gl[0][0] + (1 - eff[0][0]*eff_gl[0][0])*eff[1][0]*eff_gl[1][0]
+           eff_evt_v[3] = (eff[4][0]*eff[3][0] + eff[2][0]*eff[5][0] - eff[3][0]*eff[2][0])*eff_gl[2][0]*eff_dz[0]
         elif abs(pdgId1) == 11 and abs(pdgId2) == 13:
-           eff_evt_v[0] = eff[0][0]*eff_gl[0]
-           eff_evt_v[1] = eff[1][0]*eff_gl[1]
-           eff_evt_v[4]  = (eff_tl + (1 - eff_tl)*eff_lt)*eff_gl[2]
+           eff_evt_v[0] = eff[0][0]*eff_gl[0][0]
+           eff_evt_v[1] = eff[1][0]*eff_gl[1][0]
+           eff_evt_v[4]  = (eff_tl + (1 - eff_tl)*eff_lt)*eff_gl[2][0]
         else:
-           eff_evt_v[0] = eff[1][0]*eff_gl[0]
-           eff_evt_v[1] = eff[0][0]*eff_gl[1]
-           eff_evt_v[4]  = (eff_tl + (1 - eff_tl)*eff_lt)*eff_gl[2]
+           eff_evt_v[0] = eff[1][0]*eff_gl[0][0]
+           eff_evt_v[1] = eff[0][0]*eff_gl[1][0]
+           eff_evt_v[4]  = (eff_tl + (1 - eff_tl)*eff_lt)*eff_gl[2][0]
 
         # Trigger emulator
         Trig_em = [False, False, False, False, False, False]  
@@ -296,14 +300,14 @@ class TrigMaker(Module):
               else: Trndm.append(get_rndm(10000*Trndm[a-1]))
            else: Trndm.append(get_rndm(event_seed))
 
-        sApass   = eff[0][0]*eff_gl[0] > Trndm[0]
-        sBpass   = eff[1][0]*eff_gl[1] > Trndm[1]
+        sApass   = eff[0][0]*eff_gl[0][0] > Trndm[0]
+        sBpass   = eff[1][0]*eff_gl[1][0] > Trndm[1]
         lApass   = eff[2][0] > Trndm[2]
         lBpass   = eff[3][0] > Trndm[3]
         tApass   = eff[4][0] > Trndm[4]
         tBpass   = eff[5][0] > Trndm[5]
         DZpass   =    eff_dz[0] > Trndm[6]
-        dblglpass=    eff_gl[2] > Trndm[7]
+        dblglpass=    eff_gl[2][0] > Trndm[7]
 
         if abs(pdgId1) == 11 and abs(pdgId2) == 11:
            Trig_em[1] = sApass or sBpass
@@ -336,13 +340,13 @@ class TrigMaker(Module):
 
         eff_evt = [0., 0., 0.]
         for i in range(3):
-           s1 = eff13[0][i]*eff_gl13[0]
-           s2 = eff23[0][i]*eff_gl12[1]
-           s3 = eff13[1][i]*eff_gl13[1]
+           s1 = eff13[0][i]*eff_gl13[0][i]
+           s2 = eff23[0][i]*eff_gl12[1][i]
+           s3 = eff13[1][i]*eff_gl13[1][i]
            eff_sng = s1 + (1-s1)*s2 + (1 - s1 - (1 - s1*s2))*s3
-           e12 = (eff12[2][i]*eff12[5][i] + (1 - eff12[2][i]*eff12[5][i])*eff12[3][i]*eff12[4][i])*eff_dz12[i]*eff_gl12[2]
-           e13 = (eff13[2][i]*eff13[5][i] + (1 - eff13[2][i]*eff13[5][i])*eff13[3][i]*eff13[4][i])*eff_dz13[i]*eff_gl13[2]
-           e23 = (eff23[2][i]*eff23[5][i] + (1 - eff23[2][i]*eff23[5][i])*eff23[3][i]*eff23[4][i])*eff_dz23[i]*eff_gl23[2]
+           e12 = (eff12[2][i]*eff12[5][i] + (1 - eff12[2][i]*eff12[5][i])*eff12[3][i]*eff12[4][i])*eff_dz12[i]*eff_gl12[2][i]
+           e13 = (eff13[2][i]*eff13[5][i] + (1 - eff13[2][i]*eff13[5][i])*eff13[3][i]*eff13[4][i])*eff_dz13[i]*eff_gl13[2][i]
+           e23 = (eff23[2][i]*eff23[5][i] + (1 - eff23[2][i]*eff23[5][i])*eff23[3][i]*eff23[4][i])*eff_dz23[i]*eff_gl23[2][i]
            eff_dbl = e12 + (1 - e12)*e13 + (1 - e12)*(1 - e13)*e23
            #eff_dbl = e12 + (1 - e12)*e13 + (1 - e12 - (1 - e12)*e13)*e23
            eff_evt[i] = eff_dbl + (1 - eff_dbl)*eff_sng 
@@ -376,15 +380,15 @@ class TrigMaker(Module):
               eff_dict[key_name]['eff_gl']  = temp_eff_gl
                
               for k in range(3):
-                 temp_var = (temp_eff[2][k]*temp_eff[5][k] + (1 - temp_eff[2][k]*temp_eff[5][k])*temp_eff[3][k]*temp_eff[4][k])*temp_eff_dz[i]*temp_eff_gl[2]
+                 temp_var = (temp_eff[2][k]*temp_eff[5][k] + (1 - temp_eff[2][k]*temp_eff[5][k])*temp_eff[3][k]*temp_eff[4][k])*temp_eff_dz[k]*temp_eff_gl[2][k]
                  eff_dbl_inv[k] *= (1 - temp_var)
                  #eff_dbl_inv[k] += (1 - eff_dbl_inv[k])*temp_var
            for l in range(3):
               if i == nLep-1:
-                 eff_sng_inv[l] *= (1 - eff_dict['1_'+str(nLep)]['eff'][1][l]*eff_dict['1_'+str(nLep)]['eff_gl'][1])
+                 eff_sng_inv[l] *= (1 - eff_dict['1_'+str(nLep)]['eff'][1][l]*eff_dict['1_'+str(nLep)]['eff_gl'][1][l])
                  #eff_sng_inv[l] += (1 - eff_sng_inv[l])*eff_dict['1_'+str(nLep)]['eff'][1][l]
               else:
-                 eff_sng_inv[l] *= (1 - eff_dict[str(i + 1)+'_'+str(nLep)]['eff'][0][l]*eff_dict[str(i + 1)+'_'+str(nLep)]['eff_gl'][0])
+                 eff_sng_inv[l] *= (1 - eff_dict[str(i + 1)+'_'+str(nLep)]['eff'][0][l]*eff_dict[str(i + 1)+'_'+str(nLep)]['eff_gl'][0][l])
                  #eff_sng_inv[l] += (1 - eff_sng_inv[l])*eff_dict[str(i + 1)+'_'+str(nLep)]['eff'][0][l]
 
         for m in range(3):
