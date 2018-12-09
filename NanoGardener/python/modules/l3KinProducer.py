@@ -19,6 +19,23 @@ from itertools import combinations
 
 class l3KinProducer(Module):
     l3KinDefault = -9999
+    newbranches = {
+        'WH3l_ZVeto'     : (["F"], {}),
+        'WH3l_flagOSSF'  : (["O"], {}),
+        'WH3l_njet'      : (["I"], {}),
+        'WH3l_nbjet'     : (["I"], {}),
+        'WH3l_mtlmet'    : (["F"], {'n':3}),
+        'WH3l_dphilmet'  : (["F"], {'n':3}),
+        'WH3l_mOSll'     : (["F"], {'n':3}),
+        'WH3l_drOSll'    : (["F"], {'n':3}),
+        'WH3l_ptOSll'    : (["F"], {'n':3}),
+        'WH3l_chlll'     : (["I"], {}),
+        'WH3l_mlll'      : (["F"], {}),
+        'WH3l_ptlll'     : (["F"], {}),
+        'WH3l_ptWWW'     : (["F"], {}),
+        'WH3l_mtWWW'     : (["F"], {}),
+        'WH3l_dphilllmet': (["F"], {}),
+    }
 
     def __init__(self):
         pass
@@ -31,23 +48,6 @@ class l3KinProducer(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.newbranches = {
-            'WH3l_ZVeto'     : (["F"], {}),
-            'WH3l_flagOSSF'  : (["O"], {}),
-            'WH3l_njet'      : (["I"], {}),
-            'WH3l_nbjet'     : (["I"], {}),
-            'WH3l_mtlmet'    : (["F"], {'n':3}),
-            'WH3l_dphilmet'  : (["F"], {'n':3}),
-            'WH3l_mOSll'     : (["F"], {'n':3}),
-            'WH3l_drOSll'    : (["F"], {'n':3}),
-            'WH3l_ptOSll'    : (["F"], {'n':3}),
-            'WH3l_chlll'     : (["I"], {}),
-            'WH3l_mlll'      : (["F"], {}),
-            'WH3l_ptlll'     : (["F"], {}),
-            'WH3l_ptWWW'     : (["F"], {}),
-            'WH3l_mtWWW'     : (["F"], {}),
-            'WH3l_dphilllmet': (["F"], {}),
-        }
 
         for nameBranchKey, newBranchOpt in self.newbranches.items() :
             self.out.branch(nameBranchKey, *newBranchOpt[0], **newBranchOpt[1]);
@@ -91,12 +91,12 @@ class l3KinProducer(Module):
     def WH3l_njet(self):
         if not self.WH3l_isOk:
             return self.l3KinDefault
-        return sum([ 1 if j.pt > 40 and abs(j.eta) < 4.7 else 0 for j in self.CleanJet ])
+        return sum([ 1 if j[0] > 40 and abs(j[1]) < 4.7 else 0 for j in self.CleanJet ])
     
     def WH3l_nbjet(self):
         if not self.WH3l_isOk:
             return self.l3KinDefault
-        return sum([ 1 if j.pt > 20 and j.pt < 40 and abs(j.eta) < 4.7 and self.Jet[j.jetIdx].btagCMVA > -0.5884 else 0 for j in self.CleanJet ])
+        return sum([ 1 if j[0] > 20 and j[0] < 40 and abs(j[1]) < 4.7 and j[2] > -0.5884 else 0 for j in self.CleanJet ])
 
     def WH3l_mtlmet(self):
         """https://en.wikipedia.org/wiki/Transverse_mass with m_lepton=0, m_met=0. """
@@ -181,9 +181,10 @@ class l3KinProducer(Module):
         self.MET = ROOT.TLorentzVector()
         self.MET.SetPtEtaPhiM(event.MET_pt, 0, event.MET_phi, 0)
 
-        self.CleanJet = Collection(event, "CleanJet")
-        #auxiliary jet collection to access the mass
-        self.Jet = Collection(event, "Jet")
+        self.CleanJet = []
+        Jet = Collection(event, "Jet")
+        for j in Collection(event, "CleanJet"):
+            self.CleanJet.append((j.pt, j.eta, Jet[j.jetIdx].btagCMVA))
 
         self.WH3l_isOk = self._WH3l_isOk()
 
