@@ -179,7 +179,7 @@ class l3KinProducer(Module):
                 self.Lepton_4vecId[-1][0].SetPtEtaPhiM(Lepton[iLep].pt, Lepton[iLep].eta, Lepton[iLep].phi, 0)
 
         self.MET = ROOT.TLorentzVector()
-        self.MET.SetPtEtaPhiM(event.MET_pt, 0, event.MET_phi, 0)
+        self.MET.SetPtEtaPhiM(event.PuppiMET_pt, 0, event.PuppiMET_phi, 0)
 
         self.CleanJet = []
         Jet = Collection(event, "Jet")

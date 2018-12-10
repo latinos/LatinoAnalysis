@@ -190,9 +190,12 @@ class l2KinProducer(Module):
         WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass)
        
 
-        MET_sumEt = event.MET_sumEt
-        MET_phi   = event.MET_phi
-        MET_pt    = event.MET_pt
+        #MET_sumEt = event.MET_sumEt
+        #MET_phi   = event.MET_phi
+        #MET_pt    = event.MET_pt
+        MET_sumEt = event.PuppiMET_sumEt
+        MET_phi   = event.PuppiMET_phi
+        MET_pt    = event.PuppiMET_pt
         
         WW.setMET(MET_pt, MET_phi)
         WW.setSumET(MET_sumEt)

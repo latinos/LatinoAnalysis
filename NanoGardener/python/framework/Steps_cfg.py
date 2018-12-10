@@ -159,7 +159,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['CleanJetCut','l2Kin'],
+                  'subTargets' : ['CleanJetCut','l2Kin','l3Kin', 'l4Kin'],
                 },
 
 ## ------- WgStar DATA:
