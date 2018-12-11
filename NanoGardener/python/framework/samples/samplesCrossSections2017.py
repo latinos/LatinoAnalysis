@@ -160,7 +160,8 @@ samples['TTWJetsToLNu_ext2']            .extend( ['xsec=0.2043',	'kfact=1.000',	
 samples['TTZToLLNuNu_M-10']             .extend( ['xsec=0.2529',	'kfact=1.000',		'ref=E'] )
 samples['TTZToQQ']                      .extend( ['xsec=0.5297',        'kfact=1.000',          'ref=E'] )
 samples['TTZjets']                      .extend( ['xsec=0.7826',        'kfact=1.000',          'ref=X'] )
-samples['TTWJetsToQQ']                  .extend( ['xsec=0.4062',        'kfact=1.000',          'ref=E'] )      
+samples['TTWJetsToQQ']                  .extend( ['xsec=0.4062',        'kfact=1.000',          'ref=E'] )  
+samples['TTWjets']                      .extend( ['xsec=0.6105',        'kfact=1.000',          'ref=E'] )  # 0.0462 + 0.2043
 samples['TTTo2L2Nu_alphaS01108']        .extend( ['xsec=87.310',	'kfact=1.000',		'ref=E'] )
 samples['TTToSemiLeptonic']             .extend( ['xsec=364.35',	'kfact=1.000',	        'ref=E'] )  # 831.76 * 0.6760 * 0.1080 * 3 * 2
 samples['TTToSemiLeptonic_alphaS01108'] .extend( ['xsec=364.35',	'kfact=1.000',		'ref=E'] )  # 831.76 * 0.6760 * 0.1080 * 3 * 2
@@ -170,6 +171,15 @@ samples['TTToSemiLepton']               .extend( ['xsec=364.35',	'kfact=1.000',	
 ## GluGluWW
 samples['GluGluWWTo2L2Nu_MCFM']      	.extend( ['xsec=0.5905',	'kfact=1.000',		'ref=E'] ) # 1.4*3.974*0.1086*.1086*9 --> 1.4 is a k-factor, 3.974 comes from the comment on the qqWW samples in reference E
 samples['GluGluWWTo2L2NuHiggs_MCFM'] 	.extend( ['xsec=0.9544',	'kfact=1.000',		'ref=X'] ) # 1.4*0.6817 --> 1.4 is the same k-factor, 0.6817 is 0.07574*9, first number comes from MCFM, 9 is the lepton combinations
+samples['GluGluToWWToENEN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToENMN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToENTN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToMNEN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToMNMN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToMNTN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToTNEN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToTNMN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
+samples['GluGluToWWToTNTN']      	.extend( ['xsec=0.06387',	'kfact=1.000',		'ref=I'] ) # 1.4*0.04562 --> 1.4 is a k-factor, 0.04562 comes from MCFM (GenXsecAnalyzer result divided by 1000)
 
 
 ## ggH,HWW

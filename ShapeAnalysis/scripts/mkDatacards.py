@@ -40,7 +40,11 @@ class DatacardFactory:
         ## list of [background processes]
         self.backgrounds = []
 
-        ## list of [signal processes]
+        ## list of [alternative signal processes] (Different mass points, different models...) --> isSignal = 2
+        self.alternative_signals = []
+        ## list of [cumulative signal processes] (Standard approach) --> isSignal = 1
+        self.cumulative_signals = []
+        ## list of [signal processes] --> isSignal = 1 or isSignal = 2
         self.all_signals = []
         ## list of [background processes]
         self.all_backgrounds = []
@@ -69,13 +73,18 @@ class DatacardFactory:
         
         # divide the list of samples among signal, background and data
         for sampleName, sample in self._samples.iteritems():
-          if structureFile[sampleName]['isSignal'] == 1 :
+          if structureFile[sampleName]['isSignal'] == 1 or structureFile[sampleName]['isSignal'] == 2:
             self.all_signals.append(sampleName)
+          if structureFile[sampleName]['isSignal'] == 2 :
+            self.alternative_signals.append(sampleName)
+          if structureFile[sampleName]['isSignal'] == 1 :
+            self.cumulative_signals.append(sampleName)
           if structureFile[sampleName]['isData'] == 1 :
             self.data.append(sampleName)
           if structureFile[sampleName]['isSignal'] == 0 and structureFile[sampleName]['isData'] == 0:
             self.all_backgrounds.append(sampleName)
-          
+        self.alternative_signals.append("")
+
         if not os.path.isdir (self._outputDirDatacard + "/") :
           os.mkdir (self._outputDirDatacard + "/")
 
@@ -178,445 +187,667 @@ class DatacardFactory:
               histo.SetName("histo_Data")
               self._outFile.cd()
               histo.Write()
-                                     
+             
+                        
+            # Loop over alternative signal samples
+            alternativeSignalName = ""  
+            if len(self.alternative_signals) != 0:
+                for signalName in self.alternative_signals :
+                    print "Alternative signal: " + str(signalName)
+                    alternativeSignalName  = str(signalName)
+                    alternativeSignalTitle = ""
+                    if alternativeSignalName != "":
+                        alternativeSignalTitle = "_" + str(signalName)
+
+                    # start creating the datacard 
+                    cardPath = self._outputDirDatacard + "/" + cutName + "/" + variableName  + "/datacard" + alternativeSignalTitle + ".txt"
+                    print 'Writing to ' + cardPath 
+                    card = open( cardPath ,"w")
+                    card.write('## Shape input card\n')
         
-            # start creating the datacard 
-            cardPath = self._outputDirDatacard + "/" + cutName + "/" + variableName  + "/datacard.txt"
-            print 'Writing to ' + cardPath 
-            card = open( cardPath ,"w")
-            card.write('## Shape input card\n')
-        
-            card.write('imax 1 number of channels\n')
-            card.write('jmax * number of background\n')
-            card.write('kmax * number of nuisance parameters\n') 
+                    card.write('imax 1 number of channels\n')
+                    card.write('jmax * number of background\n')
+                    card.write('kmax * number of nuisance parameters\n') 
+                    
+                    card.write('-'*100+'\n')
+                    card.write('bin         %s' % tagNameToAppearInDatacard+'\n')
+                    if len(self.data) == 0:
+                        self._logger.warning( 'no data, no fun! ')
+                        #raise RuntimeError('No Data found!')
+                        yieldsData['data'] = 0
 
-            card.write('-'*100+'\n')
-            card.write('bin         %s' % tagNameToAppearInDatacard+'\n')
-            if len(self.data) == 0:
-              self._logger.warning( 'no data, no fun! ')
-              #raise RuntimeError('No Data found!')
-              yieldsData['data'] = 0
-
-            card.write('observation %.0f\n' % yieldsData['data'])
+                    card.write('observation %.0f\n' % yieldsData['data'])
             
-            card.write('shapes  *           * '+
-                       'shapes/histos_' + tagNameToAppearInDatacard + ".root" +
-                       '     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC' + '\n')
+                    card.write('shapes  *           * '+
+                               'shapes/histos_' + tagNameToAppearInDatacard + ".root" +
+                               '     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC' + '\n')
             
-            card.write('shapes  data_obs           * '+
-                       'shapes/histos_' + tagNameToAppearInDatacard + ".root" +
-                       '     histo_Data' + '\n')
+                    card.write('shapes  data_obs           * '+
+                               'shapes/histos_' + tagNameToAppearInDatacard + ".root" +
+                               '     histo_Data' + '\n')
             
-            #   shapes  *           * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC
-            #   shapes  data_obs    * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_Data
+                    #   shapes  *           * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC
+                    #   shapes  data_obs    * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_Data
 
             
-            totalNumberSamples = len(self.signals) + len(self.backgrounds)
-            columndef = 30
+                    print "Number of Signals:             " + str(len(self.signals))
+                    print "Number of Alternative Signals: " + str(len(self.alternative_signals) - 1)
+                    print "Number of Cumulative Signals:  " + str(len(self.cumulative_signals))
+                    print "Number of Backgrounds:         " + str(len(self.backgrounds))
+                    
+                    if alternativeSignalName == "" :
+                        totalNumberSamples = len(self.cumulative_signals) + len(self.backgrounds)
+                    else :
+                        totalNumberSamples = len(self.cumulative_signals) + len(self.backgrounds) + 1
+                    columndef = 30
 
-            # adapt column length to long bin names            
-            if len(tagNameToAppearInDatacard) >= (columndef - 5) :
-              columndef = len(tagNameToAppearInDatacard) + 7
+                    # adapt column length to long bin names            
+                    if len(tagNameToAppearInDatacard) >= (columndef - 5) :
+                        columndef = len(tagNameToAppearInDatacard) + 7
             
-            #print " columndef = ", columndef
-            #print " len(tagNameToAppearInDatacard)  = ", len(tagNameToAppearInDatacard) 
-            #print " tagNameToAppearInDatacard  = ", tagNameToAppearInDatacard
+                    #print " columndef = ", columndef
+                    #print " len(tagNameToAppearInDatacard)  = ", len(tagNameToAppearInDatacard) 
+                    #print " tagNameToAppearInDatacard  = ", tagNameToAppearInDatacard
             
             
-            card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
-            #card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) for iterator in range(totalNumberSamples) ])+'\n')
+                    card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) * totalNumberSamples])+'\n')
+                    #card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) for iterator in range(totalNumberSamples) ])+'\n')
             
-            card.write('process'.ljust(80))
-            card.write(''.join([name.ljust(columndef) for name in self.signals]))
-            card.write(''.join([name.ljust(columndef) for name in self.backgrounds]))
-            card.write('\n')
+                    card.write('process'.ljust(80))
+                    if alternativeSignalName == "" :
+                        card.write(''.join([name.ljust(columndef) for name in self.cumulative_signals]))
+                    else :
+                        card.write(alternativeSignalName.ljust(columndef))
+                        card.write(''.join([name.ljust(columndef) for name in self.cumulative_signals]))
+                        
+                    card.write(''.join([name.ljust(columndef) for name in self.backgrounds]))
+                    card.write('\n')
 
-            card.write('process'.ljust(80))
-            card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(len(self.signals))     ]))
-            card.write(''.join([('%d' % (iSample+1)).ljust(columndef) for iSample in range(len(self.backgrounds)) ]))
-            card.write('\n')
+                    card.write('process'.ljust(80))
+                    if alternativeSignalName == "" :
+                        card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(len(self.cumulative_signals)) ]))
+                    else :
+                        card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(1 + len(self.cumulative_signals)) ]))
+                    card.write(''.join([('%d' % (iSample+1)).ljust(columndef) for iSample in range(len(self.backgrounds)) ]))
+                    card.write('\n')
 
-            card.write('rate'.ljust(80))
-            card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef) for name in self.signals    ]))
-            card.write(''.join([('%-.4f' % yieldsBkg[name]).ljust(columndef) for name in self.backgrounds]))
-            card.write('\n')
-            
-            #bin                                       of_vh2j      of_vh2j    
-            #process                                      ggH         ggWW    
-            #process                                        0            1    
-            #rate                                      1.1234       2.3456
-
-            card.write('-'*100+'\n')
-
-            # add nuisances
-            
-            # first the lnN nuisances
-            for nuisanceName, nuisance in nuisances.iteritems():
-              
-              # check if a nuisance can be skipped because not in this particular cut
-              use_this_nuisance = False
-              if  'cuts' in nuisance.keys() :
-                for Cuts_where_to_use_nuisance  in   nuisance['cuts'] :
-                  if Cuts_where_to_use_nuisance == cutName :
-                    # use this niusance
-                    use_this_nuisance = True
-              else :
-                # default is use the nuisance everywhere
-                use_this_nuisance = True 
-              
-              if use_this_nuisance :
+                    card.write('rate'.ljust(80))
+                    if alternativeSignalName == "" :
+                        card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef) for name in self.cumulative_signals    ]))
+                    else :
+                        for name in self.alternative_signals :
+                            if name == alternativeSignalName :
+                                card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef)]))
+                        for name in self.cumulative_signals :
+                            card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef)]))                        
+                            
+                    card.write(''.join([('%-.4f' % yieldsBkg[name]).ljust(columndef) for name in self.backgrounds]))
+                    card.write('\n')
                
-                if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                  
-                  if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
-                    #print "nuisance[type] = ", nuisance ['type']
-                    if nuisance ['type'] == 'lnN' or nuisance ['type'] == 'lnU' :
-                      card.write((nuisance['name']).ljust(80-20))
-                      card.write((nuisance ['type']).ljust(20))
-                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                        #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
-                        #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
-                        card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
-                        card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
-                        card.write('\n')
-                      else :
-                        # apply only to selected samples
-                        for sampleName in self.signals:
-                          if sampleName in nuisance['samples'].keys() :
-                            #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
-                            card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
-                          else :
-                            card.write(('-').ljust(columndef))
-                        for sampleName in self.backgrounds:
-                          if sampleName in nuisance['samples'].keys() :
-                            #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
-                            card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
-                          else :
-                            card.write(('-').ljust(columndef))
-                             
-                    elif nuisance ['type'] == 'shape' :
-                      #
-                      # 'skipCMS' is a flag not to introduce "CMS" automatically in the name
-                      #      of the nuisance.
-                      #      It may be needed for combination purposes with ATLAS
-                      #      and agreed upon for all CMS analyses.
-                      #      For example: theoretical uncertainties on ggH with migration scheme 2017
-                      #
-                      if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
-                        card.write(("" + (nuisance['name'])).ljust(80-20))
-                      else :
-                        card.write(("CMS_" + (nuisance['name'])).ljust(80-20))
-                      if 'AsLnN' in nuisance.keys() and  float(nuisance ['AsLnN']) >= 1:
-                        print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
-                        card.write(('lnN').ljust(20))
-                        allSelectedSamples = self.signals + self.backgrounds  
-                        for sampleName in allSelectedSamples:
-                          if ('all' in nuisance.keys() and nuisance ['all'] == 1) or \
-                             sampleName in nuisance['samples'].keys() :  
-                            histo     = self._getHisto(cutName+"/"+variableName+'/', 
-                                                       'histo_' + sampleName)
-                            histoUp   = self._getHisto(cutName+"/"+variableName+'/', 
-                                                       'histo_' + sampleName + '_' + (nuisance['name']) + "Up") 
-                            histoDown = self._getHisto(cutName+"/"+variableName+'/',
-                                                       'histo_' + sampleName + '_' + (nuisance['name']) + "Down")
+                    #bin                                      of_vh2j      of_vh2j    
+                    #process                                      ggH         ggWW    
+                    #process                                        0            1    
+                    #rate                                      1.1234       2.3456
 
-                            histoIntegral = histo.Integral()
-                            histoUpIntegral = histoUp.Integral()
-                            histoDownIntegral = histoDown.Integral()
-                            if histoIntegral > 0:
-                              diffUp = (histoUpIntegral - histoIntegral)/histoIntegral/float(nuisance ['AsLnN'])
-                              diffDo = (histoDownIntegral - histoIntegral)/histoIntegral/float(nuisance ['AsLnN'])
-                            else: 
-                              diffUp = 0.
-                              diffDo = 0.
+                    card.write('-'*100+'\n')
+
+                    # add nuisances
             
-                            lnNUp = 1. + diffUp
-                            lnNDo = 1. + diffDo
-                              
-                            card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
-                          else:
-                            card.write(('-').ljust(columndef)) 
-
-                      else:  
-                        card.write((nuisance ['type']).ljust(20))
-                        if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                          card.write(''.join([('1.000').ljust(columndef) for name in self.signals      ]))
-                          card.write(''.join([('1.000').ljust(columndef) for name in self.backgrounds  ]))
-                          card.write('\n')
+                    # first the lnN nuisances
+                    for nuisanceName, nuisance in nuisances.iteritems():
+              
+                        # check if a nuisance can be skipped because not in this particular cut
+                        use_this_nuisance = False
+                        if  'cuts' in nuisance.keys() :
+                            for Cuts_where_to_use_nuisance  in   nuisance['cuts'] :
+                                if Cuts_where_to_use_nuisance == cutName :
+                                    # use this niusance
+                                    use_this_nuisance = True
                         else :
-                          # apply only to selected samples
-                          for sampleName in self.signals:
-                            if sampleName in nuisance['samples'].keys() :
-                              card.write(('1.000').ljust(columndef))                          
-                              # save the nuisance histograms in the root file
-                              if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
-                                                 )
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
-                                                 )
-                              else :
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
-                                                 )
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
-                                                 )
-                                
-                            else :
-                              card.write(('-').ljust(columndef))
-                          for sampleName in self.backgrounds:
-                            if sampleName in nuisance['samples'].keys() :
-                              card.write(('1.000').ljust(columndef))
-                              # save the nuisance histograms in the root file
-                              if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
-                                                 )
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
-                                                 )
-                              else :
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
-                                                 )
-                                self._saveHisto(cutName+"/"+variableName+'/',
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
-                                                 )
+                            # default is use the nuisance everywhere
+                            use_this_nuisance = True 
+              
+                        if use_this_nuisance :
+               
+                            if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                  
+                                if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
+                                    #print "nuisance[type] = ", nuisance ['type']
+                                    if nuisance ['type'] == 'lnN' or nuisance ['type'] == 'lnU' :
+                                        card.write((nuisance['name']).ljust(80-20))
+                                        card.write((nuisance['type']).ljust(20))
+                                        if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                                            #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals    ]))
+                                            #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds ))
+                                            if alternativeSignalName == "" :
+                                                card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.cumulative_signals]))
+                                            else :
+                                                for name in self.alternative_signals :
+                                                    if name == alternativeSignalName :
+                                                        card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) ]))
+                                                for name in self.cumulative_signals :
+                                                    card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) ]))
+
+                                            card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.backgrounds ]))
+                                            card.write('\n')
+                                        else :
+                                            # apply only to selected samples
+                                            if alternativeSignalName == "" :
+                                                for sampleName in self.cumulative_signals:
+                                                    if sampleName in nuisance['samples'].keys() :
+                                                        #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                                                        card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                                                    else :
+                                                        card.write(('-').ljust(columndef))
+                                            else :            
+                                                for sampleName in self.alternative_signals:
+                                                    if alternativeSignalName == sampleName :
+                                                        if sampleName in nuisance['samples'].keys() :
+                                                            card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                                                        else :
+                                                            card.write(('-').ljust(columndef))
+                                                for sampleName in self.cumulative_signals:
+                                                    if sampleName in nuisance['samples'].keys() :
+                                                        card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                                                    else :
+                                                        card.write(('-').ljust(columndef))
+                                            for sampleName in self.backgrounds:
+                                                if sampleName in nuisance['samples'].keys() :
+                                                    #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
+                                                    card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                                                else :
+                                                    card.write(('-').ljust(columndef))
+                             
+                                    elif nuisance ['type'] == 'shape' :
+                                        #
+                                        # 'skipCMS' is a flag not to introduce "CMS" automatically in the name
+                                        #      of the nuisance.
+                                        #      It may be needed for combination purposes with ATLAS
+                                        #      and agreed upon for all CMS analyses.
+                                        #      For example: theoretical uncertainties on ggH with migration scheme 2017
+                                        #
+                                        if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                                            card.write(("" + (nuisance['name'])).ljust(80-20))
+                                        else :
+                                            card.write(("CMS_" + (nuisance['name'])).ljust(80-20))
+                                        if 'AsLnN' in nuisance.keys() and  float(nuisance ['AsLnN']) >= 1:
+                                            print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
+                                            card.write(('lnN').ljust(20))
+                                            if alternativeSignalName == "":
+                                                allSelectedSamples = self.cumulative_signals + self.backgrounds  
+                                            else :
+                                                allSelectedSamples = self.cumulative_signals + self.backgrounds + alternativeSignalName
+                                            for sampleName in allSelectedSamples:
+                                                if ('all' in nuisance.keys() and nuisance ['all'] == 1) or \
+                                                        sampleName in nuisance['samples'].keys() :  
+                                                    histo     = self._getHisto(cutName+"/"+variableName+'/', 
+                                                                               'histo_' + sampleName)
+                                                    histoUp   = self._getHisto(cutName+"/"+variableName+'/', 
+                                                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Up") 
+                                                    histoDown = self._getHisto(cutName+"/"+variableName+'/',
+                                                                               'histo_' + sampleName + '_' + (nuisance['name']) + "Down")
+
+                                                    histoIntegral = histo.Integral()
+                                                    histoUpIntegral = histoUp.Integral()
+                                                    histoDownIntegral = histoDown.Integral()
+                                                    if histoIntegral > 0:
+                                                        diffUp = (histoUpIntegral - histoIntegral)/histoIntegral/float(nuisance ['AsLnN'])
+                                                        diffDo = (histoDownIntegral - histoIntegral)/histoIntegral/float(nuisance ['AsLnN'])
+                                                    else: 
+                                                        diffUp = 0.
+                                                        diffDo = 0.
+            
+                                                    lnNUp = 1. + diffUp
+                                                    lnNDo = 1. + diffDo
+                              
+                                                    card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
+                                                else:
+                                                    card.write(('-').ljust(columndef)) 
+                                                    
+                                        else:  
+                                            card.write((nuisance ['type']).ljust(20))
+                                            if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
+                                                if alternativeSignalName == "":
+                                                    card.write(''.join([('1.000').ljust(columndef) for name in self.cumulative_signals  ]))
+                                                else :
+                                                    for name in self.alternative_signals:
+                                                        if name == alternativeSignalName:
+                                                            card.write(''.join([('1.000').ljust(columndef) ]))
+                                                    card.write(''.join([('1.000').ljust(columndef) for name in self.cumulative_signals  ]))
+                                                card.write(''.join([('1.000').ljust(columndef) for name in self.backgrounds  ]))
+                                                card.write('\n')
+                                            else :
+                                                # apply only to selected samples
+                                                if alternativeSignalName == "":
+                                                    for sampleName in self.cumulative_signals:
+                                                        if sampleName in nuisance['samples'].keys() :
+                                                            card.write(('1.000').ljust(columndef))                          
+                                                            # save the nuisance histograms in the root file
+                                                            if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
+                                                                                )
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
+                                                                                )
+                                                            else :
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                                'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                                                                )
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                                'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                                                                )
+                                                                
+                                                        else :
+                                                            card.write(('-').ljust(columndef))
+                                                else :
+                                                    for sampleName in self.alternative_signals:
+                                                        if sampleName == alternativeSignalName :
+                                                            if sampleName in nuisance['samples'].keys() :
+                                                                card.write(('1.000').ljust(columndef))                          
+                                                                # save the nuisance histograms in the root file
+                                                                if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                    'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                                    'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
+                                                                                    )
+                                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                    'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                                    'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
+                                                                                    )
+                                                                else :
+                                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                    'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                                    'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                                                                    )
+                                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                    'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                                    'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                                                                    )
+                                                                
+                                                            else :
+                                                                card.write(('-').ljust(columndef))
+                                                    for sampleName in self.cumulative_signals:
+                                                        if sampleName in nuisance['samples'].keys() :
+                                                            card.write(('1.000').ljust(columndef))                          
+                                                            # save the nuisance histograms in the root file
+                                                            if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
+                                                                                )
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
+                                                                                )
+                                                            else :
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                                'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                                                                )
+                                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                                'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                                                                )
+                                                                
+                                                        else :
+                                                            card.write(('-').ljust(columndef))
+                                                for sampleName in self.backgrounds:
+                                                    if sampleName in nuisance['samples'].keys() :
+                                                        card.write(('1.000').ljust(columndef))
+                                                        # save the nuisance histograms in the root file
+                                                        if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
+                                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
+                                                                            )
+                                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
+                                                                            )
+                                                        else :
+                                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
+                                                                            'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                                                            )
+                                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                                            'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
+                                                                            'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                                                            )
 
 
-                            else :
-                              card.write(('-').ljust(columndef))
+                                                    else :
+                                                        card.write(('-').ljust(columndef))
                       
-                    # new line at the end of any nuisance that is *not* stat ... because in that case it's already done on its own
-                  card.write('\n')
+                                # new line at the end of any nuisance that is *not* stat ... because in that case it's already done on its own
+                                card.write('\n')
                  
                   
-                # stat nuisances  
-                if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                            # stat nuisances  
+                            if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                 
-                  for sampleName in self.signals:
-                    if sampleName in nuisance['samples'].keys() :
-                      if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
-                       
-                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
-                        card.write((nuisance ['type']).ljust(20))
+                                if alternativeSignalName != "":
+                                    for sampleName in self.alternative_signals:
+                                        if sampleName == alternativeSignalName :
+                                            if sampleName in nuisance['samples'].keys() :
+                                                if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+                                                    card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
+                                                    card.write((nuisance ['type']).ljust(20))
 
+                                                    # write line in datacard
+                                                    for sampleNameIterator2 in self.alternative_signals:
+                                                        if sampleNameIterator2 == sampleName:
+                                                            card.write(('1.000').ljust(columndef))
+                                                            for sampleNameIterator2 in self.cumulative_signals:
+                                                                card.write(('-').ljust(columndef))
                 
-                        # write line in datacard
-                        for sampleNameIterator2 in self.signals:
-                          if sampleNameIterator2 == sampleName:
-                            card.write(('1.000').ljust(columndef))
-                          else :
-                            card.write(('-').ljust(columndef))
+                                                    for sampleNameIterator2 in self.backgrounds:
+                                                        card.write(('-').ljust(columndef))
                 
-                        for sampleNameIterator2 in self.backgrounds:
-                          card.write(('-').ljust(columndef))
+                                                    card.write('\n')
                 
-                        card.write('\n')
-                
-                        # save the nuisance histograms in the root file
-                        self._saveHisto(cutName+"/"+variableName+'/',
-                                         'histo_' + sampleName + '_stat' + "Up",
-                                         'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
-                                         )
-                        self._saveHisto(cutName+"/"+variableName+'/',
-                                         'histo_' + sampleName + '_stat' + "Down",
-                                         'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
-                                         )
-                
-                      if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                                                    # save the nuisance histograms in the root file
+                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                    'histo_' + sampleName + '_stat' + "Up",
+                                                                    'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
+                                                                    )
+                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                    'histo_' + sampleName + '_stat' + "Down",
+                                                                    'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
+                                                                    )
+                                                
+                                                if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                                                    
+                                                    #print "      sampleName = ", sampleName 
+                                                    histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
+                                                    #print "      type = ", type( histoTemplate )
+                                                
+                                                    for iBin in range(1, histoTemplate.GetNbinsX()+1):
                        
-                         #print "      sampleName = ", sampleName 
-                         histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
-                         #print "      type = ", type( histoTemplate )
                 
-                         for iBin in range(1, histoTemplate.GetNbinsX()+1):
-                       
-                
-                           tag = "_ibin_"
-                           correlate = []
-                           if 'correlate' in nuisance['samples'][sampleName].keys():
-                             #specify the sample that is source of the variation
-                             tag = "_ibin"+sampleName+"_"
-                             correlate = nuisance['samples'][sampleName]["correlate"]
+                                                        tag = "_ibin_"
+                                                        correlate = []
+                                                        if 'correlate' in nuisance['samples'][sampleName].keys():
+                                                            #specify the sample that is source of the variation
+                                                            tag = "_ibin"+sampleName+"_"
+                                                            correlate = nuisance['samples'][sampleName]["correlate"]
                            
-                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(100-20))
-                           card.write((nuisance ['type']).ljust(20))
+                                                            card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(100-20))
+                                                            card.write((nuisance ['type']).ljust(20))
 
 
-                           # write line in datacard
-                           for sampleNameIterator2 in self.signals:
-                            
-                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
-                               card.write(('1.000').ljust(columndef))
-                             else :
-                               card.write(('-').ljust(columndef))
+                                                            # write line in datacard
+                                                            for sampleNameIterator2 in self.alternative_signals:
+                                                                if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                                    card.write(('1.000').ljust(columndef))
+                                                                else :
+                                                                    card.write(('-').ljust(columndef))
+
+                                                            for sampleNameIterator2 in self.cumulative_signals:
+                                                                if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                                    card.write(('1.000').ljust(columndef))
+                                                                else :
+                                                                    card.write(('-').ljust(columndef))
+                     
+                                                            for sampleNameIterator2 in self.backgrounds:
+                                                                if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                                    card.write(('1.000').ljust(columndef))
+                                                                else:  
+                                                                    card.write(('-').ljust(columndef))
+                                                        
+                                                            card.write('\n')
                 
-                           for sampleNameIterator2 in self.backgrounds:
-                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
-                               card.write(('1.000').ljust(columndef))
-                             else:  
-                               card.write(('-').ljust(columndef))
-                
-                           card.write('\n')
-                
-                           # save the nuisance histograms in the root file
-                           self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + tag + str(iBin) + '_statUp',
-                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
-                                            )
-                           self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + tag + str(iBin) + '_statDown',
-                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
-                                            )
-                           if correlate != []:
-                             for other in correlate: 
-                               self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + other + tag + str(iBin) + '_statUp',
-                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
-                                            )
-                               self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + other + tag + str(iBin) + '_statDown',
-                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
-                                            )
+                                                            # save the nuisance histograms in the root file
+                                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                                            'histo_' + sampleName + tag + str(iBin) + '_statUp',
+                                                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                                                            )
+                                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                                            'histo_' + sampleName + tag + str(iBin) + '_statDown',
+                                                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                                                            )
+                                                            if correlate != []:
+                                                                for other in correlate: 
+                                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                    'histo_' + other + tag + str(iBin) + '_statUp',
+                                                                                    'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                                                                    )
+                                                                    self._saveHisto(cutName+"/"+variableName+'/',
+                                                                                    'histo_' + other + tag + str(iBin) + '_statDown',
+                                                                                    'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                                                                    )
  
-                
-                  for sampleName in self.backgrounds:
-                    if sampleName in nuisance['samples'].keys() :
-                      if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+
+                                for sampleName in self.cumulative_signals:
+                                    if sampleName in nuisance['samples'].keys() :
+                                        if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                        
-                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
-                        card.write((nuisance ['type']).ljust(20))
+                                            card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
+                                            card.write((nuisance ['type']).ljust(20))
+
+                                            # write line in datacard
+                                            for sampleNameIterator2 in self.cumulative_signals:
+                                                if sampleNameIterator2 == sampleName:
+                                                    card.write(('1.000').ljust(columndef))
+                                                else :
+                                                    card.write(('-').ljust(columndef))
+                                                    
+                                            for sampleNameIterator2 in self.backgrounds:
+                                                card.write(('-').ljust(columndef))
+                                                    
+                                                card.write('\n')
+                                                    
+                                            # save the nuisance histograms in the root file
+                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                            'histo_' + sampleName + '_stat' + "Up",
+                                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
+                                                            )
+                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                            'histo_' + sampleName + '_stat' + "Down",
+                                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
+                                                            )
                 
-                        # write line in datacard
-                        for sampleNameIterator2 in self.signals:
-                          card.write(('-').ljust(columndef))
+                                        if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                                                
+                                            #print "      sampleName = ", sampleName 
+                                            histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
+                                            #print "      type = ", type( histoTemplate )
                 
-                        for sampleNameIterator2 in self.backgrounds:
-                          if sampleNameIterator2 == sampleName :
-                            card.write(('1.000').ljust(columndef))
-                          else :
-                            card.write(('-').ljust(columndef))
+                                            for iBin in range(1, histoTemplate.GetNbinsX()+1):
+                       
                 
-                        card.write('\n')
+                                                tag = "_ibin_"
+                                                correlate = []
+                                                if 'correlate' in nuisance['samples'][sampleName].keys():
+                                                    #specify the sample that is source of the variation
+                                                    tag = "_ibin"+sampleName+"_"
+                                                    correlate = nuisance['samples'][sampleName]["correlate"]
+                           
+                                                card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(100-20))
+                                                card.write((nuisance ['type']).ljust(20))
+
+
+                                                # write line in datacard
+                                                for sampleNameIterator2 in self.alternative_signals:
+                                                    if sampleNameIterator2 == alternativeSignalName :
+                                                        if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                            card.write(('1.000').ljust(columndef))
+                                                        else :
+                                                            card.write(('-').ljust(columndef))
+                                                            
+                                                for sampleNameIterator2 in self.cumulative_signals:
+                                                    if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                        card.write(('1.000').ljust(columndef))
+                                                    else :
+                                                        card.write(('-').ljust(columndef))
                 
-                        # save the nuisance histograms in the root file
-                        self._saveHisto(cutName+"/"+variableName+'/',
-                                         'histo_' + sampleName + '_stat' + "Up",
-                                         'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
-                                         )
-                        self._saveHisto(cutName+"/"+variableName+'/',
-                                         'histo_' + sampleName + '_stat' + "Down",
-                                         'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
-                                         )
+                                                for sampleNameIterator2 in self.backgrounds:
+                                                    if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                        card.write(('1.000').ljust(columndef))
+                                                    else:  
+                                                        card.write(('-').ljust(columndef))
+                                                        
+                                                card.write('\n')
                 
-                      if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                                                # save the nuisance histograms in the root file
+                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                'histo_' + sampleName + tag + str(iBin) + '_statUp',
+                                                                'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                                                )
+                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                'histo_' + sampleName + tag + str(iBin) + '_statDown',
+                                                                'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                                                )
+                                                if correlate != []:
+                                                    for other in correlate: 
+                                                        self._saveHisto(cutName+"/"+variableName+'/',
+                                                                        'histo_' + other + tag + str(iBin) + '_statUp',
+                                                                        'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                                                        )
+                                                        self._saveHisto(cutName+"/"+variableName+'/',
+                                                                        'histo_' + other + tag + str(iBin) + '_statDown',
+                                                                        'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                                                        )
+ 
+
+                                for sampleName in self.backgrounds:
+                                    if sampleName in nuisance['samples'].keys() :
+                                        if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+                       
+                                            card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
+                                            card.write((nuisance ['type']).ljust(20))
                 
-                         histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
-                         #print "type = ", type( histoTemplate )
+                                            # write line in datacard
+                                            for sampleNameIterator2 in self.signals:
+                                                card.write(('-').ljust(columndef))
+                
+                                            for sampleNameIterator2 in self.backgrounds:
+                                                if sampleNameIterator2 == sampleName :
+                                                    card.write(('1.000').ljust(columndef))
+                                                else :
+                                                    card.write(('-').ljust(columndef))
+                                                    
+                                            card.write('\n')
+                
+                                            # save the nuisance histograms in the root file
+                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                            'histo_' + sampleName + '_stat' + "Up",
+                                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
+                                                            )
+                                            self._saveHisto(cutName+"/"+variableName+'/',
+                                                            'histo_' + sampleName + '_stat' + "Down",
+                                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
+                                                            )
+                
+                                        if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                
+                                            histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
+                                            #print "type = ", type( histoTemplate )
                 
                 
-                         for iBin in range(1, histoTemplate.GetNbinsX()+1):
+                                            for iBin in range(1, histoTemplate.GetNbinsX()+1):
 
         
-                           tag = "_ibin_"
-                           correlate = []
-                           if 'correlate' in nuisance['samples'][sampleName].keys():
-                             #specify the sample that is source of the variation
-                             tag = "_ibin"+sampleName+"_"
-                             print tag
-                             correlate = nuisance['samples'][sampleName]["correlate"]
+                                                tag = "_ibin_"
+                                                correlate = []
+                                                if 'correlate' in nuisance['samples'][sampleName].keys():
+                                                    #specify the sample that is source of the variation
+                                                    tag = "_ibin"+sampleName+"_"
+                                                    print tag
+                                                    correlate = nuisance['samples'][sampleName]["correlate"]
    
                        
-                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(80-20))
-                           card.write((nuisance ['type']).ljust(20))
+                                                card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(80-20))
+                                                card.write((nuisance ['type']).ljust(20))
                 
-                           # write line in datacard
-                           for sampleNameIterator2 in self.signals:
-                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
-                               card.write(('1.000').ljust(columndef))
-                             else:   
-                               card.write(('-').ljust(columndef))
+                                                # write line in datacard
+                                                for sampleNameIterator2 in self.alternative_signals:
+                                                    if sampleNameIterator2 == alternativeSignalName :
+                                                        if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                            card.write(('1.000').ljust(columndef))
+                                                        else :
+                                                            card.write(('-').ljust(columndef))
+
+                                                for sampleNameIterator2 in self.cumulative_signals:
+                                                    if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                        card.write(('1.000').ljust(columndef))
+                                                    else:   
+                                                        card.write(('-').ljust(columndef))
                 
-                           for sampleNameIterator2 in self.backgrounds:
-                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
-                               card.write(('1.000').ljust(columndef))
-                             else :
-                               card.write(('-').ljust(columndef))
+                                                for sampleNameIterator2 in self.backgrounds:
+                                                    if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                                                        card.write(('1.000').ljust(columndef))
+                                                    else :
+                                                        card.write(('-').ljust(columndef))
                 
-                           card.write('\n')
+                                                card.write('\n')
                 
-                           # save the nuisance histograms in the root file
-                           self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + tag + str(iBin) + '_statUp',
-                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
-                                            )
-                           self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + sampleName + tag + str(iBin) + '_statDown',
-                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
-                                            )
-                           if correlate != []:
-                             for other in correlate:
-                               self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + other + tag + str(iBin) + '_statUp',
-                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
-                                            )
-                               self._saveHisto(cutName+"/"+variableName+'/',
-                                            'histo_' + other + tag + str(iBin) + '_statDown',
-                                            'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
-                                            ) 
+                                                # save the nuisance histograms in the root file
+                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                'histo_' + sampleName + tag + str(iBin) + '_statUp',
+                                                                'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                                                )
+                                                self._saveHisto(cutName+"/"+variableName+'/',
+                                                                'histo_' + sampleName + tag + str(iBin) + '_statDown',
+                                                                'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                                                )
+                                                if correlate != []:
+                                                    for other in correlate:
+                                                        self._saveHisto(cutName+"/"+variableName+'/',
+                                                                        'histo_' + other + tag + str(iBin) + '_statUp',
+                                                                        'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                                                        )
+                                                        self._saveHisto(cutName+"/"+variableName+'/',
+                                                                        'histo_' + other + tag + str(iBin) + '_statDown',
+                                                                        'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                                                        ) 
                 
-                # now add the "rateParam" for the normalization
-                #  e.g.:            z_norm rateParam  htsearch zll 1 
-                # see: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWG/SWGuideNonStandardCombineUses#Rate_Parameters
-                if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                  if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
-                    #print "nuisance[type] = ", nuisance ['type']
-                    # 'rateParam' has a separate treatment -> it's just a line at the end of the datacard. It defines "free floating" samples
-                    # I do it here and not before because I want the freee floating parameters at the end of the datacard
-                    if nuisance ['type'] == 'rateParam' :
-                      card.write((nuisance['name']).ljust(80-20))
-                      card.write((nuisance ['type']).ljust(20))
-                      card.write((tagNameToAppearInDatacard).ljust(columndef))   # the bin
-                      # apply only to selected samples
-                      for sampleName in self.signals:
-                          if sampleName in nuisance['samples'].keys() :
-                            card.write((sampleName).ljust(20))
-                            card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
-                      for sampleName in self.backgrounds:
-                          if sampleName in nuisance['samples'].keys() :
-                            card.write((sampleName).ljust(20))
-                            card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
-                      card.write('\n')
+
+#                            if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                                if 'type' in nuisance.keys() :
+                                    if nuisance['type'] == 'auto' :
+                                        card.write('* autoMCStats ' + nuisance ['maxPoiss'] + '  ' + nuisance ['includeSignal'] )
+                                        #  nuisance ['maxPoiss'] =  Number of threshold events for Poisson modelling
+                                        #  nuisance ['includeSignal'] =  Include MC stat nuisances on signal processes (1=True, 0=False)
+                                        card.write('\n')
+               
+               
+               
+                            # now add the "rateParam" for the normalization
+                            #  e.g.:            z_norm rateParam  htsearch zll 1 
+                            # see: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWG/SWGuideNonStandardCombineUses#Rate_Parameters
+                            if nuisanceName != 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                                if 'type' in nuisance.keys() : # some nuisances may not have "type" ... why?
+                                    #print "nuisance[type] = ", nuisance ['type']
+                                    # 'rateParam' has a separate treatment -> it's just a line at the end of the datacard. It defines "free floating" samples
+                                    # I do it here and not before because I want the freee floating parameters at the end of the datacard
+                                    if nuisance ['type'] == 'rateParam' :
+                                        card.write((nuisance['name']).ljust(80-20))
+                                        card.write((nuisance ['type']).ljust(20))
+                                        card.write((tagNameToAppearInDatacard).ljust(columndef))   # the bin
+                                        # apply only to selected samples
+                                        for sampleName in self.signals:
+                                            if sampleName in nuisance['samples'].keys() :
+                                                card.write((sampleName).ljust(20))
+                                                card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
+                                        for sampleName in self.backgrounds:
+                                            if sampleName in nuisance['samples'].keys() :
+                                                card.write((sampleName).ljust(20))
+                                                card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
+                                        card.write('\n')
 
 
-                if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                  if 'type' in nuisance.keys() :
-                    if nuisance['type'] == 'auto' :
-                      card.write('* autoMCStats ' + nuisance ['maxPoiss'] + '  ' + nuisance ['includeSignal'] )
-                      #  nuisance ['maxPoiss'] =  Number of threshold events for Poisson modelling
-                      #  nuisance ['includeSignal'] =  Include MC stat nuisances on signal processes (1=True, 0=False)
-                      card.write('\n')
-               
-               
-               
-            # now add other nuisances            
-            # Are there other kind of nuisances I forgot?
+                    # now add other nuisances            
+                    # Are there other kind of nuisances I forgot?
             
-            card.write('-'*100+'\n')
+                    card.write('-'*100+'\n')
 
-            card.write('\n')
-            card.close()
+                    card.write('\n')
+                    card.close()
 
 
 

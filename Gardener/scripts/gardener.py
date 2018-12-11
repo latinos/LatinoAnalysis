@@ -127,6 +127,9 @@ from LatinoAnalysis.Gardener.variables.reweightHHH                import genRewe
 # generic formula adder
 from LatinoAnalysis.Gardener.variables.genericFormulaAdder        import genericFormulaAdder
 
+# generic TMVA
+from LatinoAnalysis.Gardener.variables.genericTMVA        import GenericTMVAFiller
+
 if __name__ == '__main__':
 
     print "gardener"
@@ -266,7 +269,8 @@ if __name__ == '__main__':
 # generic formula adder
     modules['genericFormulaAdder'] = genericFormulaAdder()
 
-
+# generic TMVA
+    modules['genericTMVA'] = GenericTMVAFiller()
 
     gardener_cli( modules )
 
