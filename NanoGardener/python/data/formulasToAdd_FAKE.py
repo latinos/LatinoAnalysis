@@ -14,7 +14,7 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_ecalBadCalibFilter\
                    )'
 
-METFilter_FAKE   =  METFilter_Common 
+METFilter_FAKE   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
 
 formulas['METFilter_FAKE'] = METFilter_FAKE
 

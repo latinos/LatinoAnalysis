@@ -11,6 +11,13 @@ from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 from LatinoAnalysis.Tools.crabTools  import *
 
+try:
+  # CERN-specific LSF<->HTCondor switch
+  # This is temporary - CERN will soon become 100% condor
+  CERN_USE_CONDOR = (batchType == 'condor')
+except NameError:
+  # if batchType is not set, default to LSF
+  CERN_USE_CONDOR = False
 
 class PostProcMaker():
 
@@ -106,6 +113,9 @@ class PostProcMaker():
        exit()
      print '_LocalSite  = ',self._LocalSite
      print '_TargetSite = ',self._TargetSite
+
+     if self._LocalSite == 'cern' and CERN_USE_CONDOR:
+       self._Sites[self._LocalSite]['batchQueues'] = ['tomorrow', 'espresso', 'microcentury', 'longlunch', 'workday', 'testmatch', 'nextweek']
 
    def configBatch(self,queue):
      if       queue == None                                        \
@@ -518,8 +528,14 @@ class PostProcMaker():
 
        # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
        if not len(nAODFileList) == len(FileList) : 
-         FileList = nAODFileList
-         if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
+         print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
+#        print ' EXIT !!!!'
+#        exit()
+
+#        print nAODFileList
+#        print FileList
+#        FileList = nAODFileList
+#        if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
 
        # Now compute #evts
        genEventCount = 0

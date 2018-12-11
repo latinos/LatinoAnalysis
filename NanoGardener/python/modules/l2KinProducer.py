@@ -113,7 +113,16 @@ class l2KinProducer(Module):
            'upara',
            'uperp',
            'm2ljj20',
-           'm2ljj30'
+           'm2ljj30',
+# for VBF training
+           'ptTOT_cut',
+           'mTOT_cut',
+           'OLV1_cut',
+           'OLV2_cut',
+           'Ceta_cut',
+#whss
+           'mlljj20_whss',
+           'mlljj30_whss'
           ]
         
         for nameBranches in self.newbranches :
@@ -181,9 +190,12 @@ class l2KinProducer(Module):
         WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass)
        
 
-        MET_sumEt = event.MET_sumEt
-        MET_phi   = event.MET_phi
-        MET_pt    = event.MET_pt
+        #MET_sumEt = event.MET_sumEt
+        #MET_phi   = event.MET_phi
+        #MET_pt    = event.MET_pt
+        MET_sumEt = event.PuppiMET_sumEt
+        MET_phi   = event.PuppiMET_phi
+        MET_pt    = event.PuppiMET_pt
         
         WW.setMET(MET_pt, MET_phi)
         WW.setSumET(MET_sumEt)

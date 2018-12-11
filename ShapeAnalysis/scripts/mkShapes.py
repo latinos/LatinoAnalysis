@@ -216,13 +216,25 @@ if __name__ == '__main__':
       handle = open(opt.variablesFile,'r')
       exec(handle)
       handle.close()
+      #in case some variables need a compiled function
+      for variableName, variable in variables.iteritems():
+          if variable.has_key('linesToAdd'):
+            linesToAdd = variable['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
     
     samples = {}
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
-
+      #in case some samples need a compiled function
+      for sampleName, sample in samples.iteritems():
+          if sample.has_key('linesToAdd'):
+            linesToAdd = sample['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
+   
     supercut = '1'
     cuts = {}
     if os.path.exists(opt.cutsFile) :

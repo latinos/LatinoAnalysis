@@ -34,3 +34,24 @@ formulas['LepCut4l'] = '(event.nLepton>=4 and (event.Lepton_isTightElectron_mvaF
                                               (event.Lepton_isTightElectron_mvaFall17Iso_WP90[1]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[1]>0.5) and \
                                               (event.Lepton_isTightElectron_mvaFall17Iso_WP90[2]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[2]>0.5) and \
                                               (event.Lepton_isTightElectron_mvaFall17Iso_WP90[3]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[3]>0.5) )'
+
+
+muWP='cut_Tight_HWWW'
+eleWPlist = ['mvaFall17Iso_WP90', 'mvaFall17Iso_WP90_SS']
+
+for eleWP in eleWPlist: 
+
+  formulas['LepCut2l__ele_'+eleWP+'__mu_'+muWP] = '((event.Lepton_isTightElectron_'+eleWP+'[0]>0.5 or event.Lepton_isTightMuon_'+muWP+'[0]>0.5) and \
+                                                    (event.Lepton_isTightElectron_'+eleWP+'[1]>0.5 or event.Lepton_isTightMuon_'+muWP+'[1]>0.5)) \
+                                                   if event.nLepton > 1 else 0.'
+
+  formulas['LepCut3l__ele_'+eleWP+'__mu_'+muWP] = '((event.Lepton_isTightElectron_'+eleWP+'[0]>0.5 or event.Lepton_isTightMuon_'+muWP+'[0]>0.5) and \
+                                                    (event.Lepton_isTightElectron_'+eleWP+'[1]>0.5 or event.Lepton_isTightMuon_'+muWP+'[1]>0.5) and \
+                                                    (event.Lepton_isTightElectron_'+eleWP+'[2]>0.5 or event.Lepton_isTightMuon_'+muWP+'[2]>0.5)) \
+                                                   if event.nLepton > 2 else 0.'
+
+  formulas['LepCut4l__ele_'+eleWP+'__mu_'+muWP] = '((event.Lepton_isTightElectron_'+eleWP+'[0]>0.5 or event.Lepton_isTightMuon_'+muWP+'[0]>0.5) and \
+                                                    (event.Lepton_isTightElectron_'+eleWP+'[1]>0.5 or event.Lepton_isTightMuon_'+muWP+'[1]>0.5) and \
+                                                    (event.Lepton_isTightElectron_'+eleWP+'[2]>0.5 or event.Lepton_isTightMuon_'+muWP+'[2]>0.5) and \
+                                                    (event.Lepton_isTightElectron_'+eleWP+'[3]>0.5 or event.Lepton_isTightMuon_'+muWP+'[3]>0.5)) \
+                                                   if event.nLepton > 3 else 0.'
