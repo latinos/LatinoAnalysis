@@ -101,11 +101,20 @@ class ShapeFactory:
         ROOT.TH1.SetDefaultSumw2(True)
 
         #---- first create the structure in gROOT. We'll write to a file at the end
+        print '  <variables>'
         for cutName in self._cuts:
           print "cut = ", cutName, " :: ", self._cuts[cutName]
           ROOT.gROOT.mkdir(cutName)
           for variableName in self._variables:
             ROOT.gROOT.mkdir(cutName+"/"+variableName)
+
+        #---- just print the variables
+        print '  <variables>'
+        for variableName, variable in self._variables.iteritems():
+          print "    variable = ", variableName, " :: ", variable['name']
+          print "      range:", variable['range']
+          if 'samples' in variable:
+            print "      samples:", variable['samples']
 
         # Need to keep a python reference to all plot objects (otherwise python will garbage-collect)
         _allplots = []
@@ -128,7 +137,7 @@ class ShapeFactory:
               dataTrees = range(len(sample['name']))
             else:
               for iT in range(len(sample['name'])):
-                if sample['isData'] != '0':
+                if sample['isData'][iT] != '0':
                   dataTrees.append(iT)
                   
           for iT in range(len(sample['name'])):
@@ -469,19 +478,20 @@ class ShapeFactory:
               # sample is binned
               binName, cutName = cutKey
               cutFullName = '%s__%s' % cutKey
+              print "  bin/cut =", '%s/%s' % cutKey, "::", cut
             else:
               binName = ''
               cutName = cutKey
               cutFullName = cutKey
-
-            print "  cut =", cutFullName, "::", cut
+              print "  cut =", cutFullName, "::", cut
 
             drawer.addCut(cutFullName, cut)
 
             # keep only the nuisances that are applicable to this cut & sample
             applicableNuisances = {}
 
-            print '  <nuisances>'
+            if type(cutKey) is str:
+              print '  <nuisances>'
 
             for nuisanceName, nuisance in nuisances.iteritems():
               if sampleName not in nuisance['samples']:
@@ -494,10 +504,11 @@ class ShapeFactory:
                 # this nuisance does not apply to the current phase space
                 continue
 
-              print "    nuisance =", nuisanceName, "::", nuisance['name']
-              if 'kind' in nuisance:
-                  print "      kind:", nuisance['kind']
-              print "      type:", nuisance['type']
+              if type(cutKey) is str:
+                print "    nuisance =", nuisanceName, "::", nuisance['name']
+                if 'kind' in nuisance:
+                    print "      kind:", nuisance['kind']
+                print "      type:", nuisance['type']
 
               applicableNuisances[nuisanceName] = nuisance
 
@@ -507,14 +518,9 @@ class ShapeFactory:
                 drawersNuisanceDown[nuisanceName][sampleName].addCut(cutFullName, cut)
 
             # now loop over all the variables ...
-            print '  <variables>'
-             
             for variableName, variable in self._variables.iteritems():
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
-
-              print "    variable = ", variableName, " :: ", variable['name']
-              print "      range:", variable['range']
 
               if binName:
                 ROOT.gROOT.cd('binned/' + binName + '/' + cutName + '/' + variableName)
@@ -610,8 +616,7 @@ class ShapeFactory:
               cutName = cutKey
               cutFullName = cutName
               dirName = cutName
-
-            print "  cut = ", cutFullName, " :: ", cut
+              print "  cut = ", cutFullName, " :: ", cut
 
             for variableName, variable in self._variables.iteritems():
               if 'samples' in variable and sampleName not in variable['samples']:
@@ -1253,6 +1258,7 @@ class ShapeFactory:
           drawer.setInputMultiplexing(int(self._nThreads))
 
           for name, alias in self.aliases.iteritems():
+            print name, alias
             if 'samples' in alias and process not in alias['samples']:
               continue
 
