@@ -27,6 +27,7 @@ class CopyCleanJet(Module):
                 if 'CleanJet_' in var:
                     var = self.newcollectionname + var[8:]
                     self.out.branch(var, typ, lenVar='n'+self.newcollectionname)
+        CleanJet_var.append('jetIdx')
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -39,7 +40,6 @@ class CopyCleanJet(Module):
 
         # Copy CleanJet collection
         jet_dict = {}
-        CleanJet_var.append('jetIdx')
         for jv in CleanJet_var:
            jet_dict[jv] = [0]*ncleanjets
 
