@@ -2,6 +2,9 @@
 
 import json
 import sys
+# bypass ROOT argv parsing
+argv = sys.argv
+sys.argv = argv[:1]
 import ROOT
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
@@ -68,12 +71,19 @@ class DatacardFactory:
         self._fileIn = ROOT.TFile(inputFile, "READ")
         
         # divide the list of samples among signal, background and data
-        for sampleName, sample in self._samples.iteritems():
-          if structureFile[sampleName]['isSignal'] == 1 :
+        for sampleName, structureDef in structureFile.iteritems():
+          if '/' in sampleName:
+            realSampleName = sampleName[:sampleName.find('/')]
+          else:
+            realSampleName = sampleName
+            
+          if realSampleName not in self._samples:
+            continue
+          if structureDef['isSignal'] == 1 :
             self.all_signals.append(sampleName)
-          if structureFile[sampleName]['isData'] == 1 :
+          if structureDef['isData'] == 1 :
             self.data.append(sampleName)
-          if structureFile[sampleName]['isSignal'] == 0 and structureFile[sampleName]['isData'] == 0:
+          if structureDef['isSignal'] == 0 and structureDef['isData'] == 0:
             self.all_backgrounds.append(sampleName)
           
         if not os.path.isdir (self._outputDirDatacard + "/") :
@@ -129,7 +139,10 @@ class DatacardFactory:
             #killBinBkg = {}  
             
             for sampleName in self.signals:
-              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              if '/' in sampleName: # binned
+                shapeName = 'binned/' + sampleName[sampleName.find('/') + 1:] + '/' + cutName+"/"+variableName+'/histo_' + sampleName[:sampleName.find('/')]
+              else:
+                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = self._fileIn.Get(shapeName)
              # print " shapeName = ", shapeName     
              # print sampleName     
@@ -145,7 +158,7 @@ class DatacardFactory:
               yieldsSig[sampleName] = histo.Integral()
              # print yieldsSig[sampleName]
               self._outFile.cd()
-              histo.Write()
+              histo.Write('histo_' + sampleName.replace('/', '__'))
 
 
               
@@ -227,7 +240,7 @@ class DatacardFactory:
             #card.write('bin'.ljust(80) + ''.join( [tagNameToAppearInDatacard.ljust(columndef) for iterator in range(totalNumberSamples) ])+'\n')
             
             card.write('process'.ljust(80))
-            card.write(''.join([name.ljust(columndef) for name in self.signals]))
+            card.write(''.join([name.replace('/', '__').ljust(columndef) for name in self.signals]))
             card.write(''.join([name.ljust(columndef) for name in self.backgrounds]))
             card.write('\n')
 
@@ -276,12 +289,14 @@ class DatacardFactory:
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                         #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
                         #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
-                        card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.signals      ]))
-                        card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.backgrounds  ]))
+                        card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for _ in self.signals      ]))
+                        card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for _ in self.backgrounds  ]))
                         card.write('\n')
                       else :
                         # apply only to selected samples
                         for sampleName in self.signals:
+                          if '/' in sampleName:
+                            sampleName = sampleName[:sampleName.find('/')]
                           if sampleName in nuisance['samples'].keys() :
                             #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
                             card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
@@ -311,14 +326,18 @@ class DatacardFactory:
                         card.write(('lnN').ljust(20))
                         allSelectedSamples = self.signals + self.backgrounds  
                         for sampleName in allSelectedSamples:
+                          if '/' in sampleName:
+                            binName = sampleName[sampleName.find('/') + 1:]
+                            sampleName = sampleName[:sampleName.find('/')]
+                            shapeSource = 'binned/' + binName + '/' + cutName+"/"+variableName+'/'
+                          else:
+                            shapeSource = cutName+"/"+variableName+'/'
+                            
                           if ('all' in nuisance.keys() and nuisance ['all'] == 1) or \
                              sampleName in nuisance['samples'].keys() :  
-                            histo     = self._getHisto(cutName+"/"+variableName+'/', 
-                                                       'histo_' + sampleName)
-                            histoUp   = self._getHisto(cutName+"/"+variableName+'/', 
-                                                       'histo_' + sampleName + '_' + (nuisance['name']) + "Up") 
-                            histoDown = self._getHisto(cutName+"/"+variableName+'/',
-                                                       'histo_' + sampleName + '_' + (nuisance['name']) + "Down")
+                            histo     = self._getHisto(shapeSource, 'histo_' + sampleName)
+                            histoUp   = self._getHisto(shapeSource, 'histo_' + sampleName + '_' + (nuisance['name']) + "Up") 
+                            histoDown = self._getHisto(shapeSource, 'histo_' + sampleName + '_' + (nuisance['name']) + "Down")
 
                             histoIntegral = histo.Integral()
                             histoUpIntegral = histoUp.Integral()
@@ -340,32 +359,41 @@ class DatacardFactory:
                       else:  
                         card.write((nuisance ['type']).ljust(20))
                         if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                          card.write(''.join([('1.000').ljust(columndef) for name in self.signals      ]))
-                          card.write(''.join([('1.000').ljust(columndef) for name in self.backgrounds  ]))
+                          card.write(''.join([('1.000').ljust(columndef) for _ in self.signals      ]))
+                          card.write(''.join([('1.000').ljust(columndef) for _ in self.backgrounds  ]))
                           card.write('\n')
                         else :
                           # apply only to selected samples
                           for sampleName in self.signals:
+                            if '/' in sampleName:
+                              binName = sampleName[sampleName.find('/') + 1:]
+                              outName = sampleName.replace('/', '__')
+                              sampleName = sampleName[:sampleName.find('/')]
+                              shapeSource = 'binned/' + binName + '/' + cutName+"/"+variableName
+                            else:
+                              outName = sampleName
+                              shapeSource = cutName+"/"+variableName
+                              
                             if sampleName in nuisance['samples'].keys() :
                               card.write(('1.000').ljust(columndef))                          
                               # save the nuisance histograms in the root file
                               if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1 :
-                                self._saveHisto(cutName+"/"+variableName+'/',
+                                self._saveHisto(shapeSource,
                                                  'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Up"
+                                                 'histo_' + outName + '_' + (nuisance['name']) + "Up"
                                                  )
-                                self._saveHisto(cutName+"/"+variableName+'/',
+                                self._saveHisto(shapeSource,
                                                  'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                                 'histo_' + sampleName + '_' + (nuisance['name']) + "Down"
+                                                 'histo_' + outName + '_' + (nuisance['name']) + "Down"
                                                  )
                               else :
-                                self._saveHisto(cutName+"/"+variableName+'/',
+                                self._saveHisto(shapeSource,
                                                  'histo_' + sampleName + '_' + (nuisance['name']) + "Up",
-                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Up"
+                                                 'histo_' + outName + '_CMS_' + (nuisance['name']) + "Up"
                                                  )
-                                self._saveHisto(cutName+"/"+variableName+'/',
+                                self._saveHisto(shapeSource,
                                                  'histo_' + sampleName + '_' + (nuisance['name']) + "Down",
-                                                 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + "Down"
+                                                 'histo_' + outName + '_CMS_' + (nuisance['name']) + "Down"
                                                  )
                                 
                             else :
@@ -405,16 +433,27 @@ class DatacardFactory:
                 if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                 
                   for sampleName in self.signals:
+                    if '/' in sampleName:
+                      binName = sampleName[sampleName.find('/') + 1:]
+                      sampleFullName = sampleName
+                      outName = sampleName.replace('/', '__')
+                      sampleName = sampleName[:sampleName.find('/')]
+                      shapeSource = 'binned/' + binName + '/' + cutName+"/"+variableName
+                    else:
+                      sampleFullName = sampleName
+                      outName = sampleName
+                      shapeSource = cutName+"/"+variableName
+                      
                     if sampleName in nuisance['samples'].keys() :
                       if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                        
-                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" ).ljust(80-20))
+                        card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + outName + "_stat" ).ljust(80-20))
                         card.write((nuisance ['type']).ljust(20))
 
                 
                         # write line in datacard
                         for sampleNameIterator2 in self.signals:
-                          if sampleNameIterator2 == sampleName:
+                          if sampleNameIterator2 == sampleFullName:
                             card.write(('1.000').ljust(columndef))
                           else :
                             card.write(('-').ljust(columndef))
@@ -425,19 +464,19 @@ class DatacardFactory:
                         card.write('\n')
                 
                         # save the nuisance histograms in the root file
-                        self._saveHisto(cutName+"/"+variableName+'/',
+                        self._saveHisto(shapeSource,
                                          'histo_' + sampleName + '_stat' + "Up",
-                                         'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Up"
+                                         'histo_' + outName + '_CMS_' + tagNameToAppearInDatacard + "_" + outName + "_stat" + "Up"
                                          )
-                        self._saveHisto(cutName+"/"+variableName+'/',
+                        self._saveHisto(shapeSource,
                                          'histo_' + sampleName + '_stat' + "Down",
-                                         'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_stat" + "Down"
+                                         'histo_' + outName + '_CMS_' + tagNameToAppearInDatacard + "_" + outName + "_stat" + "Down"
                                          )
                 
                       if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
                        
                          #print "      sampleName = ", sampleName 
-                         histoTemplate = self._fileIn.Get(cutName+'/'+variableName+'/histo_' + sampleName)
+                         histoTemplate = self._fileIn.Get(shapeSource+'/histo_' + sampleName)
                          #print "      type = ", type( histoTemplate )
                 
                          for iBin in range(1, histoTemplate.GetNbinsX()+1):
@@ -450,20 +489,20 @@ class DatacardFactory:
                              tag = "_ibin"+sampleName+"_"
                              correlate = nuisance['samples'][sampleName]["correlate"]
                            
-                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + sampleName + "_ibin_" + str(iBin) + "_stat" ).ljust(100-20))
+                           card.write(( 'CMS_' + tagNameToAppearInDatacard + "_" + outName + "_ibin_" + str(iBin) + "_stat" ).ljust(100-20))
                            card.write((nuisance ['type']).ljust(20))
 
 
                            # write line in datacard
                            for sampleNameIterator2 in self.signals:
                             
-                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                             if sampleNameIterator2 == sampleFullName or sampleNameIterator2 in correlate:
                                card.write(('1.000').ljust(columndef))
                              else :
                                card.write(('-').ljust(columndef))
                 
                            for sampleNameIterator2 in self.backgrounds:
-                             if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
+                             if sampleNameIterator2 == sampleFullName or sampleNameIterator2 in correlate:
                                card.write(('1.000').ljust(columndef))
                              else:  
                                card.write(('-').ljust(columndef))
@@ -471,16 +510,17 @@ class DatacardFactory:
                            card.write('\n')
                 
                            # save the nuisance histograms in the root file
-                           self._saveHisto(cutName+"/"+variableName+'/',
+                           self._saveHisto(shapeSource,
                                             'histo_' + sampleName + tag + str(iBin) + '_statUp',
-                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
+                                            'histo_' + outName + '_CMS_' + tagNameToAppearInDatacard + "_" + outName + '_ibin_' + str(iBin) + '_stat' + "Up"
                                             )
-                           self._saveHisto(cutName+"/"+variableName+'/',
+                           self._saveHisto(shapeSource,
                                             'histo_' + sampleName + tag + str(iBin) + '_statDown',
-                                            'histo_' + sampleName + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Down"
+                                            'histo_' + outName + '_CMS_' + tagNameToAppearInDatacard + "_" + outName + '_ibin_' + str(iBin) + '_stat' + "Down"
                                             )
                            if correlate != []:
-                             for other in correlate: 
+                             for other in correlate:
+                               # these lines fail if correlation source is also binned
                                self._saveHisto(cutName+"/"+variableName+'/',
                                             'histo_' + other + tag + str(iBin) + '_statUp',
                                             'histo_' + other + '_CMS_' + tagNameToAppearInDatacard + "_" + sampleName + '_ibin_' + str(iBin) + '_stat' + "Up"
@@ -590,8 +630,14 @@ class DatacardFactory:
                       card.write((tagNameToAppearInDatacard).ljust(columndef))   # the bin
                       # apply only to selected samples
                       for sampleName in self.signals:
+                          if '/' in sampleName:
+                              outName = sampleName.replace('/', '__')
+                              sampleName = sampleName[:sampleName.find('/')]
+                          else:
+                              outName = sampleName
+
                           if sampleName in nuisance['samples'].keys() :
-                            card.write((sampleName).ljust(20))
+                            card.write((outName).ljust(20))
                             card.write(('%-.4f' % float(nuisance['samples'][sampleName])).ljust(columndef))
                       for sampleName in self.backgrounds:
                           if sampleName in nuisance['samples'].keys() :
@@ -625,8 +671,11 @@ class DatacardFactory:
 
    
     # _____________________________________________________________________________
-    def _saveHisto(self, folderName, histoName, histoNameOut):     
-       shapeName = folderName + histoName
+    def _saveHisto(self, folderName, histoName, histoNameOut):
+       if folderName.endswith('/'):
+         shapeName = folderName + histoName
+       else:
+         shapeName = folderName + '/' + histoName
        histo = self._fileIn.Get(shapeName)
        print " shapeName = ", shapeName
        print " --> ", histoNameOut
@@ -637,7 +686,10 @@ class DatacardFactory:
        
 
     def _getHisto(self, folderName, histoName):
-      shapeName = folderName + histoName
+      if folderName.endswith('/'):
+        shapeName = folderName + histoName
+      else:
+        shapeName = folderName + '/' + histoName
       histo = self._fileIn.Get(shapeName)
       return histo
 
@@ -652,6 +704,8 @@ class DatacardFactory:
 
 
 if __name__ == '__main__':
+    sys.argv = argv
+    
     print '''
 --------------------------------------------------------------------------------------------------
 
