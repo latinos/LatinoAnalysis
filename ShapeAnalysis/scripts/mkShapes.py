@@ -15,6 +15,7 @@ import collections
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import os.path
 import logging
+import tempfile
 import LatinoAnalysis.Gardener.odict as odict
 #from HWWAnalysis.Misc.ROOTAndUtils import TH1AddDirSentry
 import subprocess
@@ -211,6 +212,12 @@ if __name__ == '__main__':
     elif opt.debug == 1:
         print 'Logging level set to INFO (%d)' % opt.debug
         logging.basicConfig( level=logging.INFO )
+
+    ROOT.gSystem.Load('libLatinoAnalysisMultiDraw.so')
+    try:
+      ROOT.multidraw.MultiDraw
+    except:
+      raise RuntimeError('Failed to load libMultiDraw')
 
     samples = collections.OrderedDict()
     if os.path.exists(opt.samplesFile) :
@@ -465,12 +472,14 @@ if __name__ == '__main__':
               number = len(fileList)
               if number > 500:
                 print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
+
+              tmpdir = tempfile.mkdtemp()
               for istart in range(0,int(float(number)/500+1)):
                   command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
-                  command += 'hadd -f'
+                  command += 'hadd -f '
                   if rootver > 6.09:
-                    command += ' -j %d' % nThreads
-                  command += ' plots_'+opt.tag+'_temp'+str(istart)+'.root'
+                    command += ' -j %d ' % nThreads
+                  command += tmpdir + '/plots_'+opt.tag+'_temp'+str(istart)+'.root'
                   for i in range(istart*500,(istart+1)*500):
                     if i>=number: break
                     command += " "+fileList[i]
@@ -478,8 +487,9 @@ if __name__ == '__main__':
 #                  print command
                   os.system(command)
               os.chdir(os.getcwd()+"/"+opt.outputDir)
-              os.system("hadd -f plots_"+opt.tag+".root plots_"+opt.tag+"_temp*")
-              cleanup += "rm plots_"+opt.tag+"_temp*"
+              os.system("hadd -f "+tmpdir+"/plots_"+opt.tag+".root "+tmpdir+"/plots_"+opt.tag+"_temp*")
+              os.system("mv "+tmpdir+"/plots_"+opt.tag+".root .")
+              cleanup += "rm -rf "+tmpdir
               if not opt.doNotCleanup: os.system(cleanup) 
 
     elif opt.doHadd != 0 or opt.redoStat != 0:       

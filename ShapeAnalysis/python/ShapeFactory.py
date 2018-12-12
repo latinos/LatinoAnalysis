@@ -68,8 +68,6 @@ class ShapeFactory:
         print "==== makeNominals ===="
         print "======================"
 
-        ROOT.gSystem.Load('libLatinoAnalysisMultiDraw.so')
-        
         self._variables = variables
         self._samples   = samples
         self._cuts      = cuts
