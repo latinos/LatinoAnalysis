@@ -29,9 +29,10 @@ class MetUnclusteredTreeMaker(Module) :
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.metVariables = [ 'MET_pt', 'MET_phi' ]
-        for nameBranches in self.metVariables :
-          self.out.branch(nameBranches  ,  "F")
+        self.metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']
+        for x in self.metCollections:
+          self.out.branch(x+'_pt', "F")
+          self.out.branch(x+'_phi', "F")
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -46,36 +47,31 @@ class MetUnclusteredTreeMaker(Module) :
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        newmetmodule = -1
-        newmetphi = -1
+        metUnclustX = getattr(event, "MET_MetUnclustEnUpDeltaX")
+        metUnclustY = getattr(event, "MET_MetUnclustEnUpDeltaY")
 
-        met = Object(event, "MET")
+        for metType in self.metCollections:
+            try:
+                met = Object(event, metType)
+            except AttributeError:
+                continue
 
-        met_px = met.pt * math.cos(met.phi)
-        met_py = met.pt * math.sin(met.phi)
+            met_px = met.pt * math.cos(met.phi)
+            met_py = met.pt * math.sin(met.phi)
 
-        if self.kind == 'Up':
-            met_px_UnclEnUp  = met_px + getattr(event, "MET_MetUnclustEnUpDeltaX")
-            met_py_UnclEnUp  = met_py + getattr(event, "MET_MetUnclustEnUpDeltaY")
-            met_pt_UnclEnUp  = math.sqrt(met_px_UnclEnUp**2 + met_py_UnclEnUp**2)
-            met_phi_UnclEnUp = math.atan2(met_py_UnclEnUp, met_px_UnclEnUp)
-            newmet_phi_UnclEnUp = self.FixAngle(met.phi + self.FixAngle( met_phi_UnclEnUp - getattr(event, "RawMET_phi") ))
+            if self.kind == 'Up':
+                met_px_UnclEn  = met_px + metUnclustX
+                met_py_UnclEn  = met_py + metUnclustY
 
-            newmetmodule = met_pt_UnclEnUp
-            newmetphi = newmet_phi_UnclEnUp
+            elif self.kind == 'Dn' or self.kind == 'Down':
+                met_px_UnclEn  = met_px - metUnclustX
+                met_py_UnclEn  = met_py - metUnclustY
 
-        elif self.kind == 'Dn' or self.kind == 'Down':
-            met_px_UnclEnDn  = met_px - getattr(event, "MET_MetUnclustEnUpDeltaX")
-            met_py_UnclEnDn  = met_py - getattr(event, "MET_MetUnclustEnUpDeltaY")
-            met_pt_UnclEnDn  = math.sqrt(met_px_UnclEnDn**2 + met_py_UnclEnDn**2)
-            met_phi_UnclEnDn = math.atan2(met_py_UnclEnDn, met_px_UnclEnDn)
-            newmet_phi_UnclEnDn = self.FixAngle(met.phi + self.FixAngle( met_phi_UnclEnDn - getattr(event, "RawMET_phi") ))
+            met_pt_UnclEn  = math.sqrt(met_px_UnclEn**2 + met_py_UnclEn**2)
+            met_phi_UnclEn = self.FixAngle(math.atan2(met_py_UnclEn, met_px_UnclEn))
 
-            newmetmodule = met_pt_UnclEnDn
-            newmetphi = newmet_phi_UnclEnDn
-
-        self.out.fillBranch("MET_pt", newmetmodule)
-        self.out.fillBranch("MET_phi", newmetphi)
+            self.out.fillBranch(metType+"_pt", met_pt_UnclEn)
+            self.out.fillBranch(metType+"_phi", met_phi_UnclEn)
 
         return True
 

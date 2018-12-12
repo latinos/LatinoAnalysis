@@ -43,9 +43,10 @@ class LeppTScalerTreeMaker(Module) :
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.metVariables = [ 'MET_pt', 'MET_phi' ]
-        for nameBranches in self.metVariables :
-            self.out.branch(nameBranches  ,  "F")
+        self.metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']
+        for x in self.metCollections:
+          self.out.branch(x+'_pt', "F")
+
         if 'electronIdx' not in Lepton_var: Lepton_var.append('electronIdx')
         if 'muonIdx' not in Lepton_var: Lepton_var.append('muonIdx')
         for typ in Lepton_br:
@@ -89,9 +90,6 @@ class LeppTScalerTreeMaker(Module) :
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        newmetmodule = -1
-        newmetphi = -1
-
         if self.kind == 'Up':
             self.variation = 1.0
         elif self.kind == 'Dn' or self.kind == 'Down':
@@ -109,21 +107,19 @@ class LeppTScalerTreeMaker(Module) :
                 lep_dict[var] = [0]*nLep
 
         # MET
-        if self.lepFlavor == 'ele':
-            newmetmodule = met.pt * (1 + (self.variation * self.getScale('ele', met.pt, 0.0) / 100.0))
-            #newmetphi = self.FixAngle(met.phi + self.FixAngle( itree.metPfRawPhiElecEnUp - getattr(event, "RawMET_phi") )) # TODO: About finding a way to express the old "itree.metPfRawPhiElecEnUp" with nanoAOD variables: How does applying a factor to met.pt affect RawMET_phi?
-            newmetphi = met.phi #temporary
-        elif self.lepFlavor == 'mu':
-            newmetmodule = met.pt * (1 + (self.variation * self.getScale('mu', met.pt, 0.0) / 100.0))
-            #newmetphi = self.FixAngle(met.phi + self.FixAngle( itree.metPfRawPhiMuEnUp - getattr(event, "RawMET_phi") )) # TODO: About finding a way to express the old "itree.metPfRawPhiMuEnUp" with nanoAOD variables: How does applying a factor to met.pt affect RawMET_phi?
-            newmetphi = met.phi #temporary
+        for metType in self.metCollections:
+            try:
+                met = Object(event, metType)
+            except AttributeError:
+                continue
+
+            newmetpt = met.pt * (1 + (self.variation * self.getScale(self.lepFlavor, met.pt, 0.0) / 100.0))
+            self.out.fillBranch(metType+"_pt", newmetpt)
 
         # Leptons
         for idx,lep in enumerate(leptons):
-            if self.lepFlavor == 'ele' and abs(lep.pdgId) == 11:
-                lep.pt = lep.pt * (1 + (self.variation * self.getScale('ele', lep.pt, lep.eta) / 100.0))
-            elif self.lepFlavor == 'mu' and abs(lep.pdgId) == 13:
-                lep.pt = lep.pt * (1 + (self.variation * self.getScale('mu', lep.pt, lep.eta) / 100.0))
+            if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
+                lep.pt = lep.pt * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0))
 
         # Re-order lepton collection
         for idx,lep in enumerate(leptons):
@@ -145,8 +141,6 @@ class LeppTScalerTreeMaker(Module) :
                 else:
                     lep_dict[var][pt_idx] = getattr(event, 'Lepton_'+var)[idx]
 
-        self.out.fillBranch("MET_pt", newmetmodule)
-        self.out.fillBranch("MET_phi", newmetphi)
         for var in lep_dict:
             self.out.fillBranch('Lepton_' + var, lep_dict[var])
 
