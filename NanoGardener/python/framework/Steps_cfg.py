@@ -55,7 +55,7 @@ Steps = {
                  'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut',
+                  'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut','rochesterMC',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL',
                                   'trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
@@ -582,14 +582,14 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
-                  'selection'  : '"(MET_pt < 20 && mtw1 < 20)"' ,
+                  'selection'  : '"((MET_pt < 20 || PuppiMET_pt < 20) && mtw1 < 20)"' ,
                  },
 
   'fakeSelMC'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  , 
-                  'selection'  : '"(MET_pt < 20 && mtw1 < 20)"' , 
+                  'selection'  : '"((MET_pt < 20 || PuppiMET_pt < 20) && mtw1 < 20)"' , 
                   'onlySample' : [
                                   #### DY
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1',
