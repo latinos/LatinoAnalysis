@@ -14,10 +14,10 @@ from LatinoAnalysis.Tools.crabTools  import *
 try:
   # CERN-specific LSF<->HTCondor switch
   # This is temporary - CERN will soon become 100% condor
-  CERN_USE_CONDOR = (batchType == 'condor')
+  CERN_USE_LSF = (batchType == 'lsf')
 except NameError:
-  # if batchType is not set, default to LSF
-  CERN_USE_CONDOR = False
+  # if batchType is not set, default to condor
+  CERN_USE_LSF = False
 
 class PostProcMaker():
 
@@ -114,7 +114,7 @@ class PostProcMaker():
      print '_LocalSite  = ',self._LocalSite
      print '_TargetSite = ',self._TargetSite
 
-     if self._LocalSite == 'cern' and CERN_USE_CONDOR:
+     if self._LocalSite == 'cern' and not CERN_USE_LSF:
        self._Sites[self._LocalSite]['batchQueues'] = ['tomorrow', 'espresso', 'microcentury', 'longlunch', 'workday', 'testmatch', 'nextweek']
 
    def configBatch(self,queue):
