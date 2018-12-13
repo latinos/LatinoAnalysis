@@ -111,10 +111,8 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'selection'  : '"((nElectron+nMuon)>1)"' ,
-                     'subTargets' : ['baseW','leptonMaker','WgSSel', 'btagPerJet2017', 'btagPerEvent',
-                                     'PrefCorr2017','jetSel','CleanJetCut',
-                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 
-                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                     'subTargets' : ['leptonMaker','WgSSel', 
+                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar'],
                      'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
                                    #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
@@ -123,6 +121,14 @@ Steps = {
                                    'WZTo2L2Q','WZTo3LNu_mllmin01_ext1','WZTo3LNu',
                                  ]
                    },
+
+  'MCWgStarCorr2017' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut','btagPerJet2017', 'btagPerEvent',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                    },
 
 #                  'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent','PrefCorr2017'],
 #                  'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut',
@@ -245,6 +251,15 @@ Steps = {
                   'declare'    : 'wwNLL = lambda : wwNLLcorrectionWeightProducer()',
                   'module'     : 'wwNLL()',
                   'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down']
+                  } ,
+
+    'WGammaStar' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.WGammaStar',
+                  'declare'    : 'wGS = lambda : WGammaStar()',
+                  'module'     : 'wGS()',
                   } ,
 
 ## ------- MODULES: Object Handling
