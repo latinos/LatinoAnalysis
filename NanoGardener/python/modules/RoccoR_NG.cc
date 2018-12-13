@@ -1,5 +1,5 @@
-#ifndef ElectroWeakAnalysis_RoccoR
-#define ElectroWeakAnalysis_RoccoR
+#ifndef ElectroWeakAnalysis_RoccoR_NG
+#define ElectroWeakAnalysis_RoccoR_NG
 
 #include <fstream>
 #include <sstream>
