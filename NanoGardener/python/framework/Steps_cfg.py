@@ -55,9 +55,9 @@ Steps = {
                  'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut','rochesterMC',
+                  'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL',
-                                  'trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                                  'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
 
