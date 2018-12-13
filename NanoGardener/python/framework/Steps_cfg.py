@@ -111,8 +111,10 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'selection'  : '"((nElectron+nMuon)>1)"' ,
-                     'subTargets' : ['leptonMaker','WgSSel','puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent',
-                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF'],
+                     'subTargets' : ['baseW','leptonMaker','WgSSel', 'btagPerJet2017', 'btagPerEvent',
+                                     'PrefCorr2017','jetSel','CleanJetCut',
+                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                      'onlySample' : [
                                    'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
                                    #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
@@ -122,6 +124,10 @@ Steps = {
                                  ]
                    },
 
+#                  'subTargets' : ['leptonMaker','lepSel', 'puW2017', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2017', 'btagPerEvent','PrefCorr2017'],
+#                  'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut',
+#                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL',
+#                                  'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
 ## ------- DATA:
     
   'DATAl1loose2016': {
@@ -164,12 +170,12 @@ Steps = {
 
 ## ------- WgStar DATA:
 
-    'DATAWgStar2017' : { 
+    'DATAWgStar2017v2' : { 
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','WgSSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
+                  'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA','jetSel','CleanJetCut' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                    },
 
 #  Merged back to DATAl1loose2017 (was a tmp fix)    
