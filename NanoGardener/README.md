@@ -32,12 +32,13 @@ Branches can be cross referenced, e.g.  Muon_genPartIdx[i] is the index of the p
 
 ## Installation
 
-     cmsrel CMSSW_9_4_9
-     cd CMSSW_9_4_9/src
-     cmsenv
-     git clone --branch 13TeV git@github.com:latinos/setup.git LatinosSetup
-     source LatinosSetup/SetupShapeOnly.sh
-     scram b
+    export SCRAM_ARCH=slc6_amd64_gcc630
+    cmsrel CMSSW_9_4_9
+    cd CMSSW_9_4_9/src
+    cmsenv
+    git clone --branch 13TeV git@github.com:latinos/setup.git LatinosSetup
+    source LatinosSetup/SetupShapeOnly.sh
+    scram b
 
 ### Customization
 Copy the file LatinoAnalysis/Tools/python/userConfig_TEMPLATE.py to LatinoAnalysis/Tools/python/userConfig.py and edit it to reflect your local paths. This is needed for batch jobs submission
