@@ -20,16 +20,16 @@ class rochester_corr(Module):
     def __init__(self,isdata = False , lepColl="Lepton",metColls=['MET','PuppiMET','RawMET','TkMET']):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.isdata = isdata
-        print "Loading macros from "+cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR.cc"
+        print "Loading macros from "+cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc"
         try:
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR.cc+g')                                                                    
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc+g')                                                                    
         except RuntimeError: 
-            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR.cc++g')      
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc++g')      
         print "Loaded"  
 
         rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2017v0.txt"        
         print "scale factors from", rochester_path
-        rc=ROOT.RoccoR(rochester_path)
+        rc=ROOT.RoccoR_NG(rochester_path)
         self.rc= rc        
 
         self.lepColl  = lepColl

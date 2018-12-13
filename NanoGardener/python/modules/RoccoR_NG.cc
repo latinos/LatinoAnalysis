@@ -4,46 +4,46 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include "RoccoR.h"
+#include "RoccoR_NG.h"
 
-const double CrystalBall::pi = 3.14159;
-const double CrystalBall::sqrtPiOver2 = sqrt(CrystalBall::pi/2.0);
-const double CrystalBall::sqrt2 = sqrt(2.0);
+const double CrystalBall_NG::pi = 3.14159;
+const double CrystalBall_NG::sqrtPiOver2 = sqrt(CrystalBall_NG::pi/2.0);
+const double CrystalBall_NG::sqrt2 = sqrt(2.0);
 
-RocRes::RocRes(){
+RocRes_NG::RocRes_NG(){
     reset();
 }
 
-void RocRes::reset(){
+void RocRes_NG::reset(){
     NETA=0;
     NTRK=0;
     NMIN=0;
     std::vector<ResParams>().swap(resol);
 }
 
-int RocRes::etaBin(double eta) const{
+int RocRes_NG::etaBin(double eta) const{
     double abseta=fabs(eta);
     for(int i=0; i<NETA-1; ++i) if(abseta<resol[i+1].eta) return i;
     return NETA-1;
 }
 
-int RocRes::trkBin(double x, int h, TYPE T) const{
+int RocRes_NG::trkBin(double x, int h, TYPE T) const{
     for(int i=0; i<NTRK-1; ++i) if(x<resol[h].nTrk[T][i+1]) return i;
     return NTRK-1;
 }
 
-double RocRes::Sigma(double pt, int H, int F) const{
+double RocRes_NG::Sigma(double pt, int H, int F) const{
     double dpt=pt-45;
     const ResParams &rp = resol[H];
     return rp.rsPar[0][F] + rp.rsPar[1][F]*dpt + rp.rsPar[2][F]*dpt*dpt;
 }
 
-double RocRes::rndm(int H, int F, double w) const{
+double RocRes_NG::rndm(int H, int F, double w) const{
     const ResParams &rp = resol[H];
     return rp.nTrk[MC][F]+(rp.nTrk[MC][F+1]-rp.nTrk[MC][F])*w; 
 }
 
-double RocRes::kSpread(double gpt, double rpt, double eta, int n, double w) const{
+double RocRes_NG::kSpread(double gpt, double rpt, double eta, int n, double w) const{
     int H = etaBin(fabs(eta));
     int F = n-NMIN;
     double v = rndm(H, F, w);
@@ -57,7 +57,7 @@ double RocRes::kSpread(double gpt, double rpt, double eta, int n, double w) cons
     return kold/knew;
 }
 
-double RocRes::kSmear(double pt, double eta, TYPE type, double v, double u) const{
+double RocRes_NG::kSmear(double pt, double eta, TYPE type, double v, double u) const{
     int H = etaBin(fabs(eta));
     int F = trkBin(v, H, type);
     const ResParams &rp = resol[H];
@@ -65,7 +65,7 @@ double RocRes::kSmear(double pt, double eta, TYPE type, double v, double u) cons
     return 1.0/(1.0+x);
 }
 
-double RocRes::kSmear(double pt, double eta, TYPE type, double w, double u, int n) const{
+double RocRes_NG::kSmear(double pt, double eta, TYPE type, double w, double u, int n) const{
     int H = etaBin(fabs(eta));
     int F = n-NMIN;
     if(type==Data) F = trkBin(rndm(H, F, w), H, Data);
@@ -74,7 +74,7 @@ double RocRes::kSmear(double pt, double eta, TYPE type, double w, double u, int 
     return 1.0/(1.0+x);
 }
 
-double RocRes::kExtra(double pt, double eta, int n, double u, double w) const{
+double RocRes_NG::kExtra(double pt, double eta, int n, double u, double w) const{
     int H = etaBin(fabs(eta));
     int F = n-NMIN;
     const ResParams &rp = resol[H];
@@ -88,13 +88,13 @@ double RocRes::kExtra(double pt, double eta, int n, double u, double w) const{
 }
 
 
-RoccoR::RoccoR(){}
+RoccoR_NG::RoccoR_NG(){}
 
-RoccoR::RoccoR(std::string filename){
+RoccoR_NG::RoccoR_NG(std::string filename){
     init(filename);
 }
 
-void RoccoR::reset(){
+void RoccoR_NG::reset(){
     NETA=0;
     NPHI=0;
     std::vector<double>().swap(etabin);
@@ -105,9 +105,9 @@ void RoccoR::reset(){
 }
 
 
-void RoccoR::init(std::string filename){
+void RoccoR_NG::init(std::string filename){
     std::ifstream in(filename.c_str());
-    if(in.fail()) throw std::invalid_argument("RoccoR::init could not open file " + filename);
+    if(in.fail()) throw std::invalid_argument("RoccoR_NG::init could not open file " + filename);
 
     int RMIN(0), RTRK(0), RETA(0);
     std::vector<double> BETA;
@@ -145,7 +145,7 @@ void RoccoR::init(std::string filename){
 	}
 	else if(first4=="CPHI") {
 	    ss >> tag >> NPHI; 
-	    DPHI=2*CrystalBall::pi/NPHI;
+	    DPHI=2*CrystalBall_NG::pi/NPHI;
 	}
 	else if(first4=="CETA")  {
 	    ss >> tag >> NETA;
@@ -219,33 +219,33 @@ void RoccoR::init(std::string filename){
     in.close();
 }
 
-const double RoccoR::MPHI=-CrystalBall::pi;
+const double RoccoR_NG::MPHI=-CrystalBall_NG::pi;
 
-int RoccoR::etaBin(double x) const{
+int RoccoR_NG::etaBin(double x) const{
     for(int i=0; i<NETA-1; ++i) if(x<etabin[i+1]) return i;
     return NETA-1;
 }
 
-int RoccoR::phiBin(double x) const{
+int RoccoR_NG::phiBin(double x) const{
     int ibin=(x-MPHI)/DPHI;
     if(ibin<0) return 0; 
     if(ibin>=NPHI) return NPHI-1;
     return ibin;
 }
 
-double RoccoR::kScaleDT(int Q, double pt, double eta, double phi, int s, int m) const{
+double RoccoR_NG::kScaleDT(int Q, double pt, double eta, double phi, int s, int m) const{
     int H = etaBin(eta);
     int F = phiBin(phi);
     return 1.0/(RC[s][m].CP[DT][H][F].M + Q*RC[s][m].CP[DT][H][F].A*pt);
 }
 
-double RoccoR::kScaleMC(int Q, double pt, double eta, double phi, int s, int m) const{
+double RoccoR_NG::kScaleMC(int Q, double pt, double eta, double phi, int s, int m) const{
     int H = etaBin(eta);
     int F = phiBin(phi);
     return 1.0/(RC[s][m].CP[MC][H][F].M + Q*RC[s][m].CP[MC][H][F].A*pt);
 }
 
-double RoccoR::kScaleAndSmearMC(int Q, double pt, double eta, double phi, int n, double u, double w, int s, int m) const{
+double RoccoR_NG::kScaleAndSmearMC(int Q, double pt, double eta, double phi, int n, double u, double w, int s, int m) const{
     const auto& rc=RC[s][m];
     int H = etaBin(eta);
     int F = phiBin(phi);
@@ -253,7 +253,7 @@ double RoccoR::kScaleAndSmearMC(int Q, double pt, double eta, double phi, int n,
     return k*rc.RR.kExtra(k*pt, eta, n, u, w);
 }
 
-double RoccoR::kScaleFromGenMC(int Q, double pt, double eta, double phi, int n, double gt, double w, int s, int m) const{
+double RoccoR_NG::kScaleFromGenMC(int Q, double pt, double eta, double phi, int n, double gt, double w, int s, int m) const{
     const auto& rc=RC[s][m];
     int H = etaBin(eta);
     int F = phiBin(phi);
@@ -261,12 +261,12 @@ double RoccoR::kScaleFromGenMC(int Q, double pt, double eta, double phi, int n, 
     return k*rc.RR.kSpread(gt, k*pt, eta, n, w);
 }
 
-double RoccoR::kGenSmear(double pt, double eta, double v, double u, RocRes::TYPE TT, int s, int m) const{
+double RoccoR_NG::kGenSmear(double pt, double eta, double v, double u, RocRes_NG::TYPE TT, int s, int m) const{
     return RC[s][m].RR.kSmear(pt, eta, TT, v, u);
 }
 
 template <typename T>
-double RoccoR::error(T f) const{
+double RoccoR_NG::error(T f) const{
     double sum=0;
     for(int s=0; s<nset; ++s){
 	if(tvar[s]==Symhes) {
@@ -288,15 +288,15 @@ double RoccoR::error(T f) const{
     return sqrt(sum);
 }
 
-double RoccoR::kScaleDTerror(int Q, double pt, double eta, double phi) const{
+double RoccoR_NG::kScaleDTerror(int Q, double pt, double eta, double phi) const{
     return error([this, Q, pt, eta, phi](int s, int m) {return kScaleDT(Q, pt, eta, phi, s, m);});
 }
 
-double RoccoR::kScaleFromGenMCerror(int Q, double pt, double eta, double phi, int n, double gt, double w) const{
+double RoccoR_NG::kScaleFromGenMCerror(int Q, double pt, double eta, double phi, int n, double gt, double w) const{
     return error([this, Q, pt, eta, phi, n, gt, w](int s, int m) {return kScaleFromGenMC(Q, pt, eta, phi, n, gt, w, s, m);});
 }
 
-double RoccoR::kScaleAndSmearMCerror(int Q, double pt, double eta, double phi, int n, double u, double w) const{
+double RoccoR_NG::kScaleAndSmearMCerror(int Q, double pt, double eta, double phi, int n, double u, double w) const{
     return error([this, Q, pt, eta, phi, n, u, w](int s, int m) {return kScaleAndSmearMC(Q, pt, eta, phi, n, u, w, s, m);});
 }
 

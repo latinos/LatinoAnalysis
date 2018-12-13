@@ -3,7 +3,7 @@
 
 #include <boost/math/special_functions/erf.hpp>
 
-struct CrystalBall{
+struct CrystalBall_NG{
     static const double pi;
     static const double sqrtPiOver2;
     static const double sqrt2;
@@ -28,7 +28,7 @@ struct CrystalBall{
     double cdfMa;
     double cdfPa;
 
-    CrystalBall():m(0),s(1),a(10),n(10){
+    CrystalBall_NG():m(0),s(1),a(10),n(10){
 	init();
     }
 
@@ -85,7 +85,7 @@ struct CrystalBall{
 };
 
 
-struct RocRes{
+struct RocRes_NG{
     enum TYPE {MC, Data, Extra};
 
     struct ResParams{
@@ -93,7 +93,7 @@ struct RocRes{
 	double kRes[2]; 
 	std::vector<double> nTrk[2]; 
 	std::vector<double> rsPar[3]; 
-	std::vector<CrystalBall> cb;
+	std::vector<CrystalBall_NG> cb;
 	ResParams():eta(0){for(auto& k: kRes) k=1;}
     };
 
@@ -103,7 +103,7 @@ struct RocRes{
 
     std::vector<ResParams> resol;
 
-    RocRes();
+    RocRes_NG();
 
     int etaBin(double x) const;
     int trkBin(double x, int h, TYPE T=MC) const;
@@ -117,7 +117,7 @@ struct RocRes{
     double kExtra(double pt, double eta, int nlayers, double u, double w) const;
 };
 
-class RoccoR{
+class RoccoR_NG{
 
   //private:
   public:
@@ -134,7 +134,7 @@ class RoccoR{
 	struct CorParams{double M; double A;};
 
 	struct RocOne{
-	    RocRes RR;
+	    RocRes_NG RR;
 	    std::vector<std::vector<CorParams>> CP[2];
 	};
 
@@ -147,18 +147,18 @@ class RoccoR{
 	template <typename T> double error(T f) const;
 
 	//public:
-	RoccoR(); 
-	RoccoR(std::string filename); 
+	RoccoR_NG(); 
+	RoccoR_NG(std::string filename); 
 	void init(std::string filename);
 	void reset();
 
-	const RocRes& getRes(int s=0, int m=0) const {return RC[s][m].RR;}
+	const RocRes_NG& getRes(int s=0, int m=0) const {return RC[s][m].RR;}
 	double getM(int T, int H, int F, int s=0, int m=0) const{return RC[s][m].CP[T][H][F].M;}
 	double getA(int T, int H, int F, int s=0, int m=0) const{return RC[s][m].CP[T][H][F].A;}
 	double getK(int T, int H, int s=0, int m=0)        const{return RC[s][m].RR.resol[H].kRes[T];}
 
 	double kScaleMC(int Q, double pt, double eta, double phi, int s=0, int m=0) const;
-	double kGenSmear(double pt, double eta, double v, double u, RocRes::TYPE TT=RocRes::Data, int s=0, int m=0) const;
+	double kGenSmear(double pt, double eta, double v, double u, RocRes_NG::TYPE TT=RocRes_NG::Data, int s=0, int m=0) const;
 
 	double kScaleDT(int Q, double pt, double eta, double phi, int s=0, int m=0) const;
 	double kScaleFromGenMC(int Q, double pt, double eta, double phi, int n, double gt, double w, int s=0, int m=0) const; 
