@@ -20,7 +20,7 @@ import LatinoAnalysis.Gardener.odict as odict
 #from HWWAnalysis.Misc.ROOTAndUtils import TH1AddDirSentry
 import subprocess
 import threading, Queue
-from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory
+from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory
 
 # Common Tools & batch
 #from LatinoAnalysis.Tools.userConfig  import *
@@ -54,7 +54,7 @@ class Worker(threading.Thread):
         tag = params[10]
 
         infile = ""
-        infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n\n"
+        infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory\n\n"
         infile += "factory = ShapeFactory()\n"
         infile += "factory._treeName  = '"+opt.treeName+"'\n"
         infile += "factory._energy    = '"+str(energy)+"'\n"
@@ -213,6 +213,7 @@ if __name__ == '__main__':
         print 'Logging level set to INFO (%d)' % opt.debug
         logging.basicConfig( level=logging.INFO )
 
+    # Need to load MultiDraw first in case linesToAdd makes references to multidraw::currentTree
     ROOT.gSystem.Load('libLatinoAnalysisMultiDraw.so')
     try:
       ROOT.multidraw.MultiDraw
@@ -332,7 +333,7 @@ if __name__ == '__main__':
 
             jobs.AddPy2Sh()
             jobs.InitPy('from collections import OrderedDict')
-            jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n")
+            jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory\n")
             jobs.InitPy("factory = ShapeFactory()")
             jobs.InitPy("factory._treeName  = '"+opt.treeName+"'")
             jobs.InitPy("factory._energy    = '"+str(opt.energy)+"'")
