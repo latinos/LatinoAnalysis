@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 
-import json
 import sys
-from sys import exit
+argv = sys.argv
+sys.argv = argv[:1]
 import ROOT
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import os.path
-import string
 import logging
-import LatinoAnalysis.Gardener.odict as odict
-import traceback
 from array import array
 from collections import OrderedDict
-import math
 
 #import os.path
 
@@ -27,6 +23,8 @@ from LatinoAnalysis.ShapeAnalysis.PlotFactory import PlotFactory
 
 
 if __name__ == '__main__':
+    sys.argv = argv
+
     print '''
 --------------------------------------------------------------------------------------------------
 
