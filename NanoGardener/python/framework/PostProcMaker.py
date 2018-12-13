@@ -531,11 +531,8 @@ class PostProcMaker():
          print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
 #        print ' EXIT !!!!'
 #        exit()
-
-#        print nAODFileList
-#        print FileList
-#        FileList = nAODFileList
-#        if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
+         FileList = nAODFileList
+         if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
 
        # Now compute #evts
        genEventCount = 0
