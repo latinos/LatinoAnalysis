@@ -308,7 +308,8 @@ def getBaseW(directory,Samples = [] ):
     ### Get XS
     xsDB = xsectionDB()
     CMSSW=os.environ["CMSSW_BASE"]
-    xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    #xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    xsFile=CMSSW+'/src/LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections.py'
     xsDB.readPython(xsFile)
     xsDB.readYR('YR4','13TeV')
     xs = []
