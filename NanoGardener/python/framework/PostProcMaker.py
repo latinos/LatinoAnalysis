@@ -11,6 +11,8 @@ from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 from LatinoAnalysis.Tools.crabTools  import *
 
+JOB_DIR_SPLIT_READY=True
+
 try:
   # CERN-specific LSF<->HTCondor switch
   # This is temporary - CERN will soon become 100% condor
@@ -288,7 +290,12 @@ class PostProcMaker():
      if not self._iniStep == 'Prod' : bpostFix='____'+self._iniStep
 
      # Make job directories
-     jDir = jobDir+'/NanoGardening__'+iProd
+     if JOB_DIR_SPLIT :
+       jDir = jobDir+'/NanoGardening__'+iProd+'__'+iStep
+       for iSample in self._targetDic :
+         if not os.path.exists(jDir+'/'+iSample) : os.system('mkdir -p '+jDir+'/'+iSample)
+     else:
+       jDir = jobDir+'/NanoGardening__'+iProd
      if not os.path.exists(jDir) : os.system('mkdir -p '+jDir)
      wDir = workDir+'/NanoGardening__'+iProd
      if not os.path.exists(wDir) : os.system('mkdir -p '+wDir)
@@ -299,7 +306,10 @@ class PostProcMaker():
      for iSample in self._targetDic :
        for iFile in self._targetDic[iSample] :
          iTarget = os.path.basename(self._targetDic[iSample][iFile]).replace(self._treeFilePrefix,'').replace('.root','')
-         pidFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
+         if JOB_DIR_SPLIT :
+           pidFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
+         else:
+           pidFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
          if os.path.isfile(pidFile) :
            print "pidFile", pidFile
            print '--> Job Running already : '+iTarget
@@ -331,7 +341,10 @@ class PostProcMaker():
          iTarget = os.path.basename(self._targetDic[iSample][iFile]).replace(self._treeFilePrefix,'').replace('.root','')
          if iTarget in targetList :
            # Create python
-           pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+           if JOB_DIR_SPLIT :
+             pyFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+           else:
+             pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
            outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
            jsonFilter = self._Productions[iProd]['jsonFile'] if 'jsonFile' in self._Productions[iProd].keys() else None 
