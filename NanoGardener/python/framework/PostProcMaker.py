@@ -11,8 +11,6 @@ from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 from LatinoAnalysis.Tools.crabTools  import *
 
-JOB_DIR_SPLIT_READY=True
-
 try:
   # CERN-specific LSF<->HTCondor switch
   # This is temporary - CERN will soon become 100% condor
@@ -324,7 +322,7 @@ class PostProcMaker():
      # batchMode Preparation
      elif self._jobMode == 'Batch':
        print "INFO: Using Local Batch"
-       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True)
        self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
        self._jobs.AddPy2Sh()
        self._jobs.Add2All('ls -l')

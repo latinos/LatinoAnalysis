@@ -21,10 +21,9 @@ try:
 except NameError:
   JOB_DIR_SPLIT = False
 #Avoid using this feature for tools that are not ready for it -> change it in the tool after loading the library
-JOB_DIR_SPLIT_READY=False
 
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir=''):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -34,7 +33,8 @@ class batchJobs :
      self.jobsList=[]
      self.baseName = baseName
      self.prodName = prodName
-     if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY:
+     self.JOB_DIR_SPLIT_READY = JOB_DIR_SPLIT_READY
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY:
        if len(stepList) == 1 : StepName = stepList[0]
        else:
          StepName = ''
@@ -77,7 +77,7 @@ class batchJobs :
      CMSSW=os.environ["CMSSW_BASE"]
      SCRAMARCH=os.environ["SCRAM_ARCH"]
      for jName in self.jobsList:
-       if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
          subDirExtra = '/' + jName.split('__')[3] 
          if not os.path.exists(self.subDir+subDirExtra) : os.system('mkdir -p '+self.subDir+subDirExtra)
        else:
@@ -164,7 +164,7 @@ class batchJobs :
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
-     if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
        subDirExtra = '/' + jName.split('__')[3] 
      else:
        subDirExtra =''
@@ -175,7 +175,7 @@ class batchJobs :
 
    def Add2All (self,command):
      for jName in self.jobsList:
-       if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
          subDirExtra = '/' + jName.split('__')[3] 
        else:
          subDirExtra =''
@@ -187,7 +187,7 @@ class batchJobs :
 
      #os.system('cd '+self.subDir)
      for jName in self.jobsList:
-       if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
          subDirExtra = '/' + jName.split('__')[3]
        else:
          subDirExtra =''
@@ -197,7 +197,7 @@ class batchJobs :
 
    def AddPy2Sh(self):
      for jName in self.jobsList: 
-       if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
          subDirExtra = '/' + jName.split('__')[3]
        else:
          subDirExtra =''
@@ -208,7 +208,7 @@ class batchJobs :
 
    def AddPy (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
-     if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
        subDirExtra = '/' + jName.split('__')[3]
      else:
        subDirExtra =''
@@ -219,7 +219,7 @@ class batchJobs :
 
    def GetPyName (self,iStep,iTarget) :
      jName= self.jobsDic[iStep][iTarget]
-     if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
        subDirExtra = '/' + jName.split('__')[3]
      else:
        subDirExtra =''
@@ -244,7 +244,7 @@ class batchJobs :
 
 
      for jName in self.jobsList:
-       if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
          subDirExtra = '/' + jName.split('__')[3]
        else:
          subDirExtra =''
@@ -342,7 +342,7 @@ class batchJobs :
        jds += '+JobFlavour = "'+queue+'"\n'
        jds += 'queue JName in (\n'
        for jName in self.jobsList:
-         if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+         if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
            subDirExtra = '/' + jName.split('__')[3] 
          else:
            subDirExtra = '' 
@@ -387,7 +387,7 @@ class batchJobs :
      hostName = os.uname()[1]
      
      jName= self.jobsDic[iStep][iTarget]
-     if JOB_DIR_SPLIT and JOB_DIR_SPLIT_READY :
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
          subDirExtra = '/' + jName.split('__')[3]
      else:
          subDirExtra =''
