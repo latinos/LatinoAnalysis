@@ -17,7 +17,8 @@ import os.path
 import math
 
 class MetUnclusteredTreeMaker(Module) :
-    def __init__(self, kind="Up") :
+    def __init__(self, kind="Up",metCollections=['MET', 'PuppiMET', 'RawMET']) :
+        self.metCollections = metCollections
         cmssw_base = os.getenv('CMSSW_BASE')
         self.kind = kind
 
@@ -29,7 +30,6 @@ class MetUnclusteredTreeMaker(Module) :
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']
         for x in self.metCollections:
           self.out.branch(x+'_pt', "F")
           self.out.branch(x+'_phi', "F")
@@ -58,6 +58,7 @@ class MetUnclusteredTreeMaker(Module) :
 
             met_px = met.pt * math.cos(met.phi)
             met_py = met.pt * math.sin(met.phi)
+            sumEt  = met.sumEt
 
             if self.kind == 'Up':
                 met_px_UnclEn  = met_px + metUnclustX

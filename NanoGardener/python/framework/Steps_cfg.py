@@ -548,6 +548,38 @@ Steps = {
 
 ## ------- MET
 
+  'do_METUp' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.MetUnclustered',
+                  'declare'    : 'METup = lambda : MetUnclusteredTreeMaker(kind="Up",metCollections=["MET", "PuppiMET", "RawMET"])',
+                  'module'     : 'METup()',
+                },
+
+  'do_METDo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.MetUnclustered',
+                  'declare'    : 'METDo = lambda : MetUnclusteredTreeMaker(kind="Dn",metCollections=["MET", "PuppiMET", "RawMET"])',
+                  'module'     : 'METDo()',
+                },
+
+   'METUp' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METUp','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+               },
+
+   'METDo' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METDo','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+               },
+
 ## ------- e-Scale
 
 ## ------- mu-Scale
