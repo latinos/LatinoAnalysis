@@ -317,6 +317,9 @@ class PostProcMaker():
      stepList=[]
      stepList.append(iStep)
 
+     #print self._targetDic.keys()
+     #exit()
+
      if self._jobMode == 'Interactive' :
        print "INFO: Using Interactive command"
      # batchMode Preparation
@@ -583,6 +586,8 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in module :
        module = module.replace('RPLME_CMSSW',self._prodVersion)
+     if 'RPLME_JESGT' in module :
+       module = module.replace('RPLME_JESGT',self._prodJESGT)
 
      return module
 
@@ -593,6 +598,9 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in declare :
        declare = declare.replace('RPLME_CMSSW',self._prodVersion)
+  
+     if 'RPLME_JESGT' in declare :
+       declare = declare.replace('RPLME_JESGT',self._prodJESGT)
 
      return declare
 
@@ -781,6 +789,7 @@ class PostProcMaker():
      for iProd in self._prodList:
        print '----------- Running on production: '+iProd
        self._prodVersion = self._Productions[iProd]['cmssw']
+       if 'JESGT' in self._Productions[iProd] : self._prodJESGT = self._Productions[iProd]['JESGT']
        self.readSampleFile(iProd) 
        if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
 

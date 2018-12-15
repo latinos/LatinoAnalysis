@@ -63,6 +63,7 @@ Productions = {
                          'isData'  : False ,
                          'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/fall17_nAOD_v1.py' ,
                          'cmssw'   : 'Full2017v2' ,
+                         'JESGT'   : 'Fall17_17Nov2017_V6_MC' , 
                          'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2017.py' ,
                          'YRver'   : ['YR4','13TeV'] ,
                    },           
