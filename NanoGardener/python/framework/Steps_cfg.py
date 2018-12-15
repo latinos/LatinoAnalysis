@@ -513,7 +513,7 @@ Steps = {
                   'module'     : 'JES()',
                },
 
-  'do_JESUp' : {  
+  'do_JESup' : {  
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -522,7 +522,7 @@ Steps = {
                   'module'     : 'JESUp()' 
                },
 
-  'do_JESDo' : {  'isChain'    : False ,
+  'do_JESdo' : {  'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.PtCorrApplier', 
@@ -532,23 +532,23 @@ Steps = {
 
    # What about B-Tag weights ? They are done on top of the Jet Collection, not the CleanJet, so they don't catch th jet pT update !!!!
 
-   'JESUp' :   {  
+   'JESup' :   {  
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['JESBase','do_JESUp','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                  'subTargets' : ['JESBase','do_JESup','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
-   'JESDo' :   {
+   'JESdo' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['JESBase','do_JESDo','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                  'subTargets' : ['JESBase','do_JESdo','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
 ## ------- MET
 
-  'do_METUp' : {
+  'do_METup' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -557,7 +557,7 @@ Steps = {
                   'module'     : 'METup()',
                 },
 
-  'do_METDo' : {
+  'do_METdo' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -566,18 +566,18 @@ Steps = {
                   'module'     : 'METDo()',
                 },
 
-   'METUp' :   {
+   'METup' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_METUp','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                  'subTargets' : ['do_METup','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
-   'METDo' :   {
+   'METdo' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_METDo','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                  'subTargets' : ['do_METdo','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
 ## ------- e-Scale

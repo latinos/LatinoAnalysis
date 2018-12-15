@@ -22,8 +22,9 @@ from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import Lepton_br, Lepton_v
 import os.path
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele") :
+    def __init__(self, kind="Up", lepFlavor="ele", metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']) :
         cmssw_base = os.getenv('CMSSW_BASE')
+        self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
         self.lepFlavor = lepFlavor # "ele" or "mu"
         leppTscaler = {}
@@ -43,7 +44,6 @@ class LeppTScalerTreeMaker(Module) :
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']
         for x in self.metCollections:
           self.out.branch(x+'_pt', "F")
 
