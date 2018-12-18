@@ -20,16 +20,16 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger im
 from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import Lepton_br, Lepton_var 
 
 import os.path
+import math
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele", metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']) :
+    def __init__(self, kind="Up", lepFlavor="ele", metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET'], SFfile = "/src/LatinoAnalysis/NanoGardener/python/data/TODO.py") :#TODO: Set files for 2017
         cmssw_base = os.getenv('CMSSW_BASE')
         self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
         self.lepFlavor = lepFlavor # "ele" or "mu"
         leppTscaler = {}
-        # TODO Example file only, for Full2016 analysis:
-        ScaleFactorFile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_'+lepFlavor[:2]+'_80_remAOD.py'
+        ScaleFactorFile = cmssw_base + SFfile #For Full2016 analysis: '/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_'+lepFlavor[:2]+'_80_remAOD.py'
         if os.path.exists(ScaleFactorFile):
           handle = open(ScaleFactorFile,'r')
           exec(handle)
@@ -118,8 +118,33 @@ class LeppTScalerTreeMaker(Module) :
 
         # Leptons
         for idx,lep in enumerate(leptons):
+            origleppt = lep.pt
+            origlepphi = lep.phi
             if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
-                lep.pt = lep.pt * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0))
+                #lep.pt = lep.pt * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0))
+                lepptx = lep.pt * math.cos(lep.phi) * (1 + (self.variation * self.getScale(self.lepFlavor, abs(lep.pt * math.cos(lep.phi)), lep.eta) / 100.0))
+                leppty = lep.pt * math.sin(lep.phi) * (1 + (self.variation * self.getScale(self.lepFlavor, abs(lep.pt * math.sin(lep.phi)), lep.eta) / 100.0))
+                lep.pt = math.sqrt(lepptx**2 + leppty**2)
+                lep.phi = self.FixAngle(math.atan2(leppty, lepptx))
+
+                #SumET
+                if lep.electronIdx > -1: mass = event.Electron_mass[lep.electronIdx]
+                elif lep.muonIdx > -1: mass = event.Muon_mass[lep.muonIdx]
+                else: continue
+
+                p4 = ROOT.TLorentzVector()
+                p4.SetPtEtaPhiM(origleppt, lep.eta, origlepphi, mass)
+                et = p4.Energy()*math.sin(p4.Theta())
+                new_p4 = ROOT.TLorentzVector()
+                new_p4.SetPtEtaPhiM(lep.pt, lep.eta, lep.phi, mass)
+                new_et = new_p4.Energy()*math.sin(new_p4.Theta())
+
+                for metType in self.metCollections:
+                    try:
+                        met = Object(event, metType)
+                    except AttributeError:
+                        continue
+                    met.sumEt += new_et - et
 
         # Re-order lepton collection
         for idx,lep in enumerate(leptons):
