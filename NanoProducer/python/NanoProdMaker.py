@@ -125,7 +125,7 @@ class NanoProdMaker():
         os.system(cmsDrvCmd)    
 
         # prepare the crab Cfg
-        self._crabCfg=self._jDir+'/'+self._taskName+'.cfg'
+        self._crabCfg=self._jDir+'/'+self._taskName+'_cfg.py'
         fCfg = open(self._crabCfg,'w')
         fCfg.write('from WMCore.Configuration import Configuration\n')
         fCfg.write('config = Configuration()\n')
@@ -136,19 +136,19 @@ class NanoProdMaker():
         # ... JobType
         fCfg.write('config.section_(\'JobType\')\n')
         fCfg.write('config.JobType.psetName = \''+self._PyCfg+'\'\n')
-        fCfg.write('config.JobType.pluginName = \'nano6\'\n')
-        fCfg.write('config.JobType.outputFiles = \''+self._fileOut+'\'\n')
+        fCfg.write('config.JobType.pluginName = \'Analysis\'\n')
+        fCfg.write('config.JobType.outputFiles = [\''+self._fileOut+'\']\n')
         # ... Data
         fCfg.write('config.section_(\'Data\')\n')
         # ...... Input Data
         fCfg.write('config.Data.inputDataset = \''+self._Samples[iSample]['miniAOD']+'\'\n') 
         fCfg.write('config.Data.inputDBS = \'global\'\n')
-        fCfg.write('config.Data.splitting = \'FileBased\'\n')
-        fCfg.write('config.Data.unitsPerJob = 1\n')
+        fCfg.write('config.Data.splitting = \'Automatic\'\n')
+        #fCfg.write('config.Data.unitsPerJob = 1\n')
         # ...... Output data
         fCfg.write('config.Data.publication = True\n')
+        fCfg.write('config.Data.publishDBS = \'phys03\'\n')
         fCfg.write('config.Data.outputDatasetTag = \''+self._taskName+'\'\n')
-        fCfg.write('config.Data.outputPrimaryDataset = \'NanoProd\'\n')
         fCfg.write('config.Data.outLFNDirBase = \''+self._outLFNDirBase+'\'\n')
 
         # ... User
@@ -163,26 +163,26 @@ class NanoProdMaker():
 
         print self._crabCfg
 
-      # Submit
-      print "Submitting to CRAB : " + self._taskName
-      os.system('cd '+self._jDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self._crabCfg)+' --dryrun')
-      # Check result
-      logFile = self._jDir+'/crab_'+self._taskName+'/crab.log'
-      succes=False
-      taskName=None
-      with open(logFile) as search:
-        for line in search:
+        # Submit
+        print "Submitting to CRAB : " + self._taskName
+        os.system('cd '+self._jDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self._crabCfg))
+        # Check result
+        logFile = self._jDir+'/crab_'+self._taskName+'/crab.log'
+        succes=False
+        taskName=None
+        with open(logFile) as search:
+         for line in search:
           line = line.rstrip()
           if 'Success: Your task has been delivered to the CRAB3 server' in line : succes=True
           if 'Task name:' in line:
             taskName=line.split()[5]
-      print 'Success = ',succes,' --> TaskName = ',taskName
-      # Make .jid files
-      if succes:
-        # Keep the task ID
-        f = open(self.tidFile,'w')
-        f.write('CRABTask = '+taskName)
-        f.close()
+        print 'Success = ',succes,' --> TaskName = ',taskName
+        # Make .jid files
+        if succes:
+         # Keep the task ID
+         f = open(self._tidFile,'w')
+         f.write('CRABTask = '+taskName)
+         f.close()
 
 
 #------------- Main
