@@ -1,7 +1,7 @@
 
 author: X. Janssen
 
-The tool submit a crabtask per sample and publish in ohys03. Presently the storage of the nAOD is done on the Higgs EOS
+The tool submit a crabtask per sample and publish in phys03 DBS. Presently the storage of the nAOD is done on the Higgs EOS
 
 # CMSSW Install:
 
