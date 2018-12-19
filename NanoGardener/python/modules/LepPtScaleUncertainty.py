@@ -56,13 +56,6 @@ class LeppTScalerTreeMaker(Module) :
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def FixAngle(self, phi) :
-        if phi < -ROOT.TMath.Pi() :
-            phi += 2*ROOT.TMath.Pi()
-        elif phi > ROOT.TMath.Pi() :
-            phi -= 2*ROOT.TMath.Pi()
-        return phi
-
     def getScale (self, kindLep, pt, eta):
 
         # fix underflow and overflow
@@ -119,13 +112,8 @@ class LeppTScalerTreeMaker(Module) :
         # Leptons
         for idx,lep in enumerate(leptons):
             origleppt = lep.pt
-            origlepphi = lep.phi
             if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
-                #lep.pt = lep.pt * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0))
-                lepptx = lep.pt * math.cos(lep.phi) * (1 + (self.variation * self.getScale(self.lepFlavor, abs(lep.pt * math.cos(lep.phi)), lep.eta) / 100.0))
-                leppty = lep.pt * math.sin(lep.phi) * (1 + (self.variation * self.getScale(self.lepFlavor, abs(lep.pt * math.sin(lep.phi)), lep.eta) / 100.0))
-                lep.pt = math.sqrt(lepptx**2 + leppty**2)
-                lep.phi = self.FixAngle(math.atan2(leppty, lepptx))
+                lep.pt = lep.pt * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0))
 
                 #SumET
                 if lep.electronIdx > -1: mass = event.Electron_mass[lep.electronIdx]
@@ -133,7 +121,7 @@ class LeppTScalerTreeMaker(Module) :
                 else: continue
 
                 p4 = ROOT.TLorentzVector()
-                p4.SetPtEtaPhiM(origleppt, lep.eta, origlepphi, mass)
+                p4.SetPtEtaPhiM(origleppt, lep.eta, lep.phi, mass)
                 et = p4.Energy()*math.sin(p4.Theta())
                 new_p4 = ROOT.TLorentzVector()
                 new_p4.SetPtEtaPhiM(lep.pt, lep.eta, lep.phi, mass)
