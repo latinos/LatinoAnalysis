@@ -39,6 +39,7 @@ class NanoProdMaker():
      self._selTree      = []
      self._excTree      = []
      self._redo         = False
+     self._pretend      = False 
 
      # Samples
      self._Samples     = {}
@@ -164,25 +165,28 @@ class NanoProdMaker():
         print self._crabCfg
 
         # Submit
-        print "Submitting to CRAB : " + self._taskName
-        os.system('cd '+self._jDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self._crabCfg))
-        # Check result
-        logFile = self._jDir+'/crab_'+self._taskName+'/crab.log'
-        succes=False
-        taskName=None
-        with open(logFile) as search:
-         for line in search:
-          line = line.rstrip()
-          if 'Success: Your task has been delivered to the CRAB3 server' in line : succes=True
-          if 'Task name:' in line:
-            taskName=line.split()[5]
-        print 'Success = ',succes,' --> TaskName = ',taskName
-        # Make .jid files
-        if succes:
-         # Keep the task ID
-         f = open(self._tidFile,'w')
-         f.write('CRABTask = '+taskName)
-         f.close()
+        if self._pretend :
+          print "Not Submitting, dry run : " + self._taskName
+        else:
+          print "Submitting to CRAB : " + self._taskName
+          os.system('cd '+self._jDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self._crabCfg))
+          # Check result
+          logFile = self._jDir+'/crab_'+self._taskName+'/crab.log'
+          succes=False
+          taskName=None
+          with open(logFile) as search:
+           for line in search:
+            line = line.rstrip()
+            if 'Success: Your task has been delivered to the CRAB3 server' in line : succes=True
+            if 'Task name:' in line:
+              taskName=line.split()[5]
+          print 'Success = ',succes,' --> TaskName = ',taskName
+          # Make .jid files
+          if succes:
+           # Keep the task ID
+           f = open(self._tidFile,'w')
+           f.write('CRABTask = '+taskName)
+           f.close()
 
 
 #------------- Main

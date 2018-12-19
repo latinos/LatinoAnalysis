@@ -41,12 +41,8 @@ if __name__ == '__main__':
     parser.add_option("-E", "--excTree",   dest="excTree" , help="Exclude some tree (comma separated list)" , default=[]     , type='string' , action='callback' , callback=list_maker('excTree',','))
 
 #   # --- How to run:
-#   parser.add_option("-n", "--dry-run",    dest="pretend", help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
+    parser.add_option("-n", "--dry-run",    dest="pretend", help="(use with -v) just list the datacards that will go into this combination", default=False, action="store_true")
 #   parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo, don't check if tree already exists"  , default=False  , action="store_true")
-#   parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                              , default=False  , action="store_true")
-#   parser.add_option("-c","--crab",   dest="runCrab", help="Run in batch"                              , default=False  , action="store_true")
-#   parser.add_option("-Q" , "--queue" ,  dest="queue"    , help="Batch Queue"  , default=None , type='string' )
-    # TODO: parser.add_option("-g","--grid",    dest="runGrid", help="Run in Grid"                              , default=False  , action="store_true")
 
 # ---------------------------------------- Config
   
@@ -96,12 +92,7 @@ if __name__ == '__main__':
 
 #   # job mode = Interactive / Batch / Crab / DryRun
 #   factory._redo        = options.redo
-#   factory._pretend     = options.pretend  
-#   if options.runBatch  : 
-#                            factory._jobMode = 'Batch'
-#                            factory.configBatch(options.queue)
-#   elif options.runCrab   : factory._jobMode = 'Crab'
-#   else                   : factory._jobMode = 'Interactive'
-   
+    factory._pretend     = options.pretend  
+  
     factory.process()    
 
