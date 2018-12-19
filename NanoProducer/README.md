@@ -3,7 +3,7 @@ author: X. Janssen
 
 The tool submit a crabtask per sample and publish in ohys03. Presently the storage of the nAOD is done on the Higgs EOS
 
-CMSSW Install:
+# CMSSW Install:
 
 Please use the following CMSSW release:
 
@@ -14,15 +14,15 @@ Please check https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookNanoAOD#How_
 
 On top of LAtinoSetup
 
-# run the commands below in the src/ directory of a
+run the commands below in the src/ directory of CMSSW:
 git cms-merge-topic cms-nanoAOD:master-94X resp. cms-nanoAOD:master-102X
-# create a branch directly on the nanoAOD branch, skipping the unnecessary merge commit from cms-merge-topic
+create a branch directly on the nanoAOD branch, skipping the unnecessary merge commit from cms-merge-topic:
 git checkout -b nanoAOD cms-nanoAOD/master-94X resp. cms-nanoAOD/master-102X
 
-# compile it
+compile it:
 scram build
 
-USAGE:
+# USAGE:
 
 mkNanoProd.py -p <Prod> [-T <listof_samples>] [-E <listof_samples>] [-n]
 
@@ -32,13 +32,13 @@ mkNanoProd.py -p <Prod> [-T <listof_samples>] [-E <listof_samples>] [-n]
 
 -n: prepare cfg and do not submit
 
-Config file:
+# Config file:
 
  * python/Productions_cfg.py  : list of productions
  * python/samples/[Prod].py   : list of samples in that production with list of customisation to apply per sample
  * python/nanoProdCustomise.py: cutomisation functions to be used on top of standard nanoAOD cfg 
 
-TODO:
+# TODO:
 
  * Write the customisation functions !!!!! Now only dummy ones !!!!
  * Maybe allow storage on local user T2
