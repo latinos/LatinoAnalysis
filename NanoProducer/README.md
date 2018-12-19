@@ -30,7 +30,7 @@ scram build
 
 # USAGE:
 
-mkNanoProd.py -p <Prod> [-T <listof_samples>] [-E <listof_samples>] [-n]
+mkNanoProd.py -p Prod [-T <listof_samples>] [-E <listof_samples>] [-n]
 
 -T: select only these samples
 
