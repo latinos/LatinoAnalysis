@@ -2,6 +2,9 @@
 
 import json
 import sys
+# bypass ROOT argv parsing
+argv = sys.argv
+sys.argv = argv[:1]
 import ROOT
 import optparse
 import copy
@@ -150,6 +153,8 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
 
 
 if __name__ == '__main__':
+    sys.argv = argv
+
     print '''
 --------------------------------------------------------------------------------------------------
 

@@ -213,8 +213,7 @@ if __name__ == '__main__':
         print 'Logging level set to INFO (%d)' % opt.debug
         logging.basicConfig( level=logging.INFO )
 
-    # Need to load MultiDraw first in case linesToAdd makes references to multidraw::currentTree
-    ROOT.gSystem.Load('libLatinoAnalysisMultiDraw.so')
+    # MultiDraw should be loaded by importing ShapeFactoryMulti
     try:
       ROOT.multidraw.MultiDraw
     except:

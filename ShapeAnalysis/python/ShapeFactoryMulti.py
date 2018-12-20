@@ -19,6 +19,12 @@ from array import array
 
 ROOT.ROOT.EnableThreadSafety()
 
+ROOT.gSystem.Load('libLatinoAnalysisMultiDraw.so')
+try:
+  ROOT.multidraw.MultiDraw
+except:
+  raise RuntimeError('Failed to load libMultiDraw')
+
 # ----------------------------------------------------- ShapeFactory --------------------------------------
 
 class ShapeFactory:

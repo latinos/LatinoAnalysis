@@ -48,6 +48,8 @@ class batchJobs :
          self.jobsDic[iStep][iTarget] = ''
          if not 'Target' in batchSplit and len(targetList)>1 :
            kTarget = 'AllTargets'
+         elif type(iTarget) is tuple:
+           kTarget = '%s%d' % iTarget
          else:
            kTarget = iTarget
    
