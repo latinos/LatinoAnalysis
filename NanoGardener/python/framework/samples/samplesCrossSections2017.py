@@ -482,10 +482,10 @@ samples['WpWpJJ_EWK_powheg']			.extend( ['xsec=0.02093',	'kfact=1.000',	'ref=I']
 samples['WmWmJJ_EWK_powheg']			.extend( ['xsec=0.007868',	'kfact=1.000',	'ref=I'] )
 samples['WpWmJJ_EWK_QCD_noTop']   		.extend( ['xsec=2.66300',	'kfact=1.000',	'ref=I'] )
 samples['WpWmJJ_EWK_noTop']   			.extend( ['xsec=0.34520',	'kfact=1.000',	'ref=I'] )
-samples['WpWmJJ_QCD_noTop']   			.extend( ['xsec=2.42300',	'kfact=1.000',	'ref=I'] )
-samples['WpWmJJ_EWK_QCD_noTop_noHiggs']         .extend( ['xsec=2.61600',       'kfact=1.000',  'ref=I'] )
-samples['WpWmJJ_EWK_QCD_noHiggs']               .extend( ['xsec=39.88',       'kfact=1.000',  'ref=I'] )
-samples['WpWmJJ_EWK'] 				.extend( ['xsec=0.50310',	'kfact=1.000',	'ref=I'] )
+samples['WpWmJJ_QCD_noTop']   			.extend( ['xsec=2.160',	'kfact=1.000',	'ref=I'] ) #it was 2.42300 before
+samples['WpWmJJ_EWK_QCD_noTop_noHiggs']         .extend( ['xsec=2.241',       'kfact=1.000',  'ref=I'] ) #it was 2.61600 before
+samples['WpWmJJ_EWK_QCD_noHiggs']               .extend( ['xsec=35.45',       'kfact=1.000',  'ref=I'] ) #it was 39.88 before
+samples['WpWmJJ_EWK'] 				.extend( ['xsec=0.4286',	'kfact=1.000',	'ref=I'] ) #it was 0.50310 before
 samples['TWJ']   				.extend( ['xsec=0.28000',	'kfact=1.000',	'ref=X'] )
 samples['tZq_ll']   				.extend( ['xsec=0.07580',	'kfact=1.000',	'ref=E'] )
 
