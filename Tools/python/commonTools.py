@@ -178,7 +178,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
          Dir = inputDir
       if '/eos/cms/' in inputDir:
          absPath=True
-         #xrootdPath='root://eoscms.cern.ch/'
+         xrootdPath='root://eoscms.cern.ch/'
       # if   '/eos/cms/' in inputDir:
       # #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '
       #    xrootdPath='root://eoscms.cern.ch/'
