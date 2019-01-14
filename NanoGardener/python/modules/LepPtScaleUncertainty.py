@@ -47,6 +47,7 @@ class LeppTScalerTreeMaker(Module) :
         self.out = wrappedOutputTree
         for x in self.metCollections:
           self.out.branch(x+'_pt', "F")
+          self.out.branch(x+'_phi', "F")
 
         if 'electronIdx' not in Lepton_var: Lepton_var.append('electronIdx')
         if 'muonIdx' not in Lepton_var: Lepton_var.append('muonIdx')
@@ -107,8 +108,16 @@ class LeppTScalerTreeMaker(Module) :
             except AttributeError:
                 continue
 
-            newmetpt = met.pt * (1 + (self.variation * self.getScale(self.lepFlavor, met.pt, 0.0) / 100.0))
+            metx = met.pt * math.cos(met.phi)
+            mety = met.pt * math.sin(met.phi)
+            for idx,lep in enumerate(leptons):
+                if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
+                    metx = metx * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0 * math.cos(lep.phi)))
+                    mety = mety * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0 * math.sin(lep.phi)))
+            newmetpt = math.sqrt(metx**2 + mety**2)
+            newmetphi = math.atan2(metx, mety)
             self.out.fillBranch(metType+"_pt", newmetpt)
+            self.out.fillBranch(metType+"_phi", newmetphi)
 
         # Leptons
         for idx,lep in enumerate(leptons):
