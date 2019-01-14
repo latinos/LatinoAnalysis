@@ -23,18 +23,19 @@ import os.path
 import math
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele", metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET'], SFfile = "/src/LatinoAnalysis/NanoGardener/python/data/TODO.py") :#TODO: Set files for 2017
+    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']) :#TODO: Set files for 2017
         cmssw_base = os.getenv('CMSSW_BASE')
         self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
         self.lepFlavor = lepFlavor # "ele" or "mu"
         leppTscaler = {}
-        ScaleFactorFile = cmssw_base + SFfile #For Full2016 analysis: '/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_'+lepFlavor[:2]+'_80_remAOD.py'
+        ScaleFactorFile = cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/lepton_scale_n_smear/'+version+'/leppTscaler_'+lepFlavor[:2]+'.py'
         if os.path.exists(ScaleFactorFile):
           handle = open(ScaleFactorFile,'r')
           exec(handle)
           handle.close()
         self.leppTscaler = leppTscaler
+        print self.leppTscaler 
 
     def beginJob(self):
         pass
