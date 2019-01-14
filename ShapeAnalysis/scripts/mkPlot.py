@@ -19,8 +19,6 @@ from collections import OrderedDict
 #
 
 from LatinoAnalysis.ShapeAnalysis.PlotFactory import PlotFactory   
-   
-
 
 if __name__ == '__main__':
     sys.argv = argv
@@ -137,18 +135,17 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
    
-    variables = {}
-    if os.path.exists(opt.variablesFile) :
-      handle = open(opt.variablesFile,'r')
-      exec(handle)
-      handle.close()
-    
     cuts = {}
     if os.path.exists(opt.cutsFile) :
       handle = open(opt.cutsFile,'r')
       exec(handle)
       handle.close()
-   
+
+    variables = {}
+    if os.path.exists(opt.variablesFile) :
+      handle = open(opt.variablesFile,'r')
+      exec(handle)
+      handle.close()
    
     # check if only one cut or only one variable
     # is requested, and filter th elist of cuts and variables
