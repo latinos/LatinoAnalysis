@@ -272,32 +272,43 @@ if __name__ == '__main__':
             
             batchSplit = []
  
-            # ... Cuts
-            stepList=[]
-            if 'Cuts' in opt.batchSplit or "AsMuchAsPossible" in opt.batchSplit:
-              batchSplit.append('Steps')
-              for iCut in cuts: stepList.append(iCut)
-            else:
-              stepList=['ALL']
+            stepList=['ALL']
+
+            splitBySample = 'Samples' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
+            splitByFile = 'Files' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
+            splitByEvent = 'Events' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
           
             # ... Samples
             targetList=[]
-            if 'Samples' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit:
+            if splitBySample:
               batchSplit.append('Targets')
-
-              splitByFile = 'Files' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
-            
+           
               for sam_k,sam_v in samples.iteritems():
                 #handle the case in which the configuration specifies how many files per job to run
-                if splitByFile and "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
+                if splitByFile and "FilesPerJob" in sam_v and sam_v["FilesPerJob"] > 0:
                   filesPerJob = sam_v["FilesPerJob"]
                   nFiles = len(sam_v['name'])
-                  nJobs = nFiles / filesPerJob
+                  nFileBlocks = nFiles / filesPerJob
                   if nFiles % filesPerJob != 0:
-                    nJobs += 1
+                    nFileBlocks += 1
+                  
+                  if splitByEvent and 'EventsPerJob' in sam_v and sam_v['EventsPerJob'] > 0:
+                    eventsPerJob = sam_v['EventsPerJob']
+                    
+                    for iFileBlock in range(nFileBlocks):
+                      chain = ROOT.TChain('latino')
+                      for fname in sam_v['name'][iFileBlock * filesPerJob:(iFileBlock + 1) * filesPerJob]:
+                        chain.Add(fname)
+                      nEvents = chain.GetEntries()
+                      nEventBlocks = nEvents / eventsPerJob
+                      if nEvents % eventsPerJob != 0:
+                        nEventBlocks += 1
 
-                  # targetList is a list of tuples in this case
-                  targetList.extend((sam_k, iCurJob) for iCurJob in range(nJobs))
+                      targetList.extend((sam_k, iFileBlock, iEventBlock) for iEventBlock in range(nEventBlocks))
+                      
+                  else:
+                    # targetList is a list of tuples in this case
+                    targetList.extend((sam_k, iFileBlock) for iFileBlock in range(nFileBlocks))
                       
                 else:
                   targetList.append(sam_k)
@@ -311,7 +322,10 @@ if __name__ == '__main__':
             for iStep in stepList:
               for iTarget in targetList:
                 if type(iTarget) is tuple:
-                  tname = '%s%d' % iTarget
+                  if len(iTarget) == 2:
+                    tname = '%s%d' % iTarget
+                  else:
+                    tname = '%s%d.%d' % iTarget
                 else:
                   tname = iTarget
 
@@ -357,15 +371,19 @@ if __name__ == '__main__':
                   job_targets = samples
 
                 elif type(iTarget) is tuple:
-                  tname = '%s%d' % iTarget
+                  if len(iTarget) == 2:
+                    tname = '%s%d' % iTarget
+                  else:
+                    tname = '%s%d.%d' % iTarget
+
                   sample = samples[iTarget[0]]
-                  iSplit = iTarget[1]
-                  nPerJob = sample['FilesPerJob']
+                  iFileBlock = iTarget[1]
+                  filesPerJob = sample['FilesPerJob']
 
                   clone = copy.deepcopy(sample)
-                  clone['name'] = sample['name'][nPerJob * iSplit:nPerJob * (iSplit + 1)]
+                  clone['name'] = sample['name'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
                   if 'weights' in sample:
-                    clone['weights'] = sample['weights'][nPerJob * iSplit:nPerJob * (iSplit + 1)]
+                    clone['weights'] = sample['weights'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
 
                   job_targets = {iTarget[0]: clone}
 
@@ -384,7 +402,13 @@ if __name__ == '__main__':
                 instructions_for_configuration_file += "      " + str(job_targets) + ",   \n"
                 instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
                 instructions_for_configuration_file += "     '" + supercut + "',      \n"
-                instructions_for_configuration_file += "     '" + jName + "')    \n"
+                instructions_for_configuration_file += "     '" + jName + "',\n"
+                if type(iTarget) is tuple and len(iTarget) == 3:
+                  eventsPerJob = sample['EventsPerJob']
+                  instructions_for_configuration_file += "     " + str(eventsPerJob * iTarget[2]) + ",\n"
+                  instructions_for_configuration_file += "     " + str(eventsPerJob) + "\n"
+
+                instructions_for_configuration_file += ")    \n"
   
                 jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
                     
@@ -402,36 +426,46 @@ if __name__ == '__main__':
             print "     -> jobDir = ", jobDir
             print "     -> files  = ", jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+'XXX'+'__'+'YYY'+'.jid'
 
-            # ... Cuts
-            stepList=[]
-            if 'Cuts' in opt.batchSplit or "AsMuchAsPossible" in opt.batchSplit:
-              for iCut in cuts: stepList.append(iCut)
-            else:
-              stepList=['ALL']
+            stepList=['ALL']
+
+            splitByFile = 'Files' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
+            splitByEvent = 'Events' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit      
 
             # ... Samples
             targetList=[]
             if 'Samples' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit:
-              splitByFile = 'Files' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
-            
+           
               for sam_k,sam_v in samples.iteritems():
                 #handle the case in which the configuration specifies how many files per job to run
                 if splitByFile and "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
                   filesPerJob = sam_v["FilesPerJob"]
                   nFiles = len(sam_v['name'])
-                  nJobs = nFiles / filesPerJob
+                  nFileBlocks = nFiles / filesPerJob
                   if nFiles % filesPerJob != 0:
-                    nJobs += 1
+                    nFileBlocks += 1
 
-                  # targetList is a list of tuples in this case
-                  targetList.extend((sam_k, iCurJob) for iCurJob in range(nJobs))
+                  if splitByEvent and 'EventsPerJob' in sam_v and sam_v['EventsPerJob'] > 0:
+                    eventsPerJob = sam_v['EventsPerJob']
+                    
+                    for iFileBlock in range(nFileBlocks):
+                      chain = ROOT.TChain('latino')
+                      for fname in sam_v['name'][iFileBlock * filesPerJob:(iFileBlock + 1) * filesPerJob]:
+                        chain.Add(fname)
+                      nEvents = chain.GetEntries()
+                      nEventBlocks = nEvents / eventsPerJob
+                      if nEvents % eventsPerJob != 0:
+                        nEventBlocks += 1
+
+                      targetList.extend((sam_k, iFileBlock, iEventBlock) for iEventBlock in range(nEventBlocks))
+                  else:
+                    # targetList is a list of tuples in this case
+                    targetList.extend((sam_k, iFileBlock) for iFileBlock in range(nFileBlocks))
                       
                 else:
                   targetList.append(sam_k)
 
             else:  
               targetList=['ALL']
-
 
             # ...Check job status and create command
             outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root'
@@ -443,7 +477,10 @@ if __name__ == '__main__':
             for iStep in stepList:
               for iTarget in targetList:
                 if type(iTarget) is tuple:
-                  tname = '%s%d' % iTarget
+                  if len(iTarget) == 2:
+                    tname = '%s%d' % iTarget
+                  else:
+                    tname = '%s%d.%d' % iTarget
                 else:
                   tname = iTarget
 
@@ -484,7 +521,7 @@ if __name__ == '__main__':
                     if i>=number: break
                     command += " "+fileList[i]
                     cleanup += "rm "+fileList[i]+" ; "
-#                  print command
+                  print command
                   os.system(command)
               os.chdir(os.getcwd()+"/"+opt.outputDir)
               os.system("hadd -f "+tmpdir+"/plots_"+opt.tag+".root "+tmpdir+"/plots_"+opt.tag+"_temp*")

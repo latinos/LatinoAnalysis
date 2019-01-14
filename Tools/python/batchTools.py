@@ -63,7 +63,10 @@ class batchJobs :
          if not 'Target' in batchSplit and len(targetList)>1 :
            kTarget = 'AllTargets'
          elif type(iTarget) is tuple:
-           kTarget = '%s%d' % iTarget
+           if len(iTarget) == 2:
+              kTarget = '%s%d' % iTarget
+           else:
+              kTarget = '%s%d.%d' % iTarget
          else:
            kTarget = iTarget
    

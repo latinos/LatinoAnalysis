@@ -68,7 +68,7 @@ class ShapeFactory:
 
 
     # _____________________________________________________________________________
-    def makeNominals(self, inputDir, outputDir, variables, cuts, samples, nuisances, supercut, number=99999):
+    def makeNominals(self, inputDir, outputDir, variables, cuts, samples, nuisances, supercut, number=99999, firstEvent=0, nevents=-1):
 
         print "======================"
         print "==== makeNominals ===="
@@ -109,8 +109,9 @@ class ShapeFactory:
         for cutName in self._cuts:
           print "cut = ", cutName, " :: ", self._cuts[cutName]
           ROOT.gROOT.mkdir(cutName)
-          for variableName in self._variables:
-            ROOT.gROOT.mkdir(cutName+"/"+variableName)
+          for variableName, variable in self._variables.iteritems():
+            if 'cuts' not in variable or cutName in variable['cuts']:
+              ROOT.gROOT.mkdir(cutName+"/"+variableName)
 
         #---- just print the variables
         print '  <variables>'
@@ -215,210 +216,6 @@ class ShapeFactory:
             
             #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
-        ## test with LOOP: not very fast ... to be improved ...
-
-        ##---- now plot and save into output root file
-        ## - loops
-        ##    -> samples
-        ##      -> cut 
-        ##        -> variables
-        ##
-
-        ## all the histograms
-        #histos = {}       
-        #weightToPlotFormulas = {}
-        #variableToPlotFormulas = {}
-        
-        #for sampleName, sample in self._samples.iteritems():
-          
-          #print "sampleName = ", sampleName
-          ## first prepare all dummy histograms
-          #for cutName, cut in self._cuts.iteritems():
-            #for variableName, variable in self._variables.iteritems():
-
-              #numTree = 0
-              #for tree in inputs[sampleName]:      
-                ## new histogram
-                #shapeName = 'histo_' + sampleName + "_" + cutName + "_" + variableName + "_" + str(numTree)
-                ## prepare a dummy to fill
-                #histos[shapeName] = self._makeshape(shapeName,variable['range'])
-
-
-                #global_weight = sample ['weight']
-                #globalCut = "(" + cut + ") * (" + global_weight + ")"  
-
-                ## if weights vector is not given, do not apply file dependent weights
-                #if 'weights' in sample.keys() and len(sample ['weights']) != 0 :
-                  ## if weight is not given for a given root file, '-', do not apply file dependent weight for that root file
-                  #if sample ['weights'][numTree] != '-' :
-                    #globalCut = "(" + globalCut + ") * (" +  sample ['weights'][numTree] + ")" 
-
-                #weightFormulaName = 'weight_' + sampleName + '_' + cutName + '_' + variableName + '_' + str(numTree)
-                #weightToPlotFormulas[weightFormulaName] = ROOT.TTreeFormula(weightFormulaName, globalCut , tree)
-
-                #numTree += 1
-
-
-        #for sampleName, sample in self._samples.iteritems():          
-          #for variableName, variable in self._variables.iteritems():
-            #numTree = 0
-            #for tree in inputs[sampleName]:      
-              #variableFormulaName = 'weight_' + sampleName + '_' + '_' + variableName + '_' + str(numTree)
-              #variableToPlotFormulas[variableFormulaName] = ROOT.TTreeFormula(variableFormulaName, variable['name'] , tree)
-              #numTree += 1
-
-
-          
-          ## now really fill the histograms
-          #numTree = 0
-          #for tree in inputs[sampleName]:
-           
-            #print '        {0:<20} : {1:^9}'.format(sampleName,tree.GetEntries()),
-            ##print '        {0:<20} : {1:^9}'.format(sampleName,tree.GetEntries())
-            ## loop over events
-            #step = 5000
-            #nentries = tree.GetEntries()
-            
-            ## pre-filter
-            ##  to speed up
-            #tree.SetEntryList(0)
-            ## get the list
-            ##myList = ROOT.TEntryList(tree)
-            #myList = ROOT.TEntryList('myList'+'_'+str(numTree)+'_'+sampleName,"")
-            #nentriesFiltered = myList.GetN()
-            #print "      -> nentriesFiltered = ", nentriesFiltered, 
-            #tree.Draw('>> myList'+'_'+str(numTree)+'_'+sampleName , supercut, "entrylist");
-            ## apply the list
-            #tree.SetEntryList(myList)
-            #nentriesFiltered = myList.GetN()
-            #print "      -> nentriesFiltered = ", nentriesFiltered
- 
-
-            ## mild the steps
-            #while nentriesFiltered / step > 10 :
-              #step *= 10
-
-
-            ## now really looping over events
-            ##for iEvent in xrange(nentries):
-            
-            #for iEventSel in xrange(nentriesFiltered):
-              #iEvent = -1
-              #if iEventSel == 0 :
-               #iEvent = myList.GetEntry(0)
-               #iEventSel+=1
-              #else :
-               #iEvent = myList.Next()
-               #iEventSel+=1
-               #tree.GetEntry(iEvent)
-              
-              ### print event count
-              #if iEventSel > 0 and iEventSel%step == 0.:
-                #print '   >> ', iEvent, 'events processed ::', nentries, ' [', iEventSel, '(', nentriesFiltered, ')] --> %.2f' % (1. * iEventSel / nentriesFiltered * 100), ' % '
-
-              #for cutName, cut in self._cuts.iteritems():
-                ##print "cut = ", cutName, " :: ", cut
-
-                ##global_weight = sample ['weight']
-                ##globalCut = "(" + cut + ") * (" + global_weight + ")"  
-
-                ### if weights vector is not given, do not apply file dependent weights
-                ##if 'weights' in sample.keys() and len(sample ['weights']) != 0 :
-                  ### if weight is not given for a given root file, '-', do not apply file dependent weight for that root file
-                  ##if sample ['weights'][numTree] != '-' :
-                    ##globalCut = "(" + globalCut + ") * (" +  sample ['weights'][numTree] + ")" 
-
-                ##weightToPlotFormula = ROOT.TTreeFormula('blabla', globalCut , tree)
-                
-                #for variableName, variable in self._variables.iteritems():
-                  ##print "  variable[name]  = ", variable['name']
-                  ##print "  variable[range] = ", variable['range']
-                  #self._outFile.cd (cutName+"/"+variableName)
-
-                  ##variableToPlotFormula = ROOT.TTreeFormula('blabla', variable['name'] , tree)
-
-                  #shapeName = 'histo_' + sampleName + '_' + cutName + '_' + variableName + '_' + str(numTree)
-              
-                  #self._logger.debug('---'+sampleName+'---')
-                  #self._logger.debug('Formula: '+variable['name']+'>>'+shapeName)
-                  #self._logger.debug('Cut:     '+cut)
-                  #self._logger.debug('ROOTFiles:'+'\n'.join([f.GetTitle() for f in tree.GetListOfFiles()]))
-
-                  #weightFormulaName = 'weight_' + sampleName + '_' + cutName + '_' + variableName + '_' + str(numTree)
-                  #variableFormulaName = 'weight_' + sampleName + '_' + '_' + variableName + '_' + str(numTree)
-
-                  #histos[shapeName].Fill( variableToPlotFormulas[variableFormulaName].EvalInstance(), weightToPlotFormulas[weightFormulaName].EvalInstance() )
- 
-            #numTree += 1
-          
-        ##
-        ## now post filling processing
-        ## loop
-        ##  -> cut
-        ##    -> variable
-        ##      -> sample
-        #for cutName, cut in self._cuts.iteritems():
-          #for variableName, variable in self._variables.iteritems():      
-            #for sampleName, sample in self._samples.iteritems():
-              #bigName = 'histo_' + sampleName
-              #hTotal = self._makeshape(bigName,variable['range'])
-              #numTree = 0
-              #for tree in inputs[sampleName] :
-                #shapeName = 'histo_' + sampleName + "_" + cutName + "_" + variableName + "_" + str(numTree)
-                #if (numTree == 0) :
-                  #histos[shapeName].SetTitle(bigName)
-                  #histos[shapeName].SetName(bigName)
-                  #hTotal = histos[shapeName]
-                #else :
-                  #hTotal.Add(histos[shapeName])
-
-                #numTree += 1
- 
-
-              ## fold if needed
-              #doFold = 0
-              #if 'fold' in variable.keys() :
-                ##print "    variable[fold] = ", variable ['fold']
-                #doFold = variable ['fold']
-
-              #if doFold == 1 or doFold == 3 :
-                #self._FoldOverflow  (hTotal)
-              #if doFold == 2 or doFold == 3 :
-                #self._FoldUnderflow (hTotal)
-        
-        
-              ## go 1d
-              #self._outFile.cd (cutName+"/"+variableName)
-              #outputsHisto = self._h2toh1(hTotal)
-
-              ## eventually write to root file!
-              #outputsHisto.Write()              
-     
-            
-              ## prepare nuisance MC/data statistics
-              ## - uniform
-              ## - uniform method 2
-              ## - bin by bin (in selected bins)
-              #for nuisanceName, nuisance in nuisances.iteritems():
-                #if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                  ##print "nuisance[type] = ", nuisance ['type']
-                  #for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                    #if sampleNuisName == sampleName: # check if it is the sample I'm analyzing!
-                      #if configurationNuis['typeStat'] == 'uni' :
-                        ##print "     >> uniform"
-                        ## take histogram --> outputsHisto
-                        #outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_statUp")
-                        #outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_statDown")
-                        ## scale up/down
-                        #self._scaleHistoStat (outputsHistoUp,  1 )
-                        #self._scaleHistoStat (outputsHistoDo, -1 )
-                        ## save the new two histograms in final root file
-                        #outputsHistoUp.Write()
-                        #outputsHistoDo.Write()
-                                 
-        ## - then disconnect the files
-        #self._disconnectInputs(inputs)
-        
         #############################################
         # Use MultiDraw to fill the plots in one go #
         #############################################
@@ -471,8 +268,9 @@ class ShapeFactory:
                 cuts[(binName, cutName)] = '(%s) && (%s)' % (binCut, cut)
 
                 ROOT.gROOT.mkdir('binned/' + binName + '/' + cutName)
-                for variableName in self._variables:
-                  ROOT.gROOT.mkdir('binned/' + binName + '/' + cutName + '/' + variableName)
+                for variableName, variable in self._variables.iteritems():
+                  if 'cuts' not in variable or cutName in variable['cuts']:
+                    ROOT.gROOT.mkdir('binned/' + binName + '/' + cutName + '/' + variableName)
           else:
             cuts = self._cuts
 
@@ -526,6 +324,9 @@ class ShapeFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
+              if 'cuts' in variable and cutName not in variable['cuts']:
+                continue
+
               if binName:
                 ROOT.gROOT.cd('binned/' + binName + '/' + cutName + '/' + variableName)
               else:
@@ -544,10 +345,10 @@ class ShapeFactory:
               hTotal.SetName(bigName)
 
               if hTotal.InheritsFrom(ROOT.TH2.Class()):
-                  xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
-                  drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
+                xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
+                drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
               else:
-                  drawer.addPlot(hTotal, variable['name'], cutFullName)
+                drawer.addPlot(hTotal, variable['name'], cutFullName)
 
               for nuisanceName, nuisance in applicableNuisances.iteritems():
                 if nuisanceName == 'stat' or 'kind' not in nuisance:
@@ -593,19 +394,19 @@ class ShapeFactory:
 
           # We now defined all plots for this sample - execute the drawers and fill the histograms
           print 'Start nominal histogram fill'
-          drawer.execute()
+          drawer.execute(nevents, firstEvent)
           # We don't need this drawer any more - can reduce the number of open FDs?
           del drawer
 
           for nuisanceName, drawersUpList in drawersNuisanceUp.iteritems():
             if sampleName in drawersUpList:
               print 'Start', nuisanceName + 'Up', 'histogram fill'
-              drawersUpList[sampleName].execute()
+              drawersUpList[sampleName].execute(nevents, firstEvent)
               drawersUpList.pop(sampleName)
           for nuisanceName, drawersDownList in drawersNuisanceDown.iteritems():
             if sampleName in drawersDownList:
               print 'Start', nuisanceName + 'Down', 'histogram fill'
-              drawersDownList[sampleName].execute()
+              drawersDownList[sampleName].execute(nevents, firstEvent)
               drawersDownList.pop(sampleName)
 
           print 'Postfill'
@@ -624,6 +425,9 @@ class ShapeFactory:
 
             for variableName, variable in self._variables.iteritems():
               if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
+              if 'cuts' in variable and cutName not in variable['cuts']:
                 continue
 
               print "    variable[name]  = ", variable['name']
