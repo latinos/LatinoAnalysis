@@ -587,7 +587,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
-                  'declare'    : 'ElepTup = lambda : LeppTScalerTreeMaker(kind="Up", lepFlavor="ele", metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
+                  'declare'    : 'ElepTup = lambda : LeppTScalerTreeMaker(kind="Up", lepFlavor="ele", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
                   'module'     : 'ElepTup()',
                 },
 
@@ -596,7 +596,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
-                  'declare'    : 'ElepTup = lambda : LeppTScalerTreeMaker(kind="Dn", lepFlavor="ele", metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
+                  'declare'    : 'ElepTup = lambda : LeppTScalerTreeMaker(kind="Dn", lepFlavor="ele", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
                   'module'     : 'ElepTup()',
                 },
 
@@ -621,7 +621,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
-                  'declare'    : 'MupTup = lambda : LeppTScalerTreeMaker(kind="Up", lepFlavor="mu", metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
+                  'declare'    : 'MupTup = lambda : LeppTScalerTreeMaker(kind="Up", lepFlavor="mu", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
                   'module'     : 'MupTup()',
                 },
 
@@ -630,7 +630,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
-                  'declare'    : 'MupTup = lambda : LeppTScalerTreeMaker(kind="Dn", lepFlavor="mu", metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
+                  'declare'    : 'MupTup = lambda : LeppTScalerTreeMaker(kind="Dn", lepFlavor="mu", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"])',
                   'module'     : 'MupTup()',
                 },
 

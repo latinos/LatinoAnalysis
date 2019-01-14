@@ -23,7 +23,7 @@ import os.path
 import math
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']) :#TODO: Set files for 2017
+    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']) :
         cmssw_base = os.getenv('CMSSW_BASE')
         self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
@@ -36,6 +36,15 @@ class LeppTScalerTreeMaker(Module) :
           handle.close()
         self.leppTscaler = leppTscaler
         print self.leppTscaler 
+
+        # fix underflow and overflow
+        self.minpt = 0.0
+        self.maxpt = 0.0
+        self.maxeta = 0.0
+        for point in self.leppTscaler[lepFlavor]:
+          if point[0][1] > self.maxpt  : self.maxpt  = point[0][1]
+          if point[1][1] > self.maxeta : self.maxeta = point[1][1]
+        print 'maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta
 
     def beginJob(self):
         pass
@@ -60,10 +69,6 @@ class LeppTScalerTreeMaker(Module) :
 
     def getScale (self, kindLep, pt, eta):
 
-        # fix underflow and overflow
-        self.minpt = 0.0
-        self.maxpt = 200.0
-        self.maxeta = 2.5
 
         if pt < self.minpt: pt = self.minpt
         if pt > self.maxpt: pt = self.maxpt - 0.000001

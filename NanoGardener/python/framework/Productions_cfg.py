@@ -78,5 +78,14 @@ Productions = {
                        'cmssw'   : 'Full2016v3',
                    }, 
 
+ # -------- 2017 DATA 102X nAODv3 (TODO: samples/Run2017_102X_nAODv3.py)
+ 'Run2017_102X_nAODv3_Full2017v3': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_102X_nAODv3.py' ,
+                       'cmssw'   : 'Full2017v3',
+                   },
+
+
 
 }
