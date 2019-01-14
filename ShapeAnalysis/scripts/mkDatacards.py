@@ -2,6 +2,8 @@
 
 import json
 import sys
+argv = sys.argv
+sys.argv = argv[:1]
 import ROOT
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
@@ -114,9 +116,11 @@ class DatacardFactory:
             else :
               self.backgrounds.append (sampleName)
           
-          
           # loop over variables
           for variableName, variable in self._variables.iteritems():
+            if 'cuts' in variable and cutName not in variable['cuts']:
+              continue
+              
             print "  variableName = ", variableName
             tagNameToAppearInDatacard = cutName
             # e.g.    hww2l2v_13TeV_of0j
@@ -156,8 +160,6 @@ class DatacardFactory:
               self._outFile.cd()
               histo.Write()
 
-
-              
             for sampleName in self.backgrounds:
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               histo = self._fileIn.Get(shapeName)
@@ -187,17 +189,21 @@ class DatacardFactory:
               histo.SetName("histo_Data")
               self._outFile.cd()
               histo.Write()
-             
                         
             # Loop over alternative signal samples
             alternativeSignalName = ""  
             if len(self.alternative_signals) != 0:
                 for signalName in self.alternative_signals :
+                    if signalName != '' and signalName not in self.signals:
+                        continue
+                   
                     print "Alternative signal: " + str(signalName)
                     alternativeSignalName  = str(signalName)
                     alternativeSignalTitle = ""
                     if alternativeSignalName != "":
                         alternativeSignalTitle = "_" + str(signalName)
+
+                    cumulative_signals = [name for name in self.cumulative_signals if name in self.signals]
 
                     # start creating the datacard 
                     cardPath = self._outputDirDatacard + "/" + cutName + "/" + variableName  + "/datacard" + alternativeSignalTitle + ".txt"
@@ -232,13 +238,13 @@ class DatacardFactory:
             
                     print "Number of Signals:             " + str(len(self.signals))
                     print "Number of Alternative Signals: " + str(len(self.alternative_signals) - 1)
-                    print "Number of Cumulative Signals:  " + str(len(self.cumulative_signals))
+                    print "Number of Cumulative Signals:  " + str(len(cumulative_signals))
                     print "Number of Backgrounds:         " + str(len(self.backgrounds))
                     
                     if alternativeSignalName == "" :
-                        totalNumberSamples = len(self.cumulative_signals) + len(self.backgrounds)
+                        totalNumberSamples = len(cumulative_signals) + len(self.backgrounds)
                     else :
-                        totalNumberSamples = len(self.cumulative_signals) + len(self.backgrounds) + 1
+                        totalNumberSamples = len(cumulative_signals) + len(self.backgrounds) + 1
                     columndef = 30
 
                     # adapt column length to long bin names            
@@ -255,31 +261,31 @@ class DatacardFactory:
             
                     card.write('process'.ljust(80))
                     if alternativeSignalName == "" :
-                        card.write(''.join([name.ljust(columndef) for name in self.cumulative_signals]))
+                        card.write(''.join([name.ljust(columndef) for name in cumulative_signals]))
                     else :
                         card.write(alternativeSignalName.ljust(columndef))
-                        card.write(''.join([name.ljust(columndef) for name in self.cumulative_signals]))
+                        card.write(''.join([name.ljust(columndef) for name in cumulative_signals]))
                         
                     card.write(''.join([name.ljust(columndef) for name in self.backgrounds]))
                     card.write('\n')
 
                     card.write('process'.ljust(80))
                     if alternativeSignalName == "" :
-                        card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(len(self.cumulative_signals)) ]))
+                        card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(len(cumulative_signals)) ]))
                     else :
-                        card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(1 + len(self.cumulative_signals)) ]))
+                        card.write(''.join([('%d' % -iSample   ).ljust(columndef) for iSample in range(1 + len(cumulative_signals)) ]))
                     card.write(''.join([('%d' % (iSample+1)).ljust(columndef) for iSample in range(len(self.backgrounds)) ]))
                     card.write('\n')
 
                     card.write('rate'.ljust(80))
-                    if alternativeSignalName == "" :
-                        card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef) for name in self.cumulative_signals    ]))
-                    else :
+                    if alternativeSignalName != "" :
                         for name in self.alternative_signals :
-                            if name == alternativeSignalName :
-                                card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef)]))
-                        for name in self.cumulative_signals :
-                            card.write(''.join([('%-.4f' % yieldsSig[name]).ljust(columndef)]))                        
+                            if name in yieldsSig and name == alternativeSignalName :
+                                card.write(('%-.4f' % yieldsSig[name]).ljust(columndef))
+
+                    for name in cumulative_signals :
+                        if name in yieldsSig:
+                            card.write(('%-.4f' % yieldsSig[name]).ljust(columndef))
                             
                     card.write(''.join([('%-.4f' % yieldsBkg[name]).ljust(columndef) for name in self.backgrounds]))
                     card.write('\n')
@@ -320,12 +326,12 @@ class DatacardFactory:
                                             #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.signals    ]))
                                             #card.write(''.join([('%-.4f' % nuisance['value']).ljust(columndef) for name in self.backgrounds ))
                                             if alternativeSignalName == "" :
-                                                card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.cumulative_signals]))
+                                                card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in cumulative_signals]))
                                             else :
                                                 for name in self.alternative_signals :
                                                     if name == alternativeSignalName :
                                                         card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) ]))
-                                                for name in self.cumulative_signals :
+                                                for name in cumulative_signals :
                                                     card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) ]))
 
                                             card.write(''.join([(' %s ' % nuisance['value']).ljust(columndef) for name in self.backgrounds ]))
@@ -333,7 +339,7 @@ class DatacardFactory:
                                         else :
                                             # apply only to selected samples
                                             if alternativeSignalName == "" :
-                                                for sampleName in self.cumulative_signals:
+                                                for sampleName in cumulative_signals:
                                                     if sampleName in nuisance['samples'].keys() :
                                                         #card.write(('%-.4f' % nuisance['samples'][sampleName]).ljust(columndef))
                                                         card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
@@ -346,7 +352,7 @@ class DatacardFactory:
                                                             card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
                                                         else :
                                                             card.write(('-').ljust(columndef))
-                                                for sampleName in self.cumulative_signals:
+                                                for sampleName in cumulative_signals:
                                                     if sampleName in nuisance['samples'].keys() :
                                                         card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
                                                     else :
@@ -374,9 +380,9 @@ class DatacardFactory:
                                             print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
                                             card.write(('lnN').ljust(20))
                                             if alternativeSignalName == "":
-                                                allSelectedSamples = self.cumulative_signals + self.backgrounds  
+                                                allSelectedSamples = cumulative_signals + self.backgrounds  
                                             else :
-                                                allSelectedSamples = self.cumulative_signals + self.backgrounds + alternativeSignalName
+                                                allSelectedSamples = cumulative_signals + self.backgrounds + alternativeSignalName
                                             for sampleName in allSelectedSamples:
                                                 if ('all' in nuisance.keys() and nuisance ['all'] == 1) or \
                                                         sampleName in nuisance['samples'].keys() :  
@@ -408,18 +414,18 @@ class DatacardFactory:
                                             card.write((nuisance ['type']).ljust(20))
                                             if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
                                                 if alternativeSignalName == "":
-                                                    card.write(''.join([('1.000').ljust(columndef) for name in self.cumulative_signals  ]))
+                                                    card.write(''.join([('1.000').ljust(columndef) for name in cumulative_signals  ]))
                                                 else :
                                                     for name in self.alternative_signals:
                                                         if name == alternativeSignalName:
                                                             card.write(''.join([('1.000').ljust(columndef) ]))
-                                                    card.write(''.join([('1.000').ljust(columndef) for name in self.cumulative_signals  ]))
+                                                    card.write(''.join([('1.000').ljust(columndef) for name in cumulative_signals  ]))
                                                 card.write(''.join([('1.000').ljust(columndef) for name in self.backgrounds  ]))
                                                 card.write('\n')
                                             else :
                                                 # apply only to selected samples
                                                 if alternativeSignalName == "":
-                                                    for sampleName in self.cumulative_signals:
+                                                    for sampleName in cumulative_signals:
                                                         if sampleName in nuisance['samples'].keys() :
                                                             card.write(('1.000').ljust(columndef))                          
                                                             # save the nuisance histograms in the root file
@@ -471,7 +477,7 @@ class DatacardFactory:
                                                                 
                                                             else :
                                                                 card.write(('-').ljust(columndef))
-                                                    for sampleName in self.cumulative_signals:
+                                                    for sampleName in cumulative_signals:
                                                         if sampleName in nuisance['samples'].keys() :
                                                             card.write(('1.000').ljust(columndef))                          
                                                             # save the nuisance histograms in the root file
@@ -542,7 +548,7 @@ class DatacardFactory:
                                                     for sampleNameIterator2 in self.alternative_signals:
                                                         if sampleNameIterator2 == sampleName:
                                                             card.write(('1.000').ljust(columndef))
-                                                            for sampleNameIterator2 in self.cumulative_signals:
+                                                            for sampleNameIterator2 in cumulative_signals:
                                                                 card.write(('-').ljust(columndef))
                 
                                                     for sampleNameIterator2 in self.backgrounds:
@@ -587,7 +593,7 @@ class DatacardFactory:
                                                                 else :
                                                                     card.write(('-').ljust(columndef))
 
-                                                            for sampleNameIterator2 in self.cumulative_signals:
+                                                            for sampleNameIterator2 in cumulative_signals:
                                                                 if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
                                                                     card.write(('1.000').ljust(columndef))
                                                                 else :
@@ -622,7 +628,7 @@ class DatacardFactory:
                                                                                     )
  
 
-                                for sampleName in self.cumulative_signals:
+                                for sampleName in cumulative_signals:
                                     if sampleName in nuisance['samples'].keys() :
                                         if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
                        
@@ -630,7 +636,7 @@ class DatacardFactory:
                                             card.write((nuisance ['type']).ljust(20))
 
                                             # write line in datacard
-                                            for sampleNameIterator2 in self.cumulative_signals:
+                                            for sampleNameIterator2 in cumulative_signals:
                                                 if sampleNameIterator2 == sampleName:
                                                     card.write(('1.000').ljust(columndef))
                                                 else :
@@ -679,7 +685,7 @@ class DatacardFactory:
                                                         else :
                                                             card.write(('-').ljust(columndef))
                                                             
-                                                for sampleNameIterator2 in self.cumulative_signals:
+                                                for sampleNameIterator2 in cumulative_signals:
                                                     if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
                                                         card.write(('1.000').ljust(columndef))
                                                     else :
@@ -772,7 +778,7 @@ class DatacardFactory:
                                                         else :
                                                             card.write(('-').ljust(columndef))
 
-                                                for sampleNameIterator2 in self.cumulative_signals:
+                                                for sampleNameIterator2 in cumulative_signals:
                                                     if sampleNameIterator2 == sampleName or sampleNameIterator2 in correlate:
                                                         card.write(('1.000').ljust(columndef))
                                                     else:   
@@ -883,6 +889,8 @@ class DatacardFactory:
 
 
 if __name__ == '__main__':
+    sys.argv = argv
+    
     print '''
 --------------------------------------------------------------------------------------------------
 
@@ -942,18 +950,19 @@ if __name__ == '__main__':
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
+   
+    cuts = {}
+    if os.path.exists(opt.cutsFile) :
+      handle = open(opt.cutsFile,'r')
+      exec(handle)
+      handle.close()
 
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
       exec(handle)
       handle.close()
-    
-    cuts = {}
-    if os.path.exists(opt.cutsFile) :
-      handle = open(opt.cutsFile,'r')
-      exec(handle)
-      handle.close()
+      
     if len(opt.cardList)>0:
       try:
         newCuts = []
