@@ -117,8 +117,9 @@ class LeppTScalerTreeMaker(Module) :
             mety = met.pt * math.sin(met.phi)
             for idx,lep in enumerate(leptons):
                 if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
-                    metx = metx * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0 * math.cos(lep.phi)))
-                    mety = mety * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0 * math.sin(lep.phi)))
+                    diff = lep.pt * (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0)
+                    metx = metx - (diff * math.cos(lep.phi))
+                    mety = mety - (diff * math.sin(lep.phi))
             newmetpt = math.sqrt(metx**2 + mety**2)
             newmetphi = math.atan2(metx, mety)
             self.out.fillBranch(metType+"_pt", newmetpt)
