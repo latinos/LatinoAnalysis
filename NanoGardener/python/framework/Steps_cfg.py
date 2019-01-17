@@ -735,6 +735,23 @@ Steps = {
 
 ## ------- Analysis Skims:
 
+  'trainDYMVA'   : {
+                 'isChain'    : False ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : True  ,
+                 'selection'  : '"(mll>12 && Lepton_pt[0]>20 && Lepton_pt[1]>10 && (nLepton>=2 && Alt$(Lepton_pt[2],0)<10) \
+                                   && abs(Lepton_eta[0])<2.5 && abs(Lepton_eta[1])<2.5 && LepCut2l==1 \
+                                   && ptll>30 && PuppiMET_pt > 20 && fabs(91.1876 - mll) > 15 \
+                                   && ((Lepton_pdgId[0]*Lepton_pdgId[1] == -11*11) || (Lepton_pdgId[0]*Lepton_pdgId[1] == -13*13)))"' ,
+                 'onlySample' : [
+                                 #### DY
+                                 'DYJetsToLL_M-10to50-LO',
+                                 'DYJetsToLL_M-50-LO-ext1',
+                                 #### Higgs
+                                 'GluGluHToWWTo2L2NuPowheg_M125_private','VBFHToWWTo2L2NuPowheg_M125_private',
+                                ] ,
+                 },
+
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------
 
 ## ------- HADD 
