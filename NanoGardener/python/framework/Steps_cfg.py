@@ -47,7 +47,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut', 'btagPerJet2017', 'btagPerEvent' ,
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar',
                                   'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
@@ -232,6 +232,16 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.WGammaStar',
                   'declare'    : 'wGS = lambda : WGammaStar()',
                   'module'     : 'wGS()',
+                  } ,
+
+    'redoWGammaStar' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.WGammaStar',
+                  'declare'    : 'wGS = lambda : WGammaStar()',
+                  'module'     : 'wGS()',
+                  'onlySample' : ['WZTo3LNu','Wg_MADGRAPHMLM','WZ','WZTo2L2Q'],
                   } ,
 
 ## ------- MODULES: Object Handling

@@ -515,7 +515,7 @@ class PostProcMaker():
 
 #------------- MODULE CUSTOMIZATION: baseW, CMSSW_Version, ....
 
-   def computewBaseW(self,iSample):
+   def computewBaseW(self,iSample,DEBUG=False):
      if not iSample in self._baseW :
        useLocal = False
        # Always check #nAOD files !
@@ -553,12 +553,14 @@ class PostProcMaker():
        genEventSumw  = 0.0
        genEventSumw2 = 0.0
        for iFile in FileList:
+         if DEBUG : print iFile 
          if useLocal :
            f = ROOT.TFile.Open(iFile, "READ")
          else:
            f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
          Runs = f.Get("Runs")
          for iRun in Runs : 
+           if DEBUG : print '---> genEventSumw = ', iRun.genEventSumw
            genEventCount += iRun.genEventCount
            genEventSumw  += iRun.genEventSumw
            genEventSumw2 += iRun.genEventSumw2
@@ -810,4 +812,26 @@ class PostProcMaker():
        self.Reset()
        
 
+# ------------ check baseW
 
+   def checkBaseW(self):
+     for iProd in self._prodList:
+       print '----------- Running on production: '+iProd
+       self.readSampleFile(iProd)
+       if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
+       else: 
+         print '----> This is DATA, skipping !!!!'
+         exit()
+       print '---------------- for Step : ',self._iniStep
+       self.mkFileDir(iProd,'baseW')
+       self.getTargetFiles(iProd,'baseW')         
+       for iSample in self._targetDic:
+         print '------------------- for Sample : ',iSample 
+         self.computewBaseW(iSample,True)
+         for iFile in self._targetDic[iSample] : 
+           f = ROOT.TFile.Open(iFile, "READ")
+           Events = f.Get("Events")
+           for iEvt in Events:
+             print iEvt.baseW
+             break
+           f.Close()
