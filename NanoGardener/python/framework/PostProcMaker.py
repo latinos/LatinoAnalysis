@@ -2,6 +2,7 @@
 import sys, re, os, os.path, math, copy
 import string
 import subprocess
+import numpy
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
@@ -827,11 +828,17 @@ class PostProcMaker():
        self.getTargetFiles(iProd,'baseW')         
        for iSample in self._targetDic:
          print '------------------- for Sample : ',iSample 
-         self.computewBaseW(iSample,True)
+         self.computewBaseW(iSample)
+         test = {}
+         result = True
          for iFile in self._targetDic[iSample] : 
            f = ROOT.TFile.Open(iFile, "READ")
            Events = f.Get("Events")
            for iEvt in Events:
-             print iEvt.baseW
+             baseW = iEvt.baseW
+             if not numpy.isclose(baseW , self._baseW[iSample]['baseW']) : result = False
              break
            f.Close()
+           test[iFile] = baseW
+         print iSample, result
+         if not result : print test

@@ -212,7 +212,20 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer' ,
                   'declare'    : 'TopGenVars = lambda : TopGenVarsProducer()',
                   'module'     : 'TopGenVars()',
-                  'onlySample' : ['TTTo2L2Nu', 'TTToSemileptonic']
+                  'onlySample' : [
+                                  'TTTo2L2Nu',
+                                  'TTTo2L2Nu_PSWeights_CP5Down',
+                                  'TTTo2L2Nu_PSWeights_CP5Up',
+                                  'TTTo2L2Nu_PSWeights',
+                                  'TTToSemiLeptonic',
+                                  'TTWjets',
+                                  'TTZjets',
+                                  'ST_s-channel',
+                                  'ST_t-channel_antitop',
+                                  'ST_t-channel_top',
+                                  'ST_tW_antitop',
+                                  'ST_tW_top',
+                                 ]
                   } ,
 
     'wwNLL' : {
@@ -337,14 +350,6 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.Grafter' ,
                   'module'     : 'Grafter(["baseW/F=RPLME_baseW","Xsec/F=RPLME_XSection"])',
-               },  
-
-  'wwNLL'    : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer' ,
-                  'module)'     : 'wwNLLcorrectionWeightProducer()',  
                },  
 
   'btagPerJet2016': {
