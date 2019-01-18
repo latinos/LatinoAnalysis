@@ -265,7 +265,7 @@ if __name__ == '__main__':
         handle.close()
          
 
-    if   opt.doBatch != 0:
+    if opt.doBatch != 0:
             print "~~~~~~~~~~~ Running mkShape on Batch Queue"
 
             # Create Jobs Dictionary
@@ -323,9 +323,9 @@ if __name__ == '__main__':
               for iTarget in targetList:
                 if type(iTarget) is tuple:
                   if len(iTarget) == 2:
-                    tname = '%s%d' % iTarget
+                    tname = '%s.%d' % iTarget
                   else:
-                    tname = '%s%d.%d' % iTarget
+                    tname = '%s.%d.%d' % iTarget
                 else:
                   tname = iTarget
 
@@ -372,9 +372,9 @@ if __name__ == '__main__':
 
                 elif type(iTarget) is tuple:
                   if len(iTarget) == 2:
-                    tname = '%s%d' % iTarget
+                    tname = '%s.%d' % iTarget
                   else:
-                    tname = '%s%d.%d' % iTarget
+                    tname = '%s.%d.%d' % iTarget
 
                   sample = samples[iTarget[0]]
                   iFileBlock = iTarget[1]
@@ -419,7 +419,7 @@ if __name__ == '__main__':
             jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
 
 
-    elif opt.doHadd != 0 :
+    elif opt.doHadd != 0:
       
             print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             print "~~~~~~~~~~~ mkShape on Batch : Hadd"
@@ -478,9 +478,9 @@ if __name__ == '__main__':
               for iTarget in targetList:
                 if type(iTarget) is tuple:
                   if len(iTarget) == 2:
-                    tname = '%s%d' % iTarget
+                    tname = '%s.%d' % iTarget
                   else:
-                    tname = '%s%d.%d' % iTarget
+                    tname = '%s.%d.%d' % iTarget
                 else:
                   tname = iTarget
 
@@ -496,38 +496,44 @@ if __name__ == '__main__':
 #                command+=' '+iFile
 #                cleanup+='rm '+iFile+' ; '
 
-            if allDone:
-              rootver = ROOT.gROOT.GetVersion()
-              rootver = float(rootver[:rootver.find('/')])
-              if rootver > 6.09:
-                # new ROOT version has multiprocess hadd
-                if opt.numThreads == 0:
-                  nThreads = 1
-                else:
-                  nThreads = opt.numThreads
+            if not allDone:
+              sys.exit(1)
 
-              number = len(fileList)
-              if number > 500:
-                print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
+            rootver = ROOT.gROOT.GetVersion()
+            rootver = float(rootver[:rootver.find('/')])
+            if rootver > 6.09:
+              # new ROOT version has multiprocess hadd
+              if opt.numThreads == 0:
+                nThreads = 1
+              else:
+                nThreads = opt.numThreads
 
-              tmpdir = tempfile.mkdtemp()
-              for istart in range(0,int(float(number)/500+1)):
-                  command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
-                  command += 'hadd -f '
-                  if rootver > 6.09:
-                    command += ' -j %d ' % nThreads
-                  command += tmpdir + '/plots_'+opt.tag+'_temp'+str(istart)+'.root'
-                  for i in range(istart*500,(istart+1)*500):
-                    if i>=number: break
-                    command += " "+fileList[i]
-                    cleanup += "rm "+fileList[i]+" ; "
-                  print command
-                  os.system(command)
-              os.chdir(os.getcwd()+"/"+opt.outputDir)
-              os.system("hadd -f "+tmpdir+"/plots_"+opt.tag+".root "+tmpdir+"/plots_"+opt.tag+"_temp*")
-              os.system("mv "+tmpdir+"/plots_"+opt.tag+".root .")
-              cleanup += "rm -rf "+tmpdir
-              if not opt.doNotCleanup: os.system(cleanup) 
+            number = len(fileList)
+            if number > 500:
+              print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
+
+            tmpdir = tempfile.mkdtemp()
+            for istart in range(0,int(float(number)/500+1)):
+                command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
+                command += 'hadd -f '
+                if rootver > 6.09:
+                  command += ' -j %d ' % nThreads
+                command += tmpdir + '/plots_'+opt.tag+'_temp'+str(istart)+'.root'
+                for i in range(istart*500,(istart+1)*500):
+                  if i>=number: break
+                  command += " "+fileList[i]
+                  cleanup += "rm "+fileList[i]+" ; "
+                print command
+                os.system(command)
+            os.chdir(os.getcwd()+"/"+opt.outputDir)
+            command += 'hadd -f '
+            if rootver > 6.09:
+              command += ' -j %d ' % nThreads
+            command += tmpdir + '/plots_'+opt.tag+'.root ' + tmpdir + "/plots_"+opt.tag+"_temp*"
+            os.system(command)
+            os.system("mv "+tmpdir+"/plots_"+opt.tag+".root .")
+            cleanup += "rm -rf "+tmpdir
+            if not opt.doNotCleanup: os.system(cleanup) 
 
     elif opt.doHadd != 0 or opt.redoStat != 0:       
             ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option 
