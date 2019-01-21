@@ -121,7 +121,7 @@ class LeppTScalerTreeMaker(Module) :
                     metx = metx - (diff * math.cos(lep.phi))
                     mety = mety - (diff * math.sin(lep.phi))
             newmetpt = math.sqrt(metx**2 + mety**2)
-            newmetphi = math.atan2(metx, mety)
+            newmetphi = math.atan2(mety, metx)
             self.out.fillBranch(metType+"_pt", newmetpt)
             self.out.fillBranch(metType+"_phi", newmetphi)
 
