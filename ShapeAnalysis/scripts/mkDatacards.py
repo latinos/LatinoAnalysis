@@ -10,7 +10,6 @@ import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import logging
 import os.path
 import shutil
-import re
 
 # Common Tools & batch
 from LatinoAnalysis.Tools.commonTools import *
@@ -46,7 +45,6 @@ class DatacardFactory:
         if os.path.isdir(inputFile):
           # ONLY COMPATIBLE WITH OUTPUTS MERGED TO SAMPLE LEVEL!!
           self._fileIn = {}
-          allFiles = os.listdir(inputFile)
           for sampleName, sample in self._samples.iteritems():
             self._fileIn[sampleName] = ROOT.TFile.Open(inputFile+'/plots_%s_ALL_%s.root' % (self._tag, sampleName))
             if not self._fileIn[sampleName]:
@@ -209,21 +207,16 @@ class DatacardFactory:
               #   shapes  *           * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_$PROCESS histo_$PROCESS_$SYSTEMATIC
               #   shapes  data_obs    * shapes/hww-19.36fb.mH125.of_vh2j_shape_mll.root     histo_Data
 
-              totalNumberSamples = len(signals)
               columndef = 30
 
               # adapt column length to long bin names            
               if len(tagNameToAppearInDatacard) >= (columndef - 5) :
                 columndef = len(tagNameToAppearInDatacard) + 7
-            
-              #print " columndef = ", columndef
-              #print " len(tagNameToAppearInDatacard)  = ", len(tagNameToAppearInDatacard) 
-              #print " tagNameToAppearInDatacard  = ", tagNameToAppearInDatacard
 
               print '      processes and rates..'
             
               card.write('bin'.ljust(80))
-              card.write(''.join([tagNameToAppearInDatacard.ljust(columndef)] * totalNumberSamples)+'\n')
+              card.write(''.join([tagNameToAppearInDatacard.ljust(columndef)] * (len(signals) + len(cut_backgrounds)))+'\n')
             
               card.write('process'.ljust(80))
               card.write(''.join(name.ljust(columndef) for name in signals))
@@ -323,7 +316,7 @@ class DatacardFactory:
                         if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
                           suffixOut = None
                         else:
-                          suffixOut = 'CMS_' + nuisance['name']
+                          suffixOut = '_CMS_' + nuisance['name']
 
                         saved = self._saveNuisanceHistos(cutName, variableName, sampleName, '_' + nuisance['name'], suffixOut)
                         if saved:
@@ -426,10 +419,12 @@ class DatacardFactory:
                 if len(nuisance['samples']) != 1:
                   raise RuntimeError('Invalid rateParam: number of samples != 1')
 
-                for sampleName, initialValue in nuisance['samples'].iteritems():
-                  card.write(sampleName.ljust(20))
-                  card.write(('%-.4f' % float(initialValue)).ljust(columndef))
+                sampleName, initialValue = nuisance['samples'].items()[0]
+                if sampleName not in self._samples:
+                  raise RuntimeError('Invalid rateParam: unknown sample %s' % sampleName)
 
+                card.write(sampleName.ljust(20))
+                card.write(('%-.4f' % float(initialValue)).ljust(columndef))
                 card.write('\n')
 
               # now add other nuisances            
@@ -466,10 +461,8 @@ class DatacardFactory:
             histoDown.SetName('histo_%s%sDown' % (sampleName, suffixOut))
 
         self._outFile.cd()
-        if not self._outFile.Get(histoUp.GetName()):
-            histoUp.Write()
-        if not self._outFile.Get(histoDown.GetName()):
-            histoDown.Write()
+        histoUp.Write()
+        histoDown.Write()
 
         return True
 
