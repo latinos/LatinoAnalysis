@@ -18,13 +18,13 @@ Steps = {
 
 ## ------- MC:
 
-  'MCl1loose2016': {
-                  'isChain'    : True  ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False ,
-                  'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
-                  'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2016', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2016', 'btagPerEvent'],
-                },
+# 'MCl1loose2016': {
+#                 'isChain'    : True  ,
+#                 'do4MC'      : True  ,
+#                 'do4Data'    : False ,
+#                 'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
+#                 'subTargets' : ['baseW', 'leptonMaker','lepSel', 'puW2016', 'l2Kin', 'l3Kin', 'l4Kin', 'btagPerJet2016', 'btagPerEvent'],
+#               },
 
 # 'MCl1loose2017': {
 #                 'isChain'    : True  ,
@@ -50,49 +50,6 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar',
                                   'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
-
-
-# 'MCCorr2017test' : { 
-#                'isChain'    : True  ,
-#                 'do4MC'      : True  ,
-#                 'do4Data'    : False ,
-#                 'subTargets' : ['baseW','PrefCorr2017','jetSel',
-#                                 'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 
-#                                 'trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'], 
-#                  'onlySample' : [
-#                                 #### DY
-#                                 'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-5to50-LO',
-#                                 ####
-#                               # 'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
-#                               # 'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
-#                                 ####
-#                                 'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched','QCD_Pt-50to80_EMEnriched_ext1',
-#                                 'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
-#                                 ####
-#                                 'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
-#                                 'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
-#                                 ####
-#                                 'TT','TTJets','TTTo2L2Nu', 
-#                                 ]  
-#               },
-
-
-# 'MCformulas': {
-#                 'isChain'    : True  ,
-#                 'do4MC'      : True ,
-#                 'do4Data'    : False  ,           
-#                 'subTargets' : ['baseW'],#,'trigMC','formulasMC'],
-#               },             
-
-# 'MCWeights2017' : {
-#                 'isChain'    : True  ,
-#                 'do4MC'      : True ,
-#                 'do4Data'    : False  ,
-#                 'subTargets' : ['PrefCorr2017','jetSel','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL', 'trigMC','LeptonSF','formulasMC'],
-#                 #'subTargets' : ['baseW','trigMC','LeptonSF','formulasMC'],
-#               },             
-
-
 
 
 ## ------- WgStar MC:
@@ -128,7 +85,8 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
-                  'subTargets' : ['leptonMaker','lepSel', 'l2Kin', 'l3Kin', 'l4Kin'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData'], #,'formulasDATA'],
+                  # Add 'rochesterDATA','jetSel','CleanJetCut'
                 },
 
 # 'DATAl1loose2017': {
