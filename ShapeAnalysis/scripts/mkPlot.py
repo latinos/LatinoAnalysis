@@ -44,6 +44,7 @@ if __name__ == '__main__':
     parser.add_option('--maxLinearScale' , dest='maxLinearScale' , help='scale factor for max Y in linear plots (1.45 magic number as default)'     , default=1.45   ,    type=float   )
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
+    parser.add_option('--tag'            , dest='tag'            , help='Tag used for the shape file name. Used if inputFile is a directory', default=None)
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
 
     parser.add_option('--onlyVariable'   , dest='onlyVariable'   , help='draw only one variable (may be needed in post-fit plots)'          , default=None)
@@ -104,6 +105,7 @@ if __name__ == '__main__':
 
       
     factory = PlotFactory()
+    factory._tag       = opt.tag
     factory._energy    = opt.energy
     factory._lumi      = opt.lumi
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
