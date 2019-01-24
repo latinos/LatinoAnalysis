@@ -48,7 +48,7 @@ Steps = {
                   'do4Data'    : False ,
                   'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut', 'btagPerJet2017', 'btagPerEvent' ,
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar',
-                                  'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                                  'rochesterMC2017','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
 
@@ -75,7 +75,7 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut','btagPerJet2017', 'btagPerEvent',
-                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                                     'rochesterMC2017','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
 ## ------- DATA:
@@ -85,8 +85,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
-                  'subTargets' : ['leptonMaker','lepSel','jetSel', 'l2Kin', 'l3Kin', 'l4Kin','trigData'], #,'formulasDATA'],
-                  # Add 'rochesterDATA','jetSel','CleanJetCut'
+                  'subTargets' : ['leptonMaker','lepSel','jetSel', 'rochesterDATA2016' , 'l2Kin', 'l3Kin', 'l4Kin','trigData'], #,'formulasDATA'],
                 },
 
 # 'DATAl1loose2017': {
@@ -109,7 +108,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['rochesterDATA','jetSel','CleanJetCut','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
+                  'subTargets' : ['rochesterDATA2017','jetSel','CleanJetCut','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
                 },
 
 ## ------- WgStar DATA:
@@ -119,7 +118,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA','jetSel','CleanJetCut' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
+                  'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA2017','jetSel','CleanJetCut' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                    },
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
@@ -397,21 +396,39 @@ Steps = {
 
 ## ------- MODULES: Rochester corrections
 
-  'rochesterMC'   : {
+  'rochesterMC2016'   : {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False)',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,2016)',
                   'module'     : 'rochesterMC()',
               },
 
-  'rochesterDATA'   : {
+  'rochesterDATA2016'   : {
                   'isChain'    : False ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True)',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,2016)',
+                  'module'     : 'rochesterDATA()',
+              },
+
+  'rochesterMC2017'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,2017)',
+                  'module'     : 'rochesterMC()',
+              },
+
+  'rochesterDATA2017'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,2017)',
                   'module'     : 'rochesterDATA()',
               },
 
