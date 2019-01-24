@@ -793,7 +793,7 @@ ElectronWP = {
                                      'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
                                      'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
                                      'electron_col[LF_idx]["mvaSpring16GP_WP90"]',
-                                     'electron_col[LF_idx]["lostHits"] < 1',
+                                     'electron_col[LF_idx]["lostHits"] < 1',  
                                    ] ,
                                 # Barrel
                                  'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
@@ -812,6 +812,42 @@ ElectronWP = {
                                   } ,
                      # FIXME
                      #   'tkSF':  { 
+                     #              '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016/egammaEffi.txt_EGM2D.root' ,
+                     #            } ,
+                     #   'wpSF':  {
+                     #              '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016/electrons_mva_90p_Iso2016.txt' ,
+                     #            } ,
+                     #   'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_mva_90p_Iso2016/',
+                              } ,
+
+          'mva_90p_Iso2016_SS':  {
+                         'cuts' : {
+                                # Common cuts
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                     'electron_col[LF_idx]["mvaSpring16GP_WP90"]',
+                                     'electron_col[LF_idx]["lostHits"] < 1',
+                                     'electron_col[LF_idx]["tightCharge"] == 2',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.05880',
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0571',
+                                   ] ,
+                                  } ,
+                     # FIXME
+                     #   'tkSF':  {
                      #              '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016/egammaEffi.txt_EGM2D.root' ,
                      #            } ,
                      #   'wpSF':  {

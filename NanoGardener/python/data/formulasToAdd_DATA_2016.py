@@ -19,7 +19,7 @@ METFilter_DATA   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
 formulas['METFilter_DATA'] = METFilter_DATA
 
 muWP='cut_Tight80x'
-eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016']
+eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']
 
 for eleWP in eleWPlist: 
 
