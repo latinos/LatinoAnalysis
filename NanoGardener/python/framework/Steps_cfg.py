@@ -48,7 +48,7 @@ Steps = {
                   'do4Data'    : False ,
                   'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut', 'btagPerJet2017', 'btagPerEvent' ,
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar',
-                                  'rochesterMC2017','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                                  'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
 
@@ -75,7 +75,7 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut','btagPerJet2017', 'btagPerEvent',
-                                     'rochesterMC2017','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
 ## ------- DATA:
@@ -85,7 +85,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nElectron>0 && Electron_pt[0]>10) || (nMuon>0 && Muon_pt[0]>10)"' , 
-                  'subTargets' : ['leptonMaker','lepSel','jetSel', 'rochesterDATA2016' , 'l2Kin', 'l3Kin', 'l4Kin','trigData'], #,'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSel', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
 # 'DATAl1loose2017': {
@@ -108,7 +108,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['rochesterDATA2017','jetSel','CleanJetCut','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
+                  'subTargets' : ['rochesterDATA','jetSel','CleanJetCut','l2Kin', 'l3Kin', 'l4Kin','formulasDATA'],
                 },
 
 ## ------- WgStar DATA:
@@ -118,7 +118,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA2017','jetSel','CleanJetCut' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
+                  'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA','jetSel','CleanJetCut' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                    },
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
@@ -396,39 +396,21 @@ Steps = {
 
 ## ------- MODULES: Rochester corrections
 
-  'rochesterMC2016'   : {
+  'rochesterMC'   : {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,2016)',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR)',
                   'module'     : 'rochesterMC()',
               },
 
-  'rochesterDATA2016'   : {
+  'rochesterDATA'   : {
                   'isChain'    : False ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,2016)',
-                  'module'     : 'rochesterDATA()',
-              },
-
-  'rochesterMC2017'   : {
-                  'isChain'    : False ,
-                  'do4MC'      : True ,
-                  'do4Data'    : False ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,2017)',
-                  'module'     : 'rochesterMC()',
-              },
-
-  'rochesterDATA2017'   : {
-                  'isChain'    : False ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,2017)',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR)',
                   'module'     : 'rochesterDATA()',
               },
 
@@ -463,13 +445,15 @@ Steps = {
 
 ## ------- MODULES: Adding Formulas
 
+# .... 2016/2017/... : switch in the code RPLME_YEAR
+
   'formulasMC' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC.py\')' ,
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\')' ,
                  },
    
   'formulasDATA' : {
@@ -478,7 +462,7 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA.py\')' ,
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_RPLME_YEAR.py\')' ,
                  },
 
   'formulasFAKE' : {
@@ -487,7 +471,7 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE.py\')' ,
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE_RPLME_YEAR.py\')' ,
                  },
 
 # ------------------------------------ SYSTEMATICS ----------------------------------------------------------------

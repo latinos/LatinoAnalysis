@@ -589,8 +589,14 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in module :
        module = module.replace('RPLME_CMSSW',self._prodVersion)
+     
+     # GT for JES uncertainties
      if 'RPLME_JESGT' in module :
        module = module.replace('RPLME_JESGT',self._prodJESGT)
+
+     # YEAR
+     if 'RPLME_YEAR' in module :
+       module = module.replace('RPLME_YEAR',self._prodYear)
 
      return module
 
@@ -601,9 +607,14 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in declare :
        declare = declare.replace('RPLME_CMSSW',self._prodVersion)
-  
+
+     # GT for JES uncertainties  
      if 'RPLME_JESGT' in declare :
        declare = declare.replace('RPLME_JESGT',self._prodJESGT)
+
+    # YEAR
+     if 'RPLME_YEAR' in declare :
+       declare = declare.replace('RPLME_YEAR',self._prodYear)
 
      return declare
 
@@ -793,6 +804,7 @@ class PostProcMaker():
        print '----------- Running on production: '+iProd
        self._prodVersion = self._Productions[iProd]['cmssw']
        if 'JESGT' in self._Productions[iProd] : self._prodJESGT = self._Productions[iProd]['JESGT']
+       if 'year'  in self._Productions[iProd] : self._prodYear  = self._Productions[iProd]['year']
        self.readSampleFile(iProd) 
        if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
 
