@@ -129,10 +129,8 @@ class ShapeFactory:
         #    first create the "weights" list, if not already available 
         for sampleName, sample in self._samples.iteritems():
           print sampleName
-          if 'weights' not in sample.keys() :
-            sample['weights'] = []
-            for numSample in range(0, len(sample ['name']) ) :
-              sample['weights'].append ('1')
+          if 'weights' not in sample:
+            sample['weights'] = ['1'] * len(sample['name'])
 
           # then add the lumi scale factor, unless the tree is data
           dataTrees = []
@@ -231,7 +229,7 @@ class ShapeFactory:
           drawer.setFilter(supercut)
           drawer.setReweight(sample['weight'])
 
-          if 'weights' in sample.keys():
+          if 'weights' in sample:
             weights = sample['weights']
             print "  weights:", weights
             if len(weights) != 0 and len(weights) != len(sample['name']):
@@ -244,7 +242,7 @@ class ShapeFactory:
               drawer.setTreeReweight(it, False, w)
 
           # Set overall weights on the nuisance up/down drawers
-          for nuisanceDrawers in [drawersNuisanceUp, drawersNuisanceDown]:
+          for idir, nuisanceDrawers in enumerate([drawersNuisanceUp, drawersNuisanceDown]):
             for nuisanceName, drawersList in nuisanceDrawers.iteritems():
               if sampleName not in drawersList:
                 continue
@@ -253,7 +251,7 @@ class ShapeFactory:
   
               ndrawer = drawersList[sampleName]
               ndrawer.setFilter(supercut)
-              ndrawer.setReweight('(%s) * (%s)' % (sample['weight'], configurationNuis[0]))
+              ndrawer.setReweight('(%s) * (%s)' % (sample['weight'], configurationNuis[idir]))
   
               for it, w in enumerate(weights):
                 if w != '-':
