@@ -7,8 +7,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 class PrefCorr(Module):
-    def __init__(self, jetroot="L1prefiring_jetpt_2017BtoF.root", jetmapname="L1prefiring_jetpt_2017BtoF", photonroot="L1prefiring_photonpt_2017BtoF.root", photonmapname="L1prefiring_photonpt_2017BtoF", variation=0, UseEMpT=0):
-# Variation: -1 = Down, 0 = Nominal, 1 = Up
+    def __init__(self, jetroot="L1prefiring_jetpt_2017BtoF.root", jetmapname="L1prefiring_jetpt_2017BtoF", photonroot="L1prefiring_photonpt_2017BtoF.root", photonmapname="L1prefiring_photonpt_2017BtoF", UseEMpT=0):
 # UseEMpT: Set to 1 if the jet map is defined for energy deposited in ECAL (pT_EM vs pT). For jet map only, not photon!
 
         cmssw_base = os.getenv('CMSSW_BASE')
@@ -19,7 +18,6 @@ class PrefCorr(Module):
         self.jet_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/prefire_maps/" + jetroot)
         self.jet_map = self.get_root_obj(self.jet_file, jetmapname)
 
-        self.variation = variation
         self.UseEMpT = UseEMpT
 
     def open_root(self, path):
@@ -40,7 +38,9 @@ class PrefCorr(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.out.branch("PrefireWeight", "F")
+        self.branchnames = ["PrefireWeight", "PrefireWeight_Up", "PrefireWeight_Down"]
+        for bname in self.branchnames:
+          self.out.branch(bname, "F")
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -49,7 +49,6 @@ class PrefCorr(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         jets = Collection(event,"Jet")
-        prefw = 1.0
 
         # Options
         self.JetMinPt = 20 # Min/Max Values may need to be fixed for new maps
@@ -61,21 +60,25 @@ class PrefCorr(Module):
         self.PhotonMinEta = 2.0
         self.PhotonMaxEta = 3.0
 
-        for jid,jet in enumerate(jets): # First loop over all jets
-          jetpf = 1.0
-          PhotonInJet = []
+        for i,bname in zip([0,1,-1], self.branchnames):
+          self.variation = i
+          prefw = 1.0
 
-          jetpt = jet.pt
-          if self.UseEMpT: jetpt *= (jet.chEmEF + jet.neEmEF)
+          for jid,jet in enumerate(jets): # First loop over all jets
+            jetpf = 1.0
+            PhotonInJet = []
 
-          if jetpt >= self.JetMinPt and abs(jet.eta) <= self.JetMaxEta and abs(jet.eta) >= self.JetMinEta:
-            jetpf *= 1-self.GetPrefireProbability(self.jet_map, jet.eta, jetpt, self.JetMaxPt)
+            jetpt = jet.pt
+            if self.UseEMpT: jetpt *= (jet.chEmEF + jet.neEmEF)
 
-          phopf = self.EGvalue(event, jid)
-          prefw *= min(jetpf,phopf) # The higher prefire-probablity between the jet and the lower-pt photon(s)/elecron(s) from the jet is chosen
+            if jetpt >= self.JetMinPt and abs(jet.eta) <= self.JetMaxEta and abs(jet.eta) >= self.JetMinEta:
+              jetpf *= 1-self.GetPrefireProbability(self.jet_map, jet.eta, jetpt, self.JetMaxPt)
 
-        prefw *= self.EGvalue(event, -1) # Then loop over all photons/electrons not associated to jets
-        self.out.fillBranch("PrefireWeight", prefw)
+            phopf = self.EGvalue(event, jid)
+            prefw *= min(jetpf,phopf) # The higher prefire-probablity between the jet and the lower-pt photon(s)/elecron(s) from the jet is chosen
+
+          prefw *= self.EGvalue(event, -1) # Then loop over all photons/electrons not associated to jets
+          self.out.fillBranch(bname, prefw)
         return True
 
     def EGvalue(self, event, jid):
