@@ -1,5 +1,6 @@
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
+import copy
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
@@ -29,7 +30,7 @@ class DressedLeptonProducer(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         genPhotons = Collection(event, "PhotonGen")
         genLeptons = Collection(event, "LeptonGen")
-        dressedLeptons = copy.deepcopy(genLeptons)
+        dressedLeptons = Collection(event, "LeptonGen") 
         #Loop over photons, find closest lepton, if it is within cone, add it to the lepton 
         for photon  in genPhotons:
           photonp4 = ROOT.TLorentzVector()
