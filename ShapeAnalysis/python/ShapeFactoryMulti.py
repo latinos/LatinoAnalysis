@@ -36,7 +36,7 @@ class ShapeFactory:
         variables = {}
         self._variables = variables
 
-        cuts = {}
+        cuts = {} # {name: expr} or {name: {'expr': expr, 'samples': []}}
         self._cuts = cuts
 
         samples = {}
@@ -105,13 +105,23 @@ class ShapeFactory:
         ROOT.TH1.SetDefaultSumw2(True)
 
         #---- first create the structure in gROOT. We'll write to a file at the end
-        print '  <variables>'
-        for cutName in self._cuts:
+        print '  <cuts>'
+        for cutName, cut in self._cuts.iteritems():
           print "cut = ", cutName, " :: ", self._cuts[cutName]
-          ROOT.gROOT.mkdir(cutName)
-          for variableName, variable in self._variables.iteritems():
-            if 'cuts' not in variable or cutName in variable['cuts']:
-              ROOT.gROOT.mkdir(cutName+"/"+variableName)
+          if type(cut) is dict and 'categories' in cut:
+            for catname in cut['categories']:
+              ROOT.gROOT.mkdir(cutName + '_' + catname)
+
+              for variableName, variable in self._variables.iteritems():
+                if 'cuts' not in variable or cutName in variable['cuts'] or cutName + '/' + catname in variable['cuts']:
+                  ROOT.gROOT.mkdir(cutName+"_"+catname+"/"+variableName)
+
+          else:
+            ROOT.gROOT.mkdir(cutName)
+            
+            for variableName, variable in self._variables.iteritems():
+              if 'cuts' not in variable or cutName in variable['cuts']:
+                ROOT.gROOT.mkdir(cutName+"/"+variableName)
 
         #---- just print the variables
         print '  <variables>'
@@ -257,35 +267,54 @@ class ShapeFactory:
                 if w != '-':
                   ndrawer.setTreeReweight(it, False, w)
 
-          # If the sample has "super-bins" defined (e.g. signal sample for differential),
+          cuts = {}
+          for cutName, cut in self._cuts.iteritems():
+            if type(cut) is dict:
+              if 'samples' not in cut or sampleName in cut['samples']:
+                cuts[cutName] = copy.deepcopy(cut)
+            else:
+              cuts[cutName] = {'expr': cut}
+          
+          # If the sample has "subsamples" defined (e.g. signal sample for differential),
           # we multiplex the cuts
-          if 'bins' in sample:
-            cuts = copy.deepcopy(self._cuts)
-            for binName, binCut in sample['bins'].iteritems():
+          if 'subsamples' in sample:
+            for ssName, ssCut in sample['subsamples'].iteritems():
               for cutName, cut in self._cuts.iteritems():
-                cuts[(binName, cutName)] = '(%s) && (%s)' % (binCut, cut)
+                if type(cut) is dict:
+                  if 'samples' not in cut or sampleName in cut['samples'] or (sampleName + '/' + ssName) in cut['samples']:
+                    cuts[(ssName, cutName)] = copy.deepcopy(cut)
+                    cuts[(ssName, cutName)]['expr'] = '(%s) * (%s)' % (ssCut, cut['expr'])
+                else:
+                  cuts[(ssName, cutName)] = {'expr': '(%s) * (%s)' % (ssCut, cut)}
 
-                ROOT.gROOT.mkdir('binned/' + binName + '/' + cutName)
-                for variableName, variable in self._variables.iteritems():
-                  if 'cuts' not in variable or cutName in variable['cuts']:
-                    ROOT.gROOT.mkdir('binned/' + binName + '/' + cutName + '/' + variableName)
-          else:
-            cuts = self._cuts
+                for ent in ROOT.gROOT.GetList():
+                  if ent.GetName() != 'binned' and ent.IsA() is ROOT.TDirectory.Class():
+                    if not ROOT.gROOT.Get('binned/' + ssName + '/' + ent.GetName()):
+                      ROOT.gROOT.mkdir('binned/' + ssName + '/' + ent.GetName())
+                    for subent in ent.GetList():
+                      if subent.IsA() is ROOT.TDirectory.Class():
+                        if not ROOT.gROOT.Get('binned/' + ssName + '/' + ent.GetName() + '/' + subent.GetName()):
+                          ROOT.gROOT.mkdir('binned/' + ssName + '/' + ent.GetName() + '/' + subent.GetName())
 
-          # Loop over cuts
+          # Loop over cuts ("cut" is a dict)
           for cutKey, cut in cuts.iteritems():
             if type(cutKey) is tuple:
               # sample is binned
               binName, cutName = cutKey
               cutFullName = '%s__%s' % cutKey
-              print "  bin/cut =", '%s/%s' % cutKey, "::", cut
+              print "  bin/cut =", '%s/%s' % cutKey, "::", cut['expr']
             else:
               binName = ''
               cutName = cutKey
               cutFullName = cutKey
-              print "  cut =", cutFullName, "::", cut
+              print "  cut =", cutFullName, "::", cut['expr']
 
-            drawer.addCut(cutFullName, cut)
+            drawer.addCut(cutFullName, cut['expr'])
+            if 'categories' in cut:
+              categoryOrdering = []
+              for catname, expr in cut['categories'].iteritems():
+                categoryOrdering.append(catname)
+                drawer.addCategory(cutFullName, expr)
 
             # keep only the nuisances that are applicable to this cut & sample
             applicableNuisances = {}
@@ -313,9 +342,16 @@ class ShapeFactory:
               applicableNuisances[nuisanceName] = nuisance
 
               if nuisanceName in drawersNuisanceUp and sampleName in drawersNuisanceUp[nuisanceName]:
-                drawersNuisanceUp[nuisanceName][sampleName].addCut(cutFullName, cut)
+                drawersNuisanceUp[nuisanceName][sampleName].addCut(cutFullName, cut['expr'])
               if nuisanceName in drawersNuisanceDown and sampleName in drawersNuisanceDown[nuisanceName]:
-                drawersNuisanceDown[nuisanceName][sampleName].addCut(cutFullName, cut)
+                drawersNuisanceDown[nuisanceName][sampleName].addCut(cutFullName, cut['expr'])
+
+              if 'categories' in cut:
+                for catname in categoryOrdering:
+                  if nuisanceName in drawersNuisanceUp and sampleName in drawersNuisanceUp[nuisanceName]:
+                    drawersNuisanceUp[nuisanceName][sampleName].addCategory(cutFullName, cut['categories'][catname])
+                  if nuisanceName in drawersNuisanceDown and sampleName in drawersNuisanceDown[nuisanceName]:
+                    drawersNuisanceDown[nuisanceName][sampleName].addCategory(cutFullName, cut['categories'][catname])
 
             # now loop over all the variables ...
             for variableName, variable in self._variables.iteritems():
@@ -324,29 +360,56 @@ class ShapeFactory:
 
               if 'cuts' in variable and cutName not in variable['cuts']:
                 continue
-
-              if binName:
-                ROOT.gROOT.cd('binned/' + binName + '/' + cutName + '/' + variableName)
-              else:
-                ROOT.gROOT.cd(cutName+"/"+variableName)
-              
+             
               # create histogram
               bigName = 'histo_' + sampleName + '_' + cutName + '_' + variableName
 
               self._logger.debug('---'+sampleName+'---')
               self._logger.debug('Formula: '+variable['name']+'>>'+bigName)
-              self._logger.debug('Cut:     '+cut)
+              self._logger.debug('Cut:     '+cutFullName)
 
-              hTotal = self._makeshape(bigName, variable['range'])
-              _allplots.append(hTotal)
-              hTotal.SetTitle(bigName)
-              hTotal.SetName(bigName)
+              if 'categories' in cut:
+                histlist = ROOT.TObjArray()
 
-              if hTotal.InheritsFrom(ROOT.TH2.Class()):
-                xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
-                drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
+                for catname in categoryOrdering:
+                  if binName:
+                    ROOT.gROOT.cd('binned/' + binName + '/' + cutName + '_' + catname + '/' + variableName)
+                  else:
+                    ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
+                  
+                  bigbigName = 'histo_' + sampleName + '_' + cutName + '_' + catname + '_' + variableName
+                  hTotal = self._makeshape(bigbigName, variable['range'])
+                  _allplots.append(hTotal)
+                  hTotal.SetTitle(bigbigName)
+                  hTotal.SetName(bigbigName)
+                  histlist.Add(hTotal)
+
+                try:
+                  xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
+                except (RuntimeError, TypeError):
+                  xexpr, yexpr = variable['name'], ''
+                  drawer.addPlotList(histlist, xexpr, cutFullName)
+                else:
+                  drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
+
               else:
-                drawer.addPlot(hTotal, variable['name'], cutFullName)
+                if binName:
+                  ROOT.gROOT.cd('binned/' + binName + '/' + cutName + '/' + variableName)
+                else:
+                  ROOT.gROOT.cd(cutName + '/' + variableName)
+
+                hTotal = self._makeshape(bigName, variable['range'])
+                _allplots.append(hTotal)
+                hTotal.SetTitle(bigName)
+                hTotal.SetName(bigName)
+
+                try:
+                  xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
+                except (RuntimeError, TypeError):
+                  xexpr, yexpr = variable['name'], ''
+                  drawer.addPlot(hTotal, xexpr, cutFullName)
+                else:
+                  drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
 
               for nuisanceName, nuisance in applicableNuisances.iteritems():
                 if nuisanceName == 'stat' or 'kind' not in nuisance:
@@ -357,35 +420,78 @@ class ShapeFactory:
                 sampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
                 sampleNameDown = sampleName + '_' + nuisance['name'] + 'Down'
 
-                bigNameUp = 'histo_' + sampleNameUp + '_' + cutName + '_' + variableName
-                hTotalUp = self._makeshape(bigNameUp, variable['range'])
-                _allplots.append(hTotalUp)
-                hTotalUp.SetTitle(bigNameUp)
-                hTotalUp.SetName(bigNameUp)
+                if 'categories' in cut:
+                  histlistUp = ROOT.TObjArray()
+                  histlistDown = ROOT.TObjArray()
 
-                bigNameDown = 'histo_' + sampleNameDown + '_' + cutName + '_' + variableName
-                hTotalDown = self._makeshape(bigNameDown, variable['range'])
-                _allplots.append(hTotalDown)
-                hTotalDown.SetTitle(bigNameDown)
-                hTotalDown.SetName(bigNameDown)
+                  for catname in categoryOrdering:
+                    if binName:
+                      ROOT.gROOT.cd('binned/' + binName + '/' + cutName + '_' + catname + '/' + variableName)
+                    else:
+                      ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
+                    
+                    bigbigNameUp = 'histo_' + sampleNameUp + '_' + cutName + '_' + catname + '_' + variableName
+                    hTotalUp = self._makeshape(bigbigNameUp, variable['range'])
+                    _allplots.append(hTotalUp)
+                    hTotalUp.SetTitle(bigbigNameUp)
+                    hTotalUp.SetName(bigbigNameUp)
+                    histlistUp.Add(hTotalUp)
 
-                if nuisance['kind'] == 'weight':
-                  if hTotal.InheritsFrom(ROOT.TH2.Class()):
-                    drawer.addPlot2D(hTotalUp, xexpr, yexpr, cutFullName, configurationNuis[0])
-                    drawer.addPlot2D(hTotalDown, xexpr, yexpr, cutFullName, configurationNuis[1])
-                  else:
-                    drawer.addPlot(hTotalUp, variable['name'], cutFullName, configurationNuis[0])
-                    drawer.addPlot(hTotalDown, variable['name'], cutFullName, configurationNuis[1])
-                
-                elif nuisance['kind'] == 'tree':
-                  drawerUp = drawersNuisanceUp[nuisanceName][sampleName]
-                  drawerDown = drawersNuisanceDown[nuisanceName][sampleName]
-                  if hTotal.InheritsFrom(ROOT.TH2.Class()):
-                    drawerUp.addPlot2D(hTotalUp, xexpr, yexpr, cutFullName)
-                    drawerDown.addPlot2D(hTotalDown, xexpr, yexpr, cutFullName)
-                  else:
-                    drawerUp.addPlot(hTotalUp, variable['name'], cutFullName)
-                    drawerDown.addPlot(hTotalDown, variable['name'], cutFullName)
+                    bigbigNameDown = 'histo_' + sampleNameDown + '_' + cutName + '_' + catname + '_' + variableName
+                    hTotalDown = self._makeshape(bigbigNameDown, variable['range'])
+                    _allplots.append(hTotalDown)
+                    hTotalDown.SetTitle(bigbigNameDown)
+                    hTotalDown.SetName(bigbigNameDown)
+                    histlistDown.Add(hTotalDown)
+
+                  if nuisance['kind'] == 'weight':
+                    if yexpr:
+                      drawer.addPlotList2D(histlistUp, xexpr, yexpr, cutFullName, configurationNuis[0])
+                      drawer.addPlotList2D(histlistDown, xexpr, yexpr, cutFullName, configurationNuis[1])
+                    else:
+                      drawer.addPlotList(histlistUp, xexpr, cutFullName, configurationNuis[0])
+                      drawer.addPlotList(histlistDown, xexpr, cutFullName, configurationNuis[1])
+                  
+                  elif nuisance['kind'] == 'tree':
+                    drawerUp = drawersNuisanceUp[nuisanceName][sampleName]
+                    drawerDown = drawersNuisanceDown[nuisanceName][sampleName]
+                    if yexpr:
+                      drawerUp.addPlotList2D(histlistUp, xexpr, yexpr, cutFullName)
+                      drawerDown.addPlotList2D(histlistDown, xexpr, yexpr, cutFullName)
+                    else:
+                      drawerUp.addPlotList(histlistUp, xexpr, cutFullName)
+                      drawerDown.addPlotList(histlistDown, xexpr, cutFullName)
+
+                else:
+                  bigNameUp = 'histo_' + sampleNameUp + '_' + cutName + '_' + variableName
+                  hTotalUp = self._makeshape(bigNameUp, variable['range'])
+                  _allplots.append(hTotalUp)
+                  hTotalUp.SetTitle(bigNameUp)
+                  hTotalUp.SetName(bigNameUp)
+  
+                  bigNameDown = 'histo_' + sampleNameDown + '_' + cutName + '_' + variableName
+                  hTotalDown = self._makeshape(bigNameDown, variable['range'])
+                  _allplots.append(hTotalDown)
+                  hTotalDown.SetTitle(bigNameDown)
+                  hTotalDown.SetName(bigNameDown)
+  
+                  if nuisance['kind'] == 'weight':
+                    if yexpr:
+                      drawer.addPlot2D(hTotalUp, xexpr, yexpr, cutFullName, configurationNuis[0])
+                      drawer.addPlot2D(hTotalDown, xexpr, yexpr, cutFullName, configurationNuis[1])
+                    else:
+                      drawer.addPlot(hTotalUp, xexpr, cutFullName, configurationNuis[0])
+                      drawer.addPlot(hTotalDown, xexpr, cutFullName, configurationNuis[1])
+                  
+                  elif nuisance['kind'] == 'tree':
+                    drawerUp = drawersNuisanceUp[nuisanceName][sampleName]
+                    drawerDown = drawersNuisanceDown[nuisanceName][sampleName]
+                    if yexpr:
+                      drawerUp.addPlot2D(hTotalUp, xexpr, yexpr, cutFullName)
+                      drawerDown.addPlot2D(hTotalDown, xexpr, yexpr, cutFullName)
+                    else:
+                      drawerUp.addPlot(hTotalUp, xexpr, cutFullName)
+                      drawerDown.addPlot(hTotalDown, xexpr, cutFullName)
 
             # Done setting up one cut
             print ''
@@ -414,12 +520,13 @@ class ShapeFactory:
             if type(cutKey) is tuple:
               binName, cutName = cutKey
               cutFullName = '%s__%s' % cutKey
-              dirName = 'binned/' + binName + '/' + cutName
+              dirNameBase = 'binned/' + binName + '/' + cutName
+              print "  bin/cut =", '%s/%s' % cutKey, "::", cut['expr']
             else:
               cutName = cutKey
               cutFullName = cutName
-              dirName = cutName
-              print "  cut = ", cutFullName, " :: ", cut
+              dirNameBase = cutName
+              print "  cut = ", cutFullName, " :: ", cut['expr']
 
             for variableName, variable in self._variables.iteritems():
               if 'samples' in variable and sampleName not in variable['samples']:
@@ -428,108 +535,119 @@ class ShapeFactory:
               if 'cuts' in variable and cutName not in variable['cuts']:
                 continue
 
-              print "    variable[name]  = ", variable['name']
-              bigName = 'histo_' + sampleName + '_' + cutName + '_' + variableName
-              hTotal = ROOT.gROOT.Get(dirName + '/' + variableName + '/' + bigName)
-
-              # fold if needed
-              if 'fold' in variable:
-                print "    variable[fold] = ", variable['fold']
-                doFold = variable['fold']
+              if 'categories' in cut:
+                suffixes = ['_' + catname for catname in cut['categories'].iterkeys()]
               else:
-                doFold = 0
+                suffixes = ['']
 
-              outputsHisto = self._postplot(hTotal, sampleName, doFold, cutName, sample, True)
-              if outputsHisto is not hTotal:
-                _allplots.append(outputsHisto)
-                _allplots.remove(hTotal)
-                hTotal.Delete()
-              
-              for nuisanceName, nuisance in nuisances.iteritems():
-                if sampleName not in nuisance['samples'] or \
-                   ('cuts' in nuisance and cutName not in nuisance['cuts']):
-                  continue
+              for suffix in suffixes:
+                dirName = dirNameBase + suffix
+                
+                bigName = 'histo_' + sampleName + '_' + cutName + suffix + '_' + variableName
+                hTotal = ROOT.gROOT.Get(dirName + '/' + variableName + '/' + bigName)
 
-                configurationNuis = nuisance['samples'][sampleName]
-                  
-                if nuisanceName == 'stat':
-                  # 'stat' has a separate treatment, it's the MC/data statistics
-                  # prepare nuisance MC/data statistics
-                  # - uniform
-                  # - uniform method 2
-                  # - bin by bin (in selected bins)
-                  # run only if this nuisance will affect the phase space defined in "cut"
-          
-                  if configurationNuis['typeStat'] == 'uni' :
-                    #print "     >> uniform"
-                    # take histogram --> outputsHisto
-                    outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_statUp")
-                    outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_statDown")
-                    # scale up/down
-                    self._scaleHistoStat (outputsHistoUp,  1 )
-                    self._scaleHistoStat (outputsHistoDo, -1 )
+                print '   ', bigName
+  
+                # fold if needed
+                if 'fold' in variable:
+                  print "    variable[fold] = ", variable['fold']
+                  doFold = variable['fold']
+                else:
+                  doFold = 0
+  
+                outputsHisto = self._postplot(hTotal, sampleName, doFold, cutName, sample, True)
+                if outputsHisto is not hTotal:
+                  _allplots.append(outputsHisto)
+                  _allplots.remove(hTotal)
+                  hTotal.Delete()
               
-                  # bin-by-bin
-                  elif configurationNuis['typeStat'] == 'bbb' :
-                    #print "     >> bin-by-bin"
-                    keepNormalization = 0 # do not keep normalization, put 1 to keep normalization                       
-                    if 'keepNormalization' in configurationNuis.keys() :
-                      keepNormalization = configurationNuis['keepNormalization']
-                      print " keepNormalization = ", keepNormalization
-          
-                    # scale up/down
-                    zeroMC = False
-                    if  configurationNuis['zeroMCError'] == '1' : zeroMC = True
-          
-                    for iBin in range(1, outputsHisto.GetNbinsX()+1):
+                for nuisanceName, nuisance in nuisances.iteritems():
+                  if sampleName not in nuisance['samples'] or \
+                     ('cuts' in nuisance and cutName not in nuisance['cuts']):
+                    continue
+
+                  configurationNuis = nuisance['samples'][sampleName]
+                    
+                  if nuisanceName == 'stat':
+                    # 'stat' has a separate treatment, it's the MC/data statistics
+                    # prepare nuisance MC/data statistics
+                    # - uniform
+                    # - uniform method 2
+                    # - bin by bin (in selected bins)
+                    # run only if this nuisance will affect the phase space defined in "cut"
+            
+                    if configurationNuis['typeStat'] == 'uni' :
+                      #print "     >> uniform"
                       # take histogram --> outputsHisto
-                      outputsHistoUp = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp")
-                      outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
-                      #print "########### DEBUG: scaleHistoStatBBB sample", sampleName
-                      self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization, zeroMC)
-                      self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization, zeroMC)
-          
+                      outputsHistoUp = outputsHisto.Clone("histo_"+sampleName+"_statUp")
+                      outputsHistoDo = outputsHisto.Clone("histo_"+sampleName+"_statDown")
+                      # scale up/down
+                      self._scaleHistoStat (outputsHistoUp,  1 )
+                      self._scaleHistoStat (outputsHistoDo, -1 )
+                
+                    # bin-by-bin
+                    elif configurationNuis['typeStat'] == 'bbb' :
+                      #print "     >> bin-by-bin"
+                      keepNormalization = 0 # do not keep normalization, put 1 to keep normalization                       
+                      if 'keepNormalization' in configurationNuis.keys() :
+                        keepNormalization = configurationNuis['keepNormalization']
+                        print " keepNormalization = ", keepNormalization
+            
+                      # scale up/down
+                      zeroMC = False
+                      if  configurationNuis['zeroMCError'] == '1' : zeroMC = True
+            
+                      for iBin in range(1, outputsHisto.GetNbinsX()+1):
+                        # take histogram --> outputsHisto
+                        outputsHistoUp = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp")
+                        outputsHistoDo = outputsHisto.Clone("histo_" + sampleName + "_ibin_" + str(iBin) + "_statDown")
+                        #print "########### DEBUG: scaleHistoStatBBB sample", sampleName
+                        self._scaleHistoStatBBB (outputsHistoUp,  1, iBin, keepNormalization, zeroMC)
+                        self._scaleHistoStatBBB (outputsHistoDo, -1, iBin, keepNormalization, zeroMC)
+            
+                        # fix negative bins not consistent
+                        self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                        self._fixNegativeBin(outputsHistoDo, outputsHisto)
+            
+                  # if nuisanceName == 'stat'
+                  else:
+                    if 'kind' not in nuisance:
+                      continue
+
+                    print '     ', nuisanceName
+  
+                    sampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
+                    sampleNameDown = sampleName + '_' + nuisance['name'] + 'Down'
+                    bigNameUp = 'histo_' + sampleNameUp + '_' + cutName + suffix + '_' + variableName
+                    bigNameDown = 'histo_' + sampleNameDown + '_' + cutName + suffix + '_' + variableName
+  
+                    hTotalUp = ROOT.gROOT.Get(dirName+'/'+variableName+'/'+bigNameUp)
+                    hTotalDown = ROOT.gROOT.Get(dirName+'/'+variableName+'/'+bigNameDown)
+  
+                    outputsHistoUp = self._postplot(hTotalUp, sampleNameUp, doFold, cutName, sample, False)
+                    outputsHistoDo = self._postplot(hTotalDown, sampleNameDown, doFold, cutName, sample, False)
+  
+                    if outputsHistoUp is not hTotalUp:
+                      _allplots.append(outputsHistoUp)
+                      _allplots.remove(hTotalUp)
+                      hTotalUp.Delete()
+                    if outputsHistoDo is not hTotalDown:
+                      _allplots.append(outputsHistoDo)
+                      _allplots.remove(hTotalDown)
+                      hTotalDown.Delete()
+            
+                    if nuisance['kind'] == 'tree':      
+                      # check if I need to symmetrize:
+                      #    - the up will be symmetrized
+                      #    - down ->   down - (up - down)
+                      #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
+                      if 'symmetrize' in nuisance:
+                        self._symmetrize(outputsHistoUp, outputsHistoDo)
+            
+                    if 'suppressNegativeNuisances' in sample.keys() and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
                       # fix negative bins not consistent
                       self._fixNegativeBin(outputsHistoUp, outputsHisto)
                       self._fixNegativeBin(outputsHistoDo, outputsHisto)
-          
-                # if nuisanceName == 'stat'
-                else:
-                  if 'kind' not in nuisance:
-                    continue
-
-                  sampleNameUp = sampleName + '_' + nuisance['name'] + 'Up'
-                  sampleNameDown = sampleName + '_' + nuisance['name'] + 'Down'
-                  bigNameUp = 'histo_' + sampleNameUp + '_' + cutName + '_' + variableName
-                  bigNameDown = 'histo_' + sampleNameDown + '_' + cutName + '_' + variableName
-
-                  hTotalUp = ROOT.gROOT.Get(dirName+'/'+variableName+'/'+bigNameUp)
-                  hTotalDown = ROOT.gROOT.Get(dirName+'/'+variableName+'/'+bigNameDown)
-
-                  outputsHistoUp = self._postplot(hTotalUp, sampleNameUp, doFold, cutName, sample, False)
-                  outputsHistoDo = self._postplot(hTotalDown, sampleNameDown, doFold, cutName, sample, False)
-
-                  if outputsHistoUp is not hTotalUp:
-                    _allplots.append(outputsHistoUp)
-                    _allplots.remove(hTotalUp)
-                    hTotalUp.Delete()
-                  if outputsHistoDo is not hTotalDown:
-                    _allplots.append(outputsHistoDo)
-                    _allplots.remove(hTotalDown)
-                    hTotalDown.Delete()
-          
-                  if nuisance['kind'] == 'tree':      
-                    # check if I need to symmetrize:
-                    #    - the up will be symmetrized
-                    #    - down ->   down - (up - down)
-                    #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
-                    if 'symmetrize' in nuisance:
-                      self._symmetrize(outputsHistoUp, outputsHistoDo)
-          
-                  if 'suppressNegativeNuisances' in sample.keys() and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
-                    # fix negative bins not consistent
-                    self._fixNegativeBin(outputsHistoUp, outputsHisto)
-                    self._fixNegativeBin(outputsHistoDo, outputsHisto)
 
           # end of one sample
           print ''
@@ -538,8 +656,20 @@ class ShapeFactory:
 
         outFile = ROOT.TFile.Open(self._outputFileName, 'recreate')
 
+        def fullpath(tdir):
+          path = tdir.GetName()
+          d = tdir.GetMother()
+          while d:
+            path = d.GetName() + '/' + path
+            d = d.GetMother()
+          path = '/' + path
+          return path
+
         def writeDirectory(indir, outdir):
+          print fullpath(indir), '->', fullpath(outdir)
+          
           for obj in indir.GetList():
+            print ' ', obj.GetName()
             if obj.IsA() == ROOT.TDirectory.Class():
               outdir.mkdir(obj.GetName())
               writeDirectory(obj, outdir.GetDirectory(obj.GetName()))
@@ -1064,7 +1194,6 @@ class ShapeFactory:
           drawer.setInputMultiplexing(int(self._nThreads))
 
           for name, alias in self.aliases.iteritems():
-            print name, alias
             if 'samples' in alias and process not in alias['samples']:
               continue
 
