@@ -2,6 +2,7 @@
 import sys, re, os, os.path, math, copy
 import string
 import subprocess
+import numpy
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
@@ -288,7 +289,12 @@ class PostProcMaker():
      if not self._iniStep == 'Prod' : bpostFix='____'+self._iniStep
 
      # Make job directories
-     jDir = jobDir+'/NanoGardening__'+iProd
+     if JOB_DIR_SPLIT :
+       jDir = jobDir+'/NanoGardening__'+iProd+'__'+iStep
+       for iSample in self._targetDic :
+         if not os.path.exists(jDir+'/'+iSample) : os.system('mkdir -p '+jDir+'/'+iSample)
+     else:
+       jDir = jobDir+'/NanoGardening__'+iProd
      if not os.path.exists(jDir) : os.system('mkdir -p '+jDir)
      wDir = workDir+'/NanoGardening__'+iProd
      if not os.path.exists(wDir) : os.system('mkdir -p '+wDir)
@@ -299,7 +305,10 @@ class PostProcMaker():
      for iSample in self._targetDic :
        for iFile in self._targetDic[iSample] :
          iTarget = os.path.basename(self._targetDic[iSample][iFile]).replace(self._treeFilePrefix,'').replace('.root','')
-         pidFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
+         if JOB_DIR_SPLIT :
+           pidFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
+         else:
+           pidFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
          if os.path.isfile(pidFile) :
            print "pidFile", pidFile
            print '--> Job Running already : '+iTarget
@@ -309,12 +318,15 @@ class PostProcMaker():
      stepList=[]
      stepList.append(iStep)
 
+     #print self._targetDic.keys()
+     #exit()
+
      if self._jobMode == 'Interactive' :
        print "INFO: Using Interactive command"
      # batchMode Preparation
      elif self._jobMode == 'Batch':
        print "INFO: Using Local Batch"
-       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True)
        self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
        self._jobs.AddPy2Sh()
        self._jobs.Add2All('ls -l')
@@ -331,7 +343,10 @@ class PostProcMaker():
          iTarget = os.path.basename(self._targetDic[iSample][iFile]).replace(self._treeFilePrefix,'').replace('.root','')
          if iTarget in targetList :
            # Create python
-           pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+           if JOB_DIR_SPLIT :
+             pyFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+           else:
+             pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
            outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
            jsonFilter = self._Productions[iProd]['jsonFile'] if 'jsonFile' in self._Productions[iProd].keys() else None 
@@ -501,7 +516,7 @@ class PostProcMaker():
 
 #------------- MODULE CUSTOMIZATION: baseW, CMSSW_Version, ....
 
-   def computewBaseW(self,iSample):
+   def computewBaseW(self,iSample,DEBUG=False):
      if not iSample in self._baseW :
        useLocal = False
        # Always check #nAOD files !
@@ -539,12 +554,14 @@ class PostProcMaker():
        genEventSumw  = 0.0
        genEventSumw2 = 0.0
        for iFile in FileList:
+         if DEBUG : print iFile 
          if useLocal :
            f = ROOT.TFile.Open(iFile, "READ")
          else:
            f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
          Runs = f.Get("Runs")
          for iRun in Runs : 
+           if DEBUG : print '---> genEventSumw = ', iRun.genEventSumw
            genEventCount += iRun.genEventCount
            genEventSumw  += iRun.genEventSumw
            genEventSumw2 += iRun.genEventSumw2
@@ -572,6 +589,14 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in module :
        module = module.replace('RPLME_CMSSW',self._prodVersion)
+     
+     # GT for JES uncertainties
+     if 'RPLME_JESGT' in module :
+       module = module.replace('RPLME_JESGT',self._prodJESGT)
+
+     # YEAR
+     if 'RPLME_YEAR' in module :
+       module = module.replace('RPLME_YEAR',self._prodYear)
 
      return module
 
@@ -582,6 +607,14 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in declare :
        declare = declare.replace('RPLME_CMSSW',self._prodVersion)
+
+     # GT for JES uncertainties  
+     if 'RPLME_JESGT' in declare :
+       declare = declare.replace('RPLME_JESGT',self._prodJESGT)
+
+    # YEAR
+     if 'RPLME_YEAR' in declare :
+       declare = declare.replace('RPLME_YEAR',self._prodYear)
 
      return declare
 
@@ -770,6 +803,8 @@ class PostProcMaker():
      for iProd in self._prodList:
        print '----------- Running on production: '+iProd
        self._prodVersion = self._Productions[iProd]['cmssw']
+       if 'JESGT' in self._Productions[iProd] : self._prodJESGT = self._Productions[iProd]['JESGT']
+       if 'year'  in self._Productions[iProd] : self._prodYear  = self._Productions[iProd]['year']
        self.readSampleFile(iProd) 
        if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
 
@@ -790,4 +825,32 @@ class PostProcMaker():
        self.Reset()
        
 
+# ------------ check baseW
 
+   def checkBaseW(self):
+     for iProd in self._prodList:
+       print '----------- Running on production: '+iProd
+       self.readSampleFile(iProd)
+       if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
+       else: 
+         print '----> This is DATA, skipping !!!!'
+         exit()
+       print '---------------- for Step : ',self._iniStep
+       self.mkFileDir(iProd,'baseW')
+       self.getTargetFiles(iProd,'baseW')         
+       for iSample in self._targetDic:
+         print '------------------- for Sample : ',iSample 
+         self.computewBaseW(iSample)
+         test = {}
+         result = True
+         for iFile in self._targetDic[iSample] : 
+           f = ROOT.TFile.Open(iFile, "READ")
+           Events = f.Get("Events")
+           for iEvt in Events:
+             baseW = iEvt.baseW
+             if not numpy.isclose(baseW , self._baseW[iSample]['baseW']) : result = False
+             break
+           f.Close()
+           test[iFile] = baseW
+         print iSample, result
+         if not result : print test

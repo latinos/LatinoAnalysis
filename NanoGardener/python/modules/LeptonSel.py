@@ -73,8 +73,10 @@ class LeptonSel(Module):
         
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightElectron_'+wp, 'I', lenVar='nLepton')
+           print 'LeptonSel: ElecWP -> Lepton_isTightElectron_'+wp 
         for wp in self.MuonWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightMuon_'+wp, 'I', lenVar='nLepton')
+           print 'LeptonSel: MuWP -> Lepton_isTightMuon_'+wp
 
         # Old branches to clean
         self.lepBr_to_clean = Lepton_var   

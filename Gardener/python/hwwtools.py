@@ -232,16 +232,9 @@ def addOptions(parser):
     
     #parser.add_option('-v', '--variable' , dest='variable'    , help='variable'                              , default=None )
     #parser.add_option('-m', '--mass'     , dest='mass'        , help='run on one mass point only '           , default=hwwinfo.masses[:]      , type='string' , action='callback' , callback=list_maker('mass',',',int))
- 
+
+    parser.add_option('-A', '--aliasesFile',    dest='aliasesFile'      , help='optional file with TTreeFormula aliases'     , default=None )
     parser.add_option('-V', '--variablesFile' , dest='variablesFile'    , help='file with variables'                         , default=None )
     parser.add_option('-C', '--cutsFile' ,      dest='cutsFile'         , help='file with cuts'                              , default=None )
     parser.add_option('-S', '--samplesFile' ,   dest='samplesFile'      , help='file with cuts'                              , default=None )
     parser.add_option('-P', '--plotFile' ,      dest='plotFile'         , help='file with plot configurations'               , default=None )
- 
- 
- 
- 
-
-
-
-

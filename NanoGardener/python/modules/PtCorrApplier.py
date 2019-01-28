@@ -30,6 +30,13 @@ class PtCorrApplier(Module):
     def endJob(self):
         pass
 
+    def FixAngle(self, phi) :
+        if phi < -ROOT.TMath.Pi() :
+            phi += 2*ROOT.TMath.Pi()
+        elif phi > ROOT.TMath.Pi() :
+            phi -= 2*ROOT.TMath.Pi()
+        return phi
+
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.CollBr = {}
@@ -95,10 +102,12 @@ class PtCorrApplier(Module):
                 temp_met = Object(event, met)
                 MET[met] = {}
                 #MET[met]['coll'] = Object(event, met)
+                MET[met]['pt'] = temp_met['pt']
                 MET[met]['px'] = temp_met['pt']*math.cos(temp_met['phi'])   
                 MET[met]['py'] = temp_met['pt']*math.sin(temp_met['phi'])   
+                MET[met]['phi']   = temp_met['phi']
                 MET[met]['sumEt'] = temp_met['sumEt']
-
+                
         # Create new pt
         new_pt = []
         for iObj in range(nColl):
@@ -126,8 +135,7 @@ class PtCorrApplier(Module):
         if self.doMET:
             for met in self.METobj:
                 MET[met]['new_pt'] = math.sqrt(MET[met]['px']**2 + MET[met]['py']**2)
-                MET[met]['new_phi'] = math.atan2(MET[met]['px'], MET[met]['py'])
-                #MET[met]['new_sumEt'] = math.sqrt(MET[met]['sumEt']**2 - MET[met]['pt']**2 + MET[met]['new_pt']**2)
+                MET[met]['new_phi'] = math.atan2(MET[met]['py'], MET[met]['px'])
 
         # Reorder
         order = []

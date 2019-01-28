@@ -16,8 +16,14 @@ except NameError:
    # if batchType is not set, default to HTCondor
    CERN_USE_LSF = False
 
+try:
+  JOB_DIR_SPLIT = ( jobDirSplit == True ) 
+except NameError:
+  JOB_DIR_SPLIT = False
+#Avoid using this feature for tools that are not ready for it -> change it in the tool after loading the library
+
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir=''):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -27,7 +33,15 @@ class batchJobs :
      self.jobsList=[]
      self.baseName = baseName
      self.prodName = prodName
-     self.subDir   = jobDir+'/'+baseName+'__'+prodName
+     self.JOB_DIR_SPLIT_READY = JOB_DIR_SPLIT_READY
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY:
+       if len(stepList) == 1 : StepName = stepList[0]
+       else:
+         StepName = ''
+         for iStep in stepList : StepName+=iStep
+       self.subDir   = jobDir+'/'+baseName+'__'+prodName+'__'+StepName
+     else:
+       self.subDir   = jobDir+'/'+baseName+'__'+prodName
      if not os.path.exists(jobDir) : os.system('mkdir -p '+jobDir)
      self.nThreads = 1
 
@@ -48,6 +62,8 @@ class batchJobs :
          self.jobsDic[iStep][iTarget] = ''
          if not 'Target' in batchSplit and len(targetList)>1 :
            kTarget = 'AllTargets'
+         elif type(iTarget) is tuple:
+           kTarget = '%s%d' % iTarget
          else:
            kTarget = iTarget
    
@@ -63,8 +79,13 @@ class batchJobs :
      CMSSW=os.environ["CMSSW_BASE"]
      SCRAMARCH=os.environ["SCRAM_ARCH"]
      for jName in self.jobsList:
-       jFile = open(self.subDir+'/'+jName+'.sh','w')
-       if usePython : pFile = open(self.subDir+'/'+jName+'.py','w') 
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+         subDirExtra = '/' + jName.split('__')[3] 
+         if not os.path.exists(self.subDir+subDirExtra) : os.system('mkdir -p '+self.subDir+subDirExtra)
+       else:
+         subDirExtra =''
+       jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','w')
+       if usePython : pFile = open(self.subDir+subDirExtra+'/'+jName+'.py','w') 
        jFile.write('#!/bin/bash\n')
        if 'cern' in hostName:
          jFile.write('#$ -N '+jName+'\n')
@@ -113,7 +134,7 @@ class batchJobs :
          elif 'ifca' in hostName:
            jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' in hostName or 'knu' in hostName:
-           jFile.write('cd '+self.subDir+'\n')
+           jFile.write('cd '+self.subDir+subDirExtra+'\n')
          else:
            jFile.write('cd - \n')
            ### the following makes the .sh script exit if an error is thrown after the "set -e" command
@@ -121,7 +142,7 @@ class batchJobs :
        else              : jFile.write('cd '+wDir+' \n')
        jFile.close()
        if usePython : pFile.close()
-       os.system('chmod +x '+self.subDir+'/'+jName+'.sh')
+       os.system('chmod +x '+self.subDir+subDirExtra+'/'+jName+'.sh')
 
      # Create Proxy at IIHE
      if 'cern'  in hostName:
@@ -145,42 +166,66 @@ class batchJobs :
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+       subDirExtra = '/' + jName.split('__')[3] 
+     else:
+       subDirExtra =''
      #print 'Adding to ',self.subDir+'/'+jName  
-     jFile = open(self.subDir+'/'+jName+'.sh','a') 
+     jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a') 
      jFile.write(command+'\n')
      jFile.close()
 
    def Add2All (self,command):
      for jName in self.jobsList:
-       jFile = open(self.subDir+'/'+jName+'.sh','a')
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+         subDirExtra = '/' + jName.split('__')[3] 
+       else:
+         subDirExtra =''
+       jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
        jFile.write(command+'\n')
        jFile.close()
 
    def InitPy (self,command):
 
-     os.system('cd '+self.subDir)
+     #os.system('cd '+self.subDir)
      for jName in self.jobsList:
-       pFile = open(self.subDir+'/'+jName+'.py','a')
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+         subDirExtra = '/' + jName.split('__')[3]
+       else:
+         subDirExtra =''
+       pFile = open(self.subDir+subDirExtra+'/'+jName+'.py','a')
        pFile.write(command+'\n')
        pFile.close()
 
    def AddPy2Sh(self):
      for jName in self.jobsList: 
-       jFile = open(self.subDir+'/'+jName+'.sh','a')
-       command = 'python '+self.subDir+'/'+jName+'.py'
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+         subDirExtra = '/' + jName.split('__')[3]
+       else:
+         subDirExtra =''
+       jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
+       command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py'
        jFile.write(command+'\n')
        jFile.close()
 
    def AddPy (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
-     print 'Adding to ',self.subDir+'/'+jName
-     pFile = open(self.subDir+'/'+jName+'.py','a')
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+       subDirExtra = '/' + jName.split('__')[3]
+     else:
+       subDirExtra =''
+     print 'Adding to ',self.subDir+subDirExtra+'/'+jName
+     pFile = open(self.subDir+subDirExtra+'/'+jName+'.py','a')
      pFile.write(command+'\n')
      pFile.close()
 
    def GetPyName (self,iStep,iTarget) :
      jName= self.jobsDic[iStep][iTarget]
-     return self.subDir+'/'+jName+'.py' 
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+       subDirExtra = '/' + jName.split('__')[3]
+     else:
+       subDirExtra =''
+     return self.subDir+subDirExtra+'/'+jName+'.py' 
 
    def Sub(self,queue='longlunch',IiheWallTime='168:00:00',optTodo=False): 
      # Submit host name to identify the environment
@@ -199,37 +244,41 @@ class batchJobs :
      elif 'sdfarm' in hostName:
        scheduler = 'condor'
 
-     os.system('cd '+self.subDir)
 
      for jName in self.jobsList:
-       print self.subDir+'/'+jName
-       jobFile=self.subDir+'/'+jName+'.sh' 
-       errFile=self.subDir+'/'+jName+'.err'
-       outFile=self.subDir+'/'+jName+'.out'
-       jidFile=self.subDir+'/'+jName+'.jid'
-       jFile = open(self.subDir+'/'+jName+'.sh','a')
+       if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+         subDirExtra = '/' + jName.split('__')[3]
+       else:
+         subDirExtra =''
+       os.system('cd '+self.subDir+subDirExtra)
+       print self.subDir+subDirExtra+'/'+jName
+       jobFile=self.subDir+subDirExtra+'/'+jName+'.sh' 
+       errFile=self.subDir+subDirExtra+'/'+jName+'.err'
+       outFile=self.subDir+subDirExtra+'/'+jName+'.out'
+       jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
+       jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
        jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
        jFile.close()
-       jidFile=self.subDir+'/'+jName+'.jid'
+       jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
        print 'Submit',jName, ' on ', queue
 
        if 'cern' in hostName:
          if CERN_USE_LSF:
            jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
          else:
-           jdsFileName=self.subDir+'/'+jName+'.jds'
+           jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
            jdsFile = open(jdsFileName,'w')
-           jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+           jdsFile.write('executable = '+self.subDir+subDirExtra+'/'+jName+'.sh\n')
            jdsFile.write('universe = vanilla\n')
-           jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
-           jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
-           jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+           jdsFile.write('output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
+           jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
+           jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
            jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')
            jdsFile.close()
            # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
-           #jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+           # jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
        elif 'iihe' in hostName: 
          queue='localgrid@cream02'
          QSOPT='-l walltime='+IiheWallTime
@@ -241,7 +290,7 @@ class batchJobs :
            if jobid == 0 : nTry = 999
            else:  os.system('rm '+jidFile)
          if not jobid == 0 and optTodo :
-           todoFile = open(self.subDir+'/'+jName+'.todo','w')
+           todoFile = open(self.subDir+subDirExtra+'/'+jName+'.todo','w')
            todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
            todoFile.close()
 
@@ -251,14 +300,14 @@ class batchJobs :
          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
        elif 'sdfarm' in hostName:
-         jdsFileName=self.subDir+'/'+jName+'.jds'
+         jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
          jdsFile = open(jdsFileName,'w')
          #jdsFile = open(self.subDir+'/'+jName+'.jds','w')
-         jdsFile.write('executable = '+self.subDir+'/'+jName+'.sh\n')
+         jdsFile.write('executable = '+self.subDir+subDirExtra+'/'+jName+'.sh\n')
          jdsFile.write('universe = vanilla\n')
-         jdsFile.write('output = '+self.subDir+'/'+jName+'.out\n')
-         jdsFile.write('error = '+self.subDir+'/'+jName+'.err\n')
-         jdsFile.write('log = '+self.subDir+'/'+jName+'.log\n')
+         jdsFile.write('output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
+         jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
+         jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
          jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
          #jdsFile.write('should_transfer_files = YES\n')
          #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
@@ -267,7 +316,7 @@ class batchJobs :
          jdsFile.close()
          #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
          # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
-         #jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+         # jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
        elif 'ifca' in hostName :
          jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
        elif "pi.infn.it" in socket.getfqdn():
@@ -279,17 +328,27 @@ class batchJobs :
                  #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
 
      # If using condor, we can submit all jobs at once and save time
-     if scheduler == 'condor':
-       jds = 'executable = '+self.subDir+'/$(JName).sh\n'
+     if scheduler == 'condor' :
+#      jds = 'executable = '+self.subDir+'/$(JName).sh\n'
+#      jds += 'universe = vanilla\n'
+#      jds += 'output = '+self.subDir+'/$(JName).out\n'
+#      jds += 'error = '+self.subDir+'/$(JName).err\n'
+#      jds += 'log = '+self.subDir+'/$(JName).log\n'
+
+       jds = 'executable = $(JName).sh\n'
        jds += 'universe = vanilla\n'
-       jds += 'output = '+self.subDir+'/$(JName).out\n'
-       jds += 'error = '+self.subDir+'/$(JName).err\n'
-       jds += 'log = '+self.subDir+'/$(JName).log\n'
+       jds += 'output = $(JName).out\n'
+       jds += 'error = $(JName).err\n'
+       jds += 'log = $(JName).log\n'
        jds += 'request_cpus = '+str(self.nThreads)+'\n'
        jds += '+JobFlavour = "'+queue+'"\n'
        jds += 'queue JName in (\n'
        for jName in self.jobsList:
-         jds += jName + '\n'
+         if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+           subDirExtra = '/' + jName.split('__')[3] 
+         else:
+           subDirExtra = '' 
+         jds += self.subDir+subDirExtra+'/'+jName + '\n'
        jds += ')\n'
 
        proc = subprocess.Popen(['condor_submit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
@@ -304,7 +363,7 @@ class batchJobs :
        if not matches:
          sys.stderr.write('Failed to retrieve the job id. Job submission may have failed.\n')
          for jName in self.jobsList:
-           jidFile=self.subDir+'/'+jName+'.jid'
+           jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
            open(jidFile, 'w').close()
        else:
          clusterId = matches.group(1)
@@ -316,7 +375,7 @@ class batchJobs :
          except:
            sys.stderr.write('Failed to retrieve job info. Job submission may have failed.\n')
            for jName in self.jobsList:
-              jidFile=self.subDir+'/'+jName+'.jid'
+              jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
               open(jidFile, 'w').close()
          else:
            for qdict in qlist:
@@ -330,8 +389,12 @@ class batchJobs :
      hostName = os.uname()[1]
      
      jName= self.jobsDic[iStep][iTarget]
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+         subDirExtra = '/' + jName.split('__')[3]
+     else:
+         subDirExtra =''
      #print 'Adding to ',self.subDir+'/'+jName  
-     jFile = open(self.subDir+'/'+jName+'.sh','a') 
+     jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a') 
      if 'iihe' in hostName :
         jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
      elif 'ifca' in hostName :

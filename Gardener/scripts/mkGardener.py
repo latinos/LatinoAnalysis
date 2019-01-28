@@ -194,7 +194,7 @@ for iProd in prodList :
   if not Productions[iProd]['isData'] :  
     xsMethods=['Python','YellowR'] # Among 'gDoc','Python','YellowR' and order Matter (Overwriting for same samples !)
     if cmssw == '74x' : xsMethods=['gDoc','Python'] 
-    xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    xsFile=CMSSW+'/src/LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py'
     xsDB = xsectionDB()
     for iMethod in xsMethods :
 

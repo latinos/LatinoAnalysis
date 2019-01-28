@@ -3,6 +3,8 @@
 import json
 import sys
 from sys import exit
+argv = sys.argv
+sys.argv = argv[:1]
 import ROOT
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
@@ -71,26 +73,40 @@ class LawnMower:
        
         template_histogram = 0
         
-        for samples_key,samples_values in self._samples.iteritems():
+        for sampleName, structureDef in self._structure.iteritems():
+           if '/' in sampleName:
+             cardName = sampleName.replace('/', '__')
+             binName = sampleName[sampleName.find('/') + 1:]
+             shapeSource = 'binned/' + binName + '/' + self._cutNameInOriginal + "/" + self._variable
+             sampleName = sampleName[:sampleName.find('/')]
+           else:
+             cardName = sampleName
+             shapeSource = self._cutNameInOriginal+"/"+self._variable
+
+           if sampleName not in self._samples:
+             continue
+
+           if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
+             continue
 
            # 
            # propagate signal from pre-fit if triggered
            # NB: this is needed for exclusion analyses, where the fitted signal is 0
            #     or to show the signal in the background only fit 
            #
-           if (self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA" :
+           if (self._getSignalFromPrefit == 1 and structureDef['isSignal'] == 1 ) or sampleName == "DATA" :
              
              print "THISFILE:",self._inputFile
              fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
-             self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
+             self._outFile.cd (self._cutNameInOriginal+"/"+self._variable)
 
-             print self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key
-             histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key)      
+             print shapeSource + "/histo_" + sampleName
+             histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
              print histo
-             print 'histo_' + samples_key
-             histo.SetName  ('histo_' + samples_key)
-             histo.SetTitle ('histo_' + samples_key)
+             print 'histo_' + cardName
+             histo.SetName  ('histo_' + cardName)
+             histo.SetTitle ('histo_' + cardName)
              histo.Write()              
              
              template_histogram = histo.Clone ("template")
@@ -104,16 +120,30 @@ class LawnMower:
 
         #print " template_histogram = " , template_histogram
          
-        for samples_key,samples_values in self._samples.iteritems():
+        for sampleName, structureDef in self._structure.iteritems():
+           if '/' in sampleName:
+             cardName = sampleName.replace('/', '__')
+             binName = sampleName[sampleName.find('/') + 1:]
+             shapeSource = 'binned/' + binName + '/' + self._cutNameInOriginal + "/" + self._variable
+             sampleName = sampleName[:sampleName.find('/')]
+           else:
+             cardName = sampleName
+             shapeSource = self._cutNameInOriginal+"/"+self._variable
 
-           print " samples_key = ", samples_key
+           if sampleName not in self._samples:
+             continue
+
+           if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
+             continue
+
+           print " sampleName = ", sampleName
            
            copied_from_original = False
            
            #if samples_key != "DATA" :
-           if not ((self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA"):
-             if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(samples_key) ):
-               print "Sample ", samples_key, " does not exist in ", fileIn
+           if not ((self._getSignalFromPrefit == 1 and structureDef['isSignal'] == 1 ) or sampleName == "DATA"):
+             if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(cardName) ):
+               print "Sample ", cardName, " does not exist in ", fileIn
                #
                # If for some reason this histogram is not available in the combine output
                # get the histogram from the input root file, the output of mkShape
@@ -124,11 +154,11 @@ class LawnMower:
                #
                fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
-               self._outFile.cd ( self._cutNameInOriginal + "/" + self._variable )
+               self._outFile.cd(self._cutNameInOriginal+"/"+self._variable)
 
-               histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + self._variable + "/histo_" + samples_key)      
-               histo.SetName  ('histo_' + samples_key)
-               histo.SetTitle ('histo_' + samples_key)
+               histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
+               histo.SetName  ('histo_' + cardName)
+               histo.SetTitle ('histo_' + cardName)
                histo.Write()  
                
                copied_from_original = True
@@ -138,11 +168,11 @@ class LawnMower:
              #
              if not copied_from_original :  
                
-               histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + samples_key)      
-               print folder_fit_name + "/" + self._cut + "/" + samples_key
+               histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + cardName)
+               print folder_fit_name + "/" + self._cut + "/" + cardName
                
-               histo.SetName  ('histo_' + samples_key)
-               histo.SetTitle ('histo_' + samples_key)
+               histo.SetName  ('histo_' + cardName)
+               histo.SetTitle ('histo_' + cardName)
                
                # fix the binning copying from "DATA" binning, if available
                if (template_histogram != 0) :
@@ -158,15 +188,16 @@ class LawnMower:
         #
         # total signal
         histo_total_signal = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_signal")      
-        
-        histo_total_signal.SetName  ('histo_' + 'total_signal')
-        histo_total_signal.SetTitle ('histo_' + 'total_signal')
-        
-        # fix the binning copying from "DATA" binning, if available
-        if (template_histogram != 0) :
-          histo_total_signal = self._ChangeBin(histo_total_signal, template_histogram)
-        
-        histo_total_signal.Write()              
+
+        if histo_total_signal:
+          histo_total_signal.SetName  ('histo_' + 'total_signal')
+          histo_total_signal.SetTitle ('histo_' + 'total_signal')
+          
+          # fix the binning copying from "DATA" binning, if available
+          if (template_histogram != 0) :
+            histo_total_signal = self._ChangeBin(histo_total_signal, template_histogram)
+          
+          histo_total_signal.Write()              
 
         #
         # total background
@@ -228,6 +259,8 @@ class LawnMower:
 
 
 if __name__ == '__main__':
+    sys.argv = argv
+    
     print '''
 ----------------------------------------------------------------------------------------------------------------------------------
 

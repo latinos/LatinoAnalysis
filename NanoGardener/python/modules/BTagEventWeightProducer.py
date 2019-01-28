@@ -43,7 +43,10 @@ class BTagEventWeightProducer(Module):
           if central_or_syst == "central":
             weight = 1.
             for i in range(event.nCleanJet):
-              weight = weight*event.Jet_btagSF_shape[event.CleanJet_jetIdx[i]]
+              #print event.nCleanJet , event.nJet , i , event.CleanJet_jetIdx[i]
+              #weight = weight*event.Jet_btagSF_shape[event.CleanJet_jetIdx[i]]
+              idx = event.CleanJet_jetIdx[i]
+              weight *= event.Jet_btagSF_shape[idx]
           else:
             weight=1.
             for i in range(event.nCleanJet):

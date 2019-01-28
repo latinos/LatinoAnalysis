@@ -17,7 +17,7 @@ class rochester_corr(Module):
     Add a scale factor from 2017 Rochester corrections                                                                                                                                                             
     '''
 
-    def __init__(self,isdata = False , lepColl="Lepton",metColls=['MET','PuppiMET','RawMET','TkMET']):
+    def __init__(self,isdata = False , year=2016 , lepColl="Lepton",metColls=['MET','PuppiMET','RawMET','TkMET']):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.isdata = isdata
         print "Loading macros from "+cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc"
@@ -26,8 +26,9 @@ class rochester_corr(Module):
         except RuntimeError: 
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc++g')      
         print "Loaded"  
-
-        rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2017v0.txt"        
+     
+        if year == 2016 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2016.txt"
+        if year == 2017 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2017.txt"        
         print "scale factors from", rochester_path
         rc=ROOT.RoccoR_NG(rochester_path)
         self.rc= rc        

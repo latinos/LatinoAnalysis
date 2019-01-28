@@ -106,6 +106,9 @@ class PlotFactory:
         for cutName in self._cuts :
           print "cut =", cutName, "::", cuts[cutName]
           for variableName, variable in self._variables.iteritems():
+            if not fileIn.GetDirectory(cutName+"/"+variableName):
+              continue
+              
             print "variableName =", variableName
 
             if not "divideByBinWidth" in variable.keys():
@@ -203,6 +206,9 @@ class PlotFactory:
             nexpected = 0
 
             for sampleName, sample in self._samples.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+                
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               print '     -> shapeName = ', shapeName,
               histo = fileIn.Get(shapeName)
@@ -631,8 +637,9 @@ class PlotFactory:
             # save the central values of the bkg sum for use for the nuisance band 
             #
             #print " tgrMC_vy = ", tgrMC_vy
-            for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
-              tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
+            if thsBackground.GetNhists() != 0:
+              for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
+                tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
             
                         
             #
@@ -640,6 +647,9 @@ class PlotFactory:
             # It is important to do this after setting (without signal) tgrMC_vy
             #
             for sampleName, sample in self._samples.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+            
               # MC style
               if plot[sampleName]['isData'] == 0 :
                 if plot[sampleName]['isSignal'] == 1 :
@@ -692,8 +702,8 @@ class PlotFactory:
                       #"nuisances_err_do[", iBin, "] = ", nuisances_err_do[iBin], " --> " 
 
               
-            
-            tgrData       = ROOT.TGraphAsymmErrors()
+
+            tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
               tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
               tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
@@ -752,7 +762,7 @@ class PlotFactory:
               tgrMC = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMC.SetPoint     (iBin, tgrData_vx[iBin], tgrMC_vy[iBin])
-                if histo_total != None :
+                if histo_total:
                   tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
                   tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
@@ -762,7 +772,7 @@ class PlotFactory:
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
                 tgrMCMinusMC.SetPoint    (iBin, tgrData_vx[iBin], 0.)
-                if histo_total != None :
+                if histo_total:
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
                     tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
@@ -810,6 +820,9 @@ class PlotFactory:
             groupFlag = False
             #---- prepare the grouped histograms
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+              if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
+                continue
+                  
               if sampleConfiguration['isSignal'] == 1 :
                   print "############################################################## isSignal 1", sampleNameGroup
                   thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
@@ -820,7 +833,8 @@ class PlotFactory:
               # the signal is added on top of the background
               # the signal has to be the last one in the dictionary!
               # make it sure in plot.py
-              if groupFlag == False: thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
+              if groupFlag == False:
+                  thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
             
             #---- now plot
             
@@ -842,6 +856,9 @@ class PlotFactory:
             maxYused = 1.
             
             for sampleName, sample in self._samples.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+            
               if plot[sampleName]['isData'] == 1 :
                 histos[sampleName].Draw("p")
                 minXused = histos[sampleName].GetXaxis().GetBinLowEdge(1)
@@ -954,6 +971,8 @@ class PlotFactory:
               tgrData.Draw("P0")
             else : # never happening if at least one data histogram is provided
               for sampleName, sample in self._samples.iteritems():
+                if 'samples' in variable and sampleName not in variable['samples']:
+                  continue
                 if plot[sampleName]['isData'] == 1 :
                   histos[sampleName].Draw("p same")
 
@@ -1015,6 +1034,9 @@ class PlotFactory:
             else :
               
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+                if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
+                  continue
+                  
                 if self._showIntegralLegend == 0 :
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
@@ -1025,6 +1047,9 @@ class PlotFactory:
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
               for sampleName, sample in reversedSamples.iteritems():
+                if 'samples' in variable and sampleName not in variable['samples']:
+                  continue
+              
                 if plot[sampleName]['isData'] == 1 :
                   if 'nameHR' in plot[sampleName].keys() :
                     if self._showIntegralLegend == 0 :
@@ -1828,7 +1853,7 @@ class PlotFactory:
                         eylow = 0
                         eyhigh = 0
                         if len(nuisances_err_do) != 0:
-                          if histo_total != None :
+                          if histo_total:
                             eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
                             eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
                           else :                        
