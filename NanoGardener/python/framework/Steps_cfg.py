@@ -291,7 +291,7 @@ Steps = {
                  'do4MC'      : True ,
                  'do4Data'    : False  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
-                 'declare'    : 'prefCorr2017 = lambda : PrefCorr(jetroot="L1prefiring_jetpt_2016BtoH.root", jetmapname="L1prefiring_jetpt_2016BtoH", photonroot="L1prefiring_photonpt_2016BtoH.root", photonmapname="L1prefiring_photonpt_2016BtoH", variation=0, UseEMpT=0)',
+                 'declare'    : 'prefCorr2017 = lambda : PrefCorr(jetroot="L1prefiring_jetpt_2016BtoH.root", jetmapname="L1prefiring_jetpt_2016BtoH", photonroot="L1prefiring_photonpt_2016BtoH.root", photonmapname="L1prefiring_photonpt_2016BtoH", UseEMpT=0)',
                  'module'     : 'prefCorr2017()',
                },
 
@@ -300,7 +300,7 @@ Steps = {
                  'do4MC'      : True ,
                  'do4Data'    : False  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
-                 'declare'    : 'prefCorr2017 = lambda : PrefCorr(jetroot="L1prefiring_jetpt_2017BtoF.root", jetmapname="L1prefiring_jetpt_2017BtoF", photonroot="L1prefiring_photonpt_2017BtoF.root", photonmapname="L1prefiring_photonpt_2017BtoF", variation=0, UseEMpT=0)',
+                 'declare'    : 'prefCorr2017 = lambda : PrefCorr(jetroot="L1prefiring_jetpt_2017BtoF.root", jetmapname="L1prefiring_jetpt_2017BtoF", photonroot="L1prefiring_photonpt_2017BtoF.root", photonmapname="L1prefiring_photonpt_2017BtoF", UseEMpT=0)',
                  'module'     : 'prefCorr2017()',
                },
 
@@ -711,6 +711,27 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  , 
                   'selection'  : '"(nLepton>=2)"' , 
+                 },
+
+#muWP='cut_Tight80x'
+#eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']
+
+  'l2tightOR2016' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
+                                    && (    Lepton_isTightElectron_cut_WP_Tight80X[0] > 0.5        \
+                                         || Lepton_isTightElectron_cut_WP_Tight80X_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5        \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016_SS[0] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight80x[0] > 0.5             ) \
+                                    && (    Lepton_isTightElectron_cut_WP_Tight80X[1] > 0.5        \
+                                         || Lepton_isTightElectron_cut_WP_Tight80X_SS[1] > 0.5     \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016[1] > 0.5        \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016_SS[1] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight80x[1] > 0.5             ) \
+                                  "' ,
                  },
 
   'l2tightOR2017' : {

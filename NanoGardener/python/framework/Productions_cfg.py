@@ -94,7 +94,7 @@ Productions = {
  'Summer16_94X_nAODv3_Full2016v2': {
                        'isData'  : False ,
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16_94X_nAODv3.py' ,
-                       'cmssw'   : 'Full2017v2' ,
+                       'cmssw'   : 'Full2016v2' ,
                        'year'    : '2016' , 
                        'JESGT'   : 'Summer16_23Sep2016V4_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
