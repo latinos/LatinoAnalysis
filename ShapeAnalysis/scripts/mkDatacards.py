@@ -45,7 +45,7 @@ class DatacardFactory:
         if os.path.isdir(inputFile):
           # ONLY COMPATIBLE WITH OUTPUTS MERGED TO SAMPLE LEVEL!!
           self._fileIn = {}
-          for sampleName, sample in self._samples.iteritems():
+          for sampleName in self._samples:
             self._fileIn[sampleName] = ROOT.TFile.Open(inputFile+'/plots_%s_ALL_%s.root' % (self._tag, sampleName))
             if not self._fileIn[sampleName]:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
@@ -62,7 +62,7 @@ class DatacardFactory:
         # divide the list of samples among signal, background and data
         isig = 0
         ibkg = 1
-        for sampleName, sample in self._samples.iteritems():
+        for sampleName in self._samples:
           if structureFile[sampleName]['isSignal'] != 0:
             signal_ids[sampleName] = isig
             isig -= 1
@@ -86,7 +86,7 @@ class DatacardFactory:
 
         # loop over cuts. One directory per cut will be created
         for cutName in self._cuts:
-          print "cut = ", cutName, " :: ", cuts[cutName]
+          print "cut = ", cutName
           try:
             shutil.rmtree(outputDirDatacard + "/" + cutName)
           except OSError:
@@ -294,11 +294,14 @@ class DatacardFactory:
                         histoIntegral = histo.Integral()
                         histoUpIntegral = histoUp.Integral()
                         histoDownIntegral = histoDown.Integral()
-                        if histoIntegral > 0:
+                        if histoIntegral > 0. and histoUpIntegral > 0.:
                           diffUp = (histoUpIntegral - histoIntegral)/histoIntegral/float(nuisance['AsLnN'])
-                          diffDo = (histoDownIntegral - histoIntegral)/histoIntegral/float(nuisance['AsLnN'])
                         else: 
                           diffUp = 0.
+
+                        if histoIntegral > 0. and histoDownIntegral > 0.:
+                          diffDo = (histoDownIntegral - histoIntegral)/histoIntegral/float(nuisance['AsLnN'])
+                        else:
                           diffDo = 0.
         
                         lnNUp = 1. + diffUp
@@ -570,8 +573,17 @@ if __name__ == '__main__':
       for iCut in cuts:
         if not iCut in opt.cardList : cut2del.append(iCut)
       for iCut in cut2del : del cuts[iCut]   
-
   
+    # ~~~~
+    nuisances = {}
+    if opt.nuisancesFile == None :
+       print " Please provide the nuisances structure if you want to add nuisances "
+       
+    if os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close()
+
     # ~~~~
     structure = {}
     if opt.structureFile == None :
@@ -582,17 +594,5 @@ if __name__ == '__main__':
       handle = open(opt.structureFile,'r')
       exec(handle)
       handle.close()
-
-
-    # ~~~~
-    nuisances = {}
-    if opt.nuisancesFile == None :
-       print " Please provide the nuisances structure if you want to add nuisances "
-       
-    if os.path.exists(opt.nuisancesFile) :
-      handle = open(opt.nuisancesFile,'r')
-      exec(handle)
-      handle.close()
-    
     
     factory.makeDatacards( opt.inputFile ,opt.outputDirDatacard, variables, cuts, samples, structure, nuisances)
