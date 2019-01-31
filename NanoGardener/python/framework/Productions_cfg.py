@@ -38,6 +38,17 @@ Productions = {
                          'YRver'   : ['YR4','13TeV'] ,
                    },               
 
+   'Run2018_nAOD_v1_Study2018':  {
+                         'isData'  : True ,
+                         'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                         'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_nAOD_v1.py' ,
+                         'cmssw'   : 'Full2018' ,
+                         'year'    : '2018' ,
+                         'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' , ## for the moment just copy 'samplesCrossSections2017.py'
+                         'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+
    # ---- BAD electron ID: 
 
    'Run2017_nAOD_v1_Full2017':  {
