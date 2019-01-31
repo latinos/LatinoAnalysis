@@ -287,7 +287,7 @@ Trigger = {
 #    Total lumi: 35.867 /fb (brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt -u /fb)
 #   ------------------------------
 
-        'Full2016'  :  { 
+        'Full2016v2'  :  { 
                           # Lower Muon efficiency at begin of 2016 + L1 EMTF Bug ( https://twiki.cern.ch/twiki/bin/view/CMS/EndcapHighPtMuonEfficiencyProblem )
                           1  :  { 'begin' : 273158 , 'end' : 274094 , 'lumi' :  0.616 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016/HLT_DoubleEleLegHigPt_2016_cut_WP_Tight80X.txt' ,

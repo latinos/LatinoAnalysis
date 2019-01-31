@@ -263,13 +263,17 @@ class TrigMaker(Module):
         pt2, eta2 = self._over_under(pdgId2, pt2, eta2)
       
         eff, eff_dz , eff_gl = self._pair_eff(pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p)
-       
+     
+        #print abs(pdgId1) , abs(pdgId2) 
+        #print eff, eff_dz , eff_gl
+ 
         eff_dbl = [0., 0., 0.]
         eff_evt = [0., 0., 0.]
         for i in range(3): 
            eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2][i]*eff_dz[i]
            eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0][i]*(1. - eff[5][i]) + eff[1][i]*eff_gl[1][i]*(1. - eff[4][i]))
-        
+        #print eff_dbl , eff_evt        
+
         eff_tl = eff[2][0]*eff[5][0]*eff_gl[2][0]*eff_dz[0] #eff_dz
         eff_lt = eff[3][0]*eff[4][0]*eff_gl[2][0]*eff_dz[0] #eff_dz
 
