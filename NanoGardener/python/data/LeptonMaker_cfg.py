@@ -4,7 +4,7 @@ Lepton_br = {
                      'Lepton_pt',
                      'Lepton_eta',
                      'Lepton_phi',
-                     'Lepton_eCorr',
+                     #'Lepton_eCorr',
                     ],
 
                'I': [
@@ -21,7 +21,7 @@ VetoLepton_br = {
                      'VetoLepton_pt',
                      'VetoLepton_eta',
                      'VetoLepton_phi',
-                     'VetoLepton_eCorr',
+                     #'VetoLepton_eCorr',
                     ],
 
                'I': [
@@ -45,6 +45,6 @@ CleanJet_br = {
                     ],
               }
 
-Lepton_var = ['pt', 'eta', 'phi', 'pdgId', 'eCorr']
-VetoLepton_var = ['pt', 'eta', 'phi', 'pdgId', 'eCorr']
+Lepton_var = ['pt', 'eta', 'phi', 'pdgId'] #, 'eCorr']
+VetoLepton_var = ['pt', 'eta', 'phi', 'pdgId'] # , 'eCorr']
 CleanJet_var = ['pt', 'eta', 'phi']
