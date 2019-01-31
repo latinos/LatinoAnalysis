@@ -654,6 +654,15 @@ Steps = {
 
 # ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
 
+  'TrgwSel'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'selection'  : '"((TriggerEffWeight_2l_u/TriggerEffWeight_2l)>10)"' ,
+                  #'onlySample' : [ 'WWTo2L2Nu' ] ,
+                 },
+
+
 ## ------- Fake Study:
 
   'fakeSel'    : {
