@@ -132,8 +132,22 @@ Productions = {
                        'year'    : '2017' , 
                    },
 
- # -------- 2018 DATA 
-#'Run2018_102X_nAODv4_Full2018' : {
-#                  },       
+ # -------- 2018 DATA 102X nAODv4 - 14Sep2018 production
+ 'Run2018_102X_nAODv4_14Sep_Full2018' : {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_102X_nAODv4_14Sep2018.py' ,
+                       'cmssw'   : 'Full2018',
+                       'year'    : '2018' ,
+                   },
+
+ # -------- 2018 DATA 102X nAODv4 - 14Dec2018 production
+ 'Run2018_102X_nAODv4_14Dec_Full2018' : {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_102X_nAODv4_14Dec2018.py' ,
+                       'cmssw'   : 'Full2018',
+                       'year'    : '2018' ,
+                   },
 
 }
