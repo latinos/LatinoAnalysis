@@ -41,7 +41,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar'],
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
   # FIXME: check btagPerJet2016, btagPerEvent
@@ -68,7 +68,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'subTargets' : ['baseW','PrefCorr2017','jetSel','CleanJetCut', 'btagPerJet2017', 'btagPerEvent' ,
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL'
+                                  'ggHTheoryUncertainty', 'DressedLeptons', 'WGammaStar',
                                   'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
@@ -191,6 +192,27 @@ Steps = {
                   'declare'    : 'HiggsGenVars = lambda : HiggsGenVarsProducer()',
                   'module'     : 'HiggsGenVars()',
                   } ,                 
+
+   'DressedLeptons': {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False  ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.DressedLeptonProducer' ,
+                   'declare'    : 'dressedLeptons = lambda : DressedLeptonProducer(0.3)',
+                   'module'     : 'dressedLeptons()' 
+                  },
+
+   'ggHTheoryUncertainty':  {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False  ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GGHUncertaintyProducer' ,
+                   'declare'    : 'ggHUncertaintyProducer = lambda : GGHUncertaintyProducer()',
+                   'module'     : 'ggHUncertaintyProducer()',
+                   'onlySample' : [
+                                  'GluGluHToWWTo2L2NuPowheg_M125_PrivateNano'
+                                  ]
+                  },    
 
    'TopGenVars' : {
                   'isChain'    : False ,
