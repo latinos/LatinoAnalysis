@@ -439,6 +439,13 @@ Steps = {
 
 ## ------- MODULES: Fakes
 
+  'fakeW_New'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                   },
+
   'fakeW'  : {
                   'isChain'    : True ,
                   'do4MC'      : False ,
@@ -538,6 +545,16 @@ Steps = {
 # ------------------------------------ SYSTEMATICS ----------------------------------------------------------------
 
 ## ------- JES
+
+  'JESBaseTestV8' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JECMaker' ,
+                  'declare'    : 'JES = lambda : JECMaker(globalTag="Fall17_17Nov2017_V8_MC", types=["Total"], jetFlav="AK4PFchs")',
+                  'module'     : 'JES()',
+                  'onlySample' : [ 'WWTo2L2Nu' ] ,
+               },
 
   'JESBase' : {
                   'isChain'    : False ,
