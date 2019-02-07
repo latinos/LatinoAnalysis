@@ -225,7 +225,7 @@ if __name__ == '__main__':
     parser.add_option('--doHadd'         , dest='doHadd'         , help='Hadd for batch mode'                        , default=False)
     parser.add_option('--redoStat'       , dest='redoStat'        , help='redo stat uncertainty'                        , default=False)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
-    parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=0, type='int')
+    parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=1, type='int')
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
 
@@ -342,10 +342,7 @@ if __name__ == '__main__':
             print '--> Job aready created : '+iStep+'__'+tname
             exit()
 
-      if opt.numThreads == 0:
-        nThreads = 1
-      else:
-        nThreads = opt.numThreads
+      nThreads = opt.numThreads
 
       bpostFix=''
       jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,True)
@@ -465,54 +462,22 @@ if __name__ == '__main__':
       if not allDone:
         sys.exit(1)
 
-      rootver = ROOT.gROOT.GetVersion()
-      rootver = float(rootver[:rootver.find('/')])
-      if rootver > 6.09:
-        # new ROOT version has multiprocess hadd
-        if opt.numThreads == 0:
-          nThreads = 1
-        else:
-          nThreads = opt.numThreads
+      nThreads = opt.numThreads
 
-      number = len(fileList)
-      if number > 500:
-        print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
-
-      tmpdir = tempfile.mkdtemp()
       finalname = "plots_"+opt.tag+".root"
 
-      fullmerge = ['hadd']
-      if rootver > 6.09:
-        fullmerge.extend(['-j', str(nThreads)])
-      fullmerge.append(tmpdir + '/' + finalname)
+      hadd = os.environ['CMSSW_BASE'] + '/src/LatinoAnalysis/Tools/scripts/haddfast'
 
-      for istart in range(int(math.ceil(float(number)/500))):
-        fname = tmpdir + '/plots_'+opt.tag+'_temp'+str(istart)+'.root'
-
-        command = ['hadd']
-        if rootver > 6.09:
-          command.extend(['-j', str(nThreads)])
-        command.append(fname)
-        fullmerge.append(fname)
-
-        for i in range(istart*500, min(number, (istart+1)*500)):
-          command.append(fileList[i])
-
-        print ' '.join(command)
-        subprocess.Popen(command, cwd = os.getcwd() + '/' + opt.outputDir).communicate()
-
-      if istart != 0:
-        print ' '.join(fullmerge)
-        subprocess.Popen(fullmerge).communicate()
-      else:
-        os.rename(tmpdir + '/plots_'+opt.tag+'_temp0.root', tmpdir + '/' + finalname)
-
-      shutil.copyfile(tmpdir+"/" + finalname, os.getcwd() + '/' + opt.outputDir + '/' + finalname)
+      command = [hadd]
+      command.extend(['-j', str(nThreads)])
+      command.append(os.path.join(os.getcwd(), opt.outputDir, finalname))
+      command.extend(fileList)
+      print ' '.join(command)
+      subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
 
       if not opt.doNotCleanup:
         for fname in fileList:
           os.unlink(fname)
-        shutil.rmtree(tmpdir)
 
     elif opt.doHadd != 0 or opt.redoStat != 0:
       ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option
@@ -604,12 +569,10 @@ if __name__ == '__main__':
       command += "mkdir log"
       os.system(command)
 
-
-      os.system(command)
-
-      numThreads = int(opt.numThreads)
-      if numThreads == 0:
+      if opt.numThreads == 0:
         numThreads = os.sysconf('SC_NPROCESSORS_ONLN')
+      else:
+        numThreads = opt.numThreads
       print "number of threads = ", numThreads
 
       queue = Queue.Queue()
@@ -695,10 +658,7 @@ if __name__ == '__main__':
       factory._energy    = opt.energy
       factory._lumi      = opt.lumi
       factory._tag       = opt.tag
-      if opt.numThreads == 0:
-        factory._nThreads  = 1
-      else:
-        factory._nThreads  = opt.numThreads
+      factory._nThreads  = opt.numThreads
       factory.aliases    = aliases
 
       factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
