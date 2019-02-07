@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import json
 import sys
 # bypass ROOT argv parsing
 argv = sys.argv
@@ -9,21 +8,16 @@ import ROOT
 import optparse
 import copy
 import collections
-#import hwwinfo
-#import hwwsamples
-#import hwwtools
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import os.path
+import math
 import logging
 import tempfile
-import LatinoAnalysis.Gardener.odict as odict
-#from HWWAnalysis.Misc.ROOTAndUtils import TH1AddDirSentry
 import subprocess
 import threading, Queue
 from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory
 
 # Common Tools & batch
-#from LatinoAnalysis.Tools.userConfig  import *
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 
@@ -87,7 +81,7 @@ class Worker(threading.Thread):
         process.wait()
         self.status = process.returncode
         #print 'task finished with exit code '+str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
-        
+
         if (self.status) == 0 :
           print 'task finished with exit code ' +str(self.status)+'   [0 is good] --> '+str(cuts.keys())+' , '+str(samples.keys())+' , '+str(samples[theKey]['name'])
         else :
@@ -149,6 +143,57 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
     hvaried.SetBinContent(iBin, newvalue)
 #BUGFIX by Andrea: The modified histograms now have the new values computed starting from the nominal ones
 
+def makeTargetList(options, samples):
+  """
+  Return a list of draw targets or merge sources. Entry of the list can be a sample name string,
+  a 2-tuple (sample name, fileblock), or a 3-tuple (sample name, fileblock, eventblock).
+  """
+
+  targetList=[]
+
+  splitBySample = 'Samples' in options or 'AsMuchAsPossible' in options
+  splitByFile = 'Files' in options or 'AsMuchAsPossible' in options
+  splitByEvent = 'Events' in options or 'AsMuchAsPossible' in options
+
+  if splitBySample:
+    for sam_k, sam_v in samples.iteritems():
+
+      if splitByFile and "FilesPerJob" in sam_v and sam_v["FilesPerJob"] > 0:
+        filesPerJob = sam_v["FilesPerJob"]
+        nFiles = len(sam_v['name'])
+        nFileBlocks = int(math.ceil(float(nFiles) / filesPerJob))
+
+        if splitByEvent and 'EventsPerJob' in sam_v and sam_v['EventsPerJob'] > 0:
+          eventsPerJob = sam_v['EventsPerJob']
+
+          for iFileBlock in range(nFileBlocks):
+            chain = ROOT.TChain('latino')
+            for fname in sam_v['name'][iFileBlock * filesPerJob:(iFileBlock + 1) * filesPerJob]:
+              chain.Add(fname)
+            nEvents = chain.GetEntries()
+            nEventBlocks = int(math.ceil(float(nEvents) / eventsPerJob))
+
+            if nEventBlocks == 1:
+              if nFileBlocks == 1:
+                targetList.append(sam_k)
+              else:
+                targetList.append((sam_k, iFileBlock))
+            else:
+              targetList.extend((sam_k, iFileBlock, iEventBlock) for iEventBlock in range(nEventBlocks))
+
+        else:
+          if nFileBlocks == 1:
+            targetList.append(sam_k)
+          else:
+            targetList.extend((sam_k, iFileBlock) for iFileBlock in range(nFileBlocks))
+
+      else:
+        targetList.append(sam_k)
+
+  else:
+    targetList=['ALL']
+
+  return targetList
 
 
 if __name__ == '__main__':
@@ -157,11 +202,11 @@ if __name__ == '__main__':
     print '''
 --------------------------------------------------------------------------------------------------
 
-   ___|   |                               \  |         |                
- \___ \   __ \    _` |  __ \    _ \      |\/ |   _` |  |  /   _ \   __| 
-       |  | | |  (   |  |   |   __/      |   |  (   |    <    __/  |    
- _____/  _| |_| \__,_|  .__/  \___|     _|  _| \__,_| _|\_\ \___| _|    
-                       _|                                               
+   ___|   |                               \  |         |
+ \___ \   __ \    _` |  __ \    _ \      |\/ |   _` |  |  /   _ \   __|
+       |  | | |  (   |  |   |   __/      |   |  (   |    <    __/  |
+ _____/  _| |_| \__,_|  .__/  \___|     _|  _| \__,_| _|\_\ \___| _|
+                       _|
 
 --------------------------------------------------------------------------------------------------
 '''
@@ -183,7 +228,7 @@ if __name__ == '__main__':
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=0, type='int')
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
-          
+
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
@@ -194,14 +239,14 @@ if __name__ == '__main__':
 
 
     print " configuration file = ", opt.pycfg
-    print " treeName           = ", opt.treeName   
+    print " treeName           = ", opt.treeName
     print " lumi =               ", opt.lumi
-    
+
     print " inputDir =           ", opt.inputDir
     print " outputDir =          ", opt.outputDir
- 
+
     print "batchSplit: ",opt.batchSplit
-    
+
     #TFormula.SetMaxima(1000000,10000,10000000)
 
     if not opt.debug:
@@ -258,460 +303,391 @@ if __name__ == '__main__':
 
     nuisances = collections.OrderedDict()
     if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "      
+      print " Please provide the nuisances structure if you want to add nuisances "
     elif os.path.exists(opt.nuisancesFile) :
         handle = open(opt.nuisancesFile,'r')
         exec(handle)
         handle.close()
-         
+
 
     if opt.doBatch != 0:
-            print "~~~~~~~~~~~ Running mkShape on Batch Queue"
+      print "~~~~~~~~~~~ Running mkShape on Batch Queue"
 
-            # Create Jobs Dictionary
-            
-            batchSplit = []
- 
-            stepList=['ALL']
+      # Create Jobs Dictionary
 
-            splitBySample = 'Samples' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
-            splitByFile = 'Files' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
-            splitByEvent = 'Events' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
-          
-            # ... Samples
-            targetList=[]
-            if splitBySample:
-              batchSplit.append('Targets')
-           
-              for sam_k,sam_v in samples.iteritems():
-                #handle the case in which the configuration specifies how many files per job to run
-                if splitByFile and "FilesPerJob" in sam_v and sam_v["FilesPerJob"] > 0:
-                  filesPerJob = sam_v["FilesPerJob"]
-                  nFiles = len(sam_v['name'])
-                  nFileBlocks = nFiles / filesPerJob
-                  if nFiles % filesPerJob != 0:
-                    nFileBlocks += 1
-                  
-                  if splitByEvent and 'EventsPerJob' in sam_v and sam_v['EventsPerJob'] > 0:
-                    eventsPerJob = sam_v['EventsPerJob']
-                    
-                    for iFileBlock in range(nFileBlocks):
-                      chain = ROOT.TChain('latino')
-                      for fname in sam_v['name'][iFileBlock * filesPerJob:(iFileBlock + 1) * filesPerJob]:
-                        chain.Add(fname)
-                      nEvents = chain.GetEntries()
-                      nEventBlocks = nEvents / eventsPerJob
-                      if nEvents % eventsPerJob != 0:
-                        nEventBlocks += 1
+      batchSplit = []
 
-                      targetList.extend((sam_k, iFileBlock, iEventBlock) for iEventBlock in range(nEventBlocks))
-                      
-                  else:
-                    # targetList is a list of tuples in this case
-                    targetList.extend((sam_k, iFileBlock) for iFileBlock in range(nFileBlocks))
-                      
-                else:
-                  targetList.append(sam_k)
+      stepList=['ALL']
 
-            else:  
-              targetList=['ALL']
+      targetList = makeTargetList(opt.batchSplit, samples)
+      if targetList[0] != 'ALL':
+        batchSplit.append('Targets')
 
-            # ...Check job status and remove duplicates
-	    print "stepList", stepList
-	    print "targetList", targetList
-            for iStep in stepList:
-              for iTarget in targetList:
-                if type(iTarget) is tuple:
-                  if len(iTarget) == 2:
-                    tname = '%s.%d' % iTarget
-                  else:
-                    tname = '%s.%d.%d' % iTarget
-                else:
-                  tname = iTarget
-
-                pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+tname+'.jid'
-                #print pidFile
-                if os.path.isfile(pidFile) :
-                  print '--> Job aready created : '+iStep+'__'+tname
-                  exit()
-
-            if opt.numThreads == 0:
-              nThreads = 1
+      # ...Check job status and remove duplicates
+      print "stepList", stepList
+      print "targetList", targetList
+      for iStep in stepList:
+        for iTarget in targetList:
+          if type(iTarget) is tuple:
+            if len(iTarget) == 2:
+              tname = '%s.%d' % iTarget
             else:
-              nThreads = opt.numThreads
-            
-            bpostFix='' 
-            jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,True)
-            jobs.nThreads = nThreads
+              tname = '%s.%d.%d' % iTarget
+          else:
+            tname = iTarget
 
-            jobs.AddPy2Sh()
-            jobs.InitPy('from collections import OrderedDict')
-            jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory\n")
-            jobs.InitPy("factory = ShapeFactory()")
-            jobs.InitPy("factory._treeName  = '"+opt.treeName+"'")
-            jobs.InitPy("factory._energy    = '"+str(opt.energy)+"'")
-            jobs.InitPy("factory._lumi      = "+str(opt.lumi))
-            jobs.InitPy("factory._tag       = '"+str(opt.tag)+"'")
-            jobs.InitPy("factory._nThreads  = "+str(nThreads))
-            jobs.InitPy("factory.aliases    = "+str(aliases))
+          pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+tname+'.jid'
+          #print pidFile
+          if os.path.isfile(pidFile) :
+            print '--> Job aready created : '+iStep+'__'+tname
+            exit()
 
-            jobs.InitPy("\n")
+      if opt.numThreads == 0:
+        nThreads = 1
+      else:
+        nThreads = opt.numThreads
 
-            outputDir=os.getcwd()+'/'+opt.outputDir 
+      bpostFix=''
+      jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,True)
+      jobs.nThreads = nThreads
 
-            for iStep in stepList:
-              if iStep == 'ALL':
-                job_cuts = cuts
-              else:
-                job_cuts = {iStep: cuts[iStep]}
+      jobs.AddPy2Sh()
+      jobs.InitPy('from collections import OrderedDict')
+      jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory\n")
+      jobs.InitPy("factory = ShapeFactory()")
+      jobs.InitPy("factory._treeName  = '"+opt.treeName+"'")
+      jobs.InitPy("factory._energy    = '"+str(opt.energy)+"'")
+      jobs.InitPy("factory._lumi      = "+str(opt.lumi))
+      jobs.InitPy("factory._tag       = '"+str(opt.tag)+"'")
+      jobs.InitPy("factory._nThreads  = "+str(nThreads))
+      jobs.InitPy("factory.aliases    = "+str(aliases))
 
-              for iTarget in targetList:
-                if iTarget == 'ALL':
-                  tname = iTarget
-                  job_targets = samples
+      jobs.InitPy("\n")
 
-                elif type(iTarget) is tuple:
-                  if len(iTarget) == 2:
-                    tname = '%s.%d' % iTarget
-                  else:
-                    tname = '%s.%d.%d' % iTarget
+      outputDir=os.getcwd()+'/'+opt.outputDir
 
-                  sample = samples[iTarget[0]]
-                  iFileBlock = iTarget[1]
-                  filesPerJob = sample['FilesPerJob']
+      for iStep in stepList:
+        if iStep == 'ALL':
+          job_cuts = cuts
+        else:
+          job_cuts = {iStep: cuts[iStep]}
 
-                  clone = copy.deepcopy(sample)
-                  clone['name'] = sample['name'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
-                  if 'weights' in sample:
-                    clone['weights'] = sample['weights'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
+        for iTarget in targetList:
+          if iTarget == 'ALL':
+            tname = iTarget
+            job_targets = samples
 
-                  job_targets = {iTarget[0]: clone}
+          elif type(iTarget) is tuple:
+            if len(iTarget) == 2:
+              tname = '%s.%d' % iTarget
+            else:
+              tname = '%s.%d.%d' % iTarget
 
-                else:
-                  tname = iTarget
-                  job_targets = {iTarget: samples[iTarget]}
+            sample = samples[iTarget[0]]
+            iFileBlock = iTarget[1]
+            filesPerJob = sample['FilesPerJob']
 
-                jName = iStep + '_' + tname
+            clone = copy.deepcopy(sample)
+            clone['name'] = sample['name'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
+            if 'weights' in sample:
+              clone['weights'] = sample['weights'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
 
-                instructions_for_configuration_file  = ""
-                instructions_for_configuration_file += "factory.makeNominals(   \n"
-                instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
-                instructions_for_configuration_file += "     '" + outputDir + "',     \n"
-                instructions_for_configuration_file += "      " + str(variables) + ", \n"
-                instructions_for_configuration_file += "      " + str(job_cuts) + ",      \n"
-                instructions_for_configuration_file += "      " + str(job_targets) + ",   \n"
-                instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
-                instructions_for_configuration_file += "     '" + supercut + "',      \n"
-                instructions_for_configuration_file += "     '" + jName + "',\n"
-                if type(iTarget) is tuple and len(iTarget) == 3:
-                  eventsPerJob = sample['EventsPerJob']
-                  instructions_for_configuration_file += "     " + str(eventsPerJob * iTarget[2]) + ",\n"
-                  instructions_for_configuration_file += "     " + str(eventsPerJob) + "\n"
+            job_targets = {iTarget[0]: clone}
 
-                instructions_for_configuration_file += ")    \n"
-  
-                jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
-                    
-            #if 'knu' in os.uname()[1]:
-              #jobs.Sub(opt.batchQueue)
-            #else:
-            #print " opt.batchQueue = ", opt.batchQueue
-            jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
+          else:
+            tname = iTarget
+            job_targets = {iTarget: samples[iTarget]}
 
+          jName = iStep + '_' + tname
+
+          instructions_for_configuration_file  = ""
+          instructions_for_configuration_file += "factory.makeNominals(   \n"
+          instructions_for_configuration_file += "     '" + opt.inputDir +"',    \n"
+          instructions_for_configuration_file += "     '" + outputDir + "',     \n"
+          instructions_for_configuration_file += "      " + str(variables) + ", \n"
+          instructions_for_configuration_file += "      " + str(job_cuts) + ",      \n"
+          instructions_for_configuration_file += "      " + str(job_targets) + ",   \n"
+          instructions_for_configuration_file += "      " + str(nuisances) + ", \n"
+          instructions_for_configuration_file += "     '" + supercut + "',      \n"
+          instructions_for_configuration_file += "     '" + jName + "',\n"
+          if type(iTarget) is tuple and len(iTarget) == 3:
+            eventsPerJob = sample['EventsPerJob']
+            instructions_for_configuration_file += "     " + str(eventsPerJob * iTarget[2]) + ",\n"
+            instructions_for_configuration_file += "     " + str(eventsPerJob) + "\n"
+
+          instructions_for_configuration_file += ")    \n"
+
+          jobs.AddPy (iStep, iTarget, instructions_for_configuration_file)
+
+      #if 'knu' in os.uname()[1]:
+        #jobs.Sub(opt.batchQueue)
+      #else:
+      #print " opt.batchQueue = ", opt.batchQueue
+      jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
 
     elif opt.doHadd != 0:
-      
-            print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            print "~~~~~~~~~~~ mkShape on Batch : Hadd"
-            print "     -> jobDir = ", jobDir
-            print "     -> files  = ", jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+'XXX'+'__'+'YYY'+'.jid'
 
-            stepList=['ALL']
+      print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      print "~~~~~~~~~~~ mkShape on Batch : Hadd"
+      print "     -> jobDir = ", jobDir
+      print "     -> files  = ", jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+'XXX'+'__'+'YYY'+'.jid'
 
-            splitByFile = 'Files' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit
-            splitByEvent = 'Events' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit      
+      stepList=['ALL']
 
-            # ... Samples
-            targetList=[]
-            if 'Samples' in opt.batchSplit or 'AsMuchAsPossible' in opt.batchSplit:
-           
-              for sam_k,sam_v in samples.iteritems():
-                #handle the case in which the configuration specifies how many files per job to run
-                if splitByFile and "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
-                  filesPerJob = sam_v["FilesPerJob"]
-                  nFiles = len(sam_v['name'])
-                  nFileBlocks = nFiles / filesPerJob
-                  if nFiles % filesPerJob != 0:
-                    nFileBlocks += 1
+      targetList = makeTargetList(opt.batchSplit, samples)
 
-                  if splitByEvent and 'EventsPerJob' in sam_v and sam_v['EventsPerJob'] > 0:
-                    eventsPerJob = sam_v['EventsPerJob']
-                    
-                    for iFileBlock in range(nFileBlocks):
-                      chain = ROOT.TChain('latino')
-                      for fname in sam_v['name'][iFileBlock * filesPerJob:(iFileBlock + 1) * filesPerJob]:
-                        chain.Add(fname)
-                      nEvents = chain.GetEntries()
-                      nEventBlocks = nEvents / eventsPerJob
-                      if nEvents % eventsPerJob != 0:
-                        nEventBlocks += 1
+      # ...Check job status and create command
+      outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root'
+      fileList = []
+      cleanup = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
+      allDone=True
 
-                      targetList.extend((sam_k, iFileBlock, iEventBlock) for iEventBlock in range(nEventBlocks))
-                  else:
-                    # targetList is a list of tuples in this case
-                    targetList.extend((sam_k, iFileBlock) for iFileBlock in range(nFileBlocks))
-                      
-                else:
-                  targetList.append(sam_k)
+      for iStep in stepList:
+        for iTarget in targetList:
+          if type(iTarget) is tuple:
+            if len(iTarget) == 2:
+              tname = '%s.%d' % iTarget
+            else:
+              tname = '%s.%d.%d' % iTarget
+          else:
+            tname = iTarget
 
-            else:  
-              targetList=['ALL']
+          pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+tname+'.jid'
+          if os.path.isfile(pidFile) :
+            print '--> Job Running Still: '+iStep+'__'+tname
+            allDone=False
+          iFile='plots_'+opt.tag+'_'+iStep+'_'+tname+'.root'
+          if not os.path.isfile(os.getcwd()+'/'+opt.outputDir+'/'+iFile) :
+            print '--> Missing root file: '+iFile
+            allDone=False
+          fileList.append(iFile)
 
-            # ...Check job status and create command
-            outputFile=os.getcwd()+'/'+opt.outputDir+'/plots_'+opt.tag+'.root'
-            fileList = [] 
-#            command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; hadd -f '+outputFile
-            cleanup = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
-            allDone=True
+      if not allDone:
+        sys.exit(1)
 
-            for iStep in stepList:
-              for iTarget in targetList:
-                if type(iTarget) is tuple:
-                  if len(iTarget) == 2:
-                    tname = '%s.%d' % iTarget
-                  else:
-                    tname = '%s.%d.%d' % iTarget
-                else:
-                  tname = iTarget
+      rootver = ROOT.gROOT.GetVersion()
+      rootver = float(rootver[:rootver.find('/')])
+      if rootver > 6.09:
+        # new ROOT version has multiprocess hadd
+        if opt.numThreads == 0:
+          nThreads = 1
+        else:
+          nThreads = opt.numThreads
 
-                pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+tname+'.jid'
-                if os.path.isfile(pidFile) :
-                  print '--> Job Running Still: '+iStep+'__'+tname
-                  allDone=False
-                iFile='plots_'+opt.tag+'_'+iStep+'_'+tname+'.root' 
-                if not os.path.isfile(os.getcwd()+'/'+opt.outputDir+'/'+iFile) :
-                  print '--> Missing root file: '+iFile 
-                  allDone=False
-                fileList.append(iFile)
-#                command+=' '+iFile
-#                cleanup+='rm '+iFile+' ; '
+      number = len(fileList)
+      if number > 500:
+        print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
 
-            if not allDone:
-              sys.exit(1)
+      tmpdir = tempfile.mkdtemp()
+      finalname = "plots_"+opt.tag+".root"
 
-            rootver = ROOT.gROOT.GetVersion()
-            rootver = float(rootver[:rootver.find('/')])
-            if rootver > 6.09:
-              # new ROOT version has multiprocess hadd
-              if opt.numThreads == 0:
-                nThreads = 1
-              else:
-                nThreads = opt.numThreads
+      fullmerge = ['hadd']
+      if rootver > 6.09:
+        fullmerge.extend(['-j', str(nThreads)])
+      fullmerge.append(tmpdir + '/' + finalname)
 
-            number = len(fileList)
-            if number > 500:
-              print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
+      for istart in range(int(math.ceil(float(number)/500))):
+        fname = tmpdir + '/plots_'+opt.tag+'_temp'+str(istart)+'.root'
 
-            tmpdir = tempfile.mkdtemp()
-            for istart in range(0,int(float(number)/500+1)):
-                command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
-                command += 'hadd -f '
-                if rootver > 6.09:
-                  command += ' -j %d ' % nThreads
-                command += tmpdir + '/plots_'+opt.tag+'_temp'+str(istart)+'.root'
-                for i in range(istart*500,(istart+1)*500):
-                  if i>=number: break
-                  command += " "+fileList[i]
-                  cleanup += "rm "+fileList[i]+" ; "
-                print command
-                os.system(command)
-            os.chdir(os.getcwd()+"/"+opt.outputDir)
-            command += 'hadd -f '
-            if rootver > 6.09:
-              command += ' -j %d ' % nThreads
-            command += tmpdir + '/plots_'+opt.tag+'.root ' + tmpdir + "/plots_"+opt.tag+"_temp*"
-            os.system(command)
-            os.system("mv "+tmpdir+"/plots_"+opt.tag+".root .")
-            cleanup += "rm -rf "+tmpdir
-            if not opt.doNotCleanup: os.system(cleanup) 
+        command = ['hadd']
+        if rootver > 6.09:
+          command.extend(['-j', str(nThreads)])
+        command.append(fname)
+        fullmerge.append(fname)
 
-    elif opt.doHadd != 0 or opt.redoStat != 0:       
-            ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option 
-            if ('AsMuchAsPossible' in opt.batchSplit and opt.doHadd != 0) or opt.redoStat != 0:
-              ## do this only if we want to add the MC stat nuisances in the old way
-              if 'stat' in nuisances.keys()  and  not nuisances['stat']['samples']=={} :
-                os.chdir(os.getcwd()+"/"+opt.outputDir)
-                filein=ROOT.TFile('plots_'+opt.tag+'.root', 'update')
-                for sample in samples.keys():
-                  if sample == "DATA":
+        for i in range(istart*500, min(number, (istart+1)*500)):
+          command.append(fileList[i])
+
+        print ' '.join(command)
+        subprocess.Popen(command, cwd = os.getcwd() + '/' + opt.outputDir).communicate()
+
+      if istart != 0:
+        print ' '.join(fullmerge)
+        subprocess.Popen(fullmerge).communicate()
+      else:
+        os.rename(tmpdir + '/plots_'+opt.tag+'_temp0.root', tmpdir + '/' + finalname)
+
+      shutil.copyfile(tmpdir+"/" + finalname, os.getcwd() + '/' + opt.outputDir + '/' + finalname)
+
+      if not opt.doNotCleanup:
+        for fname in fileList:
+          os.unlink(fname)
+        shutil.rmtree(tmpdir)
+
+    elif opt.doHadd != 0 or opt.redoStat != 0:
+      ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option
+      if ('AsMuchAsPossible' in opt.batchSplit and opt.doHadd != 0) or opt.redoStat != 0:
+        ## do this only if we want to add the MC stat nuisances in the old way
+        if 'stat' in nuisances.keys()  and  not nuisances['stat']['samples']=={} :
+          os.chdir(os.getcwd()+"/"+opt.outputDir)
+          filein=ROOT.TFile('plots_'+opt.tag+'.root', 'update')
+          for sample in samples.keys():
+            if sample == "DATA":
+              continue
+            zeroMCerror = 0
+            if sample in nuisances['stat']['samples'].keys():
+              if 'zeroMCError' in nuisances['stat']['samples'][sample].keys():
+                if nuisances['stat']['samples'][sample]['zeroMCError'] == '1':
+                  zeroMCerror = 1
+              if zeroMCerror == 1:
+                print "special treatment of 0 MC events active for sample", sample
+              for cut in cuts.keys():
+                for variable in variables.keys():
+                  hcentral = filein.Get(cut+"/"+variable+"/histo_"+sample)
+                  if hcentral == None:
+                    print "Warning, missing", sample, cut, variable
                     continue
-                  zeroMCerror = 0
-                  if sample in nuisances['stat']['samples'].keys():
-                    if 'zeroMCError' in nuisances['stat']['samples'][sample].keys():
-                      if nuisances['stat']['samples'][sample]['zeroMCError'] == '1':
-                        zeroMCerror = 1
-                    if zeroMCerror == 1:
-                      print "special treatment of 0 MC events active for sample", sample
-                    for cut in cuts.keys():
-                      for variable in variables.keys():
-                        hcentral = filein.Get(cut+"/"+variable+"/histo_"+sample)
-                        if hcentral == None:
-                          print "Warning, missing", sample, cut, variable
-                          continue
-                        else:
-                          print "Found", sample, cut, variable
-                        for ibin in range(1, hcentral.GetNbinsX()+1):
-                          filein.cd(cut+"/"+variable)
-                          tag = "_ibin_"
-                          print nuisances['stat']['samples'][sample]
-                          if 'correlate' in nuisances['stat']['samples'][sample].keys():
-                            #specify the sample that is source of the variation
-                            tag = "_ibin"+sample+"_"
-                          hup = filein.Get(cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statUp")
-                          hdo = filein.Get(cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statDown")
-                          if hup == None:
-                            print "Adding previously missing", hcentral.GetName()+ tag + str(ibin) + "_statUp"
-                            hup = hcentral.Clone(hcentral.GetName()+ tag + str(ibin) + "_statUp")
-                          if hdo ==None:
-                            print "Adding previously missing", hcentral.GetName()+ tag + str(ibin) + "_statDown"
-                            hdo = hcentral.Clone(hcentral.GetName()+ tag + str(ibin) + "_statDown")
-                          if 'correlate' in nuisances['stat']['samples'][sample].keys():
-                            othersup = {}
-                            othersdo = {}
-                            othersce = {}
-                            for other in nuisances['stat']['samples'][sample]['correlate']:  
-                              hupother = filein.Get(cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statUp")
-                              hdoother = filein.Get(cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statDown")
-                              hcentralother = filein.Get(cut+"/"+variable+"/histo_"+other)
-                              if hupother == None:
-                                hupother = hcentralother.Clone(hcentralother.GetName()+ tag + str(ibin) + "_statUp")
-                              if hdoother == None:
-                                hdoother = hcentralother.Clone(hcentralother.GetName()+ tag + str(ibin) + "_statDown") 
-                              othersup[other] = hupother
-                              othersdo[other] = hdoother
-                              othersce[other] = hcentralother    
-                          scaleHistoStat(hcentral, hup,  1, ibin, opt.lumi, zeroMCerror)
-                          scaleHistoStat(hcentral, hdo, -1, ibin, opt.lumi, zeroMCerror)
-                          hcentral.SetBinError(ibin, 0)
-                          if 'correlate' in nuisances['stat']['samples'][sample].keys():
-                            for other in nuisances['stat']['samples'][sample]['correlate']:
-                              othersup[other].SetBinContent(ibin, max(0, othersce[other].GetBinContent(ibin)+hup.GetBinContent(ibin)-hcentral.GetBinContent(ibin)))
-                              othersdo[other].SetBinContent(ibin, max(0, othersce[other].GetBinContent(ibin)+hdo.GetBinContent(ibin)-hcentral.GetBinContent(ibin)))
-                              othersce[other].SetBinError(ibin,0)
-                          #BUGFIX by Andrea: hcentral is now the firt variable in the function
-                          #original text: scaleHistoStat(hup,  1, ibin, lumi, zeroMCerror)
-                          hcentral.Write("",ROOT.TObject.kOverwrite)
-                          print "Saviing histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statUp"
-                          hup.Write("",ROOT.TObject.kOverwrite)
-                          print "Saving histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statDown"
-                          hdo.Write("",ROOT.TObject.kOverwrite)
-                          if 'correlate' in nuisances['stat']['samples'][sample].keys():
-                            for other in nuisances['stat']['samples'][sample]['correlate']:  
-                              print "Also saving correlated variation", cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statUp"  
-                              othersup[other].Write("",ROOT.TObject.kOverwrite)
-                              print "Also saving correlated variation", cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statDown"
-                              othersdo[other].Write("",ROOT.TObject.kOverwrite)
-                              othersce[other].Write("",ROOT.TObject.kOverwrite)
-                          
+                  else:
+                    print "Found", sample, cut, variable
+                  for ibin in range(1, hcentral.GetNbinsX()+1):
+                    filein.cd(cut+"/"+variable)
+                    tag = "_ibin_"
+                    print nuisances['stat']['samples'][sample]
+                    if 'correlate' in nuisances['stat']['samples'][sample].keys():
+                      #specify the sample that is source of the variation
+                      tag = "_ibin"+sample+"_"
+                    hup = filein.Get(cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statUp")
+                    hdo = filein.Get(cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statDown")
+                    if hup == None:
+                      print "Adding previously missing", hcentral.GetName()+ tag + str(ibin) + "_statUp"
+                      hup = hcentral.Clone(hcentral.GetName()+ tag + str(ibin) + "_statUp")
+                    if hdo ==None:
+                      print "Adding previously missing", hcentral.GetName()+ tag + str(ibin) + "_statDown"
+                      hdo = hcentral.Clone(hcentral.GetName()+ tag + str(ibin) + "_statDown")
+                    if 'correlate' in nuisances['stat']['samples'][sample].keys():
+                      othersup = {}
+                      othersdo = {}
+                      othersce = {}
+                      for other in nuisances['stat']['samples'][sample]['correlate']:
+                        hupother = filein.Get(cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statUp")
+                        hdoother = filein.Get(cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statDown")
+                        hcentralother = filein.Get(cut+"/"+variable+"/histo_"+other)
+                        if hupother == None:
+                          hupother = hcentralother.Clone(hcentralother.GetName()+ tag + str(ibin) + "_statUp")
+                        if hdoother == None:
+                          hdoother = hcentralother.Clone(hcentralother.GetName()+ tag + str(ibin) + "_statDown")
+                        othersup[other] = hupother
+                        othersdo[other] = hdoother
+                        othersce[other] = hcentralother
+                    scaleHistoStat(hcentral, hup,  1, ibin, opt.lumi, zeroMCerror)
+                    scaleHistoStat(hcentral, hdo, -1, ibin, opt.lumi, zeroMCerror)
+                    hcentral.SetBinError(ibin, 0)
+                    if 'correlate' in nuisances['stat']['samples'][sample].keys():
+                      for other in nuisances['stat']['samples'][sample]['correlate']:
+                        othersup[other].SetBinContent(ibin, max(0, othersce[other].GetBinContent(ibin)+hup.GetBinContent(ibin)-hcentral.GetBinContent(ibin)))
+                        othersdo[other].SetBinContent(ibin, max(0, othersce[other].GetBinContent(ibin)+hdo.GetBinContent(ibin)-hcentral.GetBinContent(ibin)))
+                        othersce[other].SetBinError(ibin,0)
+                    #BUGFIX by Andrea: hcentral is now the firt variable in the function
+                    #original text: scaleHistoStat(hup,  1, ibin, lumi, zeroMCerror)
+                    hcentral.Write("",ROOT.TObject.kOverwrite)
+                    print "Saviing histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statUp"
+                    hup.Write("",ROOT.TObject.kOverwrite)
+                    print "Saving histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statDown"
+                    hdo.Write("",ROOT.TObject.kOverwrite)
+                    if 'correlate' in nuisances['stat']['samples'][sample].keys():
+                      for other in nuisances['stat']['samples'][sample]['correlate']:
+                        print "Also saving correlated variation", cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statUp"
+                        othersup[other].Write("",ROOT.TObject.kOverwrite)
+                        print "Also saving correlated variation", cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statDown"
+                        othersdo[other].Write("",ROOT.TObject.kOverwrite)
+                        othersce[other].Write("",ROOT.TObject.kOverwrite)
 
-              print "All done!"
-#              os.system(command)
-#              if not opt.doNotCleanup: os.system(cleanup)
-#              os.system('cd ..')
- 
+
+        print "All done!"
+
     elif opt.doThreads != 0:
 
-            print "~~~~~~~~~~~ Running mkShape in multi-threading mode..."
+      print "~~~~~~~~~~~ Running mkShape in multi-threading mode..."
 
-            command = ""
-            command += "rm -r log\n"
-            command += "mkdir log"
-            os.system(command)
-
-
-            os.system(command)
- 
-            numThreads = int(opt.numThreads)
-            if numThreads == 0:
-              numThreads = os.sysconf('SC_NPROCESSORS_ONLN')
-            print "number of threads = ", numThreads
-
-	    queue = Queue.Queue()
-             
-	    for i in range(numThreads):
-              proc = Worker(queue)
-              proc.daemon = True
-              proc.start()
-
-            number = 0
-
-            for cut_k,cut_v in cuts.iteritems():
-
-              cuts_new = {}
-              cuts_new[cut_k] = cut_v
-
-              for sam_k,sam_v in samples.iteritems():
-                thisSampleWeights=[]
-                if 'weights' in sam_v.keys():
-                  thisSampleWeights=copy.deepcopy(sam_v['weights'])
-                if "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
-                  filesPerJob = sam_v["FilesPerJob"]
-                  fileListPerJob=[]
-                  weightListPerJob=[]
-                  iCurJob = 0
-                  for filenumber, filename in enumerate(sam_v['name']) :
-                    fileListPerJob.append(filename)
-                    if len(thisSampleWeights) != 0:
-                      weightListPerJob.append(thisSampleWeights[filenumber])
-                    if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
-                      samples_new = {}
-                      samples_new[sam_k] = copy.deepcopy(sam_v)
-                      samples_new[sam_k]['name'] = fileListPerJob
-                      if len(thisSampleWeights) != 0:
-                        samples_new[sam_k]['weights'] = weightListPerJob   
-                      queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
-                      number += 1
-                      fileListPerJob=[]
-                      weightListPerJob=[]
-                else:
-                  samples_new = {}
-                  samples_new[sam_k] = copy.deepcopy(sam_v)
-                  queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
-                  number += 1
-            queue.join()
-
-            command = ""
-            command += "rm "+opt.outputDir+'/plots_'+opt.tag+".root"
-            print command
-            os.system(command)
-
-            if number<1000:
-              command = ""
-              command += "hadd "+opt.outputDir+'/plots_'+opt.tag+".root"
-              for i in xrange(number):
-                command += " "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root"
-              print command
-              os.system(command)
-            else:
-              print "WARNING: you are trying to hadd more than 1000 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
-              for istart in range(0,int(float(number)/500+1)):
-                command = ""
-                command += "hadd "+opt.outputDir+"/plots_"+opt.tag+"_temp"+str(istart)+".root"
-                for i in range(istart*500,(istart+1)*500):
-                  if i>=number: break
-                  command += " "+opt.outputDir+"/plots_"+opt.tag+"_"+str(i)+".root"
-                print command
-                os.system(command)
-              os.system("hadd "+opt.outputDir+'/plots_'+opt.tag+".root "+opt.outputDir+"/plots_"+opt.tag+"_temp*")
+      command = ""
+      command += "rm -r log\n"
+      command += "mkdir log"
+      os.system(command)
 
 
-            if not opt.doNotCleanup:
-              os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_temp*.root")
-              for i in xrange(number):
-                os.system("rm sub"+str(i)+".py")
-                os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root")
-            
-      
+      os.system(command)
+
+      numThreads = int(opt.numThreads)
+      if numThreads == 0:
+        numThreads = os.sysconf('SC_NPROCESSORS_ONLN')
+      print "number of threads = ", numThreads
+
+      queue = Queue.Queue()
+
+      for i in range(numThreads):
+        proc = Worker(queue)
+        proc.daemon = True
+        proc.start()
+
+      number = 0
+
+      for cut_k,cut_v in cuts.iteritems():
+
+        cuts_new = {}
+        cuts_new[cut_k] = cut_v
+
+        for sam_k,sam_v in samples.iteritems():
+          thisSampleWeights=[]
+          if 'weights' in sam_v.keys():
+            thisSampleWeights=copy.deepcopy(sam_v['weights'])
+          if "FilesPerJob" in sam_v.keys() and sam_v["FilesPerJob"] > 0:
+            filesPerJob = sam_v["FilesPerJob"]
+            fileListPerJob=[]
+            weightListPerJob=[]
+            iCurJob = 0
+            for filenumber, filename in enumerate(sam_v['name']) :
+              fileListPerJob.append(filename)
+              if len(thisSampleWeights) != 0:
+                weightListPerJob.append(thisSampleWeights[filenumber])
+              if (len(fileListPerJob) == filesPerJob) or filenumber==len(sam_v['name'])-1:
+                samples_new = {}
+                samples_new[sam_k] = copy.deepcopy(sam_v)
+                samples_new[sam_k]['name'] = fileListPerJob
+                if len(thisSampleWeights) != 0:
+                  samples_new[sam_k]['weights'] = weightListPerJob
+                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                number += 1
+                fileListPerJob=[]
+                weightListPerJob=[]
+          else:
+            samples_new = {}
+            samples_new[sam_k] = copy.deepcopy(sam_v)
+            queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+            number += 1
+      queue.join()
+
+      command = ""
+      command += "rm "+opt.outputDir+'/plots_'+opt.tag+".root"
+      print command
+      os.system(command)
+
+      if number<1000:
+        command = ""
+        command += "hadd "+opt.outputDir+'/plots_'+opt.tag+".root"
+        for i in xrange(number):
+          command += " "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root"
+        print command
+        os.system(command)
+      else:
+        print "WARNING: you are trying to hadd more than 1000 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
+        for istart in range(0,int(float(number)/500+1)):
+          command = ""
+          command += "hadd "+opt.outputDir+"/plots_"+opt.tag+"_temp"+str(istart)+".root"
+          for i in range(istart*500,(istart+1)*500):
+            if i>=number: break
+            command += " "+opt.outputDir+"/plots_"+opt.tag+"_"+str(i)+".root"
+          print command
+          os.system(command)
+        os.system("hadd "+opt.outputDir+'/plots_'+opt.tag+".root "+opt.outputDir+"/plots_"+opt.tag+"_temp*")
+
+
+      if not opt.doNotCleanup:
+        os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_temp*.root")
+        for i in xrange(number):
+          os.system("rm sub"+str(i)+".py")
+          os.system("rm "+opt.outputDir+'/plots_'+opt.tag+"_"+str(i)+".root")
+
+
     else:
       print "~~~~~~~~~~~ Running mkShape in normal mode..."
       factory = ShapeFactory()
@@ -724,5 +700,5 @@ if __name__ == '__main__':
       else:
         factory._nThreads  = opt.numThreads
       factory.aliases    = aliases
- 
+
       factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
