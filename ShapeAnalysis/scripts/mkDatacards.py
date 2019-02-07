@@ -8,6 +8,7 @@ import ROOT
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import logging
+import collections
 import os.path
 import shutil
 
@@ -53,11 +54,11 @@ class DatacardFactory:
           self._fileIn = ROOT.TFile(inputFile, "READ")
 
         # categorize the sample names
-        signal_ids = {} # id map of alternative_signals + cumulative_signals
+        signal_ids = collections.OrderedDict() # id map of alternative_signals + cumulative_signals
         alternative_signals = ['']
         cumulative_signals = []
         data = []
-        background_ids = {}
+        background_ids = collections.OrderedDict()
         
         # divide the list of samples among signal, background and data
         isig = 0
@@ -415,6 +416,10 @@ class DatacardFactory:
                 if nuisance['type'] != 'rateParam':
                   continue
 
+                # check if a nuisance can be skipped because not in this particular cut
+                if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+                  continue
+
                 card.write(nuisance['name'].ljust(80-20))
                 card.write('rateParam'.ljust(20))
                 card.write(tagNameToAppearInDatacard.ljust(columndef))   # the bin
@@ -575,7 +580,7 @@ if __name__ == '__main__':
       for iCut in cut2del : del cuts[iCut]   
   
     # ~~~~
-    nuisances = {}
+    nuisances = collections.OrderedDict()
     if opt.nuisancesFile == None :
        print " Please provide the nuisances structure if you want to add nuisances "
        
@@ -585,7 +590,7 @@ if __name__ == '__main__':
       handle.close()
 
     # ~~~~
-    structure = {}
+    structure = collections.OrderedDict()
     if opt.structureFile == None :
        print " Please provide the datacard structure "
        exit ()
