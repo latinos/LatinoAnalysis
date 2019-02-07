@@ -534,10 +534,9 @@ class ShapeFactory:
               for catsuffix in catsuffixes:
                 hTotal = ROOT.gROOT.Get(cutName + catsuffix + '/' + variableName + '/' + histoName)
 
-                print '   ', cutName + catsuffix + '/' + variableName + '/' + histoName
-  
                 # fold if needed
                 if 'fold' in variable:
+                  print '   ', cutName + catsuffix + '/' + variableName + '/' + histoName
                   print "    variable[fold] = ", variable['fold']
                   doFold = variable['fold']
                 else:
@@ -601,7 +600,7 @@ class ShapeFactory:
                     if 'kind' not in nuisance:
                       continue
 
-                    print '     ', nuisanceName
+                    #print '     ', nuisanceName
 
                     subsampleNameUp = subsampleName + '_' + nuisance['name'] + 'Up'
                     subsampleNameDown = subsampleName + '_' + nuisance['name'] + 'Down'
