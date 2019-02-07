@@ -23,18 +23,28 @@ import os.path
 import math
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele", metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET'], SFfile = "/src/LatinoAnalysis/NanoGardener/python/data/TODO.py") :#TODO: Set files for 2017
+    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']) :
         cmssw_base = os.getenv('CMSSW_BASE')
         self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
         self.lepFlavor = lepFlavor # "ele" or "mu"
         leppTscaler = {}
-        ScaleFactorFile = cmssw_base + SFfile #For Full2016 analysis: '/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_'+lepFlavor[:2]+'_80_remAOD.py'
+        ScaleFactorFile = cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/lepton_scale_n_smear/'+version+'/leppTscaler_'+lepFlavor[:2]+'.py'
         if os.path.exists(ScaleFactorFile):
           handle = open(ScaleFactorFile,'r')
           exec(handle)
           handle.close()
         self.leppTscaler = leppTscaler
+        print self.leppTscaler 
+
+        # fix underflow and overflow
+        self.minpt = 0.0
+        self.maxpt = 0.0
+        self.maxeta = 0.0
+        for point in self.leppTscaler[lepFlavor]:
+          if point[0][1] > self.maxpt  : self.maxpt  = point[0][1]
+          if point[1][1] > self.maxeta : self.maxeta = point[1][1]
+        print 'maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta
 
     def beginJob(self):
         pass
@@ -46,6 +56,7 @@ class LeppTScalerTreeMaker(Module) :
         self.out = wrappedOutputTree
         for x in self.metCollections:
           self.out.branch(x+'_pt', "F")
+          self.out.branch(x+'_phi', "F")
 
         if 'electronIdx' not in Lepton_var: Lepton_var.append('electronIdx')
         if 'muonIdx' not in Lepton_var: Lepton_var.append('muonIdx')
@@ -58,10 +69,6 @@ class LeppTScalerTreeMaker(Module) :
 
     def getScale (self, kindLep, pt, eta):
 
-        # fix underflow and overflow
-        self.minpt = 0.0
-        self.maxpt = 200.0
-        self.maxeta = 2.5
 
         if pt < self.minpt: pt = self.minpt
         if pt > self.maxpt: pt = self.maxpt - 0.000001
@@ -106,8 +113,17 @@ class LeppTScalerTreeMaker(Module) :
             except AttributeError:
                 continue
 
-            newmetpt = met.pt * (1 + (self.variation * self.getScale(self.lepFlavor, met.pt, 0.0) / 100.0))
+            metx = met.pt * math.cos(met.phi)
+            mety = met.pt * math.sin(met.phi)
+            for idx,lep in enumerate(leptons):
+                if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
+                    diff = lep.pt * (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0)
+                    metx = metx - (diff * math.cos(lep.phi))
+                    mety = mety - (diff * math.sin(lep.phi))
+            newmetpt = math.sqrt(metx**2 + mety**2)
+            newmetphi = math.atan2(mety, metx)
             self.out.fillBranch(metType+"_pt", newmetpt)
+            self.out.fillBranch(metType+"_phi", newmetphi)
 
         # Leptons
         for idx,lep in enumerate(leptons):

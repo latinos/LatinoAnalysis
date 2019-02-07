@@ -2,6 +2,7 @@
 import sys, re, os, os.path, math, copy
 import string
 import subprocess
+import numpy
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
@@ -515,7 +516,7 @@ class PostProcMaker():
 
 #------------- MODULE CUSTOMIZATION: baseW, CMSSW_Version, ....
 
-   def computewBaseW(self,iSample):
+   def computewBaseW(self,iSample,DEBUG=False):
      if not iSample in self._baseW :
        useLocal = False
        # Always check #nAOD files !
@@ -553,12 +554,14 @@ class PostProcMaker():
        genEventSumw  = 0.0
        genEventSumw2 = 0.0
        for iFile in FileList:
+         if DEBUG : print iFile 
          if useLocal :
            f = ROOT.TFile.Open(iFile, "READ")
          else:
            f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
          Runs = f.Get("Runs")
          for iRun in Runs : 
+           if DEBUG : print '---> genEventSumw = ', iRun.genEventSumw
            genEventCount += iRun.genEventCount
            genEventSumw  += iRun.genEventSumw
            genEventSumw2 += iRun.genEventSumw2
@@ -586,8 +589,14 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in module :
        module = module.replace('RPLME_CMSSW',self._prodVersion)
+     
+     # GT for JES uncertainties
      if 'RPLME_JESGT' in module :
        module = module.replace('RPLME_JESGT',self._prodJESGT)
+
+     # YEAR
+     if 'RPLME_YEAR' in module :
+       module = module.replace('RPLME_YEAR',self._prodYear)
 
      return module
 
@@ -598,9 +607,14 @@ class PostProcMaker():
      # "CMSSW" version
      if 'RPLME_CMSSW' in declare :
        declare = declare.replace('RPLME_CMSSW',self._prodVersion)
-  
+
+     # GT for JES uncertainties  
      if 'RPLME_JESGT' in declare :
        declare = declare.replace('RPLME_JESGT',self._prodJESGT)
+
+    # YEAR
+     if 'RPLME_YEAR' in declare :
+       declare = declare.replace('RPLME_YEAR',self._prodYear)
 
      return declare
 
@@ -790,6 +804,7 @@ class PostProcMaker():
        print '----------- Running on production: '+iProd
        self._prodVersion = self._Productions[iProd]['cmssw']
        if 'JESGT' in self._Productions[iProd] : self._prodJESGT = self._Productions[iProd]['JESGT']
+       if 'year'  in self._Productions[iProd] : self._prodYear  = self._Productions[iProd]['year']
        self.readSampleFile(iProd) 
        if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
 
@@ -810,4 +825,32 @@ class PostProcMaker():
        self.Reset()
        
 
+# ------------ check baseW
 
+   def checkBaseW(self):
+     for iProd in self._prodList:
+       print '----------- Running on production: '+iProd
+       self.readSampleFile(iProd)
+       if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
+       else: 
+         print '----> This is DATA, skipping !!!!'
+         exit()
+       print '---------------- for Step : ',self._iniStep
+       self.mkFileDir(iProd,'baseW')
+       self.getTargetFiles(iProd,'baseW')         
+       for iSample in self._targetDic:
+         print '------------------- for Sample : ',iSample 
+         self.computewBaseW(iSample)
+         test = {}
+         result = True
+         for iFile in self._targetDic[iSample] : 
+           f = ROOT.TFile.Open(iFile, "READ")
+           Events = f.Get("Events")
+           for iEvt in Events:
+             baseW = iEvt.baseW
+             if not numpy.isclose(baseW , self._baseW[iSample]['baseW']) : result = False
+             break
+           f.Close()
+           test[iFile] = baseW
+         print iSample, result
+         if not result : print test
