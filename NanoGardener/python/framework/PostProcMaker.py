@@ -350,7 +350,7 @@ class PostProcMaker():
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
            outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
            jsonFilter = self._Productions[iProd]['jsonFile'] if 'jsonFile' in self._Productions[iProd].keys() else None 
-           self.mkPyCfg(iSample,[self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'], jsonFilter)
+           self.mkPyCfg(iProd,iSample,[self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'], jsonFilter)
            # Stage Out command + cleaning
            stageOutCmd  = self.mkStageOut(outFile,self._targetDic[iSample][iFile])
            rmGarbageCmd = 'rm '+outFile+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
@@ -431,7 +431,7 @@ class PostProcMaker():
 
       return command
 
-   def mkPyCfg(self,iSample,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False, jsonFile=None):
+   def mkPyCfg(self,iProd,iSample,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False, jsonFile=None):
 
 
      fPy = open(fPyName,'a') 
@@ -493,7 +493,9 @@ class PostProcMaker():
          doSubStep = False
          if    isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
          elif             self._Steps[iSubStep]['do4MC']   : doSubStep = True       
-         if doSubStep :  fPy.write('                          '+self.customizeModule(iSample,iSubStep)+',\n')
+         # AND onlySample 
+         applyStep = self.selectSample(iProd,iSubStep,iSample)
+         if doSubStep and applyStep :  fPy.write('                          '+self.customizeModule(iSample,iSubStep)+',\n')
      else:
        fPy.write('                          '+self.customizeModule(iSample,iStep)+'\n') 
      fPy.write('                            ],      \n') 
