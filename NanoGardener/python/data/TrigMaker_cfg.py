@@ -44,17 +44,17 @@ Trigger = {
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
                                                 'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
-                                                'DoubleMu'  : [ 'HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass8'] ,
-                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu24'] ,
                                                 'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
-                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                                'SingleEle' : [ 'HLT_Ele32_WPTight_Gsf'] ,
                                               } ,
                                   'MC'     :  {
                                                 'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
-                                                'DoubleMu'  : [ 'HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass8'] ,
-                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu24'] ,
                                                 'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
-                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                                'SingleEle' : [ 'HLT_Ele32_WPTight_Gsf'] ,
                                               } ,
 
                                   },
