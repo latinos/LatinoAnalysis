@@ -1642,10 +1642,11 @@ MuonWP = {
                                     'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
                                  ] ,
                                   } ,
-                         'tkSF':  { 
-                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muon_tracker_eff_Full2017.root' ,
-                                  } ,
-                         'tkSFerror': 0.01,
+                         # Negligible, POG recommended to set to 1.
+                         #'tkSF':  { 
+                         #           '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muon_tracker_eff_Full2017.root' ,
+                         #         } ,
+                         #'tkSFerror': 0.01,
                          'idSF':  {
                                     '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muonID_cut_Tight_HWW_combined.root'],
                                   } ,
@@ -1701,10 +1702,11 @@ MuonWP = {
                                 ],
                                   },
                          'iso': ['pfRelIso04_all', 0.4],
-                         'tkSF':  {
-                                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muon_tracker_eff_Full2017.root' ,
-                                  } ,
-                         'tkSFerror': 0.01,
+                         # Negligible, POG recommended to set to 1.
+                         #'tkSF':  {
+                         #           '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muon_tracker_eff_Full2017.root' ,
+                         #         } ,
+                         #'tkSFerror': 0.01,
                          'idSF':  {
                                     '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/muonID_cut_Tight_HWW_combined.root'],
                                   } ,
