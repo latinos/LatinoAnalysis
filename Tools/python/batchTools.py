@@ -100,6 +100,10 @@ class batchJobs :
        elif 'knu' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
+       elif 'hercules' in hostName:
+         jFile.write('source  /cvmfs/cms.cern.ch/cmsset_default.sh\n')
+         #jFile.write('#$ -N '+jName+'\n')
+         #jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
        elif 'sdfarm' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
@@ -111,7 +115,7 @@ class batchJobs :
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
-       if 'knu' in hostName:
+       if 'knu' in hostName or 'hercules' in hostName:
          pass
        else:
          jFile.write('ulimit -c 0\n')
@@ -299,6 +303,17 @@ class batchJobs :
          #print 'qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+       elif 'hercules' in hostName:
+         # mib farm
+         print " hercules::queue = ", queue
+         print " hercules::outFile = ", outFile
+         print " hercules::errFile = ", errFile
+         print " hercules::jobFile = ", jobFile
+         print " hercules::jidFile = ", jidFile
+         # queues: "shortcms" (2 days) and "longcms"
+         #jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+         print 'qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+         jobid=os.system('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
        elif 'sdfarm' in hostName:
          jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
          jdsFile = open(jdsFileName,'w')
@@ -604,6 +619,11 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
             todoFile.write('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
             todoFile.close()
         elif 'knu' in hostName:
+          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          if jobid == 0 : os.system('rm '+iFile)   
+          else: os.system('rm '+jidFile)
+        elif 'hercules' in hostName:
+          # mib farm
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
