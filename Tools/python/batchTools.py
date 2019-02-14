@@ -63,7 +63,10 @@ class batchJobs :
          if not 'Target' in batchSplit and len(targetList)>1 :
            kTarget = 'AllTargets'
          elif type(iTarget) is tuple:
-           kTarget = '%s%d' % iTarget
+           if len(iTarget) == 2:
+              kTarget = '%s.%d' % iTarget
+           else:
+              kTarget = '%s.%d.%d' % iTarget
          else:
            kTarget = iTarget
    
@@ -239,10 +242,13 @@ class batchJobs :
 
      if 'cern' in hostName and not CERN_USE_LSF:
        flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+       runtimes = [20, 60, 120, 60 * 8, 60 * 24, 60 * 24 * 3, 60 * 24 * 7]
        if queue not in flavours:
          print 'Queue', queue, 'is not defined for CERN HTCondor.'
          print 'Allowed values:', flavours
          raise RuntimeError('Undefined queue')
+
+       MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
 
        scheduler = 'condor'
      elif 'sdfarm' in hostName:
@@ -278,6 +284,7 @@ class batchJobs :
            jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
            jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
            jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
+           jdsFile.write('periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime)
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')
            jdsFile.close()
@@ -356,6 +363,8 @@ class batchJobs :
        jds += 'error = $(JName).err\n'
        jds += 'log = $(JName).log\n'
        jds += 'request_cpus = '+str(self.nThreads)+'\n'
+       if 'cern' in hostName:       
+         jds += 'periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime
        jds += '+JobFlavour = "'+queue+'"\n'
        jds += 'queue JName in (\n'
        for jName in self.jobsList:
@@ -527,10 +536,13 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
 
     if 'cern' in hostName and not CERN_USE_LSF:
       flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+      runtimes = [20, 60, 120, 60 * 8, 60 * 24, 60 * 24 * 3, 60 * 24 * 7]
       if queue not in flavours:
         print 'Queue', queue, 'is not defined for CERN HTCondor.'
         print 'Allowed values:', flavours
         raise RuntimeError('Undefined queue')
+
+      MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
 
       scheduler = 'condor'
     elif 'sdfarm' in hostName:
@@ -596,6 +608,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           jdsFile.write('error = '+subDir+'/'+jName+'.err\n')
           jdsFile.write('log = '+subDir+'/'+jName+'.log\n')
           jdsFile.write('request_cpus = '+str(requestCpus)+'\n')
+          jdsFile.write('periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime)
           jdsFile.write('+JobFlavour = "'+queue+'"\n')
           jdsFile.write('queue\n')
           jdsFile.close()
@@ -669,6 +682,8 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
         jds += 'error = '+subDir+'/$(JName).err\n'
         jds += 'log = '+subDir+'/$(JName).log\n'
         jds += 'request_cpus = '+str(requestCpus)+'\n'
+        if 'cern' in hostName:
+          jds += 'periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime
         jds += '+JobFlavour = "'+queue+'"\n'
         jds += 'queue JName in (\n'
         for jName in jobsList:
