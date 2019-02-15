@@ -107,7 +107,7 @@ class PlotFactory:
           # ONLY COMPATIBLE WITH OUTPUTS MERGED TO SAMPLE LEVEL!!
           fileIn = {}
           allFiles = os.listdir(inputFile)
-          for sampleName, sample in self._samples.iteritems():
+          for sampleName in self._samples:
             fileIn[sampleName] = ROOT.TFile.Open(inputFile+'/plots_%s_ALL_%s.root' % (self._tag, sampleName))
             if not fileIn[sampleName]:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
@@ -119,7 +119,7 @@ class PlotFactory:
 
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
-          print "cut =", cutName, "::", cuts[cutName]
+          print "cut =", cutName
           for variableName, variable in self._variables.iteritems():
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
@@ -227,8 +227,6 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              sample = self._samples[sampleName]
-                
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               print '     -> shapeName = ', shapeName
               if type(fileIn) is dict:
@@ -639,12 +637,11 @@ class PlotFactory:
               # this has to be done after the scaling of the previous lines
               # andl also after all the rest, so that we inherit the style of the histograms
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-                for samples_to_group in sampleConfiguration['samples'] :
-                  if samples_to_group == sampleName :
-                    if sampleNameGroup in histos_grouped.keys() :
-                      histos_grouped[sampleNameGroup].Add(histos[sampleName])
-                    else :
-                      histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
+                if sampleName in sampleConfiguration['samples']:
+                  if sampleNameGroup in histos_grouped.keys() :
+                    histos_grouped[sampleNameGroup].Add(histos[sampleName])
+                  else :
+                    histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
 
 
             # set the colors for the groups of samples
@@ -679,8 +676,6 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              sample = self._samples[sampleName]
-            
               # MC style
               if plotdef['isData'] == 0 :
                 if plotdef['isSignal'] == 1 :
@@ -896,8 +891,6 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              sample = self._samples[sampleName]
-
               if plotdef['isData'] == 1 :
                 histos[sampleName].Draw("p")
                 minXused = histos[sampleName].GetXaxis().GetBinLowEdge(1)
@@ -1022,7 +1015,7 @@ class PlotFactory:
             tlegend.SetTextSize(0.035)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
-            reversedSampleNames = self._samples.keys()
+            reversedSampleNames = list(self._samples)
             reversedSampleNames.reverse()
             
             if len(groupPlot.keys()) == 0:
@@ -1173,6 +1166,7 @@ class PlotFactory:
             tcanvas.RedrawAxis()
             
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".png")
+            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".pdf")
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".root")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".C")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".eps")
@@ -1186,6 +1180,7 @@ class PlotFactory:
             #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".png")
+            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".pdf")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".eps")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".pdf")
             tcanvas.SetLogy(0)
@@ -1220,6 +1215,7 @@ class PlotFactory:
   
               tlegend.Draw()
               tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
+              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".pdf")
          
 
             
@@ -1373,6 +1369,7 @@ class PlotFactory:
             pad2.SetGrid()
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".png")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".pdf")
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".root")
 
             text_file_html.write(canvasRatioNameTemplate + ".root;\n")
@@ -1383,6 +1380,7 @@ class PlotFactory:
             frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF + ".png")
+            tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF + ".pdf")
             pad1.SetLogy(0)
 
 
@@ -1562,6 +1560,7 @@ class PlotFactory:
             pad2difference.SetGrid()
             
             tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".pdf")
             tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".root")
             
             text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
@@ -1571,6 +1570,7 @@ class PlotFactory:
             frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
             pad1difference.SetLogy()
             tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
+            tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF + ".pdf")
             pad1difference.SetLogy(0)
 
 
@@ -2143,6 +2143,7 @@ class PlotFactory:
                     weight_X_pad2.RedrawAxis()
                     
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".png")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".pdf")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root")
                     
                     text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
@@ -2181,6 +2182,7 @@ class PlotFactory:
                     weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
                     weight_X_pad1.SetLogy()
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".pdf")
                     weight_X_pad1.SetLogy(0)
 
 
@@ -2236,6 +2238,7 @@ class PlotFactory:
                     else :
                       weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
+                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".pdf")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
  
                     text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
