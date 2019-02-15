@@ -1166,11 +1166,9 @@ class PlotFactory:
             tcanvas.RedrawAxis()
             
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".png")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".pdf")
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".root")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".C")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".pdf")
             
             text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
@@ -1180,9 +1178,7 @@ class PlotFactory:
             #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".png")
-            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".pdf")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".pdf")
             tcanvas.SetLogy(0)
 
 
@@ -1215,7 +1211,6 @@ class PlotFactory:
   
               tlegend.Draw()
               tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
-              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".pdf")
          
 
             
@@ -1369,7 +1364,6 @@ class PlotFactory:
             pad2.SetGrid()
             
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".png")
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".pdf")
             tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".root")
 
             text_file_html.write(canvasRatioNameTemplate + ".root;\n")
@@ -1380,7 +1374,6 @@ class PlotFactory:
             frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
             pad1.SetLogy()
             tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF + ".png")
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF + ".pdf")
             pad1.SetLogy(0)
 
 
@@ -1560,7 +1553,6 @@ class PlotFactory:
             pad2difference.SetGrid()
             
             tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".pdf")
             tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".root")
             
             text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
@@ -1570,7 +1562,6 @@ class PlotFactory:
             frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
             pad1difference.SetLogy()
             tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF + ".pdf")
             pad1difference.SetLogy(0)
 
 
@@ -2143,7 +2134,6 @@ class PlotFactory:
                     weight_X_pad2.RedrawAxis()
                     
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".pdf")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root")
                     
                     text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
@@ -2182,7 +2172,6 @@ class PlotFactory:
                     weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
                     weight_X_pad1.SetLogy()
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".pdf")
                     weight_X_pad1.SetLogy(0)
 
 
@@ -2238,7 +2227,6 @@ class PlotFactory:
                     else :
                       weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".pdf")
                     weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
  
                     text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
