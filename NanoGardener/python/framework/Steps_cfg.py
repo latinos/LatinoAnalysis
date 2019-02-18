@@ -417,6 +417,14 @@ Steps = {
                   'module'     : 'LeptonSF()',
                    },
 
+   'LeptonSF_Fix' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['LeptonSF','formulasMC'],
+                   },
+
+
 ## ------- Pile-Up weights
 
   'puW'    : {
