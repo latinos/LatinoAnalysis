@@ -107,7 +107,7 @@ class PlotFactory:
           # ONLY COMPATIBLE WITH OUTPUTS MERGED TO SAMPLE LEVEL!!
           fileIn = {}
           allFiles = os.listdir(inputFile)
-          for sampleName, sample in self._samples.iteritems():
+          for sampleName in self._samples:
             fileIn[sampleName] = ROOT.TFile.Open(inputFile+'/plots_%s_ALL_%s.root' % (self._tag, sampleName))
             if not fileIn[sampleName]:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
@@ -119,7 +119,7 @@ class PlotFactory:
 
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
-          print "cut =", cutName, "::", cuts[cutName]
+          print "cut =", cutName
           for variableName, variable in self._variables.iteritems():
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
@@ -227,8 +227,6 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              sample = self._samples[sampleName]
-                
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               print '     -> shapeName = ', shapeName
               if type(fileIn) is dict:
@@ -639,12 +637,11 @@ class PlotFactory:
               # this has to be done after the scaling of the previous lines
               # andl also after all the rest, so that we inherit the style of the histograms
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-                for samples_to_group in sampleConfiguration['samples'] :
-                  if samples_to_group == sampleName :
-                    if sampleNameGroup in histos_grouped.keys() :
-                      histos_grouped[sampleNameGroup].Add(histos[sampleName])
-                    else :
-                      histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
+                if sampleName in sampleConfiguration['samples']:
+                  if sampleNameGroup in histos_grouped.keys() :
+                    histos_grouped[sampleNameGroup].Add(histos[sampleName])
+                  else :
+                    histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
 
 
             # set the colors for the groups of samples
@@ -679,8 +676,6 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              sample = self._samples[sampleName]
-            
               # MC style
               if plotdef['isData'] == 0 :
                 if plotdef['isSignal'] == 1 :
@@ -896,8 +891,6 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              sample = self._samples[sampleName]
-
               if plotdef['isData'] == 1 :
                 histos[sampleName].Draw("p")
                 minXused = histos[sampleName].GetXaxis().GetBinLowEdge(1)
@@ -1022,7 +1015,7 @@ class PlotFactory:
             tlegend.SetTextSize(0.035)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
-            reversedSampleNames = self._samples.keys()
+            reversedSampleNames = list(self._samples)
             reversedSampleNames.reverse()
             
             if len(groupPlot.keys()) == 0:
@@ -1176,7 +1169,6 @@ class PlotFactory:
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".root")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".C")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".pdf")
             
             text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
@@ -1187,7 +1179,6 @@ class PlotFactory:
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".png")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".pdf")
             tcanvas.SetLogy(0)
 
 
