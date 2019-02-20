@@ -76,7 +76,7 @@ Samples['QCD_Pt-120to170_MuEnrichedPt5_ext1'] = {'nanoAOD' :'/QCD_Pt-120to170_Mu
 Samples['QCD_Pt-170to300_MuEnrichedPt5']      = {'nanoAOD' :'/QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15-v1/NANOAODSIM'}
 Samples['QCD_Pt-300to470_MuEnrichedPt5_ext3'] = {'nanoAOD' :'/QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15_ext3-v1/NANOAODSIM'}
 Samples['QCD_Pt-470to600_MuEnrichedPt5_ext1'] = {'nanoAOD' : '/QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15_ext1-v1/NANOAODSIM'}
-Samples['/QCD_Pt-470to600_MuEnrichedPt5']     = {'nanoAOD' : '/QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15-v1/NANOAODSIM'}
+Samples['QCD_Pt-470to600_MuEnrichedPt5']     = {'nanoAOD' : '/QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15-v1/NANOAODSIM'}
 Samples['QCD_Pt-600to800_MuEnrichedPt5']      = {'nanoAOD' : '/QCD_Pt-600to800_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15-v1/NANOAODSIM'}
 Samples['QCD_Pt-1000toInf_MuEnrichedPt5']     = {'nanoAOD' : '/QCD_Pt-1000toInf_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15-v1/NANOAODSIM'}
 
