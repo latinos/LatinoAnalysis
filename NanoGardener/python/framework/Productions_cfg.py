@@ -150,7 +150,7 @@ Productions = {
                        'year'    : '2018' ,
                    },
 
- # -------- 2016 MC 94X nAODv3
+ # -------- 2018 MC 102X nAODv4
  'Autumn18_102X_nAODv4_Full2018': {
                        'isData'  : False ,
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv4.py' ,

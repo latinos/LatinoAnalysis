@@ -74,6 +74,16 @@ Steps = {
                     },
 
 
+  'MCl1loose2018' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                },
+
+
 ## ------- WgStar MC:
 
   'MCWgStar2017' : { 
@@ -406,6 +416,14 @@ Steps = {
                   'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW")',
                   'module'     : 'LeptonSF()',
                    },
+
+   'LeptonSF_Fix' : {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['LeptonSF','formulasMC'],
+                   },
+
 
 ## ------- Pile-Up weights
 
@@ -804,6 +822,21 @@ Steps = {
                                          || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5             ) \
                                   "' , 
                  },
+
+  'l2tightOR2018' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
+                                    && (    Lepton_isTightElectron_mvaFall17Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5             ) \
+                                    && (    Lepton_isTightElectron_mvaFall17Iso_WP90[1] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17Iso_WP90_SS[1] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5             ) \
+                                  "' ,
+                 },
+
 
 ## ------- Analysis Skims:
 
