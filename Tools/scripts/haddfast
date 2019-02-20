@@ -119,10 +119,7 @@ def writeto(sourcePaths, targetPath):
         nnew, nadd = merge(source, target)
 
         source.Close()
-
-        target.cd()
-        target.Write()
-        target.Close()
+        target.Close() # closing target at each iteration to flush out in-memory objects
 
         LOG.info('%s -> %s: %d new, %d merged (%.1f s)', path, targetPath, nnew, nadd, time.time() - start)
 

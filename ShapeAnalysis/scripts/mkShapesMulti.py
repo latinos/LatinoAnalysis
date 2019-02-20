@@ -167,7 +167,12 @@ def makeTargetList(options, samples):
           eventsPerJob = sam_v['EventsPerJob']
 
           for iFileBlock in range(nFileBlocks):
-            chain = ROOT.TChain('latino')
+            treeType = os.path.basename(sam_v['name'][0]).split('_')[0]
+            if treeType == 'latino':
+              chain = ROOT.TChain('latino')
+            elif treeType == 'nanoLatino':
+              chain = ROOT.TChain('Events')
+              
             for fname in sam_v['name'][iFileBlock * filesPerJob:(iFileBlock + 1) * filesPerJob]:
               chain.Add(fname)
             nEvents = chain.GetEntries()
@@ -408,9 +413,15 @@ if __name__ == '__main__':
           instructions_for_configuration_file += "     '" + supercut + "',      \n"
           instructions_for_configuration_file += "     '" + jName + "',\n"
           if type(iTarget) is tuple and len(iTarget) == 3:
+            otherTargets = [t for t in targetList if t[:2] == iTarget[:2]]
+            isLastEventBlock = (iTarget[2] == max(t[2] for t in otherTargets))
+
             eventsPerJob = sample['EventsPerJob']
             instructions_for_configuration_file += "     " + str(eventsPerJob * iTarget[2]) + ",\n"
-            instructions_for_configuration_file += "     " + str(eventsPerJob) + "\n"
+            if isLastEventBlock:
+              instructions_for_configuration_file += "     -1\n"
+            else:
+              instructions_for_configuration_file += "     " + str(eventsPerJob) + "\n"
 
           instructions_for_configuration_file += ")    \n"
 
