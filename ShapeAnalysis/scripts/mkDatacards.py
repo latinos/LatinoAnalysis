@@ -458,10 +458,12 @@ class DatacardFactory:
         histoUp = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Up')
         histoDown = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Down')
 
-        if self._skipMissingNuisance and (not histoUp or not histoDown):
+        if not histoUp or not histoDown:
           print 'Up/down histogram for', cutName, variableName, sampleName, suffixIn, 'missing'
-          return False
-      
+          if self._skipMissingNuisance:
+            return False
+          # else let ROOT raise
+
         histoUp.SetDirectory(self._outFile)
         histoDown.SetDirectory(self._outFile)
         if suffixOut:

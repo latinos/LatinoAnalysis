@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import sys, re, os, os.path, math, copy
+argv = sys.argv
+sys.argv = argv[:1]
 from optparse import OptionParser
 from collections import OrderedDict
 import subprocess
@@ -24,6 +26,8 @@ if __name__ == '__main__':
                                                                                /___/  
 --------------------------------------------------------------------------------------------
 '''
+
+    sys.argv = argv
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
