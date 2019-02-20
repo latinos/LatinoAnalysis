@@ -246,6 +246,8 @@ class PostProcMaker():
 
    def getFilesFromPath(self,paths,srmprefix):
      FileList = []
+     if os.path.isdir('/etc/grid-security/certificates'):
+       os.environ['X509_CERT_DIR'] = '/etc/grid-security/certificates'
      for path in paths:
        command = 'gfal-ls '+srmprefix+path+ " | grep root"
        proc=subprocess.Popen(command, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
@@ -298,7 +300,6 @@ class PostProcMaker():
      if not os.path.exists(jDir) : os.system('mkdir -p '+jDir)
      wDir = workDir+'/NanoGardening__'+iProd
      if not os.path.exists(wDir) : os.system('mkdir -p '+wDir)
-   
 
      # prepare targetList
      targetList = []
