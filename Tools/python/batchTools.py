@@ -22,6 +22,11 @@ except NameError:
   JOB_DIR_SPLIT = False
 #Avoid using this feature for tools that are not ready for it -> change it in the tool after loading the library
 
+try:
+   CONDOR_ACCOUNTING_GROUP = condorAccountingGroup
+except NameError:
+   CONDOR_ACCOUNTING_GROUP = ''
+
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False):
      # baseName   = Gardening, Plotting, ....
@@ -283,6 +288,9 @@ class batchJobs :
            jdsFile.write('output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
            jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
            jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
+           if CONDOR_ACCOUNTING_GROUP:
+             jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
+             jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
            jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
            jdsFile.write('periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime)
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
@@ -331,6 +339,9 @@ class batchJobs :
          jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
          jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
          jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
+         if CONDOR_ACCOUNTING_GROUP:
+           jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
+           jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
          #jdsFile.write('should_transfer_files = YES\n')
          #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
          #jdsFile.write('transfer_input_files = '+jName+'.sh\n')
@@ -363,6 +374,9 @@ class batchJobs :
        jds += 'error = $(JName).err\n'
        jds += 'log = $(JName).log\n'
        jds += 'request_cpus = '+str(self.nThreads)+'\n'
+       if CONDOR_ACCOUNTING_GROUP:
+         jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'
+         jds += 'accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n'
        if 'cern' in hostName:       
          jds += 'periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime
        jds += '+JobFlavour = "'+queue+'"\n'
@@ -608,6 +622,9 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           jdsFile.write('error = '+subDir+'/'+jName+'.err\n')
           jdsFile.write('log = '+subDir+'/'+jName+'.log\n')
           jdsFile.write('request_cpus = '+str(requestCpus)+'\n')
+          if CONDOR_ACCOUNTING_GROUP:
+            jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
+            jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
           jdsFile.write('periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime)
           jdsFile.write('+JobFlavour = "'+queue+'"\n')
           jdsFile.write('queue\n')
@@ -685,6 +702,9 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
         if 'cern' in hostName:
           jds += 'periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime
         jds += '+JobFlavour = "'+queue+'"\n'
+        if CONDOR_ACCOUNTING_GROUP:
+          jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'
+          jds += 'accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n'
         jds += 'queue JName in (\n'
         for jName in jobsList:
           jds += jName + '\n'

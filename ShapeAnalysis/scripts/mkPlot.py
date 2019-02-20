@@ -173,7 +173,14 @@ if __name__ == '__main__':
         del cuts[toRemove]
 
       print  " cuts = ", cuts
-   
+
+    nuisances = {}
+    if opt.nuisancesFile == None :
+      print " Please provide the nuisances structure if you want to add nuisances "
+    elif os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close() 
         
     groupPlot = OrderedDict()
     plot = {}
@@ -182,14 +189,6 @@ if __name__ == '__main__':
       handle = open(opt.plotFile,'r')
       exec(handle)
       handle.close()
-   
-    nuisances = {}
-    if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
-    elif os.path.exists(opt.nuisancesFile) :
-      handle = open(opt.nuisancesFile,'r')
-      exec(handle)
-      handle.close() 
    
     factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     

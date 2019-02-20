@@ -4,6 +4,7 @@ import ROOT
 import copy
 import os.path
 import shutil
+import time
 import collections
 import tempfile
 import logging
@@ -1176,6 +1177,7 @@ class ShapeFactory:
           paths = []
 
         for path in files:
+          for att in range(5): # try opening the file 5 times
             doesFileExist = True
 
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
@@ -1196,7 +1198,7 @@ class ShapeFactory:
                 doesFileExist = False
             else:
               if not os.path.exists(path):
-                print 'File '+path+' doesn\'t exists'
+                print 'File '+path+' doesn\'t exist'
                 doesFileExist = False
 
             if doesFileExist:
@@ -1204,14 +1206,19 @@ class ShapeFactory:
                 paths.append(path)
               else:
                 multidraw.addInputPath(path)
-            elif not skipMissingFiles:
-              raise RuntimeError('File '+path+' doesn\'t exists')
+              break
 
-            if friendtree is not None:
-              objarr = ROOT.TObjArray()
-              for path in paths:
-                objarr.Add(ROOT.TObjString(path))
-                multidraw.addFriend(friendtree, objarr)
+            time.sleep(10)
+
+          else: # exhausted all attempts
+            if not skipMissingFiles:
+              raise RuntimeError('File '+path+' doesn\'t exist')
+
+          if friendtree is not None:
+            objarr = ROOT.TObjArray()
+            for path in paths:
+              objarr.Add(ROOT.TObjString(path))
+              multidraw.addFriend(friendtree, objarr)
 
     # _____________________________________________________________________________
     def _geteventlists(self, listName, files):
