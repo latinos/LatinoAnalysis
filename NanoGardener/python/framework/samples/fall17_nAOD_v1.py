@@ -210,11 +210,16 @@ Samples['WLLJJToLNu_M-50_QCD_1Jet']          = {'nanoAOD' :'/WZTo3LNu_1Jets_MLL-
 Samples['WLLJJToLNu_M-50_QCD_2Jet']          = {'nanoAOD' :'/WZTo3LNu_2Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
 Samples['WLLJJToLNu_M-50_QCD_3Jet']          = {'nanoAOD' :'/WZTo3LNu_3Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
 Samples['WLLJJToLNu_M-4To60_EWK_4F']          = {'nanoAOD' :'/WLLJJ_WToLNu_EWK_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
-#Samples['WLLJJToLNu_M-4To50_QCD_0Jet']          = {'nanoAOD' :''} 
-#Samples['WLLJJToLNu_M-4To50_QCD_1Jet']          = {'nanoAOD' :''} 
-#Samples['WLLJJToLNu_M-4To50_QCD_2Jet']          = {'nanoAOD' :''} 
-#Samples['WLLJJToLNu_M-4To50_QCD_3Jet']          = {'nanoAOD' :''} 
-#Samples['WZJJ_EWK_QCD']                 = {'nanoAOD' :''} 
+Samples['WLLJJToLNu_M-4To50_QCD_0Jet']          = {'nanoAOD' :'/WZTo3LNu_0Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'} 
+Samples['WLLJJToLNu_M-4To50_QCD_1Jet']          = {'nanoAOD' :'/WZTo3LNu_1Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'} 
+Samples['WLLJJToLNu_M-4To50_QCD_2Jet']          = {'nanoAOD' :'/WZTo3LNu_2Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'} 
+Samples['WLLJJToLNu_M-4To50_QCD_3Jet']          = {'nanoAOD' :'/WZTo3LNu_3Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'} 
+#Samples['WZJJ_EWK_QCD']                 = {'nanoAOD' :''}
+
+Samples['TTZToLLNuNu_M-10']                = {'nanoAOD' :'/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
+Samples['TTWJetsToLNu']                    = {'nanoAOD' :'/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
+Samples['WWTo2L2Nu_DoubleScattering']      = {'nanoAOD' :'/WWTo2L2Nu_DoubleScattering_13TeV-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
+Samples['tZq_ll']                          = {'nanoAOD' :'/tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # TEST samples for Jet efficiencies (Xavier)
