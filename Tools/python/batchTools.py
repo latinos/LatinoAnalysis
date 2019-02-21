@@ -108,14 +108,14 @@ class batchJobs :
        elif 'knu' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
-       elif 'hercules' in hostName:
-         jFile.write('source  /cvmfs/cms.cern.ch/cmsset_default.sh\n')
-         #jFile.write('#$ -N '+jName+'\n')
-         #jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
        elif 'sdfarm' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
          jFile.write('export X509_USER_PROXY=/cms/ldap_home/'+os.environ["USER"]+'/.proxy\n')
+       elif 'hercules' in hostName:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
+         jFile.write('export X509_USER_PROXY=/gwpool/user/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('voms-proxy-info\n')
@@ -175,6 +175,8 @@ class batchJobs :
        #os.system('cp /tmp/x509up_u$UID /u/user/'+os.environ["USER"]+'/.proxy')
      if "sdfarm" in hostName: 
        os.system('cp $X509_USER_PROXY /cms/ldap_home/'+os.environ["USER"]+'/.proxy')
+     if "hercules" in hostName:
+       os.system('cp $X509_USER_PROXY /gwpool/user/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -443,6 +445,8 @@ class batchJobs :
         jFile.write('gfal-copy '+inputFile+' srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=/pnfs/knu.ac.kr/data/cms/'+outputFile+'\n')
      elif 'sdfarm' in hostName :
         jFile.write('gfal-copy -p '+inputFile+' srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/'+outputFile+'\n')
+     elif 'hercules' in hostName :
+        jFile.write('gfal-copy ' + inputFile + ' srm://storm.mib.infn.it:8444/cms' + outputFile+ '\n')
      else :
         jFile.write('cp '+inputFile+ " " + outputFile+'\n')
      jFile.close()
