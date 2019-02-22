@@ -229,11 +229,13 @@ class PlotFactory:
 
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
               print '     -> shapeName = ', shapeName
+              print fileIn
               if type(fileIn) is dict:
                 histo = fileIn[sampleName].Get(shapeName)
               else:
                 histo = fileIn.Get(shapeName)
               print ' --> ', histo
+              print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
               histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
