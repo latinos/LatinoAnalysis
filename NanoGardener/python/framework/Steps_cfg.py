@@ -584,7 +584,9 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_cfg.py\')' ,
+                  #'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_cfg.py\')' ,
+                  #'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_2017_BDT_cfg.py\')' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_2017_cfg.py\')' ,
                   'module'     : 'DYMVA()',
             } ,
 
