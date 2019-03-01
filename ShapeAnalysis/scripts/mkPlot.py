@@ -59,8 +59,11 @@ if __name__ == '__main__':
     parser.add_option('--removeWeight', dest='removeWeight', help='Remove weight S/B for PR plots, just do the sum' , action='store_true', default=False)
 
     parser.add_option('--invertXY', dest='invertXY', help='Invert the weighting for X <-> Y. Instead of slices along Y, do slices along X' , action='store_true', default=False)
-          
-          
+
+# --postFit 1: Plot pre-fit as standard stacked processes and post-fit as a single line. Use this if you ran mkPostFitPlots.py with --kind = p
+# --postFit 2: Plot post-fit as standard stacked processes and pre-fit as a single line. Use this if you ran mkPostFitPlots.py with --kind = s
+    parser.add_option('--postFit', dest='postFit', help='Plot sum of post-fit backgrounds, and the data/post-fit ratio.' , default=0, type=float) 
+
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
@@ -85,6 +88,7 @@ if __name__ == '__main__':
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
+    print "                    postFit  =", opt.postFit
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -128,6 +132,7 @@ if __name__ == '__main__':
 
     factory._invertXY = opt.invertXY
     
+    factory._postFit = opt.postFit
 
     
     #samples = {}

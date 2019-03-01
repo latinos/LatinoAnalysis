@@ -201,7 +201,14 @@ class LawnMower:
 
         #
         # total background
-        histo_total_background = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_background")      
+        # --> If kind = s, or kind = b (post-fit), take it from pre-fit!
+        # --> If kind = p (pre-fit), take it from signal + background post-fit !
+
+        if self._kind == 's' or self._kind == 'b':
+            histo_total_background = fileIn.Get("shapes_prefit/" + self._cut + "/" + "total_background")      
+        if self._kind == 'p':
+            histo_total_background = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total_background")      
+        ###        histo_total_background = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_background")      
         
         histo_total_background.SetName  ('histo_' + 'total_background')
         histo_total_background.SetTitle ('histo_' + 'total_background')

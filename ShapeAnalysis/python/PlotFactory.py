@@ -739,12 +739,21 @@ class PlotFactory:
             tgrData.SetMarkerColor(dataColor)
             tgrData.SetLineColor(dataColor)
             
+            if self._postFit == 1 or self._postFit == 2 :
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background')
+
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             tgrDataMinusMC = tgrData.Clone("tgrDataMinusMC")
             for iBin in range(0, len(tgrData_vx)) : 
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-              
+              if self._postFit == 1 or self._postFit == 2:
+                  tgrDataOverPF.SetPoint(iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)) )
+                  tgrDataOverPF.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], histoPF.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                  print "Pre-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)))
+                  print "Post-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)))
+                  print iBin
               #
               # data - MC :
               #    MC could be background only
@@ -1349,6 +1358,31 @@ class PlotFactory:
             
             tgrDataOverMC.Draw("P0")
             
+            
+            if self._postFit == 1 or self._postFit == 2:
+            #---- Ratio Legend
+                tlegendRatio = ROOT.TLegend(0.20, 0.40, 0.60, 0.55)
+                tlegendRatio.SetFillColor(0)
+                tlegendRatio.SetTextFont(42)
+                ##tlegendRatio.SetTextSize(0.035)
+                tlegendRatio.SetLineColor(0)
+                tlegendRatio.SetShadowColor(0)
+                
+                if self._postFit == 1:
+                    tlegendRatio.AddEntry(tgrDataOverMC, "pre-fit", "PL")
+                    tlegendRatio.AddEntry(tgrDataOverPF, "post-fit", "PL")
+                if self._postFit == 2:
+                    tlegendRatio.AddEntry(tgrDataOverMC, "post-fit", "PL")
+                    tlegendRatio.AddEntry(tgrDataOverPF, "pre-fit", "PL")
+                
+                for sampleName, sample in self._samples.iteritems():
+                    if sampleName == 'total_background' :
+                        tgrDataOverPF.SetMarkerColor(plot[sampleName]['color'])
+                        tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
+                        # tgrDataOverPF.SetMarkerColor(2)
+                        # tgrDataOverPF.SetLineColor(2)
+                tgrDataOverPF.Draw("PE,same")
+                tlegendRatio.Draw("same")
             
             
             for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
