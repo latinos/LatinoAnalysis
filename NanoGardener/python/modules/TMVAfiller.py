@@ -6,7 +6,7 @@ import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
-# self.mvaDic = { 'nameMva' : {
+#      mvaDic = { 'nameMva' : {
 #                                'type'      : 'BDT' ,  
 #                                'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/....'   ,
 #                                'inputVars' : { 'var1Name' : 'var1Expression' ,
@@ -16,7 +16,17 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 #               } 
 
 class TMVAfiller(Module):
-    def __init__(self,mvaDic={}):
+    def __init__(self,mvaCfgFile):
+
+       cmssw_base = os.getenv('CMSSW_BASE')
+       mvaFile = cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/'+mvaCfgFile
+       if os.path.exists(mvaFile):
+         handle = open(mvaFile,'r')
+         exec(handle)
+         self.mvaDic = mvaDic
+         handle.close()
+        print self.mvaDic
+
         self.mvaDic = mvaDic
         cmssw_base = os.getenv('CMSSW_BASE') 
         for iMva in self.mvaDic :
