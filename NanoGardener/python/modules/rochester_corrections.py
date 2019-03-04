@@ -1,6 +1,7 @@
 import optparse
 import numpy
 import ROOT
+import os
 import os.path
 import math
 import random
@@ -16,20 +17,24 @@ class rochester_corr(Module):
     Add a scale factor from 2017 Rochester corrections                                                                                                                                                             
     '''
 
-    def __init__(self,isdata = False):
+    def __init__(self,isdata = False , year=2016 , lepColl="Lepton",metColls=['MET','PuppiMET','RawMET','TkMET']):
+        cmssw_base = os.getenv('CMSSW_BASE')
         self.isdata = isdata
-        print "Loading macros from /afs/cern.ch/work/a/alvareza/public/CMSSW_9_4_9/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR.cc"
+        print "Loading macros from "+cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc"
         try:
-            ROOT.gROOT.LoadMacro('/afs/cern.ch/work/a/alvareza/public/CMSSW_9_4_9/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR.cc+g')                                                                    
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc+g')                                                                    
         except RuntimeError: 
-            ROOT.gROOT.LoadMacro('/afs/cern.ch/work/a/alvareza/public/CMSSW_9_4_9/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR.cc++g')      
+            ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc++g')      
         print "Loaded"  
-
-        rochester_path="/afs/cern.ch/work/a/alvareza/public/CMSSW_9_4_9/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2017v0.txt"        
+     
+        if year == 2016 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2016.txt"
+        if year == 2017 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2017.txt"        
         print "scale factors from", rochester_path
-        rc=ROOT.RoccoR(rochester_path)
+        rc=ROOT.RoccoR_NG(rochester_path)
         self.rc= rc        
-        pass
+
+        self.lepColl  = lepColl
+        self.metColls = metColls
 
     def beginJob(self): 
         pass
@@ -40,23 +45,27 @@ class rochester_corr(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
         self.out = wrappedOutputTree
-
-        # New Branches (optional)
-        self.out.branch('Lepton_rochesterMCSF',   'F', lenVar='nLepton')
-        self.out.branch('Lepton_rochesterDataSF', 'F', lenVar='nLepton')
-        #self.out.branch('Lepton_rochesterMCSFerr',   'F', lenVar='nLepton')
-        #self.out.branch('Lepton_rochesterDataSFerr', 'F', lenVar='nLepton')
         
-        # Old branches to clean
-        self.br_list_F=['Lepton_pt','Lepton_eta','Lepton_phi','Lepton_eCorr']
-        self.br_list_I=['Lepton_pdgId','Lepton_electronIdx','Lepton_muonIdx','Lepton_isLoose','Lepton_isVeto','Lepton_isWgs',
-                   'Lepton_isTightMuon_cut_Tight_HWWW','Lepton_isTightElectron_mvaFall17Iso_WP90','Lepton_isTightElectron_mvaFall17Iso_WP90_SS']
-        for bname in self.br_list_F:
-            self.out.branch(bname, 'F', lenVar='nLepton')
-        for bname in self.br_list_I:
-            self.out.branch(bname, 'I', lenVar='nLepton')
-        self.out.branch('MET_pt','F')
-        self.out.branch('MET_phi','F')
+        # Lepton branches to clean
+        self.CollBr = {}
+        oBrList = self.out._tree.GetListOfBranches()
+        for br in oBrList:
+            bname = br.GetName()
+            btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
+            if re.match('\A'+self.lepColl+'_', bname): 
+              if not '_rochesterSF' in bname :
+                if btype not in self.CollBr: self.CollBr[btype] = []
+                self.CollBr[btype].append(bname)
+                self.out.branch(bname, btype, lenVar='n'+self.lepColl)   
+
+        # New Lepton Branches (optional)
+        self.out.branch(self.lepColl+'_rochesterSF',   'F', lenVar='n'+self.lepColl)
+        #self.out.branch(self.lepColl+'_rochesterSFerr',   'F', lenVar='n'+self.lepColl)
+
+        # New/Updated MET
+        for iMET in self.metColls:
+          self.out.branch(iMET+'_pt','F')
+          self.out.branch(iMET+'_phi','F')
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -65,9 +74,9 @@ class rochester_corr(Module):
         self._ttreereaderversion = tree._ttreereaderversion # self._ttreereaderversion must be set AFTER all calls to tree.valueReader or tree.arrayReader                                                       
         pass
 
-    def _corMET (self,met,lpt_org,lpt):
-        newmet = met + lpt_org - lpt
-        return newmet
+    def _corMET (self,metLoc,lpt_orgLoc,lptLoc):
+        newmetLoc = metLoc + lpt_orgLoc - lptLoc
+        return newmetLoc
 
     def howCloseIsAToB(self, a_Eta, a_Phi, b_Eta, b_Phi) :
         dPhi = ROOT.TMath.Abs(b_Phi - a_Phi)
@@ -78,18 +87,22 @@ class rochester_corr(Module):
         return dR2
 
     def analyze(self, event):
-        lepton_col   = Collection(event, 'Lepton')
+        lepton_col   = Collection(event, self.lepColl)
         muon_col = Collection(event, 'Muon')
         nLep = len(lepton_col)
         if self.isdata == False : # gen level colection for MC
             genlepton_col = Collection(event, 'LeptonGen')
             ngenLep = len(genlepton_col)
 
-        met = Object(event, 'MET')
-        met_org = ROOT.TLorentzVector()
-        met_org.SetPtEtaPhiM(met['pt'], 0, met['phi'], 0)
-        newmet = ROOT.TLorentzVector()
-        newmet = met_org
+        met      = {}
+        met_org  = {}
+        newmet   = {} 
+        for iMET in self.metColls: 
+          met[iMET] = Object(event, iMET)
+          met_org[iMET] = ROOT.TLorentzVector()
+          met_org[iMET].SetPtEtaPhiM(met[iMET]['pt'], 0, met[iMET]['phi'], 0)
+          newmet[iMET]  = ROOT.TLorentzVector()
+          newmet[iMET].SetPtEtaPhiM(met[iMET]['pt'], 0, met[iMET]['phi'], 0)
         
         l1 = ROOT.TLorentzVector()
         l1_org = ROOT.TLorentzVector()
@@ -101,7 +114,7 @@ class rochester_corr(Module):
         #mcSFerr_vec=[]        
 
         for iLep in xrange(nLep) :
-            if not (lepton_col[iLep].pt > 0): continue
+            #if not (lepton_col[iLep].pt > 0): continue
             pt = lepton_col[iLep].pt
             flavour = lepton_col[iLep].pdgId
             eta = lepton_col[iLep].eta
@@ -161,7 +174,7 @@ class rochester_corr(Module):
             # correct MET and save newpt         
             l1_org.SetPtEtaPhiM(pt,eta,phi,0)
             l1.SetPtEtaPhiM (newpt,eta,phi,0)
-            newmet = self._corMET(newmet,l1_org,l1)
+            for iMET in self.metColls: newmet[iMET] = self._corMET(newmet[iMET],l1_org,l1)
             newpt_vec.append(newpt)
 
         # Reorder
@@ -173,34 +186,32 @@ class rochester_corr(Module):
             order.append(pt_idx)
 
         # Fill branches
-        for bname in self.br_list_F:
-            if '_pt' in bname:
-                temp_v = [newpt_vec[idx] for idx in order]
-                self.out.fillBranch(bname, temp_v)
+        for typ in self.CollBr: 
+          for bname in self.CollBr[typ]:
+            temp_b = bname.replace(self.lepColl+'_', '')
+            if temp_b == 'pt' :
+              temp_v = [newpt_vec[idx] for idx in order]
+              self.out.fillBranch(bname, temp_v)
             else:
-                temp_b = bname.replace('Lepton_', '')
-                temp_v = [lepton_col[idx][temp_b] for idx in order]
-                self.out.fillBranch(bname, temp_v)
-        for bname in self.br_list_I:
-            temp_b = bname.replace('Lepton_', '')
-            temp_v = [lepton_col[idx][temp_b] for idx in order]
-            self.out.fillBranch(bname, temp_v)
+              temp_v = [lepton_col[idx][temp_b] for idx in order]
+              self.out.fillBranch(bname, temp_v)  
 
-        self.out.fillBranch('MET_pt', newmet.Pt())
-        self.out.fillBranch('MET_phi', newmet.Phi())
+        for iMET in self.metColls:
+          self.out.fillBranch(iMET+'_pt', newmet[iMET].Pt())
+          self.out.fillBranch(iMET+'_phi', newmet[iMET].Phi())
     
         # Optional branches
         for idx in order:
             if self.isdata == True :
                 temp_sf = [dataSF_vec[idx] for idx in order]
-                self.out.fillBranch('Lepton_rochesterDataSF', temp_sf)
+                self.out.fillBranch('Lepton_rochesterSF', temp_sf)
                 #temp_sferr = [dataSFerr_vec[idx] for idx in order]
-                #self.out.fillBranch('Lepton_rochesterDataSFerr', temp_sferr)
+                #self.out.fillBranch('Lepton_rochesterSFerr', temp_sferr)
             else:
                 temp_sf = [mcSF_vec[idx] for idx in order]
-                self.out.fillBranch('Lepton_rochesterMCSF', temp_sf)
+                self.out.fillBranch('Lepton_rochesterSF', temp_sf)
                 #temp_sferr = [mcSFerr_vec[idx] for idx in order]
-                #self.out.fillBranch('Lepton_rochesterMCSFerr', temp_sferr)
+                #self.out.fillBranch('Lepton_rochesterSFerr', temp_sferr)
 
         return True
 

@@ -73,8 +73,10 @@ class LeptonSel(Module):
         
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightElectron_'+wp, 'I', lenVar='nLepton')
+           print 'LeptonSel: ElecWP -> Lepton_isTightElectron_'+wp 
         for wp in self.MuonWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightMuon_'+wp, 'I', lenVar='nLepton')
+           print 'LeptonSel: MuWP -> Lepton_isTightMuon_'+wp
 
         # Old branches to clean
         self.lepBr_to_clean = Lepton_var   
@@ -300,6 +302,9 @@ class LeptonSel(Module):
            for iJet in good_jet_idx:
               Eta_jet = jet_col[iJet]['eta']
               Phi_jet = jet_col[iJet]['phi']
+              if abs(Eta_jet) > self.JC_absEta:
+                 if iJet in good_jet_idx: 
+                    good_jet_idx.remove(iJet)
               if self.jetIsLepton(Eta_jet, Phi_jet, Eta_lep, Phi_lep):
                  if iJet in good_jet_idx: 
                     good_jet_idx.remove(iJet)

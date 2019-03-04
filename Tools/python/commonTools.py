@@ -270,8 +270,9 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
 
     ### Now add the actual weight
     for iEntry in range(len(sampleDic[key]['name'])):
-      name = sampleDic[key]['name'][iEntry].replace('latino_','').replace('.root','').split('__part')[0]
+      name = sampleDic[key]['name'][iEntry]
       if '/' in name : name = os.path.basename(name)
+      name = name.split('_',1)[-1].replace('.root','').split('__part')[0]
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       
@@ -308,7 +309,9 @@ def getBaseW(directory,Samples = [] ):
     ### Get XS
     xsDB = xsectionDB()
     CMSSW=os.environ["CMSSW_BASE"]
-    xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    #xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    xsFile=CMSSW+'/src/LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py'
+    print "I'm reading XS in latinoAnalysis"
     xsDB.readPython(xsFile)
     xsDB.readYR('YR4','13TeV')
     xs = []

@@ -119,6 +119,9 @@ public:
  float OLV2_cut();
  float Ceta_cut();
  
+//whss
+ float mlljj20_whss();
+ float mlljj30_whss();
  
 private:
  //! variables
@@ -1574,5 +1577,49 @@ float WW::drllTwoThree(){
  
 }
 
+//=== mass variable needed for WH same sign
 
+float WW::mlljj20_whss(){
+TLorentzVector tmpLV;
+if (_isOk && _jetOk >= 1 && J1.Pt()>30) {
+ float dphi1;
+ float dphi2;
+ float mass = 0.;
+   if(J2.Pt() > 20.) {
+   dphi1 = fabs(L1.DeltaPhi(J1+J2));
+   dphi2 = fabs(L2.DeltaPhi(J1+J2));
+     if(dphi1 <= dphi2) tmpLV = L1;
+     else tmpLV = L2;
+     mass =  ((tmpLV+tmpLV+J1+J2).M());
+   }
+   if(J2.Pt() < 20.) {
+   dphi1 = fabs(L1.DeltaPhi(J1));
+   dphi2 = fabs(L2.DeltaPhi(J1));
+     if(dphi1 <= dphi2) tmpLV = L1;
+     else tmpLV = L2;
+     mass =  ((tmpLV+tmpLV+J1).M());
+}
+return mass;
+}
+else {
+  return -9999.0;
+}
+}
 
+float WW::mlljj30_whss(){
+TLorentzVector tmpLV;
+if (_isOk && _jetOk >= 2 && J1.Pt()>30 && J2.Pt() > 30.) {
+ float dphi1;
+ float dphi2;
+ float mass = 0.;
+ dphi1 = fabs(L1.DeltaPhi(J1+J2));
+ dphi2 = fabs(L2.DeltaPhi(J1+J2));
+ if(dphi1 <= dphi2) tmpLV = L1;
+ else tmpLV = L2;
+      mass =  ((tmpLV+tmpLV+J1+J2).M());
+ return mass;
+}
+else {
+  return -9999.0;
+}
+}

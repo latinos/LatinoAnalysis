@@ -1,0 +1,239 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import glob
+import tempfile
+import time
+import multiprocessing
+import tempfile
+import logging
+import shutil
+_argv = sys.argv
+sys.argv = sys.argv[:1]
+import ROOT
+
+logging.basicConfig(level = logging.INFO)
+LOG = logging.getLogger(__name__)
+
+tdirectoryfile = ROOT.TDirectoryFile.Class()
+
+def merge(indir, outdir, pname = ''):
+    """
+    Write histograms in indir (TDirectoryFile) into outdir (TDirectoryFile). Add if target already exists.
+    Histograms are written to disk at each call and not kept in memory. There will be multiple versions
+    of the same histogram in the output file (and therefore wasted disk space) if Add is invoked. Use the
+    compress option to purge unused versions at the end.
+    """
+
+    nnew = 0
+    nadd = 0
+
+    LOG.debug(pname + '/' + indir.GetName())
+
+    # Collect all existing keys in outdir into a dict to avoid calling outdir.Get() (slow)
+    # Pick up only the latest versions (highest key cycle number)
+    outkeys = {}
+    for key in outdir.GetListOfKeys():
+        name = key.GetName()
+        try:
+            if outkeys[name].GetCycle() > key.GetCycle():
+                continue
+        except KeyError:
+            pass
+
+        outkeys[name] = key
+
+    # Convert the dict of keys into a dict of histograms
+    outcont = dict((name, key.ReadObj()) for name, key in outkeys.iteritems())
+
+    # Repeat for the input keys
+    inkeys = {}
+    for key in indir.GetListOfKeys():
+        name = key.GetName()
+        try:
+            if inkeys[name].GetCycle() > key.GetCycle():
+                continue
+        except KeyError:
+            pass
+
+        inkeys[name] = key
+
+    # Read input objects and write to output
+    for name, key in inkeys.iteritems():
+        obj = key.ReadObj()
+
+        if obj.IsA() is tdirectoryfile:
+            # If the input object is a directory, recurse
+
+            try:
+                outsubdir = outcont[name]
+            except KeyError:
+                outsubdir = outdir.mkdir(name)
+
+            nsubnew, nsubadd = merge(obj, outsubdir, pname + '/' + indir.GetName())
+            nnew += nsubnew
+            nadd += nsubadd
+
+        else:
+            # Write to outdir or add to an existing histogram
+
+            outdir.cd()
+            try:
+                outhist = outcont[name]
+            except KeyError:
+                obj.SetDirectory(outdir)
+                obj.Write()
+                nnew += 1
+            else:
+                outhist.Add(obj)
+                outhist.Write(name)
+                outhist.Delete()
+                nadd += 1
+
+        # Delete the object from memory immediately
+        # Using TObject::Delete because TDirectory::Delete does different things
+        ROOT.TObject.Delete(obj)
+
+    return nnew, nadd
+
+def writeto(sourcePaths, targetPath):
+    """
+    Write contents of sourcePaths (list of path strings) into targetPath (string).
+    Target is closed after processing each source to clean memory.
+    """
+
+    LOG.info('merge %s -> %s', sourcePaths, targetPath)
+
+    target = ROOT.TFile.Open(targetPath, 'recreate')
+    # This is critical (and safe) - see https://root-forum.cern.ch/t/tfile-close-slow/24179
+    ROOT.gROOT.GetListOfFiles().Remove(target)
+
+    _nadd = 0
+
+    for path in sourcePaths:
+        start = time.time()
+        source = ROOT.TFile.Open(path)
+        ROOT.gROOT.GetListOfFiles().Remove(source)
+
+        nnew, nadd = merge(source, target)
+
+        source.Close()
+        target.Close() # closing target at each iteration to flush out in-memory objects
+
+        LOG.info('%s -> %s: %d new, %d merged (%.1f s)', path, targetPath, nnew, nadd, time.time() - start)
+
+        _nadd += nadd
+        if path != sourcePaths[-1]:
+            if _nadd > 1000000:
+                # purge duplicate keys by compressing
+                os.rename(targetPath, targetPath + '.tmp')
+                writeto([targetPath + '.tmp'], targetPath)
+                os.unlink(targetPath + '.tmp')
+                _nadd = 0
+    
+            target = ROOT.TFile.Open(targetPath, 'update')
+            ROOT.gROOT.GetListOfFiles().Remove(target)
+
+if __name__ == '__main__':
+    sys.argv = _argv
+
+    from argparse import ArgumentParser
+    
+    argParser = ArgumentParser(description = 'Faster hadd for histogram-only files.')
+    argParser.add_argument('target', metavar = 'PATH', help = 'Target file.')
+    argParser.add_argument('source', metavar = 'PATH', nargs = '+', help = 'Source files.')
+    argParser.add_argument('--write-direct', '-D', action = 'store_true', dest = 'writeDirect', help = 'Write directly to the target path.')
+    argParser.add_argument('--force-write', '-f', action = 'store_true', dest = 'forceWrite', help = 'Overwrite existing output file.')
+    argParser.add_argument('--compress', '-C', action = 'store_true', dest = 'compress', help = 'Remake the output file to purge multi-key entries.')
+    argParser.add_argument('--num-procs', '-j', metavar = 'N', dest = 'numProcs', type = int, default = 1, help = 'Number of subprocesses to invoke.')
+    
+    args = argParser.parse_args()
+   
+    if not args.forceWrite and os.path.exists(args.target):
+        sys.stderr.write('Target file exists.')
+        sys.exit(1)
+    
+    sourcePaths = []
+    for path in args.source:
+        if '*' in path:
+            sourcePaths.extend(glob.glob(path))
+        else:
+            sourcePaths.append(path)
+
+    if args.writeDirect and not args.compress:
+        targetName = args.target
+    else:
+        dtemp = tempfile.mkdtemp()
+        targetName = '%s/target.root' % dtemp
+
+    if args.numProcs == 1:
+        writeto(sourcePaths, targetName)
+    else:
+        allSources = [(path, False) for path in sourcePaths]
+        sources = {}
+        processes = []
+
+        def wait_until_lessthan(n):
+            while True:
+                for proc, targetPath in list(processes):
+                    if proc.is_alive():
+                        continue
+
+                    proc.join()
+                    if proc.exitcode != 0:
+                        raise RuntimeError('Merge failed.')
+
+                    processes.remove((proc, targetPath))
+                    allSources.append((targetPath, True))
+
+                    for path, istmp in sources.pop(proc.name):
+                        if istmp:
+                            shutil.rmtree(os.path.dirname(path))
+
+                if len(processes) < n:
+                    break
+
+                time.sleep(1)
+
+        ijob = 0
+
+        while len(allSources) > 1 or len(processes) != 0:
+            wait_until_lessthan(args.numProcs)
+
+            if len(allSources) > 1:
+                jobid = 'proc%d' % ijob
+    
+                sources[jobid] = [allSources.pop(), allSources.pop()]
+                sourcePaths = [s[0] for s in sources[jobid]]
+                dtemp = tempfile.mkdtemp()
+                targetPath = dtemp + '/tmp.root'
+                proc = multiprocessing.Process(target = writeto, args = (sourcePaths, targetPath), name = jobid)
+                proc.daemon = True
+                proc.start()
+                processes.append((proc, targetPath))
+
+                ijob += 1
+
+        wait_until_lessthan(1)
+
+        if allSources[0][1]:
+            if args.compress or (not args.writeDirect):
+                targetName = allSources[0][0]
+            else:
+                shutil.move(allSources[0][0], targetName)
+                shutil.rmtree(os.path.dirname(allSources[0][0]))
+        else:
+            shutil.copyfile(allSources[0][0], targetName)
+    
+    if args.compress:
+        LOG.info('Compressing')
+        writeto([targetName], args.target)
+        shutil.rmtree(os.path.dirname(targetName))
+
+    elif not args.writeDirect:
+        if os.path.exists(args.target):
+            os.unlink(args.target)
+
+        shutil.move(targetName, args.target)
+        shutil.rmtree(os.path.dirname(targetName))
