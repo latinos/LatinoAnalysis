@@ -322,6 +322,9 @@ class PostProcMaker():
      #print self._targetDic.keys()
      #exit()
 
+     # Check pre bash command for Steps
+     preBash = self.checkPreBashStep(iStep)
+
      if self._jobMode == 'Interactive' :
        print "INFO: Using Interactive command"
      # batchMode Preparation
@@ -329,6 +332,7 @@ class PostProcMaker():
        print "INFO: Using Local Batch"
        self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True)
        self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
+       self._jobs.Add2All(preBash)
        self._jobs.AddPy2Sh()
        self._jobs.Add2All('ls -l')
      # CRAB3 Init
@@ -357,7 +361,7 @@ class PostProcMaker():
            rmGarbageCmd = 'rm '+outFile+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
            # Interactive 
            if   self._jobMode == 'Interactive' : 
-             command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; python '+pyFile \
+             command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; '+preBash+' python '+pyFile \
                       +' ; ls -l ; '+stageOutCmd+' ; '+rmGarbageCmd
              if not self._pretend : os.system(command)
              else                 : print command
@@ -586,6 +590,7 @@ class PostProcMaker():
      if iStep == 'baseW' :
        print "Computing baseW for",iSample  
        self.computewBaseW(iSample)
+       print self._baseW[iSample]['baseW']  
        module = module.replace('RPLME_baseW'    , str(self._baseW[iSample]['baseW']))
        module = module.replace('RPLME_XSection' , str(self._baseW[iSample]['Xsec']))
 
@@ -620,6 +625,18 @@ class PostProcMaker():
        declare = declare.replace('RPLME_YEAR',self._prodYear)
 
      return declare
+
+
+   def checkPreBashStep(self,iStep):
+     preBash = ''
+     if self._Steps[iStep]['isChain'] :
+       for iSubStep in self._Steps[iStep]['subTargets'] :
+         if 'prebash' in self._Steps[iSubStep] : 
+            for iPreBash in self._Steps[iSubStep]['prebash'] : preBash += iPreBash + ' ; '
+     else:
+       if 'prebash' in self._Steps[iStep] :
+         for iPreBash in self._Steps[iStep]['prebash'] : preBash += iPreBash + ' ; '
+     return preBash 
 
 #------------- Hadd step
 

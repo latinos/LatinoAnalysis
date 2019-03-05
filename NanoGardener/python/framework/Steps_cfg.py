@@ -50,7 +50,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016', 'btagPerEvent',
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016', 
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                 },
 
@@ -577,6 +577,21 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE_RPLME_YEAR.py\')' ,
                  },
 
+## -------- DYMVA
+
+  'DYMVA' : {
+                  #'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-slc6-gcc62-opt/setup.sh'] ,   
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  #'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_cfg.py\')' ,
+                  #'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_2017_BDT_cfg.py\')' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_2017_cfg.py\')' ,
+                  'module'     : 'DYMVA()',
+            } ,
+
+
 # ------------------------------------ SYSTEMATICS ----------------------------------------------------------------
 
 ## ------- JES
@@ -770,7 +785,7 @@ Steps = {
                   'onlySample' : [
                                   #### DY
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
-                                  'DYJetsToTT_MuEle_M-50',
+                                  'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2',
                                    # ... Low Mass HT
                                   'DYJetsToLL_M-4to50_HT-100to200',
                                   'DYJetsToLL_M-4to50_HT-100to200-ext1',
