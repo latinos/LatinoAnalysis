@@ -745,15 +745,15 @@ class PlotFactory:
             ## --postFit 1 --> line is prefit
             if self._postFit == 'p':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
-                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background_prefit')
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_prefit')
             ## --postFit 2 --> line is (S+B) postfit
             if self._postFit == 's':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
-                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background_postfit_s')
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_s')
             ## --postFit 3 --> line is B-only postfit
             if self._postFit == 'b':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
-                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background_postfit_b')
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_b')
 
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             tgrDataMinusMC = tgrData.Clone("tgrDataMinusMC")
@@ -1388,7 +1388,9 @@ class PlotFactory:
                     tlegendRatio.AddEntry(tgrDataOverPF, "post-fit", "PL")
                 
                 for sampleName, sample in self._samples.iteritems():
-                    if sampleName == 'total_background' or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
+                    ##if sampleName.find('total') == 1: 
+## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
+                    if 'total' in sampleName:
                         tgrDataOverPF.SetMarkerColor(plot[sampleName]['color'])
                         tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
                         # tgrDataOverPF.SetMarkerColor(2)
