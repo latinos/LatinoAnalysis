@@ -249,7 +249,8 @@ class DatacardFactory:
 
                 # check if a nuisance can be skipped because not in this particular cut
                 if 'cuts' in nuisance and cutName not in nuisance['cuts']:
-                  continue
+                    if 'sampleCuts' not in nuisance or len(set((proc, cutName) for proc in processes) & set(nuisance['samplesCuts'])) == 0:
+                        continue
 
                 if nuisance['type'] in ['lnN', 'lnU']:
                   card.write((nuisance['name']).ljust(80-20))
@@ -259,7 +260,7 @@ class DatacardFactory:
                   else:
                     # apply only to selected samples
                     for sampleName in processes:
-                      if sampleName in nuisance['samples']:
+                      if sampleName in nuisance['samples'] or ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
                         # in this case nuisance['samples'] is a dict mapping sample name to nuisance values in string
                         card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
                       else:
@@ -282,15 +283,19 @@ class DatacardFactory:
                     print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
                     card.write(('lnN').ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance['all'] == 1) or sampleName in nuisance['samples']:
+                      if ('all' in nuisance and nuisance['all'] == 1) or \
+                              ('samples' in nuisance and sampleName in nuisance['samples']) or \
+                              ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
                         histo = self._getHisto(cutName, variableName, sampleName)
                         histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up') 
                         histoDown = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Down')
 
-                        if self._skipMissingNuisance and (not histoUp or not histoDown):
+                        if (not histoUp or not histoDown):
                           print 'Histogram for nuisance', nuisance['name'], 'on sample', sampleName, 'missing'
-                          card.write(('-').ljust(columndef)) 
-                          continue
+
+                          if self._skipMissingNuisance:
+                            card.write(('-').ljust(columndef)) 
+                            continue
 
                         histoIntegral = histo.Integral()
                         histoUpIntegral = histoUp.Integral()
@@ -304,6 +309,12 @@ class DatacardFactory:
                           diffDo = (histoDownIntegral - histoIntegral)/histoIntegral/float(nuisance['AsLnN'])
                         else:
                           diffDo = 0.
+
+                        if 'symmetrize' in nuisance and nuisance['symmetrize']:
+                          diffUpTmp = 1. + (diffUp - diffDo) * 0.5
+                          diffDoTmp = 1. - (diffUp - diffDo) * 0.5
+                          diffUp = diffUpTmp
+                          diffDo = diffDoTmp
         
                         lnNUp = 1. + diffUp
                         lnNDo = 1. + diffDo
@@ -315,14 +326,18 @@ class DatacardFactory:
                   else:  
                     card.write('shape'.ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance ['all'] == 1) or ('samples' in nuisance and sampleName in nuisance['samples']):
+                      if ('all' in nuisance and nuisance ['all'] == 1) or \
+                              ('samples' in nuisance and sampleName in nuisance['samples']) or \
+                              ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
                         # save the nuisance histograms in the root file
                         if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
                           suffixOut = None
                         else:
                           suffixOut = '_CMS_' + nuisance['name']
 
-                        saved = self._saveNuisanceHistos(cutName, variableName, sampleName, '_' + nuisance['name'], suffixOut)
+                        symmetrize = 'symmetrize' in nuisance and nuisance['symmetrize']
+
+                        saved = self._saveNuisanceHistos(cutName, variableName, sampleName, '_' + nuisance['name'], suffixOut, symmetrize)
                         if saved:
                           card.write('1.000'.ljust(columndef))
                         else:
@@ -454,7 +469,7 @@ class DatacardFactory:
           self._fileIn.Close()
 
     # _____________________________________________________________________________
-    def _saveNuisanceHistos(self, cutName, variableName, sampleName, suffixIn, suffixOut = None):
+    def _saveNuisanceHistos(self, cutName, variableName, sampleName, suffixIn, suffixOut = None, symmetrize = False):
         histoUp = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Up')
         histoDown = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Down')
 
@@ -463,6 +478,18 @@ class DatacardFactory:
           if self._skipMissingNuisance:
             return False
           # else let ROOT raise
+
+        if symmetrize:
+          histoNom = self._getHisto(cutName, variableName, sampleName)
+          histoDiff = histoUp.Clone('histoDiff')
+          histoDiff.Add(histoDown, -1.)
+          histoDiff.Scale(0.5)
+          histoUp.Reset()
+          histoUp.Add(histoNom)
+          histoUp.Add(histoDiff)
+          histoDown.Reset()
+          histoDown.Add(histoNom)
+          histoDown.Add(histoDiff, -1.)
 
         histoUp.SetDirectory(self._outFile)
         histoDown.SetDirectory(self._outFile)

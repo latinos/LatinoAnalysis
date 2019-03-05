@@ -292,7 +292,7 @@ class batchJobs :
              jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
              jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
            jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
-           jdsFile.write('periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime)
+           jdsFile.write('periodic_hold = (JobStatus == 2 && CurrentTime - EnteredCurrentStatus > %d)\n' % MaxRunTime)
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')
            jdsFile.close()
@@ -378,7 +378,7 @@ class batchJobs :
          jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'
          jds += 'accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n'
        if 'cern' in hostName:       
-         jds += 'periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime
+         jds += 'periodic_hold = (JobStatus == 2 && CurrentTime - EnteredCurrentStatus > %d)\n' % MaxRunTime
        jds += '+JobFlavour = "'+queue+'"\n'
        jds += 'queue JName in (\n'
        for jName in self.jobsList:
@@ -625,7 +625,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           if CONDOR_ACCOUNTING_GROUP:
             jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
             jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
-          jdsFile.write('periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime)
+          jdsFile.write('periodic_hold = (JobStatus == 2 && CurrentTime - EnteredCurrentStatus > %d)\n' % MaxRunTime)
           jdsFile.write('+JobFlavour = "'+queue+'"\n')
           jdsFile.write('queue\n')
           jdsFile.close()
@@ -700,7 +700,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
         jds += 'log = '+subDir+'/$(JName).log\n'
         jds += 'request_cpus = '+str(requestCpus)+'\n'
         if 'cern' in hostName:
-          jds += 'periodic_hold = CurrentTime - EnteredCurrentStatus > %d\n' % MaxRunTime
+          jds += 'periodic_hold = (JobStatus == 2 && CurrentTime - EnteredCurrentStatus > %d)\n' % MaxRunTime
         jds += '+JobFlavour = "'+queue+'"\n'
         if CONDOR_ACCOUNTING_GROUP:
           jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'
