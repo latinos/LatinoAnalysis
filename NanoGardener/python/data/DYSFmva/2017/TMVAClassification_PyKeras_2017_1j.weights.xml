@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<MethodSetup Method="PyKeras::PyKeras_2017_1j_m1">
+<MethodSetup Method="PyKeras::PyKeras_2017_1j">
   <GeneralInfo>
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.12/04 [396292]"/>
     <Info name="Creator" value="ddicroce"/>
-    <Info name="Date" value="Mon Feb 18 17:31:52 2019"/>
+    <Info name="Date" value="Wed Mar  6 09:22:11 2019"/>
     <Info name="Host" value="Linux lcgapp-slc6-x86-64-30.cern.ch 2.6.32-642.4.2.el6.x86_64 #1 SMP Wed Aug 24 09:19:54 CEST 2016 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/afs/cern.ch/work/d/ddicroce/DNN/CMSSW_9_4_6_patch1/src/2017"/>
     <Info name="Training events" value="59000"/>
-    <Info name="TrainingTime" value="2.21347250e+02"/>
+    <Info name="TrainingTime" value="1.84990674e+02"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>
@@ -19,7 +19,7 @@
     <Option name="CreateMVAPdfs" modified="No">False</Option>
     <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
     <Option name="FilenameModel" modified="Yes">model_2017_1j.h5</Option>
-    <Option name="FilenameTrainedModel" modified="No">/afs/cern.ch/user/d/ddicroce/work/DNN/CMSSW_9_4_6_patch1/src/LatinoAnalysis/Gardener/python/data/dymva/2017/TrainedModel_PyKeras_2017_1j_m1.h5</Option>
+    <Option name="FilenameTrainedModel" modified="No">/afs/cern.ch/user/d/ddicroce/work/Latinos/CMSSW_9_4_9/src/LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/TrainedModel_PyKeras_2017_1j.h5</Option>
     <Option name="BatchSize" modified="Yes">1000</Option>
     <Option name="NumEpochs" modified="Yes">400</Option>
     <Option name="Verbose" modified="No">1</Option>
@@ -28,7 +28,7 @@
     <Option name="TriesEarlyStopping" modified="No">-1</Option>
     <Option name="LearningRateSchedule" modified="No"/>
   </Options>
-  <Variables NVar="12">
+  <Variables NVar="13">
     <Variable VarIndex="0" Expression="PV_npvsGood" Label="PV_npvsGood" Title="PV_npvsGood" Unit="" Internal="PV_npvsGood" Type="F" Min="1.00000000e+00" Max="1.01000000e+02"/>
     <Variable VarIndex="1" Expression="ptll" Label="ptll" Title="ptll" Unit="" Internal="ptll" Type="F" Min="3.00023079e+01" Max="1.00421802e+03"/>
     <Variable VarIndex="2" Expression="mpmet" Label="mpmet" Title="mpmet" Unit="" Internal="mpmet" Type="F" Min="0.00000000e+00" Max="2.29813141e+02"/>
@@ -41,6 +41,7 @@
     <Variable VarIndex="9" Expression="jetpt2_cut" Label="jetpt2_cut" Title="jetpt2_cut" Unit="" Internal="jetpt2_cut" Type="F" Min="-1.00000000e+00" Max="2.99843750e+01"/>
     <Variable VarIndex="10" Expression="dphilmet2" Label="dphilmet2" Title="dphilmet2" Unit="" Internal="dphilmet2" Type="F" Min="0.00000000e+00" Max="3.14150524e+00"/>
     <Variable VarIndex="11" Expression="projpfmet" Label="projpfmet" Title="projpfmet" Unit="" Internal="projpfmet" Type="F" Min="0.00000000e+00" Max="3.02118225e+02"/>
+    <Variable VarIndex="12" Expression="dphillmet" Label="dphillmet" Title="dphillmet" Unit="" Internal="dphillmet" Type="F" Min="3.15867474e-05" Max="3.14158487e+00"/>
   </Variables>
   <Spectators NSpec="0"/>
   <Classes NClass="2">
@@ -50,7 +51,7 @@
   <Transformations NTransformations="1">
     <Transform Name="Normalize">
       <Selection>
-        <Input NInputs="12">
+        <Input NInputs="13">
           <Input Type="Variable" Label="PV_npvsGood" Expression="PV_npvsGood"/>
           <Input Type="Variable" Label="ptll" Expression="ptll"/>
           <Input Type="Variable" Label="mpmet" Expression="mpmet"/>
@@ -63,8 +64,9 @@
           <Input Type="Variable" Label="jetpt2_cut" Expression="jetpt2_cut"/>
           <Input Type="Variable" Label="dphilmet2" Expression="dphilmet2"/>
           <Input Type="Variable" Label="projpfmet" Expression="projpfmet"/>
+          <Input Type="Variable" Label="dphillmet" Expression="dphillmet"/>
         </Input>
-        <Output NOutputs="12">
+        <Output NOutputs="13">
           <Output Type="Variable" Label="PV_npvsGood" Expression="PV_npvsGood"/>
           <Output Type="Variable" Label="ptll" Expression="ptll"/>
           <Output Type="Variable" Label="mpmet" Expression="mpmet"/>
@@ -77,6 +79,7 @@
           <Output Type="Variable" Label="jetpt2_cut" Expression="jetpt2_cut"/>
           <Output Type="Variable" Label="dphilmet2" Expression="dphilmet2"/>
           <Output Type="Variable" Label="projpfmet" Expression="projpfmet"/>
+          <Output Type="Variable" Label="dphillmet" Expression="dphillmet"/>
         </Output>
       </Selection>
       <Class ClassIndex="0">
@@ -93,6 +96,7 @@
           <Range Index="9" Min="-1.0000000000000000e+00" Max="2.9984375000000000e+01"/>
           <Range Index="10" Min="3.9428472518920898e-05" Max="3.1413395404815674e+00"/>
           <Range Index="11" Min="1.1321547208353877e-03" Max="1.9060043334960938e+02"/>
+          <Range Index="12" Min="3.1666437280364335e-04" Max="3.1415765285491943e+00"/>
         </Ranges>
       </Class>
       <Class ClassIndex="1">
@@ -109,6 +113,7 @@
           <Range Index="9" Min="-1.0000000000000000e+00" Max="2.9984375000000000e+01"/>
           <Range Index="10" Min="0.0000000000000000e+00" Max="3.1415052413940430e+00"/>
           <Range Index="11" Min="0.0000000000000000e+00" Max="3.0211822509765625e+02"/>
+          <Range Index="12" Min="3.1586747354594991e-05" Max="3.1415848731994629e+00"/>
         </Ranges>
       </Class>
       <Class ClassIndex="2">
@@ -125,6 +130,7 @@
           <Range Index="9" Min="-1.0000000000000000e+00" Max="2.9984375000000000e+01"/>
           <Range Index="10" Min="0.0000000000000000e+00" Max="3.1415052413940430e+00"/>
           <Range Index="11" Min="0.0000000000000000e+00" Max="3.0211822509765625e+02"/>
+          <Range Index="12" Min="3.1586747354594991e-05" Max="3.1415848731994629e+00"/>
         </Ranges>
       </Class>
     </Transform>

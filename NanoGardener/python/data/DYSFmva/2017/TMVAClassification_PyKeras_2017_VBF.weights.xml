@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<MethodSetup Method="PyKeras::PyKeras_2017_VBF_m1">
+<MethodSetup Method="PyKeras::PyKeras_2017_VBF">
   <GeneralInfo>
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.12/04 [396292]"/>
     <Info name="Creator" value="ddicroce"/>
-    <Info name="Date" value="Mon Feb 18 17:40:40 2019"/>
+    <Info name="Date" value="Wed Mar  6 11:26:24 2019"/>
     <Info name="Host" value="Linux lcgapp-slc6-x86-64-30.cern.ch 2.6.32-642.4.2.el6.x86_64 #1 SMP Wed Aug 24 09:19:54 CEST 2016 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/afs/cern.ch/work/d/ddicroce/DNN/CMSSW_9_4_6_patch1/src/2017"/>
     <Info name="Training events" value="11202"/>
-    <Info name="TrainingTime" value="4.37853520e+01"/>
+    <Info name="TrainingTime" value="8.33359451e+01"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>
@@ -19,7 +19,7 @@
     <Option name="CreateMVAPdfs" modified="No">False</Option>
     <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
     <Option name="FilenameModel" modified="Yes">model_2017_VBF.h5</Option>
-    <Option name="FilenameTrainedModel" modified="No">/afs/cern.ch/user/d/ddicroce/work/DNN/CMSSW_9_4_6_patch1/src/LatinoAnalysis/Gardener/python/data/dymva/2017/TrainedModel_PyKeras_2017_VBF_m1.h5</Option>
+    <Option name="FilenameTrainedModel" modified="No">/afs/cern.ch/user/d/ddicroce/work/Latinos/CMSSW_9_4_9/src/LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/TrainedModel_PyKeras_2017_VBF.h5</Option>
     <Option name="BatchSize" modified="Yes">1000</Option>
     <Option name="NumEpochs" modified="Yes">400</Option>
     <Option name="Verbose" modified="No">1</Option>
@@ -28,7 +28,7 @@
     <Option name="TriesEarlyStopping" modified="No">-1</Option>
     <Option name="LearningRateSchedule" modified="No"/>
   </Options>
-  <Variables NVar="12">
+  <Variables NVar="13">
     <Variable VarIndex="0" Expression="PfMetDivSumMet" Label="PfMetDivSumMet" Title="PfMetDivSumMet" Unit="" Internal="PfMetDivSumMet" Type="F" Min="7.11321473e-01" Max="2.20713348e+01"/>
     <Variable VarIndex="1" Expression="mtw2" Label="mtw2" Title="mtw2" Unit="" Internal="mtw2" Type="F" Min="5.80676720e-02" Max="2.51697510e+02"/>
     <Variable VarIndex="2" Expression="dphijet2met_cut" Label="dphijet2met_cut" Title="dphijet2met_cut" Unit="" Internal="dphijet2met_cut" Type="F" Min="2.96831131e-04" Max="3.14153981e+00"/>
@@ -41,6 +41,7 @@
     <Variable VarIndex="9" Expression="dphilmet1" Label="dphilmet1" Title="dphilmet1" Unit="" Internal="dphilmet1" Type="F" Min="4.62532043e-05" Max="3.14147401e+00"/>
     <Variable VarIndex="10" Expression="dphillmet" Label="dphillmet" Title="dphillmet" Unit="" Internal="dphillmet" Type="F" Min="7.56609688e-06" Max="3.14016747e+00"/>
     <Variable VarIndex="11" Expression="dphilmet2" Label="dphilmet2" Title="dphilmet2" Unit="" Internal="dphilmet2" Type="F" Min="1.46484375e-03" Max="3.14127040e+00"/>
+    <Variable VarIndex="12" Expression="PV_npvsGood" Label="PV_npvsGood" Title="PV_npvsGood" Unit="" Internal="PV_npvsGood" Type="F" Min="1.00000000e+00" Max="7.90000000e+01"/>
   </Variables>
   <Spectators NSpec="0"/>
   <Classes NClass="2">
@@ -50,7 +51,7 @@
   <Transformations NTransformations="1">
     <Transform Name="Normalize">
       <Selection>
-        <Input NInputs="12">
+        <Input NInputs="13">
           <Input Type="Variable" Label="PfMetDivSumMet" Expression="PfMetDivSumMet"/>
           <Input Type="Variable" Label="mtw2" Expression="mtw2"/>
           <Input Type="Variable" Label="dphijet2met_cut" Expression="dphijet2met_cut"/>
@@ -63,8 +64,9 @@
           <Input Type="Variable" Label="dphilmet1" Expression="dphilmet1"/>
           <Input Type="Variable" Label="dphillmet" Expression="dphillmet"/>
           <Input Type="Variable" Label="dphilmet2" Expression="dphilmet2"/>
+          <Input Type="Variable" Label="PV_npvsGood" Expression="PV_npvsGood"/>
         </Input>
-        <Output NOutputs="12">
+        <Output NOutputs="13">
           <Output Type="Variable" Label="PfMetDivSumMet" Expression="PfMetDivSumMet"/>
           <Output Type="Variable" Label="mtw2" Expression="mtw2"/>
           <Output Type="Variable" Label="dphijet2met_cut" Expression="dphijet2met_cut"/>
@@ -77,6 +79,7 @@
           <Output Type="Variable" Label="dphilmet1" Expression="dphilmet1"/>
           <Output Type="Variable" Label="dphillmet" Expression="dphillmet"/>
           <Output Type="Variable" Label="dphilmet2" Expression="dphilmet2"/>
+          <Output Type="Variable" Label="PV_npvsGood" Expression="PV_npvsGood"/>
         </Output>
       </Selection>
       <Class ClassIndex="0">
@@ -93,6 +96,7 @@
           <Range Index="9" Min="4.8828125000000000e-04" Max="3.1414740085601807e+00"/>
           <Range Index="10" Min="7.9765501141082495e-05" Max="3.1401674747467041e+00"/>
           <Range Index="11" Min="1.4648437500000000e-03" Max="3.1412703990936279e+00"/>
+          <Range Index="12" Min="1.0000000000000000e+00" Max="7.5000000000000000e+01"/>
         </Ranges>
       </Class>
       <Class ClassIndex="1">
@@ -109,6 +113,7 @@
           <Range Index="9" Min="4.6253204345703125e-05" Max="3.1404721736907959e+00"/>
           <Range Index="10" Min="7.5660968832380604e-06" Max="3.1400055885314941e+00"/>
           <Range Index="11" Min="2.8393268585205078e-03" Max="3.1354634761810303e+00"/>
+          <Range Index="12" Min="1.0000000000000000e+00" Max="7.9000000000000000e+01"/>
         </Ranges>
       </Class>
       <Class ClassIndex="2">
@@ -125,6 +130,7 @@
           <Range Index="9" Min="4.6253204345703125e-05" Max="3.1414740085601807e+00"/>
           <Range Index="10" Min="7.5660968832380604e-06" Max="3.1401674747467041e+00"/>
           <Range Index="11" Min="1.4648437500000000e-03" Max="3.1412703990936279e+00"/>
+          <Range Index="12" Min="1.0000000000000000e+00" Max="7.9000000000000000e+01"/>
         </Ranges>
       </Class>
     </Transform>

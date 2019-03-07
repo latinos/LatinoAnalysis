@@ -580,13 +580,11 @@ Steps = {
 ## -------- DYMVA
 
   'DYMVA' : {
-                  'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-slc6-gcc62-opt/setup.sh'] ,   
+                  #'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-slc6-gcc62-opt/setup.sh'] ,   
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  #'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_cfg.py\')' ,
-                  #'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_2017_BDT_cfg.py\')' ,
                   'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_2017_cfg.py\')' ,
                   'module'     : 'DYMVA()',
             } ,
