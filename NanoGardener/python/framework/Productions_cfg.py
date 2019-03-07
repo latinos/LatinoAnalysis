@@ -70,6 +70,17 @@ Productions = {
 
 ################################### nAODv2 : 2017v2 ######################################
 
+ # -------- 2016 DATA 94X nAODv3
+ 'Run2016_94X_nAODv2_Full2016v2': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"  %os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_94X_nAODv2.py' ,
+                       'cmssw'   : 'Full2016v2',
+                       'year'    : '2016' ,
+                   },
+
+
+
   # ---- Relaxed loose ID / misHit / ...
 
    'Run2017_nAOD_v1_Full2017v2':  {
