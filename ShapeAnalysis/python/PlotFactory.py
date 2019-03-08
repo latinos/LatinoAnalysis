@@ -1219,21 +1219,34 @@ class PlotFactory:
                 frameNorm.GetXaxis().SetTitle(variable['xaxis'])
               tcanvasSigVsBkg.RedrawAxis()
   
-  
+              maxY_normalized=0.0
+
               for ihisto in range(thsBackground_grouped.GetNhists()) :
-                num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
-                for ibin in range( num_bins ) :
-                  (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsBackground_grouped.GetHists().At(ihisto)).SetFillStyle(0)
-                (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
+                  num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
+                  if (thsBackground_grouped.GetHists().At(ihisto)).Integral()  > 0:
+                      if (thsBackground_grouped.GetHists().At(ihisto)).GetBinContent((thsBackground_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsBackground_grouped.GetHists().At(ihisto)).Integral() > maxY_normalized:
+                          maxY_normalized =(thsBackground_grouped.GetHists().At(ihisto)).GetBinContent((thsBackground_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsBackground_grouped.GetHists().At(ihisto)).Integral()
+
+                  for ibin in range( num_bins ) :
+                      (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                  (thsBackground_grouped.GetHists().At(ihisto)).SetFillStyle(0)
+                  (thsBackground_grouped.GetHists().At(ihisto)).SetLineWidth(3)
+                  (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
                   
               for ihisto in range(thsSignal_grouped.GetNhists()) :
-                num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
-                for ibin in range( num_bins ) :
-                  (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsSignal_grouped.GetHists().At(ihisto)).SetFillStyle(0)
-                (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
+                  num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
+                  if (thsSignal_grouped.GetHists().At(ihisto)).Integral()  > 0:
+                      if (thsSignal_Grouped.GetHists().At(ihisto)).GetBinContent((thsSignal_Grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsBackground_grouped.GetHists().At(ihisto)).Integral() > maxY_normalized:
+                          maxY_normalized = (thsSignal_grouped.GetHists().At(ihisto)).GetBinContent((thsSignal_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsSignal_grouped.GetHists().At(ihisto)).Integral()
+
+                  for ibin in range( num_bins ) :
+                      (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                  (thsSignal_grouped.GetHists().At(ihisto)).SetFillStyle(0)
+                  (thsSignal_grouped.GetHists().At(ihisto)).SetLineWidth(3)
+                  (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
   
+              frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
+
               tlegend.Draw()
               tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
          
