@@ -1347,6 +1347,18 @@ Productions= {
                         'puData'  : '/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
                        },
 
+  #### VBS semileptonic MC production Run2_2016
+
+  'VBS_semileptonic_signal_summer16' : {
+                          'isData': False,
+                          'samples': 'LatinoTrees/AnalysisStep/test/crab/samples/samples_VBS_semileptonic_2016.py',
+                          'dir':      "/group/OneLepton/VBS_semileptonic_signal_summer16/",
+                          'dirExt'  : 'LatinoTrees' ,
+                          'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                          'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full',
+                       }
+
 
 }
 
