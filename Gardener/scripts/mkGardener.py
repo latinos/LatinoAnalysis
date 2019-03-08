@@ -81,7 +81,7 @@ parser = OptionParser(usage="usage: %prog [options]")
 parser.add_option("-p","--prods",   dest="prods"   , help="List of production to run on"              , default=[]     , type='string' , action='callback' , callback=list_maker('prods',','))
 parser.add_option("-s","--steps",   dest="steps"   , help="list of Steps to produce"                  , default=[]     , type='string' , action='callback' , callback=list_maker('steps',','))
 parser.add_option("-i","--iniStep",   dest="iniStep"   , help="Step to restart from"                      , default='Prod' , type='string' ) 
-parser.add_option(     "--friendStep",dest="friendStep"   , help="step to use as auxiliary input file (default None)"    , default=None , type='string' ) 
+parser.add_option("--friendStep",dest="friendStep"   , help="step to use as auxiliary input file (default None)"    , default=None , type='string' ) 
 parser.add_option("-R","--redo" ,   dest="redo"    , help="Redo, don't check if tree already exists"  , default=False  , action="store_true")
 parser.add_option("-b","--batch",   dest="runBatch", help="Run in batch"                              , default=False  , action="store_true")
 parser.add_option("-S","--batchSplit", dest="batchSplit", help="Splitting mode for batch jobs"        , default='Target', type='string' , action='callback' , callback=list_maker('batchSplit',','))
@@ -124,6 +124,7 @@ if options.inputTarget != None:
 if options.outputTarget != None:
   eosTargBaseOut=options.outputTarget
 
+
 print "eosProdBase    = ", eosProdBase
 print "eosTargBaseIn  = ", eosTargBaseIn
 print "eosTargBaseOut = ", eosTargBaseOut 
@@ -151,6 +152,7 @@ if "/eos/cms" in eosTargBaseOut:
   aquamarineLocationOut = "0.3.84-aquamarine"
   xrootdPathOut = 'root://eoscms.cern.ch/'
   
+
 # Compile all root macros before sending jobs
 if options.runBatch:
   print "Batch mode"
@@ -219,6 +221,11 @@ for iProd in prodList :
       fileCmd = 'ls ' + eosTargBaseIn + prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] # +' | grep  ttDM0001scalar0010'
     else:
       fileCmd = 'ls ' + eosTargBaseIn +iProd+ '/'+options.iniStep
+  elif 'hercules' in os.uname()[1]:
+    if options.iniStep == 'Prod' :
+      fileCmd = 'ls ' + eosTargBaseIn + prodDir + "/" + Productions[iProd]['dirExt']
+    else:
+      fileCmd = 'ls ' + eosTargBaseIn  + iProd+ '/'+ options.iniStep
   else:
     if options.iniStep == 'Prod' : 
       fileCmd = 'ls '+prodDir+Productions[iProd]['dirExt']  # +' | grep  ttDM'
@@ -253,6 +260,11 @@ for iProd in prodList :
           fileCmd = 'ls ' + outDirBase + prodDir+'/'+iProd #+' | grep  ttDM'
         else: 
           fileCmd = 'ls ' + outDirBase + iProd+'/'+options.iniStep+'__'+iStep
+      elif 'hercules' in os.uname()[1]:
+          if options.iniStep == 'Prod' :
+            fileCmd = 'ls ' + eosTargBaseOut + iProd+'/'+ iStep
+          else: 
+            fileCmd = 'ls ' + eosTargBaseOut + iProd+'/'+options.iniStep+'__'+iStep
       else:
         if options.iniStep == 'Prod' :
           fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+'Prod__'+iStep
@@ -305,6 +317,7 @@ for iProd in prodList :
           #    if not iTree in FileExistList and selectSample: targetList[iSample] = 'NOSPLIT'
         #else: 
         #if 'ttDM' in iSample: print iSample, selectSample 
+        print(FileInList)
         for iFile in FileInList:
             #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in FileExistList 
             if options.redo or not iFile in FileExistList or iStep == 'hadd' :
@@ -339,6 +352,11 @@ for iProd in prodList :
                       targetList[iKey] = eosTargBaseIn + prodDir.split('RunII/')[1]+Productions[iProd]['dirExt'] + '/'+iFile 
                     else:
                       targetList[iKey] = eosTargBaseIn + iProd+'/'+options.iniStep + '/' +iFile
+                  elif 'hercules' in os.uname()[1]:
+                    if options.iniStep == 'Prod' :
+                      targetList[iKey] = eosTargBaseIn + prodDir + Productions[iProd]['dirExt'] + '/'+iFile 
+                    else:
+                      targetList[iKey] = eosTargBaseIn  + iProd+ '/'+ options.iniStep + '/' +iFile
                   else:
                     if options.iniStep == 'Prod' :
                       targetList[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -391,6 +409,11 @@ for iProd in prodList :
                     targetListBaseW[iKey] = eosTargBaseIn + prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']+'/'+iFile 
                   else:
                     targetListBaseW[iKey] = eosTargBaseIn + iProd+'/'+options.iniStep+'/'+iFile
+                elif 'hercules' in os.uname()[1]:
+                  if options.iniStep == 'Prod' :
+                    targetList[iKey] = eosTargBaseIn + prodDir + Productions[iProd]['dirExt'] + '/'+iFile 
+                  else:
+                    targetList[iKey] = eosTargBaseIn  + iProd+ '/'+ options.iniStep + '/' +iFile
                 else: 
                   if options.iniStep == 'Prod' :
                     targetListBaseW[iKey] = 'root://eoscms.cern.ch//eos/cms'+prodDir+Productions[iProd]['dirExt']+'/'+iFile
@@ -433,14 +456,14 @@ for iProd in prodList :
       elif 'knu' in os.uname()[1]:
         if iStep == 'UEPS' :
           for iUEPS in Steps[iStep]['cpMap'] :
-	    outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iUEP
+            outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iUEP
             os.system('mkdir -p '+outDir)  
         else:
           if startingStep == 'Prod' :
-	    outDir = outDirBase+'/'+iProd+'/'+iStep
+            outDir = outDirBase+'/'+iProd+'/'+iStep
             os.system('mkdir -p '+ outDir)
           else:
-	    outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iStep
+            outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iStep
             os.system('mkdir -p '+ outDir)
       else:
         if iStep == 'UEPS' :

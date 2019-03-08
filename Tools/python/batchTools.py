@@ -147,6 +147,12 @@ class batchJobs :
            jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' in hostName or 'knu' in hostName:
            jFile.write('cd '+self.subDir+subDirExtra+'\n')
+         elif 'hercules' in hostName:
+           tmpdataDir = jobDir + "/tmp/" + baseName +"_"+prodName
+           jFile.write("mkdir "+ jobDir + "/tmp\n")
+           jFile.write("mkdir "+ tmpdataDir +  "\n")
+           jFile.write("cd "+ tmpdataDir + "\n")
+           jFile.write("pwd \n")
          else:
            jFile.write('cd - \n')
            ### the following makes the .sh script exit if an error is thrown after the "set -e" command
@@ -322,6 +328,8 @@ class batchJobs :
          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
        elif 'hercules' in hostName:
          # mib farm
+         if queue not in ['shortcms', 'longcms']:
+           queue = 'shortcms'
          print " hercules::queue = ", queue
          print " hercules::outFile = ", outFile
          print " hercules::errFile = ", errFile
@@ -446,7 +454,7 @@ class batchJobs :
      elif 'sdfarm' in hostName :
         jFile.write('gfal-copy -p '+inputFile+' srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/'+outputFile+'\n')
      elif 'hercules' in hostName :
-        jFile.write('gfal-copy ' + inputFile + ' srm://storm.mib.infn.it:8444/cms/' + outputFile+ '\n')
+        jFile.write('gfal-copy -p file://`pwd`/' + inputFile + ' srm://storm.mib.infn.it:8444/cms/' + outputFile+ '\n')
      else :
         jFile.write('cp '+inputFile+ " " + outputFile+'\n')
      jFile.close()
@@ -658,6 +666,8 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           else: os.system('rm '+jidFile)
         elif 'hercules' in hostName:
           # mib farm
+          if queue not in ['shortcms', 'longcms']:
+            queue = 'shortcms'
           jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
