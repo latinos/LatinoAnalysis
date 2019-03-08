@@ -1213,7 +1213,7 @@ class PlotFactory:
               frameNorm = ROOT.TH1F
               frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
   
-              frameNorm.GetYaxis().SetRangeUser( 0, 2 )
+              frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
               # setup axis names
               if 'xaxis' in variable.keys() : 
                 frameNorm.GetXaxis().SetTitle(variable['xaxis'])
@@ -1224,13 +1224,15 @@ class PlotFactory:
                 num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
                 for ibin in range( num_bins ) :
                   (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                (thsBackground_grouped.GetHists().At(ihisto)).SetFillStyle(0)
+                (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
                   
               for ihisto in range(thsSignal_grouped.GetNhists()) :
                 num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
                 for ibin in range( num_bins ) :
                   (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                (thsSignal_grouped.GetHists().At(ihisto)).SetFillStyle(0)
+                (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
   
               tlegend.Draw()
               tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
