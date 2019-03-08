@@ -5140,4 +5140,12 @@ Steps= {
                                         'SingleMuon_Run2016H-03Feb2017_ver3-v1',
                                        ],
                     },
+
+  'PrefCorr' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+      
+                  'command'    : 'gardener.py prefcorrMiniAOD',
+                 },
 }
