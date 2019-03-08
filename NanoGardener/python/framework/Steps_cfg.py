@@ -464,7 +464,7 @@ Steps = {
 
 ## ------- MODULES: Fakes
 
-  'fakeWp1'  : {
+  'fakeWp2'  : {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
