@@ -464,7 +464,16 @@ for iProd in prodList :
             os.system('mkdir -p '+ outDir)
           else:
             outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iStep
-            os.system('mkdir -p '+ outDir)
+            os.system('mkdir -p '+ outDir
+      elif 'hercules' in os.uname()[1]:
+        if iStep == 'UEPS' :
+          for iUEPS in Steps[iStep]['cpMap'] :
+            os.system('mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iUEPS)  
+        else:
+          if startingStep == 'Prod' :
+            os.system('mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+iStep)
+          else:
+            os.system('mkdir -p '+eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep)
       else:
         if iStep == 'UEPS' :
           for iUEPS in Steps[iStep]['cpMap'] :
@@ -573,7 +582,7 @@ for iProd in prodList :
               for i in range(len(SubSteps)-1) : 
                 PrevStep+=SubSteps[i]
                 if len(SubSteps)-1 > 1 and i < len(SubSteps)-2 : PrevStep+='__'
-#            if not '__' in  options.iniStep :
+                                #            if not '__' in  options.iniStep :
             fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/RunII/'+prodDir.split('RunII/')[1]+Productions[iProd]['dirExt']
 #            else:
 #              fileCmd = 'ls /pnfs/iihe/cms/store/user/' + options.user + '/HWW2015/'+iProd+'/'+PrevStep
@@ -859,7 +868,8 @@ for iProd in prodList :
             else:
               command+='xrdcp -f '+outTree+' '+ eosTargBaseOut+'/'+iProd+'/'+startingStep+'__'+iStep+'/latino_'+iTarget+'.root'
 
-        if 'sdfarm' in os.uname()[1]:
+        # GarbageCollector 
+        if 'sdfarm' in os.uname()[1] or 'hercules' in os.uname()[1]:
           for iGarbage in GarbageCollector: 
             command+='; rm -f '+iGarbage
 
