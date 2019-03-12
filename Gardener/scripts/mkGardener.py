@@ -464,7 +464,7 @@ for iProd in prodList :
             os.system('mkdir -p '+ outDir)
           else:
             outDir = outDirBase+'/'+iProd+'/'+startingStep+'__'+iStep
-            os.system('mkdir -p '+ outDir
+            os.system('mkdir -p '+ outDir)
       elif 'hercules' in os.uname()[1]:
         if iStep == 'UEPS' :
           for iUEPS in Steps[iStep]['cpMap'] :

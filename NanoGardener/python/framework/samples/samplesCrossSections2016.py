@@ -8,7 +8,7 @@
 #	C	https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt1314TeV		
 #	D	https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SingleTopRefXsec		
 #	E	https://twiki.cern.ch/twiki/bin/view/CMS/SummaryTable1G25ns
-#     F       https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV
+#       F       https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV
 #	F2	https://github.com/latinos/LatinoAnalysis/blob/master/Tools/python/HiggsXSection.py
 #	G	https://twiki.cern.ch/twiki/bin/view/CMS/GenXsecTaskForce		
 #	H	http://arxiv.org/pdf/1307.7403v1.pdf		
@@ -16,17 +16,17 @@
 #	J	https://svnweb.cern.ch/cern/wsvn/LHCDMF/trunk/doc/tex/TTBar_Xsecs_Appendix.tex
 #	K	https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWW13TeVProductionMassScan (powheg numbers)
 #	L	https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWW13TeVProduction (powheg numbers)
-#   M       https://github.com/shu-xiao/MadGraphScanning/blob/master/diffCrossSection/madGraph.txt
-#   N       MCM
-#   O       https://twiki.cern.ch/twiki/pub/LHCPhysics/LHCHXSWG/Higgs_XSBR_YR4_update.xlsx
-#   P       https://drive.google.com/file/d/0B7mfFpGbPaMvb0ZtMlJfdXhJb2M/view
-#   Q       #https://indico.cern.ch/event/448517/session/0/contribution/16/attachments/1164999/1679225/Long_Generators_WZxsec_05_10_15.pdf
+#       M       https://github.com/shu-xiao/MadGraphScanning/blob/master/diffCrossSection/madGraph.txt
+#       N       MCM
+#       O       https://twiki.cern.ch/twiki/pub/LHCPhysics/LHCHXSWG/Higgs_XSBR_YR4_update.xlsx
+#       P       https://drive.google.com/file/d/0B7mfFpGbPaMvb0ZtMlJfdXhJb2M/view
+#       Q       #https://indico.cern.ch/event/448517/session/0/contribution/16/attachments/1164999/1679225/Long_Generators_WZxsec_05_10_15.pdf
 #	R	https://cms-pdmv.cern.ch/mcm/requests?page=0&prepid=B2G-RunIISummer15GS*&dataset_name=TTbarDMJets_*scalar_Mchi-*_Mphi-10000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-#   S       https://docs.google.com/spreadsheets/d/1b4qnWfZrimEGYc1z4dHl21-A9qyJgpqNUbhOlvCzjbE/edit?usp=sharing
-#   T       https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR
-#   U       https://twiki.cern.ch/twiki/pub/CMS/MonoHCombination/crossSection_ZpBaryonic_gq0p25.txt
+#       S       https://docs.google.com/spreadsheets/d/1b4qnWfZrimEGYc1z4dHl21-A9qyJgpqNUbhOlvCzjbE/edit?usp=sharing
+#       T       https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR
+#       U       https://twiki.cern.ch/twiki/pub/CMS/MonoHCombination/crossSection_ZpBaryonic_gq0p25.txt
 #	V	https://twiki.cern.ch/twiki/bin/viewauth/CMS/SameSignDilepton2016
-#   Z   http://cms.cern.ch/iCMS/analysisadmin/cadilines?line=SMP-18-006
+#       Z   http://cms.cern.ch/iCMS/analysisadmin/cadilines?line=SMP-18-006
 #	X	Unknown! - Cross section not yet there
 
 
@@ -731,13 +731,13 @@ samples['VBF_H0Mf05_ToWWTo2L2Nu'] .extend( ['xsec=0.0846',	'kfact=1.000',		'ref=
 
 # VBSlnujj semileptonic 
 
-samples['WpToLNu_WmTo2J'].extend( ['xsec=0.9114'  ,   'kfact=1.000',   'ref=Z' ])
-samples['WpTo2J_WmToLNu'].extend( ['xsec=0.9107'  ,   'kfact=1.000',   'ref=Z' ])
-samples['WpToLNu_WpTo2J'].extend( ['xsec=0.0879'  ,   'kfact=1.000',   'ref=Z' ])
-samples['WmToLNu_WmTo2J'].extend( ['xsec=0.0326'  ,   'kfact=1.000',   'ref=Z' ])
-samples['WpToLNu_ZTo2J'].extend( ['xsec=0.1825'   ,   'kfact=1.000',   'ref=Z' ])
-samples['WpTo2J_ZTo2L'].extend( ['xsec=0.0540'    ,   'kfact=1.000',   'ref=Z' ])
-samples['WmToLNu_ZTo2J'].extend( ['xsec=0.1000'   ,   'kfact=1.000',   'ref=Z' ])
-samples['WmTo2J_ZTo2L'].extend(['xsec=0.0298'     ,   'kfact=1.000',   'ref=Z' ])
-samples['ZTo2L_ZTo2J'].extend(['xsec=0.0159'      ,   'kfact=1.000',   'ref=Z' ])
+samples['WpToLNu_WmTo2J']   .extend( ['xsec=0.9114',    'kfact=1.000',   'ref=Z' ])
+samples['WpTo2J_WmToLNu']   .extend( ['xsec=0.9107',    'kfact=1.000',   'ref=Z' ])
+samples['WpToLNu_WpTo2J']   .extend( ['xsec=0.0879',    'kfact=1.000',   'ref=Z' ])
+samples['WmToLNu_WmTo2J']   .extend( ['xsec=0.0326',    'kfact=1.000',   'ref=Z' ])
+samples['WpToLNu_ZTo2J']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=Z' ])
+samples['WpTo2J_ZTo2L']     .extend( ['xsec=0.0540',    'kfact=1.000',   'ref=Z' ])
+samples['WmToLNu_ZTo2J']    .extend( ['xsec=0.1000',    'kfact=1.000',   'ref=Z' ])
+samples['WmTo2J_ZTo2L']     .extend(['xsec=0.0298',     'kfact=1.000',   'ref=Z' ])
+samples['ZTo2L_ZTo2J']      .extend(['xsec=0.0159',     'kfact=1.000',   'ref=Z' ])
 

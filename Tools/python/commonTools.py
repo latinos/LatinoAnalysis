@@ -418,7 +418,7 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       return "ls /xrootd/" + usedDir
     elif "hercules" in os.uname()[1]:   # cluster MiB
       if "/store/group" in inputDir:
-        return "ls /gwteras/cms" +inputDir
+        return "ls /gwteras/cms/" +inputDir
       else:
         return "ls "+ inputDir
     else :
