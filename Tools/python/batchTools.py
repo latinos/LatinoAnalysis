@@ -338,7 +338,7 @@ class batchJobs :
          # queues: "shortcms" (2 days) and "longcms"
          #jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
          print 'qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
-         jobid=os.system('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+         jobid=os.system('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' +queue +' > '+jidFile)
        elif 'sdfarm' in hostName:
          jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
          jdsFile = open(jdsFileName,'w')
@@ -668,7 +668,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           # mib farm
           if queue not in ['shortcms', 'longcms']:
             queue = 'shortcms'
-          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' + queue +' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
         elif 'sdfarm' in hostName:

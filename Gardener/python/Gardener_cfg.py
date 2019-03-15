@@ -1347,6 +1347,21 @@ Productions= {
                         'puData'  : '/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
                        },
 
+  'Apr2017_summer16_SingleLepton_hercules'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'dir'     : '/group/OneLepton/Apr2017_summer16/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                        'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full',
+                        'onlySamples': [
+                             'DYJetsToLL_M-10to50-LO','ST_s-channel','ST_t-channel_antitop','ST_t-channel_top','ST_tW_antitop_noHad_ext1','ST_tW_antitop_noHad','ST_tW_antitop','ST_tW_top_noHad_ext1','ST_tW_top_noHad','ST_tW_top','ttHToNonbb_M125','TTTo2L2Nu','TTToSemiLepton','TTWJetsToLNu_ext2','TTWJetsToLNu','TTWJetsToQQ','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM','WgStarLNuEE','WgStarLNuMuMu','WJetsToLNu_HT100_200_ext1','WJetsToLNu_HT100_200_ext2','WJetsToLNu_HT100_200','WJetsToLNu_HT1200_2500_ext1','WJetsToLNu_HT200_400_ext1','WJetsToLNu_HT200_400_ext2','WJetsToLNu_HT200_400','WJetsToLNu_HT2500_inf_ext1','WJetsToLNu_HT2500_inf','WJetsToLNu_HT400_600_ext1','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800_ext1','WJetsToLNu_HT600_800','WJetsToLNu_HT800_1200_ext1','WJetsToLNu','WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet','WLLJJToLNu_M-4To50_QCD_2Jet','WLLJJToLNu_M-4To50_QCD_3Jet','WLLJJToLNu_M-4To50_QCD_4Jet','WLLJJToLNu_M-4To60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet','WLLJJToLNu_M-60_EWK_4F','WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600','WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf','WWTo2L2Nu','WWW','WWZ','WZJJ_EWK_QCD','WZTo1L1Nu2Q','WZTo1L3Nu','WZTo2L2Q','ZZTo2L2Q','ZZZ'
+                        ]
+                       },
+                       
+                       
+                       
   #### VBS semileptonic MC production Run2_2016
 
   'VBS_semileptonic_signal_summer16' : {
@@ -1356,8 +1371,10 @@ Productions= {
                           'dirExt'  : 'LatinoTrees' ,
                           'cmssw'   : 'Full2016' ,
                         # 37.X fb-1
-                          'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full',
-                       }
+                          'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full'
+                       },
+
+  ### HHWWbb semileptonic Run2_2016
 
 
 }
@@ -1368,7 +1385,8 @@ Productions= {
 # .... .... this is defined by mkGardener in "-s" "--steps" option
 # .... .... if it is a "chain", it means that the intermediate steps are NOT saved
 # .... ....    e.g. 'puadder','baseW','wwNLL' ---> only after all steps the folder will be saved on eos
-
+VBS_semilep_samples = ['WpToLNu_WmTo2J','WpTo2J_WmToLNu','WpToLNu_WpTo2J','WmToLNu_WmTo2J',
+                          'WpToLNu_ZTo2J','WpTo2J_ZTo2L','WmToLNu_ZTo2J','WmTo2J_ZTo2L','ZTo2L_ZTo2J']
 
 samples4Syst = [
                  # DY 
@@ -2910,7 +2928,7 @@ Steps= {
                  'VBFHToWWTo2L2Nu_JHUGen698_M2000' ,        
                  'VBFHToWWTo2L2Nu_JHUGen698_M2500' ,        
                  'VBFHToWWTo2L2Nu_JHUGen698_M3000' ,        
-                                  ]
+                                  ]  + VBS_semilep_samples
 
                 },
 
@@ -3385,6 +3403,22 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l1selfiller --kind 4 --cmssw RPLME_CMSSW --idEleKind cut_WP_Tight80X'
                },
+
+  'l1looseSimple'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'std_vector_lepton_pt[0] > 18.0 && std_vector_lepton_isLooseLepton[0]>0.5 \' '
+                },
+
+  'l1tight'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'std_vector_lepton_pt[0] > 18.0 && \
+                                                      (std_vector_muon_isTightLepton_cut_Tight80x[0]>0.5 || \
+                                                       std_vector_electron_isTightLepton_cut_WP_Tight80X[0]>0.5)\' '
+                },
 
 
   'do_WgStarsel' : {
@@ -5159,5 +5193,12 @@ Steps= {
                   'do4Data'    : False,
       
                   'command'    : 'gardener.py prefcorrMiniAOD',
+                 },
+
+  'l1tightChain' :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ["l1looseSimple", 'l1tight']
                  },
 }

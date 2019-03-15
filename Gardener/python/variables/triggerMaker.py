@@ -554,10 +554,6 @@ class triggerCalculator():
             evt_eff_snglEle = 0.
             evt_eff_snglMu = evt_eff
 
-          evt_eff_dbleEle = 0.
-          evt_eff_dbleMu = 0.
-          evt_eff_EleMu = 0.
-
           # ...And the grand combo:
           TrgEmulator[0] = TrgEmulator[1] or TrgEmulator[2] or TrgEmulator[3] or TrgEmulator[4] or TrgEmulator[5]
 
@@ -566,11 +562,11 @@ class triggerCalculator():
           # and low variation ...
           evt_eff_error_low     = low_eff_sgl_1
 
-          return evt_eff, evt_eff_error_low, evt_eff_error_up , evt_eff_snglEle , evt_eff_snglMu , evt_eff_dbleEle , evt_eff_dbleMu , evt_eff_EleMu , TrgEmulator
+          return evt_eff, evt_eff_error_low, evt_eff_error_up , evt_eff_snglEle , evt_eff_snglMu ,TrgEmulator
         else :
           # if for any reason it is not a lepton ... 
           TrgEmulator = [ False , False , False , False , False , False ]
-          return 1, 1, 1 , 1 , 1 , 1 , 1 , 1 , TrgEmulator
+          return 1, 1, 1 , 1 , 1 , TrgEmulator
 
     def _get3lWeight(self, kindLep1, pt1, eta1, kindLep2, pt2, eta2, kindLep3, pt3, eta3):
 
@@ -1179,6 +1175,8 @@ class triggerMaker(TreeCloner):
            'effTrigW_DbleEle',
            'effTrigW_DbleMu',
            'effTrigW_EleMu',
+           'effTrigW1l_SnglEle',
+           'effTrigW1l_SnglMu',
           ]
           self.namesOldBranchesToBeModifiedVector = [
            'std_vector_TrgEmulator'
@@ -1264,26 +1262,46 @@ class triggerMaker(TreeCloner):
               self.branches['effTrigW_DbleEle'][0] = 1.0
               self.branches['effTrigW_DbleMu'][0] = 1.0
               self.branches['effTrigW_EleMu'][0] = 1.0
+              self.branches['effTrigW1l_SnglEle'][0] = 1.0
+              self.branches['effTrigW1l_SnglMu'][0] = 1.0
   
               bvector_TrgEmulator.clear()
   
               #evt_eff_dbleEle , evt_eff_dble_Mu , evt_eff_EleMu , TrgEmulator
                  
-              # ONLY 1 lepton trigger weight (explicit check on flavour) 
-              if itree.std_vector_lepton_flavour[0] > -20 and itree.std_vector_lepton_flavour[1] < -20:
+              # ONLY 1 lepton trigger weight (exclusive) 
+              if itree.std_vector_lepton_flavour.size() == 1 or  \
+                        (itree.std_vector_lepton_flavour.size()>=2 and itree.std_vector_lepton_flavour[0] > -20 and \
+                        itree.std_vector_lepton_flavour[1] < -20):
+
                 self.branches['effTrigW1l'][0], self.branches['effTrigW1l_Down'][0], self.branches['effTrigW1l_Up'][0] , \
-                self.branches['effTrigW_SnglEle'][0] , self.branches['effTrigW_SnglMu'][0] , \
-                self.branches['effTrigW_DbleEle'][0] , self.branches['effTrigW_DbleMu'][0] , self.branches['effTrigW_EleMu'][0] , \
+                self.branches['effTrigW1l_SnglEle'][0] , self.branches['effTrigW1l_SnglMu'][0] , \
                 TrgEmulator = \
                     self.triggerCalculators[self.runPeriod-1]._get1lWeight(itree.std_vector_lepton_flavour[0], itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0])
                 for iEmu in TrgEmulator: bvector_TrgEmulator.push_back(iEmu)
+                # zeroing all other >1 lepton efficiencies
+                self.branches['effTrigW']     [0] = 0.0
+                self.branches['effTrigW_Down'][0] = 0.0
+                self.branches['effTrigW_Up']  [0] = 0.0
+                self.branches['effTrigW_SnglEle'][0] = 0.0
+                self.branches['effTrigW_SnglMu'][0] = 0.0
+                self.branches['effTrigW_DbleEle'][0] = 0.0
+                self.branches['effTrigW_DbleMu'][0] = 0.0
+                self.branches['effTrigW_EleMu'][0] = 0.0
+                self.branches['effTrigW3l']     [0] = 0.0
+                self.branches['effTrigW3l_Down'][0] = 0.0
+                self.branches['effTrigW3l_Up']  [0] = 0.0
+                self.branches['effTrigW4l']     [0] = 0.0
+                self.branches['effTrigW4l_Down'][0] = 0.0
+                self.branches['effTrigW4l_Up']  [0] = 0.0
               
               else:
+                # > 1 lepton case
                 self.branches["effTrigW1l"][0]       = 0.0
                 self.branches["effTrigW1l_Down"][0]  = 0.0
                 self.branches["effTrigW1l_Up"][0]    = 0.0
 
-                # More than 1-lepton trigger weights
+                
                 # 2-lepton trigger weight
                 if itree.std_vector_lepton_flavour.size() >= 2 :
                   self.branches['effTrigW'][0], self.branches['effTrigW_Down'][0], self.branches['effTrigW_Up'][0] , \

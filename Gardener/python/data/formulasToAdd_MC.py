@@ -9,6 +9,12 @@ formulas['XSWeight'] = 'event.baseW*\
                         if hasattr(event, \'GEN_weight_SM\') else event.baseW'
 
 
+formulas['SFweight1l'] = 'event.puW*\
+                          event.effTrigW*\
+                          event.std_vector_lepton_recoW[0]*\
+                          event.veto_EMTFBug \
+                          if hasattr(event, \'std_vector_lepton_recoW\') else 1.'
+
 formulas['SFweight2l'] = 'event.puW*\
                           event.effTrigW*\
                           event.std_vector_lepton_recoW[0]*\
