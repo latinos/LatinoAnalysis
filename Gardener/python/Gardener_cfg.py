@@ -1375,6 +1375,15 @@ Productions= {
                        },
 
   ### HHWWbb semileptonic Run2_2016
+  'HHWWbb_semileptonic_signal_summer16' : {
+                          'isData': False,
+                          'samples': 'LatinoTrees/AnalysisStep/test/crab/samples/list_MC_HHWWbb_semileptonic_2016.py',
+                          'dir':      "/group/OneLepton/HHWWbb_semileptonic_signal_summer16/",
+                          'dirExt'  : 'LatinoTrees' ,
+                          'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                          'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full'
+                       },
 
 
 }
@@ -1385,8 +1394,8 @@ Productions= {
 # .... .... this is defined by mkGardener in "-s" "--steps" option
 # .... .... if it is a "chain", it means that the intermediate steps are NOT saved
 # .... ....    e.g. 'puadder','baseW','wwNLL' ---> only after all steps the folder will be saved on eos
-VBS_semilep_samples = ['WpToLNu_WmTo2J','WpTo2J_WmToLNu','WpToLNu_WpTo2J','WmToLNu_WmTo2J',
-                          'WpToLNu_ZTo2J','WpTo2J_ZTo2L','WmToLNu_ZTo2J','WmTo2J_ZTo2L','ZTo2L_ZTo2J']
+VBS_HH_semilep_samples = ['WpToLNu_WmTo2J','WpTo2J_WmToLNu','WpToLNu_WpTo2J','WmToLNu_WmTo2J',
+                          'WpToLNu_ZTo2J','WpTo2J_ZTo2L','WmToLNu_ZTo2J','WmTo2J_ZTo2L','ZTo2L_ZTo2J', 'HH_bblnjj']
 
 samples4Syst = [
                  # DY 
@@ -2928,7 +2937,7 @@ Steps= {
                  'VBFHToWWTo2L2Nu_JHUGen698_M2000' ,        
                  'VBFHToWWTo2L2Nu_JHUGen698_M2500' ,        
                  'VBFHToWWTo2L2Nu_JHUGen698_M3000' ,        
-                                  ]  + VBS_semilep_samples
+                                  ]  + VBS_HH_semilep_samples
 
                 },
 
