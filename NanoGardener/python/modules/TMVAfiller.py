@@ -67,13 +67,13 @@ class TMVAfiller(Module):
           for iVar in self.mvaDic[iMva]['inputVars'] :  
             self.mvaDic[iMva]['inputs'][jVar][0] = eval(self.mvaDic[iMva]['inputVars'][iVar])
             jVar+=1
-          print "====== ",iMva
+          #print "====== ",iMva
           #print self.mvaDic[iMva]['inputVars'].keys()
           #print self.mvaDic[iMva]['inputs']   
-          #val = self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type'])
+          val = self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type'])
           #print val
-          self.out.fillBranch(iMva, self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type']))
-          #print "====== "
+          self.out.fillBranch(iMva, val)
+          #self.out.fillBranch(iMva, self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type']))
 
         return True
 
