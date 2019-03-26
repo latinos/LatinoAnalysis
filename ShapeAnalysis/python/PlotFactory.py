@@ -1236,7 +1236,7 @@ class PlotFactory:
               for ihisto in range(thsSignal_grouped.GetNhists()) :
                   num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
                   if (thsSignal_grouped.GetHists().At(ihisto)).Integral()  > 0:
-                      if (thsSignal_Grouped.GetHists().At(ihisto)).GetBinContent((thsSignal_Grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsBackground_grouped.GetHists().At(ihisto)).Integral() > maxY_normalized:
+                      if (thsSignal_grouped.GetHists().At(ihisto)).GetBinContent((thsSignal_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsSignal_grouped.GetHists().At(ihisto)).Integral() > maxY_normalized:
                           maxY_normalized = (thsSignal_grouped.GetHists().At(ihisto)).GetBinContent((thsSignal_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsSignal_grouped.GetHists().At(ihisto)).Integral()
 
                   for ibin in range( num_bins ) :
