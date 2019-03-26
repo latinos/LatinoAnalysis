@@ -18,6 +18,9 @@ from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSF
 from LatinoAnalysis.Gardener.variables.multiIdisoScaleFactors     import MultiIdIsoSFFiller
 from LatinoAnalysis.Gardener.variables.LeptonEtaPtCorrFactors     import LeptonEtaPtCorrFactors
 
+# jet pairs identification
+from LatinoAnalysis.Gardener.variables.jetPairing                 import jetPairing
+
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
 from LatinoAnalysis.Gardener.variables.l1Sel                      import L1SelFiller
@@ -231,6 +234,9 @@ if __name__ == '__main__':
     modules['l2kinfiller']     = L2KinFiller()
     modules['l3kinfiller']     = L3KinFiller()
     modules['l4kinfiller']     = L4KinFiller()
+
+# jet pairing
+    modules['jetPairing']      = jetPairing()
 
 # Nuisances
     modules['JESTreeMaker']           = JESTreeMaker()
