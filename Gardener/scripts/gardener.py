@@ -18,9 +18,6 @@ from LatinoAnalysis.Gardener.variables.idisoScaleFactors          import IdIsoSF
 from LatinoAnalysis.Gardener.variables.multiIdisoScaleFactors     import MultiIdIsoSFFiller
 from LatinoAnalysis.Gardener.variables.LeptonEtaPtCorrFactors     import LeptonEtaPtCorrFactors
 
-# jet pairs identification
-from LatinoAnalysis.Gardener.variables.jetPairing                 import jetPairing
-
 # selections
 from LatinoAnalysis.Gardener.variables.l2Sel                      import L2SelFiller
 from LatinoAnalysis.Gardener.variables.l1Sel                      import L1SelFiller
@@ -136,6 +133,10 @@ from LatinoAnalysis.Gardener.variables.genericTMVA        import GenericTMVAFill
 # Prefiring
 from LatinoAnalysis.Gardener.variables.PrefireCorr_gardener          import PrefCorr
 
+# jet pairs identification
+from LatinoAnalysis.Gardener.variable.GetTopSelection             import GenTopFlag
+from LatinoAnalysis.Gardener.variables.jetPairing                 import jetPairing
+
 if __name__ == '__main__':
 
     print "gardener"
@@ -237,6 +238,7 @@ if __name__ == '__main__':
 
 # jet pairing
     modules['jetPairing']      = jetPairing()
+    modules['GenTopFlag'] = GenTopFlag()
 
 # Nuisances
     modules['JESTreeMaker']           = JESTreeMaker()
