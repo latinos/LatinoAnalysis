@@ -13,8 +13,8 @@ from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 
 class rochester_corr(Module):
 
-    '''                                                                                                                                                                                                            
-    Add a scale factor from 2017 Rochester corrections                                                                                                                                                             
+    '''
+    Add a scale factor from Rochester corrections                                                                                                                                                             
     '''
 
     def __init__(self,isdata = False , year=2016 , lepColl="Lepton",metColls=['MET','PuppiMET','RawMET','TkMET']):
@@ -29,6 +29,7 @@ class rochester_corr(Module):
      
         if year == 2016 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2016.txt"
         if year == 2017 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2017.txt"        
+        if year == 2018 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2018.txt"        
         print "scale factors from", rochester_path
         rc=ROOT.RoccoR_NG(rochester_path)
         self.rc= rc        
@@ -114,7 +115,6 @@ class rochester_corr(Module):
         #mcSFerr_vec=[]        
 
         for iLep in xrange(nLep) :
-            #if not (lepton_col[iLep].pt > 0): continue
             pt = lepton_col[iLep].pt
             flavour = lepton_col[iLep].pdgId
             eta = lepton_col[iLep].eta
@@ -150,12 +150,18 @@ class rochester_corr(Module):
                                 matchedgenpt = genlepton_col[iGenLep].pt
                                 minimumdR2 = dR2
                     if matchedgenpt == -1 :
-                        u2 =random.random()
-                        mcSF = self.rc.kScaleAndSmearMC(charge, pt, eta, phi, nl, u1, u2)                                                                                                                         
+                        mcSF = self.rc.kSmearMC(charge, pt, eta, phi, nl, u1)                                                                                                                         
+                        #mcSFerr = self.rc.kSmearMCerror(charge, pt, eta, phi, nl, u1)
+                        # Old functions
+                        #u2 =random.random()
+                        #mcSF = self.rc.kScaleAndSmearMC(charge, pt, eta, phi, nl, u1, u2)                                                                                                                         
                         #mcSFerr = self.rc.kScaleAndSmearMCerror(charge, pt, eta, phi, nl, u1, u2)                                                                                                                         
                     #for MC, if matched gen-level muon (genPt) is available, use this function                                                                                                                
                     else :
-                        mcSF = self.rc.kScaleFromGenMC(charge, pt, eta, phi, nl, matchedgenpt, u1)
+                        mcSF = self.rc.kSpreadMC(charge, pt, eta, phi, matchedgenpt)
+                        #mcSFerr = self.rc.kSpreadMCerror(charge, pt, eta, phi, matchedgenpt)
+                        # Old functions
+                        #mcSF = self.rc.kScaleFromGenMC(charge, pt, eta, phi, nl, matchedgenpt, u1)
                         #mcSFerr = self.rc.kScaleFromGenMCerror(charge, pt, eta, phi, nl, matchedgenpt, u1)
                     if mcSF < 0.5 or mcSF > 1.5 or math.isnan(mcSF) == 1 :
                         mcSF = 1
