@@ -285,6 +285,14 @@ Steps = {
 
 ## ------- MODULES: Object Handling
 
+  'Dummy' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.Dummy' ,
+                  'module'     : 'Dummy()',
+            },
+
   'leptonMaker': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -464,7 +472,7 @@ Steps = {
 
 ## ------- MODULES: Fakes
 
-  'fakeWp1'  : {
+  'fakeWp2NB'  : {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
