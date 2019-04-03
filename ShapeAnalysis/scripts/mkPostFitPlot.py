@@ -202,15 +202,32 @@ class LawnMower:
         #
         # total background
         histo_total_background = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_background")      
-        
         histo_total_background.SetName  ('histo_' + 'total_background')
         histo_total_background.SetTitle ('histo_' + 'total_background')
         
+        histo_total_background_prefit  = fileIn.Get("shapes_prefit/" + self._cut + "/" + "total_background")      
+        histo_total_background_prefit.SetName  ('histo_total_background_prefit')
+        histo_total_background_prefit.SetTitle ('histo_total_background_prefit')
+
+        histo_total_background_postfit_s = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total_background")      
+        histo_total_background_postfit_s.SetName  ('histo_total_background_postfit_s')
+        histo_total_background_postfit_s.SetTitle ('histo_total_background_postfit_s')
+
+        histo_total_background_postfit_b = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total_background")      
+        histo_total_background_postfit_b.SetName  ('histo_total_background_postfit_b')
+        histo_total_background_postfit_b.SetTitle ('histo_total_background_postfit_b')
+
         # fix the binning copying from "DATA" binning, if available
         if (template_histogram != 0) :
           histo_total_background = self._ChangeBin(histo_total_background, template_histogram)
+          histo_total_background_prefit = self._ChangeBin(histo_total_background_prefit, template_histogram)
+          histo_total_background_postfit_s = self._ChangeBin(histo_total_background_postfit_s, template_histogram)
+          histo_total_background_postfit_b = self._ChangeBin(histo_total_background_postfit_b, template_histogram)
         
         histo_total_background.Write()              
+        histo_total_background_prefit.Write()              
+        histo_total_background_postfit_s.Write()              
+        histo_total_background_postfit_b.Write()              
         
         #
         # total
@@ -219,18 +236,30 @@ class LawnMower:
         histo_total.SetName  ('histo_' + 'total')
         histo_total.SetTitle ('histo_' + 'total')
         
+        histo_total_prefit  = fileIn.Get("shapes_prefit/" + self._cut + "/" + "total")      
+        histo_total_prefit.SetName  ('histo_total_prefit')
+        histo_total_prefit.SetTitle ('histo_total_prefit')
+
+        histo_total_postfit_s = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total")      
+        histo_total_postfit_s.SetName  ('histo_total_postfit_s')
+        histo_total_postfit_s.SetTitle ('histo_total_postfit_s')
+
+        histo_total_postfit_b = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total")      
+        histo_total_postfit_b.SetName  ('histo_total_postfit_b')
+        histo_total_postfit_b.SetTitle ('histo_total_postfit_b')
+
         # fix the binning copying from "DATA" binning, if available
         if (template_histogram != 0) :
           histo_total = self._ChangeBin(histo_total, template_histogram)
+          histo_total_prefit = self._ChangeBin(histo_total_prefit, template_histogram)
+          histo_total_postfit_s = self._ChangeBin(histo_total_postfit_s, template_histogram)
+          histo_total_postfit_b = self._ChangeBin(histo_total_postfit_b, template_histogram)
         
         histo_total.Write()              
-        
-        
-        
-        
-             
-     
-        
+        histo_total_prefit.Write()      
+        histo_total_postfit_s.Write()        
+        histo_total_postfit_b.Write()
+
     # _____________________________________________________________________________
     def _ChangeBin(self, myhisto, templatehisto): 
 
