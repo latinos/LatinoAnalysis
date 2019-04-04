@@ -134,8 +134,8 @@ from LatinoAnalysis.Gardener.variables.genericTMVA        import GenericTMVAFill
 from LatinoAnalysis.Gardener.variables.PrefireCorr_gardener          import PrefCorr
 
 # jet pairs identification
-from LatinoAnalysis.Gardener.variable.JetPairingGen             import JetPairingGen
-from LatinoAnalysis.Gardener.variables.jetPairing                 import jetPairing
+from LatinoAnalysis.Gardener.variables.JetPairingGenVBS             import JetPairingGenVBS
+#from LatinoAnalysis.Gardener.variable.JetPairingGenHH             import JetPairingGenHH
 
 if __name__ == '__main__':
 
@@ -237,8 +237,7 @@ if __name__ == '__main__':
     modules['l4kinfiller']     = L4KinFiller()
 
 # jet pairing
-    modules['jetPairing']      = jetPairing()
-    modules['JetPairingGen']   = JetPairingGen()
+    modules['JetPairingGenVBS']   = JetPairingGenVBS()
 
 # Nuisances
     modules['JESTreeMaker']           = JESTreeMaker()

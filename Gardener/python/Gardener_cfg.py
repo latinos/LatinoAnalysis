@@ -5210,4 +5210,79 @@ Steps= {
                   'do4Data'    : True,
                   'subTargets' : ["l1looseSimple", 'l1tight']
                  },
+
+  'JetPairingGenVBS' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'command'    : 'gardener.py JetPairingGenVBS --radius 1'
+
+                  },
+
+# WP taken from https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/allBtagPogScaleFactors.py#L358
+  'btagTight' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.8958 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.8958 )) >= 1 \' '
+                  },
+  
+  'btagLoose' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.2219 )) >= 1 \' '
+                  },
+
+  'bvetoTight' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.2219 ) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.2219 )) == 0 \' '
+                },
+
+  'bvetoLoose' : {
+                    'isChain'    : False ,
+                    'do4MC'      : True ,
+                    'do4Data'    : True,
+                    'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[1] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[2] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[3] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[4] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[5] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[6] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[7] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[8] > 0.8958 ) + \
+                                                              1*(std_vector_jet_DeepCSVB[9] > 0.8958 )) == 0 \' '
+                  },
+
+
 }
