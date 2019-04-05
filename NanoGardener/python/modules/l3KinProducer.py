@@ -19,6 +19,8 @@ from itertools import combinations
 
 class l3KinProducer(Module):
     l3KinDefault = -9999
+    Zmass = 91.1876
+    Wmass = 80.4
     newbranches = {
         'WH3l_ZVeto'     : (["F"], {}),
         'WH3l_flagOSSF'  : (["O"], {}),
@@ -35,6 +37,15 @@ class l3KinProducer(Module):
         'WH3l_ptWWW'     : (["F"], {}),
         'WH3l_mtWWW'     : (["F"], {}),
         'WH3l_dphilllmet': (["F"], {}),
+
+        'ZH3l_njet'      : (["F"], {}),
+        'ZH3l_z4lveto'   : (["F"], {}),
+        'ZH3l_dmjjmW'    : (["F"], {}),
+        'ZH3l_mtW_notZ'  : (["F"], {}),
+        'ZH3l_dphilmetjj': (["F"], {}),
+        'ZH3l_mTlmetjj'  : (["F"], {}),
+        'ZH3l_ptZ'       : (["F"], {}),
+        'ZH3l_checkmZ'   : (["F"], {}),
     }
 
     def __init__(self):
@@ -64,16 +75,71 @@ class l3KinProducer(Module):
             return False
         return True
 
+    def _ZH3l_setNotZLepton(self):
+        """Find the lepton least likely to be part of the Z pair by invariant mass"""
+        if not self.WH3l_isOk:
+            return False
+
+        minmllDiffToZ = -1*self.l3KinDefault
+
+        lep0 = self.Lepton_4vecId[0] 
+        lep1 = self.Lepton_4vecId[1] 
+        lep2 = self.Lepton_4vecId[2] 
+
+        """There is probably a smarter way to do this but this will work"""
+        if lep0[1]+lep1[1] == 0:
+            mllDiffToZ = abs((lep0[0]+lep1[0]).M()-self.Zmass)
+            if mllDiffToZ < minmllDiffToZ: 
+                self.notZLepton = lep2
+                self.pTZ = (lep0[0]+lep1[0]).Pt()
+                self.checkZmass = (lep0[0]+lep1[0]).M()
+                minmllDiffToZ = mllDiffToZ 
+
+        if lep1[1]+lep2[1] == 0:
+            mllDiffToZ = abs((lep1[0]+lep2[0]).M()-self.Zmass)
+            if mllDiffToZ < minmllDiffToZ: 
+                self.notZLepton = lep0
+                self.pTZ = (lep1[0]+lep2[0]).Pt()
+                self.checkZmass = (lep1[0]+lep2[0]).M()
+                minmllDiffToZ = mllDiffToZ 
+
+        if lep2[1]+lep0[1] == 0:
+            mllDiffToZ = abs((lep2[0]+lep0[0]).M()-self.Zmass)
+            if mllDiffToZ < minmllDiffToZ: 
+                self.notZLepton = lep1
+                self.pTZ = (lep2[0]+lep0[0]).Pt()
+                self.checkZmass = (lep2[0]+lep0[0]).M()
+                minmllDiffToZ = mllDiffToZ 
+
+
+        return True
+
+    def _ZH3l_setJets(self):
+        """Internal use only.  Should match ggH analysis jet counting"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        tmp_ZH3l_njet = sum([ 1 if j[0] > 30 and abs(j[1]) < 4.7 else 0 for j in self.CleanJet ])
+        if tmp_ZH3l_njet < 2:
+            return tmp_ZH3l_njet
+
+        j0 = self.CleanJet[0]
+        j1 = self.CleanJet[1]
+        self.j4vec0 = ROOT.TLorentzVector()
+        self.j4vec1 = ROOT.TLorentzVector()
+        self.j4vec0.SetPtEtaPhiM(j0[0], j0[1], j0[2], 0)
+        self.j4vec1.SetPtEtaPhiM(j1[0], j1[1], j1[2], 0)
+    
+        return tmp_ZH3l_njet
+
     def WH3l_ZVeto(self):
         """Return min mass difference in OSSF lepton pairs"""
         if not self.WH3l_isOk:
             return -1*self.l3KinDefault
 
-        Zmass=91.1876
         minmllDiffToZ = -1*self.l3KinDefault
         for iLep, jLep in combinations(self.Lepton_4vecId,2):
             if iLep[1]+jLep[1] == 0:
-                mllDiffToZ = abs((iLep[0]+jLep[0]).M()-Zmass)
+                mllDiffToZ = abs((iLep[0]+jLep[0]).M()-self.Zmass)
                 minmllDiffToZ = mllDiffToZ if mllDiffToZ < minmllDiffToZ else minmllDiffToZ
         return minmllDiffToZ
 
@@ -96,7 +162,7 @@ class l3KinProducer(Module):
     def WH3l_nbjet(self):
         if not self.WH3l_isOk:
             return self.l3KinDefault
-        return sum([ 1 if j[0] > 20 and j[0] < 40 and abs(j[1]) < 4.7 and j[2] > -0.5884 else 0 for j in self.CleanJet ])
+        return sum([ 1 if j[0] > 20 and j[0] < 40 and abs(j[1]) < 4.7 and j[3] > -0.5884 else 0 for j in self.CleanJet ])
 
     def WH3l_mtlmet(self):
         """https://en.wikipedia.org/wiki/Transverse_mass with m_lepton=0, m_met=0. """
@@ -166,6 +232,62 @@ class l3KinProducer(Module):
             return self.l3KinDefault
         return abs((self.Lepton_4vecId[0][0]+self.Lepton_4vecId[1][0]+self.Lepton_4vecId[2][0]).DeltaPhi(self.MET))
 
+
+    def ZH3l_njet(self):
+        """Jet counting.  For validation against ggH -- can eventually be removed"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return self._ZH3l_njet
+
+    def ZH3l_z4lveto(self):
+        """Return mass difference of 3 leptons to Z"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return abs(self.WH3l_mlll() - self.Zmass)
+
+    def ZH3l_dmjjmW(self):
+        """Return mass difference between leading jets and W"""
+        if not self.WH3l_isOk or not self._ZH3l_njet >= 2:
+            return self.l3KinDefault
+        return ((self.j4vec0 + self.j4vec1).M() - self.Wmass)
+
+    def ZH3l_mtW_notZ(self):
+        """https://en.wikipedia.org/wiki/Transverse_mass with m_lepton=0, m_met=0. """
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+
+        lvec = self.notZLepton[0]
+        mvec = self.MET
+        mtlmet = math.sqrt(2 * lvec.Pt() * mvec.Pt() * (1 - math.cos(abs(lvec.DeltaPhi(mvec))))) 
+        return mtlmet
+
+    def ZH3l_dphilmetjj(self):
+        """Delta phi between dijets and l+MET, i.e., between the Ws"""
+        if not self.WH3l_isOk or not self._ZH3l_njet >= 2:
+            return self.l3KinDefault
+        return abs((self.notZLepton[0] + self.MET).DeltaPhi(self.j4vec0 + self.j4vec1))
+
+    def ZH3l_mTlmetjj(self):
+        """Return pt of selected Z"""
+        if not self.WH3l_isOk or not self._ZH3l_njet >= 2:
+            return self.l3KinDefault
+        WWvec = self.MET + self.notZLepton[0] + self.j4vec0 + self.j4vec1;
+        sumpt = self.MET.Pt() + self.notZLepton[0].Pt() + self.j4vec0.Pt() + self.j4vec1.Pt()
+        return math.sqrt(pow(sumpt,2) - pow(WWvec.Px(),2) - pow(WWvec.Py(),2));
+
+    def ZH3l_ptZ(self):
+        """Return pt of selected Z"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return self.pTZ
+
+    def ZH3l_checkmZ(self):
+        """Return pt of selected Z"""
+        if not self.WH3l_isOk:
+            return self.l3KinDefault
+        return self.checkZmass
+
+
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
@@ -184,9 +306,12 @@ class l3KinProducer(Module):
         self.CleanJet = []
         Jet = Collection(event, "Jet")
         for j in Collection(event, "CleanJet"):
-            self.CleanJet.append((j.pt, j.eta, Jet[j.jetIdx].btagCMVA))
+            self.CleanJet.append((j.pt, j.eta, j.phi, Jet[j.jetIdx].btagCMVA))
 
         self.WH3l_isOk = self._WH3l_isOk()
+
+        self._ZH3l_setNotZLepton()
+        self._ZH3l_njet = self._ZH3l_setJets()
 
         for nameBranchKey in self.newbranches.keys():
             self.out.fillBranch(nameBranchKey, getattr(self, nameBranchKey)());
