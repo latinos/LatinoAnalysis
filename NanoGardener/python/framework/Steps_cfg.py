@@ -430,15 +430,16 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
                   'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW")',
                   'module'     : 'LeptonSF()',
-                   },
+                },
 
-   'LeptonSF_Fix' : {
-                  'isChain'    : True ,
+  'ChargeFlip' : {
+                 'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['LeptonSF','formulasMC'],
-                   },
-
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
+                  'declare'    : 'ChargeFlip = lambda : ChargeFlipWeight("RPLME_CMSSW")',
+                  'module'     : 'ChargeFlip()',
+                 },
 
 ## ------- Pile-Up weights
 
