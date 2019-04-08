@@ -662,6 +662,9 @@ Trigger = {
                        }
 }
 
+Trigger['Full2016v4'] = Trigger['Full2016v2'] 
+
+
 NewVar_MC_dict = {
    'F': [
          'TriggerEffWeight_2l',
