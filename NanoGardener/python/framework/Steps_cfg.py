@@ -155,8 +155,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  #'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
-                  'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'], ## removing rochesterDATA
+                  'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
 ## ------- WgStar DATA:
