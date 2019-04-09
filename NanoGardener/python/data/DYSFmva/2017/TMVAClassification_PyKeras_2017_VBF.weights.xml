@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.12/04 [396292]"/>
     <Info name="Creator" value="ddicroce"/>
-    <Info name="Date" value="Wed Mar  6 11:26:24 2019"/>
-    <Info name="Host" value="Linux lcgapp-slc6-x86-64-30.cern.ch 2.6.32-642.4.2.el6.x86_64 #1 SMP Wed Aug 24 09:19:54 CEST 2016 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Date" value="Tue Apr  9 12:07:16 2019"/>
+    <Info name="Host" value="Linux lcgapp-centos7-x86-64-23.cern.ch 3.10.0-693.5.2.el7.x86_64 #1 SMP Fri Oct 20 20:32:50 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/afs/cern.ch/work/d/ddicroce/DNN/CMSSW_9_4_6_patch1/src/2017"/>
     <Info name="Training events" value="11202"/>
-    <Info name="TrainingTime" value="8.33359451e+01"/>
+    <Info name="TrainingTime" value="5.25612271e+01"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>

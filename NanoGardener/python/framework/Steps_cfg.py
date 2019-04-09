@@ -588,7 +588,7 @@ Steps = {
 ## -------- DYMVA
 
   'DYMVA' : {
-                  #'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-slc6-gcc62-opt/setup.sh'] ,   
+                  'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,   
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
