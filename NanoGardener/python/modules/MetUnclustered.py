@@ -17,7 +17,7 @@ import os.path
 import math
 
 class MetUnclusteredTreeMaker(Module) :
-    def __init__(self, kind="Up",metCollections=['MET', 'PuppiMET', 'RawMET']) :
+    def __init__(self, kind="Up",metCollections=['MET', 'PuppiMET', 'RawMET', 'ChsMET' , 'CaloMET']) :
         self.metCollections = metCollections
         cmssw_base = os.getenv('CMSSW_BASE')
         self.kind = kind
