@@ -496,8 +496,8 @@ class PostProcMaker():
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
          doSubStep = False
-         if    isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
-         elif             self._Steps[iSubStep]['do4MC']   : doSubStep = True       
+         if        isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
+         elif  not isData and self._Steps[iSubStep]['do4MC']   : doSubStep = True       
          # AND onlySample 
          applyStep = self.selectSample(iProd,iSubStep,iSample)
          if doSubStep and applyStep :  fPy.write('                          '+self.customizeModule(iSample,iSubStep)+',\n')

@@ -473,6 +473,14 @@ Steps = {
 
 ## ------- MODULES: Fakes
 
+  'fakeWMC' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                  'onlySample' : [ 'Zg', 'WZTo3LNu_mllmin01'] #, 'Wg_MADGRAPHMLM', 'WZTo3LNu' ] , 
+                   }, 
+
   'fakeWp2NB'  : {
                   'isChain'    : True ,
                   'do4MC'      : False ,
@@ -489,7 +497,7 @@ Steps = {
 
   'fakeWstep'   : {
                   'isChain'    : False ,
-                  'do4MC'      : False ,
+                  'do4MC'      : True ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonFakeWMaker',
                   'declare'    : '',
@@ -580,7 +588,7 @@ Steps = {
   'formulasFAKE' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
-                  'do4Data'    : False  ,
+                  'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE_RPLME_YEAR.py\')' ,
