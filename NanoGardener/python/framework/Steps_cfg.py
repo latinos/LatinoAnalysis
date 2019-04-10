@@ -384,6 +384,17 @@ Steps = {
                  'module'     : 'trigMCKR()',
                },
 
+## ------- MODULES: JEC
+
+  'JECupdate2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
+                  'declare'    : 'JECreapply = lambda : jetRecalib(globalTag="Fall17_17Nov2017_V32_MC")',
+                  'module'     : 'JECreapply()',
+                 },    
+
 ## ------- MODULES: MC Weights
 
   'baseW'    : {
@@ -469,6 +480,17 @@ Steps = {
                   'declare'    : 'pufile_data2017="%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileup_Cert_294927-306462_13TeV_PromptReco_Collisions17_withVar.root" % os.environ["CMSSW_BASE"]',
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
+
+## ------- MODULES: Embedding
+
+  'Embedding2017' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : False ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_2017_v1.root")',
+                 'module'     : 'embed()',
+               },
 
 ## ------- MODULES: Fakes
 
