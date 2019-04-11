@@ -384,6 +384,25 @@ Steps = {
                  'module'     : 'trigMCKR()',
                },
 
+## ------- MODULES: JEC
+
+  'JECupdateMC2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
+                  'declare'    : 'jetRecalib2017MC = lambda : jetRecalib(globalTag="Fall17_17Nov2017_V32_MC", jetCollections=["CleanJet"], metCollections=["MET"])',
+                  'module'     : 'jetRecalib2017MC()',
+                 },    
+
+  'JECupdateDATA2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
+                  'module'     : 'jetRecalib2017RPLME_RUN()', ### <--- TODO
+                 },    
+
 ## ------- MODULES: MC Weights
 
   'baseW'    : {
@@ -470,7 +489,26 @@ Steps = {
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
 
+## ------- MODULES: Embedding
+
+  'Embedding2017' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : False ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_2017_v1.root")',
+                 'module'     : 'embed()',
+               },
+
 ## ------- MODULES: Fakes
+
+  'fakeWMC' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                  'onlySample' : [ 'Zg', 'WZTo3LNu_mllmin01', 'Wg_MADGRAPHMLM', 'WZTo3LNu' ] , 
+                   }, 
 
   'fakeWp2NB'  : {
                   'isChain'    : True ,
@@ -488,7 +526,7 @@ Steps = {
 
   'fakeWstep'   : {
                   'isChain'    : False ,
-                  'do4MC'      : False ,
+                  'do4MC'      : True ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonFakeWMaker',
                   'declare'    : '',
@@ -579,7 +617,7 @@ Steps = {
   'formulasFAKE' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
-                  'do4Data'    : False  ,
+                  'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE_RPLME_YEAR.py\')' ,
@@ -588,7 +626,7 @@ Steps = {
 ## -------- DYMVA
 
   'DYMVA' : {
-                  #'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-slc6-gcc62-opt/setup.sh'] ,   
+                  'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,   
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,

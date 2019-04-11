@@ -97,6 +97,16 @@ Productions = {
                        'year'    : '2016' ,
                    },
 
+  # ---- Embedding 2017 ...
+
+   'Embedding2017_nAOD_v1_Full2017v2':  {
+                         'isData'  : True ,
+                         'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                         'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2017_nAODv2.py' ,
+                         'cmssw'   : 'Full2017v2' ,
+                         'year'    : '2017' , 
+                   },
+
   # ---- Relaxed loose ID / misHit / ...
 
    'Run2017_nAOD_v1_Full2017v2':  {
