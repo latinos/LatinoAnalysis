@@ -499,7 +499,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'subTargets' : ['fakeWstep','formulasFAKE'],
-                  'onlySample' : [ 'Zg', 'WZTo3LNu_mllmin01'] #, 'Wg_MADGRAPHMLM', 'WZTo3LNu' ] , 
+                  'onlySample' : [ 'Zg', 'WZTo3LNu_mllmin01', 'Wg_MADGRAPHMLM', 'WZTo3LNu' ] , 
                    }, 
 
   'fakeWp2NB'  : {
