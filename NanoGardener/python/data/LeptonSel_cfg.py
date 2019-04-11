@@ -41,7 +41,7 @@ ElectronWP = {
                                 'True' :
                                   [
                                    'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
-                                   'electron_col[LF_idx]["cutBased_Fall17_v1"] >= 1',
+                                   'electron_col[LF_idx]["cutBased_Fall17_V1"] >= 1',
                                   ] ,             
                                 # Barrel
                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
