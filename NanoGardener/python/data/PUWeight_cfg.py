@@ -33,6 +33,19 @@ PUCfg = {
                    'doSysVar'    : True , 
                 } ,
 
+ 'Full2018v4' : {
+                   'srcfile'     : "auto" ,
+                   'targetfiles' : { '1-1' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2018/2018_PU.root' } ,
+                   'srchist'     : "pileup"   ,
+                   'targethist'  : "pileup"   ,
+                   'name'        : "puWeight" ,
+                   'norm'        : True       ,
+                   'verbose'     : False      ,
+                   'nvtx_var'    : "Pileup_nTrueInt" ,
+                   'doSysVar'    : True ,
+                } ,
+
 }
 
 PUCfg['Full2016v4'] = PUCfg['Full2016v2']
+#PUCfg['Full2017v4'] = PUCfg['Full2016v2']
