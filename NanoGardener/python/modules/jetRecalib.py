@@ -10,23 +10,23 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.jme.JetReCalibrator import
 
 class jetRecalib(Module):
     # Module based on https://github.com/cms-nanoAOD/nanoAOD-tools/blob/master/python/postprocessing/modules/jme/jetRecalib.py
-    def __init__(self,  globalTag, jetType = "AK4PFchs"):
+    def __init__(self,  globalTag, jetCollections = ["CleanJet"], metCollections = ["MET"], jetType = "AK4PFchs"):
 
         if "AK4" in jetType : 
             self.jetBranchName = "Jet"
-            self.otherJetBranches = ["CleanJet"] # Any jet collections based on full Jet-collection
         elif "AK8" in jetType :
             self.jetBranchName = "FatJet"
             self.subJetBranchName = "SubJet"
         else:
             raise ValueError("ERROR: Invalid jet type = '%s'!" % jetType)
-        self.metCollections = ["MET"]
+        self.otherJetBranches = jetCollections # Any jet collections based on full Jet-collection
+        self.metCollections = metCollections
         self.rhoBranchName = "fixedGridRhoFastjetAll"
         # To do : change to real values
         self.jmsVals = [1.00, 0.99, 1.01]
         
 
-        self.jesInputFilePath = os.environ['CMSSW_BASE'] + "/src/LatinoAnalysis/NanoGardener/python/data/JEC/"
+        self.jesInputFilePath = os.environ['CMSSW_BASE'] + "/src/PhysicsTools/NanoAODTools/data/jme/"
 
         self.jetReCalibrator = JetReCalibrator(globalTag, jetType , True, self.jesInputFilePath, calculateSeparateCorrections = False, calculateType1METCorrection  = False)
 	
@@ -108,3 +108,12 @@ class jetRecalib(Module):
             self.out.fillBranch("%s_phi" % met, math.atan2(met_py[mid], met_px[mid]))   
 
         return True
+
+
+# define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
+
+jetRecalib2017B = lambda : jetRecalib("Fall17_17Nov2017B_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])
+jetRecalib2017C = lambda : jetRecalib("Fall17_17Nov2017C_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])
+jetRecalib2017D = lambda : jetRecalib("Fall17_17Nov2017DE_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])
+jetRecalib2017E = lambda : jetRecalib("Fall17_17Nov2017DE_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])
+jetRecalib2017F = lambda : jetRecalib("Fall17_17Nov2017F_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])

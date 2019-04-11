@@ -386,13 +386,21 @@ Steps = {
 
 ## ------- MODULES: JEC
 
-  'JECupdate2017': {
+  'JECupdateMC2017': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
-                  'do4Data'    : True  ,
+                  'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
-                  'declare'    : 'JECreapply = lambda : jetRecalib(globalTag="Fall17_17Nov2017_V32_MC")',
-                  'module'     : 'JECreapply()',
+                  'declare'    : 'jetRecalib2017MC = lambda : jetRecalib(globalTag="Fall17_17Nov2017_V32_MC", jetCollections=["CleanJet"], metCollections=["MET"])',
+                  'module'     : 'jetRecalib2017MC()',
+                 },    
+
+  'JECupdateDATA2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
+                  'module'     : 'jetRecalib2017RPLME_RUN()', ### <--- TODO
                  },    
 
 ## ------- MODULES: MC Weights
