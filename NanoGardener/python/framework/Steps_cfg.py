@@ -418,7 +418,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'module'     : 'btagSFProducer(era="2016", algo="cmva")',
+                  'module'     : 'btagSFProducer(era="Legacy2016", algo="deepcsv")',
                  },
 
   'btagPerJet2017': {
