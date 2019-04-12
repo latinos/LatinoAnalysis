@@ -168,6 +168,15 @@ Steps = {
                   'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA','jetSel','CleanJetCut' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
                    },
 
+## ------- EMBEDDING:
+
+    'Embedding2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['EmbeddingWeights2017','trigMCKeepRun','LeptonSF','formulasEMBED'],
+                   },
+
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
 ## ------- MODULES: MC Kinematic
@@ -491,7 +500,7 @@ Steps = {
 
 ## ------- MODULES: Embedding
 
-  'Embedding2017' : { 
+  'EmbeddingWeights2017' : { 
                  'isChain'    : False ,
                  'do4MC'      : False ,
                  'do4Data'    : True  ,
@@ -621,6 +630,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE_RPLME_YEAR.py\')' ,
+                 },
+
+  'formulasEMBED' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\')' ,
                  },
 
 ## -------- DYMVA
@@ -760,6 +778,20 @@ Steps = {
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
+  'EmbElepTup' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
+               },
+
+  'EmbElepTdo' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
+               },
+
 ## ------- mu-Scale
 
   'do_MupTup' : {
@@ -792,6 +824,20 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+               },
+
+  'EmbMupTup' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
+               },
+
+  'EmbMupTdo' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
                },
 
 # ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
