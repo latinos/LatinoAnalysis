@@ -450,13 +450,54 @@ Steps = {
                   'module'     : 'LeptonSF()',
                 },
 
+## ------ Charge Flip
+
   'ChargeFlip' : {
+                 'isChain'     : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['ChargeFlipDY','ChargeFlipWW','ChargeFlipTop'],
+                  'onlySample' : ['DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50','WWTo2L2Nu', 'GluGluToWWToENEN', 'GluGluToWWToENMN', 'GluGluToWWToENTN', 'GluGluToWWToMNEN', 'GluGluToWWToMNMN', 'GluGluToWWToMNTN', 'GluGluToWWToTNEN', 'GluGluToWWToTNMN', 'GluGluToWWToTNTN' , 'TTTo2L2Nu', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ST_tW_antitop', 'ST_tW_top']
+                 },
+
+  'ChargeFlipDY' : {
                  'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
-                  'declare'    : 'ChargeFlip = lambda : ChargeFlipWeight("RPLME_CMSSW")',
-                  'module'     : 'ChargeFlip()',
+                  'declare'    : 'ChargeFlipDY = lambda : ChargeFlipWeight("RPLME_CMSSW","DY")',
+                  'module'     : 'ChargeFlipDY()',
+                  'onlySample' : ['DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50'],
+                 },
+
+   'ChargeFlipWW' : {
+                 'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
+                  'declare'    : 'ChargeFlipWW = lambda : ChargeFlipWeight("RPLME_CMSSW","WW")',
+                  'module'     : 'ChargeFlipWW()',
+                  'onlySample' : ['WWTo2L2Nu', 'GluGluToWWToENEN', 'GluGluToWWToENMN', 'GluGluToWWToENTN', 'GluGluToWWToMNEN', 'GluGluToWWToMNMN', 'GluGluToWWToMNTN', 'GluGluToWWToTNEN', 'GluGluToWWToTNMN', 'GluGluToWWToTNTN' ]
+                 },
+
+   'ChargeFlipTop' : {
+                 'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
+                  'declare'    : 'ChargeFlipTop = lambda : ChargeFlipWeight("RPLME_CMSSW","Top")',
+                  'module'     : 'ChargeFlipTop()',
+                  'onlySample' : [ 'TTTo2L2Nu', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ST_tW_antitop', 'ST_tW_top']
+                    },
+
+   'ChargeFlipClosure' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
+                  'declare'    : 'ChargeFlipClosusre = lambda : ChargeFlipWeight("RPLME_CMSSW","DY",False)',
+                  'module'     : 'ChargeFlipClosusre()',
+                  'onlySample' : ['DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50'],
                  },
 
 ## ------- Pile-Up weights
