@@ -48,4 +48,4 @@ PUCfg = {
 }
 
 PUCfg['Full2016v4'] = PUCfg['Full2016v2']
-#PUCfg['Full2017v4'] = PUCfg['Full2016v2']
+PUCfg['Full2017v4'] = PUCfg['Full2016v2']

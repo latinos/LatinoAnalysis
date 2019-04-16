@@ -127,6 +127,14 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
+  'DATAl1loose2017': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
+                },
+
 # 'DATAl1loose2017': {
 #                 'isChain'    : True  ,
 #                 'do4MC'      : False ,
@@ -427,7 +435,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'module'     : 'btagSFProducer(era="Legacy2016", algo="deepcsv")',
+                  'declare'    : 'btagSFProducer2016 = lambda : btagSFProducer(era="Legacy2016", algo="deepcsv")',
+                  'module'     : 'btagSFProducer2016()',
                  },
 
   'btagPerJet2017': {
@@ -657,8 +666,8 @@ Steps = {
 
   'formulasDATA' : {
                   'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True   ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_RPLME_YEAR.py\')' ,
