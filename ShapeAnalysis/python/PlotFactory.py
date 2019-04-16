@@ -739,16 +739,28 @@ class PlotFactory:
             tgrData.SetMarkerColor(dataColor)
             tgrData.SetLineColor(dataColor)
             
-            if self._postFit == 1 or self._postFit == 2 :
+            ## Default: --postFit 0 --> No additional line is drawn
+            ## ----------------------------------------------------
+
+            ## --postFit 1 --> line is prefit
+            if self._postFit == 'p':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
-                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background')
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_prefit')
+            ## --postFit 2 --> line is (S+B) postfit
+            if self._postFit == 's':
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_s')
+            ## --postFit 3 --> line is B-only postfit
+            if self._postFit == 'b':
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_b')
 
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             tgrDataMinusMC = tgrData.Clone("tgrDataMinusMC")
             for iBin in range(0, len(tgrData_vx)) : 
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-              if self._postFit == 1 or self._postFit == 2:
+              if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
                   tgrDataOverPF.SetPoint(iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)) )
                   tgrDataOverPF.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], histoPF.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
                   print "Pre-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)))
@@ -1201,25 +1213,40 @@ class PlotFactory:
               frameNorm = ROOT.TH1F
               frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
   
-              frameNorm.GetYaxis().SetRangeUser( 0, 2 )
+              frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
               # setup axis names
               if 'xaxis' in variable.keys() : 
                 frameNorm.GetXaxis().SetTitle(variable['xaxis'])
               tcanvasSigVsBkg.RedrawAxis()
   
-  
+              maxY_normalized=0.0
+
               for ihisto in range(thsBackground_grouped.GetNhists()) :
-                num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
-                for ibin in range( num_bins ) :
-                  (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                  num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
+                  if (thsBackground_grouped.GetHists().At(ihisto)).Integral()  > 0:
+                      if (thsBackground_grouped.GetHists().At(ihisto)).GetBinContent((thsBackground_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsBackground_grouped.GetHists().At(ihisto)).Integral() > maxY_normalized:
+                          maxY_normalized =(thsBackground_grouped.GetHists().At(ihisto)).GetBinContent((thsBackground_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsBackground_grouped.GetHists().At(ihisto)).Integral()
+
+                  for ibin in range( num_bins ) :
+                      (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                  (thsBackground_grouped.GetHists().At(ihisto)).SetFillStyle(0)
+                  (thsBackground_grouped.GetHists().At(ihisto)).SetLineWidth(3)
+                  (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
                   
               for ihisto in range(thsSignal_grouped.GetNhists()) :
-                num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
-                for ibin in range( num_bins ) :
-                  (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                  num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
+                  if (thsSignal_grouped.GetHists().At(ihisto)).Integral()  > 0:
+                      if (thsSignal_grouped.GetHists().At(ihisto)).GetBinContent((thsSignal_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsSignal_grouped.GetHists().At(ihisto)).Integral() > maxY_normalized:
+                          maxY_normalized = (thsSignal_grouped.GetHists().At(ihisto)).GetBinContent((thsSignal_grouped.GetHists().At(ihisto)).GetMaximumBin())/(thsSignal_grouped.GetHists().At(ihisto)).Integral()
+
+                  for ibin in range( num_bins ) :
+                      (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
+                  (thsSignal_grouped.GetHists().At(ihisto)).SetFillStyle(0)
+                  (thsSignal_grouped.GetHists().At(ihisto)).SetLineWidth(3)
+                  (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("hist,same")
   
+              frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
+
               tlegend.Draw()
               tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
          
@@ -1359,7 +1386,7 @@ class PlotFactory:
             tgrDataOverMC.Draw("P0")
             
             
-            if self._postFit == 1 or self._postFit == 2:
+            if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
             #---- Ratio Legend
                 tlegendRatio = ROOT.TLegend(0.20, 0.40, 0.60, 0.55)
                 tlegendRatio.SetFillColor(0)
@@ -1368,15 +1395,17 @@ class PlotFactory:
                 tlegendRatio.SetLineColor(0)
                 tlegendRatio.SetShadowColor(0)
                 
-                if self._postFit == 1:
-                    tlegendRatio.AddEntry(tgrDataOverMC, "pre-fit", "PL")
-                    tlegendRatio.AddEntry(tgrDataOverPF, "post-fit", "PL")
-                if self._postFit == 2:
+                if self._postFit == 'p':
                     tlegendRatio.AddEntry(tgrDataOverMC, "post-fit", "PL")
                     tlegendRatio.AddEntry(tgrDataOverPF, "pre-fit", "PL")
+                if self._postFit == 's' or  self._postFit == 'b':
+                    tlegendRatio.AddEntry(tgrDataOverMC, "pre-fit", "PL")
+                    tlegendRatio.AddEntry(tgrDataOverPF, "post-fit", "PL")
                 
                 for sampleName, sample in self._samples.iteritems():
-                    if sampleName == 'total_background' :
+                    ##if sampleName.find('total') == 1: 
+## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
+                    if 'total' in sampleName:
                         tgrDataOverPF.SetMarkerColor(plot[sampleName]['color'])
                         tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
                         # tgrDataOverPF.SetMarkerColor(2)

@@ -38,7 +38,7 @@ class TMVAfiller(Module):
 
         cmssw_base = os.getenv('CMSSW_BASE') 
         for iMva in self.mvaDic :
-          self.mvaDic[iMva]['reader'] = ROOT.TMVA.Reader()
+          self.mvaDic[iMva]['reader'] = ROOT.TMVA.Reader("V")
           self.mvaDic[iMva]['inputs'] = []
           jVar=0
           for iVar in self.mvaDic[iMva]['inputVars'] :
@@ -55,7 +55,7 @@ class TMVAfiller(Module):
         self.out = wrappedOutputTree
         self.itree = inputTree
         for iMva in self.mvaDic :
-          self.out.branch(iMva,  'F')
+          self.out.branch(iMva, 'F')
     
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -65,14 +65,15 @@ class TMVAfiller(Module):
         for iMva in self.mvaDic :
           jVar=0
           for iVar in self.mvaDic[iMva]['inputVars'] :  
-            self.mvaDic[iMva]['inputs'][jVar] = eval(self.mvaDic[iMva]['inputVars'][iVar])
+            self.mvaDic[iMva]['inputs'][jVar][0] = eval(self.mvaDic[iMva]['inputVars'][iVar])
             jVar+=1
+          #print "====== ",iMva
           #print self.mvaDic[iMva]['inputVars'].keys()
           #print self.mvaDic[iMva]['inputs']   
-          val =self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type'])
+          val = self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type'])
           #print val
-          self.out.fillBranch(iMva,val)
-          #self.out.fillBranch(iMva, self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type'])) 
+          self.out.fillBranch(iMva, val)
+          #self.out.fillBranch(iMva, self.mvaDic[iMva]['reader'].EvaluateMVA(self.mvaDic[iMva]['type']))
 
         return True
 

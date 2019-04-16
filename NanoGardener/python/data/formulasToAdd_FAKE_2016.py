@@ -9,8 +9,7 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_HBHENoiseFilter*\
                      event.Flag_HBHENoiseIsoFilter*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
-                     event.Flag_BadPFMuonFilter*\
-                     event.Flag_BadChargedCandidateFilter*\
+                     event.Flag_BadPFMuonFilter\
                    )'
 
 METFilter_FAKE   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
