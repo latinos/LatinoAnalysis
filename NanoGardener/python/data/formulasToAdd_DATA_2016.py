@@ -18,7 +18,8 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_globalSuperTightHalo2016Filter*\
                      event.Flag_HBHENoiseFilter*\
                      event.Flag_HBHENoiseIsoFilter*\
-                     event.Flag_EcalDeadCellTriggerPrimitiveFilter\
+                     event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
+                     event.Flag_BadPFMuonFilter\
                    )'
 
 

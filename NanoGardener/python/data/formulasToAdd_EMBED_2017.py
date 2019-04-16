@@ -11,44 +11,10 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_HBHENoiseIsoFilter*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
                      event.Flag_BadPFMuonFilter*\
-                     event.Flag_ecalBadCalibFilterV2\
+                     event.Flag_ecalBadCalibFilter\
                    )'
 
 METFilter_DATA   =  METFilter_Common 
-
-formulas['METFilter_MC'] = METFilter_DATA
-
-# Common Weights
-
-
-formulas['XSWeight'] = 'event.baseW*\
-                        event.genWeight \
-                        if hasattr(event, \'genWeight\') else event.baseW'
-
-
-formulas['SFweight2l'] = 'event.puWeight*\
-                          event.TriggerEffWeight_2l*\
-                          event.Lepton_RecoSF[0]*\
-                          event.Lepton_RecoSF[1]*\
-                          event.EMTFbug_veto \
-                          if event.nLepton > 1 else 0.'
-
-formulas['SFweight3l'] = 'event.puWeight*\
-                          event.TriggerEffWeight_3l*\
-                          event.Lepton_RecoSF[0]*\
-                          event.Lepton_RecoSF[1]*\
-                          event.Lepton_RecoSF[2]*\
-                          event.EMTFbug_veto \
-                          if event.nLepton > 2 else 0.'
-
-formulas['SFweight4l'] = 'event.puWeight*\
-                          event.TriggerEffWeight_4l*\
-                          event.Lepton_RecoSF[0]*\
-                          event.Lepton_RecoSF[1]*\
-                          event.Lepton_RecoSF[2]*\
-                          event.Lepton_RecoSF[3]*\
-                          event.EMTFbug_veto \
-                          if event.nLepton > 3 else 0.'
 
 
 # Lepton WP
@@ -208,18 +174,3 @@ formulas['LepSF4l__mu_'+muWP+'__Do'] = '((abs(event.Lepton_pdgId[0]) == 13)*(eve
                                         ((abs(event.Lepton_pdgId[3]) == 13)*(event.Lepton_tightMuon_'+muWP+'_TotSF'+'_Down[3])/(event.Lepton_tightMuon_'+muWP+'_TotSF'+'[3])+\
                                          (abs(event.Lepton_pdgId[3]) == 11)) \
                                         if event.nLepton > 3 else 0.'
-
-formulas['GenLepMatch2l'] = 'event.Lepton_genmatched[0]*\
-                             event.Lepton_genmatched[1] \
-                             if event.nLepton > 1 else 0.'
-
-formulas['GenLepMatch3l'] = 'event.Lepton_genmatched[0]*\
-                             event.Lepton_genmatched[1]*\
-                             event.Lepton_genmatched[2] \
-                             if event.nLepton > 2 else 0.'
-
-formulas['GenLepMatch4l'] = 'event.Lepton_genmatched[0]*\
-                             event.Lepton_genmatched[1]*\
-                             event.Lepton_genmatched[2]*\
-                             event.Lepton_genmatched[3] \
-                             if event.nLepton > 3 else 0.'

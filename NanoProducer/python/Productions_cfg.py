@@ -19,5 +19,11 @@ Productions = {
                          'EraModifiers' : 'Run2_2017,run2_nanoAOD_94XMiniAODv2' ,
                    },
 
+   'Summer16_102X_nAODv4_Full2016v4': {
+                         'isData'       : False ,
+                         'samples'      : 'LatinoAnalysis/NanoProducer/python/samples/Summer16_102X_mAODv3.py' ,
+                         'GlobalTag'    : '102X_mcRun2_asymptotic_v6' ,
+                         'EraModifiers' : 'Run2_2016,run2_nanoAOD_94X2016' ,
+   }
 
 }
