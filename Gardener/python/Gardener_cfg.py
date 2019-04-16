@@ -5258,16 +5258,16 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
-                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[1] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[2] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[3] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[4] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[5] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[6] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[7] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[8] > 0.2219)*(std_vector_jet_pt[0]>20) + \
-                                                            1*(std_vector_jet_DeepCSVB[9] > 0.2219)*(std_vector_jet_pt[0]>20) \
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.2219)*(std_vector_jet_pt[0]>25) \
                                                             ) == 0 \' '
                 },
 
@@ -5275,16 +5275,16 @@ Steps= {
                     'isChain'    : False ,
                     'do4MC'      : True ,
                     'do4Data'    : True,
-                    'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[1] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[2] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[3] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[4] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[5] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[6] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[7] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[8] > 0.8958)*(std_vector_jet_pt[0]>20) + \
-                                                              1*(std_vector_jet_DeepCSVB[9] > 0.8958)*(std_vector_jet_pt[0]>20) \
+                    'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[1] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[2] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[3] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[4] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[5] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[6] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[7] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[8] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[9] > 0.8958)*(std_vector_jet_pt[0]>25) \
                                                               ) == 0 \' '
                   },
 
