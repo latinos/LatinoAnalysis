@@ -36,6 +36,7 @@ samples['WJetsToLNu']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'
 samples['WJetsToLNu_ext2']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu-LO']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu-LO_ext2']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
+samples['WJetsToLNu_HT70_100']          .extend( ['xsec=1319.00',       'kfact=1.21',           'ref=E'] )   ##temporary jhchoi
 samples['WJetsToLNu_HT100_200']        	.extend( ['xsec=1345.00',	'kfact=1.21',		'ref=E'] )
 samples['WJetsToLNu_HT100_200_ext1']      .extend( ['xsec=1345.00',	'kfact=1.21',		'ref=E'] )
 samples['WJetsToLNu_HT100_200_ext2']      .extend( ['xsec=1345.00',	'kfact=1.21',		'ref=E'] )
@@ -111,12 +112,14 @@ samples['WWTo2L2Nu_aTGC_600-800']      	.extend( ['xsec=0.339499',	'kfact=1.000'
 samples['WWTo2L2Nu_aTGC_800-Inf']      	.extend( ['xsec=0.241369',	'kfact=1.000',		'ref=X'] )		
 samples['WWToLNuQQ']	             	.extend( ['xsec=49.997',	'kfact=1.000',		'ref=E'] )	
 samples['WWToLNuQQext']	             	.extend( ['xsec=49.997',	'kfact=1.000',		'ref=E'] )
+samples['WWToLNuQQ_AMCNLOFXFX']         .extend( ['xsec=49.997',        'kfact=1.000',          'ref=E'] )
 samples['WWTo4Q'] 	             	.extend( ['xsec=51.723',	'kfact=1.000',		'ref=E'] )
 samples['WWTo2L2NuHerwigPS']	        .extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )	
 samples['WWTo2L2Nu_CUETUp']	        .extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )
 samples['WWTo2L2Nu_CUETDown']	        .extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )
 samples['WZ']			        .extend( ['xsec=47.130',	'kfact=1.000',		'ref=E'] )
 samples['WZ_ext']			.extend( ['xsec=47.130',	'kfact=1.000',		'ref=E'] )
+samples['WZ_AMCNLO']                    .extend( ['xsec=5.26'  ,        'kfact=1.000',          'ref=E'] )
 samples['WZTo3LNu']		        .extend( ['xsec=4.42965',	'kfact=1.000',		'ref=E'] )
 samples['WZTo3LNu_ext']                 .extend( ['xsec=4.42965',       'kfact=1.000',          'ref=E'] )
 samples['WZTo3LNu_mllmin01']	        .extend( ['xsec=58.59',		'kfact=0.601644',	'ref=N'] ) # kfact from gen-level Z0 comparision to WZTo3LNu
@@ -132,7 +135,9 @@ samples['VVTo2L2Nu_ext1']		        .extend( ['xsec=11.950',	'kfact=1.000',		'ref
 ## ZZ
 samples['ZZ']                           .extend( ['xsec=16.52300',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Q']                     .extend( ['xsec=3.220000',	'kfact=1.000',		'ref=E'] )
+samples['ZZTo2L2Q_AMCNLOFXFX']          .extend( ['xsec=3.22',          'kfact=1.000',          'ref=E'] )
 samples['ZZTo4L']                       .extend( ['xsec=1.212000',	'kfact=1.000',		'ref=E'] )
+samples['ZZTo4L_AMCNLOFXFX']            .extend( ['xsec=1.212000',      'kfact=1.000',          'ref=E'] )
 samples['ZZTo2L2Nu']                    .extend( ['xsec=0.564000',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Nu_ext1']               .extend( ['xsec=0.564000',      'kfact=1.000',          'ref=E'] )
 samples['ggZZ4e']                       .extend( ['xsec=0.001586',	'kfact=1.000',		'ref=E'] )
@@ -176,6 +181,7 @@ samples['TTTo2L2Nu_alphaS01108']        .extend( ['xsec=87.310',	'kfact=1.000',	
 samples['TTToSemiLeptonic']             .extend( ['xsec=364.35',	'kfact=1.000',	        'ref=E'] )  # 831.76 * 0.6760 * 0.1080 * 3 * 2
 samples['TTToSemiLeptonic_alphaS01108'] .extend( ['xsec=364.35',	'kfact=1.000',		'ref=E'] )  # 831.76 * 0.6760 * 0.1080 * 3 * 2
 samples['TTToSemiLepton']               .extend( ['xsec=364.35',	'kfact=1.000',	        'ref=E'] )  # 831.76 * 0.6760 * 0.1080 * 3 * 2
+samples['TT_TuneCUETP8M2T4']            .extend( ['xsec=831.76',        'kfact=1.000',          'ref=E'] )  # only change of tuning 
 
 
 ## GluGluWW
