@@ -32,6 +32,7 @@ public:
 
 // void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
  void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour, std::vector<float> invectorcharge); 
+ void setNotZLepton();
 
  void setMET  (float met, float metphi);
  void setTkMET(float met, float metphi);
@@ -74,10 +75,19 @@ public:
  float pt23();
  float ptbest();
  
+ float z4lveto();
+ float dmjjmW();
+ float mtw_notZ();
+ float dphilmetjj();
+ float mTlmetjj();
+ float ptz();
+ float checkmZ();
 
 private:
  //! variables
  TLorentzVector L1,L2,L3;
+ TLorentzVector notZlep;	// for Zh
+ TLorentzVector Zlep1, Zlep2;	// for Zh
  TLorentzVector MET;
  TLorentzVector J1, J2;
  float pid1, pid2;
@@ -165,6 +175,7 @@ WWW::WWW(float pt1, float pt2, float pt3, float eta1, float eta2, float eta3, fl
   L3.SetPtEtaPhiM(pt3, eta3, phi3, 0.);
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
   _isOk =  true;
+  setNotZLepton();
  }
  else {
   _isOk = false;
@@ -339,7 +350,62 @@ void WWW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectore
  if ( _leptonspt.size() > 2 && _leptonspt.at(2) > 0 ) {
   L3.SetPtEtaPhiM(_leptonspt.at(2), _leptonseta.at(2), _leptonsphi.at(2), 0); //---- NB: leptons are treated as massless
  }
- 
+
+ setNotZLepton();
+}
+
+// Set not-Z-lepton (W candidate) for Zh 
+void WWW::setNotZLepton() {
+
+  float Zmass = 91.1876;
+
+  float L1Charge = _leptonsflavour.at(0);
+  float L2Charge = _leptonsflavour.at(1);
+  float L3Charge = _leptonsflavour.at(2);
+  float L1flavour = _leptonscharge.at(0);
+  float L2flavour = _leptonscharge.at(1);
+  float L3flavour = _leptonscharge.at(2);
+
+  // cout << endl;
+  // cout << "Charges " << L1Charge << " " << L2Charge << " " << L3Charge << endl;
+  // cout << "Flavours " << L1flavour << " " << L2flavour << " " << L3flavour << endl;
+
+  double dlep = 0.;
+  double mindlep = 99999.;
+
+  if((L1Charge * L2Charge < 0) && (fabs(L1flavour) == fabs(L2flavour))){
+    mindlep = fabs((L1 + L2).M()-Zmass);
+    // cout << "Z = L1+L2; m = " << (L1 + L2).M() << endl;
+    notZlep = L3;
+    Zlep1 = L1;
+    Zlep2 = L2;
+    // cout << "chose L3" << endl;
+  }
+
+  if((L2Charge * L3Charge < 0) && (fabs(L2flavour) == fabs(L3flavour))){
+    dlep = fabs((L2 + L3).M()-Zmass);
+    // cout << "Z = L2+L3; m = " << (L2 + L3).M() << endl;
+    if (dlep < mindlep) {
+      mindlep = dlep;
+      notZlep = L1;
+      Zlep1 = L2;
+      Zlep2 = L3;
+      // cout << "chose L1" << endl;
+    }
+  }
+
+  if((L1Charge * L3Charge < 0) && (fabs(L1flavour) == fabs(L3flavour))){
+    dlep = fabs((L1 + L3).M()-Zmass);
+    // cout << "Z = L1+L3; m = " << (L1 + L3).M() << endl;
+    if (dlep < mindlep) {
+      mindlep = dlep;
+      notZlep = L2;
+      Zlep1 = L1;
+      Zlep2 = L3;
+      // cout << "chose L2" << endl;
+    }
+  }
+
 }
 
 /*
@@ -480,6 +546,31 @@ return dlep_sort[1];
  } 
 }
 
+float WWW::z4lveto(){
+
+  float Zmass = 91.1876;
+
+  if (_isOk) {
+
+    return fabs(mlll() - Zmass);
+
+  } else {
+    return -9999.0;
+  }
+}
+
+float WWW::dmjjmW() {
+
+  float Wmass = 80.4;
+  float mjj = 0.0;
+  if (_jetOk >= 2) {
+    mjj = (J1+J2).M();
+    return mjj-Wmass;
+  }
+
+  return -9999.0;
+}
+
 float WWW::zveto_3l(){
 float Zmass = 91.1876;
 
@@ -533,6 +624,15 @@ float dilep_diff3 = fabs(dlep3-Zmass);
  else {
   return -9999.0;
  }
+}
+
+float WWW::mtw_notZ(){
+
+  if (_isOk) {
+    return sqrt(2 * notZlep.Pt() * pfmet() * (1 - cos(fabs((notZlep).DeltaPhi(MET)))));
+  } else {
+    return -9999.0;
+  }
 }
 
 
@@ -703,6 +803,46 @@ float WWW::dphilllmet(){
 
  if (_isOk) {
   return  fabs( (L1+L2+L3).DeltaPhi(MET) );
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::mTlmetjj(){
+
+ if (_isOk && _jetOk >= 2) {
+   TLorentzVector WWvec = MET + notZlep + J1 + J2;
+   return  sqrt( pow(MET.Pt() + notZlep.Pt() + J1.Pt() + J2.Pt(),2) - pow(WWvec.Px(),2) - pow(WWvec.Py(),2));
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::ptz() {
+
+  if (_isOk) {
+    return ((Zlep1 + Zlep2).Pt());
+  } else {
+    return -9999.0;
+  }
+
+}
+
+float WWW::checkmZ() {
+  if (_isOk) {
+    return ((Zlep1 + Zlep2).M());
+  } else {
+    return -9999.0;
+  }
+
+}
+
+float WWW::dphilmetjj(){
+
+ if (_isOk && _jetOk >= 2) {
+  return  fabs( (notZlep+MET).DeltaPhi(J1+J2) );
  }
  else {
   return -9999.0;

@@ -320,7 +320,7 @@ class HiggsXSection:
 
      # Final X-Section
      HiggsXS['xs'] =  HiggsProdXS * HiggsBR * FinalStateBR    
-
+     print HiggsXS
      return HiggsXS
 
 ### Below some examples of usage :
