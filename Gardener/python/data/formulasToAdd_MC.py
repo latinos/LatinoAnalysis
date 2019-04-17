@@ -180,6 +180,8 @@ formulas['LepSF4l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]
                                          (abs(event.std_vector_lepton_flavour[3]) == 11)) \
                                         if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
 
+formulas['GenLepMatch1l'] = 'event.std_vector_lepton_genmatched[0] \
+                             if hasattr(event, \'std_vector_lepton_genmatched\') else 1. '
 
 formulas['GenLepMatch2l'] = 'event.std_vector_lepton_genmatched[0]*\
                              event.std_vector_lepton_genmatched[1] \

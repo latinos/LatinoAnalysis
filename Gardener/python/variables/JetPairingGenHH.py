@@ -53,17 +53,15 @@ class JetPairingGenVBS(TreeCloner):
 
         self.connect(tree,input)
 
-        newbranches = ["hasTopGen", "V_jets", "VBS_jets", "PartonJetMatchFlag"]
+        newbranches = ["V_jets", "H_jets", "PartonJetMatchFlag"]
 
         self.clone(output,newbranches)
         
-        hasTopGen =   numpy.zeros(1, dtype=numpy.float32)
         V_jets    =   numpy.zeros(2, dtype=numpy.int32)
-        VBS_jets  =   numpy.zeros(2, dtype=numpy.int32)
+        H_jets  =   numpy.zeros(2, dtype=numpy.int32)
         PartonJetMatchFlag  =   numpy.zeros(1, dtype=numpy.int32)
-        self.otree.Branch('hasTopGen',      hasTopGen,      'hasTopGen/F')
         self.otree.Branch('V_jets',         V_jets,         'V_jets/I')
-        self.otree.Branch('VBS_jets',       VBS_jets,       'VBS_jets/I')
+        self.otree.Branch('H_jets',       H_jets,       'H_jets/I')
         self.otree.Branch('PartonJetMatchFlag', PartonJetMatchFlag, 'PartonJetMatchFlag/I')
 
         nentries = self.itree.GetEntries()
@@ -84,32 +82,23 @@ class JetPairingGenVBS(TreeCloner):
 
             partons, pids = utils.get_hard_partons(itree, self.debug)
 
-            # Exclude events with top in the partons
-            if 6 in pids or -6 in pids:
-                hasTopGen[0] = 1.
-                PartonJetMatchFlag[0] = -1
-            else:
-                hasTopGen[0] = 0.
-                # If the event doesn't have top we can extract
-                # "true" partons from VBS processes
+            # first take the two bs and the other two partons
+            bpair = [i, for i, p in enumerate(pids) if p in [5,-5]]
+            v_pair = [ip for ip in range(4) if not ip in bs]
+            
+            # now associate partons and nearest jets
+            jets = utils.get_jets(itree, self.debug)
+            matchresult, flag = utils.associate_vectors(jets, partons, self.radius)
 
-                # get the pair nearest  to W or Z mass
-                vpair = utils.nearest_masses_pair(partons, [80.385, 91.1876])
-                vbspair = [ip for ip in range(4) if not ip in vpair]
-
-                # now associate partons and nearest jets
-                jets = utils.get_jets(itree, self.debug)
-                matchresult, flag = utils.associate_vectors(jets, partons, self.radius)
-
-                PartonJetMatchFlag[0] = flag
+            PartonJetMatchFlag[0] = flag
                 
-                if flag == 0:
-                    # Save the truth association only if every parton is 
-                    # associated to a different jet
-                    for ip, iparton in enumerate(vpair):
-                        V_jets[ip] = matchresult[0][iparton]
-                    for jp, jparton in enumerate(vbspair):
-                        VBS_jets[jp] = matchresult[0][iparton]
+            if flag == 0:
+                # Save the truth association only if every parton is 
+                # associated to a different jet
+                for ip, iparton in enumerate(vpair):
+                    V_jets[ip] = matchresult[0][iparton]
+                for jp, jparton in enumerate(bpair):
+                    H_jets[jp] = matchresult[0][iparton]
                
             otree.Fill()
   
