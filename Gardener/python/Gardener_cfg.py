@@ -1356,7 +1356,22 @@ Productions= {
                         # 37.X fb-1
                         'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full',
                         'onlySamples': [
-                             'DYJetsToLL_M-10to50-LO','ST_s-channel','ST_t-channel_antitop','ST_t-channel_top','ST_tW_antitop_noHad_ext1','ST_tW_antitop_noHad','ST_tW_antitop','ST_tW_top_noHad_ext1','ST_tW_top_noHad','ST_tW_top','ttHToNonbb_M125','TTTo2L2Nu','TTToSemiLepton','TTWJetsToLNu_ext2','TTWJetsToLNu','TTWJetsToQQ','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM','WgStarLNuEE','WgStarLNuMuMu','WJetsToLNu_HT100_200_ext1','WJetsToLNu_HT100_200_ext2','WJetsToLNu_HT100_200','WJetsToLNu_HT1200_2500_ext1','WJetsToLNu_HT200_400_ext1','WJetsToLNu_HT200_400_ext2','WJetsToLNu_HT200_400','WJetsToLNu_HT2500_inf_ext1','WJetsToLNu_HT2500_inf','WJetsToLNu_HT400_600_ext1','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800_ext1','WJetsToLNu_HT600_800','WJetsToLNu_HT800_1200_ext1','WJetsToLNu','WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet','WLLJJToLNu_M-4To50_QCD_2Jet','WLLJJToLNu_M-4To50_QCD_3Jet','WLLJJToLNu_M-4To50_QCD_4Jet','WLLJJToLNu_M-4To60_EWK_4F','WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet','WLLJJToLNu_M-50_QCD_3Jet','WLLJJToLNu_M-60_EWK_4F','WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600','WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf','WWTo2L2Nu','WWW','WWZ','WZJJ_EWK_QCD','WZTo1L1Nu2Q','WZTo1L3Nu','WZTo2L2Q','ZZTo2L2Q','ZZZ'
+                             'DYJetsToLL_M-10to50-LO','ST_s-channel','ST_t-channel_antitop',
+                             'ST_t-channel_top','ST_tW_antitop_noHad_ext1','ST_tW_antitop_noHad',
+                             'ST_tW_antitop','ST_tW_top_noHad_ext1','ST_tW_top_noHad','ST_tW_top',
+                             'ttHToNonbb_M125','TTTo2L2Nu','TTToSemiLepton','TTWJetsToLNu_ext2','TTWJetsToLNu',
+                             'TTWJetsToQQ','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM','WgStarLNuEE','WgStarLNuMuMu',
+                             'WJetsToLNu_HT100_200_ext1','WJetsToLNu_HT100_200_ext2','WJetsToLNu_HT100_200',
+                             'WJetsToLNu_HT1200_2500_ext1','WJetsToLNu_HT200_400_ext1','WJetsToLNu_HT200_400_ext2',
+                             'WJetsToLNu_HT200_400','WJetsToLNu_HT2500_inf_ext1','WJetsToLNu_HT2500_inf',
+                             'WJetsToLNu_HT400_600_ext1','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800_ext1',
+                             'WJetsToLNu_HT600_800','WJetsToLNu_HT800_1200_ext1','WJetsToLNu',
+                             'WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet','WLLJJToLNu_M-4To50_QCD_2Jet',
+                             'WLLJJToLNu_M-4To50_QCD_3Jet','WLLJJToLNu_M-4To50_QCD_4Jet','WLLJJToLNu_M-4To60_EWK_4F',
+                             'WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet',
+                             'WLLJJToLNu_M-50_QCD_3Jet','WLLJJToLNu_M-60_EWK_4F','WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600',
+                             'WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf','WWTo2L2Nu','WWW','WWZ','WZJJ_EWK_QCD',
+                             'WZTo1L1Nu2Q','WZTo1L3Nu','WZTo2L2Q','ZZTo2L2Q','ZZZ'
                         ]
                        },
                        

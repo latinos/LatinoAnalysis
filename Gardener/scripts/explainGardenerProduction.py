@@ -10,7 +10,7 @@ from LatinoAnalysis.Gardener import Gardener_cfg as cfg
 
 parser = OptionParser(usage="usage: %prog [options]")
 parser.add_option("-p","--prod",dest="prod", help="Production directory", type='string', default="")
-parser.add_option("-t","--type",dest="type", help="MC/DATA", type='string', default="")
+parser.add_option("-t","--type",dest="type", help="MC/DATA", type='string', default="MC")
 (options, args) = parser.parse_args()
 
 parts = options.prod.split("__")

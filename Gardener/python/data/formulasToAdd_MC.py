@@ -10,7 +10,7 @@ formulas['XSWeight'] = 'event.baseW*\
 
 
 formulas['SFweight1l'] = 'event.puW*\
-                          event.effTrigW*\
+                          event.effTrigW1l*\
                           event.std_vector_lepton_recoW[0]*\
                           event.veto_EMTFBug \
                           if hasattr(event, \'std_vector_lepton_recoW\') else 1.'

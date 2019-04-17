@@ -151,7 +151,7 @@ class LeptonEtaPtCorrFactors(TreeCloner):
             for bname, bvariable in self.oldBranchesToBeModified.iteritems(): bvariable[0] = 1.
 
             # Loop on leptons
-            Nelec=0
+            Nelec=0 
             electron_ptW_2l      = 1.
             electron_ptW_2l_Up   = 1.
             electron_ptW_2l_Down = 1.
