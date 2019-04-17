@@ -147,6 +147,7 @@ samples['ggZZ2e2m']                     .extend( ['xsec=0.003194',	'kfact=1.000'
 samples['ggZZ2e2t']                     .extend( ['xsec=0.003194',	'kfact=1.000',		'ref=E'] )
 samples['ggZZ2m2t']                     .extend( ['xsec=0.003194',	'kfact=1.000',		'ref=E'] )
 samples['ZZJJTo4L_EWK']                 .extend( ['xsec=0.0004453',	'kfact=1.000',		'ref=E'] )
+samples['ZZTo2L2Nu_EWK']		            .extend( ['xsec=0.0003014',	'kfact=1.000',		'ref=I'] ) #Run SMP-RunIISummer15wmLHEGS-00086
 
 ## Single top
 samples['ST_t-channel_antitop']         .extend( ['xsec=26.38',		'kfact=1.000',		'ref=E'] )
