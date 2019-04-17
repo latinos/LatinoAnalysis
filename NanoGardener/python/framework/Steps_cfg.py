@@ -127,6 +127,14 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
+  'DATAl1loose2017': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
+                },
+
 # 'DATAl1loose2017': {
 #                 'isChain'    : True  ,
 #                 'do4MC'      : False ,
@@ -166,6 +174,15 @@ Steps = {
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA','jetSel','CleanJetCut' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
+                   },
+
+## ------- EMBEDDING:
+
+    'Embedding2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['EmbeddingWeights2017','trigMCKeepRun','LeptonSF','formulasEMBED'],
                    },
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
@@ -418,7 +435,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'module'     : 'btagSFProducer(era="Legacy2016", algo="deepcsv")',
+                  'declare'    : 'btagSFProducer2016 = lambda : btagSFProducer(era="Legacy2016", algo="deepcsv")',
+                  'module'     : 'btagSFProducer2016()',
                  },
 
   'btagPerJet2017': {
@@ -450,13 +468,54 @@ Steps = {
                   'module'     : 'LeptonSF()',
                 },
 
+## ------ Charge Flip
+
   'ChargeFlip' : {
+                 'isChain'     : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['ChargeFlipDY','ChargeFlipWW','ChargeFlipTop'],
+                  'onlySample' : ['DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50','WWTo2L2Nu', 'GluGluToWWToENEN', 'GluGluToWWToENMN', 'GluGluToWWToENTN', 'GluGluToWWToMNEN', 'GluGluToWWToMNMN', 'GluGluToWWToMNTN', 'GluGluToWWToTNEN', 'GluGluToWWToTNMN', 'GluGluToWWToTNTN' , 'TTTo2L2Nu', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ST_tW_antitop', 'ST_tW_top']
+                 },
+
+  'ChargeFlipDY' : {
                  'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
-                  'declare'    : 'ChargeFlip = lambda : ChargeFlipWeight("RPLME_CMSSW")',
-                  'module'     : 'ChargeFlip()',
+                  'declare'    : 'ChargeFlipDY = lambda : ChargeFlipWeight("RPLME_CMSSW","DY")',
+                  'module'     : 'ChargeFlipDY()',
+                  'onlySample' : ['DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50'],
+                 },
+
+   'ChargeFlipWW' : {
+                 'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
+                  'declare'    : 'ChargeFlipWW = lambda : ChargeFlipWeight("RPLME_CMSSW","WW")',
+                  'module'     : 'ChargeFlipWW()',
+                  'onlySample' : ['WWTo2L2Nu', 'GluGluToWWToENEN', 'GluGluToWWToENMN', 'GluGluToWWToENTN', 'GluGluToWWToMNEN', 'GluGluToWWToMNMN', 'GluGluToWWToMNTN', 'GluGluToWWToTNEN', 'GluGluToWWToTNMN', 'GluGluToWWToTNTN' ]
+                 },
+
+   'ChargeFlipTop' : {
+                 'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
+                  'declare'    : 'ChargeFlipTop = lambda : ChargeFlipWeight("RPLME_CMSSW","Top")',
+                  'module'     : 'ChargeFlipTop()',
+                  'onlySample' : [ 'TTTo2L2Nu', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ST_tW_antitop', 'ST_tW_top']
+                    },
+
+   'ChargeFlipClosure' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ChargeFlipWeight' ,
+                  'declare'    : 'ChargeFlipClosusre = lambda : ChargeFlipWeight("RPLME_CMSSW","DY",False)',
+                  'module'     : 'ChargeFlipClosusre()',
+                  'onlySample' : ['DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50'],
                  },
 
 ## ------- Pile-Up weights
@@ -491,7 +550,7 @@ Steps = {
 
 ## ------- MODULES: Embedding
 
-  'Embedding2017' : { 
+  'EmbeddingWeights2017' : { 
                  'isChain'    : False ,
                  'do4MC'      : False ,
                  'do4Data'    : True  ,
@@ -607,8 +666,8 @@ Steps = {
 
   'formulasDATA' : {
                   'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True   ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_RPLME_YEAR.py\')' ,
@@ -621,6 +680,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE_RPLME_YEAR.py\')' ,
+                 },
+
+  'formulasEMBED' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\')' ,
                  },
 
 ## -------- DYMVA
@@ -760,6 +828,20 @@ Steps = {
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
+  'EmbElepTup' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
+               },
+
+  'EmbElepTdo' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
+               },
+
 ## ------- mu-Scale
 
   'do_MupTup' : {
@@ -792,6 +874,20 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+               },
+
+  'EmbMupTup' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
+               },
+
+  'EmbMupTdo' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasEMBED'],
                },
 
 # ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
