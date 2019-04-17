@@ -927,7 +927,7 @@ Steps = {
                  },
 
 
-  'fakeKinMC'  : {
+  'fakeSelKinMC'  : {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  , 
@@ -966,7 +966,7 @@ Steps = {
                                   ####
                                   'TT','TTJets','TTTo2L2Nu',
                                  ] ,               
-                    'subTargets' : ['baseW','rochesterMC','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCnoSF'] ,
+                    'subTargets' : ['baseW','rochesterMC','trigMC','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCnoSF'] ,
                  },
 
 
