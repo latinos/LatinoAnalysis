@@ -5226,13 +5226,30 @@ Steps= {
                   'subTargets' : ["l1looseSimple", 'l1tight']
                  },
 
-  'JetPairingGenVBS' : {
+  'JetPairing_VBS' :{
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ["JetPairingGenVBS", 'JetPairingVBS']
+                 }
+  },
+
+  'JetPairingGenVBS' :{
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'command'    : 'gardener.py JetPairingGenVBS --radius 1'
+                  'command'    : 'gardener.pu JetPairingGenVBS.py --radius 0.8'
+                 }
+  },
 
-                  },
+  'JetPairingVBS' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.pu JetPairingVBS.py'
+                 }
+  },
+
 
 # WP taken from https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/allBtagPogScaleFactors.py#L358
   'btagTight' : {
