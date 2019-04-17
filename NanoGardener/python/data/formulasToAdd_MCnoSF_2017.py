@@ -4,7 +4,7 @@
 
 formulas = {}
 
-#from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Moriond_2018
+# from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Moriond_2018
 METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_globalSuperTightHalo2016Filter*\
                      event.Flag_HBHENoiseFilter*\
@@ -14,11 +14,16 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_ecalBadCalibFilterV2\
                    )'
 
-METFilter_DATA   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
+METFilter_DATA   =  METFilter_Common 
 
-formulas['METFilter_DATA'] = METFilter_DATA
+formulas['METFilter_MC'] = METFilter_DATA
+
+# Common Weights
 
 
+formulas['XSWeight'] = 'event.baseW*\
+                        event.genWeight \
+                        if hasattr(event, \'genWeight\') else event.baseW'
 
 
 muWP='cut_Tight_HWWW'

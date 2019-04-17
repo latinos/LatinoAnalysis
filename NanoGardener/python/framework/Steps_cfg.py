@@ -653,6 +653,15 @@ Steps = {
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\')' ,
                  },
+
+  'formulasMCnoSF' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MCnoSF_RPLME_YEAR.py\')' ,
+                 },
    
   'formulasMC16tmp' : {
                   'isChain'    : False ,
@@ -916,6 +925,51 @@ Steps = {
                   'do4Data'    : True  ,
                   'selection'  : '"((MET_pt < 20 || PuppiMET_pt < 20) && mtw1 < 20)"' ,
                  },
+
+
+  'fakeKinMC'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  , 
+                  'selection'  : '"(MET_pt < 20 || PuppiMET_pt < 20)"' , 
+                  'onlySample' : [
+                                  #### DY
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
+                                  'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2','DYJetsToLL_M-10to50-LO-ext1',
+                                   # ... Low Mass HT
+                                  'DYJetsToLL_M-4to50_HT-100to200',
+                                  'DYJetsToLL_M-4to50_HT-100to200-ext1',
+                                  'DYJetsToLL_M-4to50_HT-200to400',
+                                  'DYJetsToLL_M-4to50_HT-200to400-ext1',
+                                  'DYJetsToLL_M-4to50_HT-400to600',
+                                  'DYJetsToLL_M-4to50_HT-400to600-ext1',
+                                  'DYJetsToLL_M-4to50_HT-600toInf',
+                                  'DYJetsToLL_M-4to50_HT-600toInf-ext1',
+                                   # ... high Mass HT
+                                  'DYJetsToLL_M-50_HT-100to200',
+                                  'DYJetsToLL_M-50_HT-200to400',
+                                  'DYJetsToLL_M-50_HT-400to600',
+                                  'DYJetsToLL_M-50_HT-600to800',
+                                  'DYJetsToLL_M-50_HT-800to1200',
+                                  'DYJetsToLL_M-50_HT-1200to2500',
+                                  'DYJetsToLL_M-50_HT-2500toInf',
+ 
+                                  ####
+                                  'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
+                                  'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
+                                  ####
+                                  'QCD_Pt-15to20_EMEnriched', 'QCD_Pt-20to30_EMEnriched', 'QCD_Pt-30to50_EMEnriched', 'QCD_Pt-50to80_EMEnriched','QCD_Pt-50to80_EMEnriched_ext1',
+                                  'QCD_Pt-20toInf_MuEnrichedPt15','QCD_Pt-30toInf_DoubleEMEnriched','QCD_Pt-15to20_MuEnrichedPt5',
+                                  ####
+                                  'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
+                                  'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
+                                  ####
+                                  'TT','TTJets','TTTo2L2Nu',
+                                 ] ,               
+                    'subTargets' : ['baseW','rochesterMC','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCnoSF'] ,
+                 },
+
+
 
   'fakeSelMC'  : {
                   'isChain'    : False ,
