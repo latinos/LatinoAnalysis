@@ -5231,23 +5231,20 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : True,
                   'subTargets' : ["JetPairingGenVBS", 'JetPairingVBS']
-                 }
   },
 
   'JetPairingGenVBS' :{
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'command'    : 'gardener.pu JetPairingGenVBS.py --radius 0.8'
-                 }
+                  'command'    : 'gardener.py JetPairingGenVBS --radius 0.8'
   },
 
   'JetPairingVBS' :{
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
-                  'command'    : 'gardener.pu JetPairingVBS.py'
-                 }
+                  'command'    : 'gardener.py JetPairingVBS'
   },
 
 
@@ -5266,6 +5263,23 @@ Steps= {
                                                             1*(std_vector_jet_DeepCSVB[7] > 0.8958)*(std_vector_jet_pt[7]>25) + \
                                                             1*(std_vector_jet_DeepCSVB[8] > 0.8958)*(std_vector_jet_pt[8]>25) + \
                                                             1*(std_vector_jet_DeepCSVB[9] > 0.8958)*(std_vector_jet_pt[9]>25) \
+                                                            ) >= 1 \' '
+                  },
+
+  'btagMedium' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.6324)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.6324)*(std_vector_jet_pt[1]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.6324)*(std_vector_jet_pt[2]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.6324)*(std_vector_jet_pt[3]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.6324)*(std_vector_jet_pt[4]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.6324)*(std_vector_jet_pt[5]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.6324)*(std_vector_jet_pt[6]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.6324)*(std_vector_jet_pt[7]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.6324)*(std_vector_jet_pt[8]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.6324)*(std_vector_jet_pt[9]>25) \
                                                             ) >= 1 \' '
                   },
   
