@@ -180,6 +180,15 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    }, 
 
+ # -------- 2016 Embedding 102X nAODv4
+ 'Embedding2016_102X_nAODv4_Full2016v4': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2016_nAODv4.py' ,
+                       'cmssw'   : 'Full2016v4',
+                       'year'    : '2016' , 
+                   }, 
+
  # -------- 2017 DATA 102X nAODv4 (TODO: samples/Run2017_102X_nAODv4.py)
  'Run2017_102X_nAODv4_Full2017v4': {
                        'isData'  : True ,
