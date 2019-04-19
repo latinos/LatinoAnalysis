@@ -424,7 +424,9 @@ Samples["WLLJJToLNu_M-4To50_QCD_3Jet"] = {'nanoAOD': '/WZTo3LNu_3Jets_MLL-4to50_
 Samples["TTWJetsToLNu"] = {'nanoAOD': '/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 Samples["TTZToLLNuNu_M-10"] = {'nanoAOD': '/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 Samples["WWTo2L2Nu_DoubleScattering"] = {'nanoAOD': '/WWTo2L2Nu_DoubleScattering_13TeV-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
-Samples['tZq_ll']                          = {'nanoAOD' :'tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_new_pmx_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
+
+Samples['tZq_ll']                          = {'nanoAOD' :'/tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_new_pmx_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
+
 
 
 

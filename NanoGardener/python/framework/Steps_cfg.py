@@ -185,6 +185,13 @@ Steps = {
                   'subTargets' : ['EmbeddingWeights2017','trigMCKeepRun','LeptonSF','formulasEMBED'],
                    },
 
+    'Embedding2016' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['EmbeddingWeights2016','trigMCKeepRun','LeptonSF','formulasEMBED'],
+                   },
+
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
 ## ------- MODULES: MC Kinematic
@@ -557,6 +564,25 @@ Steps = {
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
                  'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_2017_v1.root")',
                  'module'     : 'embed()',
+               },
+
+  'EmbeddingWeights2016' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : False ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_v16_12_embedded.root")',
+                 'module'     : 'embed()',
+               },
+
+  'EmbeddingVeto' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : True ,
+                 'do4Data'    : False  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedVeto' ,
+                 'declare'    : 'embedveto = lambda : EmbedVeto()',
+                 'module'     : 'embedveto()',
+                 'onlySample' : ['TTTo2L2Nu', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ST_tW_antitop', 'ST_tW_top', 'WWTo2L2Nu', 'WpWmJJ_EWK', 'GluGluToWWToENEN', 'GluGluToWWToENMN', 'GluGluToWWToENTN', 'GluGluToWWToMNEN', 'GluGluToWWToMNMN', 'GluGluToWWToMNTN', 'GluGluToWWToTNEN', 'GluGluToWWToTNMN', 'GluGluToWWToTNTN', 'ZZTo2L2Nu', 'ZZTo2L2Q', 'ZZTo4L', 'WZTo2L2Q', 'Wg_MADGRAPHMLM', 'Zg', 'WZTo3LNu_mllmin01']
                },
 
 ## ------- MODULES: Fakes
