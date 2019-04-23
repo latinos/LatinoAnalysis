@@ -36,6 +36,7 @@ class JetPairingGenVBS(TreeCloner):
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-d', '--debug',  dest='debug',  help='Debug flag',  default="0")
         group.add_option('--radius',  dest='radius',  help='Radius for jet-parton association',  default=1.)
+        group.add_option('--ptminjet',  dest='ptmin_jet',  help='Min Pt for jets',  default=20.)
         parser.add_option_group(group)
         return group
 
@@ -43,6 +44,7 @@ class JetPairingGenVBS(TreeCloner):
     def checkOptions(self,opts):
         self.debug = (opts.debug == "1")
         self.radius = float(opts.radius)
+        self.ptmin_jet = float(opts.ptmin_jet)
 
     def process(self,**kwargs):
         print module_name
@@ -62,8 +64,8 @@ class JetPairingGenVBS(TreeCloner):
         VBS_jets  =   numpy.zeros(2, dtype=numpy.int32)
         PartonJetMatchFlag  =   numpy.zeros(1, dtype=numpy.int32)
         self.otree.Branch('hasTopGen',      hasTopGen,      'hasTopGen/F')
-        self.otree.Branch('V_jets',         V_jets,         'V_jets/I')
-        self.otree.Branch('VBS_jets',       VBS_jets,       'VBS_jets/I')
+        self.otree.Branch('V_jets_true',    V_jets,         'V_jets_true[2]/I')
+        self.otree.Branch('VBS_jets_true',   VBS_jets,       'VBS_jets_true[2]/I')
         self.otree.Branch('PartonJetMatchFlag', PartonJetMatchFlag, 'PartonJetMatchFlag/I')
 
         nentries = self.itree.GetEntries()
@@ -98,7 +100,7 @@ class JetPairingGenVBS(TreeCloner):
                 vbspair = [ip for ip in range(4) if not ip in vpair]
 
                 # now associate partons and nearest jets
-                jets = utils.get_jets(itree, self.debug)
+                jets = utils.get_jets(itree, self.ptmin_jet, self.debug)
                 matchresult, flag = utils.associate_vectors(jets, partons, self.radius)
 
                 PartonJetMatchFlag[0] = flag
@@ -109,7 +111,7 @@ class JetPairingGenVBS(TreeCloner):
                     for ip, iparton in enumerate(vpair):
                         V_jets[ip] = matchresult[0][iparton]
                     for jp, jparton in enumerate(vbspair):
-                        VBS_jets[jp] = matchresult[0][iparton]
+                        VBS_jets[jp] = matchresult[0][jparton]
                
             otree.Fill()
   

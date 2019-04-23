@@ -22,10 +22,12 @@ def get_hard_partons(event, debug=False):
                 pids.append(int(pid))
     return partons, pids
 
-def get_jets(event, debug=False):
+def get_jets(event, ptmin=20., debug=False):
     jets = []
     for pt, eta, phi in  zip(event.std_vector_jet_pt, 
                      event.std_vector_jet_eta, event.std_vector_jet_phi):
+        if pt < ptmin: 
+            break
         if abs(eta) < 10 :
             p = pt * cosh(eta)
             vec = TLorentzVector()

@@ -5226,7 +5226,7 @@ Steps= {
                   'subTargets' : ["l1looseSimple", 'l1tight']
                  },
 
-  'JetPairing_VBS' :{
+  'JetPairingVBSChain' :{
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
@@ -5237,14 +5237,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
-                  'command'    : 'gardener.py JetPairingGenVBS --radius 0.8'
+                  'command'    : 'gardener.py JetPairingGenVBS --radius 0.8 --ptminjet 20.0'
   },
 
   'JetPairingVBS' :{
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
-                  'command'    : 'gardener.py JetPairingVBS'
+                  'command'    : 'gardener.py JetPairingVBS --ptminjet 20.0'
   },
 
 
