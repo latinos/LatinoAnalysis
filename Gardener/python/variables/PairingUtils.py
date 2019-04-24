@@ -40,7 +40,7 @@ def get_jets(event, ptmin=20., debug=False):
             jets.append(vec)
     return jets
 
-def get_jets(event, indexes, ptmin=20., debug=False):
+def get_jets_byindex(event, indexes, ptmin=20., debug=False):
     jets = []
     for i, (pt, eta, phi, mass) , in  enumerate(zip(event.std_vector_jet_pt, 
                      event.std_vector_jet_eta, event.std_vector_jet_phi,

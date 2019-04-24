@@ -1,4 +1,12 @@
 module_name =    ''' 
+ ____   ____  ______     ______       _      _  __                             __        _            
+|_  _| |_  _||_   _ \  .' ____ \     (_)    (_)[  |                           [  |  _   (_)           
+  \ \   / /    | |_) | | (___ \_|    __     __  | |  _ .--.  __   _            | | / ]  __   _ .--.   
+   \ \ / /     |  __'.  _.____`.    [  |   [  | | | [ `.-. |[  | | |           | '' <  [  | [ `.-. |  
+    \ ' /     _| |__) || \____) | _  | | _  | | | |  | | | | | \_/ |, _______  | |`\ \  | |  | | | |  
+     \_/     |_______/  \______.'[ \_| |[ \_| |[___][___||__]'.__.'_/|_______|[__|  \_][___][___||__] 
+                                  \____/ \____/                                                       
+
 '''
 
 import optparse
@@ -243,8 +251,8 @@ class VBSjjlnu_kin(TreeCloner):
                 for var in variables:
                     variables[var][0] = -9999
             else:
-                vbsjets = utils.get_jets(itree, itree.VBS_jets, self.ptmin_jet, self.debug)
-                vjets = utils.get_jets(itree, itree.V_jets, self.ptmin_jet, self.debug)
+                vbsjets = utils.get_jets_byindex(itree, itree.VBS_jets, self.ptmin_jet, self.debug)
+                vjets = utils.get_jets_byindex(itree, itree.V_jets, self.ptmin_jet, self.debug)
 
                 if self.debug:
                     print "VBSjets:", vbsjets

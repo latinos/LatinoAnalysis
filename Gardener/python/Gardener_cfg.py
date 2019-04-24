@@ -5224,20 +5224,20 @@ Steps= {
                   'do4MC'      : True ,
                   'do4Data'    : True,
                   'subTargets' : ["l1looseSimple", 'l1tight']
-                 },
+   },
 
-  'VBS_PairingAndVars' :{
+  'resolvedVBSPairingAndVars' :{
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
-                  'subTargets' : ["gr4JetsSkim", 'JetPairingVBS', 'VBSjjlnu_kin']
+                  'subTargets' : ['gr4JetsSkim', 'JetPairingVBS', 'VBSjjlnu_kin']
   },
 
-  'VBS_PairingGenAndVars' :{
+  'resolvedVBSPairingGenAndVars' :{
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
-                  'subTargets' : ["gr4JetsSkim", 'JetPairingGenVBS','JetPairingVBS', 'VBSjjlnu_kin']
+                  'subTargets' : ['gr4JetsSkim', 'JetPairingGenVBS','JetPairingVBS', 'VBSjjlnu_kin']
   },
 
   'JetPairingGenVBS' :{
