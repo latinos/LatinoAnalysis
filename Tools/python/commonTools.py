@@ -135,11 +135,11 @@ class xsectionDB:
     def get(self,iSample):
       if self._useYR :
         Higgs = self._HiggsXS.GetHiggsXS4Sample(self._YRVersion,self._YREnergy,iSample)
-        #print Higgs
+        print Higgs
         if not Higgs['xs'] == 0. : return str(Higgs['xs'])
 
       if iSample in self.xsections : 
-        #print iSample, self.xsections[iSample]['sample'], self.xsections[iSample]['xs']
+        print iSample, self.xsections[iSample]['xs'] , self.xsections[iSample]['kfact']
         return str(float(self.xsections[iSample]['xs'])*float(self.xsections[iSample]['kfact']))
       else : 
         return ''

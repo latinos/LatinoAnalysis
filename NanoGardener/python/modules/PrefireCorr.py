@@ -1,4 +1,5 @@
 import ROOT
+import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 import re
 import os
@@ -111,10 +112,12 @@ class PrefCorr(Module):
       bin = Map.FindBin(eta, min(pt, maxpt-0.01))
       pref_prob = Map.GetBinContent(bin)
 
-      # Choose larger uncertainty between 20% of prefire rate and bin statistical uncertainty
+      stat = Map.GetBinError(bin) # bin statistical uncertainty
+      syst = 0.2*pref_prob # 20% of prefire rate
+
       if self.variation == 1: 
-        pref_prob = min(max(pref_prob + Map.GetBinError(bin), (1+0.2) * pref_prob), 1.0)
+        pref_prob = min(pref_prob + math.sqrt(stat*stat + syst*syst), 1.0)
       if self.variation == -1:
-        pref_prob = max(min(pref_prob - Map.GetBinError(bin), (1-0.2) * pref_prob), 0.0)
+        pref_prob = max(pref_prob - math.sqrt(stat*stat + syst*syst), 0.0)
       return pref_prob
 

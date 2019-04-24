@@ -13,17 +13,16 @@ Trigger = {
         'Full2018'  :  {  
                           # Full 2018 
                           1  :  { 'begin' : 315252 , 'end' : 325175 , 'lumi' : 58.826 ,
-                                  # FIXME: UPdate with 2018 values
-                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'DoubleEleLegLowPt' : 'Full2017/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'SingleEle'         : 'Full2017/Ele35_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency_Run2017B.txt' ,
-                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency_Run2017B.txt' ,
-                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency_Run2017B.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2017/Mu23_pt_eta_efficiency_withSys_Run2017B.txt',
-                                                'MuEleLegLowPt'     : 'Full2017/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'EleMuLegHigPt'     : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'EleMuLegLowPt'     : 'Full2017/Mu12_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2018/Ele23_Ele12_leg1_pt_eta_2018_EGM_nominal_efficiency.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2018/Ele23_Ele12_leg2_pt_eta_2018_EGM_nominal_efficiency.txt' ,
+                                                'SingleEle'         : 'Full2018/Ele32_pt_eta_2018_EGM_nominal_efficiency.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2018/Mu17_Mu8_leg1_pt_eta_2018_SingleMu_nominal_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2018/Mu17_Mu8_leg2_pt_eta_2018_SingleMu_nominal_efficiency.txt' ,
+                                                'SingleMu'          : 'Full2018/IsoMu24_pt_eta_2018_SingleMu_nominal_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2018/Mu23_pt_eta_2018_nominal_efficiency.txt',
+                                                'MuEleLegLowPt'     : 'Full2018/Ele23_Ele12_leg2_pt_eta_2018_EGM_nominal_efficiency.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2018/Ele23_Ele12_leg1_pt_eta_2018_EGM_nominal_efficiency.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2018/Mu12_pt_eta_2018_nominal_efficiency.txt' ,
                                               } ,
                                   # FIXME: UPdate with 2018 values
                                   'DZEff'  :  { 
@@ -357,7 +356,7 @@ Trigger = {
                                                 'DoubleMuLegHigPt'  : 'Full2016v2/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
                                                 'DoubleMuLegLowPt'  : 'Full2016v2/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'SingleMu'          : 'Full2016v2/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2016v2/Mu23_Ele12_legMu_pt_eta_nominal2016_BCDEF_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v2/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v2/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v2/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2016v2/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
@@ -401,7 +400,7 @@ Trigger = {
                                                 'DoubleMuLegHigPt'  : 'Full2016v2/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
                                                 'DoubleMuLegLowPt'  : 'Full2016v2/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'SingleMu'          : 'Full2016v2/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2016v2/Mu23_Ele12_legMu_pt_eta_nominal2016_BCDEF_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v2/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v2/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v2/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2016v2/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
@@ -444,7 +443,7 @@ Trigger = {
                                                 'DoubleMuLegHigPt'  : 'Full2016v2/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
                                                 'DoubleMuLegLowPt'  : 'Full2016v2/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'SingleMu'          : 'Full2016v2/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2016v2/Mu23_Ele12_legMu_pt_eta_nominal2016_BCDEF_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v2/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v2/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v2/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2016v2/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
@@ -488,7 +487,7 @@ Trigger = {
                                                 'DoubleMuLegHigPt'  : 'Full2016v2/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
                                                 'DoubleMuLegLowPt'  : 'Full2016v2/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'SingleMu'          : 'Full2016v2/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2016v2/Mu23_Ele12_legMu_pt_eta_nominal2016_BCDEF_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v2/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v2/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v2/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2016v2/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
@@ -534,7 +533,7 @@ Trigger = {
                                                 'DoubleMuLegHigPt'  : 'Full2016v2/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_GH_efficiency.txt' ,
                                                 'DoubleMuLegLowPt'  : 'Full2016v2/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'SingleMu'          : 'Full2016v2/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2016v2/Mu23_Ele12_legMu_pt_eta_nominal2016_Mu_GH_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v2/DoubleMu_IsoMu23_l1pt20_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v2/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v2/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2016v2/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
@@ -577,7 +576,7 @@ Trigger = {
                                                 'DoubleMuLegHigPt'  : 'Full2016v2/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_GH_efficiency.txt' ,
                                                 'DoubleMuLegLowPt'  : 'Full2016v2/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'SingleMu'          : 'Full2016v2/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2016v2/Mu23_Ele12_legMu_pt_eta_nominal2016_Mu_GH_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v2/DoubleMu_IsoMu23_l1pt20_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v2/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v2/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2016v2/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
@@ -622,7 +621,7 @@ Trigger = {
                                                 'DoubleMuLegHigPt'  : 'Full2016v2/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_GH_efficiency.txt' ,
                                                 'DoubleMuLegLowPt'  : 'Full2016v2/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'SingleMu'          : 'Full2016v2/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2016v2/Mu23_Ele12_legMu_pt_eta_nominal2016_Mu_GH_efficiency.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v2/DoubleMu_IsoMu23_l1pt23_Run2016GH_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v2/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v2/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2016v2/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
@@ -661,6 +660,11 @@ Trigger = {
         
                        }
 }
+
+Trigger['Full2016v4'] = Trigger['Full2016v2'] 
+Trigger['Full2017v4'] = Trigger['Full2017v2'] 
+Trigger['Full2018v4'] = Trigger['Full2018'] 
+
 
 NewVar_MC_dict = {
    'F': [
