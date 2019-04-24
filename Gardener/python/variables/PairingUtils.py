@@ -24,20 +24,21 @@ def get_hard_partons(event, debug=False):
 
 def get_jets(event, ptmin=20., debug=False):
     jets = []
-    for pt, eta, phi in  zip(event.std_vector_jet_pt, 
-                     event.std_vector_jet_eta, event.std_vector_jet_phi):
-        if pt < ptmin: 
+    for pt, eta, phi, mass , in  zip(event.std_vector_jet_pt, 
+                     event.std_vector_jet_eta, event.std_vector_jet_phi,
+                     event.std_vector_jet_mass):
+        if pt < ptmin or pt<0: 
             break
         if abs(eta) < 10 :
             p = pt * cosh(eta)
+            en = sqrt(p**2 + mass**2)
             vec = TLorentzVector()
-            vec.SetPtEtaPhiE(pt, eta, phi, p)
+            vec.SetPtEtaPhiE(pt, eta, phi, en)
             # check if different from the previous one
             if debug:
-                print "Jet > pt:", pt ," eta:", eta, " phi:", phi
+                print "Jet > pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
             jets.append(vec)
     return jets
-        
 
 def associate_vectors(jets, partons, dist):
     ''' The params influences the flag of the event:
