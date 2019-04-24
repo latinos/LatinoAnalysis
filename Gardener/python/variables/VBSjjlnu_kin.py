@@ -6,6 +6,8 @@ import numpy
 import ROOT
 import os.path
 from collections import namedtuple
+from itertools import chain
+from math import cosh
 from ROOT import TLorentzVector
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 import LatinoAnalysis.Gardener.variables.PairingUtils as utils 
@@ -27,7 +29,7 @@ vbs_branches = {
                 "deltaphi_lep_nu", "deltaeta_lep_nu",
                 "deltaR_lep_nu", "deltaR_vbs", "deltaR_vjet",
                 "Rvjets_high", "Rvjets_low",
-                "Zvjets_high", "Zvjets_low", "Zl",
+                "Zvjets_high", "Zvjets_low", "Zlep",
                 "A_vbs", "A_vjet", "Mw_lep", "w_lep_pt", 
                 "Mww", "R_ww", "R_mw", "A_ww",
                 "C_vbs", "C_ww", "L_p", "L_pw", "Ht"          
@@ -36,7 +38,7 @@ vbs_branches = {
             }
 
 
-def getVBSkinematics(vbsjets, vjets,lepton, met, ):
+def getVBSkinematics(vbsjets, vjets,lepton, met, other_jets_eta, other_jets_pts, debug=False):
     output = {}
     # variables extraction
     total_vbs = TLorentzVector(0,0,0,0)
@@ -48,6 +50,9 @@ def getVBSkinematics(vbsjets, vjets,lepton, met, ):
         vbs_etas.append(j.Eta())
         vbs_phis.append(j.Phi())
         vbs_pts.append(j.Pt())
+    if debug:
+        print "VBS pts", vbs_pts
+        print "VBS etas", vbs_etas
     deltaeta_vbs = abs(vbs_etas[0]- vbs_etas[1])
     mean_eta_vbs = sum(vbs_etas) / 2 
     output["vbs_pt_high"] = vbs_pts[0]
@@ -57,10 +62,8 @@ def getVBSkinematics(vbsjets, vjets,lepton, met, ):
     output["deltaphi_vbs"] = abs(vbsjets[0].DeltaPhi(vbsjets[1]))
     output["deltaR_vbs"] = vbsjets[0].DrEtaPhi(vbsjets[1])
     output["vbs_etaprod"] = vbs_etas[0]*vbs_etas[1]
-    sorted_vbs_etas = sorted(vbs_etas)
-    sorted_vjet_etas = sorted(vjet_etas)
-    output["eta_vbs_high"] = abs(sorted_vbs_etas[0])
-    output["eta_vbs_low"] = abs(sorted_vbs_etas[1])
+    output["vbs_eta_high"] = abs(vbs_etas[0])
+    output["vbs_eta_low"] = abs(vbs_etas[1])
 
     total_vjet = TLorentzVector(0,0,0,0)
     vjet_etas = []
@@ -71,14 +74,17 @@ def getVBSkinematics(vbsjets, vjets,lepton, met, ):
         vjet_etas.append(j.Eta())
         vjet_phis.append(j.Phi())
         vjet_pts.append(j.Pt())
+    if debug:
+        print "Vjet pts", vjet_pts
+        print "Vjet etas", vjet_etas
     output["vjet_pt_high"] = vjet_pts[0]
     output["vjet_pt_low"] = vjet_pts[1]
     output["mjj_vjet"] = total_vjet.M()
     output["deltaphi_vjet"] =  abs(vjets[0].DeltaPhi(vjets[1]))
     output["deltaeta_vjet"] = abs(vjet_etas[0] - vjet_etas[1])
     output["deltaR_vjet"] = vjets[0].DrEtaPhi(vjets[1])
-    output["eta_vjet_high"] = abs(sorted_vjet_etas[0])
-    output["eta_vjet_low"] = abs(sorted_vjet_etas[1])
+    output["vjet_eta_high"] = abs(vjet_etas[0])
+    output["vjet_eta_low"] = abs(vjet_etas[1])
 
     nu_vec = RecoNeutrino.reconstruct_neutrino(lepton, met)
     output["deltaphi_lep_nu"] = abs(lepton.DeltaPhi(nu_vec)) 
@@ -149,17 +155,19 @@ def getVBSkinematics(vbsjets, vjets,lepton, met, ):
     N_jets_forward = 0
     N_jets_central = 0
     Ht = 0.
-    for j in event.jets:
-        if j not in vbsjets and j not in vjets:
-            # Looking only to jets != vbs & vjets
-            Z = abs((j.Eta() - mean_eta_vbs)/ deltaeta_vbs)
-            Njets += 1
-            if Z > 0.5:
-                N_jets_forward += 1
-            else:
-                N_jets_central += 1
+    for j_eta, j_pt in zip(other_jets_eta, other_jets_pts):
+        # Looking only to jets != vbs & vjets
+        Z = abs((j_eta - mean_eta_vbs)/ deltaeta_vbs)
+        Njets += 1
+        if Z > 0.5:
+            N_jets_forward += 1
+        else:
+            N_jets_central += 1
         # Ht totale
-        Ht += j.Pt()
+        Ht += j_pt
+    # Add vbs and vjet to Ht
+    for jet in chain(vbsjets, vjets):
+        Ht += jet.Pt()
             
     output["N_jets"] = Njets 
     output["N_jets_central"] = N_jets_central
@@ -185,12 +193,14 @@ class VBSjjlnu_kin(TreeCloner):
         description = self.help()
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-d', '--debug',  dest='debug',  help='Debug flag',  default="0")
+        group.add_option('--ptminjet',  dest='ptmin_jet',  help='Min Pt for jets',  default=20.)
         parser.add_option_group(group)
         return group
 
 
     def checkOptions(self,opts):
         self.debug = (opts.debug == "1")
+        self.ptmin_jet = float(opts.ptmin_jet)
 
     def process(self,**kwargs):
         print module_name
@@ -202,14 +212,14 @@ class VBSjjlnu_kin(TreeCloner):
         self.connect(tree,input)
 
         variables = {}
-        self.clone(output,  vbs_branches["F"]+vbs_branches["I"])
+        self.clone(output,  vbs_branches["D"]+vbs_branches["I"])
 
-        for br in vbs_branches["F"]:
-            variables[b] = numpy.zeros(1, dtype=numpy.float32)
-            self.otree.Branch(b, variables[b], "{}/F".format(b))
+        for br in vbs_branches["D"]:
+            variables[br] = numpy.zeros(1, dtype=numpy.float32)
+            self.otree.Branch(br, variables[br], "{}/D".format(br))
         for br in vbs_branches["I"]:
-            variables[b] = numpy.zeros(1, dtype=numpy.int32)
-            self.otree.Branch(b, variables[b], "{}/I".format(b))
+            variables[br] = numpy.zeros(1, dtype=numpy.int32)
+            self.otree.Branch(br, variables[br], "{}/I".format(br))
        
 
         nentries = self.itree.GetEntries()
@@ -226,47 +236,43 @@ class VBSjjlnu_kin(TreeCloner):
             if i > 0 and i%step == 0.:
                 print i,'events processed :: ', nentries
 
-            # Check if VBSjets and Vjets are all associated
-            if -1 in itree.V_jets or -1 in itree.VBS_jets:
+            # Check if we have at least 4 jets with pt > ptmin
+            # and VBSjets and Vjets are all associated
+            if (not itree.std_vector_jet_pt[3] >= self.ptmin_jet) or  \
+                -1 in itree.V_jets or -1 in itree.VBS_jets:
                 for var in variables:
                     variables[var][0] = -9999
-            
-            # Get 4 vectors
-            vbsjets = []
-            vjets = []
+            else:
+                vbsjets = utils.get_jets(itree, itree.VBS_jets, self.ptmin_jet, self.debug)
+                vjets = utils.get_jets(itree, itree.V_jets, self.ptmin_jet, self.debug)
 
-            for vbs_index in itree.VBS_jets:
-                vec = TLorentzVector()
-                vec.SetPtEtaPhiE(itree.std_vector_jet_pt[vbs_index], 
-                                itree.std_vector_jet_eta[vbs_index], 
-                                itree.std_vector_jet_phi[vbs_index], 
-                                itree.std_vector_jet_mass[vbs_index])
-                vbsjets.append(vec)
+                if self.debug:
+                    print "VBSjets:", vbsjets
+                    print "Vjets:", vjets
+                
+                lepton = TLorentzVector()
+                plep = itree.std_vector_lepton_pt[0] * cosh(itree.std_vector_lepton_eta[0])
+                lepton.SetPtEtaPhiE(itree.std_vector_lepton_pt[0], itree.std_vector_lepton_eta[0],
+                                    itree.std_vector_lepton_phi[0], plep)
+                
+                met = TLorentzVector()
+                met.SetPtEtaPhiE(itree.metPfType1, 0., itree.metPfType1Phi, itree.metPfType1)
 
-            for vjet_index in itree.V_jets:
-                vec = TLorentzVector()
-                vec.SetPtEtaPhiE(itree.std_vector_jet_pt[vjet_index], 
-                                itree.std_vector_jet_eta[vjet_index], 
-                                itree.std_vector_jet_phi[vjet_index], 
-                                itree.std_vector_jet_mass[vjet_index])
-                vbsjets.append(vec)
-            
-            lepton = TLorentzVector()
-            lepton.SetPtEtaPhiE(itree.std_vector_lepton_pt[0],
-                                itree.std_vector_lepton_eta[0],
-                                itree.std_vector_lepton_phi[0],
-                                itree.std_vector_lepton_pt[0])
-            
+                other_jets_eta = []
+                other_jets_pts = []
+                for i, ( eta, pt) in enumerate(zip(itree.std_vector_jet_eta, itree.std_vector_jet_pt)):
+                    if i not in itree.VBS_jets and i not in itree.V_jets:
+                        other_jets_eta.append(eta)
+                        other_jets_pts.append(pt)
+    
+                output =  getVBSkinematics(vbsjets, vjets, lepton, met, 
+                                            other_jets_eta, other_jets_pts, self.debug)
 
-            met = TLorentzVector()
-            met.SetPt(itree.metPfType1)
-            met.SetPhi(itree.metPfType1Phi)
+                if self.debug:
+                    print output
 
-            output =  getVBSkinematics(vbsjets, vjets, lepton, met)
-            
-            
-            for vk, vvalue in variables.items():
-                vvalue[0] = output[vk]
+                for vk, vvalue in variables.items():
+                    vvalue[0] = output[vk]
                 
             otree.Fill()
   

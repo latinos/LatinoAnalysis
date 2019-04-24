@@ -5247,6 +5247,12 @@ Steps= {
                   'command'    : 'gardener.py JetPairingVBS --ptminjet 20.0'
   },
 
+   'VBSjjlnu_kin' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py VBSjjlnu_kin'
+  },
 
 # WP taken from https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/allBtagPogScaleFactors.py#L358
   'btagTight' : {
