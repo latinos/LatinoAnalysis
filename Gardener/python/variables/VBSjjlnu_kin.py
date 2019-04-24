@@ -14,7 +14,7 @@ import LatinoAnalysis.Gardener.variables.PairingUtils as utils
 import LatinoAnalysis.Gardener.variables.VBS_recoNeutrino as RecoNeutrino
 
 vbs_branches = {
-            "D": [ "mjj_vbs", "mjj_vjet",
+            "F": [ "mjj_vbs", "mjj_vjet",
                 "vbs_pt_high", "vbs_pt_low", "vbs_etaprod",
                 "vjet_pt_high", "vjet_pt_low", 
                 "vbs_eta_high", "vbs_eta_low",
@@ -212,11 +212,11 @@ class VBSjjlnu_kin(TreeCloner):
         self.connect(tree,input)
 
         variables = {}
-        self.clone(output,  vbs_branches["D"]+vbs_branches["I"])
+        self.clone(output,  vbs_branches["F"]+vbs_branches["I"])
 
-        for br in vbs_branches["D"]:
+        for br in vbs_branches["F"]:
             variables[br] = numpy.zeros(1, dtype=numpy.float32)
-            self.otree.Branch(br, variables[br], "{}/D".format(br))
+            self.otree.Branch(br, variables[br], "{}/F".format(br))
         for br in vbs_branches["I"]:
             variables[br] = numpy.zeros(1, dtype=numpy.int32)
             self.otree.Branch(br, variables[br], "{}/I".format(br))

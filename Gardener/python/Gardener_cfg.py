@@ -5226,11 +5226,18 @@ Steps= {
                   'subTargets' : ["l1looseSimple", 'l1tight']
                  },
 
-  'JetPairingVBSChain' :{
+  'VBS_PairingAndVars' :{
                   'isChain'    : True ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
-                  'subTargets' : ["JetPairingGenVBS", 'JetPairingVBS']
+                  'subTargets' : ["gr4JetsSkim", 'JetPairingVBS', 'VBSjjlnu_kin']
+  },
+
+  'VBS_PairingGenAndVars' :{
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ["gr4JetsSkim", 'JetPairingGenVBS','JetPairingVBS', 'VBSjjlnu_kin']
   },
 
   'JetPairingGenVBS' :{
@@ -5251,7 +5258,14 @@ Steps= {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
-                  'command'    : 'gardener.py VBSjjlnu_kin'
+                  'command'    : 'gardener.py VBSjjlnu_kin --ptminjet 20.0'
+  },
+
+  'gr4JetsSkim' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \'std_vector_jet_pt[3]>=20 \' '
   },
 
 # WP taken from https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/allBtagPogScaleFactors.py#L358
