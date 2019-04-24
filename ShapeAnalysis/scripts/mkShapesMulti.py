@@ -320,6 +320,10 @@ if __name__ == '__main__':
       if 'cutspost' in nuis:
         nuis.pop('cutspost')
 
+    for vari in variables.itervalues():
+      if 'cutspost' in vari:
+        vari.pop('cutspost')
+
     if opt.doBatch != 0:
       print "~~~~~~~~~~~ Running mkShape on Batch Queue"
 

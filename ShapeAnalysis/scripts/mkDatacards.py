@@ -311,10 +311,17 @@ class DatacardFactory:
                           diffDo = 0.
 
                         if 'symmetrize' in nuisance and nuisance['symmetrize']:
-                          diffUpTmp = 1. + (diffUp - diffDo) * 0.5
-                          diffDoTmp = 1. - (diffUp - diffDo) * 0.5
-                          diffUp = diffUpTmp
-                          diffDo = diffDoTmp
+                          diff = (diffUp - diffDo) * 0.5
+                          if diff >= 1.:
+                              # can't symmetrize
+                              diffUp = diff * 2. - 0.999
+                              diffDo = -0.999
+                          elif diff <= -1.:
+                              diffUp = -0.999
+                              diffDo = -diff * 2. - 0.999
+                          else:
+                              diffUp = diff
+                              diffDo = -diff
         
                         lnNUp = 1. + diffUp
                         lnNDo = 1. + diffDo
