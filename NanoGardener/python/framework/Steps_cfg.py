@@ -352,6 +352,16 @@ Steps = {
                   'declare'    : 'jetSel = lambda : JetSel(2,"loose",15.0,4.7,"CleanJet")' ,
                   'module'     : 'jetSel()' ,
                }, 
+   'fatjetSel' : {
+                  'isChain'   : False ,
+                  'do4MC'     : True  ,
+                  'do4Date'   : True  ,
+                  #    def __init__(self,jetid=1,minpt=200.0, maxeta=2.4, max_tau21=0.4, fatjetColl="FatJet"):    
+                  'import'    : 'LatinoAnalysis.NanoGardener.modules.FatJetSel',
+                  'declare'   : 'fatjetSel = lambda : FatJetSel(1,200.,2.4,0.4,"FatJet")' ,
+                  'module'    : 'fatjetSel()' ,
+               },
+
 
    'CleanJetCut' : {
                  'isChain'    : False ,
