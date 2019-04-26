@@ -55,14 +55,17 @@ class FatJetSel(Module):##inherit from Module
         for iFatJet in range(nFatJet):
           pt  = fatjet_coll[iFatJet]['pt'] ##it will read 'FatJet_pt[iFatJet]'
           eta = fatjet_coll[iFatJet]['eta']
-          
+          tau1 = fatjet_coll[iFatJet]['tau1']
+          tau2 = fatjet_coll[iFatJet]['tau2']
           jetId = fatjet_coll[iFatJet]['jetId']
           
+
+          tau21 = tau2/tau1
           goodFatJet = True
-          if pt         <  self.minpt   : goodFatJet = False    
-          if abs(eta)   >  self.maxeta  : goodFatJet = False 
-          if jetId      <  self.jetid   : goodFatJet = False
-          
+          if pt         <  self.minpt     : goodFatJet = False    
+          if abs(eta)   >  self.maxeta    : goodFatJet = False 
+          if jetId      <  self.jetid     : goodFatJet = False
+          if tau21      >  self.max_tau12 : goodFatJet = False 
           if goodFatJet : order.append(iFatJet)##order = index list of good fatjets 
 
         for typ in self.CollBr: ##each type of branch  
