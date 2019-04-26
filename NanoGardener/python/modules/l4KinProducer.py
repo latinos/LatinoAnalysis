@@ -65,7 +65,10 @@ class l4KinProducer(Module):
             'minMt_zh4l',
             'z1Mt_zh4l',
             'mllll_zh4l',
-            'chllll_zh4l'
+            'chllll_zh4l',
+            'z1dPhi_lep1MET_zh4l',
+            'z1dPhi_lep2MET_zh4l',
+            'z1mindPhi_lepMET_zh4l',
           ]
         
         for nameBranches in self.newbranches :

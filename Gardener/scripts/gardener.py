@@ -130,6 +130,9 @@ from LatinoAnalysis.Gardener.variables.genericFormulaAdder        import generic
 # generic TMVA
 from LatinoAnalysis.Gardener.variables.genericTMVA        import GenericTMVAFiller
 
+# Prefiring
+from LatinoAnalysis.Gardener.variables.PrefireCorr_gardener          import PrefCorr
+
 if __name__ == '__main__':
 
     print "gardener"
@@ -271,6 +274,9 @@ if __name__ == '__main__':
 
 # generic TMVA
     modules['genericTMVA'] = GenericTMVAFiller()
+
+# Prefiring
+    modules['prefcorrMiniAOD']   = PrefCorr()
 
     gardener_cli( modules )
 

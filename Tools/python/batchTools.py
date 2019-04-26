@@ -108,14 +108,14 @@ class batchJobs :
        elif 'knu' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
-       elif 'hercules' in hostName:
-         jFile.write('source  /cvmfs/cms.cern.ch/cmsset_default.sh\n')
-         #jFile.write('#$ -N '+jName+'\n')
-         #jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
        elif 'sdfarm' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
          jFile.write('export X509_USER_PROXY=/cms/ldap_home/'+os.environ["USER"]+'/.proxy\n')
+       elif 'hercules' in hostName:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
+         jFile.write('export X509_USER_PROXY=/gwpool/users/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('voms-proxy-info\n')
@@ -147,6 +147,12 @@ class batchJobs :
            jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' in hostName or 'knu' in hostName:
            jFile.write('cd '+self.subDir+subDirExtra+'\n')
+         elif 'hercules' in hostName:
+           tmpdataDir = jobDir + "/tmp/" + baseName +"_"+prodName
+           jFile.write("mkdir "+ jobDir + "/tmp\n")
+           jFile.write("mkdir "+ tmpdataDir +  "\n")
+           jFile.write("cd "+ tmpdataDir + "\n")
+           jFile.write("pwd \n")
          else:
            jFile.write('cd - \n')
            ### the following makes the .sh script exit if an error is thrown after the "set -e" command
@@ -175,6 +181,8 @@ class batchJobs :
        #os.system('cp /tmp/x509up_u$UID /u/user/'+os.environ["USER"]+'/.proxy')
      if "sdfarm" in hostName: 
        os.system('cp $X509_USER_PROXY /cms/ldap_home/'+os.environ["USER"]+'/.proxy')
+     if "hercules" in hostName:
+       os.system('cp $X509_USER_PROXY /gwpool/users/'+os.environ["USER"]+'/.proxy')
 
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
@@ -320,6 +328,8 @@ class batchJobs :
          #print 'bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
        elif 'hercules' in hostName:
          # mib farm
+         if queue not in ['shortcms', 'longcms']:
+           queue = 'shortcms'
          print " hercules::queue = ", queue
          print " hercules::outFile = ", outFile
          print " hercules::errFile = ", errFile
@@ -328,7 +338,7 @@ class batchJobs :
          # queues: "shortcms" (2 days) and "longcms"
          #jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
          print 'qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
-         jobid=os.system('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+         jobid=os.system('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' +queue +' > '+jidFile)
        elif 'sdfarm' in hostName:
          jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
          jdsFile = open(jdsFileName,'w')
@@ -443,6 +453,8 @@ class batchJobs :
         jFile.write('gfal-copy '+inputFile+' srm://cluster142.knu.ac.kr:8443/srm/managerv2?SFN=/pnfs/knu.ac.kr/data/cms/'+outputFile+'\n')
      elif 'sdfarm' in hostName :
         jFile.write('gfal-copy -p '+inputFile+' srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/'+outputFile+'\n')
+     elif 'hercules' in hostName :
+        jFile.write('gfal-copy -p file://`pwd`/' + inputFile + ' srm://storm.mib.infn.it:8444/cms/' + outputFile+ '\n')
      else :
         jFile.write('cp '+inputFile+ " " + outputFile+'\n')
      jFile.close()
@@ -654,7 +666,9 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           else: os.system('rm '+jidFile)
         elif 'hercules' in hostName:
           # mib farm
-          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+          if queue not in ['shortcms', 'longcms']:
+            queue = 'shortcms'
+          jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' + queue +' > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
         elif 'sdfarm' in hostName:

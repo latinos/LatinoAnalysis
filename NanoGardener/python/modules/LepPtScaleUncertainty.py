@@ -23,7 +23,7 @@ import os.path
 import math
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET']) :
+    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET' , 'ChsMET']) :
         cmssw_base = os.getenv('CMSSW_BASE')
         self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"

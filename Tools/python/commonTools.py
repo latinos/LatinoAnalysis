@@ -135,11 +135,11 @@ class xsectionDB:
     def get(self,iSample):
       if self._useYR :
         Higgs = self._HiggsXS.GetHiggsXS4Sample(self._YRVersion,self._YREnergy,iSample)
-        #print Higgs
+        print Higgs
         if not Higgs['xs'] == 0. : return str(Higgs['xs'])
 
       if iSample in self.xsections : 
-        #print iSample, self.xsections[iSample]['sample'], self.xsections[iSample]['xs']
+        print iSample, self.xsections[iSample]['xs'] , self.xsections[iSample]['kfact']
         return str(float(self.xsections[iSample]['xs'])*float(self.xsections[iSample]['kfact']))
       else : 
         return ''
@@ -416,6 +416,11 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       else:
         usedDir = inputDir
       return "ls /xrootd/" + usedDir
+    elif "hercules" in os.uname()[1]:   # cluster MiB
+      if "/store/group" in inputDir:
+        return "ls /gwteras/cms/" +inputDir
+      else:
+        return "ls "+ inputDir
     else :
       if iniStep == 'Prod' :
         return " ls " + inputDir
@@ -434,6 +439,8 @@ def rootReadPath(inputFile):
       return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
     elif 'sdfarm' in os.uname()[1] :
       return "root://cms-xrdr.sdfarm.kr:1094//xrd" + inputFile
+    elif 'hercules' in os.uname()[1]:
+      return "/gwteras/cms" + inputFile
     else :
        return "/eos/cms" + inputFile
        # return  inputFile
@@ -464,6 +471,11 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
       else:
         return subprocess.check_output("ls -l /xrootd/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "hercules" in os.uname()[1]:
+      if "/store/group" in inputFile:
+        return subprocess.check_output("ls -l /gwteras/cms" + inputFile +" | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l "+ inputFile +" | cut -d ' ' -f 5", shell=True)
     else :
        return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
        # return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)

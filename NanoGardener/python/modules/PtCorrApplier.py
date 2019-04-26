@@ -10,7 +10,7 @@ class PtCorrApplier(Module):
     '''
     Module that applies pt corrections to a given collection
     '''
-    def __init__(self, Coll='CleanJet', CorrSrc='jecUncertTotal', kind='Up', doMET=True, METobjects = ['MET','PuppiMET','RawMET','TkMET']):
+    def __init__(self, Coll='CleanJet', CorrSrc='jecUncertTotal', kind='Up', doMET=True, METobjects = ['MET','PuppiMET','RawMET','TkMET','ChsMET','CaloMET']):
         self.CollTC = Coll
         self.CorrSrc = CorrSrc
         self.kind = kind
