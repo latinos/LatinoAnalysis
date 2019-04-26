@@ -502,9 +502,9 @@ class LeptonFakeWMaker(Module):
 
                 #Getting the btagscore
                 if ( kindLep =='ele' and ele_col[ lepton_col[iLep]['electronIdx'] ]['jetIdx']>=0  )  :
-                    btagscore = jet_col[ ele_col[ lepton_col[iLep]['electronIdx'] ]['jetIdx'] ]['btagCSVV2']
+                    btagscore = jet_col[ ele_col[ lepton_col[iLep]['electronIdx'] ]['jetIdx'] ]['btagDeepB']
                 elif  ( kindLep =='mu' and mu_col[ lepton_col[iLep]['muonIdx'] ]['jetIdx']>=0  )  :
-                    btagscore = jet_col[ mu_col[ lepton_col[iLep]['muonIdx'] ]['jetIdx'] ]['btagCSVV2']
+                    btagscore = jet_col[ mu_col[ lepton_col[iLep]['muonIdx'] ]['jetIdx'] ]['btagDeepB']
                 else : btagscore = 0
 
                 # consider only leptons with pt>10 GeV
