@@ -65,7 +65,7 @@ class FatJetSel(Module):##inherit from Module
           if pt         <  self.minpt     : goodFatJet = False    
           if abs(eta)   >  self.maxeta    : goodFatJet = False 
           if jetId      <  self.jetid     : goodFatJet = False
-          if tau21      >  self.max_tau12 : goodFatJet = False 
+          if tau21      >  self.max_tau21 : goodFatJet = False 
           if goodFatJet : order.append(iFatJet)##order = index list of good fatjets 
 
         for typ in self.CollBr: ##each type of branch  
