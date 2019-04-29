@@ -61,36 +61,60 @@ class FakeWeight():
         self.MuPR = self._getRootObj(self.fileMuPR, 'h_Muon_signal_pt_eta_bin')
         self.ElPR = self._getRootObj(self.fileElPR, 'h_Ele_signal_pt_eta_bin')
 
-        self.MuFR_jet10 = self._getRootObj(self.fileMuFR_jet10, 'FR_pT_eta_EWKcorr')
-        self.MuFR_jet15 = self._getRootObj(self.fileMuFR_jet15, 'FR_pT_eta_EWKcorr')
-        self.MuFR_jet20 = self._getRootObj(self.fileMuFR_jet20, 'FR_pT_eta_EWKcorr')
-        self.MuFR_jet25 = self._getRootObj(self.fileMuFR_jet25, 'FR_pT_eta_EWKcorr')
-        self.MuFR_jet30 = self._getRootObj(self.fileMuFR_jet30, 'FR_pT_eta_EWKcorr')
-        self.MuFR_jet35 = self._getRootObj(self.fileMuFR_jet35, 'FR_pT_eta_EWKcorr')
-        self.MuFR_jet45 = self._getRootObj(self.fileMuFR_jet45, 'FR_pT_eta_EWKcorr')
+        self.MuFR_jet10_bveto = self._getRootObj(self.fileMuFR_jet10, 'bveto/FR_pt_eta_EWKcorr')
+        self.MuFR_jet15_bveto = self._getRootObj(self.fileMuFR_jet15, 'bveto/FR_pt_eta_EWKcorr')
+        self.MuFR_jet20_bveto = self._getRootObj(self.fileMuFR_jet20, 'bveto/FR_pt_eta_EWKcorr')
+        self.MuFR_jet25_bveto = self._getRootObj(self.fileMuFR_jet25, 'bveto/FR_pt_eta_EWKcorr')
+        self.MuFR_jet30_bveto = self._getRootObj(self.fileMuFR_jet30, 'bveto/FR_pt_eta_EWKcorr')
+        self.MuFR_jet35_bveto = self._getRootObj(self.fileMuFR_jet35, 'bveto/FR_pt_eta_EWKcorr')
+        self.MuFR_jet45_bveto = self._getRootObj(self.fileMuFR_jet45, 'bveto/FR_pt_eta_EWKcorr')
 
-        self.ElFR_jet25 = self._getRootObj(self.fileElFR_jet25, 'FR_pT_eta_EWKcorr')
-        self.ElFR_jet35 = self._getRootObj(self.fileElFR_jet35, 'FR_pT_eta_EWKcorr')
-        self.ElFR_jet45 = self._getRootObj(self.fileElFR_jet45, 'FR_pT_eta_EWKcorr')
+        self.ElFR_jet25_bveto = self._getRootObj(self.fileElFR_jet25, 'bveto/FR_pt_eta_EWKcorr')
+        self.ElFR_jet35_bveto = self._getRootObj(self.fileElFR_jet35, 'bveto/FR_pt_eta_EWKcorr')
+        self.ElFR_jet45_bveto = self._getRootObj(self.fileElFR_jet45, 'bveto/FR_pt_eta_EWKcorr')
 
-        #self.MuFR_jet10 = self._getRootObj(self.fileMuFR_jet10, 'FR_pt_eta_EWKcorr')
-        #self.MuFR_jet15 = self._getRootObj(self.fileMuFR_jet15, 'FR_pt_eta_EWKcorr')
-        #self.MuFR_jet20 = self._getRootObj(self.fileMuFR_jet20, 'FR_pt_eta_EWKcorr')
-        #self.MuFR_jet25 = self._getRootObj(self.fileMuFR_jet25, 'FR_pt_eta_EWKcorr')
-        #self.MuFR_jet30 = self._getRootObj(self.fileMuFR_jet30, 'FR_pt_eta_EWKcorr')
-        #self.MuFR_jet35 = self._getRootObj(self.fileMuFR_jet35, 'FR_pt_eta_EWKcorr')
-        #self.MuFR_jet45 = self._getRootObj(self.fileMuFR_jet45, 'FR_pt_eta_EWKcorr')
+        self.MuFR_jet10_loose = self._getRootObj(self.fileMuFR_jet10, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet15_loose = self._getRootObj(self.fileMuFR_jet15, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet20_loose = self._getRootObj(self.fileMuFR_jet20, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet25_loose = self._getRootObj(self.fileMuFR_jet25, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet30_loose = self._getRootObj(self.fileMuFR_jet30, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet35_loose = self._getRootObj(self.fileMuFR_jet35, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet45_loose = self._getRootObj(self.fileMuFR_jet45, 'loosebtag/FR_pt_eta_EWKcorr')
 
-        #self.ElFR_jet25 = self._getRootObj(self.fileElFR_jet25, 'FR_pt_eta_EWKcorr')
-        #self.ElFR_jet35 = self._getRootObj(self.fileElFR_jet35, 'FR_pt_eta_EWKcorr')
-        #self.ElFR_jet45 = self._getRootObj(self.fileElFR_jet45, 'FR_pt_eta_EWKcorr')
+        self.ElFR_jet25_loose = self._getRootObj(self.fileElFR_jet25, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.ElFR_jet35_loose = self._getRootObj(self.fileElFR_jet35, 'loosebtag/FR_pt_eta_EWKcorr')
+        self.ElFR_jet45_loose = self._getRootObj(self.fileElFR_jet45, 'loosebtag/FR_pt_eta_EWKcorr')
+
+        self.MuFR_jet10_medium = self._getRootObj(self.fileMuFR_jet10, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet15_medium = self._getRootObj(self.fileMuFR_jet15, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet20_medium = self._getRootObj(self.fileMuFR_jet20, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet25_medium = self._getRootObj(self.fileMuFR_jet25, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet30_medium = self._getRootObj(self.fileMuFR_jet30, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet35_medium = self._getRootObj(self.fileMuFR_jet35, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet45_medium = self._getRootObj(self.fileMuFR_jet45, 'mediumbtag/FR_pt_eta_EWKcorr')
+
+        self.ElFR_jet25_medium = self._getRootObj(self.fileElFR_jet25, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.ElFR_jet35_medium = self._getRootObj(self.fileElFR_jet35, 'mediumbtag/FR_pt_eta_EWKcorr')
+        self.ElFR_jet45_medium = self._getRootObj(self.fileElFR_jet45, 'mediumbtag/FR_pt_eta_EWKcorr')
+
+        self.MuFR_jet10_tight = self._getRootObj(self.fileMuFR_jet10, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet15_tight = self._getRootObj(self.fileMuFR_jet15, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet20_tight = self._getRootObj(self.fileMuFR_jet20, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet25_tight = self._getRootObj(self.fileMuFR_jet25, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet30_tight = self._getRootObj(self.fileMuFR_jet30, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet35_tight = self._getRootObj(self.fileMuFR_jet35, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.MuFR_jet45_tight = self._getRootObj(self.fileMuFR_jet45, 'tightbtag/FR_pt_eta_EWKcorr')
+
+        self.ElFR_jet25_tight = self._getRootObj(self.fileElFR_jet25, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.ElFR_jet35_tight = self._getRootObj(self.fileElFR_jet35, 'tightbtag/FR_pt_eta_EWKcorr')
+        self.ElFR_jet45_tight = self._getRootObj(self.fileElFR_jet45, 'tightbtag/FR_pt_eta_EWKcorr')
 
     def _getRate(self, h2, pt, eta, leptonptmax):
 
         aeta  = abs(eta)
         nbins = h2.GetNbinsX()
         ptmax = leptonptmax
-        
+
         if (ptmax <= 0.) : ptmax = h2.GetXaxis().GetBinCenter(nbins)
         
         rate_value = h2.GetBinContent(h2.FindBin(min(pt, ptmax), aeta))
@@ -105,8 +129,8 @@ class FakeWeight():
     def _get2lWeight(self, leptons, MuFRName, ElFRName, stat):
 
         # Get FR
-        exec ('ElFR = self.'+ElFRName )
-        exec ('MuFR = self.'+MuFRName )
+        #exec ('ElFR = self.'+ElFRName )
+        #exec ('MuFR = self.'+MuFRName )
 
         # avoid dots to go faster
         MuPR = self.MuPR
@@ -132,10 +156,19 @@ class FakeWeight():
                 pE = 0.  # prompt rate statistical error
                 fE = 0.  # fake   rate statistical error
 
+                btagscore = leptons[i][4]
+                if   (btagscore <0.1522) : btagbin = "_bveto"
+                elif (btagscore <0.4941) : btagbin = "_loose"
+                elif (btagscore <0.8001) : btagbin = "_medium"
+                else : btagbin = "_tight"
+                MuFR = getattr(self, MuFRName+btagbin)
+                ElFR = getattr(self, ElFRName+btagbin)
+
+
                 if (leptons[i][0] == 'mu') :
 
                     p, pE = self._getRate(MuPR, leptons[i][1], leptons[i][2], -999.)
-                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2],   35.)
+                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2],  35.)
 
                     if   (stat == 'MuUp')   : f = f + fE
                     elif (stat == 'MuDown') : f = f - fE
@@ -143,7 +176,7 @@ class FakeWeight():
                 elif (leptons[i][0] == 'ele') :
 
                     p, pE = self._getRate(ElPR, leptons[i][1], leptons[i][2], -999.)
-                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],   35.)
+                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],  35.)
 
                     if   (stat == 'ElUp')   : f = f + fE
                     elif (stat == 'ElDown') : f = f - fE
@@ -184,8 +217,8 @@ class FakeWeight():
     def _get3lWeight(self, leptons, MuFRName, ElFRName, stat):
 
         # Get FR
-        exec ('ElFR = self.'+ElFRName )
-        exec ('MuFR = self.'+MuFRName )
+        #exec ('ElFR = self.'+ElFRName )
+        #exec ('MuFR = self.'+MuFRName )
 
 
         # avoid dots to go faster
@@ -211,11 +244,18 @@ class FakeWeight():
                 f  = 0.  # fake   rate
                 pE = 0.  # prompt rate statistical error
                 fE = 0.  # fake   rate statistical error
+                btagscore = leptons[i][4]
+                if   (btagscore <0.1522) : btagbin = "_bveto"
+                elif (btagscore <0.4941) : btagbin = "_loose"
+                elif (btagscore <0.8001) : btagbin = "_medium"
+                else : btagbin = "_tight"
+                MuFR = getattr(self, MuFRName+btagbin)
+                ElFR = getattr(self, ElFRName+btagbin)
 
                 if (leptons[i][0] == 'mu') :
 
                     p, pE = self._getRate(MuPR, leptons[i][1], leptons[i][2], -999.)
-                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2],   35.)
+                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2], 35.)
 
                     if   (stat == 'MuUp')   : f = f + fE
                     elif (stat == 'MuDown') : f = f - fE
@@ -223,7 +263,7 @@ class FakeWeight():
                 elif (leptons[i][0] == 'ele') :
 
                     p, pE = self._getRate(ElPR, leptons[i][1], leptons[i][2], -999.)
-                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],   35.)
+                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2], 35.)
 
                     if   (stat == 'ElUp')   : f = f + fE
                     elif (stat == 'ElDown') : f = f - fE
@@ -274,8 +314,8 @@ class FakeWeight():
     def _get4lWeight(self, leptons, MuFRName, ElFRName, stat):
 
         # Get FR
-        exec ('ElFR = self.'+ElFRName )
-        exec ('MuFR = self.'+MuFRName )
+        #exec ('ElFR = self.'+ElFRName )
+        #exec ('MuFR = self.'+MuFRName )
 
         # avoid dots to go faster
         MuPR = self.MuPR
@@ -300,11 +340,19 @@ class FakeWeight():
                 f  = 0.  # fake   rate
                 pE = 0.  # prompt rate statistical error
                 fE = 0.  # fake   rate statistical error
+                btagscore = leptons[i][4]
+                if   (btagscore <0.1522) : btagbin = "_bveto"
+                elif (btagscore <0.4941) : btagbin = "_loose"
+                elif (btagscore <0.8001) : btagbin = "_medium"
+                else : btagbin = "_tight"
+                MuFR = getattr(self, MuFRName+btagbin)
+                ElFR = getattr(self, ElFRName+btagbin)
+
 
                 if (leptons[i][0] == 'mu') :
 
                     p, pE = self._getRate(MuPR, leptons[i][1], leptons[i][2], -999.)
-                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2],   35.)
+                    f, fE = self._getRate(MuFR, leptons[i][1], leptons[i][2], 35.)
 
                     if   (stat == 'MuUp')   : f = f + fE
                     elif (stat == 'MuDown') : f = f - fE
@@ -312,7 +360,7 @@ class FakeWeight():
                 elif (leptons[i][0] == 'ele') :
 
                     p, pE = self._getRate(ElPR, leptons[i][1], leptons[i][2], -999.)
-                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2],   35.)
+                    f, fE = self._getRate(ElFR, leptons[i][1], leptons[i][2], 35.)
 
                     if   (stat == 'ElUp')   : f = f + fE
                     elif (stat == 'ElDown') : f = f - fE
@@ -443,6 +491,14 @@ class LeptonFakeWMaker(Module):
         lepton_col   = Collection(event, 'Lepton')
         nLep = len(lepton_col)
 
+        #For the btagscore
+        jet_col = Collection(event, 'Jet')
+        nJets = len(jet_col)
+        ele_col = Collection(event, 'Electron')
+        nEle = len(ele_col)
+        mu_col = Collection(event, 'Muon')
+        nMu = len(mu_col)
+
         Leptons = {}
         for iTag in self.FakeWeights: Leptons[iTag] = {}
         selectedLepton = 0
@@ -460,6 +516,12 @@ class LeptonFakeWMaker(Module):
                 elif abs (flavour) == 13 :
                   kindLep = 'mu'
 
+                #Getting the btagscore
+                if ( kindLep =='ele' and ele_col[ lepton_col[iLep]['electronIdx'] ]['jetIdx']>=0  )  :
+                    btagscore = jet_col[ ele_col[ lepton_col[iLep]['electronIdx'] ]['jetIdx'] ]['btagDeepB']
+                elif  ( kindLep =='mu' and mu_col[ lepton_col[iLep]['muonIdx'] ]['jetIdx']>=0  )  :
+                    btagscore = jet_col[ mu_col[ lepton_col[iLep]['muonIdx'] ]['jetIdx'] ]['btagDeepB']
+                else : btagscore = 0
 
                 # consider only leptons with pt>10 GeV
                 if pt > 10 \
@@ -476,7 +538,7 @@ class LeptonFakeWMaker(Module):
                      muWP  = self.FakeWeights[iTag]['muWP']
                      if   abs (flavour) == 11 : IsTightLepton = lepton_col[iLep]['isTightElectron_'+eleWP]
                      elif abs (flavour) == 13 : IsTightLepton = lepton_col[iLep]['isTightMuon_'+muWP]
-                     Leptons[iTag][selectedLepton] = [kindLep, pt, eta, IsTightLepton]
+                     Leptons[iTag][selectedLepton] = [kindLep, pt, eta, IsTightLepton, btagscore]
 
                    selectedLepton += 1
 
