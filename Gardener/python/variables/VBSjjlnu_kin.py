@@ -251,12 +251,12 @@ class VBSjjlnu_kin(TreeCloner):
                 for var in variables:
                     variables[var][0] = -9999
             else:
-                vbsjets = utils.get_jets_byindex(itree, itree.VBS_jets, self.ptmin_jet, self.debug)
-                vjets = utils.get_jets_byindex(itree, itree.V_jets, self.ptmin_jet, self.debug)
-
                 if self.debug:
-                    print "VBSjets:", vbsjets
-                    print "Vjets:", vjets
+                    print "VBSjets", [i for i in itree.VBS_jets]
+                    print "Vjets", [j for j in itree.V_jets]
+
+                vjets = utils.get_jets_byindex(itree, itree.V_jets, self.ptmin_jet, self.debug)
+                vbsjets = utils.get_jets_byindex(itree, itree.VBS_jets, self.ptmin_jet, self.debug)
                 
                 lepton = TLorentzVector()
                 plep = itree.std_vector_lepton_pt[0] * cosh(itree.std_vector_lepton_eta[0])
@@ -269,7 +269,7 @@ class VBSjjlnu_kin(TreeCloner):
                 other_jets_eta = []
                 other_jets_pts = []
                 for i, ( eta, pt) in enumerate(zip(itree.std_vector_jet_eta, itree.std_vector_jet_pt)):
-                    if i not in itree.VBS_jets and i not in itree.V_jets:
+                    if i not in itree.VBS_jets and i not in itree.V_jets and pt >=self.ptmin_jet and abs(eta)<10:
                         other_jets_eta.append(eta)
                         other_jets_pts.append(pt)
     
