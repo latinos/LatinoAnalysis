@@ -3123,6 +3123,13 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_JHUGen698_M2500',
                                   'VBFHToWWTo2L2Nu_JHUGen698_M3000',
 
+                                  # ... ggH and VBF 4,5TeV
+                                  # NOTE: Samples use JHUGen714, but name is 698 here for consistent treatment within the module
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M4000',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M5000',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M4000',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M5000',
+
                                  ],
                   #'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+)*"',
                   'command'    : 'gardener.py BWEwkSingletReweighter ',
