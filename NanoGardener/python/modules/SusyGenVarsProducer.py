@@ -26,14 +26,15 @@ class SusyGenVarsProducer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
 
-        self.out.branch("susyMprompt",   "F")
-        self.out.branch("susyMstop",     "F")
-        self.out.branch("susyMLSP",      "F")
-        self.out.branch("susyMChargino", "F")
-        self.out.branch("susyMSlepton",  "F")
-        self.out.branch("Xsec",          "F")
-        self.out.branch("ptISR",         "F")
-        self.out.branch("njetISR",       "F")
+        self.out.branch("susyMprompt",     "F")
+        self.out.branch("susyMstop",       "F")
+        self.out.branch("susyMLSP",        "F")
+        self.out.branch("susyMChargino",   "F")
+        self.out.branch("susyMSlepton",    "F")
+        self.out.branch("Xsec",            "F")
+        self.out.branch("XsecUncertainty", "F")
+        self.out.branch("ptISR",           "F")
+        self.out.branch("njetISR",         "F")
 
         if self.susyModelIsSet==False :
 
@@ -53,18 +54,28 @@ class SusyGenVarsProducer(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def getCrossSection(self, susyProcess, susyMass) :
+    def getCrossSectionUncertainty(self, susyProcess, isusyMass):
+        
+        xsUnc = SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['uncertainty']
+        if '%' not in xsUnc: 
+            return float(xsUnc)
+        else:
+            xsUnc = xsUnc.replace('%', '')
+            return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])*float(xsUnc)/100.
+
+    def getCrossSection(self, susyProcess, susyMass):
 
         isusyMass = int(susyMass)
 
         if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
             
-            return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])
+            return [float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value']),
+                    self.getCrossSectionUncertainty(susyProcess, isusyMass)]
         
         elif isusyMass%5!=0 :
                     
-            isusyMass1 = 5*(iSusyMass/5)
-            isusyMass2 = 5*(iSusyMass/5+1)
+            isusyMass1 = 5*(isusyMass/5)
+            isusyMass2 = 5*(isusyMass/5+1)
                     
             if str(isusyMass1) in SUSYCrossSections[susyProcess]['massPoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
 
@@ -72,10 +83,13 @@ class SusyGenVarsProducer(Module):
                 susyXsec2 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass2)]['value'])
 
                 slope = -math.log(susyXsec2/susyXsec1)/(isusyMass2-isusyMass1)
-                
-                return isusyMass1*math.exp(-slope*(isusyMass-isusyMass1))
+                susyXsec = susyXsec1*math.exp(-slope*(isusyMass-isusyMass1))
 
-        
+                susyXsecRelUnc = (self.getCrossSectionUncertainty(susyProcess, isusyMass1)/susyXsec1 + 
+                                  self.getCrossSectionUncertainty(susyProcess, isusyMass2)/susyXsec2)/2.
+                
+                return [susyXsec, susyXsec*susyXsecRelUnc]
+
         raise Exception('SusyGenVarsProducer ERROR: cross section not available for', self.susyProcess, 'at mass =', susyMass)
 
     ###
@@ -88,6 +102,7 @@ class SusyGenVarsProducer(Module):
         massChargino = -1.
         massSlepton  = -1.
         xSection     = -1.
+        xSecUncert   = -1.
         ptISR        = -1.
         njetISR      =  0.
 
@@ -100,7 +115,7 @@ class SusyGenVarsProducer(Module):
         # http://pdg.lbl.gov/2007/reviews/montecarlorpp.pdf
         for particle in genParticles :
 
-            if abs(particle.pdgId)>=1000000 and abs(particle.pdgId)<=2001000 : # It´s SUSY particle
+            if abs(particle.pdgId)>=1000000 and abs(particle.pdgId)<=2001000 : # It is SUSY particle
 
                 if abs(genParticles[particle.genPartIdxMother].pdgId)<1000000 : # Its mother is not SUSY
 
@@ -110,7 +125,7 @@ class SusyGenVarsProducer(Module):
                     elif nSusyParticles==1 :
                         susyParticle2.SetPtEtaPhiM(particle.pt, particle.eta, particle.phi, particle.mass)
                     nSusyParticles += 1
-                        
+
                 if abs(particle.pdgId)==1000006 : # Stop1
                     massStop = particle.mass
                 
@@ -124,7 +139,9 @@ class SusyGenVarsProducer(Module):
                     (abs(particle.pdgId)==2000011 or abs(particle.pdgId)==2000013 or abs(particle.pdgId)==2000015)) : # RH sleptons
                     massSlepton = particle.mass
 
-        xSection = self.getCrossSection(self.susyProcess, massPrompt)
+        xSec = self.getCrossSection(self.susyProcess, massPrompt)
+        xSection = xSec[0]
+        xSecUncert = xSec[1]
         
         if nSusyParticles==2 :
             ptISR = (susyParticle1+susyParticle2).Pt()
@@ -176,14 +193,15 @@ class SusyGenVarsProducer(Module):
                     if matched==False:
                         njetISR += 1
 
-        self.out.fillBranch("susyMprompt",   massPrompt)
-        self.out.fillBranch("susyMstop",     massStop)
-        self.out.fillBranch("susyMLSP",      massLSP)
-        self.out.fillBranch("susyMChargino", massChargino)
-        self.out.fillBranch("susyMSlepton",  massSlepton)
-        self.out.fillBranch("Xsec",          xSection)
-        self.out.fillBranch("ptISR",         ptISR)
-        self.out.fillBranch("njetISR",       njetISR)
+        self.out.fillBranch("susyMprompt",     massPrompt)
+        self.out.fillBranch("susyMstop",       massStop)
+        self.out.fillBranch("susyMLSP",        massLSP)
+        self.out.fillBranch("susyMChargino",   massChargino)
+        self.out.fillBranch("susyMSlepton",    massSlepton)
+        self.out.fillBranch("Xsec",            xSection)
+        self.out.fillBranch("XsecUncertainty", xSecUncert)
+        self.out.fillBranch("ptISR",           ptISR)
+        self.out.fillBranch("njetISR",         njetISR)
             
         return True
  

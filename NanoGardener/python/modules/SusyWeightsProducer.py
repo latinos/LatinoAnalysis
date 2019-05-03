@@ -46,21 +46,23 @@ class SusyWeightsProducer(Module):
 
             self.isrObservable = ''
 
-            for isrObs in SUSYISRCorrections[self.cmssw] :
-                for susyModel in SUSYISRCorrections[self.cmssw][isrObs]['susyModels'] :
+            for isrObs in SUSYISRCorrections:
+                for susyModel in SUSYISRCorrections[isrObs]['susyModels'] :
                     if susyModel in inputFileName :
+                        for isrVer in SUSYISRCorrections[isrObs]['version']:
+                            if self.cmssw in SUSYISRCorrections[isrObs]['version'][isrVer]['production'].keys():
 
-                        self.isrObservable = isrObs
+                                self.isrObservable = isrObs
                         
-                        self.isrEdge = []
-                        self.isrCorrection = []
+                                self.isrEdge = []
+                                self.isrCorrection = []
 
-                        for edge in sorted(SUSYISRCorrections[self.cmssw][isrObs]['correction'].keys()) :
+                                for edge in sorted(SUSYISRCorrections[isrObs]['version'][isrVer]['correction'].keys()) :
+                                    
+                                    self.isrEdge.append( float(edge) )
+                                    self.isrCorrection.append( float(SUSYISRCorrections[isrObs]['version'][isrVer]['correction'][edge]) )
 
-                            self.isrEdge.append( float(edge) )
-                            self.isrCorrection.append( float(SUSYISRCorrections[self.cmssw][self.isrObservable]['correction'][edge]) )
-
-                        self.isrBins = len(self.isrEdge) - 1
+                                    self.isrBins = len(self.isrEdge) - 1
 
             if self.isrObservable=='' :
                 raise Exception('SusyWeightsProducer ERROR: SUSY model not found for', inputFile.GetName())
