@@ -429,7 +429,7 @@ class PostProcMaker():
             print 'ERROR: mkStageOut to different site not yet implemented for _LocalSite = ',self._LocalSite
             exit()
       #KISTI T3
-      elif self._LocalSite == 'sdfarm.kr' :
+      elif self._LocalSite == 'sdfarm' :
         if not cpMode:
           command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
         else:
