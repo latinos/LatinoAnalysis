@@ -295,6 +295,16 @@ Samples['QCD_Pt_10to30']            = {'nanoAOD' : '/QCD_Pt_15to30_TuneCP5_13TeV
 Samples['QCD_Pt_30to50']            = {'nanoAOD' : '/QCD_Pt_30to50_TuneCP5_13TeV_pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Yutaro
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Samples['GJetsDR04_HT100To200'] = {'nanoAOD': '/GJets_DR-0p4_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_v2/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
+Samples['GJetsDR04_HT200To400'] = {'nanoAOD': '/GJets_DR-0p4_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_v2/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
+Samples['GJetsDR04_HT400To600'] = {'nanoAOD': '/GJets_DR-0p4_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_v2/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
+Samples['GJetsDR04_HT600ToInf'] = {'nanoAOD': '/GJets_DR-0p4_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
+Samples['GJets_HT40To100'] = {'nanoAOD': '/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/NANOAODSIM'}
+Samples['GJets_HT40To100-ext1'] = {'nanoAOD': '/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_1core_94X_mc2017_realistic_v14_ext1-v2/NANOAODSIM'}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Jonatan
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Samples['WWW']  = {'nanoAOD' :'/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
@@ -410,4 +420,3 @@ Samples["QCD_HT200to300"]  = {'nanoAOD' :'/QCD_HT200to300_TuneCP5_13TeV-madgraph
 Samples["QCD_HT300to500"]  = {'nanoAOD' :'/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
 Samples["QCD_HT700to1000"] = {'nanoAOD' :'/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
 Samples["QCD_HT1000to1500"] = {'nanoAOD' :'/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'}
-

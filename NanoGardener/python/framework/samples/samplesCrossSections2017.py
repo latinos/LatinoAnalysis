@@ -567,6 +567,13 @@ samples['QCD_Pt_80to170_bcToE']    		.extend( ['xsec=39430',		'kfact=1.000',	're
 samples['QCD_Pt_170to250_bcToE']    		.extend( ['xsec=2607',		'kfact=1.000',	'ref=I'] )
 samples['QCD_Pt_250toInf_bcToE']    		.extend( ['xsec=720.1',		'kfact=1.000',	'ref=I'] )
 
+# GJets
+samples['GJetsDR04_HT100To200'] .extend( ['xsec=5382', 'kfact=1.000', 'ref=I'] )
+samples['GJetsDR04_HT200To400'] .extend( ['xsec=1177', 'kfact=1.000', 'ref=I'] )
+samples['GJetsDR04_HT400To600'] .extend( ['xsec=132.8', 'kfact=1.000', 'ref=I'] )
+samples['GJetsDR04_HT600ToInf'] .extend( ['xsec=44.25', 'kfact=1.000', 'ref=I'] )
+samples['GJets_HT40To100']      .extend( ['xsec=18740', 'kfact=1.000', 'ref=I'] )
+samples['GJets_HT40To100-ext1'] .extend( ['xsec=18740', 'kfact=1.000', 'ref=I'] )
 
 # VBS
 samples['WpWpJJ_EWK_QCD']   			.extend( ['xsec=0.05454',	'kfact=1.000',	'ref=I'] )

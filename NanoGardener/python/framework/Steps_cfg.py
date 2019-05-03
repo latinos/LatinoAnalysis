@@ -1034,6 +1034,8 @@ Steps = {
                                   'QCD_Pt_15to20_bcToE','QCD_Pt_20to30_bcToE','QCD_Pt_30to80_bcToE','QCD_Pt_80to170_bcToE',
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
+                                  'GJetsDR04_HT100To200', 'GJetsDR04_HT200To400', 'GJetsDR04_HT400To600', 'GJetsDR04_HT600ToInf', 'GJets_HT40To100', 'GJets_HT40To100-ext1',
+                                  ####
                                   'TT','TTJets','TTTo2L2Nu',
                                  ] ,               
                  },
