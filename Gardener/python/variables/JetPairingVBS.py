@@ -6,8 +6,7 @@ module_name =    '''
  | |__| |  __/ |_| |  | (_| | | |  | | | | | (_| |\  /  | |_) |____) |
   \____/ \___|\__|_|   \__,_|_|_|  |_|_| |_|\__, | \/   |____/|_____/ 
                                              __/ |                    
-                                            |___/                     
-                                
+                                            |___/                                                   
 '''
 
 #
@@ -38,6 +37,7 @@ class JetPairingVBS(TreeCloner):
         group = optparse.OptionGroup(parser,self.label, description)
         group.add_option('-d', '--debug',  dest='debug',  help='Debug flag',  default="0")
         group.add_option('--ptminjet',  dest='ptmin_jet',  help='Min Pt for jets',  default=20.)
+        group.add_option('-m', '--mode',  dest='mode',  help='Pairing mode, 0=vjet+vbs, 1=vbs+vjet',  default="0")
         parser.add_option_group(group)
         return group
 
@@ -45,6 +45,7 @@ class JetPairingVBS(TreeCloner):
     def checkOptions(self,opts):
         self.debug = (opts.debug == "1")
         self.ptmin_jet = float(opts.ptmin_jet)
+        self.mode = opts.mode
 
     def process(self,**kwargs):
         print module_name
@@ -80,20 +81,39 @@ class JetPairingVBS(TreeCloner):
             jets = utils.get_jets(itree, self.ptmin_jet, self.debug)
             vpair   = [-1,-1]
             vbspair = [-1,-1]
+
+            if self.mode == 0:
+                
+                if len(jets) >=2:
+                    vpair = utils.nearest_masses_pair(jets, [80.385, 91.1876])
             
-            if len(jets) >=2:
-                vpair = utils.nearest_masses_pair(jets, [80.385, 91.1876])
-        
-                if len(jets) >=4:
-                    # Save pairs of (index, jet) for the next step
-                    remaining_jets = [(i,j) for i,j in enumerate(jets) if i not in vpair]
-                    # The result of the next step are indexes in the new collection of jets
-                    vbspair_newindexes = utils.max_mjj_pair([rj[1] for rj in remaining_jets])
-                    # going back to global index 
-                    vbspair = [remaining_jets[i][0] for i in vbspair_newindexes]
-                                                              
-                elif self.debug:
-                    print "Less than 4 jets available"
+                    if len(jets) >=4:
+                        # Save pairs of (index, jet) for the next step
+                        remaining_jets = [(i,j) for i,j in enumerate(jets) if i not in vpair]
+                        # The result of the next step are indexes in the new collection of jets
+                        vbspair_newindexes = utils.max_mjj_pair([rj[1] for rj in remaining_jets])
+                        # going back to global index 
+                        vbspair = [remaining_jets[i][0] for i in vbspair_newindexes]
+                                                                
+                    elif self.debug:
+                        print "Less than 4 jets available"
+
+            elif self.mode == 1:
+
+                if len(jets) >=2:
+                    vbspair = utils.max_mjj_pair(jets)
+            
+                    if len(jets) >=4:
+                        # Save pairs of (index, jet) for the next step
+                        remaining_jets = [(i,j) for i,j in enumerate(jets) if i not in vbspair]
+                        # The result of the next step are indexes in the new collection of jets
+                        vpair_newindexes = utils.nearest_masses_pair([rj[1] for rj in remaining_jets], [80.385, 91.1876])
+                        # going back to global index 
+                        vpair = [remaining_jets[i][0] for i in vpair_newindexes]
+                                                                
+                    elif self.debug:
+                        print "Less than 4 jets available"
+
 
             V_jets[0], V_jets[1] = vpair
             VBS_jets[0], VBS_jets[1] = vbspair
