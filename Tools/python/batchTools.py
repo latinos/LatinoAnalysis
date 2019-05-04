@@ -352,8 +352,8 @@ class batchJobs :
          
          if 'ui10' in hostName:
             jdsFile.write('requirements = ( HasSingularity == true ) \n')
-            jdsFile.write('+SingularityImage = ""/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-el6:latest"" \n')
-            jdsFile.write('+SingularityBind = ""/cvmfs, /cms, /share"" \n')
+            jdsFile.write('+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-el6:latest" \n')
+            jdsFile.write('+SingularityBind = "/cvmfs, /cms, /share" \n')
             
 
          #jdsFile.write('should_transfer_files = YES\n')
