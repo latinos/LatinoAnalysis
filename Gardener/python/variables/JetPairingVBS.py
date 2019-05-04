@@ -83,27 +83,21 @@ class JetPairingVBS(TreeCloner):
             
             if len(jets) >=2:
                 vpair = utils.nearest_masses_pair(jets, [80.385, 91.1876])
-                for i in range(2):
-                    
-
+        
                 if len(jets) >=4:
                     # Save pairs of (index, jet) for the next step
                     remaining_jets = [(i,j) for i,j in enumerate(jets) if i not in vpair]
                     # The result of the next step are indexes in the new collection of jets
-                    vbspair = utils.max_mjj_pair([rj[1] for rj in remaining_jets])
-                    for ivbs in range(2):
-                        # we have to refer to the global jets indexing
-                        VBS_jets[ivbs] =  remaining_jets[ivbs][0]
-                        if VBS_jets[ivbs] in vpair:
-                            print("ERROR! Reusing a jet!")
-                            VBS_jets[ivbs] = -1
-                    
-
+                    vbspair_newindexes = utils.max_mjj_pair([rj[1] for rj in remaining_jets])
+                    # going back to global index 
+                    vbspair = [remaining_jets[i][0] for i in vbspair_newindexes]
+                                                              
                 elif self.debug:
                     print "Less than 4 jets available"
 
-            V_jets[i] = vpair[i]
-                
+            V_jets[0], V_jets[1] = vpair
+            VBS_jets[0], VBS_jets[1] = vbspair
+
             otree.Fill()
   
         self.disconnect()
