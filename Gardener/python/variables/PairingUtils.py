@@ -182,3 +182,62 @@ def get_nearest_vector(target, vectors):
         l.append(([i,k], vectors[i].DeltaR(target) ))  
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0][0]
+
+
+
+#Functions to put in PairingUtils
+def get_jets_and_bscore(event, ptmin=20., debug=False):
+    jets = []
+    b_scores = []
+
+    for pt, eta, phi,mass, bvalue in  zip(event.std_vector_jet_pt, 
+                     event.std_vector_jet_eta, event.std_vector_jet_phi, 
+                     event.std_vector_jet_mass, event.std_vector_jet_DeepCSVB):
+
+        if pt < 0 or pt < ptmin:
+            break
+        if abs(eta) < 10 :
+            p = pt * cosh(eta)
+            vec = TLorentzVector()
+            en = sqrt(p**2 + mass**2)
+            vec.SetPtEtaPhiE(pt, eta, phi, en)
+            jets.append(vec)
+            b_scores.append(bvalue)
+    
+    return jets, b_scores
+
+
+def nearest_mass_pair_notH(vectors, mass, hpair):
+    ''' Returns the pair of vectors with invariant mass nearest to 
+    the given mass, checking if it isn't the bb pair '''
+    l = []
+    for i ,k  in combinations(range(len(vectors)),2):
+        l.append(([i,k], abs(mass - (vectors[i]+ vectors[k]).M() )))  
+    l = sorted(l, key=itemgetter(1))
+    for i in range(len(l)):
+        if  l[i][0][0] != hpair[0] and l[i][0][0] != hpair[1]  and \
+            l[i][0][1] != hpair[0] and l[i][0][1] != hpair[1]:
+            return l[i][0]
+
+def max_pt_pair_notH(vectors, hpair):
+    ''' Returns the pair with highest Pt, , checking that it isn't the bb pair'''
+    l = []
+    for i ,k  in combinations(range(len(vectors)),2):
+        l.append(( [i,k], (vectors[i]+ vectors[k]).Pt() ))
+    l = sorted(l, key=itemgetter(1), reverse=True)
+    l = sorted(l, key=itemgetter(1))
+    for i in range(len(l)):
+        if l[i][0][0] != hpair[0] and l[i][0][0] != hpair[1] and \
+           l[i][0][1] != hpair[0] and l[i][0][1] != hpair[1]:
+            return l[i][0]
+
+def min_deltaeta_pairs_notH(vectors, hpair):
+    l = []
+    for i ,k  in combinations(range(len(vectors)),2):
+        l.append( ([i,k], abs(vectors[i].Eta()- vectors[k].Eta()) ) )
+    l = sorted(l, key=itemgetter(1))
+    for i in range(len(l)):
+        if  l[i][0][0] != hpair[0] and l[i][0][0] != hpair[1] and \
+            l[i][0][1] != hpair[0] and l[i][0][1] != hpair[1] :
+            return l[i][0]
+

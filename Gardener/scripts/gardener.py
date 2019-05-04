@@ -136,6 +136,7 @@ from LatinoAnalysis.Gardener.variables.PrefireCorr_gardener          import Pref
 # jet pairs identification
 from LatinoAnalysis.Gardener.variables.JetPairingGenVBS             import JetPairingGenVBS
 from LatinoAnalysis.Gardener.variables.JetPairingVBS                import JetPairingVBS
+from LatinoAnalysis.Gardener.variables.JetPairingHH                import JetPairingHH
 #from LatinoAnalysis.Gardener.variable.JetPairingGenHH             import JetPairingGenHH
 from LatinoAnalysis.Gardener.variables.VBSjjlnu_kin                  import VBSjjlnu_kin
 
@@ -241,6 +242,7 @@ if __name__ == '__main__':
 # jet pairing
     modules['JetPairingGenVBS']   = JetPairingGenVBS()
     modules['JetPairingVBS']      = JetPairingVBS()
+    modules['JetPairingHH']      = JetPairingHH()
     modules['VBSjjlnu_kin']       = VBSjjlnu_kin()
 
 # Nuisances

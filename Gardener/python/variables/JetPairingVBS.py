@@ -84,7 +84,7 @@ class JetPairingVBS(TreeCloner):
             if len(jets) >=2:
                 vpair = utils.nearest_masses_pair(jets, [80.385, 91.1876])
                 for i in range(2):
-                    V_jets[i] = vpair[i]
+                    
 
                 if len(jets) >=4:
                     # Save pairs of (index, jet) for the next step
@@ -102,6 +102,7 @@ class JetPairingVBS(TreeCloner):
                 elif self.debug:
                     print "Less than 4 jets available"
 
+            V_jets[i] = vpair[i]
                 
             otree.Fill()
   
