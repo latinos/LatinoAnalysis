@@ -40,7 +40,8 @@ vbs_branches = {
                 "Zvjets_high", "Zvjets_low", "Zlep",
                 "A_vbs", "A_vjet", "Mw_lep", "w_lep_pt", 
                 "Mww", "R_ww", "R_mw", "A_ww",
-                "C_vbs", "C_ww", "L_p", "L_pw", "Ht"          
+                "C_vbs", "C_ww", "L_p", "L_pw", "Ht",
+                "recoMET", "recoMET_pz"          
                 ],
             "I": ["N_jets", "N_jets_forward", "N_jets_central"]
             }
@@ -95,6 +96,8 @@ def getVBSkinematics(vbsjets, vjets,lepton, met, other_jets_eta, other_jets_pts,
     output["vjet_eta_low"] = abs(vjet_etas[1])
 
     nu_vec = RecoNeutrino.reconstruct_neutrino(lepton, met)
+    output["recoMET"] = nu_vec.Pt()
+    output["recoMET_pz"] = nu_vec.Pz() 
     output["deltaphi_lep_nu"] = abs(lepton.DeltaPhi(nu_vec)) 
     output["deltaeta_lep_nu"] = abs(lepton.Eta() - nu_vec.Eta())
     output["deltaR_lep_nu"] = lepton.DrEtaPhi(nu_vec)
