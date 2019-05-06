@@ -5254,12 +5254,30 @@ Steps= {
                   'command'    : 'gardener.py JetPairingGenVBS --radius 0.8 --ptminjet 20.0'
   },
 
+
+
   'JetPairingVBS' :{
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : True,
                   'command'    : 'gardener.py JetPairingVBS --ptminjet 20.0'
   },
+
+  'HHPairingGenAndVars' :{
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ['gr4JetsSkim', 'JetPairingGenHH','JetPairingHH']
+  },
+
+
+  'JetPairingGenHH' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'command'    : 'gardener.py JetPairingGenHH --radius 0.8 --ptminjet 20.0 --bWP M -m 0'
+  },
+
 
   'JetPairingHH' :{
                   'isChain'    : False ,
