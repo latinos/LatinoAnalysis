@@ -20,7 +20,7 @@ import os.path
 from LatinoAnalysis.Gardener.gardening import TreeCloner
 import LatinoAnalysis.Gardener.variables.PairingUtils as utils 
 
-class JetPairingGenVBS(TreeCloner):
+class JetPairingGenHH(TreeCloner):
 
     def __init__(self):
         pass
