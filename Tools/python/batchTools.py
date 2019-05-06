@@ -336,7 +336,7 @@ class batchJobs :
          print " hercules::jidFile = ", jidFile
          # queues: "shortcms" (2 days) and "longcms"
          #jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-         print 'qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+         print 'qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' + queue+ ' > '+jidFile
          jobid=os.system('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' +queue +' > '+jidFile)
        elif 'sdfarm' in hostName:
          jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
