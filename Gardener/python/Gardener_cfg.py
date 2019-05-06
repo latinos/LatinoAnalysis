@@ -5254,12 +5254,7 @@ Steps= {
                   'command'    : 'gardener.py JetPairingGenVBS --radius 0.8 --ptminjet 20.0'
   },
 
-  'HHPairingGenAndVars' :{
-                  'isChain'    : True ,
-                  'do4MC'      : True ,
-                  'do4Data'    : True,
-                  'subTargets' : ['gr4JetsSkim', 'JetPairingGenHH','JetPairingHH']
-  },
+
 
   'JetPairingVBS' :{
                   'isChain'    : False ,
@@ -5268,7 +5263,15 @@ Steps= {
                   'command'    : 'gardener.py JetPairingVBS --ptminjet 20.0'
   },
 
-  'JetPairingGenVBS' :{
+  'HHPairingGenAndVars' :{
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ['gr4JetsSkim', 'JetPairingGenHH','JetPairingHH']
+  },
+
+
+  'JetPairingGenHH' :{
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False,
