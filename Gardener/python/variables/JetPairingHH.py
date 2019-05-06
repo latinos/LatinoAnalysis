@@ -48,7 +48,7 @@ class JetPairingHH(TreeCloner):
     def checkOptions(self,opts):
         self.debug = (opts.debug == "1")
         self.ptmin_jet = float(opts.ptmin_jet)
-        self.mode = opts.mode
+        self.mode = int(opts.mode)
         self.bWP = opts.bWP
 
     def process(self,**kwargs):
@@ -95,6 +95,7 @@ class JetPairingHH(TreeCloner):
             if len(bjets) >= 2:
                 # Take the indexes of the two jets with bigger bscore
                 hpair = [j[0] for j in list(sorted(bjets, key=itemgetter(1), reverse=True))[:2]]
+                print hpair
                 
                 if len(jets) >=4:
                     if self.mode == 0:

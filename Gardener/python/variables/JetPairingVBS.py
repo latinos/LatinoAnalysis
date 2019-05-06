@@ -45,7 +45,7 @@ class JetPairingVBS(TreeCloner):
     def checkOptions(self,opts):
         self.debug = (opts.debug == "1")
         self.ptmin_jet = float(opts.ptmin_jet)
-        self.mode = opts.mode
+        self.mode = int(opts.mode)
 
     def process(self,**kwargs):
         print module_name
