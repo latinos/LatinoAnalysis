@@ -88,11 +88,11 @@ class JetPairingGenHH(TreeCloner):
             partons, pids = utils.get_hard_partons(itree, self.debug)
 
             # first take the two bs 
-            bpair = [i for i, p in enumerate(pids) if p in [5,-5]]
+            hpair = [i for i, p in enumerate(pids) if p in [5,-5]]
             
             
             #find the W jets
-            if len(partons) >= 4: # and len(bpair) == 2:
+            if len(partons) >= 4: # and len(hpair) == 2:
                 if self.mode == 0:
                     wpair = utils.nearest_mass_pair_notH(jets, 80.385, hpair)
                 elif self.mode == 1:
@@ -108,7 +108,7 @@ class JetPairingGenHH(TreeCloner):
             if flag == 0:
                 # Save the truth association only if every parton is 
                 # associated to a different jet
-                for ip, iparton in enumerate(bpair):
+                for ip, iparton in enumerate(hpair):
                     H_jets[ip] = matchresult[0][iparton]
                 for jp, jparton in enumerate(wpair):
                     W_jets[jp] = matchresult[0][jparton]
