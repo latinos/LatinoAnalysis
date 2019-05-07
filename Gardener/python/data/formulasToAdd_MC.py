@@ -47,7 +47,7 @@ muWP='cut_Tight80x'
 for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_Iso2016','mva_90p_Iso2015','mva_90p_Iso2016'] :
 
   formulas['LepSF1l__ele_'+eleWP+'__mu_'+muWP] = 'event.std_vector_electron_idisoW_'+eleWP+'[0]*\
-                                                  event.std_vector_muon_idisoW_'+muWP+'[0]*\
+                                                  event.std_vector_muon_idisoW_'+muWP+'[0]\
                                                   if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') and hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
 
   formulas['LepSF2l__ele_'+eleWP+'__mu_'+muWP] = 'event.std_vector_electron_idisoW_'+eleWP+'[0]*\
