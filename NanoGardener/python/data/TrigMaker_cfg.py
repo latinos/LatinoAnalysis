@@ -668,6 +668,9 @@ Trigger['Full2018v4'] = Trigger['Full2018']
 
 NewVar_MC_dict = {
    'F': [
+         'TriggerEffWeight_1l',
+         'TriggerEffWeight_1l_u',
+         'TriggerEffWeight_1l_d',
          'TriggerEffWeight_2l',
          'TriggerEffWeight_2l_u',
          'TriggerEffWeight_2l_d',
