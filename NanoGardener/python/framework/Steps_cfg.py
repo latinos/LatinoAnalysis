@@ -582,7 +582,7 @@ Steps = {
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedVeto' ,
                  'declare'    : 'embedveto = lambda : EmbedVeto()',
                  'module'     : 'embedveto()',
-                 'onlySample' : ['TTTo2L2Nu', 'ST_tW_antitop', 'ST_tW_top', 'WWTo2L2Nu', 'WpWmJJ_EWK', 'GluGluToWWToTNTN', 'ZZTo2L2Nu', 'ZZTo2L2Q', 'ZZTo4L', 'WZTo2L2Q', 'Zg', 'WZTo3LNu_mllmin01']
+                 'onlySample' : ['TTTo2L2Nu', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ST_tW_antitop', 'ST_tW_top', 'WWTo2L2Nu', 'WpWmJJ_EWK', 'GluGluToWWToENEN', 'GluGluToWWToENMN', 'GluGluToWWToENTN', 'GluGluToWWToMNEN', 'GluGluToWWToMNMN', 'GluGluToWWToMNTN', 'GluGluToWWToTNEN', 'GluGluToWWToTNMN', 'GluGluToWWToTNTN', 'ZZTo2L2Nu', 'ZZTo2L2Q', 'ZZTo4L', 'WZTo2L2Q', 'Wg_MADGRAPHMLM', 'Zg', 'WZTo3LNu_mllmin01']
                },
 
 ## ------- MODULES: Fakes
