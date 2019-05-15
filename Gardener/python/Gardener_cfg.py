@@ -3147,7 +3147,7 @@ Steps= {
 
                                  ],
                   #'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+)*"',
-                  'command'    : 'gardener.py BWEwkSingletReweighter ',
+                  'command'    : 'gardener.py BWEwkSingletReweighter -i 1.0 -f 1.0 -s 1.0 -l 0.0 -n 0.0 -q 1.0 ',
                  },
 
 
