@@ -172,6 +172,12 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
+  'DATAl1loose2018fix': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  , 
+                  'subTargets' : ['jetSel','l2Kin', 'l3Kin', 'l4Kin']
+               },
 
 ## ------- WgStar DATA:
 
