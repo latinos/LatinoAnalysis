@@ -361,9 +361,9 @@ Samples["QCD_Pt-30toInf_DoubleEMEnriched"] = {'nanoAOD': '/QCD_Pt-30toInf_Double
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ### GJets
 
-Samples['GJetsDR04_HT40To100'] = {'nanoAOD': ''}
-Samples['GJetsDR04_HT100To200'] = {'nanoAOD': ''}
-Samples['GJetsDR04_HT200To400'] = {'nanoAOD': ''}
+#Samples['GJetsDR04_HT40To100'] = {'nanoAOD': ''}
+#Samples['GJetsDR04_HT100To200'] = {'nanoAOD': ''}
+#Samples['GJetsDR04_HT200To400'] = {'nanoAOD': ''}
 Samples['GJetsDR04_HT400To600'] = {'nanoAOD': '/GJets_DR-0p4_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_v2/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 Samples['GJetsDR04_HT600ToInf'] = {'nanoAOD': '/GJets_DR-0p4_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 Samples['GJets_HT40To100'] = {'nanoAOD': '/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
