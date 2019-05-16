@@ -343,7 +343,7 @@ class TrigMaker(Module):
            singleLeg  = "SingleMu"
 
          # Get Leg Efficiencies
-        eff_sgl, low_eff_sgl, high_eff_sgl = self._getLegEff (pt1, eta1, run_p, singleLeg)
+        eff_sgl, low_eff_sgl, high_eff_sgl = self._get_LegEff (pt1, eta1, run_p, singleLeg)
 
         # Trigger emulator
         Trig_em = [False, False, False, False, False, False]  
