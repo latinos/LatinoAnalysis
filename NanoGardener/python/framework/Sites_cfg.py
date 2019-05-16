@@ -20,9 +20,9 @@ Sites = {
 
   'sdfarm' : {
               'lsCmd'       : 'ls' ,
-              'mkDir'       : True ,
-              'xrootdPath'  : 'root://eoscms.cern.ch/' ,
-              'treeBaseDir' : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
+              'mkDir'       : False ,
+              'xrootdPath'  : 'root://cms-xrdr.private.lo:2094/',
+              'treeBaseDir' : '/xrd/store/group/phys_higgs/cmshww/jhchoi/Latino/HWWNano/',
              } ,
 
   'ifca' : {
