@@ -196,7 +196,16 @@ Samples['QCD_Pt-20to30_EMEnriched']        = {'nanoAOD' :'/QCD_Pt-20to30_EMEnric
 #Samples['QCD_Pt-30to50_EMEnriched_ext1']        = {'nanoAOD' :'/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/NANOAODSIM'}
 Samples['QCD_Pt-50to80_EMEnriched'] = {'nanoAOD' :'/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'} 
 #Samples['QCD_Pt-50to80_EMEnriched_ext1']        = {'nanoAOD' :'/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/NANOAODSIM'}
-Samples['QCD_Pt-30toInf_DoubleEMEnriched'] = {'nanoAOD' :'/QCD_Pt-30toInf_DoubleEMEnriched_MGG-40to80_TuneCUETP8M1_13TeV_Pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'} 
+Samples['QCD_Pt-30toInf_DoubleEMEnriched'] = {'nanoAOD' :'/QCD_Pt-30toInf_DoubleEMEnriched_MGG-40to80_TuneCUETP8M1_13TeV_Pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+
+### GJets
+Samples['GJetsDR04_HT40To100'] = {'nanoAOD': '/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_qcut19_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples['GJetsDR04_HT100To200'] = {'nanoAOD': '/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_qcut19_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples['GJetsDR04_HT200To400'] = {'nanoAOD': '/GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_qcut19_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples['GJetsDR04_HT400To600'] = {'nanoAOD': '/GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_qcut19_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples['GJetsDR04_HT600ToInf'] = {'nanoAOD': '/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_qcut19_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples['GJets_HT40To100'] = {'nanoAOD': '/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples['GJets_HT40To100-ext1'] = {'nanoAOD': '/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6_ext1-v1/NANOAODSIM'}
 
 ### Signals
 
