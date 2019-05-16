@@ -337,9 +337,9 @@ class TrigMaker(Module):
          
         pt1, eta1 = self._over_under(pdgId1, pt1, eta1)
 
-        if abs(pdfId1) == 11 :
+        if abs(pdgId1) == 11 :
            singleLeg  = "SingleEle"                              
-        if abs(pdfId1) == 13:
+        if abs(pdgId1) == 13:
            singleLeg  = "SingleMu"
 
          # Get Leg Efficiencies
@@ -356,11 +356,11 @@ class TrigMaker(Module):
 
          # eff_evt_v_map = ['sinEl', 'sinMu', 'doubleEl', 'doubleMu', 'ElMu']
         eff_evt_v = [0.,0.,0.,0.,0.]
-        if abs(pdfId1) == 11 :
+        if abs(pdgId1) == 11 :
            eff_evt_v[0] = eff_sgl[0]
            Trig_em[0] = eff_sgl[0] > Trndm[0]
 
-        if abs(pdfId1) == 13 :
+        if abs(pdgId1) == 13 :
            eff_evt_v[1] = eff_sgl[0]
            Trig_em[1] = eff_sgl[0] > Trndm[1]
          
