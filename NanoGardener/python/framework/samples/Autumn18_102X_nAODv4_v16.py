@@ -87,7 +87,7 @@ Samples['HZJ_HToWW_M125']     = {'nanoAOD' :'/HZJ_HToWW_M125_13TeV_powheg_jhugen
 ### Samples['GluGluZH_HToWWTo2L2Nu_ZTo2L_M125']     = {'nanoAOD' :''} ### Still missing
 ### Samples['GluGluZH_HToWWTo2L2Nu_ZTo2L_M130']     = {'nanoAOD' :''} ### Still missing
 ### Samples['GluGluZH_HToWWTo2L2Nu_M120']     = {'nanoAOD' :''} ### Still missing
-### Samples['GluGluZH_HToWWTo2L2Nu_M125']     = {'nanoAOD' :''} ### Still missing
+Samples['GluGluZH_HToWWTo2L2Nu_M125'] = {'nanoAOD' :'/GluGluZH_HToWWTo2L2Nu_M125_13TeV_powheg_pythia8_TuneCP5_PSweights/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'} ##!!!!
 ### Samples['GluGluZH_HToWWTo2L2Nu_M130']     = {'nanoAOD' :''} ### Still missing
 #### ttH Inclusive ========
 Samples['ttHToNonbb_M125']     = {'nanoAOD' :'/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'}
@@ -352,6 +352,10 @@ Samples['TTWjets'] = {'nanoAOD' :'/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8/Run
 # Pablo
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ## W + jets
+
+
+#Samples['WJetsToLNu']={'nanoAOD':'/WJetsToLNu_13TeV_amcatnloFXFX_pythia8/'}
+Samples['WJetsToLNu-LO'] = {'nanoAOD' :'/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'}
 Samples['WJetsToLNu_HT70_100'] = {'nanoAOD': '/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'}
 Samples['WJetsToLNu_HT100_200'] = {'nanoAOD': '/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'}
 Samples['WJetsToLNu_HT200_400'] = {'nanoAOD': '/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'}
