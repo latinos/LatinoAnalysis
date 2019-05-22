@@ -497,7 +497,7 @@ if __name__ == '__main__':
 
       if not opt.doNotCleanup:
         for fname in fileList:
-          os.unlink(fname)
+          os.unlink(opt.outputDir + '/' + fname)
 
     elif opt.doHadd != 0 or opt.redoStat != 0:
       ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option
