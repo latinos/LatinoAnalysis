@@ -173,9 +173,9 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
-  'DATAl1loose2018fix': {
+  'jetSelfix': {
                   'isChain'    : True  ,
-                  'do4MC'      : False ,
+                  'do4MC'      : True ,
                   'do4Data'    : True  , 
                   'subTargets' : ['jetSel','l2Kin', 'l3Kin', 'l4Kin']
                },
@@ -1060,6 +1060,9 @@ Steps = {
                                   'GJetsDR04_HT100To200', 'GJetsDR04_HT200To400', 'GJetsDR04_HT400To600', 'GJetsDR04_HT600ToInf', 'GJets_HT40To100', 'GJets_HT40To100-ext1',
                                   ####
                                   'TT','TTJets','TTTo2L2Nu',
+                                  ###
+                                  'GJetsDR04_HT40To100', 'GJetsDR04_HT100To200', 'GJetsDR04_HT200To400', 'GJetsDR04_HT400To600', 'GJetsDR04_HT600ToInf',
+                                  'GJets_HT40To100-ext1',
                                  ] ,               
                  },
 
