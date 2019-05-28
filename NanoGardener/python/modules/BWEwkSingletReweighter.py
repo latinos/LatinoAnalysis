@@ -11,21 +11,17 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 # Needs variables from "HiggsGenVars" module to work
 class BWEwkSingletReweighter(Module):
-    def __init__(self, year="2017", cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], JHU="714", decayWeightsFile="decayWeights.pkl"):
+    def __init__(self, year="2017", cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], decayWeightsFile="decayWeights.pkl"):
 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
-        if JHU not in ["628", "698", "710", "714"]: print "We don't have samples with JHUgen version",JHU,"!"
         self.year = year
 
         self.cprime_list = cprime
         self.brnew_list = brnew
 
         self.undoCPS = True
-        if JHU in ["698", "710", "714"]: # Looks like 714 needs the same treatment as 698. I assume the same goes for 710.
-          self.isNewJHU = True
-        else:
-          self.isNewJHU = False
+        self.isNewJHU = True
 
         # Non-CPS values from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR2014 for up to 1000 GeV
         Hmass = [80.0, 81.0, 82.0, 83.0, 84.0, 85.0, 86.0, 87.0, 88.0, 89.0,
@@ -229,7 +225,7 @@ class BWEwkSingletReweighter(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
 
         filename = str(inputFile)[str(inputFile).find("/nanoLatino")+1:str(inputFile).find(".root")+5]
-        filenameFormat = "nanoLatino_(GluGlu|VBF)HToWWTo(2L2Nu|LNuQQ)(_JHUGen698|)_M([0-9]+).*\.root"
+        filenameFormat = "nanoLatino_(GluGlu|VBF)HToWWTo(2L2Nu|LNuQQ)(_JHUGen698|_JHUGen714|)_M([0-9]+).*\.root"
         pattern = re.match(filenameFormat, filename)
         if pattern == None:
           raise NameError("Cannot parse filename",filename, "; Expected pattern is", filenameFormat)
@@ -252,6 +248,10 @@ class BWEwkSingletReweighter(Module):
         except IOError:
           print "Shiftfile not loaded! Result will not be normalized!"
           self.shifts = 0
+
+        # Looks like 714 needs the same treatment as 698. I assume the same goes for 710.
+        # So only JHUgen628 from 2016 needs the special treatment
+        if self.year == "2016" and pattern.group(3) == "": self.isNewJHU = False
 
         self.mH  = float(pattern.group(4))
         self.gsm = self.g.GetBinContent(self.g.FindBin(self.mH))
