@@ -28,8 +28,8 @@ print inpath
 transferFile = ''
 for r,d,f in os.walk(inpath):
   for dir in d:
-     targetpath=os.path.join(production,os.path.join(r,dir)).split(production)[1]
-     commandMkdir = 'gfal-mkdir '+outpath+targetpath
+     targetpath=(os.path.join(r,dir).split(production))[1]
+     commandMkdir = 'gfal-mkdir '+outpath+"/"+production+"/"+targetpath
      if opts.pretend:
        print commandMkdir
      else:
@@ -39,7 +39,7 @@ for r,d,f in os.walk(inpath):
   for file in f:
     filein='gsiftp://eoscmsftp.cern.ch/'+os.path.join(r, file)
     
-    targetpath=os.path.join(production,os.path.join(r,file)).split(production)[1]
+    targetpath=production+"/"+os.path.join(r,file).split(production)[1]
     #commandTransfer = 'fts-transfer-submit -s https://fts3-pilot.cern.ch:8446 '+filein+" "+outpath+targetpath
     #if opts.pretend:
     #  print commandTransfer
