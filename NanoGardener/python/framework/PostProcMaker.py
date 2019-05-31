@@ -179,7 +179,6 @@ class PostProcMaker():
        if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
      else:
-       #print FileList
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
@@ -396,6 +395,8 @@ class PostProcMaker():
          and not self._Sites[self._LocalSite]['xrootdPath']  in File \
          and     self._Sites[self._LocalSite]['treeBaseDir'] in File :
         return self._Sites[self._LocalSite]['xrootdPath']+File
+      elif self._LocalSite == 'sdfarm' :
+	return File.replace('/xrootd', self._Sites[self._LocalSite]['xrootdPath']+'//xrd')
       else:  
         return File
 
@@ -430,6 +431,7 @@ class PostProcMaker():
             exit()
       #KISTI T3
       elif self._LocalSite == 'sdfarm' :
+	storeFile = storeFile.replace('xrootd', 'xrd')
         if not cpMode:
           command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
         else:
