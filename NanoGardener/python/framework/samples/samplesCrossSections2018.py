@@ -604,6 +604,13 @@ samples['QCD_Pt_80to170_bcToE']    		.extend( ['xsec=39430',		'kfact=1.000',	're
 samples['QCD_Pt_170to250_bcToE']    		.extend( ['xsec=2607',		'kfact=1.000',	'ref=I'] )
 samples['QCD_Pt_250toInf_bcToE']    		.extend( ['xsec=720.1',		'kfact=1.000',	'ref=I'] )
 
+samples['QCD_HT200to300'] .extend(['xsec=1538000',	'kfact=1.000',	'ref=I'])
+samples['QCD_HT300to500'] .extend(['xsec=320700',	'kfact=1.000',	'ref=I'])
+samples['QCD_HT700to1000'] .extend(['xsec=6181',	'kfact=1.000',	'ref=I'])
+samples['QCD_HT1000to1500'] .extend(['xsec=1097',	'kfact=1.000',	'ref=I'])
+samples['QCD_HT1500to2000'] .extend(['xsec=98.17',	'kfact=1.000',	'ref=I'])
+samples['QCD_HT2000toInf'] .extend(['xsec=20.11',	'kfact=1.000',	'ref=I'])
+
 # GJets
 samples['GJetsDR04_HT40To100'] .extend( ['xsec=17420', 'kfact=1.000', 'ref=I'] )
 samples['GJetsDR04_HT100To200'] .extend( ['xsec=5382', 'kfact=1.000', 'ref=I'] )
