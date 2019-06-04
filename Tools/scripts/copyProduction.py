@@ -118,7 +118,7 @@ for r,d,f in os.walk(inpath):
     #commandCheckSum="gfal-sum "+outpath+targetpath + " ADLER32"
     #out = subprocess.Popen([commandCheckSum] , stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     #stdout,stderr = out.communicate()
-    queue.put( [filein, outpath+targetpath, transferFile, opts.check] )
+    queue.put( [filein, outpath+targetpath, opts.check] )
   #checksumout = stdout.split()[1]
   #if checksumin != checksumout:
   #  transferFile += filein+" "+outpath+targetpath+"\n"
