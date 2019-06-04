@@ -175,7 +175,7 @@ Productions = {
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16_102X_nAODv4.py' ,
                        'cmssw'   : 'Full2016v4' ,
                        'year'    : '2016' ,
-                       # ???????? 'JESGT'   : 'Summer16_23Sep2016V4_MC' ,
+                       'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    }, 
