@@ -217,20 +217,20 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     elif "sdfarm" in os.uname()[1]:
       absPath=True
       lsCmd='ls '
-      if not '/xrootd/' in inputDir and '/store/' in inputDir: 
-        Dir = '/xrootd/' + inputDir
+      if not '/xrootd/' in inputDir and '/store/' in inputDir:
+        Dir = '/xrootd/store/' + inputDir.split('/store/')[1]
       else:
         Dir = inputDir 
       if '/xrootd/' in Dir :
 	#xrootdPath='root://cms-xrdr.sdfarm.kr/'
-	xrootdPath='root://cms-xrdr.sdfarm.kr:1094//'
+	#xrootdPath='root://cms-xrdr.sdfarm.kr:1094/' # outside of Korean farm
+	xrootdPath='root://cms-xrdr.private.lo:2094/' # inside of Korean farm
 
     # ... DEFAULT: local mounted disk
     else :
       lsCmd='ls '
       Dir = inputDir
 
-    #print xrootdPath, Dir , lsCmd , Sample
 
     ##### Now get the files for Sample
     fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'.root'
@@ -248,8 +248,8 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     FileTarget = []
     for iFile in Files:
       if absPath :
-	if "sdfarm" in os.uname()[1]:
-	  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
+	#if "sdfarm" in os.uname()[1]:
+	#  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
         if not FromPostProc :
           FileTarget.append('###'+xrootdPath+iFile)
         else:

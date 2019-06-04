@@ -80,6 +80,16 @@ Steps = {
                                   'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                     },
 
+  'MCCorr2017_SemiLep' : {
+                 'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['jetSel','CleanJetCut', 
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL',
+                                  'ggHTheoryUncertainty', 'DressedLeptons', 
+                                  'rochesterMC','trigMC'],
+                    },
+
 
   'MCl1loose2018' :  {
                   'isChain'    : True  ,
