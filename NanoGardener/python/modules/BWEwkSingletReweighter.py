@@ -15,7 +15,7 @@ class BWEwkSingletReweighter(Module):
 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
-        self.year = year
+        self.year = str(year)
 
         self.cprime_list = cprime
         self.brnew_list = brnew
