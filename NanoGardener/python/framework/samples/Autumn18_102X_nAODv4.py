@@ -92,6 +92,19 @@ Samples['QCD_Pt-170to300_EMEnriched'] = {'nanoAOD' : '/QCD_Pt-170to300_EMEnriche
 Samples['QCD_Pt-300toInf_EMEnriched'] = {'nanoAOD' : '/QCD_Pt-300toInf_EMEnriched_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15-v1/NANOAODSIM'}
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Yutaro
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### GJets
+
+#Samples['GJetsDR04_HT40To100'] = {'nanoAOD': ''}
+#Samples['GJetsDR04_HT100To200'] = {'nanoAOD': ''}
+#Samples['GJetsDR04_HT200To400'] = {'nanoAOD': ''}
+#Samples['GJetsDR04_HT400To600'] = {'nanoAOD': ''}
+#Samples['GJetsDR04_HT600ToInf'] = {'nanoAOD': ''}
+#Samples['GJets_HT40To100'] = {'nanoAOD': ''}
+#Samples['GJets_HT40To100-ext1'] = {'nanoAOD': ''}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Jonatan
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Samples['ZZZ']  = {'nanoAOD' :'/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAOD-102X_upgrade2018_realistic_v15_ext1-v1/NANOAODSIM'}

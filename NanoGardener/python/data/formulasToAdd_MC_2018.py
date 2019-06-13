@@ -53,22 +53,6 @@ formulas['SFweight4l'] = 'event.puWeight*\
 
 # Lepton WP
 
-formulas['LepCut2l'] = '(event.nLepton>=2 and (event.Lepton_isTightElectron_mvaFall17Iso_WP90[0]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[0]>0.5) and \
-                                              (event.Lepton_isTightElectron_mvaFall17Iso_WP90[1]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[1]>0.5) )' 
-
-formulas['LepCut2lSS'] = '(event.nLepton>=2 and (event.Lepton_isTightElectron_mvaFall17Iso_WP90_SS[0]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[0]>0.5) and \
-                                              (event.Lepton_isTightElectron_mvaFall17Iso_WP90_SS[1]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[1]>0.5) )' 
-
-formulas['LepCut3l'] = '(event.nLepton>=3 and (event.Lepton_isTightElectron_mvaFall17Iso_WP90[0]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[0]>0.5) and \
-                                              (event.Lepton_isTightElectron_mvaFall17Iso_WP90[1]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[1]>0.5) and \
-                                              (event.Lepton_isTightElectron_mvaFall17Iso_WP90[2]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[2]>0.5) )'
-
-formulas['LepCut4l'] = '(event.nLepton>=4 and (event.Lepton_isTightElectron_mvaFall17Iso_WP90[0]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[0]>0.5) and \
-                                              (event.Lepton_isTightElectron_mvaFall17Iso_WP90[1]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[1]>0.5) and \
-                                              (event.Lepton_isTightElectron_mvaFall17Iso_WP90[2]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[2]>0.5) and \
-                                              (event.Lepton_isTightElectron_mvaFall17Iso_WP90[3]>0.5 or event.Lepton_isTightMuon_cut_Tight_HWWW[3]>0.5) )'
-
-
 muWP='cut_Tight_HWWW'
 eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
 

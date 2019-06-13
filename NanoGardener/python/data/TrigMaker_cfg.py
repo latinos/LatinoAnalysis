@@ -24,12 +24,11 @@ Trigger = {
                                                 'EleMuLegHigPt'     : 'Full2018/Ele23_Ele12_leg1_pt_eta_2018_EGM_nominal_efficiency.txt' ,
                                                 'EleMuLegLowPt'     : 'Full2018/Mu12_pt_eta_2018_nominal_efficiency.txt' ,
                                               } ,
-                                  # FIXME: UPdate with 2018 values
                                   'DZEff'  :  { 
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2017/DZEff_mm.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2018/DZEff_mm.txt' } ,
                                                 'MuEle'     : { 'value'   : [1.0,0.0] } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2017/DZEff_em.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2018/DZEff_em.txt' } ,
                                               } ,
                                   # Electron HLT Zvtx Efficiency Scale Factor: 0.934+-0.005
                                   'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
@@ -668,6 +667,9 @@ Trigger['Full2018v4'] = Trigger['Full2018']
 
 NewVar_MC_dict = {
    'F': [
+         'TriggerEffWeight_1l',
+         'TriggerEffWeight_1l_u',
+         'TriggerEffWeight_1l_d',
          'TriggerEffWeight_2l',
          'TriggerEffWeight_2l_u',
          'TriggerEffWeight_2l_d',

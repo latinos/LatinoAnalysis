@@ -317,7 +317,6 @@ for iProd in prodList :
           #    if not iTree in FileExistList and selectSample: targetList[iSample] = 'NOSPLIT'
         #else: 
         #if 'ttDM' in iSample: print iSample, selectSample 
-        print(FileInList)
         for iFile in FileInList:
             #if 'DYJetsToLL_M-50_00' in iFile and iSample == 'DYJetsToLL_M-50': print iFile , options.redo ,  iFile in FileExistList 
           if options.redo or not iFile in FileExistList or iStep == 'hadd' :

@@ -332,6 +332,46 @@ class TrigMaker(Module):
 
         return eff_evt, eff_evt_v, Trig_em 
 
+
+    def _get_w1l(self, pdgId1, pt1, eta1, run_p, event_seed=None):
+         
+        pt1, eta1 = self._over_under(pdgId1, pt1, eta1)
+
+        if abs(pdgId1) == 11 :
+           singleLeg  = "SingleEle"                              
+        if abs(pdgId1) == 13:
+           singleLeg  = "SingleMu"
+
+         # Get Leg Efficiencies
+        eff_sgl, low_eff_sgl, high_eff_sgl = self._get_LegEff (pt1, eta1, run_p, singleLeg)
+        eff_v=[]
+        eff_v.append(eff_sgl)
+        eff_v.append(low_eff_sgl) 
+        eff_v.append(high_eff_sgl)
+
+        # Trigger emulator
+        Trig_em = [False, False, False, False, False, False]  
+        Trndm = []
+        for a in range(8):
+           if event_seed is not None:
+              if a == 0: Trndm.append(get_rndm(event_seed*event_seed))
+              else: Trndm.append(get_rndm(10000*Trndm[a-1]))
+           else: Trndm.append(get_rndm(event_seed))
+
+         # eff_evt_v_map = ['sinEl', 'sinMu', 'doubleEl', 'doubleMu', 'ElMu']
+        eff_evt_v = [0.,0.,0.,0.,0.]
+        if abs(pdgId1) == 11 :
+           eff_evt_v[0] = eff_sgl
+           Trig_em[0] = eff_sgl > Trndm[0]
+
+        if abs(pdgId1) == 13 :
+           eff_evt_v[1] = eff_sgl
+           Trig_em[1] = eff_sgl > Trndm[1]
+         
+        Trig_em[0] = Trig_em[1] or Trig_em[2] or Trig_em[3] or Trig_em[4] or Trig_em[5]
+
+        return eff_v, eff_evt_v, Trig_em 
+
     def _get_3lw(self, pdgId1, pt1, eta1, pdgId2, pt2, eta2, pdgId3, pt3, eta3, nvtx, run_p):
         
         pt1, eta1 = self._over_under(pdgId1, pt1, eta1)
@@ -484,7 +524,18 @@ class TrigMaker(Module):
         eff_dict = {}
         for name in self.NewVar['F']:
            if 'EffWeight' in name: eff_dict[name] = 0.
-        Trig_em = [False]*6       
+        Trig_em = [False]*6     
+
+        if nLep > 0 :
+           temp_evt, temp_evt_v, Trig_em = self._get_w1l(pdgId[0], pt[0], eta[0], run_p, evt)
+           eff_dict['TriggerEffWeight_1l']   = temp_evt[0]
+           eff_dict['TriggerEffWeight_1l_d'] = temp_evt[1]
+           eff_dict['TriggerEffWeight_1l_u'] = temp_evt[2]
+           eff_dict['TriggerEffWeight_sngEl'] = temp_evt_v[0]
+           eff_dict['TriggerEffWeight_sngMu'] = temp_evt_v[1]
+           eff_dict['TriggerEffWeight_dblEl'] = temp_evt_v[2]
+           eff_dict['TriggerEffWeight_dblMu'] = temp_evt_v[3]
+           eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
  
         if nLep > 1:
            temp_evt, temp_evt_v, Trig_em = self._get_w(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], nvtx, run_p, evt)

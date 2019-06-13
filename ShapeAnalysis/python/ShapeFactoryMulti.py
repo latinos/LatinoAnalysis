@@ -335,21 +335,15 @@ class ShapeFactory:
 
               applicableNuisances[nuisanceName] = nuisance
 
-              if nuisanceName in drawersNuisanceUp and sampleName in drawersNuisanceUp[nuisanceName]:
-                drawersNuisanceUp[nuisanceName][sampleName].addCut(cutFullName, cut['expr'])
-                if 'categorization' in cut:
-                  drawersNuisanceUp[nuisanceName][sampleName].setCategorization(cutFullName, cut['categorization'])
-                else:
-                  for catname in categoryOrdering:
-                    drawersNuisanceUp[nuisanceName][sampleName].addCategory(cutFullName, cut['categories'][catname])
-
-              if nuisanceName in drawersNuisanceDown and sampleName in drawersNuisanceDown[nuisanceName]:
-                drawersNuisanceDown[nuisanceName][sampleName].addCut(cutFullName, cut['expr'])
-                if 'categorization' in cut:
-                  drawersNuisanceDown[nuisanceName][sampleName].setCategorization(cutFullName, cut['categorization'])
-                else:
-                  for catname in categoryOrdering:
-                    drawersNuisanceDown[nuisanceName][sampleName].addCategory(cutFullName, cut['categories'][catname])
+              for ndrawers in [drawersNuisanceUp, drawersNuisanceDown]:
+                if nuisanceName in ndrawers and sampleName in ndrawers[nuisanceName]:
+                  ndrawer = ndrawers[nuisanceName][sampleName]
+                  ndrawer.addCut(cutFullName, cut['expr'])
+                  if 'categorization' in cut:
+                    ndrawer.setCategorization(cutFullName, cut['categorization'])
+                  else:
+                    for catname in categoryOrdering:
+                      ndrawer.addCategory(cutFullName, cut['categories'][catname])
 
             histoName = 'histo_' + subsampleName
 
@@ -363,13 +357,22 @@ class ShapeFactory:
              
               # create histogram
               self._logger.debug('---'+subsampleName+'---')
-              self._logger.debug('Formula: '+variable['name'])
+              self._logger.debug('Formula: '+str(variable['name']))
               self._logger.debug('Cut:     '+cutFullName)
 
-              try:
-                xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
-              except (RuntimeError, TypeError):
-                xexpr, yexpr = variable['name'], ''
+              if type(variable['name']) is str:
+                try:
+                  xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
+                except (RuntimeError, TypeError):
+                  xexpr, yexpr = variable['name'], ''
+              elif type(variable['name']) is tuple:
+                if len(variable['name']) == 1:
+                  xexpr = variable['name'][0]
+                  yexpr = ''
+                elif len(variable['name']) == 2:
+                  yexpr, xexpr = variable['name']
+                else:
+                  raise NotImplementedError('Cannot plot >=3D distributions')
 
               if 'categories' in cut:
                 histlist = ROOT.TObjArray()
@@ -407,80 +410,67 @@ class ShapeFactory:
 
                 configurationNuis = nuisance['samples'][sampleName]
 
-                subsampleNameUp = subsampleName + '_' + nuisance['name'] + 'Up'
-                subsampleNameDown = subsampleName + '_' + nuisance['name'] + 'Down'
+                for ndrawers, variation, confidx in [(drawersNuisanceUp, 'Up', 0), (drawersNuisanceDown, 'Down', 1)]:
+                  subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
 
-                if 'categories' in cut:
-                  histlistUp = ROOT.TObjArray()
-                  histlistDown = ROOT.TObjArray()
-
-                  for catname in categoryOrdering:
-                    ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
-
-                    histoNameUp = 'histo_' + subsampleNameUp
-                    hTotalUp = self._makeshape(histoNameUp, variable['range'])
-                    _allplots.append(hTotalUp)
-                    hTotalUp.SetTitle(histoNameUp)
-                    hTotalUp.SetName(histoNameUp)
-                    histlistUp.Add(hTotalUp)
-
-                    histoNameDown = 'histo_' + subsampleNameDown
-                    hTotalDown = self._makeshape(histoNameDown, variable['range'])
-                    _allplots.append(hTotalDown)
-                    hTotalDown.SetTitle(histoNameDown)
-                    hTotalDown.SetName(histoNameDown)
-                    histlistDown.Add(hTotalDown)
-
-                  if nuisance['kind'] == 'weight':
-                    if yexpr:
-                      drawer.addPlotList2D(histlistUp, xexpr, yexpr, cutFullName, configurationNuis[0])
-                      drawer.addPlotList2D(histlistDown, xexpr, yexpr, cutFullName, configurationNuis[1])
-                    else:
-                      drawer.addPlotList(histlistUp, xexpr, cutFullName, configurationNuis[0])
-                      drawer.addPlotList(histlistDown, xexpr, cutFullName, configurationNuis[1])
-                  
-                  elif nuisance['kind'] == 'tree':
-                    drawerUp = drawersNuisanceUp[nuisanceName][sampleName]
-                    drawerDown = drawersNuisanceDown[nuisanceName][sampleName]
-                    if yexpr:
-                      drawerUp.addPlotList2D(histlistUp, xexpr, yexpr, cutFullName)
-                      drawerDown.addPlotList2D(histlistDown, xexpr, yexpr, cutFullName)
-                    else:
-                      drawerUp.addPlotList(histlistUp, xexpr, cutFullName)
-                      drawerDown.addPlotList(histlistDown, xexpr, cutFullName)
-
-                else:
-                  ROOT.gROOT.cd(cutName + '/' + variableName)
-
-                  histoNameUp = 'histo_' + subsampleNameUp
-                  hTotalUp = self._makeshape(histoNameUp, variable['range'])
-                  _allplots.append(hTotalUp)
-                  hTotalUp.SetTitle(histoNameUp)
-                  hTotalUp.SetName(histoNameUp)
+                  if 'categories' in cut:
+                    histlistNuis = ROOT.TObjArray()
   
-                  histoNameDown = 'histo_' + subsampleNameDown
-                  hTotalDown = self._makeshape(histoNameDown, variable['range'])
-                  _allplots.append(hTotalDown)
-                  hTotalDown.SetTitle(histoNameDown)
-                  hTotalDown.SetName(histoNameDown)
+                    for catname in categoryOrdering:
+                      ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
   
-                  if nuisance['kind'] == 'weight':
-                    if yexpr:
-                      drawer.addPlot2D(hTotalUp, xexpr, yexpr, cutFullName, configurationNuis[0])
-                      drawer.addPlot2D(hTotalDown, xexpr, yexpr, cutFullName, configurationNuis[1])
-                    else:
-                      drawer.addPlot(hTotalUp, xexpr, cutFullName, configurationNuis[0])
-                      drawer.addPlot(hTotalDown, xexpr, cutFullName, configurationNuis[1])
-                  
-                  elif nuisance['kind'] == 'tree':
-                    drawerUp = drawersNuisanceUp[nuisanceName][sampleName]
-                    drawerDown = drawersNuisanceDown[nuisanceName][sampleName]
-                    if yexpr:
-                      drawerUp.addPlot2D(hTotalUp, xexpr, yexpr, cutFullName)
-                      drawerDown.addPlot2D(hTotalDown, xexpr, yexpr, cutFullName)
-                    else:
-                      drawerUp.addPlot(hTotalUp, xexpr, cutFullName)
-                      drawerDown.addPlot(hTotalDown, xexpr, cutFullName)
+                      histoNameNuis = 'histo_' + subsampleNameNuis
+                      hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
+                      _allplots.append(hTotalNuis)
+                      hTotalNuis.SetTitle(histoNameNuis)
+                      hTotalNuis.SetName(histoNameNuis)
+                      histlistNuis.Add(hTotalNuis)
+  
+                    if nuisance['kind'] == 'weight':
+                      if yexpr:
+                        drawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName, configurationNuis[confidx])
+                      else:
+                        drawer.addPlotList(histlistNuis, xexpr, cutFullName, configurationNuis[confidx])
+                    
+                    elif nuisance['kind'] == 'tree':
+                      try:
+                        ndrawer = ndrawers[nuisanceName][sampleName]
+                      except KeyError:
+                        # nuisance drawer for the specific sample may not exist if there is no nuisance tree corresponding to the nominal
+                        # can be the case e.g. for UE and PS trees with FilesPerJob = 1
+                        continue
+
+                      if yexpr:
+                        ndrawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName)
+                      else:
+                        ndrawer.addPlotList(histlistNuis, xexpr, cutFullName)
+
+                  else:
+                    ROOT.gROOT.cd(cutName + '/' + variableName)
+  
+                    histoNameNuis = 'histo_' + subsampleNameNuis
+                    hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
+                    _allplots.append(hTotalNuis)
+                    hTotalNuis.SetTitle(histoNameNuis)
+                    hTotalNuis.SetName(histoNameNuis)
+    
+                    if nuisance['kind'] == 'weight':
+                      if yexpr:
+                        drawer.addPlot2D(hTotalNuis, xexpr, yexpr, cutFullName, configurationNuis[confidx])
+                      else:
+                        drawer.addPlot(hTotalNuis, xexpr, cutFullName, configurationNuis[confidx])
+                    
+                    elif nuisance['kind'] == 'tree':
+                      try:
+                        ndrawer = ndrawers[nuisanceName][sampleName]
+                      except KeyError:
+                        # see above
+                        continue
+
+                      if yexpr:
+                        ndrawer.addPlot2D(hTotalNuis, xexpr, yexpr, cutFullName)
+                      else:
+                        ndrawer.addPlot(hTotalNuis, xexpr, cutFullName)
 
             # Done setting up one cut
             print ''
@@ -491,16 +481,16 @@ class ShapeFactory:
           # We don't need this drawer any more - can reduce the number of open FDs?
           del drawer
 
-          for nuisanceName, drawersUpList in drawersNuisanceUp.iteritems():
-            if sampleName in drawersUpList:
-              print 'Start', nuisanceName + 'Up', 'histogram fill'
-              drawersUpList[sampleName].execute(nevents, firstEvent)
-              drawersUpList.pop(sampleName)
-          for nuisanceName, drawersDownList in drawersNuisanceDown.iteritems():
-            if sampleName in drawersDownList:
-              print 'Start', nuisanceName + 'Down', 'histogram fill'
-              drawersDownList[sampleName].execute(nevents, firstEvent)
-              drawersDownList.pop(sampleName)
+          for ndrawers, variation in [(drawersNuisanceUp, 'Up'), (drawersNuisanceDown, 'Down')]:
+            for nuisanceName, ndrawersNuis in ndrawers.iteritems():
+              try:
+                ndrawer = ndrawersNuis[sampleName]
+              except KeyError:
+                continue
+
+              print 'Start', nuisanceName + variation, 'histogram fill'
+              ndrawer.execute(nevents, firstEvent)
+              ndrawersNuis.pop(sampleName)
 
           print 'Postfill'
           
@@ -1075,12 +1065,13 @@ class ShapeFactory:
         """Split a y:x expression and return (x, y)"""
         pos = 0
         while pos < len(expr):
-            pos = expr.find(':', pos)
-            if pos == -1:
-                break
-            if expr[pos + 1] != ':': #make sure this is not a double-colon
-                return expr[pos + 1:], expr[:pos]
-            pos += 1
+          pos = expr.find(':', pos)
+          if pos == -1:
+            break
+          elif expr[pos + 1] == ':': #make sure this is not a double-colon
+            pos += 2
+          else:
+            return expr[pos + 1:], expr[:pos]
 
         raise RuntimeError('Expression ' + expr + ' is not 2D')
  
@@ -1119,7 +1110,7 @@ class ShapeFactory:
          
           # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
           files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-          self._buildchain(drawer, files, skipMissingFiles)
+          nfiles = self._buildchain(drawer, files, skipMissingFiles)
 
           # if we specify a friends tree directory we need to load the friend trees and attch them 
           if friendsDir != None:
@@ -1134,8 +1125,9 @@ class ShapeFactory:
           #    print eventlists[itree]
           #    eventlists[itree].Print()
           #    tree.SetEventList(eventlists[itree])
-              
-          drawers[process] = drawer
+
+          if nfiles != 0:
+            drawers[process] = drawer
           
           # FIXME: add possibility to add Friend Trees for new variables   
          
@@ -1176,6 +1168,8 @@ class ShapeFactory:
         if friendtree is not None:
           paths = []
 
+        ntrees = 0
+
         for path in files:
           for att in range(5): # try opening the file 5 times
             doesFileExist = True
@@ -1206,6 +1200,8 @@ class ShapeFactory:
                 paths.append(path)
               else:
                 multidraw.addInputPath(path)
+
+              ntrees += 1
               break
 
             time.sleep(10)
@@ -1219,6 +1215,8 @@ class ShapeFactory:
             for path in paths:
               objarr.Add(ROOT.TObjString(path))
               multidraw.addFriend(friendtree, objarr)
+
+        return ntrees
 
     # _____________________________________________________________________________
     def _geteventlists(self, listName, files):

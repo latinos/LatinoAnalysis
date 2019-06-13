@@ -310,10 +310,19 @@ if __name__ == '__main__':
     if opt.nuisancesFile == None :
       print " Please provide the nuisances structure if you want to add nuisances "
     elif os.path.exists(opt.nuisancesFile) :
-        handle = open(opt.nuisancesFile,'r')
-        exec(handle)
-        handle.close()
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close()
 
+    for nuis in nuisances.itervalues():
+      if 'samplespost' in nuis:
+        nuis.pop('samplespost')
+      if 'cutspost' in nuis:
+        nuis.pop('cutspost')
+
+    for vari in variables.itervalues():
+      if 'cutspost' in vari:
+        vari.pop('cutspost')
 
     if opt.doBatch != 0:
       print "~~~~~~~~~~~ Running mkShape on Batch Queue"
@@ -488,7 +497,7 @@ if __name__ == '__main__':
 
       if not opt.doNotCleanup:
         for fname in fileList:
-          os.unlink(fname)
+          os.unlink(opt.outputDir + '/' + fname)
 
     elif opt.doHadd != 0 or opt.redoStat != 0:
       ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option
