@@ -671,8 +671,15 @@ Steps = {
                   'do4Data'    : True ,
                   'subTargets' : ['fakeWstep','formulasFAKE'],
                    },
+  'fakeWelewithiso'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                   },
 
-  'fakeW'  : {
+
+    'fakeW'  : {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
