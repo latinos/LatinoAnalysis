@@ -34,6 +34,7 @@
 ## W+jets
 samples['WJetsToLNu']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu-LO']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
+samples['WJetsToLNu-LO_ext1']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu_HT100_200']        	.extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
 samples['WJetsToLNu_HT100_200_ext1']      .extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
 samples['WJetsToLNu_HT100_200_ext2']      .extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
@@ -134,6 +135,7 @@ samples['VVTo2L2Nu_ext1']		        .extend( ['xsec=11.950',	'kfact=1.000',		'ref
 samples['ZZ']                           .extend( ['xsec=16.52300',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Q']                     .extend( ['xsec=3.220000',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo4L']                       .extend( ['xsec=1.212000',	'kfact=1.000',		'ref=E'] )
+samples['ZZTo4L_ext1']                       .extend( ['xsec=1.212000',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Nu']                    .extend( ['xsec=0.564000',	'kfact=1.000',		'ref=E'] )
 samples['ggZZ4e']                       .extend( ['xsec=0.001586',	'kfact=1.000',		'ref=E'] )
 samples['ggZZ4m']                       .extend( ['xsec=0.001586',	'kfact=1.000',		'ref=E'] )
@@ -172,8 +174,10 @@ samples['TTWJetsToLNu_ext2']            .extend( ['xsec=0.2043',	'kfact=1.000',	
 samples['TTZToLLNuNu_M-10']             .extend( ['xsec=0.2529',	'kfact=1.000',		'ref=E'] )
 samples['TTZToQQ']                      .extend( ['xsec=0.5297',        'kfact=1.000',          'ref=E'] )
 samples['TTZjets']                      .extend( ['xsec=0.7826',        'kfact=1.000',          'ref=X'] )
+samples['TTZjets_ext1']                      .extend( ['xsec=0.7826',        'kfact=1.000',          'ref=X'] )
 samples['TTWJetsToQQ']                  .extend( ['xsec=0.4062',        'kfact=1.000',          'ref=E'] )  
 samples['TTWjets']                      .extend( ['xsec=0.6105',        'kfact=1.000',          'ref=E'] )  # 0.0462 + 0.2043
+samples['TTWjets_ext1']                      .extend( ['xsec=0.6105',        'kfact=1.000',          'ref=E'] )  # 0.0462 + 0.2043
 samples['TTTo2L2Nu_alphaS01108']        .extend( ['xsec=87.310',	'kfact=1.000',		'ref=E'] )
 samples['TTToSemiLeptonic']             .extend( ['xsec=364.35',	'kfact=1.000',	        'ref=E'] )  # 831.76 * 0.6760 * 0.1080 * 3 * 2
 samples['TTToSemiLeptonic_alphaS01108'] .extend( ['xsec=364.35',	'kfact=1.000',		'ref=E'] )  # 831.76 * 0.6760 * 0.1080 * 3 * 2
