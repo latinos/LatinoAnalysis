@@ -2,6 +2,7 @@
 import sys, re, os, os.path, math, copy
 import string
 import subprocess
+import numpy
 
 # configuration auto-loaded where the job directory and the working directory is defined
 from LatinoAnalysis.Tools.userConfig  import *
@@ -11,6 +12,13 @@ from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 from LatinoAnalysis.Tools.crabTools  import *
 
+try:
+  # CERN-specific LSF<->HTCondor switch
+  # This is temporary - CERN will soon become 100% condor
+  CERN_USE_LSF = (batchType == 'lsf')
+except NameError:
+  # if batchType is not set, default to condor
+  CERN_USE_LSF = False
 
 class PostProcMaker():
 
@@ -107,6 +115,9 @@ class PostProcMaker():
      print '_LocalSite  = ',self._LocalSite
      print '_TargetSite = ',self._TargetSite
 
+     if self._LocalSite == 'cern' and not CERN_USE_LSF:
+       self._Sites[self._LocalSite]['batchQueues'] = ['tomorrow', 'espresso', 'microcentury', 'longlunch', 'workday', 'testmatch', 'nextweek']
+
    def configBatch(self,queue):
      if       queue == None                                        \
           and 'batchQueues' in self._Sites[self._LocalSite]        \
@@ -165,10 +176,9 @@ class PostProcMaker():
      fileCmd = self._Sites[self._LocalSite]['lsCmd']+' '+self._targetDir
      # fileCmd .... Files
      if self._iniStep == 'Prod' :
-       if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
+       if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'__part0.root'
        else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
      else:
-       #print FileList
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
@@ -235,6 +245,8 @@ class PostProcMaker():
 
    def getFilesFromPath(self,paths,srmprefix):
      FileList = []
+     if os.path.isdir('/etc/grid-security/certificates'):
+       os.environ['X509_CERT_DIR'] = '/etc/grid-security/certificates'
      for path in paths:
        command = 'gfal-ls '+srmprefix+path+ " | grep root"
        proc=subprocess.Popen(command, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
@@ -278,18 +290,25 @@ class PostProcMaker():
      if not self._iniStep == 'Prod' : bpostFix='____'+self._iniStep
 
      # Make job directories
-     jDir = jobDir+'/NanoGardening__'+iProd
+     if JOB_DIR_SPLIT :
+       jDir = jobDir+'/NanoGardening__'+iProd+'__'+iStep
+       for iSample in self._targetDic :
+         if not os.path.exists(jDir+'/'+iSample) : os.system('mkdir -p '+jDir+'/'+iSample)
+     else:
+       jDir = jobDir+'/NanoGardening__'+iProd
      if not os.path.exists(jDir) : os.system('mkdir -p '+jDir)
      wDir = workDir+'/NanoGardening__'+iProd
      if not os.path.exists(wDir) : os.system('mkdir -p '+wDir)
-   
 
      # prepare targetList
      targetList = []
      for iSample in self._targetDic :
        for iFile in self._targetDic[iSample] :
          iTarget = os.path.basename(self._targetDic[iSample][iFile]).replace(self._treeFilePrefix,'').replace('.root','')
-         pidFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
+         if JOB_DIR_SPLIT :
+           pidFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
+         else:
+           pidFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.jid'
          if os.path.isfile(pidFile) :
            print "pidFile", pidFile
            print '--> Job Running already : '+iTarget
@@ -299,13 +318,20 @@ class PostProcMaker():
      stepList=[]
      stepList.append(iStep)
 
+     #print self._targetDic.keys()
+     #exit()
+
+     # Check pre bash command for Steps
+     preBash = self.checkPreBashStep(iStep)
+
      if self._jobMode == 'Interactive' :
        print "INFO: Using Interactive command"
      # batchMode Preparation
      elif self._jobMode == 'Batch':
        print "INFO: Using Local Batch"
-       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
+       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True)
        self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
+       self._jobs.Add2All(preBash)
        self._jobs.AddPy2Sh()
        self._jobs.Add2All('ls -l')
      # CRAB3 Init
@@ -321,17 +347,20 @@ class PostProcMaker():
          iTarget = os.path.basename(self._targetDic[iSample][iFile]).replace(self._treeFilePrefix,'').replace('.root','')
          if iTarget in targetList :
            # Create python
-           pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+           if JOB_DIR_SPLIT :
+             pyFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+           else:
+             pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
            outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
            jsonFilter = self._Productions[iProd]['jsonFile'] if 'jsonFile' in self._Productions[iProd].keys() else None 
-           self.mkPyCfg(iSample,[self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'], jsonFilter)
+           self.mkPyCfg(iProd,iSample,[self.getStageIn(iFile)],iStep,pyFile,outFile,self._Productions[iProd]['isData'], jsonFilter)
            # Stage Out command + cleaning
            stageOutCmd  = self.mkStageOut(outFile,self._targetDic[iSample][iFile])
            rmGarbageCmd = 'rm '+outFile+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root') 
            # Interactive 
            if   self._jobMode == 'Interactive' : 
-             command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; python '+pyFile \
+             command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; '+preBash+' python '+pyFile \
                       +' ; ls -l ; '+stageOutCmd+' ; '+rmGarbageCmd
              if not self._pretend : os.system(command)
              else                 : print command
@@ -366,6 +395,8 @@ class PostProcMaker():
          and not self._Sites[self._LocalSite]['xrootdPath']  in File \
          and     self._Sites[self._LocalSite]['treeBaseDir'] in File :
         return self._Sites[self._LocalSite]['xrootdPath']+File
+      elif self._LocalSite == 'sdfarm' :
+	return File.replace('/xrootd', self._Sites[self._LocalSite]['xrootdPath']+'//xrd')
       else:  
         return File
 
@@ -398,7 +429,14 @@ class PostProcMaker():
          else :
             print 'ERROR: mkStageOut to different site not yet implemented for _LocalSite = ',self._LocalSite
             exit()
-
+      #KISTI T3
+      elif self._LocalSite == 'sdfarm' :
+	storeFile = storeFile.replace('xrootd', 'xrd')
+        if not cpMode:
+          command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
+        else:
+          command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
+            
       # MISSING STAGE OUT
       else :
         print 'ERROR: mkStageOut not available for _LocalSite = ',self._LocalSite
@@ -406,7 +444,7 @@ class PostProcMaker():
 
       return command
 
-   def mkPyCfg(self,iSample,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False, jsonFile=None):
+   def mkPyCfg(self,iProd,iSample,inputRootFiles,iStep,fPyName,haddFileName=None,isData=False, jsonFile=None):
 
 
      fPy = open(fPyName,'a') 
@@ -466,9 +504,11 @@ class PostProcMaker():
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
          doSubStep = False
-         if    isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
-         elif             self._Steps[iSubStep]['do4MC']   : doSubStep = True       
-         if doSubStep :  fPy.write('                          '+self.customizeModule(iSample,iSubStep)+',\n')
+         if        isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
+         elif  not isData and self._Steps[iSubStep]['do4MC']   : doSubStep = True       
+         # AND onlySample 
+         applyStep = self.selectSample(iProd,iSubStep,iSample)
+         if doSubStep and applyStep :  fPy.write('                          '+self.customizeModule(iSample,iSubStep)+',\n')
      else:
        fPy.write('                          '+self.customizeModule(iSample,iStep)+'\n') 
      fPy.write('                            ],      \n') 
@@ -491,7 +531,7 @@ class PostProcMaker():
 
 #------------- MODULE CUSTOMIZATION: baseW, CMSSW_Version, ....
 
-   def computewBaseW(self,iSample):
+   def computewBaseW(self,iSample,DEBUG=False):
      if not iSample in self._baseW :
        useLocal = False
        # Always check #nAOD files !
@@ -518,6 +558,9 @@ class PostProcMaker():
 
        # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
        if not len(nAODFileList) == len(FileList) : 
+         print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
+#        print ' EXIT !!!!'
+#        exit()
          FileList = nAODFileList
          if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
 
@@ -526,12 +569,14 @@ class PostProcMaker():
        genEventSumw  = 0.0
        genEventSumw2 = 0.0
        for iFile in FileList:
+         if DEBUG : print iFile 
          if useLocal :
            f = ROOT.TFile.Open(iFile, "READ")
          else:
            f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
          Runs = f.Get("Runs")
          for iRun in Runs : 
+           if DEBUG : print '---> genEventSumw = ', iRun.genEventSumw
            genEventCount += iRun.genEventCount
            genEventSumw  += iRun.genEventSumw
            genEventSumw2 += iRun.genEventSumw2
@@ -553,12 +598,21 @@ class PostProcMaker():
      if iStep == 'baseW' :
        print "Computing baseW for",iSample  
        self.computewBaseW(iSample)
+       print self._baseW[iSample]['baseW']  
        module = module.replace('RPLME_baseW'    , str(self._baseW[iSample]['baseW']))
        module = module.replace('RPLME_XSection' , str(self._baseW[iSample]['Xsec']))
 
      # "CMSSW" version
      if 'RPLME_CMSSW' in module :
        module = module.replace('RPLME_CMSSW',self._prodVersion)
+     
+     # GT for JES uncertainties
+     if 'RPLME_JESGT' in module :
+       module = module.replace('RPLME_JESGT',self._prodJESGT)
+
+     # YEAR
+     if 'RPLME_YEAR' in module :
+       module = module.replace('RPLME_YEAR',self._prodYear)
 
      return module
 
@@ -570,7 +624,27 @@ class PostProcMaker():
      if 'RPLME_CMSSW' in declare :
        declare = declare.replace('RPLME_CMSSW',self._prodVersion)
 
+     # GT for JES uncertainties  
+     if 'RPLME_JESGT' in declare :
+       declare = declare.replace('RPLME_JESGT',self._prodJESGT)
+
+    # YEAR
+     if 'RPLME_YEAR' in declare :
+       declare = declare.replace('RPLME_YEAR',self._prodYear)
+
      return declare
+
+
+   def checkPreBashStep(self,iStep):
+     preBash = ''
+     if self._Steps[iStep]['isChain'] :
+       for iSubStep in self._Steps[iStep]['subTargets'] :
+         if 'prebash' in self._Steps[iSubStep] : 
+            for iPreBash in self._Steps[iSubStep]['prebash'] : preBash += iPreBash + ' ; '
+     else:
+       if 'prebash' in self._Steps[iStep] :
+         for iPreBash in self._Steps[iStep]['prebash'] : preBash += iPreBash + ' ; '
+     return preBash 
 
 #------------- Hadd step
 
@@ -757,6 +831,8 @@ class PostProcMaker():
      for iProd in self._prodList:
        print '----------- Running on production: '+iProd
        self._prodVersion = self._Productions[iProd]['cmssw']
+       if 'JESGT' in self._Productions[iProd] : self._prodJESGT = self._Productions[iProd]['JESGT']
+       if 'year'  in self._Productions[iProd] : self._prodYear  = self._Productions[iProd]['year']
        self.readSampleFile(iProd) 
        if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
 
@@ -777,4 +853,32 @@ class PostProcMaker():
        self.Reset()
        
 
+# ------------ check baseW
 
+   def checkBaseW(self):
+     for iProd in self._prodList:
+       print '----------- Running on production: '+iProd
+       self.readSampleFile(iProd)
+       if not self._Productions[iProd]['isData'] : self.loadXSDB(iProd)
+       else: 
+         print '----> This is DATA, skipping !!!!'
+         exit()
+       print '---------------- for Step : ',self._iniStep
+       self.mkFileDir(iProd,'baseW')
+       self.getTargetFiles(iProd,'baseW')         
+       for iSample in self._targetDic:
+         print '------------------- for Sample : ',iSample 
+         self.computewBaseW(iSample)
+         test = {}
+         result = True
+         for iFile in self._targetDic[iSample] : 
+           f = ROOT.TFile.Open(iFile, "READ")
+           Events = f.Get("Events")
+           for iEvt in Events:
+             baseW = iEvt.baseW
+             if not numpy.isclose(baseW , self._baseW[iSample]['baseW']) : result = False
+             break
+           f.Close()
+           test[iFile] = baseW
+         print iSample, result
+         if not result : print test

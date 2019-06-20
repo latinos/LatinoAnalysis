@@ -24,6 +24,8 @@ class PlotFactory:
     # _____________________________________________________________________________
     def __init__(self):
 
+        self._tag = ''
+
         variables = {}
         self._variables = variables
 
@@ -101,11 +103,30 @@ class PlotFactory:
 
         generalCounter = 0
 
-        fileIn = ROOT.TFile(inputFile, "READ")
+        if os.path.isdir(inputFile):
+          # ONLY COMPATIBLE WITH OUTPUTS MERGED TO SAMPLE LEVEL!!
+          fileIn = {}
+          allFiles = os.listdir(inputFile)
+          for sampleName in self._samples:
+            fileIn[sampleName] = ROOT.TFile.Open(inputFile+'/plots_%s_ALL_%s.root' % (self._tag, sampleName))
+            if not fileIn[sampleName]:
+              raise RuntimeError('Input file for sample ' + sampleName + ' missing')
+          if os.path.exists(inputFile+'/plots_total.root'):
+            fileIn['total'] = ROOT.TFile.Open(inputFile+'/plots_total.root')
+              
+        else:
+          fileIn = ROOT.TFile(inputFile, "READ")
+
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
-          print "cut =", cutName, "::", cuts[cutName]
+          print "cut =", cutName
           for variableName, variable in self._variables.iteritems():
+            if 'cuts' in variable and cutName not in variable['cuts']:
+              continue
+
+            if type(fileIn) is not dict and not fileIn.GetDirectory(cutName+"/"+variableName):
+              continue
+              
             print "variableName =", variableName
 
             if not "divideByBinWidth" in variable.keys():
@@ -202,12 +223,36 @@ class PlotFactory:
 
             nexpected = 0
 
-            for sampleName, sample in self._samples.iteritems():
-              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-              print '     -> shapeName = ', shapeName,
-              histo = fileIn.Get(shapeName)
-              print ' --> ', histo
-              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
+            for sampleName, plotdef in plot.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
+              if 'subsamples' in plotdef:
+                histos[sampleName] = None
+                for subsample in plotdef['subsamples']:
+                  shapeName = cutName+"/"+variableName+'/histo_' + sampleName + '_' + subsample
+                  print '     -> shapeName = ', shapeName
+                  if type(fileIn) is dict:
+                    histo = fileIn[sampleName].Get(shapeName)
+                  else:
+                    histo = fileIn.Get(shapeName)
+                  print ' --> ', histo
+                  print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
+                  if histos[sampleName] is None:
+                    histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
+                  else:
+                    histos[sampleName].Add(histo)
+                    
+              else:
+                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                print '     -> shapeName = ', shapeName
+                if type(fileIn) is dict:
+                  histo = fileIn[sampleName].Get(shapeName)
+                else:
+                  histo = fileIn.Get(shapeName)
+                print ' --> ', histo
+                print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
+                histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
@@ -215,18 +260,18 @@ class PlotFactory:
 
               # allow arbitrary scaling in MC (and DATA??), if needed
               # for example to "see" a signal
-              if 'scale' in plot[sampleName].keys() : 
-                histos[sampleName].Scale(plot[sampleName]['scale'])
-                #print " >> scale ", sampleName, " to ", plot[sampleName]['scale']
+              if 'scale' in plotdef.keys() : 
+                histos[sampleName].Scale(plotdef['scale'])
+                #print " >> scale ", sampleName, " to ", plotdef['scale']
 
               # apply cut dependent scale factors
               # for example when plotting different phase spaces
-              if 'cuts' in plot[sampleName].keys() : 
-                if cutName in plot[sampleName]['cuts'] :
-                  histos[sampleName].Scale( float( plot[sampleName]['cuts'][cutName] ) )
+              if 'cuts' in plotdef.keys() : 
+                if cutName in plotdef['cuts'] :
+                  histos[sampleName].Scale( float( plotdef['cuts'][cutName] ) )
      
 
-              if plot[sampleName]['isData'] == 1 :  
+              if plotdef['isData'] == 1 :  
                 if variable['divideByBinWidth'] == 1:
                   histos[sampleName].Scale(1,"width")
                   thsData.Add(histos[sampleName])
@@ -236,16 +281,16 @@ class PlotFactory:
 
 
               # data style
-              if plot[sampleName]['isData'] == 1 :
-                #print ' plot[', sampleName, '][color] = ' , plot[sampleName]['color']
-                histos[sampleName].SetMarkerColor(plot[sampleName]['color'])
+              if plotdef['isData'] == 1 :
+                #print ' plot[', sampleName, '][color] = ' , plotdef['color']
+                histos[sampleName].SetMarkerColor(plotdef['color'])
                 histos[sampleName].SetMarkerSize(1)
                 histos[sampleName].SetMarkerStyle(20)
-                histos[sampleName].SetLineColor(plot[sampleName]['color'])
+                histos[sampleName].SetLineColor(plotdef['color'])
                 
                 # blind data
-                if 'isBlind' in plot[sampleName].keys() :
-                  if plot[sampleName]['isBlind'] == 1 :
+                if 'isBlind' in plotdef.keys() :
+                  if plotdef['isBlind'] == 1 :
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       histos[sampleName].SetBinContent(iBin, 0)
                       histos[sampleName].SetBinError  (iBin, 0)
@@ -269,8 +314,8 @@ class PlotFactory:
                     tgrData_vx.append(  histos[sampleName].GetBinCenter (iBin))
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
-                    #print " plot[", sampleName, "].keys() = ", plot[sampleName].keys()
-                    if ('isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] != 3) and not ('isBlind' in plot[sampleName].keys() and plot[sampleName]['isBlind'] == 1) :
+                    #print " plot[", sampleName, "].keys() = ", plotdef.keys()
+                    if ('isSignal' not in plotdef.keys() or plotdef['isSignal'] != 3) and not ('isBlind' in plotdef.keys() and plotdef['isBlind'] == 1) :
                       if variable['divideByBinWidth'] == 1:
                         tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 0, 1) / histos[sampleName].GetBinWidth (iBin) )
                         tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 1, 0) / histos[sampleName].GetBinWidth (iBin) )
@@ -286,7 +331,7 @@ class PlotFactory:
                     tgrData_vx[iBin-1] = (  histos[sampleName].GetBinCenter (iBin))
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
-                    if 'isSignal' not in plot[sampleName].keys() or plot[sampleName]['isSignal'] == 3 :
+                    if 'isSignal' not in plotdef.keys() or plotdef['isSignal'] == 3 :
                       if variable['divideByBinWidth'] == 1:
                         tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 0, 1) / histos[sampleName].GetBinWidth (iBin))
                         tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 1, 0) / histos[sampleName].GetBinWidth (iBin))
@@ -297,24 +342,24 @@ class PlotFactory:
                     
 
               # MC style
-              if plot[sampleName]['isData'] == 0 :
+              if plotdef['isData'] == 0 :
                 # only background "filled" histogram
-                if plot[sampleName]['isSignal'] == 0:
+                if plotdef['isSignal'] == 0:
                   #histos[sampleName].SetFillStyle(1001)
-                  #histos[sampleName].SetFillColorAlpha(plot[sampleName]['color'], 0.5)
-                  #histos[sampleName].SetFillColor(plot[sampleName]['color'])
-                  #histos[sampleName].SetLineColor(plot[sampleName]['color']+1)
-                  histos[sampleName].SetFillColor(plot[sampleName]['color'])
+                  #histos[sampleName].SetFillColorAlpha(plotdef['color'], 0.5)
+                  #histos[sampleName].SetFillColor(plotdef['color'])
+                  #histos[sampleName].SetLineColor(plotdef['color']+1)
+                  histos[sampleName].SetFillColor(plotdef['color'])
                   histos[sampleName].SetFillStyle(3001)
                 else :
                   histos[sampleName].SetFillStyle(0)
                   histos[sampleName].SetLineWidth(2)
              
-                histos[sampleName].SetLineColor(plot[sampleName]['color'])
+                histos[sampleName].SetLineColor(plotdef['color'])
                 # scale to luminosity if MC
                 #histos[sampleName].Scale(self._lumi)  ---> NO! They are already scaled to luminosity in mkShape!
                 
-                if plot[sampleName]['isSignal'] == 1 :
+                if plotdef['isSignal'] == 1 :
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
                     thsSignal.Add(histos[sampleName])
@@ -322,14 +367,14 @@ class PlotFactory:
                     thsSignal.Add(histos[sampleName])
 
 
-                elif plot[sampleName]['isSignal'] == 2 or plot[sampleName]['isSignal'] == 3 :
+                elif plotdef['isSignal'] == 2 or plotdef['isSignal'] == 3 :
                   #print "SigSup histo: ", histos[sampleName]
                   if  variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
                     sigSupList.append(histos[sampleName])
                   else:
                     sigSupList.append(histos[sampleName])
-                  if plot[sampleName]['isSignal'] == 3 :
+                  if plotdef['isSignal'] == 3 :
                     #print "sigForAdditionalRatio histo: ", histos[sampleName]
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                     sigForAdditionalDifferenceList[sampleName] = histos[sampleName]
@@ -380,7 +425,7 @@ class PlotFactory:
                   #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                     #tgrMC_vy.append(0.)
                 # fill the reference distribution, and add each "sample" that is not "signal"
-                #if plot[sampleName]['isSignal'] == 0:
+                #if plotdef['isSignal'] == 0:
                   #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                     #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                  
@@ -408,13 +453,19 @@ class PlotFactory:
                     else:
                       shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
                     #print "loading shape variation", shapeNameUp
-                    histoUp = fileIn.Get(shapeNameUp)
+                    if type(fileIn) is dict:
+                      histoUp = fileIn[sampleName].Get(shapeNameUp)
+                    else:
+                      histoUp = fileIn.Get(shapeNameUp)
                     if 'name' in nuisance:
                       shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Down"
                     else:
                       shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
                     #print "loading shape variation", shapeNameDown
-                    histoDown = fileIn.Get(shapeNameDown)
+                    if type(fileIn) is dict:
+                      histoUp = fileIn[sampleName].Get(shapeNameDown)
+                    else:
+                      histoDown = fileIn.Get(shapeNameDown)
 
                     if histoUp == None:
                       if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
@@ -540,26 +591,26 @@ class PlotFactory:
                                 #print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
                   
                   
-                  if 'scale' in plot[sampleName].keys() : 
+                  if 'scale' in plotdef.keys() : 
                     if histoDown != None:  
                       #print " histoDown integral = ", histoDown.Integral()
-                      histoDown.Scale(plot[sampleName]['scale'])
-                      #print " ---> plot[", sampleName, "]['scale'] = ", plot[sampleName]['scale']
+                      histoDown.Scale(plotdef['scale'])
+                      #print " ---> plot[", sampleName, "]['scale'] = ", plotdef['scale']
                       #print " --> histoDown integral = ", histoDown.Integral()
                       
                     if histoUp != None:  
-                      histoUp.Scale(plot[sampleName]['scale'])
+                      histoUp.Scale(plotdef['scale'])
                                  
 
                   # apply cut dependent scale factors
                   # for example when plotting different phase spaces
-                  if 'cuts' in plot[sampleName].keys() : 
-                    if cutName in plot[sampleName]['cuts'] :
+                  if 'cuts' in plotdef.keys() : 
+                    if cutName in plotdef['cuts'] :
                       if histoDown != None:  
-                        #print " rescaling: ", sampleName, " - ", cutName, " = ", plot[sampleName]['cuts'][cutName]
-                        histoDown.Scale( float(plot[sampleName]['cuts'][cutName]) )
+                        #print " rescaling: ", sampleName, " - ", cutName, " = ", plotdef['cuts'][cutName]
+                        histoDown.Scale( float(plotdef['cuts'][cutName]) )
                       if histoUp != None:  
-                        histoUp.Scale( float(plot[sampleName]['cuts'][cutName]) )
+                        histoUp.Scale( float(plotdef['cuts'][cutName]) )
 
                   if variable["divideByBinWidth"] == 1:
                     if histoUp != None:
@@ -581,8 +632,8 @@ class PlotFactory:
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       nuisances_vy_do[nuisanceName].append(0.)
                   # get the background sum
-                  if plot[sampleName]['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
-                    #print "plot[", sampleName, "]['isSignal'] == ", plot[sampleName]['isSignal']
+                  if plotdef['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
+                    #print "plot[", sampleName, "]['isSignal'] == ", plotdef['isSignal']
                     for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                       if histoUp != None:
                         #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
@@ -604,12 +655,11 @@ class PlotFactory:
               # this has to be done after the scaling of the previous lines
               # andl also after all the rest, so that we inherit the style of the histograms
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-                for samples_to_group in sampleConfiguration['samples'] :
-                  if samples_to_group == sampleName :
-                    if sampleNameGroup in histos_grouped.keys() :
-                      histos_grouped[sampleNameGroup].Add(histos[sampleName])
-                    else :
-                      histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
+                if sampleName in sampleConfiguration['samples']:
+                  if sampleNameGroup in histos_grouped.keys() :
+                    histos_grouped[sampleNameGroup].Add(histos[sampleName])
+                  else :
+                    histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
 
 
             # set the colors for the groups of samples
@@ -631,18 +681,23 @@ class PlotFactory:
             # save the central values of the bkg sum for use for the nuisance band 
             #
             #print " tgrMC_vy = ", tgrMC_vy
-            for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
-              tgrMC_vy.append(thsBackground.GetStack().Last().GetBinContent(iBin))
+            if thsBackground.GetNhists() != 0:
+              last = thsBackground.GetStack().Last()
+              for iBin in range(1, last.GetNbinsX()+1):
+                tgrMC_vy.append(last.GetBinContent(iBin))
             
                         
             #
             # and now  let's add the signal on top of the background stack 
             # It is important to do this after setting (without signal) tgrMC_vy
             #
-            for sampleName, sample in self._samples.iteritems():
+            for sampleName, plotdef in plot.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
               # MC style
-              if plot[sampleName]['isData'] == 0 :
-                if plot[sampleName]['isSignal'] == 1 :
+              if plotdef['isData'] == 0 :
+                if plotdef['isSignal'] == 1 :
                   thsBackground.Add(histos[sampleName])
 
             #
@@ -692,8 +747,8 @@ class PlotFactory:
                       #"nuisances_err_do[", iBin, "] = ", nuisances_err_do[iBin], " --> " 
 
               
-            
-            tgrData       = ROOT.TGraphAsymmErrors()
+
+            tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
               tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
               tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
@@ -701,12 +756,35 @@ class PlotFactory:
             tgrData.SetMarkerColor(dataColor)
             tgrData.SetLineColor(dataColor)
             
+            ## Default: --postFit 0 --> No additional line is drawn
+            ## ----------------------------------------------------
+
+            ## --postFit 1 --> line is prefit
+            if self._postFit == 'p':
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_prefit')
+            ## --postFit 2 --> line is (S+B) postfit
+            if self._postFit == 's':
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_s')
+            ## --postFit 3 --> line is B-only postfit
+            if self._postFit == 'b':
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
+                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_b')
+
+            last = thsBackground.GetStack().Last()
+
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             tgrDataMinusMC = tgrData.Clone("tgrDataMinusMC")
-            for iBin in range(0, len(tgrData_vx)) : 
-              tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-              tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-              
+            for iBin in range(0, len(tgrData_vx)) :
+              tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , last.GetBinContent(iBin+1)) )
+              tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], last.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], last.GetBinContent(iBin+1)) )
+              if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
+                  tgrDataOverPF.SetPoint(iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)) )
+                  tgrDataOverPF.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], histoPF.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], last.GetBinContent(iBin+1)) )
+                  print "Pre-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)))
+                  print "Post-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , last.GetBinContent(iBin+1)))
+                  print iBin
               #
               # data - MC :
               #    MC could be background only
@@ -722,14 +800,14 @@ class PlotFactory:
                   tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio( self.Difference(tgrData_vy[iBin] ,  tgrMC_vy[iBin]),   tgrMC_vy[iBin] ) )
                   tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], tgrMC_vy[iBin]) , self.Ratio(tgrData_evy_up[iBin], tgrMC_vy[iBin]) )
                 else :
-                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio( self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)),   thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
-                  tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio( self.Difference(tgrData_vy[iBin] , last.GetBinContent(iBin+1)),   last.GetBinContent(iBin+1)) )
+                  tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], last.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], last.GetBinContent(iBin+1)) )
               else :
                 if self._showDataMinusBkgOnly :
                   tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , tgrMC_vy[iBin]   ) )
                   tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
                 else :
-                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , thsBackground.GetStack().Last().GetBinContent(iBin+1)) )
+                  tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , last.GetBinContent(iBin+1)) )
                   tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
             
             
@@ -742,17 +820,23 @@ class PlotFactory:
             # from the histogram itself
             #
             special_shapeName = cutName+"/"+variableName+'/histo_total' 
-            histo_total = fileIn.Get(special_shapeName)
+            if type(fileIn) is dict:
+              if 'total' in fileIn:
+                histo_total = fileIn['total'].Get(special_shapeName)
+              else:
+                histo_total = None
+            else:
+              histo_total = fileIn.Get(special_shapeName)
+
             if variable['divideByBinWidth'] == 1:
               histo_total.Scale(1,"width")
             print ' --> ', histo_total
-
             
             if len(mynuisances.keys()) != 0:
               tgrMC = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMC.SetPoint     (iBin, tgrData_vx[iBin], tgrMC_vy[iBin])
-                if histo_total != None :
+                if histo_total:
                   tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
                   tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
@@ -762,7 +846,7 @@ class PlotFactory:
               for iBin in range(0, len(tgrData_vx)) :
                 tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
                 tgrMCMinusMC.SetPoint    (iBin, tgrData_vx[iBin], 0.)
-                if histo_total != None :
+                if histo_total:
                   tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
                     tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
@@ -810,6 +894,9 @@ class PlotFactory:
             groupFlag = False
             #---- prepare the grouped histograms
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+              if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
+                continue
+                  
               if sampleConfiguration['isSignal'] == 1 :
                   print "############################################################## isSignal 1", sampleNameGroup
                   thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
@@ -820,7 +907,8 @@ class PlotFactory:
               # the signal is added on top of the background
               # the signal has to be the last one in the dictionary!
               # make it sure in plot.py
-              if groupFlag == False: thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
+              if groupFlag == False:
+                  thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
             
             #---- now plot
             
@@ -841,8 +929,11 @@ class PlotFactory:
             minYused = 1.
             maxYused = 1.
             
-            for sampleName, sample in self._samples.iteritems():
-              if plot[sampleName]['isData'] == 1 :
+            for sampleName, plotdef in plot.iteritems():
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
+              if plotdef['isData'] == 1 :
                 histos[sampleName].Draw("p")
                 minXused = histos[sampleName].GetXaxis().GetBinLowEdge(1)
                 maxXused = histos[sampleName].GetXaxis().GetBinUpEdge(histos[sampleName].GetNbinsX())
@@ -953,8 +1044,10 @@ class PlotFactory:
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
             else : # never happening if at least one data histogram is provided
-              for sampleName, sample in self._samples.iteritems():
-                if plot[sampleName]['isData'] == 1 :
+              for sampleName, plotdef in plot.iteritems():
+                if 'samples' in variable and sampleName not in variable['samples']:
+                  continue
+                if plotdef['isData'] == 1 :
                   histos[sampleName].Draw("p same")
 
             #---- the Legend
@@ -964,23 +1057,27 @@ class PlotFactory:
             tlegend.SetTextSize(0.035)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
-            reversedSamplesItems = self._samples.items()
-            reversedSamplesItems.reverse()
-            reversedSamples = OrderedDict(reversedSamplesItems)
+            reversedSampleNames = list(self._samples)
+            reversedSampleNames.reverse()
             
             if len(groupPlot.keys()) == 0:
-              for sampleName, sample in reversedSamples.iteritems():
-                if plot[sampleName]['isData'] == 0 :
-                  if 'nameHR' in plot[sampleName].keys() :
-                    if plot[sampleName]['nameHR'] != '' :
+              for sampleName in reversedSampleNames:
+                try:
+                  plotdef = plot[sampleName]
+                except KeyError:
+                  continue
+
+                if plotdef['isData'] == 0 :
+                  if 'nameHR' in plotdef.keys() :
+                    if plotdef['nameHR'] != '' :
                       if self._showIntegralLegend == 0 :
-                        tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "F")
+                        tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "F")
                       else :
                         if variable["divideByBinWidth"] == 1:
                           nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width") 
                         else:
                           nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
-                        tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
+                        tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "F")
@@ -991,17 +1088,22 @@ class PlotFactory:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "F")
                
-              for sampleName, sample in reversedSamples.iteritems():
-                if plot[sampleName]['isData'] == 1 :
-                  if 'nameHR' in plot[sampleName].keys() :
+              for sampleName in reversedSampleNames:
+                try:
+                  plotdef = plot[sampleName]
+                except KeyError:
+                  continue
+
+                if plotdef['isData'] == 1 :
+                  if 'nameHR' in plotdef.keys() :
                     if self._showIntegralLegend == 0 :
-                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                      tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
                       else:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
-                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
+                      tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
@@ -1013,8 +1115,10 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
-              
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+                if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
+                  continue
+                  
                 if self._showIntegralLegend == 0 :
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
@@ -1024,18 +1128,26 @@ class PlotFactory:
                     nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1)
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
-              for sampleName, sample in reversedSamples.iteritems():
-                if plot[sampleName]['isData'] == 1 :
-                  if 'nameHR' in plot[sampleName].keys() :
+              for sampleName in reversedSampleNames:
+                if 'samples' in variable and sampleName not in variable['samples']:
+                  continue
+
+                try:
+                  plotdef = plot[sampleName]
+                except KeyError:
+                  continue
+              
+                if plotdef['isData'] == 1 :
+                  if 'nameHR' in plotdef.keys() :
                     if self._showIntegralLegend == 0 :
-                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'], "EPL")
+                      tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
                       else:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
                       print " nevents [", sampleName, "] = ", nevents
-                      tlegend.AddEntry(histos[sampleName], plot[sampleName]['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
+                      tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName , "EPL")
@@ -1048,7 +1160,6 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
               
-                  
             if len(mynuisances.keys()) != 0:
                 if self._showIntegralLegend == 0 :
                     tlegend.AddEntry(tgrMC, "All MC", "F")
@@ -1100,7 +1211,6 @@ class PlotFactory:
             tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".root")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".C")
             #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".pdf")
             
             text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
@@ -1111,7 +1221,6 @@ class PlotFactory:
             tcanvas.SetLogy()
             tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".png")
             #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".eps")
-            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".pdf")
             tcanvas.SetLogy(0)
 
 
@@ -1123,25 +1232,44 @@ class PlotFactory:
               frameNorm = ROOT.TH1F
               frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
   
-              frameNorm.GetYaxis().SetRangeUser( 0, 2 )
+              frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
               # setup axis names
               if 'xaxis' in variable.keys() : 
                 frameNorm.GetXaxis().SetTitle(variable['xaxis'])
               tcanvasSigVsBkg.RedrawAxis()
   
-  
-              for ihisto in range(thsBackground_grouped.GetNhists()) :
-                num_bins = (thsBackground_grouped.GetHists().At(ihisto)).GetNbinsX()
+              maxY_normalized=0.0
+
+              for hentry in thsBackground_grouped.GetHists():
+                num_bins = hentry.GetNbinsX()
+                if hentry.Integral() > 0.:
+                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
+                  if y_normalized > maxY_normalized:
+                    maxY_normalized = y_normalized
+
                 for ibin in range( num_bins ) :
-                  (thsBackground_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsBackground_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                  hentry.SetBinError(ibin+1, 0.000001)
+
+                hentry.SetFillStyle(0)
+                hentry.SetLineWidth(3)
+                hentry.DrawNormalized("hist,same")
                   
-              for ihisto in range(thsSignal_grouped.GetNhists()) :
-                num_bins = (thsSignal_grouped.GetHists().At(ihisto)).GetNbinsX()
+              for hentry in thsSignal_grouped.GetHists():
+                num_bins = hentry.GetNbinsX()
+                if hentry.Integral() > 0.:
+                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
+                  if y_normalized > maxY_normalized:
+                    maxY_normalized = y_normalized
+
                 for ibin in range( num_bins ) :
-                  (thsSignal_grouped.GetHists().At(ihisto)).SetBinError(ibin+1, 0.000001)
-                (thsSignal_grouped.GetHists().At(ihisto)).DrawNormalized("same")
+                  hentry.SetBinError(ibin+1, 0.000001)
+
+                hentry.SetFillStyle(0)
+                hentry.SetLineWidth(3)
+                hentry.DrawNormalized("hist,same")
   
+              frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
+
               tlegend.Draw()
               tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
          
@@ -1280,6 +1408,33 @@ class PlotFactory:
             
             tgrDataOverMC.Draw("P0")
             
+            
+            if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
+            #---- Ratio Legend
+                tlegendRatio = ROOT.TLegend(0.20, 0.40, 0.60, 0.55)
+                tlegendRatio.SetFillColor(0)
+                tlegendRatio.SetTextFont(42)
+                ##tlegendRatio.SetTextSize(0.035)
+                tlegendRatio.SetLineColor(0)
+                tlegendRatio.SetShadowColor(0)
+                
+                if self._postFit == 'p':
+                    tlegendRatio.AddEntry(tgrDataOverMC, "post-fit", "PL")
+                    tlegendRatio.AddEntry(tgrDataOverPF, "pre-fit", "PL")
+                if self._postFit == 's' or  self._postFit == 'b':
+                    tlegendRatio.AddEntry(tgrDataOverMC, "pre-fit", "PL")
+                    tlegendRatio.AddEntry(tgrDataOverPF, "post-fit", "PL")
+                
+                for sampleName, sample in self._samples.iteritems():
+                    ##if sampleName.find('total') == 1: 
+## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
+                    if 'total' in sampleName:
+                        tgrDataOverPF.SetMarkerColor(plot[sampleName]['color'])
+                        tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
+                        # tgrDataOverPF.SetMarkerColor(2)
+                        # tgrDataOverPF.SetLineColor(2)
+                tgrDataOverPF.Draw("PE,same")
+                tlegendRatio.Draw("same")
             
             
             for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
@@ -1621,20 +1776,22 @@ class PlotFactory:
                       
                       if len(groupPlot.keys()) == 0:          
 
-                          for ihisto in range(thsBackground.GetNhists()) :
-                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)                             
+                          for ihisto in range(thsBackground.GetNhists()):
+                             hentry = thsBackground.GetHists().At(ihisto)
+
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + hentry.GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
                                       
-                             histo.SetFillColor( ((thsBackground.GetHists().At(ihisto))).GetFillColor())
-                             histo.SetFillStyle( ((thsBackground.GetHists().At(ihisto))).GetFillStyle())
-                             histo.SetLineColor( ((thsBackground.GetHists().At(ihisto))).GetLineColor())
-                             histo.SetLineWidth( ((thsBackground.GetHists().At(ihisto))).GetLineWidth())
+                             histo.SetFillColor( hentry.GetFillColor())
+                             histo.SetFillStyle( hentry.GetFillStyle())
+                             histo.SetLineColor( hentry.GetLineColor())
+                             histo.SetLineWidth( hentry.GetLineWidth())
                              
                              for ibin in range( nbinY ) :
                                if self._invertXY :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin*nbinX +1 + sliceX) ) )
                                else :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Background[ihisto].Add(histo)
@@ -1646,20 +1803,22 @@ class PlotFactory:
                                totalWeightedIntegralBkg += histo.Integral()
                           
                              
-                          for ihisto in range(thsSignal.GetNhists()) :
-                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                          for ihisto in range(thsSignal.GetNhists()):
+                             hentry = thsSignal.GetHists().At(ihisto)
+
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + (()).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
                              
-                             histo.SetFillColor( ((thsSignal.GetHists().At(ihisto))).GetFillColor())
-                             histo.SetFillStyle( ((thsSignal.GetHists().At(ihisto))).GetFillStyle())
-                             histo.SetLineColor( ((thsSignal.GetHists().At(ihisto))).GetLineColor())
-                             histo.SetLineWidth( ((thsSignal.GetHists().At(ihisto))).GetLineWidth())
+                             histo.SetFillColor( hentry.GetFillColor())
+                             histo.SetFillStyle( hentry.GetFillStyle())
+                             histo.SetLineColor( hentry.GetLineColor())
+                             histo.SetLineWidth( hentry.GetLineWidth())
                              
                              for ibin in range( nbinY ) :
                                if self._invertXY :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin*nbinX +1 + sliceX) ) )
                                else :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin+1 + sliceX * nbinY) ) )
                           
                              if sliceX != 0:
                                weight_X_list_Signal[ihisto].Add(histo)
@@ -1670,14 +1829,16 @@ class PlotFactory:
                           
                           
                           for ihisto in range(thsData.GetNhists()) :
-                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                             hentry = thsData.GetHists().At(ihisto)
+
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + hentry.GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
 
                              for ibin in range( nbinY ) :
                                if self._invertXY :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX ) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin*nbinX +1 + sliceX ) ) )
                                else :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Data[ihisto].Add(histo)
@@ -1687,20 +1848,22 @@ class PlotFactory:
                       
                       else :
 
-                          for ihisto in range(thsBackground_grouped.GetNhists()) :
-                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsBackground_grouped.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
+                          for ihisto in range(thsBackground_grouped.GetNhists()):
+                             hentry = thsBackground_grouped.GetHists().At(ihisto)
+
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + hentry.GetName() + '_slice_'+ str(sliceX), '-' , nbinY, 0, nbinY)
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
                              
-                             histo.SetFillColor( ((thsBackground_grouped.GetHists().At(ihisto))).GetFillColor())
-                             histo.SetFillStyle( ((thsBackground_grouped.GetHists().At(ihisto))).GetFillStyle())
-                             histo.SetLineColor( ((thsBackground_grouped.GetHists().At(ihisto))).GetLineColor())
-                             histo.SetLineWidth( ((thsBackground_grouped.GetHists().At(ihisto))).GetLineWidth())
+                             histo.SetFillColor( hentry.GetFillColor())
+                             histo.SetFillStyle( hentry.GetFillStyle())
+                             histo.SetLineColor( hentry.GetLineColor())
+                             histo.SetLineWidth( hentry.GetLineWidth())
                              
                              for ibin in range( nbinY ) :
                                if self._invertXY :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground_grouped.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin*nbinX +1 + sliceX) ) )
                                else :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsBackground_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Background[ihisto].Add(histo)
@@ -1712,20 +1875,22 @@ class PlotFactory:
                                totalWeightedIntegralBkg += histo.Integral()
                           
                              
-                          for ihisto in range(thsSignal_grouped.GetNhists()) :
-                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsSignal_grouped.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                          for ihisto in range(thsSignal_grouped.GetNhists()):
+                             hentry = thsSignal_grouped.GetHists().At(ihisto)
+
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + hentry.GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
 
-                             histo.SetFillColor( ((thsSignal_grouped.GetHists().At(ihisto))).GetFillColor())
-                             histo.SetFillStyle( ((thsSignal_grouped.GetHists().At(ihisto))).GetFillStyle())
-                             histo.SetLineColor( ((thsSignal_grouped.GetHists().At(ihisto))).GetLineColor())
-                             histo.SetLineWidth( ((thsSignal_grouped.GetHists().At(ihisto))).GetLineWidth())
+                             histo.SetFillColor( hentry.GetFillColor())
+                             histo.SetFillStyle( hentry.GetFillStyle())
+                             histo.SetLineColor( hentry.GetLineColor())
+                             histo.SetLineWidth( hentry.GetLineWidth())
                              
                              for ibin in range( nbinY ) :
                                if self._invertXY :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal_grouped.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin*nbinX +1 + sliceX) ) )
                                else :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsSignal_grouped.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin+1 + sliceX * nbinY) ) )
                           
                              if sliceX != 0:
                                weight_X_list_Signal[ihisto].Add(histo)
@@ -1737,15 +1902,17 @@ class PlotFactory:
                           
                           
                           
-                          for ihisto in range(thsData.GetNhists()) :
-                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + ((thsData.GetHists().At(ihisto))).GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
+                          for ihisto in range(thsData.GetNhists()):
+                             hentry = thsData.GetHists().At(ihisto)
+
+                             histo = ROOT.TH1F('h_weigth_X_' +  cutName + '_' + variableName + '_' + hentry.GetName() + '_slice_'+ str(sliceX), "-", nbinY, 0, nbinY)
                              histo = self.FixBins (histo, tgrData_vx, tgrData_evx)
 
                              for ibin in range( nbinY ) :
                                if self._invertXY :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin*nbinX +1 + sliceX) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin*nbinX +1 + sliceX) ) )
                                else :
-                                 histo.SetBinContent(ibin+1, weight * ( ((thsData.GetHists().At(ihisto))).GetBinContent(ibin+1 + sliceX * nbinY) ) )
+                                 histo.SetBinContent(ibin+1, weight * ( hentry.GetBinContent(ibin+1 + sliceX * nbinY) ) )
                              
                              if sliceX != 0:
                                weight_X_list_Data[ihisto].Add(histo)
@@ -1828,7 +1995,7 @@ class PlotFactory:
                         eylow = 0
                         eyhigh = 0
                         if len(nuisances_err_do) != 0:
-                          if histo_total != None :
+                          if histo_total:
                             eylow  = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
                             eyhigh = weight_X_list_weights[sliceX] * global_normalization * histo_total.GetBinError(number_of_bin + 1)
                           else :                        
@@ -1849,9 +2016,10 @@ class PlotFactory:
                     # create the weighted data over MC distribution
                     #
                     weight_X_tgrDataOverMC = weight_X_tgrData.Clone("tgrDataOverMCweighted")
+                    last = weight_X_thsBackground.GetStack().Last()
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrDataOverMC.GetX()[ibin]
-                      y = self.Ratio(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                      y = self.Ratio(weight_X_tgrData.GetY()[ibin] , last.GetBinContent(ibin+1) )
 
                       number_of_bin = ibin + sliceX * nbinY
                       if self._invertXY :
@@ -1859,29 +2027,30 @@ class PlotFactory:
 
                       exlow  = tgrData_evx[number_of_bin]
                       exhigh = tgrData_evx[number_of_bin]
-                      eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
-                      eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                      eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  last.GetBinContent(ibin+1) )
+                      eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), last.GetBinContent(ibin+1) )                    
                       
                       weight_X_tgrDataOverMC.SetPoint      (ibin, x, y)
                       weight_X_tgrDataOverMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
 
-                      #print " Ratio:: ibin,x,y = ", ibin, ", ", x, ", ", y, ", ", eylow, ", ", eyhigh, " <-- ", weight_X_tgrData.GetY()[ibin], " / ",  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) 
+                      #print " Ratio:: ibin,x,y = ", ibin, ", ", x, ", ", y, ", ", eylow, ", ", eyhigh, " <-- ", weight_X_tgrData.GetY()[ibin], " / ",  last.GetBinContent(ibin+1) 
 
 
                     #
                     # create the weighted data minus MC distribution
                     #
                     weight_X_tgrDataMinusMC = weight_X_tgrData.Clone("tgrDataMinusMCweighted")
+                    last = weight_X_thsBackground.GetStack().Last()
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrDataMinusMC.GetX()[ibin]                      
                       if self._showRelativeRatio :
-                        y = self.Ratio ( self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) ) , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                     
+                        y = self.Ratio ( self.Difference(weight_X_tgrData.GetY()[ibin] , last.GetBinContent(ibin+1) ) , last.GetBinContent(ibin+1) )
                       else : 
                         # if show only "data - bkg", subtract "data - (bkg+sig) + sig "
                         if self._showDataMinusBkgOnly :
-                          y =  self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )   + weight_X_thsSignal.GetStack().Last().GetBinContent(ibin+1) 
+                          y =  self.Difference(weight_X_tgrData.GetY()[ibin] , last.GetBinContent(ibin+1) )   + weight_X_thsSignal.GetStack().Last().GetBinContent(ibin+1) 
                         else :
-                          y = self.Difference(weight_X_tgrData.GetY()[ibin] , weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
+                          y = self.Difference(weight_X_tgrData.GetY()[ibin] , last.GetBinContent(ibin+1) )
 
                       number_of_bin = ibin + sliceX * nbinY
                       if self._invertXY :
@@ -1891,8 +2060,8 @@ class PlotFactory:
                       exhigh = tgrData_evx[number_of_bin]
 
                       if self._showRelativeRatio :
-                        eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
-                        eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                        eylow  = self.Ratio(weight_X_tgrData.GetErrorYlow(ibin),  last.GetBinContent(ibin+1) )
+                        eyhigh = self.Ratio(weight_X_tgrData.GetErrorYhigh(ibin), last.GetBinContent(ibin+1) )                    
                       else :
                         eylow  = weight_X_tgrData.GetErrorYlow(ibin) 
                         eyhigh = weight_X_tgrData.GetErrorYhigh(ibin)                  
@@ -1906,6 +2075,7 @@ class PlotFactory:
                     # create the weighted MC over MC distribution
                     #
                     weight_X_tgrMCOverMC = weight_X_tgrData.Clone("tgrMCOverMCweighted")
+                    last = weight_X_thsBackground.GetStack().Last()
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrMCOverMC.GetX()[ibin]
                       y = 1 
@@ -1916,8 +2086,8 @@ class PlotFactory:
 
                       exlow  = tgrData_evx[number_of_bin]
                       exhigh = tgrData_evx[number_of_bin]
-                      eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
-                      eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                      eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  last.GetBinContent(ibin+1) )
+                      eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), last.GetBinContent(ibin+1) )                    
                       
                       weight_X_tgrMCOverMC.SetPoint      (ibin, x, y)
                       weight_X_tgrMCOverMC.SetPointError (ibin, exlow, exhigh, eylow, eyhigh)
@@ -1927,6 +2097,7 @@ class PlotFactory:
                     # create the weighted MC over MC distribution
                     #
                     weight_X_tgrMCMinusMC = weight_X_tgrData.Clone("tgrMCMinusMCweighted")
+                    last = weight_X_thsBackground.GetStack().Last()
                     for ibin in range( nbinY ) :
                       x = weight_X_tgrMCMinusMC.GetX()[ibin]
                       y = 0
@@ -1938,8 +2109,8 @@ class PlotFactory:
                       exlow  = tgrData_evx[number_of_bin]
                       exhigh = tgrData_evx[number_of_bin]
                       if self._showRelativeRatio :
-                        eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )
-                        eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), weight_X_thsBackground.GetStack().Last().GetBinContent(ibin+1) )                    
+                        eylow  = self.Ratio(weight_X_tgrMC.GetErrorYlow(ibin),  last.GetBinContent(ibin+1) )
+                        eyhigh = self.Ratio(weight_X_tgrMC.GetErrorYhigh(ibin), last.GetBinContent(ibin+1) )                    
                       else :
                         eylow  = weight_X_tgrMC.GetErrorYlow(ibin) 
                         eyhigh = weight_X_tgrMC.GetErrorYhigh(ibin)             
@@ -1955,7 +2126,7 @@ class PlotFactory:
                     #
                     # - recalculate the maxY
                     #     _maxLinearScale --> 1.45 in the past
-                    maxYused = self._maxLinearScale * self.GetMaximumIncludingErrors(weight_X_thsBackground.GetStack().Last())
+                    maxYused = self._maxLinearScale * self.GetMaximumIncludingErrors(last)
 
                     # recalculate min-max X due to weighting rolling
                     minXused = weight_X_tgrMCMinusMC.GetX()[0] - tgrData_evx[0]

@@ -37,7 +37,7 @@ class PromptParticlesGenVarsProducer(Module):
         neutrinos=[]
         photons=[]
         for particle  in genParticles :
-          if ( (abs(particle.pdgId)==11 or abs(particle.pdgId==13)) and particle.status == 1) or \
+          if ( (abs(particle.pdgId)==11 or abs(particle.pdgId)==13) and particle.status == 1) or \
                (abs(particle.pdgId)==15 and particle.statusFlags >> 1 & 1 and particle.statusFlags >> 13 & 1) : # isDecayed and LastCopy
             leptons.append(particle)
           if particle.pdgId == 22 and particle.status == 1 :

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import sys, re, os, os.path, math, copy
+argv = sys.argv
+sys.argv = argv[:1]
 from optparse import OptionParser
 from collections import OrderedDict
 import subprocess
@@ -24,6 +26,8 @@ if __name__ == '__main__':
                                                                                /___/  
 --------------------------------------------------------------------------------------------
 '''
+
+    sys.argv = argv
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -98,6 +102,13 @@ if __name__ == '__main__':
 
     if options.runBatch :
       pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
+      for fn in os.listdir(pathRootMacro):
+        if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
+          try:
+            ROOT.gROOT.LoadMacro(pathRootMacro+fn+'+g')
+          except RuntimeError:
+            ROOT.gROOT.LoadMacro(pathRootMacro+fn+'++g')
+      pathRootMacro = CMSSW + '/src/LatinoAnalysis/NanoGardener/python/modules/'
       for fn in os.listdir(pathRootMacro):
         if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
           try:

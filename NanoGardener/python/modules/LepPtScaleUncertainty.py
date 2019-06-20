@@ -20,20 +20,31 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger im
 from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import Lepton_br, Lepton_var 
 
 import os.path
+import math
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele") :
+    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET' , 'ChsMET']) :
         cmssw_base = os.getenv('CMSSW_BASE')
+        self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
         self.lepFlavor = lepFlavor # "ele" or "mu"
         leppTscaler = {}
-        # TODO Example file only, for Full2016 analysis:
-        ScaleFactorFile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_'+lepFlavor[:2]+'_80_remAOD.py'
+        ScaleFactorFile = cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/lepton_scale_n_smear/'+version+'/leppTscaler_'+lepFlavor[:2]+'.py'
         if os.path.exists(ScaleFactorFile):
           handle = open(ScaleFactorFile,'r')
           exec(handle)
           handle.close()
         self.leppTscaler = leppTscaler
+        print self.leppTscaler 
+
+        # fix underflow and overflow
+        self.minpt = 0.0
+        self.maxpt = 0.0
+        self.maxeta = 0.0
+        for point in self.leppTscaler[lepFlavor]:
+          if point[0][1] > self.maxpt  : self.maxpt  = point[0][1]
+          if point[1][1] > self.maxeta : self.maxeta = point[1][1]
+        print 'maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta
 
     def beginJob(self):
         pass
@@ -43,9 +54,10 @@ class LeppTScalerTreeMaker(Module) :
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.metVariables = [ 'MET_pt', 'MET_phi' ]
-        for nameBranches in self.metVariables :
-            self.out.branch(nameBranches  ,  "F")
+        for x in self.metCollections:
+          self.out.branch(x+'_pt', "F")
+          self.out.branch(x+'_phi', "F")
+
         if 'electronIdx' not in Lepton_var: Lepton_var.append('electronIdx')
         if 'muonIdx' not in Lepton_var: Lepton_var.append('muonIdx')
         for typ in Lepton_br:
@@ -55,19 +67,8 @@ class LeppTScalerTreeMaker(Module) :
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def FixAngle(self, phi) :
-        if phi < -ROOT.TMath.Pi() :
-            phi += 2*ROOT.TMath.Pi()
-        elif phi > ROOT.TMath.Pi() :
-            phi -= 2*ROOT.TMath.Pi()
-        return phi
-
     def getScale (self, kindLep, pt, eta):
 
-        # fix underflow and overflow
-        self.minpt = 0.0
-        self.maxpt = 200.0
-        self.maxeta = 2.5
 
         if pt < self.minpt: pt = self.minpt
         if pt > self.maxpt: pt = self.maxpt - 0.000001
@@ -89,9 +90,6 @@ class LeppTScalerTreeMaker(Module) :
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        newmetmodule = -1
-        newmetphi = -1
-
         if self.kind == 'Up':
             self.variation = 1.0
         elif self.kind == 'Dn' or self.kind == 'Down':
@@ -109,21 +107,48 @@ class LeppTScalerTreeMaker(Module) :
                 lep_dict[var] = [0]*nLep
 
         # MET
-        if self.lepFlavor == 'ele':
-            newmetmodule = met.pt * (1 + (self.variation * self.getScale('ele', met.pt, 0.0) / 100.0))
-            #newmetphi = self.FixAngle(met.phi + self.FixAngle( itree.metPfRawPhiElecEnUp - getattr(event, "RawMET_phi") )) # TODO: About finding a way to express the old "itree.metPfRawPhiElecEnUp" with nanoAOD variables: How does applying a factor to met.pt affect RawMET_phi?
-            newmetphi = met.phi #temporary
-        elif self.lepFlavor == 'mu':
-            newmetmodule = met.pt * (1 + (self.variation * self.getScale('mu', met.pt, 0.0) / 100.0))
-            #newmetphi = self.FixAngle(met.phi + self.FixAngle( itree.metPfRawPhiMuEnUp - getattr(event, "RawMET_phi") )) # TODO: About finding a way to express the old "itree.metPfRawPhiMuEnUp" with nanoAOD variables: How does applying a factor to met.pt affect RawMET_phi?
-            newmetphi = met.phi #temporary
+        for metType in self.metCollections:
+            try:
+                met = Object(event, metType)
+            except AttributeError:
+                continue
+
+            metx = met.pt * math.cos(met.phi)
+            mety = met.pt * math.sin(met.phi)
+            for idx,lep in enumerate(leptons):
+                if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
+                    diff = lep.pt * (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0)
+                    metx = metx - (diff * math.cos(lep.phi))
+                    mety = mety - (diff * math.sin(lep.phi))
+            newmetpt = math.sqrt(metx**2 + mety**2)
+            newmetphi = math.atan2(mety, metx)
+            self.out.fillBranch(metType+"_pt", newmetpt)
+            self.out.fillBranch(metType+"_phi", newmetphi)
 
         # Leptons
         for idx,lep in enumerate(leptons):
-            if self.lepFlavor == 'ele' and abs(lep.pdgId) == 11:
-                lep.pt = lep.pt * (1 + (self.variation * self.getScale('ele', lep.pt, lep.eta) / 100.0))
-            elif self.lepFlavor == 'mu' and abs(lep.pdgId) == 13:
-                lep.pt = lep.pt * (1 + (self.variation * self.getScale('mu', lep.pt, lep.eta) / 100.0))
+            origleppt = lep.pt
+            if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
+                lep.pt = lep.pt * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0))
+
+                #SumET
+                if lep.electronIdx > -1: mass = event.Electron_mass[lep.electronIdx]
+                elif lep.muonIdx > -1: mass = event.Muon_mass[lep.muonIdx]
+                else: continue
+
+                p4 = ROOT.TLorentzVector()
+                p4.SetPtEtaPhiM(origleppt, lep.eta, lep.phi, mass)
+                et = p4.Energy()*math.sin(p4.Theta())
+                new_p4 = ROOT.TLorentzVector()
+                new_p4.SetPtEtaPhiM(lep.pt, lep.eta, lep.phi, mass)
+                new_et = new_p4.Energy()*math.sin(new_p4.Theta())
+
+                for metType in self.metCollections:
+                    try:
+                        met = Object(event, metType)
+                    except AttributeError:
+                        continue
+                    met.sumEt += new_et - et
 
         # Re-order lepton collection
         for idx,lep in enumerate(leptons):
@@ -145,8 +170,6 @@ class LeppTScalerTreeMaker(Module) :
                 else:
                     lep_dict[var][pt_idx] = getattr(event, 'Lepton_'+var)[idx]
 
-        self.out.fillBranch("MET_pt", newmetmodule)
-        self.out.fillBranch("MET_phi", newmetphi)
         for var in lep_dict:
             self.out.fillBranch('Lepton_' + var, lep_dict[var])
 

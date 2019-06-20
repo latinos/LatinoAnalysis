@@ -73,6 +73,17 @@ class FakeWeight():
         self.ElFR_jet35 = self._getRootObj(self.fileElFR_jet35, 'FR_pT_eta_EWKcorr')
         self.ElFR_jet45 = self._getRootObj(self.fileElFR_jet45, 'FR_pT_eta_EWKcorr')
 
+        #self.MuFR_jet10 = self._getRootObj(self.fileMuFR_jet10, 'FR_pt_eta_EWKcorr')
+        #self.MuFR_jet15 = self._getRootObj(self.fileMuFR_jet15, 'FR_pt_eta_EWKcorr')
+        #self.MuFR_jet20 = self._getRootObj(self.fileMuFR_jet20, 'FR_pt_eta_EWKcorr')
+        #self.MuFR_jet25 = self._getRootObj(self.fileMuFR_jet25, 'FR_pt_eta_EWKcorr')
+        #self.MuFR_jet30 = self._getRootObj(self.fileMuFR_jet30, 'FR_pt_eta_EWKcorr')
+        #self.MuFR_jet35 = self._getRootObj(self.fileMuFR_jet35, 'FR_pt_eta_EWKcorr')
+        #self.MuFR_jet45 = self._getRootObj(self.fileMuFR_jet45, 'FR_pt_eta_EWKcorr')
+
+        #self.ElFR_jet25 = self._getRootObj(self.fileElFR_jet25, 'FR_pt_eta_EWKcorr')
+        #self.ElFR_jet35 = self._getRootObj(self.fileElFR_jet35, 'FR_pt_eta_EWKcorr')
+        #self.ElFR_jet45 = self._getRootObj(self.fileElFR_jet45, 'FR_pt_eta_EWKcorr')
 
     def _getRate(self, h2, pt, eta, leptonptmax):
 

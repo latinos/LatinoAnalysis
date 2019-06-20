@@ -106,8 +106,10 @@ class LeptonSFMaker(Module):
             self.SF_dict['muon'][wp]['tkSF'] = {}
             self.SF_dict['muon'][wp]['idSF'] = {}
             self.SF_dict['muon'][wp]['isoSF'] = {}
+            self.SF_dict['muon'][wp]['hasSFreco'] = False
             for SFkey in self.MuonWP[self.cmssw]['TightObjWP'][wp]:
                 if SFkey == 'tkSF':
+                    self.SF_dict['muon'][wp]['hasSFreco'] = True
                     self.SF_dict['muon'][wp]['tkSF']['data'] = []
                     self.SF_dict['muon'][wp]['tkSF']['beginRP'] = []
                     self.SF_dict['muon'][wp]['tkSF']['endRP'] = []
@@ -119,14 +121,15 @@ class LeptonSFMaker(Module):
                         self.SF_dict['muon'][wp]['tkSF']['data'].append(self.conv_graph2list(self.get_root_obj(tk_file, 'ratio_eff_vtx_dr030e030_corr')))
                         tk_file.Close()
                 if SFkey == 'idSF':
-                    split_file = self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF'][rpr][0].split('.')
                     self.SF_dict['muon'][wp]['idSF']['data'] = []
                     self.SF_dict['muon'][wp]['idSF']['mc'] = []
                     self.SF_dict['muon'][wp]['idSF']['beginRP'] = []
                     self.SF_dict['muon'][wp]['idSF']['endRP'] = []
-                    if split_file[-1] == 'txt':
-                        self.rootIDSF = False
-                        for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF']:
+                    self.SF_dict['muon'][wp]['idSF']['isRoot'] = []
+                    for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF']:
+                        split_file = self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF'][rpr][0].split('.')
+                        if split_file[-1] == 'txt':
+                            self.SF_dict['muon'][wp]['idSF']['isRoot'].append(False)
                             self.SF_dict['muon'][wp]['idSF']['beginRP'].append(int(rpr.split('-')[0]))
                             self.SF_dict['muon'][wp]['idSF']['endRP'].append(int(rpr.split('-')[1]))
                             id_file_data = open(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF'][rpr][0])
@@ -135,9 +138,8 @@ class LeptonSFMaker(Module):
                             self.SF_dict['muon'][wp]['idSF']['mc'].append([line.rstrip().split() for line in id_file_mc if '#' not in line])
                             id_file_data.close()
                             id_file_mc.close()
-                    if split_file[-1] == 'root':
-                        self.rootIDSF = True
-                        for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF']:
+                        if split_file[-1] == 'root':
+                            self.SF_dict['muon'][wp]['idSF']['isRoot'].append(True)
                             self.SF_dict['muon'][wp]['idSF']['beginRP'].append(int(rpr.split('-')[0]))
                             self.SF_dict['muon'][wp]['idSF']['endRP'].append(int(rpr.split('-')[1]))
                             data_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF'][rpr][0])
@@ -145,14 +147,15 @@ class LeptonSFMaker(Module):
                             data_file.Close()
 
                 if SFkey == 'isoSF':
-                    split_file = self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF'][rpr][0].split('.')
                     self.SF_dict['muon'][wp]['isoSF']['data'] = []
                     self.SF_dict['muon'][wp]['isoSF']['mc'] = []
                     self.SF_dict['muon'][wp]['isoSF']['beginRP'] = []
                     self.SF_dict['muon'][wp]['isoSF']['endRP'] = []
-                    if split_file[-1] == 'txt':
-                        self.rootISOSF = False
-                        for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['isoSF']:
+                    self.SF_dict['muon'][wp]['isoSF']['isRoot'] = []
+                    for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['isoSF']:
+                        split_file = self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF'][rpr][0].split('.')
+                        if split_file[-1] == 'txt':
+                            self.SF_dict['muon'][wp]['isoSF']['isRoot'].append(False)
                             self.SF_dict['muon'][wp]['isoSF']['beginRP'].append(int(rpr.split('-')[0]))
                             self.SF_dict['muon'][wp]['isoSF']['endRP'].append(int(rpr.split('-')[1]))
                             id_file_data = open(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['isoSF'][rpr][0])
@@ -161,14 +164,16 @@ class LeptonSFMaker(Module):
                             self.SF_dict['muon'][wp]['isoSF']['mc'].append([line.rstrip().split() for line in id_file_mc if '#' not in line])
                             id_file_data.close()
                             id_file_mc.close()
-                    if split_file[-1] == 'root':
-                        self.rootISOSF = True
-                        for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['isoSF']:
+                        if split_file[-1] == 'root':
+                            self.SF_dict['muon'][wp]['isoSF']['isRoot'].append(True)
                             self.SF_dict['muon'][wp]['isoSF']['beginRP'].append(int(rpr.split('-')[0]))
                             self.SF_dict['muon'][wp]['isoSF']['endRP'].append(int(rpr.split('-')[1]))
                             data_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['isoSF'][rpr][0])
                             self.SF_dict['muon'][wp]['isoSF']['data'].append(self.get_root_obj(data_file, 'Muon_isoSF2D'))
                             data_file.Close()
+            if not self.SF_dict['muon'][wp]['hasSFreco']: 
+                self.SF_dict['muon'][wp]['tkSF']['beginRP'] = self.SF_dict['muon'][wp]['idSF']['beginRP']                
+                self.SF_dict['muon'][wp]['tkSF']['endRP'] = self.SF_dict['muon'][wp]['idSF']['endRP']                
 
     #_____Help functions
     def open_root(self, path, option=''):
@@ -259,6 +264,11 @@ class LeptonSFMaker(Module):
         pt, eta = self.trunc_kin(pdgId, lep_pt, lep_eta)
         kin_str = 'electron' if (abs(pdgId) == 11) else 'muon'       
 
+        if abs(pdgId) == 13 and not self.SF_dict[kin_str][wp]['hasSFreco']:
+            tkSF = 1.
+            tkSF_err = 0.
+            return tkSF, tkSF_err, tkSF_err
+
         #select right SF dict index based on runperiod
         run_idx = 0
         #print(kin_str)
@@ -274,6 +284,7 @@ class LeptonSFMaker(Module):
         if abs(pdgId) == 13:
             tkSF, tkSF_up, tkSF_dwn = self.get_nvtxGraph_VnUnD(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], nvtx)
             tkSF_err = self.SF_dict[kin_str][wp]['tkSF']['SFerror']
+        
         return tkSF, tkSF_err, tkSF_err
 
     def get_idIso_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
@@ -306,7 +317,7 @@ class LeptonSFMaker(Module):
                     return tkSF, tkSF_err, tkSF_err, tkSF_sys
 
         if abs(pdgId) == 13:
-            if not self.rootISOSF:
+            if not self.SF_dict['muon'][wp]['isoSF']['isRoot'][run_idx]:
                 dot_iso_d = []
                 dot_iso_m = []
                 dot_id_d = []
@@ -347,7 +358,7 @@ class LeptonSFMaker(Module):
             #tkSF_iso_sys = math.sqrt( float(dot[8])**2 + float(dot[9])**2 + float(dot[10])**2 + float(dot[11])**2)
             #tkSF_iso_sys /= mc_iso
             
-            if not self.rootIDSF:
+            if not self.SF_dict['muon'][wp]['idSF']['isRoot'][run_idx]:
                 data_id = float(dot_id_d[4])
                 mc_id = float(dot_id_m[4])
 
@@ -409,14 +420,18 @@ class LeptonSFMaker(Module):
            pdgId = lepton_col[iLep]['pdgId']
            pt = lepton_col[iLep]['pt']
            eta = lepton_col[iLep]['eta']
+           did_reco = False
+           reco_sf, reco_sf_dwn, reco_sf_up = 0., 0., 0.
            # Lepton id's
            if abs(lepton_col[iLep]['pdgId']) == 11:
               for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
-                  reco_sf, reco_sf_dwn, reco_sf_up = self.get_reco_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  if not did_reco:
+                      reco_sf, reco_sf_dwn, reco_sf_up = self.get_reco_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                      lep_var['RecoSF'].append(reco_sf)
+                      lep_var['RecoSF_Up'].append(reco_sf + reco_sf_up)
+                      lep_var['RecoSF_Down'].append(reco_sf - reco_sf_dwn)
+                      did_reco = True
                   idiso_sf, idiso_sf_dwn, idiso_sf_up, idiso_sf_sys = self.get_idIso_SF(pdgId, pt, eta, nvtx, wp, run_period)
-                  lep_var['RecoSF'].append(reco_sf)
-                  lep_var['RecoSF_Up'].append(reco_sf + reco_sf_up)
-                  lep_var['RecoSF_Down'].append(reco_sf - reco_sf_dwn)
                   el_wp_var[wp + '_IdIsoSF'].append(idiso_sf)
                   el_wp_var[wp + '_IdIsoSF_Up'].append(idiso_sf + idiso_sf_up)
                   el_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
@@ -434,11 +449,13 @@ class LeptonSFMaker(Module):
                   mu_wp_var[wp + '_TotSF_Down'].append(reco_sf - reco_sf_dwn)
            elif abs(lepton_col[iLep]['pdgId']) == 13:
               for wp in self.MuonWP[self.cmssw]['TightObjWP']:
-                  reco_sf, reco_sf_dwn, reco_sf_up = self.get_reco_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  if not did_reco:
+                      reco_sf, reco_sf_dwn, reco_sf_up = self.get_reco_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                      lep_var['RecoSF'].append(reco_sf)
+                      lep_var['RecoSF_Up'].append(reco_sf + reco_sf_up)
+                      lep_var['RecoSF_Down'].append(reco_sf - reco_sf_dwn)
+                      did_reco = True
                   idiso_sf, idiso_sf_dwn, idiso_sf_up, idiso_sf_sys = self.get_idIso_SF(pdgId, pt, eta, nvtx, wp, run_period)
-                  lep_var['RecoSF'].append(reco_sf)
-                  lep_var['RecoSF_Up'].append(reco_sf + reco_sf_up)
-                  lep_var['RecoSF_Down'].append(reco_sf - reco_sf_dwn)
                   mu_wp_var[wp + '_IdIsoSF'].append(idiso_sf)
                   mu_wp_var[wp + '_IdIsoSF_Up'].append(idiso_sf + idiso_sf_up)
                   mu_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)

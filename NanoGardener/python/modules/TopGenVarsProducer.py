@@ -26,16 +26,33 @@ class TopGenVarsProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         genParticles = Collection(event, "GenPart")
+        toppt   = 0.
+        topeta  = 0.
+        topphi  = 0.
+        topmass = 0.
+        atoppt   = 0.
+        atopeta  = 0.
+        atopphi  = 0.
+        atopmass = 0.   
         for particle  in genParticles :
           if particle.pdgId == 6 and (particle.statusFlags >> 13 & 1):
-            self.out.fillBranch("topGenPt",  particle.pt)
-            self.out.fillBranch("topGenEta", particle.eta)
-            self.out.fillBranch("topGenPhi", particle.phi)
-            self.out.fillBranch("topGenMass", particle.mass)
+            toppt = particle.pt
+            topeta = particle.eta
+            topphi = particle.phi
+            topmass = particle.mass
           elif particle.pdgId == -6 and (particle.statusFlags >> 13 & 1):  
-            self.out.fillBranch("antitopGenPt",  particle.pt)
-            self.out.fillBranch("antitopGenEta", particle.eta)
-            self.out.fillBranch("antitopGenPhi", particle.phi)
-            self.out.fillBranch("antitopGenMass", particle.mass) 
+            atoppt = particle.pt
+            atopeta = particle.eta
+            atopphi = particle.phi
+            atopmass = particle.mass
+        self.out.fillBranch("topGenPt",  toppt)
+        self.out.fillBranch("topGenEta", topeta)
+        self.out.fillBranch("topGenPhi", topphi)
+        self.out.fillBranch("topGenMass", topmass)
+        self.out.fillBranch("antitopGenPt",  atoppt)
+        self.out.fillBranch("antitopGenEta", atopeta)
+        self.out.fillBranch("antitopGenPhi", atopphi)
+        self.out.fillBranch("antitopGenMass", atopmass)
+
+            
         return True
- 

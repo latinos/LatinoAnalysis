@@ -64,8 +64,9 @@ class ZWW{
     float z1Mt_zh4l();
     float mllll_zh4l();
     float chllll_zh4l();
-
-
+    float z1dPhi_lep1MET_zh4l();
+    float z1dPhi_lep2MET_zh4l();
+    float z1mindPhi_lepMET_zh4l();
 
   private:
     //! variables
@@ -257,6 +258,7 @@ void ZWW::setJet(std::vector<float> pt,
 void ZWW::setMET(float met, float phi){
     met_    = met;
     metPhi_ = phi;
+ metVec_.SetPtEtaPhiM(met_, 0, metPhi_, 0.);
     isMETOk();
 }
 
@@ -490,6 +492,46 @@ float ZWW::minDeltaPhi_zh4l(){
     }
 }
 
+
+float ZWW::z1dPhi_lep1MET_zh4l(){
+    if (isAllOk_ && isLepOk_){
+        setZ0LepIdx_();
+        setZ1LepIdx_();
+        return fabs((lepVec_[z1LepIdx_[0]]).DeltaPhi(metVec_));
+            }
+    else{
+        return -1.*zwwDefault;
+    }
+}
+
+float ZWW::z1dPhi_lep2MET_zh4l(){
+    if (isAllOk_ && isLepOk_){
+        setZ0LepIdx_();
+        setZ1LepIdx_();
+        return fabs((lepVec_[z1LepIdx_[1]]).DeltaPhi(metVec_));
+            }
+    else{
+        return -1.*zwwDefault;
+    }
+}
+
+float ZWW::z1mindPhi_lepMET_zh4l(){
+    if (isAllOk_ && isLepOk_){
+        setZ0LepIdx_();
+        setZ1LepIdx_();
+float dphi1 = fabs((lepVec_[z1LepIdx_[0]]).DeltaPhi(metVec_));
+float dphi2 = fabs((lepVec_[z1LepIdx_[1]]).DeltaPhi(metVec_));
+       if(dphi1 < dphi2) {
+          return dphi1;
+     }
+       else {
+          return dphi2;
+     }
+            }
+    else{
+        return -1.*zwwDefault;
+    }
+}
 
 float ZWW::chllll_zh4l(){
     if (isAllOk_){

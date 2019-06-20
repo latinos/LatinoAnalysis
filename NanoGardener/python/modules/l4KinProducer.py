@@ -65,7 +65,10 @@ class l4KinProducer(Module):
             'minMt_zh4l',
             'z1Mt_zh4l',
             'mllll_zh4l',
-            'chllll_zh4l'
+            'chllll_zh4l',
+            'z1dPhi_lep1MET_zh4l',
+            'z1dPhi_lep2MET_zh4l',
+            'z1mindPhi_lepMET_zh4l',
           ]
         
         for nameBranches in self.newbranches :
@@ -139,8 +142,8 @@ class l4KinProducer(Module):
         ZWW.setLepton(lep_pt, lep_eta, lep_phi, lep_flavour, lep_ch, lep_isLooseLepton)
         ZWW.setJet(jet_pt, jet_eta, jet_phi, jet_mass, jet_cmvav2)
          
-        MET_phi   = event.MET_phi
-        MET_pt    = event.MET_pt
+        MET_phi   = event.PuppiMET_phi
+        MET_pt    = event.PuppiMET_pt
         
         ZWW.setMET(MET_pt, MET_phi)
 
