@@ -178,7 +178,17 @@ Productions = {
                        'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
-                   }, 
+                   },  
+
+ # -------- 2016 Susy 102X nAODv4
+ 'Summer16FS_102X_nAODv4_Full2016v4': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16FS_102X_nAODv4.py' ,
+                       'cmssw'   : 'Full2016v4' ,
+                       'year'    : '2016' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 
  # -------- 2016 Embedding 102X nAODv4
  'Embedding2016_102X_nAODv4_Full2016v4': {
@@ -204,7 +214,7 @@ Productions = {
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/fall17_102X_nAODv4.py' ,
                        'cmssw'   : 'Full2017v4',
                        'year'    : '2017' ,
-                       # ???????? 'JESGT'   : 'Summer16_23Sep2016V4_MC' ,
+                       'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2017.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    }, 
@@ -242,7 +252,7 @@ Productions = {
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv4.py' ,
                        'cmssw'   : 'Full2018' ,
                        'year'    : '2018' ,
-                   #   'JESGT'   : 'Summer16_23Sep2016V4_MC' ,
+                       'JESGT'   : 'Autumn18_V8_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
@@ -253,7 +263,7 @@ Productions = {
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv4_v16.py' ,
                        'cmssw'   : 'Full2018v4' ,
                        'year'    : '2018' ,
-                   #   'JESGT'   : 'Summer16_23Sep2016V4_MC' ,
+                       'JESGT'   : 'Autumn18_V8_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },

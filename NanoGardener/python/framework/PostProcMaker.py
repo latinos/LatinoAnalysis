@@ -176,7 +176,7 @@ class PostProcMaker():
      fileCmd = self._Sites[self._LocalSite]['lsCmd']+' '+self._targetDir
      # fileCmd .... Files
      if self._iniStep == 'Prod' :
-       if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
+       if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'__part0.root'
        else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
      else:
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'

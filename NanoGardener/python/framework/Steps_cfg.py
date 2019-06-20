@@ -412,7 +412,7 @@ Steps = {
                   # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
                   'declare'    : 'jetSel = lambda : JetSel(2,"medium",15.0,4.7,"CleanJet")' ,
                   'module'     : 'jetSel()' ,
-               }, 
+               },
 
    'CleanJetCut' : {
                  'isChain'    : False ,
@@ -422,6 +422,14 @@ Steps = {
                   'declare'    : 'cleanJetCut = lambda : CopyCleanJet(newcollectionname="CleanJetCut", cuts=["eta>2.65","eta<3.139"])',
                   'module'     : 'cleanJetCut()',
                }, 
+
+   'susyGen': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyGenVarsProducer' ,
+                  'module'     : 'SusyGenVarsProducer()' ,
+               },
 
 
 ## ------- MODULES: Trigger
@@ -625,6 +633,14 @@ Steps = {
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
 
+   'susyW': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyWeightsProducer' ,
+                  'module'     : 'SusyWeightsProducer("RPLME_CMSSW")' ,
+             },
+
 ## ------- MODULES: Embedding
 
   'EmbeddingWeights2017' : { 
@@ -671,8 +687,15 @@ Steps = {
                   'do4Data'    : True ,
                   'subTargets' : ['fakeWstep','formulasFAKE'],
                    },
+  'fakeWelewithiso'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                   },
 
-  'fakeW'  : {
+
+    'fakeW'  : {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
@@ -1270,6 +1293,6 @@ Steps = {
                             },
                },
 
-} 
+}
 
 
