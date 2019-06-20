@@ -135,11 +135,11 @@ class xsectionDB:
     def get(self,iSample):
       if self._useYR :
         Higgs = self._HiggsXS.GetHiggsXS4Sample(self._YRVersion,self._YREnergy,iSample)
-        #print Higgs
+        print Higgs
         if not Higgs['xs'] == 0. : return str(Higgs['xs'])
 
       if iSample in self.xsections : 
-        #print iSample, self.xsections[iSample]['sample'], self.xsections[iSample]['xs']
+        print iSample, self.xsections[iSample]['xs'] , self.xsections[iSample]['kfact']
         return str(float(self.xsections[iSample]['xs'])*float(self.xsections[iSample]['kfact']))
       else : 
         return ''
@@ -164,7 +164,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     if 'iihe' in os.uname()[1] :
       if not FromPostProc : absPath=True
       lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
          Dir = '/pnfs/iihe/cms/' + inputDir
       else:                        
          Dir = inputDir
@@ -172,10 +172,13 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
 
     # ... CERN
     elif 'cern' in os.uname()[1] : 
-      if not '/eos/' in  inputDir and '/store/' in inpuDir:
+      if not '/eos/' in  inputDir and '/store/' in inputDir:
          Dir = '/eos/cms/' + inputDir
       else:                          
          Dir = inputDir
+      if '/eos/cms/' in inputDir:
+         absPath=True
+         xrootdPath='root://eoscms.cern.ch/'
       # if   '/eos/cms/' in inputDir:
       # #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '
       #    xrootdPath='root://eoscms.cern.ch/'
@@ -187,7 +190,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     # ... IFCA   
     elif 'ifca' in os.uname()[1] :
       lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+      if not '/gpfs/' in inputDir and '/store/' in inputDir:
         Dir = '/gpfs/gaes/cms/' + inputDir 
       else:
         Dir = inputDir
@@ -195,7 +198,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     # ... PISA         
     elif "pi.infn.it" in socket.getfqdn():
       lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inpuDir:
+      if not '/gpfs/' in inputDir and '/store/' in inputDir:
         Dir = '/gpfs/ddn/srm/cms/' + inputDir 
       else:
         Dir = inputDir
@@ -204,7 +207,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     elif "knu" in os.uname()[1]:
       absPath=True
       lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inpuDir: 
+      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
         Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
       else:
         Dir = inputDir 
@@ -214,20 +217,20 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     elif "sdfarm" in os.uname()[1]:
       absPath=True
       lsCmd='ls '
-      if not '/xrootd/' in inputDir and '/store/' in inpuDir: 
-        Dir = '/xrootd/' + inputDir
+      if not '/xrootd/' in inputDir and '/store/' in inputDir:
+        Dir = '/xrootd/store/' + inputDir.split('/store/')[1]
       else:
         Dir = inputDir 
       if '/xrootd/' in Dir :
 	#xrootdPath='root://cms-xrdr.sdfarm.kr/'
-	xrootdPath='root://cms-xrdr.sdfarm.kr:1094//'
+	#xrootdPath='root://cms-xrdr.sdfarm.kr:1094/' # outside of Korean farm
+	xrootdPath='root://cms-xrdr.private.lo:2094/' # inside of Korean farm
 
     # ... DEFAULT: local mounted disk
     else :
       lsCmd='ls '
       Dir = inputDir
 
-    #print xrootdPath, Dir , lsCmd , Sample
 
     ##### Now get the files for Sample
     fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'.root'
@@ -245,8 +248,8 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     FileTarget = []
     for iFile in Files:
       if absPath :
-	if "sdfarm" in os.uname()[1]:
-	  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
+	#if "sdfarm" in os.uname()[1]:
+	#  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
         if not FromPostProc :
           FileTarget.append('###'+xrootdPath+iFile)
         else:
@@ -267,8 +270,9 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
 
     ### Now add the actual weight
     for iEntry in range(len(sampleDic[key]['name'])):
-      name = sampleDic[key]['name'][iEntry].replace('latino_','').replace('.root','').split('__part')[0]
+      name = sampleDic[key]['name'][iEntry]
       if '/' in name : name = os.path.basename(name)
+      name = name.split('_',1)[-1].replace('.root','').split('__part')[0]
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       
@@ -305,7 +309,9 @@ def getBaseW(directory,Samples = [] ):
     ### Get XS
     xsDB = xsectionDB()
     CMSSW=os.environ["CMSSW_BASE"]
-    xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    #xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
+    xsFile=CMSSW+'/src/LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py'
+    print "I'm reading XS in latinoAnalysis"
     xsDB.readPython(xsFile)
     xsDB.readYR('YR4','13TeV')
     xs = []
@@ -339,6 +345,7 @@ def printSampleDic(sampleDic):
 def getTmpDir():
     if   'iihe' in os.uname()[1] : return '/scratch/'
     elif 'cern' in os.uname()[1] : return '/tmp/$USER/'
+    elif 'ifca' in os.uname()[1] : return '/gpfs/projects/cms/'+os.environ["USER"]+'/'
     else : return '/tmp'
 
 def delDirSE(Dir):
@@ -349,6 +356,9 @@ def delDirSE(Dir):
     elif 'cern' in os.uname()[1] :
       if not '/eos/cms' in inDir : inDir = '/eos/cms' + inDir
       os.system('rm -rf '+inDir)
+    elif 'ifca' in os.uname()[1] : 
+      if not '/gpfs/gaes/cms' in inDir : inDir = '/gpfs/gaes/cms' + inDir
+      os.system('rm -rf '+inDir) 
     else:
       print 'ERROR: Unknown SITE for srmcp2local ->exit()'
       exit()
@@ -360,6 +370,9 @@ def srmcp2local(inFile,outFile):
       os.system('lcg-cp srm://maite.iihe.ac.be:8443'+srcFile+' file://'+outFile)
     elif 'cern' in os.uname()[1] :
       if not '/eos/cms' in srcFile : srcFile = '/eos/cms' + srcFile
+      os.system('cp '+srcFile+' '+outFile)
+    elif  'ifca' in os.uname()[1] : 
+      if not '/gpfs/gaes/cms' in srcFile : srcFile = '/gpfs/gaes/cms' + srcFile
       os.system('cp '+srcFile+' '+outFile)
     else:
       print 'ERROR: Unknown SITE for srmcp2local ->exit()'
@@ -403,6 +416,11 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       else:
         usedDir = inputDir
       return "ls /xrootd/" + usedDir
+    elif "hercules" in os.uname()[1]:   # cluster MiB
+      if "/store/group" in inputDir:
+        return "ls /gwteras/cms/" +inputDir
+      else:
+        return "ls "+ inputDir
     else :
       if iniStep == 'Prod' :
         return " ls " + inputDir
@@ -421,6 +439,8 @@ def rootReadPath(inputFile):
       return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
     elif 'sdfarm' in os.uname()[1] :
       return "root://cms-xrdr.sdfarm.kr:1094//xrd" + inputFile
+    elif 'hercules' in os.uname()[1]:
+      return "/gwteras/cms" + inputFile
     else :
        return "/eos/cms" + inputFile
        # return  inputFile
@@ -451,6 +471,11 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)
       else:
         return subprocess.check_output("ls -l /xrootd/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif "hercules" in os.uname()[1]:
+      if "/store/group" in inputFile:
+        return subprocess.check_output("ls -l /gwteras/cms" + inputFile +" | cut -d ' ' -f 5", shell=True)
+      else:
+        return subprocess.check_output("ls -l "+ inputFile +" | cut -d ' ' -f 5", shell=True)
     else :
        return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
        # return subprocess.check_output("ls -l " + inputFile + " | cut -d ' ' -f 5", shell=True)

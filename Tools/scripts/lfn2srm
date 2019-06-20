@@ -1,0 +1,55 @@
+#! /bin/bash
+
+URL='http://cmsweb.cern.ch/phedex/datasvc/xml/prod/lfn2pfn?node=$SITE&protocol=srmv2&lfn=$LFN'
+
+function url() {
+  local SITE="$1"
+  local LFN="$2"
+  echo "$URL" | sed -e"s#\$SITE#$SITE#" -e"s#\$LFN#$LFN#"
+}
+
+# parse command line arguments and options
+NAME=$(basename $0)
+OPTS=$(getopt -n "$NAME" -o "ds:" -l "debug,site:" -- "$@")
+
+# check for invalid options
+if [ $? != 0 ]; then 
+  exit 1
+fi
+
+# reload the parsed options into the environment
+eval set -- "$OPTS"
+
+# parse options
+SITE=""
+DEBUG=""
+while true; do
+  case "$1" in 
+    "-d" | "--debug" )
+      DEBUG="1"
+      shift
+      ;;
+    "-s" | "--site" )
+      SITE="$2"
+      shift 2
+      ;;
+    "--" )
+      # inserted by getopt to singal the end of options
+      shift
+      break
+      ;;
+  esac
+done
+
+if [ ! "$SITE" ]; then
+  echo "$NAME: error: the --site option is required"
+  exit 1
+fi
+
+for LFN in "$@"; do
+  if [ "$DEBUG" ]; then
+    wget --no-check-certificate "$(url "$SITE" "$LFN")" -O-
+  fi
+  wget -q --no-check-certificate "$(url "$SITE" "$LFN")" -O- | sed -e"s|.*pfn='\([^']\+\)'.*|\1|"
+  echo
+done

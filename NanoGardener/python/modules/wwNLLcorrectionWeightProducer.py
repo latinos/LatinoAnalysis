@@ -22,7 +22,7 @@ import os.path
 
 class wwNLLcorrectionWeightProducer(Module):
     def __init__(self):
-
+        print ' ------> wwNLLcorrectionWeightProducer Init() ----'
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
         try:

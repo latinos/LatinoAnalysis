@@ -109,7 +109,7 @@ class HiggsXSection:
 
       # ... BSM (high mass NWA Higgs-like)
       if model == 'bsm' :
-        if YRversion in  ['YR4prel'] :
+        if YRversion in  ['YR4prel','YR4'] :
           self._YR[YRversion][model]['br']['VV'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/br/BR4.txt')
           self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/br/BR4.txt')
 
@@ -320,12 +320,14 @@ class HiggsXSection:
 
      # Final X-Section
      HiggsXS['xs'] =  HiggsProdXS * HiggsBR * FinalStateBR    
-
+     print HiggsXS
      return HiggsXS
 
 ### Below some examples of usage :
 
 #HiggsXS = HiggsXSection()
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_JHUGen698_M900')
+#print HiggsXS.GetHiggsXS4Sample('YR4prel','13TeV','GluGluHToWWTo2L2Nu_JHUGen698_M2000')
 #print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ZH','125.0','pdf','sm')
 #print HiggsXS.GetHiggsProdXSNP('YR4','13TeV','ZH','125.0','pdf','sm')
 #print HiggsXS.GetHiggsProdXSNP('YR4prel','13TeV','ggZH','125.0','pdf','sm')

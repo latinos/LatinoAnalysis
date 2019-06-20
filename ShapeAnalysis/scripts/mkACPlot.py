@@ -448,6 +448,7 @@ if __name__ == '__main__':
 
     # Create Needed dictionnary
 
+
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
@@ -476,7 +477,7 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
-    treeBaseDir =''
+#   treeBaseDir =''
 
     # Scans Preselection
     if len(opt.scanList)>0:

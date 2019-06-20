@@ -9,6 +9,13 @@ formulas['XSWeight'] = 'event.baseW*\
                         if hasattr(event, \'GEN_weight_SM\') else event.baseW'
 
 
+formulas['SFweight1l'] = 'event.puW*\
+                          event.effTrigW1l*\
+                          event.std_vector_lepton_recoW[0]*\
+                          event.std_vector_lepton_etaW[0]*event.std_vector_lepton_ptW[0]*\
+                          event.veto_EMTFBug \
+                          if hasattr(event, \'std_vector_lepton_recoW\') else 1.'
+
 formulas['SFweight2l'] = 'event.puW*\
                           event.effTrigW*\
                           event.std_vector_lepton_recoW[0]*\
@@ -39,6 +46,10 @@ formulas['SFweight4l'] = 'event.puW*\
 muWP='cut_Tight80x'
 for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_Iso2016','mva_90p_Iso2015','mva_90p_Iso2016'] :
 
+  formulas['LepSF1l__ele_'+eleWP+'__mu_'+muWP] = 'event.std_vector_electron_idisoW_'+eleWP+'[0]*\
+                                                  event.std_vector_muon_idisoW_'+muWP+'[0]\
+                                                  if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') and hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+
   formulas['LepSF2l__ele_'+eleWP+'__mu_'+muWP] = 'event.std_vector_electron_idisoW_'+eleWP+'[0]*\
                                                   event.std_vector_electron_idisoW_'+eleWP+'[1]*\
                                                   event.std_vector_muon_idisoW_'+muWP+'[0]*\
@@ -62,6 +73,10 @@ for eleWP in ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_80p_Iso2015','mva_80p_
                                                   event.std_vector_muon_idisoW_'+muWP+'[2]*\
                                                   event.std_vector_muon_idisoW_'+muWP+'[3] \
                                                   if hasattr(event, \'std_vector_electron_idisoW_'+eleWP+'\') and hasattr(event, \'std_vector_muon_idisoW_'+muWP+'\') else 1.'
+
+  formulas['LepCut1l__ele_'+eleWP+'__mu_'+muWP] = '((event.std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[0]>0.5)) \
+                                                   if hasattr(event, \'std_vector_electron_isTightLepton_'+eleWP+'\') and hasattr(event, \'std_vector_muon_isTightLepton_'+muWP+'\') else 1.'
+
 
   formulas['LepCut2l__ele_'+eleWP+'__mu_'+muWP] = '((event.std_vector_electron_isTightLepton_'+eleWP+'[0]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[0]>0.5) and \
                                                     (event.std_vector_electron_isTightLepton_'+eleWP+'[1]>0.5 or event.std_vector_muon_isTightLepton_'+muWP+'[1]>0.5)) \
@@ -174,6 +189,8 @@ formulas['LepSF4l__mu_'+muWP+'__Do'] = '((abs(event.std_vector_lepton_flavour[0]
                                          (abs(event.std_vector_lepton_flavour[3]) == 11)) \
                                         if hasattr(event, \'std_vector_muon_totSF_'+muWP+'\') else 1.'
 
+formulas['GenLepMatch1l'] = 'event.std_vector_lepton_genmatched[0] \
+                             if hasattr(event, \'std_vector_lepton_genmatched\') else 1. '
 
 formulas['GenLepMatch2l'] = 'event.std_vector_lepton_genmatched[0]*\
                              event.std_vector_lepton_genmatched[1] \

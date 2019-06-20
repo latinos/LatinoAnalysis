@@ -1,0 +1,33 @@
+Samples = {}
+
+Samples["HWminusJ_HToTauTau_M125"] = { 'miniAOD': "/WminusHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluHToWWTo2L2NuPowheg_M125_CP5Up"] = { 'miniAOD': "/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_CP5Up/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluHToWWTo2L2NuPowheg_M125_CP5Down"] = { 'miniAOD': "/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_CP5Down/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWW_M130"] = { 'miniAOD': "/GluGluZH_HToWW_M130_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWWTo2L2Nu_M125"] = { 'miniAOD': "/GluGluZH_HToWWTo2L2Nu_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWWTo2L2Nu_M120"] = { 'miniAOD': "/GluGluZH_HToWWTo2L2Nu_M120_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["VBFHToWWTo2L2NuPowheg_M125_CP5Down"] = { 'miniAOD': "/VBFHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_CP5Down/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWWTo2L2Nu_ZTo2L_M130"] = { 'miniAOD': "/GluGluZH_HToWWTo2L2Nu_ZTo2L_M130_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluHToWWTo2L2NuPowheg_M125"] = { 'miniAOD': "/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HWplusJ_HToWW_M125"] = { 'miniAOD': "/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["VBFHToWWTo2L2NuPowheg_M125_CP5Up"] = { 'miniAOD': "/VBFHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_CP5Up/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HZJ_HToWW_M130"] = { 'miniAOD': "/HZJ_HToWW_M130_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HZJ_HToTauTau_M125"] = { 'miniAOD': "/ZHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HZJ_HToWWTo2L2Nu_ZTo2L_M125"] = { 'miniAOD': "/HZJ_HToWWTo2L2Nu_ZTo2L_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWWTo2L2Nu_ZTo2L_M120"] = { 'miniAOD': "/GluGluZH_HToWWTo2L2Nu_ZTo2L_M120_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWWTo2L2Nu_ZTo2L_M125"] = { 'miniAOD': "/GluGluZH_HToWWTo2L2Nu_ZTo2L_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["ttHToNonbb_M125"] = { 'miniAOD': "/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluHToTauTau_M125-ext1"] = { 'miniAOD': "/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM"}
+Samples["HWminusJ_HToWW_M125"] = { 'miniAOD': "/HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["VBFHToTauTau_M125"] = { 'miniAOD': "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWWTo2L2Nu_M130"] = { 'miniAOD': "/GluGluZH_HToWWTo2L2Nu_M130_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HWminusJ_HToWW_LNu_M125"] = { 'miniAOD': "/HWminusJ_HToWWTo2L2Nu_WTo2L_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HWplusJ_HToWW_LNu_M125"] = { 'miniAOD': "/HWplusJ_HToWWTo2L2Nu_WTo2L_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HZJ_HToWWTo2L2Nu_M125"] = { 'miniAOD': "/HZJ_HToWWTo2L2Nu_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HWplusJ_HToTauTau_M125"] = { 'miniAOD': "/WplusHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["HZJ_HToWW_M120"] = { 'miniAOD': "/HZJ_HToWW_M120_13TeV_powheg_jhu714_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWW_M120"] = { 'miniAOD': "/GluGluZH_HToWW_M120_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluZH_HToWW_M125"] = { 'miniAOD': "/GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["GluGluHToTauTau_M125"] = { 'miniAOD': "/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+Samples["VBFHToWWTo2L2NuPowheg_M125"] = { 'miniAOD': "/VBFHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM"}
+

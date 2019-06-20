@@ -1,18 +1,27 @@
 import ROOT
 import os
+import re
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
-from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import List_newVar, Lep_var 
-#from LatinoAnalysis.NanoGardener.data.Trigger_names import TrigNames, SPTrigNames
+from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import Lepton_br, Lepton_var 
+from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import VetoLepton_br, VetoLepton_var 
+from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import CleanJet_br, CleanJet_var 
+from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 
 class LeptonMaker(Module): 
     '''
     put this file in LatinoAnalysis/NanoGardener/python/modules/
     Add extra variables to NANO tree
     '''
-    def __init__(self):
-        pass
+    def __init__(self, min_lep_pt = [10]):
+        self.min_lep_pt = min_lep_pt
+        self.min_lep_pt_idx = range(len(min_lep_pt))
+        print_str = ''
+        for idx in self.min_lep_pt_idx:
+            print_str += 'Lepton_pt[' + str(idx) + '] > ' + str(min_lep_pt[idx])
+            if not idx == self.min_lep_pt_idx[-1]: print_str += ', '
+        print('LeptonMaker: ' + print_str)
 
     def beginJob(self): 
         pass
@@ -23,12 +32,17 @@ class LeptonMaker(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
         self.out = wrappedOutputTree
-        for typ in List_newVar:
-           for var in List_newVar[typ]:
+
+        # New branches
+        for typ in Lepton_br:
+           for var in Lepton_br[typ]:
               if 'Lepton_' in var: self.out.branch(var, typ, lenVar='nLepton')
-              elif 'SPTrigger' in var: self.out.branch(var, typ, len(SPTrigNames))
-              elif 'Trigger' in var: self.out.branch(var, typ, len(TrigNames))
-              else: self.out.branch(var, typ)
+        for typ in VetoLepton_br:
+           for var in VetoLepton_br[typ]:
+              if 'VetoLepton_' in var: self.out.branch(var, typ, lenVar='nVetoLepton')
+        for typ in CleanJet_br:
+           for var in CleanJet_br[typ]:
+              if 'CleanJet_' in var: self.out.branch(var, typ, lenVar='nCleanJet')
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -36,32 +50,16 @@ class LeptonMaker(Module):
     def initReaders(self,tree): # this function gets the pointers to Value and ArrayReaders and sets them in the C++ worker class
         self.electron_var = {}
         self.muon_var = {}
-        for lv in Lep_var:
-           self.electron_var['Electron_'+lv] = tree.arrayReader('Electron_'+lv)
-           if lv == 'eCorr': continue
-           self.muon_var['Muon_'+lv] = tree.arrayReader('Muon_'+lv)
-
-        #self.is_trigger = []
-        #self.is_SPtrigger = []
-        #b = tree.GetListOfBranches()
-
-        #for name in TrigNames:
-        #   if b.FindObject(name): self.is_trigger.append(True)
-        #   else: self.is_trigger.append(False)
-
-        #for name in SPTrigNames:
-        #   if b.FindObject(name): self.is_SPtrigger.append(True)
-        #   else: self.is_SPtrigger.append(False)
-
-        #self.trigger = {}
-        #self.SPtrigger = {}
-        #for i in range(len(TrigNames)):
-        #   if self.is_trigger[i]: self.trigger[TrigNames[i]] = tree.valueReader(TrigNames[i])
-        #for i in range(len(SPTrigNames)):
-        #   if self.is_SPtrigger[i]: self.SPtrigger[SPTrigNames[i]] = tree.valueReader(SPTrigNames[i])
+        self.jet_var = {}
+        for br in tree.GetListOfBranches():
+           bname = br.GetName()
+           if re.match('\AElectron_', bname):  self.electron_var[bname] = tree.arrayReader(bname)
+           if re.match('\AMuon_', bname):      self.muon_var[bname] = tree.arrayReader(bname)
+           if re.match('\AJet_', bname):       self.jet_var[bname] = tree.arrayReader(bname)
 
         self.nElectron = tree.valueReader('nElectron')
         self.nMuon = tree.valueReader('nMuon')
+        self.nJet = tree.valueReader('nJet')
         self._ttreereaderversion = tree._ttreereaderversion # self._ttreereaderversion must be set AFTER all calls to tree.valueReader or tree.arrayReader
 
     def analyze(self, event):
@@ -71,17 +69,26 @@ class LeptonMaker(Module):
             self.initReaders(event._tree)
         # do NOT access other branches in python between the check/call to initReaders and the call to C++ worker code
         
-        # Set vars
+        #--- Set vars
         nEl = int(self.nElectron)
         nMu = int(self.nMuon)
+        nJt = int(self.nJet)
         nLep = nMu + nEl
 
-        temp_dict = {}
-        for lv in Lep_var:
-           temp_dict[lv] = [0]*nLep
-        temp_dict['instance'] = [0]*nLep
+        if nLep < len(self.min_lep_pt): return False
 
-        #--- Start looping leptons
+        lep_dict = {}
+        for lv in Lepton_var:
+           lep_dict[lv] = [0]*nLep
+        lep_dict['electronIdx'] = [-1]*nLep
+        lep_dict['muonIdx'] = [-1]*nLep
+        
+        jet_dict = {}
+        for jv in CleanJet_var:
+           jet_dict[jv] = [0]*nJt
+        jet_dict['jetIdx'] = [0]*nJt
+        
+        #--- Lepton Loops
         for iLep1 in range(nLep):
            pt_idx = 0
            if iLep1 < nEl:
@@ -90,51 +97,59 @@ class LeptonMaker(Module):
            else:
               pt1 = self.muon_var['Muon_pt'][iLep1 - nEl]
               pdgId1 = self.muon_var['Muon_pdgId'][iLep1 - nEl]
-           
-           # Start comparing lepton to other leptons
+           # Start comparing leptons
            for iLep2 in range(nLep):
-              if iLep2 == iLep1:
-                 continue
+              if iLep2 == iLep1: continue
               if iLep2 < nEl:
                  pt2 = self.electron_var['Electron_pt'][iLep2]
               else:
                  pt2 = self.muon_var['Muon_pt'][iLep2 - nEl]
-              if pt1 < pt2:
+              if pt1 < pt2 or (pt1==pt2 and iLep1>iLep2):
                  pt_idx += 1
+                
 
+           # Pt filter
+           if pt_idx in self.min_lep_pt_idx and pt1 < self.min_lep_pt[pt_idx]: return False
+           
            # Now index is set, fill the vars  
            if abs(pdgId1) == 11:
-              for var in temp_dict:
-                 if not 'instance' in var:
-                    temp_dict[var][pt_idx] = self.electron_var['Electron_'+var][iLep1]
-                 else:
-                    temp_dict[var][pt_idx] = iLep1
+              for var in lep_dict:
+                 if not 'Idx' in var:
+                    lep_dict[var][pt_idx] = self.electron_var['Electron_'+var][iLep1]
+                 elif 'electronIdx' in var:
+                    lep_dict[var][pt_idx] = iLep1
            elif abs(pdgId1) == 13:
-              for var in temp_dict:
-                 if not 'instance' in var and not 'eCorr' in var:
-                    temp_dict[var][pt_idx] = self.muon_var['Muon_'+var][iLep1 - nEl]
+              for var in lep_dict:
+                 if not 'Idx' in var and not 'eCorr' in var:
+                    lep_dict[var][pt_idx] = self.muon_var['Muon_'+var][iLep1 - nEl]
                  elif 'eCorr' in var:
-                    temp_dict[var][pt_idx] = 1.
-                 else:
-                    temp_dict[var][pt_idx] = iLep1 - nEl
-        #--- Lepton loop complete
+                    lep_dict[var][pt_idx] = 1.
+                 elif 'muonIdx' in var:
+                    lep_dict[var][pt_idx] = iLep1 - nEl
+        #--- Jet Loops
+        for iJ1 in range(nJt):
+           pt_idx = 0
+           pt1 = self.jet_var['Jet_pt'][iJ1]
+           # Start comparing jets
+           for iJ2 in range(nJt):
+              if iJ2 == iJ1: continue
+              pt2 = self.jet_var['Jet_pt'][iJ2]
+              if pt1 < pt2 or (pt1==pt2 and iJ1>iJ2):
+                 pt_idx += 1
+           # Now index is set, fill the vars  
+           for var in jet_dict:
+              if not 'Idx' in var:
+                 jet_dict[var][pt_idx] = self.jet_var['Jet_' + var][iJ1]
+              else:
+                 jet_dict[var][pt_idx] = iJ1
 
-        # Fill branches
-        for var in temp_dict:
-           self.out.fillBranch('Lepton_' + var, temp_dict[var])
-        
-        #Trig = []
-        #SPTrig = []
-        #for i in range(len(TrigNames)):
-        #   if self.is_trigger[i]: Trig.append(int(self.trigger[TrigNames[i]]))
-        #   else: Trig.append(-1)       
-        #for i in range(len(SPTrigNames)):
-        #   if self.is_SPtrigger[i]: SPTrig.append(int(self.SPtrigger[SPTrigNames[i]]))
-        #   else: SPTrig.append(-1)       
- 
-        #self.out.fillBranch('nLepton', nLep)
-        #self.out.fillBranch('Trigger_bits', Trig)
-        #self.out.fillBranch('SPTrigger_bits', SPTrig)
+        #--- Fill branches
+        for var in lep_dict:
+           self.out.fillBranch('Lepton_' + var, lep_dict[var])
+           if var in VetoLepton_var + ['electronIdx', 'muonIdx']:
+              self.out.fillBranch('VetoLepton_' + var, lep_dict[var])
+        for var in jet_dict:
+           self.out.fillBranch( 'CleanJet_' + var, jet_dict[var])
 
         return True
 

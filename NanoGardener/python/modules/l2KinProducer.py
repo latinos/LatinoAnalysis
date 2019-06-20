@@ -113,7 +113,16 @@ class l2KinProducer(Module):
            'upara',
            'uperp',
            'm2ljj20',
-           'm2ljj30'
+           'm2ljj30',
+# for VBF training
+           'ptTOT_cut',
+           'mTOT_cut',
+           'OLV1_cut',
+           'OLV2_cut',
+           'Ceta_cut',
+#whss
+           'mlljj20_whss',
+           'mlljj30_whss'
           ]
         
         for nameBranches in self.newbranches :
@@ -146,18 +155,21 @@ class l2KinProducer(Module):
           lep_pt. push_back(lep.pt)
           lep_eta.push_back(lep.eta)
           lep_phi.push_back(lep.phi)
+          lep_flavour.push_back(lep.pdgId)
           # 11 = ele 
           # 13 = mu
-          if lep.tightId == 0 :
-            lep_flavour.push_back(lep.charge *  11)
-          else: 
-            lep_flavour.push_back(lep.charge *  13)
+          #if lep.tightId == 0 :
+          #  lep_flavour.push_back(lep.charge *  11)
+          #else: 
+          #  lep_flavour.push_back(lep.charge *  13)
           
           # is this really doing its job?
         
            
           
-        Jet   = Collection(event, "Jet")
+        Jet   = Collection(event, "CleanJet")
+        #auxiliary jet collection to access the mass
+        OrigJet   = Collection(event, "Jet")
         nJet = len(Jet)
 
         jet_pt    = ROOT.std.vector(float)(0)
@@ -169,7 +181,7 @@ class l2KinProducer(Module):
           jet_pt. push_back(jet.pt)
           jet_eta.push_back(jet.eta)
           jet_phi.push_back(jet.phi)
-          jet_mass.push_back(jet.mass)
+          jet_mass.push_back(OrigJet[jet.jetIdx].mass)
 
 
         WW = ROOT.WW()
@@ -178,9 +190,12 @@ class l2KinProducer(Module):
         WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass)
        
 
-        MET_sumEt = event.MET_sumEt
-        MET_phi   = event.MET_phi
-        MET_pt    = event.MET_pt
+        #MET_sumEt = event.MET_sumEt
+        #MET_phi   = event.MET_phi
+        #MET_pt    = event.MET_pt
+        MET_sumEt = event.PuppiMET_sumEt
+        MET_phi   = event.PuppiMET_phi
+        MET_pt    = event.PuppiMET_pt
         
         WW.setMET(MET_pt, MET_phi)
         WW.setSumET(MET_sumEt)

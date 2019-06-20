@@ -1347,6 +1347,59 @@ Productions= {
                         'puData'  : '/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root',
                        },
 
+  'Apr2017_summer16_SingleLepton_hercules'   : {
+                        'isData'  : False ,
+                        'samples' : 'LatinoTrees/AnalysisStep/test/crab/samples/samples_summer16.py' ,
+                        'dir'     : '/group/OneLepton/Apr2017_summer16/',
+                        'dirExt'  : 'LatinoTrees' ,
+                        'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                        'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full',
+                        'onlySamples': [
+                             'DYJetsToLL_M-10to50-LO','ST_s-channel','ST_t-channel_antitop',
+                             'ST_t-channel_top','ST_tW_antitop_noHad_ext1','ST_tW_antitop_noHad',
+                             'ST_tW_antitop','ST_tW_top_noHad_ext1','ST_tW_top_noHad','ST_tW_top',
+                             'ttHToNonbb_M125','TTTo2L2Nu','TTToSemiLepton','TTWJetsToLNu_ext2','TTWJetsToLNu',
+                             'TTWJetsToQQ','Wg_AMCNLOFXFX','Wg_MADGRAPHMLM','WgStarLNuEE','WgStarLNuMuMu',
+                             'WJetsToLNu_HT100_200_ext1','WJetsToLNu_HT100_200_ext2','WJetsToLNu_HT100_200',
+                             'WJetsToLNu_HT1200_2500_ext1','WJetsToLNu_HT200_400_ext1','WJetsToLNu_HT200_400_ext2',
+                             'WJetsToLNu_HT200_400','WJetsToLNu_HT2500_inf_ext1','WJetsToLNu_HT2500_inf',
+                             'WJetsToLNu_HT400_600_ext1','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800_ext1',
+                             'WJetsToLNu_HT600_800','WJetsToLNu_HT800_1200_ext1','WJetsToLNu',
+                             'WLLJJToLNu_M-4To50_QCD_0Jet','WLLJJToLNu_M-4To50_QCD_1Jet','WLLJJToLNu_M-4To50_QCD_2Jet',
+                             'WLLJJToLNu_M-4To50_QCD_3Jet','WLLJJToLNu_M-4To50_QCD_4Jet','WLLJJToLNu_M-4To60_EWK_4F',
+                             'WLLJJToLNu_M-50_QCD_0Jet','WLLJJToLNu_M-50_QCD_1Jet','WLLJJToLNu_M-50_QCD_2Jet',
+                             'WLLJJToLNu_M-50_QCD_3Jet','WLLJJToLNu_M-60_EWK_4F','WWTo2L2Nu_aTGC_0-400','WWTo2L2Nu_aTGC_400-600',
+                             'WWTo2L2Nu_aTGC_600-800','WWTo2L2Nu_aTGC_800-Inf','WWTo2L2Nu','WWW','WWZ','WZJJ_EWK_QCD',
+                             'WZTo1L1Nu2Q','WZTo1L3Nu','WZTo2L2Q','ZZTo2L2Q','ZZZ'
+                        ]
+                       },
+                       
+                       
+                       
+  #### VBS semileptonic MC production Run2_2016
+
+  'VBS_semileptonic_signal_summer16' : {
+                          'isData': False,
+                          'samples': 'LatinoTrees/AnalysisStep/test/crab/samples/samples_VBS_semileptonic_2016.py',
+                          'dir':      "/group/OneLepton/VBS_semileptonic_signal_summer16/",
+                          'dirExt'  : 'LatinoTrees' ,
+                          'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                          'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full'
+                       },
+
+  ### HHWWbb semileptonic Run2_2016
+  'HHWWbb_semileptonic_signal_summer16' : {
+                          'isData': False,
+                          'samples': 'LatinoTrees/AnalysisStep/test/crab/samples/list_MC_HHWWbb_semileptonic_2016.py',
+                          'dir':      "/group/OneLepton/HHWWbb_semileptonic_signal_summer16/",
+                          'dirExt'  : 'LatinoTrees' ,
+                          'cmssw'   : 'Full2016' ,
+                        # 37.X fb-1
+                          'puData'  : '/gwteras/cms/store/group/OneLepton/puData_Full'
+                       },
+
 
 }
 
@@ -1356,7 +1409,8 @@ Productions= {
 # .... .... this is defined by mkGardener in "-s" "--steps" option
 # .... .... if it is a "chain", it means that the intermediate steps are NOT saved
 # .... ....    e.g. 'puadder','baseW','wwNLL' ---> only after all steps the folder will be saved on eos
-
+VBS_HH_semilep_samples = ['WpToLNu_WmTo2J','WpTo2J_WmToLNu','WpToLNu_WpTo2J','WmToLNu_WmTo2J',
+                          'WpToLNu_ZTo2J','WpTo2J_ZTo2L','WmToLNu_ZTo2J','WmTo2J_ZTo2L','ZTo2L_ZTo2J', 'HH_bblnjj']
 
 samples4Syst = [
                  # DY 
@@ -1385,6 +1439,7 @@ samples4Syst = [
                  'ST_t-channel_antitop','ST_t-channel_top',
                  'ST_tW_antitop','ST_tW_top',
                  'ST_tW_antitop_noHad' , 'ST_tW_antitop_noHad_ext1' , 'ST_tW_top_noHad' , 'ST_tW_top_noHad_ext1' ,
+                 'TTZjets',
 
                  # VV (including WW) 
                  'WWTo2L2Nu','GluGluWWTo2L2Nu_MCFM','GluGluWWTo2L2NuHiggs_MCFM',
@@ -2743,6 +2798,13 @@ Steps= {
                 } ,
 
 
+  'doDNN' :{
+                'isChain'    : False ,
+                'do4MC'      : True  ,
+                'do4Data'    : True ,
+                'command'    : 'gardener.py vbfdnnvarFiller  ' ,
+   }, 
+
   'genVariables'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2890,7 +2952,7 @@ Steps= {
                  'VBFHToWWTo2L2Nu_JHUGen698_M2000' ,        
                  'VBFHToWWTo2L2Nu_JHUGen698_M2500' ,        
                  'VBFHToWWTo2L2Nu_JHUGen698_M3000' ,        
-                                  ]
+                                  ]  + VBS_HH_semilep_samples
 
                 },
 
@@ -3076,9 +3138,16 @@ Steps= {
                                   'VBFHToWWTo2L2Nu_JHUGen698_M2500',
                                   'VBFHToWWTo2L2Nu_JHUGen698_M3000',
 
+                                  # ... ggH and VBF 4,5TeV
+                                  # NOTE: Samples use JHUGen714, but name is 698 here for consistent treatment within the module
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M4000',
+                                  'GluGluHToWWTo2L2Nu_JHUGen698_M5000',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M4000',
+                                  'VBFHToWWTo2L2Nu_JHUGen698_M5000',
+
                                  ],
                   #'command'    : 'gardener.py BWEwkSingletReweighter -p "latino_(GluGlu|VBF)HToWWTo2L2Nu_M([0-9]+)*"',
-                  'command'    : 'gardener.py BWEwkSingletReweighter ',
+                  'command'    : 'gardener.py BWEwkSingletReweighter -i 1.0 -f 1.0 -s 1.0 -l 0.0 -n 0.0 -q 1.0 ',
                  },
 
 
@@ -3365,6 +3434,22 @@ Steps= {
                   'do4Data'    : True  ,
                   'command'    : 'gardener.py l1selfiller --kind 4 --cmssw RPLME_CMSSW --idEleKind cut_WP_Tight80X'
                },
+
+  'l1looseSimple'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'std_vector_lepton_pt[0] > 18.0 && std_vector_lepton_isLooseLepton[0]>0.5 \' '
+                },
+
+  'l1tight'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \'std_vector_lepton_pt[0] > 18.0 && \
+                                                      (std_vector_muon_isTightLepton_cut_Tight80x[0]>0.5 || \
+                                                       std_vector_electron_isTightLepton_cut_WP_Tight80X[0]>0.5)\' '
+                },
 
 
   'do_WgStarsel' : {
@@ -4676,7 +4761,8 @@ Steps= {
                                   'QCD_Pt_170to250_bcToE','QCD_Pt_250toInf_bcToE',
                                   ####
                                   'TT','TTJets',
-
+                                  ### 
+                                  'Wg_MADGRAPHMLM' , 'GluGluHToWWTo2L2NuPowheg_M125' , 'WZTo3LNu_mllmin01' ,
                                  ] ,
            },
 
@@ -4795,6 +4881,96 @@ Steps= {
                   'subTargets' : ['do_vbsSel','chFlipProba2j'], 
            },
 
+ 'vbsLooseSel'    : {
+                  'isChain'    : False  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'command'    : 'gardener.py filter -f \' std_vector_lepton_pt[0]>20 && std_vector_lepton_pt[1]>10 && njet>=2 && mjj>250 \' ' ,
+                  'onlySample' : [
+                                        #  
+                                        'DoubleEG_Run2016B-03Feb2017_ver2-v2',
+                                        'DoubleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        'MuonEG_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleElectron_Run2016B-03Feb2017_ver2-v2',
+                                        'SingleMuon_Run2016B-03Feb2017_ver2-v2',
+                                        #  
+                                        'DoubleEG_Run2016C-03Feb2017-v1',
+                                        'DoubleMuon_Run2016C-03Feb2017-v1',
+                                        'MuonEG_Run2016C-03Feb2017-v1',
+                                        'SingleElectron_Run2016C-03Feb2017-v1',
+                                        'SingleMuon_Run2016C-03Feb2017-v1',
+                                        #  
+                                        'DoubleEG_Run2016D-03Feb2017-v1',
+                                        'DoubleMuon_Run2016D-03Feb2017-v1',
+                                        'MuonEG_Run2016D-03Feb2017-v1',
+                                        'SingleElectron_Run2016D-03Feb2017-v1',
+                                        'SingleMuon_Run2016D-03Feb2017-v1',
+                                        #  
+                                        'DoubleEG_Run2016E-03Feb2017-v1',
+                                        'DoubleMuon_Run2016E-03Feb2017-v1',
+                                        'MuonEG_Run2016E-03Feb2017-v1',
+                                        'SingleElectron_Run2016E-03Feb2017-v1',
+                                        'SingleMuon_Run2016E-03Feb2017-v1',
+                                        # 
+                                        'DoubleEG_Run2016F-03Feb2017-v1',
+                                        'DoubleMuon_Run2016F-03Feb2017-v1',
+                                        'MuonEG_Run2016F-03Feb2017-v1',
+                                        'SingleElectron_Run2016F-03Feb2017-v1',
+                                        'SingleMuon_Run2016F-03Feb2017-v1', 
+                                        #  
+                                        'DoubleEG_Run2016G-03Feb2017-v1',
+                                        'DoubleMuon_Run2016G-03Feb2017-v1',
+                                        'MuonEG_Run2016G-03Feb2017-v1',
+                                        'SingleElectron_Run2016G-03Feb2017-v1',
+                                        'SingleMuon_Run2016G-03Feb2017-v1',
+                                        #  
+                                        'DoubleEG_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver2-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver2-v1',
+                                        'DoubleEG_Run2016H-03Feb2017_ver3-v1',
+                                        'DoubleMuon_Run2016H-03Feb2017_ver3-v1',
+                                        'MuonEG_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleElectron_Run2016H-03Feb2017_ver3-v1',
+                                        'SingleMuon_Run2016H-03Feb2017_ver3-v1',
+                                    #  Charge Flip backgrounds
+                                    'DYJetsToLL_M-10to50'   ,
+                                    'DYJetsToLL_M-50'   ,
+                                    'TTTo2L2Nu'        ,
+                                    'ST_tW_top_noHad' ,
+                                    'ST_tW_antitop_noHad' ,
+                                    'GluGluWWTo2L2Nu_MCFM',
+                                    'WWTo2L2Nu'       ,
+                                    # Other MC
+           'Zg',
+           'WGJJ',
+           'ZZTo4L',
+           'WpWpJJ_QCD',
+           'ZZZ',
+           'WZZ',
+           'WWZ',
+           'TTWJetsToLNu',
+           'TTZToLLNuNu_M-10',
+           'WWTo2L2Nu_DoubleScattering',
+           'WLLJJToLNu_M-4To60_EWK_4F'       ,
+           'WLLJJToLNu_M-60_EWK_4F'          ,
+           'WLLJJToLNu_M-4To50_QCD_0Jet'     ,
+           'WLLJJToLNu_M-4To50_QCD_1Jet'     ,
+           'WLLJJToLNu_M-4To50_QCD_2Jet'     ,
+           'WLLJJToLNu_M-4To50_QCD_3Jet'    ,
+           'WLLJJToLNu_M-50_QCD_0Jet'       ,
+           'WLLJJToLNu_M-50_QCD_1Jet'       ,
+           'WLLJJToLNu_M-50_QCD_2Jet'      ,
+           'WLLJJToLNu_M-50_QCD_3Jet'     ,
+           'tZq_ll'                      ,
+           'WpWpJJ_EWK',
+
+
+                                 ],
+           },
+
+
   'tightVbsSel'    : {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
@@ -4855,6 +5031,22 @@ Steps= {
                   'onlySample' : ['DYJetsToLL_M-10to50','DYJetsToLL_M-50','TTTo2L2Nu_ext1','DYJetsToLL_M-50-LO-ext1','TTTo2L2Nu'],
                   },
 
+  'chargeFlipWeightVBS' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'command'    : 'gardener.py chargeFlipWeightVBS',
+                  'onlySample' : [
+                                    'DYJetsToLL_M-10to50'   ,
+                                    'DYJetsToLL_M-50'   ,
+                                    'TTTo2L2Nu'        ,
+                                    'ST_tW_top_noHad' ,
+                                    'ST_tW_antitop_noHad' ,
+                                    'GluGluWWTo2L2Nu_MCFM',
+                                    'WWTo2L2Nu'       ,
+],
+                  },
+ 
 
   'sfSel'    : {  'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -5025,4 +5217,174 @@ Steps= {
                                         'SingleMuon_Run2016H-03Feb2017_ver3-v1',
                                        ],
                     },
+
+  'PrefCorr' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+      
+                  'command'    : 'gardener.py prefcorrMiniAOD',
+                 },
+
+  'l1tightChain' :  {
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ["l1looseSimple", 'l1tight']
+   },
+
+  'resolvedVBSPairingAndVars' :{
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ['gr4JetsSkim', 'JetPairingVBS', 'VBSjjlnu_kin']
+  },
+
+  'resolvedVBSPairingGenAndVars' :{
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ['gr4JetsSkim', 'JetPairingGenVBS','JetPairingVBS', 'VBSjjlnu_kin']
+  },
+
+  'JetPairingGenVBS' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'command'    : 'gardener.py JetPairingGenVBS --radius 0.8 --ptminjet 20.0'
+  },
+
+
+
+  'JetPairingVBS' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py JetPairingVBS --ptminjet 20.0'
+  },
+
+  'HHPairingGenAndVars' :{
+                  'isChain'    : True ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'subTargets' : ['gr4JetsSkim', 'JetPairingGenHH','JetPairingHH']
+  },
+
+
+  'JetPairingGenHH' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False,
+                  'command'    : 'gardener.py JetPairingGenHH --radius 0.8 --ptminjet 20.0 --bWP M -m 0'
+  },
+
+
+  'JetPairingHH' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py JetPairingHH --ptminjet 20.0 --bWP M -m 0'
+  },
+
+   'VBSjjlnu_kin' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py VBSjjlnu_kin --ptminjet 20.0'
+  },
+
+  'gr4JetsSkim' :{
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \'std_vector_jet_pt[3]>=20 \' '
+  },
+
+# WP taken from https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/allBtagPogScaleFactors.py#L358
+  'btagTight' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.8958)*(std_vector_jet_pt[1]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.8958)*(std_vector_jet_pt[2]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.8958)*(std_vector_jet_pt[3]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.8958)*(std_vector_jet_pt[4]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.8958)*(std_vector_jet_pt[5]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.8958)*(std_vector_jet_pt[6]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.8958)*(std_vector_jet_pt[7]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.8958)*(std_vector_jet_pt[8]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.8958)*(std_vector_jet_pt[9]>25) \
+                                                            ) >= 1 \' '
+                  },
+
+  'btagMedium' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.6324)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.6324)*(std_vector_jet_pt[1]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.6324)*(std_vector_jet_pt[2]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.6324)*(std_vector_jet_pt[3]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.6324)*(std_vector_jet_pt[4]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.6324)*(std_vector_jet_pt[5]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.6324)*(std_vector_jet_pt[6]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.6324)*(std_vector_jet_pt[7]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.6324)*(std_vector_jet_pt[8]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.6324)*(std_vector_jet_pt[9]>25) \
+                                                            ) >= 1 \' '
+                  },
+  
+  'btagLoose' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.2219)*(std_vector_jet_pt[1]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.2219)*(std_vector_jet_pt[2]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.2219)*(std_vector_jet_pt[3]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.2219)*(std_vector_jet_pt[4]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.2219)*(std_vector_jet_pt[5]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.2219)*(std_vector_jet_pt[6]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.2219)*(std_vector_jet_pt[7]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.2219)*(std_vector_jet_pt[8]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.2219)*(std_vector_jet_pt[9]>25) \
+                                                            ) >= 1 \' '
+                  },
+
+  'bvetoTight' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True,
+                  'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.2219)*(std_vector_jet_pt[0]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[1] > 0.2219)*(std_vector_jet_pt[1]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[2] > 0.2219)*(std_vector_jet_pt[2]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[3] > 0.2219)*(std_vector_jet_pt[3]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[4] > 0.2219)*(std_vector_jet_pt[4]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[5] > 0.2219)*(std_vector_jet_pt[5]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[6] > 0.2219)*(std_vector_jet_pt[6]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[7] > 0.2219)*(std_vector_jet_pt[7]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[8] > 0.2219)*(std_vector_jet_pt[8]>25) + \
+                                                            1*(std_vector_jet_DeepCSVB[9] > 0.2219)*(std_vector_jet_pt[9]>25) \
+                                                            ) == 0 \' '
+                },
+
+  'bvetoLoose' : {
+                    'isChain'    : False ,
+                    'do4MC'      : True ,
+                    'do4Data'    : True,
+                    'command'    : 'gardener.py filter -f \' (1*(std_vector_jet_DeepCSVB[0] > 0.8958)*(std_vector_jet_pt[0]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[1] > 0.8958)*(std_vector_jet_pt[1]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[2] > 0.8958)*(std_vector_jet_pt[2]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[3] > 0.8958)*(std_vector_jet_pt[3]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[4] > 0.8958)*(std_vector_jet_pt[4]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[5] > 0.8958)*(std_vector_jet_pt[5]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[6] > 0.8958)*(std_vector_jet_pt[6]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[7] > 0.8958)*(std_vector_jet_pt[7]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[8] > 0.8958)*(std_vector_jet_pt[8]>25) + \
+                                                              1*(std_vector_jet_DeepCSVB[9] > 0.8958)*(std_vector_jet_pt[9]>25) \
+                                                              ) == 0 \' '
+                  },
+
+
 }

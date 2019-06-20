@@ -65,7 +65,10 @@ class l4KinProducer(Module):
             'minMt_zh4l',
             'z1Mt_zh4l',
             'mllll_zh4l',
-            'chllll_zh4l'
+            'chllll_zh4l',
+            'z1dPhi_lep1MET_zh4l',
+            'z1dPhi_lep2MET_zh4l',
+            'z1mindPhi_lepMET_zh4l',
           ]
         
         for nameBranches in self.newbranches :
@@ -100,20 +103,24 @@ class l4KinProducer(Module):
           lep_pt. push_back(lep.pt)
           lep_eta.push_back(lep.eta)
           lep_phi.push_back(lep.phi)
-          lep_ch.push_back(lep.charge)
+          lep_ch.push_back(-lep.pdgId/abs(lep.pdgId))
           lep_isLooseLepton.push_back(1) # FIXME
+          lep_flavour.push_back(lep.pdgId)
           # 11 = ele 
           # 13 = mu
-          if lep.tightId == 0 :
-            lep_flavour.push_back(lep.charge *  11)
-          else: 
-            lep_flavour.push_back(lep.charge *  13)
+          #if lep.tightId == 0 :
+          #  lep_flavour.push_back(lep.charge *  11)
+          #else: 
+          #  lep_flavour.push_back(lep.charge *  13)
           
           # is this really doing its job?
         
            
           
-        Jet   = Collection(event, "Jet")
+        Jet   = Collection(event, "CleanJet")
+        #auxiliary jet collection to access the mass
+        OrigJet   = Collection(event, "Jet")
+
         nJet = len(Jet)
 
         jet_pt     = ROOT.std.vector(float)(0)
@@ -126,8 +133,8 @@ class l4KinProducer(Module):
           jet_pt. push_back(jet.pt)
           jet_eta.push_back(jet.eta)
           jet_phi.push_back(jet.phi)
-          jet_mass.push_back(jet.mass)
-          jet_cmvav2.push_back(jet.btagCMVA)
+          jet_mass.push_back(OrigJet[jet.jetIdx].mass)
+          jet_cmvav2.push_back(OrigJet[jet.jetIdx].btagCMVA)
 
 
         ZWW = ROOT.ZWW()
@@ -135,8 +142,8 @@ class l4KinProducer(Module):
         ZWW.setLepton(lep_pt, lep_eta, lep_phi, lep_flavour, lep_ch, lep_isLooseLepton)
         ZWW.setJet(jet_pt, jet_eta, jet_phi, jet_mass, jet_cmvav2)
          
-        MET_phi   = event.MET_phi
-        MET_pt    = event.MET_pt
+        MET_phi   = event.PuppiMET_phi
+        MET_pt    = event.PuppiMET_pt
         
         ZWW.setMET(MET_pt, MET_phi)
 
