@@ -502,9 +502,9 @@ def batchStatus():
               iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
-            elif 'ifca' in hostName :
-              iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
-              if 'Q' in iStat : Pend[iStep]+=1
+            elif 'ifca' in os.uname()[1] :	
+              iStat = os.popen('qstat | grep \" qw \" |  awk \'{print $1 \" '+jidFile+'\"}\' | xargs -n 2 grep | awk \'{ print $2 }\' ').read()
+	      if 'job' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
             elif 'cern' in hostName and not CERN_USE_LSF:
               iStat = os.popen(r'cat '+jidFile+" | xargs -n 1 condor_q | tail -n1").read()
