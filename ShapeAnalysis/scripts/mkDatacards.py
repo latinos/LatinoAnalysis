@@ -325,6 +325,19 @@ class DatacardFactory:
         
                         lnNUp = 1. + diffUp
                         lnNDo = 1. + diffDo
+
+                        #  
+                        # avoid 0.00/XXX and XXX/0.00 in the lnN --> ill defined nuisance
+                        # if this happens put 0.00 ---> 1.00, meaning *no* effect of this nuisance
+                        #              Done like this because it is very likely what you are experiencing 
+                        #              is a MC fluctuation in the varied sample, that is the up/down histogram has 0 entries!
+                        #
+                        #              NB: with the requirement "histoUpIntegral > 0" and "histoDownIntegral > 0" this should never happen, 
+                        #                  except for some strange coincidence of "AsLnN" ... 
+                        #                  This fix is left, just for sake of safety
+                        #
+                        if lnNUp==0: lnNUp = 1
+                        if lnNDo==0: lnNDo = 1
             
                         card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
                       else:
@@ -354,12 +367,12 @@ class DatacardFactory:
                         card.write(('-').ljust(columndef))
 
                 card.write('\n')
-
+                
               # done with normalization and shape nuisances.
               # now add the stat nuisances
               if 'stat' in nuisances:
                 nuisance = nuisances['stat']
-
+                
                 if nuisance['type'] == 'auto':
                   # use autoMCStats feature of combine
                   card.write('* autoMCStats ' + nuisance['maxPoiss'] + '  ' + nuisance['includeSignal'])
