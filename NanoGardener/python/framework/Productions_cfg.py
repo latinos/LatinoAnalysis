@@ -178,7 +178,17 @@ Productions = {
                        'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
-                   }, 
+                   },  
+
+ # -------- 2016 Susy 102X nAODv4
+ 'Summer16FS_102X_nAODv4_Full2016v4': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16FS_102X_nAODv4.py' ,
+                       'cmssw'   : 'Full2016v4' ,
+                       'year'    : '2016' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 
  # -------- 2016 Embedding 102X nAODv4
  'Embedding2016_102X_nAODv4_Full2016v4': {
@@ -257,5 +267,15 @@ Productions = {
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
+
+ # -------- 2018 DATA 102X nAODv5 
+ 'Run2018_102X_nAODv5_Full2018v4' : {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_102X_nAODv5.py' ,
+                       'cmssw'   : 'Full2018v4',
+                       'year'    : '2018' ,
+                   },
+
 
 }
