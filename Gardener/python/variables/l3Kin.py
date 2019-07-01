@@ -95,8 +95,12 @@ class L3KinFiller(TreeCloner):
 	   'z4lveto',
 	   'dmjjmW',
 	   'mtw_notZ',
+	   'pdgid_notZ',
 	   'dphilmetjj',
+	   'dphilmetj',
 	   'mTlmetjj',
+	   'pTlmetjj',
+	   'pTlmetj',
 	   'ptz',
 	   'checkmZ',
            ]
