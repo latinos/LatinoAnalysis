@@ -350,13 +350,17 @@ class TrigMaker(Module):
          
         pt1, eta1 = self._over_under(pdgId1, pt1, eta1)
 
-        if abs(pdfId1) == 11 :
+        if abs(pdgId1) == 11 :
            singleLeg  = "SingleEle"                              
-        if abs(pdfId1) == 13:
+        if abs(pdgId1) == 13:
            singleLeg  = "SingleMu"
 
          # Get Leg Efficiencies
-        eff_sgl, low_eff_sgl, high_eff_sgl = self._getLegEff (pt1, eta1, run_p, singleLeg)
+        eff_sgl, low_eff_sgl, high_eff_sgl = self._get_LegEff (pt1, eta1, run_p, singleLeg)
+        eff_v=[]
+        eff_v.append(eff_sgl)
+        eff_v.append(low_eff_sgl) 
+        eff_v.append(high_eff_sgl)
 
         # Trigger emulator
         Trig_em = [False, False, False, False, False, False]  
@@ -369,17 +373,17 @@ class TrigMaker(Module):
 
          # eff_evt_v_map = ['sinEl', 'sinMu', 'doubleEl', 'doubleMu', 'ElMu']
         eff_evt_v = [0.,0.,0.,0.,0.]
-        if abs(pdfId1) == 11 :
-           eff_evt_v[0] = eff_sgl[0]
-           Trig_em[0] = eff_sgl[0] > Trndm[0]
+        if abs(pdgId1) == 11 :
+           eff_evt_v[0] = eff_sgl
+           Trig_em[0] = eff_sgl > Trndm[0]
 
-        if abs(pdfId1) == 13 :
-           eff_evt_v[1] = eff_sgl[0]
-           Trig_em[1] = eff_sgl[0] > Trndm[1]
+        if abs(pdgId1) == 13 :
+           eff_evt_v[1] = eff_sgl
+           Trig_em[1] = eff_sgl > Trndm[1]
          
         Trig_em[0] = Trig_em[1] or Trig_em[2] or Trig_em[3] or Trig_em[4] or Trig_em[5]
 
-        return eff_sgl, eff_evt_v, Trig_em 
+        return eff_v, eff_evt_v, Trig_em 
 
     def _get_3lw(self, pdgId1, pt1, eta1, pdgId2, pt2, eta2, pdgId3, pt3, eta3, nvtx, run_p):
         
@@ -543,7 +547,7 @@ class TrigMaker(Module):
            if 'EffWeight' in name: eff_dict[name] = 0.
         Trig_em = [False]*6     
 
-        if nLep == 1:
+        if nLep > 0 :
            temp_evt, temp_evt_v, Trig_em = self._get_w1l(pdgId[0], pt[0], eta[0], run_p, evt)
            for name in self.NewVar['F']:
                if 'TriggerEffWeight' in name:

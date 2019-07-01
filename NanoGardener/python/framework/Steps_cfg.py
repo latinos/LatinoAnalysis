@@ -790,6 +790,15 @@ Steps = {
                   'module'     : 'rochesterDATA()',
               },
 
+  'rochesterMCLP19'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
+                  'module'     : 'rochesterMC()',
+              },
+
 
 ## ------- MODULES: Kinematic
 
@@ -897,7 +906,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_'+RPLME_YEAR+'_cfg.py\')' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\')' ,
                   'module'     : 'DYMVA()',
             } ,
 
@@ -1144,6 +1153,7 @@ Steps = {
                                   'DYJetsToLL_M-50_HT-2500toInf',
  
                                   ####
+                                  'WJetsToLNu-LO',
                                   'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
                                   'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
                                   ####
@@ -1155,7 +1165,7 @@ Steps = {
                                   ####
                                   'TT','TTJets','TTTo2L2Nu',
                                  ] ,               
-                    'subTargets' : ['baseW','rochesterMC','trigMC','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCnoSF'] ,
+                    'subTargets' : ['baseW','rochesterMCLP19','trigMC','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCnoSF'] ,
                  },
 
 
