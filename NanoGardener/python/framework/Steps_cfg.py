@@ -257,7 +257,7 @@ Steps = {
                   'do4MC'    : False ,
                   'do4Data'  : True  ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                  'declare'  : 'MHTrigData = lambda : TrigMaker("RPLME_CMSSW",True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMakerMonoHiggs_cfg.py")',
+                  'declare'  : 'MHTrigData = lambda : TrigMaker("RPLME_CMSSW",True,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMakerMonoHiggs_cfg.py")',
                   'module'   : 'MHTrigData()',
                },
 
@@ -266,7 +266,7 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : False ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                  'declare'  : 'MHTrigMC = lambda : TrigMaker("RPLME_CMSSW",False,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMakerMonoHiggs_cfg.py")',
+                  'declare'  : 'MHTrigMC = lambda : TrigMaker("RPLME_CMSSW",False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMakerMonoHiggs_cfg.py")',
                   'module'   : 'MHTrigMC()',
                },
 ####
