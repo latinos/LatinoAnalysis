@@ -251,7 +251,7 @@ Steps = {
 
 ## ------- MODULES: MonoHiggs
 
-#### MHTrigs step only works for 2016 for now !!!!!!
+#### MHTrigs step only works for 2016 and 2017 for now !!!!!!
   'MHTrigData' : { 
                   'isChain'  : False ,
                   'do4MC'    : False ,
@@ -278,6 +278,15 @@ Steps = {
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.Switch' ,
                   'declare'  : 'MHSwitch2016 = lambda : Switch(cfg_path="LatinoAnalysis/NanoGardener/python/data/switch/MH16_triggerSwitch_cfg.py")',
                   'module'   : 'MHSwitch2016()',
+               },
+
+  'MHSwitch2017' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.Switch' ,
+                  'declare'  : 'MHSwitch2017 = lambda : Switch(cfg_path="LatinoAnalysis/NanoGardener/python/data/switch/MH17_triggerSwitch_cfg.py")',
+                  'module'   : 'MHSwitch2017()',
                },
 
   'MonoHiggsMVA' : { 
