@@ -11,7 +11,7 @@ from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import Trigger
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 
-class TrigMakerGen(Module):
+class TrigMaker(Module):
     '''
     Trigger Maker module MC,
     ''' 
