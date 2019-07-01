@@ -3,50 +3,50 @@ mvaDic = {}
 
 mvaDic['dymva_bdt_0j'] = {
                           'type'      : 'BDT' ,  
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/UATmva_DYmva_2017_0j_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/UATmva_DYmva_2018_0j_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
 mvaDic['dymva_bdt_1j'] = {
                           'type'      : 'BDT' ,
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/UATmva_DYmva_2017_1j_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/UATmva_DYmva_2018_1j_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
 mvaDic['dymva_bdt_2j'] = {
                           'type'      : 'BDT' ,
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/UATmva_DYmva_2017_2j_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/UATmva_DYmva_2018_2j_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
 mvaDic['dymva_bdt_VBF'] = {
                           'type'      : 'BDT' ,
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/UATmva_DYmva_2017_VBF_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/UATmva_DYmva_2018_VBF_BDT_1000Trees_Grad_FalseBagged_0.6BagFrac_1BagShrink_GiniIndex_20Cuts_CostComplexity_12PruneStrength_13Var.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
 
 mvaDic['dymva_dnn_0j'] = {
                           'type'      : 'PyKeras' ,
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/TMVAClassification_PyKeras_2017_0j.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/TMVAClassification_PyKeras_2018_0j.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
 mvaDic['dymva_dnn_1j'] = {
                           'type'      : 'PyKeras' ,
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/TMVAClassification_PyKeras_2017_1j.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/TMVAClassification_PyKeras_2018_1j.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
 mvaDic['dymva_dnn_2j'] = {
                           'type'      : 'PyKeras' ,
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/TMVAClassification_PyKeras_2017_2j.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/TMVAClassification_PyKeras_2018_2j.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
 mvaDic['dymva_dnn_VBF'] = {
                           'type'      : 'PyKeras' ,
-                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2017/TMVAClassification_PyKeras_2017_VBF.weights.xml'   ,
+                          'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018/TMVAClassification_PyKeras_2018_VBF.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
 
