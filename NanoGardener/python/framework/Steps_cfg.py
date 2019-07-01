@@ -749,6 +749,15 @@ Steps = {
                   'module'     : 'rochesterDATA()',
               },
 
+  'rochesterMCLP19'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
+                  'module'     : 'rochesterMC()',
+              },
+
 
 ## ------- MODULES: Kinematic
 
@@ -1114,7 +1123,7 @@ Steps = {
                                   ####
                                   'TT','TTJets','TTTo2L2Nu',
                                  ] ,               
-                    'subTargets' : ['baseW','rochesterMC','trigMC','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCnoSF'] ,
+                    'subTargets' : ['baseW','rochesterMCLP19','trigMC','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCnoSF'] ,
                  },
 
 
