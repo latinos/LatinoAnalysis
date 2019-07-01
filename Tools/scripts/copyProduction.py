@@ -67,8 +67,8 @@ parser.add_option("-n", "--dry_run"    ,   dest="pretend",     help="do not do i
 base=opts.base
 commandLFN = 'lfn2srm --site='+args[1]+" "+opts.tasklfn
 if opts.kind=='nano':
-  base+="/HWWNano"
-  commandLFN+="/HWWNano"
+  base+="/HWWNano/"
+  commandLFN+="/HWWNano/"
 production=args[0]  
 inpath=base+"/"+production
 print commandLFN
