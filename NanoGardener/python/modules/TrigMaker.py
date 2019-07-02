@@ -16,11 +16,12 @@ class TrigMaker(Module):
     Trigger Maker module MC,
     ''' 
 
-    def __init__(self, cmssw = 'Full2016', isData = False, keepRunP = False, cfg_path = 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py', seeded = False):
+    def __init__(self, cmssw = 'Full2016', isData = False, keepRunP = False, cfg_path = 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py', seeded = False, isFastSim = False):
         self.cmssw = cmssw
         self.isData = isData
         self.keepRunP = keepRunP
         self.seeded = seeded
+        self.isFastSim = isFastSim
 
         self.mu_maxPt = 200
         self.mu_minPt = 10
@@ -520,24 +521,27 @@ class TrigMaker(Module):
            phi.append(lep_col[iLep]['phi'])
 
         EMTF  = self._get_EMTFbug_veto(pdgId, pt, eta, phi, run_p)
-        trig_dec = self._get_trigDec(run_p, event)        
- 
-        # Fill DATA branches
-        for name in self.NewVar['I']: 
-            if 'Trigger_sngEl' in name: self.out.fillBranch(name, trig_dec['SingleEle']) 
-            elif 'Trigger_sngMu' in name: self.out.fillBranch(name,  trig_dec['SingleMu']) 
-            elif 'Trigger_dblEl' in name: self.out.fillBranch(name, trig_dec['DoubleEle']) 
-            elif 'Trigger_dblMu' in name: self.out.fillBranch(name,  trig_dec['DoubleMu']) 
-            elif 'Trigger_ElMu' in name: self.out.fillBranch(name,      trig_dec['EleMu']) 
-            elif 'run_period' in name and not self.keepRunP: self.out.fillBranch(name, run_p) 
-            elif 'EMTFbug_veto' in name : self.out.fillBranch(name, EMTF)
 
-        #self.out.fillBranch('Trigger_sngMu',  trig_dec['SingleMu']) 
-        #self.out.fillBranch('Trigger_dblEl', trig_dec['DoubleEle']) 
-        #self.out.fillBranch('Trigger_dblMu',  trig_dec['DoubleMu']) 
-        #self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
-        #if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
-        #self.out.fillBranch('EMTFbug_veto', EMTF)
+        if not self.isFastSim: 
+
+            trig_dec = self._get_trigDec(run_p, event)
+
+            # Fill DATA branches
+            for name in self.NewVar['I']: 
+                if 'Trigger_sngEl' in name: self.out.fillBranch(name, trig_dec['SingleEle']) 
+                elif 'Trigger_sngMu' in name: self.out.fillBranch(name,  trig_dec['SingleMu']) 
+                elif 'Trigger_dblEl' in name: self.out.fillBranch(name, trig_dec['DoubleEle']) 
+                elif 'Trigger_dblMu' in name: self.out.fillBranch(name,  trig_dec['DoubleMu']) 
+                elif 'Trigger_ElMu' in name: self.out.fillBranch(name,      trig_dec['EleMu']) 
+                elif 'run_period' in name and not self.keepRunP: self.out.fillBranch(name, run_p) 
+                elif 'EMTFbug_veto' in name : self.out.fillBranch(name, EMTF)
+
+            #self.out.fillBranch('Trigger_sngMu',  trig_dec['SingleMu']) 
+            #self.out.fillBranch('Trigger_dblEl', trig_dec['DoubleEle']) 
+            #self.out.fillBranch('Trigger_dblMu',  trig_dec['DoubleMu']) 
+            #self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
+            #if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
+            #self.out.fillBranch('EMTFbug_veto', EMTF)
  
         # Stop here if not MC 
         if self.isData: return True
