@@ -39,11 +39,16 @@ class l3KinProducer(Module):
         'WH3l_mtWWW'     : (["F"], {}),
         'WH3l_dphilllmet': (["F"], {}),
 
+        # for ZH3l, "l" in these variables *always* refers to the lepton not associated with the Z
         'ZH3l_njet'      : (["F"], {}),
         'ZH3l_Z4lveto'   : (["F"], {}),
         'ZH3l_dmjjmW'    : (["F"], {}),
         'ZH3l_mTlmet'    : (["F"], {}),
+        'ZH3l_pdgid_l'   : (["F"], {}),
         'ZH3l_dphilmetjj': (["F"], {}),
+        'ZH3l_dphilmetj' : (["F"], {}),
+        'ZH3l_pTlmetjj'  : (["F"], {}),
+        'ZH3l_pTlmetj'   : (["F"], {}),
         'ZH3l_mTlmetjj'  : (["F"], {}),
         'ZH3l_pTZ'       : (["F"], {}),
         'ZH3l_checkmZ'   : (["F"], {}),
@@ -189,7 +194,7 @@ class l3KinProducer(Module):
             if iLep[1]+jLep[1] == 0:
                 mllDiffToZ = abs((iLep[0]+jLep[0]).M()-self.Zmass)
                 if mllDiffToZ < minmllDiffToZ:
-                    self.ZH3l_XLepton = kLep[0]
+                    self.ZH3l_XLepton = kLep
                     self.pTZ = (iLep[0]+jLep[0]).Pt()
                     self.checkZmass = (iLep[0]+jLep[0]).M()
                     minmllDiffToZ = mllDiffToZ 
@@ -214,11 +219,17 @@ class l3KinProducer(Module):
             return self.l3KinDefault
         return (self.ZH3l_CleanJet_4vecId[0][0] + self.ZH3l_CleanJet_4vecId[1][0]).M() - self.Wmass
 
+    def ZH3l_pdgid_l(self):
+        """Signed PDGID of lepton"""
+        if not self.ZH3l_isOk:
+            return self.l3KinDefault
+        return self.ZH3l_XLepton[1]
+
     def ZH3l_mTlmet(self):
         """https://en.wikipedia.org/wiki/Transverse_mass with m_lepton=0, m_met=0. """
         if not self.ZH3l_isOk:
             return self.l3KinDefault
-        lvec = self.ZH3l_XLepton
+        lvec = self.ZH3l_XLepton[0]
         mtlmet = math.sqrt(2 * lvec.Pt() * self.MET.Pt() * (1 - math.cos(abs(lvec.DeltaPhi(self.MET))))) 
         return mtlmet
 
@@ -226,7 +237,25 @@ class l3KinProducer(Module):
         """Delta phi between dijets and l+MET, i.e., between the Ws"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
             return self.l3KinDefault
-        return abs((self.ZH3l_XLepton + self.MET).DeltaPhi(self.ZH3l_CleanJet_4vecId[0][0] + self.ZH3l_CleanJet_4vecId[1][0]))
+        return abs((self.ZH3l_XLepton[0] + self.MET).DeltaPhi(self.ZH3l_CleanJet_4vecId[0][0] + self.ZH3l_CleanJet_4vecId[1][0]))
+
+    def ZH3l_dphilmetj(self):
+        """Delta phi between lead jet and l+MET, i.e., between the Ws"""
+        if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 1:
+            return self.l3KinDefault
+        return abs((self.ZH3l_XLepton[0] + self.MET).DeltaPhi(self.ZH3l_CleanJet_4vecId[0][0]))
+
+    def ZH3l_pTlmetjj(self):
+        """pT of dijets and l+MET, i.e., of the WW system"""
+        if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
+            return self.l3KinDefault
+        return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0][0] + self.ZH3l_CleanJet_4vecId[1][0]).Pt()
+
+    def ZH3l_pTlmetj(self):
+        """pT of lead jet and l+MET, i.e., of the WW system"""
+        if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 1:
+            return self.l3KinDefault
+        return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0][0]).Pt()
 
     def ZH3l_mTlmetjj(self):
         """Return pt of selected Z"""
@@ -234,8 +263,9 @@ class l3KinProducer(Module):
             return self.l3KinDefault
         jvec0 = self.ZH3l_CleanJet_4vecId[0][0]
         jvec1 = self.ZH3l_CleanJet_4vecId[1][0]
-        WWvec = self.MET + self.ZH3l_XLepton + jvec0 + jvec1;
-        sumpt = self.MET.Pt() + self.ZH3l_XLepton.Pt() + jvec0.Pt() + jvec1.Pt()
+        lvec = self.ZH3l_XLepton[0] 
+        WWvec = self.MET + lvec + jvec0 + jvec1;
+        sumpt = self.MET.Pt() + lvec.Pt() + jvec0.Pt() + jvec1.Pt()
         return math.sqrt(pow(sumpt,2) - pow(WWvec.Px(),2) - pow(WWvec.Py(),2));
 
     def ZH3l_pTZ(self):
