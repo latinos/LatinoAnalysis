@@ -276,7 +276,8 @@ class TrigMaker(Module):
         pt2, eta2 = self._over_under(pdgId2, pt2, eta2)
       
         eff, eff_dz , eff_gl = self._pair_eff(pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p)
-     
+        #eff_map = ['SingleEle', 'SingleMu', 'EleMuLegHigPt', 'MuEleLegHigPt', 'MuEleLegLowPt', 'EleMuLegLowPt']
+
         #print abs(pdgId1) , abs(pdgId2) 
         #print eff, eff_dz , eff_gl
  

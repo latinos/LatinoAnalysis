@@ -78,8 +78,12 @@ public:
  float z4lveto();
  float dmjjmW();
  float mtw_notZ();
+ float pdgid_notZ();
  float dphilmetjj();
+ float dphilmetj();
  float mTlmetjj();
+ float pTlmetjj();
+ float pTlmetj();
  float ptz();
  float checkmZ();
 
@@ -87,6 +91,7 @@ private:
  //! variables
  TLorentzVector L1,L2,L3;
  TLorentzVector notZlep;	// for Zh
+ float pid_notZ;	// for Zh
  TLorentzVector Zlep1, Zlep2;	// for Zh
  TLorentzVector MET;
  TLorentzVector J1, J2;
@@ -261,6 +266,7 @@ void WWW::checkIfOk() {
   }
   
  }
+ // cout << "At end of checkIfOk, _jetOk = " << _jetOk << endl;
  
 }
 
@@ -308,6 +314,8 @@ void WWW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta,
  else { 
   _jetOk = 0;  //---- protection
  }
+
+ // cout << "At end of setJetsA, _jetOk = " << _jetOk << endl;
 }
 
 void WWW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass, std::vector<float> invectorbtag) {
@@ -330,6 +338,7 @@ void WWW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta,
  else {
   _jetOk = 0;  //---- protection
  }
+ // cout << "At end of setJetsB, _jetOk = " << _jetOk << endl;
 }
 
 
@@ -379,6 +388,7 @@ void WWW::setNotZLepton() {
     notZlep = L3;
     Zlep1 = L1;
     Zlep2 = L2;
+    pid_notZ = L3flavour;
     // cout << "chose L3" << endl;
   }
 
@@ -390,6 +400,7 @@ void WWW::setNotZLepton() {
       notZlep = L1;
       Zlep1 = L2;
       Zlep2 = L3;
+      pid_notZ = L1flavour;
       // cout << "chose L1" << endl;
     }
   }
@@ -402,6 +413,7 @@ void WWW::setNotZLepton() {
       notZlep = L2;
       Zlep1 = L1;
       Zlep2 = L3;
+      pid_notZ = L2flavour;
       // cout << "chose L2" << endl;
     }
   }
@@ -635,6 +647,15 @@ float WWW::mtw_notZ(){
   }
 }
 
+float WWW::pdgid_notZ(){
+
+  if (_isOk) {
+    return pid_notZ;
+  } else {
+    return -9999.0;
+  }
+}
+
 
 float WWW::chlll(){
  if (_isOk) {
@@ -820,6 +841,28 @@ float WWW::mTlmetjj(){
  }
 }
 
+float WWW::pTlmetjj(){
+
+ if (_isOk && _jetOk >= 2 && J2.Pt() > 30) {
+   TLorentzVector WWvec = MET + notZlep + J1 + J2;
+   return  WWvec.Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::pTlmetj(){
+
+ if (_isOk && _jetOk >= 1 && J1.Pt() > 30) {
+   TLorentzVector WWvec = MET + notZlep + J1 + J2;
+   return  WWvec.Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
 float WWW::ptz() {
 
   if (_isOk) {
@@ -841,8 +884,19 @@ float WWW::checkmZ() {
 
 float WWW::dphilmetjj(){
 
- if (_isOk && _jetOk >= 2) {
+ if (_isOk && _jetOk >= 2 && J2.Pt() > 30) {
   return  fabs( (notZlep+MET).DeltaPhi(J1+J2) );
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+float WWW::dphilmetj(){
+
+  // cout << "In dphilmetj, _isOk = " << _isOk << " and _jetOk = " << _jetOk << endl;
+ if (_isOk && _jetOk >= 1 && J1.Pt() > 30) {
+  return  fabs( (notZlep+MET).DeltaPhi(J1) );
  }
  else {
   return -9999.0;
