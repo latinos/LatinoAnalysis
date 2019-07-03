@@ -3106,6 +3106,7 @@ MuonWP = {
 # ... ans copy Full2017v2 in Full2017 (unchanfed WP's) 
 MuonWP['Full2017'] = MuonWP['Full2017v2']
 MuonWP['Full2017v2LP19'] = MuonWP['Full2017v2']
+MuonWP['Full2017v2LP19']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017LP19/'
 # .... and copy Full2016v2 in Full2017v4 (only Electron WP names were changed)
 MuonWP['Full2016v4'] = MuonWP['Full2016v2']
 MuonWP['Full2017v4'] = MuonWP['Full2017v2']
