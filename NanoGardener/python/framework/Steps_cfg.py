@@ -112,6 +112,13 @@ Steps = {
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                 },
 
+  'MCCorr2017LP19' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','EmbeddingVeto',
+                                     'rochesterMCLP19','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+                },
 
   'MCl1loose2018' :  {
                   'isChain'    : True  ,
@@ -849,6 +856,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\')' ,
+                 },
+
+  'formulasMCLP19' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_2017LP19.py\')' ,
                  },
 
   'formulasMCnoSF' : {

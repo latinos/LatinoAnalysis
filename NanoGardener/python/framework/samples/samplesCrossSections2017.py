@@ -34,6 +34,7 @@
 ## W+jets
 samples['WJetsToLNu']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu-LO']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
+samples['WJetsToLNu-LO-ext']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu-LO_ext1']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu_HT100_200']        	.extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
 samples['WJetsToLNu_HT100_200_ext1']      .extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
@@ -587,6 +588,7 @@ samples['GJetsDR04_HT200To400'] .extend( ['xsec=1177', 'kfact=1.000', 'ref=I'] )
 samples['GJetsDR04_HT400To600'] .extend( ['xsec=132.8', 'kfact=1.000', 'ref=I'] )
 samples['GJetsDR04_HT600ToInf'] .extend( ['xsec=44.25', 'kfact=1.000', 'ref=I'] )
 samples['GJets_HT40To100']      .extend( ['xsec=18740', 'kfact=1.000', 'ref=I'] )
+samples['GJets_HT40To100-ext1'] .extend( ['xsec=18740', 'kfact=1.000', 'ref=I'] )
 samples['GJets_HT40To100_ext1'] .extend( ['xsec=18740', 'kfact=1.000', 'ref=I'] )
 
 # VBS

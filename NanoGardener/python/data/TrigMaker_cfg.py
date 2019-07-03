@@ -306,6 +306,242 @@ Trigger = {
 
 
                        },   
+
+# ----------------------------
+
+
+        'Full2017v2LP19'  :  {  
+                          # Run B 
+                          1  :  { 'begin' : 297020 , 'end' : 299329 , 'lumi' : 4.793 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                                'SingleEle'         : 'Full2017v2LP19/Ele35_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency_Run2017B.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency_Run2017B.txt' ,
+                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency_Run2017B.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2017/Mu23_pt_eta_efficiency_withSys_Run2017B.txt',
+                                                'MuEleLegLowPt'     : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2017/Mu12_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017/DZEff_mm.txt' } ,
+                                                'MuEle'     : { 'pt1:pt2' : 'Full2017/DZEff_me.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017/DZEff_em.txt' } ,
+                                              } ,
+                                  # Electron HLT Zvtx Efficiency Scale Factor: 0.934+-0.005
+                                  'GlEff'  :  { 'DoubleEle' : [0.934,0.005],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [0.934,0.005],
+                                                'EleMu'     : [0.934,0.005],
+                                                'SingleEle' : [0.934,0.005],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+
+                                },
+
+                          # Run C
+                          2  :  { 'begin' : 299337 , 'end' : 302029 , 'lumi' : 9.633 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'SingleEle'         : 'Full2017v2LP19/Ele35_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency_Run2017CD.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency_Run2017CD.txt' ,
+                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency_Run2017CD.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2017/Mu23_pt_eta_efficiency_withSys_Run2017CDE.txt',
+                                                'MuEleLegLowPt'     : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2017/Mu12_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017/DZEff_mm.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017/DZEff_em.txt' } ,
+                                              } ,
+                                  # Electron HLT Zvtx Efficiency Scale Factor: 0.992+-0.001
+                                  'GlEff'  :  { 'DoubleEle' : [0.992,0.001],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [0.992,0.001],
+                                                'EleMu'     : [0.992,0.001],
+                                                'SingleEle' : [0.992,0.001],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code?'
+                                  'DATA'   :  { 
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                },
+
+                          # Run2017D       302030  303434     4.248
+
+                          3  :  { 'begin' : 302030 , 'end' : 303434  , 'lumi' : 4.248 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'SingleEle'         : 'Full2017v2LP19/Ele35_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency_Run2017CD.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency_Run2017CD.txt' ,
+                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency_Run2017CD.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2017/Mu23_pt_eta_efficiency_withSys_Run2017CDE.txt',
+                                                'MuEleLegLowPt'     : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2017/Mu12_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017/DZEff_mm.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017/DZEff_em.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code?'
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                },
+
+                          # Run2017E       303435  304826     9.315
+
+                          4  :  { 'begin' : 303435 , 'end' : 304826  , 'lumi' : 9.315 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'SingleEle'         : 'Full2017v2LP19/Ele35_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency_Run2017E.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency_Run2017E.txt' ,
+                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency_Run2017E.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2017/Mu23_pt_eta_efficiency_withSys_Run2017CDE.txt',
+                                                'MuEleLegLowPt'     : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2017/Mu12_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017/DZEff_mm.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017/DZEff_em.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code?'
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                },
+
+
+                          # Run2017F       304911  306462    13.540
+
+                          5  :  { 'begin' : 304911 , 'end' : 306462  , 'lumi' : 13.540 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017F.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017F.txt' ,
+                                                'SingleEle'         : 'Full2017v2LP19/Ele35_pt_eta_efficiency_withSys_Run2017F.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency_Run2017F.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency_Run2017F.txt' ,
+                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency_Run2017F.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2017/Mu23_pt_eta_efficiency_withSys_Run2017F.txt',
+                                                'MuEleLegLowPt'     : 'Full2017v2LP19/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017F.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2017v2LP19/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017F.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2017/Mu12_pt_eta_efficiency_withSys_Run2017F.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017/DZEff_mm.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017/DZEff_em.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False ,
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code?'
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoMu27'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'SingleEle' : [ 'HLT_Ele35_WPTight_Gsf'] ,
+                                              } ,
+                                },
+
+
+
+                       },   
+
 # --------------------------- 2015 ---------------------------------
 
 #        'Full2015'  :  { 1  :  { 'begin' : 1 , 'end' : 999999 , 'lumi' :  5.0 ,
@@ -662,7 +898,7 @@ Trigger = {
 
 Trigger['Full2016v4'] = Trigger['Full2016v2'] 
 Trigger['Full2017v4'] = Trigger['Full2017v2'] 
-Trigger['Full2017v2LP19'] = Trigger['Full2017v2'] 
+#Trigger['Full2017v2LP19'] = Trigger['Full2017v2'] 
 Trigger['Full2018v4'] = Trigger['Full2018'] 
 
 
