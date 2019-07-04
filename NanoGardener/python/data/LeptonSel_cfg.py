@@ -809,7 +809,7 @@ ElectronWP = {
                                     '4-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v2LP19/egammaEffi_passingMVA94Xwp90isoHWWiso0p06_runE.txt' ,
                                     '5-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v2LP19/egammaEffi_passingMVA94Xwp90isoHWWiso0p06_runF.txt' ,
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017v2p2NewBinning/',
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017LP19/',
                               } ,
  
           'mvaFall17Iso_WP90_SS':  {
@@ -853,7 +853,7 @@ ElectronWP = {
                                     '4-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoSSHWW_runE.txt',
                                     '5-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi_passingMVA94Xwp90isoSSHWW_runF.txt',
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017v2p2NewBinning/',
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017LP19/',
                               } ,
 
              },
@@ -3106,6 +3106,7 @@ MuonWP = {
 # ... ans copy Full2017v2 in Full2017 (unchanfed WP's) 
 MuonWP['Full2017'] = MuonWP['Full2017v2']
 MuonWP['Full2017v2LP19'] = MuonWP['Full2017v2']
+MuonWP['Full2017v2LP19']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017LP19/'
 # .... and copy Full2016v2 in Full2017v4 (only Electron WP names were changed)
 MuonWP['Full2016v4'] = MuonWP['Full2016v2']
 MuonWP['Full2017v4'] = MuonWP['Full2017v2']
