@@ -992,6 +992,22 @@ Steps = {
                   'subTargets' : ['JESBase','do_JESdo','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
+
+   'JESupLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase','do_JESup','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+               },
+
+   'JESdoLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase','do_JESdo','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+               },
+
+
 ## ------- MET
 
   'do_METup' : {
@@ -1026,6 +1042,20 @@ Steps = {
                   'subTargets' : ['do_METdo','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
 
+   'METupLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METup','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+               },
+
+   'METdoLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METdo','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+               },
+
 ## ------- e-Scale
 
   'do_ElepTup' : {
@@ -1058,6 +1088,20 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+               },
+
+  'ElepTupLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_ElepTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+               },
+
+  'ElepTdoLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
                },
 
   'EmbElepTup' :   {
@@ -1107,6 +1151,21 @@ Steps = {
                   'do4Data'    : False  ,
                   'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                },
+
+  'MupTupLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+               },
+
+  'MupTdoLP19' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
+               },
+
 
   'EmbMupTup' :   {
                   'isChain'    : True ,
