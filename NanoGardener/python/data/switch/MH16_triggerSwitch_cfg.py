@@ -12,7 +12,7 @@ SwitchDict = {
     },
 
     # Mu33_Ele33 || Mu50
-    'MHTrig2016_mu': {
+    'MHTrig2016_me': {
         'threshold': [
             'abs(event.Lepton_pdgId[0]*event.Lepton_pdgId[1])==11*13',
             'event.Lepton_pt[0]>35',

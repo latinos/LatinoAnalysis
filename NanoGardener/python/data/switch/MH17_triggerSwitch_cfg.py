@@ -24,7 +24,7 @@ SwitchDict = {
     },
 
     # Mu27_Ele37 || Mu37_Ele27 || Mu50
-    'MHTrig2017_mu': {
+    'MHTrig2017_me': {
         'threshold': [
             'event.run_period>2',
             'abs(event.Lepton_pdgId[0]*event.Lepton_pdgId[1])==11*13',
