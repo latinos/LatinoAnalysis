@@ -46,21 +46,6 @@ class ShapeFactory:
         pass
 
     # _____________________________________________________________________________
-    def getvariable(self,tag,mass,cat):
-
-        if tag in self._variables :
-            try:
-                theVariable = (self._variables[tag])(mass,cat)
-            except KeyError as ke:
-                self._logger.error('Variable '+tag+' not available. Possible values: '+', '.join(self._variables.iterkeys()) )
-                raise ke
-        else :
-            theVariable = tag
-
-        return theVariable
-
-
-    # _____________________________________________________________________________
     def makeNominals(self, inputDir, outputDir, variables, cuts, samples, nuisances, supercut, number=99999, firstEvent=0, nevents=-1):
 
         print "======================"
@@ -119,7 +104,12 @@ class ShapeFactory:
         #---- just print the variables
         print '  <variables>'
         for variableName, variable in self._variables.iteritems():
-          print "    variable = ", variableName, " :: ", variable['name']
+          line = "    variable = " + variableName + " :: "
+          if 'name' in variable:
+            line += str(variable['name'])
+          elif 'class' in variable:
+            line += variable['class']
+          print line
           print "      range:", variable['range']
           if 'samples' in variable:
             print "      samples:", variable['samples']
@@ -357,22 +347,71 @@ class ShapeFactory:
              
               # create histogram
               self._logger.debug('---'+subsampleName+'---')
-              self._logger.debug('Formula: '+str(variable['name']))
+              if 'name' in variable:
+                self._logger.debug('Formula: '+str(variable['name']))
+              elif 'class' in variable:
+                self._logger.debug('Class: '+str(variable['class']))
               self._logger.debug('Cut:     '+cutFullName)
 
-              if type(variable['name']) is str:
-                try:
-                  xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
-                except (RuntimeError, TypeError):
-                  xexpr, yexpr = variable['name'], ''
-              elif type(variable['name']) is tuple:
-                if len(variable['name']) == 1:
-                  xexpr = variable['name'][0]
-                  yexpr = ''
-                elif len(variable['name']) == 2:
-                  yexpr, xexpr = variable['name']
+              if 'weight' in variable:
+                wgtspec = variable['weight']
+                if 'source' in wgtspec:
+                  fname, _, objname = wgtspec['source'].partition(':')
+                  ftmp = ROOT.TFile.Open(fname)
+                  wsource = ftmp.Get(objname)
+                  try:
+                    wsource.SetDirectory(0)
+                  except:
+                    pass
+                  ftmp.Close()
                 else:
-                  raise NotImplementedError('Cannot plot >=3D distributions')
+                  wsource = None
+
+                if 'xexpr' in wgtspec:
+                  if 'yexpr' in wgtspec:
+                    reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wgtspec['yexpr'], wsource)
+                    print 'Reweighting:', reweight
+                  else:
+                    reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wsource)
+                elif 'class' in wgtspec:
+                  if 'args' in wgtspec:
+                    if type(wgtspec['args']) is tuple:
+                      args = wgtspec['args']
+                    else:
+                      args = (wgtspec['args'],)
+                  else:
+                    args = tuple()
+
+                  func = getattr(ROOT, wgtspec['class'])(*args)
+                  reweight = ROOT.multidraw.ReweightSource(ROOT.multidraw.CompiledExprSource(func), wsource)
+              else:
+                reweight = None
+
+              if 'name' in variable:
+                if type(variable['name']) is str:
+                  try:
+                    xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
+                  except (RuntimeError, TypeError):
+                    xexpr, yexpr = variable['name'], ''
+                elif type(variable['name']) is tuple:
+                  if len(variable['name']) == 1:
+                    xexpr = variable['name'][0]
+                    yexpr = ''
+                  elif len(variable['name']) == 2:
+                    yexpr, xexpr = variable['name']
+                  else:
+                    raise NotImplementedError('Cannot plot >=3D distributions')
+
+              else:
+                if 'args' in variable:
+                  if type(variable['args']) is tuple:
+                    args = variable['args']
+                  else:
+                    args = (variable['args'],)
+                else:
+                  args = tuple()
+                xexpr = getattr(ROOT, variable['class'])(*args)
+                yexpr = ''
 
               if 'categories' in cut:
                 histlist = ROOT.TObjArray()
@@ -387,9 +426,9 @@ class ShapeFactory:
                   histlist.Add(hTotal)
 
                 if yexpr:
-                  drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
+                  filler = drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
                 else:
-                  drawer.addPlotList(histlist, xexpr, cutFullName)
+                  filler = drawer.addPlotList(histlist, xexpr, cutFullName)
 
               else:
                 ROOT.gROOT.cd(cutName + '/' + variableName)
@@ -400,10 +439,13 @@ class ShapeFactory:
                 hTotal.SetName(histoName)
 
                 if yexpr:
-                  drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
+                  filler = drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
                 else:
-                  drawer.addPlot(hTotal, xexpr, cutFullName)
+                  filler = drawer.addPlot(hTotal, xexpr, cutFullName)
 
+              if reweight is not None:
+                filler.setReweight(reweight)
+                  
               for nuisanceName, nuisance in applicableNuisances.iteritems():
                 if nuisanceName == 'stat' or 'kind' not in nuisance:
                   continue
@@ -411,6 +453,22 @@ class ShapeFactory:
                 configurationNuis = nuisance['samples'][sampleName]
 
                 for ndrawers, variation, confidx in [(drawersNuisanceUp, 'Up', 0), (drawersNuisanceDown, 'Down', 1)]:
+                  if nuisance['kind'] == 'tree':
+                    try:
+                      ndrawer = ndrawers[nuisanceName][sampleName]
+                    except KeyError:
+                      # nuisance drawer for the specific sample may not exist if there is no nuisance tree corresponding to the nominal
+                      # can be the case e.g. for UE and PS trees with FilesPerJob = 1
+                      continue
+
+                    reweightNuis = reweight
+
+                  elif nuisance['kind'] == 'weight':
+                    reweightNuis = ROOT.ReweightSource(configurationNuis[confidx])
+                    if reweight is not None:
+                      # compound reweight
+                      reweightNuis = ROOT.ReweightSource(reweight, reweightNuis)
+
                   subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
 
                   if 'categories' in cut:
@@ -425,26 +483,12 @@ class ShapeFactory:
                       hTotalNuis.SetTitle(histoNameNuis)
                       hTotalNuis.SetName(histoNameNuis)
                       histlistNuis.Add(hTotalNuis)
-  
-                    if nuisance['kind'] == 'weight':
-                      if yexpr:
-                        drawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName, configurationNuis[confidx])
-                      else:
-                        drawer.addPlotList(histlistNuis, xexpr, cutFullName, configurationNuis[confidx])
+
+                    if yexpr:
+                      filler = drawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName)
+                    else:
+                      filler = drawer.addPlotList(histlistNuis, xexpr, cutFullName)
                     
-                    elif nuisance['kind'] == 'tree':
-                      try:
-                        ndrawer = ndrawers[nuisanceName][sampleName]
-                      except KeyError:
-                        # nuisance drawer for the specific sample may not exist if there is no nuisance tree corresponding to the nominal
-                        # can be the case e.g. for UE and PS trees with FilesPerJob = 1
-                        continue
-
-                      if yexpr:
-                        ndrawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName)
-                      else:
-                        ndrawer.addPlotList(histlistNuis, xexpr, cutFullName)
-
                   else:
                     ROOT.gROOT.cd(cutName + '/' + variableName)
   
@@ -454,23 +498,13 @@ class ShapeFactory:
                     hTotalNuis.SetTitle(histoNameNuis)
                     hTotalNuis.SetName(histoNameNuis)
     
-                    if nuisance['kind'] == 'weight':
-                      if yexpr:
-                        drawer.addPlot2D(hTotalNuis, xexpr, yexpr, cutFullName, configurationNuis[confidx])
-                      else:
-                        drawer.addPlot(hTotalNuis, xexpr, cutFullName, configurationNuis[confidx])
-                    
-                    elif nuisance['kind'] == 'tree':
-                      try:
-                        ndrawer = ndrawers[nuisanceName][sampleName]
-                      except KeyError:
-                        # see above
-                        continue
+                    if yexpr:
+                      filler = ndrawer.addPlot2D(hTotalNuis, xexpr, yexpr, cutFullName)
+                    else:
+                      filler = ndrawer.addPlot(hTotalNuis, xexpr, cutFullName)
 
-                      if yexpr:
-                        ndrawer.addPlot2D(hTotalNuis, xexpr, yexpr, cutFullName)
-                      else:
-                        ndrawer.addPlot(hTotalNuis, xexpr, cutFullName)
+                  if reweightNuis is not None:
+                    filler.setReweight(reweightNuis)
 
             # Done setting up one cut
             print ''
@@ -1098,7 +1132,7 @@ class ShapeFactory:
             if 'samples' in alias and process not in alias['samples']:
               continue
 
-            drawer.addVariable(name, alias['expr'])
+            drawer.addAlias(name, alias['expr'])
 
           # lists[process] = []
           
