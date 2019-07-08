@@ -582,8 +582,8 @@ samples['QCD_HT1000to1500']                     .extend( ['xsec=1048'   ,       
 samples['QCD_HT1500to2000']                     .extend( ['xsec=102.3'  ,       'kfact=1.000',  'ref=I'] )
 samples['QCD_HT2000toInf']                      .extend( ['xsec=20.23'  ,       'kfact=1.000',  'ref=I'] )
 
-Samples['QCD_Pt_15to30']                        .extend( ['xsec=1245000000'  ,       'kfact=1.000',  'ref=I'] )
-Samples['QCD_Pt_30to50']                        .extend( ['xsec=106900000'   ,       'kfact=1.000',  'ref=I'] )
+samples['QCD_Pt_15to30']                        .extend( ['xsec=1245000000'  ,       'kfact=1.000',  'ref=I'] )
+samples['QCD_Pt_30to50']                        .extend( ['xsec=106900000'   ,       'kfact=1.000',  'ref=I'] )
 
 # GJets
 samples['GJetsDR04_HT40To100'] .extend( ['xsec=17420', 'kfact=1.000', 'ref=I'] )
