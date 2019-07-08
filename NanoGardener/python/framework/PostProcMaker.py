@@ -596,7 +596,7 @@ class PostProcMaker():
 #        print ' EXIT !!!!'
 #        exit()
          FileList = nAODFileList
-         if not 'srmPrefix' in self._Samples[iSample]: useLocal = False
+         if 'srmPrefix' in self._Samples[iSample]: useLocal = False
 
        # Now compute #evts
        genEventCount = 0
@@ -604,7 +604,7 @@ class PostProcMaker():
        genEventSumw2 = 0.0
        for iFile in FileList:
          if DEBUG : print iFile 
-         if useLocal :
+         if useLocal:
            f = ROOT.TFile.Open(iFile, "READ")
          else:
            f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
