@@ -249,6 +249,7 @@ class PostProcMaker():
          # gfal-ls from command line (i.e. subprocess) doesn't work in CC7
          # fortunatley the python binding does, but it's not included in the CMSSW python libraries
          import gfal2
+         useGfal2Py = True
        except ImportError:
          if '/usr/lib64/python2.7/site-packages' not in sys.path:
            sys.path.append('/usr/lib64/python2.7/site-packages')
