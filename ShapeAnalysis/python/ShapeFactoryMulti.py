@@ -1196,6 +1196,12 @@ class ShapeFactory:
 	else: return False
       else: return False
 
+    # _____________________________________________________________________________
+    def _test_xrootdFile(self, path):
+      xrdserver=path.lstrip("root://").split("/")[0]
+      cmd='xrd '+xrdserver+' existfile '+path.split('root://'+xrdserver)[1]
+      if os.system(cmd) == 0 : return True
+      return False  
 
     # _____________________________________________________________________________
     def _buildchain(self, multidraw, files, skipMissingFiles, friendtree = None):
@@ -1224,6 +1230,10 @@ class ShapeFactory:
               if not self._test_sdfarm_File(path):
                 print 'File '+path+' doesn\'t exist @ sdfarm.kr'
                 doesFileExist = False
+            elif 'root://' in path:
+              if not self._test_xrootdFile(path):
+                print 'File '+path+' doesn\'t exist @ sdfarm.kr'
+                doesFileExist = False 
             else:
               if not os.path.exists(path):
                 print 'File '+path+' doesn\'t exist'

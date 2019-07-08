@@ -292,6 +292,7 @@ class batchJobs :
            jdsFile = open(jdsFileName,'w')
            jdsFile.write('executable = '+self.subDir+subDirExtra+'/'+jName+'.sh\n')
            jdsFile.write('universe = vanilla\n')
+           #jdsFile.write('use_x509userproxy = true\n')
            jdsFile.write('output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
            jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
            jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
@@ -387,6 +388,7 @@ class batchJobs :
        jds += 'output = $(JName).out\n'
        jds += 'error = $(JName).err\n'
        jds += 'log = $(JName).log\n'
+       #jds += 'use_x509userproxy = true\n'
        jds += 'request_cpus = '+str(self.nThreads)+'\n'
        if CONDOR_ACCOUNTING_GROUP:
          jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'
@@ -502,9 +504,9 @@ def batchStatus():
               iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
-            elif 'ifca' in hostName :
-              iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep Latino | awk \'{print $5}\' ').read()
-              if 'Q' in iStat : Pend[iStep]+=1
+            elif 'ifca' in os.uname()[1] :	
+              iStat = os.popen('qstat | grep \" qw \" |  awk \'{print $1 \" '+jidFile+'\"}\' | xargs -n 2 grep | awk \'{ print $2 }\' ').read()
+	      if 'job' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
             elif 'cern' in hostName and not CERN_USE_LSF:
               iStat = os.popen(r'cat '+jidFile+" | xargs -n 1 condor_q | tail -n1").read()

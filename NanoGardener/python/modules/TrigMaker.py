@@ -16,7 +16,7 @@ class TrigMaker(Module):
     Trigger Maker module MC,
     ''' 
 
-    def __init__(self, cmssw = 'Full2016', isData = False, keepRunP = False, seeded = False):
+    def __init__(self, cmssw = 'Full2016', isData = False, keepRunP = False, cfg_path = 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py', seeded = False):
         self.cmssw = cmssw
         self.isData = isData
         self.keepRunP = keepRunP
@@ -32,15 +32,22 @@ class TrigMaker(Module):
         self.el_maxEta = 2.5
         self.el_minEta = -2.5
 
+        cmssw_base = os.getenv('CMSSW_BASE')
+        var = {}
+        execfile(cmssw_base+'/src/'+cfg_path, var)
         if self.isData:
            self.typeStr = 'DATA'
-           self.NewVar = NewVar_DATA_dict
+           self.NewVar = var['NewVar_DATA_dict']
         else:
-           self.NewVar = NewVar_MC_dict
+           self.NewVar = var['NewVar_MC_dict']
            self.typeStr = 'MC'
 
-        print('TrigMaker: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
+        self.Trigger = var['Trigger']
 
+        print('TrigMakerGen: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
+        if cfg_path != 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py':
+            print('TrigMakerGen: loaded trigger configuration from ' + cfg_path)
+ 
     def beginJob(self): 
         pass
 
@@ -56,12 +63,14 @@ class TrigMaker(Module):
            isThere = False
            for br in inputTree.GetListOfBranches():
               if br.GetName() == 'run_period': isThere = True
-           if not isThere: raise IOError("Input tree does not contain the 'run_period' branch. Set 'keepRunP' to False.")
-           else: self.NewVar['I'].remove('run_period')
+           if not isThere: print("WARNING: Input tree does not contain the 'run_period' branch, while 'keepRunP' is True.")
+           else: 
+               try: self.NewVar['I'].remove('run_period')
+               except: pass
  
         for typ in self.NewVar:
            for name in self.NewVar[typ]:
-              if name == 'TriggerEmulator': self.out.branch(name, typ, 6)
+              if 'TriggerEmulator' in name: self.out.branch(name, typ, 6)
               else:                         self.out.branch(name, typ)
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -76,51 +85,55 @@ class TrigMaker(Module):
         self.TM_GlEff = {}
         #self.TM_trkSFMu = {}
         self.TM_runInt  = {}
-        for RunP in Trigger[self.cmssw]:
-           #self.TM_trkSFMu[RunP] = deepcopy(Trigger[self.cmssw][RunP]['trkSFMu'])
+        for RunP in self.Trigger[self.cmssw]:
+           #self.TM_trkSFMu[RunP] = deepcopy(self.Trigger[self.cmssw][RunP]['trkSFMu'])
            self.TM_trig[RunP]    = {}
            self.TM_LegEff[RunP]  = {}
            self.TM_DZEff[RunP]   = {}
            self.TM_GlEff[RunP] = {}
-           self.TM_runInt[RunP]  = {'b': Trigger[self.cmssw][RunP]['begin'], 'e': Trigger[self.cmssw][RunP]['end']}
-           for Tname in Trigger[self.cmssw][RunP][self.typeStr]:
+           self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
+           for Tname in self.Trigger[self.cmssw][RunP][self.typeStr]:
               self.TM_trig[RunP][Tname] = []
-              for HLT in Trigger[self.cmssw][RunP][self.typeStr][Tname]:
-                 self.TM_trig[RunP][Tname].append('event.'+HLT)
+              for HLT in self.Trigger[self.cmssw][RunP][self.typeStr][Tname]:
+                 if HLT is not None: self.TM_trig[RunP][Tname].append('event.'+HLT)
+                 else: self.TM_trig[RunP][Tname].append('False')
 
-           for Tname in Trigger[self.cmssw][RunP]['LegEff']:
-              temp_file = open(cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/trigger/' + Trigger[self.cmssw][RunP]['LegEff'][Tname], 'r')
+           for Tname in self.Trigger[self.cmssw][RunP]['LegEff']:
+              if self.Trigger[self.cmssw][RunP]['LegEff'][Tname] is not None:
+                  temp_file = open(cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/trigger/' + self.Trigger[self.cmssw][RunP]['LegEff'][Tname], 'r')
+              else:
+                  temp_file = open(cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/trigger/dummy_trigger_efficiency.txt', 'r')
               self.TM_LegEff[RunP][Tname] = [line.rstrip().split() for line in temp_file if '#' not in line]
               temp_file.close()
 
-           for Tname in Trigger[self.cmssw][RunP]['DZEff']:
-              Key = list(Trigger[self.cmssw][RunP]['DZEff'][Tname].keys())[0]
+           for Tname in self.Trigger[self.cmssw][RunP]['DZEff']:
+              Key = list(self.Trigger[self.cmssw][RunP]['DZEff'][Tname].keys())[0]
               self.TM_DZEff[RunP][Tname] = {}
               self.TM_DZEff[RunP][Tname]['type'] = Key  
               if Key == 'value' :
-                  self.TM_DZEff[RunP][Tname]['vals'] = Trigger[self.cmssw][RunP]['DZEff'][Tname]['value']
+                  self.TM_DZEff[RunP][Tname]['vals'] = self.Trigger[self.cmssw][RunP]['DZEff'][Tname]['value']
               else: 
-                  temp_file = open(cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/trigger/' + Trigger[self.cmssw][RunP]['DZEff'][Tname][Key],'r')
+                  temp_file = open(cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/trigger/' + self.Trigger[self.cmssw][RunP]['DZEff'][Tname][Key],'r')
                   self.TM_DZEff[RunP][Tname]['vals'] = [line.rstrip().split() for line in temp_file if '#' not in line]
                   temp_file.close()
 
-           for Tname in Trigger[self.cmssw][RunP]['GlEff']:
+           for Tname in self.Trigger[self.cmssw][RunP]['GlEff']:
               self.TM_GlEff[RunP][Tname] = [] 
-              self.TM_GlEff[RunP][Tname].append(Trigger[self.cmssw][RunP]['GlEff'][Tname][0])
-              self.TM_GlEff[RunP][Tname].append(Trigger[self.cmssw][RunP]['GlEff'][Tname][0]-Trigger[self.cmssw][RunP]['GlEff'][Tname][1])
-              self.TM_GlEff[RunP][Tname].append(min(1.,Trigger[self.cmssw][RunP]['GlEff'][Tname][0]+Trigger[self.cmssw][RunP]['GlEff'][Tname][1]))
+              self.TM_GlEff[RunP][Tname].append(self.Trigger[self.cmssw][RunP]['GlEff'][Tname][0])
+              self.TM_GlEff[RunP][Tname].append(self.Trigger[self.cmssw][RunP]['GlEff'][Tname][0]-self.Trigger[self.cmssw][RunP]['GlEff'][Tname][1])
+              self.TM_GlEff[RunP][Tname].append(min(1.,self.Trigger[self.cmssw][RunP]['GlEff'][Tname][0]+self.Trigger[self.cmssw][RunP]['GlEff'][Tname][1]))
 
 
         # Set some run/event specific var
         self.total_lum = 0.
         self.EMTFbug = {}
-        for RunP in Trigger[self.cmssw]:
-           self.total_lum += Trigger[self.cmssw][RunP]['lumi']
-           self.EMTFbug[RunP] = Trigger[self.cmssw][RunP]['EMTFBug']
+        for RunP in self.Trigger[self.cmssw]:
+           self.total_lum += self.Trigger[self.cmssw][RunP]['lumi']
+           self.EMTFbug[RunP] = self.Trigger[self.cmssw][RunP]['EMTFBug']
         
         self.RunFrac = [0.]
-        for RunP in Trigger[self.cmssw]:
-           self.RunFrac.append(self.RunFrac[-1] + Trigger[self.cmssw][RunP]['lumi']/self.total_lum)
+        for RunP in self.Trigger[self.cmssw]:
+           self.RunFrac.append(self.RunFrac[-1] + self.Trigger[self.cmssw][RunP]['lumi']/self.total_lum)
        
         if self.keepRunP: self.run_p = 'event.run_period'
  
@@ -157,7 +170,7 @@ class TrigMaker(Module):
 
                  return [eff, eff_d, eff_u]
            elif len(eff_l) > 2:
-              raise IOError('Unexpected info in /LatinoAnalysis/NanoGardener/python/data/trigger/' + Trigger[self.cmssw][run_p]['LegEff'][trig_name] +\
+              raise IOError('Unexpected info in /LatinoAnalysis/NanoGardener/python/data/trigger/' + self.Trigger[self.cmssw][run_p]['LegEff'][trig_name] +\
                             ': ' + eff_l + ' not enough inputs?') 
         return [0. , 0., 0.]
         
@@ -263,7 +276,8 @@ class TrigMaker(Module):
         pt2, eta2 = self._over_under(pdgId2, pt2, eta2)
       
         eff, eff_dz , eff_gl = self._pair_eff(pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p)
-     
+        #eff_map = ['SingleEle', 'SingleMu', 'EleMuLegHigPt', 'MuEleLegHigPt', 'MuEleLegLowPt', 'EleMuLegLowPt']
+
         #print abs(pdgId1) , abs(pdgId2) 
         #print eff, eff_dz , eff_gl
  
@@ -402,7 +416,7 @@ class TrigMaker(Module):
            raise ValueError('Incorrect input format: requires vectors of equal length.')
         nLep = len(pt_v)
         if nLep < 2:
-           raise ValueError('At leat 2 leptons required.')
+           raise ValueError('At least 2 leptons required.')
         
         for h in range(nLep):
            pt_v[h], eta_v[h] = self._over_under(pdgId_v[h], pt_v[h], eta_v[h])
@@ -509,13 +523,21 @@ class TrigMaker(Module):
         trig_dec = self._get_trigDec(run_p, event)        
  
         # Fill DATA branches
-        self.out.fillBranch('Trigger_sngEl', trig_dec['SingleEle']) 
-        self.out.fillBranch('Trigger_sngMu',  trig_dec['SingleMu']) 
-        self.out.fillBranch('Trigger_dblEl', trig_dec['DoubleEle']) 
-        self.out.fillBranch('Trigger_dblMu',  trig_dec['DoubleMu']) 
-        self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
-        if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
-        self.out.fillBranch('EMTFbug_veto', EMTF)
+        for name in self.NewVar['I']: 
+            if 'Trigger_sngEl' in name: self.out.fillBranch(name, trig_dec['SingleEle']) 
+            elif 'Trigger_sngMu' in name: self.out.fillBranch(name,  trig_dec['SingleMu']) 
+            elif 'Trigger_dblEl' in name: self.out.fillBranch(name, trig_dec['DoubleEle']) 
+            elif 'Trigger_dblMu' in name: self.out.fillBranch(name,  trig_dec['DoubleMu']) 
+            elif 'Trigger_ElMu' in name: self.out.fillBranch(name,      trig_dec['EleMu']) 
+            elif 'run_period' in name and not self.keepRunP: self.out.fillBranch(name, run_p) 
+            elif 'EMTFbug_veto' in name : self.out.fillBranch(name, EMTF)
+
+        #self.out.fillBranch('Trigger_sngMu',  trig_dec['SingleMu']) 
+        #self.out.fillBranch('Trigger_dblEl', trig_dec['DoubleEle']) 
+        #self.out.fillBranch('Trigger_dblMu',  trig_dec['DoubleMu']) 
+        #self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
+        #if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
+        #self.out.fillBranch('EMTFbug_veto', EMTF)
  
         # Stop here if not MC 
         if self.isData: return True
@@ -528,42 +550,81 @@ class TrigMaker(Module):
 
         if nLep > 0 :
            temp_evt, temp_evt_v, Trig_em = self._get_w1l(pdgId[0], pt[0], eta[0], run_p, evt)
-           eff_dict['TriggerEffWeight_1l']   = temp_evt[0]
-           eff_dict['TriggerEffWeight_1l_d'] = temp_evt[1]
-           eff_dict['TriggerEffWeight_1l_u'] = temp_evt[2]
-           eff_dict['TriggerEffWeight_sngEl'] = temp_evt_v[0]
-           eff_dict['TriggerEffWeight_sngMu'] = temp_evt_v[1]
-           eff_dict['TriggerEffWeight_dblEl'] = temp_evt_v[2]
-           eff_dict['TriggerEffWeight_dblMu'] = temp_evt_v[3]
-           eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
+           for name in self.NewVar['F']:
+               if 'TriggerEffWeight' in name:
+                   if '_1l' in name:
+                       if '_1l_d' in name: eff_dict[name] = temp_evt[1]
+                       elif '_1l_u' in name: eff_dict[name] = temp_evt[2]
+                       else: eff_dict[name] = temp_evt[0]
+                   elif '_sngEl' in name: eff_dict[name] = temp_evt_v[0]
+                   elif '_sngMu' in name: eff_dict[name] = temp_evt_v[1]
+                   elif '_dblEl' in name: eff_dict[name] = temp_evt_v[2]
+                   elif '_dblMu' in name: eff_dict[name] = temp_evt_v[3]
+                   elif '_ElMu' in name: eff_dict[name]  = temp_evt_v[4]
+ 
+           #eff_dict['TriggerEffWeight_1l']   = temp_evt[0]
+           #eff_dict['TriggerEffWeight_1l_d'] = temp_evt[1]
+           #eff_dict['TriggerEffWeight_1l_u'] = temp_evt[2]
+           #eff_dict['TriggerEffWeight_sngEl'] = temp_evt_v[0]
+           #eff_dict['TriggerEffWeight_sngMu'] = temp_evt_v[1]
+           #eff_dict['TriggerEffWeight_dblEl'] = temp_evt_v[2]
+           #eff_dict['TriggerEffWeight_dblMu'] = temp_evt_v[3]
+           #eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
  
         if nLep > 1:
            temp_evt, temp_evt_v, Trig_em = self._get_w(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], nvtx, run_p, evt)
-           eff_dict['TriggerEffWeight_2l']   = temp_evt[0]
-           eff_dict['TriggerEffWeight_2l_d'] = temp_evt[1]
-           eff_dict['TriggerEffWeight_2l_u'] = temp_evt[2]
-           eff_dict['TriggerEffWeight_sngEl'] = temp_evt_v[0]
-           eff_dict['TriggerEffWeight_sngMu'] = temp_evt_v[1]
-           eff_dict['TriggerEffWeight_dblEl'] = temp_evt_v[2]
-           eff_dict['TriggerEffWeight_dblMu'] = temp_evt_v[3]
-           eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
+           for name in self.NewVar['F']:
+               if 'TriggerEffWeight' in name:
+                   if '_2l' in name:
+                       if '_2l_d' in name: eff_dict[name] = temp_evt[1]
+                       elif '_2l_u' in name: eff_dict[name] = temp_evt[2]
+                       else: eff_dict[name] = temp_evt[0]
+                   elif '_sngEl' in name: eff_dict[name] = temp_evt_v[0]
+                   elif '_sngMu' in name: eff_dict[name] = temp_evt_v[1]
+                   elif '_dblEl' in name: eff_dict[name] = temp_evt_v[2]
+                   elif '_dblMu' in name: eff_dict[name] = temp_evt_v[3]
+                   elif '_ElMu' in name: eff_dict[name]  = temp_evt_v[4]
+
+           #eff_dict['TriggerEffWeight_2l']   = temp_evt[0]
+           #eff_dict['TriggerEffWeight_2l_d'] = temp_evt[1]
+           #eff_dict['TriggerEffWeight_2l_u'] = temp_evt[2]
+           #eff_dict['TriggerEffWeight_sngEl'] = temp_evt_v[0]
+           #eff_dict['TriggerEffWeight_sngMu'] = temp_evt_v[1]
+           #eff_dict['TriggerEffWeight_dblEl'] = temp_evt_v[2]
+           #eff_dict['TriggerEffWeight_dblMu'] = temp_evt_v[3]
+           #eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
 
         if nLep > 2:
            temp_evt = self._get_3lw(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], pdgId[2], pt[2], eta[2], nvtx, run_p)
-           eff_dict['TriggerEffWeight_3l']   = temp_evt[0]
-           eff_dict['TriggerEffWeight_3l_d'] = temp_evt[1]
-           eff_dict['TriggerEffWeight_3l_u'] = temp_evt[2]
+           for name in self.NewVar['F']:
+               if 'TriggerEffWeight' in name:
+                   if '_3l' in name:
+                       if '_3l_d' in name: eff_dict[name] = temp_evt[1]
+                       elif '_3l_u' in name: eff_dict[name] = temp_evt[2]
+                       else: eff_dict[name] = temp_evt[0]
+
+           #eff_dict['TriggerEffWeight_3l']   = temp_evt[0]
+           #eff_dict['TriggerEffWeight_3l_d'] = temp_evt[1]
+           #eff_dict['TriggerEffWeight_3l_u'] = temp_evt[2]
            
         if nLep > 3:
            temp_evt = self._get_nlw(pdgId[:4], pt[:4], eta[:4], nvtx, run_p)
-           eff_dict['TriggerEffWeight_4l']   = temp_evt[0]
-           eff_dict['TriggerEffWeight_4l_d'] = temp_evt[1]
-           eff_dict['TriggerEffWeight_4l_u'] = temp_evt[2]
+           for name in self.NewVar['F']:
+               if 'TriggerEffWeight' in name:
+                   if '_4l' in name:
+                       if '_4l_d' in name: eff_dict[name] = temp_evt[1]
+                       elif '_4l_u' in name: eff_dict[name] = temp_evt[2]
+                       else: eff_dict[name] = temp_evt[0]
+
+           #eff_dict['TriggerEffWeight_4l']   = temp_evt[0]
+           #eff_dict['TriggerEffWeight_4l_d'] = temp_evt[1]
+           #eff_dict['TriggerEffWeight_4l_u'] = temp_evt[2]
 
         # Fill branches
-        self.out.fillBranch('TriggerEmulator', Trig_em)
+        if 'TriggerEmulator' in self.NewVar['I']:
+            self.out.fillBranch('TriggerEmulator', Trig_em)
         for name in eff_dict:
-           self.out.fillBranch(name, eff_dict[name])
+            self.out.fillBranch(name, eff_dict[name])
 
         return True
 

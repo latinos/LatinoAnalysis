@@ -317,6 +317,8 @@ samples['GluGluHToTauTau_M130']		.extend( ['xsec=1.5260',     	'kfact=1.000',		'
 
 samples['GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS']   .extend( ['xsec=0.9913',  'kfact=1.000',    'ref=CF'] ) # 43.92*0.215*0.108*0.108*9 Higgs LHC value
 
+samples['ggH_hmm']                      .extend(['xsec=0.010571',      'kfact=1.000',            'ref=F'] ) # 48.58*2.176*10^{-4} 
+samples['ggH_hmm_ext1']                 .extend(['xsec=0.010571',      'kfact=1.000',            'ref=F'] ) # 48.58*2.176*10^{-4} 
 
 ## W+H
 samples['HWplusJ_HToWW_M120']          	.extend( ['xsec=0.1350',	'kfact=1.000',	       	'ref=EF'] ) # 0.956*0.141
@@ -846,3 +848,10 @@ samples['ZTo2L_ZTo2J']      .extend(['xsec=0.0159',     'kfact=1.000',   'ref=Z'
 # HH_WWbb_bblnujj semileptonic 2016
 # FIXME: insert reference
 samples['HH_bblnjj']        .extend(['xsec=1.97', 'kfact=1.000', 'ref=??'])
+
+# Dummies for Susy samples
+samples['T2tt__mStop-150to250']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-250to350']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-350to400']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-400to1200']    .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-1200to2000']   .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])

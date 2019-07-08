@@ -80,11 +80,15 @@ class HiggsXSection:
           self._YR[YRversion][model]['xs'][energy]['ttH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/sm/xs/'+energy+'/'+energy+'-ttH.txt') 
   
       # ... BSM (high mass NWA Higgs-like)
+      N3LO = False # Switch to use either N3LO or NNLO+NNLL ggH cross sections
       if model == 'bsm' :
         if YRversion in  ['YR4prel','YR4'] :
           if not energy in ['13TeV'] : return
           if not energy in self._YR[YRversion][model]['xs'] : self._YR[YRversion][model]['xs'][energy] = {}
-          self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-ggH.txt') 
+          if N3LO == False and YRversion != 'YR4prel' :
+            self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-ggH-NNLO-NLL.txt') 
+          else:
+            self._YR[YRversion][model]['xs'][energy]['ggH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-ggH.txt') 
           self._YR[YRversion][model]['xs'][energy]['vbfH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-vbfH.txt') 
           self._YR[YRversion][model]['xs'][energy]['WH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-WH.txt')
           self._YR[YRversion][model]['xs'][energy]['ZH'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/xs/'+energy+'/'+energy+'-ZH.txt')

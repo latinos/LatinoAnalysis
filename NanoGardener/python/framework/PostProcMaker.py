@@ -176,7 +176,7 @@ class PostProcMaker():
      fileCmd = self._Sites[self._LocalSite]['lsCmd']+' '+self._targetDir
      # fileCmd .... Files
      if self._iniStep == 'Prod' :
-       if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'.root'
+       if len(FileList) == 1 : fileCmd += self._treeFilePrefix+iSample+'__part0.root'
        else                  : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
      else:
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
@@ -244,20 +244,45 @@ class PostProcMaker():
      return FileList
 
    def getFilesFromPath(self,paths,srmprefix):
-     FileList = []
-     if os.path.isdir('/etc/grid-security/certificates'):
+     if 'el7' in os.uname()[2]:
+       try:
+         # gfal-ls from command line (i.e. subprocess) doesn't work in CC7
+         # fortunatley the python binding does, but it's not included in the CMSSW python libraries
+         import gfal2
+       except ImportError:
+         if '/usr/lib64/python2.7/site-packages' not in sys.path:
+           sys.path.append('/usr/lib64/python2.7/site-packages')
+         try:
+           import gfal2
+         except ImportError:
+           useGfal2Py = False
+         else:
+           useGfal2Py = True
+     else:
+       useGfal2Py = False
+
+     if 'X509_CERT_DIR' not in os.environ and os.path.isdir('/etc/grid-security/certificates'):
        os.environ['X509_CERT_DIR'] = '/etc/grid-security/certificates'
+
+     FileList = []
      for path in paths:
-       command = 'gfal-ls '+srmprefix+path+ " | grep root"
-       proc=subprocess.Popen(command, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
-       out, err = proc.communicate()
-       if not proc.returncode == 0 :
-         print out
-         print err
-         exit()
-       files=string.split(out)
+       if useGfal2Py:
+         ctx = gfal2.creat_context()
+         dircont = ctx.listdir(srmprefix + path)
+         files = [f for f in dircont if f.endswith('.root')]
+       else:
+         command = 'gfal-ls '+srmprefix+path+ " | grep root"
+         proc=subprocess.Popen(command, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+         out, err = proc.communicate()
+         if not proc.returncode == 0 :
+           print out
+           print err
+           exit()
+         files=string.split(out)
+
        for file in files:
          FileList.append(path+"/"+file)
+
      return FileList 
 
    def mkFileDir(self,iProd,iStep):
@@ -452,6 +477,7 @@ class PostProcMaker():
      # Common Header
      fPy.write('#!/usr/bin/env python \n')
      fPy.write('import os, sys \n')
+     fPy.write('import subprocess\n')
      fPy.write('import ROOT \n')
      fPy.write('ROOT.PyConfig.IgnoreCommandLineOptions = True \n')
      fPy.write(' \n')
@@ -481,9 +507,16 @@ class PostProcMaker():
          fPy.write(self.customizeDeclare(iStep)+'\n')
      fPy.write(' \n')
 
+     if self._iniStep == 'Prod':
+       for iFile in inputRootFiles:
+         fPy.write('subprocess.Popen(["xrdcp", "'+iFile+'", "."]).communicate()\n')
+
      # Files
      fPy.write('files=[')
-     for iFile in inputRootFiles : fPy.write('"'+iFile+'",')
+     if self._iniStep == 'Prod':
+       for iFile in inputRootFiles : fPy.write('"./'+os.path.basename(iFile)+'",')
+     else:
+       for iFile in inputRootFiles : fPy.write('"'+iFile+'",')
      fPy.write(']\n') 
      fPy.write(' \n')
      
