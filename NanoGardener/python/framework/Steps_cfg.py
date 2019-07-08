@@ -120,6 +120,14 @@ Steps = {
                                      'rochesterMCLP19','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
                 },
 
+
+  'PUFIXLP19' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['puW','formulasMCLP19'],
+  },               
+
   'MCl1loose2018' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
