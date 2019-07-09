@@ -464,10 +464,10 @@ class ShapeFactory:
                     reweightNuis = reweight
 
                   elif nuisance['kind'] == 'weight':
-                    reweightNuis = ROOT.ReweightSource(configurationNuis[confidx])
+                    reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[confidx])
                     if reweight is not None:
                       # compound reweight
-                      reweightNuis = ROOT.ReweightSource(reweight, reweightNuis)
+                      reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
 
                   subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
 
