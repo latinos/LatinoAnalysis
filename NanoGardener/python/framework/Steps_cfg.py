@@ -44,6 +44,15 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
+  'MCl2loose2016_hmumu' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSel_hmumu_2016','CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TriggerObjectMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                },
+
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
   'MCCorr2016' : {
@@ -52,6 +61,14 @@ Steps = {
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','EmbeddingVeto', 
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                },
+
+  'MCCorr2016_hmumu' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','EmbeddingVeto', 
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'formulasMC'],
                 },
 
   'MCCorr2016tmp'  : {
@@ -344,6 +361,15 @@ Steps = {
                   'module'     : 'GenLeptonMatch()' ,
                    },
 
+  'TriggerObjectMatch' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TriggerObjectMatchProducer' ,
+                  'declare'    : 'TriggerObjectMatch = lambda : TriggerObjectMatchProducer()',
+                  'module'     : 'TriggerObjectMatch()' ,
+                   },
+
    'HiggsGenVars' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -541,6 +567,15 @@ Steps = {
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
                  'declare'    : 'trigMC = lambda : TrigMaker("RPLME_CMSSW",False,False)',
                  'module'     : 'trigMC()',
+               },
+
+ 'TrigMC_hmumu'   : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : False ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
+                  'declare'  : 'MHTrigMC = lambda : TrigMaker("RPLME_CMSSW",False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_hmumu_cfg.py")',
+                  'module'   : 'MHTrigMC()',
                },
 
   'trigMCKeepRun' : { 'isChain'    : False ,
