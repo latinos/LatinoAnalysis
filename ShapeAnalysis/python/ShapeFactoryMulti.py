@@ -355,35 +355,38 @@ class ShapeFactory:
 
               if 'weight' in variable:
                 wgtspec = variable['weight']
-                if 'source' in wgtspec:
-                  fname, _, objname = wgtspec['source'].partition(':')
-                  ftmp = ROOT.TFile.Open(fname)
-                  wsource = ftmp.Get(objname)
-                  try:
-                    wsource.SetDirectory(0)
-                  except:
-                    pass
-                  ftmp.Close()
+                if type(wgtspec) is str:
+                  reweight = ROOT.multidraw.ReweightSource(wgtspec)
                 else:
-                  wsource = None
-
-                if 'xexpr' in wgtspec:
-                  if 'yexpr' in wgtspec:
-                    reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wgtspec['yexpr'], wsource)
-                    print 'Reweighting:', reweight
+                  if 'source' in wgtspec:
+                    fname, _, objname = wgtspec['source'].partition(':')
+                    ftmp = ROOT.TFile.Open(fname)
+                    wsource = ftmp.Get(objname)
+                    try:
+                      wsource.SetDirectory(0)
+                    except:
+                      pass
+                    ftmp.Close()
                   else:
-                    reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wsource)
-                elif 'class' in wgtspec:
-                  if 'args' in wgtspec:
-                    if type(wgtspec['args']) is tuple:
-                      args = wgtspec['args']
+                    wsource = None
+  
+                  if 'xexpr' in wgtspec:
+                    if 'yexpr' in wgtspec:
+                      reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wgtspec['yexpr'], wsource)
+                      print 'Reweighting:', reweight
                     else:
-                      args = (wgtspec['args'],)
-                  else:
-                    args = tuple()
-
-                  func = getattr(ROOT, wgtspec['class'])(*args)
-                  reweight = ROOT.multidraw.ReweightSource(ROOT.multidraw.CompiledExprSource(func), wsource)
+                      reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wsource)
+                  elif 'class' in wgtspec:
+                    if 'args' in wgtspec:
+                      if type(wgtspec['args']) is tuple:
+                        args = wgtspec['args']
+                      else:
+                        args = (wgtspec['args'],)
+                    else:
+                      args = tuple()
+  
+                    func = getattr(ROOT, wgtspec['class'])(*args)
+                    reweight = ROOT.multidraw.ReweightSource(ROOT.multidraw.CompiledExprSource(func), wsource)
               else:
                 reweight = None
 
