@@ -78,11 +78,12 @@ class ShapeFactory:
           self._outputFileName = outputDir+'/plots_'+self._tag+".root"
 
         print " outputFileName = ", self._outputFileName
-        os.system ("mkdir " + outputDir + "/")
+        os.system ("mkdir -p " + outputDir + "/")
         
         ROOT.TH1.SetDefaultSumw2(True)
 
         #---- first create the structure in gROOT. We'll write to a file at the end
+        print ''
         print '  <cuts>'
         for cutName, cut in self._cuts.iteritems():
           print "cut = ", cutName, " :: ", self._cuts[cutName]
@@ -102,6 +103,7 @@ class ShapeFactory:
                 ROOT.gROOT.mkdir(cutName+"/"+variableName)
 
         #---- just print the variables
+        print ''
         print '  <variables>'
         for variableName, variable in self._variables.iteritems():
           line = "    variable = " + variableName + " :: "
@@ -114,14 +116,39 @@ class ShapeFactory:
           if 'samples' in variable:
             print "      samples:", variable['samples']
 
+        print ''
+        print '  <nuisances>'
+
+        for nuisanceName, nuisance in nuisances.iteritems():
+          line = "    nuisance = " + nuisanceName
+          if 'name' in nuisance:
+            line += " :: " + nuisance['name']
+          print line
+          if 'kind' in nuisance:
+              print "      kind:", nuisance['kind']
+          print "      type:", nuisance['type']
+
+          if nuisanceName == "stat":
+            for item in nuisance["samples"].itervalues():
+              if "zeroMCError" not in item:
+                item["zeroMCError"] = '0'
+            
+        #############################################
+        # Use MultiDraw to fill the plots in one go #
+        #############################################
+
         # Need to keep a python reference to all plot objects (otherwise python will garbage-collect)
         _allplots = []
-       
-        # check if any sample is MC:
-        #    if MC then add the scaling to luminosity
-        #    first create the "weights" list, if not already available 
+
+        print ''
+        print '  <start histogram filling>'
+
+        # One MultiDraw per sample = tree
         for sampleName, sample in self._samples.iteritems():
-          print sampleName
+          print "    sample =", sampleName
+          #print "    name:", sample['name']
+          #print "    weight:", sample['weight']
+
           if 'weights' not in sample:
             sample['weights'] = ['1'] * len(sample['name'])
 
@@ -140,86 +167,12 @@ class ShapeFactory:
             if iT not in dataTrees:
               # default is "scale to luminosity"
               sample['weights'][iT] = "( (" + sample['weights'][iT] + ") * " + str(self._lumi) + ")"
-              print " sample ['weights'][" + str(iT) + "] = ", sample['weights'][iT]
+              print "      sample ['weights'][" + str(iT) + "] = ", sample['weights'][iT]
 
-        # connect the trees
-        list_of_trees_to_connect = {}
-        #print " samples = ", self._samples
-        for sampleName, sample in self._samples.iteritems():
-          list_of_trees_to_connect[sampleName] = sample['name']
-          #print 'sample[name] = ', sample['name']
-              
-        drawers = self._connectInputs(list_of_trees_to_connect, inputDir, skipMissingFiles = False)
-
-        # Sept 2017
-        # Tree kind nuisances can be hanndled in two ways:
-        # usual way: a full tree for the variation up and a full tree for the variation down
-        # This behavior is activated by the presence in the nuisances.py file of the tags 'folderUp' and 'folderDown'
-        # alternative way: a combination of trees holding only the varied branches and the central tree for all the unvaried branches.
-        # This behavior is activated by the presence in the nuisances.py file of the tags: 'unskimmedFolderUp', 'unskimmedFolderDown', 'unskimmedFriendTreeDir'.
-        # Note that one has to use trees before skimming. The skimming can be applied on top is the additional tags 'skimListFolderUp' and 'skimListFolderDown'
-        # are present. These tags hold the path to the directories holding the files holding the "prunerlist" event list
-
-        # connect nuisances trees
-        drawersNuisanceUp   = {}
-        drawersNuisanceDown = {}
-        #evlistsNuisanceUp = {}
-        #evlistsNuisanceDown = {}
-
-        for nuisanceName, nuisance in nuisances.iteritems():
-          if nuisanceName == "stat":
-            for sample, item in nuisance["samples"].iteritems():
-              if "zeroMCError" not in item:
-                item["zeroMCError"] = '0'
-
-          if 'kind' in nuisance and nuisance['kind'] == 'tree':
-            list_of_trees_to_connect = {}
-            for sampleNuisName, _ in nuisance['samples'].iteritems() :
-              if sampleNuisName in self._samples:
-                list_of_trees_to_connect[sampleNuisName] = [os.path.basename(s) if '###' in s else s for s in self._samples[sampleNuisName]['name']]
-
-            if len(list_of_trees_to_connect) == 0:
-              continue
-            
-            unskimmedFriendsDir = None
-            unskimmedFolderUp = None
-            unskimmedFolderDown = None
-            skimListFolderUp = None
-            skimListFolderDown = None
-            
-            if 'unskimmedFriendTreeDir' in nuisance.keys():
-              unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
-            if 'unskimmedFolderUp' in nuisance.keys():
-              unskimmedFolderUp = nuisance['unskimmedFolderUp']
-            if 'unskimmedFolderDown' in nuisance.keys():
-              unskimmedFolderDown = nuisance['unskimmedFolderDown']
-            if 'skimListFolderUp' in nuisance.keys():
-              skimListFolderUp = nuisance['skimListFolderUp']
-            if 'skimListFolderDown' in nuisance.keys():
-              skimListFolderDown = nuisance['skimListFolderDown']   
-
-            if unskimmedFriendsDir == None: 
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(list_of_trees_to_connect, nuisance['folderUp'], skipMissingFiles = True)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(list_of_trees_to_connect, nuisance['folderDown'], skipMissingFiles = True)
-            else:
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(list_of_trees_to_connect, nuisance['unskimmedFolderUp'], True, unskimmedFriendsDir, skimListFolderUp)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(list_of_trees_to_connect, nuisance['unskimmedFolderDown'], True, unskimmedFriendsDir, skimListFolderDown)
-            
-            #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
-
-        #############################################
-        # Use MultiDraw to fill the plots in one go #
-        #############################################
-
-        # One MultiDraw per sample = tree
-        for sampleName, sample in self._samples.iteritems():
-          print "sample =", sampleName
-          print "  name:", sample['name']
-          print "  weight:", sample['weight']
+          drawer = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
+          drawer.setFilter(supercut)
 
           # Set overall weights on the nominal drawer
-          drawer = drawers[sampleName]
-          drawer.setFilter(supercut)
           drawer.setReweight(sample['weight'])
 
           if 'weights' in sample:
@@ -234,15 +187,53 @@ class ShapeFactory:
             if w != '-':
               drawer.setTreeReweight(it, False, w)
 
+          # Set up drawers for tree-type nuisances
+
+          drawersNuisanceUp   = {}
+          drawersNuisanceDown = {}
+
+          for nuisanceName, nuisance in nuisances.iteritems():
+            if 'kind' not in nuisance or nuisance['kind'] != 'tree':
+              continue
+
+            # Sept 2017
+            # Tree kind nuisances can be hanndled in two ways:
+            # usual way: a full tree for the variation up and a full tree for the variation down
+            # This behavior is activated by the presence in the nuisances.py file of the tags 'folderUp' and 'folderDown'
+            # alternative way: a combination of trees holding only the varied branches and the central tree for all the unvaried branches.
+            # This behavior is activated by the presence in the nuisances.py file of the tags: 'unskimmedFolderUp', 'unskimmedFolderDown', 'unskimmedFriendTreeDir'.
+            # Note that one has to use trees before skimming. The skimming can be applied on top is the additional tags 'skimListFolderUp' and 'skimListFolderDown'
+            # are present. These tags hold the path to the directories holding the files holding the "prunerlist" event list
+
+            if sampleName not in nuisance['samples']:
+              continue
+
+            filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+
+            if 'unskimmedFriendTreeDir' in nuisance.keys():
+              unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
+
+              try:
+                skimListFolderUp = nuisance['skimListFolderUp']
+              except KeyError:
+                skimListFolderUp = None
+              try:
+                skimListFolderDown = nuisance['skimListFolderDown']
+              except KeyError:
+                skimListFolderDown = None
+
+              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], True, unskimmedFriendsDir, skimListFolderUp)
+              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], True, unskimmedFriendsDir, skimListFolderDown)
+
+            else:
+              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles = True)
+              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles = True)
+
           # Set overall weights on the nuisance up/down drawers
           for idir, nuisanceDrawers in enumerate([drawersNuisanceUp, drawersNuisanceDown]):
-            for nuisanceName, drawersList in nuisanceDrawers.iteritems():
-              if sampleName not in drawersList:
-                continue
-  
+            for nuisanceName, ndrawer in nuisanceDrawers.iteritems():
               configurationNuis = nuisances[nuisanceName]['samples'][sampleName]
-  
-              ndrawer = drawersList[sampleName]
+
               ndrawer.setFilter(supercut)
               ndrawer.setReweight('(%s) * (%s)' % (sample['weight'], configurationNuis[idir]))
   
@@ -271,6 +262,7 @@ class ShapeFactory:
               else:
                 cuts[cutName] = {'expr': cut}
 
+          print ''
           # Loop over cuts ("cut" is a dict)
           for cutKey, cut in cuts.iteritems():
             if type(cutKey) is tuple:
@@ -278,62 +270,56 @@ class ShapeFactory:
               ssName, cutName = cutKey
               subsampleName = sampleName + '_' + ssName
               cutFullName = '%s__%s' % cutKey
-              print "  subsample/cut =", '%s/%s' % cutKey, "::", cut['expr']
+              print "    subsample/cut =", '%s/%s' % cutKey, "::", cut['expr']
             else:
               cutName = cutKey
               subsampleName = sampleName
               cutFullName = cutKey
-              print "  cut =", cutFullName, "::", cut['expr']
+              print "    cut =", cutFullName, "::", cut['expr']
 
             drawer.addCut(cutFullName, cut['expr'])
 
             categoryOrdering = []
             if 'categories' in cut:
               if type(cut['categories']) is dict:
-                print '  categories =', ', '.join(cut['categories'].iterkeys())
+                print '    categories =', ', '.join(cut['categories'].iterkeys())
                 for catname, expr in cut['categories'].iteritems():
                   categoryOrdering.append(catname)
                   drawer.addCategory(cutFullName, expr)
               else:
                 # is a list
                 categoryOrdering = list(cut['categories'])
-                print '  categorization =', cut['categorization']
+                print '    categorization =', cut['categorization']
                 drawer.setCategorization(cutFullName, cut['categorization'])
 
             # keep only the nuisances that are applicable to this cut & sample
             applicableNuisances = {}
 
-            if type(cutKey) is str:
-              print '  <nuisances>'
-
             for nuisanceName, nuisance in nuisances.iteritems():
-              if sampleName not in nuisance['samples']:
-                # this nuisance does not apply to the current sample
-                continue
-
               # If "cuts" is not defined in nuisances.py, then it is assumed to affect
               # all the cuts phase spaces
-              if 'cuts' in nuisance and cutName not in nuisance['cuts']:
-                # this nuisance does not apply to the current phase space
+              if (sampleName not in nuisance['samples']) or \
+                    ('cuts' in nuisance and cutName not in nuisance['cuts']):
+                # this nuisance does not apply to the current sample / phase space
                 continue
-
-              if type(cutKey) is str:
-                print "    nuisance =", nuisanceName, "::", nuisance['name']
-                if 'kind' in nuisance:
-                    print "      kind:", nuisance['kind']
-                print "      type:", nuisance['type']
 
               applicableNuisances[nuisanceName] = nuisance
 
-              for ndrawers in [drawersNuisanceUp, drawersNuisanceDown]:
-                if nuisanceName in ndrawers and sampleName in ndrawers[nuisanceName]:
-                  ndrawer = ndrawers[nuisanceName][sampleName]
-                  ndrawer.addCut(cutFullName, cut['expr'])
-                  if 'categorization' in cut:
-                    ndrawer.setCategorization(cutFullName, cut['categorization'])
-                  else:
-                    for catname in categoryOrdering:
-                      ndrawer.addCategory(cutFullName, cut['categories'][catname])
+              if 'kind' not in nuisance or nuisance['kind'] != 'tree':
+                continue
+
+              for nuisanceDrawers in [drawersNuisanceUp, drawersNuisanceDown]:
+                try:
+                  ndrawer = nuisanceDrawers[nuisanceName]
+                except KeyError:
+                  continue
+
+                ndrawer.addCut(cutFullName, cut['expr'])
+                if 'categorization' in cut:
+                  ndrawer.setCategorization(cutFullName, cut['categorization'])
+                else:
+                  for catname in categoryOrdering:
+                    ndrawer.addCategory(cutFullName, cut['categories'][catname])
 
             histoName = 'histo_' + subsampleName
 
@@ -455,10 +441,10 @@ class ShapeFactory:
 
                 configurationNuis = nuisance['samples'][sampleName]
 
-                for ndrawers, variation, confidx in [(drawersNuisanceUp, 'Up', 0), (drawersNuisanceDown, 'Down', 1)]:
+                for idir, (ndrawers, variation) in enumerate([(drawersNuisanceUp, 'Up'), (drawersNuisanceDown, 'Down')]):
                   if nuisance['kind'] == 'tree':
                     try:
-                      ndrawer = ndrawers[nuisanceName][sampleName]
+                      ndrawer = ndrawers[nuisanceName]
                     except KeyError:
                       # nuisance drawer for the specific sample may not exist if there is no nuisance tree corresponding to the nominal
                       # can be the case e.g. for UE and PS trees with FilesPerJob = 1
@@ -467,10 +453,12 @@ class ShapeFactory:
                     reweightNuis = reweight
 
                   elif nuisance['kind'] == 'weight':
-                    reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[confidx])
+                    reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[idir])
                     if reweight is not None:
                       # compound reweight
                       reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
+
+                    ndrawer = drawer
 
                   subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
 
@@ -488,9 +476,9 @@ class ShapeFactory:
                       histlistNuis.Add(hTotalNuis)
 
                     if yexpr:
-                      filler = drawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName)
+                      filler = ndrawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName)
                     else:
-                      filler = drawer.addPlotList(histlistNuis, xexpr, cutFullName)
+                      filler = ndrawer.addPlotList(histlistNuis, xexpr, cutFullName)
                     
                   else:
                     ROOT.gROOT.cd(cutName + '/' + variableName)
@@ -519,15 +507,12 @@ class ShapeFactory:
           del drawer
 
           for ndrawers, variation in [(drawersNuisanceUp, 'Up'), (drawersNuisanceDown, 'Down')]:
-            for nuisanceName, ndrawersNuis in ndrawers.iteritems():
-              try:
-                ndrawer = ndrawersNuis[sampleName]
-              except KeyError:
-                continue
-
+            for nuisanceName, ndrawer in ndrawers.iteritems():
               print 'Start', nuisanceName + variation, 'histogram fill'
               ndrawer.execute(nevents, firstEvent)
-              ndrawersNuis.pop(sampleName)
+
+          drawersNuisanceUp = None
+          drawersNuisanceDown = None
 
           print 'Postfill'
           
@@ -1113,63 +1098,55 @@ class ShapeFactory:
         raise RuntimeError('Expression ' + expr + ' is not 2D')
  
     # _____________________________________________________________________________
-    def _connectInputs(self, samples, inputDir, skipMissingFiles, friendsDir = None, skimListDir = None):
-        drawers = {}
-        # lists = {}
-
+    def _connectInputs(self, process, filenames, inputDir, skipMissingFiles, friendsDir = None, skimListDir = None):
 	if "sdfarm" in os.uname()[1]:
 	  inputDir = inputDir.replace("xrootd","xrd")
 
-        print "connectInputs from", inputDir
+        print "  connectInputs from", inputDir
 
-        for process, filenames in samples.iteritems():
-          print '  process:', process, '(%d files)' % len(filenames)
+        print '  (%d files)' % len(filenames)
 
-          drawer = ROOT.multidraw.MultiDraw(self._treeName)
-          drawer.setWeightBranch('')
-          drawer.setPrintLevel(1)
-          drawer.setDoTimeProfile(True)
-          drawer.setInputMultiplexing(int(self._nThreads))
+        drawer = ROOT.multidraw.MultiDraw(self._treeName)
+        drawer.setWeightBranch('')
+        drawer.setPrintLevel(1)
+        drawer.setDoTimeProfile(True)
+        drawer.setInputMultiplexing(int(self._nThreads))
 
-          for name, alias in self.aliases.iteritems():
-            if 'samples' in alias and process not in alias['samples']:
-              continue
+        for name, alias in self.aliases.iteritems():
+          if 'samples' in alias and process not in alias['samples']:
+            continue
 
-            drawer.addAlias(name, alias['expr'])
+          drawer.addAlias(name, alias['expr'])
 
-          # lists[process] = []
-          
-          # if the filenames start with "###" the folder will be reset
-          # and the name of the tree will start directly from the "filename" listed
-          # disregarding any "inputDir" given
-          #    This is useful in case we need to use multiple eos folders,
-          #    some of them under iteos, some under the standard eos          
-         
-          # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
-          files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-          nfiles = self._buildchain(drawer, files, skipMissingFiles)
+        # lists[process] = []
+        
+        # if the filenames start with "###" the folder will be reset
+        # and the name of the tree will start directly from the "filename" listed
+        # disregarding any "inputDir" given
+        #    This is useful in case we need to use multiple eos folders,
+        #    some of them under iteos, some under the standard eos          
+       
+        # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
+        files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
+        nfiles = self._buildchain(drawer, files, skipMissingFiles)
 
-          # if we specify a friends tree directory we need to load the friend trees and attch them 
-          if friendsDir != None:
-            files = [(friendsDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-            self._buildchain(drawer, files, False, friendtree = self._treeName)
+        # if we specify a friends tree directory we need to load the friend trees and attch them 
+        if friendsDir != None:
+          files = [(friendsDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
+          self._buildchain(drawer, files, False, friendtree = self._treeName)
 
-          #if we specify a directory with skim event lists we need to load them and skim    
-          #if skimListDir != None:
-          #  eventlists = self._geteventlists("prunerlist",  [(skimListDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames])
-          #  lists[process] = eventlists
-          #  for itree, tree in enumerate(trees):
-          #    print eventlists[itree]
-          #    eventlists[itree].Print()
-          #    tree.SetEventList(eventlists[itree])
+        #if we specify a directory with skim event lists we need to load them and skim    
+        #if skimListDir != None:
+        #  eventlists = self._geteventlists("prunerlist",  [(skimListDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames])
+        #  lists[process] = eventlists
+        #  for itree, tree in enumerate(trees):
+        #    print eventlists[itree]
+        #    eventlists[itree].Print()
+        #    tree.SetEventList(eventlists[itree])
 
-          if nfiles != 0:
-            drawers[process] = drawer
-          
-          # FIXME: add possibility to add Friend Trees for new variables   
-         
-        # return inputs, lists
-        return drawers
+        # FIXME: add possibility to add Friend Trees for new variables   
+
+        return drawer
 
     # _____________________________________________________________________________
     def _testEosFile(self,path): 
