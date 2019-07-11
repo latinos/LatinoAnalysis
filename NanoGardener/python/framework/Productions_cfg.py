@@ -202,10 +202,10 @@ Productions = {
                    },  
 
  # -------- 2016 MC 102X nAODv4 Hmumu
- 'Summer16_102X_nAODv4_Full2016v4': {
+ 'Summer16_102X_nAODv4_Full2016v4_Hmumu': {
                        'isData'  : False ,
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16_Hmumu_102X_nAODv4.py' ,
-                       'cmssw'   : 'Full2016v4' ,
+                       'cmssw'   : 'Full2016v2_hmumu' ,
                        'year'    : '2016' ,
                        'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
