@@ -73,34 +73,40 @@ class ShapeFactory:
         print " supercut = ", supercut
         
         if number != 99999 :
-          self._outputFileName = outputDir+'/plots_'+self._tag+"_"+str(number)+".root"
+          outputFileName = outputDir+'/plots_'+self._tag+"_"+str(number)+".root"
         else :
-          self._outputFileName = outputDir+'/plots_'+self._tag+".root"
+          outputFileName = outputDir+'/plots_'+self._tag+".root"
 
-        print " outputFileName = ", self._outputFileName
+        print " outputFileName = ", outputFileName
         os.system ("mkdir -p " + outputDir + "/")
         
         ROOT.TH1.SetDefaultSumw2(True)
 
-        #---- first create the structure in gROOT. We'll write to a file at the end
+        #---- Open the output file and create the ROOT directory structure
+        dtemp = tempfile.mkdtemp()
+        tmpPath = dtemp + '/' + os.path.basename(outputFileName)
+        outFile = ROOT.TFile.Open(tmpPath, 'recreate')
+        # Speed up TFile::Close - see https://root-forum.cern.ch/t/tfile-close-slow/24179
+        ROOT.gROOT.GetListOfFiles().Remove(outFile)
+        
         print ''
         print '  <cuts>'
         for cutName, cut in self._cuts.iteritems():
           print "cut = ", cutName, " :: ", self._cuts[cutName]
           if type(cut) is dict and 'categories' in cut:
             for catname in cut['categories']:
-              ROOT.gROOT.mkdir(cutName + '_' + catname)
+              outFile.mkdir(cutName + '_' + catname)
 
               for variableName, variable in self._variables.iteritems():
                 if 'cuts' not in variable or cutName in variable['cuts'] or cutName + '/' + catname in variable['cuts']:
-                  ROOT.gROOT.mkdir(cutName+"_"+catname+"/"+variableName)
+                  outFile.mkdir(cutName+"_"+catname+"/"+variableName)
 
           else:
-            ROOT.gROOT.mkdir(cutName)
+            outFile.mkdir(cutName)
             
             for variableName, variable in self._variables.iteritems():
               if 'cuts' not in variable or cutName in variable['cuts']:
-                ROOT.gROOT.mkdir(cutName+"/"+variableName)
+                outFile.mkdir(cutName+"/"+variableName)
 
         #---- just print the variables
         print ''
@@ -209,6 +215,16 @@ class ShapeFactory:
               continue
 
             filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+            skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
+            
+            if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
+              # Workaround for missing nuisance files - don't use this regularly!
+              if sample['name'][0].startswith('###'):
+                altDir = os.path.dirname(sample['name'][0].replace('###', ''))
+              else:
+                altDir = inputDir
+            else:
+              altDir = ''
 
             if 'unskimmedFriendTreeDir' in nuisance.keys():
               unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
@@ -222,12 +238,12 @@ class ShapeFactory:
               except KeyError:
                 skimListFolderDown = None
 
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], True, unskimmedFriendsDir, skimListFolderUp)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], True, unskimmedFriendsDir, skimListFolderDown)
+              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
+              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
 
             else:
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles = True)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles = True)
+              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
+              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
 
           # Set overall weights on the nuisance up/down drawers
           for idir, nuisanceDrawers in enumerate([drawersNuisanceUp, drawersNuisanceDown]):
@@ -406,7 +422,7 @@ class ShapeFactory:
                 histlist = ROOT.TObjArray()
 
                 for catname in categoryOrdering:
-                  ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
+                  outFile.cd(cutName + '_' + catname + '/' + variableName)
 
                   hTotal = self._makeshape(histoName, variable['range'])
                   _allplots.append(hTotal)
@@ -420,7 +436,7 @@ class ShapeFactory:
                   filler = drawer.addPlotList(histlist, xexpr, cutFullName)
 
               else:
-                ROOT.gROOT.cd(cutName + '/' + variableName)
+                outFile.cd(cutName + '/' + variableName)
 
                 hTotal = self._makeshape(histoName, variable['range'])
                 _allplots.append(hTotal)
@@ -466,7 +482,7 @@ class ShapeFactory:
                     histlistNuis = ROOT.TObjArray()
   
                     for catname in categoryOrdering:
-                      ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
+                      outFile.cd(cutName + '_' + catname + '/' + variableName)
   
                       histoNameNuis = 'histo_' + subsampleNameNuis
                       hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
@@ -481,7 +497,7 @@ class ShapeFactory:
                       filler = ndrawer.addPlotList(histlistNuis, xexpr, cutFullName)
                     
                   else:
-                    ROOT.gROOT.cd(cutName + '/' + variableName)
+                    outFile.cd(cutName + '/' + variableName)
   
                     histoNameNuis = 'histo_' + subsampleNameNuis
                     hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
@@ -501,6 +517,13 @@ class ShapeFactory:
             print ''
 
           # We now defined all plots for this sample - execute the drawers and fill the histograms
+
+          # make a scratch ROOT file for MultiDraw aliases tree
+          with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
+            pass
+          tmpROOTFile = ROOT.TFile.Open(tmpfile.name, 'recreate')
+          tmpROOTFile.cd()
+          
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
           # We don't need this drawer any more - can reduce the number of open FDs?
@@ -510,6 +533,9 @@ class ShapeFactory:
             for nuisanceName, ndrawer in ndrawers.iteritems():
               print 'Start', nuisanceName + variation, 'histogram fill'
               ndrawer.execute(nevents, firstEvent)
+
+          tmpROOTFile.Close()
+          os.unlink(tmpfile.name)
 
           drawersNuisanceUp = None
           drawersNuisanceDown = None
@@ -545,7 +571,7 @@ class ShapeFactory:
                 catsuffixes = ['']
 
               for catsuffix in catsuffixes:
-                hTotal = ROOT.gROOT.Get(cutName + catsuffix + '/' + variableName + '/' + histoName)
+                hTotal = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoName)
 
                 # fold if needed
                 if 'fold' in variable:
@@ -621,8 +647,8 @@ class ShapeFactory:
                     histoNameUp = 'histo_' + subsampleNameUp
                     histoNameDown = 'histo_' + subsampleNameDown
   
-                    hTotalUp = ROOT.gROOT.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
-                    hTotalDown = ROOT.gROOT.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
+                    hTotalUp = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
+                    hTotalDown = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
   
                     outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
                     outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
@@ -650,42 +676,13 @@ class ShapeFactory:
           # end of one sample
           print ''
 
-        print 'Writing histograms to', self._outputFileName
-
-        dtemp = tempfile.mkdtemp()
-        tmpPath = dtemp + '/' + os.path.basename(self._outputFileName)
-        outFile = ROOT.TFile.Open(tmpPath, 'recreate')
-        # Speed up TFile::Close - see https://root-forum.cern.ch/t/tfile-close-slow/24179
-        ROOT.gROOT.GetListOfFiles().Remove(outFile)
-
-        def fullpath(tdir):
-          path = tdir.GetName()
-          d = tdir.GetMother()
-          while d:
-            path = d.GetName() + '/' + path
-            d = d.GetMother()
-          path = '/' + path
-          return path
-
-        def writeDirectory(indir, outdir):
-          for obj in indir.GetList():
-            if obj.IsA() == ROOT.TDirectory.Class():
-              outdir.mkdir(obj.GetName())
-              writeDirectory(obj, outdir.GetDirectory(obj.GetName()))
-            else:
-              outdir.cd()
-              obj.SetDirectory(outdir)
-              obj.Write()
-              obj.Delete()
-
-        print 'Writing in-memory histograms to', tmpPath
-        writeDirectory(ROOT.gROOT, outFile)
-        print 'Closing', tmpPath
+        outFile.cd()
+        outFile.Write()
         outFile.Close()
-
-        print 'Copying', tmpPath, 'to', self._outputFileName
-        shutil.copyfile(tmpPath, self._outputFileName)
-        shutil.rmtree(dtemp)
+        
+        print 'Copying', outFile.GetName(), 'to', outputFileName
+        shutil.copyfile(outFile.GetName(), outputFileName)
+        shutil.rmtree(os.path.dirname(outFile.GetName()))
 
     # _____________________________________________________________________________
     def _symmetrize(self, hUp, hDo): 
@@ -1098,7 +1095,7 @@ class ShapeFactory:
         raise RuntimeError('Expression ' + expr + ' is not 2D')
  
     # _____________________________________________________________________________
-    def _connectInputs(self, process, filenames, inputDir, skipMissingFiles, friendsDir = None, skimListDir = None):
+    def _connectInputs(self, process, filenames, inputDir, skipMissingFiles, friendsDir=None, skimListDir=None, altDir=''):
 	if "sdfarm" in os.uname()[1]:
 	  inputDir = inputDir.replace("xrootd","xrd")
 
@@ -1128,12 +1125,12 @@ class ShapeFactory:
        
         # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
         files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-        nfiles = self._buildchain(drawer, files, skipMissingFiles)
+        nfiles = self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
 
         # if we specify a friends tree directory we need to load the friend trees and attch them 
         if friendsDir != None:
           files = [(friendsDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-          self._buildchain(drawer, files, False, friendtree = self._treeName)
+          self._buildchain(drawer, files, False, friendtree=self._treeName)
 
         #if we specify a directory with skim event lists we need to load them and skim    
         #if skimListDir != None:
@@ -1149,12 +1146,27 @@ class ShapeFactory:
         return drawer
 
     # _____________________________________________________________________________
+    def _testLocalFile(self,path): 
+      if not os.path.exists(path):
+        return False 
+
+      try:
+        f = ROOT.TFile.Open(path)
+        if not f or f.IsZombie():
+          return False
+      finally:
+        if f:
+          f.Close()
+
+      return True
+
+    # _____________________________________________________________________________
     def _testEosFile(self,path): 
       eoususer='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select'
       if 'eosuser.cern.ch' in path: 
         if os.system(eoususer+' ls '+path.split('/eosuser.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
       if 'eoscms.cern.ch' in path:
-        if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True 
+        if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
       return False 
 
     # _____________________________________________________________________________
@@ -1184,7 +1196,34 @@ class ShapeFactory:
       return False  
 
     # _____________________________________________________________________________
-    def _buildchain(self, multidraw, files, skipMissingFiles, friendtree = None):
+    def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
+        def testFile(path):
+          if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
+            exists = self._testEosFile(path)
+            location = 'CERN'
+          elif "maite.iihe.ac.be" in path:
+            exists = self._testIiheFile(path)
+            location = 'IIHE'
+          elif "cluster142.knu.ac.kr" in path:
+            # already checked the file at mkShape.py
+            exists = True
+            location = 'KNU'
+          elif "sdfarm" in path:
+            exists = self._test_sdfarm_File(path)
+            location = 'sdfarm.kr'
+          elif 'root://' in path:
+            exists = self._test_xrootdFile(path)
+            location = 'AAA'
+          else:
+            print 'checking local'
+            exists = self._testLocalFile(path)
+            location = 'local'
+
+          if not exists:
+            print 'File '+path+' doesn\'t exist @', location
+
+          return exists
+
         if friendtree is not None:
           paths = []
 
@@ -1192,53 +1231,39 @@ class ShapeFactory:
 
         for path in files:
           for att in range(5): # try opening the file 5 times
-            doesFileExist = True
-
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-
-            if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
-              if not self._testEosFile(path):
-                print 'File '+path+' doesn\'t exist'
-                doesFileExist = False
-            elif "maite.iihe.ac.be" in path:
-              if not self._testIiheFile(path):
-                print 'File '+path+' doesn\'t exist @ IIHE'
-                doesFileExist = False
-	    elif "cluster142.knu.ac.kr" in path:
-	      pass # already checked the file at mkShape.py
-            elif "sdfarm" in path:
-              if not self._test_sdfarm_File(path):
-                print 'File '+path+' doesn\'t exist @ sdfarm.kr'
-                doesFileExist = False
-            elif 'root://' in path:
-              if not self._test_xrootdFile(path):
-                print 'File '+path+' doesn\'t exist @ sdfarm.kr'
-                doesFileExist = False 
-            else:
-              if not os.path.exists(path):
-                print 'File '+path+' doesn\'t exist'
-                doesFileExist = False
-
-            if doesFileExist:
+  
+            exists = testFile(path)
+            if not exists:
+              if altDir and testFile(altDir + '/' + os.path.basename(path)):
+                path = altDir + '/' + os.path.basename(path)
+                exists = True
+  
+            if exists:
               if friendtree is not None:
                 paths.append(path)
               else:
                 multidraw.addInputPath(path)
-
+  
               ntrees += 1
               break
-
+  
+            elif skipMissingFiles:
+              break
+                
             time.sleep(10)
-
+  
           else: # exhausted all attempts
-            if not skipMissingFiles:
-              raise RuntimeError('File '+path+' doesn\'t exist')
+            print 'File '+path+' doesn\'t exist and skipMissingFiles=False in buildChain.'
+            print 'If you are trying to build a chain for a tree-based nuisance which has different number of'\
+                ' files wrt nominal (e.g. UE and PS variations), set "synchronized": False in the nuisance specification.'
+            raise RuntimeError('File '+path+' doesn\'t exist')
 
-          if friendtree is not None:
-            objarr = ROOT.TObjArray()
-            for path in paths:
-              objarr.Add(ROOT.TObjString(path))
-              multidraw.addFriend(friendtree, objarr)
+        if friendtree is not None:
+          objarr = ROOT.TObjArray()
+          for path in paths:
+            objarr.Add(ROOT.TObjString(path))
+            multidraw.addFriend(friendtree, objarr)
 
         return ntrees
 
