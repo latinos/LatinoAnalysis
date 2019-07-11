@@ -356,6 +356,15 @@ Samples["QCD_Pt-50to80_EMEnriched"] = {'nanoAOD': '/QCD_Pt-50to80_EMEnriched_Tun
 
 Samples["QCD_Pt-30toInf_DoubleEMEnriched"] = {'nanoAOD': '/QCD_Pt-30toInf_DoubleEMEnriched_MGG-40to80_TuneCP5_13TeV_Pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 
+
+### QCD not enriched                                                                                                                           
+Samples['QCD_Pt_15to30']                    = {'/QCD_Pt_15to30_TuneCP5_13TeV_pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X\
+_mc2017_realistic_v6-v1/NANOAODSIM'}
+Samples['QCD_Pt_30to50']                    = {'/QCD_Pt_30to50_TuneCP5_13TeV_pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X\
+_mc2017_realistic_v6-v1/NANOAODSIM'}
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Yutaro
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
