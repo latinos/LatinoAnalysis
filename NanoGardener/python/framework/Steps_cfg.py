@@ -79,6 +79,14 @@ Steps = {
                      'onlySample' : ['DYJetsToLL_M-50_ext2'],
                  },
 
+  'MCMonoH2016' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['MHTrigMC','MHSwitch2016','MonoHiggsMVA','l3Kin','formulasMCMH'],
+                 },
+
+
 ### OLD Stuff begin
 
   'MCl1loose2017v2': {
@@ -955,6 +963,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_16tmp.py\')' ,
+                 },
+
+  'formulasMCMH' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_MonoH.py\')' ,
                  },
 
 
