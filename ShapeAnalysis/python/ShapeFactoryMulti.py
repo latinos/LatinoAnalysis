@@ -152,45 +152,64 @@ class ShapeFactory:
         # One MultiDraw per sample = tree
         for sampleName, sample in self._samples.iteritems():
           print "    sample =", sampleName
-          #print "    name:", sample['name']
+          print "    name:", sample['name']
           #print "    weight:", sample['weight']
 
           if 'weights' not in sample:
             sample['weights'] = ['1'] * len(sample['name'])
 
-          # then add the lumi scale factor, unless the tree is data
-          dataTrees = []
+          # label each tree as data / MC
           if 'isData' in sample:
             if len(sample['isData']) == 1 and sample['isData'][0] == 'all':
               # if you put 'all', all the root files are considered "data"
-              dataTrees = range(len(sample['name']))
+              isData = [True] * len(sample['name'])
             else:
+              isData = []
               for iT in range(len(sample['name'])):
-                if sample['isData'][iT] != '0':
-                  dataTrees.append(iT)
-                  
-          for iT in range(len(sample['name'])):
-            if iT not in dataTrees:
-              # default is "scale to luminosity"
-              sample['weights'][iT] = "( (" + sample['weights'][iT] + ") * " + str(self._lumi) + ")"
-              print "      sample ['weights'][" + str(iT) + "] = ", sample['weights'][iT]
+                try:
+                  isData.append((int(sample['isData'][iT]) != 0))
+                except IndexError:
+                  isData.append(False)
+          else:
+            isData = [False] * len(sample['name'])
 
+          treeweights = []
+          if 'weights' in sample:
+            lumiscale = None
+            for iw, weight in enumerate(sample['weights']):
+              treeweight = ShapeFactory._make_reweight(weight)
+              # add the lumi scale factor for MC trees
+              if not isData[iw]:
+                if lumiscale is None:
+                  lumiscale = ROOT.multidraw.ReweightSource(str(self._lumi))
+
+                treeweight = ROOT.multidraw.ReweightSource(treeweight, lumiscale)
+
+              treeweights.append(treeweight)
+          else:
+            treeweights = [None] * len(sample['name'])
+
+          if len(treeweights) != len(sample['name']):
+            raise RuntimeError('Number of tree-by-tree weights doesn\'t match the number of trees')
+
+          if type(sample['weight']) is list:
+            # compound weight
+            sampleweight = ShapeFactory._make_reweight(sample['weight'][0])
+            for w in sample['weight'][1:]:
+              sampleweight = ROOT.multidraw.ReweightSource(sampleweight, ShapeFactory._make_reweight(w))
+          else:
+            sampleweight = ShapeFactory._make_reweight(sample['weight'])
+
+          # Create the nominal drawer
+                  
           drawer = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
           drawer.setFilter(supercut)
 
           # Set overall weights on the nominal drawer
-          drawer.setReweight(sample['weight'])
-
-          if 'weights' in sample:
-            weights = sample['weights']
-            print "  weights:", weights
-            if len(weights) != 0 and len(weights) != len(sample['name']):
-              raise RuntimeError('Number of tree-by-tree weights doesn\'t match the number of trees')
-          else:
-            weights = []
-
-          for it, w in enumerate(weights):
-            if w != '-':
+          drawer.setReweight(sampleweight)
+               
+          for it, w in enumerate(treeweights):
+            if w is not None:
               drawer.setTreeReweight(it, False, w)
 
           # Set up drawers for tree-type nuisances
@@ -248,13 +267,19 @@ class ShapeFactory:
           # Set overall weights on the nuisance up/down drawers
           for idir, nuisanceDrawers in enumerate([drawersNuisanceUp, drawersNuisanceDown]):
             for nuisanceName, ndrawer in nuisanceDrawers.iteritems():
+              # tree-type nuisances can in addition have weights for up / down
               configurationNuis = nuisances[nuisanceName]['samples'][sampleName]
+              if float(configurationNuis[idir]) != 1.:
+                nuisanceShift = ShapeFactory._make_reweight(configurationNuis[idir])
+                nuisanceweight = ROOT.multidraw.ReweightSource(sampleweight, nuisanceShift)
+              else:
+                nuisanceweight = sampleweight
 
               ndrawer.setFilter(supercut)
-              ndrawer.setReweight('(%s) * (%s)' % (sample['weight'], configurationNuis[idir]))
+              ndrawer.setReweight(nuisanceweight)
   
-              for it, w in enumerate(weights):
-                if w != '-':
+              for it, w in enumerate(treeweights):
+                if w is not None:
                   ndrawer.setTreeReweight(it, False, w)
 
           cuts = collections.OrderedDict()
@@ -356,39 +381,7 @@ class ShapeFactory:
               self._logger.debug('Cut:     '+cutFullName)
 
               if 'weight' in variable:
-                wgtspec = variable['weight']
-                if type(wgtspec) is str:
-                  reweight = ROOT.multidraw.ReweightSource(wgtspec)
-                else:
-                  if 'source' in wgtspec:
-                    fname, _, objname = wgtspec['source'].partition(':')
-                    ftmp = ROOT.TFile.Open(fname)
-                    wsource = ftmp.Get(objname)
-                    try:
-                      wsource.SetDirectory(0)
-                    except:
-                      pass
-                    ftmp.Close()
-                  else:
-                    wsource = None
-  
-                  if 'xexpr' in wgtspec:
-                    if 'yexpr' in wgtspec:
-                      reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wgtspec['yexpr'], wsource)
-                      print 'Reweighting:', reweight
-                    else:
-                      reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wsource)
-                  elif 'class' in wgtspec:
-                    if 'args' in wgtspec:
-                      if type(wgtspec['args']) is tuple:
-                        args = wgtspec['args']
-                      else:
-                        args = (wgtspec['args'],)
-                    else:
-                      args = tuple()
-  
-                    func = getattr(ROOT, wgtspec['class'])(*args)
-                    reweight = ROOT.multidraw.ReweightSource(ROOT.multidraw.CompiledExprSource(func), wsource)
+                reweight = ShapeFactory._make_reweight(variable['weight'])
               else:
                 reweight = None
 
@@ -408,14 +401,7 @@ class ShapeFactory:
                     raise NotImplementedError('Cannot plot >=3D distributions')
 
               else:
-                if 'args' in variable:
-                  if type(variable['args']) is tuple:
-                    args = variable['args']
-                  else:
-                    args = (variable['args'],)
-                else:
-                  args = tuple()
-                xexpr = getattr(ROOT, variable['class'])(*args)
+                xexpr = ShapeFactory._make_ttreefunction(variable)
                 yexpr = ''
 
               if 'categories' in cut:
@@ -1297,5 +1283,63 @@ class ShapeFactory:
         lists.append(evlist)
 
       return lists
-        
 
+    @staticmethod
+    def _make_ttreefunction(expr):
+      try:
+        args = expr['args']
+      except KeyError:
+        args = tuple()
+      else:
+        if type(args) is not tuple:
+          args = (args,)
+
+      return getattr(ROOT, expr['class'])(*args)
+
+    @staticmethod
+    def _make_compiledsource(expr):
+      func = ShapeFactory._make_ttreefunction(expr)
+      return ROOT.multidraw.CompiledExprSource(func)
+
+    @staticmethod
+    def _make_reweight(weight):
+      if type(weight) is str:
+        return ROOT.multidraw.ReweightSource(weight)
+
+      try:
+        fname, _, objname = weight['source'].partition(':')
+      except KeyError:
+        wsource = None
+      else:
+        ftmp = ROOT.TFile.Open(fname)
+        wsource = ftmp.Get(objname)
+        try:
+          wsource.SetDirectory(0)
+        except:
+          pass
+        ftmp.Close()
+      
+      if 'class' in weight:
+        expr = ShapeFactory._make_compiledsource(weight)
+        return ROOT.multidraw.ReweightSource(expr, wsource)
+
+      else:
+        if 'expr' in weight:
+          xexpr = weight['expr']
+          yexpr = None
+        else:
+          xexpr = weight['xexpr']
+          if 'yexpr' in weight:
+            yexpr = weight['yexpr']
+          else:
+            yexpr = None
+
+        if type(xexpr) is dict:
+          xexpr = ShapeFactory._make_compiledsource(xexpr)
+          if yexpr is not None:
+            yexpr = ShapeFactory._make_compiledsource(yexpr)
+
+        if yexpr is not None:
+          return ROOT.multidraw.ReweightSource(xexpr, yexpr, wsource)
+        else:
+          return ROOT.multidraw.ReweightSource(xexpr, wsource)
