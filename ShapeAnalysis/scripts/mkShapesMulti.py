@@ -288,6 +288,13 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
+    #in case some aliases need a compiled function 
+    for aliasName, alias in aliases.iteritems():
+      if alias.has_key('linesToAdd'):
+        linesToAdd = alias['linesToAdd']
+        for line in linesToAdd:
+          ROOT.gROOT.ProcessLineSync(line)
+
     supercut = '1'
     cuts = collections.OrderedDict()
     if os.path.exists(opt.cutsFile) :
