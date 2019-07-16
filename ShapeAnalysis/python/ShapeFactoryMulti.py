@@ -56,6 +56,13 @@ class ShapeFactory:
         self._samples   = samples
         self._cuts      = cuts
 
+        #in case some aliases need a compiled function 
+        for aliasName, alias in self.aliases.iteritems():
+          if alias.has_key('linesToAdd'):
+            linesToAdd = alias['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
+
         #in case some variables need a compiled function 
         for variableName, variable in self._variables.iteritems():
           if variable.has_key('linesToAdd'):
@@ -233,36 +240,41 @@ class ShapeFactory:
             if sampleName not in nuisance['samples']:
               continue
 
-            filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
-            skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
+            if 'folderUp' in nuisance and 'folderDown' in nuisance:
+              filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+              skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
             
-            if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
-              # Workaround for missing nuisance files - don't use this regularly!
-              if sample['name'][0].startswith('###'):
-                altDir = os.path.dirname(sample['name'][0].replace('###', ''))
+              if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
+                # Workaround for missing nuisance files - don't use this regularly!
+                if sample['name'][0].startswith('###'):
+                  altDir = os.path.dirname(sample['name'][0].replace('###', ''))
+                else:
+                  altDir = inputDir
               else:
-                altDir = inputDir
-            else:
-              altDir = ''
+                altDir = ''
+  
+              if 'unskimmedFriendTreeDir' in nuisance.keys():
+                unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
+  
+                try:
+                  skimListFolderUp = nuisance['skimListFolderUp']
+                except KeyError:
+                  skimListFolderUp = None
+                try:
+                  skimListFolderDown = nuisance['skimListFolderDown']
+                except KeyError:
+                  skimListFolderDown = None
+  
+                drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
+                drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
+  
+              else:
+                drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
+                drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
 
-            if 'unskimmedFriendTreeDir' in nuisance.keys():
-              unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
-
-              try:
-                skimListFolderUp = nuisance['skimListFolderUp']
-              except KeyError:
-                skimListFolderUp = None
-              try:
-                skimListFolderDown = nuisance['skimListFolderDown']
-              except KeyError:
-                skimListFolderDown = None
-
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
-
-            else:
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
+            elif 'filesUp' in nuisance and 'filesDown' in nuisance:
+              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, nuisance['filesUp'][sampleName], '', skipMissingFiles=False)
+              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, nuisance['filesDown'][sampleName], '', skipMissingFiles=False)
 
           # Set overall weights on the nuisance up/down drawers
           for idir, nuisanceDrawers in enumerate([drawersNuisanceUp, drawersNuisanceDown]):
@@ -277,10 +289,21 @@ class ShapeFactory:
 
               ndrawer.setFilter(supercut)
               ndrawer.setReweight(nuisanceweight)
+
+              # if the nuisance drawer is built from independent files, length of chain can be
+              # different from the length of tree weights
+              tocheck = 'files' + ('Up' if idir == 0 else 'Down')
+              if tocheck in nuisances[nuisanceName] and len(nuisances[nuisanceName][tocheck][sampleName]) != len(treeweights):
+                warnIfTreeWeight = True
+              else:
+                warnIfTreeWeight = False
   
               for it, w in enumerate(treeweights):
                 if w is not None:
                   ndrawer.setTreeReweight(it, False, w)
+                  if warnIfTreeWeight:
+                    print 'Nuisance', nuisanceName, 'tree filler for sample', sampleName, 'has different number of trees from the nominal filler. Tree-based reweighting may cause problems.'
+                    warnIfTreeWeight = False
 
           cuts = collections.OrderedDict()
           if 'subsamples' in sample:
@@ -1099,7 +1122,10 @@ class ShapeFactory:
           if 'samples' in alias and process not in alias['samples']:
             continue
 
-          drawer.addAlias(name, alias['expr'])
+          if 'class' in alias:
+            drawer.addAlias(name, ShapeFactory._make_ttreefunction(alias))
+          else:
+            drawer.addAlias(name, alias['expr'])
 
         # lists[process] = []
         
