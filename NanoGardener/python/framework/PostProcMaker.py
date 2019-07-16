@@ -479,6 +479,7 @@ class PostProcMaker():
      fPy.write('#!/usr/bin/env python \n')
      fPy.write('import os, sys \n')
      fPy.write('import subprocess\n')
+     fPy.write('import shutil\n')
      fPy.write('import ROOT \n')
      fPy.write('ROOT.PyConfig.IgnoreCommandLineOptions = True \n')
      fPy.write(' \n')
@@ -508,19 +509,33 @@ class PostProcMaker():
          fPy.write(self.customizeDeclare(iStep)+'\n')
      fPy.write(' \n')
 
-     if self._iniStep == 'Prod':
-       for iFile in inputRootFiles:
-         fPy.write('subprocess.Popen(["xrdcp", "'+iFile+'", "."]).communicate()\n')
-
      # Files
-     fPy.write('files=[')
-     if self._iniStep == 'Prod':
-       for iFile in inputRootFiles : fPy.write('"./'+os.path.basename(iFile)+'",')
-     else:
-       for iFile in inputRootFiles : fPy.write('"'+iFile+'",')
-     fPy.write(']\n') 
-     fPy.write(' \n')
-     
+     fPy.write('sourceFiles=[\n%s\n]\n\n' % (',\n'.join('    "%s"' % f for f in inputRootFiles)))
+     fPy.write('files=[]\n\n')
+
+     # Download the file locally with size validation (make maximum 5 attempts)
+     fPy.write('for source in sourceFiles:\n')
+     fPy.write('    fname = os.path.basename(source).replace(".root", "_input.root")\n')
+     fPy.write('    for att in range(5):\n')
+     fPy.write('        if source.startswith("root://"):\n')
+     fPy.write('            subprocess.Popen(["xrdcp", source, "./" + fname]).communicate()\n')
+     fPy.write('            out, err = subprocess.Popen(["xrdfs", source[:source.find("/", 7)], "stat", source[source.find("/", 7) + 1:]], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()\n')
+     fPy.write('            size = int(out.split("\\n")[2].split()[1])\n')
+     fPy.write('        else:\n')
+     fPy.write('            shutil.copyfile(source, "./" + fname)\n')
+     fPy.write('            size = os.stat(source).st_size\n')
+     fPy.write('\n')
+     fPy.write('        if os.stat(os.path.basename(fname)).st_size == size:\n')
+     fPy.write('            break\n')
+     fPy.write('        else:\n')
+     fPy.write('            try:\n')
+     fPy.write('                os.unlink(os.path.basename(fname))\n')
+     fPy.write('            except OSError:\n')
+     fPy.write('                pass\n')
+     fPy.write('    else:\n')
+     fPy.write('        raise RuntimeError("Failed to download " + source)\n\n')
+     fPy.write('    files.append(fname)\n\n')
+
      # Configure modules
      fPy.write('p = PostProcessor(  "."   ,          \n')
      fPy.write('                    files ,          \n')
@@ -559,6 +574,13 @@ class PostProcMaker():
      # Common footer
      fPy.write('p.run() \n')
      fPy.write(' \n')
+
+     fPy.write('for fname in files:\n')
+     fPy.write('    try:\n')
+     fPy.write('        os.unlink(fname)\n')
+     fPy.write('        os.rename(fname.replace("_input.root", "_input_Skim.root"), fname.replace("_input.root", "_Skim.root"))\n')
+     fPy.write('    except:\n')
+     fPy.write('        pass\n')
 
      # Close file
      fPy.close()
