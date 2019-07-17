@@ -1532,7 +1532,7 @@ Steps = {
                                     'GluGluHToWWTo2L2Nu_M125_CUETDown' , 'VBFHToWWTo2L2Nu_M125_CUETDown' , 'WWTo2L2Nu_CUETDown' ,
                                     'GluGluHToWWTo2L2Nu_M125_CUETUp'   , 'VBFHToWWTo2L2Nu_M125_CUETUp'   , 'WWTo2L2Nu_CUETUp'   ,
                                     'GluGluHToWWTo2L2NuHerwigPS_M125'  , 'VBFHToWWTo2L2NuHerwigPS_M125'  , 'WWTo2L2NuHerwigPS'  ,
-                                    'GluGluHToWWTo2L2Nu_M125_herwigpp'
+                                    'GluGluHToWWTo2L2Nu_M125_herwigpp' , 'VBFHToWWTo2L2Nu_M125_herwigpp',
                                  ] ,
                   'cpMap' : {
                               'UEdo' : {
@@ -1540,7 +1540,7 @@ Steps = {
                                           'VBFHToWWTo2L2NuPowheg_M125_CP5Down'    : ['VBFHToWWTo2L2NuPowheg_M125_PrivateNano','VBFHToWWTo2L2NuPowheg_M125']    ,
                                           'WWTo2L2Nu_CP5Down'               : ['WWTo2L2Nu_PrivateNano', 'WWTo2L2Nu'] ,
                                           'GluGluHToWWTo2L2Nu_M125_CUETDown' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
-                                          'VBFHToWWTo2L2Nu_M125_CUETDown'    : ['VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125']    ,
+                                          'VBFHToWWTo2L2Nu_M125_CUETDown'    : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125']    ,
                                           'WWTo2L2Nu_CUETDown'               : ['WWTo2L2Nu'] , 
                                        },
                               'UEup' : {
@@ -1548,13 +1548,14 @@ Steps = {
                                           'VBFHToWWTo2L2NuPowheg_M125_CP5Up'    : ['VBFHToWWTo2L2NuPowheg_M125_PrivateNano','VBFHToWWTo2L2NuPowheg_M125']    ,
                                           'WWTo2L2Nu_CP5Up'               : ['WWTo2L2Nu_PrivateNano', 'WWTo2L2Nu'] ,
                                           'GluGluHToWWTo2L2Nu_M125_CUETUp'   : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
-                                          'VBFHToWWTo2L2Nu_M125_CUETUp'      : ['VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125']    ,
+                                          'VBFHToWWTo2L2Nu_M125_CUETUp'      : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125']    ,
                                           'WWTo2L2Nu_CUETUp'                 : ['WWTo2L2Nu'] ,
                                        },
                               'PS'   : {
                                           'GluGluHToWWTo2L2NuHerwigPS_M125'  : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
                                           'GluGluHToWWTo2L2Nu_M125_herwigpp' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'], 
-                                          'VBFHToWWTo2L2NuHerwigPS_M125'     : ['VBFHToWWTo2L2Nu_M125','VBFHToWWTo2L2Nu_alternative_M125'] ,
+                                          'VBFHToWWTo2L2NuHerwigPS_M125'     : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125'] ,
+                                          'VBFHToWWTo2L2Nu_M125_herwigpp'    : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125'] ,
                                           'WWTo2L2NuHerwigPS'                : ['WWTo2L2Nu'] ,
                                        },
                             },
