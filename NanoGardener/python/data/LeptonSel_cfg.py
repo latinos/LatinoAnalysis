@@ -3596,11 +3596,11 @@ MuonWP['Full2017v4'] = MuonWP['Full2017v2']
 MuonWP['Full2018v4'] = MuonWP['Full2018']
 # .... and copy Full2016v2 in Full2017v5 (only Electron WP names were changed)
 MuonWP['Full2016v5'] = MuonWP['Full2016v2']
-MuonWP['Full2016v5']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v5/']
+MuonWP['Full2016v5']['TightObjWP']['cut_Tight80x']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v5/'
 MuonWP['Full2017v5'] = MuonWP['Full2017v2']
-MuonWP['Full2017v5']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017v5/']
+MuonWP['Full2017v5']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017v5/'
 MuonWP['Full2018v5'] = MuonWP['Full2018']
-MuonWP['Full2018v5']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2018v5/']
+MuonWP['Full2018v5']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2018v5/'
 
 if __name__ == '__main__':
     print('_______________LepFilter_dict___________')

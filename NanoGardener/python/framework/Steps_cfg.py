@@ -247,7 +247,8 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','DYMVA','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
+                  #'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','DYMVA','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
                 },
 
 
@@ -1043,7 +1044,7 @@ Steps = {
 ## -------- DYMVA
 
   'DYMVA' : {
-                  'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
