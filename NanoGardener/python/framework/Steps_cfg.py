@@ -559,6 +559,17 @@ Steps = {
                   'module'     : 'jetSel()' ,
                },
 
+   'jetSelCustom' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(2,"custom",15.0,4.7,"CleanJet")' ,
+                  'module'     : 'jetSel()' ,
+               },
+
+
    'CleanJetCut' : {
                  'isChain'    : False ,
                   'do4MC'      : True  ,
