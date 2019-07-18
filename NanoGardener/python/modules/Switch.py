@@ -49,7 +49,10 @@ class Switch(Module):
     def decide(self, th_list, event):
         for th in th_list:
             #th_str = 'event.' + th
-            if not eval(th): return False
+            happy = False
+            try: happy = eval(th)
+            except: raise ValueError('Switch decide: Could not evaluate ' + th)
+            if not happy: return False
         return True
 
     def analyze(self, event):

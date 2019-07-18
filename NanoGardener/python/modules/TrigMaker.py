@@ -21,7 +21,8 @@ class TrigMaker(Module):
         self.isData = isData
         self.keepRunP = keepRunP
         self.seeded = seeded
-
+        self.firstEvent = True
+ 
         self.mu_maxPt = 200
         self.mu_minPt = 10
         self.mu_maxEta = 2.4
@@ -44,9 +45,9 @@ class TrigMaker(Module):
 
         self.Trigger = var['Trigger']
 
-        print('TrigMakerGen: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
+        print('TrigMaker: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
         if cfg_path != 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py':
-            print('TrigMakerGen: loaded trigger configuration from ' + cfg_path)
+            print('TrigMaker: loaded trigger configuration from ' + cfg_path)
  
     def beginJob(self): 
         pass
@@ -60,13 +61,13 @@ class TrigMaker(Module):
         
         if self.keepRunP:
            # Check if input tree indeed contains run_period
-           isThere = False
-           for br in inputTree.GetListOfBranches():
-              if br.GetName() == 'run_period': isThere = True
-           if not isThere: print("WARNING: Input tree does not contain the 'run_period' branch, while 'keepRunP' is True.")
-           else: 
-               try: self.NewVar['I'].remove('run_period')
-               except: pass
+           #isThere = False
+           #for br in wrappedOutputTree.GetListOfBranches():
+           #   if br.GetName() == 'run_period': isThere = True
+           #if not isThere: print("TrigMaker WARNING: Input tree does not contain the 'run_period' branch, while 'keepRunP' is True.")
+           #else: 
+           try: self.NewVar['I'].remove('run_period')
+           except: pass
  
         for typ in self.NewVar:
            for name in self.NewVar[typ]:
@@ -495,7 +496,11 @@ class TrigMaker(Module):
     #_____Analyze
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
- 
+
+        if self.firstEvent:
+            self.firstEvent = False
+            if self.keepRunP and not hasattr(event, 'run_period'): raise ValueError('TrigMaker: event does not contain the \'run_period\' branch, while \'keepRunP\' is True.')
+
         # Make your life easier
         if self.seeded: evt = eval(self.event)
         else: evt = None
