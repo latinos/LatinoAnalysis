@@ -51,12 +51,13 @@ formulas['SFweight4l'] = 'event.puWeight*\
                           if event.nLepton > 3 else 0.'
 
 # MonoHiggs
-#formulas['SFweight2lMH'] = 'event.puWeight*\
-#                          event.MHTriggerEffWeight_2l*\
-#                          event.Lepton_RecoSF[0]*\
-#                          event.Lepton_RecoSF[1]*\
-#                          event.EMTFbug_veto \
-#                          if event.nLepton > 1 else 0.'
+formulas['SFweight2lMH'] = 'event.puWeight*\
+                          event.MHTriggerEffWeight_2l*\
+                          event.Lepton_RecoSF[0]*\
+                          event.Lepton_RecoSF[1]*\
+                          event.EMTFbug_veto \
+                          if hasattr(event, \'MHTriggerEffWeight_2l\') else 0.\
+                          if event.nLepton > 1 else 0.'
 
 # Lepton WP
 
