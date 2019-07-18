@@ -247,8 +247,8 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  #'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','DYMVA','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','DYMVA','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
+                 # 'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
                 },
 
 
@@ -613,7 +613,7 @@ Steps = {
                  'do4MC'      : False ,
                  'do4Data'    : True  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                 'declare'    : 'trigData = lambda : TrigMaker("RPLME_CMSSW",True)',
+                 'declare'    : 'trigData = lambda : TrigMaker("RPLME_CMSSW",isData=True,keepRunP=False)',
                  'module'     : 'trigData()',
                },
 
@@ -622,7 +622,7 @@ Steps = {
                  'do4MC'      : True  ,
                  'do4Data'    : False ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                 'declare'    : 'trigMC = lambda : TrigMaker("RPLME_CMSSW",False,False)',
+                 'declare'    : 'trigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=False)',
                  'module'     : 'trigMC()',
                },
 
@@ -631,7 +631,7 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : False ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                  'declare'  : 'MHTrigMC = lambda : TrigMaker("RPLME_CMSSW",False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_hmumu_cfg.py")',
+                  'declare'  : 'MHTrigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_hmumu_cfg.py")',
                   'module'   : 'MHTrigMC()',
                },
 
@@ -639,7 +639,7 @@ Steps = {
                  'do4MC'      : True  ,
                  'do4Data'    : False ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                 'declare'    : 'trigMCKR = lambda : TrigMaker("RPLME_CMSSW",False,True)',
+                 'declare'    : 'trigMCKR = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True)',
                  'module'     : 'trigMCKR()',
                },
 
