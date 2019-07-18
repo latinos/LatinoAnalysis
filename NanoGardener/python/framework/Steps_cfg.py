@@ -242,6 +242,14 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATALP19' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATALP19'],
                 },
 
+  'DATAl1loose2017v5': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','DYMVA','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
+                },
+
 
 # 'DATAl1loose2017': {
 #                 'isChain'    : True  ,
@@ -847,6 +855,15 @@ Steps = {
                   'do4Data'    : True ,
                   'subTargets' : ['fakeWstep','formulasFAKE'],
                    },
+
+
+  'fakeWPUFIXLP19'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                   },
+
 
   'fakeWstep'   : {
                   'isChain'    : False ,
