@@ -242,6 +242,14 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATALP19' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATALP19'],
                 },
 
+  'DATAl1loose2017v5': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','DYMVA','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
+                },
+
 
 # 'DATAl1loose2017': {
 #                 'isChain'    : True  ,
@@ -551,6 +559,17 @@ Steps = {
                   'module'     : 'jetSel()' ,
                },
 
+   'jetSelCustom' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(2,"custom",15.0,4.7,"CleanJet")' ,
+                  'module'     : 'jetSel()' ,
+               },
+
+
    'CleanJetCut' : {
                  'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -847,6 +866,15 @@ Steps = {
                   'do4Data'    : True ,
                   'subTargets' : ['fakeWstep','formulasFAKE'],
                    },
+
+
+  'fakeWPUFIXLP19'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                   },
+
 
   'fakeWstep'   : {
                   'isChain'    : False ,
