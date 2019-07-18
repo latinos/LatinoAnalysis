@@ -128,6 +128,14 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
+  'MCl1loose2017v5' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                },
 
   'MCCorr2017' : {
                      'isChain'    : True  ,
@@ -247,8 +255,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','DYMVA','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
-                 # 'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch2017','MonoHiggsMVA', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch2017', 'formulasDATA'],
                 },
 
 
@@ -1419,12 +1426,22 @@ Steps = {
 
 ## ------- 2-Leptons: Loose / tightOR
 
-  'l2loose'   : {
-                  'isChain'    : False ,
+#  'l2loose'   : {
+#                  'isChain'    : False ,
+#                  'do4MC'      : True  ,
+#                  'do4Data'    : True  , 
+#                  'selection'  : '"(nLepton>=2)"' , 
+#                 },
+
+# Run MVA after 2 lepton selection !
+   'l2loose' :  {
+                  'isChain'    : True  ,
                   'do4MC'      : True  ,
-                  'do4Data'    : True  , 
-                  'selection'  : '"(nLepton>=2)"' , 
-                 },
+                  'do4Data'    : True  ,
+                  'selection'  : '"(nLepton>=2)"' ,
+                  'subTargets' : ['DYMVA','MonoHiggsMVA']
+                },
+ 
 
 #muWP='cut_Tight80x'
 #eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']
