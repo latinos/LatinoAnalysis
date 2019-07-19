@@ -93,8 +93,10 @@ class FatJetMaker(Module):
             fj_softdrop_mass = self.fatjet_var["FatJet_msoftdrop"][ifj]
             fj_tau1 = self.fatjet_var["FatJet_tau1"][ifj]
             fj_tau2 = self.fatjet_var["FatJet_tau2"][ifj]
+            # If the FatJet has only 1 particle remove it (rare corner case)
+            if fj_tau1 == 0:  continue
             fj_tau21 = fj_tau2 / fj_tau1
-
+            
             goodFatJet = True
 
             if fj_pt < self.minpt:              goodFatJet = False
