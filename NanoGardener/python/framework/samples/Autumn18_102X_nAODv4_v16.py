@@ -310,8 +310,8 @@ Samples['QCD_Pt-120to170_EMEnriched']        = {'nanoAOD' :'/QCD_Pt-120to170_EME
 Samples['QCD_Pt-170to300_EMEnriched']        = {'nanoAOD' :'/QCD_Pt-170to300_EMEnriched_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'}
 Samples['QCD_Pt-300toInf_EMEnriched']        = {'nanoAOD' :'/QCD_Pt-300toInf_EMEnriched_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM'}
 ### QCD not enriched 
-Samples['QCD_Pt_15to30']                     = {'/QCD_Pt_15to30_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16_ext1-v1/NANOAODSIM/'}
-Samples['QCD_Pt_30to50']                     = {'/QCD_Pt_30to50_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM/'}
+Samples['QCD_Pt_15to30']                     = {'nanoAOD' :'/QCD_Pt_15to30_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16_ext1-v1/NANOAODSIM/'}
+Samples['QCD_Pt_30to50']                     = {'nanoAOD' :'/QCD_Pt_30to50_TuneCP5_13TeV_pythia8/RunIIAutumn18NanoAODv4-Nano14Dec2018_102X_upgrade2018_realistic_v16-v1/NANOAODSIM/'}
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
