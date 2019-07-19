@@ -351,14 +351,14 @@ Trigger = {
                                   'EMTFBug':  True , 
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL', 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
                                                 'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL', 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
@@ -395,14 +395,14 @@ Trigger = {
                                   'EMTFBug':  True , 
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL', 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
                                                 'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL', 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
@@ -438,14 +438,14 @@ Trigger = {
                                   'EMTFBug':  False , 
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL', 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
                                                 'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL', 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
@@ -482,14 +482,14 @@ Trigger = {
                                   'EMTFBug':  False , 
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
                                                 'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
@@ -528,14 +528,14 @@ Trigger = {
                                   'EMTFBug':  False , 
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
                                                 'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
@@ -571,14 +571,14 @@ Trigger = {
                                   'EMTFBug':  False , 
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
                                                 'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
@@ -615,14 +615,14 @@ Trigger = {
                                   'EMTFBug':  False , 
                                   #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
                                                 'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL'] ,
                                                 'DoubleMu'  : [ 'HLT_Mu30_TkMu11'] ,
                                                 'SingleMu'  : [ 'HLT_Mu50'] ,
                                                 'DoubleEle' : [ 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW'] ,
