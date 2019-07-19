@@ -207,6 +207,19 @@ Samples['GJetsDR04_HT600ToInf'] = {'nanoAOD': '/GJets_DR-0p4_HT-600ToInf_TuneCUE
 Samples['GJets_HT40To100'] = {'nanoAOD': '/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
 Samples['GJets_HT40To100-ext1'] = {'nanoAOD': '/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6_ext1-v1/NANOAODSIM'}
 
+##VBS WWJJ
+Samples["WpWmJJ_EWK"]                  ={'nanoAOD':'/WWJJToLNuLNu_EWK_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWmJJ_EWK_noTop"]            ={'nanoAOD':'/WWJJToLNuLNu_EWK_noTop_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWmJJ_EWK_QCD_noTop"]        ={'nanoAOD':'/WWJJToLNuLNu_EWK_QCD_noTop_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWmJJ_EWK_QCD_noHiggs"]      ={'nanoAOD':'/WWJJToLNuLNu_EWK_QCD_noHiggs_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWmJJ_EWK_QCD_noTop_noHiggs"]={'nanoAOD':'/WWJJToLNuLNu_EWK_QCD_noTop-noHiggs_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWmJJ_QCD_noTop"]            ={'nanoAOD':'/WWJJToLNuLNu_QCD_noTop_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWpJJ_EWK"]                  ={'nanoAOD':'/WpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWpJJ_EWK_POWHEG"]           ={'nanoAOD':'/WpWpJJ_EWK_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWpJJ_EWK_QCD"]              ={'nanoAOD':'/WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+Samples["WpWpJJ_QCD"]                  ={'nanoAOD':'/WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
+
+
 ### Signals
 
 #### gg->H->WW
