@@ -2768,6 +2768,7 @@ ElectronWP = {
 }
 
 #ElectronWP['Study2017'] = ElectronWP['Full2016']
+ElectronWP['Full2016v5']=ElectronWP['Full2016v4']
 
 ####################### Muon WP ######################################
 
