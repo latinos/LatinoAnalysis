@@ -27,7 +27,7 @@ class FatJetMaker(Module):
 
     '''
     def __init__(self, minpt=200.0, maxeta=2.4, max_tau21=0.4,mass_range=[100, 200], 
-                    over_lepR =1.0, over_jetR = 0.8):
+                    over_lepR =1.0, over_jetR = 1.2):
         self.minpt = minpt
         self.maxeta = maxeta 
         self.max_tau21 = max_tau21
