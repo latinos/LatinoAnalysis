@@ -56,7 +56,7 @@ class VBSjjlnu_JetPairing(Module):
            if re.match('\ACleanJet_', bname): self.jet_var[bname] =    tree.arrayReader(bname)
         self.nJet = tree.valueReader('nCleanJet')
         self.nFatJet = tree.valueReader('nCleanFatJet')
-        self.JetNotFat = tree.arrayReader("CleanJetNotFat_jetIdx")
+        self.JetNotFat_index = tree.arrayReader("CleanJetNotFat_jetIdx")
         self.nJetNotFat = tree.valueReader("nCleanJetNotFat")
         self.rawjet_mass = tree.arrayReader("Jet_mass")
 
@@ -70,12 +70,13 @@ class VBSjjlnu_JetPairing(Module):
 
         nFatJet = int(self.nFatJet)
         VBS_jets = [-1,-1]
-        V_jets = [-1,-1]
+        V_jets =   [-1,-1]
         category= -1
 
         # Take the 4-momenta of the CleanJets.
-        # If FatJets are present only the CleanJetNotFat are taken
-        good_jets = self.get_jets_vectors(event, self.minpt, self.debug)
+        # If FatJets are present only the CleanJetNotFat are taken. A list of indexes
+        # referring to the CleanJet collection is keeps to save the final result
+        good_jets, good_jets_ids = self.get_jets_vectors(event, self.minpt, self.debug)
 
         # Veto events with more than 1 FatJet
         if nFatJet >1 : return False
@@ -85,19 +86,16 @@ class VBSjjlnu_JetPairing(Module):
             # Boosted category
             ##################################
             category = 0
-            # The V jet is the FatJet with largest Pt
-            # We save the index of the FatJet, the jet collection will be choosen using the category
-            V_jets = [0,0]
             # Vbs jets
             # Let's take the pair with biggest invariant mass
             VBS_jets = max_mjj_pair(good_jets)
+            # The V_jets is left void because it is not used
             
         elif len(good_jets) >= 4:
             ##############################
             # Resolved category
             ###########################
             category = 1
-
             if self.mode == "vbs:maxmjj-vjet:massWZ":
                 VBS_jets = max_mjj_pair(good_jets)
                 # Save pairs of (index, jet) for the next step
@@ -109,20 +107,16 @@ class VBSjjlnu_JetPairing(Module):
 
             elif self.mode == "vbs:maxmjj-vjet:maxPt":
                 VBS_jets = max_mjj_pair(good_jets)
-                # Save pairs of (index, jet) for the next step
                 remaining_jets = [(i,j) for i,j in enumerate(good_jets) if i not in VBS_jets]
-                # The result of the next step are indexes in the new collection of jets
+                # Max pt pair for V Jets
                 vpair_newindexes = max_pt_pair([rj[1] for rj in remaining_jets])
-                # going back to global index 
                 V_jets = [remaining_jets[i][0] for i in vpair_newindexes]
 
             elif self.mode == "vjet:massWZ-vbs:maxmjj":
                 V_jets = nearest_mass_pair(jets, 85.7863)
-                # Save pairs of (index, jet) for the next step
                 remaining_jets = [(i,j) for i,j in enumerate(jets) if i not in V_jets]
-                # The result of the next step are indexes in the new collection of jets
+                # Max mjj pair for VBS jets
                 vbspair_newindexes = max_mjj_pair([rj[1] for rj in remaining_jets])
-                # going back to global index 
                 VBS_jets = [remaining_jets[i][0] for i in vbspair_newindexes]
                                                             
         elif len(good_jets) == 3:
@@ -146,10 +140,18 @@ class VBSjjlnu_JetPairing(Module):
             elif category == 0:
                 print("Boosted| mjj_vbs:{:.3f}, vbs_deltaeta: {:.3f}".format(VBS_mass, VBS_eta))
 
-        # Fill the variables
+
+        # Fill the indexes
+        # N.B. The VBS_jets and V_jets index are positions in the list of 
+        # good_jets (Jet not overlapping with Fatjet with a minpt). 
+        # We want to save a reference to the CleanJet collection for safety
+        VBS_jets_original = [good_jets_ids[i] for i in VBS_jets]
+        if category == 1:  V_jets_original = [good_jets_ids[i] for i in V_jets]
+        else:              V_jets_original = V_jets
+
         self.out.fillBranch("VBS_category", category)
-        self.out.fillBranch("VBS_jets", VBS_jets)
-        self.out.fillBranch("V_jets", V_jets)       
+        self.out.fillBranch("VBS_jets", VBS_jets_original)
+        self.out.fillBranch("V_jets", V_jets_original)       
 
         """return True (go to next module) or False (fail, go to next event)"""
         return True
@@ -157,11 +159,15 @@ class VBSjjlnu_JetPairing(Module):
 
     def get_jets_vectors(self, event, ptmin, debug=False):
         '''
-        Returns a list of 4-momenta for jets (CleanJetNotFat)
+        Returns a list of 4-momenta for jets looking only at jets
+        that are cleaned from FatJets.
+        A list of indexes in the collection of CleanJet is returned as a reference. 
         '''
         jets = []
+        coll_ids = []
         for ijnf in range(int(self.nJetNotFat)):
-            jetindex = self.JetNotFat[ijnf]
+            jetindex = self.JetNotFat_index[ijnf]
+            # index in the original Jet collection
             rawjetid = self.jet_var["CleanJet_jetIdx"][jetindex]
             pt, eta, phi, mass = self.jet_var["CleanJet_pt"][jetindex], \
                         self.jet_var["CleanJet_eta"][jetindex],\
@@ -179,5 +185,6 @@ class VBSjjlnu_JetPairing(Module):
                 if debug:
                     print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
                 jets.append(vec)
-        return jets
+                coll_ids.append(jetindex)
+        return jets, coll_ids
 
