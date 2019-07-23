@@ -1491,6 +1491,24 @@ Steps = {
                                   "' ,
                  },
 
+  'l2tightOR2016v5' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
+                                    && (    Lepton_isTightElectron_cut_WP_Tight80X[0] > 0.5        \
+                                         || Lepton_isTightElectron_cut_WP_Tight80X_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5        \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016_SS[0] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight80x[0] > 0.5             ) \
+                                    && (    Lepton_isTightElectron_cut_WP_Tight80X[1] > 0.5        \
+                                         || Lepton_isTightElectron_cut_WP_Tight80X_SS[1] > 0.5     \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016[1] > 0.5        \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016_SS[1] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight80x[1] > 0.5             ) \
+                                  "' ,
+                 },
+
   'l2tightOR2017' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
