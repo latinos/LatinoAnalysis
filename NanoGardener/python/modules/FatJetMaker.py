@@ -135,6 +135,7 @@ class FatJetMaker(Module):
         for var in output_vars:
             self.out.fillBranch(var, output_vars[var])
         # Now let's save a vector of CleanJet NOT overlapping with CleanFatJet
+        # keeping the order of pt
         cleanjet_notoverlap = [ij for ij in range(nJet) if ij not in overlapping_jets]
         self.out.fillBranch("CleanJetNotFat_jetIdx", cleanjet_notoverlap)
 

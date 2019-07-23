@@ -629,7 +629,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.5, mass_range=[50, 120], over_lepR=1.0, over_jetR=1.2)',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], over_lepR=1.0, over_jetR=1.2)',
                   'module'     : 'fatjetMaker()'
     },
 
@@ -1629,7 +1629,6 @@ Steps = {
                                   "' ,
                  },
 
-
 ## ------- Analysis Skims:
 
   'trainDYMVA'   : {
@@ -1648,6 +1647,48 @@ Steps = {
                                  'GluGluHToWWTo2L2NuPowheg_M125_private','VBFHToWWTo2L2NuPowheg_M125_private',
                                 ] ,
                  },
+
+  # VBSjjlnu semileptonic analysis SKIM-----------------------------
+  
+  'VBSjjlnu_JetCut': {
+      'isChain'    : False ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      # - if nFatJet=1 check if there are at least two jets with 20 GeV,
+      # - veto events with more than 1 Fatjet
+      # - if not FatJet check that there are at least 3 jets with 20 GeV
+      'selection'  : '"( nCleanFatJet == 1 && nCleanJetNotFat>=2 && CleanJet_pt[CleanJetNotFat_jetIdx[1]]>=20) || \
+                        (nCleanJet >= 3  && CleanJet_pt[2]>=20)"'
+  },
+
+  'VBSjjlnu_Pairing': {
+      'isChain'    : False ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
+      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=20,mode="vbs:maxmjj-vjet:massWZ", debug=True)',
+      'module'     : 'vbs_pairing()'
+  },
+
+  # 'VBSjjlnu_kin': {
+  #     'isChain'    : False ,
+  #     'do4MC'      : True  ,
+  #     'do4Data'    : True  ,
+  #     'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
+  #     'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin()',
+  #     'module'     : 'vbs_vars_maker()'
+  # },
+
+  'VBSjjlnuSkim2017' : {
+      'isChain'    : True ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'selection'  : '"(nLepton==1 && Lepton_pt[0]>30 && MET_pt>30 ) \
+                    && (  Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5 \
+                          || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
+                     "',
+      'subTargets': ['CleanFatJet', 'VBSjjlnu_Pairing']
+  },
 
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------
 
@@ -1707,6 +1748,7 @@ Steps = {
                                        },
                             },
                },
+
 
 }
 
