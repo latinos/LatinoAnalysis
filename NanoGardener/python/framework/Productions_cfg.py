@@ -321,6 +321,15 @@ Productions = {
                        'year'    : '2018' ,
                    },
 
+ # -------- 2018 DATA 102X nAODv5
+'Run2018_102X_nAODv5_Full2018v5' : {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_102X_nAODv5.py' ,
+                       'cmssw'   : 'Full2018v5',
+                       'year'    : '2018' ,
+                   },
+
  # -------- 2018 MC 102X nAODv4
  'Autumn18_102X_nAODv4_Full2018': {
                        'isData'  : False ,
@@ -342,6 +351,18 @@ Productions = {
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
+
+ # -------- 2018 MC 102X nAODv5
+ 'Autumn18_102X_nAODv5_Full2018v5':{
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv5.py' ,
+                       'cmssw'   : 'Full2018v5' ,
+                       'year'    : '2018' ,
+                       'JESGT'   : 'Autumn18_V8_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
 
  # -------- 2018 DATA 102X nAODv5 
  'Run2018_102X_nAODv5_Full2018v4' : {
