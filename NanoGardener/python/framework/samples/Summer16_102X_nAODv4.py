@@ -222,8 +222,26 @@ Samples["WpWpJJ_QCD"]                  ={'nanoAOD':'/WpWpJJ_QCD_TuneCUETP8M1_13T
 
 ### Signals
 
-#### gg->H->WW
+#### Private Nano Signals
+Samples['GluGluHToWWTo2L2Nu_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths": ['store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__GluGluHToWWTo2L2Nu_M125/190411_211933/0000/']}
+Samples['GluGluHToWWTo2L2NuAMCNLO_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths": ['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluHToWWTo2L2Nu_M125_13TeV_amcatnloFXFX_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__GluGluHToWWTo2L2NuAMCNLO_M125/190411_212225/0000/']}
+Samples['GluGluHToWWTo2L2NuPowheg_M125'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths": ['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__GluGluHToWWTo2L2NuPowheg_M125/190411_211639/0000/']}
+Samples['GluGluHToWWTo2L2Nu_M125_herwigpp_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths": ['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_herwigpp/nanoAOD__Summer16_102X_nAODv4_Full2016v4__GluGluHToWWTo2L2Nu_M125_herwigpp/190411_212031/0000/']}
+Samples['VBFHToWWTo2L2Nu_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__VBFHToWWTo2L2Nu_M125/190411_211540/0000/']}
+Samples['VBFHToWWTo2L2Nu_M125_herwigpp_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_herwigpp/nanoAOD__Summer16_102X_nAODv4_Full2016v4__VBFHToWWTo2L2Nu_M125_herwigpp/190411_211833/0000/']}
+Samples['ggZH_HToWW_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluZH_HToWW_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__ggZH_HToWW_M125/190411_212128/0000/']}
+Samples['HZJ_HToTauTau_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/ZHToTauTau_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__HZJ_HToTauTau_M125/190411_211332/0000/']}
+Samples['HWminusJ_HToWW_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/HWminusJ_HToWW_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__HWminusJ_HToWW_M125/190411_211736/0000/']}
+Samples['HWplusJ_HToWW_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/HWplusJ_HToWW_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__HWplusJ_HToWW_M125/190411_211441/0000/']}
+Samples['HWminusJ_HToTauTau_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/WminusHToTauTau_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__HWminusJ_HToTauTau_M125/190411_211136/0000/']}
+Samples['HWplusJ_HToTauTau_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/WplusHToTauTau_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__HWplusJ_HToTauTau_M125/190411_211235/0000/']}
+Samples['HZJ_HToWW_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/HZJ_HToWW_M125_13TeV_powheg_pythia8/nanoAOD__Summer16_102X_nAODv4_Full2016v4__HZJ_HToWW_M125/190411_212321/0000/']}
+Samples['bbHToWWTo2L2Nu_M125_ybyt_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/bbHToWWTo2L2Nu_M-125_4FS_ybyt_13TeV_amcatnlo/nanoAOD__Summer16_102X_nAODv4_Full2016v4__bbHToWWTo2L2Nu_M125_ybyt/190411_212418/0000/']}
 
+
+
+
+#### gg->H->WW
 
 Samples['GluGluHToWWTo2L2Nu_Mlarge'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M125_W10_13TeV_powheg_JHUgen_pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'} ##!!!!
 #Samples['GluGluHToWWTo2L2Nu_alternative_M125'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/RunIISummer16NanoAOD-PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/NANOAODSIM'}
