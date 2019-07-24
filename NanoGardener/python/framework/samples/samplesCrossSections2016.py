@@ -616,7 +616,7 @@ samples['WpWpJJ_EWK']                           .extend( ['xsec=0.02526',       
 samples['WpWpJJ_QCD']                           .extend( ['xsec=0.02474',       'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_QCD_aQGC']                  .extend( ['xsec=0.1390',        'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_aQGC']                  	.extend( ['xsec=0.1174',        'kfact=1.000',  'ref=I'] )
-samples['WpWpJJ_EWK_powheg']			.extend( ['xsec=0.02093',	'kfact=1.000',	'ref=I'] )
+samples['WpWpJJ_EWK_POWHEG']			.extend( ['xsec=0.02093',	'kfact=1.000',	'ref=I'] )
 samples['WmWmJJ_EWK_powheg']			.extend( ['xsec=0.007868',	'kfact=1.000',	'ref=I'] )
 samples['WpWmJJ_EWK_QCD_noTop']   		.extend( ['xsec=2.66300',	'kfact=1.000',	'ref=I'] )
 samples['WpWmJJ_EWK_noTop']   			.extend( ['xsec=0.34520',	'kfact=1.000',	'ref=I'] )
