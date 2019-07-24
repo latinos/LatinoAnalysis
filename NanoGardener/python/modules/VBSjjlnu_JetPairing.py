@@ -61,16 +61,17 @@ class VBSjjlnu_JetPairing(Module):
         
     
     def analyze(self, event):
+        # Read branches that may be created by previous step in the chain
+        # It's important to read them like this in case they 
+        # are created by the step before in a PostProcessor chain. 
+        self.nFatJet = event.nCleanFatJet
+        self.nJetNotFat = event.nCleanJetNotFat
+        self.JetNotFat_index = event.CleanJetNotFat_jetIdx
+        
         # do this check at every event, as other modules might have read further branches
         if event._tree._ttreereaderversion > self._ttreereaderversion: 
             self.initReaders(event._tree)
 
-        # Read branches created by previous step in the chain
-        self.nFatJet = event.nCleanFatJet
-        self.nJetNotFat = event.nCleanJetNotFat
-        self.JetNotFat_index = event.CleanJetNotFat_jetIdx
-        print(self.nFatJet, self.JetNotFat_index, self.nJetNotFat)
-    
         VBS_jets = [-1,-1]
         V_jets =   [-1,-1]
         category= -1
