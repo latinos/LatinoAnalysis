@@ -2,7 +2,7 @@ import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 import re
 
-from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.modules.PairingUtils import *
 
@@ -55,9 +55,6 @@ class VBSjjlnu_JetPairing(Module):
            bname = br.GetName()
            if re.match('\ACleanJet_', bname): self.jet_var[bname] =    tree.arrayReader(bname)
         self.nJet = tree.valueReader('nCleanJet')
-        self.nFatJet = tree.valueReader('nCleanFatJet')
-        self.JetNotFat_index = tree.arrayReader("CleanJetNotFat_jetIdx")
-        self.nJetNotFat = tree.valueReader("nCleanJetNotFat")
         self.rawjet_mass = tree.arrayReader("Jet_mass")
 
         self._ttreereaderversion = tree._ttreereaderversion
@@ -68,7 +65,12 @@ class VBSjjlnu_JetPairing(Module):
         if event._tree._ttreereaderversion > self._ttreereaderversion: 
             self.initReaders(event._tree)
 
-        nFatJet = int(self.nFatJet)
+        # Read branches created by previous step in the chain
+        self.nFatJet = event.nCleanFatJet
+        self.nJetNotFat = event.nCleanJetNotFat
+        self.JetNotFat_index = event.CleanJetNotFat_jetIdx
+        print(self.nFatJet, self.JetNotFat_index, self.nJetNotFat)
+    
         VBS_jets = [-1,-1]
         V_jets =   [-1,-1]
         category= -1
@@ -79,9 +81,9 @@ class VBSjjlnu_JetPairing(Module):
         good_jets, good_jets_ids = self.get_jets_vectors(event, self.minpt, self.debug)
 
         # Veto events with more than 1 FatJet
-        if nFatJet >1 : return False
+        if self.nFatJet >1 : return False
 
-        if nFatJet == 1 and len(good_jets) >= 2 :
+        if self.nFatJet == 1 and len(good_jets) >= 2 :
             ###################################
             # Boosted category
             ##################################
