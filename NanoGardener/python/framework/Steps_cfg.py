@@ -168,7 +168,7 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','EmbeddingVeto',
-                                     'rochesterMC','trigMC','MHTrigMC','MHSwitch2017','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                                     'rochesterMC','trigMC','MHTrigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','MHSwitch2017','formulasMC'],
                 },
 
 
