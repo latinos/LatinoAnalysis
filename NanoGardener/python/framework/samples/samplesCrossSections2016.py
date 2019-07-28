@@ -616,7 +616,7 @@ samples['WpWpJJ_EWK']                           .extend( ['xsec=0.02526',       
 samples['WpWpJJ_QCD']                           .extend( ['xsec=0.02474',       'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_QCD_aQGC']                  .extend( ['xsec=0.1390',        'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_aQGC']                  	.extend( ['xsec=0.1174',        'kfact=1.000',  'ref=I'] )
-samples['WpWpJJ_EWK_powheg']			.extend( ['xsec=0.02093',	'kfact=1.000',	'ref=I'] )
+samples['WpWpJJ_EWK_POWHEG']			.extend( ['xsec=0.02093',	'kfact=1.000',	'ref=I'] )
 samples['WmWmJJ_EWK_powheg']			.extend( ['xsec=0.007868',	'kfact=1.000',	'ref=I'] )
 samples['WpWmJJ_EWK_QCD_noTop']   		.extend( ['xsec=2.66300',	'kfact=1.000',	'ref=I'] )
 samples['WpWmJJ_EWK_noTop']   			.extend( ['xsec=0.34520',	'kfact=1.000',	'ref=I'] )
@@ -898,3 +898,20 @@ samples['T2tt__mStop-250to350']     .extend(['xsec=1.',     'kfact=1.000',   're
 samples['T2tt__mStop-350to400']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
 samples['T2tt__mStop-400to1200']    .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
 samples['T2tt__mStop-1200to2000']   .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+
+
+#PrivateNanoSamples
+samples['GluGluHToWWTo2L2Nu_M125_PrivateNano']      .extend( ['xsec=1.0315',    'kfact=1.000',          'ref=Y'] ) # 45.20*0.215*0.1086*0.1086*9
+samples['GluGluHToWWTo2L2Nu_M125_herwigpp_PrivateNano']  .extend( ['xsec=0.9913',       'kfact=1.000',          'ref=CF'] ) # 43.92*0.215*0.108*0.108*9 Higgs LHC value
+samples['GluGluHToWWTo2L2NuAMCNLO_M125_PrivateNano']   .extend( ['xsec=0.9913', 'kfact=1.000',          'ref=CF'] ) # 43.92*0.215*0.108*0.108*9
+samples['GluGluHToWWTo2L2NuPowheg_M125_PrivateNano']   .extend( ['xsec=0.9913', 'kfact=1.000',          'ref=CF'] ) # 43.92*0.215*0.108*0.108*9
+samples['VBFHToWWTo2L2Nu_M125_PrivateNano']             .extend( ['xsec=0.0896',        'kfact=1.000',          'ref=Y'] ) # 3.925*0.215*0.1086*0.1086*9
+samples['VBFHToWWTo2L2Nu_M125_herwigpp_PrivateNano'] .extend( ['xsec=0.0846',   'kfact=1.000',          'ref=EF'] ) # 3.75*0.215*0.108*0.108*9 YR value
+samples['ggZH_HToWW_M125_PrivateNano']          .extend( ['xsec=1.0000',        'kfact=1.000',          'ref=X'] )
+samples['HZJ_HToTauTau_M125_PrivateNano']               .extend( ['xsec=0.0550',        'kfact=1.000',          'ref=EF'] ) # 0.8696*0.0632
+samples['HWminusJ_HToWW_M125_PrivateNano']      .extend( ['xsec=0.1160',        'kfact=1.000',          'ref=EF'] ) # 0.539*0.215
+samples['HWplusJ_HToWW_M125_PrivateNano']               .extend( ['xsec=0.1810',        'kfact=1.000',          'ref=EF'] ) # 0.842*0.215
+samples['HWminusJ_HToTauTau_M125_PrivateNano']  .extend( ['xsec=0.0341',        'kfact=1.000',          'ref=EF'] ) # 0.539*0.0632
+samples['HWplusJ_HToTauTau_M125_PrivateNano']   .extend( ['xsec=0.0532',        'kfact=1.000',          'ref=EF'] ) # 0.842*0.0632
+samples['HZJ_HToWW_M125_PrivateNano']           .extend( ['xsec=0.187',         'kfact=1.000',          'ref=EF'] ) # 0.8696*0.215
+samples['bbHToWWTo2L2Nu_M125_ybyt_PrivateNano']     .extend( ['xsec=0.000743225',    'kfact=1.000',         'ref=N'] ) # 0.000743225 = -0.03293*0.215*0.108*0.108*9

@@ -139,7 +139,7 @@ class FatJetMaker(Module):
         
         # Now let's save a vector of CleanJet NOT overlapping with CleanFatJet
         cleanjet_not_overlap = [ij for ij in range(nJet) if ij not in overlapping_jets]
-
+        # Saving deltaR between every jet and the first FatJet
         distances_jets_fatjets = []
         if len(output_vars["CleanFatJet_phi"])> 0:
             for clj in cleanjet_not_overlap:

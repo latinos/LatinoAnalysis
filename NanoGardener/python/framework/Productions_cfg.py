@@ -352,6 +352,34 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
+
+#################################### nAODv5 
+
+ # -------- 2016 MC 102X nAODv4
+ 'Summer16_102X_nAODv5_SigOnly_Full2016v5': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16_102X_nAODv5_SigOnly.py' ,
+                       'cmssw'   : 'Full2016v5' ,
+                       'year'    : '2016' ,
+                       'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+
+
+ # -------- 2017 MC 102X nAODv5 : Full2017v5 -> Tight Isolation
+ 'Fall2017_102X_nAODv5_SigOnly_Full2017v5' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/fall17_102X_nAODv5_SigOnly.py' ,
+                       'cmssw'   : 'Full2017v5',
+                       'year'    : '2017' ,
+                       'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2017.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+
  # -------- 2018 MC 102X nAODv5
  'Autumn18_102X_nAODv5_Full2018v5':{
                        'isData'  : False ,

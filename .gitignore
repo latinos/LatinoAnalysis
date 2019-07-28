@@ -1,5 +1,4 @@
 *.pcm
 *.pyc
-__init__.py
 *.so
 *.d
