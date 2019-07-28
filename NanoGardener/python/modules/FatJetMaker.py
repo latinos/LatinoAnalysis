@@ -1,6 +1,7 @@
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 import re
+from math import sqrt
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
@@ -50,6 +51,8 @@ class FatJetMaker(Module):
                 self.out.branch(var, typ, lenVar='nCleanFatJet')
         #vector of CleanJet idx not overlapping with Fatjets
         self.out.branch('CleanJetNotFat_jetIdx', "I", lenVar="nCleanJetNotFat") 
+        # Distance from the first FatJet
+        self.out.branch('CleanJetNotFat_deltaR', "F", lenVar="nCleanJetNotFat")
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -80,19 +83,21 @@ class FatJetMaker(Module):
         nLep = int(self.nLepton)
         nJet = int(self.nJet)
 
+        # variables for CleanJets NotFat
         overlapping_jets = []
+
         output_vars  = {}
         for typ in CleanFatJet_br:
             for var in CleanFatJet_br[typ]:
                 output_vars[var] = []
 
         for ifj in range(nFatJet):
-            fj_pt = self.fatjet_var["FatJet_pt"][ifj]
-            fj_eta = self.fatjet_var["FatJet_eta"][ifj]
-            fj_phi = self.fatjet_var["FatJet_phi"][ifj]
+            fj_pt            = self.fatjet_var["FatJet_pt"][ifj]
+            fj_eta           = self.fatjet_var["FatJet_eta"][ifj]
+            fj_phi           = self.fatjet_var["FatJet_phi"][ifj]
             fj_softdrop_mass = self.fatjet_var["FatJet_msoftdrop"][ifj]
-            fj_tau1 = self.fatjet_var["FatJet_tau1"][ifj]
-            fj_tau2 = self.fatjet_var["FatJet_tau2"][ifj]
+            fj_tau1          = self.fatjet_var["FatJet_tau1"][ifj]
+            fj_tau2          = self.fatjet_var["FatJet_tau2"][ifj]
             # If the FatJet has only 1 particle remove it (rare corner case)
             if fj_tau1 == 0:  continue
             fj_tau21 = fj_tau2 / fj_tau1
@@ -125,23 +130,34 @@ class FatJetMaker(Module):
 
                 # Get the jet overlapping with this CleanFatJet  DeltaR<0.8
                 for ij in range(nJet):
-                    if self.inDeltaR(fj_phi, fj_eta, 
-                                    self.jet_var["CleanJet_phi"][ij], self.jet_var["CleanJet_eta"][ij], 
-                                    drmax = self.over_jetR):
+                    if ( self.inDeltaR(fj_phi, fj_eta, 
+                                    self.jet_var["CleanJet_phi"][ij], 
+                                    self.jet_var["CleanJet_eta"][ij],  
+                            drmax = self.over_jetR) ):
                         overlapping_jets.append(ij)
                         #print("Found overlapping jet")
         
+        # Now let's save a vector of CleanJet NOT overlapping with CleanFatJet
+        cleanjet_not_overlap = [ij for ij in range(nJet) if ij not in overlapping_jets]
+
+        distances_jets_fatjets = []
+        if len(output_vars["CleanFatJet_phi"])> 0:
+            for clj in cleanjet_not_overlap:
+                distances_jets_fatjets.append(
+                        self.getDeltaR(self.jet_var["CleanJet_phi"][clj],
+                                    self.jet_var["CleanJet_eta"][clj],
+                                    output_vars["CleanFatJet_phi"][0],
+                                    output_vars["CleanFatJet_eta"][0]) )
+
         # Fill all branches
         for var in output_vars:
             self.out.fillBranch(var, output_vars[var])
-        # Now let's save a vector of CleanJet NOT overlapping with CleanFatJet
-        # keeping the order of pt
-        cleanjet_notoverlap = [ij for ij in range(nJet) if ij not in overlapping_jets]
-        self.out.fillBranch("CleanJetNotFat_jetIdx", cleanjet_notoverlap)
+
+        self.out.fillBranch("CleanJetNotFat_jetIdx", cleanjet_not_overlap)
+        self.out.fillBranch("CleanJetNotFat_deltaR", distances_jets_fatjets)
 
         """return True (go to next module) or False (fail, go to next event)"""
         return True
-
 
 
     def inDeltaR(self, phi1, eta1, phi2, eta2, drmax=0.4):
@@ -154,3 +170,11 @@ class FatJetMaker(Module):
             return True
         else:
             return False
+            
+    def getDeltaR(self, phi1, eta1, phi2, eta2):
+        dphi = phi1 - phi2
+        if dphi > ROOT.TMath.Pi(): dphi -= 2*ROOT.TMath.Pi()
+        if dphi < -ROOT.TMath.Pi(): dphi += 2*ROOT.TMath.Pi()
+        deta = eta1 - eta2
+        deltaR = (deta*deta) + (dphi*dphi)
+        return sqrt(deltaR)

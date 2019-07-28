@@ -629,7 +629,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], over_lepR=1.0, over_jetR=1.2)',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], over_lepR=0.8, over_jetR=0.8)',
                   'module'     : 'fatjetMaker()'
     },
 
@@ -1666,7 +1666,7 @@ Steps = {
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=20,mode="vbs:maxmjj-vjet:massWZ")',
+      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=20,mode="vbs:maxmjj-vjet:massWZ", debug=False)',
       'module'     : 'vbs_pairing()'
   },
 
@@ -1675,7 +1675,7 @@ Steps = {
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(minptjet=20., debug=True)',
+      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(minptjet=20., debug=False)',
       'module'     : 'vbs_vars_maker()'
   },
 
