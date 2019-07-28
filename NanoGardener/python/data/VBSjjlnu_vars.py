@@ -217,20 +217,20 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     # Delta Phi with lepton
     output["deltaphi_lep_vbs_high"] = abs(lepton.DeltaPhi(vbsjets[0]))
     output["deltaphi_lep_vbs_low"] = abs(lepton.DeltaPhi(vbsjets[1]))
-    output["deltaphi_lep_vjet_high"] = abs(lepton.DeltaPhi(vjets[0]))
+    output["deltaphi_lep_vjet_high"] = abs(lepton.DeltaPhi(fatjet))
     # Delta Eta with lepton
     output["deltaeta_lep_vbs_high"] = abs(lepton.Eta() - vbs_etas[0])
     output["deltaeta_lep_vbs_low"]  = abs(lepton.Eta() - vbs_etas[1])
     output["deltaeta_lep_vjet_high"] = abs(lepton.Eta() - vjet_etas[0])
     # Look for nearest vbs jet from lepton
     output["deltaR_lep_vbs"] = min( [ lepton.DrEtaPhi(vbsjets[0]), lepton.DrEtaPhi(vbsjets[1])])
-    output["deltaR_lep_vjet"] = lepton.DrEtaPhi(vjets[0])
+    output["deltaR_lep_vjet"] = lepton.DrEtaPhi(fatjet)
     # Zeppenfeld variables
     output["Zvjets_high"] = (vjet_etas[0] - mean_eta_vbs)/ deltaeta_vbs
     output["Zlep"] = (lepton.Eta() - mean_eta_vbs)/ deltaeta_vbs
     #R variables
     ptvbs12  = vbsjets[0].Pt() * vbsjets[1].Pt() 
-    output["Rvjets_high"] = (lepton.Pt() * vjets[0].Pt()) / ptvbs12
+    output["Rvjets_high"] = (lepton.Pt() * fatjet.Pt()) / ptvbs12
     #Asymmetry
     output["Asym_vbs"]  = (vbs_pts[0] - vbs_pts[1]) / sum(vbs_pts)
     #WW variables
@@ -276,7 +276,7 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
         # Ht totale
         Ht += j_pt
     # Add vbs and vjet to Ht
-    for jet in chain(vbsjets, vjets):
+    for jet in chain(vbsjets, [fatjet]):
         Ht += jet.Pt()
             
     output["N_jets"] = Njets 

@@ -1661,33 +1661,33 @@ Steps = {
                         (nCleanJet >= 3  && CleanJet_pt[2]>=20)"'
   },
 
-  'VBSjjlnu_Pairing': {
+  'VBSjjlnu_pairing': {
       'isChain'    : False ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=20,mode="vbs:maxmjj-vjet:massWZ", debug=True)',
+      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=20,mode="vbs:maxmjj-vjet:massWZ")',
       'module'     : 'vbs_pairing()'
   },
 
-  # 'VBSjjlnu_kin': {
-  #     'isChain'    : False ,
-  #     'do4MC'      : True  ,
-  #     'do4Data'    : True  ,
-  #     'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-  #     'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin()',
-  #     'module'     : 'vbs_vars_maker()'
-  # },
+  'VBSjjlnu_kin': {
+      'isChain'    : False ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
+      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(minptjet=20., debug=True)',
+      'module'     : 'vbs_vars_maker()'
+  },
 
   'VBSjjlnuSkim2017' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'selection'  : '"(nLepton==1 && Lepton_pt[0]>30 && MET_pt>30 ) \
-                    && (  Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5 \
+                    && (  Lepton_isTightElectron_mvaFall17Iso_WP90[0] > 0.5 \
                           || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
                      "',
-      'subTargets': ['CleanFatJet', 'VBSjjlnu_Pairing']
+      'subTargets': ['CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin']
   },
 
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------

@@ -79,7 +79,7 @@ class VBSjjlnu_JetPairing(Module):
         # Take the 4-momenta of the CleanJets.
         # If FatJets are present only the CleanJetNotFat are taken. A list of indexes
         # referring to the CleanJet collection is keeps to save the final result
-        good_jets, good_jets_ids = self.get_jets_vectors(event, self.minpt, self.debug)
+        good_jets, good_jets_ids = self.get_jets_vectors(self.minpt, self.debug)
 
         # Veto events with more than 1 FatJet
         if self.nFatJet >1 : return False
@@ -160,7 +160,7 @@ class VBSjjlnu_JetPairing(Module):
         return True
 
 
-    def get_jets_vectors(self, event, ptmin, debug=False):
+    def get_jets_vectors(self, ptmin, debug=False):
         '''
         Returns a list of 4-momenta for jets looking only at jets
         that are cleaned from FatJets.
