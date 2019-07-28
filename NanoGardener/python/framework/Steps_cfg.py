@@ -1712,7 +1712,7 @@ Steps = {
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'selection'  : '"(nLepton==1 && Lepton_pt[0]>30 && MET_pt>30 ) \
-                    && (  Lepton_isTightElectron_mvaFall17Iso_WP90[0] > 0.5 \
+                    && (  Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5 \
                           || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
                      "',
       'subTargets': ['CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin']

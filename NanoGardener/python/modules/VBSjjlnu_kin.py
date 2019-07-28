@@ -41,9 +41,9 @@ class VBSjjlnu_kin(Module):
         self.vbs_category = event.VBS_category
         self.v_jets_index   = [event.V_jets[0], event.V_jets[1]]
         self.vbs_jets_index = [event.VBS_jets[0], event.VBS_jets[1]]
-        self.rawjet_coll    = Collection(event, 'Jet')
-        self.jet_coll       = Collection(event, 'CleanJet')
-        self.notfatjet_coll = Collection(event, 'CleanJetNotFat')
+        self.rawJet_coll    = Collection(event, 'Jet')
+        self.Jet_coll       = Collection(event, 'CleanJet')
+        self.JetNotFat_coll = Collection(event, 'CleanJetNotFat')
 
         # # do this check at every event, as other modules might have read further branches
         # if event._tree._ttreereaderversion > self._ttreereaderversion: 
@@ -120,14 +120,14 @@ class VBSjjlnu_kin(Module):
         '''
         jets = []
         coll_ids = []
-        for ijnf in range(len(self.notfatjet_coll)):
-            jetindex = self.notfatjet_coll[ijnf].jetIdx
+        for ijnf in range(len(self.JetNotFat_coll)):
+            jetindex = self.JetNotFat_coll[ijnf].jetIdx
             # index in the original Jet collection
-            rawjetid = self.jet_coll[jetindex].jetIdx
-            pt, eta, phi, mass = self.jet_coll[jetindex].pt, \
-                        self.jet_coll[jetindex].eta,\
-                        self.jet_coll[jetindex].phi, \
-                        self.rawjet_coll[rawjetid].mass
+            rawjetid = self.Jet_coll[jetindex].jetIdx
+            pt, eta, phi, mass = self.Jet_coll[jetindex].pt, \
+                        self.Jet_coll[jetindex].eta,\
+                        self.Jet_coll[jetindex].phi, \
+                        self.rawJet_coll[rawjetid].mass
 
             if pt < ptmin or pt<0: 
                 break

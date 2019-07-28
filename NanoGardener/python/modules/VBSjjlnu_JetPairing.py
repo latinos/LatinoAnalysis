@@ -35,7 +35,7 @@ class VBSjjlnu_JetPairing(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.initReaders(inputTree)
+        #self.initReaders(inputTree)
         self.out = wrappedOutputTree
 
         # New Branches
@@ -49,28 +49,18 @@ class VBSjjlnu_JetPairing(Module):
         pass
 
 
-    def initReaders(self,tree): # this function gets the pointers to Value and ArrayReaders and sets them in the C++ worker class
-        self.jet_var = {}
-        for br in tree.GetListOfBranches():
-           bname = br.GetName()
-           if re.match('\ACleanJet_', bname): self.jet_var[bname] =    tree.arrayReader(bname)
-        self.nJet = tree.valueReader('nCleanJet')
-        self.rawjet_mass = tree.arrayReader("Jet_mass")
-
-        self._ttreereaderversion = tree._ttreereaderversion
-        
-    
     def analyze(self, event):
         # Read branches that may be created by previous step in the chain
         # It's important to read them like this in case they 
         # are created by the step before in a PostProcessor chain. 
         self.nFatJet = event.nCleanFatJet
-        self.nJetNotFat = event.nCleanJetNotFat
-        self.JetNotFat_index = event.CleanJetNotFat_jetIdx
+        self.rawJet_coll    = Collection(event, 'Jet')
+        self.Jet_coll       = Collection(event, 'CleanJet')
+        self.JetNotFat_coll = Collection(event,'CleanJetNotFat')
         
         # do this check at every event, as other modules might have read further branches
-        if event._tree._ttreereaderversion > self._ttreereaderversion: 
-            self.initReaders(event._tree)
+        # if event._tree._ttreereaderversion > self._ttreereaderversion: 
+        #     self.initReaders(event._tree)
 
         VBS_jets = [-1,-1]
         V_jets =   [-1,-1]
@@ -80,7 +70,7 @@ class VBSjjlnu_JetPairing(Module):
         # If FatJets are present only the CleanJetNotFat are taken. A list of indexes
         # referring to the CleanJet collection is keeps to save the final result
         good_jets, good_jets_ids = self.get_jets_vectors(self.minpt, self.debug)
-
+        
         # Veto events with more than 1 FatJet
         if self.nFatJet >1 : return False
 
@@ -168,26 +158,25 @@ class VBSjjlnu_JetPairing(Module):
         '''
         jets = []
         coll_ids = []
-        for ijnf in range(int(self.nJetNotFat)):
-            jetindex = self.JetNotFat_index[ijnf]
+        for ijnf in range(len(self.JetNotFat_coll)):
+            jetindex = self.JetNotFat_coll[ijnf].jetIdx
             # index in the original Jet collection
-            rawjetid = self.jet_var["CleanJet_jetIdx"][jetindex]
-            pt, eta, phi, mass = self.jet_var["CleanJet_pt"][jetindex], \
-                        self.jet_var["CleanJet_eta"][jetindex],\
-                        self.jet_var["CleanJet_phi"][jetindex], \
-                        self.rawjet_mass[rawjetid]
+            rawjetid = self.Jet_coll[jetindex].jetIdx
+            pt, eta, phi, mass = self.Jet_coll[jetindex].pt, \
+                        self.Jet_coll[jetindex].eta,\
+                        self.Jet_coll[jetindex].phi, \
+                        self.rawJet_coll[rawjetid].mass
 
             if pt < ptmin or pt<0: 
                 break
-            if abs(eta) < 10 :
-                p = pt * cosh(eta)
-                en = sqrt(p**2 + mass**2)
-                vec = TLorentzVector()
-                vec.SetPtEtaPhiE(pt, eta, phi, en)
-                # check if different from the previous one
-                if debug:
-                    print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
-                jets.append(vec)
-                coll_ids.append(jetindex)
+            if abs(eta) > 10 : continue
+            p = pt * cosh(eta)
+            en = sqrt(p**2 + mass**2)
+            vec = TLorentzVector()
+            vec.SetPtEtaPhiE(pt, eta, phi, en)
+            # check if different from the previous one
+            if debug:
+                print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
+            jets.append(vec)
+            coll_ids.append(jetindex)
         return jets, coll_ids
-
