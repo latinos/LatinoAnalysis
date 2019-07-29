@@ -287,6 +287,20 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       
+#### To add ext samples
+def getEventSumw(directory,sample,prefix):
+    Files=getSampleFiles(directory,sample,False,prefix)
+    genEventSumw  = 0.0
+    for iFile in Files:
+        f = ROOT.TFile.Open(iFile.replace('###',''), "READ")
+        Runs=f.Get("Runs")
+        for iRun in Runs:
+            genEventSumw  += iRun.genEventSumw
+        f.Close()
+    nEvt = genEventSumw
+    return nEvt
+
+
 
 #### BaseW across sample _ext
 
