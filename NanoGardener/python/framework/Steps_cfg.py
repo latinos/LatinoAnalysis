@@ -657,7 +657,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.5, mass_range=[50, 120], over_lepR=1.0, over_jetR=1.2)',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], over_lepR=0.8, over_jetR=0.8)',
                   'module'     : 'fatjetMaker()'
     },
 
