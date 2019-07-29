@@ -262,6 +262,8 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
 	#if "sdfarm" in os.uname()[1]:
 	#  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
         if not FromPostProc :
+            if "sdfarm" in os.uname()[1]:
+                if '/xrootd/' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
           FileTarget.append('###'+xrootdPath+iFile)
         else:
           FileTarget.append(iFile)
