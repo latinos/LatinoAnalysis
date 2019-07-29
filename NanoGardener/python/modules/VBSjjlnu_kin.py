@@ -98,11 +98,13 @@ class VBSjjlnu_kin(Module):
                 else:                      
                     other_jets.append(jet)
 
+            
             output = vbs_vars.getVBSkin_resolved(vbsjets, vjets, lep, met, other_jets, debug=self.debug )
         
         elif category == 2:
             ##############################
             # Missing jet (3-jet) category
+            if self.debug: print "Category 2: Missing one jet"
             output = vbs_vars.getDefault()
 
         # Fill the branches

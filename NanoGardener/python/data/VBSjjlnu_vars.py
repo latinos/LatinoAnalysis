@@ -105,9 +105,10 @@ def getVBSkin_resolved(vbsjets, vjets,lepton, met, other_jets, debug=False):
     output["deltaR_lep_vbs"] = min( [ lepton.DrEtaPhi(vbsjets[0]), lepton.DrEtaPhi(vbsjets[1])])
     output["deltaR_lep_vjet"] = min( [ lepton.DrEtaPhi(vjets[0]), lepton.DrEtaPhi(vjets[1])])
     # Zeppenfeld variables
-    output["Zvjets_high"] = (vjet_etas[0] - mean_eta_vbs)/ deltaeta_vbs
-    output["Zvjets_low"] = (vjet_etas[1] - mean_eta_vbs)/ deltaeta_vbs
-    output["Zlep"] = (lepton.Eta() - mean_eta_vbs)/ deltaeta_vbs
+    if deltaeta_vbs != 0:
+        output["Zvjets_high"] = (vjet_etas[0] - mean_eta_vbs)/ deltaeta_vbs
+        output["Zvjets_low"] = (vjet_etas[1] - mean_eta_vbs)/ deltaeta_vbs
+        output["Zlep"] = (lepton.Eta() - mean_eta_vbs)/ deltaeta_vbs
     #R variables
     ptvbs12  = vbsjets[0].Pt() * vbsjets[1].Pt() 
     output["Rvjets_high"] = (lepton.Pt() * vjets[0].Pt()) / ptvbs12
@@ -131,7 +132,8 @@ def getVBSkin_resolved(vbsjets, vjets,lepton, met, other_jets, debug=False):
     output["A_ww"] = (w_lep_t + w_had_t).Pt() / (w_lep.Pt() + w_had.Pt())
     #Centrality
     eta_ww = (w_lep.Eta() + w_had.Eta())/2
-    output["Centr_vbs"] = abs(vbs_etas[0] - eta_ww - vbs_etas[1]) / deltaeta_vbs
+    if deltaeta_vbs != 0.:
+        output["Centr_vbs"] = abs(vbs_etas[0] - eta_ww - vbs_etas[1]) / deltaeta_vbs
     deltaeta_plus = max(vbs_etas) - max([w_lep.Eta(), w_had.Eta()])
     deltaeta_minus = min([w_lep.Eta(), w_had.Eta()]) - min(vbs_etas)
     output["Centr_ww"] = min([deltaeta_plus, deltaeta_minus])
@@ -142,19 +144,19 @@ def getVBSkin_resolved(vbsjets, vjets,lepton, met, other_jets, debug=False):
     output["Lep_projw"] = (w_lep_t * lep_vec_t) / (lepton.Pt() * w_lep.Pt())
     # Ht and number of jets with Pt> 20
     # using uncut jets
-    Njets = 0
+    Njets = len(other_jets)
     N_jets_forward = 0
     N_jets_central = 0
     Ht = 0.
     for oj in other_jets:
         j_eta, j_pt = oj.Eta(), oj.Pt()
         # Looking only to jets != vbs & vjets
-        Z = abs((j_eta - mean_eta_vbs)/ deltaeta_vbs)
-        Njets += 1
-        if Z > 0.5:
-            N_jets_forward += 1
-        else:
-            N_jets_central += 1
+        if deltaeta_vbs != 0.:
+            Z = abs((j_eta - mean_eta_vbs)/ deltaeta_vbs)
+            if Z > 0.5:
+                N_jets_forward += 1
+            else:
+                N_jets_central += 1
         # Ht totale
         Ht += j_pt
     # Add vbs and vjet to Ht
@@ -226,8 +228,9 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     output["deltaR_lep_vbs"] = min( [ lepton.DrEtaPhi(vbsjets[0]), lepton.DrEtaPhi(vbsjets[1])])
     output["deltaR_lep_vjet"] = lepton.DrEtaPhi(fatjet)
     # Zeppenfeld variables
-    output["Zvjets_high"] = (vjet_etas[0] - mean_eta_vbs)/ deltaeta_vbs
-    output["Zlep"] = (lepton.Eta() - mean_eta_vbs)/ deltaeta_vbs
+    if deltaeta_vbs != 0.:
+        output["Zvjets_high"] = (vjet_etas[0] - mean_eta_vbs)/ deltaeta_vbs
+        output["Zlep"] = (lepton.Eta() - mean_eta_vbs)/ deltaeta_vbs
     #R variables
     ptvbs12  = vbsjets[0].Pt() * vbsjets[1].Pt() 
     output["Rvjets_high"] = (lepton.Pt() * fatjet.Pt()) / ptvbs12
@@ -249,7 +252,8 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     output["A_ww"] = (w_lep_t + w_had_t).Pt() / (w_lep.Pt() + w_had.Pt())
     #Centrality
     eta_ww = (w_lep.Eta() + w_had.Eta())/2
-    output["Centr_vbs"] = abs(vbs_etas[0] - eta_ww - vbs_etas[1]) / deltaeta_vbs
+    if deltaeta_vbs != 0.:
+        output["Centr_vbs"] = abs(vbs_etas[0] - eta_ww - vbs_etas[1]) / deltaeta_vbs
     deltaeta_plus = max(vbs_etas) - max([w_lep.Eta(), w_had.Eta()])
     deltaeta_minus = min([w_lep.Eta(), w_had.Eta()]) - min(vbs_etas)
     output["Centr_ww"] = min([deltaeta_plus, deltaeta_minus])
@@ -260,19 +264,19 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     output["Lep_projw"] = (w_lep_t * lep_vec_t) / (lepton.Pt() * w_lep.Pt())
     # Ht and number of jets with Pt> 20
     # using uncut jets
-    Njets = 0
+    Njets = len(other_jets)
     N_jets_forward = 0
     N_jets_central = 0
     Ht = 0.
     for oj in other_jets:
         j_eta, j_pt = oj.Eta(), oj.Pt()
         # Looking only to jets != vbs & vjets
-        Z = abs((j_eta - mean_eta_vbs)/ deltaeta_vbs)
-        Njets += 1
-        if Z > 0.5:
-            N_jets_forward += 1
-        else:
-            N_jets_central += 1
+        if deltaeta_vbs != 0.:
+            Z = abs((j_eta - mean_eta_vbs)/ deltaeta_vbs)
+            if Z > 0.5:
+                N_jets_forward += 1
+            else:
+                N_jets_central += 1
         # Ht totale
         Ht += j_pt
     # Add vbs and vjet to Ht
