@@ -189,6 +189,13 @@ Steps = {
                      'subTargets' : ['puW','formulasMCLP19'],
   },               
 
+  'MVAFix' : { 
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : [ 'DYMVA','MonoHiggsMVA' ] ,
+             }, 
+
   'MCl1loose2018' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
