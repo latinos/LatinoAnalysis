@@ -198,7 +198,7 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     output["vbs_eta_low"] = abs(vbs_etas[1])
 
     total_vjet = fatjet
-    vjet_etas = [fatjet.Pt(),  -999.]
+    vjet_etas = [fatjet.Eta(),  -999.]
     vjet_phis = [fatjet.Phi(), -999.]
     vjet_pts = [fatjet.Pt(),   -999.]
     if debug:
@@ -208,7 +208,6 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     output["vjet_pt_low"] =  vjet_pts[1]
     output["mjj_vjet"] = total_vjet.M()
     output["vjet_eta_high"] = abs(vjet_etas[0])
-    output["vjet_eta_low"] = abs(vjet_etas[1])
 
     nu_vec = RecoNeutrino.reconstruct_neutrino(lepton, met)
     output["recoMET"] = nu_vec.Pt()
