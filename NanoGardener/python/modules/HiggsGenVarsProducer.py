@@ -28,5 +28,12 @@ class HiggsGenVarsProducer(Module):
             self.out.fillBranch("higgsGenEta", particle.eta)
             self.out.fillBranch("higgsGenPhi", particle.phi)
             self.out.fillBranch("higgsGenMass", particle.mass)
+            break
+        else: # = pdgId 25 not found
+          self.out.fillBranch("higgsGenPt", -1.)
+          self.out.fillBranch("higgsGenEta", 0.)
+          self.out.fillBranch("higgsGenPhi", 0.)
+          self.out.fillBranch("higgsGenMass", -1.)
+
         return True
 
