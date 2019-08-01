@@ -254,17 +254,50 @@ class DatacardFactory:
 
                 if nuisance['type'] in ['lnN', 'lnU']:
                   card.write((nuisance['name']).ljust(80-20))
-                  card.write((nuisance['type']).ljust(20))
-                  if 'all' in nuisance and nuisance ['all'] == 1: # for all samples
-                    card.write(''.join(('%-.4f' % nuisance['value']).ljust(columndef) for _ in processes))
-                  else:
-                    # apply only to selected samples
+
+                  if 'AsShape' in nuisance and float(nuisance['AsShape']) >= 1.:
+                    print ">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"
+                    card.write(('shape').ljust(20))
                     for sampleName in processes:
-                      if sampleName in nuisance['samples'] or ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
-                        # in this case nuisance['samples'] is a dict mapping sample name to nuisance values in string
-                        card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                      if ('all' in nuisance and nuisance['all'] == 1) or \
+                              ('samples' in nuisance and sampleName in nuisance['samples']) or \
+                              ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
+                        histo = self._getHisto(cutName, variableName, sampleName)
+
+                        histoUp = histo.Clone('%s_%sUp' % (histo.GetName(), nuisance['name']))
+                        histoDown = histo.Clone('%s_%sDown' % (histo.GetName(), nuisance['name']))
+                        histoUp.SetDirectory(self._outFile)
+                        histoDown.SetDirectory(self._outFile)
+
+                        if '/' in nuisance['samples'][sampleName]:
+                            up, down = nuisance['samples'][sampleName].split('/')
+                            histoUp.Scale(float(up))
+                            histoDown.Scale(float(down))
+                        else:
+                            histoUp.Scale(float(nuisance['samples'][sampleName]))
+                            histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
+
+                        self._outFile.cd()
+                        histoUp.Write()
+                        histoDown.Write()
+
+                        card.write('1.000'.ljust(columndef))
+
                       else:
                         card.write(('-').ljust(columndef))
+
+                  else:
+                    card.write((nuisance['type']).ljust(20))
+                    if 'all' in nuisance and nuisance ['all'] == 1: # for all samples
+                      card.write(''.join(('%-.4f' % nuisance['value']).ljust(columndef) for _ in processes))
+                    else:
+                      # apply only to selected samples
+                      for sampleName in processes:
+                        if sampleName in nuisance['samples'] or ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
+                          # in this case nuisance['samples'] is a dict mapping sample name to nuisance values in string
+                          card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                        else:
+                          card.write(('-').ljust(columndef))
                 
                 elif nuisance['type'] == 'shape':
                   #
@@ -535,6 +568,9 @@ class DatacardFactory:
         else:
             # Merged single ROOT file
             histo = self._fileIn.Get(shapeName)
+
+        if not histo:
+            print shapeName, 'not found'
       
         return histo
 
