@@ -7,6 +7,7 @@ import shutil
 import time
 import collections
 import tempfile
+import subprocess
 import logging
 from array import array
 
@@ -221,8 +222,7 @@ class ShapeFactory:
 
           # Set up drawers for tree-type nuisances
 
-          drawersNuisanceUp   = {}
-          drawersNuisanceDown = {}
+          nuisanceDrawers = {}
 
           for nuisanceName, nuisance in nuisances.iteritems():
             if 'kind' not in nuisance or nuisance['kind'] != 'tree':
@@ -265,22 +265,25 @@ class ShapeFactory:
                 except KeyError:
                   skimListFolderDown = None
   
-                drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
-                drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
+                ndrawerUp = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
+                ndrawerDown = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
   
               else:
-                drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
-                drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
+                ndrawerUp = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
+                ndrawerDown = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
 
             elif 'filesUp' in nuisance and 'filesDown' in nuisance:
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, nuisance['filesUp'][sampleName], '', skipMissingFiles=False)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, nuisance['filesDown'][sampleName], '', skipMissingFiles=False)
+              ndrawerUp = self._connectInputs(sampleName, nuisance['filesUp'][sampleName], '', skipMissingFiles=False)
+              ndrawerDown = self._connectInputs(sampleName, nuisance['filesDown'][sampleName], '', skipMissingFiles=False)
+
+            nuisanceDrawers[nuisanceName] = (ndrawerUp, ndrawerDown)
 
           # Set overall weights on the nuisance up/down drawers
-          for idir, nuisanceDrawers in enumerate([drawersNuisanceUp, drawersNuisanceDown]):
-            for nuisanceName, ndrawer in nuisanceDrawers.iteritems():
-              # tree-type nuisances can in addition have weights for up / down
-              configurationNuis = nuisances[nuisanceName]['samples'][sampleName]
+          for nuisanceName, ndrawers in nuisanceDrawers.iteritems():
+            # tree-type nuisances can in addition have weights for up / down
+            configurationNuis = nuisances[nuisanceName]['samples'][sampleName]
+
+            for idir, ndrawer in enumerate(ndrawers):
               if float(configurationNuis[idir]) != 1.:
                 nuisanceShift = ShapeFactory._make_reweight(configurationNuis[idir])
                 nuisanceweight = ROOT.multidraw.ReweightSource(sampleweight, nuisanceShift)
@@ -369,15 +372,11 @@ class ShapeFactory:
 
               applicableNuisances[nuisanceName] = nuisance
 
+              # tree-type nuisance?
               if 'kind' not in nuisance or nuisance['kind'] != 'tree':
                 continue
 
-              for nuisanceDrawers in [drawersNuisanceUp, drawersNuisanceDown]:
-                try:
-                  ndrawer = nuisanceDrawers[nuisanceName]
-                except KeyError:
-                  continue
-
+              for ndrawer in nuisanceDrawers[nuisanceName]:
                 ndrawer.addCut(cutFullName, cut['expr'])
                 if 'categorization' in cut:
                   ndrawer.setCategorization(cutFullName, cut['categorization'])
@@ -466,24 +465,17 @@ class ShapeFactory:
 
                 configurationNuis = nuisance['samples'][sampleName]
 
-                for idir, (ndrawers, variation) in enumerate([(drawersNuisanceUp, 'Up'), (drawersNuisanceDown, 'Down')]):
+                for idir, variation in enumerate(('Up', 'Down')):
                   if nuisance['kind'] == 'tree':
-                    try:
-                      ndrawer = ndrawers[nuisanceName]
-                    except KeyError:
-                      # nuisance drawer for the specific sample may not exist if there is no nuisance tree corresponding to the nominal
-                      # can be the case e.g. for UE and PS trees with FilesPerJob = 1
-                      continue
-
+                    ndrawer = nuisanceDrawers[nuisanceName][idir]
                     reweightNuis = reweight
 
                   elif nuisance['kind'] == 'weight':
+                    ndrawer = drawer
                     reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[idir])
                     if reweight is not None:
                       # compound reweight
                       reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
-
-                    ndrawer = drawer
 
                   subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
 
@@ -538,16 +530,14 @@ class ShapeFactory:
           # We don't need this drawer any more - can reduce the number of open FDs?
           del drawer
 
-          for ndrawers, variation in [(drawersNuisanceUp, 'Up'), (drawersNuisanceDown, 'Down')]:
-            for nuisanceName, ndrawer in ndrawers.iteritems():
+          for nuisanceName in nuisanceDrawers.keys():
+            ndrawers = nuisanceDrawers.pop(nuisanceName)
+            for ndrawer, variation in zip(ndrawers, ('Up', 'Down')):
               print 'Start', nuisanceName + variation, 'histogram fill'
               ndrawer.execute(nevents, firstEvent)
 
           tmpROOTFile.Close()
           os.unlink(tmpfile.name)
-
-          drawersNuisanceUp = None
-          drawersNuisanceDown = None
 
           print 'Postfill'
           
@@ -690,7 +680,22 @@ class ShapeFactory:
         outFile.Close()
         
         print 'Copying', outFile.GetName(), 'to', outputFileName
-        shutil.copyfile(outFile.GetName(), outputFileName)
+
+        realOutDir = os.path.realpath(os.path.dirname(outputFileName))
+        
+        for _ in range(10):
+          try:
+            if realOutDir.startswith('/eos/cms'):
+              subprocess.Popen(['xrdcp', '-f', outFile.GetName(), 'root://eoscms.cern.ch/' + realOutDir + '/' + os.path.basename(outputFileName)]).communicate()
+            else:
+              shutil.copyfile(outFile.GetName(), outputFileName)
+          except:
+            continue
+          else:
+            break
+        else:
+          raise IOError('Failed to copy output')
+        
         shutil.rmtree(os.path.dirname(outFile.GetName()))
 
     # _____________________________________________________________________________
@@ -1137,7 +1142,7 @@ class ShapeFactory:
        
         # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
         files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-        nfiles = self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
+        self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
 
         # if we specify a friends tree directory we need to load the friend trees and attch them 
         if friendsDir != None:
@@ -1227,7 +1232,6 @@ class ShapeFactory:
             exists = self._test_xrootdFile(path)
             location = 'AAA'
           else:
-            print 'checking local'
             exists = self._testLocalFile(path)
             location = 'local'
 
