@@ -232,6 +232,7 @@ if __name__ == '__main__':
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=1, type='int')
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
+    parser.add_option("-n", "--dry-run"  , dest="dryRun"         , help="do not make shapes"                         , default=False, action="store_true")
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
 
     # read default parsing options as well
@@ -440,7 +441,8 @@ if __name__ == '__main__':
         #jobs.Sub(opt.batchQueue)
       #else:
       #print " opt.batchQueue = ", opt.batchQueue
-      jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
+      if not opt.dryRun:
+        jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
 
     elif opt.doHadd != 0:
 
@@ -489,15 +491,19 @@ if __name__ == '__main__':
       hadd = os.environ['CMSSW_BASE'] + '/src/LatinoAnalysis/Tools/scripts/haddfast'
 
       command = [hadd]
-      command.extend(['-j', str(nThreads)])
+      if nThreads == 1:
+        command.append('--compress')
+      else:
+        command.extend(['-j', str(nThreads)])
       command.append(os.path.join(os.getcwd(), opt.outputDir, finalname))
       command.extend(fileList)
       print ' '.join(command)
-      subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
-
-      if not opt.doNotCleanup:
-        for fname in fileList:
-          os.unlink(opt.outputDir + '/' + fname)
+      if not opt.dryRun:
+        subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
+  
+        if not opt.doNotCleanup:
+          for fname in fileList:
+            os.unlink(opt.outputDir + '/' + fname)
 
     elif opt.doHadd != 0 or opt.redoStat != 0:
       ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option

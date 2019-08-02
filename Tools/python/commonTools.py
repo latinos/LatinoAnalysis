@@ -158,87 +158,98 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
     
 
     #### SETUP DISK ACCESS ####
-
-    xrootdPath=''
-    # ... IIHE
-    if 'iihe' in os.uname()[1] :
-      if not FromPostProc : absPath=True
-      lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
-         Dir = '/pnfs/iihe/cms/' + inputDir
-      else:                        
-         Dir = inputDir
-      if '/pnfs/' in inputDir :  xrootdPath='dcap://maite.iihe.ac.be/'
-
-    # ... CERN
-    elif 'cern' in os.uname()[1] : 
-      if not '/eos/' in  inputDir and '/store/' in inputDir:
-         Dir = '/eos/cms/' + inputDir
-      else:                          
-         Dir = inputDir
-      if '/eos/cms/' in inputDir:
-         absPath=True
-         xrootdPath='root://eoscms.cern.ch/'
-      # if   '/eos/cms/' in inputDir:
-      # #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '
-      #    xrootdPath='root://eoscms.cern.ch/'
-      # elif '/eos/user/' in inputDir:
-      # #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/eos.select ls '
-      #    xrootdPath='root://eosuser.cern.ch/'     
-      lsCmd='ls ' 
-    
-    # ... IFCA   
-    elif 'ifca' in os.uname()[1] :
-      lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inputDir:
-        Dir = '/gpfs/gaes/cms/' + inputDir 
-      else:
-        Dir = inputDir
-
-    # ... PISA         
-    elif "pi.infn.it" in socket.getfqdn():
-      lsCmd='ls '
-      if not '/gpfs/' in inputDir and '/store/' in inputDir:
-        Dir = '/gpfs/ddn/srm/cms/' + inputDir 
-      else:
-        Dir = inputDir
-
-    # ... KNU
-    elif "knu" in os.uname()[1]:
+    #if someoune had defined xrootdPath, live with it
+    if 'root://' in inputDir:
+      xrdserver=inputDir.lstrip("root://").split("/")[0]
+      xrootdPath='root://'+xrdserver
       absPath=True
-      lsCmd='ls '
-      if not '/pnfs/' in inputDir and '/store/' in inputDir: 
-        Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
-      else:
-        Dir = inputDir 
-      if '/pnfs/' in inputDir :  xrootdPath='dcap://cluster142.knu.ac.kr/'
-     
-    # ... KISTI
-    elif "sdfarm" in os.uname()[1]:
-      absPath=True
-      lsCmd='ls '
-      if not '/xrootd/' in inputDir and '/store/' in inputDir:
-        Dir = '/xrootd/store/' + inputDir.split('/store/')[1]
-      else:
-        Dir = inputDir 
-      if '/xrootd/' in Dir :
-	#xrootdPath='root://cms-xrdr.sdfarm.kr/'
-	#xrootdPath='root://cms-xrdr.sdfarm.kr:1094/' # outside of Korean farm
-	xrootdPath='root://cms-xrdr.private.lo:2094/' # inside of Korean farm
+      lsCmd='xrdfs '+xrdserver+' ls '
+      Dir = inputDir.lstrip("root://").lstrip(xrdserver)
+    else:  
+      xrootdPath=''
+      # ... IIHE
+      if 'iihe' in os.uname()[1] :
+        if not FromPostProc : absPath=True
+        lsCmd='ls '
+        if not '/pnfs/' in inputDir and '/store/' in inputDir: 
+           Dir = '/pnfs/iihe/cms/' + inputDir
+        else:                        
+           Dir = inputDir
+        if '/pnfs/' in inputDir :  xrootdPath='dcap://maite.iihe.ac.be/'
 
-    # ... DEFAULT: local mounted disk
-    else :
-      lsCmd='ls '
-      Dir = inputDir
+      # ... CERN
+      elif 'cern' in os.uname()[1] : 
+        if not '/eos/' in  inputDir and '/store/' in inputDir:
+           Dir = '/eos/cms/' + inputDir
+        else:                          
+           Dir = inputDir
+        if '/eos/cms/' in inputDir:
+           absPath=True
+           xrootdPath='root://eoscms.cern.ch/'
+        # if   '/eos/cms/' in inputDir:
+        # #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select ls '
+        #    xrootdPath='root://eoscms.cern.ch/'
+        # elif '/eos/user/' in inputDir:
+        # #   lsCmd='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/eos.select ls '
+        #    xrootdPath='root://eosuser.cern.ch/'     
+        lsCmd='ls ' 
+      
+      # ... IFCA   
+      elif 'ifca' in os.uname()[1] :
+        lsCmd='ls '
+        if not '/gpfs/' in inputDir and '/store/' in inputDir:
+          Dir = '/gpfs/gaes/cms/' + inputDir 
+        else:
+          Dir = inputDir
+
+      # ... PISA         
+      elif "pi.infn.it" in socket.getfqdn():
+        lsCmd='ls '
+        if not '/gpfs/' in inputDir and '/store/' in inputDir:
+          Dir = '/gpfs/ddn/srm/cms/' + inputDir 
+        else:
+          Dir = inputDir
+
+      # ... KNU
+      elif "knu" in os.uname()[1]:
+        absPath=True
+        lsCmd='ls '
+        if not '/pnfs/' in inputDir and '/store/' in inputDir: 
+          Dir = '/pnfs/knu.ac.kr/data/cms/' + inputDir
+        else:
+          Dir = inputDir 
+        if '/pnfs/' in inputDir :  xrootdPath='dcap://cluster142.knu.ac.kr/'
+       
+      # ... KISTI
+      elif "sdfarm" in os.uname()[1]:
+        absPath=True
+        lsCmd='ls '
+        if not '/xrootd/' in inputDir and '/store/' in inputDir:
+          Dir = '/xrootd/store/' + inputDir.split('/store/')[1]
+        else:
+          Dir = inputDir 
+        if '/xrootd/' in Dir :
+          #xrootdPath='root://cms-xrdr.sdfarm.kr/'
+          #xrootdPath='root://cms-xrdr.sdfarm.kr:1094/' # outside of Korean farm
+          xrootdPath='root://cms-xrdr.private.lo:2094/' # inside of Korean farm
+
+      # ... DEFAULT: local mounted disk
+      else :
+        lsCmd='ls '
+        Dir = inputDir
 
 
     ##### Now get the files for Sample
     fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'.root'
+    if 'root://' in inputDir:
+      fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'.root' 
     proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out,err = proc.communicate()
     Files   = string.split(out)
     if len(Files) == 0 :
       fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'__part*.root'
+      if 'root://' in inputDir:
+        fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'__part | grep root'
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
       Files   = string.split(out)
@@ -251,7 +262,9 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
 	#if "sdfarm" in os.uname()[1]:
 	#  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
         if not FromPostProc :
-          FileTarget.append('###'+xrootdPath+iFile)
+            if "sdfarm" in os.uname()[1]:
+                if '/xrootd/' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
+            FileTarget.append('###'+xrootdPath+iFile)
         else:
           FileTarget.append(iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
@@ -276,6 +289,20 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       
+#### To add ext samples
+def getEventSumw(directory,sample,prefix):
+    Files=getSampleFiles(directory,sample,False,prefix)
+    genEventSumw  = 0.0
+    for iFile in Files:
+        f = ROOT.TFile.Open(iFile.replace('###',''), "READ")
+        Runs=f.Get("Runs")
+        for iRun in Runs:
+            genEventSumw  += iRun.genEventSumw
+        f.Close()
+    nEvt = genEventSumw
+    return nEvt
+
+
 
 #### BaseW across sample _ext
 

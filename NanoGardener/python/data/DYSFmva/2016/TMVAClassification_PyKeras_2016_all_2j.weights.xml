@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<MethodSetup Method="PyKeras::PyKeras_2016_all_2j">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.2.1 [262657]"/>
+    <Info name="ROOT Release" value="6.12/04 [396292]"/>
+    <Info name="Creator" value="ddicroce"/>
+    <Info name="Date" value="Wed Jun 12 20:08:06 2019"/>
+    <Info name="Host" value="Linux lcgapp-centos7-x86-64-23.cern.ch 3.10.0-693.5.2.el7.x86_64 #1 SMP Fri Oct 20 20:32:50 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/afs/cern.ch/work/d/ddicroce/DNN/CMSSW_9_4_6_patch1/src/2016"/>
+    <Info name="Training events" value="46603"/>
+    <Info name="TrainingTime" value="1.73942090e+02"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="Yes">I</Option>
+    <Option name="H" modified="Yes">True</Option>
+    <Option name="CreateMVAPdfs" modified="No">False</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
+    <Option name="FilenameModel" modified="Yes">model_2016_all_2j.h5</Option>
+    <Option name="FilenameTrainedModel" modified="No">/afs/cern.ch/user/d/ddicroce/public/DYSFmva/2016/TrainedModel_PyKeras_2016_all_2j.h5</Option>
+    <Option name="BatchSize" modified="Yes">1000</Option>
+    <Option name="NumEpochs" modified="Yes">400</Option>
+    <Option name="Verbose" modified="No">1</Option>
+    <Option name="ContinueTraining" modified="No">False</Option>
+    <Option name="SaveBestOnly" modified="No">True</Option>
+    <Option name="TriesEarlyStopping" modified="No">-1</Option>
+    <Option name="LearningRateSchedule" modified="No"/>
+  </Options>
+  <Variables NVar="13">
+    <Variable VarIndex="0" Expression="upara" Label="upara" Title="upara" Unit="" Internal="upara" Type="F" Min="-3.73864355e+03" Max="8.21486206e+02"/>
+    <Variable VarIndex="1" Expression="mth" Label="mth" Title="mth" Unit="" Internal="mth" Type="F" Min="0.00000000e+00" Max="8.79471252e+02"/>
+    <Variable VarIndex="2" Expression="ptTOT_cut" Label="ptTOT_cut" Title="ptTOT_cut" Unit="" Internal="ptTOT_cut" Type="F" Min="2.32065558e-01" Max="5.80278748e+02"/>
+    <Variable VarIndex="3" Expression="uperp" Label="uperp" Title="uperp" Unit="" Internal="uperp" Type="F" Min="-1.71463403e+03" Max="1.74887061e+03"/>
+    <Variable VarIndex="4" Expression="dphilljet_cut" Label="dphilljet_cut" Title="dphilljet_cut" Unit="" Internal="dphilljet_cut" Type="F" Min="1.34389993e-04" Max="3.14158916e+00"/>
+    <Variable VarIndex="5" Expression="ptll" Label="ptll" Title="ptll" Unit="" Internal="ptll" Type="F" Min="3.00012131e+01" Max="1.14748279e+03"/>
+    <Variable VarIndex="6" Expression="PfMetDivSumMet" Label="PfMetDivSumMet" Title="PfMetDivSumMet" Unit="" Internal="PfMetDivSumMet" Type="F" Min="4.76182699e-01" Max="2.86398296e+01"/>
+    <Variable VarIndex="7" Expression="MET_pt" Label="MET_pt" Title="MET_pt" Unit="" Internal="MET_pt" Type="F" Min="1.18117258e-01" Max="1.11217590e+03"/>
+    <Variable VarIndex="8" Expression="mtw1" Label="mtw1" Title="mtw1" Unit="" Internal="mtw1" Type="F" Min="0.00000000e+00" Max="8.83890015e+02"/>
+    <Variable VarIndex="9" Expression="jetpt1_cut" Label="jetpt1_cut" Title="jetpt1_cut" Unit="" Internal="jetpt1_cut" Type="F" Min="3.01250000e+01" Max="1.19000000e+03"/>
+    <Variable VarIndex="10" Expression="dphijjmet_cut" Label="dphijjmet_cut" Title="dphijjmet_cut" Unit="" Internal="dphijjmet_cut" Type="F" Min="2.31933562e-04" Max="3.14155293e+00"/>
+    <Variable VarIndex="11" Expression="mpmet" Label="mpmet" Title="mpmet" Unit="" Internal="mpmet" Type="F" Min="0.00000000e+00" Max="2.88572357e+02"/>
+    <Variable VarIndex="12" Expression="PV_npvsGood" Label="PV_npvsGood" Title="PV_npvsGood" Unit="" Internal="PV_npvsGood" Type="F" Min="2.00000000e+00" Max="7.00000000e+01"/>
+  </Variables>
+  <Spectators NSpec="0"/>
+  <Classes NClass="2">
+    <Class Name="Signal" Index="0"/>
+    <Class Name="Background" Index="1"/>
+  </Classes>
+  <Transformations NTransformations="1"/>
+  <MVAPdfs/>
+</MethodSetup>

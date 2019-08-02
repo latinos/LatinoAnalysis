@@ -34,7 +34,10 @@ class TMVAfiller(Module):
         loadKeras = False
         for iMva in self.mvaDic : 
           if self.mvaDic[iMva]['type'] == 'PyKeras' : loadKeras = True  
-        if loadKeras : ROOT.TMVA.PyMethodBase.PyInitialize()
+        if loadKeras : 
+          from os import environ
+          environ['KERAS_BACKEND'] = 'tensorflow'
+          ROOT.TMVA.PyMethodBase.PyInitialize()
 
         cmssw_base = os.getenv('CMSSW_BASE') 
         for iMva in self.mvaDic :
