@@ -45,11 +45,11 @@ class DressedLeptonProducer(Module):
               minDR = dr
               closestLepton = il
           if minDR < self.cone:
-            newp4 = dressedLeptons[il].p4()+photonp4  
-            dressedLeptons[il].pt=newp4.Pt()
-            dressedLeptons[il].eta=newp4.Eta()
-            dressedLeptons[il].phi=newp4.Phi()
-            dressedLeptons[il].mass=newp4.M()
+            newp4 = dressedLeptons[closestLepton].p4()+photonp4  
+            dressedLeptons[closestLepton].pt=newp4.Pt()
+            dressedLeptons[closestLepton].eta=newp4.Eta()
+            dressedLeptons[closestLepton].phi=newp4.Phi()
+            dressedLeptons[closestLepton].mass=newp4.M()
 
         for branch in self.allQuantities:
           out = []
