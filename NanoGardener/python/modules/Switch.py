@@ -12,19 +12,19 @@ class Switch(Module):
     Create branch <desired_branchname> with boolean
 
     In cfg_path:
-    SwitchDict = {
-        '<desired_branchname>': {
-            'threshold': [
-                'event.<desired_cut>',
+    SwitchDict[era] = {
+        '<desired_branchname>': {               
+            '<or_case>': [                      or_case (for example cut on run_period region) all or_case need to be complementary
+                'event.<desired_cut>',          actual turn on statement
             ]
         },
     }
     '''
-    def __init__(self, cfg_path = 'LatinoAnalysis/NanoGardener/python/data/Switch_cfg.py'):
+    def __init__(self, cmssw = 'Full2016v2', cfg_path = 'LatinoAnalysis/NanoGardener/python/data/switch/MH_triggerSwitch_cfg.py'):
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
         execfile(cmssw_base+'/src/'+cfg_path, var)
-        self.switch_dict = var['SwitchDict']
+        self.switch_dict = var['SwitchDict'][cmssw]
         
 
     def beginJob(self):
@@ -40,18 +40,28 @@ class Switch(Module):
             bname = 'Switch_'+name
             self.out.branch(bname, 'O')
             self.th_dict[bname] = []
-            self.th_dict[bname] = self.switch_dict[name]['threshold'] 
+            self.th_dict[bname] = self.switch_dict[name] 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
     # Help functions
     def decide(self, th_list, event):
-        for th in th_list:
+        current_case = None
+        for case in th_list:
+            this_case = False
+            try:  this_case = eval(case)
+            except: raise ValueError('Switch decide: Could not evaluate case: ' + case)
+            if this_case:
+                current_case = case
+                break
+        if current_case is None: ValueError('Switch decide: no case found, cases need to be complementary')
+            
+        for th in th_list[current_case]:
             #th_str = 'event.' + th
             happy = False
             try: happy = eval(th)
-            except: raise ValueError('Switch decide: Could not evaluate ' + th)
+            except: raise ValueError('Switch decide: Could not evaluate threshold: ' + th)
             if not happy: return False
         return True
 
