@@ -101,7 +101,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['MHTrigMC','MHSwitch2016','MonoHiggsMVA','l3Kin','formulasMCMH'],
+                     'subTargets' : ['MHTrigMC','MHSwitch','MonoHiggsMVA','l3Kin','formulasMCMH'],
                  },
 
 
@@ -168,7 +168,7 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','EmbeddingVeto',
-                                     'rochesterMC','trigMC','MHTrigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','MHSwitch2017','formulasMC'],
+                                     'rochesterMC','trigMC','MHTrigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','MHSwitch','formulasMC'],
                 },
 
 
@@ -293,7 +293,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  #'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch2016', 'formulasDATA'],
+                  #'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                  },
 
@@ -318,7 +318,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch2017', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
                 },
 
 
@@ -427,23 +427,13 @@ Steps = {
                   'module'   : 'MHTrigMC()',
                },
 ####
-
-  'MHSwitch2016' : { 
+  'MHSwitch' : { 
                   'isChain'  : False ,
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.Switch' ,
-                  'declare'  : 'MHSwitch2016 = lambda : Switch(cfg_path="LatinoAnalysis/NanoGardener/python/data/switch/MH16_triggerSwitch_cfg.py")',
-                  'module'   : 'MHSwitch2016()',
-               },
-
-  'MHSwitch2017' : { 
-                  'isChain'  : False ,
-                  'do4MC'    : True  ,
-                  'do4Data'  : True ,
-                  'import'   : 'LatinoAnalysis.NanoGardener.modules.Switch' ,
-                  'declare'  : 'MHSwitch2017 = lambda : Switch(cfg_path="LatinoAnalysis/NanoGardener/python/data/switch/MH17_triggerSwitch_cfg.py")',
-                  'module'   : 'MHSwitch2017()',
+                  'declare'  : 'MHSwitch = lambda : Switch(cmssw="RPLME_CMSSW", cfg_path="LatinoAnalysis/NanoGardener/python/data/switch/MH16_triggerSwitch_cfg.py")',
+                  'module'   : 'MHSwitch()',
                },
 
   'MonoHiggsMVA' : { 
