@@ -103,6 +103,16 @@ Samples["HWplusJ_HToWW_LNu_M130"] = {'nanoAOD': '/HWplusJ_HToWWTo2L2Nu_WTo2L_M13
 #### ttH Inclusive ======== 
 Samples['ttHToNonbb_M125']     = {'nanoAOD' :'/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_new_pmx_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 
+
+#### Private Nano
+Samples['GluGluHToWWTo2L2Nu_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths": ['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8/nanoAOD__Fall17_102X_nAODv4_Full2017v4__GluGluHToWWTo2L2NuPowheg_M125/190416_125057/0000/']}
+Samples['VBFHToWWTo2L2Nu_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/VBFHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8/nanoAOD__Fall17_102X_nAODv4_Full2017v4__VBFHToWWTo2L2NuPowheg_M125/190416_124912/0000/']}
+Samples['ggZH_HToWW_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/nanoAOD__Fall17_102X_nAODv4_Full2017v4__GluGluZH_HToWW_M125/190416_125153/0000/']}
+Samples['HWminusJ_HToWW_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/nanoAOD__Fall17_102X_nAODv4_Full2017v4__HWminusJ_HToWW_M125/190416_124357/0000/']}
+Samples['HWplusJ_HToWW_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/nanoAOD__Fall17_102X_nAODv4_Full2017v4__HWplusJ_HToWW_M125/190416_123604/0000/']}
+Samples['HZJ_HToWWTo2L2Nu_M125_PrivateNano'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/group/phys_higgs/cmshww/amassiro/NanoProd/HZJ_HToWWTo2L2Nu_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5/nanoAOD__Fall17_102X_nAODv4_Full2017v4__HZJ_HToWWTo2L2Nu_M125/190416_124727/0000/']}
+
+
 ### bbH
 
 #### bbH
