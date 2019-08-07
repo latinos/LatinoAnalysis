@@ -37,7 +37,7 @@ class FatJetMaker(Module):
 
 
     '''
-    def __init__(self,jetid=1, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
+    def __init__(self,jetid=0, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
                     over_lepR =0.8, over_jetR = 0.8):
         self.jetid = jetid
         self.minpt = minpt
