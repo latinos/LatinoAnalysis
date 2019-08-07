@@ -665,6 +665,16 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyGenVarsProducer' ,
                   'module'     : 'SusyGenVarsProducer()' ,
                },
+    
+    ##--High Mass SemiLeptonic channel
+  'wlepMaker' : {
+                  'isChain'   : False ,
+                  'do4MC'     : True  ,
+                  'do4Data'   : True  ,
+                  'import'    : 'LatinoAnalysis.NanoGardener.modules.WlepMaker',
+                  'declare'   : 'wlepMkr = lambda : WlepMaker()',
+                  'module'    : 'wlepMkr()',
+     },
 
 
 ## ------- MODULES: Trigger
