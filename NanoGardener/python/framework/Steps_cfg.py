@@ -511,7 +511,8 @@ Steps = {
                    'declare'    : 'ggHUncertaintyProducer = lambda : GGHUncertaintyProducer()',
                    'module'     : 'ggHUncertaintyProducer()',
                    'onlySample' : [
-                                  'GluGluHToWWTo2L2NuPowheg_M125_PrivateNano'
+                                  'GluGluHToWWTo2L2NuPowheg_M125_PrivateNano',
+                                  'GluGluHToWWTo2L2NuPowheg_M125'
                                   ]
                   },    
 
