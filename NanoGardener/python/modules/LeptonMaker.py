@@ -114,10 +114,12 @@ class LeptonMaker(Module):
            # Now index is set, fill the vars  
            if abs(pdgId1) == 11:
               for var in lep_dict:
-                 if not 'Idx' in var:
+                 if not 'Idx' and not 'ptErr' in var:
                     lep_dict[var][pt_idx] = self.electron_var['Electron_'+var][iLep1]
                  elif 'electronIdx' in var:
                     lep_dict[var][pt_idx] = iLep1
+                 elif 'ptErr' in var: 
+                    lep_dict[var][pt_idx] = self.electron_var['Electron_energyErr'][iLep1]
            elif abs(pdgId1) == 13:
               for var in lep_dict:
                  if not 'Idx' in var and not 'eCorr' in var:
