@@ -402,4 +402,25 @@ Productions = {
                    },
 
 
+ # -------- 2016 MC 102X nAODv5 for Higgs -> mumu 
+ 'Summer16_102X_nAODv5_Full2016v5_hmm': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16_102X_nAODv5_hmm.py' ,
+                       'cmssw'   : 'Full2016v2hmm' ,
+                       'year'    : '2016' ,
+                       'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ # -------- 2016 DATA 102X nAODv5 for Higgs -> mumu  
+ 'Run2016_102X_nAODv5_Full2016v5_hmm': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_23Sep2016ReRe
+co_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_102X_nAODv5_hmm.py' ,
+                       'cmssw'   : 'Full2016v2hmm' ,
+                       'year'    : '2016' ,
+                   },
+
 }
