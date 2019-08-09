@@ -486,7 +486,7 @@ Steps = {
   'TriggerObjectMatch' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
-                  'do4Data'    : False  ,
+                  'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TriggerObjectMatchProducer' ,
                   'declare'    : 'TriggerObjectMatch = lambda : TriggerObjectMatchProducer()',
                   'module'     : 'TriggerObjectMatch()' ,
@@ -519,7 +519,12 @@ Steps = {
                    'module'     : 'ggHUncertaintyProducer()',
                    'onlySample' : [
                                   'GluGluHToWWTo2L2NuPowheg_M125_PrivateNano',
-                                  'GluGluHToWWTo2L2NuPowheg_M125'
+                                  'GluGluHToWWTo2L2NuPowheg_M125',
+                                  'GluGluHToMuMu_M125_CP5',
+                                  'GluGluHToMuMu_M125_CP5up',
+                                  'GluGluHToMuMu_M125_CP5down',
+                                  'GluGluHToMuMu_M125_powheg',
+                                  'GluGluHToMuMu_M125_powheg_ext1',
                                   ]
                   },    
 
@@ -730,15 +735,6 @@ Steps = {
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
                  'declare'    : 'trigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=False)',
                  'module'     : 'trigMC()',
-               },
-
- 'TrigMC_hmumu'   : { 
-                  'isChain'  : False ,
-                  'do4MC'    : True  ,
-                  'do4Data'  : False ,
-                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                  'declare'  : 'MHTrigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_hmumu_cfg.py")',
-                  'module'   : 'MHTrigMC()',
                },
 
   'trigMCKeepRun' : { 'isChain'    : False ,
