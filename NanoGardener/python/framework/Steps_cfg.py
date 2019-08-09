@@ -433,7 +433,7 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.Switch' ,
-                  'declare'  : 'MHSwitch = lambda : Switch(cmssw="RPLME_CMSSW", cfg_path="LatinoAnalysis/NanoGardener/python/data/switch/MH16_triggerSwitch_cfg.py")',
+                  'declare'  : 'MHSwitch = lambda : Switch(cmssw="RPLME_CMSSW", cfg_path="LatinoAnalysis/NanoGardener/python/data/switch/MH_triggerSwitch_cfg.py")',
                   'module'   : 'MHSwitch()',
                },
 
