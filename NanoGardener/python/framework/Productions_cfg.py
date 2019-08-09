@@ -416,8 +416,7 @@ Productions = {
  # -------- 2016 DATA 102X nAODv5 for Higgs -> mumu  
  'Run2016_102X_nAODv5_Full2016v5_hmm': {
                        'isData'  : True ,
-                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_23Sep2016ReRe
-co_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_102X_nAODv5_hmm.py' ,
                        'cmssw'   : 'Full2016v2hmm' ,
                        'year'    : '2016' ,
