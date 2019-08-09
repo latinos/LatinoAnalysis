@@ -44,6 +44,7 @@ class l2KinProducer(Module):
         self.out = wrappedOutputTree
         self.newbranches = [
            'mll',
+           'mllErr',
            'dphill',
            'yll',
            'ptll',
@@ -58,7 +59,9 @@ class l2KinProducer(Module):
            'mR',
            'mT2',
            'channel',
-
+           'pt1omll',
+           'pt2omll',
+           'cosThetaCS',
 
            'drll',
            'dphilljet',
@@ -73,6 +76,7 @@ class l2KinProducer(Module):
            
            'mjj',
            'detajj',
+           'zeppjj' ,
            'njet',
           
            'mllWgSt',
@@ -150,12 +154,15 @@ class l2KinProducer(Module):
         lep_eta     = ROOT.std.vector(float)(0)
         lep_phi     = ROOT.std.vector(float)(0)
         lep_flavour = ROOT.std.vector(float)(0)
+        lep_ptErr   = ROOT.std.vector(float)(0)
         
         for lep in leptons :
           lep_pt. push_back(lep.pt)
           lep_eta.push_back(lep.eta)
           lep_phi.push_back(lep.phi)
           lep_flavour.push_back(lep.pdgId)
+          lep_ptErr.push_back(lep.ptErr)
+          # print "In python I read: " + str(lep.ptErr)
           # 11 = ele 
           # 13 = mu
           #if lep.tightId == 0 :
@@ -186,7 +193,8 @@ class l2KinProducer(Module):
 
         WW = ROOT.WW()
         
-        WW.setLeptons(lep_pt, lep_eta, lep_phi, lep_flavour)
+        WW.setLeptons(lep_pt, lep_eta, lep_phi, lep_flavour,lep_ptErr)
+        ##WW.setLeptonsErr(lep_ptErr)
         WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass)
        
 
