@@ -469,12 +469,13 @@ class LeptonSFMaker(Module):
                     if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
                         dot_id_m = dot
                         break
+                # Muon POG provides trigger scale factors symmetric in eta
                 for dot in self.SF_dict[kin_str][wp]['triggSF']['data'][run_idx]:
-                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (abs(eta) >= float(dot[0]) and abs(eta) <= float(dot[1])):
                         dot_trigg_d = dot
                         break
                 for dot in self.SF_dict[kin_str][wp]['triggSF']['mc'][run_idx]:
-                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (abs(eta) >= float(dot[0]) and abs(eta) <= float(dot[1])):
                         dot_trigg_m = dot
                         break
 
