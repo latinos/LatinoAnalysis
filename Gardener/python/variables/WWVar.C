@@ -10,14 +10,15 @@
 
 class WW {
 public:
- //! constructor
- WW();
- WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
- WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi);
- WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
- WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
- WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi, float metsum, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
- virtual ~WW() {}
+  //! constructor
+  WW();
+  //  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
+  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2, float ptl1Err, float ptl2Err);
+  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi);
+  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
+  WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
+  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi, float metsum, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
+  virtual ~WW() {}
  
  //! check
  void checkIfOk();
@@ -27,7 +28,8 @@ public:
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta);
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass);
 
- void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour);
+ void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour, std::vector<float> invectorptErr);
+  // void setLeptonsErr(std::vector<float> invectorptErr);
  
  void setMET   (float met, float metphi);
  void setTkMET (float met, float metphi);
@@ -64,7 +66,11 @@ public:
  float yll();
  float ptll();
  float drll();
- 
+ float mllErr();
+ float pt1omll();
+ float pt2omll();
+ float cosThetaCS();
+
  float dphilljet();
  float dphilljetjet();
  float dphilmet();
@@ -86,6 +92,7 @@ public:
  float channel();
  float mjj();
  float detajj();
+ float zeppjj();
  float dphijj();
  float njet();
 
@@ -131,7 +138,8 @@ private:
  float pid1, pid2;
  float _SumEt ;
  TLorentzVector TkMET;
- 
+ float pt1Err, pt2Err;
+
  bool _isOk;
  int  _jetOk;
  int  _lepOk;
@@ -148,6 +156,7 @@ private:
  std::vector<float> _leptonseta;
  std::vector<float> _leptonsphi;
  std::vector<float> _leptonsflavour;
+ std::vector<float> _leptonsptErr;
  
 };
 
@@ -232,13 +241,42 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  _isTkMET = false;
 }
 
-WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
+// WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2) {
+ 
+//  if (pt1>0 && pt2>0) {  
+//   L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
+//   L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
+//   pid1 = pidl1;
+//   pid2 = pidl2;
+//   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
+//   _isOk =  true;
+//  }
+//  else {
+//   _isOk = false;
+//  }
+//  if( jetpt1>0) {
+//   J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1); //---- NB: jets are treated as massive
+//   if( jetpt2>0) {
+//    J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
+//    _jetOk = 2;
+//   }
+//   else {
+//    _jetOk = 1;
+//   }
+//  }
+ 
+//  _isTkMET = false;
+// }
+
+WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2, float ptl1Err, float ptl2Err) {
  
  if (pt1>0 && pt2>0) {  
   L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
   L2.SetPtEtaPhiM(pt2, eta2, phi2, 0.);
   pid1 = pidl1;
   pid2 = pidl2;
+  pt1Err = ptl1Err;
+  pt2Err = ptl2Err;
   MET.SetPtEtaPhiM(met, 0, metphi, 0.);
   _isOk =  true;
  }
@@ -268,6 +306,7 @@ void WW::checkIfOk() {
  //---- leptons
  if (_leptonspt.size() == _leptonseta.size()    &&   
      _leptonspt.size() == _leptonsphi.size()    &&   
+     _leptonspt.size() == _leptonsptErr.size()  &&   
      _leptonspt.size() == _leptonsflavour.size())
   {
    
@@ -362,12 +401,13 @@ void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, 
  }
 }
 
-void WW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour) {
+void WW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour, std::vector<float> invectorptErr) {
  _leptonspt      = invectorpt;
  _leptonseta     = invectoreta;
  _leptonsphi     = invectorphi;
  _leptonsflavour = invectorflavour;
- 
+ _leptonsptErr   = invectorptErr;
+
  //---- need to update L1 and L2
  if ( _leptonspt.size() > 0 && _leptonspt.at(0) > 0 ) {
   L1.SetPtEtaPhiM(_leptonspt.at(0), _leptonseta.at(0), _leptonsphi.at(0), 0); //---- NB: leptons are treated as massless
@@ -381,9 +421,10 @@ void WW::setLeptons(std::vector<float> invectorpt, std::vector<float> invectoret
  
 }
 
-
-
-
+//void WW::setLeptonsErr(std::vector<float> invectorptErr){
+//  _leptonsptErr = invectorptErr;
+//  
+//}
 
 
 //! functions
@@ -406,6 +447,30 @@ float WW::ptll(){
  else {
   return -9999.0;
  }
+}
+
+// Collins-Soper rest frame: cos(theta)
+float WW::cosThetaCS(){
+  if (_isOk) {
+    float my_mass  = (L1+L2).M();
+    float my_ptll  = (L1+L2).Pt();
+    float p1plus   = ( L1.E() + L1.Pz() ) / sqrt(2.);
+    float p1minus  = ( L1.E() - L1.Pz() ) / sqrt(2.);
+    float p2plus   = ( L2.E() + L2.Pz() ) / sqrt(2.);
+    float p2minus  = ( L2.E() - L2.Pz() ) / sqrt(2.);
+    float my_abs   = (L1+L2).Pz() / abs((L1+L2).Pz());
+    if ( my_mass * sqrt( my_mass*my_mass + my_ptll*my_ptll > 0.)){
+      float my_cosTheta = ( 2 * my_abs * ( p1plus*p2minus - p1minus*p2plus ) ) / ( my_mass * sqrt( my_mass*my_mass + my_ptll*my_ptll ) );
+      //std::cout<<"Collins Soper: "<<my_cosTheta<<std::endl;
+      return my_cosTheta;
+    }
+    else {
+      return -9999.0;
+    }
+  }
+  else {
+    return -9999.0;
+  }
 }
 
 
@@ -812,6 +877,52 @@ float WW::mll(){
  
 }
 
+float WW::mllErr(){
+ 
+  if (_isOk && L1.Pt() > 0. &&  L2.Pt() > 0.) {
+  float mass = (L1+L2).M();
+  float Err1 = _leptonsptErr.at(0);  
+  float Err2 = _leptonsptErr.at(1);
+  float dpt1 = (Err1 * mass) / (2 * L1.Pt());
+  float dpt2 = (Err2 * mass) / (2 * L2.Pt());
+  float err  = sqrt(dpt1*dpt1 + dpt2*dpt2);
+  //sqrt( (Err1 * ( mass / (2 * L1.Pt() * L1.Pt())))*(Err1 * ( mass / (2 * L1.Pt() * L1.Pt()))) + (Err2 * ( mass / (2 * L2.Pt() * L2.Pt())))*(Err2 * ( mass / ( 2 * L2.Pt() * L2.Pt() ))) );  // std::cout<<"pt1 = "<<L1.Pt()<<std::endl;
+  // std::cout<<"pt1Err = "<<_leptonsptErr.at(0)<<std::endl;
+  // std::cout<<"pt2 = "<<L2.Pt()<<std::endl;
+  // std::cout<<"pt2Err = "<<_leptonsptErr.at(1)<<std::endl;
+  // std::cout<<"mll = "<<mass<<std::endl;
+  //std::cout<<"err = "<<err/mass<<std::endl;
+  // std::cout<<"+++++++++++"<<std::endl;
+  return err;
+ }
+ else {
+  return -9999.0;
+ }
+ 
+}
+
+float WW::pt1omll(){ // pt1/mll
+
+  if (_isOk && (L1+L2).M() > 0.){
+    return L1.Pt() / ((L1+L2).M());
+  }
+  else{
+    return -9999.0;
+  }
+
+}
+
+float WW::pt2omll(){ // pt2/mll
+
+  if (_isOk && (L1+L2).M() > 0.){
+    return L2.Pt() / ((L1+L2).M());
+  }
+  else{
+    return -9999.0;
+  }
+
+}
+
 float WW::dphillmet(){
  
  if (_isOk) {
@@ -987,6 +1098,26 @@ float WW::detajj(){
  else {
   return -9999.0;
  } 
+}
+
+
+float WW::zeppjj(){
+ 
+  if (_jetOk >= 2) {
+    float my_yll = (L1 + L2).Rapidity();
+    float my_sum = ( J1.Rapidity() + J2.Rapidity() ) / 2.;
+    float my_denominator = fabs( J1.Rapidity() - J2.Rapidity() );
+    if (my_denominator > 0){
+      //std::cout<<"Zeppenfeld: "<<( my_yll - my_sum ) / my_denominator<<std::endl;
+      return ( my_yll - my_sum ) / my_denominator;
+    }
+    else {
+      return -9999.0;
+    }
+  }
+  else {
+    return -9999.0;
+  } 
 }
 
 
