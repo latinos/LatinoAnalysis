@@ -106,6 +106,7 @@ class LeptonSFMaker(Module):
             self.SF_dict['muon'][wp]['tkSF'] = {}
             self.SF_dict['muon'][wp]['idSF'] = {}
             self.SF_dict['muon'][wp]['isoSF'] = {}
+            self.SF_dict['muon'][wp]['triggSF'] = {}
             self.SF_dict['muon'][wp]['hasSFreco'] = False
             for SFkey in self.MuonWP[self.cmssw]['TightObjWP'][wp]:
                 if SFkey == 'tkSF':
@@ -120,6 +121,7 @@ class LeptonSFMaker(Module):
                         tk_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['tkSF'][rpr])
                         self.SF_dict['muon'][wp]['tkSF']['data'].append(self.conv_graph2list(self.get_root_obj(tk_file, 'ratio_eff_vtx_dr030e030_corr')))
                         tk_file.Close()
+
                 if SFkey == 'idSF':
                     self.SF_dict['muon'][wp]['idSF']['data'] = []
                     self.SF_dict['muon'][wp]['idSF']['mc'] = []
@@ -171,6 +173,33 @@ class LeptonSFMaker(Module):
                             data_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['isoSF'][rpr][0])
                             self.SF_dict['muon'][wp]['isoSF']['data'].append(self.get_root_obj(data_file, 'Muon_isoSF2D'))
                             data_file.Close()
+
+                if SFkey == 'triggSF':
+                    self.SF_dict['muon'][wp]['triggSF']['data'] = []
+                    self.SF_dict['muon'][wp]['triggSF']['mc'] = []
+                    self.SF_dict['muon'][wp]['triggSF']['beginRP'] = []
+                    self.SF_dict['muon'][wp]['triggSF']['endRP'] = []
+                    self.SF_dict['muon'][wp]['triggSF']['isRoot'] = []
+                    for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['triggSF']:
+                        split_file = self.MuonWP[self.cmssw]['TightObjWP'][wp]['triggSF'][rpr][0].split('.')
+                        if split_file[-1] == 'txt':
+                            self.SF_dict['muon'][wp]['triggSF']['isRoot'].append(False)
+                            self.SF_dict['muon'][wp]['triggSF']['beginRP'].append(int(rpr.split('-')[0]))
+                            self.SF_dict['muon'][wp]['triggSF']['endRP'].append(int(rpr.split('-')[1]))
+                            id_file_data = open(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['triggSF'][rpr][0])
+                            id_file_mc = open(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['triggSF'][rpr][1])
+                            self.SF_dict['muon'][wp]['triggSF']['data'].append([line.rstrip().split() for line in id_file_data if '#' not in line])
+                            self.SF_dict['muon'][wp]['triggSF']['mc'].append([line.rstrip().split() for line in id_file_mc if '#' not in line])
+                            id_file_data.close()
+                            id_file_mc.close()
+                        if split_file[-1] == 'root':
+                            self.SF_dict['muon'][wp]['triggSF']['isRoot'].append(True)
+                            self.SF_dict['muon'][wp]['triggSF']['beginRP'].append(int(rpr.split('-')[0]))
+                            self.SF_dict['muon'][wp]['triggSF']['endRP'].append(int(rpr.split('-')[1]))
+                            data_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['triggSF'][rpr][0])
+                            self.SF_dict['muon'][wp]['triggSF']['data'].append(self.get_root_obj(data_file, 'Muon_triggSF2D'))
+                            data_file.Close()
+
             if not self.SF_dict['muon'][wp]['hasSFreco']: 
                 self.SF_dict['muon'][wp]['tkSF']['beginRP'] = self.SF_dict['muon'][wp]['idSF']['beginRP']                
                 self.SF_dict['muon'][wp]['tkSF']['endRP'] = self.SF_dict['muon'][wp]['idSF']['endRP']                
@@ -386,6 +415,137 @@ class LeptonSFMaker(Module):
             return tkSF, tkSF_dwn, tkSF_up, 0.0
         return tkSF, tkSF_err, tkSF_err, tkSF_sys
 
+
+    def get_idIsoTrigg_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
+        pt, eta = self.trunc_kin(pdgId, lep_pt, lep_eta)
+        kin_str = 'electron' if (abs(pdgId) == 11) else 'muon'       
+
+        #select right SF dict index based on runperiod
+        run_idx = 0
+        for idx in range(len(self.SF_dict[kin_str][wp]['tkSF']['beginRP'])):
+            if run_period >= self.SF_dict[kin_str][wp]['tkSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['tkSF']['endRP'][idx]:
+                run_idx = idx
+
+        tkSF = 0.
+        tkSF_up = 1.
+        tkSF_dwn = 1.
+        tkSF_sys = 1.
+        if abs(pdgId) == 11:
+            for dot in self.SF_dict[kin_str][wp]['wpSF']['data'][run_idx]:
+                if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                    data = float(dot[4])
+                    mc = float(dot[6])
+
+                    sigma_d = float(dot[5])
+                    sigma_m = float(dot[7])
+                    
+                    tkSF = data/mc
+                    tkSF_err = math.sqrt( (sigma_d/mc)**2 + (data/mc/mc*sigma_m)**2)
+                    tkSF_sys = math.sqrt( float(dot[8])**2 + float(dot[9])**2 + float(dot[10])**2 + float(dot[11])**2)
+                    tkSF_sys /= mc
+                    return tkSF, tkSF_err, tkSF_err, tkSF_sys
+
+        if abs(pdgId) == 13:
+            if not self.SF_dict['muon'][wp]['isoSF']['isRoot'][run_idx]:
+                dot_iso_d = []
+                dot_iso_m = []
+                dot_id_d = []
+                dot_id_m = []
+                dot_trigg_d = []
+                dot_trigg_m = []
+                for dot in self.SF_dict[kin_str][wp]['isoSF']['data'][run_idx]:
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                        dot_iso_d = dot
+                        break
+                for dot in self.SF_dict[kin_str][wp]['isoSF']['mc'][run_idx]:
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                        dot_iso_m = dot
+                        break
+                for dot in self.SF_dict[kin_str][wp]['idSF']['data'][run_idx]:
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                        dot_id_d = dot
+                        break
+                for dot in self.SF_dict[kin_str][wp]['idSF']['mc'][run_idx]:
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                        dot_id_m = dot
+                        break
+                for dot in self.SF_dict[kin_str][wp]['triggSF']['data'][run_idx]:
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                        dot_trigg_d = dot
+                        break
+                for dot in self.SF_dict[kin_str][wp]['triggSF']['mc'][run_idx]:
+                    if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
+                        dot_trigg_m = dot
+                        break
+
+                data_iso = float(dot_iso_d[4])
+                mc_iso = float(dot_iso_m[4])
+
+                sigma_iso_up_d = float(dot_iso_d[5])
+                sigma_iso_up_m = float(dot_iso_m[5])
+                    
+                sigma_iso_dwn_d = float(dot_iso_d[6])
+                sigma_iso_dwn_m = float(dot_iso_m[6])
+
+                tkSF_iso = data_iso/mc_iso
+                tkSF_iso_up = (data_iso + sigma_iso_up_d)/(mc_iso - sigma_iso_dwn_m) - tkSF_iso
+                tkSF_iso_dwn = tkSF_iso - (data_iso - sigma_iso_dwn_d)/(mc_iso + sigma_iso_up_m)
+            
+            else:
+                tkSF_iso, tkSF_err = self.get_hist_VnE(self.SF_dict[kin_str][wp]['isoSF']['data'][run_idx], eta, pt)
+                tkSF_iso_up = tkSF_err
+                tkSF_iso_dwn = tkSF_err
+            #tkSF_iso_sys = math.sqrt( float(dot[8])**2 + float(dot[9])**2 + float(dot[10])**2 + float(dot[11])**2)
+            #tkSF_iso_sys /= mc_iso
+            
+            if not self.SF_dict['muon'][wp]['idSF']['isRoot'][run_idx]:
+                data_id = float(dot_id_d[4])
+                mc_id = float(dot_id_m[4])
+
+                sigma_id_up_d = float(dot_id_d[5])
+                sigma_id_up_m = float(dot_id_m[5])
+                    
+                sigma_id_dwn_d = float(dot_id_d[6])
+                sigma_id_dwn_m = float(dot_id_m[6])
+
+                tkSF_id = data_id/mc_id
+                tkSF_id_up = (data_id + sigma_id_up_d)/(mc_id - sigma_id_dwn_m) - tkSF_id
+                tkSF_id_dwn = tkSF_id - (data_id - sigma_id_dwn_d)/(mc_id + sigma_id_up_m)
+            
+            else:
+                tkSF_id, tkSF_err = self.get_hist_VnE(self.SF_dict[kin_str][wp]['idSF']['data'][run_idx], eta, pt)
+                tkSF_id_up = tkSF_err
+                tkSF_id_dwn = tkSF_err
+
+            if not self.SF_dict['muon'][wp]['triggSF']['isRoot'][run_idx]:
+                data_trigg = float(dot_id_d[4])
+                mc_trigg = float(dot_id_m[4])
+
+                sigma_trigg_up_d = float(dot_id_d[5])
+                sigma_trigg_up_m = float(dot_id_m[5])
+                    
+                sigma_trigg_dwn_d = float(dot_id_d[6])
+                sigma_trigg_dwn_m = float(dot_id_m[6])
+
+                tkSF_trigg = data_trigg/mc_trigg
+                tkSF_trigg_up = (data_trigg + sigma_trigg_up_d)/(mc_trigg - sigma_trigg_dwn_m) - tkSF_trigg
+                tkSF_trigg_dwn = tkSF_trigg - (data_trigg - sigma_trigg_dwn_d)/(mc_trigg + sigma_trigg_up_m)
+            
+            else:
+                tkSF_trigg, tkSF_err = self.get_hist_VnE(self.SF_dict[kin_str][wp]['idSF']['data'][run_idx], eta, pt)
+                tkSF_trigg_up = tkSF_err
+                tkSF_trigg_dwn = tkSF_err
+
+                #tkSF_id_sys = math.sqrt( float(dot[8])**2 + float(dot[9])**2 + float(dot[10])**2 + float(dot[11])**2)
+                #tkSF_id_sys /= mc_id
+
+            tkSF_up = tkSF_id * tkSF_iso * tkSF_trigg * math.sqrt(tkSF_id_up*tkSF_id_up/tkSF_id/tkSF_id + tkSF_iso_up*tkSF_iso_up/tkSF_iso/tkSF_iso + tkSF_trigg_up*tkSF_trigg_up/tkSF_trigg/tkSF_trigg)
+            tkSF_dwn = tkSF_id * tkSF_iso * tkSF_trigg * math.sqrt(tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id +  tkSF_iso_dwn*tkSF_iso_dwn/tkSF_iso/tkSF_iso + tkSF_trigg_dwn*tkSF_trigg_dwn/tkSF_trigg/tkSF_trigg)
+            tkSF = tkSF_id * tkSF_iso * tkSF_trigg
+            return tkSF, tkSF_dwn, tkSF_up, 0.0
+        return tkSF, tkSF_err, tkSF_err, tkSF_sys
+
+
     #_____Analyze
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
@@ -455,7 +615,12 @@ class LeptonSFMaker(Module):
                       lep_var['RecoSF_Up'].append(reco_sf + reco_sf_up)
                       lep_var['RecoSF_Down'].append(reco_sf - reco_sf_dwn)
                       did_reco = True
-                  idiso_sf, idiso_sf_dwn, idiso_sf_up, idiso_sf_sys = self.get_idIso_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  if "triggSF" in self.MuonWP[self.cmssw]['TightObjWP'][wp]:
+                      #print "I see you are including also trigger SF for " + wp + "working point"
+                      idiso_sf, idiso_sf_dwn, idiso_sf_up, idiso_sf_sys = self.get_idIsoTrigg_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  else :
+                      #print "I do not see any trigger SF for " + wp + "working point"
+                      idiso_sf, idiso_sf_dwn, idiso_sf_up, idiso_sf_sys = self.get_idIso_SF(pdgId, pt, eta, nvtx, wp, run_period)
                   mu_wp_var[wp + '_IdIsoSF'].append(idiso_sf)
                   mu_wp_var[wp + '_IdIsoSF_Up'].append(idiso_sf + idiso_sf_up)
                   mu_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
