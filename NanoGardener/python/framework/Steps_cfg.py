@@ -53,13 +53,12 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
-  'MCl2loose2016_hmumu' :  {
+  'MCl2loose2016hmm' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSel_hmumu_2016','CleanJetCut',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TriggerObjectMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','PromptParticlesGenVars','GenVar','GenLeptonMatch','HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
   # FIXME: check btagPerJet2016, btagPerEvent
@@ -81,12 +80,12 @@ Steps = {
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
                 },
 
-  'MCCorr2016_hmumu' : {
+  'MCCorr2016hmm' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','EmbeddingVeto', 
-                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'formulasMC'],
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','EmbeddingVeto','rochesterMC','trigMC','LeptonSF','puW','l2Kin','formulasMChmm'],
+      ##'trigMC',
                 },
 
   'MCCorr2016tmp'  : {
@@ -296,6 +295,14 @@ Steps = {
                   #'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                  },
+
+  'DATAl2loose2016hmm' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'selection'  : '"((nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','l2Kin','formulasDATAhmm'],
+                },
 
   'DATAl1loose2017': {
                   'isChain'    : True  ,
@@ -640,6 +647,16 @@ Steps = {
                   'module'     : 'jetSel()' ,
                },
 
+
+   'jetSelHmm2016' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(1,"custom",15.0,4.7,"CleanJet")' ,
+                  'module'     : 'jetSel()' ,
+               },
 
    'CleanJetCut' : {
                  'isChain'    : False ,
@@ -1091,6 +1108,14 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_MonoH.py\')' ,
                  },
 
+  'formulasMChmm' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_2016_hmumu.py\')' ,
+                 },
 
   'formulasDATA' : {
                   'isChain'    : False ,
@@ -1100,6 +1125,16 @@ Steps = {
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_RPLME_YEAR.py\')' ,
                  },
+
+  'formulasDATAhmm' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True   ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_2016_hmumu.py\')' ,
+                 }, 
+
   'formulasDATALP19' : {
                   'isChain'    : False ,
                   'do4MC'      : False ,
@@ -1108,8 +1143,6 @@ Steps = {
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_2017LP19.py\')' ,
                  },
-
-
 
   'formulasFAKE' : {
                   'isChain'    : False ,
@@ -1665,6 +1698,18 @@ Steps = {
                                   "' ,
                  },
 
+#muWP='cut_Medium80x,cut_Tight80x'
+  'l2tightOR2016hmm' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=2 && Lepton_pt[0]>20 && Lepton_pt[1]>18) \
+                                    && (    Lepton_isTightMuon_cut_Tight80x[0] > 0.5   \
+                                         || Lepton_isTightMuon_cut_Medium80x[0] > 0.5) \
+                                    && (    Lepton_isTightMuon_cut_Tight80x[1] > 0.5   \
+                                         || Lepton_isTightMuon_cut_Medium80x[1] > 0.5) \
+                                  "' ,
+                 },
 
 ## ------- Analysis Skims:
 
