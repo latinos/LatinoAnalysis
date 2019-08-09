@@ -2367,8 +2367,8 @@ ElectronWP = {
 
 
 
-###____________________Full2016v2_hmumu________ : for nAODv4
-'Full2016v2_hmumu': {
+###____________________Full2016v2hmm________ 
+'Full2016v2hmm': {
 
 ## ------------
  'VetoObjWP' : {
@@ -2442,6 +2442,7 @@ ElectronWP = {
                               } ,
      },
 },
+
 
 ###____________________Full2016v2________ : for nAODv3 (and nAODv2)
 'Full2016v2': {
@@ -3574,9 +3575,10 @@ MuonWP = {
 
 },
 
-###____________________Full2016v2_hmumu__________________________
 
-'Full2016v2_hmumu': {
+###____________________Full2016v2hmm__________________________
+
+'Full2016v2hmm': {
 
     ## ------------  
     'VetoObjWP' : { 
@@ -3654,9 +3656,7 @@ MuonWP = {
                 [ 
                     'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
                     'muon_col[LF_idx]["mediumId"] == 1' ,
-                    ##'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
                     'muon_col[LF_idx]["pfRelIso04_all"] < 0.25',
-                    #'muon_col[LF_idx]["trackIso"]/muon_col[LF_idx]["pt"] < 0.4' ,
                 ] ,
             } ,
             'idSF':  {    
@@ -3669,7 +3669,7 @@ MuonWP = {
             } ,
         } ,
 
-        ### POG Tight WP
+        ### POG Tight WP + trigger matching
         'cut_Tight80x' : {
             'cuts' : { 
                 # Common cuts
@@ -3677,11 +3677,10 @@ MuonWP = {
                 [ 
                     'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
                     'muon_col[LF_idx]["tightId"] == 1' ,
-                    ##'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
                     'muon_col[LF_idx]["pfRelIso04_all"] < 0.15',
-                    #'muon_col[LF_idx]["trackIso"]/muon_col[LF_idx]["pt"] < 0.4' ,
+                    'muon_col[LF_idx]["isTriggMatched"] == 1',
                 ] ,
-            } ,### have to updatre SFs!!!!
+            } ,### adding trigger scale factors here
             'idSF':  {
                 '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2_hmumu/muonID_Tight_TH2_SFs_pt_eta_Run2016BF.root' ] ,
                 '6-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2_hmumu/muonID_Tight_TH2_SFs_pt_eta_Run2016GH.root' ] ,
@@ -3689,6 +3688,10 @@ MuonWP = {
             'isoSF':  {
                 '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2_hmumu/muonISO_Tight_TH2_SFs_pt_eta_Run2016BF.root' ] ,
                 '6-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2_hmumu/muonISO_Tight_TH2_SFs_pt_eta_Run2016GH.root' ] ,
+            } ,
+            'triggSF':  {
+                '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2_hmumu/muonTrig_IsoMu24_OR_IsoTkMu24_TH2_SFs_pt_eta_Run2016BF.root' ] ,
+                '6-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2_hmumu/muonTrig_IsoMu24_OR_IsoTkMu24_TH2_SFs_pt_eta_Run2016GH.root' ] ,
             } ,
         } ,
     } ,
