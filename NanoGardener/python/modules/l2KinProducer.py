@@ -62,6 +62,9 @@ class l2KinProducer(Module):
            'pt1omll',
            'pt2omll',
            'cosThetaCS',
+           'phiCS',
+#           'copyPhiCS',
+#           'copyCosThetaCS',
 
            'drll',
            'dphilljet',
@@ -193,7 +196,7 @@ class l2KinProducer(Module):
 
         WW = ROOT.WW()
         
-        WW.setLeptons(lep_pt, lep_eta, lep_phi, lep_flavour,lep_ptErr)
+        WW.setLeptons(lep_pt, lep_eta, lep_phi, lep_flavour, lep_ptErr)
         ##WW.setLeptonsErr(lep_ptErr)
         WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass)
        

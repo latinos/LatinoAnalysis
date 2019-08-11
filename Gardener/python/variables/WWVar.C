@@ -70,6 +70,9 @@ public:
  float pt1omll();
  float pt2omll();
  float cosThetaCS();
+ float phiCS();
+  // float copyPhiCS();
+  //float copyCosThetaCS();
 
  float dphilljet();
  float dphilljetjet();
@@ -449,27 +452,213 @@ float WW::ptll(){
  }
 }
 
-// Collins-Soper rest frame: cos(theta)
+// // Collins-Soper rest frame: cos(theta)
+// float WW::cosThetaCS(){
+//   if (_isOk) {
+//     float my_mass  = (L1+L2).M();
+//     float my_ptll  = (L1+L2).Pt();
+//     float p1plus   = ( L1.E() + L1.Pz() ) / sqrt(2.);
+//     float p1minus  = ( L1.E() - L1.Pz() ) / sqrt(2.);
+//     float p2plus   = ( L2.E() + L2.Pz() ) / sqrt(2.);
+//     float p2minus  = ( L2.E() - L2.Pz() ) / sqrt(2.);
+//     float my_abs   = (L1+L2).Pz() / abs((L1+L2).Pz());
+//     if ( my_mass * sqrt( my_mass*my_mass + my_ptll*my_ptll > 0.)){
+//       float my_cosTheta = ( 2 * my_abs * ( p1plus*p2minus - p1minus*p2plus ) ) / ( my_mass * sqrt( my_mass*my_mass + my_ptll*my_ptll ) );
+//       //std::cout<<"Collins Soper: "<<my_cosTheta<<std::endl;
+//       return my_cosTheta;
+//     }
+//     else {
+//       return -9999.0;
+//     }
+//   }
+//   else {
+//     return -9999.0;
+//   }
+// }
+
+// // Collins-Soper rest frame: phi
+// float WW::phiCS(){
+//   if (_isOk) {
+//     TVector3 my_delta;
+//     float my_pid1, my_pid2;
+//     my_pid1 = _leptonsflavour.at(0);
+//     my_pid2 = _leptonsflavour.at(1);
+//     // std::cout<<"pid1: "<<my_pid1<<std::endl;
+//     // std::cout<<"pid2: "<<my_pid2<<std::endl;
+//     if (my_pid1 < 0 && my_pid2 > 0){
+//       my_delta = (L1 - L2).Vect();
+//     }
+//     else if (my_pid1 > 0 && my_pid2 < 0){
+//       my_delta = (L2 - L1).Vect();
+//     }
+//     else {
+//       // not defined for same-sign events
+//       return -9999.0;
+//     }
+//     float my_mass  = (L1+L2).M();
+//     float my_ptll  = (L1+L2).Pt();
+//     //TLorentzVector my_proton;
+//     TVector3 my_proton_direction;
+//     my_proton_direction.SetXYZ(0.,0.,6500.);
+//     TVector3 my_ptll_direction;
+//     float my_ptll_X,my_ptll_Y,my_ptll_Z;
+//     my_ptll_X = (L1+L2).Px();
+//     my_ptll_Y = (L1+L2).Py();
+//     my_ptll_Z = (L1+L2).Pz();
+//     my_ptll_direction.SetXYZ(my_ptll_X,my_ptll_Y,my_ptll_Z);
+//     TVector3 my_R; // my_ptll_direction x my_proton_direction;
+//     my_R = my_ptll_direction.Cross(my_proton_direction);
+//     my_R *= (1. / my_R.Mag());
+//     //    std::cout<<"R versor magnitude: "<<my_R.Mag()<<std::endl;    
+//     TVector3 my_ptll_versor;
+//     my_ptll_versor = my_ptll_direction *= (1. / my_ptll_direction.Mag());
+//     //    std::cout<<"ptll versor magnitude: "<<my_ptll_versor.Mag()<<std::endl;    
+//     float tan_phi; // tangent of Collins-Soper angle
+//     tan_phi = ( sqrt(my_mass * my_mass + my_ptll * my_ptll) * (my_delta * my_R) ) / ( my_mass * (my_delta * my_ptll_versor) );
+//     float phi = TMath::ATan(tan_phi);
+//     //std::cout<<"phiCS: "<<phi<<std::endl;
+//     return phi;
+//   }
+//   else {
+//     return -9999.0;
+//   }
+// }
+
+// Phi decay angle (mu+) in the Collins-Soper frame
+// Ref: https://github.com/alisw/AliPhysics/blob/master/PWG/muon/AliAnalysisTaskDimuonCFContainerBuilder.cxx#L913
+float WW::phiCS(){
+  if (_isOk) {
+    // In the CM frame
+    TLorentzVector pMu1CM, pMu2CM, pProjCM, pTargCM, pDimuCM;
+    // In the dimuon rest frame
+    TLorentzVector pMu1Dimu, pMu2Dimu, pProjDimu, pTargDimu; 
+    TVector3 beta,yaxisCS, xaxisCS, zaxisCS;
+    Double_t mp=0.93827231;
+    Double_t fBeamEnergy=6500.;
+    
+    // --- Fill the Lorentz vector for projectile and target in the CM frame
+    pProjCM.SetPxPyPzE(0.,0.,-fBeamEnergy,TMath::Sqrt(fBeamEnergy*fBeamEnergy+mp*mp)); 
+    pTargCM.SetPxPyPzE(0.,0.,fBeamEnergy,TMath::Sqrt(fBeamEnergy*fBeamEnergy+mp*mp)); 
+    
+    // --- Obtain the dimuon parameters in the CM frame
+    pDimuCM=L1+L2;
+    
+    // --- Translate the dimuon parameters in the dimuon rest frame
+    beta=(-1./pDimuCM.E())*pDimuCM.Vect();
+    if(beta.Mag()>=1) 
+      return -9999.0;
+    pMu1Dimu=L1;
+    pMu2Dimu=L2;
+    pProjDimu=pProjCM;
+    pTargDimu=pTargCM;
+    pMu1Dimu.Boost(beta);
+    pMu2Dimu.Boost(beta);
+    pProjDimu.Boost(beta);
+    pTargDimu.Boost(beta);
+    
+    //Debugging part -------------------------------------
+    Double_t debugProj[4]={0.,0.,0.,0.};
+    Double_t debugTarg[4]={0.,0.,0.,0.};
+    Double_t debugMu1[4]={0.,0.,0.,0.};
+    Double_t debugMu2[4]={0.,0.,0.,0.};
+    pMu1Dimu.GetXYZT(debugMu1);
+    pMu2Dimu.GetXYZT(debugMu2);
+    pProjDimu.GetXYZT(debugProj);
+    pTargDimu.GetXYZT(debugTarg);
+    if (debugProj[0]!=debugProj[0] ||debugProj[1]!=debugProj[1] || debugProj[2]!=debugProj[2] ||debugProj[3]!=debugProj[3]) return -9999.0; 
+    if (debugTarg[0]!=debugTarg[0] ||debugTarg[1]!=debugTarg[1] || debugTarg[2]!=debugTarg[2] ||debugTarg[3]!=debugTarg[3]) return -9999.0; 
+    if (debugMu1[0]!=debugMu1[0] ||debugMu1[1]!=debugMu1[1] || debugMu1[2]!=debugMu1[2] ||debugMu1[3]!=debugMu1[3]) return -9999.0; 
+    if (debugMu2[0]!=debugMu2[0] ||debugMu2[1]!=debugMu2[1] || debugMu2[2]!=debugMu2[2] ||debugMu2[3]!=debugMu2[3]) return -9999.0; 
+    //----------------------------------------------------
+    
+    // --- Determine the z axis for the CS angle 
+    zaxisCS=(((pProjDimu.Vect()).Unit())-((pTargDimu.Vect()).Unit())).Unit();
+    yaxisCS=(((pProjDimu.Vect()).Unit()).Cross((pTargDimu.Vect()).Unit())).Unit();
+    xaxisCS=(yaxisCS.Cross(zaxisCS)).Unit();
+    
+    Double_t phi=0.;
+    if(_leptonsflavour.at(0) > 0) {
+      phi = TMath::ATan2((pMu1Dimu.Vect()).Dot(yaxisCS),((pMu1Dimu.Vect()).Dot(xaxisCS)));
+    } else {
+      phi = TMath::ATan2((pMu2Dimu.Vect()).Dot(yaxisCS),((pMu2Dimu.Vect()).Dot(xaxisCS)));
+    }
+    if (phi>TMath::Pi()) phi=phi-TMath::Pi();
+    
+    return phi;
+  }
+  else{
+    return -9999.0;
+  }
+}
+
+
+// Cosine of the theta decay angle (mu+) in the Collins-Soper frame
+// Ref: https://github.com/alisw/AliPhysics/blob/master/PWG/muon/AliAnalysisTaskDimuonCFContainerBuilder.cxx#L800
 float WW::cosThetaCS(){
   if (_isOk) {
-    float my_mass  = (L1+L2).M();
-    float my_ptll  = (L1+L2).Pt();
-    float p1plus   = ( L1.E() + L1.Pz() ) / sqrt(2.);
-    float p1minus  = ( L1.E() - L1.Pz() ) / sqrt(2.);
-    float p2plus   = ( L2.E() + L2.Pz() ) / sqrt(2.);
-    float p2minus  = ( L2.E() - L2.Pz() ) / sqrt(2.);
-    float my_abs   = (L1+L2).Pz() / abs((L1+L2).Pz());
-    if ( my_mass * sqrt( my_mass*my_mass + my_ptll*my_ptll > 0.)){
-      float my_cosTheta = ( 2 * my_abs * ( p1plus*p2minus - p1minus*p2plus ) ) / ( my_mass * sqrt( my_mass*my_mass + my_ptll*my_ptll ) );
-      //std::cout<<"Collins Soper: "<<my_cosTheta<<std::endl;
-      return my_cosTheta;
+    // In the CM. frame
+    TLorentzVector pMu1CM, pMu2CM, pProjCM, pTargCM, pDimuCM;
+    // In the dimuon rest frame
+    TLorentzVector pMu1Dimu, pMu2Dimu, pProjDimu, pTargDimu;
+    TVector3 beta,zaxisCS;
+    Double_t mp=0.93827231;
+    double fBeamEnergy=6500.;
+
+    // --- Fill the Lorentz vector for projectile and target in the CM frame
+    pProjCM.SetPxPyPzE(0.,0.,-fBeamEnergy,TMath::Sqrt(fBeamEnergy*fBeamEnergy+mp*mp)); 
+    pTargCM.SetPxPyPzE(0.,0.,fBeamEnergy,TMath::Sqrt(fBeamEnergy*fBeamEnergy+mp*mp)); 
+
+    // --- Get the muons parameters in the CM frame 
+    pMu1CM=L1;
+    pMu2CM=L2;
+
+    // --- Obtain the dimuon parameters in the CM frame
+    pDimuCM=pMu1CM+pMu2CM;
+
+    // --- Translate the dimuon parameters in the dimuon rest frame
+    beta=(-1./pDimuCM.E())*pDimuCM.Vect();
+    if(beta.Mag()>=1) 
+      return -9999.;
+    pMu1Dimu=pMu1CM;
+    pMu2Dimu=pMu2CM;
+    pProjDimu=pProjCM;
+    pTargDimu=pTargCM;
+    pMu1Dimu.Boost(beta);
+    pMu2Dimu.Boost(beta);
+    pProjDimu.Boost(beta);
+    pTargDimu.Boost(beta);
+    
+    //Debugging part -------------------------------------
+    Double_t debugProj[4]={0.,0.,0.,0.};
+    Double_t debugTarg[4]={0.,0.,0.,0.};
+    Double_t debugMu1[4]={0.,0.,0.,0.};
+    Double_t debugMu2[4]={0.,0.,0.,0.};
+    pMu1Dimu.GetXYZT(debugMu1);
+    pMu2Dimu.GetXYZT(debugMu2);
+    pProjDimu.GetXYZT(debugProj);
+    pTargDimu.GetXYZT(debugTarg);
+    if (debugProj[0]!=debugProj[0] ||debugProj[1]!=debugProj[1] || debugProj[2]!=debugProj[2] ||debugProj[3]!=debugProj[3]) return -9999.; 
+    if (debugTarg[0]!=debugTarg[0] ||debugTarg[1]!=debugTarg[1] || debugTarg[2]!=debugTarg[2] ||debugTarg[3]!=debugTarg[3]) return -9999.; 
+    if (debugMu1[0]!=debugMu1[0] ||debugMu1[1]!=debugMu1[1] || debugMu1[2]!=debugMu1[2] ||debugMu1[3]!=debugMu1[3]) return -9999.; 
+    if (debugMu2[0]!=debugMu2[0] ||debugMu2[1]!=debugMu2[1] || debugMu2[2]!=debugMu2[2] ||debugMu2[3]!=debugMu2[3]) return -9999.; 
+    //----------------------------------------------------
+    
+    // --- Determine the z axis for the CS angle 
+    zaxisCS=(((pProjDimu.Vect()).Unit())-((pTargDimu.Vect()).Unit())).Unit();
+    
+    // --- Determine the CS angle (angle between mu+ and the z axis defined above)
+    Double_t cost;
+    
+    if(_leptonsflavour.at(0) > 0) {
+      cost = zaxisCS.Dot((pMu1Dimu.Vect()).Unit());
     }
     else {
-      return -9999.0;
+      cost = zaxisCS.Dot((pMu2Dimu.Vect()).Unit());
     }
+    return cost;
   }
   else {
-    return -9999.0;
+    return -9999.;
   }
 }
 
@@ -1057,6 +1246,7 @@ float WW::mTe(){
 
 float WW::channel(){
  
+
  if (_isOk) {
   if( abs(pid1) == 11 ) {
       if( abs(pid2) == 11 ) return 1; // ee
