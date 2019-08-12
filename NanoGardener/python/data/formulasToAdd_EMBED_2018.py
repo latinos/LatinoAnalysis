@@ -19,8 +19,6 @@ METFilter_DATA   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
 formulas['METFilter_DATA'] = METFilter_DATA
 
 
-
-
 muWP='cut_Tight_HWWW'
 eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
 

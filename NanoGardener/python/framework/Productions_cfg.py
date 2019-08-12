@@ -402,4 +402,14 @@ Productions = {
                    },
 
 
+ # -------- 2018 Embedding 102X nAODv5
+ 'Embedding2018_102X_nAODv5_Full2018v5': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2018_nAODv5.py' ,
+                       'cmssw'   : 'Full2018v5',
+                       'year'    : '2018' , 
+                   }, 
+
+
 }
