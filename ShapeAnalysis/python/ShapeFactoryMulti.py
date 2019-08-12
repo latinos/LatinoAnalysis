@@ -7,6 +7,7 @@ import shutil
 import time
 import collections
 import tempfile
+import subprocess
 import logging
 from array import array
 
@@ -56,6 +57,13 @@ class ShapeFactory:
         self._samples   = samples
         self._cuts      = cuts
 
+        #in case some aliases need a compiled function 
+        for aliasName, alias in self.aliases.iteritems():
+          if alias.has_key('linesToAdd'):
+            linesToAdd = alias['linesToAdd']
+            for line in linesToAdd:
+              ROOT.gROOT.ProcessLineSync(line)
+
         #in case some variables need a compiled function 
         for variableName, variable in self._variables.iteritems():
           if variable.has_key('linesToAdd'):
@@ -73,34 +81,40 @@ class ShapeFactory:
         print " supercut = ", supercut
         
         if number != 99999 :
-          self._outputFileName = outputDir+'/plots_'+self._tag+"_"+str(number)+".root"
+          outputFileName = outputDir+'/plots_'+self._tag+"_"+str(number)+".root"
         else :
-          self._outputFileName = outputDir+'/plots_'+self._tag+".root"
+          outputFileName = outputDir+'/plots_'+self._tag+".root"
 
-        print " outputFileName = ", self._outputFileName
+        print " outputFileName = ", outputFileName
         os.system ("mkdir -p " + outputDir + "/")
         
         ROOT.TH1.SetDefaultSumw2(True)
 
-        #---- first create the structure in gROOT. We'll write to a file at the end
+        #---- Open the output file and create the ROOT directory structure
+        dtemp = tempfile.mkdtemp()
+        tmpPath = dtemp + '/' + os.path.basename(outputFileName)
+        outFile = ROOT.TFile.Open(tmpPath, 'recreate')
+        # Speed up TFile::Close - see https://root-forum.cern.ch/t/tfile-close-slow/24179
+        ROOT.gROOT.GetListOfFiles().Remove(outFile)
+        
         print ''
         print '  <cuts>'
         for cutName, cut in self._cuts.iteritems():
           print "cut = ", cutName, " :: ", self._cuts[cutName]
           if type(cut) is dict and 'categories' in cut:
             for catname in cut['categories']:
-              ROOT.gROOT.mkdir(cutName + '_' + catname)
+              outFile.mkdir(cutName + '_' + catname)
 
               for variableName, variable in self._variables.iteritems():
                 if 'cuts' not in variable or cutName in variable['cuts'] or cutName + '/' + catname in variable['cuts']:
-                  ROOT.gROOT.mkdir(cutName+"_"+catname+"/"+variableName)
+                  outFile.mkdir(cutName+"_"+catname+"/"+variableName)
 
           else:
-            ROOT.gROOT.mkdir(cutName)
+            outFile.mkdir(cutName)
             
             for variableName, variable in self._variables.iteritems():
               if 'cuts' not in variable or cutName in variable['cuts']:
-                ROOT.gROOT.mkdir(cutName+"/"+variableName)
+                outFile.mkdir(cutName+"/"+variableName)
 
         #---- just print the variables
         print ''
@@ -146,51 +160,69 @@ class ShapeFactory:
         # One MultiDraw per sample = tree
         for sampleName, sample in self._samples.iteritems():
           print "    sample =", sampleName
-          #print "    name:", sample['name']
+          print "    name:", sample['name']
           #print "    weight:", sample['weight']
 
           if 'weights' not in sample:
             sample['weights'] = ['1'] * len(sample['name'])
 
-          # then add the lumi scale factor, unless the tree is data
-          dataTrees = []
+          # label each tree as data / MC
           if 'isData' in sample:
             if len(sample['isData']) == 1 and sample['isData'][0] == 'all':
               # if you put 'all', all the root files are considered "data"
-              dataTrees = range(len(sample['name']))
+              isData = [True] * len(sample['name'])
             else:
+              isData = []
               for iT in range(len(sample['name'])):
-                if sample['isData'][iT] != '0':
-                  dataTrees.append(iT)
-                  
-          for iT in range(len(sample['name'])):
-            if iT not in dataTrees:
-              # default is "scale to luminosity"
-              sample['weights'][iT] = "( (" + sample['weights'][iT] + ") * " + str(self._lumi) + ")"
-              print "      sample ['weights'][" + str(iT) + "] = ", sample['weights'][iT]
+                try:
+                  isData.append((int(sample['isData'][iT]) != 0))
+                except IndexError:
+                  isData.append(False)
+          else:
+            isData = [False] * len(sample['name'])
 
+          treeweights = []
+          if 'weights' in sample:
+            lumiscale = None
+            for iw, weight in enumerate(sample['weights']):
+              treeweight = ShapeFactory._make_reweight(weight)
+              # add the lumi scale factor for MC trees
+              if not isData[iw]:
+                if lumiscale is None:
+                  lumiscale = ROOT.multidraw.ReweightSource(str(self._lumi))
+
+                treeweight = ROOT.multidraw.ReweightSource(treeweight, lumiscale)
+
+              treeweights.append(treeweight)
+          else:
+            treeweights = [None] * len(sample['name'])
+
+          if len(treeweights) != len(sample['name']):
+            raise RuntimeError('Number of tree-by-tree weights doesn\'t match the number of trees')
+
+          if type(sample['weight']) is list:
+            # compound weight
+            sampleweight = ShapeFactory._make_reweight(sample['weight'][0])
+            for w in sample['weight'][1:]:
+              sampleweight = ROOT.multidraw.ReweightSource(sampleweight, ShapeFactory._make_reweight(w))
+          else:
+            sampleweight = ShapeFactory._make_reweight(sample['weight'])
+
+          # Create the nominal drawer
+                  
           drawer = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
           drawer.setFilter(supercut)
 
           # Set overall weights on the nominal drawer
-          drawer.setReweight(sample['weight'])
-
-          if 'weights' in sample:
-            weights = sample['weights']
-            print "  weights:", weights
-            if len(weights) != 0 and len(weights) != len(sample['name']):
-              raise RuntimeError('Number of tree-by-tree weights doesn\'t match the number of trees')
-          else:
-            weights = []
-
-          for it, w in enumerate(weights):
-            if w != '-':
+          drawer.setReweight(sampleweight)
+               
+          for it, w in enumerate(treeweights):
+            if w is not None:
               drawer.setTreeReweight(it, False, w)
 
           # Set up drawers for tree-type nuisances
 
-          drawersNuisanceUp   = {}
-          drawersNuisanceDown = {}
+          nuisanceDrawers = {}
 
           for nuisanceName, nuisance in nuisances.iteritems():
             if 'kind' not in nuisance or nuisance['kind'] != 'tree':
@@ -208,38 +240,73 @@ class ShapeFactory:
             if sampleName not in nuisance['samples']:
               continue
 
-            filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+            if 'folderUp' in nuisance and 'folderDown' in nuisance:
+              filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+              skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
+            
+              if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
+                # Workaround for missing nuisance files - don't use this regularly!
+                if sample['name'][0].startswith('###'):
+                  altDir = os.path.dirname(sample['name'][0].replace('###', ''))
+                else:
+                  altDir = inputDir
+              else:
+                altDir = ''
+  
+              if 'unskimmedFriendTreeDir' in nuisance.keys():
+                unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
+  
+                try:
+                  skimListFolderUp = nuisance['skimListFolderUp']
+                except KeyError:
+                  skimListFolderUp = None
+                try:
+                  skimListFolderDown = nuisance['skimListFolderDown']
+                except KeyError:
+                  skimListFolderDown = None
+  
+                ndrawerUp = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
+                ndrawerDown = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
+  
+              else:
+                ndrawerUp = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
+                ndrawerDown = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
 
-            if 'unskimmedFriendTreeDir' in nuisance.keys():
-              unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
+            elif 'filesUp' in nuisance and 'filesDown' in nuisance:
+              ndrawerUp = self._connectInputs(sampleName, nuisance['filesUp'][sampleName], '', skipMissingFiles=False)
+              ndrawerDown = self._connectInputs(sampleName, nuisance['filesDown'][sampleName], '', skipMissingFiles=False)
 
-              try:
-                skimListFolderUp = nuisance['skimListFolderUp']
-              except KeyError:
-                skimListFolderUp = None
-              try:
-                skimListFolderDown = nuisance['skimListFolderDown']
-              except KeyError:
-                skimListFolderDown = None
-
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], True, unskimmedFriendsDir, skimListFolderUp)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], True, unskimmedFriendsDir, skimListFolderDown)
-
-            else:
-              drawersNuisanceUp[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles = True)
-              drawersNuisanceDown[nuisanceName] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles = True)
+            nuisanceDrawers[nuisanceName] = (ndrawerUp, ndrawerDown)
 
           # Set overall weights on the nuisance up/down drawers
-          for idir, nuisanceDrawers in enumerate([drawersNuisanceUp, drawersNuisanceDown]):
-            for nuisanceName, ndrawer in nuisanceDrawers.iteritems():
-              configurationNuis = nuisances[nuisanceName]['samples'][sampleName]
+          for nuisanceName, ndrawers in nuisanceDrawers.iteritems():
+            # tree-type nuisances can in addition have weights for up / down
+            configurationNuis = nuisances[nuisanceName]['samples'][sampleName]
+
+            for idir, ndrawer in enumerate(ndrawers):
+              if float(configurationNuis[idir]) != 1.:
+                nuisanceShift = ShapeFactory._make_reweight(configurationNuis[idir])
+                nuisanceweight = ROOT.multidraw.ReweightSource(sampleweight, nuisanceShift)
+              else:
+                nuisanceweight = sampleweight
 
               ndrawer.setFilter(supercut)
-              ndrawer.setReweight('(%s) * (%s)' % (sample['weight'], configurationNuis[idir]))
+              ndrawer.setReweight(nuisanceweight)
+
+              # if the nuisance drawer is built from independent files, length of chain can be
+              # different from the length of tree weights
+              tocheck = 'files' + ('Up' if idir == 0 else 'Down')
+              if tocheck in nuisances[nuisanceName] and len(nuisances[nuisanceName][tocheck][sampleName]) != len(treeweights):
+                warnIfTreeWeight = True
+              else:
+                warnIfTreeWeight = False
   
-              for it, w in enumerate(weights):
-                if w != '-':
+              for it, w in enumerate(treeweights):
+                if w is not None:
                   ndrawer.setTreeReweight(it, False, w)
+                  if warnIfTreeWeight:
+                    print 'Nuisance', nuisanceName, 'tree filler for sample', sampleName, 'has different number of trees from the nominal filler. Tree-based reweighting may cause problems.'
+                    warnIfTreeWeight = False
 
           cuts = collections.OrderedDict()
           if 'subsamples' in sample:
@@ -305,15 +372,11 @@ class ShapeFactory:
 
               applicableNuisances[nuisanceName] = nuisance
 
+              # tree-type nuisance?
               if 'kind' not in nuisance or nuisance['kind'] != 'tree':
                 continue
 
-              for nuisanceDrawers in [drawersNuisanceUp, drawersNuisanceDown]:
-                try:
-                  ndrawer = nuisanceDrawers[nuisanceName]
-                except KeyError:
-                  continue
-
+              for ndrawer in nuisanceDrawers[nuisanceName]:
                 ndrawer.addCut(cutFullName, cut['expr'])
                 if 'categorization' in cut:
                   ndrawer.setCategorization(cutFullName, cut['categorization'])
@@ -340,39 +403,7 @@ class ShapeFactory:
               self._logger.debug('Cut:     '+cutFullName)
 
               if 'weight' in variable:
-                wgtspec = variable['weight']
-                if type(wgtspec) is str:
-                  reweight = ROOT.multidraw.ReweightSource(wgtspec)
-                else:
-                  if 'source' in wgtspec:
-                    fname, _, objname = wgtspec['source'].partition(':')
-                    ftmp = ROOT.TFile.Open(fname)
-                    wsource = ftmp.Get(objname)
-                    try:
-                      wsource.SetDirectory(0)
-                    except:
-                      pass
-                    ftmp.Close()
-                  else:
-                    wsource = None
-  
-                  if 'xexpr' in wgtspec:
-                    if 'yexpr' in wgtspec:
-                      reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wgtspec['yexpr'], wsource)
-                      print 'Reweighting:', reweight
-                    else:
-                      reweight = ROOT.multidraw.ReweightSource(wgtspec['xexpr'], wsource)
-                  elif 'class' in wgtspec:
-                    if 'args' in wgtspec:
-                      if type(wgtspec['args']) is tuple:
-                        args = wgtspec['args']
-                      else:
-                        args = (wgtspec['args'],)
-                    else:
-                      args = tuple()
-  
-                    func = getattr(ROOT, wgtspec['class'])(*args)
-                    reweight = ROOT.multidraw.ReweightSource(ROOT.multidraw.CompiledExprSource(func), wsource)
+                reweight = ShapeFactory._make_reweight(variable['weight'])
               else:
                 reweight = None
 
@@ -392,21 +423,14 @@ class ShapeFactory:
                     raise NotImplementedError('Cannot plot >=3D distributions')
 
               else:
-                if 'args' in variable:
-                  if type(variable['args']) is tuple:
-                    args = variable['args']
-                  else:
-                    args = (variable['args'],)
-                else:
-                  args = tuple()
-                xexpr = getattr(ROOT, variable['class'])(*args)
+                xexpr = ShapeFactory._make_ttreefunction(variable)
                 yexpr = ''
 
               if 'categories' in cut:
                 histlist = ROOT.TObjArray()
 
                 for catname in categoryOrdering:
-                  ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
+                  outFile.cd(cutName + '_' + catname + '/' + variableName)
 
                   hTotal = self._makeshape(histoName, variable['range'])
                   _allplots.append(hTotal)
@@ -420,7 +444,7 @@ class ShapeFactory:
                   filler = drawer.addPlotList(histlist, xexpr, cutFullName)
 
               else:
-                ROOT.gROOT.cd(cutName + '/' + variableName)
+                outFile.cd(cutName + '/' + variableName)
 
                 hTotal = self._makeshape(histoName, variable['range'])
                 _allplots.append(hTotal)
@@ -441,24 +465,17 @@ class ShapeFactory:
 
                 configurationNuis = nuisance['samples'][sampleName]
 
-                for idir, (ndrawers, variation) in enumerate([(drawersNuisanceUp, 'Up'), (drawersNuisanceDown, 'Down')]):
+                for idir, variation in enumerate(('Up', 'Down')):
                   if nuisance['kind'] == 'tree':
-                    try:
-                      ndrawer = ndrawers[nuisanceName]
-                    except KeyError:
-                      # nuisance drawer for the specific sample may not exist if there is no nuisance tree corresponding to the nominal
-                      # can be the case e.g. for UE and PS trees with FilesPerJob = 1
-                      continue
-
+                    ndrawer = nuisanceDrawers[nuisanceName][idir]
                     reweightNuis = reweight
 
                   elif nuisance['kind'] == 'weight':
+                    ndrawer = drawer
                     reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[idir])
                     if reweight is not None:
                       # compound reweight
                       reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
-
-                    ndrawer = drawer
 
                   subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
 
@@ -466,7 +483,7 @@ class ShapeFactory:
                     histlistNuis = ROOT.TObjArray()
   
                     for catname in categoryOrdering:
-                      ROOT.gROOT.cd(cutName + '_' + catname + '/' + variableName)
+                      outFile.cd(cutName + '_' + catname + '/' + variableName)
   
                       histoNameNuis = 'histo_' + subsampleNameNuis
                       hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
@@ -481,7 +498,7 @@ class ShapeFactory:
                       filler = ndrawer.addPlotList(histlistNuis, xexpr, cutFullName)
                     
                   else:
-                    ROOT.gROOT.cd(cutName + '/' + variableName)
+                    outFile.cd(cutName + '/' + variableName)
   
                     histoNameNuis = 'histo_' + subsampleNameNuis
                     hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
@@ -501,18 +518,26 @@ class ShapeFactory:
             print ''
 
           # We now defined all plots for this sample - execute the drawers and fill the histograms
+
+          # make a scratch ROOT file for MultiDraw aliases tree
+          with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
+            pass
+          tmpROOTFile = ROOT.TFile.Open(tmpfile.name, 'recreate')
+          tmpROOTFile.cd()
+          
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
           # We don't need this drawer any more - can reduce the number of open FDs?
           del drawer
 
-          for ndrawers, variation in [(drawersNuisanceUp, 'Up'), (drawersNuisanceDown, 'Down')]:
-            for nuisanceName, ndrawer in ndrawers.iteritems():
+          for nuisanceName in nuisanceDrawers.keys():
+            ndrawers = nuisanceDrawers.pop(nuisanceName)
+            for ndrawer, variation in zip(ndrawers, ('Up', 'Down')):
               print 'Start', nuisanceName + variation, 'histogram fill'
               ndrawer.execute(nevents, firstEvent)
 
-          drawersNuisanceUp = None
-          drawersNuisanceDown = None
+          tmpROOTFile.Close()
+          os.unlink(tmpfile.name)
 
           print 'Postfill'
           
@@ -545,7 +570,7 @@ class ShapeFactory:
                 catsuffixes = ['']
 
               for catsuffix in catsuffixes:
-                hTotal = ROOT.gROOT.Get(cutName + catsuffix + '/' + variableName + '/' + histoName)
+                hTotal = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoName)
 
                 # fold if needed
                 if 'fold' in variable:
@@ -621,8 +646,8 @@ class ShapeFactory:
                     histoNameUp = 'histo_' + subsampleNameUp
                     histoNameDown = 'histo_' + subsampleNameDown
   
-                    hTotalUp = ROOT.gROOT.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
-                    hTotalDown = ROOT.gROOT.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
+                    hTotalUp = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
+                    hTotalDown = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
   
                     outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
                     outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
@@ -650,42 +675,28 @@ class ShapeFactory:
           # end of one sample
           print ''
 
-        print 'Writing histograms to', self._outputFileName
-
-        dtemp = tempfile.mkdtemp()
-        tmpPath = dtemp + '/' + os.path.basename(self._outputFileName)
-        outFile = ROOT.TFile.Open(tmpPath, 'recreate')
-        # Speed up TFile::Close - see https://root-forum.cern.ch/t/tfile-close-slow/24179
-        ROOT.gROOT.GetListOfFiles().Remove(outFile)
-
-        def fullpath(tdir):
-          path = tdir.GetName()
-          d = tdir.GetMother()
-          while d:
-            path = d.GetName() + '/' + path
-            d = d.GetMother()
-          path = '/' + path
-          return path
-
-        def writeDirectory(indir, outdir):
-          for obj in indir.GetList():
-            if obj.IsA() == ROOT.TDirectory.Class():
-              outdir.mkdir(obj.GetName())
-              writeDirectory(obj, outdir.GetDirectory(obj.GetName()))
-            else:
-              outdir.cd()
-              obj.SetDirectory(outdir)
-              obj.Write()
-              obj.Delete()
-
-        print 'Writing in-memory histograms to', tmpPath
-        writeDirectory(ROOT.gROOT, outFile)
-        print 'Closing', tmpPath
+        outFile.cd()
+        outFile.Write()
         outFile.Close()
+        
+        print 'Copying', outFile.GetName(), 'to', outputFileName
 
-        print 'Copying', tmpPath, 'to', self._outputFileName
-        shutil.copyfile(tmpPath, self._outputFileName)
-        shutil.rmtree(dtemp)
+        realOutDir = os.path.realpath(os.path.dirname(outputFileName))
+        
+        for _ in range(10):
+          try:
+            if realOutDir.startswith('/eos/cms'):
+              subprocess.Popen(['xrdcp', '-f', outFile.GetName(), 'root://eoscms.cern.ch/' + realOutDir + '/' + os.path.basename(outputFileName)]).communicate()
+            else:
+              shutil.copyfile(outFile.GetName(), outputFileName)
+          except:
+            continue
+          else:
+            break
+        else:
+          raise IOError('Failed to copy output')
+        
+        shutil.rmtree(os.path.dirname(outFile.GetName()))
 
     # _____________________________________________________________________________
     def _symmetrize(self, hUp, hDo): 
@@ -1098,7 +1109,7 @@ class ShapeFactory:
         raise RuntimeError('Expression ' + expr + ' is not 2D')
  
     # _____________________________________________________________________________
-    def _connectInputs(self, process, filenames, inputDir, skipMissingFiles, friendsDir = None, skimListDir = None):
+    def _connectInputs(self, process, filenames, inputDir, skipMissingFiles, friendsDir=None, skimListDir=None, altDir=''):
 	if "sdfarm" in os.uname()[1]:
 	  inputDir = inputDir.replace("xrootd","xrd")
 
@@ -1116,7 +1127,10 @@ class ShapeFactory:
           if 'samples' in alias and process not in alias['samples']:
             continue
 
-          drawer.addAlias(name, alias['expr'])
+          if 'class' in alias:
+            drawer.addAlias(name, ShapeFactory._make_ttreefunction(alias))
+          else:
+            drawer.addAlias(name, alias['expr'])
 
         # lists[process] = []
         
@@ -1128,12 +1142,12 @@ class ShapeFactory:
        
         # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
         files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-        nfiles = self._buildchain(drawer, files, skipMissingFiles)
+        self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
 
         # if we specify a friends tree directory we need to load the friend trees and attch them 
         if friendsDir != None:
           files = [(friendsDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-          self._buildchain(drawer, files, False, friendtree = self._treeName)
+          self._buildchain(drawer, files, False, friendtree=self._treeName)
 
         #if we specify a directory with skim event lists we need to load them and skim    
         #if skimListDir != None:
@@ -1149,12 +1163,27 @@ class ShapeFactory:
         return drawer
 
     # _____________________________________________________________________________
+    def _testLocalFile(self,path): 
+      if not os.path.exists(path):
+        return False 
+
+      try:
+        f = ROOT.TFile.Open(path)
+        if not f or f.IsZombie():
+          return False
+      finally:
+        if f:
+          f.Close()
+
+      return True
+
+    # _____________________________________________________________________________
     def _testEosFile(self,path): 
       eoususer='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select'
       if 'eosuser.cern.ch' in path: 
         if os.system(eoususer+' ls '+path.split('/eosuser.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
       if 'eoscms.cern.ch' in path:
-        if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True 
+        if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
       return False 
 
     # _____________________________________________________________________________
@@ -1184,7 +1213,33 @@ class ShapeFactory:
       return False  
 
     # _____________________________________________________________________________
-    def _buildchain(self, multidraw, files, skipMissingFiles, friendtree = None):
+    def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
+        def testFile(path):
+          if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
+            exists = self._testEosFile(path)
+            location = 'CERN'
+          elif "maite.iihe.ac.be" in path:
+            exists = self._testIiheFile(path)
+            location = 'IIHE'
+          elif "cluster142.knu.ac.kr" in path:
+            # already checked the file at mkShape.py
+            exists = True
+            location = 'KNU'
+          elif "sdfarm" in path:
+            exists = self._test_sdfarm_File(path)
+            location = 'sdfarm.kr'
+          elif 'root://' in path:
+            exists = self._test_xrootdFile(path)
+            location = 'AAA'
+          else:
+            exists = self._testLocalFile(path)
+            location = 'local'
+
+          if not exists:
+            print 'File '+path+' doesn\'t exist @', location
+
+          return exists
+
         if friendtree is not None:
           paths = []
 
@@ -1192,53 +1247,39 @@ class ShapeFactory:
 
         for path in files:
           for att in range(5): # try opening the file 5 times
-            doesFileExist = True
-
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-
-            if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
-              if not self._testEosFile(path):
-                print 'File '+path+' doesn\'t exist'
-                doesFileExist = False
-            elif "maite.iihe.ac.be" in path:
-              if not self._testIiheFile(path):
-                print 'File '+path+' doesn\'t exist @ IIHE'
-                doesFileExist = False
-	    elif "cluster142.knu.ac.kr" in path:
-	      pass # already checked the file at mkShape.py
-            elif "sdfarm" in path:
-              if not self._test_sdfarm_File(path):
-                print 'File '+path+' doesn\'t exist @ sdfarm.kr'
-                doesFileExist = False
-            elif 'root://' in path:
-              if not self._test_xrootdFile(path):
-                print 'File '+path+' doesn\'t exist @ sdfarm.kr'
-                doesFileExist = False 
-            else:
-              if not os.path.exists(path):
-                print 'File '+path+' doesn\'t exist'
-                doesFileExist = False
-
-            if doesFileExist:
+  
+            exists = testFile(path)
+            if not exists:
+              if altDir and testFile(altDir + '/' + os.path.basename(path)):
+                path = altDir + '/' + os.path.basename(path)
+                exists = True
+  
+            if exists:
               if friendtree is not None:
                 paths.append(path)
               else:
                 multidraw.addInputPath(path)
-
+  
               ntrees += 1
               break
-
+  
+            elif skipMissingFiles:
+              break
+                
             time.sleep(10)
-
+  
           else: # exhausted all attempts
-            if not skipMissingFiles:
-              raise RuntimeError('File '+path+' doesn\'t exist')
+            print 'File '+path+' doesn\'t exist and skipMissingFiles=False in buildChain.'
+            print 'If you are trying to build a chain for a tree-based nuisance which has different number of'\
+                ' files wrt nominal (e.g. UE and PS variations), set "synchronized": False in the nuisance specification.'
+            raise RuntimeError('File '+path+' doesn\'t exist')
 
-          if friendtree is not None:
-            objarr = ROOT.TObjArray()
-            for path in paths:
-              objarr.Add(ROOT.TObjString(path))
-              multidraw.addFriend(friendtree, objarr)
+        if friendtree is not None:
+          objarr = ROOT.TObjArray()
+          for path in paths:
+            objarr.Add(ROOT.TObjString(path))
+            multidraw.addFriend(friendtree, objarr)
 
         return ntrees
 
@@ -1272,5 +1313,63 @@ class ShapeFactory:
         lists.append(evlist)
 
       return lists
-        
 
+    @staticmethod
+    def _make_ttreefunction(expr):
+      try:
+        args = expr['args']
+      except KeyError:
+        args = tuple()
+      else:
+        if type(args) is not tuple:
+          args = (args,)
+
+      return getattr(ROOT, expr['class'])(*args)
+
+    @staticmethod
+    def _make_compiledsource(expr):
+      func = ShapeFactory._make_ttreefunction(expr)
+      return ROOT.multidraw.CompiledExprSource(func)
+
+    @staticmethod
+    def _make_reweight(weight):
+      if type(weight) is str:
+        return ROOT.multidraw.ReweightSource(weight)
+
+      try:
+        fname, _, objname = weight['source'].partition(':')
+      except KeyError:
+        wsource = None
+      else:
+        ftmp = ROOT.TFile.Open(fname)
+        wsource = ftmp.Get(objname)
+        try:
+          wsource.SetDirectory(0)
+        except:
+          pass
+        ftmp.Close()
+      
+      if 'class' in weight:
+        expr = ShapeFactory._make_compiledsource(weight)
+        return ROOT.multidraw.ReweightSource(expr, wsource)
+
+      else:
+        if 'expr' in weight:
+          xexpr = weight['expr']
+          yexpr = None
+        else:
+          xexpr = weight['xexpr']
+          if 'yexpr' in weight:
+            yexpr = weight['yexpr']
+          else:
+            yexpr = None
+
+        if type(xexpr) is dict:
+          xexpr = ShapeFactory._make_compiledsource(xexpr)
+          if yexpr is not None:
+            yexpr = ShapeFactory._make_compiledsource(yexpr)
+
+        if yexpr is not None:
+          return ROOT.multidraw.ReweightSource(xexpr, yexpr, wsource)
+        else:
+          return ROOT.multidraw.ReweightSource(xexpr, wsource)

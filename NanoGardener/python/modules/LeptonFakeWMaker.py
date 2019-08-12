@@ -430,7 +430,9 @@ class LeptonFakeWMaker(Module):
                         '_4l',   '_4lMuUp',   '_4lMuDown',   '_4lElUp',   '_4lElDown',   '_4lstatMuUp',   '_4lstatMuDown',   '_4lstatElUp',   '_4lstatElDown' ]
 
         for iTag in self.FakeWeights:
-          for iVarExt in fakeVarExt : self.out.branch('fakeW_'+iTag+iVarExt,'F')            
+          for iVarExt in fakeVarExt : 
+            print 'Creating  : ','fakeW_'+iTag+iVarExt
+            self.out.branch('fakeW_'+iTag+iVarExt,'F')            
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass

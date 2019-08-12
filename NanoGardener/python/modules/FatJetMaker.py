@@ -13,7 +13,7 @@ class FatJetMaker(Module):
     1) kinematics cuts:  minpt, maxeta, max_tau21, mass_range
     2) for each FatJet passing the cuts the overlapping with leptons is checked
        with a configurable radius, (default 1.0)
-    3) The CleanJet collection is checked to save a vector with the ids of the jets
+    3) The CleanJet collection is checked to save a vector with the idxs of the jets
         not overlapping with the CleanFatJet. (default radius 0.8)
 
     The output of this module is a CleanFatJet collection with pt,eta,phi. Also a jetIdx reference 
@@ -26,9 +26,20 @@ class FatJetMaker(Module):
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetWtagging
     https://indico.cern.ch/event/779704/contributions/3245276/attachments/1768349/2874166/WtagSF_tau21.pdf
 
+    # bit1 : loose id / bit2 : tight id / bit3 : tightLepVeto
+    # if fatjet = loose && tight && tightLepVeto => 111(in binary) => 1+2+4 = 7
+    # (is loose id) + 2*(is tight id) + 4*(is tightLepVeto id)
+    # Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto
+    # >=2 -> ask tightId
+    # >=4 -> ask tightIdLepVeto
+    # >=6 -> ask tightId+tightIdLepVeto
+    # see https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetWtagging#Working_points_and_data_MC_scale                                                                           
+
+
     '''
-    def __init__(self, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
+    def __init__(self,jetid=0, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
                     over_lepR =0.8, over_jetR = 0.8):
+        self.jetid = jetid
         self.minpt = minpt
         self.maxeta = maxeta 
         self.max_tau21 = max_tau21
@@ -92,6 +103,7 @@ class FatJetMaker(Module):
                 output_vars[var] = []
 
         for ifj in range(nFatJet):
+            fj_id            = self.fatjet_var["FatJet_jetId"][ifj]
             fj_pt            = self.fatjet_var["FatJet_pt"][ifj]
             fj_eta           = self.fatjet_var["FatJet_eta"][ifj]
             fj_phi           = self.fatjet_var["FatJet_phi"][ifj]
@@ -103,7 +115,7 @@ class FatJetMaker(Module):
             fj_tau21 = fj_tau2 / fj_tau1
             
             goodFatJet = True
-
+            if fj_id      <  self.jetid     : goodFatJet = False
             if fj_pt < self.minpt:              goodFatJet = False
             if abs(fj_eta) > self.maxeta :      goodFatJet = False
             if fj_softdrop_mass < self.mass_range[0] or fj_softdrop_mass> self.mass_range[1]: goodFatJet = False

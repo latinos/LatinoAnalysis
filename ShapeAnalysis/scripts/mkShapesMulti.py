@@ -46,14 +46,18 @@ class Worker(threading.Thread):
         energy = params[8]
         lumi = params[9]
         tag = params[10]
+        aliases = params[11]
 
         infile = ""
+        infile += "from collections import OrderedDict\n"
         infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory\n\n"
         infile += "factory = ShapeFactory()\n"
         infile += "factory._treeName  = '"+opt.treeName+"'\n"
         infile += "factory._energy    = '"+str(energy)+"'\n"
         infile += "factory._lumi      = "+str(lumi)+"\n"
         infile += "factory._tag       = '"+str(tag)+"'\n"
+        infile += "factory._nThreads  = 1\n"
+        infile += "factory.aliases    = "+aliases+"\n"
 
         #infile += "factory.makeNominals('"+inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts)+","+str(samples)+","+str(nuisances)+",'"+supercut+"',"+str(number)+")\n"
 
@@ -287,6 +291,13 @@ if __name__ == '__main__':
       handle = open(opt.aliasesFile,'r')
       exec(handle)
       handle.close()
+
+    #in case some aliases need a compiled function 
+    for aliasName, alias in aliases.iteritems():
+      if alias.has_key('linesToAdd'):
+        linesToAdd = alias['linesToAdd']
+        for line in linesToAdd:
+          ROOT.gROOT.ProcessLineSync(line)
 
     supercut = '1'
     cuts = collections.OrderedDict()
@@ -634,14 +645,14 @@ if __name__ == '__main__':
                 samples_new[sam_k]['name'] = fileListPerJob
                 if len(thisSampleWeights) != 0:
                   samples_new[sam_k]['weights'] = weightListPerJob
-                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag, str(aliases)] )
                 number += 1
                 fileListPerJob=[]
                 weightListPerJob=[]
           else:
             samples_new = {}
             samples_new[sam_k] = copy.deepcopy(sam_v)
-            queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+            queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag, str(aliases)] )
             number += 1
       queue.join()
 
