@@ -58,7 +58,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','PromptParticlesGenVars','GenVar','GenLeptonMatch','HiggsGenVars','ggHToMINLO_powheg', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','PromptParticlesGenVars','GenVar','GenLeptonMatch','HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
   # FIXME: check btagPerJet2016, btagPerEvent
@@ -538,11 +538,22 @@ Steps = {
                    'onlySample' : [
                                   'GluGluHToWWTo2L2NuPowheg_M125_PrivateNano',
                                   'GluGluHToWWTo2L2NuPowheg_M125',
-                                  # 'GluGluHToMuMu_M125_CP5',
-                                  # 'GluGluHToMuMu_M125_CP5up',
-                                  # 'GluGluHToMuMu_M125_CP5down',
                                   'GluGluHToMuMu_M125_powheg',
                                   'GluGluHToMuMu_M125_powheg_ext1',
+                                  ]
+                  },    
+
+   'ggHToMINLO_mcatnlo':  {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False  ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.ggHtoMINLOMaker' ,
+                   'declare'    : 'ggHtoMINLOMaker_mcatnlo = lambda : ggHtoMINLOMaker("mcatnlo")',
+                   'module'     : 'ggHtoMINLOMaker_mcatnlo()',
+                   'onlySample' : [
+                                  'GluGluHToMuMu_M125_CP5',
+                                  'GluGluHToMuMu_M125_CP5up',
+                                  'GluGluHToMuMu_M125_CP5down',
                                   ]
                   },    
 
