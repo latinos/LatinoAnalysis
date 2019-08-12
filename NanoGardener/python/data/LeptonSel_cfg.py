@@ -1205,7 +1205,7 @@ ElectronWP = {
                                   [
                                      'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
                                      'electron_col[LF_idx]["cutBased_Fall17_V1"] >= 3',
-                                     'electron_col[LF_idx]["mvaFall17noIso_WP90"]',
+                                     'electron_col[LF_idx]["mvaFall17V1noIso_WP90"]',
                                      'electron_col[LF_idx]["convVeto"] == 1',
                                   ] ,
                                 # Barrel
@@ -3151,6 +3151,7 @@ MuonWP = {
                                   'None' 
                                 ],
                                   },
+                         'iso': ['pfRelIso04_all', 0.4],
                          'idSF':  {
                                     '1-1' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/ID_TH2_SFs_pt_eta.root'],
                                   } ,

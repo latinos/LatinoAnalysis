@@ -279,6 +279,38 @@ Steps = {
                                      'rochesterMCLP19','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMCLP19'],
                     }, 
 
+#   ---> v5
+
+ 'MCWgStar201Xv5' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"((nElectron+nMuon)>1)"' ,
+                     'subTargets' : ['leptonMaker','WgSSel','jetSelCustom',
+                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar','ggHTheoryUncertainty', 'DressedLeptons'],
+                     'onlySample' : [
+                                   'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
+                                   #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
+                                   'DYJetsToLL_M-10to50', 'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
+                                   'DYJetsToLL_M-5to50-LO','DYJetsToLL_M-50-LO-ext1',
+                                   'TTTo2L2Nu', 'ST_tW_antitop', 'ST_tW_top', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ZZTo2L2Nu',
+                                   'ZZTo4L', 'ZZTo2L2Q',
+                                   'WWW', 'WWZ', 'WZZ', 'ZZZ',
+                                   'GluGluToWWToENEN',
+                                   'GluGluToWWToENMN',
+                                   'GluGluToWWToENTN',
+                                   'GluGluToWWToMNEN',
+                                   'GluGluToWWToMNMN',
+                                   'GluGluToWWToMNTN',
+                                   'GluGluToWWToTNEN',
+                                   'GluGluToWWToTNMN',
+                                   'GluGluToWWToTNTN',
+                                   'WZTo2L2Q','WZTo3LNu_mllmin01','WZTo3LNu', 'Zg',
+                                 ]
+                   },
+
+
+
 ## ------- DATA:
     
   'DATAl1loose2016': {
