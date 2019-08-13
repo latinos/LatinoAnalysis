@@ -488,6 +488,13 @@ Steps = {
 
 ## ------- EMBEDDING:
 
+    'Embedding2018' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['EmbeddingWeights2018','trigMCKeepRun','LeptonSF','formulasEMBED'],
+                   },
+
     'Embedding2017' : { 
                   'isChain'    : True  ,
                   'do4MC'      : False ,
@@ -997,6 +1004,15 @@ Steps = {
              },
 
 ## ------- MODULES: Embedding
+
+  'EmbeddingWeights2018' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : False ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_v18_1_em-channel.root")',
+                 'module'     : 'embed()',
+               },
 
   'EmbeddingWeights2017' : { 
                  'isChain'    : False ,
