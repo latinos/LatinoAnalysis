@@ -83,8 +83,8 @@ class WlepMaker(Module):
 
        #met_pt=float(self.met_var['MET_pt'])
        #met_phi=float(self.met_var['MET_phi'])
-       met_pt  = event.MET_pt
-       met_phi = event.MET_phi
+       met_pt  = event.PuppiMET_pt
+       met_phi = event.PuppiMET_phi
        
        wlep_mass  = 80.4
        
