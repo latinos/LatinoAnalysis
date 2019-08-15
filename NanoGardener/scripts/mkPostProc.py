@@ -101,6 +101,8 @@ if __name__ == '__main__':
 # ---------------------------------------- Compile all root macros before sending jobs
 
     if options.runBatch :
+      ROOT.gSystem.Load("libZZMatrixElementMELA.so")
+      ROOT.gSystem.Load("libMelaAnalyticsCandidateLOCaster.so")
       pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
       for fn in os.listdir(pathRootMacro):
         if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
