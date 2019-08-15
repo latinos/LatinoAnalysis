@@ -34,6 +34,7 @@ class HighMassVariables(Module):
 
         njets = getattr(event, "nCleanJet")
         jets = Collection(event, "CleanJet")
+        norigjets = getattr(event, "nJet")
         origjets = Collection(event, "Jet")
         ngenjets = getattr(event, "nGenJet")
         genjets = Collection(event, "GenJet")
@@ -41,7 +42,9 @@ class HighMassVariables(Module):
         # Getting mjjGen is easier here than it was in HIG-17-033, because we already have a lepton-cleaned jet collection
         usingGenJets = []
         for cjet in jets:
-          genjetidx = origjets[cjet.jetIdx].genJetIdx
+          jetidx = cjet.jetIdx
+          if jetidx == -1 or jetidx >= norigjets: continue # Should never happen, but does very rarely
+          genjetidx = origjets[jetidx].genJetIdx
           if genjetidx == -1 or genjetidx >= ngenjets: continue
           usingGenJets.append(genjetidx)
           if len(usingGenJets) == 2: break
@@ -56,19 +59,13 @@ class HighMassVariables(Module):
 
         self.out.fillBranch("mjjGen", mjjgen)
 
-
-
         l1_eta = getattr(event, 'Lepton_eta')[0]
         l2_eta = getattr(event, 'Lepton_eta')[1]
-        l1_phi = getattr(event, 'Lepton_phi')[0]
-        l2_phi = getattr(event, 'Lepton_phi')[1]
+        dphill = getattr(event, 'dphill')
         deta = l1_eta+l2_eta
-        dphi = abs(l1_phi-l2_phi)+math.pi
-        if dphi > math.pi: dphi -= 2*math.pi
+        dphi = math.pi-dphill
         back2back = math.sqrt((deta*deta)+(dphi*dphi))
         self.out.fillBranch("back2back", back2back)
-
-
 
 #        max_mjj = -9999
 #        max_detajj = -9999 # detajj of two jets with max mjj; NOT max detajj of any jets
