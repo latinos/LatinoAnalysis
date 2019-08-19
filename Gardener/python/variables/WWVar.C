@@ -13,7 +13,7 @@ public:
   //! constructor
   WW();
   //  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2);
-  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2, float ptl1Err, float ptl2Err);
+  WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2, float ptl1Err, float ptl2Err, float jetbtag1, float jetbtag2);
   WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi);
   WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float met, float metphi);
   WW(float pt1, float pt2, float phi1, float phi2, float met, float metphi);
@@ -26,7 +26,7 @@ public:
  //! set functions
  void setJets(std::vector<float> invector);
  void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta);
- void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass);
+ void setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass, std::vector<float> invectorbtag, float inbtagCut);
 
  void setLeptons(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectorflavour, std::vector<float> invectorptErr);
   // void setLeptonsErr(std::vector<float> invectorptErr);
@@ -56,6 +56,7 @@ public:
  float mT2();  //void functionMT2(int& npar, double* d, double& r, double par[], int flag);
 
  float dphill();
+ float maxetall();
  float mll();
  float pt1();
  float pt2();
@@ -97,7 +98,13 @@ public:
  float detajj();
  float zeppjj();
  float dphijj();
+ float drlj();
  float njet();
+ float nbjet();
+
+ // float nbjet2016();
+ // float nbjet2017();
+ // float nbjet2018();
 
  float dphijet1met();  
  float dphijet2met();  
@@ -142,6 +149,7 @@ private:
  float _SumEt ;
  TLorentzVector TkMET;
  float pt1Err, pt2Err;
+  float btag1, btag2;
 
  bool _isOk;
  int  _jetOk;
@@ -154,6 +162,8 @@ private:
  std::vector<float> _jetseta;
  std::vector<float> _jetsphi;
  std::vector<float> _jetsmass;
+ std::vector<float> _jetsbtag;
+ float _jetsbtagCut; 
 
  std::vector<float> _leptonspt;
  std::vector<float> _leptonseta;
@@ -271,7 +281,7 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
 //  _isTkMET = false;
 // }
 
-WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2, float ptl1Err, float ptl2Err) {
+WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, float pidl1, float pidl2, float met, float metphi, float jetpt1, float jetpt2, float jeteta1, float jeteta2, float jetphi1, float jetphi2, float jetmass1, float jetmass2, float ptl1Err, float ptl2Err, float jetbtag1, float jetbtag2) {
  
  if (pt1>0 && pt2>0) {  
   L1.SetPtEtaPhiM(pt1, eta1, phi1, 0.);
@@ -288,8 +298,10 @@ WW::WW(float pt1, float pt2, float eta1, float eta2, float phi1, float phi2, flo
  }
  if( jetpt1>0) {
   J1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1); //---- NB: jets are treated as massive
+  btag1 = jetbtag1;
   if( jetpt2>0) {
    J2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2); //---- NB: jets are treated as massive
+   btag2 = jetbtag2;
    _jetOk = 2;
   }
   else {
@@ -383,11 +395,13 @@ void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta) 
  _jetOk = 0;  //---- protection need to update J1 and J2, but eta, phi and mass are missing!
 }
 
-void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass) {
- _jetspt   = invectorpt;
- _jetseta  = invectoreta;
- _jetsphi  = invectorphi;
- _jetsmass = invectormass;
+void WW::setJets(std::vector<float> invectorpt, std::vector<float> invectoreta, std::vector<float> invectorphi, std::vector<float> invectormass, std::vector<float> invectorbtag, float inbtagCut) {
+ _jetspt      = invectorpt;
+ _jetseta     = invectoreta;
+ _jetsphi     = invectorphi;
+ _jetsmass    = invectormass;
+ _jetsbtag    = invectorbtag;
+ _jetsbtagCut = inbtagCut;
 
  //---- need to update J1 and J2
  if (( _jetspt.size() > 1 && _jetspt.at(0) > 0 && _jetspt.at(1) <= 0 ) || ( _jetspt.size() == 1 && _jetspt.at(0) > 0)) {
@@ -442,6 +456,47 @@ float WW::njet(){
  return njet; 
 }
 
+
+float WW::nbjet(){
+ float nbjet = 0;
+ for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+   if (_jetspt.at(ijet) > 20 && fabs(_jetseta.at(ijet)) < 2.5 && _jetsbtag.at(ijet) > _jetsbtagCut) {
+   nbjet += 1;
+  }
+ }
+ return nbjet; 
+}
+
+
+// float WW::nbjet2016(){
+//  float nbjet = 0;
+//  for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+//    if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet))<2.4 && _jetsbtag.at(ijet))>0.6321) {
+//    nbjet += 1;
+//   }
+//  }
+//  return nbjet; 
+// }
+
+// float WW::nbjet2017(){
+//  float nbjet = 0;
+//  for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+//    if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet))<2.4 && _jetsbtag.at(ijet))>0.4941) {
+//    nbjet += 1;
+//   }
+//  }
+//  return nbjet; 
+// }
+
+// float WW::nbjet2018(){
+//  float nbjet = 0;
+//  for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+//    if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet))<2.4 && _jetsbtag.at(ijet))>0.4184) {
+//    nbjet += 1;
+//   }
+//  }
+//  return nbjet; 
+// }
 
 float WW::ptll(){
  if (_isOk) {
@@ -703,6 +758,21 @@ float WW::dphill(){
 }
 
 
+float WW::maxetall(){
+  if (_isOk) {
+    if (fabs(L1.Eta()) > fabs(L2.Eta())){
+      return fabs(L1.Eta());
+    }
+    else {
+      return fabs(L2.Eta());
+    }
+  }
+  else {
+    return -9999.0;
+  } 
+}
+
+
 float WW::drll(){
  //---- https://root.cern.ch/doc/master/TLorentzVector_8h_source.html#l00469
  if (_isOk) {
@@ -713,6 +783,7 @@ float WW::drll(){
  } 
 }
 
+
 float WW::dphilljet(){
  if (_isOk && _jetOk >= 1) { 
   return  fabs( (L1+L2).DeltaPhi(J1) );
@@ -721,7 +792,6 @@ float WW::dphilljet(){
   return -9999.0;
  }
 }
-
 
 
 float WW::jetpt1_cut(){
@@ -1313,11 +1383,43 @@ float WW::zeppjj(){
 
 float WW::dphijj(){
  if (_isOk) {
-  return fabs(J1.DeltaPhi(J2));
+  return abs(J1.DeltaPhi(J2));
  }
  else {
   return -9999.0;
  } 
+}
+
+
+// min DeltaR between a lepton and a jet
+float WW::drlj(){
+
+  float minDR = 10000.0;
+  float drl1j, drl2j;
+  TLorentzVector myJet;
+
+  if (_isOk) {
+    if (_jetOk == 0)
+      return -9999.0;
+    for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+      if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet)) < 4.7) {
+	myJet.SetPtEtaPhiM(_jetspt.at(ijet), _jetseta.at(ijet), _jetsphi.at(ijet), _jetsmass.at(ijet));
+	drl1j = L1.DeltaR(myJet);
+	minDR = min(minDR,drl1j); 
+	drl2j = L2.DeltaR(myJet);
+	minDR = min(minDR,drl2j); 
+      }
+    }
+    if (minDR == 10000.0){
+      return -9999.0;
+    }
+    else {
+      return minDR;
+    }
+  }
+  else {
+    return -9999.0;
+  } 
 }
 
 

@@ -23,7 +23,9 @@ import os.path
 
 
 class l2KinProducer(Module):
-    def __init__(self):
+    def __init__(self, year):
+        
+        self.year = year
 
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
@@ -46,6 +48,7 @@ class l2KinProducer(Module):
            'mll',
            'mllErr',
            'dphill',
+           'maxetall',
            'yll',
            'ptll',
            'pt1',
@@ -80,7 +83,9 @@ class l2KinProducer(Module):
            'mjj',
            'detajj',
            'zeppjj' ,
+           'drlj',
            'njet',
+           'nbjet',
           
            'mllWgSt',
            'drllWgSt',
@@ -92,6 +97,7 @@ class l2KinProducer(Module):
            
            'dphijet1met',  
            'dphijet2met',  
+           'dphijj',    
            'dphijjmet',    
            'dphijjmet_cut',    
            'dphilep1jet1', 
@@ -186,20 +192,31 @@ class l2KinProducer(Module):
         jet_eta   = ROOT.std.vector(float)(0)
         jet_phi   = ROOT.std.vector(float)(0)
         jet_mass  = ROOT.std.vector(float)(0)
+        jet_btag  = ROOT.std.vector(float)(0)
 
         for jet in Jet :
           jet_pt. push_back(jet.pt)
           jet_eta.push_back(jet.eta)
           jet_phi.push_back(jet.phi)
           jet_mass.push_back(OrigJet[jet.jetIdx].mass)
+          jet_btag.push_back(OrigJet[jet.jetIdx].btagDeepB)
 
 
         WW = ROOT.WW()
         
         WW.setLeptons(lep_pt, lep_eta, lep_phi, lep_flavour, lep_ptErr)
         ##WW.setLeptonsErr(lep_ptErr)
-        WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass)
-       
+        
+        # set b-tag WP, depending on the year
+        btag_cut = 0.
+        if self.year   == "2016" : btag_cut = 0.6321
+        elif self.year == "2017" : btag_cut = 0.4941
+        elif self.year == "2018" : btag_cut = 0.4184
+        else :
+            print "please enter a valid year"
+            return
+
+        WW.setJets   (jet_pt, jet_eta, jet_phi, jet_mass, jet_btag, btag_cut)
 
         #MET_sumEt = event.MET_sumEt
         #MET_phi   = event.MET_phi

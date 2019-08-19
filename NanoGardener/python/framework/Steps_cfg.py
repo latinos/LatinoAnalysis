@@ -84,7 +84,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','EmbeddingVeto','rochesterMC','trigMC','LeptonSF','puW','l2Kin','formulasMChmm'],
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','EmbeddingVeto','rochesterMC','trigMC','LeptonSF','puW','l2Kin2016','formulasMChmm'],
       ##'trigMC',
                 },
 
@@ -556,6 +556,19 @@ Steps = {
                                   'GluGluHToMuMu_M125_CP5down',
                                   ]
                   },    
+
+
+   # 'keepBranches_2016':  {
+   #     'isChain'    : False ,
+   #     'do4MC'      : True  ,
+   #     'do4Data'    : True  ,
+   #     'import'     : 'PhysicsTools.NanoAODTools.postprocessing.examples.exampleModule',
+   #     #exampleModuleConstr -s _exaModu_keepdrop --bo scripts/keep_and_drop_output.txt
+   #     #'import'     : 'LatinoAnalysis.NanoGardener.modules.BranchSelection' ,
+   #     'declare'    : '_exaModu_keepdrop = lambda : _exaModu_keepdrop --bo LatinoAnalysis/NanoGardener/python/data/branches_to_keep.txt',
+   #     'module'     : '_exaModu_keepdrop()',
+   # },
+
 
    'TopGenVars' : {
                   'isChain'    : False ,
@@ -1064,6 +1077,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
                   'declare'    : '',
                   'module'     : 'l2KinProducer()' ,
+               },  
+
+  'l2Kin2016'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
+                  'declare'    : 'l2KinProducer_2016 = lambda : l2KinProducer("2016")',
+                  'module'     : 'l2KinProducer_2016()' ,
                },  
 
   'l3Kin'    : {
