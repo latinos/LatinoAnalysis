@@ -5,6 +5,7 @@ SwitchDict = {
     'MHTrig2017_ee_DoubleEle33': {
         'threshold': [
             'event.run_period<3',
+            'event.nLepton > 1',
             'abs(event.Lepton_pdgId[0])==11',
             'abs(event.Lepton_pdgId[1])==11',
             'event.Lepton_pt[0]>40',
@@ -16,6 +17,7 @@ SwitchDict = {
     'MHTrig2017_ee_DoubleEle25': {
         'threshold': [
             'event.run_period>2',
+            'event.nLepton > 1',
             'abs(event.Lepton_pdgId[0])==11',
             'abs(event.Lepton_pdgId[1])==11',
             'event.Lepton_pt[0]>35',
@@ -24,9 +26,10 @@ SwitchDict = {
     },
 
     # Mu27_Ele37 || Mu37_Ele27 || Mu50
-    'MHTrig2017_mu': {
+    'MHTrig2017_me': {
         'threshold': [
             'event.run_period>2',
+            'event.nLepton > 1',
             'abs(event.Lepton_pdgId[0]*event.Lepton_pdgId[1])==11*13',
             'event.Lepton_pt[0]>42',
             'event.Lepton_pt[1]>32',
@@ -37,6 +40,7 @@ SwitchDict = {
     'MHTrig2017_mm': {
         'threshold': [
             'event.run_period>2',
+            'event.nLepton > 1',
             'abs(event.Lepton_pdgId[0])==13',
             'abs(event.Lepton_pdgId[1])==13',
             'event.Lepton_pt[0]>40',

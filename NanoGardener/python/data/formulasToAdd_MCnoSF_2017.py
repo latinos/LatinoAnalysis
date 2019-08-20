@@ -27,8 +27,8 @@ formulas['XSWeight'] = 'event.baseW*\
 
 
 muWP='cut_Tight_HWWW'
-#eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
-eleWPlist = ['mvaFall17Iso_WP90','mvaFall17Iso_WP90_SS']
+eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
+#eleWPlist = ['mvaFall17Iso_WP90','mvaFall17Iso_WP90_SS']
 
 for eleWP in eleWPlist: 
 

@@ -46,14 +46,18 @@ class Worker(threading.Thread):
         energy = params[8]
         lumi = params[9]
         tag = params[10]
+        aliases = params[11]
 
         infile = ""
+        infile += "from collections import OrderedDict\n"
         infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory\n\n"
         infile += "factory = ShapeFactory()\n"
         infile += "factory._treeName  = '"+opt.treeName+"'\n"
         infile += "factory._energy    = '"+str(energy)+"'\n"
         infile += "factory._lumi      = "+str(lumi)+"\n"
         infile += "factory._tag       = '"+str(tag)+"'\n"
+        infile += "factory._nThreads  = 1\n"
+        infile += "factory.aliases    = "+aliases+"\n"
 
         #infile += "factory.makeNominals('"+inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts)+","+str(samples)+","+str(nuisances)+",'"+supercut+"',"+str(number)+")\n"
 
@@ -232,6 +236,7 @@ if __name__ == '__main__':
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=1, type='int')
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
+    parser.add_option("-n", "--dry-run"  , dest="dryRun"         , help="do not make shapes"                         , default=False, action="store_true")
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
 
     # read default parsing options as well
@@ -286,6 +291,13 @@ if __name__ == '__main__':
       handle = open(opt.aliasesFile,'r')
       exec(handle)
       handle.close()
+
+    #in case some aliases need a compiled function 
+    for aliasName, alias in aliases.iteritems():
+      if alias.has_key('linesToAdd'):
+        linesToAdd = alias['linesToAdd']
+        for line in linesToAdd:
+          ROOT.gROOT.ProcessLineSync(line)
 
     supercut = '1'
     cuts = collections.OrderedDict()
@@ -440,7 +452,8 @@ if __name__ == '__main__':
         #jobs.Sub(opt.batchQueue)
       #else:
       #print " opt.batchQueue = ", opt.batchQueue
-      jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
+      if not opt.dryRun:
+        jobs.Sub(opt.batchQueue,opt.IiheWallTime,True)
 
     elif opt.doHadd != 0:
 
@@ -489,15 +502,19 @@ if __name__ == '__main__':
       hadd = os.environ['CMSSW_BASE'] + '/src/LatinoAnalysis/Tools/scripts/haddfast'
 
       command = [hadd]
-      command.extend(['-j', str(nThreads)])
+      if nThreads == 1:
+        command.append('--compress')
+      else:
+        command.extend(['-j', str(nThreads)])
       command.append(os.path.join(os.getcwd(), opt.outputDir, finalname))
       command.extend(fileList)
       print ' '.join(command)
-      subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
-
-      if not opt.doNotCleanup:
-        for fname in fileList:
-          os.unlink(opt.outputDir + '/' + fname)
+      if not opt.dryRun:
+        subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
+  
+        if not opt.doNotCleanup:
+          for fname in fileList:
+            os.unlink(opt.outputDir + '/' + fname)
 
     elif opt.doHadd != 0 or opt.redoStat != 0:
       ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option
@@ -628,14 +645,14 @@ if __name__ == '__main__':
                 samples_new[sam_k]['name'] = fileListPerJob
                 if len(thisSampleWeights) != 0:
                   samples_new[sam_k]['weights'] = weightListPerJob
-                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag, str(aliases)] )
                 number += 1
                 fileListPerJob=[]
                 weightListPerJob=[]
           else:
             samples_new = {}
             samples_new[sam_k] = copy.deepcopy(sam_v)
-            queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+            queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag, str(aliases)] )
             number += 1
       queue.join()
 

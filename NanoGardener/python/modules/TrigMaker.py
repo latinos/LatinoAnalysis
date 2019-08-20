@@ -22,7 +22,8 @@ class TrigMaker(Module):
         self.keepRunP = keepRunP
         self.seeded = seeded
         self.isFastSim = isFastSim
-
+        self.firstEvent = True
+ 
         self.mu_maxPt = 200
         self.mu_minPt = 10
         self.mu_maxEta = 2.4
@@ -45,9 +46,9 @@ class TrigMaker(Module):
 
         self.Trigger = var['Trigger']
 
-        print('TrigMakerGen: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
+        print('TrigMaker: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
         if cfg_path != 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py':
-            print('TrigMakerGen: loaded trigger configuration from ' + cfg_path)
+            print('TrigMaker: loaded trigger configuration from ' + cfg_path)
  
     def beginJob(self): 
         pass
@@ -61,13 +62,13 @@ class TrigMaker(Module):
         
         if self.keepRunP:
            # Check if input tree indeed contains run_period
-           isThere = False
-           for br in inputTree.GetListOfBranches():
-              if br.GetName() == 'run_period': isThere = True
-           if not isThere: print("WARNING: Input tree does not contain the 'run_period' branch, while 'keepRunP' is True.")
-           else: 
-               try: self.NewVar['I'].remove('run_period')
-               except: pass
+           #isThere = False
+           #for br in wrappedOutputTree.GetListOfBranches():
+           #   if br.GetName() == 'run_period': isThere = True
+           #if not isThere: print("TrigMaker WARNING: Input tree does not contain the 'run_period' branch, while 'keepRunP' is True.")
+           #else: 
+           try: self.NewVar['I'].remove('run_period')
+           except: pass
  
         for typ in self.NewVar:
            for name in self.NewVar[typ]:
@@ -283,10 +284,12 @@ class TrigMaker(Module):
         #print eff, eff_dz , eff_gl
  
         eff_dbl = [0., 0., 0.]
+        eff_sgl = [0., 0., 0.]
         eff_evt = [0., 0., 0.]
         for i in range(3): 
            eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2][i]*eff_dz[i]
-           eff_evt[i] = (eff_dbl[i] + eff[0][i]*eff_gl[0][i]*(1. - eff[5][i]) + eff[1][i]*eff_gl[1][i]*(1. - eff[4][i]))
+           eff_sgl[i] =  eff[0][i]*eff_gl[0][i]+eff[1][i]*eff_gl[1][i]-eff[0][i]*eff[1][i]*eff_gl[0][i]*eff_gl[1][i]
+           eff_evt[i] = eff_sgl[i] + eff_dbl[i] - eff_sgl[i]*eff_dbl[i] 
         #print eff_dbl , eff_evt        
 
         eff_tl = eff[2][0]*eff[5][0]*eff_gl[2][0]*eff_dz[0] #eff_dz
@@ -304,11 +307,11 @@ class TrigMaker(Module):
         elif abs(pdgId1) == 11 and abs(pdgId2) == 13:
            eff_evt_v[0] = eff[0][0]*eff_gl[0][0]
            eff_evt_v[1] = eff[1][0]*eff_gl[1][0]
-           eff_evt_v[4]  = (eff_tl + (1 - eff_tl)*eff_lt)*eff_gl[2][0]
+           eff_evt_v[4]  = (eff[4][0]*eff[3][0] + eff[2][0]*eff[5][0] - eff[3][0]*eff[2][0])*eff_gl[2][0]*eff_dz[0]
         else:
            eff_evt_v[0] = eff[1][0]*eff_gl[0][0]
            eff_evt_v[1] = eff[0][0]*eff_gl[1][0]
-           eff_evt_v[4]  = (eff_tl + (1 - eff_tl)*eff_lt)*eff_gl[2][0]
+           eff_evt_v[4]  = (eff[4][0]*eff[3][0] + eff[2][0]*eff[5][0] - eff[3][0]*eff[2][0])*eff_gl[2][0]*eff_dz[0]
 
         # Trigger emulator
         Trig_em = [False, False, False, False, False, False]  
@@ -496,7 +499,11 @@ class TrigMaker(Module):
     #_____Analyze
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
- 
+
+        if self.firstEvent:
+            self.firstEvent = False
+            if self.keepRunP and not hasattr(event, 'run_period'): raise ValueError('TrigMaker: event does not contain the \'run_period\' branch, while \'keepRunP\' is True.')
+
         # Make your life easier
         if self.seeded: evt = eval(self.event)
         else: evt = None

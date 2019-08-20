@@ -262,7 +262,9 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
 	#if "sdfarm" in os.uname()[1]:
 	#  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
         if not FromPostProc :
-          FileTarget.append('###'+xrootdPath+iFile)
+            if "sdfarm" in os.uname()[1]:
+                if '/xrootd/' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
+            FileTarget.append('###'+xrootdPath+iFile)
         else:
           FileTarget.append(iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
@@ -287,6 +289,20 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       
+#### To add ext samples
+def getEventSumw(directory,sample,prefix):
+    Files=getSampleFiles(directory,sample,False,prefix)
+    genEventSumw  = 0.0
+    for iFile in Files:
+        f = ROOT.TFile.Open(iFile.replace('###',''), "READ")
+        Runs=f.Get("Runs")
+        for iRun in Runs:
+            genEventSumw  += iRun.genEventSumw
+        f.Close()
+    nEvt = genEventSumw
+    return nEvt
+
+
 
 #### BaseW across sample _ext
 
