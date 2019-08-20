@@ -301,7 +301,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','l2Kin','formulasDATAhmm'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','rochesterDATA','l2Kin','formulasDATAhmm'],
                 },
 
   'DATAl1loose2017': {
