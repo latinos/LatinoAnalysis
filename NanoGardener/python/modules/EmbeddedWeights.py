@@ -33,7 +33,7 @@ class EmbedWeights(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         filename = str(inputFile)[str(inputFile).find("/nanoLatino")+1:str(inputFile).find(".root")+5]
-        filenameFormat = "nanoLatino_DYToTT_MuEle_Embedded_Run(2016|2017)(B|C|D|E|F|G|H).*\.root"
+        filenameFormat = "nanoLatino_DYToTT_MuEle_Embedded_Run(2016|2017|2018)(A|B|C|D|E|F|G|H).*\.root"
         pattern = re.match(filenameFormat, filename)
         if pattern == None:
           raise NameError("Cannot parse filename",filename, "; Expected pattern is", filenameFormat)
@@ -90,14 +90,14 @@ class EmbedWeights(Module):
         w.var("m_iso").setVal(getattr(event, 'Muon_pfRelIso04_all')[mu_id])
 
         ### Get Isolation and ID scalefactors
-        if self.year == "2017":
+        if self.year == "2017" or self.year == "2018":
           embed_mu_isoSF = w.function("m_looseiso_binned_embed_ratio").getValV()
           embed_el_isoSF = w.function("e_iso_binned_embed_ratio").getValV()
           embed_mu_idSF = w.function("m_id_embed_ratio").getValV()
           embed_el_idSF = w.function("e_id_embed_ratio").getValV()
         elif self.year == "2016":
-          embed_mu_isoSF = w.function("m_iso_ratio").getValV()
-          embed_el_isoSF = w.function("e_iso_ratio").getValV()
+          embed_mu_isoSF = w.function("m_looseiso_ratio").getValV()
+          embed_el_isoSF = w.function("e_looseiso_ratio").getValV()
           embed_mu_idSF = w.function("m_id_ratio").getValV()
           embed_el_idSF = w.function("e_id_ratio").getValV()
         self.out.fillBranch("embed_mu_isoSF", embed_mu_isoSF)
@@ -108,7 +108,7 @@ class EmbedWeights(Module):
         ### Determine Trigger scalefactor
         # The actual HLT triggers used here (w/ or w/o "_DZ") don't exactly correspond to what we use in the end,
         # but they're the ones that were used to compute der Trigger scale factors, so they NEED to be used here
-        if self.year == "2017":
+        if self.year == "2017" or self.year == "2018":
           trigger_12_data_Weight_1 = w.function("e_trg_binned_12_data").getValV()
           trigger_23_data_Weight_2 = w.function("m_trg_binned_23_data").getValV()
           trigger_23_data_Weight_1 = w.function("e_trg_binned_23_data").getValV()
@@ -128,8 +128,12 @@ class EmbedWeights(Module):
           trigger_23_embed_Weight_2 = w.function("m_trg23_binned_ic_embed").getValV()
           trigger_23_embed_Weight_1 = w.function("e_trg23_binned_ic_embed").getValV()
           trigger_8_embed_Weight_2 = w.function("m_trg8_binned_ic_embed").getValV()
-          trg_muonelectron_mu23ele12 = getattr(event, 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL')
-          trg_muonelectron_mu8ele23 = getattr(event, 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL')
+          if self.run in ["B", "C", "D", "E", "F"]:
+            trg_muonelectron_mu23ele12 = getattr(event, 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL')
+            trg_muonelectron_mu8ele23 = getattr(event, 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL')
+          elif self.run in ["G", "H"]:
+            trg_muonelectron_mu23ele12 = getattr(event, 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ')
+            trg_muonelectron_mu8ele23 = getattr(event, 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ')
 
         numerator = (trigger_23_data_Weight_2*trigger_12_data_Weight_1*(trg_muonelectron_mu23ele12==1)+trigger_23_data_Weight_1*trigger_8_data_Weight_2*(trg_muonelectron_mu8ele23==1) - trigger_23_data_Weight_2*trigger_23_data_Weight_1*((trg_muonelectron_mu8ele23==1)*(trg_muonelectron_mu23ele12==1)))
         denominator = (trigger_23_embed_Weight_2*trigger_12_embed_Weight_1*(trg_muonelectron_mu23ele12==1)+trigger_23_embed_Weight_1*trigger_8_embed_Weight_2*(trg_muonelectron_mu8ele23==1) - trigger_23_embed_Weight_2*trigger_23_embed_Weight_1*((trg_muonelectron_mu8ele23==1)*(trg_muonelectron_mu23ele12==1)))
@@ -147,7 +151,7 @@ class EmbedWeights(Module):
         ### Stitching for 2016 samples
         embed_stitching = 1.0
         if self.year == "2016":
-          if self.run == "B": embed_stitching = 1.0/0.891 # runnr >= 272007 and runnr < 275657
+          if   self.run == "B": embed_stitching = 1.0/0.891 # runnr >= 272007 and runnr < 275657
           elif self.run == "C": embed_stitching = 1.0/0.910 # runnr >= 275657 and runnr < 276315
           elif self.run == "D": embed_stitching = 1.0/0.953 # runnr >= 276315 and runnr < 276831
           elif self.run == "E": embed_stitching = 1.0/0.947 # runnr >= 276831 and runnr < 277772
@@ -184,13 +188,14 @@ class EmbedWeights(Module):
             geta = gen.eta
             gphi = gen.phi
         recoleps = {}
-        i=0
-        for lep in leptons:
+        for i,lep in enumerate(leptons):
           recoleps[i] = {}
           #recoleps[i]["pt"] = lep.pt
           recoleps[i]["eta"] = lep.eta
           recoleps[i]["phi"] = lep.phi
-          i += 1
+        if len(recoleps) == 0:
+          print "There aren't even any leptons? In event",getattr(event, 'event')
+          return -1
 
         DeltaR = 99
         UseThisIndex = -1
@@ -207,5 +212,5 @@ class EmbedWeights(Module):
         if DeltaR < 0.4: 
           lep_id = UseThisIndex
         else:
-          print "Too large deltaR after manual genmatching:",DeltaR,"; not considering event"
+          print "Too large deltaR after manual genmatching:",DeltaR,"; not considering event",getattr(event, 'event')
       return lep_id

@@ -681,10 +681,15 @@ class PlotFactory:
             # save the central values of the bkg sum for use for the nuisance band 
             #
             #print " tgrMC_vy = ", tgrMC_vy
+            nuisances_err_up = array('f')
+            nuisances_err_do = array('f')
             if thsBackground.GetNhists() != 0:
               last = thsBackground.GetStack().Last()
               for iBin in range(1, last.GetNbinsX()+1):
                 tgrMC_vy.append(last.GetBinContent(iBin))
+                #initialize with MC stat
+                nuisances_err_up.append(last.GetBinError(iBin))
+                nuisances_err_do.append(last.GetBinError(iBin))
             
                         
             #
@@ -719,8 +724,6 @@ class PlotFactory:
                 #    tgrBkg_evy_up[iBin-1] = SumQ ( tgrBkg_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                 #    tgrBkg_evy_do[iBin-1] = SumQ ( tgrBkg_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) ) 
 
-            nuisances_err_up = array('f')
-            nuisances_err_do = array('f')
             for nuisanceName in mynuisances.keys():
               #print " nuisanceName = " , nuisanceName
               if len(nuisances_err_up) == 0 : 
@@ -735,7 +738,7 @@ class PlotFactory:
                 #print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
                      #" diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
                      #" new global error = ", nuisances_err_do[iBin]
-                
+                 
                 if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
                   nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
                   nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin])

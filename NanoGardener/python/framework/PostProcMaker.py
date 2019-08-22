@@ -567,6 +567,9 @@ class PostProcMaker():
 #------------- MODULE CUSTOMIZATION: baseW, CMSSW_Version, ....
 
    def computewBaseW(self,iSample,DEBUG=False):
+     if   '_ext' in iSample : iSampleXS = iSample.split('_ext')[0]
+     elif '-ext' in iSample : iSampleXS = iSample.split('-ext')[0]
+     else:                    iSampleXS = iSample
      if not iSample in self._baseW :
        useLocal = False
        # Always check #nAOD files !
@@ -618,7 +621,7 @@ class PostProcMaker():
          f.Close()
        # get the X-section and baseW
        nEvt = genEventSumw
-       Xsec  = self._xsDB.get(iSample)
+       Xsec  = self._xsDB.get(iSampleXS)
        baseW = float(Xsec)*1000./nEvt
        print 'baseW: xs,N -> W', Xsec , nEvt , baseW
        # Store Info
