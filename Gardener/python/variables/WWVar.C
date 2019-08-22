@@ -460,7 +460,7 @@ float WW::njet(){
 float WW::nbjet(){
  float nbjet = 0;
  for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
-   if (_jetspt.at(ijet) > 20 && fabs(_jetseta.at(ijet)) < 2.5 && _jetsbtag.at(ijet) > _jetsbtagCut) {
+   if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet)) < 2.4 && _jetsbtag.at(ijet) > _jetsbtagCut) {
    nbjet += 1;
   }
  }
