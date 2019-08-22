@@ -219,6 +219,7 @@ ElectronWP = {
                                 'True' :
                                   [
                                      'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["cutBased_Fall17_V1"] >= 3',
                                      'electron_col[LF_idx]["mvaFall17V1noIso_WP90"]',
                                      'electron_col[LF_idx]["convVeto"] == 1',
                                   ] ,
@@ -231,34 +232,36 @@ ElectronWP = {
                                 # EndCap
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
-                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
-                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                    'electron_col[LF_idx]["sieie"] < 0.03 ' ,                           
+                                    'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.014' ,
+                                    'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                   ] ,
                                   } ,
                          'cuts_iso': {
                                 # Common cuts
                                 'True' :
                                 [
-                                  'None',
+                                  '0.06',
                                 ],
                                 # Barrel
                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                 [
-                                  '0.25' 
+                                  'None' 
                                 ],
                                 # EndCap
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                 [
-                                  '0.2' 
+                                  'None' 
                                 ],
                                   },
                          'iso': ['pfRelIso03_all', 0.3],
                          # FIXME: Update for 2018
                          'tkSF':  {
-                                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/egammaEffi.txt_EGM2D_updatedAll.root',
+                                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v5/egammaEffi.txt_EGM2D_updatedAll.root',
                                   } ,
                          'wpSF':  {
-                                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/egammaEffi_passingMVA102Xwp90isoHWW_runABCD.txt' ,
+                                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v5/egammaEffi_passingMVA102Xwp90isoSSHWWiso0p06_2018runABCD.txt',
                                   } ,
                              } ,
 
@@ -1201,7 +1204,8 @@ ElectronWP = {
                                 'True' :
                                   [
                                      'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
-                                     'electron_col[LF_idx]["mvaFall17noIso_WP90"]',
+                                     'electron_col[LF_idx]["cutBased_Fall17_V1"] >= 3',
+                                     'electron_col[LF_idx]["mvaFall17V1noIso_WP90"]',
                                      'electron_col[LF_idx]["convVeto"] == 1',
                                   ] ,
                                 # Barrel
@@ -1213,25 +1217,27 @@ ElectronWP = {
                                 # EndCap
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                   [
-                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
-                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   'electron_col[LF_idx]["sieie"] < 0.03 ' ,
+                                   'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.014' ,
+                                   'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                   'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
                                   ] ,
                                   } ,
                          'cuts_iso': {
                                 # Common cuts
                                 'True' :
                                 [
-                                  'None',
+                                  '0.06',
                                 ],
                                 # Barrel
                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
                                 [
-                                  '0.25' 
+                                  'None' 
                                 ],
                                 # EndCap
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                 [
-                                  '0.2' 
+                                  'None' 
                                 ],
                                   },
                          'iso': ['pfRelIso03_all', 0.3],
@@ -2321,14 +2327,12 @@ ElectronWP = {
                                    [
                                      'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
                                      'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
-                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.05880',
                                    ] ,
                                  # EndCap
                                  'abs(electron_col[LF_idx]["eta"]) > 1.479' :
                                    [
                                      'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
                                      'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
-                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.0571',
                                    ] ,
                                   } ,
                         'cuts_iso': {
@@ -2339,16 +2343,12 @@ ElectronWP = {
                                 ],
                                 # Barrel
                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
-                                # FIXME : 
                                 [
-                                 # '0.25' 
                                  '0.05880'
                                 ],
                                 # EndCap
                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
-                                # FIXME
                                 [
-                                 # '0.2' 
                                  '0.0571'
                                 ],
                                   },
@@ -3151,6 +3151,7 @@ MuonWP = {
                                   'None' 
                                 ],
                                   },
+                         'iso': ['pfRelIso04_all', 0.4],
                          'idSF':  {
                                     '1-1' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/ID_TH2_SFs_pt_eta.root'],
                                   } ,
