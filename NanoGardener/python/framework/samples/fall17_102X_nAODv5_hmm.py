@@ -11,11 +11,10 @@ Samples['GluGluHToMuMu_M125_CP5_ext1']       = {'nanoAOD' : '/GluGluHToMuMu_M125
 Samples['GluGluHToMuMu_M125_CP5up']          = {'nanoAOD' : '/GluGluHToMuMu_M125_TuneCP5up_PSweights_13TeV_amcatnloFXFX_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 Samples['GluGluHToMuMu_M125_CP5down']        = {'nanoAOD' : '/GluGluHToMuMu_M125_TuneCP5down_PSweights_13TeV_amcatnloFXFX_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
-Samples['GluGluHToMuMu_M125_powheg']         = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
-Samples['GluGluHToMuMu_M125_powheg_ext1']    = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7_ext1-v1/NANOAODSIM'} 
-Samples['GluGluHToMuMu_M125_powheg_CP5up']   = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5up_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
-Samples['GluGluHToMuMu_M125_powheg_CP5down'] = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5down_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
-###Samples['GluGluHToMuMu_M125_CP5_powheg']         = {'nanoAOD' : '/GluGluHToMuMu_M-125_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
+Samples['GluGluHToMuMu_M125_powheg_CP5']      = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
+Samples['GluGluHToMuMu_M125_powheg_CP5_ext1'] = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7_ext1-v1/NANOAODSIM'} 
+Samples['GluGluHToMuMu_M125_powheg_CP5up']    = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5up_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
+Samples['GluGluHToMuMu_M125_powheg_CP5down']  = {'nanoAOD' : '/GluGluHToMuMu_M-125_TuneCP5down_PSweights_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
 ### VBF H MuMu
 
