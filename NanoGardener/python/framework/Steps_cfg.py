@@ -289,12 +289,26 @@ Steps = {
                      'subTargets' : ['leptonMaker','WgSSel','jetSelCustom',
                                      'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar','ggHTheoryUncertainty', 'DressedLeptons'],
                      'onlySample' : [
-                                   'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','Wg_MADGRAPHMLM',
+                                   'Wg500',
+                                   'Wg_AMCNLOFXFX','Wg_AMCNLOFXFX_ext2','Wg_AMCNLOFXFX_ext3',
+                                   'WZTo3LNu','WZTo3LNu_ext1',
+                                   'WZTo3LNu_mllmin01',
+                                   'WZTo3LNu_powheg',
+                                   'Wg_MADGRAPHMLM',
                                    #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
-                                   'DYJetsToLL_M-10to50', 'DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3',
-                                   'DYJetsToLL_M-5to50-LO','DYJetsToLL_M-50-LO-ext1',
-                                   'TTTo2L2Nu', 'ST_tW_antitop', 'ST_tW_top', 'ST_s-channel', 'ST_t-channel_antitop', 'ST_t-channel_top', 'ZZTo2L2Nu',
-                                   'ZZTo4L', 'ZZTo2L2Q',
+                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-10to50_ext1',
+                                   'DYJetsToLL_M-50','DYJetsToLL_M-50_ext','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2', 
+                                   'DYJetsToLL_M-5to50-LO',
+                                   'DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50-LO_ext2',
+                                   'TTTo2L2Nu', 
+                                   'ST_tW_antitop','ST_tW_antitop_ext1','ST_tW_antitop_noHad','ST_tW_antitop_noHad_ext1', 
+                                   'ST_tW_top','ST_tW_top_ext1','ST_tW_top_noHad','ST_tW_top_noHad_ext1', 
+                                   'ST_s-channel','ST_s-channel_ext1', 
+                                   'ST_t-channel_antitop', 
+                                   'ST_t-channel_top', 
+                                   'ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2',
+                                   'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2', 
+                                   'ZZTo2L2Q',
                                    'WWW', 'WWZ', 'WZZ', 'ZZZ',
                                    'GluGluToWWToENEN',
                                    'GluGluToWWToENMN',
@@ -305,10 +319,33 @@ Steps = {
                                    'GluGluToWWToTNEN',
                                    'GluGluToWWToTNMN',
                                    'GluGluToWWToTNTN',
-                                   'WZTo2L2Q','WZTo3LNu_mllmin01','WZTo3LNu', 'Zg',
+                                   'WZTo2L2Q','Zg',
                                  ]
                    },
 
+  'MCWgStarCorr2016v5' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','EmbeddingVeto',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                   },
+
+  'MCWgStarCorr2017v5' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','EmbeddingVeto',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                   },
+
+  'MCWgStarCorr2018v5' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJet2018','EmbeddingVeto',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC'],
+                   }, 
 
 
 ## ------- DATA:
@@ -450,6 +487,13 @@ Steps = {
 
 
 ## ------- EMBEDDING:
+
+    'Embedding2018' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['EmbeddingWeights2018','trigMCKeepRun','LeptonSF','formulasEMBED'],
+                   },
 
     'Embedding2017' : { 
                   'isChain'    : True  ,
@@ -960,6 +1004,15 @@ Steps = {
              },
 
 ## ------- MODULES: Embedding
+
+  'EmbeddingWeights2018' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : False ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_v18_1_em-channel.root")',
+                 'module'     : 'embed()',
+               },
 
   'EmbeddingWeights2017' : { 
                  'isChain'    : False ,
