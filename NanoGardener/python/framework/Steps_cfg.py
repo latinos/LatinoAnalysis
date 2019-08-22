@@ -637,10 +637,13 @@ Steps = {
                                   'TTWjets',
                                   'TTZjets',
                                   'ST_s-channel',
+                                  'ST_s-channel_ext1',
                                   'ST_t-channel_antitop',
                                   'ST_t-channel_top',
                                   'ST_tW_antitop',
+                                  'ST_tW_antitop_ext1',
                                   'ST_tW_top',
+                                  'ST_tW_top_ext1',
                                  ]
                   } ,
 
