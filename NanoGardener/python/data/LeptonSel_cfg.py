@@ -3506,7 +3506,7 @@ MuonWP = {
                 '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v4_hmumu/muonISO_Loose_TH2_SFs_pt_eta_Run2017BF.root' ] ,
             } ,
             'triggSF':  {
-                '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2_hmumu/muonTrig_IsoMu27_TH2_SFs_pt_eta_Run2017BF.root' ] ,
+                '1-5' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v4_hmumu/muonTrig_IsoMu27_TH2_SFs_pt_eta_Run2017BF.root' ] ,
             } ,
         } ,
     } ,
