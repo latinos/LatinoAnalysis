@@ -213,6 +213,15 @@ class ShapeFactory:
           drawer = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
           drawer.setFilter(supercut)
 
+          for aliasName, alias in self.aliases.iteritems():
+            if 'samples' in alias and sampleName not in alias['samples']:
+              continue
+
+            if 'class' in alias:
+              drawer.addAlias(aliasName, ShapeFactory._make_ttreefunction(alias))
+            else:
+              drawer.addAlias(aliasName, alias['expr'])
+
           # Set overall weights on the nominal drawer
           drawer.setReweight(sampleweight)
                
@@ -292,6 +301,18 @@ class ShapeFactory:
 
               ndrawer.setFilter(supercut)
               ndrawer.setReweight(nuisanceweight)
+
+              for aliasName, alias in self.aliases.iteritems():
+                if 'samples' in alias and sampleName not in alias['samples']:
+                  continue
+
+                if 'nominalOnly' in alias and alias['nominalOnly']:
+                  continue
+  
+                if 'class' in alias:
+                  ndrawer.addAlias(aliasName, ShapeFactory._make_ttreefunction(alias))
+                else:
+                  ndrawer.addAlias(aliasName, alias['expr'])
 
               # if the nuisance drawer is built from independent files, length of chain can be
               # different from the length of tree weights
@@ -686,7 +707,9 @@ class ShapeFactory:
         for _ in range(10):
           try:
             if realOutDir.startswith('/eos/cms'):
-              subprocess.Popen(['xrdcp', '-f', outFile.GetName(), 'root://eoscms.cern.ch/' + realOutDir + '/' + os.path.basename(outputFileName)]).communicate()
+              cmd = ['xrdcp', '-f', outFile.GetName(), 'root://eoscms.cern.ch/' + realOutDir + '/' + os.path.basename(outputFileName)]
+              print ' '.join(cmd)
+              subprocess.Popen(cmd).communicate()
             else:
               shutil.copyfile(outFile.GetName(), outputFileName)
           except:
@@ -1122,15 +1145,6 @@ class ShapeFactory:
         drawer.setPrintLevel(1)
         drawer.setDoTimeProfile(True)
         drawer.setInputMultiplexing(int(self._nThreads))
-
-        for name, alias in self.aliases.iteritems():
-          if 'samples' in alias and process not in alias['samples']:
-            continue
-
-          if 'class' in alias:
-            drawer.addAlias(name, ShapeFactory._make_ttreefunction(alias))
-          else:
-            drawer.addAlias(name, alias['expr'])
 
         # lists[process] = []
         
