@@ -28,6 +28,7 @@ class CopyCleanJet(Module):
                     var = self.newcollectionname + var[8:]
                     self.out.branch(var, typ, lenVar='n'+self.newcollectionname)
         CleanJet_var.append('jetIdx')
+        CleanJet_var.append('rawFactor')
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass

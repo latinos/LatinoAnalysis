@@ -141,7 +141,10 @@ class LeptonMaker(Module):
            # Now index is set, fill the vars  
            for var in jet_dict:
               if not 'Idx' in var:
-                 jet_dict[var][pt_idx] = self.jet_var['Jet_' + var][iJ1]
+                 if var == 'rawPt':
+                     jet_dict[var][pt_idx] = (1. - self.jet_var['Jet_rawFactor'][iJ1]) *  self.jet_var['Jet_pt'][iJ1]
+                 else:
+                     jet_dict[var][pt_idx] = self.jet_var['Jet_' + var][iJ1]
               else:
                  jet_dict[var][pt_idx] = iJ1
 
@@ -151,7 +154,7 @@ class LeptonMaker(Module):
            if var in VetoLepton_var + ['electronIdx', 'muonIdx']:
               self.out.fillBranch('VetoLepton_' + var, lep_dict[var])
         for var in jet_dict:
-           self.out.fillBranch( 'CleanJet_' + var, jet_dict[var])
+              self.out.fillBranch( 'CleanJet_' + var, jet_dict[var])
 
         return True
 

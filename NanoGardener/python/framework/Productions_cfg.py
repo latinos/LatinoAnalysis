@@ -422,4 +422,16 @@ Productions = {
                        'year'    : '2016' ,
                    },
 
+ # -------- 2017 MC 102X nAODv5 for Higgs -> mumu
+ 'Fall2017_102X_nAODv5_Full2017v5_hmm' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/fall17_102X_nAODv5_hmm.py' ,
+                       'cmssw'   : 'Full2017v4hmm',
+                       'year'    : '2017' ,
+                       'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2017.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   }, 
+
 }
+

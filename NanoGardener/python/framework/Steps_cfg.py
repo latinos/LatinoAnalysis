@@ -61,6 +61,15 @@ Steps = {
                   'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','PromptParticlesGenVars','GenVar','GenLeptonMatch','HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
+  'MCl2loose2017hmm' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','CleanJetCutHmm2017',],#'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                },
+
+
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
   'MCCorr2016' : {
@@ -492,6 +501,15 @@ Steps = {
                   'module'     : 'TriggerObjectMatch()' ,
                    },
 
+  'TriggerObjectMatch2017' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TriggerObjectMatchProducer2017' ,
+                  'declare'    : 'TriggerObjectMatch2017 = lambda : TriggerObjectMatchProducer2017()',
+                  'module'     : 'TriggerObjectMatch2017()' ,
+                   },
+
    'HiggsGenVars' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -705,12 +723,31 @@ Steps = {
                   'module'     : 'jetSel()' ,
                },
 
+    'jetSelHmm2017' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(2,"custom",15.0,4.7,"CleanJet")' ,
+                  'module'     : 'jetSel()' ,
+               },
+
    'CleanJetCut' : {
                  'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.CopyCleanJet',
                   'declare'    : 'cleanJetCut = lambda : CopyCleanJet(newcollectionname="CleanJetCut", cuts=["eta>2.65","eta<3.139"])',
+                  'module'     : 'cleanJetCut()',
+               }, 
+
+   'CleanJetCutHmm2017' : {
+                 'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.CopyCleanJet',
+                  'declare'    : 'cleanJetCut = lambda : CopyCleanJet(newcollectionname="CleanJetCut", cuts=["rawPt<50","eta>2.65","eta<3.139"])',
                   'module'     : 'cleanJetCut()',
                }, 
 
