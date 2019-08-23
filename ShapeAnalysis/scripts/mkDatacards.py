@@ -369,10 +369,13 @@ class DatacardFactory:
                         #                  except for some strange coincidence of "AsLnN" ... 
                         #                  This fix is left, just for sake of safety
                         #
-                        if lnNUp==0: lnNUp = 1
-                        if lnNDo==0: lnNDo = 1
-            
-                        card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
+                        if lnNUp==0: lnNUp = 1.
+                        if lnNDo==0: lnNDo = 1.
+
+                        if abs(lnNUp - 1.) < 5.e-4 and abs(lnNDo - 1.) < 5.e-4:
+                          card.write(('-').ljust(columndef))
+                        else:
+                          card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
                       else:
                         card.write(('-').ljust(columndef)) 
 

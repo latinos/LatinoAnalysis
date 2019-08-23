@@ -5,13 +5,14 @@ import os
 import math
 import numpy
 import pickle
+from scipy.interpolate import interp1d
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 # Needs variables from "HiggsGenVars" module to work
 class BWEwkSingletReweighter(Module):
-    def __init__(self, year="2017", cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], decayWeightsFile="decayWeights.pkl"):
+    def __init__(self, year="2017", cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], relw=[0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30], decayWeightsFile="decayWeights.pkl"):
 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
@@ -19,9 +20,11 @@ class BWEwkSingletReweighter(Module):
 
         self.cprime_list = cprime
         self.brnew_list = brnew
+        self.relw_list = relw
 
         self.undoCPS = True
         self.isNewJHU = True
+        self.decayWeightsFile = decayWeightsFile
 
         # Non-CPS values from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR2014 for up to 1000 GeV
         Hmass = [80.0, 81.0, 82.0, 83.0, 84.0, 85.0, 86.0, 87.0, 88.0, 89.0,
@@ -249,17 +252,19 @@ class BWEwkSingletReweighter(Module):
           print "Shiftfile not loaded! Result will not be normalized!"
           self.shifts = 0
 
+        self.mH  = float(pattern.group(4))
+
         # Looks like 714 needs the same treatment as 698. I assume the same goes for 710.
         # So only JHUgen628 from 2016 needs the special treatment
-        if self.year == "2016" and pattern.group(3) == "": self.isNewJHU = False
+        if self.year == "2016" and pattern.group(3) == "" and self.finalState == "2L2Nu": self.isNewJHU = False
+        if self.year == "2016" and self.finalState == "LNuQQ" and ((self.mH == 125.0) or (self.productionProcess == "VBF" and ((self.mH == 210.0) or (self.mH == 250.0)))): self.isNewJHU = False # Cherry picking v628 semileptonic samples
 
-        self.mH  = float(pattern.group(4))
         self.gsm = self.g.GetBinContent(self.g.FindBin(self.mH))
         self.gsmCPS = self.gCPS.GetBinContent(self.gCPS.FindBin(self.mH))
 
         # only with the old JHU samples, which did not have proper decay weights for WW, we need to load the decay weights file.
         if not self.isNewJHU:
-          with open (self.cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/'+decayWeightsFile) as decayWeightsFile_stream:
+          with open (self.cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/'+self.decayWeightsFile) as decayWeightsFile_stream:
             allparams = pickle.load(decayWeightsFile_stream)
           self.decayWeightFunction = interp1d(**allparams[str(int(self.mH))]["decayWeight"])
           self.minmass = min(allparams[str(int(self.mH))]["decayWeight"]['x'])
@@ -275,6 +280,12 @@ class BWEwkSingletReweighter(Module):
             for bname in self.branchnames:
               self.out.branch(bname, "F")
 
+        for relw in self.relw_list:
+          for appendix in ["", "_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"]:
+            self.branchnames.append('RelW'+str(relw)+appendix)
+          for bname in self.branchnames:
+            self.out.branch(bname, "F")
+
         self.mela = ROOT.MelaReweighterWW(13, self.mH, self.gsm)
         #GF 1.16637e-5
         #sin2thetaW 0.22264585341299603
@@ -288,23 +299,23 @@ class BWEwkSingletReweighter(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        LHE = Collection(event,"LHEPart")
-        mass = 0
-        LHElepId = []
-        LHEneuId = []
+        self.LHE = Collection(event,"LHEPart")
+        Gen = Collection(event,"GenPart")
+        #LHElepId = []
+        #LHEneuId = []
         LHEjetId = []
         mass = getattr(event, 'higgsGenMass')
 
-        for idx,part in enumerate(LHE):
-          if abs(part.pdgId) in [11,13,15]:
-            LHElepId.append(idx)
-          elif abs(part.pdgId) in [12,14,16]:
-            LHEneuId.append(idx)
-          elif abs(part.pdgId) in [1,2,3,4,5,21]:
+        for idx,part in enumerate(self.LHE):
+          #  if abs(part.pdgId) in [11,13,15]:
+          #    LHElepId.append(idx)
+          #  elif abs(part.pdgId) in [12,14,16]:
+          #    LHEneuId.append(idx)
+          if abs(part.pdgId) in [1,2,3,4,5,21]:
             LHEjetId.append(idx)
 
-        LHElepId = self.pTorder(event, LHElepId)
-        LHEneuId = self.pTorder(event, LHEneuId)
+        #LHElepId = self.pTorder(event, LHElepId)
+        #LHEneuId = self.pTorder(event, LHEneuId)
         LHEjetId = self.pTorder(event, LHEjetId)
 
         fourMomenta=[]
@@ -312,16 +323,115 @@ class BWEwkSingletReweighter(Module):
         partons   = ROOT.vector('TLorentzVector')()
         partonIDs = ROOT.vector('int')()
 
-        for ilep in range(2):
+        FinalStatePartIDs = []
+        for gid,gen in enumerate(Gen):
+          #if event.event == 340287: #2018 VBFHToWWTo2L2Nu_M500
+          #  print "Particle",gid,"with pdgId",gen.pdgId,"and mom",gen.genPartIdxMother
+          if abs(gen.pdgId) >= 21: continue # Straight up ignore W bosons, photons or gluons from scattering
+          if event.GenPart_genPartIdxMother[gid] == -1: continue # Protection for next line
+          if abs(event.GenPart_pdgId[event.GenPart_genPartIdxMother[gid]]) != 24: continue # Somehow the check in the next line isn't sufficient for all cases
+          plist = self.FromWandH(event, gid)
+          if plist == False: continue
+          #if event.event == 340287:
+          #  print gid, plist, FinalStatePartIDs
+          #  for asd in plist:
+          #    print event.GenPart_pdgId[asd]," ",
+          #  print ""
+          ignore = 0
+          for AlreadyIn in FinalStatePartIDs:
+            if AlreadyIn in plist: ignore = 1
+          if ignore == 1: continue
+          FinalStatePartIDs.append(gid)
+
+        if len(FinalStatePartIDs) != 4: # Remove W -> gamma W -> e+ e- W
+          removethis = []
+          #print "====="
+          for pi1,p1 in enumerate(FinalStatePartIDs):
+            for pi2,p2 in enumerate(FinalStatePartIDs):
+              if pi1>=pi2: continue
+              if event.GenPart_genPartIdxMother[p1] != event.GenPart_genPartIdxMother[p2]: continue
+              if event.GenPart_pdgId[p1] + event.GenPart_pdgId[p2] == 0:
+                if p1 not in removethis: removethis.append(p1)
+                if p2 not in removethis: removethis.append(p2)
+                #print "Removing this: Part",p1,"with id",event.GenPart_pdgId[p1],"with mom",event.GenPart_genPartIdxMother[p1]
+                #print "       ...and: Part",p2,"with id",event.GenPart_pdgId[p2],"with mom",event.GenPart_genPartIdxMother[p2]
+            #if event.GenPart_pdgId[p1] == 21: removethis.append(p1)# Remove additional gluons
+          for rem in removethis:
+            FinalStatePartIDs.remove(rem)
+
+        if len(FinalStatePartIDs) != 4: # Remove rare additonal hadrons
+          removethis = []
+          for pi1,p1 in enumerate(FinalStatePartIDs):
+            mom_id = event.GenPart_genPartIdxMother[p1]
+            NumWithThisID = 0
+            for pi2,p2 in enumerate(FinalStatePartIDs):
+              if event.GenPart_genPartIdxMother[p2] == mom_id: NumWithThisID += 1
+            if NumWithThisID != 2:
+              for pi2,p2 in enumerate(FinalStatePartIDs):
+                if (event.GenPart_genPartIdxMother[p2] == mom_id) and (p2 not in removethis):
+                  removethis.append(p2)
+                  #print "Removing this: Part with id",event.GenPart_pdgId[p2],"from mom",event.GenPart_genPartIdxMother[p2],"with id",event.GenPart_pdgId[event.GenPart_genPartIdxMother[p2]]
+          for rem in removethis:
+            FinalStatePartIDs.remove(rem)
+
+        if len(FinalStatePartIDs) != 4:
+          print "Not exactly 4 particles!"
+          print "Event no.:",event.event
+          print FinalStatePartIDs
+          for p in FinalStatePartIDs:
+            print p,": id",event.GenPart_pdgId[p],", mom:",event.GenPart_genPartIdxMother[p],", momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[p]]#,", mom-mom:",event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]],", mom-momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]]]
+
+        nlep = 0
+        nneu = 0
+        njet = 0
+        for idx in FinalStatePartIDs:
+          if abs(event.GenPart_pdgId[idx]) in [11,13,15]:
+            nlep +=1
+          elif abs(event.GenPart_pdgId[idx]) in [12,14,16]:
+            nneu +=1
+          elif abs(event.GenPart_pdgId[idx]) in [1,2,3,4,5,21]:
+            njet +=1
+        if not ((nlep == 2 and nneu == 2 and self.finalState == "2L2Nu") or (nlep == 1 and nneu == 1 and njet == 2 and self.finalState == "LNuQQ")):
+          print "Didn't get expected particles!"
+          print "Event no.:",event.event
+          print FinalStatePartIDs
+          print "nlep:",nlep,", nneu:",nneu,", njet:",njet
+
+        LHEFinalStateIDs = self.getLHE(event, FinalStatePartIDs)
+        #print FinalStatePartIDs
+        #print LHEFinalStateIDs
+
+        for ipart in LHEFinalStateIDs:
           l = ROOT.TLorentzVector()
-          l.SetPtEtaPhiM(event.LHEPart_pt[LHElepId[ilep]], event.LHEPart_eta[LHElepId[ilep]], event.LHEPart_phi[LHElepId[ilep]], 0.)
+          l.SetPtEtaPhiM(LHEFinalStateIDs[ipart][0], LHEFinalStateIDs[ipart][1], LHEFinalStateIDs[ipart][2], 0.)
           fourMomenta.append(l)
-          ids.append(event.LHEPart_pdgId[LHElepId[ilep]])
-        for ineu in range(2):  
-          n = ROOT.TLorentzVector()
-          n.SetPtEtaPhiM(event.LHEPart_pt[LHEneuId[ineu]], event.LHEPart_eta[LHEneuId[ineu]], event.LHEPart_phi[LHEneuId[ineu]], 0.)
-          fourMomenta.append(n)
-          ids.append(event.LHEPart_pdgId[LHEneuId[ineu]])
+          ids.append(LHEFinalStateIDs[ipart][3])
+
+        #if self.finalState == "2L2Nu":
+        #  for ilep in range(2):
+        #    l = ROOT.TLorentzVector()
+        #    l.SetPtEtaPhiM(event.LHEPart_pt[LHElepId[ilep]], event.LHEPart_eta[LHElepId[ilep]], event.LHEPart_phi[LHElepId[ilep]], 0.)
+        #    fourMomenta.append(l)
+        #    ids.append(event.LHEPart_pdgId[LHElepId[ilep]])
+        #  for ineu in range(2):  
+        #    n = ROOT.TLorentzVector()
+        #    n.SetPtEtaPhiM(event.LHEPart_pt[LHEneuId[ineu]], event.LHEPart_eta[LHEneuId[ineu]], event.LHEPart_phi[LHEneuId[ineu]], 0.)
+        #    fourMomenta.append(n)
+        #    ids.append(event.LHEPart_pdgId[LHEneuId[ineu]])
+        #else:
+        #  l = ROOT.TLorentzVector()
+        #  l.SetPtEtaPhiM(event.LHEPart_pt[LHElepId[0]], event.LHEPart_eta[LHElepId[0]], event.LHEPart_phi[LHElepId[0]], 0.)
+        #  fourMomenta.append(l)
+        #  ids.append(event.LHEPart_pdgId[LHElepId[0]])
+        #  n = ROOT.TLorentzVector()
+        #  n.SetPtEtaPhiM(event.LHEPart_pt[LHEneuId[0]], event.LHEPart_eta[LHEneuId[0]], event.LHEPart_phi[LHEneuId[0]], 0.)
+        #  fourMomenta.append(n)
+        #  ids.append(event.LHEPart_pdgId[LHEneuId[0]])
+        #  for ijet in range(2):
+        #    j = ROOT.TLorentzVector()
+        #    j.SetPtEtaPhiM(event.LHEPart_pt[LHEjetId[ijet]], event.LHEPart_eta[LHEjetId[ijet]], event.LHEPart_phi[LHEjetId[ijet]], 0.)
+        #    fourMomenta.append(j)
+        #    ids.append(event.LHEPart_pdgId[LHEjetId[ijet]])
 
         #these are the incoming partons
         mothers = ROOT.vector('TLorentzVector')()
@@ -334,19 +444,22 @@ class BWEwkSingletReweighter(Module):
         mothers.push_back(incoming2)
         motherIDs.push_back(int(event.Generator_id1))
         motherIDs.push_back(int(event.Generator_id2))
-           
+
         #print "incoming:"
         #print incoming1.Px(), incoming1.Py(), incoming1.Pz(), int(event.Generator_id1)
         #print incoming2.Px(), incoming2.Py(), incoming2.Pz(), int(event.Generator_id2)
 
         #print "outgoing:"
         for ijet in range(len(LHEjetId)):
+          if ijet in LHEFinalStateIDs: continue
           parton = ROOT.TLorentzVector()
           parton.SetPtEtaPhiM(event.LHEPart_pt[ijet], event.LHEPart_eta[ijet], event.LHEPart_phi[ijet], 0.)
           partons.push_back(parton)                     
           partonIDs.push_back(int(event.LHEPart_pdgId[ijet]))
           #print parton.Px(), parton.Py(), parton.Pz(), int(event.LHEPart_pdgId[ijet])
-      
+
+
+        ########## For cprime Model
         CPSweight = 1.
         if self.undoCPS:
           if self.isNewJHU:
@@ -404,6 +517,60 @@ class BWEwkSingletReweighter(Module):
                 addweight[appendix]=0.
               weights[name+appendix] = weights[name]*addweight[appendix]
 
+            #self.WriteForNorm(cprime,brnew,weights[name])
+            for appendix in ["", "_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"]:
+              self.out.fillBranch(name+appendix, weights[name+appendix])
+
+
+        ########## For Narrow Width Approximation
+        for relw in self.relw_list:
+          self.gsm = relw * self.mH
+          if self.gsm == 0: self.gsm = 0.001 * self.mH
+          if self.undoCPS:
+            # Invert CPSweight here w.r.t. previously because it could be 0
+            if self.isNewJHU:
+              CPSweight = self.FixedBreightWigner(mass, self.mH, self.gsm)/self.FixedBreightWigner(mass, self.mH, self.gsmCPS)
+            else:
+              thisCPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
+              CPSweight = 0 if (thisCPSweight==0) else 1/thisCPSweight
+            weights = {}
+
+            name = 'RelW'+str(relw)
+            #kprime = cprime**2
+            #overallweight = kprime*(1-brnew) 
+            #gprime = self.gsm
+            shift = 1.
+            if self.shifts:
+              for line in self.shifts:
+                if float(line[0])==self.mH and float(line[1])==relw and float(line[2])==-1:
+                  shift = float(line[3])
+                  break
+            weights[name] = (1./shift)*decayWeight*CPSweight
+            if self.gsm == 0 and weights[name] != 0:
+              print "I don't get this."
+              print weights[name]
+              print shift
+              print decayWeight
+              #print CPSweight," = ",self.FixedBreightWigner(mass, self.mH, self.gsm)," / ",self.FixedBreightWigner(mass, self.mH, self.gsmCPS)
+              print CPSweight," = 1 / ",thisCPSweight
+            self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
+            self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                         fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
+                                                         partons, partonIDs,
+                                                         mothers, motherIDs)
+            addweight = {}
+            addweight["_I"] = self.mela.weightStoI()
+            addweight["_I_Honly"] = self.mela.weightStoI_H()
+            addweight["_I_Bonly"] = self.mela.weightStoI_B()
+            addweight["_I_HB"] = self.mela.weightStoI_HB()
+            addweight["_B"] = self.mela.weightStoB()
+            addweight["_H"] = self.mela.weightStoH()
+
+            for appendix in ["_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"]:
+              if math.isnan(addweight[appendix]) or math.isinf(addweight[appendix]): #dirty protection for occasional failures
+                addweight[appendix]=0.
+              weights[name+appendix] = weights[name]*addweight[appendix]
+
             for appendix in ["", "_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"]:
               self.out.fillBranch(name+appendix, weights[name+appendix])
 
@@ -414,6 +581,7 @@ class BWEwkSingletReweighter(Module):
       return k*(1-br)
 
     def FixedBreightWigner(self, m, mH, G):
+      if G == 0.0: return 0.0
       return mH*G/((m**2-mH**2)**2 + (mH*G)**2)
     
     def RunningBreightWigner(self, m, mH, G):
@@ -439,4 +607,60 @@ class BWEwkSingletReweighter(Module):
             order[j] += 1
       newlist = [oldlist[i] for i in order]
       return newlist
+
+    def FromWandH(self, event, pid):
+      fromH = 0
+      fromW = 0
+      plist = []
+      while event.GenPart_genPartIdxMother[pid] != -1:
+        pid = event.GenPart_genPartIdxMother[pid]
+        plist.append(pid)
+        if abs(event.GenPart_pdgId[pid]) == 24: fromW = 1
+        if event.GenPart_pdgId[pid] == 25: fromH = 1
+        if fromH and fromW: return plist
+      return False
+      
+
+    def getLHE(self, event, genlist): # Particles in LHE collection have higher precision -> Find LHE particles with closest match to GenParticles
+      LHElist = {}
+      for gid in genlist:
+        pt = event.GenPart_pt[gid]
+        eta = event.GenPart_eta[gid]
+        phi = event.GenPart_phi[gid]
+        pdgid = event.GenPart_pdgId[gid]
+        deltaR = 9999
+        LHEid = -1
+        #print "====="
+        #print gid,pdgid,eta,phi
+        for lid,lhe in enumerate(self.LHE):
+          #print lhe.pdgId,lhe.eta,lhe.phi
+          if lhe.pdgId != pdgid: continue
+          dphi = phi-lhe.phi
+          if dphi > math.pi: dphi -= 2*math.pi
+          if dphi < -math.pi: dphi += 2*math.pi
+          deta = eta-lhe.eta
+          dR = math.sqrt((deta)*(deta)+(dphi)*(dphi))
+          if deltaR > dR:
+            deltaR = dR
+            LHEid = lid
+            LHEpt = lhe.pt
+            LHEeta = lhe.eta
+            LHEphi = lhe.phi
+            LHEpdg = lhe.pdgId
+        #print "DeltaR:",deltaR
+        if LHEid==-1: # VERY rare, use placeholder key value
+          LHElist[pdgid+100+10*len(LHElist)]=[pt, eta, phi, pdgid]
+        elif deltaR > 0.2: # Use GenPart information if direction is too different
+          #print "Eta:",eta,"vs.",LHEeta
+          #print "Phi:",phi,"vs.",LHEphi
+          LHElist[LHEid]=[pt, eta, phi, pdgid]
+        else:
+          LHElist[LHEid]=[LHEpt, LHEeta, LHEphi, pdgid]
+        
+      return LHElist
+
+    #def WriteForNorm(self, cprime, brnew, weight):
+    #  with open(self.cmssw_base+'/src/TEMP_BWShifts_'+self.productionProcess+'_'+self.finalState+'_'+self.year+'_'+str(self.mH)+'.txt') as temp:
+    #    temp.write(str(self.mH)+" "+str(cprime)+" "+str(brnew)+" "+str(weight)+"\n" )
+    #  return
 
