@@ -670,7 +670,9 @@ Steps = {
                                   'TTTo2L2Nu_PSWeights',
                                   'TTToSemiLeptonic',
                                   'TTWjets',
+                                  'TTWjets_ext1'
                                   'TTZjets',
+                                  'TTZjets_ext1',
                                   'ST_s-channel',
                                   'ST_s-channel_ext1',
                                   'ST_t-channel_antitop',
