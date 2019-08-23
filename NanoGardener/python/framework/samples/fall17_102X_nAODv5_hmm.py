@@ -70,7 +70,7 @@ Samples['ST_t-channel_top']      = {'nanoAOD' :'/ST_t-channel_top_5f_TuneCP5_13T
 Samples['ST_s-channel_antitop']   = {'nanoAOD' :'/ST_s-channel_antitop_leptonDecays_13TeV-PSweights_powheg-pythia/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['ST_s-channel_top']      = {'nanoAOD' :'/ST_s-channel_top_leptonDecays_13TeV-PSweights_powheg-pythia/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
-Samples['tZq_ll']                = {'nanoAOD' : 'tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
+Samples['tZq_ll']                = {'nanoAOD' : '/tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
 Samples['TTWJetsToLNu']          = {'nanoAOD' :'/TTWJetsToLNu_TuneCP5_PSweights_13TeV-amcatnloFXFX-madspin-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
