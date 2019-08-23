@@ -27,7 +27,7 @@ class EmbedVeto(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         taus = 0
-        if getattr(event, 'Trigger_ElMu') == 1: # Only events from embedded samples passing the ElMu Trigger are used. If an MC event doesn't pass this trigger, it won't be double-counted, so it shouldn't be veto-ed.
+        if event.nLepton >= 2 and getattr(event, 'Trigger_ElMu') == 1: # Only events from embedded samples passing the ElMu Trigger are used. If an MC event doesn't pass this trigger, it won't be double-counted, so it shouldn't be veto-ed.
           for lep in range(2):
             pdgid = abs(getattr(event, 'Lepton_pdgId')[lep])
             if pdgid == 11:

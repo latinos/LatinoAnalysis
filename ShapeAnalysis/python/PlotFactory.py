@@ -35,6 +35,10 @@ class PlotFactory:
         samples = OrderedDict()
         self._samples = samples
 
+        self._plotsToWrite = ['c', 'cratio', 'cdifference']
+        self._plotLinear = True
+        self._plotLog = True
+
         outputDirPlots = {}
         self._outputDirPlots = outputDirPlots
         
@@ -42,6 +46,8 @@ class PlotFactory:
         # 0 is no
 
         self._FigNamePF = ''
+
+        self._fileFormats = ['png', 'root']
 
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
@@ -1209,22 +1215,22 @@ class PlotFactory:
             # draw back all the axes            
             #frame.Draw("AXIS")
             tcanvas.RedrawAxis()
-            
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".png")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".root")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".C")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".eps")
-            
-            text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
-            
-            # log Y axis
-            frame.GetYaxis().SetRangeUser( max(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
-            #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
-            tcanvas.SetLogy()
-            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".png")
-            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".eps")
-            tcanvas.SetLogy(0)
+            if 'c' in self._plotsToWrite:
+                if self._plotLinear:
+                    self._saveCanvas(tcanvas, self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF)
+
+                if self._plotLog:
+                    # log Y axis
+                    frame.GetYaxis().SetRangeUser( max(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
+                    #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
+                    tcanvas.SetLogy(True)
+                    # if plotLinear is true, we have already saved root and C (if in the list of formats)
+                    self._saveCanvas(tcanvas, self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
+                    tcanvas.SetLogy(False)
+
+                if 'root' in self._fileFormats:
+                    text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
 
             if self._plotNormalizedDistributions :
@@ -1274,7 +1280,7 @@ class PlotFactory:
               frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
 
               tlegend.Draw()
-              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
+              self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
          
 
             
@@ -1453,19 +1459,24 @@ class PlotFactory:
             #frameRatio.Draw("AXIS")
             pad2.RedrawAxis()
             pad2.SetGrid()
-            
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".png")
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".root")
 
-            text_file_html.write(canvasRatioNameTemplate + ".root;\n")
+            if 'cratio' in self._plotsToWrite:
+                if self._plotLinear:
+                    self._saveCanvas(tcanvasRatio, self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF)
+
+                if self._plotLog:
+                    # log Y axis
+                    #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+                    pad1.SetLogy(True)
+                    self._saveCanvas(tcanvasRatio, self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
+                    pad1.SetLogy(False)
+
+
+            if 'root' in self._fileFormats:
+                text_file_html.write(canvasRatioNameTemplate + ".root;\n")
 
             
-            # log Y axis
-            #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
-            frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
-            pad1.SetLogy()
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF + ".png")
-            pad1.SetLogy(0)
 
 
 
@@ -1642,21 +1653,21 @@ class PlotFactory:
             #frameDifference.Draw("AXIS")
             pad2difference.RedrawAxis()
             pad2difference.SetGrid()
-            
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".root")
-            
-            text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
-            
-            # log Y axis
-            #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
-            frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
-            pad1difference.SetLogy()
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
-            pad1difference.SetLogy(0)
 
+            if 'cdifference' in self._plotsToWrite:
+                if self._plotLinear:
+                    self._saveCanvas(tcanvasDifference, self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF)
 
+                if self._plotLog:
+                    # log Y axis
+                    #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+                    pad1difference.SetLogy(True)
+                    self._saveCanvas(tcanvasDifference, self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
+                    pad1difference.SetLogy(False)
 
+                if 'root' in self._fileFormats:
+                    text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
 
 
 
@@ -2240,10 +2251,10 @@ class PlotFactory:
                     #weight_X_frameRatio.Draw("AXIS")
                     weight_X_pad2.RedrawAxis()
                     
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root")
-                    
-                    text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
+                    self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF)
+
+                    if 'root' in self._fileFormats:
+                        text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
                     
                     # save also all the TH1F separately for later combination
                     temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root", "UPDATE")
@@ -2276,10 +2287,11 @@ class PlotFactory:
  
  
                     # log Y axis
-                    weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
-                    weight_X_pad1.SetLogy()
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
-                    weight_X_pad1.SetLogy(0)
+                    if self._plotLog:
+                        weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
+                        weight_X_pad1.SetLogy(True)
+                        self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate, imageOnly=True)
+                        weight_X_pad1.SetLogy(False)
 
 
  
@@ -2333,10 +2345,11 @@ class PlotFactory:
                       weight_X_canvasDifferenceNameTemplate = 'cdifference_relative_weight_X_' + cutName + '_' + variableName
                     else :
                       weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
- 
-                    text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
+
+                    self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate)
+
+                    if 'root' in self._fileFormats:
+                      text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
  
  
  
@@ -2528,3 +2541,17 @@ class PlotFactory:
         
         return hnew
       
+    def _saveCanvas(self, tcanvas, nameBase, imageOnly=False):
+        if 'png' in self._fileFormats:
+            tcanvas.SaveAs(nameBase + ".png")
+        if 'pdf' in self._fileFormats:
+            tcanvas.SaveAs(nameBase + ".pdf")
+        if 'eps' in self._fileFormats:
+            tcanvas.SaveAs(nameBase + ".eps")
+
+        if not imageOnly:
+            if 'root' in self._fileFormats:
+                tcanvas.SaveAs(nameBase + ".root")
+            if 'C' in self._fileFormats:
+                tcanvas.SaveAs(nameBase + ".C")
+
