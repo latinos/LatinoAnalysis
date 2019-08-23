@@ -66,7 +66,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','CleanJetCutHmm2017',],#'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','CleanJetCutHmm2017','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
 
@@ -539,10 +539,15 @@ Steps = {
                                   'GluGluHToWWTo2L2NuPowheg_M125_PrivateNano',
                                   'GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToMuMu_M125_CP5',
+                                  'GluGluHToMuMu_M125_CP5_ext1',
                                   'GluGluHToMuMu_M125_CP5up',
                                   'GluGluHToMuMu_M125_CP5down',
                                   'GluGluHToMuMu_M125_powheg',
                                   'GluGluHToMuMu_M125_powheg_ext1',
+                                  'GluGluHToMuMu_M125_powheg_CP5',
+                                  'GluGluHToMuMu_M125_powheg_CP5up',
+                                  'GluGluHToMuMu_M125_powheg_CP5down',
+                                  'GluGluHToMuMu_M125_powheg_CP5_ext1',
                                   ]
                   },    
 
@@ -558,6 +563,10 @@ Steps = {
                                   'GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToMuMu_M125_powheg',
                                   'GluGluHToMuMu_M125_powheg_ext1',
+                                  'GluGluHToMuMu_M125_powheg_CP5',
+                                  'GluGluHToMuMu_M125_powheg_CP5up',
+                                  'GluGluHToMuMu_M125_powheg_CP5down',
+                                  'GluGluHToMuMu_M125_powheg_CP5_ext1',
                                   ]
                   },    
 
@@ -570,6 +579,7 @@ Steps = {
                    'module'     : 'ggHtoMINLOMaker_mcatnlo()',
                    'onlySample' : [
                                   'GluGluHToMuMu_M125_CP5',
+                                  'GluGluHToMuMu_M125_CP5_ext1',
                                   'GluGluHToMuMu_M125_CP5up',
                                   'GluGluHToMuMu_M125_CP5down',
                                   ]
