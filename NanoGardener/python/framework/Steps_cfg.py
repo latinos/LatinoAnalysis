@@ -4,6 +4,8 @@
 
 LNuQQSamples=[ 'GluGluHToWWToLNuQQ_M1000', 'GluGluHToWWToLNuQQ_M115', 'GluGluHToWWToLNuQQ_M120', 'GluGluHToWWToLNuQQ_M124', 'GluGluHToWWToLNuQQ_M125', 'GluGluHToWWToLNuQQ_M126', 'GluGluHToWWToLNuQQ_M130', 'GluGluHToWWToLNuQQ_M135', 'GluGluHToWWToLNuQQ_M140', 'GluGluHToWWToLNuQQ_M145', 'GluGluHToWWToLNuQQ_M150', 'GluGluHToWWToLNuQQ_M1500', 'GluGluHToWWToLNuQQ_M155', 'GluGluHToWWToLNuQQ_M160', 'GluGluHToWWToLNuQQ_M165', 'GluGluHToWWToLNuQQ_M170', 'GluGluHToWWToLNuQQ_M175', 'GluGluHToWWToLNuQQ_M180', 'GluGluHToWWToLNuQQ_M190', 'GluGluHToWWToLNuQQ_M200', 'GluGluHToWWToLNuQQ_M2000', 'GluGluHToWWToLNuQQ_M210', 'GluGluHToWWToLNuQQ_M230', 'GluGluHToWWToLNuQQ_M250', 'GluGluHToWWToLNuQQ_M2500', 'GluGluHToWWToLNuQQ_M270', 'GluGluHToWWToLNuQQ_M300', 'GluGluHToWWToLNuQQ_M3000', 'GluGluHToWWToLNuQQ_M350', 'GluGluHToWWToLNuQQ_M400', 'GluGluHToWWToLNuQQ_M4000', 'GluGluHToWWToLNuQQ_M450', 'GluGluHToWWToLNuQQ_M500', 'GluGluHToWWToLNuQQ_M5000', 'GluGluHToWWToLNuQQ_M550', 'GluGluHToWWToLNuQQ_M600', 'GluGluHToWWToLNuQQ_M650', 'GluGluHToWWToLNuQQ_M700', 'GluGluHToWWToLNuQQ_M750', 'GluGluHToWWToLNuQQ_M750_NWA', 'GluGluHToWWToLNuQQ_M800', 'GluGluHToWWToLNuQQ_M900', 'VBFHToWWToLNuQQ_M1000', 'VBFHToWWToLNuQQ_M115', 'VBFHToWWToLNuQQ_M120', 'VBFHToWWToLNuQQ_M124', 'VBFHToWWToLNuQQ_M125', 'VBFHToWWToLNuQQ_M126', 'VBFHToWWToLNuQQ_M130', 'VBFHToWWToLNuQQ_M135', 'VBFHToWWToLNuQQ_M140', 'VBFHToWWToLNuQQ_M145', 'VBFHToWWToLNuQQ_M150', 'VBFHToWWToLNuQQ_M1500', 'VBFHToWWToLNuQQ_M155', 'VBFHToWWToLNuQQ_M160', 'VBFHToWWToLNuQQ_M165', 'VBFHToWWToLNuQQ_M170', 'VBFHToWWToLNuQQ_M175', 'VBFHToWWToLNuQQ_M180', 'VBFHToWWToLNuQQ_M190', 'VBFHToWWToLNuQQ_M200', 'VBFHToWWToLNuQQ_M2000', 'VBFHToWWToLNuQQ_M210', 'VBFHToWWToLNuQQ_M230', 'VBFHToWWToLNuQQ_M250', 'VBFHToWWToLNuQQ_M2500', 'VBFHToWWToLNuQQ_M270', 'VBFHToWWToLNuQQ_M300', 'VBFHToWWToLNuQQ_M3000', 'VBFHToWWToLNuQQ_M350', 'VBFHToWWToLNuQQ_M400', 'VBFHToWWToLNuQQ_M4000', 'VBFHToWWToLNuQQ_M450', 'VBFHToWWToLNuQQ_M500', 'VBFHToWWToLNuQQ_M5000', 'VBFHToWWToLNuQQ_M550', 'VBFHToWWToLNuQQ_M600', 'VBFHToWWToLNuQQ_M650', 'VBFHToWWToLNuQQ_M700', 'VBFHToWWToLNuQQ_M750', 'VBFHToWWToLNuQQ_M750_NWA', 'VBFHToWWToLNuQQ_M800', 'VBFHToWWToLNuQQ_M900' ]
 
+TwoL2NuSamples=[ 'GluGluHToWWTo2L2Nu_M115', 'GluGluHToWWTo2L2Nu_M120', 'GluGluHToWWTo2L2Nu_M124', 'GluGluHToWWTo2L2Nu_M125', 'GluGluHToWWTo2L2Nu_M126', 'GluGluHToWWTo2L2Nu_M130', 'GluGluHToWWTo2L2Nu_M135', 'GluGluHToWWTo2L2Nu_M140', 'GluGluHToWWTo2L2Nu_M145', 'GluGluHToWWTo2L2Nu_M150', 'GluGluHToWWTo2L2Nu_M155', 'GluGluHToWWTo2L2Nu_M160', 'GluGluHToWWTo2L2Nu_M165', 'GluGluHToWWTo2L2Nu_M170', 'GluGluHToWWTo2L2Nu_M175', 'GluGluHToWWTo2L2Nu_M180', 'GluGluHToWWTo2L2Nu_M190', 'GluGluHToWWTo2L2Nu_M200', 'GluGluHToWWTo2L2Nu_M210', 'GluGluHToWWTo2L2Nu_M230', 'GluGluHToWWTo2L2Nu_M250', 'GluGluHToWWTo2L2Nu_M270', 'GluGluHToWWTo2L2Nu_M300', 'GluGluHToWWTo2L2Nu_M350', 'GluGluHToWWTo2L2Nu_M400', 'GluGluHToWWTo2L2Nu_M450', 'GluGluHToWWTo2L2Nu_M500', 'GluGluHToWWTo2L2Nu_M550', 'GluGluHToWWTo2L2Nu_M600', 'GluGluHToWWTo2L2Nu_M650', 'GluGluHToWWTo2L2Nu_M700', 'GluGluHToWWTo2L2Nu_M750', 'GluGluHToWWTo2L2Nu_M800', 'GluGluHToWWTo2L2Nu_M900', 'GluGluHToWWTo2L2Nu_M1000', 'GluGluHToWWTo2L2Nu_M1500', 'GluGluHToWWTo2L2Nu_M2000', 'GluGluHToWWTo2L2Nu_M2500', 'GluGluHToWWTo2L2Nu_M3000', 'GluGluHToWWTo2L2Nu_M4000', 'GluGluHToWWTo2L2Nu_M5000', 'GluGluHToWWTo2L2Nu_JHUGen698_M300', 'GluGluHToWWTo2L2Nu_JHUGen698_M350', 'GluGluHToWWTo2L2Nu_JHUGen698_M400', 'GluGluHToWWTo2L2Nu_JHUGen698_M450', 'GluGluHToWWTo2L2Nu_JHUGen698_M500', 'GluGluHToWWTo2L2Nu_JHUGen698_M550', 'GluGluHToWWTo2L2Nu_JHUGen698_M600', 'GluGluHToWWTo2L2Nu_JHUGen698_M650', 'GluGluHToWWTo2L2Nu_JHUGen698_M700', 'GluGluHToWWTo2L2Nu_JHUGen698_M750', 'GluGluHToWWTo2L2Nu_JHUGen698_M800', 'GluGluHToWWTo2L2Nu_JHUGen698_M900', 'GluGluHToWWTo2L2Nu_JHUGen698_M1000', 'GluGluHToWWTo2L2Nu_JHUGen698_M1500', 'GluGluHToWWTo2L2Nu_JHUGen698_M2000', 'GluGluHToWWTo2L2Nu_JHUGen698_M2500', 'GluGluHToWWTo2L2Nu_JHUGen698_M3000', 'GluGluHToWWTo2L2Nu_JHUGen698_M4000', 'GluGluHToWWTo2L2Nu_JHUGen698_M5000', 'GluGluHToWWTo2L2Nu_JHUGen714_M4000', 'GluGluHToWWTo2L2Nu_JHUGen714_M5000', 'VBFHToWWTo2L2Nu_M115', 'VBFHToWWTo2L2Nu_M120', 'VBFHToWWTo2L2Nu_M124', 'VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2Nu_M126', 'VBFHToWWTo2L2Nu_M130', 'VBFHToWWTo2L2Nu_M135', 'VBFHToWWTo2L2Nu_M140', 'VBFHToWWTo2L2Nu_M145', 'VBFHToWWTo2L2Nu_M150', 'VBFHToWWTo2L2Nu_M155', 'VBFHToWWTo2L2Nu_M160', 'VBFHToWWTo2L2Nu_M165', 'VBFHToWWTo2L2Nu_M170', 'VBFHToWWTo2L2Nu_M175', 'VBFHToWWTo2L2Nu_M180', 'VBFHToWWTo2L2Nu_M190', 'VBFHToWWTo2L2Nu_M200', 'VBFHToWWTo2L2Nu_M210', 'VBFHToWWTo2L2Nu_M230', 'VBFHToWWTo2L2Nu_M250', 'VBFHToWWTo2L2Nu_M270', 'VBFHToWWTo2L2Nu_M300', 'VBFHToWWTo2L2Nu_M350', 'VBFHToWWTo2L2Nu_M400', 'VBFHToWWTo2L2Nu_M450', 'VBFHToWWTo2L2Nu_M500', 'VBFHToWWTo2L2Nu_M550', 'VBFHToWWTo2L2Nu_M600', 'VBFHToWWTo2L2Nu_M650', 'VBFHToWWTo2L2Nu_M700', 'VBFHToWWTo2L2Nu_M750', 'VBFHToWWTo2L2Nu_M800', 'VBFHToWWTo2L2Nu_M900', 'VBFHToWWTo2L2Nu_M1000', 'VBFHToWWTo2L2Nu_M1500', 'VBFHToWWTo2L2Nu_M2000', 'VBFHToWWTo2L2Nu_M2500', 'VBFHToWWTo2L2Nu_M3000', 'VBFHToWWTo2L2Nu_M4000', 'VBFHToWWTo2L2Nu_M5000', 'VBFHToWWTo2L2Nu_JHUGen698_M300', 'VBFHToWWTo2L2Nu_JHUGen698_M350', 'VBFHToWWTo2L2Nu_JHUGen698_M400', 'VBFHToWWTo2L2Nu_JHUGen698_M450', 'VBFHToWWTo2L2Nu_JHUGen698_M500', 'VBFHToWWTo2L2Nu_JHUGen698_M550', 'VBFHToWWTo2L2Nu_JHUGen698_M600', 'VBFHToWWTo2L2Nu_JHUGen698_M650', 'VBFHToWWTo2L2Nu_JHUGen698_M700', 'VBFHToWWTo2L2Nu_JHUGen698_M750', 'VBFHToWWTo2L2Nu_JHUGen698_M800', 'VBFHToWWTo2L2Nu_JHUGen698_M900', 'VBFHToWWTo2L2Nu_JHUGen698_M1000', 'VBFHToWWTo2L2Nu_JHUGen698_M1500', 'VBFHToWWTo2L2Nu_JHUGen698_M2000', 'VBFHToWWTo2L2Nu_JHUGen698_M2500', 'VBFHToWWTo2L2Nu_JHUGen698_M3000', 'VBFHToWWTo2L2Nu_JHUGen698_M4000', 'VBFHToWWTo2L2Nu_JHUGen698_M5000', 'VBFHToWWTo2L2Nu_JHUGen714_M4000', 'VBFHToWWTo2L2Nu_JHUGen714_M5000' ]
+
 # -------------------------------------------- HERE WE GO ----------------------------------------------------
 
 Steps = {
@@ -509,6 +511,39 @@ Steps = {
                   'subTargets' : ['EmbeddingWeights2016','trigMCKeepRun','LeptonSF','formulasEMBED'],
                    },
 
+## ------- HIGH MASS:
+
+    'Semilep2016' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['l1tightOR2016v5','CleanFatJet','wlepMaker'],
+                  'onlySample' : LNuQQSamples,
+                   },
+
+    'Semilep2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['l1tightOR2017v5','CleanFatJet','wlepMaker'],
+                  'onlySample' : LNuQQSamples,
+                   },
+
+    'Semilep2018' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['l1tightOR2018v5','CleanFatJet','wlepMaker'],
+                  'onlySample' : LNuQQSamples,
+                   },
+
+    'HighMass' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['HMvars','BWReweight'],
+                   },
+
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
 ## ------- MODULES: MonoHiggs
@@ -683,12 +718,16 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BWEwkSingletReweighter' ,
                   'declare'    : 'BWEwkSingRew = lambda : BWEwkSingletReweighter(year=RPLME_YEAR)',
                   'module'     : 'BWEwkSingRew()',
-                  'onlySample' : ['GluGluHToWWTo2L2Nu_M115', 'GluGluHToWWTo2L2Nu_M120', 'GluGluHToWWTo2L2Nu_M124', 'GluGluHToWWTo2L2Nu_M125', 'GluGluHToWWTo2L2Nu_M126', 'GluGluHToWWTo2L2Nu_M130', 'GluGluHToWWTo2L2Nu_M135', 'GluGluHToWWTo2L2Nu_M140', 'GluGluHToWWTo2L2Nu_M145', 'GluGluHToWWTo2L2Nu_M150', 'GluGluHToWWTo2L2Nu_M155', 'GluGluHToWWTo2L2Nu_M160', 'GluGluHToWWTo2L2Nu_M165', 'GluGluHToWWTo2L2Nu_M170', 'GluGluHToWWTo2L2Nu_M175', 'GluGluHToWWTo2L2Nu_M180', 'GluGluHToWWTo2L2Nu_M190', 'GluGluHToWWTo2L2Nu_M200', 'GluGluHToWWTo2L2Nu_M210', 'GluGluHToWWTo2L2Nu_M230', 'GluGluHToWWTo2L2Nu_M250', 'GluGluHToWWTo2L2Nu_M270', 'GluGluHToWWTo2L2Nu_M300', 'GluGluHToWWTo2L2Nu_M350', 'GluGluHToWWTo2L2Nu_M400', 'GluGluHToWWTo2L2Nu_M450', 'GluGluHToWWTo2L2Nu_M500', 'GluGluHToWWTo2L2Nu_M550', 'GluGluHToWWTo2L2Nu_M600', 'GluGluHToWWTo2L2Nu_M650', 'GluGluHToWWTo2L2Nu_M700', 'GluGluHToWWTo2L2Nu_M750', 'GluGluHToWWTo2L2Nu_M800', 'GluGluHToWWTo2L2Nu_M850', 'GluGluHToWWTo2L2Nu_M900', 'GluGluHToWWTo2L2Nu_M1000', 'GluGluHToWWTo2L2Nu_M1500', 'GluGluHToWWTo2L2Nu_M2000', 'GluGluHToWWTo2L2Nu_M2500', 'GluGluHToWWTo2L2Nu_M3000', 'GluGluHToWWTo2L2Nu_M4000', 'GluGluHToWWTo2L2Nu_M5000',
-                                  'VBFHToWWTo2L2Nu_M115', 'VBFHToWWTo2L2Nu_M120', 'VBFHToWWTo2L2Nu_M124', 'VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2Nu_M126', 'VBFHToWWTo2L2Nu_M130', 'VBFHToWWTo2L2Nu_M135', 'VBFHToWWTo2L2Nu_M140', 'VBFHToWWTo2L2Nu_M145', 'VBFHToWWTo2L2Nu_M150', 'VBFHToWWTo2L2Nu_M155', 'VBFHToWWTo2L2Nu_M160', 'VBFHToWWTo2L2Nu_M165', 'VBFHToWWTo2L2Nu_M170', 'VBFHToWWTo2L2Nu_M175', 'VBFHToWWTo2L2Nu_M180', 'VBFHToWWTo2L2Nu_M190', 'VBFHToWWTo2L2Nu_M200', 'VBFHToWWTo2L2Nu_M210', 'VBFHToWWTo2L2Nu_M230', 'VBFHToWWTo2L2Nu_M250', 'VBFHToWWTo2L2Nu_M270', 'VBFHToWWTo2L2Nu_M300', 'VBFHToWWTo2L2Nu_M350', 'VBFHToWWTo2L2Nu_M400', 'VBFHToWWTo2L2Nu_M450', 'VBFHToWWTo2L2Nu_M500', 'VBFHToWWTo2L2Nu_M550', 'VBFHToWWTo2L2Nu_M600', 'VBFHToWWTo2L2Nu_M650', 'VBFHToWWTo2L2Nu_M700', 'VBFHToWWTo2L2Nu_M750', 'VBFHToWWTo2L2Nu_M800', 'VBFHToWWTo2L2Nu_M850', 'VBFHToWWTo2L2Nu_M900', 'VBFHToWWTo2L2Nu_M1000', 'VBFHToWWTo2L2Nu_M1500', 'VBFHToWWTo2L2Nu_M2000', 'VBFHToWWTo2L2Nu_M2500', 'VBFHToWWTo2L2Nu_M3000', 'VBFHToWWTo2L2Nu_M4000', 'VBFHToWWTo2L2Nu_M5000',
-                                  'GluGluHToWWTo2L2Nu_JHUGen698_M300', 'GluGluHToWWTo2L2Nu_JHUGen698_M350', 'GluGluHToWWTo2L2Nu_JHUGen698_M400', 'GluGluHToWWTo2L2Nu_JHUGen698_M450', 'GluGluHToWWTo2L2Nu_JHUGen698_M500', 'GluGluHToWWTo2L2Nu_JHUGen698_M550', 'GluGluHToWWTo2L2Nu_JHUGen698_M600', 'GluGluHToWWTo2L2Nu_JHUGen698_M650', 'GluGluHToWWTo2L2Nu_JHUGen698_M700', 'GluGluHToWWTo2L2Nu_JHUGen698_M750', 'GluGluHToWWTo2L2Nu_JHUGen698_M800', 'GluGluHToWWTo2L2Nu_JHUGen698_M850', 'GluGluHToWWTo2L2Nu_JHUGen698_M900', 'GluGluHToWWTo2L2Nu_JHUGen698_M1000', 'GluGluHToWWTo2L2Nu_JHUGen698_M1500', 'GluGluHToWWTo2L2Nu_JHUGen698_M2000', 'GluGluHToWWTo2L2Nu_JHUGen698_M2500', 'GluGluHToWWTo2L2Nu_JHUGen698_M3000', 'GluGluHToWWTo2L2Nu_JHUGen698_M4000', 'GluGluHToWWTo2L2Nu_JHUGen698_M5000', 'GluGluHToWWTo2L2Nu_JHUGen714_M4000', 'GluGluHToWWTo2L2Nu_JHUGen714_M5000',
-                                  'VBFHToWWTo2L2Nu_JHUGen698_M300', 'VBFHToWWTo2L2Nu_JHUGen698_M350', 'VBFHToWWTo2L2Nu_JHUGen698_M400', 'VBFHToWWTo2L2Nu_JHUGen698_M450', 'VBFHToWWTo2L2Nu_JHUGen698_M500', 'VBFHToWWTo2L2Nu_JHUGen698_M550', 'VBFHToWWTo2L2Nu_JHUGen698_M600', 'VBFHToWWTo2L2Nu_JHUGen698_M650', 'VBFHToWWTo2L2Nu_JHUGen698_M700', 'VBFHToWWTo2L2Nu_JHUGen698_M750', 'VBFHToWWTo2L2Nu_JHUGen698_M800', 'VBFHToWWTo2L2Nu_JHUGen698_M850', 'VBFHToWWTo2L2Nu_JHUGen698_M900', 'VBFHToWWTo2L2Nu_JHUGen698_M1000', 'VBFHToWWTo2L2Nu_JHUGen698_M1500', 'VBFHToWWTo2L2Nu_JHUGen698_M2000', 'VBFHToWWTo2L2Nu_JHUGen698_M2500', 'VBFHToWWTo2L2Nu_JHUGen698_M3000', 'VBFHToWWTo2L2Nu_JHUGen698_M4000', 'VBFHToWWTo2L2Nu_JHUGen698_M5000', 'VBFHToWWTo2L2Nu_JHUGen714_M4000', 'VBFHToWWTo2L2Nu_JHUGen714_M5000',
-                                  'GluGluHToWWToLNuQQ_M115', 'GluGluHToWWToLNuQQ_M120', 'GluGluHToWWToLNuQQ_M124', 'GluGluHToWWToLNuQQ_M125', 'GluGluHToWWToLNuQQ_M126', 'GluGluHToWWToLNuQQ_M130', 'GluGluHToWWToLNuQQ_M135', 'GluGluHToWWToLNuQQ_M140', 'GluGluHToWWToLNuQQ_M145', 'GluGluHToWWToLNuQQ_M150', 'GluGluHToWWToLNuQQ_M155', 'GluGluHToWWToLNuQQ_M160', 'GluGluHToWWToLNuQQ_M165', 'GluGluHToWWToLNuQQ_M170', 'GluGluHToWWToLNuQQ_M175', 'GluGluHToWWToLNuQQ_M180', 'GluGluHToWWToLNuQQ_M190', 'GluGluHToWWToLNuQQ_M200', 'GluGluHToWWToLNuQQ_M210', 'GluGluHToWWToLNuQQ_M230', 'GluGluHToWWToLNuQQ_M250', 'GluGluHToWWToLNuQQ_M270', 'GluGluHToWWToLNuQQ_M300', 'GluGluHToWWToLNuQQ_M350', 'GluGluHToWWToLNuQQ_M400', 'GluGluHToWWToLNuQQ_M450', 'GluGluHToWWToLNuQQ_M500', 'GluGluHToWWToLNuQQ_M550', 'GluGluHToWWToLNuQQ_M600', 'GluGluHToWWToLNuQQ_M650', 'GluGluHToWWToLNuQQ_M700', 'GluGluHToWWToLNuQQ_M750', 'GluGluHToWWToLNuQQ_M800', 'GluGluHToWWToLNuQQ_M850', 'GluGluHToWWToLNuQQ_M900', 'GluGluHToWWToLNuQQ_M1000', 'GluGluHToWWToLNuQQ_M1500', 'GluGluHToWWToLNuQQ_M2000', 'GluGluHToWWToLNuQQ_M2500', 'GluGluHToWWToLNuQQ_M3000', 'GluGluHToWWToLNuQQ_M4000', 'GluGluHToWWToLNuQQ_M5000',
-                                  'VBFHToWWToLNuQQ_M115', 'VBFHToWWToLNuQQ_M120', 'VBFHToWWToLNuQQ_M124', 'VBFHToWWToLNuQQ_M125', 'VBFHToWWToLNuQQ_M126', 'VBFHToWWToLNuQQ_M130', 'VBFHToWWToLNuQQ_M135', 'VBFHToWWToLNuQQ_M140', 'VBFHToWWToLNuQQ_M145', 'VBFHToWWToLNuQQ_M150', 'VBFHToWWToLNuQQ_M155', 'VBFHToWWToLNuQQ_M160', 'VBFHToWWToLNuQQ_M165', 'VBFHToWWToLNuQQ_M170', 'VBFHToWWToLNuQQ_M175', 'VBFHToWWToLNuQQ_M180', 'VBFHToWWToLNuQQ_M190', 'VBFHToWWToLNuQQ_M200', 'VBFHToWWToLNuQQ_M210', 'VBFHToWWToLNuQQ_M230', 'VBFHToWWToLNuQQ_M250', 'VBFHToWWToLNuQQ_M270', 'VBFHToWWToLNuQQ_M300', 'VBFHToWWToLNuQQ_M350', 'VBFHToWWToLNuQQ_M400', 'VBFHToWWToLNuQQ_M450', 'VBFHToWWToLNuQQ_M500', 'VBFHToWWToLNuQQ_M550', 'VBFHToWWToLNuQQ_M600', 'VBFHToWWToLNuQQ_M650', 'VBFHToWWToLNuQQ_M700', 'VBFHToWWToLNuQQ_M750', 'VBFHToWWToLNuQQ_M800', 'VBFHToWWToLNuQQ_M850', 'VBFHToWWToLNuQQ_M900', 'VBFHToWWToLNuQQ_M1000', 'VBFHToWWToLNuQQ_M1500', 'VBFHToWWToLNuQQ_M2000', 'VBFHToWWToLNuQQ_M2500', 'VBFHToWWToLNuQQ_M3000', 'VBFHToWWToLNuQQ_M4000', 'VBFHToWWToLNuQQ_M5000']
+                  'onlySample' : TwoL2NuSamples + LNuQQSamples,
+               },
+
+    'HMvars' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMvariables' ,
+                  'declare'    : 'HMvars = lambda : HighMassVariables()',
+                  'module'     : 'HMvars()',
                },
 
 ## ------- MODULES: Object Handling
@@ -1782,6 +1821,47 @@ Steps = {
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[1] > 0.5     \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[1] > 0.5     \
                                          || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5             ) \
+                                  "' ,
+                 },
+
+## ------- 1-Lepton: tightOR (For LNuQQ samples)
+
+  'l1tightOR2016v5' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                                    && (    Lepton_isTightElectron_cut_WP_Tight80X[0] > 0.5        \
+                                         || Lepton_isTightElectron_cut_WP_Tight80X_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5        \
+                                         || Lepton_isTightElectron_mva_90p_Iso2016_SS[0] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight80x[0] > 0.5             ) \
+                                  "' ,
+                 },
+
+  'l1tightOR2017v5' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                                    && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5             ) \
+                                  "' ,
+                 },
+
+  'l1tightOR2018v5' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                                    && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5             ) \
                                   "' ,
                  },
 
