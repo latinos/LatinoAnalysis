@@ -598,10 +598,9 @@ class ShapeFactory:
                 else:
                   doFold = 0
 
+                _allplots.remove(hTotal)
                 outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True)
-                if outputsHisto is not hTotal:
-                  _allplots.add(outputsHisto)
-                  _allplots.remove(hTotal)
+                _allplots.add(outputsHisto)
 
                 for nuisanceName, nuisance in nuisances.iteritems():
                   if sampleName not in nuisance['samples'] or \
@@ -712,17 +711,14 @@ class ShapeFactory:
                     else:
                       hTotalUp = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
                       hTotalDown = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
-  
-                    outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
-                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
-  
-                    if outputsHistoUp is not hTotalUp:
-                      _allplots.add(outputsHistoUp)
-                      _allplots.remove(hTotalUp)
-                    if outputsHistoDo is not hTotalDown:
-                      _allplots.add(outputsHistoDo)
-                      _allplots.remove(hTotalDown)
 
+                    _allplots.remove(hTotalUp)
+                    outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
+                    _allplots.add(outputsHistoUp)
+                    _allplots.remove(hTotalDown)
+                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
+                    _allplots.add(outputsHistoDo)
+  
                     # check if I need to symmetrize:
                     #    - the up will be symmetrized
                     #    - down ->   down - (up - down)
