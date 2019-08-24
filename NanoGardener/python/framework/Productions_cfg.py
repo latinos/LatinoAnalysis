@@ -442,5 +442,15 @@ Productions = {
                        'year'    : '2017' ,
                    },
 
+ # -------- 2018 MC 102X nAODv5
+ 'Autumn18_102X_nAODv5_Full2018v5_hmm':{
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv5_hmm.py' ,
+                       'cmssw'   : 'Full2018v5hmm' ,
+                       'year'    : '2018' ,
+                       'JESGT'   : 'Autumn18_V16_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 }
 

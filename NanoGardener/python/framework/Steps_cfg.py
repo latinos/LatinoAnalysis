@@ -316,7 +316,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','rochesterDATA','l2Kin2016','formulasDATAhmm'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','CleanJetCutHmmDummy','rochesterDATA','l2Kin2016','formulasDATAhmm'],
                 },
 
   'DATAl2loose2017hmm' :  {
@@ -324,7 +324,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','rochesterDATA','l2Kin2017','formulasDATAhmm'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','CleanJetCutHmm2017','rochesterDATA','l2Kin2017','formulasDATAhmm'],
                 },
 
   'DATAl1loose2017': {
