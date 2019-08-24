@@ -433,5 +433,14 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    }, 
 
+ # -------- 2017 DATA 102X nAODv5 for Higgs -> mumu  
+ 'Run2017_102X_nAODv5_Full2017v5_hmm': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_102X_nAODv5_hmm.py' ,
+                       'cmssw'   : 'Full2017v4hmm' ,
+                       'year'    : '2017' ,
+                   },
+
 }
 

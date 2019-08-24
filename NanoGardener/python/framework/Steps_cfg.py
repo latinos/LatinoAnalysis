@@ -96,6 +96,13 @@ Steps = {
       ##'trigMC',
                 },
 
+  'MCCorr2017hmm' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','EmbeddingVeto','rochesterMC','trigMC','LeptonSF','puW','l2Kin2017','formulasMChmm'],
+                },
+
   'MCCorr2016tmp'  : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -310,6 +317,14 @@ Steps = {
                   'do4Data'    : True ,
                   'selection'  : '"((nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','rochesterDATA','l2Kin2016','formulasDATAhmm'],
+                },
+
+  'DATAl2loose2017hmm' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'selection'  : '"((nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','rochesterDATA','l2Kin2017','formulasDATAhmm'],
                 },
 
   'DATAl1loose2017': {
@@ -1141,6 +1156,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
                   'declare'    : 'l2KinProducer_2016 = lambda : l2KinProducer("2016")',
                   'module'     : 'l2KinProducer_2016()' ,
+               },  
+
+  'l2Kin2017'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
+                  'declare'    : 'l2KinProducer_2017 = lambda : l2KinProducer("2017")',
+                  'module'     : 'l2KinProducer_2017()' ,
                },  
 
   'l3Kin'    : {

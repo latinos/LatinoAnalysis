@@ -1193,6 +1193,7 @@ Trigger['Full2016v4'] = Trigger['Full2016v2']
 Trigger['Full2016v2hmm'] = Trigger['Full2016v2'] 
 Trigger['Full2016v5'] = Trigger['Full2016v2'] 
 Trigger['Full2017v4'] = Trigger['Full2017v2'] 
+Trigger['Full2017v4hmm'] = Trigger['Full2017v2'] 
 #Trigger['Full2017v2LP19'] = Trigger['Full2017v2'] 
 Trigger['Full2018v4'] = Trigger['Full2018'] 
 
