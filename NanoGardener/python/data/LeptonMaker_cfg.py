@@ -44,6 +44,7 @@ CleanJet_br = {
                      'CleanJet_phi',
                      'CleanJet_rawFactor',
                      'CleanJet_rawPt',
+                     'CleanJet_qgl',
                     ],
 
                'I': [
@@ -53,4 +54,4 @@ CleanJet_br = {
 
 Lepton_var = ['pt', 'eta', 'phi', 'pdgId','ptErr']#,'isTriggMatched'] #, 'eCorr']
 VetoLepton_var = ['pt', 'eta', 'phi', 'pdgId','ptErr']#,'isTriggMatched'] # , 'eCorr']
-CleanJet_var = ['pt', 'eta', 'phi','rawFactor','rawPt']
+CleanJet_var = ['pt', 'eta', 'phi','rawFactor','rawPt','qgl']
