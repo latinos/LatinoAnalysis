@@ -57,6 +57,7 @@ public:
 
  float dphill();
  float maxetall();
+ float detall();
  float mll();
  float pt1();
  float pt2();
@@ -97,6 +98,12 @@ public:
  float mjj();
  float detajj();
  float zeppjj();
+ float ptjj();
+ float etajj();
+ float phijj();
+ float ptlljj();
+ float etalljj();
+ float philljj();
  float dphijj();
  float drlj();
  float njet();
@@ -773,6 +780,17 @@ float WW::maxetall(){
 }
 
 
+float WW::detall(){
+ 
+ if (_isOk) {
+  return abs(L1.Eta()-L2.Eta());
+ }
+ else {
+  return -9999.0;
+ } 
+}
+
+
 float WW::drll(){
  //---- https://root.cern.ch/doc/master/TLorentzVector_8h_source.html#l00469
  if (_isOk) {
@@ -1361,6 +1379,76 @@ float WW::detajj(){
 }
 
 
+float WW::ptjj(){
+ if (_jetOk >= 2) {
+  return (J1+J2).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::etajj(){
+ if (_jetOk >= 2) {
+  return (J1+J2).Eta();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::phijj(){
+ if (_jetOk >= 2) {
+  return (J1+J2).Phi();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::mlljj(){
+ if (_isOk && _jetOk >= 2) {
+  return (L1+L2+J1+J2).M();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::ptlljj(){
+ if (_isOk && _jetOk >= 2) {
+  return (L1+L2+J1+J2).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::etalljj(){
+ if (_isOk && _jetOk >= 2) {
+  return (L1+L2+J1+J2).Eta();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::philljj(){
+ if (_isOk && _jetOk >= 2) {
+  return (L1+L2+J1+J2).Phi();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
 float WW::zeppjj(){
  
   if (_jetOk >= 2) {
@@ -1415,6 +1503,98 @@ float WW::drlj(){
     }
     else {
       return minDR;
+    }
+  }
+  else {
+    return -9999.0;
+  } 
+}
+
+
+// max DeltaR between a lepton and a jet
+float WW::maxdrlj(){
+
+  float maxDR = -9999.0;
+  float drl1j, drl2j;
+  TLorentzVector myJet;
+
+  if (_isOk) {
+    if (_jetOk == 0)
+      return -9999.0;
+    for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+      if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet)) < 4.7) {
+	myJet.SetPtEtaPhiM(_jetspt.at(ijet), _jetseta.at(ijet), _jetsphi.at(ijet), _jetsmass.at(ijet));
+	drl1j = L1.DeltaR(myJet);
+	maxDR = max(maxDR,drl1j); 
+	drl2j = L2.DeltaR(myJet);
+	maxDR = max(maxDR,drl2j); 
+      }
+    }
+    if (maxDR == -9999.0){
+      return -9999.0;
+    }
+    else {
+      return maxDR;
+    }
+  }
+  else {
+    return -9999.0;
+  } 
+}
+
+
+// min DeltaR between di-lepton system and a jet
+float WW::drllj(){
+
+  float minDR = 10000.0;
+  float delrllj;
+  TLorentzVector myJet;
+
+  if (_isOk) {
+    if (_jetOk == 0)
+      return -9999.0;
+    for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+      if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet)) < 4.7) {
+	myJet.SetPtEtaPhiM(_jetspt.at(ijet), _jetseta.at(ijet), _jetsphi.at(ijet), _jetsmass.at(ijet));
+	delrllj = (L1+L2).DeltaR(myJet);
+	minDR = min(minDR,delrllj); 
+      }
+    }
+    if (minDR == 10000.0){
+      return -9999.0;
+    }
+    else {
+      return minDR;
+    }
+  }
+  else {
+    return -9999.0;
+  } 
+}
+
+
+// max DeltaR between di-lepton system and a jet
+float WW::maxdrllj(){
+
+  float maxDR = -9999.0;
+  float drllj;
+  TLorentzVector myJet;
+
+  if (_isOk) {
+    if (_jetOk == 0)
+      return -9999.0;
+    for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
+      if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet)) < 4.7) {
+	myJet.SetPtEtaPhiM(_jetspt.at(ijet), _jetseta.at(ijet), _jetsphi.at(ijet), _jetsmass.at(ijet));
+	drllj = (L1+L2).DeltaR(myJet);
+	maxDR = max(maxDR,drllj); 
+      }
+    }
+    if (maxDR == -9999.0){
+      return -9999.0;
+    }
+    else {
+      return maxDR;
     }
   }
   else {
