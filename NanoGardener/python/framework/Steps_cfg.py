@@ -69,7 +69,6 @@ Steps = {
                   'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','CleanJetCutHmm2017','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
-
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
   'MCCorr2016' : {

@@ -102,11 +102,15 @@ public:
  float ptjj();
  float etajj();
  float phijj();
+ float mlljj();
  float ptlljj();
  float etalljj();
  float philljj();
  float dphijj();
  float drlj();
+ float maxdrlj();
+ float drllj();
+ float maxdrllj();
  float njet();
  float nbjet();
 
@@ -1588,7 +1592,7 @@ float WW::drllj(){
 float WW::maxdrllj(){
 
   float maxDR = -9999.0;
-  float drllj;
+  float mydrllj;
   TLorentzVector myJet;
 
   if (_isOk) {
@@ -1597,8 +1601,8 @@ float WW::maxdrllj(){
     for (unsigned int ijet=0; ijet < _jetspt.size(); ijet++) {
       if (_jetspt.at(ijet) > 30 && fabs(_jetseta.at(ijet)) < 4.7) {
 	myJet.SetPtEtaPhiM(_jetspt.at(ijet), _jetseta.at(ijet), _jetsphi.at(ijet), _jetsmass.at(ijet));
-	drllj = (L1+L2).DeltaR(myJet);
-	maxDR = max(maxDR,drllj); 
+	mydrllj = (L1+L2).DeltaR(myJet);
+	maxDR = max(maxDR,mydrllj); 
       }
     }
     if (maxDR == -9999.0){

@@ -195,7 +195,7 @@ class l2KinProducer(Module):
         
            
           
-        Jet   = Collection(event, "CleanJet")
+        Jet   = Collection(event, "CleanJetCut")
         #auxiliary jet collection to access the mass
         OrigJet   = Collection(event, "Jet")
         nJet = len(Jet)
