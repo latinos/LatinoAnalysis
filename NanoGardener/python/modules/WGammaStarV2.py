@@ -155,9 +155,9 @@ class WGammaStarV2(Module):
 	for i,particle  in enumerate(genParticles) :
 	  pdg_Id = abs(particle.pdgId)
           daughters=[]
-          if pdg_Id == 22 and (particle.statusFlags >> 8 & 1): # hard process
+          if pdg_Id == 22 and (particle.statusFlags >> 7 & 1): # hard process
             # this is out gstar candidate, cleanup everything
-            fromG_HP = False
+            fromG_HP = True
             fromG_PS = False
             fromZ = False
             fromG_PS = False
@@ -165,7 +165,6 @@ class WGammaStarV2(Module):
             self.Daughters(particle, i, genParticles, daughters)
             gstar = self.findGStarPair(daughters)
             if (gstar != None):
-              fromG_HP = True
               mom_pdgId = particle.pdgId
               mom_status = 0
             #if there was a photon from the hard process in the event, that is the only one we want to look, nothing else matters
@@ -196,8 +195,6 @@ class WGammaStarV2(Module):
                 fromW = True    
                 mom_pdgId=particle.pdgId
                 mom_status = 4
-          if (fromW): # already found a gStar from W
-             break
 
           if pdg_Id==22 and (not (particle.statusFlags >> 8 & 1)) and not fromG_HP and not fromZ and not fromW:
              self.Daughters(particle, i, genParticles, daughters)
