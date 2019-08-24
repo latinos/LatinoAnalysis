@@ -116,6 +116,10 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
          jFile.write('export X509_USER_PROXY=/gwpool/users/'+os.environ["USER"]+'/.proxy\n')
+       elif 'hammer' in hostName:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch/\n')
+         jFile.write('export X509_USER_PROXY=/tmp/x509up_u616617\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('voms-proxy-info\n')
@@ -183,7 +187,8 @@ class batchJobs :
        os.system('cp $X509_USER_PROXY /cms/ldap_home/'+os.environ["USER"]+'/.proxy')
      if "hercules" in hostName:
        os.system('cp $X509_USER_PROXY /gwpool/users/'+os.environ["USER"]+'/.proxy')
-
+     if 'hammer' in hostName:
+       os.system('cp $X509_USER_PROXY /home/dkondra/.proxy')
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
@@ -370,6 +375,8 @@ class batchJobs :
        elif "pi.infn.it" in socket.getfqdn():
          queue="cms"
          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+       elif 'hammer' in hostName :
+          jobid=os.system('qsub -q cms-express -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
        else:
          #print 'cd '+self.subDir+'/'+jName.split('/')[0]+'; bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jName.split('/')[1]+'.sh | grep submitted' 
          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
