@@ -51,6 +51,7 @@ class l2KinProducer(Module):
            'maxetall',
            'detall',
            'yll',
+           'etall',
            'ptll',
            'pt1',
            'pt2',

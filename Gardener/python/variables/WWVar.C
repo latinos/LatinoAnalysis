@@ -66,6 +66,7 @@ public:
  float phi1();
  float phi2();
  float yll();
+ float etall();
  float ptll();
  float drll();
  float mllErr();
@@ -728,6 +729,16 @@ float WW::cosThetaCS(){
 float WW::yll(){
  if (_isOk) {
   return (L1+L2).Rapidity();
+ }
+ else {
+  return -9999.0;
+ }
+}
+
+
+float WW::etall(){
+ if (_isOk) {
+  return (L1+L2).Eta();
  }
  else {
   return -9999.0;
