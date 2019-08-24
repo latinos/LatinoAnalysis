@@ -37,6 +37,18 @@ Sites = {
               'xrootdPath'  : '' ,
               'srmPrefix'   : 'srm://srm01.ifca.es' ,
               'treeBaseDir' : '/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/' ,
-             }
+             },
 
+'hammer-fe00' : {
+              'lsCmd'       : 'ls' ,
+              'mkDir'       : False ,
+              'xrootdPath'  : 'root://eoscms.cern.ch//',
+              'treeBaseDir' : '/mnt/hadoop/store/user/dkondrat/latinos/',
+             } ,
+'hammer-fe01' : {
+              'lsCmd'       : 'ls' ,
+              'mkDir'       : False ,
+              'xrootdPath'  : 'root://eoscms.cern.ch//',
+              'treeBaseDir' : '/mnt/hadoop/store/user/dkondrat/latinos/',
+             } ,
 }
