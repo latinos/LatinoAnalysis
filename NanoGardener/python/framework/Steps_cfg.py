@@ -1876,7 +1876,7 @@ Steps = {
                  },
 
 #muWP='cut_Medium80x,cut_Tight80x'
-  'l2tightOR2016hmm' : {
+  'l2tightORhmm' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
