@@ -69,6 +69,14 @@ Steps = {
                   'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','CleanJetCutHmm2017','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
+  'MCl2loose2018hmm' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2018','lepSel','jetSelHmm2018','CleanJetCutHmmDummy','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                },
+
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
   'MCCorr2016' : {
@@ -524,6 +532,15 @@ Steps = {
                   'module'     : 'TriggerObjectMatch2017()' ,
                    },
 
+  'TriggerObjectMatch2018' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TriggerObjectMatchProducer2018' ,
+                  'declare'    : 'TriggerObjectMatch2018 = lambda : TriggerObjectMatchProducer2018()',
+                  'module'     : 'TriggerObjectMatch2018()' ,
+                   },
+
    'HiggsGenVars' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -748,6 +765,16 @@ Steps = {
                },
 
     'jetSelHmm2017' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(2,"custom",15.0,4.7,"CleanJet")' ,
+                  'module'     : 'jetSel()' ,
+               },
+
+    'jetSelHmm2018' : {  ## same as 2017. Redefined just to avoid confusion
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,

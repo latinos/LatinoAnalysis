@@ -442,7 +442,7 @@ Productions = {
                        'year'    : '2017' ,
                    },
 
- # -------- 2018 MC 102X nAODv5
+ # -------- 2018 MC 102X nAODv5 for Higgs -> mumu
  'Autumn18_102X_nAODv5_Full2018v5_hmm':{
                        'isData'  : False ,
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv5_hmm.py' ,
