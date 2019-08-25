@@ -111,6 +111,13 @@ Steps = {
                      'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','EmbeddingVeto','rochesterMC','trigMC','LeptonSF','puW','l2Kin2017','formulasMChmm'],
                 },
 
+  'MCCorr2018hmm' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJet2018','EmbeddingVeto','rochesterMC','trigMC','LeptonSF','puW','l2Kin2018','formulasMChmm'],
+                },
+
   'MCCorr2016tmp'  : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -333,6 +340,14 @@ Steps = {
                   'do4Data'    : True ,
                   'selection'  : '"((nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker','TriggerObjectMatch2017','lepSel','jetSelHmm2017','CleanJetCutHmm2017','rochesterDATA','l2Kin2017','formulasDATAhmm'],
+                },
+
+  'DATAl2loose2018hmm' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'selection'  : '"((nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2018','lepSel','jetSelHmm2018','CleanJetCutHmmDummy','rochesterDATA','l2Kin2018','formulasDATAhmm'],
                 },
 
   'DATAl1loose2017': {
@@ -1194,6 +1209,15 @@ Steps = {
                   'module'     : 'l2KinProducer_2017()' ,
                },  
 
+  'l2Kin2018'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
+                  'declare'    : 'l2KinProducer_2018 = lambda : l2KinProducer("2018")',
+                  'module'     : 'l2KinProducer_2018()' ,
+               },  
+
   'l3Kin'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1267,7 +1291,7 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_2016_hmumu.py\')' ,
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR_hmumu.py\')' ,
                  },
 
   'formulasDATA' : {
@@ -1285,7 +1309,7 @@ Steps = {
                   'do4Data'    : True   ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_2016_hmumu.py\')' ,
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_DATA_RPLME_YEAR_hmumu.py\')' ,
                  }, 
 
   'formulasDATALP19' : {

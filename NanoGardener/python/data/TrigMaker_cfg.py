@@ -1196,6 +1196,7 @@ Trigger['Full2017v4'] = Trigger['Full2017v2']
 Trigger['Full2017v4hmm'] = Trigger['Full2017v2'] 
 #Trigger['Full2017v2LP19'] = Trigger['Full2017v2'] 
 Trigger['Full2018v4'] = Trigger['Full2018'] 
+Trigger['Full2018v5hmm'] = Trigger['Full2018'] 
 
 
 NewVar_MC_dict = {
