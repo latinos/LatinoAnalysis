@@ -59,8 +59,9 @@ Samples['EWKZ2Jets_ZToLL_M-50'] = {'nanoAOD' : '/EWKZ2Jets_ZToLL_M-50_TuneCP5_13
 
 ### Top
 
+# I am commenting TTJets sample, since it is not used at the moment and process it would mean using a lot of time and disk space
+# Samples['TTJets']                = {'nanoAOD' : '/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['TTTo2L2Nu']             = {'nanoAOD' : '/TTTo2L2Nu_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
-Samples['TTJets']                = {'nanoAOD' : '/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['TTToSemiLeptonic']      = {'nanoAOD' : '/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 
 Samples['ST_tW_top']             = {'nanoAOD' :'/ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
