@@ -813,7 +813,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.CopyCleanJet',
-                  'declare'    : 'cleanJetCut = lambda : CopyCleanJet(newcollectionname="CleanJetCut", cuts=["rawPt<50","eta>2.65","eta<3.139"])',
+                  'declare'    : 'cleanJetCut = lambda : CopyCleanJet(newcollectionname="CleanJet", cuts=["rawPt<50","eta>2.65","eta<3.139"])',
                   'module'     : 'cleanJetCut()',
                }, 
 
@@ -1613,6 +1613,13 @@ Steps = {
                   'do4Data'    : True  ,
                   'selection'  : '"(mll>12 && ptll>30 && (MET_pt > 20 || PuppiMET_pt>20) && Alt$(Lepton_pt[0],0.)>20 && Alt$(Lepton_pt[1],0.)>10 && Alt$(Lepton_pt[2],0.)<10 && Alt$(Lepton_pdgId[0]*Lepton_pdgId[1],0)==-11*13)"',
                   #'onlySample' : [ 'WWTo2L2Nu' ] ,
+                 },
+
+  'VBFhmmSel'     : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"Alt$(CleanJet_pt[0],0)>25 && Alt$(CleanJet_pt[1],0)>20 && mjj > 300"',
                  },
 
 ## ------- Fake Study:
