@@ -21,7 +21,7 @@ ________________________________________________________________________________
 '''
 
 
-class WGammaStar(Module):
+class WGammaStarV2(Module):
     def __init__(self):
         self.pLeptState1 = [0,0,0,0]
         self.lept1_4V = ROOT.TLorentzVector()
@@ -30,21 +30,49 @@ class WGammaStar(Module):
         self.tmp4V_2 = ROOT.TLorentzVector()
     def beginJob(self,histFile=None,histDirName=None):
 	pass
-    def Daughters(self,genParticles,pdgid):
-        daught_par = [];
-        if((pdgid >= 1 and pdgid <= 6) or pdgid ==21):
-            for particle in genParticles:
-                if(particle.genPartIdxMother < 0) :
-                   continue
-                if(abs(genParticles[particle.genPartIdxMother].pdgId) == pdgid):
-                   daught_par.append(particle)
-        else :
-            for particle in genParticles:
-                if(particle.genPartIdxMother < 0) :
-                   continue
-                if(particle.status==1 and abs(genParticles[particle.genPartIdxMother].pdgId) == pdgid):
-                   daught_par.append(particle)
-        return daught_par
+    def Daughters(self,p,idx,genParticles, daughters):
+        if p.status == 1 or (abs(p.pdgId)==15):
+          daughters.append(p)
+        else:  
+          for i,part in enumerate(genParticles):
+            if part.genPartIdxMother == idx:
+              self.Daughters(part, i, genParticles, daughters) 
+                 
+    def printParticle(self, p):
+      print p.pdgId,p.status,p.pt
+
+    def findGStarPair (self, leptons):
+      # get the charged leptons
+      charged = [l for l in leptons if abs(l.pdgId)==11 or abs(l.pdgId)==13 or abs(l.pdgId)==15]
+      pairs = []
+      #form the opposite sign same flavor pairs
+      for i in range(len(charged)-1):
+        for j in range(i+1, len(charged)):
+          if charged[i].pdgId*charged[j].pdgId == -(charged[i].pdgId)**2:
+            pairs.append([charged[i], charged[j]])
+
+      #find the smallest mass
+      if len(pairs) == 0:
+        return None
+      gstarmass = 999999.
+      for p in pairs:
+        tmp4V_1 = ROOT.TLorentzVector()
+        tmp4V_2 = ROOT.TLorentzVector()
+
+        if abs(p[0].pdgId)==11:
+          tmp4V_1.SetPtEtaPhiM(p[0].pt,p[0].eta,p[0].phi,0.0005)
+          tmp4V_2.SetPtEtaPhiM(p[1].pt,p[1].eta,p[1].phi,0.0005)
+        elif abs(p[0].pdgId)==13:
+          tmp4V_1.SetPtEtaPhiM(p[0].pt,p[0].eta,p[0].phi,0.106)
+          tmp4V_2.SetPtEtaPhiM(p[1].pt,p[1].eta,p[1].phi,0.106)
+        if (tmp4V_1+tmp4V_2).M() < gstarmass:
+          gstarmass = (tmp4V_1+tmp4V_2).M()
+          gstar = p
+
+      return gstar  
+
+
+
 
     def LeptFromW(self,daughters,isMuon):
         nLeptFromW=0
@@ -71,30 +99,36 @@ class WGammaStar(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.newbranchesF = [
-        'Gen_ZGstar_mu1_pt',  
-        'Gen_ZGstar_mu1_eta', 
-        'Gen_ZGstar_mu1_phi', 
-        'Gen_ZGstar_mu2_pt',  
-        'Gen_ZGstar_mu2_eta',
-        'Gen_ZGstar_mu2_phi',
-        'Gen_ZGstar_ele1_pt',
-        'Gen_ZGstar_ele1_eta',
-        'Gen_ZGstar_ele1_phi',
-        'Gen_ZGstar_ele2_pt',
-        'Gen_ZGstar_ele2_eta',
-        'Gen_ZGstar_ele2_phi',
-        'Gen_ZGstar_mass',
-        'Gen_ZGstar_deltaR'
+        ('Gen_ZGstar_mu1_pt',  "pt of the leading muon from G* candidate"),  
+        ('Gen_ZGstar_mu1_eta', "eta of the leading muon from G* candidate"),
+        ('Gen_ZGstar_mu1_phi', "phi of the leading muon from G* candidate"), 
+        ('Gen_ZGstar_mu2_pt',  "pt of the subleading muon from G* candidate"),  
+        ('Gen_ZGstar_mu2_eta', "eta of the subleading muon from G* candidate"),
+        ('Gen_ZGstar_mu2_phi', "phi of the subleading muon from G* candidate"), 
+        ('Gen_ZGstar_ele1_pt', "pt of the leading electron from G* candidate"),  
+        ('Gen_ZGstar_ele1_eta',"eta of the leading electron from G* candidate"),
+        ('Gen_ZGstar_ele1_phi',"phi of the leading electron from G* candidate"), 
+        ('Gen_ZGstar_ele2_pt', "pt of the subleading electron from G* candidate"), 
+        ('Gen_ZGstar_ele2_eta',"eta of the subleading electron from G* candidate"),
+        ('Gen_ZGstar_ele2_phi',"phi of the subleading electron from G* candidate"),
+        ('Gen_ZGstar_mass',    "G* candidate mass"),
+        ('Gen_ZGstar_deltaR',   "deltaR between leptons from G* candidate"),
          ]
         self.newbranchesI = [
-        "Gen_ZGstar_MomId",
-        "Gen_ZGstar_MomStatus"
+        ("Gen_ZGstar_MomId", "Id of the mother particle of the G*"),
+        ("Gen_ZGstar_MomStatus", "how the G* is born: \
+0= from a hard process photon:\
+1= from a Z candidate decaying to a lepton pair, with Z boson in event history:\
+2= from a Z to 4 leptons decay, with Z boson in event history: \
+3= from lepton pair in the eventhistorym without a Z boson in the event history: \
+4= from a W boson decaying to 3 charged leptons: \
+5= from a photon in the parton shower")
         ]
         
         for nameBranchesF in self.newbranchesF :
-          self.out.branch(nameBranchesF  ,  "F");
+          self.out.branch(nameBranchesF[0]  ,  "F", title=nameBranchesF[1]);
         for nameBranchesI in self.newbranchesI :
-          self.out.branch(nameBranchesI  ,  "I");
+          self.out.branch(nameBranchesI[0]  ,  "I", title=nameBranchesI[1]);
 
     def analyze(self, event):
         genParticles = Collection(event, "GenPart")
@@ -116,210 +150,110 @@ class WGammaStar(Module):
         muon2FromGstar_phi  = -9999.0
         mom_pdgId           = 9999
         mom_status          = 9999
-	for particle  in genParticles :
+        fromG_HP = False #foton from hard process
+        fromZ = False
+        fromW = False
+        fromG_PS = False # foton from PS
+        gstar = None
+        statuses = ['fromG_HP', 'fromZ_ll_inhistory', "fromZ_llll", 'fromZ_ll_decay', 'fromW3l', 'fromG_PS']
+        fromHardProcessLeptons = []
+        # Photon from hard process takes precedence on Z takes precedence on from W, which takes precedence on from gamma from PS
+	for i,particle  in enumerate(genParticles) :
 	  pdg_Id = abs(particle.pdgId)
-          if ( pdg_Id == 11 and particle.status == 1)  : 
-	    if (particle.genPartIdxMother < 0) :
-               continue
-            else :
-                pLeptMom = particle.genPartIdxMother  #index to mother
-                while (abs(genParticles[pLeptMom].pdgId) == 11) : 
-	           if (genParticles[pLeptMom].genPartIdxMother < 0) :
-                      break
-                   else :
-                      pLeptMom = genParticles[pLeptMom].genPartIdxMother
-            isMuon = False
-            mom_pdgId = genParticles[pLeptMom].pdgId
-            mom_status = genParticles[pLeptMom].status
-          elif(pdg_Id == 13 and particle.status == 1)  : 
-	    if (particle.genPartIdxMother < 0) :
-               continue
-            else :
-                pLeptMom = particle.genPartIdxMother  #index to mother
-                while (abs(genParticles[pLeptMom].pdgId) == 13) : 
-	           if (genParticles[pLeptMom].genPartIdxMother < 0) :
-                      break
-                   else :
-                      pLeptMom = genParticles[pLeptMom].genPartIdxMother
-            isMuon = True
-            mom_pdgId = genParticles[pLeptMom].pdgId
-            mom_status = genParticles[pLeptMom].status
-          else :
-              continue
-          if(abs(genParticles[pLeptMom].pdgId)==24):  
-              daughters = self.Daughters(genParticles,24) 
+          daughters=[]
+          if pdg_Id == 22 and (particle.statusFlags >> 7 & 1): # hard process
+            # this is out gstar candidate, cleanup everything
+            fromG_HP = True
+            fromG_PS = False
+            fromZ = False
+            fromG_PS = False
+            gstar = None
+            self.Daughters(particle, i, genParticles, daughters)
+            gstar = self.findGStarPair(daughters)
+            if (gstar != None):
+              mom_pdgId = particle.pdgId
+              mom_status = 0
+            #if there was a photon from the hard process in the event, that is the only one we want to look, nothing else matters
+            # otherwise in Zg sample the Z will end up to be the gamma* candidate, but that is not what we want
+            #so if a photon from hard process is aroung, if we don't have a gamma* candidate at this point, we can as well move to next event.
+            break  
+
+          if pdg_Id==23 and not fromG_HP:
+              self.Daughters(particle, i, genParticles, daughters)
+              #in this case  dughters can be simply two as in Z/gamma*->ll, or 4 in case you have radiation off a lepton
+              # Z/gamma*->llgamma* ->llll
+              gstar = self.findGStarPair(daughters)
+              if (gstar != None):
+                fromZ = True
+                mom_pdgId = particle.pdgId;
+                if len(daughters)==2:
+                  mom_status = 1
+                else:
+                  mom_status = 2
+
+          if pdg_Id==24 and not fromG_HP and not fromZ:
+              self.Daughters(particle, i, genParticles, daughters) 
+              # if the mom is a W, it we are in terested in W->l nu gamma* -> l nu l+ l- --> 4 daugthers
               if(not (len(daughters)==4)) : 
                   continue
-              nLeptFromW,daughterLeptonsFromW = self.LeptFromW(daughters,isMuon)
-              if((len(daughterLeptonsFromW)==2)) : 
-                  if(daughterLeptonsFromW[0].pdgId * daughterLeptonsFromW[1].pdgId > 0):
-                      continue
-                  self.pLeptState1[0] = daughterLeptonsFromW[0]
-                  self.pLeptState1[1] = daughterLeptonsFromW[1]
-                  if(isMuon):
-                      muon1FromGstar_pt     = self.pLeptState1[0].pt
-                      muon1FromGstar_eta    = self.pLeptState1[0].eta
-                      muon1FromGstar_phi    = self.pLeptState1[0].phi
-                      muon2FromGstar_pt     = self.pLeptState1[1].pt
-                      muon2FromGstar_eta    = self.pLeptState1[1].eta
-                      muon2FromGstar_phi    = self.pLeptState1[1].phi
+              gstar = self.findGStarPair(daughters)
+              if (gstar != None):
+                fromW = True    
+                mom_pdgId=particle.pdgId
+                mom_status = 4
 
-                      self.lept1_4V.SetPtEtaPhiM(muon1FromGstar_pt,muon1FromGstar_eta,muon1FromGstar_phi,0.106)
-                      self.lept2_4V.SetPtEtaPhiM(muon2FromGstar_pt,muon2FromGstar_eta,muon2FromGstar_phi,0.106)
-                  else :
-                      elec1FromGstar_pt     = self.pLeptState1[0].pt
-                      elec1FromGstar_eta    = self.pLeptState1[0].eta
-                      elec1FromGstar_phi    = self.pLeptState1[0].phi
-                      elec2FromGstar_pt     = self.pLeptState1[1].pt
-                      elec2FromGstar_eta    = self.pLeptState1[1].eta
-                      elec2FromGstar_phi    = self.pLeptState1[1].phi
-                      self.lept1_4V.SetPtEtaPhiM(elec1FromGstar_pt,elec1FromGstar_eta,elec1FromGstar_phi,0.0005)
-                      self.lept2_4V.SetPtEtaPhiM(elec2FromGstar_pt,elec2FromGstar_eta,elec2FromGstar_phi,0.0005)
-                  _ZGstarDiLept_DelaR = self.deltaR(self.pLeptState1[0].eta,self.pLeptState1[1].eta,self.pLeptState1[0].phi,self.pLeptState1[1].phi)
-                  genDiLeptMassZGstar = (self.lept1_4V + self.lept2_4V).M()
-              elif((len(daughterLeptonsFromW)==3)) :
-                  self.pLeptState1[0] = daughterLeptonsFromW[0]
-                  self.pLeptState1[1] = daughterLeptonsFromW[1]
-                  self.pLeptState1[2] = daughterLeptonsFromW[2]
-                  genDiLeptMassZGstar = 100000000.0
-                  for i in range(0,3):
-                      for j in range(0,3):
-                          if(i>=j):
-                              continue
-                          if(self.pLeptState1[i].pdgId*self.pLeptState1[j].pdgId > 0):
-                              continue
-                          if(isMuon):
-                              self.tmp4V_1.SetPtEtaPhiM(self.pLeptState1[i].pt,self.pLeptState1[i].eta,self.pLeptState1[i].phi,0.106)
-                              self.tmp4V_2.SetPtEtaPhiM(self.pLeptState1[j].pt,self.pLeptState1[j].eta,self.pLeptState1[j].phi,0.106)
-                          else :
-                              self.tmp4V_1.SetPtEtaPhiM(self.pLeptState1[i].pt,self.pLeptState1[i].eta,self.pLeptState1[i].phi,0.0005)
-                              self.tmp4V_2.SetPtEtaPhiM(self.pLeptState1[j].pt,self.pLeptState1[j].eta,self.pLeptState1[j].phi,0.0005)
-                          tmpInvM = (self.tmp4V_1 + self.tmp4V_2).M()
-                          if(tmpInvM < genDiLeptMassZGstar):
-                              genDiLeptMassZGstar = tmpInvM
-                              if(isMuon):
-                                  muon1FromGstar_pt     = self.pLeptState1[i].pt
-                                  muon1FromGstar_eta    = self.pLeptState1[i].eta
-                                  muon1FromGstar_phi    = self.pLeptState1[i].phi
-                                  muon2FromGstar_pt     = self.pLeptState1[j].pt
-                                  muon2FromGstar_eta    = self.pLeptState1[j].eta
-                                  muon2FromGstar_phi    = self.pLeptState1[j].phi
-                              else:
-                                  elec1FromGstar_pt     = self.pLeptState1[i].pt
-                                  elec1FromGstar_eta    = self.pLeptState1[i].eta
-                                  elec1FromGstar_phi    = self.pLeptState1[i].phi
-                                  elec2FromGstar_pt     = self.pLeptState1[j].pt
-                                  elec2FromGstar_eta    = self.pLeptState1[j].eta
-                                  elec2FromGstar_phi    = self.pLeptState1[j].phi
-                              _ZGstarDiLept_DelaR = self.deltaR(self.pLeptState1[i].eta,self.pLeptState1[j].eta,self.pLeptState1[i].phi,self.pLeptState1[j].phi)
-                              genDiLeptMassZGstar = (self.lept1_4V + self.lept2_4V).M()
-              else :
-                  continue
-          elif(abs(genParticles[pLeptMom].pdgId) == 23 or abs(genParticles[pLeptMom].pdgId) == 22) :
-              daughters = []
-              if(abs(genParticles[pLeptMom].pdgId) == 23):
-                  daughters = self.Daughters(genParticles,23)
-              else:
-                  daughters = self.Daughters(genParticles,22)
-              if(len(daughters) != 2):
-                  continue
-              nLeptFromZ = 0
-              for i in range(len(daughters)):
-                  if(isMuon and abs(daughters[i].pdgId) == 13):
-                      nLeptFromZ+=1
-                  if(not isMuon and abs(daughters[i].pdgId) == 11):
-                      nLeptFromZ+=1
-              
-              if(nLeptFromZ == 2):
-                  if(daughters[0].pdgId * daughters[1].pdgId > 0):
-                      continue
-                  self.pLeptState1[0] = daughters[0]
-                  self.pLeptState1[1] = daughters[1]
-                  if(isMuon):
-                      muon1FromGstar_pt     = self.pLeptState1[0].pt
-                      muon1FromGstar_eta    = self.pLeptState1[0].eta
-                      muon1FromGstar_phi    = self.pLeptState1[0].phi
-                      muon2FromGstar_pt     = self.pLeptState1[1].pt
-                      muon2FromGstar_eta    = self.pLeptState1[1].eta
-                      muon2FromGstar_phi    = self.pLeptState1[1].phi
+          if pdg_Id==22 and (not (particle.statusFlags >> 8 & 1)) and not fromG_HP and not fromZ and not fromW:
+             self.Daughters(particle, i, genParticles, daughters)
+             if(not (len(daughters)==2)) :
+               continue
+             gstar = self.findGStarPair(daughters)
+             if (gstar != None):
+              fromG = True  
+              mom_pdgId=particle.pdgId  
+              mom_status = 5
+          #keep arounf a list of all prompt leptons
+          if (((pdg_Id==11 or pdg_Id==13) and particle.status == 1 ) or pdg_Id==15) and (particle.statusFlags & 1):
+            fromHardProcessLeptons.append(particle)
+        
+        #if there are not gammaStar from Z, still look through the prompt lepton pairs, as there may be a Z missing in event history, this has precedence on Ws and gamma
+        if not fromZ and not fromG_HP:
+          gstar = self.findGStarPair(fromHardProcessLeptons)
+          fromZ = True
+          if (gstar != None):
+            mom_pdgId = 23
+            mom_status = 3
+        if gstar != None:
+          #print "this is pdg id", pdg_Id, "daughters:"
+          #for d in daughters:
+          #  self.printParticle(d)
+          #print "gstar identified as: "
+          #self.printParticle(gstar[0])
+          #self.printParticle(gstar[1])
+          self.pLeptState1[0] = gstar[0]
+          self.pLeptState1[1] = gstar[1]
+          if abs(self.pLeptState1[0].pdgId)==13:
+              muon1FromGstar_pt     = self.pLeptState1[0].pt
+              muon1FromGstar_eta    = self.pLeptState1[0].eta
+              muon1FromGstar_phi    = self.pLeptState1[0].phi
+              muon2FromGstar_pt     = self.pLeptState1[1].pt
+              muon2FromGstar_eta    = self.pLeptState1[1].eta
+              muon2FromGstar_phi    = self.pLeptState1[1].phi
 
-                      self.lept1_4V.SetPtEtaPhiM(muon1FromGstar_pt,muon1FromGstar_eta,muon1FromGstar_phi,0.106)
-                      self.lept2_4V.SetPtEtaPhiM(muon2FromGstar_pt,muon2FromGstar_eta,muon2FromGstar_phi,0.106)
-                  else:
-                      elec1FromGstar_pt     = self.pLeptState1[0].pt
-                      elec1FromGstar_eta    = self.pLeptState1[0].eta
-                      elec1FromGstar_phi    = self.pLeptState1[0].phi
-                      elec2FromGstar_pt     = self.pLeptState1[1].pt
-                      elec2FromGstar_eta    = self.pLeptState1[1].eta
-                      elec2FromGstar_phi    = self.pLeptState1[1].phi
-
-                      self.lept1_4V.SetPtEtaPhiM(elec1FromGstar_pt,elec1FromGstar_eta,elec1FromGstar_phi,0.0005)
-                      self.lept2_4V.SetPtEtaPhiM(elec2FromGstar_pt,elec2FromGstar_eta,elec2FromGstar_phi,0.0005)
-
-                  genDiLeptMassZGstar = (self.lept1_4V + self.lept2_4V).M()
-                  _ZGstarDiLept_DelaR = self.deltaR(self.pLeptState1[0].eta,self.pLeptState1[1].eta,self.pLeptState1[0].phi,self.pLeptState1[1].phi)
-              else : 
-                  continue
-
-          elif((abs(genParticles[pLeptMom].pdgId) <=6  and abs(genParticles[pLeptMom].pdgId) >= 1) or abs(genParticles[pLeptMom].pdgId) == 21 ) :
-              nLeptFromQ = 0
-              nWFromQ = 0
-              daughters = []
-              listLeptFromQ = []
-              
-              if(abs(genParticles[pLeptMom].pdgId) == 21):
-                  daughters = self.Daughters(genParticles,21)
-              else :
-                  for iMom in range(1,7):
-                      if(abs(genParticles[pLeptMom].pdgId) == iMom):
-                          daughters = self.Daughters(genParticles,iMom)
-                          break
-              for i in range(len(daughters)):
-                  if(abs(daughters[i].pdgId) == 24):
-                      nWFromQ+=1
-                  if(isMuon and abs(daughters[i].pdgId) == 13):
-                      if(daughters[i].status != 1 ):
-                          continue
-                      listLeptFromQ.append(daughters[i])
-                      nLeptFromQ+=1
-                  if(not isMuon and abs(daughters[i].pdgId) == 11):
-                      if(daughters[i].status != 1 ):
-                          continue
-                      listLeptFromQ.append(daughters[i])
-                      nLeptFromQ+=1
-
-              if(nLeptFromQ == 2 and nWFromQ == 1):
-                  if(listLeptFromQ[0].pdgId * listLeptFromQ[1].pdgId > 0):
-                      continue
-                  self.pLeptState1[0] = listLeptFromQ[0]
-                  self.pLeptState1[1] = listLeptFromQ[1]
-                  if(isMuon):
-                      muon1FromGstar_pt     = self.pLeptState1[0].pt
-                      muon1FromGstar_eta    = self.pLeptState1[0].eta
-                      muon1FromGstar_phi    = self.pLeptState1[0].phi
-                      muon2FromGstar_pt     = self.pLeptState1[1].pt
-                      muon2FromGstar_eta    = self.pLeptState1[1].eta
-                      muon2FromGstar_phi    = self.pLeptState1[1].phi
-
-                      self.lept1_4V.SetPtEtaPhiM(muon1FromGstar_pt,muon1FromGstar_eta,muon1FromGstar_phi,0.106)
-                      self.lept2_4V.SetPtEtaPhiM(muon2FromGstar_pt,muon2FromGstar_eta,muon2FromGstar_phi,0.106)
-                  else:
-                      elec1FromGstar_pt     = self.pLeptState1[0].pt
-                      elec1FromGstar_eta    = self.pLeptState1[0].eta
-                      elec1FromGstar_phi    = self.pLeptState1[0].phi
-                      elec2FromGstar_pt     = self.pLeptState1[1].pt
-                      elec2FromGstar_eta    = self.pLeptState1[1].eta
-                      elec2FromGstar_phi    = self.pLeptState1[1].phi
-
-                      self.lept1_4V.SetPtEtaPhiM(elec1FromGstar_pt,elec1FromGstar_eta,elec1FromGstar_phi,0.0005)
-                      self.lept2_4V.SetPtEtaPhiM(elec2FromGstar_pt,elec2FromGstar_eta,elec2FromGstar_phi,0.0005)
-
-                  genDiLeptMassZGstar = (self.lept1_4V + self.lept2_4V).M()
-                  _ZGstarDiLept_DelaR = self.deltaR(self.pLeptState1[0].eta,self.pLeptState1[1].eta,self.pLeptState1[0].phi,self.pLeptState1[1].phi)
-              else:
-                  continue
-          else:
-              continue
+              self.lept1_4V.SetPtEtaPhiM(muon1FromGstar_pt,muon1FromGstar_eta,muon1FromGstar_phi,0.106)
+              self.lept2_4V.SetPtEtaPhiM(muon2FromGstar_pt,muon2FromGstar_eta,muon2FromGstar_phi,0.106)
+          else :
+              elec1FromGstar_pt     = self.pLeptState1[0].pt
+              elec1FromGstar_eta    = self.pLeptState1[0].eta
+              elec1FromGstar_phi    = self.pLeptState1[0].phi
+              elec2FromGstar_pt     = self.pLeptState1[1].pt
+              elec2FromGstar_eta    = self.pLeptState1[1].eta
+              elec2FromGstar_phi    = self.pLeptState1[1].phi
+              self.lept1_4V.SetPtEtaPhiM(elec1FromGstar_pt,elec1FromGstar_eta,elec1FromGstar_phi,0.0005)
+              self.lept2_4V.SetPtEtaPhiM(elec2FromGstar_pt,elec2FromGstar_eta,elec2FromGstar_phi,0.0005)
+          _ZGstarDiLept_DelaR = self.deltaR(self.pLeptState1[0].eta,self.pLeptState1[1].eta,self.pLeptState1[0].phi,self.pLeptState1[1].phi)
+          genDiLeptMassZGstar = (self.lept1_4V + self.lept2_4V).M()
+        
+        
         self.out.fillBranch("Gen_ZGstar_mu1_pt", muon1FromGstar_pt )
         self.out.fillBranch("Gen_ZGstar_mu1_eta",muon1FromGstar_eta )
         self.out.fillBranch("Gen_ZGstar_mu1_phi",muon1FromGstar_phi )
