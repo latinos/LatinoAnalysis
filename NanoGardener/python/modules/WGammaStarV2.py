@@ -99,30 +99,36 @@ class WGammaStarV2(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.newbranchesF = [
-        'Gen_ZGstar_mu1_pt',  
-        'Gen_ZGstar_mu1_eta', 
-        'Gen_ZGstar_mu1_phi', 
-        'Gen_ZGstar_mu2_pt',  
-        'Gen_ZGstar_mu2_eta',
-        'Gen_ZGstar_mu2_phi',
-        'Gen_ZGstar_ele1_pt',
-        'Gen_ZGstar_ele1_eta',
-        'Gen_ZGstar_ele1_phi',
-        'Gen_ZGstar_ele2_pt',
-        'Gen_ZGstar_ele2_eta',
-        'Gen_ZGstar_ele2_phi',
-        'Gen_ZGstar_mass',
-        'Gen_ZGstar_deltaR'
+        ('Gen_ZGstar_mu1_pt',  "pt of the leading muon from G* candidate"),  
+        ('Gen_ZGstar_mu1_eta', "eta of the leading muon from G* candidate"),
+        ('Gen_ZGstar_mu1_phi', "phi of the leading muon from G* candidate"), 
+        ('Gen_ZGstar_mu2_pt',  "pt of the subleading muon from G* candidate"),  
+        ('Gen_ZGstar_mu2_eta', "eta of the subleading muon from G* candidate"),
+        ('Gen_ZGstar_mu2_phi', "phi of the subleading muon from G* candidate"), 
+        ('Gen_ZGstar_ele1_pt', "pt of the leading electron from G* candidate"),  
+        ('Gen_ZGstar_ele1_eta',"eta of the leading electron from G* candidate"),
+        ('Gen_ZGstar_ele1_phi',"phi of the leading electron from G* candidate"), 
+        ('Gen_ZGstar_ele2_pt', "pt of the subleading electron from G* candidate"), 
+        ('Gen_ZGstar_ele2_eta',"eta of the subleading electron from G* candidate"),
+        ('Gen_ZGstar_ele2_phi',"phi of the subleading electron from G* candidate"),
+        ('Gen_ZGstar_mass',    "G* candidate mass"),
+        ('Gen_ZGstar_deltaR',   "deltaR between leptons from G* candidate"),
          ]
         self.newbranchesI = [
-        "Gen_ZGstar_MomId",
-        "Gen_ZGstar_MomStatus"
+        ("Gen_ZGstar_MomId", "Id of the mother particle of the G*"),
+        ("Gen_ZGstar_MomStatus", "how the G* is born: \
+0= from a hard process photon:\
+1= from a Z candidate decaying to a lepton pair, with Z boson in event history:\
+2= from a Z to 4 leptons decay, with Z boson in event history: \
+3= from lepton pair in the eventhistorym without a Z boson in the event history: \
+4= from a W boson decaying to 3 charged leptons: \
+5= from a photon in the parton shower")
         ]
         
         for nameBranchesF in self.newbranchesF :
-          self.out.branch(nameBranchesF  ,  "F");
+          self.out.branch(nameBranchesF[0]  ,  "F", title=nameBranchesF[1]);
         for nameBranchesI in self.newbranchesI :
-          self.out.branch(nameBranchesI  ,  "I");
+          self.out.branch(nameBranchesI[0]  ,  "I", title=nameBranchesI[1]);
 
     def analyze(self, event):
         genParticles = Collection(event, "GenPart")
