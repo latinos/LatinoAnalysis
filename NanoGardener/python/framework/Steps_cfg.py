@@ -58,7 +58,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','CleanJetCutHmmDummy','PromptParticlesGenVars','GenVar','GenLeptonMatch','HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','PromptParticlesGenVars','GenVar','GenLeptonMatch','HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
   'MCl2loose2017hmm' :  {
@@ -74,7 +74,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch2018','lepSel','jetSelHmm2018','CleanJetCutHmmDummy','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2018','lepSel','jetSelHmm2018','PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars','ggHToMINLO_powheg','ggHToMINLO_mcatnlo', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
                 },
 
   # FIXME: check btagPerJet2016, btagPerEvent
@@ -331,7 +331,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','CleanJetCutHmmDummy','rochesterDATA','l2Kin2016','formulasDATAhmm'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch','lepSel','jetSelHmm2016','rochesterDATA','l2Kin2016','formulasDATAhmm'],
                 },
 
   'DATAl2loose2017hmm' :  {
@@ -347,7 +347,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True ,
                   'selection'  : '"((nMuon)>1)"' ,
-                  'subTargets' : ['leptonMaker','TriggerObjectMatch2018','lepSel','jetSelHmm2018','CleanJetCutHmmDummy','rochesterDATA','l2Kin2018','formulasDATAhmm'],
+                  'subTargets' : ['leptonMaker','TriggerObjectMatch2018','lepSel','jetSelHmm2018','rochesterDATA','l2Kin2018','formulasDATAhmm'],
                 },
 
   'DATAl1loose2017': {

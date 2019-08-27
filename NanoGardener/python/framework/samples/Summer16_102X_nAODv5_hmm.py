@@ -52,8 +52,11 @@ Samples['ttHToMuMu_M125_CP5down'] = {'nanoAOD' : '/ttHToMuMu_M125_TuneCP5down_PS
 ### Drell-Yan
 
 Samples['DYJetsToLL_M-50_ext2']    = {'nanoAOD' :'/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext2-v1/NANOAODSIM'}
-Samples['DYJetsToLL_M-105To160']   = {'nanoAOD' : '/DYJetsToLL_M-105To160_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM'}
+Samples['DYJetsToLL_M-105To160_ext1']   = {'nanoAOD' : '/DYJetsToLL_M-105To160_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM'}
+#Samples['DYJetsToLL_M-105To160']   = {'nanoAOD' : '/DYJetsToLL_M-105To160_TuneCP5_PSweights_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'}
+
 Samples['EWK_LLJJ_MLL-50_MJJ-120'] = {'nanoAOD' : '/EWK_LLJJ_MLL-50_MJJ-120_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'}
+# Samples['EWK_LLJJ_MLL-50_MJJ-120_herwig'] = {'nanoAOD' : '/EWK_LLJJ_MLL-50_MJJ-120_13TeV-madgraph-herwigpp/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'}
 
 ### Top
 

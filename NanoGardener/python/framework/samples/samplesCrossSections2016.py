@@ -104,8 +104,10 @@ samples['DYJetsToLL_M-5to50_HT-600toinf']  .extend( ['xsec=1.124',  'kfact=1.000
 
 ## DY (Higgs mass)
 samples['DYJetsToLL_M-105To160']    .extend( ['xsec=42.73',  'kfact=1.000',          'ref=M'] ) # 42.73
+samples['DYJetsToLL_M-105To160_ext1']    .extend( ['xsec=42.73',  'kfact=1.000',          'ref=M'] ) # 42.73
 
 samples['EWK_LLJJ_MLL-50_MJJ-120']  .extend( ['xsec=1.664',  'kfact=1.000',          'ref=M'] ) # 1.664
+samples['EWK_LLJJ_MLL-50_MJJ-120_herwig']  .extend( ['xsec=1.664',  'kfact=1.000',          'ref=M'] ) # 1.664
 
 ## VV 
 samples['WW-LO']                        .extend( ['xsec=114.726',       'kfact=1.000',          'ref=E'] )  # 118.7 from E - 3.974 still from E
