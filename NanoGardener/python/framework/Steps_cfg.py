@@ -1579,6 +1579,18 @@ Steps = {
                   #'onlySample' : [ 'WWTo2L2Nu' ] ,
                  },
 
+
+  'DropBranches' : {
+            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"(mll>12 && ptll>30 && (MET_pt > 20 || PuppiMET_pt>20) && Alt$(Lepton_pt[0],0.)>20 && Alt$(Lepton_pt[1],0.)>10 && Alt$(Lepton_pt[2],0.)<10 && Alt$(Lepton_pdgId[0]*Lepton_pdgId[1],0)==-11*13)"',
+                  'branchsel'  : '"/afs/cern.ch/work/f/fernanpe/framework_forFullRun2/CMSSW_10_2_9/src/LatinoAnalysis/NanoGardener/python/data/keep_and_drop.txt"',
+                  'outputbranchsel'  : '"/afs/cern.ch/work/f/fernanpe/framework_forFullRun2/CMSSW_10_2_9/src/LatinoAnalysis/NanoGardener/python/data/keep_and_drop.txt"',
+            } ,
+
+
 ## ------- Fake Study:
 
   'fakeSel'    : {

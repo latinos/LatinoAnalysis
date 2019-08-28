@@ -563,6 +563,8 @@ class PostProcMaker():
        fPy.write('                    branchsel='+self._Steps[iStep]['branchsel']+' ,       \n')
      else:
        fPy.write('                    branchsel=None , \n')
+     if 'outputbranchsel' in self._Steps[iStep] :
+       fPy.write('                    outputbranchsel='+self._Steps[iStep]['outputbranchsel']+' ,       \n')
      fPy.write('                    modules=[        \n')
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
