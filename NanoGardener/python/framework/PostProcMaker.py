@@ -298,7 +298,8 @@ class PostProcMaker():
      
      if not iStep == 'UEPS' : 
 
-       self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'
+       self._targetDir = '/eos/cms/store/user/yiiyama/HWWNano/'+iProd+'/'
+       #self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'
        if not self._iniStep == 'Prod' : self._targetDir += self._iniStep+'__'+iStep+'/'
        else                           : self._targetDir += iStep+'/'
 
@@ -560,9 +561,13 @@ class PostProcMaker():
      else: 
        fPy.write('                    cut=None ,       \n')
      if 'branchsel' in self._Steps[iStep] :
-       fPy.write('                    branchsel='+self._Steps[iStep]['branchsel']+' ,       \n')
+       fPy.write('                    branchsel="'+self._Steps[iStep]['branchsel']+'",       \n')
      else:
        fPy.write('                    branchsel=None , \n')
+     if 'outputbranchsel' in self._Steps[iStep]:
+       fPy.write('                    outputbranchsel="'+self._Steps[iStep]['outputbranchsel']+'",       \n')
+     else:
+       fPy.write('                    outputbranchsel=None , \n')
      fPy.write('                    modules=[        \n')
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
