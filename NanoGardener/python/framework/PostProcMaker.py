@@ -298,8 +298,7 @@ class PostProcMaker():
      
      if not iStep == 'UEPS' : 
 
-       self._targetDir = '/eos/cms/store/user/yiiyama/HWWNano/'+iProd+'/'
-       #self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'
+       self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'
        if not self._iniStep == 'Prod' : self._targetDir += self._iniStep+'__'+iStep+'/'
        else                           : self._targetDir += iStep+'/'
 
