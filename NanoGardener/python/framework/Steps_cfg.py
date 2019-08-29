@@ -107,6 +107,20 @@ Steps = {
                      'subTargets' : ['MHTrigMC','MHSwitch','MonoHiggsMVA','l3Kin','formulasMCMH'],
                  },
 
+  'MCMonoH' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['MHTrigMC','MHSwitch','MonoHiggsMVA','l3Kin','formulasMCMH'],
+                 },
+
+  'DATAMonoH' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : False  ,
+                     'do4Data'    : True ,
+                     'subTargets' : ['MHTrigData','MHSwitch','MonoHiggsMVA','l3Kin'],
+                 },
+
 
 ### OLD Stuff begin
 
@@ -827,6 +841,15 @@ Steps = {
                   'declare'   : 'wlepMkr = lambda : WlepMaker()',
                   'module'    : 'wlepMkr()',
      },
+    'whadJetSel' : {
+                  'isChain'   : False ,
+                  'do4MC'     : True  ,
+                  'do4Data'   : True  ,
+                  'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel()',
+                  'module'    : 'WhadJetSel()',
+    },
+
 
 
 ## ------- MODULES: Trigger
