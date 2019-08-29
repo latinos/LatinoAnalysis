@@ -841,6 +841,15 @@ Steps = {
                   'declare'   : 'wlepMkr = lambda : WlepMaker()',
                   'module'    : 'wlepMkr()',
      },
+    'whadJetSel' : {
+                  'isChain'   : False ,
+                  'do4MC'     : True  ,
+                  'do4Data'   : True  ,
+                  'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel()',
+                  'module'    : 'WhadJetSel()',
+    },
+
 
 
 ## ------- MODULES: Trigger
