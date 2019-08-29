@@ -982,6 +982,15 @@ Steps = {
                   'module'     : 'LeptonSF()',
                 },
 
+  'JetSF': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSFMaker' ,
+                  'declare'    : 'JetSF = lambda : JetSFMaker("RPLME_CMSSW")',
+                  'module'     : 'JetSF()',
+                },
+
 ## ------ Charge Flip
 
   'ChargeFlip' : {
