@@ -7,7 +7,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 
 class WhadJetSel(Module):
-    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="Jet"):
+    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="CleanJet"):
         # Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto
         # jetId = userInt('tightId')*2+4*userInt('tightIdLepVeto')
         # >=2 -> ask tightId
