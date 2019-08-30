@@ -531,7 +531,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2016v5','CleanFatJet','wlepMaker'],
+                  'subTargets' : ['l1tightOR2016v5','CleanFatJet','whadJetSel','wlepMaker'],
                   'onlySample' : LNuQQSamples,
                    },
 
@@ -539,7 +539,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2017v5','CleanFatJet','wlepMaker'],
+                  'subTargets' : ['l1tightOR2017v5','CleanFatJet','whadJetSel','wlepMaker'],
                   'onlySample' : LNuQQSamples,
                    },
 
@@ -547,7 +547,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2018v5','CleanFatJet','wlepMaker'],
+                  'subTargets' : ['l1tightOR2018v5','CleanFatJet','whadJetSel','wlepMaker'],
                   'onlySample' : LNuQQSamples,
                    },
 
