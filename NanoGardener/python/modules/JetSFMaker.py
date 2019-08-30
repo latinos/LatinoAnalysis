@@ -60,7 +60,7 @@ class JetSFMaker(Module):
         sf_map = self.sf_maps['%s_%s' % (jtype, wp)]
 
         ix = min(max(1, sf_map.GetXaxis().FindFixBin(jet.pt)), sf_map.GetNbinsX())
-        iy = min(max(1, sf_map.GetYaxis().FindFixBin(jet.eta)), sf_map.GetNbinsX())
+        iy = min(max(1, sf_map.GetYaxis().FindFixBin(jet.eta)), sf_map.GetNbinsY())
 
         return sf_map.GetBinContent(ix, iy), sf_map.GetBinError(ix, iy)
 
