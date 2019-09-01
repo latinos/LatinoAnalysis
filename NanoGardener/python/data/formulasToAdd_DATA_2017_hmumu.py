@@ -5,7 +5,7 @@
 formulas = {}
 
 #from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Moriond_2018
-METFilter_Common = '(event.Flag_goodVertices*\ 
+METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_globalSuperTightHalo2016Filter*\
                      event.Flag_HBHENoiseFilter*\
                      event.Flag_HBHENoiseIsoFilter*\
