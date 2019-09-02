@@ -104,8 +104,31 @@ class WhadJetSel(Module):
                 
                 v1=ROOT.TLorentzVector()
                 v2=ROOT.TLorentzVector()
-                v1.SetPtEtaPhiM(jet_coll[iJet]['pt'],jet_coll[iJet]['eta'],jet_coll[iJet]['phi'],jet_coll[iJet]['mass'])
-                v2.SetPtEtaPhiM(jet_coll[jJet]['pt'],jet_coll[jJet]['eta'],jet_coll[jJet]['phi'],jet_coll[jJet]['mass'])
+                if 'Clean' in self.jetColl : 
+                    jet_pt1  = ori_jet_coll[jet_coll[iJet]['jetIdx']]['pt']
+                    jet_eta1 = ori_jet_coll[jet_coll[iJet]['jetIdx']]['eta']
+                    jet_phi1  = ori_jet_coll[jet_coll[iJet]['jetIdx']]['phi']
+                    jet_mass1 = ori_jet_coll[jet_coll[iJet]['jetIdx']]['mass']
+
+                    jet_pt2  = ori_jet_coll[jet_coll[jJet]['jetIdx']]['pt']
+                    jet_eta2 = ori_jet_coll[jet_coll[jJet]['jetIdx']]['eta']
+                    jet_phi2  = ori_jet_coll[jet_coll[jJet]['jetIdx']]['phi']
+                    jet_mass2 = ori_jet_coll[jet_coll[jJet]['jetIdx']]['mass']
+                    
+                else : 
+                    jet_pt1  = jet_coll[iJet]['pt']
+                    jet_eta1 = jet_coll[iJet]['eta']
+                    jet_phi1  = jet_coll[iJet]['phi']
+                    jet_mass1 = jet_coll[iJet]['mass']
+
+                    jet_pt2  = jet_coll[jJet]['pt']
+                    jet_eta2 = jet_coll[jJet]['eta']
+                    jet_phi2  = jet_coll[jJet]['phi']
+                    jet_mass2 = jet_coll[jJet]['mass']
+
+                    
+                v1.SetPtEtaPhiM(jet_pt1,jet_eta1,jet_phi1,jet_mass1)
+                v2.SetPtEtaPhiM(jet_pt2,jet_eta2,jet_phi2,jet_mass2)
                 M12=(v1+v2).M()
                 if abs(M12-wmass) < dM:
                     idx_j1=iJet
