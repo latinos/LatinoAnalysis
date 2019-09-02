@@ -531,7 +531,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2016v5','CleanFatJet','wlepMaker'],
+                  'subTargets' : ['l1tightOR2016v5','PreselFatJet','whadJetSel','wlepMaker'],
                   'onlySample' : LNuQQSamples,
                    },
 
@@ -539,7 +539,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2017v5','CleanFatJet','wlepMaker'],
+                  'subTargets' : ['l1tightOR2017v5','PreselFatJet','whadJetSel','wlepMaker'],
                   'onlySample' : LNuQQSamples,
                    },
 
@@ -547,7 +547,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2018v5','CleanFatJet','wlepMaker'],
+                  'subTargets' : ['l1tightOR2018v5','PreselFatJet','whadJetSel','wlepMaker'],
                   'onlySample' : LNuQQSamples,
                    },
 
@@ -849,7 +849,14 @@ Steps = {
                   'declare'   : 'whadJetSel = lambda : WhadJetSel()',
                   'module'    : 'WhadJetSel()',
     },
-
+    'PreselFatJet' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=1, minpt=200, maxeta=2.4, max_tau21=9999., mass_range=[40, 13000], over_lepR=0.8, over_jetR=0.8)',
+                  'module'     : 'fatjetMaker()'
+    },
 
 
 ## ------- MODULES: Trigger
