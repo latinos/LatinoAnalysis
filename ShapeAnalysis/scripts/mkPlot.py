@@ -164,6 +164,23 @@ if __name__ == '__main__':
       handle = open(opt.variablesFile,'r')
       exec(handle)
       handle.close()
+
+    nuisances = {}
+    if opt.nuisancesFile == None :
+      print " Please provide the nuisances structure if you want to add nuisances "
+    elif os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close()
+
+    import LatinoAnalysis.ShapeAnalysis.utils as utils
+
+    subsamplesmap = utils.flatten_samples(samples)
+    categoriesmap = utils.flatten_cuts(cuts)
+
+    utils.update_variables_with_categories(variables, categoriesmap)
+    utils.update_nuisances_with_subsamples(nuisances, subsamplesmap)
+    utils.update_nuisances_with_categories(nuisances, categoriesmap)
    
     # check if only one cut or only one variable
     # is requested, and filter th elist of cuts and variables
@@ -178,7 +195,6 @@ if __name__ == '__main__':
         del variables[toRemove]
            
       print  " variables = ", variables
-      
 
     if opt.onlyCut != None :
       list_to_remove = []
@@ -189,15 +205,7 @@ if __name__ == '__main__':
         del cuts[toRemove]
 
       print  " cuts = ", cuts
-
-    nuisances = {}
-    if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
-    elif os.path.exists(opt.nuisancesFile) :
-      handle = open(opt.nuisancesFile,'r')
-      exec(handle)
-      handle.close() 
-        
+       
     groupPlot = OrderedDict()
     plot = {}
     legend = {}

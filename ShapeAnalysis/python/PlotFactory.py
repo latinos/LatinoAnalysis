@@ -233,32 +233,15 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              if 'subsamples' in plotdef:
-                histos[sampleName] = None
-                for subsample in plotdef['subsamples']:
-                  shapeName = cutName+"/"+variableName+'/histo_' + sampleName + '_' + subsample
-                  print '     -> shapeName = ', shapeName
-                  if type(fileIn) is dict:
-                    histo = fileIn[sampleName].Get(shapeName)
-                  else:
-                    histo = fileIn.Get(shapeName)
-                  print ' --> ', histo
-                  print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
-                  if histos[sampleName] is None:
-                    histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
-                  else:
-                    histos[sampleName].Add(histo)
-                    
+              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              print '     -> shapeName = ', shapeName
+              if type(fileIn) is dict:
+                histo = fileIn[sampleName].Get(shapeName)
               else:
-                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-                print '     -> shapeName = ', shapeName
-                if type(fileIn) is dict:
-                  histo = fileIn[sampleName].Get(shapeName)
-                else:
-                  histo = fileIn.Get(shapeName)
-                print ' --> ', histo
-                print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
-                histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
+                histo = fileIn.Get(shapeName)
+              print ' --> ', histo
+              print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
+              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
@@ -1193,6 +1176,8 @@ class PlotFactory:
               CMS_lumi.lumi_sqrtS = legend['sqrt']
             if 'lumi' in legend.keys() :
               CMS_lumi.lumi_13TeV = legend['lumi']
+            else:
+              CMS_lumi.lumi_13TeV = 'L = %.1f fb^{-1}' % self._lumi
         
             # Simple example of macro: plot with CMS name and lumi text
             #  (this script does not pretend to work in all configurations)
