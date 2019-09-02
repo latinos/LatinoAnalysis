@@ -338,7 +338,8 @@ Samples["ZZTo4L_ext1"] = {'nanoAOD': '/ZZTo4L_13TeV_powheg_pythia8/RunIIFall17Na
 
 Samples["Wg_AMCNLOFXFX"] = {'nanoAOD': '/WGToLNuG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 Samples["Wg_MADGRAPHMLM"] = {'nanoAOD': '/WGToLNuG_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
-
+### WGJJ
+Samples["WGJJ"] = {'nanoAOD': '/WGJJToLNu_EWK_QCD_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 ### Zg
 Samples["ZGToLLG"] = {'nanoAOD': '/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v3/NANOAODSIM'}
 
