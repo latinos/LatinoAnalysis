@@ -661,63 +661,67 @@ class ShapeFactory:
                     histoNameUp = 'histo_' + subsampleNameUp
                     histoNameDown = 'histo_' + subsampleNameDown
 
-                    if nuisance['kind'].endswith('_envelope'):
-                      arrup = root_numpy.hist2array(hTotal, copy=True)
-                      arrdown = root_numpy.hist2array(hTotal, copy=True)
-
-                      for ivar in range(len(configurationNuis)):
-                        subsampleNameVar = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
-                        histoNameVar = 'histo_' + subsampleNameVar
-                        hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
-                        arrvar = root_numpy.hist2array(hTotalVar, copy=False)
-
-                        arrup = np.maximum(arrup, arrvar)
-                        arrdown = np.minimum(arrdown, arrvar)
-
-                        if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
-                          _allplots.remove(hTotalVar)
-                          hTotalVar.Delete()
-
-                    elif nuisance['kind'].endswith('_rms'):
-                      arrnom = root_numpy.hist2array(hTotal, copy=False)
-                      arrv2 = np.zeros_like(arrnom)
-
-                      for ivar in range(len(configurationNuis)):
-                        subsampleNameVar = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
-                        histoNameVar = 'histo_' + subsampleNameVar
-                        hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
-                        arrvar = root_numpy.hist2array(hTotalVar, copy=True)
-                        arrvar -= arrnom
-                        arrv2 += arrvar * arrvar
-
-                        if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
-                          _allplots.remove(hTotalVar)
-                          hTotalVar.Delete()
-
-                      arrv2 /= len(configurationNuis)
-                      arrv = np.sqrt(arrv2)
-                      arrup = arrnom + arrv
-                      arrdown = arrnom - arrv
-
                     if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
-                      outFile.cd(cutName + catsuffix + '/' + variableName)
-                      hTotalUp = hTotal.Clone(histoNameUp)
-                      hTotalDown = hTotal.Clone(histoNameDown)
-                      _allplots.add(hTotalUp)
-                      _allplots.add(hTotalDown)
-                      root_numpy.array2hist(arrup, hTotalUp)
-                      root_numpy.array2hist(arrdown, hTotalDown)
+                      def getvar(ivar):
+                        subsampleNameVar = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
+                        histoNameVar = 'histo_' + subsampleNameVar
+                        hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
+                        _allplots.remove(hTotalVar)
+                        outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, True)
+  
+                        arrvar = root_numpy.hist2array(outputsHistoVar, copy=True)
+  
+                        if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
+                          outputsHistoVar.Delete()
+                        else:
+                          _allplots.add(outputsHistoVar)
+  
+                        return arrvar
+  
+                      if nuisance['kind'].endswith('_envelope'):
+                        arrup = root_numpy.hist2array(outputsHisto, copy=True)
+                        arrdown = root_numpy.hist2array(outputsHisto, copy=True)
+  
+                        for ivar in range(len(configurationNuis)):
+                          arrvar = getvar(ivar)
+  
+                          arrup = np.maximum(arrup, arrvar)
+                          arrdown = np.minimum(arrdown, arrvar)
+  
+                      elif nuisance['kind'].endswith('_rms'):
+                        arrnom = root_numpy.hist2array(outputsHisto, copy=False)
+                        arrv2 = np.zeros_like(arrnom)
+  
+                        for ivar in range(len(configurationNuis)):
+                          arrvar = getvar(ivar)
+  
+                          arrvar -= arrnom
+                          arrv2 += arrvar * arrvar
+  
+                        arrv2 /= len(configurationNuis)
+                        arrv = np.sqrt(arrv2)
+                        arrup = arrnom + arrv
+                        arrdown = arrnom - arrv
 
+                      outFile.cd(cutName + catsuffix + '/' + variableName)
+                      outputsHistoUp = outputsHisto.Clone(histoNameUp)
+                      outputsHistoDown = outputsHisto.Clone(histoNameDown)
+                      _allplots.add(outputsHistoUp)
+                      _allplots.add(outputsHistoDown)
+                      root_numpy.array2hist(arrup, outputsHistoUp)
+                      root_numpy.array2hist(arrdown, outputsHistoDown)
+
+                    # if nuisance is kind envelope or rms
                     else:
                       hTotalUp = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
                       hTotalDown = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
 
-                    _allplots.remove(hTotalUp)
-                    outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
-                    _allplots.add(outputsHistoUp)
-                    _allplots.remove(hTotalDown)
-                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
-                    _allplots.add(outputsHistoDo)
+                      _allplots.remove(hTotalUp)
+                      outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
+                      _allplots.add(outputsHistoUp)
+                      _allplots.remove(hTotalDown)
+                      outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
+                      _allplots.add(outputsHistoDo)
   
                     # check if I need to symmetrize:
                     #    - the up will be symmetrized
