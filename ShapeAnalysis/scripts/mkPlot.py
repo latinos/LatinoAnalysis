@@ -49,7 +49,13 @@ if __name__ == '__main__':
 
     parser.add_option('--onlyVariable'   , dest='onlyVariable'   , help='draw only one variable (may be needed in post-fit plots)'          , default=None)
     parser.add_option('--onlyCut'        , dest='onlyCut'        , help='draw only one cut phase space (may be needed in post-fit plots)'   , default=None)
-   
+    parser.add_option('--onlyPlot'       , dest='onlyPlot'       , help='draw only specified plot type (comma-separated c, cratio, and/or cdifference)', default=None)
+
+    parser.add_option('--linearOnly'     , dest='linearOnly'     , help='Make linear plot only.', action='store_true', default=False)
+    parser.add_option('--logOnly'        , dest='logOnly'        , help='Make log plot only.', action='store_true', default=False)
+
+    parser.add_option('--fileFormats'    , dest='fileFormats'    , help='Output plot file formats (comma-separated png, pdf, root, C, and/or eps). Default "png,root"', default='png,root')
+
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
     parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
@@ -112,7 +118,12 @@ if __name__ == '__main__':
     factory._lumi      = opt.lumi
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
     factory._showIntegralLegend = opt.showIntegralLegend
-    
+
+    if opt.onlyPlot is not None:
+        factory._plotsToWrite = opt.onlyPlot.split(',')
+    factory._plotLinear = opt.linearOnly or not opt.logOnly
+    factory._plotLog = opt.logOnly or not opt.linearOnly
+
     factory._scaleToPlot = opt.scaleToPlot 
     factory._minLogC = opt.minLogC 
     factory._maxLogC = opt.maxLogC 
@@ -129,6 +140,8 @@ if __name__ == '__main__':
     factory._removeWeight = opt.removeWeight
 
     factory._invertXY = opt.invertXY
+
+    factory._fileFormats = opt.fileFormats.split(',')
     
     factory._postFit = opt.postFit
 
@@ -151,6 +164,23 @@ if __name__ == '__main__':
       handle = open(opt.variablesFile,'r')
       exec(handle)
       handle.close()
+
+    nuisances = {}
+    if opt.nuisancesFile == None :
+      print " Please provide the nuisances structure if you want to add nuisances "
+    elif os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close()
+
+    import LatinoAnalysis.ShapeAnalysis.utils as utils
+
+    subsamplesmap = utils.flatten_samples(samples)
+    categoriesmap = utils.flatten_cuts(cuts)
+
+    utils.update_variables_with_categories(variables, categoriesmap)
+    utils.update_nuisances_with_subsamples(nuisances, subsamplesmap)
+    utils.update_nuisances_with_categories(nuisances, categoriesmap)
    
     # check if only one cut or only one variable
     # is requested, and filter th elist of cuts and variables
@@ -165,7 +195,6 @@ if __name__ == '__main__':
         del variables[toRemove]
            
       print  " variables = ", variables
-      
 
     if opt.onlyCut != None :
       list_to_remove = []
@@ -176,15 +205,7 @@ if __name__ == '__main__':
         del cuts[toRemove]
 
       print  " cuts = ", cuts
-
-    nuisances = {}
-    if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
-    elif os.path.exists(opt.nuisancesFile) :
-      handle = open(opt.nuisancesFile,'r')
-      exec(handle)
-      handle.close() 
-        
+       
     groupPlot = OrderedDict()
     plot = {}
     legend = {}

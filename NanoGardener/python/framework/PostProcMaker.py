@@ -30,6 +30,7 @@ class PostProcMaker():
 
      #self._aaaXrootd = 'root://cms-xrd-global.cern.ch//'
      self._aaaXrootd = 'root://xrootd-cms.infn.it//'
+
      self._haddnano  = 'PhysicsTools/NanoAODTools/scripts/haddnano.py'
 
      # root tree prefix
@@ -480,11 +481,13 @@ class PostProcMaker():
      fPy.write('#!/usr/bin/env python \n')
      fPy.write('import os, sys \n')
      fPy.write('import subprocess\n')
+     fPy.write('import shutil\n')
      fPy.write('import ROOT \n')
      fPy.write('ROOT.PyConfig.IgnoreCommandLineOptions = True \n')
      fPy.write(' \n')
      fPy.write('from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor \n')
      fPy.write('from LatinoAnalysis.NanoGardener.modules.Dummy import *\n')
+     fPy.write('import LatinoAnalysis.Tools.userConfig as userConfig\n')
      fPy.write(' \n')
 
      # Import(s) of modules
@@ -509,19 +512,44 @@ class PostProcMaker():
          fPy.write(self.customizeDeclare(iStep)+'\n')
      fPy.write(' \n')
 
-     if self._iniStep == 'Prod':
-       for iFile in inputRootFiles:
-         fPy.write('subprocess.Popen(["xrdcp", "'+iFile+'", "."]).communicate()\n')
-
      # Files
-     fPy.write('files=[')
-     if self._iniStep == 'Prod':
-       for iFile in inputRootFiles : fPy.write('"./'+os.path.basename(iFile)+'",')
-     else:
-       for iFile in inputRootFiles : fPy.write('"'+iFile+'",')
-     fPy.write(']\n') 
-     fPy.write(' \n')
-     
+     fPy.write('sourceFiles=[\n%s\n]\n\n' % (',\n'.join('    "%s"' % f for f in inputRootFiles)))
+     fPy.write('files=[]\n\n')
+
+     # Download the file locally with size validation (make maximum 5 attempts)
+     fPy.write('for source in sourceFiles:\n')
+     fPy.write('    fname = os.path.basename(source).replace(".root", "_input.root")\n')
+     fPy.write('    for att in range(5):\n')
+     fPy.write('        if source.startswith("root://"):\n')
+     fPy.write('            proc = subprocess.Popen(["xrdcp", "-f", source, "./" + fname])\n')
+     fPy.write('            proc.communicate()\n')
+     fPy.write('            if proc.returncode == 0:\n')
+     fPy.write('                out, err = subprocess.Popen(["xrdfs", source[:source.find("/", 7)], "stat", source[source.find("/", 7) + 1:]], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()\n')
+     fPy.write('                try:\n')
+     fPy.write('                    size = int(out.split("\\n")[2].split()[1])\n')
+     fPy.write('                except:\n')
+     fPy.write('                    if hasattr(userConfig, "postProcSkipSizeValidation") and userConfig.postProcSkipSizeValidation:\n')
+     fPy.write('                        sys.stderr.write("Failed to obtain original file size but skipping validation as requested by user\\n")\n')
+     fPy.write('                        break\n')
+     fPy.write('                    raise\n')
+     fPy.write('            else:\n')
+     fPy.write('                continue\n')
+     fPy.write('        else:\n')
+     fPy.write('            shutil.copyfile(source, "./" + fname)\n')
+     fPy.write('            size = os.stat(source).st_size\n')
+     fPy.write('\n')
+     fPy.write('        try:\n')
+     fPy.write('            if os.stat(os.path.basename(fname)).st_size == size:\n')
+     fPy.write('                break\n')
+     fPy.write('        except:\n')
+     fPy.write('            try:\n')
+     fPy.write('                os.unlink(os.path.basename(fname))\n')
+     fPy.write('            except:\n')
+     fPy.write('                pass\n')
+     fPy.write('    else:\n')
+     fPy.write('        raise RuntimeError("Failed to download " + source)\n\n')
+     fPy.write('    files.append(fname)\n\n')
+
      # Configure modules
      fPy.write('p = PostProcessor(  "."   ,          \n')
      fPy.write('                    files ,          \n')
@@ -532,9 +560,13 @@ class PostProcMaker():
      else: 
        fPy.write('                    cut=None ,       \n')
      if 'branchsel' in self._Steps[iStep] :
-       fPy.write('                    branchsel='+self._Steps[iStep]['branchsel']+' ,       \n')
+       fPy.write('                    branchsel="'+self._Steps[iStep]['branchsel']+'",       \n')
      else:
        fPy.write('                    branchsel=None , \n')
+     if 'outputbranchsel' in self._Steps[iStep]:
+       fPy.write('                    outputbranchsel="'+self._Steps[iStep]['outputbranchsel']+'",       \n')
+     else:
+       fPy.write('                    outputbranchsel=None , \n')
      fPy.write('                    modules=[        \n')
      if self._Steps[iStep]['isChain'] :
        for iSubStep in  self._Steps[iStep]['subTargets'] :
@@ -560,6 +592,13 @@ class PostProcMaker():
      # Common footer
      fPy.write('p.run() \n')
      fPy.write(' \n')
+
+     fPy.write('for fname in files:\n')
+     fPy.write('    try:\n')
+     fPy.write('        os.unlink(fname)\n')
+     fPy.write('        os.rename(fname.replace("_input.root", "_input_Skim.root"), fname.replace("_input.root", "_Skim.root"))\n')
+     fPy.write('    except:\n')
+     fPy.write('        pass\n')
 
      # Close file
      fPy.close()
