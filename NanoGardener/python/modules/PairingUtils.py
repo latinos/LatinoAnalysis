@@ -74,13 +74,21 @@ def max_mjj_pair(vectors):
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0]
 
-def max_pt_pair(vectors):
+def max_pt_sum(vectors):
     ''' Returns the pair with highest Pt'''
     l = []
     for i ,k  in combinations(range(len(vectors)),2):
         l.append(( [i,k], (vectors[i]+ vectors[k]).Pt() ))
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0]
+
+def max_pt_pair(vectors):
+    ''' Returns the two jets with highest Pt'''
+    l = []
+    for i ,v in enumerate(vectors):
+        l.append(( i, v.Pt()))
+    l = sorted(l, key=itemgetter(1), reverse=True)
+    return (l[0][0],l[1][0])
 
 def nearest_mass_pair(vectors, mass):
     ''' Returns the pair of vectors with invariant mass nearest to 

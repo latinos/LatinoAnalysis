@@ -819,7 +819,7 @@ Steps = {
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
                    #'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], over_lepR=0.8, over_jetR=0.8)',
-                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], over_lepR=0.8, over_jetR=0.8)',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 150], over_lepR=0.8, over_jetR=0.8)',
                    #'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=1 ,minpt=200, maxeta=2.4, max_tau21=999., mass_range=[40, 13000], over_lepR=0.8, over_jetR=1.0)',
                   'module'     : 'fatjetMaker()'
     },
@@ -1918,24 +1918,12 @@ Steps = {
                  },
 
   # VBSjjlnu semileptonic analysis SKIM-----------------------------
-  
-  'VBSjjlnu_JetCut': {
-      'isChain'    : False ,
-      'do4MC'      : True  ,
-      'do4Data'    : True  ,
-      # - if nFatJet=1 check if there are at least two jets with 20 GeV,
-      # - veto events with more than 1 Fatjet
-      # - if not FatJet check that there are at least 3 jets with 20 GeV
-      'selection'  : '"( nCleanFatJet == 1 && nCleanJetNotFat>=2 && CleanJet_pt[CleanJetNotFat_jetIdx[1]]>=20) || \
-                        (nCleanJet >= 3  && CleanJet_pt[2]>=20)"'
-  },
-
   'VBSjjlnu_pairing': {
       'isChain'    : False ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=20,mode="vbs:maxmjj-vjet:massWZ", debug=False)',
+      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=30,  debug=False)',
       'module'     : 'vbs_pairing()'
   },
 
@@ -1948,6 +1936,24 @@ Steps = {
       'module'     : 'vbs_vars_maker()'
   },
 
+  'VBSjjlnu_pairing_v2': {
+      'isChain'    : False ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
+      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=30, mode="ALL", debug=False)',
+      'module'     : 'vbs_pairing()'
+  },
+
+  'VBSjjlnu_kin_v2': {
+      'isChain'    : False ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
+      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(minptjet=20., mode=["maxmjj","maxmjj_massWZ"], debug=False)',
+      'module'     : 'vbs_vars_maker()'
+  },
+
   'VBSjjlnuSkim2017' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
@@ -1957,6 +1963,35 @@ Steps = {
                           || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
                      "',
       'subTargets': ['CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin']
+  },
+
+  'VBSjjlnuSkim2017v2' : {
+      'isChain'    : True ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'selection'  : '"nLepton>=1  && Lepton_pt[0]>30 \
+                          && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 \
+                             || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5 \
+                             || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
+                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)>0.5 \
+                        "',   # It's bettere to request NON tight for second lepton
+      'subTargets': ['CleanFatJet', 'VBSjjlnu_pairing_v2', 'VBSjjlnu_kin_v2']
+  },
+
+  'VBSjjlnuSkim2017v2_fatjet' : {
+      'isChain'    : False ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'selection'  : '"VBS_category==0 && nLepton>=1  && Lepton_pt[0]>30 \
+                          && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 \
+                             || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5 \
+                             || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
+                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)>0.5 \
+                    && ( Alt$(Lepton_isTightElectron_mvaFall17V2Iso_WP90[1], 0) < 0.5 \
+                         || Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )       \
+                        "',   # It's bettere to request NON tight for second lepton
+      'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/FatjetSkim_outputbranches.txt'
+      
   },
 
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------

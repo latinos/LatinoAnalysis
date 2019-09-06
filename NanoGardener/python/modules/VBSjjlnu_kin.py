@@ -1,6 +1,5 @@
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
-import re
 from ROOT import TLorentzVector
 from math import cosh, sqrt
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
@@ -10,10 +9,18 @@ import LatinoAnalysis.NanoGardener.data.VBSjjlnu_vars as vbs_vars
 
 class VBSjjlnu_kin(Module):
     '''
-    
+    This module calculates several VBS semileptonic analysis observables. 
+    The VBS and Vjets have been already associated by the VBSjjlnu_JetPairing module. 
+    The mode selects the tagging algorithm. 
+
+    The mode option is a list. It selects the association algo for each category of 
+    VBS_category.  For example mode=[maxmjj, maxmjj_massWZ] selects the maxmjj strategy 
+    for Fatjet events and  maxmjj_massWZ for resolved events.
     '''
-    def __init__(self, minptjet = 20, debug=False):
-        self.minptjet = minptjet 
+    def __init__(self, minptjet = 20, mode=[ "maxmjj", "maxmjj_massWZ"], debug=False):
+        self.minptjet = minptjet
+        self.V_jets_var = { 0: "V_jets_"+ mode[0],  1: "V_jets_"+ mode[1]}
+        self.VBS_jets_var = { 0: "VBS_jets_"+mode[0], 1: "VBS_jets_" +mode[1]}
         self.debug = debug      
 
     def beginJob(self):
@@ -39,8 +46,6 @@ class VBSjjlnu_kin(Module):
         # It's important to read them like this in case they 
         # are created by the step before in a PostProcessor chain. 
         self.vbs_category = event.VBS_category
-        self.v_jets_index   = [event.V_jets[0], event.V_jets[1]]
-        self.vbs_jets_index = [event.VBS_jets[0], event.VBS_jets[1]]
         self.rawJet_coll    = Collection(event, 'Jet')
         self.Jet_coll       = Collection(event, 'CleanJet')
         self.JetNotFat_coll = Collection(event, 'CleanJetNotFat')
@@ -50,62 +55,65 @@ class VBSjjlnu_kin(Module):
         #     self.initReaders(event._tree)
 
         lepton_raw = Object(event, "Lepton", index=0)
-        MET    = Object(event, "PuppiMET")
+        puppiMET    = Object(event, "PuppiMET")
         category = int(self.vbs_category)
 
         lep = TLorentzVector()
         lep.SetPtEtaPhiE(lepton_raw.pt, lepton_raw.eta,lepton_raw.phi, lepton_raw.pt * cosh(lepton_raw.eta))
-        met = TLorentzVector()
-        met.SetPtEtaPhiE(MET.pt, 0., MET.phi, MET.pt)
+        puppimet = TLorentzVector()
+        puppimet.SetPtEtaPhiE(puppiMET.pt, 0., puppiMET.phi, puppiMET.pt)
+       
 
         # Trick for ArrayRead -> list
         # vbs_jets_index = [self.vbs_jets[0], self.vbs_jets[1]]
         # v_jets_index = [self.v_jets[0], self.v_jets[1]]
 
-        jets, jets_ids = self.get_jets_vectors(self.minptjet, self.debug)
+        jets, jets_ids = self.get_jets_vectors(self.minptjet)
 
         output = None
 
         if category == 0:
             #####################
             # Boosted category
+            v_jets_index   = [event[self.V_jets_var[0]][0], event[self.V_jets_var[0]][1]]
+            vbs_jets_index = [event[self.VBS_jets_var[0]][0], event[self.VBS_jets_var[0]][1]]
             fatjet = Object(event, "CleanFatJet", index=0)
             other_jets = []
             vbsjets = []
             # N.B. VBsjets and VJets indexes refers to the original CleanJet collection
             # the jets list is loaded with the NotFatJet mask. We have to compare original ids. 
             for jet, jetind in zip(jets, jets_ids):
-                if jetind in self.vbs_jets_index:  
+                if jetind in vbs_jets_index:  
                     vbsjets.append(jet)
                 else:                      
                     other_jets.append(jet)
 
             # CleanFatJet collection mass is Softdrop PUPPI mass
-            output = vbs_vars.getVBSkin_boosted(vbsjets, fatjet.p4(), lep, met, other_jets, debug=self.debug )
+            output = vbs_vars.getVBSkin_boosted(vbsjets, fatjet.p4(), lep, puppimet, other_jets, debug=self.debug )
 
         
         elif category == 1:
             #####################
             # Resolved category
+            v_jets_index   = [event[self.V_jets_var[1]][0], event[self.V_jets_var[1]][1]]
+            vbs_jets_index = [event[self.VBS_jets_var[1]][0], event[self.VBS_jets_var[1]][1]]
             other_jets = []
             vbsjets = []
             vjets = []
             for jet, jetind in zip(jets, jets_ids):
-                if jetind in self.vbs_jets_index:  
+                if jetind in vbs_jets_index:  
                     vbsjets.append(jet)
-                elif jetind in self.v_jets_index:
+                elif jetind in v_jets_index:
                     vjets.append(jet)
                 else:                      
                     other_jets.append(jet)
-
-            
-            output = vbs_vars.getVBSkin_resolved(vbsjets, vjets, lep, met, other_jets, debug=self.debug )
+            output = vbs_vars.getVBSkin_resolved(vbsjets, vjets, lep, puppimet, other_jets, debug=self.debug )
         
-        elif category == 2:
-            ##############################
-            # Missing jet (3-jet) category
-            if self.debug: print "Category 2: Missing one jet"
-            output = vbs_vars.getDefault()
+        # elif category == 2:
+        #     ##############################
+        #     # Missing jet (3-jet) category
+        #     if self.debug: print "Category 2: Missing one jet"
+        #     output = vbs_vars.getDefault()
 
         # Fill the branches
         for var, val in output.items():
@@ -114,7 +122,7 @@ class VBSjjlnu_kin(Module):
         """return True (go to next module) or False (fail, go to next event)"""
         return True
 
-    def get_jets_vectors(self, ptmin, debug=False):
+    def get_jets_vectors(self, ptmin):
         '''
         Returns a list of 4-momenta for jets looking only at jets
         that are cleaned from FatJets.
@@ -139,7 +147,7 @@ class VBSjjlnu_kin(Module):
             vec = TLorentzVector()
             vec.SetPtEtaPhiE(pt, eta, phi, en)
             # check if different from the previous one
-            if debug:
+            if self.debug:
                 print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
             jets.append(vec)
             coll_ids.append(jetindex)

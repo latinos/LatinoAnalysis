@@ -1,5 +1,5 @@
 from itertools import chain
-from math import cosh
+from math import cosh, sqrt, cos
 from ROOT import TLorentzVector
 import LatinoAnalysis.Gardener.variables.VBS_recoNeutrino as RecoNeutrino
 
@@ -20,10 +20,10 @@ VBSjjlnu_branches  = {
             "deltaR_lep_nu", "deltaR_vbs", "deltaR_vjet",
             "Rvjets_high", "Rvjets_low",
             "Zvjets_high", "Zvjets_low", "Zlep",
-            "Asym_vbs", "Asym_vjet", "Mw_lep", "w_lep_pt", 
+            "Asym_vbs", "Asym_vjet", "Mw_lep", "Mtw_lep", "w_lep_pt", 
             "Mww", "R_ww", "R_mw", "A_ww",
             "Centr_vbs", "Centr_ww", "Lep_proj", "Lep_projw", "Ht",
-            "recoMET", "recoMET_pz"          
+            "recoMET", "recoMET_pz" ,"recoMET_nearlep", "recoMET_pz_nearlep" ,
             ],
         "I": ["N_jets", "N_jets_forward", "N_jets_central"]
     }
@@ -85,9 +85,12 @@ def getVBSkin_resolved(vbsjets, vjets,lepton, met, other_jets, debug=False):
     output["vjet_eta_high"] = abs(vjet_etas[0])
     output["vjet_eta_low"] = abs(vjet_etas[1])
 
-    nu_vec = RecoNeutrino.reconstruct_neutrino(lepton, met)
+    nu_vec = RecoNeutrino.reconstruct_neutrino(lepton, met,mode="central")
+    nu_vec_nearlep = RecoNeutrino.reconstruct_neutrino(lepton, met,mode="pz_lep")
     output["recoMET"] = nu_vec.Pt()
     output["recoMET_pz"] = nu_vec.Pz() 
+    output["recoMET_nearlep"] = nu_vec_nearlep.Pt()
+    output["recoMET_pz_nearlep"] = nu_vec_nearlep.Pz() 
     output["deltaphi_lep_nu"] = abs(lepton.DeltaPhi(nu_vec)) 
     output["deltaeta_lep_nu"] = abs(lepton.Eta() - nu_vec.Eta())
     output["deltaR_lep_nu"] = lepton.DrEtaPhi(nu_vec)
@@ -126,6 +129,8 @@ def getVBSkin_resolved(vbsjets, vjets,lepton, met, other_jets, debug=False):
     ww_vec = w_lep + w_had
     output["w_lep_pt"] = w_lep.Pt()
     output["Mw_lep"] = w_lep.M()
+    #output["Mtw_lep"] = w_lep_t.M()
+    output["Mtw_lep"] = sqrt(2 * lepton.Pt() * met.Pt() * (1 - cos( lepton.DeltaPhi(met))));
     output["Mww"] = ww_vec.M()
     output["R_ww"] = (w_lep.Pt() * w_lep.Pt()) / ptvbs12
     output["R_mw"] = ww_vec.M() / ptvbs12
@@ -169,7 +174,6 @@ def getVBSkin_resolved(vbsjets, vjets,lepton, met, other_jets, debug=False):
     output["Ht"] = Ht
     return output
 
-
 def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     output = getDefault()
     # variables extraction
@@ -209,9 +213,12 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     output["mjj_vjet"] = total_vjet.M()
     output["vjet_eta_high"] = abs(vjet_etas[0])
 
-    nu_vec = RecoNeutrino.reconstruct_neutrino(lepton, met)
+    nu_vec = RecoNeutrino.reconstruct_neutrino(lepton, met,mode="central")
+    nu_vec_nearlep = RecoNeutrino.reconstruct_neutrino(lepton, met,mode="pz_lep")
     output["recoMET"] = nu_vec.Pt()
     output["recoMET_pz"] = nu_vec.Pz() 
+    output["recoMET_nearlep"] = nu_vec_nearlep.Pt()
+    output["recoMET_pz_nearlep"] = nu_vec_nearlep.Pz() 
     output["deltaphi_lep_nu"] = abs(lepton.DeltaPhi(nu_vec)) 
     output["deltaeta_lep_nu"] = abs(lepton.Eta() - nu_vec.Eta())
     output["deltaR_lep_nu"] = lepton.DrEtaPhi(nu_vec)
@@ -245,6 +252,8 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, other_jets, debug=False):
     ww_vec = w_lep + w_had
     output["w_lep_pt"] = w_lep.Pt()
     output["Mw_lep"] = w_lep.M()
+    #output["Mtw_lep"] = w_lep_t.M()
+    output["Mtw_lep"] = sqrt(2 * lepton.Pt() * met.Pt() * (1 - cos( lepton.DeltaPhi(met))));
     output["Mww"] = ww_vec.M()
     output["R_ww"] = (w_lep.Pt() * w_lep.Pt()) / ptvbs12
     output["R_mw"] = ww_vec.M() / ptvbs12
