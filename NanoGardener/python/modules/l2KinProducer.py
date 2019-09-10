@@ -90,7 +90,8 @@ class l2KinProducer(Module):
            'dphilep1jet1', 
            'dphilep1jet2', 
            'dphilep2jet1', 
-           'dphilep2jet2', 
+           'dphilep2jet2',
+           'mindetajl',
            
            'ht',
            'vht_pt',
