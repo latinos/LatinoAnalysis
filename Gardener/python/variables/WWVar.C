@@ -99,6 +99,7 @@ public:
  float dphilep2jet2(); 
 
  float mindetajl();
+ float detall();
 
  float vht_pt();
  float vht_phi();
@@ -1097,6 +1098,17 @@ float WW::mindetajl()
     if (detaj2l2 < themin) themin = detaj2l2;
 
     return themin;
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+float WW::detall()
+{
+  if (_isOk) {
+    return fabs(L1.Eta() - L2.Eta());
   }
   else {
     return -9999.0;
