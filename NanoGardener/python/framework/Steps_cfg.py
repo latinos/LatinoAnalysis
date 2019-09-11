@@ -727,7 +727,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.WGammaStar',
-                  'declare'    : 'wGS = lambda : WGammaStar()',
+                  'declare'    : 'wGS = lambda : WGammaStarV2()',
                   'module'     : 'wGS()',
                   } ,
 
@@ -2050,7 +2050,22 @@ Steps = {
                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)>0.5 \
                     && ( Alt$(Lepton_isTightElectron_mvaFall17V2Iso_WP90[1], 0) < 0.5 \
-                         || Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )       \
+                         && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )       \
+                        "', 
+      'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/FatjetSkim_outputbranches.txt',
+      'onlySample' : LNuJJ_VBS_Samples_bkg + LNuJJ_VBS_Samples_signal + LNuJJ_VBS_Samples_data2017
+  },
+
+   'VBSjjlnuSkim2017v3_fatjet' : {
+      'isChain'    : False ,
+      'do4MC'      : True  ,
+      'do4Data'    : True  ,
+      'selection'  : '"VBS_category==0 && nLepton>=1  && Lepton_pt[0]>30  \
+                      && (  Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5 \
+                             || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
+                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)>0.5 \
+                    && ( Alt$(Lepton_isTightElectron_mvaFall17V2Iso_WP90[1], 0) < 0.5 \
+                         && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )       \
                         "', 
       'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/FatjetSkim_outputbranches.txt',
       'onlySample' : LNuJJ_VBS_Samples_bkg + LNuJJ_VBS_Samples_signal + LNuJJ_VBS_Samples_data2017

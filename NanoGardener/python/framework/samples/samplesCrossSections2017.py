@@ -960,3 +960,5 @@ samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   're
 # Wjets EWK production semileptonic analysis
 # XS from AN CMS-SMP-17-161
 samples['WLNuJJ_EWK'].extend (['xsec=20.44', 'kfact=1.000', 'ref=SMP-17-161'])
+
+samples['GluGluToHHTo2B2WToLNu2J'].extend(['xsec=1.97', 'kfact=1.000', 'ref=?'])
