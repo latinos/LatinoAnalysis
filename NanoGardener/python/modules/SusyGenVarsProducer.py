@@ -46,9 +46,17 @@ class SusyGenVarsProducer(Module):
                         self.susyProcess = process
 
             if self.susyProcess=='' :
-                raise Exception('SusyGenVarsProducer ERROR: SUSY process not found for', inputFile.GetName())
+                print 'SusyGenVarsProducer WARNING: SUSY process not found for input file', inputFile.GetName()
+
+                for susyModel in SUSYCrossSections[process]['susyModels'] :
+                    if susyModel in outputFile.GetName() :
+                        self.susyProcess = process
+
+                if self.susyProcess=='' :
+                    print 'SusyGenVarsProducer WARNING: SUSY process not found for output file', outputFile.GetName()
             
-            self.susyModelIsSet = True
+            if self.susyProcess!='' :
+                self.susyModelIsSet = True
 
     ###    
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -139,6 +147,16 @@ class SusyGenVarsProducer(Module):
                     (abs(particle.pdgId)==2000011 or abs(particle.pdgId)==2000013 or abs(particle.pdgId)==2000015)) : # RH sleptons
                     massSlepton = particle.mass
 
+        if self.susyModelIsSet==False:
+            if massStop>-1:
+                self.susyProcess = 'StopSbottom'
+            elif massChargino>-1:
+                self.susyProcess = 'WinoC1C1'
+            else:
+                raise Exception('SusyGenVarsProducer ERROR: SUSY process not set from gen particle inspection either')
+            print 'SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection'
+            self.susyModelIsSet = True
+                
         xSec = self.getCrossSection(self.susyProcess, massPrompt)
         xSection = xSec[0]
         xSecUncert = xSec[1]
