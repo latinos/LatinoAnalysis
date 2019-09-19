@@ -16,7 +16,7 @@ for jet in ['real', 'pu']:
 
 jet_puid_sf = {}
 
-for cmssw in ['Full2016', 'Full2016v2_hmumu', 'Full2016v4', 'Full2016v5', 'Full2016v2']:
+for cmssw in ['Full2016', 'Full2016v2_hmumu', 'Full2016v4', 'Full2016v5','Full2016v5_mh', 'Full2016v2']:
     jet_puid_sf[cmssw] = _jet_puid_sf['2016']
 
 for cmssw in ['Full2017v2LP19', 'Study2017', 'Full2017', 'Full2017v2', 'Full2017v5', 'Full2017v4']:

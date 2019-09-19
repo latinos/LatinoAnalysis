@@ -38,6 +38,7 @@ class FakeWeight():
 
         self.eleDir = eleWPDic[cmssw][WPType][eleWP]['fakeW']
         self.muDir  = muWPDic[cmssw][WPType][muWP]['fakeW']
+        print self.eleDir , self.muDir
 
         # Root Files
 

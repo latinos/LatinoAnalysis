@@ -1166,6 +1166,14 @@ Steps = {
                   'subTargets' : ['fakeWstep','formulasFAKE'],
                    },
 
+  'fakeW_CutBasedTest'  : {
+                  'isChain'    : True ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['fakeWstep','formulasFAKE'],
+                   },
+
+
 
     'fakeW'  : {
                   'isChain'    : True ,
