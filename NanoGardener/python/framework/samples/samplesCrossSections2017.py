@@ -944,3 +944,11 @@ samples['WpToLNu_WpTo2J']   .extend( ['xsec=0.0879',    'kfact=1.000',   'ref=Z'
 samples['WpToLNu_ZTo2J']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=Z' ])
 samples['ZTo2L_ZTo2J']      .extend( ['xsec=0.0159',     'kfact=1.000',   'ref=Z' ])
 samples['WpToLNu_WmTo2J']   .extend( ['xsec=0.9114',    'kfact=1.000',   'ref=Z' ])
+
+
+
+samples['2HDMa_MH3_300_MH4_150'] .extend( ['xsec=0.041793',       'kfact=1.00',           'ref=N'] ) #Cross-section :   1.863 x 0.2137 x 0.104976                                                               
+samples['2HDMa_MH3_500_MH4_150'] .extend( ['xsec=0.012327',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_MH3_700_MH4_150'] .extend( ['xsec=0.0044396',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_MH3_900_MH4_150'] .extend( ['xsec=0.0017289',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_MH3_1200_MH4_150'] .extend( ['xsec=0.00023577',       'kfact=1.00',           'ref=N'] )
