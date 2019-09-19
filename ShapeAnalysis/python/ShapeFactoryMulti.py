@@ -9,6 +9,8 @@ import collections
 import tempfile
 import subprocess
 import logging
+import numpy as np
+import root_numpy
 from array import array
 
 ROOT.ROOT.EnableThreadSafety()
@@ -18,6 +20,8 @@ try:
   ROOT.multidraw.MultiDraw
 except:
   raise RuntimeError('Failed to load libMultiDraw')
+
+import LatinoAnalysis.Tools.userConfig as userConfig
 
 # ----------------------------------------------------- ShapeFactory --------------------------------------
 
@@ -152,7 +156,7 @@ class ShapeFactory:
         #############################################
 
         # Need to keep a python reference to all plot objects (otherwise python will garbage-collect)
-        _allplots = []
+        _allplots = set()
 
         print ''
         print '  <start histogram filling>'
@@ -213,6 +217,15 @@ class ShapeFactory:
           drawer = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
           drawer.setFilter(supercut)
 
+          for aliasName, alias in self.aliases.iteritems():
+            if 'samples' in alias and sampleName not in alias['samples']:
+              continue
+
+            if 'class' in alias:
+              drawer.addAlias(aliasName, ShapeFactory._make_ttreefunction(alias))
+            else:
+              drawer.addAlias(aliasName, alias['expr'])
+
           # Set overall weights on the nominal drawer
           drawer.setReweight(sampleweight)
                
@@ -225,7 +238,7 @@ class ShapeFactory:
           nuisanceDrawers = {}
 
           for nuisanceName, nuisance in nuisances.iteritems():
-            if 'kind' not in nuisance or nuisance['kind'] != 'tree':
+            if ('kind' not in nuisance) or (not nuisance['kind'].startswith('tree')):
               continue
 
             # Sept 2017
@@ -273,19 +286,22 @@ class ShapeFactory:
                 ndrawerDown = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
 
             elif 'filesUp' in nuisance and 'filesDown' in nuisance:
+              # TODO this feature is not fully working - I can't come up with a good way to assign variation files to batch jobs
               ndrawerUp = self._connectInputs(sampleName, nuisance['filesUp'][sampleName], '', skipMissingFiles=False)
               ndrawerDown = self._connectInputs(sampleName, nuisance['filesDown'][sampleName], '', skipMissingFiles=False)
 
-            nuisanceDrawers[nuisanceName] = (ndrawerUp, ndrawerDown)
+            # TODO write case of 'folders' for tree_envelope and tree_rms
+
+            nuisanceDrawers[nuisanceName] = [ndrawerUp, ndrawerDown]
 
           # Set overall weights on the nuisance up/down drawers
           for nuisanceName, ndrawers in nuisanceDrawers.iteritems():
             # tree-type nuisances can in addition have weights for up / down
             configurationNuis = nuisances[nuisanceName]['samples'][sampleName]
 
-            for idir, ndrawer in enumerate(ndrawers):
-              if float(configurationNuis[idir]) != 1.:
-                nuisanceShift = ShapeFactory._make_reweight(configurationNuis[idir])
+            for ivar, ndrawer in enumerate(ndrawers):
+              if float(configurationNuis[ivar]) != 1.:
+                nuisanceShift = ShapeFactory._make_reweight(configurationNuis[ivar])
                 nuisanceweight = ROOT.multidraw.ReweightSource(sampleweight, nuisanceShift)
               else:
                 nuisanceweight = sampleweight
@@ -293,9 +309,21 @@ class ShapeFactory:
               ndrawer.setFilter(supercut)
               ndrawer.setReweight(nuisanceweight)
 
+              for aliasName, alias in self.aliases.iteritems():
+                if 'samples' in alias and sampleName not in alias['samples']:
+                  continue
+
+                if 'nominalOnly' in alias and alias['nominalOnly']:
+                  continue
+  
+                if 'class' in alias:
+                  ndrawer.addAlias(aliasName, ShapeFactory._make_ttreefunction(alias))
+                else:
+                  ndrawer.addAlias(aliasName, alias['expr'])
+
               # if the nuisance drawer is built from independent files, length of chain can be
               # different from the length of tree weights
-              tocheck = 'files' + ('Up' if idir == 0 else 'Down')
+              tocheck = 'files' + ('Up' if ivar == 0 else 'Down')
               if tocheck in nuisances[nuisanceName] and len(nuisances[nuisanceName][tocheck][sampleName]) != len(treeweights):
                 warnIfTreeWeight = True
               else:
@@ -372,19 +400,15 @@ class ShapeFactory:
 
               applicableNuisances[nuisanceName] = nuisance
 
-              # tree-type nuisance?
-              if 'kind' not in nuisance or nuisance['kind'] != 'tree':
-                continue
-
-              for ndrawer in nuisanceDrawers[nuisanceName]:
-                ndrawer.addCut(cutFullName, cut['expr'])
-                if 'categorization' in cut:
-                  ndrawer.setCategorization(cutFullName, cut['categorization'])
-                else:
-                  for catname in categoryOrdering:
-                    ndrawer.addCategory(cutFullName, cut['categories'][catname])
-
-            histoName = 'histo_' + subsampleName
+              # setup cuts for tree-type nuisances
+              if 'kind' in nuisance and nuisance['kind'].startswith('tree'):
+                for ndrawer in nuisanceDrawers[nuisanceName]:
+                  ndrawer.addCut(cutFullName, cut['expr'])
+                  if 'categorization' in cut:
+                    ndrawer.setCategorization(cutFullName, cut['categorization'])
+                  else:
+                    for catname in categoryOrdering:
+                      ndrawer.addCategory(cutFullName, cut['categories'][catname])
 
             # now loop over all the variables ...
             for variableName, variable in self._variables.iteritems():
@@ -426,38 +450,44 @@ class ShapeFactory:
                 xexpr = ShapeFactory._make_ttreefunction(variable)
                 yexpr = ''
 
-              if 'categories' in cut:
-                histlist = ROOT.TObjArray()
+              def setup_filler(drawer, subsampleName, reweight):
+                histoName = 'histo_' + subsampleName
 
-                for catname in categoryOrdering:
-                  outFile.cd(cutName + '_' + catname + '/' + variableName)
-
+                if 'categories' in cut:
+                  histlist = ROOT.TObjArray()
+                
+                  for catname in categoryOrdering:
+                    outFile.cd(cutName + '_' + catname + '/' + variableName)
+                
+                    hTotal = self._makeshape(histoName, variable['range'])
+                    _allplots.add(hTotal)
+                    hTotal.SetTitle(histoName)
+                    hTotal.SetName(histoName)
+                    histlist.Add(hTotal)
+                
+                  if yexpr:
+                    filler = drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
+                  else:
+                    filler = drawer.addPlotList(histlist, xexpr, cutFullName)
+                
+                else:
+                  outFile.cd(cutName + '/' + variableName)
+                
                   hTotal = self._makeshape(histoName, variable['range'])
-                  _allplots.append(hTotal)
+                  _allplots.add(hTotal)
                   hTotal.SetTitle(histoName)
                   hTotal.SetName(histoName)
-                  histlist.Add(hTotal)
+                
+                  if yexpr:
+                    filler = drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
+                  else:
+                    filler = drawer.addPlot(hTotal, xexpr, cutFullName)
+                
+                if reweight is not None:
+                  filler.setReweight(reweight)
 
-                if yexpr:
-                  filler = drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
-                else:
-                  filler = drawer.addPlotList(histlist, xexpr, cutFullName)
 
-              else:
-                outFile.cd(cutName + '/' + variableName)
-
-                hTotal = self._makeshape(histoName, variable['range'])
-                _allplots.append(hTotal)
-                hTotal.SetTitle(histoName)
-                hTotal.SetName(histoName)
-
-                if yexpr:
-                  filler = drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
-                else:
-                  filler = drawer.addPlot(hTotal, xexpr, cutFullName)
-
-              if reweight is not None:
-                filler.setReweight(reweight)
+              setup_filler(drawer, subsampleName, reweight)
                   
               for nuisanceName, nuisance in applicableNuisances.iteritems():
                 if nuisanceName == 'stat' or 'kind' not in nuisance:
@@ -465,54 +495,36 @@ class ShapeFactory:
 
                 configurationNuis = nuisance['samples'][sampleName]
 
-                for idir, variation in enumerate(('Up', 'Down')):
-                  if nuisance['kind'] == 'tree':
-                    ndrawer = nuisanceDrawers[nuisanceName][idir]
-                    reweightNuis = reweight
+                if nuisance['kind'] == 'tree':
+                  for ivar, variation in enumerate(('Up', 'Down')):
+                    ndrawer = nuisanceDrawers[nuisanceName][ivar]
+                    subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
+                    setup_filler(ndrawer, subsampleNameNuis, reweight)
 
-                  elif nuisance['kind'] == 'weight':
-                    ndrawer = drawer
-                    reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[idir])
+                elif nuisance['kind'].startswith('tree'): # tree_envelope or tree_rms
+                  for ivar, ndrawer in enumerate(nuisanceDrawers[nuisanceName]):
+                    subsampleNameNuis = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
+                    setup_filler(ndrawer, subsampleNameNuis, reweight)
+
+                elif nuisance['kind'] == 'weight':
+                  for ivar, variation in enumerate(('Up', 'Down')):
+                    reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[ivar])
                     if reweight is not None:
                       # compound reweight
                       reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
-
-                  subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
-
-                  if 'categories' in cut:
-                    histlistNuis = ROOT.TObjArray()
   
-                    for catname in categoryOrdering:
-                      outFile.cd(cutName + '_' + catname + '/' + variableName)
-  
-                      histoNameNuis = 'histo_' + subsampleNameNuis
-                      hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
-                      _allplots.append(hTotalNuis)
-                      hTotalNuis.SetTitle(histoNameNuis)
-                      hTotalNuis.SetName(histoNameNuis)
-                      histlistNuis.Add(hTotalNuis)
+                    subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
+                    setup_filler(drawer, subsampleNameNuis, reweightNuis)
 
-                    if yexpr:
-                      filler = ndrawer.addPlotList2D(histlistNuis, xexpr, yexpr, cutFullName)
-                    else:
-                      filler = ndrawer.addPlotList(histlistNuis, xexpr, cutFullName)
-                    
-                  else:
-                    outFile.cd(cutName + '/' + variableName)
+                elif nuisance['kind'].startswith('weight'): # weight_envelope or weight_rms
+                  for ivar, expr in enumerate(configurationNuis):
+                    reweightNuis = ROOT.multidraw.ReweightSource(expr)
+                    if reweight is not None:
+                      # compound reweight
+                      reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
   
-                    histoNameNuis = 'histo_' + subsampleNameNuis
-                    hTotalNuis = self._makeshape(histoNameNuis, variable['range'])
-                    _allplots.append(hTotalNuis)
-                    hTotalNuis.SetTitle(histoNameNuis)
-                    hTotalNuis.SetName(histoNameNuis)
-    
-                    if yexpr:
-                      filler = ndrawer.addPlot2D(hTotalNuis, xexpr, yexpr, cutFullName)
-                    else:
-                      filler = ndrawer.addPlot(hTotalNuis, xexpr, cutFullName)
-
-                  if reweightNuis is not None:
-                    filler.setReweight(reweightNuis)
+                    subsampleNameNuis = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
+                    setup_filler(drawer, subsampleNameNuis, reweightNuis)
 
             # Done setting up one cut
             print ''
@@ -532,7 +544,13 @@ class ShapeFactory:
 
           for nuisanceName in nuisanceDrawers.keys():
             ndrawers = nuisanceDrawers.pop(nuisanceName)
-            for ndrawer, variation in zip(ndrawers, ('Up', 'Down')):
+            nuisance = nuisances[nuisanceName]
+            if nuisance['kind'] == 'tree':
+              variations = ['Up', 'Down']
+            else:
+              variations = ['V%dVar' % i for i in range(len(ndrawers))]
+
+            for ndrawer, variation in zip(ndrawers, variations):
               print 'Start', nuisanceName + variation, 'histogram fill'
               ndrawer.execute(nevents, firstEvent)
 
@@ -580,11 +598,10 @@ class ShapeFactory:
                 else:
                   doFold = 0
 
+                _allplots.remove(hTotal)
                 outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True)
-                if outputsHisto is not hTotal:
-                  _allplots.append(outputsHisto)
-                  _allplots.remove(hTotal)
-              
+                _allplots.add(outputsHisto)
+
                 for nuisanceName, nuisance in nuisances.iteritems():
                   if sampleName not in nuisance['samples'] or \
                      ('cuts' in nuisance and cutName not in nuisance['cuts']):
@@ -638,34 +655,80 @@ class ShapeFactory:
                     if 'kind' not in nuisance:
                       continue
 
-                    #print '     ', nuisanceName
-
                     subsampleNameUp = subsampleName + '_' + nuisance['name'] + 'Up'
                     subsampleNameDown = subsampleName + '_' + nuisance['name'] + 'Down'
 
                     histoNameUp = 'histo_' + subsampleNameUp
                     histoNameDown = 'histo_' + subsampleNameDown
-  
-                    hTotalUp = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
-                    hTotalDown = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
-  
-                    outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
-                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
-  
-                    if outputsHistoUp is not hTotalUp:
-                      _allplots.append(outputsHistoUp)
-                      _allplots.remove(hTotalUp)
-                    if outputsHistoDo is not hTotalDown:
-                      _allplots.append(outputsHistoDo)
-                      _allplots.remove(hTotalDown)
 
-                    if nuisance['kind'] == 'tree':      
-                      # check if I need to symmetrize:
-                      #    - the up will be symmetrized
-                      #    - down ->   down - (up - down)
-                      #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
-                      if 'symmetrize' in nuisance:
-                        self._symmetrize(outputsHistoUp, outputsHistoDo)
+                    if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
+                      def getvar(ivar):
+                        subsampleNameVar = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
+                        histoNameVar = 'histo_' + subsampleNameVar
+                        hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
+                        _allplots.remove(hTotalVar)
+                        outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, True)
+  
+                        arrvar = root_numpy.hist2array(outputsHistoVar, copy=True)
+  
+                        if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
+                          outputsHistoVar.Delete()
+                        else:
+                          _allplots.add(outputsHistoVar)
+  
+                        return arrvar
+  
+                      if nuisance['kind'].endswith('_envelope'):
+                        arrup = root_numpy.hist2array(outputsHisto, copy=True)
+                        arrdown = root_numpy.hist2array(outputsHisto, copy=True)
+  
+                        for ivar in range(len(configurationNuis)):
+                          arrvar = getvar(ivar)
+  
+                          arrup = np.maximum(arrup, arrvar)
+                          arrdown = np.minimum(arrdown, arrvar)
+  
+                      elif nuisance['kind'].endswith('_rms'):
+                        arrnom = root_numpy.hist2array(outputsHisto, copy=False)
+                        arrv2 = np.zeros_like(arrnom)
+  
+                        for ivar in range(len(configurationNuis)):
+                          arrvar = getvar(ivar)
+  
+                          arrvar -= arrnom
+                          arrv2 += arrvar * arrvar
+  
+                        arrv2 /= len(configurationNuis)
+                        arrv = np.sqrt(arrv2)
+                        arrup = arrnom + arrv
+                        arrdown = arrnom - arrv
+
+                      outFile.cd(cutName + catsuffix + '/' + variableName)
+                      outputsHistoUp = outputsHisto.Clone(histoNameUp)
+                      outputsHistoDown = outputsHisto.Clone(histoNameDown)
+                      _allplots.add(outputsHistoUp)
+                      _allplots.add(outputsHistoDown)
+                      root_numpy.array2hist(arrup, outputsHistoUp)
+                      root_numpy.array2hist(arrdown, outputsHistoDown)
+
+                    # if nuisance is kind envelope or rms
+                    else:
+                      hTotalUp = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameUp)
+                      hTotalDown = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameDown)
+
+                      _allplots.remove(hTotalUp)
+                      outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
+                      _allplots.add(outputsHistoUp)
+                      _allplots.remove(hTotalDown)
+                      outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
+                      _allplots.add(outputsHistoDo)
+  
+                    # check if I need to symmetrize:
+                    #    - the up will be symmetrized
+                    #    - down ->   down - (up - down)
+                    #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
+                    if 'symmetrize' in nuisance:
+                      self._symmetrize(outputsHistoUp, outputsHistoDo)
             
                     if 'suppressNegativeNuisances' in sample.keys() and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
                       # fix negative bins not consistent
@@ -686,7 +749,9 @@ class ShapeFactory:
         for _ in range(10):
           try:
             if realOutDir.startswith('/eos/cms'):
-              subprocess.Popen(['xrdcp', '-f', outFile.GetName(), 'root://eoscms.cern.ch/' + realOutDir + '/' + os.path.basename(outputFileName)]).communicate()
+              cmd = ['xrdcp', '-f', outFile.GetName(), 'root://eoscms.cern.ch/' + realOutDir + '/' + os.path.basename(outputFileName)]
+              print ' '.join(cmd)
+              subprocess.Popen(cmd).communicate()
             else:
               shutil.copyfile(outFile.GetName(), outputFileName)
           except:
@@ -1123,15 +1188,6 @@ class ShapeFactory:
         drawer.setDoTimeProfile(True)
         drawer.setInputMultiplexing(int(self._nThreads))
 
-        for name, alias in self.aliases.iteritems():
-          if 'samples' in alias and process not in alias['samples']:
-            continue
-
-          if 'class' in alias:
-            drawer.addAlias(name, ShapeFactory._make_ttreefunction(alias))
-          else:
-            drawer.addAlias(name, alias['expr'])
-
         # lists[process] = []
         
         # if the filenames start with "###" the folder will be reset
@@ -1373,3 +1429,4 @@ class ShapeFactory:
           return ROOT.multidraw.ReweightSource(xexpr, yexpr, wsource)
         else:
           return ROOT.multidraw.ReweightSource(xexpr, wsource)
+

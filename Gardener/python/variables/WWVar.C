@@ -98,6 +98,9 @@ public:
  float dphilep2jet1(); 
  float dphilep2jet2(); 
 
+ float mindetajl();
+ float detall();
+
  float vht_pt();
  float vht_phi();
  float ht();
@@ -1075,6 +1078,41 @@ float WW::dphilep2jet2(){
  else {
   return -9999.0;
  } 
+}
+
+
+float WW::mindetajl()
+{
+  if (_isOk && _jetOk >= 2) {
+
+    float themin = 999;
+
+    float detaj1l1 = fabs(J1.Eta() - L1.Eta());
+    float detaj1l2 = fabs(J1.Eta() - L2.Eta());
+    float detaj2l1 = fabs(J2.Eta() - L1.Eta());
+    float detaj2l2 = fabs(J2.Eta() - L2.Eta());
+
+    if (detaj1l1 < themin) themin = detaj1l1;
+    if (detaj1l2 < themin) themin = detaj1l2;
+    if (detaj2l1 < themin) themin = detaj2l1;
+    if (detaj2l2 < themin) themin = detaj2l2;
+
+    return themin;
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+float WW::detall()
+{
+  if (_isOk) {
+    return fabs(L1.Eta() - L2.Eta());
+  }
+  else {
+    return -9999.0;
+  }
 }
 
 
