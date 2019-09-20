@@ -1112,7 +1112,7 @@ Steps = {
                  'do4MC'      : False ,
                  'do4Data'    : True  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
-                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_v18_1_em-channel.root")',
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_legacy_2018.root")',
                  'module'     : 'embed()',
                },
 

@@ -90,7 +90,12 @@ class EmbedWeights(Module):
         w.var("m_iso").setVal(getattr(event, 'Muon_pfRelIso04_all')[mu_id])
 
         ### Get Isolation and ID scalefactors
-        if self.year == "2017" or self.year == "2018":
+        if self.year == "2018":
+          embed_mu_isoSF = w.function("m_looseiso_binned_embed_ratio").getValV()
+          embed_el_isoSF = w.function("e_iso_binned_embed_kit_ratio").getValV()
+          embed_mu_idSF = w.function("m_id_embed_kit_ratio").getValV()
+          embed_el_idSF = w.function("e_id90_embed_kit_ratio").getValV()
+        if self.year == "2017":
           embed_mu_isoSF = w.function("m_looseiso_binned_embed_ratio").getValV()
           embed_el_isoSF = w.function("e_iso_binned_embed_ratio").getValV()
           embed_mu_idSF = w.function("m_id_embed_ratio").getValV()
