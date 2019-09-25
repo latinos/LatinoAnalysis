@@ -734,7 +734,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.WGammaStar',
-                  'declare'    : 'wGS = lambda : WGammaStar()',
+                  'declare'    : 'wGS = lambda : WGammaStarV2()',
                   'module'     : 'wGS()',
                   } ,
 
