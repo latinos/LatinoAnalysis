@@ -388,6 +388,16 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
+ # -------- 2016 MC 102X nAODv4
+ 'Summer16_102X_nAODv5_SigOnly_Full2016v5_mh': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16_102X_nAODv5_SigOnly.py' ,
+                       'cmssw'   : 'Full2016v5_mh' ,
+                       'year'    : '2016' ,
+                       'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 
 
  # -------- 2017 MC 102X nAODv5 : Full2017v5 -> Tight Isolation
