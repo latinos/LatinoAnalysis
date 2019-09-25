@@ -1218,57 +1218,6 @@ class PlotFactory:
                     text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
 
-            if self._plotNormalizedDistributions :
-              # ~~~~~~~~~~~~~~~~~~~~
-              # plot signal vs background normalized
-              tcanvasSigVsBkg.cd()
-  
-              frameNorm = ROOT.TH1F
-              frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
-  
-              frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
-              # setup axis names
-              if 'xaxis' in variable.keys() : 
-                frameNorm.GetXaxis().SetTitle(variable['xaxis'])
-              tcanvasSigVsBkg.RedrawAxis()
-  
-              maxY_normalized=0.0
-
-              for hentry in thsBackground_grouped.GetHists():
-                num_bins = hentry.GetNbinsX()
-                if hentry.Integral() > 0.:
-                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
-                  if y_normalized > maxY_normalized:
-                    maxY_normalized = y_normalized
-
-                for ibin in range( num_bins ) :
-                  hentry.SetBinError(ibin+1, 0.000001)
-
-                hentry.SetFillStyle(0)
-                hentry.SetLineWidth(3)
-                hentry.DrawNormalized("hist,same")
-                  
-              for hentry in thsSignal_grouped.GetHists():
-                num_bins = hentry.GetNbinsX()
-                if hentry.Integral() > 0.:
-                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
-                  if y_normalized > maxY_normalized:
-                    maxY_normalized = y_normalized
-
-                for ibin in range( num_bins ) :
-                  hentry.SetBinError(ibin+1, 0.000001)
-
-                hentry.SetFillStyle(0)
-                hentry.SetLineWidth(3)
-                hentry.DrawNormalized("hist,same")
-  
-              frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
-
-              tlegend.Draw()
-              self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
-         
-
-            
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
             print "- draw with ratio"
@@ -1421,7 +1370,7 @@ class PlotFactory:
                 
                 for sampleName, sample in self._samples.iteritems():
                     ##if sampleName.find('total') == 1: 
-## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
+                    ## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
                     if 'total' in sampleName:
                         tgrDataOverPF.SetMarkerColor(plot[sampleName]['color'])
                         tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
@@ -2336,6 +2285,62 @@ class PlotFactory:
                     if 'root' in self._fileFormats:
                       text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
  
+
+            #
+            # This is performed at the end because it will change the "FillStyle" of the histograms
+            # and you don't want to change it in the previous plots!
+            # All histograms will become "transparent" as far as fill style is concerned
+            #
+
+            if self._plotNormalizedDistributions :
+              # ~~~~~~~~~~~~~~~~~~~~
+              # plot signal vs background normalized
+              tcanvasSigVsBkg.cd()
+  
+              frameNorm = ROOT.TH1F
+              frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
+  
+              frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
+              # setup axis names
+              if 'xaxis' in variable.keys() : 
+                frameNorm.GetXaxis().SetTitle(variable['xaxis'])
+              tcanvasSigVsBkg.RedrawAxis()
+  
+              maxY_normalized=0.0
+
+              for hentry in thsBackground_grouped.GetHists():
+                num_bins = hentry.GetNbinsX()
+                if hentry.Integral() > 0.:
+                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
+                  if y_normalized > maxY_normalized:
+                    maxY_normalized = y_normalized
+
+                for ibin in range( num_bins ) :
+                  hentry.SetBinError(ibin+1, 0.000001)
+
+                hentry.SetFillStyle(0)
+                hentry.SetLineWidth(3)
+                hentry.DrawNormalized("hist,same")
+                  
+              for hentry in thsSignal_grouped.GetHists():
+                num_bins = hentry.GetNbinsX()
+                if hentry.Integral() > 0.:
+                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
+                  if y_normalized > maxY_normalized:
+                    maxY_normalized = y_normalized
+
+                for ibin in range( num_bins ) :
+                  hentry.SetBinError(ibin+1, 0.000001)
+
+                hentry.SetFillStyle(0)
+                hentry.SetLineWidth(3)
+                hentry.DrawNormalized("hist,same")
+  
+              frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
+
+              tlegend.Draw()
+              self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
+         
  
  
  
