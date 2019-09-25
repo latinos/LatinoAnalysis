@@ -22,16 +22,11 @@
     <Option name="FilenameTrainedModel" modified="No">/afs/cern.ch/user/d/ddicroce/public/DYSFmva/2018_v5/TrainedModel_PyKeras_2018_1j.h5</Option>
     <Option name="BatchSize" modified="Yes">100</Option>
     <Option name="NumEpochs" modified="Yes">400</Option>
-    <Option name="NumThreads" modified="Yes">8</Option>
-    <Option name="GpuOptions" modified="No"/>
     <Option name="Verbose" modified="No">1</Option>
     <Option name="ContinueTraining" modified="No">False</Option>
     <Option name="SaveBestOnly" modified="No">True</Option>
     <Option name="TriesEarlyStopping" modified="Yes">10</Option>
     <Option name="LearningRateSchedule" modified="No"/>
-    <Option name="TensorBoard" modified="Yes">./performance_2018_1j</Option>
-    <Option name="TensorBoard" modified="No">./performance_2018_1j</Option>
-    <Option name="ValidationSize" modified="Yes">30%</Option>
   </Options>
   <Variables NVar="13">
     <Variable VarIndex="0" Expression="PV_npvsGood" Label="PV_npvsGood" Title="PV_npvsGood" Unit="" Internal="PV_npvsGood" Type="F" Min="1.00000000e+00" Max="7.80000000e+01"/>
