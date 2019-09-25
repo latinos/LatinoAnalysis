@@ -933,6 +933,14 @@ samples['VBF_H0PHf05_ToWWTo2L2Nu'].extend( ['xsec=0.0846',	'kfact=1.000',		'ref=
 samples['VBF_H0L1f05_ToWWTo2L2Nu'].extend( ['xsec=0.0846',	'kfact=1.000',		'ref=EF'] ) # 3.75*0.215*0.108*0.108*9 YR value 
 samples['VBF_H0Mf05_ToWWTo2L2Nu'] .extend( ['xsec=0.0846',	'kfact=1.000',		'ref=EF'] ) # 3.75*0.215*0.108*0.108*9 YR value 
 
+
+samples['2HDMa_MH3_300_MH4_150'] .extend( ['xsec=0.041793',       'kfact=1.00',           'ref=N'] ) #Cross-section :   1.863 x 0.2137 x 0.104976                                                               
+samples['2HDMa_MH3_500_MH4_150'] .extend( ['xsec=0.012327',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_MH3_700_MH4_150'] .extend( ['xsec=0.0044396',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_MH3_900_MH4_150'] .extend( ['xsec=0.0017289',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_MH3_1200_MH4_150'] .extend( ['xsec=0.00023577',       'kfact=1.00',           'ref=N'] )
+
+
 ################
 # VBS Semileptonic
 samples['WmTo2J_ZTo2L']     .extend(['xsec=0.0298',     'kfact=1.000',   'ref=W' ])
@@ -961,4 +969,5 @@ samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   're
 # XS from AN CMS-SMP-17-161
 samples['WLNuJJ_EWK'].extend (['xsec=20.44', 'kfact=1.000', 'ref=SMP-17-161'])
 
+# HH bblnu
 samples['GluGluToHHTo2B2WToLNu2J'].extend(['xsec=1.97', 'kfact=1.000', 'ref=?'])

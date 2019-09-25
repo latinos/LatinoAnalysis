@@ -20,6 +20,13 @@ Samples = {
 
 Samples = {}
 
+
+Samples['2HDMa_MH3_300_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
+Samples['2HDMa_MH3_500_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
+Samples['2HDMa_MH3_700_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_700_MH4_150_MH2_700_MHC_700_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
+Samples['2HDMa_MH3_900_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_900_MH4_150_MH2_900_MHC_900_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
+Samples['2HDMa_MH3_1200_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_1200_MH4_150_MH2_1200_MHC_1200_step4-300b448c9cac23489ef80b7cb5b24a8e/USER'}
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Giulio
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

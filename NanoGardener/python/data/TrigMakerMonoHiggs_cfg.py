@@ -633,6 +633,7 @@ Trigger = {
 
 Trigger['Full2016v4'] = Trigger['Full2016v2'] 
 Trigger['Full2016v5'] = Trigger['Full2016v2'] # TODO: update eff new Ele WP 
+Trigger['Full2016v5_mh'] = Trigger['Full2016v2'] # TODO: update eff new Ele WP 
 Trigger['Full2017v4'] = Trigger['Full2017v2'] 
 Trigger['Full2017v5'] = Trigger['Full2017v2'] 
 
