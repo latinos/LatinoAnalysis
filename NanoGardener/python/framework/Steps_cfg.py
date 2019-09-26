@@ -578,6 +578,29 @@ Steps = {
                   'do4Data'    : True  ,
                   'subTargets' : ['HMvars','BWReweight'],
                    },
+   
+
+
+    'HiMaSemiLep_MC'  : {
+                  'isChain'    : True ,
+		  'do4MC'	: True ,
+		  'do4Data'	: False,
+		  'subTargets'	: ['HMsemiVarsMC'],
+		  },
+		  #'subTargets'	: ['HiMaSemiSel','HMsemiVarsMC'],
+
+    'HiMaSemiSel': {
+    	          'isChain'	: False	,
+		  'do4MC'	: True	,
+		  'do4Data'	: True	,
+                  'selection'  :'"(  Lepton_pt[0]>30 \
+		       && ( fabs(Lepton_eta[0])  < 2.1*(abs(Lepton_pdgId[0])==11) \
+		       ||   fabs(Lepton_eta[0])  < 2.4*(abs(Lepton_pdgId[0])==13))\
+                       && ( ( Alt$( Lepton_pt[1],-1) < 15*(Alt$(Lepton_pdgId[1], 11) * Alt$(Lepton_pdgId[1], 11) ==11*11) )\
+		       ||   ( Alt$( Lepton_pt[1],-1) < 10*(Alt$(Lepton_pdgId[1], 13) * Alt$(Lepton_pdgId[1], 13) ==13*13 )) )" ',
+		  },
+
+
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
@@ -766,6 +789,24 @@ Steps = {
                   'declare'    : 'HMvars = lambda : HighMassVariables()',
                   'module'     : 'HMvars()',
                },
+
+    'HMsemiVarsMC' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMsemiVars' ,
+                  'declare'    : 'HMsemiVars = lambda : HiMassSemiVars("MC")',
+                  'module'     : 'HMsemiVars()',
+               },
+    'HMsemiVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMsemiVars' ,
+                  'declare'    : 'HMsemiVars = lambda : HiMassSemiVars("DATA")',
+                  'module'     : 'HMsemiVars()',
+               },
+
 
     'assignRun': {
                   'isChain'    : False ,
