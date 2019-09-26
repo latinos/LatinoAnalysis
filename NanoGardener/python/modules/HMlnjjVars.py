@@ -10,7 +10,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 Wmass=80.4
 
-class HiMassSemiVars(Module):
+class HiMassSemiVarsGen(Module):
     def __init__(self, dataOrMc = 'DATA'):
         self.DataMc = dataOrMc
 	self.GenH_v4  = ROOT.TLorentzVector()
@@ -83,32 +83,28 @@ class HiMassSemiVars(Module):
         #OrgJets = Collection(event, "Jet")
 
 	# initialize
-	self.GenH_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gSingleLept_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gMet_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gW_Lept_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gW_Ak8_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gW_Ak4_v4.SetPtEtaPhiM(0,0,0,0)
+	self.H_v4.SetPtEtaPhiM(0,0,0,0)
+	self.SingleLept_v4.SetPtEtaPhiM(0,0,0,0)
+	self.Met_v4.SetPtEtaPhiM(0,0,0,0)
+	self.W_Lept_v4.SetPtEtaPhiM(0,0,0,0)
+	self.W_Ak8_v4.SetPtEtaPhiM(0,0,0,0)
+	self.W_Ak4_v4.SetPtEtaPhiM(0,0,0,0)
 
         Lept_col        = Collection(event, 'Lepton')
         CleanJet_col    = Collection(event, 'CleanJet')
         FatJet_col      = Collection(event, 'FatJet')
 
-        if self.DataMc == 'MC':
-          genSemiLeptFatJetEvt = False
-          genSemiLeptResolvEvt = False
-	  genIsAk8_B_evt = False
-	  genIsAk4_B_evt = False
-          # accepted jet idx
-          fidJetIdx = []
-          gAk4_idx0 = 999
-          gAk4_idx1 = 999
-          dRAk8Ak4_list = []
-          dRAk8Lept = -999
-          dRAk4Lept = [-1] *2
-          GenDressedLept_col    = Collection(event, 'GenDressedLepton')
-          GenAK4_col            = Collection(event, 'GenJet')
-          GenAK8_col            = Collection(event, 'GenJetAK8')
+        FatJetEvt = False
+        ResolvEvt = False
+	IsAk8_B_evt = False
+	IsAk4_B_evt = False
+        # accepted jet idx
+        fidJetIdx = []
+        Ak4_idx0 = 999
+        Ak4_idx1 = 999
+        dRAk8Ak4_list = []
+        dRAk8Lept = -999
+        RAk4Lept = [-1] *2
           gMet_pt   = getattr(event, "GenMET_pt")
           gMet_phi  = getattr(event, "GenMET_phi")
           # For single lepton evt
@@ -340,5 +336,5 @@ class HiMassSemiVars(Module):
         return metPz
  
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed                    
-HMsemiVars = lambda : HiMassSemiVars()
+HMsemiVarsGen = lambda : HiMassSemiVarsGen()
 

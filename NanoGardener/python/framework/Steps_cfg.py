@@ -579,15 +579,31 @@ Steps = {
                   'subTargets' : ['HMvars','BWReweight'],
                    },
    
-
-
-    'HiMaSemiLep_MC'  : {
+    'HMLnjjGen2017'  : {
                   'isChain'    : True ,
 		  'do4MC'	: True ,
-		  'do4Data'	: False,
-		  'subTargets'	: ['HMsemiVarsMC'],
+		  'do4Data'	: True,
+		  'subTargets'	: ['HiMaSemiSel','HMsemiVarsMC'],
 		  },
-		  #'subTargets'	: ['HiMaSemiSel','HMsemiVarsMC'],
+
+
+    'HMLnjjPre2017'  : {
+                  'isChain'    : True ,
+		  'do4MC'	: True ,
+		  'do4Data'	: True,
+                  'subTargets' : ['l1tightOR2017v5','HiMasLnjjFatJet','whadJetSel','wlepMaker'],
+		  },
+
+		  #'subTargets'	: ['HMsemiVarsMC'],
+
+    'HiMasLnjjFatJet' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=1, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=1.0, over_jetR=0.8)',
+                  'module'     : 'fatjetMaker()'
+    },
 
     'HiMaSemiSel': {
     	          'isChain'	: False	,
@@ -790,13 +806,13 @@ Steps = {
                   'module'     : 'HMvars()',
                },
 
-    'HMsemiVarsMC' : {
+    'HMsemiVarsGen' : {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.HMsemiVars' ,
-                  'declare'    : 'HMsemiVars = lambda : HiMassSemiVars("MC")',
-                  'module'     : 'HMsemiVars()',
+                  'declare'    : 'HMsemiVarsGen = lambda : HiMassSemiVarsGen("MC")',
+                  'module'     : 'HMsemiVarsGen()',
                },
     'HMsemiVars' : {
                   'isChain'    : False ,
