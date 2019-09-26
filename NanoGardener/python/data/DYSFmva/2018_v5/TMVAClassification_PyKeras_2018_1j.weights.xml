@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.19/01 [398081]"/>
     <Info name="Creator" value="ddicroce"/>
-    <Info name="Date" value="Wed Sep 18 21:43:48 2019"/>
+    <Info name="Date" value="Wed Sep 25 18:55:31 2019"/>
     <Info name="Host" value="Linux cmsbuild13.cern.ch 3.10.0-957.21.3.el7.x86_64 #1 SMP Tue Jun 18 16:35:19 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux"/>
-    <Info name="Dir" value="/afs/cern.ch/work/d/ddicroce/DNN/CMSSW_11_0_ROOT6_X_2019-09-15-2300/src/2018"/>
+    <Info name="Dir" value="/afs/cern.ch/work/d/ddicroce/DNN/CMSSW_11_0_ROOT6_X_2019-09-15-2300/src/2018/v1/v2"/>
     <Info name="Training events" value="123833"/>
-    <Info name="TrainingTime" value="1.48335010e+02"/>
+    <Info name="TrainingTime" value="1.10262229e+02"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>
@@ -27,8 +27,6 @@
     <Option name="SaveBestOnly" modified="No">True</Option>
     <Option name="TriesEarlyStopping" modified="Yes">10</Option>
     <Option name="LearningRateSchedule" modified="No"/>
-    <Option name="TensorBoard" modified="Yes">./performance_2018_1j</Option>
-    <Option name="TensorBoard" modified="No">./performance_2018_1j</Option>
   </Options>
   <Variables NVar="13">
     <Variable VarIndex="0" Expression="PV_npvsGood" Label="PV_npvsGood" Title="PV_npvsGood" Unit="" Internal="PV_npvsGood" Type="F" Min="1.00000000e+00" Max="7.80000000e+01"/>

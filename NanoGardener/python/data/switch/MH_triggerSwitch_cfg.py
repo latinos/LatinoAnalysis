@@ -152,3 +152,4 @@ SwitchDict['Full2016v2'] = {
 
 SwitchDict['Full2016v4'] = SwitchDict['Full2016v2']
 SwitchDict['Full2016v5'] = SwitchDict['Full2016v2']
+SwitchDict['Full2016v5_mh'] = SwitchDict['Full2016v2']
