@@ -41,7 +41,7 @@ class EmbedWeights(Module):
         self.run = pattern.group(2)
 
         self.out = wrappedOutputTree
-        self.branchnames = ["embed_norm", "embed_mu_isoSF", "embed_mu_idSF", "embed_el_isoSF", "embed_el_idSF", "embed_hltSF", "embed_stitching", "embed_total"]
+        self.branchnames = ["embed_norm", "embed_mu_isoSF", "embed_mu_idSF", "embed_el_isoSF", "embed_el_idSF", "embed_hltSF", "embed_total"]
         for bname in self.branchnames:
           self.out.branch(bname, "F")
 
@@ -153,20 +153,8 @@ class EmbedWeights(Module):
 
         self.out.fillBranch("embed_hltSF", embed_hltSF)
 
-        ### Stitching for 2016 samples
-        embed_stitching = 1.0
-        if self.year == "2016":
-          if   self.run == "B": embed_stitching = 1.0/0.891 # runnr >= 272007 and runnr < 275657
-          elif self.run == "C": embed_stitching = 1.0/0.910 # runnr >= 275657 and runnr < 276315
-          elif self.run == "D": embed_stitching = 1.0/0.953 # runnr >= 276315 and runnr < 276831
-          elif self.run == "E": embed_stitching = 1.0/0.947 # runnr >= 276831 and runnr < 277772
-          elif self.run == "F": embed_stitching = 1.0/0.942 # runnr >= 277772 and runnr < 278820
-          elif self.run == "G": embed_stitching = 1.0/0.906 # runnr >= 278820 and runnr < 280919
-          elif self.run == "H": embed_stitching = 1.0/0.950 # runnr >= 280919 and runnr < 284045
-        self.out.fillBranch("embed_stitching", embed_stitching)
-
         ### Total
-        embed_total = embed_norm * embed_mu_isoSF * embed_el_isoSF * embed_mu_idSF * embed_el_idSF * embed_hltSF * embed_stitching
+        embed_total = embed_norm * embed_mu_isoSF * embed_el_isoSF * embed_mu_idSF * embed_el_idSF * embed_hltSF
         if embed_total == 0: return False # Remove event; it's 0 anyway
         self.out.fillBranch("embed_total", embed_total)
 
