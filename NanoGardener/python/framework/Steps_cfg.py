@@ -1367,14 +1367,14 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE_RPLME_YEAR.py\')' ,
                  },
 
-  'formulasFAKE1l' : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
-                  'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE1l_RPLME_YEAR.py\')' ,
-                 },
+  # 'formulasFAKE1l' : {
+  #                 'isChain'    : False ,
+  #                 'do4MC'      : True  ,
+  #                 'do4Data'    : True  ,
+  #                 'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+  #                 'declare'    : '',
+  #                 'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_FAKE1l_RPLME_YEAR.py\')' ,
+  #                },
 
   'formulasEMBED' : {
                   'isChain'    : False ,
@@ -2044,7 +2044,7 @@ Steps = {
       'onlySample' : LNuJJ_VBS_Samples_bkg + LNuJJ_VBS_Samples_signal + LNuJJ_VBS_Samples_data2017
   },
 
-  'VBSjjlnuSkim2017v3_fakes' : {
+  'VBSjjlnuSkim2017v3_fakesv2' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
@@ -2053,7 +2053,7 @@ Steps = {
                         && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 ) \
                         "',  
-      'subTargets': ['fakeWstep1l','formulasFAKE1l','CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
+      'subTargets': ['fakeWstep1l','CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
       'onlySample' : LNuJJ_VBS_Samples_data2017
   },
 
