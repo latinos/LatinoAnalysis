@@ -129,8 +129,11 @@ class ShapeFactory:
             line += str(variable['name'])
           elif 'class' in variable:
             line += variable['class']
+          elif 'tree' in variable:
+            line += 'tree (%d branches)' % len(variable['tree'])
           print line
-          print "      range:", variable['range']
+          if 'range' in variable:
+            print "      range:", variable['range']
           if 'samples' in variable:
             print "      samples:", variable['samples']
 
@@ -431,63 +434,98 @@ class ShapeFactory:
               else:
                 reweight = None
 
-              if 'name' in variable:
-                if type(variable['name']) is str:
-                  try:
-                    xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
-                  except (RuntimeError, TypeError):
-                    xexpr, yexpr = variable['name'], ''
-                elif type(variable['name']) is tuple:
-                  if len(variable['name']) == 1:
-                    xexpr = variable['name'][0]
-                    yexpr = ''
-                  elif len(variable['name']) == 2:
-                    yexpr, xexpr = variable['name']
+              if 'tree' in variable:
+                def setup_filler(drawer, subsampleName, reweight):
+                  treeName = 'tree_' + subsampleName
+
+                  if 'categories' in cut:
+                    treelist = ROOT.TObjArray()
+                  
+                    for catname in categoryOrdering:
+                      outFile.cd(cutName + '_' + catname + '/' + variableName)
+
+                      tree = ROOT.TTree(treeName, treeName)
+                      _allplots.add(tree)
+                      treelist.Add(tree)
+                  
+                    filler = drawer.addTreeList(treelist, cutFullName)
+                  
                   else:
-                    raise NotImplementedError('Cannot plot >=3D distributions')
+                    outFile.cd(cutName + '/' + variableName)
+
+                    tree = ROOT.TTree(treeName, treeName)
+                    _allplots.add(tree)
+
+                    filler = drawer.addTree(tree, cutFullName)
+
+                  for bname in sorted(variable['tree'].iterkeys()):
+                    filler.addBranch(bname, variable['tree'][bname])
+                  
+                  if reweight is not None:
+                    filler.setReweight(reweight)
+
+                  return filler
 
               else:
-                xexpr = ShapeFactory._make_ttreefunction(variable)
-                yexpr = ''
+                if 'name' in variable:
+                  if type(variable['name']) is str:
+                    try:
+                      xexpr, yexpr = ShapeFactory._splitexpr(variable['name'])
+                    except (RuntimeError, TypeError):
+                      xexpr, yexpr = variable['name'], ''
+                  elif type(variable['name']) is tuple:
+                    if len(variable['name']) == 1:
+                      xexpr = variable['name'][0]
+                      yexpr = ''
+                    elif len(variable['name']) == 2:
+                      yexpr, xexpr = variable['name']
+                    else:
+                      raise NotImplementedError('Cannot plot >=3D distributions')
+  
+                elif 'class' in variable:
+                  xexpr = ShapeFactory._make_ttreefunction(variable)
+                  yexpr = ''
 
-              def setup_filler(drawer, subsampleName, reweight):
-                histoName = 'histo_' + subsampleName
-
-                if 'categories' in cut:
-                  histlist = ROOT.TObjArray()
-                
-                  for catname in categoryOrdering:
-                    outFile.cd(cutName + '_' + catname + '/' + variableName)
-                
+                def setup_filler(drawer, subsampleName, reweight):
+                  histoName = 'histo_' + subsampleName
+  
+                  if 'categories' in cut:
+                    histlist = ROOT.TObjArray()
+                  
+                    for catname in categoryOrdering:
+                      outFile.cd(cutName + '_' + catname + '/' + variableName)
+                  
+                      hTotal = self._makeshape(histoName, variable['range'])
+                      _allplots.add(hTotal)
+                      hTotal.SetTitle(histoName)
+                      hTotal.SetName(histoName)
+                      histlist.Add(hTotal)
+                  
+                    if yexpr:
+                      filler = drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
+                    else:
+                      filler = drawer.addPlotList(histlist, xexpr, cutFullName)
+                  
+                  else:
+                    outFile.cd(cutName + '/' + variableName)
+                  
                     hTotal = self._makeshape(histoName, variable['range'])
                     _allplots.add(hTotal)
                     hTotal.SetTitle(histoName)
                     hTotal.SetName(histoName)
-                    histlist.Add(hTotal)
-                
-                  if yexpr:
-                    filler = drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
-                  else:
-                    filler = drawer.addPlotList(histlist, xexpr, cutFullName)
-                
-                else:
-                  outFile.cd(cutName + '/' + variableName)
-                
-                  hTotal = self._makeshape(histoName, variable['range'])
-                  _allplots.add(hTotal)
-                  hTotal.SetTitle(histoName)
-                  hTotal.SetName(histoName)
-                
-                  if yexpr:
-                    filler = drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
-                  else:
-                    filler = drawer.addPlot(hTotal, xexpr, cutFullName)
-                
-                if reweight is not None:
-                  filler.setReweight(reweight)
+                  
+                    if yexpr:
+                      filler = drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
+                    else:
+                      filler = drawer.addPlot(hTotal, xexpr, cutFullName)
+                  
+                  if reweight is not None:
+                    filler.setReweight(reweight)
+
+                  return filler
 
 
-              setup_filler(drawer, subsampleName, reweight)
+              nominal_filler = setup_filler(drawer, subsampleName, reweight)
                   
               for nuisanceName, nuisance in applicableNuisances.iteritems():
                 if nuisanceName == 'stat' or 'kind' not in nuisance:
@@ -495,36 +533,41 @@ class ShapeFactory:
 
                 configurationNuis = nuisance['samples'][sampleName]
 
-                if nuisance['kind'] == 'tree':
-                  for ivar, variation in enumerate(('Up', 'Down')):
-                    ndrawer = nuisanceDrawers[nuisanceName][ivar]
+                if nuisance['kind'] in ['tree', 'tree_envelope', 'tree_rms']:
+                  def setup_variation(variation, ndrawer):
                     subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
                     setup_filler(ndrawer, subsampleNameNuis, reweight)
 
-                elif nuisance['kind'].startswith('tree'): # tree_envelope or tree_rms
-                  for ivar, ndrawer in enumerate(nuisanceDrawers[nuisanceName]):
-                    subsampleNameNuis = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
-                    setup_filler(ndrawer, subsampleNameNuis, reweight)
+                  if nuisance['kind'] == 'tree':
+                    for ivar, variation in enumerate(('Up', 'Down')):
+                      ndrawer = nuisanceDrawers[nuisanceName][ivar]
+                      setup_variation(variation, ndrawer)
+                  else:
+                    for ivar, ndrawer in enumerate(nuisanceDrawers[nuisanceName]):
+                      variation = 'V%dVar' % ivar
+                      setup_variation(variation, ndrawer)
 
-                elif nuisance['kind'] == 'weight':
-                  for ivar, variation in enumerate(('Up', 'Down')):
-                    reweightNuis = ROOT.multidraw.ReweightSource(configurationNuis[ivar])
-                    if reweight is not None:
-                      # compound reweight
-                      reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
-  
-                    subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
-                    setup_filler(drawer, subsampleNameNuis, reweightNuis)
+                elif nuisance['kind'] in ['weight', 'weight_envelope', 'weight_rms']:
+                  def setup_variation(variation, expr):
+                    if 'tree' in variable:
+                      nominal_filler.addBranch('reweight_' + nuisance['name'] + variation, expr)
+                    else:
+                      reweightNuis = ROOT.multidraw.ReweightSource(expr)
+                      if reweight is not None:
+                        # compound reweight
+                        reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
 
-                elif nuisance['kind'].startswith('weight'): # weight_envelope or weight_rms
-                  for ivar, expr in enumerate(configurationNuis):
-                    reweightNuis = ROOT.multidraw.ReweightSource(expr)
-                    if reweight is not None:
-                      # compound reweight
-                      reweightNuis = ROOT.multidraw.ReweightSource(reweight, reweightNuis)
-  
-                    subsampleNameNuis = subsampleName + '_' + nuisance['name'] + ('V%dVar' % ivar)
-                    setup_filler(drawer, subsampleNameNuis, reweightNuis)
+                      subsampleNameNuis = subsampleName + '_' + nuisance['name'] + variation
+                      setup_filler(drawer, subsampleNameNuis, reweightNuis)
+
+                  if nuisance['kind'] == 'weight':
+                    for ivar, variation in enumerate(('Up', 'Down')):
+                      expr = configurationNuis[ivar]
+                      setup_variation(variation, expr)
+                  else:
+                    for ivar, expr in enumerate(configurationNuis):
+                      variation = 'V%dVar' % ivar
+                      setup_variation(variation, expr)
 
             # Done setting up one cut
             print ''
@@ -539,8 +582,6 @@ class ShapeFactory:
           
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
-          # We don't need this drawer any more - can reduce the number of open FDs?
-          del drawer
 
           for nuisanceName in nuisanceDrawers.keys():
             ndrawers = nuisanceDrawers.pop(nuisanceName)
@@ -575,6 +616,9 @@ class ShapeFactory:
             histoName = 'histo_' + subsampleName
 
             for variableName, variable in self._variables.iteritems():
+              if 'tree' in variable:
+                continue
+              
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
@@ -1157,7 +1201,7 @@ class ShapeFactory:
     def _makeshape( name, bins ):
         hclass,hargs,ndim = ShapeFactory._bins2hclass( bins )
         return hclass(name, name, *hargs)
-      
+
     @staticmethod
     def _splitexpr(expr):
         """Split a y:x expression and return (x, y)"""
