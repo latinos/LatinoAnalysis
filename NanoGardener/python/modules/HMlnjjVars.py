@@ -10,15 +10,13 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 Wmass=80.4
 
-class HiMassSemiVarsGen(Module):
-    def __init__(self, dataOrMc = 'DATA'):
-        self.DataMc = dataOrMc
-	self.GenH_v4  = ROOT.TLorentzVector()
-	self.gSingleLept_v4 = ROOT.TLorentzVector()
-	self.gMet_v4  = ROOT.TLorentzVector()
-	self.gW_Lept_v4 = ROOT.TLorentzVector()
-	self.gW_Ak8_v4 = ROOT.TLorentzVector()
-	self.gW_Ak4_v4 = ROOT.TLorentzVector()
+class HMlnjjVarsClass(Module):
+    def __init__(self):
+	self.HlnFat_4v  = ROOT.TLorentzVector()
+	self.Hlnjj_4v   = ROOT.TLorentzVector()
+	self.Wlep_4v   = ROOT.TLorentzVector()
+	self.Wfat_4v   = ROOT.TLorentzVector()
+	self.Wjj_4v   = ROOT.TLorentzVector()
 
     def beginJob(self):
         pass
@@ -30,20 +28,23 @@ class HiMassSemiVarsGen(Module):
         self.out = wrappedOutputTree
 
         #New Branches
-        if self.DataMc == 'MC':
-          self.out.branch("GenEvtFlag", "I")
-          self.out.branch("GenDrAk8Ak4", "F", lenVar="nGenDrAk8Ak4")
-          self.out.branch("GenDrAk8Lept", "F")
-          self.out.branch("GenW_Lept_pt", "F")
-          self.out.branch("GenW_Lept_eta", "F")
-          self.out.branch("GenW_Lept_phi", "F")
-          self.out.branch("GenW_Lept_mass", "F")
-          self.out.branch("GenW_Ak8_mass", "F")
-          self.out.branch("GenW_Ak4_mass", "F")
-          self.out.branch("GenH_pt", "F")
-          self.out.branch("GenH_eta", "F")
-          self.out.branch("GenH_phi", "F")
-          self.out.branch("GenH_mass", "F")
+        self.out.branch("CHlnjj" , "I")
+        self.out.branch("IsFatSig" , "O")
+        self.out.branch("IsFatSB"  , "O")
+        self.out.branch("IsFatTop" , "O")
+        self.out.branch("IsJjSig" , "O")
+        self.out.branch("IsJjSB"  , "O")
+        self.out.branch("IsJjTop" , "O")
+
+        self.out.branch("WptOvHfatM", "F")
+        self.out.branch("WptOvHak4M", "F")
+
+        self.out.branch("HlnFat_mass", "F")
+        self.out.branch("Hlnjj_mass" , "F")
+        self.out.branch("Wlep_mt" , "F")
+        self.out.branch("Hlnjj_mt" , "F")
+
+        #self.out.branch("GenDrAk8Ak4", "F", lenVar="nGenDrAk8Ak4")
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -83,220 +84,184 @@ class HiMassSemiVarsGen(Module):
         #OrgJets = Collection(event, "Jet")
 
 	# initialize
-	self.H_v4.SetPtEtaPhiM(0,0,0,0)
-	self.SingleLept_v4.SetPtEtaPhiM(0,0,0,0)
-	self.Met_v4.SetPtEtaPhiM(0,0,0,0)
-	self.W_Lept_v4.SetPtEtaPhiM(0,0,0,0)
-	self.W_Ak8_v4.SetPtEtaPhiM(0,0,0,0)
-	self.W_Ak4_v4.SetPtEtaPhiM(0,0,0,0)
+	self.HlnFat_4v.SetPtEtaPhiM(0,0,0,0)
+	self.Hlnjj_4v.SetPtEtaPhiM(0,0,0,0)
+	self.Wlep_4v.SetPtEtaPhiM(0,0,0,0)
+	self.Wfat_4v.SetPtEtaPhiM(0,0,0,0)
+	self.Wjj_4v.SetPtEtaPhiM(0,0,0,0)
+
+	HlnFat_mass = -999.
+	Hlnjj_mass = -999.
+
+	WptOvHfatM = -999
+	WptOvHak4M = -999
+
+	Wfat_Sig     = False
+	Wfat_SB      = False
+	Wfat_Btop    = False
+
+	Wjj_Sig     = False
+	Wjj_SB      = False
+	Wjj_Btop    = False
+
+	Wlep_mt = -999
+	Hlnjj_mt = -999
+
+	IsFatSig = False
+	IsFatSB  = False
+	IsFatTop = False
+
+	IsJjSig = False
+	IsJjSB  = False
+	IsJjTop = False
 
         Lept_col        = Collection(event, 'Lepton')
-        CleanJet_col    = Collection(event, 'CleanJet')
-        FatJet_col      = Collection(event, 'FatJet')
+        #FatJet_col      = Collection(event, 'FatJet')
 
-        FatJetEvt = False
-        ResolvEvt = False
-	IsAk8_B_evt = False
-	IsAk4_B_evt = False
-        # accepted jet idx
-        fidJetIdx = []
-        Ak4_idx0 = 999
-        Ak4_idx1 = 999
-        dRAk8Ak4_list = []
-        dRAk8Lept = -999
-        RAk4Lept = [-1] *2
-          gMet_pt   = getattr(event, "GenMET_pt")
-          gMet_phi  = getattr(event, "GenMET_phi")
-          # For single lepton evt
-          singleLeptEvt = False
-          gSingleLept_id  = -999
-          gSingleLept_pt  = -999
-          gSingleLept_eta = -999
-          gSingleLept_phi = -999
+        CFatJet_col		= Collection(event, 'CleanFatJet')
 
-          for idx in range(GenDressedLept_col._len):
-            gLept_id = GenDressedLept_col[idx]['pdgId']
-            gLept_pt = GenDressedLept_col[idx]['pt']
-            gLept_eta = GenDressedLept_col[idx]['eta']
-            gLept_phi = GenDressedLept_col[idx]['phi']
-            if not singleLeptEvt:
-              if gLept_pt > 30:
-                if abs(gLept_id) == 11:
-                  if abs(gLept_eta) < 2.1:
-                    singleLeptEvt = True
-                    gSingleLept_id = gLept_id
-                    gSingleLept_pt = gLept_pt
-                    gSingleLept_eta = gLept_eta
-                    gSingleLept_phi = gLept_phi
-                    continue
-                elif abs(gLept_id) == 13:
-                  if abs(gLept_eta) < 2.4:
-                    singleLeptEvt = True
-                    gSingleLept_id = gLept_id
-                    gSingleLept_pt = gLept_pt
-                    gSingleLept_eta = gLept_eta
-                    gSingleLept_phi = gLept_phi
-                    continue
-                else:
-                  continue
-            # check additional lepton
-            if singleLeptEvt == True :
-              if abs(gLept_id) == 11:
-                if abs(gLept_eta) < 2.1 and gLept_pt > 15:
-                  singleLeptEvt = False
-                  break
-              elif abs(gLept_id) == 13:
-                if abs(gLept_eta) < 2.4 and gLept_pt > 10:
-                  singleLeptEvt = False
-                  break
-              else : pass
-          # Only for single lepton evt ##############################
-          if singleLeptEvt :
-            # Wleptonic decay recon
-            gSingleLept_px = gSingleLept_pt*math.cos(gSingleLept_phi)
-            gSingleLept_py = gSingleLept_pt*math.sin(gSingleLept_phi)
-            gSingleLept_pz = gSingleLept_pt*math.sinh(gSingleLept_eta) ##pz = pt*sinh(eta)
-            gSingleLept_E  = gSingleLept_pt*math.cosh(gSingleLept_eta) ## p = pt*cosh(eta)
-            self.gSingleLept_v4.SetPxPyPzE(gSingleLept_px, gSingleLept_py, gSingleLept_pz, gSingleLept_E)
-            gMet_px = gMet_pt*math.cos(gMet_phi)
-            gMet_py = gMet_pt*math.sin(gMet_phi)
-            gMet_pz = self.WlepMetPzCalc( gSingleLept_E, gSingleLept_pt, gSingleLept_pz, gSingleLept_phi,
-                gMet_pt, gMet_phi)
-            gMet_E  = math.sqrt(gMet_pz**2 + gMet_pt**2)
-            self.gMet_v4.SetPxPyPzE(gMet_px, gMet_py, gMet_pz, gMet_E)
-
-            # Check if Boosted Evt ########################
-            for igAk8 in range(GenAK8_col._len):
-	      if genIsAk8_B_evt : break
-              if genSemiLeptFatJetEvt : break
-              gW_Ak8_pt    = GenAK8_col[igAk8]['pt']
-              gW_Ak8_eta   = GenAK8_col[igAk8]['eta']
-              gW_Ak8_phi   = GenAK8_col[igAk8]['phi']
-              gW_Ak8_mass  = GenAK8_col[igAk8]['mass']
-              if gW_Ak8_pt < 200: continue
-              if abs(gW_Ak8_eta) > 2.4: continue
-              genSemiLeptFatJetEvt = True
-
-              dRAk8Lept = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gSingleLept_phi, gSingleLept_eta)
-
-              for igAk4 in range(GenAK4_col._len):
-                gAk4_pt 	= GenAK4_col[igAk4]['pt']
-                gAk4_eta        = GenAK4_col[igAk4]['eta']
-                gAk4_phi        = GenAK4_col[igAk4]['phi']
-                gAk4_id         = GenAK4_col[igAk4]['partonFlavour']
-                if abs(gAk4_eta) > 2.4: continue
-                dRAk8Ak4 = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gAk4_phi, gAk4_eta)
-	        # b-veto for W_Ak8 evet
-		if dRAk8Ak4 > 0.8 and abs(gAk4_id) == 5 and gAk4_pt > 20:
-		  genIsAk8_B_evt = True
-		  genSemiLeptFatJetEvt = False
-		  break
-                elif gAk4_pt > 30:
-                  dRAk8Ak4_list.append( dRAk8Ak4 )
-		else: pass
-
-            # Check if Resolved Evt ####################################
-            if not genSemiLeptFatJetEvt and not genIsAk8_B_evt:
-              for idx in range(GenAK4_col._len):
-                gAk4_0_pt               = GenAK4_col[idx]['pt']
-                gAk4_0_eta      = GenAK4_col[idx]['eta']
-                if gAk4_0_pt < 30: continue
-                if abs(gAk4_0_eta) > 2.4: continue
-                fidJetIdx.append(idx)
-              # Pairing Ak4s
-              dM = 9999.
-              for idx in fidJetIdx:
-                for jdx in fidJetIdx:
-                  if jdx <= idx: continue
-                  gAk4_0_pt     = GenAK4_col[idx]['pt']
-                  gAk4_0_eta    = GenAK4_col[idx]['eta']
-                  gAk4_0_phi    = GenAK4_col[idx]['phi']
-                  gAk4_0_mass   = GenAK4_col[idx]['mass']
-
-                  gAk4_1_pt     = GenAK4_col[jdx]['pt']
-                  gAk4_1_eta    = GenAK4_col[jdx]['eta']
-                  gAk4_1_phi    = GenAK4_col[jdx]['phi']
-                  gAk4_1_mass   = GenAK4_col[jdx]['mass']
-                  WhadMass = self.InvMassCalc(gAk4_0_pt, gAk4_0_eta, gAk4_0_phi, gAk4_0_mass,
-                                              gAk4_1_pt, gAk4_1_eta, gAk4_1_phi, gAk4_1_mass)
-                  if abs(WhadMass - Wmass) < dM:
-                    genSemiLeptResolvEvt = True
-                    dM = abs(WhadMass - Wmass)
-                    gAk4_idx0 = idx
-                    gAk4_idx1 = jdx
-	      # Check if b-event
-              for idx in range(GenAK4_col._len):
-                gAk4_0_pt       = GenAK4_col[idx]['pt']
-                gAk4_0_eta      = GenAK4_col[idx]['eta']
-                gAk4_0_id       = GenAK4_col[idx]['partonFlavour']
-		if idx == gAk4_idx0 or idx == gAk4_idx1: continue
-                if gAk4_0_pt < 20: continue
-                if abs(gAk4_0_eta) > 2.4: continue
-                if abs(gAk4_0_id) == 5:
-		  genIsAk4_B_evt = True
-                  genSemiLeptResolvEvt = False
-		  break
-
-              if genSemiLeptResolvEvt:
-                gResJet_0_pt    = GenAK4_col[gAk4_idx0]['pt']
-                gResJet_0_eta   = GenAK4_col[gAk4_idx0]['eta']
-                gResJet_0_phi   = GenAK4_col[gAk4_idx0]['phi']
-                gResJet_0_mass  = GenAK4_col[gAk4_idx0]['mass']
-                gW_Ak4_v4_0 = ROOT.TLorentzVector()
-                gW_Ak4_v4_0.SetPtEtaPhiM(gResJet_0_pt, gResJet_0_eta, gResJet_0_phi, gResJet_0_mass)
-                gResJet_1_pt    = GenAK4_col[gAk4_idx1]['pt']
-                gResJet_1_eta   = GenAK4_col[gAk4_idx1]['eta']
-                gResJet_1_phi   = GenAK4_col[gAk4_idx1]['phi']
-                gResJet_1_mass  = GenAK4_col[gAk4_idx1]['mass']
-                gW_Ak4_v4_1 = ROOT.TLorentzVector()
-                gW_Ak4_v4_1.SetPtEtaPhiM(gResJet_1_pt, gResJet_1_eta, gResJet_1_phi, gResJet_1_mass)
-		self.gW_Ak4_v4 = gW_Ak4_v4_0 + gW_Ak4_v4_1
-                dRAk4Lept[0] = self.getDeltaR(gResJet_0_phi,  gResJet_0_eta, gSingleLept_phi, gSingleLept_eta)
-                dRAk4Lept[1] = self.getDeltaR(gResJet_0_phi,  gResJet_0_eta, gSingleLept_phi, gSingleLept_eta)
+	CJet_col		= Collection(event, 'CleanJet')
+        #CleanJetNotFat_jetIdx   = getattr(event, "CleanJetNotFat_jetIdx")
+        CleanJetNotFat_col      = Collection(event, "CleanJetNotFat")
 
 
-          if genSemiLeptFatJetEvt or  genSemiLeptResolvEvt:
-            # wLeptonic 4 vector
-            self.gW_Lept_v4 = self.gSingleLept_v4 + self.gMet_v4
-            gW_Lept_dict = {}
-            gW_Lept_dict['pt']   = self.gW_Lept_v4.Pt()
-            gW_Lept_dict['eta']  = self.gW_Lept_v4.Eta()
-            gW_Lept_dict['phi']  = self.gW_Lept_v4.Phi()
-            gW_Lept_dict['mass'] = self.gW_Lept_v4.M()
-            for var in gW_Lept_dict:
-              self.out.fillBranch( 'GenW_Lept_' + var, gW_Lept_dict[var])
+	Jet_col		= Collection(event, 'Jet')
 
-          if genSemiLeptFatJetEvt:
-            # H+ mass recon
-            #gW_Ak8_px = gAk8_pt*math.cos(gAk8_phi)
-            #gW_Ak8_py = gAk8_pt*math.sin(gAk8_phi)
-            #gW_Ak8_pz = gAk8_pt*math.sinh(gAk8_eta) ##pz = pt*sinh(eta)
-            self.gW_Ak8_v4.SetPtEtaPhiM(gW_Ak8_pt, gW_Ak8_eta, gW_Ak8_phi, gW_Ak8_mass)
+        met_pt         = getattr(event, "MET_pt")
 
-            self.GenH_v4 = self.gW_Lept_v4 + self.gW_Ak8_v4
-            self.out.fillBranch("GenEvtFlag", 1)
-            self.out.fillBranch("GenDrAk8Lept", dRAk8Lept)
-            self.out.fillBranch("GenH_pt",  self.GenH_v4.Pt() )
-            self.out.fillBranch("GenH_eta", self.GenH_v4.Eta() )
-            self.out.fillBranch("GenH_phi", self.GenH_v4.Phi() )
-            self.out.fillBranch("GenH_mass",self.GenH_v4.M() )
-            self.out.fillBranch("GenW_Ak8_mass", gW_Ak8_mass )
+        #IsWlepEvt      = getattr(event, "IsWlepEvt")
+        Wlep_pt_PF    = getattr(event, "Wlep_pt_PF")
+        Wlep_eta_PF   = getattr(event, "Wlep_eta_PF")
+        Wlep_phi_PF   = getattr(event, "Wlep_phi_PF")
+        Wlep_mass_PF  = getattr(event,"Wlep_mass_PF")
 
-          elif genSemiLeptResolvEvt:
-            self.GenH_v4 = self.gW_Lept_v4 + self.gW_Ak4_v4
+        Wjj_pt	= getattr(event,"Whad_pt")
+        Wjj_eta	= getattr(event,"Whad_eta")
+        Wjj_phi	= getattr(event,"Whad_phi")
+        Wjj_mass	= getattr(event,"Whad_mass")
+        Wjj_ClJet0_idx= getattr(event, "idx_j1")
+        Wjj_ClJet1_idx= getattr(event, "idx_j2")
 
-            self.out.fillBranch("GenEvtFlag", 2)
-            self.out.fillBranch("GenH_pt",  self.GenH_v4.Pt() )
-            self.out.fillBranch("GenH_eta", self.GenH_v4.Eta() )
-            self.out.fillBranch("GenH_phi", self.GenH_v4.Phi() )
-            self.out.fillBranch("GenH_mass",self.GenH_v4.M() )
-            self.out.fillBranch("GenW_Ak4_mass", self.gW_Ak4_v4.M())
-	  else :
-            self.out.fillBranch("GenEvtFlag", 0)
+	#if IsWlepEvt != 1: return False
+	if Lept_col._len < 1: return False
+	CHlnjj  = -999
+	if abs(Lept_col[0]['pdgId']) == 11 : CHlnjj = 1
+	if abs(Lept_col[0]['pdgId']) == 13 : CHlnjj = 2
 
 
-          self.out.fillBranch("GenDrAk8Ak4", dRAk8Ak4_list)
+	self.Wlep_4v.SetPtEtaPhiM(Wlep_pt_PF,
+	                           Wlep_eta_PF,
+	                           Wlep_phi_PF,
+	                           Wlep_mass_PF
+				   )
 
+	# FatJet evet from FatJet module , but need to apply cut further
+	for ix in range( CFatJet_col._len ):
+
+	  Wfat_mass = CFatJet_col[ix]['mass']
+	  Wfat_pt   = CFatJet_col[ix]['pt']
+	  Wfat_eta  = CFatJet_col[ix]['eta']
+	  Wfat_phi  = CFatJet_col[ix]['phi']
+	  Wfat_tau21= CFatJet_col[ix]['tau21']
+
+	  self.Wfat_4v.SetPtEtaPhiM(Wfat_pt, Wfat_eta, Wfat_phi, Wfat_mass)
+
+	  self.HlnFat_4v = self.Wfat_4v + self.Wlep_4v 
+	  HlnFat_mass = self.HlnFat_4v.M()
+
+	  WptOvHfatM = min(Wlep_pt_PF, Wfat_pt)/HlnFat_mass
+
+	  # FatJet Evt Cuts
+          # These are already selected in postproduction but to make sure
+	  # N-subjettiness tau21 = tau2/tau1
+	  cutJ_base = [ Wfat_pt > 200, Wfat_tau21 < 0.45, met_pt > 40, WptOvHfatM > 0.4]
+	  if not all(cutJ_base) : continue
+	  # Let's stop the loop here, passing cutJ_base, then it become a Sig or a SB for a event.
+	  cutJ_SB   = [ Wfat_mass > 40, Wfat_mass < 250]
+	  cutJ_Sig  = [ Wfat_mass >= 65, Wfat_mass <= 105]
+
+	  if all(cutJ_Sig): Wfat_Sig = True 
+	    
+	  if all(cutJ_SB) and not all(cutJ_Sig) : Wfat_SB  = True
+
+	  # b-veto
+          # DeepB, bWP='0.2219'
+	  for jdx in range( CleanJetNotFat_col._len ):
+	    clj_idx = CleanJetNotFat_col[jdx]['jetIdx']
+	    jet_idx = CJet_col[ clj_idx ]['jetIdx']
+	    if Jet_col[ jet_idx ]['btagDeepB'] > 0.2219:
+	      if Jet_col[ jet_idx ]['pt'] > 20:
+	        Wfat_Btop = True 
+
+        # W_Ak4 Event ----------------------------
+	if (Wfat_Sig == False or Wfat_Btop == True) and (Wjj_mass > -1):
+	  # Now it is Wjj event, initialize as all is true
+
+	  self.Wjj_4v.SetPtEtaPhiM(Wjj_pt, Wjj_eta, Wjj_phi, Wjj_mass)
+	  self.Hlnjj_4v = self.Wlep_4v + self.Wjj_4v
+
+	  Hlnjj_mass = self.Hlnjj_4v.M()
+	  Hlnjj_mt = self.Hlnjj_4v.Mt()
+	  WptOvHak4M = min(Wlep_pt_PF, Wjj_pt)/Hlnjj_mass
+
+	  Wlep_mt =  self.Wlep_4v.Mt()
+
+	  cutjj_Base = [ met_pt>30, Wlep_mt>50, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
+	  cutjj_Sig  = [ Wjj_mass > 65 and Wjj_mass < 105 ]
+	  cutjj_SB   = [ Wjj_mass > 40 and Wjj_mass < 250 ]
+
+	  if all(cutjj_Base) and all(cutjj_Sig) : Wjj_Sig = True
+	  if all(cutjj_Base) and not all(cutjj_Sig) and all(cutjj_SB) : Wjj_SB = True
+
+
+	  JetIdx0 = CJet_col[Wjj_ClJet0_idx]['jetIdx']
+	  JetIdx1 = CJet_col[Wjj_ClJet1_idx]['jetIdx']
+
+	  for jdx in range(Jet_col._len):
+	    if jdx == JetIdx0: continue
+	    if jdx == JetIdx1: continue
+	    if Jet_col[jdx]['pt'] < 20: continue
+	    if abs(Jet_col[jdx]['eta']) > 2.4: continue
+	    if Jet_col[jdx]['btagDeepB'] > 0.2219: Wjj_Btop = True
+
+	# VBF tag ---------------------------------------
+	# Requiring two additional jets with pt > 30 gev, |eta| < 4.7
+	# and VBF cuts
+
+	# Save Event ---------------------------------
+	# Evet Catagory
+	Cat_Fat_Sig = [Wfat_Sig == True, Wfat_Btop == False]
+	Cat_Fat_SB  = [Wfat_SB  == True, Wfat_Btop == False]
+	Cat_Fat_Btop= [Wfat_Sig == True, Wfat_Btop == True]
+
+	if all(Cat_Fat_Sig) : IsFatSig = True
+	if all(Cat_Fat_SB)  : IsFatSB  = True
+	if all(Cat_Fat_Btop): IsFatTop = True
+
+	Cat_AK4_Sig = [Wjj_Sig == True, Wjj_Btop == False]
+	Cat_AK4_SB  = [Wjj_SB  == True, Wjj_Btop == False]
+	Cat_AK4_Btop= [Wjj_Sig == True, Wjj_Btop == True]
+	if all(Cat_AK4_Sig) : IsJjSig = True
+	if all(Cat_AK4_SB)  : IsJjSB  = True
+	if all(Cat_AK4_Btop): IsJjTop = True
+
+	if IsFatSig==False and IsFatSB==False and IsFatTop==False and IsJjSig==False and IsJjSB==False and IsJjTop==False:
+	  return False
+
+        self.out.fillBranch( 'CHlnjj' , CHlnjj)
+        self.out.fillBranch( 'IsFatSig' , IsFatSig)
+        self.out.fillBranch( 'IsFatSB'  , IsFatSB)
+        self.out.fillBranch( 'IsFatTop' , IsFatTop)
+        self.out.fillBranch( 'IsJjSig' , IsJjSig)
+        self.out.fillBranch( 'IsJjSB'  , IsJjSB)
+        self.out.fillBranch( 'IsJjTop' , IsJjTop)
+        self.out.fillBranch( 'WptOvHfatM' , WptOvHfatM)
+        self.out.fillBranch( 'WptOvHak4M' , WptOvHak4M)
+
+        self.out.fillBranch( 'HlnFat_mass' , HlnFat_mass)
+        self.out.fillBranch( 'Hlnjj_mass'  , Hlnjj_mass)
+        self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)
+        self.out.fillBranch( 'Hlnjj_mt'  , Hlnjj_mt)
 
         return True
 
@@ -336,5 +301,5 @@ class HiMassSemiVarsGen(Module):
         return metPz
  
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed                    
-HMsemiVarsGen = lambda : HiMassSemiVarsGen()
+HMlnjjVars = lambda : HMlnjjVarsClass()
 

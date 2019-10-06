@@ -579,24 +579,25 @@ Steps = {
                   'subTargets' : ['HMvars','BWReweight'],
                    },
    
-    'HMLnjjGen2017'  : {
+    'HMlnjjGen'  : {
                   'isChain'    : True ,
 		  'do4MC'	: True ,
 		  'do4Data'	: True,
-		  'subTargets'	: ['HiMaSemiSel','HMsemiVarsMC'],
+		  'subTargets'	: ['HMlnjjLepSel','HMlnjjVarsGen'],
 		  },
 
 
-    'HMLnjjPre2017'  : {
+    'HMlnjjSel2017'  : {
                   'isChain'    : True ,
 		  'do4MC'	: True ,
 		  'do4Data'	: True,
-                  'subTargets' : ['l1tightOR2017v5','HiMasLnjjFatJet','whadJetSel','wlepMaker'],
+                  'subTargets' : ['HMlnjjLepSel','HMlnjjVars'],
 		  },
 
-		  #'subTargets'	: ['HMsemiVarsMC'],
+                  #'subTargets' : ['l1tightOR2017v5','HMlnjjLepSel','wlepMaker','HMlnjjFatJet', 'whadJetSel', 'HMlnjjVars'],
 
-    'HiMasLnjjFatJet' : {
+
+    'HMlnjjFatJet' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
@@ -605,7 +606,7 @@ Steps = {
                   'module'     : 'fatjetMaker()'
     },
 
-    'HiMaSemiSel': {
+    'HMlnjjLepSel': {
     	          'isChain'	: False	,
 		  'do4MC'	: True	,
 		  'do4Data'	: True	,
@@ -806,21 +807,22 @@ Steps = {
                   'module'     : 'HMvars()',
                },
 
-    'HMsemiVarsGen' : {
+    'HMlnjjVarsGen' : {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : False ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMsemiVars' ,
-                  'declare'    : 'HMsemiVarsGen = lambda : HiMassSemiVarsGen("MC")',
-                  'module'     : 'HMsemiVarsGen()',
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVarsGen' ,
+                  'declare'    : 'HMlnjjVarsGen = lambda : HMlnjjVarsGen("MC")',
+                  'module'     : 'HMlnjjVarsGen()',
                },
-    'HMsemiVars' : {
+
+    'HMlnjjVars' : {
                   'isChain'    : False ,
                   'do4MC'      : True ,
                   'do4Data'    : True ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMsemiVars' ,
-                  'declare'    : 'HMsemiVars = lambda : HiMassSemiVars("DATA")',
-                  'module'     : 'HMsemiVars()',
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVars' ,
+                  'declare'    : 'HMlnjjVars = lambda : HMlnjjVarsClass()',
+                  'module'     : 'HMlnjjVars()',
                },
 
 
@@ -933,7 +935,7 @@ Steps = {
                   'do4MC'     : True  ,
                   'do4Data'   : True  ,
                   'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
-                  'declare'   : 'whadJetSel = lambda : WhadJetSel()',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel(jetid=1,pujetid="none",minpt=30.0,maxeta=2.4,jetColl="CleanJet")',
                   'module'    : 'WhadJetSel()',
     },
     'PreselFatJet' : {
