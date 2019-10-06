@@ -578,6 +578,46 @@ Steps = {
                   'do4Data'    : True  ,
                   'subTargets' : ['HMvars','BWReweight'],
                    },
+   
+    'HMlnjjGen'  : {
+                  'isChain'    : True ,
+		  'do4MC'	: True ,
+		  'do4Data'	: True,
+		  'subTargets'	: ['HMlnjjLepSel','HMlnjjVarsGen'],
+		  },
+
+
+    'HMlnjjSel2017'  : {
+                  'isChain'    : True ,
+		  'do4MC'	: True ,
+		  'do4Data'	: True,
+                  'subTargets' : ['HMlnjjLepSel','HMlnjjVars'],
+		  },
+
+                  #'subTargets' : ['l1tightOR2017v5','HMlnjjLepSel','wlepMaker','HMlnjjFatJet', 'whadJetSel', 'HMlnjjVars'],
+
+
+    'HMlnjjFatJet' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=1, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=1.0, over_jetR=0.8)',
+                  'module'     : 'fatjetMaker()'
+    },
+
+    'HMlnjjLepSel': {
+    	          'isChain'	: False	,
+		  'do4MC'	: True	,
+		  'do4Data'	: True	,
+                  'selection'  :'"(  Lepton_pt[0]>30 \
+		       && ( fabs(Lepton_eta[0])  < 2.1*(abs(Lepton_pdgId[0])==11) \
+		       ||   fabs(Lepton_eta[0])  < 2.4*(abs(Lepton_pdgId[0])==13))\
+                       && ( ( Alt$( Lepton_pt[1],-1) < 15*(Alt$(Lepton_pdgId[1], 11) * Alt$(Lepton_pdgId[1], 11) ==11*11) )\
+		       ||   ( Alt$( Lepton_pt[1],-1) < 10*(Alt$(Lepton_pdgId[1], 13) * Alt$(Lepton_pdgId[1], 13) ==13*13 )) )" ',
+		  },
+
+
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
@@ -767,6 +807,25 @@ Steps = {
                   'module'     : 'HMvars()',
                },
 
+    'HMlnjjVarsGen' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVarsGen' ,
+                  'declare'    : 'HMlnjjVarsGen = lambda : HMlnjjVarsGen("MC")',
+                  'module'     : 'HMlnjjVarsGen()',
+               },
+
+    'HMlnjjVars' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVars' ,
+                  'declare'    : 'HMlnjjVars = lambda : HMlnjjVarsClass()',
+                  'module'     : 'HMlnjjVars()',
+               },
+
+
     'assignRun': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -876,7 +935,7 @@ Steps = {
                   'do4MC'     : True  ,
                   'do4Data'   : True  ,
                   'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
-                  'declare'   : 'whadJetSel = lambda : WhadJetSel()',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel(jetid=1,pujetid="none",minpt=30.0,maxeta=2.4,jetColl="CleanJet")',
                   'module'    : 'WhadJetSel()',
     },
     'PreselFatJet' : {
