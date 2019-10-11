@@ -49,6 +49,8 @@ class WhadJetSel(Module):
     
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+
         jet_coll = Collection(event, self.jetColl )
         nJet     = jet_coll._len
         if 'Clean' in self.jetColl : ori_jet_coll = Collection(event, self.jetColl.replace('Clean',''))

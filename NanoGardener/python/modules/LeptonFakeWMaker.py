@@ -38,6 +38,7 @@ class FakeWeight():
 
         self.eleDir = eleWPDic[cmssw][WPType][eleWP]['fakeW']
         self.muDir  = muWPDic[cmssw][WPType][muWP]['fakeW']
+        print self.eleDir , self.muDir
 
         # Root Files
 
@@ -98,6 +99,57 @@ class FakeWeight():
         
         return rate_value, rate_error
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # _get1lWeight
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def _get1lWeight(self, leptons, MuFRName, ElFRName, stat):
+
+        # Get FR
+        exec ('ElFR = self.'+ElFRName )
+        exec ('MuFR = self.'+MuFRName )
+
+        # avoid dots to go faster
+        MuPR = self.MuPR
+        ElPR = self.ElPR
+
+        #only the first lepton 
+        lepton = leptons[0]
+
+        promptProbability = numpy.ones(1, dtype=numpy.float32)
+        fakeProbability   = numpy.ones(1, dtype=numpy.float32)
+        
+        p  = 1.  # prompt rate
+        f  = 0.  # fake   rate
+        pE = 0.  # prompt rate statistical error
+        fE = 0.  # fake   rate statistical error
+
+        if (lepton[0] == 'mu') :
+
+            p, pE = self._getRate(MuPR, lepton[1], lepton[2], -999.)
+            f, fE = self._getRate(MuFR, lepton[1], lepton[2],   35.)
+
+            if   (stat == 'MuUp')   : f = f + fE
+            elif (stat == 'MuDown') : f = f - fE
+
+        elif (lepton[0] == 'ele') :
+
+            p, pE = self._getRate(ElPR, lepton[1], lepton[2], -999.)
+            f, fE = self._getRate(ElFR, lepton[1], lepton[2],   35.)
+
+            if   (stat == 'ElUp')   : f = f + fE
+            elif (stat == 'ElDown') : f = f - fE
+
+        if (lepton[3] == 1) :
+            # Tight lepton
+            fakeProbability   = (-1) * f * (1 - p)
+        
+        else :
+            fakeProbability   = p * f
+
+        fakeProbability   /= (p - f)
+
+        return fakeProbability
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # _get2lWeight
@@ -380,8 +432,8 @@ class LeptonFakeWMaker(Module):
     Produce branches with lepton fake weights
     '''
 
-    def __init__(self, cmssw, WPdic='LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py'):
-
+    def __init__(self, cmssw, WPdic='LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py', min_nlep=2):
+        self.min_nlep = min_nlep 
         self.cmssw = cmssw     
         cmssw_base = os.getenv('CMSSW_BASE')
         self.WPdic = cmssw_base+'/src/'+WPdic
@@ -423,11 +475,19 @@ class LeptonFakeWMaker(Module):
         self.out = wrappedOutputTree
 
         # New Branches
-        fakeVarExt =  [ '_2l0j', '_2l0jMuUp', '_2l0jMuDown', '_2l0jElUp', '_2l0jElDown', '_2l0jstatMuUp', '_2l0jstatMuDown', '_2l0jstatElUp', '_2l0jstatElDown',
+        fakeVarExt =  [ 
+                        '_2l0j', '_2l0jMuUp', '_2l0jMuDown', '_2l0jElUp', '_2l0jElDown', '_2l0jstatMuUp', '_2l0jstatMuDown', '_2l0jstatElUp', '_2l0jstatElDown',
                         '_2l1j', '_2l1jMuUp', '_2l1jMuDown', '_2l1jElUp', '_2l1jElDown', '_2l1jstatMuUp', '_2l1jstatMuDown', '_2l1jstatElUp', '_2l1jstatElDown',
                         '_2l2j', '_2l2jMuUp', '_2l2jMuDown', '_2l2jElUp', '_2l2jElDown', '_2l2jstatMuUp', '_2l2jstatMuDown', '_2l2jstatElUp', '_2l2jstatElDown',
                         '_3l',   '_3lMuUp',   '_3lMuDown',   '_3lElUp',   '_3lElDown',   '_3lstatMuUp',   '_3lstatMuDown',   '_3lstatElUp',   '_3lstatElDown',
                         '_4l',   '_4lMuUp',   '_4lMuDown',   '_4lElUp',   '_4lElDown',   '_4lstatMuUp',   '_4lstatMuDown',   '_4lstatElUp',   '_4lstatElDown' ]
+
+        if self.min_nlep == 1:
+            fakeVarExt = [ ]
+            for mupt in [10,15,20,25,30,35,45]:
+                for elept in [25,35,45]:
+                    fakeVarExt.append("_mu{}_ele{}".format(mupt,elept))
+            
 
         for iTag in self.FakeWeights:
           for iVarExt in fakeVarExt : 
@@ -484,7 +544,11 @@ class LeptonFakeWMaker(Module):
 
         # Now compute the fakes 
         for iTag in self.FakeWeights:
-
+            if self.min_nlep == 1 and selectedLepton == 1:
+               for mupt in [10,15,20,25,30,35,45]:
+                  for elept in [25,35,45]:
+                     self.out.fillBranch('fakeW_{}_mu{}_ele{}'.format(iTag, mupt, elept) , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet{}'.format(mupt), 'ElFR_jet{}'.format(elept), 'Nominal'))
+            else:   
                self.out.fillBranch('fakeW_'+iTag+'_2l0j'          , self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet35', 'Nominal') )
                self.out.fillBranch('fakeW_'+iTag+'_2l0jMuUp'      , self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet30', 'ElFR_jet35', 'Nominal') )
                self.out.fillBranch('fakeW_'+iTag+'_2l0jMuDown'    , self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet10', 'ElFR_jet35', 'Nominal') )

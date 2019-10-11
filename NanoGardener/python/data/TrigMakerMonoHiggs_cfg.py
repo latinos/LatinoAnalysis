@@ -13,26 +13,25 @@ Trigger = {
         'Full2018'  :  {  
                           # Full 2018 
                           1  :  { 'begin' : 315252 , 'end' : 325175 , 'lumi' : 58.826 ,
-                                  # FIXME: UPdate with 2018 values
-                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'DoubleEleLegLowPt' : 'Full2017/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'SingleEle'         : 'Full2017/Ele35_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'DoubleMuLegHigPt'  : 'Full2017/Mu17_Mu8_leg1_pt_eta_Iso_efficiency_Run2017B.txt' ,
-                                                'DoubleMuLegLowPt'  : 'Full2017/Mu17_Mu8_leg2_pt_eta_Iso_efficiency_Run2017B.txt' ,
-                                                'SingleMu'          : 'Full2017/IsoMu27_pt_eta_efficiency_Run2017B.txt' ,
-                                                'MuEleLegHigPt'     : 'Full2017/Mu23_pt_eta_efficiency_withSys_Run2017B.txt',
-                                                'MuEleLegLowPt'     : 'Full2017/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'EleMuLegHigPt'     : 'Full2017/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
-                                                'EleMuLegLowPt'     : 'Full2017/Mu12_pt_eta_efficiency_withSys_Run2017B.txt' ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'monoHiggs/2018/DoubleEle25_leg_pt_eta_nominal_withSys_efficiency_RunABCD.txt' ,
+                                                'DoubleEleLegLowPt' : 'monoHiggs/2018/DoubleEle25_leg_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
+                                                'SingleEle'         : None , 
+                                                'DoubleMuLegHigPt'  : 'monoHiggs/2018/Mu37_TkMu27_leg1_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
+                                                'DoubleMuLegLowPt'  : 'monoHiggs/2018/Mu37_TkMu27_leg2_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
+                                                'SingleMu'          : 'monoHiggs/2018/Mu50_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
+                                                'MuEleLegHigPt'     : 'monoHiggs/2018/Mu37_Ele27_legMu_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
+                                                'MuEleLegLowPt'     : 'monoHiggs/2018/Ele27_Ele37_leg2_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
+                                                'EleMuLegHigPt'     : 'monoHiggs/2018/Ele27_Ele37_leg1_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
+                                                'EleMuLegLowPt'     : 'monoHiggs/2018/Mu27_Ele37_legMu_pt_eta_nominal_withSys_efficiency_RunABCD.txt' , 
                                               } ,
-                                  # FIXME: UPdate with 2018 values
+                                  # No DZ dependancy
                                   'DZEff'  :  { 
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2017/DZEff_mm.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0,0.0] } ,
                                                 'MuEle'     : { 'value'   : [1.0,0.0] } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2017/DZEff_em.txt' } ,
+                                                'EleMu'     : { 'value'   : [1.0,0.0] } ,
                                               } ,
-                                  # Electron HLT Zvtx Efficiency Scale Factor: 0.934+-0.005
+                                  # No global factor
                                   'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
                                                 'DoubleMu'  : [1.0  ,0.   ],
                                                 'MuEle'     : [1.0  ,0.   ],
@@ -41,20 +40,19 @@ Trigger = {
                                                 'SingleMu'  : [1.0  ,0.   ],
                                               } ,
                                   'EMTFBug':  False , 
-                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
                                   'DATA'   :  {
-                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
-                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'] ,
-                                                'SingleMu'  : [ 'HLT_IsoMu24'] ,
-                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
-                                                'SingleEle' : [ 'HLT_Ele32_WPTight_Gsf'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_MW', 'HLT_Mu27_Ele37_CaloIdL_MW'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu37_TkMu27'] ,
+                                                'SingleMu'  : [ 'HLT_Mu50'] ,
+                                                'DoubleEle' : [ 'HLT_DoubleEle25_CaloIdL_MW'] ,
+                                                'SingleEle' : [ None ] ,
                                               } ,
                                   'MC'     :  {
-                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
-                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'] ,
-                                                'SingleMu'  : [ 'HLT_IsoMu24'] ,
-                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
-                                                'SingleEle' : [ 'HLT_Ele32_WPTight_Gsf'] ,
+                                                'EleMu'     : [ 'HLT_Mu37_Ele27_CaloIdL_MW', 'HLT_Mu27_Ele37_CaloIdL_MW'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu37_TkMu27'] ,
+                                                'SingleMu'  : [ 'HLT_Mu50'] ,
+                                                'DoubleEle' : [ 'HLT_DoubleEle25_CaloIdL_MW'] ,
+                                                'SingleEle' : [ None ] ,
                                               } ,
 
                                   },
@@ -635,6 +633,7 @@ Trigger = {
 
 Trigger['Full2016v4'] = Trigger['Full2016v2'] 
 Trigger['Full2016v5'] = Trigger['Full2016v2'] # TODO: update eff new Ele WP 
+Trigger['Full2016v5_mh'] = Trigger['Full2016v2'] # TODO: update eff new Ele WP 
 Trigger['Full2017v4'] = Trigger['Full2017v2'] 
 Trigger['Full2017v5'] = Trigger['Full2017v2'] 
 

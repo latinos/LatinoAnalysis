@@ -65,6 +65,7 @@ class FatJetMaker(Module):
         # Distance from the first FatJet
         self.out.branch('CleanJetNotFat_deltaR', "F", lenVar="nCleanJetNotFat")
 
+
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
