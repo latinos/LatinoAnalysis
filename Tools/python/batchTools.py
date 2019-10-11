@@ -116,6 +116,8 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
          jFile.write('export X509_USER_PROXY=/gwpool/users/'+os.environ["USER"]+'/.proxy\n')
+       elif 'ifca' in hostName:
+         jFile.write('export X509_USER_PROXY=/gpfs/users/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        jFile.write('voms-proxy-info\n')
@@ -163,14 +165,17 @@ class batchJobs :
        os.system('chmod +x '+self.subDir+subDirExtra+'/'+jName+'.sh')
 
      # Create Proxy at IIHE
-     if 'cern'  in hostName:
+     if 'cern' or 'ifca' in hostName:
        cmd='voms-proxy-info'
        proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
        out, err = proc.communicate()
        for line in out.split('\n'):
         if "path" in line:
           proxypath=line.split(':')[1]
-       os.system('cp '+proxypath+' /afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+       if 'cern' in hostName:
+         os.system('cp '+proxypath+' /afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+       elif 'ifca' in hostName:
+         os.system('cp '+proxypath+' /gpfs/users/'+os.environ["USER"]+'/.proxy\n')  
      if 'iihe'  in hostName:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
@@ -187,7 +192,7 @@ class batchJobs :
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-       subDirExtra = '/' + jName.split('__')[3] 
+       subDirExtra = '/' + jName.split('__')[3]
      else:
        subDirExtra =''
      #print 'Adding to ',self.subDir+'/'+jName  
