@@ -121,7 +121,7 @@ class FatJetMassScaler(Module):
             else:
                 smearfactor = 1
 
-        print "smear factor: ", smearfactor
+        #print "smear factor: ", smearfactor
         new_mass = raw_mass * smearfactor
 
         return new_mass, smearfactor
