@@ -28,7 +28,7 @@ class HMlnjjVarsClass(Module):
         self.out = wrappedOutputTree
 
         #New Branches
-        self.out.branch("CHlnjj" , "I")
+        self.out.branch("Flavlnjj" , "I")
         self.out.branch("IsFatSig" , "O")
         self.out.branch("IsFatSB"  , "O")
         self.out.branch("IsFatTop" , "O")
@@ -43,6 +43,14 @@ class HMlnjjVarsClass(Module):
         self.out.branch("Hlnjj_mass" , "F")
         self.out.branch("Wlep_mt" , "F")
         self.out.branch("Hlnjj_mt" , "F")
+
+        self.out.branch("vbfFat_jj_dEta" , "F")
+        self.out.branch("vbfFat_jj_mass" , "F")
+        self.out.branch("vbfjj_jj_dEta" , "F")
+        self.out.branch("vbfjj_jj_mass" , "F")
+
+        self.out.branch("IsVbfFat" , "O")
+        self.out.branch("IsVbfjj" , "O")
 
         #self.out.branch("GenDrAk8Ak4", "F", lenVar="nGenDrAk8Ak4")
 
@@ -115,6 +123,13 @@ class HMlnjjVarsClass(Module):
 	IsJjSB  = False
 	IsJjTop = False
 
+	IsVbfFat = False
+	IsVbfjj = False
+	vbfFat_jj_dEta = -999
+	vbfFat_jj_mass = -999
+	vbfjj_jj_dEta = -999
+	vbfjj_jj_mass = -999
+
         Lept_col        = Collection(event, 'Lepton')
         #FatJet_col      = Collection(event, 'FatJet')
 
@@ -144,9 +159,9 @@ class HMlnjjVarsClass(Module):
 
 	#if IsWlepEvt != 1: return False
 	if Lept_col._len < 1: return False
-	CHlnjj  = -999
-	if abs(Lept_col[0]['pdgId']) == 11 : CHlnjj = 1
-	if abs(Lept_col[0]['pdgId']) == 13 : CHlnjj = 2
+	Flavlnjj  = -999
+	if abs(Lept_col[0]['pdgId']) == 11 : Flavlnjj = 1
+	if abs(Lept_col[0]['pdgId']) == 13 : Flavlnjj = 2
 
 
 	self.Wlep_4v.SetPtEtaPhiM(Wlep_pt_PF,
@@ -224,9 +239,6 @@ class HMlnjjVarsClass(Module):
 	    if abs(Jet_col[jdx]['eta']) > 2.4: continue
 	    if Jet_col[jdx]['btagDeepB'] > 0.2219: Wjj_Btop = True
 
-	# VBF tag ---------------------------------------
-	# Requiring two additional jets with pt > 30 gev, |eta| < 4.7
-	# and VBF cuts
 
 	# Save Event ---------------------------------
 	# Evet Catagory
@@ -245,10 +257,83 @@ class HMlnjjVarsClass(Module):
 	if all(Cat_AK4_SB)  : IsJjSB  = True
 	if all(Cat_AK4_Btop): IsJjTop = True
 
+	# VBF tag ---------------------------------------
+	# Requiring two additional jets with pt > 30 gev, |eta| < 4.7
+	# and VBF cuts
+        
+	# lnJ case--------
+        lnJ_addJet_pt = []
+        lnJ_addJet_eta = []
+        lnJ_addJet_phi = []
+        lnJ_addJet_mass = []
+        lnJ_addJet_jid = []
+
+	nlnJ_addJet = 0
+	if IsFatSig or IsFatSB or IsFatTop:
+	  for jdx in range(CleanJetNotFat_col._len):
+	    clj_i = CleanJetNotFat_col[jdx]['jetIdx']
+	    if ( CJet_col[clj_i]['pt'] < 30 ) or ( abs(CJet_col[clj_i]['eta'])>4.7 ): continue
+	    lnJ_addJet_pt.append(CJet_col[clj_i]['pt'])
+	    lnJ_addJet_eta.append(CJet_col[clj_i]['eta'])
+	    lnJ_addJet_phi.append(CJet_col[clj_i]['phi'])
+	    lnJ_addJet_mass.append(Jet_col[CJet_col[clj_i]['jetIdx']]['mass'])
+	    lnJ_addJet_jid.append(Jet_col[CJet_col[clj_i]['jetIdx']]['jetId'])
+	    nlnJ_addJet +=1
+
+	  if nlnJ_addJet > 1:
+	    for i in range(nlnJ_addJet):
+	      for j in range(nlnJ_addJet):
+	        dEta_tmp = abs(lnJ_addJet_eta[i] - lnJ_addJet_eta[j])
+		mass_tmp = self.InvMassCalc(lnJ_addJet_pt[i],lnJ_addJet_eta[i],lnJ_addJet_phi[i],lnJ_addJet_mass[i],
+		  lnJ_addJet_pt[j],lnJ_addJet_eta[j],lnJ_addJet_phi[j],lnJ_addJet_mass[j])
+		if dEta_tmp > 3.5:
+		  if mass_tmp > vbfFat_jj_mass:
+		    vbfFat_jj_dEta = dEta_tmp
+		    vbfFat_jj_mass = mass_tmp
+	    if vbfFat_jj_mass > 500:
+	      IsVbfFat = True
+
+	# lnjj case ---------
+        lnjj_addJet_pt = []
+        lnjj_addJet_eta = []
+        lnjj_addJet_phi = []
+        lnjj_addJet_mass = []
+        lnjj_addJet_jid = []
+	nlnjj_addJet = 0
+	if IsJjSig or IsJjSB or IsJjTop:
+	  for ci in range(CJet_col._len):
+	    # check if it is used
+	    if ci == Wjj_ClJet0_idx : continue
+	    if ci == Wjj_ClJet1_idx : continue
+	    if ( CJet_col[ci]['pt'] < 30 ) or ( abs(CJet_col[ci]['eta'])>4.7 ): continue
+	    lnjj_addJet_pt.append  (CJet_col[ci]['pt'])
+	    lnjj_addJet_eta.append (CJet_col[ci]['eta'])
+	    lnjj_addJet_phi.append (CJet_col[ci]['phi'])
+	    lnjj_addJet_mass.append(Jet_col[CJet_col[ci]['jetIdx']]['mass'])
+	    lnjj_addJet_jid.append (Jet_col[CJet_col[ci]['jetIdx']]['jetId'])
+	    nlnjj_addJet +=1
+
+	  if nlnjj_addJet > 1:
+	    for i in range(nlnjj_addJet):
+	      for j in range(nlnjj_addJet):
+	        dEta_tmp = abs(lnjj_addJet_eta[i] - lnjj_addJet_eta[j])
+		mass_tmp = self.InvMassCalc(lnjj_addJet_pt[i],lnjj_addJet_eta[i],lnjj_addJet_phi[i],lnjj_addJet_mass[i],
+		                       lnjj_addJet_pt[j],lnjj_addJet_eta[j],lnjj_addJet_phi[j],lnjj_addJet_mass[j])
+		if dEta_tmp > 3.5:
+		  if mass_tmp > vbfjj_jj_mass:
+		    vbfjj_jj_dEta = dEta_tmp
+		    vbfjj_jj_mass = mass_tmp
+	    if vbfjj_jj_mass > 500:
+	      IsVbfjj = True
+
+
+
+
+
 	if IsFatSig==False and IsFatSB==False and IsFatTop==False and IsJjSig==False and IsJjSB==False and IsJjTop==False:
 	  return False
 
-        self.out.fillBranch( 'CHlnjj' , CHlnjj)
+        self.out.fillBranch( 'Flavlnjj' , Flavlnjj)
         self.out.fillBranch( 'IsFatSig' , IsFatSig)
         self.out.fillBranch( 'IsFatSB'  , IsFatSB)
         self.out.fillBranch( 'IsFatTop' , IsFatTop)
@@ -262,6 +347,13 @@ class HMlnjjVarsClass(Module):
         self.out.fillBranch( 'Hlnjj_mass'  , Hlnjj_mass)
         self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)
         self.out.fillBranch( 'Hlnjj_mt'  , Hlnjj_mt)
+
+        self.out.fillBranch( 'IsVbfFat'        , IsVbfFat)
+        self.out.fillBranch( 'IsVbfjj'        , IsVbfjj)
+        self.out.fillBranch( 'vbfFat_jj_dEta'    , vbfFat_jj_dEta)
+        self.out.fillBranch( 'vbfFat_jj_mass'  , vbfFat_jj_mass)
+        self.out.fillBranch( 'vbfjj_jj_dEta'    , vbfjj_jj_dEta)
+        self.out.fillBranch( 'vbfjj_jj_mass'  , vbfjj_jj_mass)
 
         return True
 
