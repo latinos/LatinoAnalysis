@@ -911,10 +911,17 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                   #'declare'    : 'fatjetMaker = lambda : FatJetMaker(minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], over_lepR=0.8, over_jetR=0.8)',
                   'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 150], over_lepR=0.8, over_jetR=0.8)',
-                   #'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=1 ,minpt=200, maxeta=2.4, max_tau21=999., mass_range=[40, 13000], over_lepR=0.8, over_jetR=1.0)',
                   'module'     : 'fatjetMaker()'
+    },
+
+    'CorrFatJetMass' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMassScaler',
+                  'declare'    : 'fatjetmass_scaler = lambda : FatJetMassScaler(year=RPLME_YEAR, type="scale_smear", kind="Central",collection="CleanFatJet")',
+                  'module'     : 'fatjetmass_scaler()'
     },
 
    'susyGen': {
@@ -1723,6 +1730,43 @@ Steps = {
                   'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasEMBED'],
                },
 
+#-------------------------  Fatjet mass scale
+  'FatJetMass_up' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMassScaler',
+                  'declare'    : 'fj_massup = lambda : FatJetMassScaler(year=RPLME_YEAR, type="scale", kind="Up",collection="CleanFatJet")',
+                  'module'     : 'fj_massup()'
+    },
+
+  'FatJetMass_do' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMassScaler',
+                  'declare'    : 'fj_massdo = lambda : FatJetMassScaler(year=RPLME_YEAR, type="scale", kind="Down",collection="CleanFatJet")',
+                  'module'     : 'fj_massdo()'
+    },
+
+   'FatJetMassRes_up' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMassScaler',
+                  'declare'    : 'fj_resup = lambda : FatJetMassScaler(year=RPLME_YEAR, type="smear", kind="Up",collection="CleanFatJet")',
+                  'module'     : 'fj_resup()'
+    },
+
+  'FatJetMassRes_do' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMassScaler',
+                  'declare'    : 'fj_resdo = lambda : FatJetMassScaler(year=RPLME_YEAR, type="smear", kind="Down",collection="CleanFatJet")',
+                  'module'     : 'fj_resdo()'
+    },
+
 # ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
 
   'TrgwSel'   : {
@@ -2126,7 +2170,6 @@ Steps = {
       'subTargets': ['fakeWstep1l','CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
       'onlySample' : LNuJJ_VBS_Samples_data2017
   },
-
 
 
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------
