@@ -39,8 +39,11 @@ class ZWW{
 //    bool  selection();
     float pfmetPhi_zh4l();
     float zMass_zh4l(int zLepIdx_[2]);
+    float zPt_zh4l(int zLepIdx_[2]);
     float z0Mass_zh4l();
+    float z0Pt_zh4l();
     float z1Mass_zh4l();
+    float z1Pt_zh4l();
     float zaMass_zh4l();
     float zbMass_zh4l();
     float flagZ1SF_zh4l();
@@ -394,13 +397,35 @@ float ZWW::zMass_zh4l(int zLepIdx_[2]){
 }
 
 
+float ZWW::zPt_zh4l(int zLepIdx_[2]){
+    if (isAllOk_){
+        if (zLepIdx_[0]!=zwwDefault){
+            return (lepVec_[zLepIdx_[0]]+lepVec_[zLepIdx_[1]]).Pt();
+        }
+        else{
+            return zwwDefault;
+        }
+    }
+    else{
+        return zwwDefault;
+    }
+}
+
 
 float ZWW::z0Mass_zh4l(){
     return zMass_zh4l(z0LepIdx_);
 }
 
+float ZWW::z0Pt_zh4l(){
+    return zPt_zh4l(z0LepIdx_);
+}
+
 float ZWW::z1Mass_zh4l(){
     return zMass_zh4l(z1LepIdx_);
+}
+
+float ZWW::z1Pt_zh4l(){
+    return zPt_zh4l(z1LepIdx_);
 }
 
 float ZWW::zaMass_zh4l(){

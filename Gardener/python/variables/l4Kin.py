@@ -62,7 +62,9 @@ class L4KinFiller(TreeCloner):
         self.namesOldBranchesToBeModifiedSimpleVariable = [
             'pfmetPhi_zh4l',
             'z0Mass_zh4l',
+            'z0Pt_zh4l',
             'z1Mass_zh4l',
+            'z1Pt_zh4l',
             'zaMass_zh4l',
             'zbMass_zh4l',
             'flagZ1SF_zh4l',

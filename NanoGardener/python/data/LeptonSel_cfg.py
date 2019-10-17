@@ -3218,7 +3218,7 @@ ElectronWP = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/egammaEffi_passingMVA80Xwp90HWW.txt' ,
                                   } ,
-                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016/',
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/MonoHiggs/',
                               } ,
 
           'mva_90p_Iso2016_SS':  {
@@ -4800,6 +4800,7 @@ MuonWP['Full2018v4'] = MuonWP['Full2018']
 # .... and copy Full2016v2 in Full2017v5 (only Electron WP names were changed)
 MuonWP['Full2016v5'] = MuonWP['Full2016v2']
 MuonWP['Full2016v5_mh'] = MuonWP['Full2016v2']
+MuonWP['Full2016v5_mh']['TightObjWP']['cut_Tight80x']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/MonoHiggs/' 
 # still using same fakes: MuonWP['Full2016v5']['TightObjWP']['cut_Tight80x']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v5/'
 MuonWP['Full2017v5'] = MuonWP['Full2017v2']
 MuonWP['Full2017v5']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2017v5/mvaFall17V1Iso_WP90/'
