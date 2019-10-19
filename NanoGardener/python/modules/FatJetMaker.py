@@ -71,6 +71,7 @@ class FatJetMaker(Module):
 
 
     def initReaders(self,tree): # this function gets the pointers to Value and ArrayReaders and sets them in the C++ worker class
+
         self.lepton_var = {}
         self.jet_var = {}
         self.fatjet_var = {}
