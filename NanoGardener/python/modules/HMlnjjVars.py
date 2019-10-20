@@ -199,14 +199,17 @@ class HMlnjjVarsClass(Module):
 	    
 	  if all(cutJ_SB) and not all(cutJ_Sig) : Wfat_SB  = True
 
+	  if Wfat_Sig or Wfat_SB: break
+
 	  # b-veto
           # DeepB, bWP='0.2219'
-	  for jdx in range( CleanJetNotFat_col._len ):
-	    clj_idx = CleanJetNotFat_col[jdx]['jetIdx']
-	    jet_idx = CJet_col[ clj_idx ]['jetIdx']
-	    if Jet_col[ jet_idx ]['btagDeepB'] > 0.2219:
-	      if Jet_col[ jet_idx ]['pt'] > 20:
-	        Wfat_Btop = True 
+	for jdx in range( CleanJetNotFat_col._len ):
+	  clj_idx = CleanJetNotFat_col[jdx]['jetIdx']
+	  jet_idx = CJet_col[ clj_idx ]['jetIdx']
+	  # TODO decide the btag cut dependent on year
+	  if Jet_col[ jet_idx ]['btagDeepB'] > 0.2219:
+	    if Jet_col[ jet_idx ]['pt'] > 20:
+	      Wfat_Btop = True 
 
         # W_Ak4 Event ----------------------------
 	if (Wfat_Sig == False or Wfat_Btop == True) and (Wjj_mass > -1):
