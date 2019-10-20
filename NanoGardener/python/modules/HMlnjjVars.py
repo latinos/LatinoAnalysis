@@ -182,9 +182,9 @@ class HMlnjjVarsClass(Module):
 	  self.Wfat_4v.SetPtEtaPhiM(Wfat_pt, Wfat_eta, Wfat_phi, Wfat_mass)
 
 	  self.HlnFat_4v = self.Wfat_4v + self.Wlep_4v 
-	  HlnFat_mass = self.HlnFat_4v.M()
+	  tmp_mass = self.HlnFat_4v.M()
 
-	  WptOvHfatM = min(Wlep_pt_PF, Wfat_pt)/HlnFat_mass
+	  WptOvHfatM = min(Wlep_pt_PF, Wfat_pt)/tmp_mass
 
 	  # FatJet Evt Cuts
           # These are already selected in postproduction but to make sure
@@ -195,14 +195,21 @@ class HMlnjjVarsClass(Module):
 	  cutJ_SB   = [ Wfat_mass > 40, Wfat_mass < 250]
 	  cutJ_Sig  = [ Wfat_mass >= 65, Wfat_mass <= 105]
 
-	  if all(cutJ_Sig): Wfat_Sig = True 
+	  if all(cutJ_Sig):
+	    Wfat_Sig = True 
+	    Wfat_SB = False
+	    HlnFat_mass = tmp_mass
+	    # TODO save wfat vriables
+	    break
 	    
-	  if all(cutJ_SB) and not all(cutJ_Sig) : Wfat_SB  = True
-
-	  if Wfat_Sig or Wfat_SB: break
+	  if (all(cutJ_SB) ) and (not all(cutJ_Sig)) and (not Wfat_SB) :
+	    Wfat_SB  = True
+	    HlnFat_mass = tmp_mass
+	    # TODO save wfat vriables
 
 	  # b-veto
           # DeepB, bWP='0.2219'
+	# TODO check if jet is b when the jet is not used only for signal fatJet
 	for jdx in range( CleanJetNotFat_col._len ):
 	  clj_idx = CleanJetNotFat_col[jdx]['jetIdx']
 	  jet_idx = CJet_col[ clj_idx ]['jetIdx']
