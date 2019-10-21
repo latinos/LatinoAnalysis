@@ -591,7 +591,7 @@ Steps = {
 		  },
 
 
-    'HMlnjjSel2017_New'  : {
+    'HMlnjjSel_New'  : {
                   'isChain'    : True ,
 		  'do4MC'	: True ,
 		  'do4Data'	: True,
@@ -825,7 +825,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVars' ,
-                  'declare'    : 'HMlnjjVars = lambda : HMlnjjVarsClass()',
+                  'declare'    : 'HMlnjjVars = lambda : HMlnjjVarsClass(RPLME_YEAR)',
                   'module'     : 'HMlnjjVars()',
                },
 
