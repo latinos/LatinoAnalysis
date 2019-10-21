@@ -156,6 +156,12 @@ class SusyGenVarsProducer(Module):
                 raise Exception('SusyGenVarsProducer ERROR: SUSY process not set from gen particle inspection either')
             print 'SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection'
             self.susyModelIsSet = True
+
+        if self.susyProcess=='WinoC1C1' and (massChargino%25)!=0 :
+            print 'SusyGenVarsProducer WARNING: weird chargino mass', massChargino, '. Setting to ', 25*int(massChargino/25), 'mass
+            LSP =', massLSP, 'massSlepton =', massSlepton
+            massChargino = 25*int(massChargino/25)
+            massPrompt = massChargino 
                 
         xSec = self.getCrossSection(self.susyProcess, massPrompt)
         xSection = xSec[0]
