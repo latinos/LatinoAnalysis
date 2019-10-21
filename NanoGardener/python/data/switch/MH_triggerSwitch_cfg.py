@@ -153,3 +153,8 @@ SwitchDict['Full2016v2'] = {
 SwitchDict['Full2016v4'] = SwitchDict['Full2016v2']
 SwitchDict['Full2016v5'] = SwitchDict['Full2016v2']
 SwitchDict['Full2016v5_mh'] = SwitchDict['Full2016v2']
+
+SwitchDict['Full2016v6'] = SwitchDict['Full2016v5']
+SwitchDict['Full2017v6'] = SwitchDict['Full2017v5']
+SwitchDict['Full2018v6'] = SwitchDict['Full2018']
+
