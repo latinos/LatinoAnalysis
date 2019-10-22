@@ -640,7 +640,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['l1tightOR2016v5','PreselFatJet','whadJetSel','wlepMaker'],
-                  'onlySample' : LNuQQSamples,
+                  #'onlySample' : LNuQQSamples,
                    },
 
     'Semilep2017' : { 
@@ -648,7 +648,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['l1tightOR2017v5','PreselFatJet','whadJetSel','wlepMaker'],
-                  'onlySample' : LNuQQSamples,
+                  #'onlySample' : LNuQQSamples,
                    },
 
     'Semilep2018' : { 
@@ -656,7 +656,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['l1tightOR2018v5','PreselFatJet','whadJetSel','wlepMaker'],
-                  'onlySample' : LNuQQSamples,
+                  #'onlySample' : LNuQQSamples,
                    },
 
     'HighMass' : { 
@@ -674,7 +674,7 @@ Steps = {
 		  },
 
 
-    'HMlnjjSel_New'  : {
+    'HMlnjjSel'  : {
                   'isChain'    : True ,
 		  'do4MC'	: True ,
 		  'do4Data'	: True,
