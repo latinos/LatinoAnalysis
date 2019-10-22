@@ -211,7 +211,7 @@ class HMlnjjVarsClass(Module):
         bWP=self.bWP  
         for jdx in range( CleanJetNotFat_col._len ):
             clj_idx = CleanJetNotFat_col[jdx]['jetIdx']
-	    jet_idx = CJet_col[ clj_idx ]['jetIdx']
+            jet_idx = CJet_col[ clj_idx ]['jetIdx']
 	    if Jet_col[ jet_idx ]['btagDeepB'] > bWP:
 	      if Jet_col[ jet_idx ]['pt'] > 20:
 	        Wfat_Btop = True 
