@@ -494,7 +494,14 @@ class DatacardFactory:
                   raise RuntimeError('Invalid rateParam: unknown sample %s' % sampleName)
 
                 card.write(sampleName.ljust(20))
-                card.write(('%-.4f' % float(initialValue)).ljust(columndef))
+                if 'bond' not in nuisance.keys():
+                    card.write(('%-.4f' % float(initialValue)).ljust(columndef))
+                    if 'limits' in nuisance.keys():
+                        card.write(nuisance['limits'].ljust(20))
+                else:
+                    bondFormula, bondParameters = nuisance['bond'][variableName].items()[0]
+                    card.write(bondFormula.ljust(20))
+                    card.write(bondParameters.ljust(20))
                 card.write('\n')
 
               # now add other nuisances            
