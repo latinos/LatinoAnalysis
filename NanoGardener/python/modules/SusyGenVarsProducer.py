@@ -158,8 +158,7 @@ class SusyGenVarsProducer(Module):
             self.susyModelIsSet = True
 
         if self.susyProcess=='WinoC1C1' and (massChargino%25)!=0 :
-            print 'SusyGenVarsProducer WARNING: weird chargino mass', massChargino, '. Setting to ', 25*int(massChargino/25), 'mass
-            LSP =', massLSP, 'massSlepton =', massSlepton
+            print 'SusyGenVarsProducer WARNING: weird chargino mass', massChargino, '. Setting to ', 25*int(massChargino/25), 'massLSP =', massLSP, 'massSlepton =', massSlepton
             massChargino = 25*int(massChargino/25)
             massPrompt = massChargino 
                 
