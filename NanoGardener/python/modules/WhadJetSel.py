@@ -49,6 +49,8 @@ class WhadJetSel(Module):
     
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+
         jet_coll = Collection(event, self.jetColl )
         nJet     = jet_coll._len
         if 'Clean' in self.jetColl : ori_jet_coll = Collection(event, self.jetColl.replace('Clean',''))
@@ -130,7 +132,8 @@ class WhadJetSel(Module):
                 v1.SetPtEtaPhiM(jet_pt1,jet_eta1,jet_phi1,jet_mass1)
                 v2.SetPtEtaPhiM(jet_pt2,jet_eta2,jet_phi2,jet_mass2)
                 M12=(v1+v2).M()
-                if abs(M12-wmass) < dM:
+                this_dM = abs(M12-wmass)
+                if this_dM < dM:
                     idx_j1=iJet
                     idx_j2=jJet
                     whad_pt=(v1+v2).Pt()
@@ -141,6 +144,7 @@ class WhadJetSel(Module):
                     whad_py=(v1+v2).Py()
                     whad_pz=(v1+v2).Pz()
                     whad_E=(v1+v2).E()
+                    dM = this_dM
 
 
         #self.out.fillBranch()

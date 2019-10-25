@@ -37,7 +37,7 @@ class FatJetMaker(Module):
 
 
     '''
-    def __init__(self,jetid=0, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
+    def __init__(self, jetid=0, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
                     over_lepR =0.8, over_jetR = 0.8):
         self.jetid = jetid
         self.minpt = minpt
@@ -53,9 +53,7 @@ class FatJetMaker(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.initReaders(inputTree)
         self.out = wrappedOutputTree
-
         # New Branches
         for typ in CleanFatJet_br:
             for var in CleanFatJet_br[typ]:
@@ -65,34 +63,18 @@ class FatJetMaker(Module):
         # Distance from the first FatJet
         self.out.branch('CleanJetNotFat_deltaR', "F", lenVar="nCleanJetNotFat")
 
+
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-
-    def initReaders(self,tree): # this function gets the pointers to Value and ArrayReaders and sets them in the C++ worker class
-        self.lepton_var = {}
-        self.jet_var = {}
-        self.fatjet_var = {}
-        for br in tree.GetListOfBranches():
-           bname = br.GetName()
-           if re.match('\ALepton_', bname):  self.lepton_var[bname] =  tree.arrayReader(bname)
-           if re.match('\ACleanJet_', bname): self.jet_var[bname] =    tree.arrayReader(bname)
-           if re.match('\AFatJet_', bname):   self.fatjet_var[bname] = tree.arrayReader(bname)
-
-        self.nLepton = tree.valueReader('nLepton')
-        self.nJet = tree.valueReader('nCleanJet')
-        self.nFatJet = tree.valueReader('nFatJet')
-        self._ttreereaderversion = tree._ttreereaderversion
-        
     
     def analyze(self, event):
-        # do this check at every event, as other modules might have read further branches
-        if event._tree._ttreereaderversion > self._ttreereaderversion: 
-            self.initReaders(event._tree)
-
-        nFatJet = int(self.nFatJet)
-        nLep = int(self.nLepton)
-        nJet = int(self.nJet)
+        leptons_coll = Collection(event, "Lepton")
+        fatjets_coll = Collection(event, "FatJet")
+        jets_coll = Collection(event, "CleanJet")
+        nFatJet = len(fatjets_coll)
+        nLep = len(leptons_coll)
+        nJet = len(jets_coll)
 
         # variables for CleanJets NotFat
         overlapping_jets = []
@@ -102,14 +84,15 @@ class FatJetMaker(Module):
             for var in CleanFatJet_br[typ]:
                 output_vars[var] = []
 
-        for ifj in range(nFatJet):
-            fj_id            = self.fatjet_var["FatJet_jetId"][ifj]
-            fj_pt            = self.fatjet_var["FatJet_pt"][ifj]
-            fj_eta           = self.fatjet_var["FatJet_eta"][ifj]
-            fj_phi           = self.fatjet_var["FatJet_phi"][ifj]
-            fj_softdrop_mass = self.fatjet_var["FatJet_msoftdrop"][ifj]
-            fj_tau1          = self.fatjet_var["FatJet_tau1"][ifj]
-            fj_tau2          = self.fatjet_var["FatJet_tau2"][ifj]
+        for ifj, fj in enumerate(fatjets_coll):
+            # removing attribute fetching for performance
+            fj_id            = fj.jetId
+            fj_pt            = fj.pt
+            fj_eta           = fj.eta
+            fj_phi           = fj.phi
+            fj_softdrop_mass = fj.msoftdrop
+            fj_tau1          = fj.tau1
+            fj_tau2          = fj.tau2
             # If the FatJet has only 1 particle remove it (rare corner case)
             if fj_tau1 == 0:  continue
             fj_tau21 = fj_tau2 / fj_tau1
@@ -124,15 +107,14 @@ class FatJetMaker(Module):
             # Check leptons if the ID kinematics cuts are passed
             if goodFatJet:
                 # Loop on leptons and exclude FatJet if there's a lepton with DeltaR < 1
-                for il in range(nLep):
-                    lep_phi = self.lepton_var["Lepton_phi"][il]
-                    lep_eta = self.lepton_var["Lepton_eta"][il]
-                    dRLep = self.getDeltaR(fj_phi, fj_eta, lep_phi, lep_eta)
+                for il,lep in enumerate(leptons_coll):
+                    dRLep = self.getDeltaR(fj_phi, fj_eta, lep.phi, lep.eta)
                     if dRLep < self.over_lepR:
                         goodFatJet = False
                        #print("Found lepton matched to FatJet")
 
             if goodFatJet:
+                #  The mass will be scaled and smeared in FatJetMassScaler module
                 # save the CleanFatJet info
                 output_vars["CleanFatJet_pt"].append(fj_pt)
                 output_vars["CleanFatJet_eta"].append(fj_eta)
@@ -142,9 +124,8 @@ class FatJetMaker(Module):
                 output_vars["CleanFatJet_jetIdx"].append(ifj)
 
                 # Get the jet overlapping with this CleanFatJet  DeltaR<0.8
-                for ij in range(nJet):
-                    dRjet =  self.getDeltaR(fj_phi, fj_eta, 
-                                self.jet_var["CleanJet_phi"][ij], self.jet_var["CleanJet_eta"][ij])
+                for ij, jet in enumerate(jets_coll):
+                    dRjet =  self.getDeltaR(fj_phi, fj_eta, jet.phi, jet.eta)
                     if dRjet < self.over_jetR:
                         overlapping_jets.append(ij)
                         #print("Found overlapping jet")
@@ -156,7 +137,7 @@ class FatJetMaker(Module):
         if len(output_vars["CleanFatJet_phi"])> 0:
             for  inoj, clj in enumerate(cleanjet_not_overlap):
                 distances_jets_fatjets[inoj] =  self.getDeltaR(
-                        self.jet_var["CleanJet_phi"][clj], self.jet_var["CleanJet_eta"][clj],
+                        jets_coll[clj].phi, jets_coll[clj].eta,
                         output_vars["CleanFatJet_phi"][0], output_vars["CleanFatJet_eta"][0] ) 
     
 
