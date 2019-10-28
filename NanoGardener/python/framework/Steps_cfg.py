@@ -994,7 +994,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 150], over_lepR=0.8, over_jetR=0.8)',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
                   'module'     : 'fatjetMaker()'
     },
 
@@ -1029,7 +1029,7 @@ Steps = {
                   'do4MC'     : True  ,
                   'do4Data'   : True  ,
                   'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
-                  'declare'   : 'whadJetSel = lambda : WhadJetSel(jetid=1,pujetid="none",minpt=30.0,maxeta=2.4,jetColl="CleanJet")',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel(2,"custom",15.0,4.7,"CleanJet")',
                   'module'    : 'WhadJetSel()',
     },
     'PreselFatJet' : {
