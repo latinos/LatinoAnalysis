@@ -11,24 +11,24 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 Wmass=80.4
 
 class HMlnjjVarsClass(Module):
-    def __init__(self,year=2017):
+    def __init__(self,year):
 	self.HlnFat_4v  = ROOT.TLorentzVector()
 	self.Hlnjj_4v   = ROOT.TLorentzVector()
 	self.Wlep_4v   = ROOT.TLorentzVector()
 	self.Wfat_4v   = ROOT.TLorentzVector()
 	self.Wjj_4v   = ROOT.TLorentzVector()
-        
+        print "@@Year->",year
         self.year=year
         # b-tag WP && tau21 (Wtag)
         self.bWP=0.2217 ##2016legacy
         self.tau21WP=0.4 ##2016 legacy
-        if self.year==2016: 
+        if '2016' in str(self.year): 
             self.bWP=0.2217   ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
             self.tau21WP=0.4  ##2016 scale factors and corrections
-        elif self.year ==2017: 
+        elif '2017' in str(self.year): 
             self.bWP=0.1522    ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             self.tau21WP=0.45  ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetWtagging#tau21_0_45
-        elif self.year ==2018:
+        elif '2018' in str(self.year):
             self.bWP=0.1241    ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
             self.tau21WP=0.45  ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetWtagging#tau21_0_45_HP_0_45_tau21_0_75_LP
 
