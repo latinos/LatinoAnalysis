@@ -20,6 +20,8 @@ Samples = {
 
 Samples = {}
 
+Samples['2HDMa_SemiLep_MH3_200_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_200_MH4_150_MH2_200_MHC_200_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
+
 
 Samples['2HDMa_MH3_300_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
 Samples['2HDMa_MH3_500_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
