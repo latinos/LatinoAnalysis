@@ -53,6 +53,10 @@ samples['WJetsToLNu_HT1200_2500_ext1']    .extend( ['xsec=1.074',	'kfact=1.21',	
 samples['WJetsToLNu_HT2500_inf']       	.extend( ['xsec=0.008001',	'kfact=1.21',		'ref=W'] )
 samples['WJetsToLNu_HT2500_inf_ext1']     .extend( ['xsec=0.008001',	'kfact=1.21',		'ref=W'] )
 
+samples['WJetsToLNu-0J'] .extend( ['xsec=54611.6',      'kfact=1.00',           'ref=I'] )
+samples['WJetsToLNu-1J'] .extend( ['xsec=8966.2',       'kfact=1.00',           'ref=I'] )
+samples['WJetsToLNu-2J'] .extend( ['xsec= 3643.12',     'kfact=1.00',           'ref=I'] )
+
 
 ## DY
 samples['DYJetsToLL_M-10to50']        	   .extend( ['xsec=18610.0',	'kfact=1.000',		'ref=E'] )
