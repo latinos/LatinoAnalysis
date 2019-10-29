@@ -48,6 +48,7 @@ public:
  float m2ljj30();
 
  float pTWW();
+ float pTHjj();
  float mTi();
  float mTe();
  float choiMass();
@@ -1214,6 +1215,14 @@ float WW::vht_phi(){
  }
 }
 
+float WW::pTHjj(){
+  if (_isOk && _jetOk >= 2) {
+  return (L1+L2+J1+J2+MET).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
 
 
 //

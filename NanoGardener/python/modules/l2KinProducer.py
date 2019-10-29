@@ -105,6 +105,7 @@ class l2KinProducer(Module):
            'mpmet',
            
            'pTWW',
+           'pTHjj',
 
            'recoil',
            'jetpt1_cut',
