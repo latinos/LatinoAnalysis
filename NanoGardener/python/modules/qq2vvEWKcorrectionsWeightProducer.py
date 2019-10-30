@@ -65,7 +65,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
         self.out = wrappedOutputTree
         newbranches = ['ewknloW', 'ewknloWuncertainty']
         #
-        # "ewknloWuncertainty" is the fractional uncertainty on "ewknloW", i.e. 1 -> 100% uncertainty, 0.1 -> 10% uncertainty
+        # "ewknloWuncertainty" is the absolute uncertainty on "ewknloW"
         #
         for nameBranches in newbranches :
           self.out.branch(nameBranches  ,  "F");
