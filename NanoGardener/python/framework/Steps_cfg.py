@@ -856,6 +856,20 @@ Steps = {
                   'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down']
                   } ,
 
+    'vvNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'vvNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'vvNLOEWK()',
+                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down',
+                                  'WZTo3LNu', 'WZTo3LNu_ext1', 'WZ', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg',
+                                   'ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2', 'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2', 'ZZTo2L2Q'
+                                  ]
+                  } ,
+
+
     'WGammaStar' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
