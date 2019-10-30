@@ -205,8 +205,13 @@ class DatacardFactory:
               columndef = 30
 
               # adapt column length to long bin names            
-              if len(tagNameToAppearInDatacard) >= (columndef - 5) :
+              if len(tagNameToAppearInDatacard) >= (columndef -5) :
                 columndef = len(tagNameToAppearInDatacard) + 7
+
+              for name in signals :
+                if len(name)>= (columndef -5) :
+                    columndef = len(name) + 7
+
 
               print '      processes and rates..'
             

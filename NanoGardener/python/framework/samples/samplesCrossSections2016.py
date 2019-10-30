@@ -55,6 +55,16 @@ samples['WJetsToLNu_HT1200_2500_ext1']    .extend( ['xsec=1.32900',	'kfact=1.21'
 samples['WJetsToLNu_HT2500_inf']       	.extend( ['xsec=0.03216',	'kfact=1.21',		'ref=E'] )
 samples['WJetsToLNu_HT2500_inf_ext1']     .extend( ['xsec=0.03216',	'kfact=1.21',		'ref=E'] )
 
+samples['WJetsToLNu_WJetsToLNu_Pt-100To250']                	.extend( ['xsec=676.3',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-100To250_ext1']                	.extend( ['xsec=676.3',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-100To250_ext4']                	.extend( ['xsec=676.3',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-250To400']                	.extend( ['xsec=23.94',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-250To400_ext1']                	.extend( ['xsec=23.94',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-250To400_ext4']                	.extend( ['xsec=23.94',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-400To600']                	.extend( ['xsec=3.031',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-400To600_ext1']                	.extend( ['xsec=3.031',	'kfact=1.00',		'ref=I'] )
+samples['WJetsToLNu_WJetsToLNu_Pt-600ToInf']                	.extend( ['xsec=0.4524',	'kfact=1.00',		'ref=I'] )
+
 
 ## DY
 samples['DYJetsToLL_M-10to50']        	   .extend( ['xsec=18610.0',	'kfact=1.000',		'ref=E'] )
