@@ -513,6 +513,18 @@ Samples['monoH_2HDM_MZp-1700_MA0-300'] = {'nanoAOD' : '/ZprimeToA0hToA0chichihWW
 Samples['monoH_2HDM_MZp-2000_MA0-300'] = {'nanoAOD' : '/ZprimeToA0hToA0chichihWWTollnunu_2HDM_MZp-2000_MA0-300_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v2/NANOAODSIM'}
 Samples['monoH_2HDM_MZp-2500_MA0-300'] = {'nanoAOD' : '/ZprimeToA0hToA0chichihWWTollnunu_2HDM_MZp-2500_MA0-300_13TeV-madgraph-pythia8/RunIISummer16NanoAODv4-PUMoriond17_Nano14Dec2018_102X_mcRun2_asymptotic_v6-v1/NANOAODSIM'}
 
+# Single top/ttDM signal samples
+
+Samples['DMPseudo_ttbar01j_Mchi1_Mphi10_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMPseudoscalar_ttbar01j_mphi_10_mchi_1_July2019/cprieels-DMPseudo_ttbar01j_Mchi1_Mphi10_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+Samples['DMPseudo_ttbar01j_Mchi1_Mphi50_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMPseudoscalar_ttbar01j_mphi_50_mchi_1_July2019/cprieels-DMPseudo_ttbar01j_Mchi1_Mphi50_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+Samples['DMPseudo_ttbar01j_Mchi1_Mphi100_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMPseudoscalar_ttbar01j_mphi_100_mchi_1_July2019/cprieels-DMPseudo_ttbar01j_Mchi1_Mphi100_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+Samples['DMPseudo_ttbar01j_Mchi1_Mphi500_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMPseudoscalar_ttbar01j_mphi_500_mchi_1_July2019/cprieels-DMPseudo_ttbar01j_Mchi1_Mphi500_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+
+Samples['DMScalar_ttbar01j_Mchi1_Mphi10_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMScalar_ttbar01j_mphi_10_mchi_1_July2019/cprieels-DMScalar_ttbar01j_Mchi1_Mphi10_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+Samples['DMScalar_ttbar01j_Mchi1_Mphi50_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMScalar_ttbar01j_mphi_50_mchi_1_July2019/cprieels-DMScalar_ttbar01j_Mchi1_Mphi50_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+Samples['DMScalar_ttbar01j_Mchi1_Mphi100_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMScalar_ttbar01j_mphi_100_mchi_1_July2019/cprieels-DMScalar_ttbar01j_Mchi1_Mphi100_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+Samples['DMScalar_ttbar01j_Mchi1_Mphi500_Private2019'] = {'dasInst' : 'prod/phys03', 'nanoAOD': '/DMScalar_ttbar01j_mphi_500_mchi_1_July2019/cprieels-DMScalar_ttbar01j_Mchi1_Mphi500_Private2019_NANOAODSIM-466f2942f540183f96eb432144c741b2/USER'}
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Nicolo'
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

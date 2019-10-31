@@ -663,6 +663,17 @@ samples['WLLJJToLNu_M-4To50_QCD_2Jet']  	.extend( ['xsec=0.08209',	'kfact=1.000'
 samples['WLLJJToLNu_M-4To50_QCD_3Jet']  	.extend( ['xsec=0.05082',	'kfact=1.000',	'ref=N'] )
 
 # ttDM
+# ttDM
+samples['DMScalar_ttbar01j_Mchi1_Mphi10_Private2019'] .extend( ['xsec=19.76', 'kfact=1.000', 'ref=W'] )
+samples['DMScalar_ttbar01j_Mchi1_Mphi50_Private2019'] .extend( ['xsec=3.006', 'kfact=1.000', 'ref=W'] )
+samples['DMScalar_ttbar01j_Mchi1_Mphi100_Private2019'] .extend( ['xsec=0.696', 'kfact=1.000', 'ref=W'] )
+samples['DMScalar_ttbar01j_Mchi1_Mphi500_Private2019'] .extend( ['xsec=0.0059', 'kfact=1.000', 'ref=W'] )
+
+samples['DMPseudo_ttbar01j_Mchi1_Mphi10_Private2019'] .extend( ['xsec=0.4463', 'kfact=1.000', 'ref=W'] )
+samples['DMPseudo_ttbar01j_Mchi1_Mphi50_Private2019'] .extend( ['xsec=0.3072', 'kfact=1.000', 'ref=W'] )
+samples['DMPseudo_ttbar01j_Mchi1_Mphi100_Private2019'] .extend( ['xsec=0.1941', 'kfact=1.000', 'ref=W'] )
+samples['DMPseudo_ttbar01j_Mchi1_Mphi500_Private2019'] .extend( ['xsec=0.005943', 'kfact=1.000', 'ref=W'] )
+
 samples['ttDM0001scalar00010'] .extend( ['xsec=19.59'           , 'kfact=1.000', 'ref=J'] )
 samples['ttDM0001scalar0010']  .extend( ['xsec=19.59'           , 'kfact=1.000', 'ref=J'] )
 samples['ttDM0001scalar00020'] .extend( ['xsec=10.48'           , 'kfact=1.000', 'ref=J'] )
