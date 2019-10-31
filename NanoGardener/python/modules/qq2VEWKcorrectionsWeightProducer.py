@@ -45,10 +45,10 @@ class vNLOEWKcorrectionWeightProducer(Module):
         wknum = self.get_root_obj ( self.kfactorFile , "EWKcorr/W"      )
         wkden = self.get_root_obj ( self.kfactorFile , "WJets_LO/inv_pt")
         
-        self.zkfact = zknum.Clone("zkfact");
-        self.wkfact = wknum.Clone("wkfact");
-        self.zkfact.Divide(zkden);
-        self.wkfact.Divide(wkden);
+        self.zkfact = zknum.Clone("zkfact")
+        self.wkfact = wknum.Clone("wkfact")
+        self.zkfact.Divide(zkden)
+        self.wkfact.Divide(wkden)
         
         #print " self.zkfact = ", self.zkfact
         #print " self.wkfact = ", self.wkfact
