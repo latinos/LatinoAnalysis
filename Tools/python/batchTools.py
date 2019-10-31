@@ -168,6 +168,7 @@ class batchJobs :
        cmd='voms-proxy-info'
        proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
        out, err = proc.communicate()
+       proxypath = " xxx "
        for line in out.split('\n'):
         if "path" in line:
           proxypath=line.split(':')[1]

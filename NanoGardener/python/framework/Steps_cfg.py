@@ -856,6 +856,41 @@ Steps = {
                   'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down']
                   } ,
 
+    'wwNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'wwNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'wwNLOEWK(\'ww\')',
+                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down'
+                                  ]
+                  } ,
+
+
+    'wzNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'wzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'wzNLOEWK(\'wz\')',
+                  'onlySample' : ['WZTo3LNu', 'WZTo3LNu_ext1', 'WZ', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg'
+                                  ]
+                  } ,
+
+    'zzNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'zzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'zzNLOEWK(\'zz\')',
+                  'onlySample' : ['ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2', 'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2', 'ZZTo2L2Q'
+                                  ]
+                  } ,
+
+
     'WGammaStar' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
