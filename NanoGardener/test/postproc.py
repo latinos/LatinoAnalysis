@@ -15,6 +15,7 @@ from LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.MetUnclustered import *
 from LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer import *
+from LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer import *
 
 
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
@@ -73,7 +74,9 @@ p = PostProcessor(".", files,
                          #btagSFProducer(era='2016', algo='cmva'),
                          #BTagEventWeightProducer(),
                          #
-                         vvNLOEWKcorrectionWeightProducer('wz')
+                         #vvNLOEWKcorrectionWeightProducer('wz')
+                         #
+                         vNLOEWKcorrectionWeightProducer('z')
                          ],
                        provenance=True,
                        fwkJobReport=True
