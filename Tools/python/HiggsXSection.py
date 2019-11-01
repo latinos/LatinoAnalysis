@@ -309,15 +309,22 @@ class HiggsXSection:
         FinalState   = 'ZZ->4l'
         FinalStateBR = self._br['Z2ll']*self._br['Z2ll']
 
-     # ...... WH with W decays BR :wq
+     # ...... WH with W decays BR 
      if ProdMode == 'HWplus' or ProdMode == 'HWminus' :
-        if 'WToLNu'  in SampleName : 
+        if '_WToLNu_'  in SampleName : 
            FinalState   += ' + W->lv'
            FinalStateBR *= self._br['W2lv']
-        if 'WToQQ'   in SampleName :  
+        elif '_LNu_' in SampleName :
+           FinalState   += ' + W->lv'
+           FinalStateBR *= self._br['W2lv'] 
+        elif '_WToQQ_'   in SampleName :  
            FinalState   += ' + W->QQ'
            FinalStateBR *= self._br['W2QQ']
-
+     # ...... ZH with Z decays BR
+     if ProdMode == 'ZH' or ProdMode == 'ggZH' :
+        if '_ZTo2L_' in SampleName :
+           FinalState   += ' + Z->ll'
+           FinalStateBR *= self._br['Z2ll'] 
 
      HiggsXS['FinalState']   = FinalState
      HiggsXS['FinalStateBR'] = FinalStateBR
