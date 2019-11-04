@@ -342,7 +342,7 @@ samples['GluGluHToTauTau_M130']		.extend( ['xsec=1.5260',     	'kfact=1.000',		'
 
 samples['GluGluHToWWTo2L2Nu_M125_minloHJ_NNLOPS']   .extend( ['xsec=0.9913',  'kfact=1.000',    'ref=CF'] ) # 43.92*0.215*0.108*0.108*9 Higgs LHC value
 
-samples['GluGluHToWWTo2L2Nu_minloHJJ_M125']   .extend( ['xsec=0.8962',  'kfact=1.000',    'ref=I'] ) # 39.71*0.215*0.108*0.108*9 (39.71 from GenXSecAnalyzer)
+samples['GGHjjToWWTo2L2Nu_minloHJJ_M125']   .extend( ['xsec=0.8962',  'kfact=1.000',    'ref=I'] ) # 39.71*0.215*0.108*0.108*9 (39.71 from GenXSecAnalyzer)
 
 
 samples['GluGluHToMuMu_M125_CP5']        .extend(['xsec=0.010571',      'kfact=1.000',           'ref=FT'] ) # 48.58*2.176*10^{-4} 
