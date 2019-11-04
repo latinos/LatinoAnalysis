@@ -10,9 +10,9 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_HBHENoiseFilter*\
                      event.Flag_HBHENoiseIsoFilter*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
-                     event.Flag_BadPFMuonFilter\
+                     event.Flag_BadPFMuonFilter*\
+                     event.Flag_ecalBadCalibFilterV2\
                    )'
-                     #event.Flag_ecalBadCalibFilterV2\
 
 METFilter_DATA   =  METFilter_Common 
 
@@ -28,7 +28,7 @@ formulas['XSWeight'] = 'event.baseW*\
 
 muWP='cut_Tight_HWWW'
 eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
-#eleWPlist = ['mvaFall17Iso_WP90','mvaFall17Iso_WP90_SS']
+eleWPlist += ['cutFall17V1Iso_Tight','cutFall17V1Iso_Tight_SS','cutFall17V2Iso_Tight','cutFall17V2Iso_Tight_SS']
 
 for eleWP in eleWPlist: 
 

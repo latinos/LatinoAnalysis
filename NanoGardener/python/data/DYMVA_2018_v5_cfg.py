@@ -49,13 +49,12 @@ mvaDic['dymva_dnn_VBF'] = {
                           'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018_v5/TMVAClassification_PyKeras_2018_VBF.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
-'''
+
 mvaDic['dymva_dnn_VH'] = {
                           'type'      : 'PyKeras' ,
                           'xmlFile'   : 'LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018_v5/TMVAClassification_PyKeras_2018_VH.weights.xml'   ,
                           'inputVars' : OrderedDict() ,
                          }
-'''
 
 #--- Variables
 #0j
@@ -175,7 +174,7 @@ mvaDic['dymva_dnn_2j']['inputVars']['dphijjmet_cut']   = 'event.dphijjmet_cut'
 mvaDic['dymva_dnn_2j']['inputVars']['ptTOT_cut']       = 'event.ptTOT_cut'
 mvaDic['dymva_dnn_2j']['inputVars']['mTOT_cut']        = 'event.mTOT_cut'
 mvaDic['dymva_dnn_2j']['inputVars']['PV_npvsGood']     = 'event.PV_npvsGood'
-'''
+
 #VH
 mvaDic['dymva_dnn_VH']['inputVars']['ptll']            = 'event.ptll'
 mvaDic['dymva_dnn_VH']['inputVars']['mth']             = 'event.mth'
@@ -204,7 +203,7 @@ mvaDic['dymva_dnn_VH']['inputVars']['dphijjmet_cut']   = 'event.dphijjmet_cut'
 mvaDic['dymva_dnn_VH']['inputVars']['ptTOT_cut']       = 'event.ptTOT_cut'
 mvaDic['dymva_dnn_VH']['inputVars']['mTOT_cut']        = 'event.mTOT_cut'
 mvaDic['dymva_dnn_VH']['inputVars']['PV_npvsGood']     = 'event.PV_npvsGood'
-'''
+
 #VBF
 mvaDic['dymva_bdt_VBF']['inputVars']['PV_npvsGood']     = 'event.PV_npvsGood'
 mvaDic['dymva_bdt_VBF']['inputVars']['PfMetDivSumMet']  = 'event.PfMetDivSumMet'
