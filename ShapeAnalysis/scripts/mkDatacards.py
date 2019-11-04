@@ -263,12 +263,12 @@ class DatacardFactory:
                         histoDown.SetDirectory(self._outFile)
 
                         if '/' in nuisance['samples'][sampleName]:
-                            up, down = nuisance['samples'][sampleName].split('/')
-                            histoUp.Scale(float(up))
-                            histoDown.Scale(float(down))
+                          up, down = nuisance['samples'][sampleName].split('/')
+                          histoUp.Scale(float(up))
+                          histoDown.Scale(float(down))
                         else:
-                            histoUp.Scale(float(nuisance['samples'][sampleName]))
-                            histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
+                          histoUp.Scale(float(nuisance['samples'][sampleName]))
+                          histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
 
                         self._outFile.cd()
                         histoUp.Write()
