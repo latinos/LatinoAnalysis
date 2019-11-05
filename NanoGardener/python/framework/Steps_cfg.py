@@ -1466,6 +1466,15 @@ Steps = {
                   'module'     : 'l2KinProducer()' ,
                },  
 
+  'l2Kin_ElepTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l2KinProducer(branch_map="ElepTup")' ,
+               },
+
   'l3Kin'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1734,6 +1743,15 @@ Steps = {
                   'module'     : 'ElepTup()',
                 },
 
+  'do_ElepTup_withsuffix': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
+                  'declare'    : 'ElepTup = lambda : LeppTScalerTreeMaker(kind="Up", lepFlavor="ele", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"], suffix="_ElepTup")',
+                  'module'     : 'ElepTup()',
+                },
+
   'do_ElepTdo' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1748,6 +1766,13 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_ElepTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
+               },
+
+  'ElepTup_withsuffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_ElepTup_withsuffix','l2Kin_ElepTup'],
                },
 
   'ElepTdo' :   {

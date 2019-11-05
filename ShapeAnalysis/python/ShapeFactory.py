@@ -207,8 +207,6 @@ class ShapeFactory:
               #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
 
-
-
         ## test with LOOP: not very fast ... to be improved ...
 
         ##---- now plot and save into output root file
