@@ -856,6 +856,41 @@ Steps = {
                   'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down']
                   } ,
 
+    'wwNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'wwNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'wwNLOEWK(\'ww\')',
+                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down'
+                                  ]
+                  } ,
+
+
+    'wzNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'wzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'wzNLOEWK(\'wz\')',
+                  'onlySample' : ['WZTo3LNu', 'WZTo3LNu_ext1', 'WZ', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg'
+                                  ]
+                  } ,
+
+    'zzNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'zzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'zzNLOEWK(\'zz\')',
+                  'onlySample' : ['ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2', 'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2', 'ZZTo2L2Q'
+                                  ]
+                  } ,
+
+
     'WGammaStar' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -994,7 +1029,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 150], over_lepR=0.8, over_jetR=0.8)',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
                   'module'     : 'fatjetMaker()'
     },
 
@@ -1029,7 +1064,7 @@ Steps = {
                   'do4MC'     : True  ,
                   'do4Data'   : True  ,
                   'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
-                  'declare'   : 'whadJetSel = lambda : WhadJetSel(jetid=1,pujetid="none",minpt=30.0,maxeta=2.4,jetColl="CleanJet")',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel(2,"custom",15.0,4.7,"CleanJet")',
                   'module'    : 'WhadJetSel()',
     },
     'PreselFatJet' : {

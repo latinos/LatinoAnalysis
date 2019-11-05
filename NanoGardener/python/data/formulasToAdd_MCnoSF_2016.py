@@ -10,8 +10,7 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_HBHENoiseFilter*\
                      event.Flag_HBHENoiseIsoFilter*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
-                     event.Flag_BadPFMuonFilter*\
-                     event.Flag_ecalBadCalibFilterV2\
+                     event.Flag_BadPFMuonFilter\
                    )'
 
 METFilter_DATA   =  METFilter_Common 
@@ -25,12 +24,13 @@ formulas['XSWeight'] = 'event.baseW*\
                         event.genWeight \
                         if hasattr(event, \'genWeight\') else event.baseW'
 
+# Lepton WP
 
-muWP='cut_Tight_HWWW'
-eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
-eleWPlist += ['cutFall17V1Iso_Tight','cutFall17V1Iso_Tight_SS','cutFall17V2Iso_Tight','cutFall17V2Iso_Tight_SS']
+muWP='cut_Tight80x'
+eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016']
 
 for eleWP in eleWPlist: 
+
 
   formulas['LepCut2l__ele_'+eleWP+'__mu_'+muWP] = '((event.Lepton_isTightElectron_'+eleWP+'[0]>0.5 or event.Lepton_isTightMuon_'+muWP+'[0]>0.5) and \
                                                     (event.Lepton_isTightElectron_'+eleWP+'[1]>0.5 or event.Lepton_isTightMuon_'+muWP+'[1]>0.5)) \
