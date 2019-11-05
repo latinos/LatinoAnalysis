@@ -98,6 +98,9 @@ public:
  float dphilep1jet2(); 
  float dphilep2jet1(); 
  float dphilep2jet2(); 
+ float maxdphilepjj();
+ float dphilep2jj();
+ float dphilep1jj();
 
  float mindetajl();
  float detall();
@@ -525,6 +528,36 @@ float WW::dphilljetjet(){
  }
  else {
   return -9999.0;
+ }
+}
+
+float WW::maxdphilepjj(){
+ if (_isOk && _jetOk >= 2) {
+float d1 = fabs(L1.DeltaPhi(J1+J2));
+float d2 = fabs(L2.DeltaPhi(J1+J2));
+if(d1>d2) return d1;
+else return d2;
+}
+else {
+ return -9999.0;
+ }
+}
+
+float WW::dphilep1jj(){
+ if (_isOk && _jetOk >= 2) {
+ return fabs(L1.DeltaPhi(J1+J2));
+}
+else {
+ return -9999.0;
+ }
+}
+
+float WW::dphilep2jj(){
+ if (_isOk && _jetOk >= 2) {
+ return fabs(L2.DeltaPhi(J1+J2));
+}
+else {
+ return -9999.0;
  }
 }
 
