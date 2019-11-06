@@ -1,6 +1,6 @@
 // 
 // root -l draw_ewk_V.cxx
-// 
+// From https://arxiv.org/pdf/1705.04664v2.pdf
 // 
 
 void draw_ewk_V() {
