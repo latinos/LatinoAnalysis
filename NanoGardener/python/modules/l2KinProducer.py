@@ -129,7 +129,9 @@ class l2KinProducer(Module):
            'Ceta_cut',
 #whss
            'mlljj20_whss',
-           'mlljj30_whss'
+           'mlljj30_whss',
+           'WlepPt_whss',
+           'WlepMt_whss'
           ]
         
         for nameBranches in self.newbranches :
