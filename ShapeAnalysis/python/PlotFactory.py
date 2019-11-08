@@ -250,13 +250,31 @@ class PlotFactory:
 
                 #print ' plot[', sampleName, '][color] = ' , plotdef['color']
                 histos[sampleName].SetMarkerColor(plotdef['color'])
+
                 histos[sampleName].SetMarkerSize(1)
                 histos[sampleName].SetMarkerStyle(20)
-                histos[sampleName].SetLineColor(plotdef['color'])
+                histos[sampleName].SetLineColor(self._getColor(plotdef['color']))
                 
                 # blind data
                 if 'isBlind' in plotdef.keys() and plotdef['isBlind'] == 1:
                   histos[sampleName].Reset()
+
+                # Per variable blinding
+                if 'blind' in variable:
+                  if cutName in variable['blind']:
+                    blind_range = variable['blind'][cutName]
+                    if blind_range == "full":
+                      for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                        histos[sampleName].SetBinContent(iBin, 0)
+                        histos[sampleName].SetBinError  (iBin, 0)
+                      histos[sampleName].Reset()
+                    elif type(blind_range) in [list,tuple] and len(blind_range)==2:
+                      b0 = histos[sampleName].FindBin(blind_range[0])
+                      b1 = histos[sampleName].FindBin(blind_range[1])
+                      for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                        if iBin >= b0 and iBin <= b1:
+                          histos[sampleName].SetBinContent(iBin, 0)
+                          histos[sampleName].SetBinError  (iBin, 0)
 
                 thsData.Add(histos[sampleName])
 
@@ -298,16 +316,19 @@ class PlotFactory:
                 # only background "filled" histogram
                 if plotdef['isSignal'] == 0:
                   #histos[sampleName].SetFillStyle(1001)
-                  #histos[sampleName].SetFillColorAlpha(plotdef['color'], 0.5)
-                  #histos[sampleName].SetFillColor(plotdef['color'])
-                  #histos[sampleName].SetLineColor(plotdef['color']+1)
-                  histos[sampleName].SetFillColor(plotdef['color'])
-                  histos[sampleName].SetFillStyle(3001)
+                  #histos[sampleName].SetFillColorAlpha(self._getColor(plotdef['color'],) 0.5)
+                  #histos[sampleName].SetFillColor(self._getColor(plotdef['color']))
+                  #histos[sampleName].SetLineColor(self._getColor(plotdef['color']+)1)
+                  histos[sampleName].SetFillColor(self._getColor(plotdef['color']))
+                  if 'fill' in plotdef:
+                    histos[sampleName].SetFillStype(plotdef['fill'])
+                  else:
+                    histos[sampleName].SetFillStyle(3001)
                 else :
                   histos[sampleName].SetFillStyle(0)
                   histos[sampleName].SetLineWidth(2)
              
-                histos[sampleName].SetLineColor(plotdef['color'])
+                histos[sampleName].SetLineColor(self._getColor(plotdef['color']))
                 # scale to luminosity if MC
                 #histos[sampleName].Scale(self._lumi)  ---> NO! They are already scaled to luminosity in mkShape!
                 
@@ -465,14 +486,17 @@ class PlotFactory:
             # set the colors for the groups of samples
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
               if sampleNameGroup in histos_grouped.keys() :
-                histos_grouped[sampleNameGroup].SetLineColor(sampleConfiguration['color'])
+                histos_grouped[sampleNameGroup].SetLineColor(self._getColor(sampleConfiguration['color']))
                 if sampleConfiguration['isSignal'] == 0:
                   #histos_grouped[sampleNameGroup].SetFillStyle(1001)
-                  #histos_grouped[sampleNameGroup].SetFillColorAlpha(sampleConfiguration['color'], 0.5)
-                  #histos_grouped[sampleNameGroup].SetFillColor(sampleConfiguration['color'])
-                  #histos_grouped[sampleNameGroup].SetLineColor(sampleConfiguration['color']+1)
-                  histos_grouped[sampleNameGroup].SetFillColor(sampleConfiguration['color'])
-                  histos_grouped[sampleNameGroup].SetFillStyle(3001)
+                  #histos_grouped[sampleNameGroup].SetFillColorAlpha(self._getColor(sampleConfiguration['color'],) 0.5)
+                  #histos_grouped[sampleNameGroup].SetFillColor(self._getColor(sampleConfiguration['color']))
+                  #histos_grouped[sampleNameGroup].SetLineColor(self._getColor(sampleConfiguration['color']+)1)
+                  histos_grouped[sampleNameGroup].SetFillColor(self._getColor(sampleConfiguration['color']))
+                  if 'fill' in sampleConfiguration:
+                    histos_grouped[sampleNameGroup].SetFillStyle(sampleConfiguration['fill'])
+                  else:
+                    histos_grouped[sampleNameGroup].SetFillStyle(3001)
                 else :
                   histos_grouped[sampleNameGroup].SetFillStyle(0)
                   histos_grouped[sampleNameGroup].SetLineWidth(2)
@@ -2339,4 +2363,14 @@ class PlotFactory:
                 tcanvas.SaveAs(nameBase + ".root")
             if 'C' in self._fileFormats:
                 tcanvas.SaveAs(nameBase + ".C")
+
+    def _getColor(self, color):
+      if type(color) == int:
+        return color
+      elif type(color) == tuple:
+        # RGB
+        return ROOT.TColor.GetColor(*color)
+      elif type(color) == str:
+        # hex string
+        return ROOT.TColor.GetColor(color)
 
