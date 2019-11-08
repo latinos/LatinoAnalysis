@@ -23,7 +23,7 @@ import os.path
 import math
 
 class LeppTScalerTreeMaker(Module) :
-    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET' , 'ChsMET']) :
+    def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET' , 'ChsMET'], suffix=''):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
@@ -46,6 +46,9 @@ class LeppTScalerTreeMaker(Module) :
           if point[1][1] > self.maxeta : self.maxeta = point[1][1]
         print 'maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta
 
+        # Add a suffix to the output branches instead of overwriting the existing ones
+        self._suffix = suffix
+
     def beginJob(self):
         pass
 
@@ -55,14 +58,14 @@ class LeppTScalerTreeMaker(Module) :
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         for x in self.metCollections:
-          self.out.branch(x+'_pt', "F")
-          self.out.branch(x+'_phi', "F")
+          self.out.branch(x+'_pt'+self._suffix, "F")
+          self.out.branch(x+'_phi'+self._suffix, "F")
 
         if 'electronIdx' not in Lepton_var: Lepton_var.append('electronIdx')
         if 'muonIdx' not in Lepton_var: Lepton_var.append('muonIdx')
         for typ in Lepton_br:
             for var in Lepton_br[typ]:
-                if 'Lepton_' in var: self.out.branch(var, typ, lenVar='nLepton')
+                if 'Lepton_' in var: self.out.branch(var+self._suffix, typ, lenVar='nLepton')
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -122,8 +125,8 @@ class LeppTScalerTreeMaker(Module) :
                     mety = mety - (diff * math.sin(lep.phi))
             newmetpt = math.sqrt(metx**2 + mety**2)
             newmetphi = math.atan2(mety, metx)
-            self.out.fillBranch(metType+"_pt", newmetpt)
-            self.out.fillBranch(metType+"_phi", newmetphi)
+            self.out.fillBranch(metType+"_pt"+self._suffix, newmetpt)
+            self.out.fillBranch(metType+"_phi"+self._suffix, newmetphi)
 
         # Leptons
         for idx,lep in enumerate(leptons):
@@ -171,7 +174,7 @@ class LeppTScalerTreeMaker(Module) :
                     lep_dict[var][pt_idx] = getattr(event, 'Lepton_'+var)[idx]
 
         for var in lep_dict:
-            self.out.fillBranch('Lepton_' + var, lep_dict[var])
+            self.out.fillBranch('Lepton_' + var + self._suffix, lep_dict[var])
 
         return True
 

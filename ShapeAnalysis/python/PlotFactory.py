@@ -14,6 +14,8 @@ import traceback
 from array import array
 from collections import OrderedDict
 import math
+import numpy as np
+import root_numpy as rnp
 
 
 # ----------------------------------------------------- PlotFactory --------------------------------------
@@ -175,26 +177,9 @@ class PlotFactory:
             tgrData_evy_up = array('f')
             tgrData_evy_do = array('f')
 
-            #print " ... how is this still a thing ..."
-
             #these vectors are needed for nuisances accounting
             nuisances_vy_up     = {}
-            #print " ... one "
             nuisances_vy_do     = {}
-            #print " ... two"
-            tgrMC_vy            = array('f')
- 
-            #print 'before thstack ...'
-            #print 'really before thstack ...'
-
-
-            #thsData       = ROOT.THStack ("thsData",      "thsData")
-            #thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
-            #thsBackground = ROOT.THStack ("thsBackground","thsBackground")
-    
-            #thsSignal_grouped     = ROOT.THStack ("thsSignal_grouped",    "thsSignal_grouped")
-            #thsBackground_grouped = ROOT.THStack ("thsBackground_grouped","thsBackground_grouped")
-    
  
             ROOT.gROOT.cd()
  
@@ -241,7 +226,7 @@ class PlotFactory:
                 histo = fileIn.Get(shapeName)
               print ' --> ', histo
               print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
-              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
+              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
@@ -255,43 +240,25 @@ class PlotFactory:
 
               # apply cut dependent scale factors
               # for example when plotting different phase spaces
-              if 'cuts' in plotdef.keys() : 
-                if cutName in plotdef['cuts'] :
-                  histos[sampleName].Scale( float( plotdef['cuts'][cutName] ) )
+              if 'cuts' in plotdef.keys() and cutName in plotdef['cuts']:
+                histos[sampleName].Scale( float( plotdef['cuts'][cutName] ) )
      
-
-              if plotdef['isData'] == 1 :  
-                if variable['divideByBinWidth'] == 1:
-                  histos[sampleName].Scale(1,"width")
-                  thsData.Add(histos[sampleName])
-                else:
-                  thsData.Add(histos[sampleName])
-
-
-
               # data style
               if plotdef['isData'] == 1 :
-                #print ' plot[', sampleName, '][color] = ' , self._getColor(plotdef['color']
-                histos[sampleName].SetMarkerColor(self._getColor(plotdef['color']))
+                if variable['divideByBinWidth'] == 1:
+                  histos[sampleName].Scale(1,"width")
+
+                #print ' plot[', sampleName, '][color] = ' , plotdef['color']
+                histos[sampleName].SetMarkerColor(plotdef['color'])
+
                 histos[sampleName].SetMarkerSize(1)
                 histos[sampleName].SetMarkerStyle(20)
                 histos[sampleName].SetLineColor(self._getColor(plotdef['color']))
                 
                 # blind data
-                if 'isBlind' in plotdef.keys() :
-                  if plotdef['isBlind'] == 1 :
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      histos[sampleName].SetBinContent(iBin, 0)
-                      histos[sampleName].SetBinError  (iBin, 0)
-                    #but_how_is_it_possible = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
-                    #print " what is it = ", sampleName
-                    #print " but_how_is_it_possible [", sampleName, "] = ", but_how_is_it_possible
-                    #but_how_is_it_possible_low_high = histos[sampleName].Integral(-1, -1)
-                    #print " but_how_is_it_possible_low_high [", sampleName, "] = ", but_how_is_it_possible_low_high
-                    histos[sampleName].Reset()
-                    #but_how_is_it_possible_low_high_reset = histos[sampleName].Integral(-1, -1)
-                    #print " but_how_is_it_possible_low_high_reset [", sampleName, "] = ", but_how_is_it_possible_low_high_reset
-                    
+                if 'isBlind' in plotdef.keys() and plotdef['isBlind'] == 1:
+                  histos[sampleName].Reset()
+
                 # Per variable blinding
                 if 'blind' in variable:
                   if cutName in variable['blind']:
@@ -307,9 +274,9 @@ class PlotFactory:
                       for iBin in range(1, histos[sampleName].GetNbinsX()+1):
                         if iBin >= b0 and iBin <= b1:
                           histos[sampleName].SetBinContent(iBin, 0)
-                          histos[sampleName].SetBinError  (iBin, 0)                      
-                
-                #thsData.Add(histos[sampleName])
+                          histos[sampleName].SetBinError  (iBin, 0)
+
+                thsData.Add(histos[sampleName])
 
                 # first time fill vectors X axis
                 if len(tgrData_vx) == 0 :
@@ -343,10 +310,9 @@ class PlotFactory:
                         tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                         tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     
-                    
-
-              # MC style
-              if plotdef['isData'] == 0 :
+              # if plotdef['isData'] == 1:
+              else:
+                # MC style
                 # only background "filled" histogram
                 if plotdef['isSignal'] == 0:
                   #histos[sampleName].SetFillStyle(1001)
@@ -369,18 +335,16 @@ class PlotFactory:
                 if plotdef['isSignal'] == 1 :
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
-                    thsSignal.Add(histos[sampleName])
-                  else:
-                    thsSignal.Add(histos[sampleName])
 
+                  thsSignal.Add(histos[sampleName])
 
                 elif plotdef['isSignal'] == 2 or plotdef['isSignal'] == 3 :
                   #print "SigSup histo: ", histos[sampleName]
                   if  variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
-                    sigSupList.append(histos[sampleName])
-                  else:
-                    sigSupList.append(histos[sampleName])
+
+                  sigSupList.append(histos[sampleName])
+
                   if plotdef['isSignal'] == 3 :
                     #print "sigForAdditionalRatio histo: ", histos[sampleName]
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
@@ -389,274 +353,123 @@ class PlotFactory:
                   nexpected += histos[sampleName].Integral(-1,-1)
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
-                    thsBackground.Add(histos[sampleName])
-                  else:
-                    thsBackground.Add(histos[sampleName])
+
+                  thsBackground.Add(histos[sampleName])
                   #print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
                 # "massage" the list of nuisances accordingly
                 for nuisanceName, nuisance in nuisances.iteritems():         
+                  if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+                    continue
+                  # run only if this nuisance will affect the phase space defined in "cut"
 
-                  if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) :   # run only if this nuisance will affect the phase space defined in "cut"
-                    
-                    #print " nuisanceName = ", nuisanceName
-                    if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                      #print " nuisance = ", nuisance
-                      if 'samples' in nuisance.keys():
-                        if sampleName in nuisance['samples'].keys() :
-                          #print " stat nuisances for ", sampleName
-                          if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
-                            print 'In principle nothing to be done here ... just wait'
-                          if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
-                            # add N ad hoc nuisances, one for each bin
-                            for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                              if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
-                                #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
-                                #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
-                                mynuisances['ibin_' + str(iBin) + '_stat'] = {
-                                  'samples'  : {   sampleName : '1.00', },
-                                }
-                              else :  # otherwise just add the new sample in the list of samples to be considered
-                                mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
-                    else :
-                      if nuisanceName not in mynuisances.keys() :
-                        if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
-                          pass
-                          #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
-                        else :
-                          mynuisances[nuisanceName] = nuisances[nuisanceName]
+                  #print " nuisanceName = ", nuisanceName
+                  if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                    #print " nuisance = ", nuisance
+                    if 'samples' in nuisance.keys():
+                      if sampleName in nuisance['samples'].keys() :
+                        #print " stat nuisances for ", sampleName
+                        if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+                          print 'In principle nothing to be done here ... just wait'
+                        if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                          # add N ad hoc nuisances, one for each bin
+                          for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                            if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
+                              #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
+                              #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
+                              mynuisances['ibin_' + str(iBin) + '_stat'] = {
+                                'samples'  : {   sampleName : '1.00', },
+                              }
+                            else :  # otherwise just add the new sample in the list of samples to be considered
+                              mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
+                  else :
+                    if nuisanceName not in mynuisances.keys() :
+                      if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
+                        pass
+                        #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
+                      else :
+                        mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
-                # prepare the reference distribution
-                #if len(tgrMC_vy) == 0:
-                  #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    #tgrMC_vy.append(0.)
-                # fill the reference distribution, and add each "sample" that is not "signal"
-                #if plotdef['isSignal'] == 0:
-                  #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                nuisanceHistos = ({}, {})
                  
                 for nuisanceName, nuisance in mynuisances.iteritems():
                   # is this nuisance to be considered for this background?
-                  is_this_nuisance_to_be_considered = False
-                  if 'samples' in nuisance.keys() :
-                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                      if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                        is_this_nuisance_to_be_considered = True
-                  elif 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                    is_this_nuisance_to_be_considered = True
+                  if 'samples' in nuisance:
+                    if sampleName not in nuisance['samples']:
+                      continue
+                  elif 'all' not in nuisance or nuisance['all'] != 1:
+                    continue
 
-                  #print " sampleName = ", sampleName, " nuisanceName = ", nuisanceName, " is_this_nuisance_to_be_considered = ", is_this_nuisance_to_be_considered
-                  
-                  histoUp = None
-                  histoDown = None
- 
-                  if not ( ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) ) :   # run only if this nuisance will affect the phase space defined in "cut"
-                    is_this_nuisance_to_be_considered = False
- 
-                  if is_this_nuisance_to_be_considered :
-                    if 'name' in nuisance:
-                      shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Up"
-                    else:
-                      shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
-                    #print "loading shape variation", shapeNameUp
-                    if type(fileIn) is dict:
-                      histoUp = fileIn[sampleName].Get(shapeNameUp)
-                    else:
-                      histoUp = fileIn.Get(shapeNameUp)
-                    if 'name' in nuisance:
-                      shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Down"
-                    else:
-                      shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
-                    #print "loading shape variation", shapeNameDown
-                    if type(fileIn) is dict:
-                      histoUp = fileIn[sampleName].Get(shapeNameDown)
-                    else:
-                      histoDown = fileIn.Get(shapeNameDown)
+                  if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+                    continue
 
-                    if histoUp == None:
-                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                         if nuisance['type'] == 'lnN' :                             
-                           # example:
-                           #              'samples'  : {
-                           #                   'WW' : '1.00',    
-                           #                   'ggH': '1.23/0.97'
-                           #                },                              
-                           down_variation = 0.
-                           up_variation = 0.
-                           
-                           if "/" in nuisance['value'] :
-                             #print " nuisance['value'] = ", nuisance['value']
-                             twovariations = nuisance['value'].split("/")
-                             #print " twovariations = ", twovariations
-                             down_variation = float(twovariations[0])
-                             up_variation   = float(twovariations[1]) 
-                           else :
-                             down_variation = 2. - float(nuisance['value'])
-                             up_variation   = float(nuisance['value']) 
-                           
-                           # don't use  histos[sampleName], or the second "scale" will fail!!!
-                           if 'name' in nuisance:
-                             histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
-                           else:
-                             histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
-                           histoUp.Scale(up_variation)
-                    
-                      elif 'samples' in nuisance.keys():
-                        for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                          if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                            if 'type' in nuisance.keys() :
-                              if nuisance['type'] == 'lnN' :                             
-                                # example:
-                                #              'samples'  : {
-                                #                   'WW' : '1.00',    
-                                #                   'ggH': '1.23/0.97'
-                                #                },                              
-                                down_variation = 0.
-                                up_variation = 0.
+                  if 'name' in nuisance:
+                    shapeNameVars = tuple(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+var for var in ['Up', 'Down'])
+                  else:
+                    shapeNameVars = tuple(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+var for var in ['Up', 'Down'])
 
-                                #print " configurationNuis samples = ", configurationNuis
-                                
-                                if "/" in configurationNuis :
-                                  #print " configurationNuis samples = ", configurationNuis
-                                  twovariations = configurationNuis.split("/")
-                                  #print " twovariations = ", twovariations
-                                  down_variation = float(twovariations[0])
-                                  up_variation   = float(twovariations[1]) 
-                                else :
-                                  down_variation = 2. - float(configurationNuis)
-                                  up_variation   = float(configurationNuis) 
-                                
-                                # don't use  histos[sampleName], or the second "scale" will fail!!!
-                                if 'name' in nuisance:
-                                  histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
-                                else:
-                                  histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
-                                histoUp.Scale(up_variation)
-                                #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
-                                
-                                
-                              #else :
-                                #print "Warning! No", nuisanceName, " up variation for", sampleName, ' of kind lnN'
-                            
-                    if histoDown == None:
-                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                         if nuisance['type'] == 'lnN' :                             
-                           # example:
-                           #              'samples'  : {
-                           #                   'WW' : '1.00',    
-                           #                   'ggH': '1.23/0.97'
-                           #                },                              
-                           down_variation = 0.
-                           up_variation = 0.
-                           
-                           if "/" in nuisance['value'] :
-                             #print " nuisance['value'] down = ", nuisance['value']
-                             twovariations = nuisance['value'].split("/")
-                             down_variation = float(twovariations[0])
-                             up_variation   = float(twovariations[1]) 
-                           else :
-                             down_variation = 2. - float(nuisance['value'])
-                             up_variation   = float(nuisance['value']) 
-                           
-                           # don't use  histos[sampleName], or the second "scale" will fail!!!
-                           if 'name' in nuisance:
-                             histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
-                           else:
-                             histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
-                           histoDown.Scale(down_variation)
-                           
-                      elif 'samples' in nuisance.keys():
-                        for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                          if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                            if 'type' in nuisance.keys() :
-                              if nuisance['type'] == 'lnN' :                             
-                                # example:
-                                #              'samples'  : {
-                                #                   'WW' : '1.00',    
-                                #                   'ggH': '1.23/0.97'
-                                #                },
-                                down_variation = 0.
-                                up_variation = 0.
-                                
-                                if "/" in configurationNuis :
-                                  #print " configurationNuis down samples = ", configurationNuis
-                                  twovariations = configurationNuis.split("/")
-                                  down_variation = float(twovariations[0])
-                                  up_variation   = float(twovariations[1]) 
-                                else :
-                                  down_variation = 2. - float(configurationNuis)
-                                  up_variation   = float(configurationNuis) 
-                                
-                                # don't use  histos[sampleName], or the second "scale" will fail!!!
-                                if 'name' in nuisance:
-                                  histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
-                                else:
-                                  histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
-                                histoDown.Scale(down_variation)
-                              #else :
-                                #print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
-                  
-                  
-                  if 'scale' in plotdef.keys() : 
-                    if histoDown != None:  
-                      #print " histoDown integral = ", histoDown.Integral()
-                      histoDown.Scale(plotdef['scale'])
-                      #print " ---> plot[", sampleName, "]['scale'] = ", plotdef['scale']
-                      #print " --> histoDown integral = ", histoDown.Integral()
+                  if 'type' in nuisance and nuisance['type'] == 'lnN':
+                    if 'samples' in nuisance:
+                      values = nuisance['samples'][sampleName]
+                      # example:
+                      #              'samples'  : {
+                      #                   'WW' : '1.00',    
+                      #                   'ggH': '1.23/0.97'
+                      #                },                              
+                    else: # 'all'
+                      values = nuisance['value']
+
+                    if '/' in values:
+                      variations = map(float, values.split('/'))
+                    else:
+                      variations = (float(values), 2. - float(values))
                       
-                    if histoUp != None:  
-                      histoUp.Scale(plotdef['scale'])
-                                 
+                    # don't use  histos[sampleName], or the second "scale" will fail!!!
+                    for ivar, shapeNameVar in enumerate(shapeNameVars):
+                      histoVar = histo.Clone(shapeNameVar.replace('/', '__'))
+                      histoVar.Scale(variations[ivar])
 
-                  # apply cut dependent scale factors
-                  # for example when plotting different phase spaces
-                  if 'cuts' in plotdef.keys() : 
-                    if cutName in plotdef['cuts'] :
-                      if histoDown != None:  
-                        #print " rescaling: ", sampleName, " - ", cutName, " = ", plotdef['cuts'][cutName]
-                        histoDown.Scale( float(plotdef['cuts'][cutName]) )
-                      if histoUp != None:  
-                        histoUp.Scale( float(plotdef['cuts'][cutName]) )
+                      nuisanceHistos[ivar][nuisanceName] = histoVar
 
-                  if variable["divideByBinWidth"] == 1:
-                    if histoUp != None:
-                      histoUp.Scale(1,"width")
-                    if histoDown != None:
-                      histoDown.Scale(1,"width")
- 
-                  # now, even if not considered this nuisance, I need to add it, 
-                  # so that in case is "empty" it will add the nominal value
-                  # for this sample that is not affected by the nuisance
-                  
-                  if nuisanceName not in nuisances_vy_up.keys() or nuisanceName not in nuisances_vy_do.keys():  
-                    nuisances_vy_up[nuisanceName] = array('f')
-                    nuisances_vy_do[nuisanceName] = array('f')
-                  if (len(nuisances_vy_up[nuisanceName]) == 0):
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      nuisances_vy_up[nuisanceName].append(0.)
-                  if (len(nuisances_vy_do[nuisanceName]) == 0):
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      nuisances_vy_do[nuisanceName].append(0.)
-                  # get the background sum
-                  if plotdef['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
-                    #print "plot[", sampleName, "]['isSignal'] == ", plotdef['isSignal']
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      if histoUp != None:
-                        #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
-                              #"while default was: ", histos[sampleName].GetBinContent (iBin)
-                        nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
+                  else:
+                    for ivar, shapeNameVar in enumerate(shapeNameVars):
+                      if type(fileIn) is dict:
+                        histoVar = fileIn[sampleName].Get(shapeNameVar)
                       else:
-                        # add the central sample 
-                        nuisances_vy_up[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)  
-                      if histoDown != None:  
-                        #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoDown.GetBinContent (", iBin, ") = ", histoDown.GetBinContent (iBin), \
-                              #"while default was: ", histos[sampleName].GetBinContent (iBin)
-                        nuisances_vy_do[nuisanceName][iBin-1] += histoDown.GetBinContent (iBin)
-                      else:
-                        # add the central sample 
-                        nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
-            
+                        histoVar = fileIn.Get(shapeNameVar)
+  
+                      nuisanceHistos[ivar][nuisanceName] = histoVar
+
+                for ivar, nuisances_vy in enumerate([nuisances_vy_up, nuisances_vy_do]):
+                  for nuisanceName, nuisance in mynuisances.iteritems():
+                    try:
+                      histoVar = nuisanceHistos[ivar][nuisanceName]
+                    except KeyError:
+                      # now, even if not considered this nuisance, I need to add it, 
+                      # so that in case is "empty" it will add the nominal value
+                      # for this sample that is not affected by the nuisance
+                      histoVar = histos[sampleName]
+                    else:
+                      if 'scale' in plotdef:
+                        histoVar.Scale(plotdef['scale'])
+                                   
+                      # apply cut dependent scale factors
+                      # for example when plotting different phase spaces
+                      if 'cuts' in plotdef and cutName in plotdef['cuts']:
+                        histoVar.Scale(float(plotdef['cuts'][cutName]))
+    
+                      if variable["divideByBinWidth"] == 1:
+                        histoVar.Scale(1., "width")
+                    
+                    try:
+                      vy = nuisances_vy[nuisanceName]
+                    except KeyError:
+                      vy = nuisances_vy[nuisanceName] = np.zeros_like(rnp.hist2array(histo, copy=False))
+
+                    # get the background sum
+                    if plotdef['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
+                      vy += rnp.hist2array(histoVar, copy=False)
 
               # create the group of histograms to plot
               # this has to be done after the scaling of the previous lines
@@ -668,6 +481,7 @@ class PlotFactory:
                   else :
                     histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
 
+            # end sample loop
 
             # set the colors for the groups of samples
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
@@ -689,18 +503,16 @@ class PlotFactory:
             
             # fill the reference distribution with the background only distribution
             # save the central values of the bkg sum for use for the nuisance band 
-            #
-            #print " tgrMC_vy = ", tgrMC_vy
-            nuisances_err_up = array('f')
-            nuisances_err_do = array('f')
+
             if thsBackground.GetNhists() != 0:
               last = thsBackground.GetStack().Last()
-              for iBin in range(1, last.GetNbinsX()+1):
-                tgrMC_vy.append(last.GetBinContent(iBin))
-                #initialize with MC stat
-                nuisances_err_up.append(last.GetBinError(iBin))
-                nuisances_err_do.append(last.GetBinError(iBin))
-            
+              tgrMC_vy = rnp.hist2array(last, copy=True)
+              nuisances_err2_up = rnp.array(last.GetSumw2())[1:-1]
+              nuisances_err2_do = rnp.array(last.GetSumw2())[1:-1]
+            else:
+              tgrMC_vy = np.zeros((0,))
+              nuisances_err2_up = np.zeros((0,))
+              nuisances_err2_do = np.zeros((0,))
                         
             #
             # and now  let's add the signal on top of the background stack 
@@ -735,31 +547,17 @@ class PlotFactory:
                 #    tgrBkg_evy_do[iBin-1] = SumQ ( tgrBkg_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) ) 
 
             for nuisanceName in mynuisances.keys():
-              #print " nuisanceName = " , nuisanceName
-              if len(nuisances_err_up) == 0 : 
-                for iBin in range(len(tgrMC_vy)):
-                  nuisances_err_up.append(0.)
-                  nuisances_err_do.append(0.)
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
-              for iBin in range(len(tgrMC_vy)):
-                #print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     #" diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     #" new global error = ", nuisances_err_up[iBin]
-                #print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     #" diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     #" new global error = ", nuisances_err_do[iBin]
-                 
-                if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
-                  nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
-                  nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin])
-                else:
-                  nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin])
-                  nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin]) 
+              up = nuisances_vy_up[nuisanceName]
+              do = nuisances_vy_do[nuisanceName]
+              up_is_up = (up > tgrMC_vy)
+              dup2 = np.square(up - tgrMC_vy)
+              ddo2 = np.square(do - tgrMC_vy)
+              nuisances_err2_up += np.where(up_is_up, dup2, ddo2)
+              nuisances_err2_do += np.where(up_is_up, ddo2, dup2)
 
-                #print "nuisances_err_up[", iBin, "] = ", nuisances_err_up[iBin], " --> ", \
-                      #"nuisances_err_do[", iBin, "] = ", nuisances_err_do[iBin], " --> " 
-
-              
+            nuisances_err_up = np.sqrt(nuisances_err2_up)
+            nuisances_err_do = np.sqrt(nuisances_err2_do)
 
             tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
