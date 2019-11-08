@@ -38,6 +38,7 @@ class l3KinProducer(Module):
         'WH3l_ptWWW'     : (["F"], {}),
         'WH3l_mtWWW'     : (["F"], {}),
         'WH3l_dphilllmet': (["F"], {}),
+        'WH3l_ptW'       : (["F"], {}),
 
         # for ZH3l, "l" in these variables *always* refers to the lepton not associated with the Z
         'ZH3l_njet'      : (["F"], {}),
@@ -181,6 +182,19 @@ class l3KinProducer(Module):
         if not self.WH3l_isOk:
             return self.l3KinDefault
         return abs((self.Lepton_4vecId[0][0]+self.Lepton_4vecId[1][0]+self.Lepton_4vecId[2][0]).DeltaPhi(self.MET))
+
+    def WH3l_ptW(self):
+        """Return pt of lepton least likely to be from the Higgs (proxy for associated W)"""
+        WH3l_ptW = self.l3KinDefault
+        if self.WH3l_isOk:
+            mindR = -1*self.l3KinDefault
+            for iLep, jLep, kLep in permutations(self.Lepton_4vecId, 3):
+                if iLep[1]*jLep[1] < 0:
+                    dR = iLep[0].DeltaR(jLep[0])
+                    if dR < mindR:
+                        mindR = dR
+                        WH3l_ptW = kLep[0].Pt()
+        return WH3l_ptW
 
     def _ZH3l_setXLepton(self):
         """Find the lepton least likely to be part of the Z pair by invariant mass.  Double-duty as a check for OSSF pair"""

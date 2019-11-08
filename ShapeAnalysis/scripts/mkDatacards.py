@@ -205,8 +205,13 @@ class DatacardFactory:
               columndef = 30
 
               # adapt column length to long bin names            
-              if len(tagNameToAppearInDatacard) >= (columndef - 5) :
+              if len(tagNameToAppearInDatacard) >= (columndef -5) :
                 columndef = len(tagNameToAppearInDatacard) + 7
+
+              for name in signals :
+                if len(name)>= (columndef -5) :
+                    columndef = len(name) + 7
+
 
               print '      processes and rates..'
             
@@ -263,12 +268,12 @@ class DatacardFactory:
                         histoDown.SetDirectory(self._outFile)
 
                         if '/' in nuisance['samples'][sampleName]:
-                            up, down = nuisance['samples'][sampleName].split('/')
-                            histoUp.Scale(float(up))
-                            histoDown.Scale(float(down))
+                          up, down = nuisance['samples'][sampleName].split('/')
+                          histoUp.Scale(float(up))
+                          histoDown.Scale(float(down))
                         else:
-                            histoUp.Scale(float(nuisance['samples'][sampleName]))
-                            histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
+                          histoUp.Scale(float(nuisance['samples'][sampleName]))
+                          histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
 
                         self._outFile.cd()
                         histoUp.Write()

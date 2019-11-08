@@ -20,6 +20,8 @@ Samples = {
 
 Samples = {}
 
+Samples['2HDMa_SemiLep_MH3_200_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_200_MH4_150_MH2_200_MHC_200_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
+
 
 Samples['2HDMa_MH3_300_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
 Samples['2HDMa_MH3_500_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
@@ -437,6 +439,9 @@ Samples["WJetsToLNu_HT600_800"] = {'nanoAOD': '/WJetsToLNu_HT-600To800_TuneCP5_1
 Samples["WJetsToLNu_HT800_1200"] = {'nanoAOD': '/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 Samples["WJetsToLNu_HT1200_2500"] = {'nanoAOD': '/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 Samples["WJetsToLNu_HT2500_inf"] = {'nanoAOD': '/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
+Samples["WJetsToLNu-0J"] = {'nanoAOD': '/WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
+Samples["WJetsToLNu-1J"] = {'nanoAOD': '/WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6_ext1-v2/NANOAODSIM'}
+Samples["WJetsToLNu-2J"] = {'nanoAOD': '/WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Xavier/Kamiel
