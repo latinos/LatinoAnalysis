@@ -13,8 +13,12 @@
 # NLO Electroweak corrections for V samples
 #
 # Credits to Adish Vartak: https://github.com/cmg-xtracks/cmgtools-lite/blob/94X_dev/TTHAnalysis/macros/xtracks/addSumWgt.py
-# 
-# 
+# Thanks to Raffaele Gerosa
+#
+# Inputs from: https://arxiv.org/pdf/1705.04664v2.pdf
+# Table: http://lpcc.web.cern.ch/content/dark-matter-wg-documents
+#
+#
 
 
 import ROOT
@@ -35,23 +39,27 @@ class vNLOEWKcorrectionWeightProducer(Module):
         # change this part into correct path structure... 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
-        self.kfactorFile = self.open_root (self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kfactors_V.root')
+        #self.kfactorFile = self.open_root (self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kfactors_V.root')
         
         #
         # TEST: ratio w.r.t. LO ?
         #
-        zknum = self.get_root_obj ( self.kfactorFile , "EWKcorr/Z"      )
-        zkden = self.get_root_obj ( self.kfactorFile , "ZJets_LO/inv_pt")
-        wknum = self.get_root_obj ( self.kfactorFile , "EWKcorr/W"      )
-        wkden = self.get_root_obj ( self.kfactorFile , "WJets_LO/inv_pt")
+        #zknum = self.get_root_obj ( self.kfactorFile , "EWKcorr/Z"      )
+        #zkden = self.get_root_obj ( self.kfactorFile , "ZJets_LO/inv_pt")
+        #wknum = self.get_root_obj ( self.kfactorFile , "EWKcorr/W"      )
+        #wkden = self.get_root_obj ( self.kfactorFile , "WJets_LO/inv_pt")
         
-        self.zkfact = zknum.Clone("zkfact")
-        self.wkfact = wknum.Clone("wkfact")
-        self.zkfact.Divide(zkden)
-        self.wkfact.Divide(wkden)
+        #self.zkfact = zknum.Clone("zkfact")
+        #self.wkfact = wknum.Clone("wkfact")
+        #self.zkfact.Divide(zkden)
+        #self.wkfact.Divide(wkden)
         
         #print " self.zkfact = ", self.zkfact
         #print " self.wkfact = ", self.wkfact
+        
+        self.graph_zvv_kfact = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kewk_zvv_for_python.txt');
+        self.graph_z_kfact   = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kewk_z_for_python.txt');
+        self.graph_w_kfact   = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kewk_w_for_python.txt');
         
         self.sample_type = sample_type
         print " sample_type = " , sample_type
@@ -100,13 +108,16 @@ class vNLOEWKcorrectionWeightProducer(Module):
 
         lheParticles = Collection(event, "LHEPart")
         
-        isw = False
-        isz = False
+        isw   = False
+        isz   = False
+        iszvv = False
 
         if self.sample_type == 'w' :
           isw = True
         if self.sample_type == 'z' :
           isz = True
+        if self.sample_type == 'zvv' :
+          iszvv = True
           
 
 #
@@ -167,14 +178,21 @@ class vNLOEWKcorrectionWeightProducer(Module):
             
             ewknloW = 1.0
 
-            if vpt > 0. and vpt < 150.1 :
-              vpt = 150.1
-            if vpt > 1199.9 :
-              vpt = 1199.9
+            #if vpt > 0. and vpt < 150.1 :
+              #vpt = 150.1
+            #if vpt > 1199.9 :
+              #vpt = 1199.9
+    
+            if vpt > 0. and vpt < 35. :
+              vpt = 35.
+            if vpt > 2000. :
+              vpt = 2000.
     
             if vpt > 0. :
-              bin = self.wkfact.FindBin(vpt)
-              ewknloW = self.wkfact.GetBinContent(bin);
+              ewknloW = self.graph_z_kfact.Eval(vpt)
+               
+              #bin = self.wkfact.FindBin(vpt)
+              #ewknloW = self.wkfact.GetBinContent(bin);
               
               
 #  
@@ -223,16 +241,86 @@ class vNLOEWKcorrectionWeightProducer(Module):
             
             ewknloW = 1.0
 
-            if vpt > 0. and vpt < 150.1 :
-              vpt = 150.1
-            if vpt > 1199.9 :
-              vpt = 1199.9
+            #if vpt > 0. and vpt < 150.1 :
+              #vpt = 150.1
+            #if vpt > 1199.9 :
+              #vpt = 1199.9
+
+            if vpt > 0. and vpt < 35. :
+              vpt = 35.
+            if vpt > 2000. :
+              vpt = 2000.
     
             if vpt > 0. :
-              bin = self.zkfact.FindBin(vpt)
-              ewknloW = self.zkfact.GetBinContent(bin);
+              ewknloW = self.graph_z_kfact.Eval(vpt)
+              
+              #bin = self.zkfact.FindBin(vpt)
+              #ewknloW = self.zkfact.GetBinContent(bin);
           
 
+#
+#          __  /                
+#             / \ \   / \ \   / 
+#            /   \ \ /   \ \ /  
+#          ____|  \_/     \_/   
+#                               
+
+ 
+        if iszvv : 
+          
+
+          ptl1 = -1
+          ptl2 = -1
+ 
+          for particle  in lheParticles :
+
+            # neutrinos
+            #          12   14   16
+
+            if abs(particle.pdgId) == 12 or abs(particle.pdgId) == 14 or abs(particle.pdgId) == 16:
+
+              if ptl1 == -1 :
+                ptl1   = particle.pt
+                etal1  = particle.eta
+                phil1  = particle.phi
+                idl1   = particle.pdgId
+              elif ptl2 == -1 :
+                ptl2   = particle.pt
+                etal2  = particle.eta
+                phil2  = particle.phi
+                idl2   = particle.pdgId
+
+          #
+          # if for any reason I was not able to assign the leptons, set the weight to -2 --> it can be followed up later
+          #
+          if ptl1 == -1 or ptl2 == -1 :
+            ewknloW = -2
+          else :  
+            l1 = ROOT.TLorentzVector()
+            l2 = ROOT.TLorentzVector()
+            l1.SetPtEtaPhiM(ptl1, etal1, phil1, 0) # everything massless ... at these energies! ... maybe the tau?
+            l2.SetPtEtaPhiM(ptl2, etal2, phil2, 0) # everything massless ... at these energies! ... maybe the tau?
+            
+            vpt = (l1+l2).Pt()
+            
+            ewknloW = 1.0
+
+            #if vpt > 0. and vpt < 150.1 :
+              #vpt = 150.1
+            #if vpt > 1199.9 :
+              #vpt = 1199.9
+
+            if vpt > 0. and vpt < 35. :
+              vpt = 35.
+            if vpt > 2000. :
+              vpt = 2000.
+    
+            if vpt > 0. :
+              ewknloW = self.graph_zvv_kfact.Eval(vpt)
+              
+              #bin = self.zkfact.FindBin(vpt)
+              #ewknloW = self.zkfact.GetBinContent(bin);
+          
 
  
         # now finally fill the branch ...
