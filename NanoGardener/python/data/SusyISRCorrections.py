@@ -31,9 +31,9 @@ SUSYISRCorrections = {
                                 },
                   },
     
-    'ptISR'   : { 'susyModels' : { 'TChiWW'      : '1', 
-                                   'TChiSlepSnu' : '1', 
-                                   'TChiStauSnu' : '1',  
+    'ptISR'   : { 'susyModels' : { 'TChipmWW'      : '1', 
+                                   'TChipmSlepSnu' : '1', 
+                                   'TChipmStauSnu' : '1',  
                                    },
                   'version' : { 'Ana'    : { 'production' : { 'Full2016'      : '1', 
                                                               'Full2016v4'    : '1', 
