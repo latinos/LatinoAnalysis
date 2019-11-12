@@ -111,7 +111,9 @@ class L2KinFiller(TreeCloner):
            'dphilep1jet2', 
            'dphilep2jet1', 
            'dphilep2jet2', 
-           
+           'maxdphilepjj',
+           'dphilep1jj',           
+           'dphilep2jj',           
            'ht',
            'vht_pt',
            'vht_phi',
