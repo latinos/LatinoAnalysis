@@ -317,7 +317,8 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','btagPerJet2018','CorrFatJetMass',
-                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK',  
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
 
@@ -1112,6 +1113,14 @@ Steps = {
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
                  'declare'    : 'trigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=False)',
                  'module'     : 'trigMC()',
+               },
+
+  'trigMC_Cut'   : { 'isChain'    : False ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
+                 'declare'    : 'CBtrigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_CutBased_cfg.py")',
+                 'module'     : 'CBtrigMC()',
                },
 
  'TrigMC_hmumu'   : { 
