@@ -1248,7 +1248,6 @@ Trigger['Full2018v4'] = Trigger['Full2018']
 # Set v6 to V5
 Trigger['Full2016v6'] = Trigger['Full2016v5']
 Trigger['Full2017v6'] = Trigger['Full2017v5']
-Trigger['Full2018v6'] = Trigger['Full2018v5']
 
 NewVar_MC_dict = {
    'F': [
