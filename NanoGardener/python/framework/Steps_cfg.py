@@ -332,6 +332,13 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/MCGenOnly_outputbranches.txt'
                },
 
+  'l23Kin': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['l2Kin', 'l3Kin'],
+            },
+
 ## ------- WgStar MC:
 
   'MCWgStar2017' : { 
