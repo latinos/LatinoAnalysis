@@ -12,11 +12,11 @@ Wmass=80.4
 
 class HMlnjjVarsClass(Module):
     def __init__(self,year):
-    self.HlnFat_4v  = ROOT.TLorentzVector()
-    self.Hlnjj_4v   = ROOT.TLorentzVector()
-    self.Wlep_4v   = ROOT.TLorentzVector()
-    self.Wfat_4v   = ROOT.TLorentzVector()
-    self.Wjj_4v   = ROOT.TLorentzVector()
+        self.HlnFat_4v  = ROOT.TLorentzVector()
+        self.Hlnjj_4v   = ROOT.TLorentzVector()
+        self.Wlep_4v   = ROOT.TLorentzVector()
+        self.Wfat_4v   = ROOT.TLorentzVector()
+        self.Wjj_4v   = ROOT.TLorentzVector()
         print "@@Year->",year
         self.year=year
         # b-tag WP && tau21 (Wtag)
@@ -259,10 +259,10 @@ class HMlnjjVarsClass(Module):
         IsFat = all(Cat_Fat)
 
         Cat_AK4     = [IsWjj, met_pt > 30]
-        isJj = all(Cat_AK4)
+        IsJj = all(Cat_AK4)
 
 
-        EventVar['IsBoosted'] = isFat
+        EventVar['IsBoosted'] = IsFat
         EventVar['IsResolved'] = IsJj
         EventVar['IsTopTagged'] = Evt_btagged
 
