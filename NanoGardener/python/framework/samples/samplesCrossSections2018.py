@@ -619,7 +619,7 @@ samples['Wg500']          .extend( ['xsec=1.00000',  'kfact=1.000',  'ref=X'] )
 samples['WgStarLNuMuMu']  .extend( ['xsec=2.793',    'kfact=1.000',  'ref=X'] )
 samples['WgStarLNuEE']    .extend( ['xsec=3.526',    'kfact=1.000',  'ref=X'] )
 samples['Zg']             .extend( ['xsec=131.300',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
-samples['ZGToLLG']        .extend( ['xsec=131.300',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
+samples['ZGToLLG']        .extend( ['xsec=58.83',  'kfact=1.000',  'ref=Rafael'] )  # 55.5*1.06
 samples['ZgStar']         .extend( ['xsec=1.00000',  'kfact=1.000',  'ref=X'] )
 
 
