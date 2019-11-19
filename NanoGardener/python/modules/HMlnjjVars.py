@@ -48,27 +48,15 @@ class HMlnjjVarsClass(Module):
 
         self.out.branch("Flavlnjj" , "I")
 
-        list_myvar=['IsBoostedSR','IsBoostedSB','IsBoostedTopCR',
-                    'IsResolvedSR','IsResolvedSB','IsResolvedTopCR']
-        self.out.branch("IsBoostedTopCR" , "O")
-        self.out.branch("IsBoostedSR" , "O")
-        self.out.branch("IsBoostedSB"  , "O")
 
-        self.out.branch("IsResolvedTopCR" , "O")
-        self.out.branch("IsResolvedSR" , "O")
-        self.out.branch("IsResolvedSB"  , "O")
-
+        self.out.branch("IsBoosted", "O")
+        self.out.branch("IsResolved", "O")
+        self.out.branch("IsTopTagged", "O")
 
         ##For Boosted Selection ##For FatJet
         list_myvar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass']
         for myvar in list_myvar:
-
-            self.out.branch("CleanFatJetPassMBoostedSR_"+myvar, 'F', lenVar='nCleanFatJetPassMBoostedSR')
-            self.out.branch("CleanFatJetPassMBoostedSB_"+myvar, 'F', lenVar='nCleanFatJetPassMBoostedSB')
-
-
-
-
+            self.out.branch("CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='nCleanFatJetPassMBoosted')
 
 
 
@@ -114,34 +102,26 @@ class HMlnjjVarsClass(Module):
 
         ##--For FatJet Collection in SR/SB/TopCR
         list_myvar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass']
-        CleanFatJetPassMBoostedSR={}
-        CleanFatJetPassMBoostedSB={}
-        #CleanFatJetPassBoostedTopCR={}
+        CleanFatJetPassMBoosted={}
         for myvar in list_myvar:
-            CleanFatJetPassMBoostedSR[myvar]=[]
-            CleanFatJetPassMBoostedSB[myvar]=[]
+            CleanFatJetPassMBoosted[myvar]=[]
 
 
 
-        Wfat_SR   = False
-        Wfat_SB   = False
-        Wfat_Btop = False
-        Wjj_Btop  = False
+        Evt_btagged = False
 
         Hlnjj_mass = -999.
         WptOvHak4M = -999
 
-        Wjj_SR     = False
-        Wjj_SB     = False
-        Wjj_Btop   = False
+        IsWfat = False
+        IsWjj  = False
 
         Wlep_mt  = -999
         Hlnjj_mt = -999
 
         ##Event variable
         EventVar={}
-        list_myvar=['IsBoostedSR','IsBoostedSB','IsBoostedTopCR','IsResolvedSR',
-                    'IsResolvedSB','IsResolvedTopCR','IsVbfFat','IsVbfjj']
+        list_myvar=['IsBoosted','IsResolved','IsTopTagged','IsVbfFat','IsVbfjj']
         for myvar in list_myvar:
             EventVar[myvar]=False
 
@@ -150,13 +130,9 @@ class HMlnjjVarsClass(Module):
         vbfjj_jj_dEta  = -999
         vbfjj_jj_mass  = -999
 
-        IsFatSig = False
-        IsFatSB  = False
-        IsFatTop = False
 
-        IsJjSig  = False
-        IsJjSB   = False
-        IsJjTop  = False
+        IsFat = False
+        IsJj  = False
 
         IsVbfFat = False
         IsVbfjj  = False
@@ -204,14 +180,14 @@ class HMlnjjVarsClass(Module):
                             )
 
         ##Check btagged event or not
-
+        # FIXME: loop over CleanJetNotFat or all CleanJet?
         bWP=self.bWP
         for jdx in range( CleanJetNotFat_col._len ):
             clj_idx = CleanJetNotFat_col[jdx]['jetIdx']
             jet_idx = CJet_col[ clj_idx ]['jetIdx']
             if Jet_col[ jet_idx ]['btagDeepB'] > bWP:
               if Jet_col[ jet_idx ]['pt'] > 20:
-                Wfat_Btop = True
+                Evt_btagged = True
 
 
 
@@ -241,36 +217,21 @@ class HMlnjjVarsClass(Module):
               ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetWtagging#2016_scale_factors_and_correctio , high purity cut
             cutJ_base = [Wfat_pt > 200, abs(Wfat_eta)<2.4,
                          Wfat_tau21 < self.tau21WP, thisWptOvHfatM > 0.4]
-            #cutJ_base = [ Wfat_pt > 200 abs(Wfat_eta)<2.4, Wfat_mass < 250, Wfat_mass > 40]
-            if not all(cutJ_base) : continue
-            # Let's stop the loop here, passing cutJ_base, then it become a Sig or a SB for a event.
-            cutJ_SB   = [ Wfat_mass > 40, Wfat_mass < 250]
-            cutJ_SR  = [ Wfat_mass >= 65, Wfat_mass <= 105]
-            if all(cutJ_SR): ##pass SR msoftdrop cut
-                ##Need to use dic type
-                CleanFatJetPassMBoostedSR['pt'].append(Wfat_pt)
-                CleanFatJetPassMBoostedSR['mass'].append(Wfat_mass)
-                CleanFatJetPassMBoostedSR['eta'].append(Wfat_eta)
-                CleanFatJetPassMBoostedSR['phi'].append(Wfat_phi)
-                CleanFatJetPassMBoostedSR['tau21'].append(Wfat_tau21)
-                CleanFatJetPassMBoostedSR['WptOvHfatM'].append(thisWptOvHfatM)
-                CleanFatJetPassMBoostedSR['HlnFat_mass'].append(thisHlnFat_mass)
+            if  all(cutJ_base):
+                CleanFatJetPassMBoosted['pt'].append(Wfat_pt)
+                CleanFatJetPassMBoosted['mass'].append(Wfat_mass)
+                CleanFatJetPassMBoosted['eta'].append(Wfat_eta)
+                CleanFatJetPassMBoosted['phi'].append(Wfat_phi)
+                CleanFatJetPassMBoosted['tau21'].append(Wfat_tau21)
+                CleanFatJetPassMBoosted['WptOvHfatM'].append(thisWptOvHfatM)
+                CleanFatJetPassMBoosted['HlnFat_mass'].append(thisHlnFat_mass)
 
-            elif all(cutJ_SB): ##pass SB msoftdrop cut
 
-                CleanFatJetPassMBoostedSB['pt'].append(Wfat_pt)
-                CleanFatJetPassMBoostedSB['mass'].append(Wfat_mass)
-                CleanFatJetPassMBoostedSB['eta'].append(Wfat_eta)
-                CleanFatJetPassMBoostedSB['phi'].append(Wfat_phi)
-                CleanFatJetPassMBoostedSB['tau21'].append(Wfat_tau21)
-                CleanFatJetPassMBoostedSB['WptOvHfatM'].append(thisWptOvHfatM)
-                CleanFatJetPassMBoostedSB['HlnFat_mass'].append(thisHlnFat_mass)
+        IsWfat=(len(CleanFatJetPassMBoosted['pt']) > 0 )
 
-        Wfat_SR=(len(CleanFatJetPassMBoostedSR['pt']) > 0 )
-        Wfat_SB=(len(CleanFatJetPassMBoostedSB['pt']) > 0 )
         # W_Ak4 Event ----------------------------
         #if (Wfat_SR == False or Wfat_Btop == True) and (Wjj_mass > -1):
-        if ( ( not Wfat_SR ) and ((Wjj_ClJet0_idx != -1) or (Wjj_ClJet1_idx != -1)) ) : ##No FatJet passing final boosted cut and no resolved Whad candidate
+        if ( ( not IsWfat ) and ((Wjj_ClJet0_idx != -1) and (Wjj_ClJet1_idx != -1)) ) : ##No FatJet passing final boosted cut and it is resolved Whad candidate
             # Now it is Wjj event, initialize as all is true
 
             self.Wjj_4v.SetPtEtaPhiM(Wjj_pt, Wjj_eta, Wjj_phi, Wjj_mass)
@@ -284,21 +245,7 @@ class HMlnjjVarsClass(Module):
 
             #cutjj_Base = [ met_pt>30, Wlep_mt>50, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
             cutjj_Base = [ Wlep_mt>50, Wjj_mass > 40 and Wjj_mass < 250, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
-            cutjj_SR  = [ Wjj_mass > 65 and Wjj_mass < 105 ]
-            cutjj_SB  = [   (Wjj_mass >  40 and Wjj_mass <  65)
-                         or (Wjj_mass > 105 and Wjj_mass < 250) ]
-
-            if all(cutjj_Base) and all(cutjj_SR) : Wjj_SR = True
-            if all(cutjj_Base) and all(cutjj_SB) : Wjj_SB = True
-
-            JetIdx0 = CJet_col[Wjj_ClJet0_idx]['jetIdx']
-            JetIdx1 = CJet_col[Wjj_ClJet1_idx]['jetIdx']
-            for jdx in range(Jet_col._len):
-                if jdx == JetIdx0: continue
-                if jdx == JetIdx1: continue
-                if Jet_col[jdx]['pt'] < 20: continue
-                if abs(Jet_col[jdx]['eta']) > 2.4: continue
-                if Jet_col[jdx]['btagDeepB'] > bWP: Wjj_Btop = True
+            IsWjj = all(cutjj_Base)
 
 
 
@@ -308,30 +255,16 @@ class HMlnjjVarsClass(Module):
 
         # Save Event ---------------------------------
         # Evet Catagory
-        Cat_Fat_Btop= [Wfat_SR == True, Wfat_Btop == True, met_pt > 40]
-        Cat_Fat_Sig = [Wfat_SR == True, Wfat_Btop == False, met_pt > 40]
-        Cat_Fat_SB  = [Wfat_SB  == True, Wfat_Btop == False, met_pt > 40]
+        Cat_Fat = [IsWfat, met_pt > 40]
+        IsFat = all(Cat_Fat)
+
+        Cat_AK4     = [IsWjj, met_pt > 30]
+        isJj = all(Cat_AK4)
 
 
-        if all(Cat_Fat_Sig) : IsFatSig = True
-        if all(Cat_Fat_SB)  : IsFatSB  = True
-        if all(Cat_Fat_Btop): IsFatTop = True
-
-        Cat_AK4_Btop= [Wjj_SR == True, Wjj_Btop == True, met_pt >30]
-        Cat_AK4_Sig = [Wjj_SR == True, Wjj_Btop == False, met_pt > 30]
-        Cat_AK4_SB  = [Wjj_SB  == True, Wjj_Btop == False, met_pt > 30]
-
-        if all(Cat_AK4_Sig) : IsJjSig = True
-        if all(Cat_AK4_SB)  : IsJjSB  = True
-        if all(Cat_AK4_Btop): IsJjTop = True
-
-        EventVar['IsBoostedSR'] = IsFatSig
-        EventVar['IsBoostedSB'] = IsFatSB
-        EventVar['IsBoostedTopCR'] = IsFatTop
-
-        EventVar['IsResolvedSR'] = IsJjSig
-        EventVar['IsResolvedSB'] = IsJjSB
-        EventVar['IsResolvedTopCR'] = IsJjTop
+        EventVar['IsBoosted'] = isFat
+        EventVar['IsResolved'] = IsJj
+        EventVar['IsTopTagged'] = Evt_btagged
 
 
         # VBF tag ---------------------------------------
@@ -346,7 +279,7 @@ class HMlnjjVarsClass(Module):
         lnJ_addJet_jid = []
 
         nlnJ_addJet = 0
-        if IsFatSig or IsFatSB or IsFatTop:
+        if IsFat:
             for jdx in range(CleanJetNotFat_col._len):
                 clj_i = CleanJetNotFat_col[jdx]['jetIdx']
                 if ( CJet_col[clj_i]['pt'] < 30 ) or ( abs(CJet_col[clj_i]['eta'])>4.7 ): continue
@@ -380,7 +313,7 @@ class HMlnjjVarsClass(Module):
         lnjj_addJet_mass = []
         lnjj_addJet_jid = []
         nlnjj_addJet = 0
-        if IsJjSig or IsJjSB or IsJjTop:
+        if IsJj:
             for ci in range(CJet_col._len):
                 # check if it is used
                 if ci == Wjj_ClJet0_idx : continue
@@ -413,22 +346,18 @@ class HMlnjjVarsClass(Module):
 
 
 
-        if IsFatSig==False and IsFatSB==False and IsFatTop==False and IsJjSig==False and IsJjSB==False and IsJjTop==False:
-            return False
-
 
 
         self.out.fillBranch( 'Flavlnjj' , Flavlnjj)
         ##--Event Categorization--##
-        list_myvar=['IsBoostedSR','IsBoostedSB','IsBoostedTopCR','IsResolvedSR','IsResolvedSB','IsResolvedTopCR','IsVbfFat','IsVbfjj']
+        list_myvar=['IsBoosted','IsResolved','IsTopTagged','IsVbfFat','IsVbfjj']
         for myvar in list_myvar:
             self.out.fillBranch( myvar, EventVar[myvar] )
 
         ##--Boosted FatJet--##
         list_myvar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass']
         for myvar in list_myvar:
-            self.out.fillBranch( "CleanFatJetPassMBoostedSR_"+myvar , CleanFatJetPassMBoostedSR[myvar])
-            self.out.fillBranch( "CleanFatJetPassMBoostedSB_"+myvar , CleanFatJetPassMBoostedSB[myvar])
+            self.out.fillBranch( "CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
 
 
 
