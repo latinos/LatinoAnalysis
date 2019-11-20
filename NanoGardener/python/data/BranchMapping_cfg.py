@@ -1,14 +1,51 @@
-branch_mapping = {
-    'ElepTup': {
-        'mapping': {
-            'Lepton_pt': 'Lepton_pt_ElepTup',
-            'mll': 'mll_ElepTup',
-            'ptll': 'ptll_ElepTup',
-            'pt1': 'pt1_ElepTup',
-            'pt2': 'pt2_ElepTup',
-            'mth': 'mth_ElepTup',
-            'mcoll': 'mcoll_ElepTup',
-            'mcollWW': 'mcollWW_ElepTup',
-        }
-    }
+_ElepT_branches = [
+  'Lepton_pt',
+  ## l2Kin
+  'mll',
+  'ptll',
+  'pt1',
+  'pt2',
+  'mth',
+  'mcoll',
+  'mcollWW',
+  'mTi',
+  'mTe',
+  'choiMass',
+  'mR',
+  'mT2',
+  'mtw1',
+  'mtw2',
+  'mllWgSt',
+  'mllThird',
+  'mllOneThree',
+  'mllTwoThree',
+  'vht_pt',
+  'pTWW',
+  'pTHjj',
+  'recoil',
+  'upara',
+  'uperp',
+  'm2ljj20',
+  'm2ljj30',
+  'ptTOT_cut',
+  'mTOT_cut',
+  'mlljj20_whss',
+  'mlljj30_whss',
+  'WlepPt_whss',
+  'WlepMt_whss',
+  ## TrigMaker
+  'TriggerEmulator',
+  # trigger efficiencies - to be added programmatically below 
+]
+
+branch_mapping = {}
+
+branch_mapping['ElepTup'] = {
+  'branches': _ElepT_branches,
+  'suffix': '_ElepTup'
+}
+
+branch_mapping['ElepTdo'] = {
+  'branches': _ElepT_branches,
+  'suffix': '_ElepTdo'
 }
