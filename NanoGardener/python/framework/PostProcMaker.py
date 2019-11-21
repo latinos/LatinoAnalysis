@@ -922,7 +922,7 @@ class PostProcMaker():
                FileOutList = self.getSampleFiles(self._targetDir, tSample)
 
                if nin > nnom:
-                 # If there are more nuisance variation files than nominal files, merge the variations
+                 # If there are more nuisance variation files than the nominal files, merge the variations
                  # mkShapes cannot process the nuisance variations with more files than nominal
                  nmerge = nin / nnom
                  if nin % nnom != 0:
@@ -934,13 +934,15 @@ class PostProcMaker():
 
                  for ttFile, sFiles in merging.iteritems():
                    tFile = ttFile.replace(iSample, tSample)
-                   if not tFile in FileOutList or self._redo:
-                     tmpFile = tmpdir + '/' + os.path.basename(tFile)
-                     cmd = self._cmsswBasedir+'/src/'+self._haddnano+' '+tmpFile+' '
-                     cmd += ' '.join(self.getStageIn(sFile) for sFile in sFiles)
-                     os.system(cmd)
-                     os.system(self.mkStageOut(tmpFile, tFile, False))
-                     os.system('rm ' + tmpFile)
+                   if tFile in FileOutList and not self._redo:
+                     continue
+                   
+                   tmpFile = tmpdir + '/' + os.path.basename(tFile)
+                   cmd = self._cmsswBasedir+'/src/'+self._haddnano+' '+tmpFile+' '
+                   cmd += ' '.join(self.getStageIn(sFile) for sFile in sFiles)
+                   os.system(cmd)
+                   os.system(self.mkStageOut(tmpFile, tFile, False))
+                   os.system('rm ' + tmpFile)
 
                  os.system('rmdir ' + tmpdir)
 
@@ -950,6 +952,42 @@ class PostProcMaker():
                    tFile = self._targetDir + os.path.basename(iFile).replace(iSample,tSample)
                    if not tFile in FileOutList or self._redo:
                      os.system(self.mkStageOut(iFile,tFile,True))
+
+               if nin < nnom:
+                 # If there are fewer nuisance variation files than the nominal files, create empty trees
+                 with tempfile.NamedTemporaryFile(suffix='.root', delete=False) as ftmp:
+                   pass
+
+                 sourceName = (self._targetDir+self._treeFilePrefix+tSample+'__part0.root').replace('//','/')
+                 source = ROOT.TFile.Open(source)
+
+                 target = ROOT.TFile.Open(ftmp.name, 'recreate')
+                 for key in source.GetListOfKeys():
+                   obj = key.ReadObj()
+                   if obj.IsA() == ROOT.TTree.Class():
+                     clone = obj.CloneTree(0)
+                     clone.Write()
+                   elif obj.InheritsFrom(ROOT.TH1.Class()):
+                     clone = obj.Clone()
+                     clone.Reset()
+                     clone.Write()
+                   else:
+                     clone = obj.Clone()
+                     clone.Write()
+
+                 target.Close()
+                 source.Close()
+
+                 # now copy the target (empty template file) nnom - nnin times
+                 for iPart in range(nin, nnom):
+                   tFile = (self._targetDir+self._treeFilePrefix+tSample+'__part'+str(iPart)+'.root').replace('//','/')
+                   if tFile in FileOutList and not self._redo:
+                     continue
+                   
+                   os.system(self.mkStageOut(ftmp.name, tFile, False))
+
+                 os.system('rm ' + ftmp.name)
+
 
 #------------- Main
 
