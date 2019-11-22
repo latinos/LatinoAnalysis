@@ -2,6 +2,7 @@
 import sys, re, os, os.path, math, copy
 import string
 import subprocess
+import tempfile
 import numpy
 
 # configuration auto-loaded where the job directory and the working directory is defined
@@ -221,18 +222,32 @@ class PostProcMaker():
 
      for iSample in self._Samples :
        if self.selectSample(iProd,iStep,iSample) :
-         # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
-         if self._iniStep == 'Prod' :
-           if 'srmPrefix' in self._Samples[iSample]:
-             FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix']))
-           else:
-             if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-             else:                                    dasInst = 'prod/global'
-             FileDic = self.getTargetFileDic(iProd,iStep,iSample,self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst))
-         # From previous PostProc step
-         else :
-           FileDic = self.getTargetFileDic(iProd,iStep,iSample,getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True))
-         if len(FileDic) > 0 : self._targetDic[iSample] = FileDic
+         FileDic = self.getTargetFileDic(iProd, iStep, iSample, self.getFiles(iSample))
+         if len(FileDic) > 0:
+           self._targetDic[iSample] = FileDic
+
+   def getFiles(self, sample):
+     if self._iniStep == 'Prod':
+       # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
+       return self.getFilesFromSource(sample)
+     else:
+       # From previous PostProc step
+       return self.getSampleFiles(self._sourceDir, sample)
+
+   def getSampleFiles(self, directory, sample):
+       return getSampleFiles(directory, sample, True, self._treeFilePrefix, True)
+
+   def getFilesFromSource(self, sample):
+       if 'srmPrefix' in self._Samples[sample]:
+         return self.getFilesFromPath(self._Samples[sample]['paths'], self._Samples[sample]['srmPrefix'])
+       else:
+         try:
+           dasInst = self._Samples[sample]['dasInst']
+         except KeyError:
+           dasInst = 'prod/global'
+
+         return self.getFilesFromDAS(self._Samples[sample]['nanoAOD'], dasInst)
+>>>>>>> master
 
    def getFilesFromDAS(self,dataset,dasInstance='prod/global'):
      dasCmd='dasgoclient -query="instance='+dasInstance+' file dataset='+dataset+'"'
@@ -625,37 +640,27 @@ class PostProcMaker():
      if   '_ext' in iSample : iSampleXS = iSample.split('_ext')[0]
      elif '-ext' in iSample : iSampleXS = iSample.split('-ext')[0]
      else:                    iSampleXS = iSample
-     if not iSample in self._baseW :
+     if not iSample in self._baseW:
        useLocal = False
+
+       FileList = self.getFiles(iSample)
+
        # Always check #nAOD files !
-       if 'srmPrefix' in self._Samples[iSample]:
-         useLocal = True
-         nAODFileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
-       else:
-         if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-         else:                                    dasInst = 'prod/global'
-         nAODFileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
-       # From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
-       if self._iniStep == 'Prod' :
+       if self._iniStep == 'Prod':
          if 'srmPrefix' in self._Samples[iSample]:
            useLocal = True
-           FileList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
-         else:
-           if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-           else:                                    dasInst = 'prod/global'
-           FileList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
-         # From previous PostProc step
-       else :
+       else:
          useLocal = True
-         FileList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
+         nAODFileList = self.getFilesFromSource(iSample)
 
-       # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
-       if not len(nAODFileList) == len(FileList) :
-         print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
-#        print ' EXIT !!!!'
-#        exit()
-         FileList = nAODFileList
-         if 'srmPrefix' in self._Samples[iSample]: useLocal = False
+         # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
+         if not len(nAODFileList) == len(FileList):
+           print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
+  #        print ' EXIT !!!!'
+  #        exit()
+           FileList = nAODFileList
+           if 'srmPrefix' in self._Samples[iSample]:
+             useLocal = False
 
        # Now compute #evts
        genEventCount = 0
@@ -749,40 +754,26 @@ class PostProcMaker():
 
 #------------- Hadd step
 
-   def getHaddFiles(self,iProd,iStep):
+   def getHaddFiles(self, iProd, iStep):
 
      self._HaddDic = {}
 
      for iSample in self._Samples :
        if self.selectSample(iProd,iStep,iSample) :
-         HaddDic = {}
          # Get File List in input directory
-         # ... From central (or private) nanoAOD : DAS instance to be declared for ptrivate nAOD
-         if self._iniStep == 'Prod' :
-           if 'srmPrefix' in self._Samples[iSample]:
-             FileInList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
-           else:
-             if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-             else:                                    dasInst = 'prod/global'
-             FileInList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
-         # ... From previous PostProc step
-         else :
-           FileInList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
+         FileInList = self.getFiles(iSample)
 
-         if len(FileInList) == 0 : continue
+         if len(FileInList) == 0:
+           continue
 
          # Check size(FileInList) == size(Initial Step File List), i.e. do not Hadd in case previous step is not done
          # ... Only needed if from previous PostProc step
-         if not self._iniStep == 'Prod' :
+         if not self._iniStep == 'Prod':
            #... if no hadd before -> Prod:
-           if not 'hadd' in self._sourceDir :
-             if 'srmPrefix' in self._Samples[iSample]:
-               FileOriList = self.getFilesFromPath(self._Samples[iSample]['paths'],self._Samples[iSample]['srmPrefix'])
-             else:
-               if 'dasInst' in self._Samples[iSample] : dasInst = self._Samples[iSample]['dasInst']
-               else:                                    dasInst = 'prod/global'
-               FileOriList = self.getFilesFromDAS(self._Samples[iSample]['nanoAOD'],dasInst)
-             if not len(FileInList) == len (FileOriList) :
+           if not 'hadd' in self._sourceDir:
+             FileOriList = self.getFilesFromSource(iSample)
+
+             if not len(FileInList) == len(FileOriList):
                print 'WARNING: HADD not possible, missing files in _sourceDir for iSample ',iSample,' --> SKIPPING IT !!!'
                continue
            else:
@@ -790,43 +781,68 @@ class PostProcMaker():
              exit()
 
          # Now Build the HADD dictionnary according to target size
-         sortDic={}
-         if '__part' in FileInList[0]:
-           for iFile in FileInList :
-             sortDic[int(iFile.split('__part')[1].replace('.root',''))] = iFile
-         else:
-           iPart=0
-           for iFile in FileInList :
-             sortDic[iPart] = iFile
-             iPart+=1
+         HaddDic = self.buildHadd(iSample, cutby='size')
 
-         iPart=0
-         tSize=0
-         for iKey in sortDic :
-           iFile = sortDic[iKey]
-           targetFileName = (self._targetDir+self._treeFilePrefix+iSample+'__part'+str(iPart)+'.root').replace('//','/')
-           if not targetFileName in HaddDic : HaddDic[targetFileName] = []
-           HaddDic[targetFileName].append(iFile)
-           iSize = float(remoteFileSize(iFile))
-           tSize+=iSize
-           if tSize > self._Steps['hadd']['SizeMax']:
-             iPart+=1
-             tSize=0
+         if len(HaddDic) > 0:
+           self._HaddDic[iSample] = HaddDic
 
-         # Remove '__part0' if only 1 target file
-         if len(HaddDic) == 1 :
-           oldKey=''
-           for iKey in HaddDic: oldKey = iKey
-           newKey = iKey.replace('__part0','')
-           HaddDic[newKey] = HaddDic.pop(iKey)
+   def buildHadd(self, iSample, FileInList, cutby='size', threshold=0):
+     if cutby == 'size' and threshold == 0:
+       threshold = self._Steps['hadd']['SizeMax']
 
-         # Check if Taget files are existing
-         if not self._redo :
-           FileOutList=getSampleFiles(self._targetDir,iSample,True,self._treeFilePrefix,True)
-           for iFile in FileOutList :
-             if iFile.replace('//','/') in HaddDic : del HaddDic[iFile.replace('//','/')]
+     sortDic={}
+     if '__part' in FileInList[0]:
+       for iFile in FileInList :
+         sortDic[int(iFile.split('__part')[1].replace('.root',''))] = iFile
+     else:
+       iPart=0
+       for iFile in FileInList:
+         sortDic[iPart] = iFile
+         iPart+=1
 
-         if len(HaddDic) > 0 : self._HaddDic[iSample] = HaddDic
+     HaddDic = {}
+     def nextList():
+       newFileName = (self._targetDir+self._treeFilePrefix+iSample+'__part'+str(len(HaddDic))+'.root').replace('//','/')
+       HaddDic[newFileName] = []
+       return HaddDic[newFileName]
+
+     sources = nextList()
+     tSize=0
+
+     for iKey in sorted(sortDic.iterkeys()):
+       iFile = sortDic[iKey]
+
+       sources.append(iFile)
+
+       if cutby == 'size':
+         iSize = float(remoteFileSize(iFile))
+         tSize+=iSize
+         if tSize > threshold:
+           sources = nextList()
+           tSize=0
+       elif cutby == 'filecount':
+         if len(sources) == threshold:
+           sources = nextList()
+
+     # Remove '__part0' if only 1 target file
+     if len(HaddDic) == 1:
+       oldKey = HaddDic.keys()[0]
+       newKey = oldKey.replace('__part0', '')
+       HaddDic[newKey] = HaddDic.pop(oldKey)
+
+     # We may have created an extra empty list if the grouping was exact
+     for n, l in HaddDic.items():
+       if len(l) == 0:
+         HaddDic.pop(n)
+
+     # Check if Taget files are existing
+     if not self._redo :
+       FileOutList = self.getSampleFiles(self._targetDir, iSample)
+       for iFile in FileOutList:
+         if iFile.replace('//','/') in HaddDic:
+           HaddDic.pop(iFile.replace('//','/'))
+
+     return HaddDic
 
    def mkHadd(self,iProd,iStep):
 
@@ -911,19 +927,91 @@ class PostProcMaker():
            exit()
          # ... From previous PostProc step
          else :
-           FileInList = getSampleFiles(self._sourceDir,iSample,True,self._treeFilePrefix,True)
+           FileInList = self.getSampleFiles(self._sourceDir, iSample)
 
          if len(FileInList) == 0 : continue
 
          for iUEPS in self._Steps[iStep]['cpMap'] :
            if iSample in self._Steps[iStep]['cpMap'][iUEPS]:
-             self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'__'+iUEPS
+             self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'__'+iUEPS+'/'
              for tSample in self._Steps[iStep]['cpMap'][iUEPS][iSample] :
-               FileOutList = getSampleFiles(self._targetDir,tSample,True,self._treeFilePrefix,True)
-               for iFile in FileInList:
-                 tFile = self._targetDir + '/' +  os.path.basename(iFile).replace(iSample,tSample)
-                 if not tFile in FileOutList or self._redo :
-                   os.system(self.mkStageOut(iFile,tFile,True))
+               nin = len(FileInList)
+
+               nominalDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep
+               nnom = len(self.getSampleFiles(nominalDir, tSample))
+
+               if nnom == 0:
+                 # No nominal -> we don't need this variation
+                 continue
+
+               FileOutList = self.getSampleFiles(self._targetDir, tSample)
+
+               if nin > nnom:
+                 # If there are more nuisance variation files than the nominal files, merge the variations
+                 # mkShapes cannot process the nuisance variations with more files than nominal
+                 nmerge = nin / nnom
+                 if nin % nnom != 0:
+                   nmerge += 1
+
+                 merging = self.buildHadd(iSample, FileInList, cutby='filecount', threshold=nmerge)
+
+                 tmpdir = tempfile.mkdtemp()
+
+                 for ttFile, sFiles in merging.iteritems():
+                   tFile = ttFile.replace(iSample, tSample)
+                   if tFile in FileOutList and not self._redo:
+                     continue
+                   
+                   tmpFile = tmpdir + '/' + os.path.basename(tFile)
+                   cmd = self._cmsswBasedir+'/src/'+self._haddnano+' '+tmpFile+' '
+                   cmd += ' '.join(self.getStageIn(sFile) for sFile in sFiles)
+                   os.system(cmd)
+                   os.system(self.mkStageOut(tmpFile, tFile, False))
+                   os.system('rm ' + tmpFile)
+
+                 os.system('rmdir ' + tmpdir)
+
+               else:
+                 # Otherwise just copy the files
+                 for iFile in FileInList:
+                   tFile = self._targetDir + os.path.basename(iFile).replace(iSample,tSample)
+                   if not tFile in FileOutList or self._redo:
+                     os.system(self.mkStageOut(iFile,tFile,True))
+
+               if nin < nnom:
+                 # If there are fewer nuisance variation files than the nominal files, create empty trees
+                 with tempfile.NamedTemporaryFile(suffix='.root', delete=False) as ftmp:
+                   pass
+
+                 sourceName = (self._targetDir+self._treeFilePrefix+tSample+'__part0.root').replace('//','/')
+                 source = ROOT.TFile.Open(source)
+
+                 target = ROOT.TFile.Open(ftmp.name, 'recreate')
+                 for key in source.GetListOfKeys():
+                   obj = key.ReadObj()
+                   if obj.IsA() == ROOT.TTree.Class():
+                     clone = obj.CloneTree(0)
+                     clone.Write()
+                   elif obj.InheritsFrom(ROOT.TH1.Class()):
+                     clone = obj.Clone()
+                     clone.Reset()
+                     clone.Write()
+                   else:
+                     clone = obj.Clone()
+                     clone.Write()
+
+                 target.Close()
+                 source.Close()
+
+                 # now copy the target (empty template file) nnom - nnin times
+                 for iPart in range(nin, nnom):
+                   tFile = (self._targetDir+self._treeFilePrefix+tSample+'__part'+str(iPart)+'.root').replace('//','/')
+                   if tFile in FileOutList and not self._redo:
+                     continue
+                   
+                   os.system(self.mkStageOut(ftmp.name, tFile, False))
+
+                 os.system('rm ' + ftmp.name)
 
 #------------- Main
 
