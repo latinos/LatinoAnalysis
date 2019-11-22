@@ -21,28 +21,6 @@ Samples = {
 Samples = {}
 
 Samples['2HDMa_SemiLep_MH3_200_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_200_MH4_150_MH2_200_MHC_200_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_300_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_400_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_150_MH2_400_MHC_400_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_500_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_700_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_700_MH4_150_MH2_700_MHC_700_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_900_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_900_MH4_150_MH2_900_MHC_900_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_1200_MH4_150_neg'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_1200_MH4_150_MH2_1200_MHC_1200_NANOv4_neg-58733efd3fcb3e10188e6169c5958b9e/USER'}
-
-Samples['2HDMa_SemiLep_MH3_200_MH4_150_pos'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_200_MH4_150_MH2_200_MHC_200_NANOv4_pos-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_300_MH4_150_pos'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_NANOv4_pos-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_400_MH4_150_pos'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_150_MH2_400_MHC_400_NANOv4_pos-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_500_MH4_150_pos'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_NANOv4_pos-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_700_MH4_150_pos'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_700_MH4_150_MH2_700_MHC_700_NANOv4_pos-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_900_MH4_150_pos'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_900_MH4_150_MH2_900_MHC_900_NANOv4_pos-58733efd3fcb3e10188e6169c5958b9e/USER'}
-Samples['2HDMa_SemiLep_MH3_1200_MH4_150_pos'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/monoHiggsMC_2HDMa_semiLep/svanputt-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_1200_MH4_150_MH2_1200_MHC_1200_NANOv4_pos-58733efd3fcb3e10188e6169c5958b9e/USER'}
-
-
-Samples['2HDMa_MH3_200_MH4_150_V2'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_200_MH4_150_MH2_200_MHC_200_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-Samples['2HDMa_MH3_300_MH4_150_V2'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-Samples['2HDMa_MH3_400_MH4_150_V2'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_150_MH2_400_MHC_400_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-Samples['2HDMa_MH3_500_MH4_150_V2'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-Samples['2HDMa_MH3_600_MH4_150_V2'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_600_MH4_150_MH2_600_MHC_600_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-Samples['2HDMa_MH3_1200_MH4_150_V2'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_1200_MH4_150_MH2_1200_MHC_1200_step4-f189fe9e1774a1be724b2f695108a46c/USER'}
 
 
 Samples['2HDMa_MH3_300_MH4_150'] = {'dasInst' : 'prod/phys03'  , 'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-2HDMa_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_step4_nano-300b448c9cac23489ef80b7cb5b24a8e/USER'}
@@ -687,26 +665,3 @@ Samples["ggZZ2e2m_ext1"] = {'nanoAOD':'/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_
 Samples["ggZZ2e2m"] = {'nanoAOD':'/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'} 
 Samples["ggZZ4m_ext1"] = {'nanoAOD':'/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6_ext1-v1/NANOAODSIM'}
 Samples["ggZZ4m"] = {'nanoAOD':'/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
-
-
-
-
-Samples['darkHiggs_mhs_160_mx_100_mZp_200_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_100_mZp_200_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_100_mZp_300_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_100_mZp_300_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_100_mZp_500_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_100_mZp_500_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_100_mZp_700_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_100_mZp_700_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_100_mZp_900_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_100_mZp_900_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_100_mZp_1200_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_100_mZp_1200_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_200_mZp_500_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_200_mZp_500_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_200_mZp_700_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_200_mZp_700_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_200_mZp_900_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_200_mZp_900_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
-
-Samples['darkHiggs_mhs_160_mx_200_mZp_1200_V2'] = {'dasInst' : 'prod/phys03'  ,'nanoAOD' :'/CRAB_PrivateMC/fernanpe-EXO-RunIIFall17wmLHEGS-darkHiggs_V4_theta_0p01_gq_0p25_gx_1p0_mhs_160_mx_200_mZp_1200_step4_nano-f189fe9e1774a1be724b2f695108a46c/USER'}
