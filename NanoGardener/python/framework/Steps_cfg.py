@@ -716,6 +716,23 @@ Steps = {
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
+## ------- MODULES: Exo analyses                                                                                                                                    
+    'TopPlusDMRunIILegacy': {
+                   'isChain'    : True ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
+                   'subTargets' : ['mT2Davis'],
+    },
+
+    'mT2Davis': {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
+                   'module'     : 'mt2Producer()' ,
+    },
+
 ## ------- MODULES: MonoHiggs
 
 #### MHTrigs step only works for 2016 and 2017 for now !!!!!!
