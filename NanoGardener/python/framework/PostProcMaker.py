@@ -247,7 +247,6 @@ class PostProcMaker():
            dasInst = 'prod/global'
 
          return self.getFilesFromDAS(self._Samples[sample]['nanoAOD'], dasInst)
->>>>>>> master
 
    def getFilesFromDAS(self,dataset,dasInstance='prod/global'):
      dasCmd='dasgoclient -query="instance='+dasInstance+' file dataset='+dataset+'"'
