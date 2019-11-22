@@ -630,7 +630,7 @@ class PostProcMaker():
 
        # Always check #nAOD files !
        if self._iniStep == 'Prod':
-         if 'srmPrefix' in self._samples[iSample]:
+         if 'srmPrefix' in self._Samples[iSample]:
            useLocal = True
        else:
          useLocal = True
