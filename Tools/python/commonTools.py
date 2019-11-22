@@ -196,6 +196,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
       
       # ... IFCA   
       elif 'ifca' in os.uname()[1] :
+        absPath=True
         lsCmd='ls '
         if not '/gpfs/' in inputDir and '/store/' in inputDir:
           Dir = '/gpfs/gaes/cms/' + inputDir 
@@ -542,7 +543,10 @@ def remoteFileSize(inputFile):
       else:
         return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif 'ifca' in os.uname()[1] :
-        return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+        storeLocation = ''
+        if 'store' in inputFile:
+            storeLocation = '/gpfs/gaes/cms/'
+        return subprocess.check_output("ls -l " + storeLocation + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "pi.infn.it" in socket.getfqdn():
         return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "knu" in os.uname()[1]:
