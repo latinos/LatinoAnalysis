@@ -76,7 +76,9 @@ p = PostProcessor(".", files,
                          #
                          #vvNLOEWKcorrectionWeightProducer('wz')
                          #
-                         vNLOEWKcorrectionWeightProducer('z')
+                         #vNLOEWKcorrectionWeightProducer('z')
+                         vNLOEWKcorrectionWeightProducer('zvv')
+                         #vNLOEWKcorrectionWeightProducer('w')
                          ],
                        provenance=True,
                        fwkJobReport=True
