@@ -11,7 +11,9 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 Wmass=80.4
 
 class HMlnjjVarsGen(Module):
-    def __init__(self):
+
+    def __init__(self,dataMc):
+        self.DataMc = dataMc
 	self.GenH_v4  = ROOT.TLorentzVector()
 	self.gSingleLept_v4 = ROOT.TLorentzVector()
 	self.gMet_v4  = ROOT.TLorentzVector()

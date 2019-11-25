@@ -1009,6 +1009,15 @@ Steps = {
                   'onlySample' : TwoL2NuSamples + LNuQQSamples,
                },
 
+    'MelaDisc' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.MelaDiscriminator' ,
+                  'declare'    : 'MelaDisc = lambda : MelaDiscClass(year=RPLME_YEAR)',
+                  'module'     : 'MelaDisc()',
+               },
+
     'HMvars' : { 
                   'isChain'    : False ,
                   'do4MC'      : True ,
