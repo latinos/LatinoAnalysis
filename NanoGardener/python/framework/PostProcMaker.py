@@ -608,6 +608,7 @@ class PostProcMaker():
    def computewBaseW(self,iSample,DEBUG=False):
      if   '_ext' in iSample : iSampleXS = iSample.split('_ext')[0]
      elif '-ext' in iSample : iSampleXS = iSample.split('-ext')[0]
+     elif '_newpmx' in iSample : iSampleXS = iSample.split('_newpmx')[0]
      else:                    iSampleXS = iSample
      if not iSample in self._baseW :
        useLocal = False
