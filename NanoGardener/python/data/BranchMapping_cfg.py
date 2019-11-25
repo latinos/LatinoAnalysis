@@ -35,8 +35,12 @@ _ElepT_branches = [
   'WlepMt_whss',
   ## TrigMaker
   'TriggerEmulator',
-  # trigger efficiencies - to be added programmatically below 
+  # trigger efficiencies - added below
 ]
+
+## TrigMaker
+from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
+_ElepT_branches.extend(NewVar_MC_dict['F'])
 
 branch_mapping = {}
 

@@ -1147,8 +1147,8 @@ Steps = {
                  'module'     : 'trigMCKR()',
                },
 
-  # TODO: We shouldn't be instantiating almost exact modules for each variation
-  # Create a global "static" instance which the variations can refer to
+  # TODO: We shouldn't be instantiating almost exactly identical modules for each variation
+  # Perhaps create a global "static" instance which the variations can refer to?
   'trigMCKeepRun_ElepTup' : { 'isChain'    : False ,
                  'do4MC'      : True  ,
                  'do4Data'    : False ,
