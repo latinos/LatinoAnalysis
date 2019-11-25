@@ -51,11 +51,11 @@ class HMlnjjVarsClass(Module):
 
         self.out.branch("IsBoosted", "O")
         self.out.branch("IsResolved", "O")
-        self.out.branch("IsTopTagged", "O")
+        self.out.branch("IsBTopTagged", "O")
 
         ##For Boosted Selection ##For FatJet
-        list_myvar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass']
-        for myvar in list_myvar:
+        self.list_WJetVar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass','CFatJetIdx']
+        for myvar in self.list_WJetVar:
             self.out.branch("CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='nCleanFatJetPassMBoosted')
 
 
@@ -101,13 +101,13 @@ class HMlnjjVarsClass(Module):
         self.Wjj_4v.SetPtEtaPhiM(0,0,0,0)
 
         ##--For FatJet Collection in SR/SB/TopCR
-        list_myvar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass']
         CleanFatJetPassMBoosted={}
-        for myvar in list_myvar:
+        for myvar in self.list_WJetVar:
             CleanFatJetPassMBoosted[myvar]=[]
 
 
-
+        Wfat_Btop   = False
+        Wjj_Btop    = False
         Evt_btagged = False
 
         Hlnjj_mass = -999.
@@ -121,7 +121,7 @@ class HMlnjjVarsClass(Module):
 
         ##Event variable
         EventVar={}
-        list_myvar=['IsBoosted','IsResolved','IsTopTagged','IsVbfFat','IsVbfjj']
+        list_myvar=['IsBoosted','IsResolved','IsBTopTagged','IsVbfFat','IsVbfjj']
         for myvar in list_myvar:
             EventVar[myvar]=False
 
@@ -180,14 +180,13 @@ class HMlnjjVarsClass(Module):
                             )
 
         ##Check btagged event or not
-        # FIXME: loop over CleanJetNotFat or all CleanJet?
         bWP=self.bWP
         for jdx in range( CleanJetNotFat_col._len ):
             clj_idx = CleanJetNotFat_col[jdx]['jetIdx']
             jet_idx = CJet_col[ clj_idx ]['jetIdx']
             if Jet_col[ jet_idx ]['btagDeepB'] > bWP:
-              if Jet_col[ jet_idx ]['pt'] > 20:
-                Evt_btagged = True
+                if Jet_col[ jet_idx ]['pt'] > 20:
+                    Wfat_Btop = True
 
 
 
@@ -225,6 +224,7 @@ class HMlnjjVarsClass(Module):
                 CleanFatJetPassMBoosted['tau21'].append(Wfat_tau21)
                 CleanFatJetPassMBoosted['WptOvHfatM'].append(thisWptOvHfatM)
                 CleanFatJetPassMBoosted['HlnFat_mass'].append(thisHlnFat_mass)
+                CleanFatJetPassMBoosted['CFatJetIdx'].append(ix)
 
 
         IsWfat=(len(CleanFatJetPassMBoosted['pt']) > 0 )
@@ -247,8 +247,14 @@ class HMlnjjVarsClass(Module):
             cutjj_Base = [ Wlep_mt>50, Wjj_mass > 40 and Wjj_mass < 250, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
             IsWjj = all(cutjj_Base)
 
-
-
+            JetIdx0 = CJet_col[Wjj_ClJet0_idx]['jetIdx']
+            JetIdx1 = CJet_col[Wjj_ClJet1_idx]['jetIdx']
+            for jdx in range(Jet_col._len):
+                if jdx == JetIdx0: continue
+                if jdx == JetIdx1: continue
+                if Jet_col[jdx]['pt'] < 20: continue
+                if abs(Jet_col[jdx]['eta']) > 2.4: continue
+                if Jet_col[jdx]['btagDeepB'] > bWP: Wjj_Btop = True
 
 
 
@@ -261,10 +267,12 @@ class HMlnjjVarsClass(Module):
         Cat_AK4     = [IsWjj, met_pt > 30]
         IsJj = all(Cat_AK4)
 
+        Evt_btagged = (IsFat and Wfat_Btop) or (IsJj and Wjj_Btop)
+
 
         EventVar['IsBoosted'] = IsFat
         EventVar['IsResolved'] = IsJj
-        EventVar['IsTopTagged'] = Evt_btagged
+        EventVar['IsBTopTagged'] = Evt_btagged
 
 
         # VBF tag ---------------------------------------
@@ -350,13 +358,12 @@ class HMlnjjVarsClass(Module):
 
         self.out.fillBranch( 'Flavlnjj' , Flavlnjj)
         ##--Event Categorization--##
-        list_myvar=['IsBoosted','IsResolved','IsTopTagged','IsVbfFat','IsVbfjj']
+        list_myvar=['IsBoosted','IsResolved','IsBTopTagged','IsVbfFat','IsVbfjj']
         for myvar in list_myvar:
             self.out.fillBranch( myvar, EventVar[myvar] )
 
         ##--Boosted FatJet--##
-        list_myvar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass']
-        for myvar in list_myvar:
+        for myvar in self.list_WJetVar:
             self.out.fillBranch( "CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
 
 
