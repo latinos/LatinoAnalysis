@@ -1865,7 +1865,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
-
+                },
+  
   'ElepTdo_suffix' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
@@ -2001,6 +2002,7 @@ Steps = {
                   'declare'    : 'fj_resdo = lambda : FatJetMassScaler(year=RPLME_YEAR, type="smear", kind="Down",collection="CleanFatJet")',
                   'module'     : 'fj_resdo()'
     },
+
 
     # chain of chains
     'systematics': {
@@ -2151,7 +2153,6 @@ Steps = {
 
 #muWP='cut_Tight80x'
 #eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']
-
   'l2tightOR2016' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2414,7 +2415,6 @@ Steps = {
       'onlySample' : LNuJJ_VBS_Samples_data2017
   },
 
-
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------
 
 ## ------- HADD 
@@ -2475,6 +2475,6 @@ Steps = {
                },
 
 
-}
 
+}
 
