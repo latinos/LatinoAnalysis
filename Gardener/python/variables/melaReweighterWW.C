@@ -434,7 +434,7 @@ void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& 
   bool hasOneGluon = false;
   for (unsigned int i = 0; i < mothers.size(); ++i){
     _mothers->push_back(SimpleParticle_t(idsMothers[i], mothers[i]));
-    if (idsMothers[i] == 22)
+    if (idsMothers[i] == 21)
       hasOneGluon = true;
   }
 
@@ -443,7 +443,6 @@ void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& 
     _candModified = 0;
   }
 
-  _mela->resetInputEvent();
   //check charge        
   double chargeIn = 0;
   for (unsigned int i = 0; i < _mothers->size(); ++i){
@@ -456,7 +455,7 @@ void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& 
     chargeOut+=p.charge();
   }
   bool toRecast=true;
-  if (chargeIn != chargeOut){
+  if (abs(chargeIn-chargeOut) > 0.1){
     toRecast =  false;
     //just kill the unwanted particle
     for (unsigned int i = 0; i < _associated->size(); ++i){
@@ -464,15 +463,15 @@ void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& 
       bool antiParticleInInitialState=false;
       for (unsigned int j = 0; j < _mothers->size(); ++j){
         if (id==-_mothers->at(j).first){
-          //cout << "Skipping " << id << endl;
           antiParticleInInitialState=true;
-        }  
-      }    
+        }
+      }
       if (antiParticleInInitialState)
         _associated->erase(_associated->begin()+i);
-    }    
-  }  
+    }
+  }
 
+  _mela->resetInputEvent();
   _mela->setInputEvent(_daughters, _associated, _mothers, true); 
   if (isVBF){
     bool recasted = recast();
@@ -487,4 +486,4 @@ void MelaReweighterWW::setupDaughters(bool isVBF, const int& id_l1,  const int& 
     }
   }
 
-}                    
+}
