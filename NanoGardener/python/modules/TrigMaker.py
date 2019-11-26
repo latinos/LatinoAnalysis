@@ -32,6 +32,7 @@ class TrigMaker(Module):
         self.el_minPt = 10
         self.el_maxEta = 2.5
         self.el_minEta = -2.5
+        self.cfg_path = cfg_path 
 
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
@@ -184,6 +185,9 @@ class TrigMaker(Module):
            raise ValueError('_over_under can only operate on leptons, pdgI = ' + str(pdgId) + ', pt = ' + str(pt) + ', eta = ' + str(eta))
 
     def _get_DZEff(self,run_p,trigName,nvtxIn,pt1In,pt2In):
+      print self.cfg_path
+      print run_p,trigName,nvtxIn,pt1In,pt2In
+      print self.TM_DZEff[run_p][trigName] 
       DZeff = 1. 
       nvtx = nvtxIn
       pt1 = pt1In
