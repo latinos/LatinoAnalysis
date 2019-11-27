@@ -30,8 +30,9 @@ class MappedEvent(object):
         mapping = dict(mapping)
 
         if suffix:
-            for branch in branches:
-                mapping[branch] = branch + suffix
+            if len(branches) != 0:
+                for branch in branches:
+                    mapping[branch] = branch + suffix
             else:
                 self._suffix = suffix
         
@@ -95,8 +96,9 @@ class MappedOutputTree(object):
         mapping = dict(mapping)
 
         if suffix:
-            for branch in branches:
-                mapping[branch] = branch + suffix
+            if len(branches) != 0:
+                for branch in branches:
+                    mapping[branch] = branch + suffix
             else:
                 self._suffix = suffix
 

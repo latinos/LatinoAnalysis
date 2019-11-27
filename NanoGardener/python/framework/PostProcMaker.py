@@ -586,7 +586,7 @@ class PostProcMaker():
          if not self.selectSample(iProd, s, iSample):
            return
 
-         fPy.write('                          '+self.customizeModule(iSample, s)+'\n')
+         fPy.write('                          '+self.customizeModule(iSample, s)+',\n')
 
      fPy.write('p = PostProcessor(  "."   ,          \n')
      fPy.write('                    files ,          \n')
