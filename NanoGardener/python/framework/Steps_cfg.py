@@ -688,6 +688,13 @@ Steps = {
                   'subTargets' : ['HMlnjjLepSel','HMlnjjVars'],
 		  },
 
+    'HMlnjjSelBWRew'  : {
+                  'isChain'    : True ,
+		  'do4MC'	: True ,
+		  'do4Data'	: True,
+                  'subTargets' : ['HMlnjjLepSel','BWReweight','HMlnjjVars'],
+		  },
+
                   #'subTargets' : ['l1tightOR2017v5','HMlnjjLepSel','wlepMaker','HMlnjjFatJet', 'whadJetSel', 'HMlnjjVars'],
 
 
@@ -705,10 +712,12 @@ Steps = {
 		  'do4MC'	: True	,
 		  'do4Data'	: True	,
                   'selection'  :'"(  Lepton_pt[0]>30 \
-		       && ( fabs(Lepton_eta[0])  < 2.1*(abs(Lepton_pdgId[0])==11) \
-		       ||   fabs(Lepton_eta[0])  < 2.4*(abs(Lepton_pdgId[0])==13))\
-                       && ( ( Alt$( Lepton_pt[1],-1) < 15*(Alt$(Lepton_pdgId[1], 11) * Alt$(Lepton_pdgId[1], 11) ==11*11) )\
-		       ||   ( Alt$( Lepton_pt[1],-1) < 10*(Alt$(Lepton_pdgId[1], 13) * Alt$(Lepton_pdgId[1], 13) ==13*13 )) )" ',
+		  	&& ( fabs(Lepton_eta[0])  < 2.5*(abs(Lepton_pdgId[0])==11) \
+		  	||   fabs(Lepton_eta[0])  < 2.4*(abs(Lepton_pdgId[0])==13))\
+		  	&& ( ( Alt$( Lepton_pt[1],-1) < 15*( abs( Alt$(Lepton_pdgId[1], 11)) ==11) )\
+		  	||   ( Alt$( Lepton_pt[1],-1) < 10*( abs( Alt$(Lepton_pdgId[1], 13)) ==13) )\
+		  	|| Alt$( !Lepton_isLoose[1],1 ) )\
+		  		)"',
 		  },
 
 
@@ -1008,6 +1017,15 @@ Steps = {
                   'onlySample' : TwoL2NuSamples + LNuQQSamples,
                },
 
+    'MelaDisc' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.MelaDiscriminator' ,
+                  'declare'    : 'MelaDisc = lambda : MelaDiscClass(year=RPLME_YEAR)',
+                  'module'     : 'MelaDisc()',
+               },
+
     'HMvars' : { 
                   'isChain'    : False ,
                   'do4MC'      : True ,
@@ -1152,7 +1170,7 @@ Steps = {
                   'do4MC'     : True  ,
                   'do4Data'   : True  ,
                   'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
-                  'declare'   : 'whadJetSel = lambda : WhadJetSel(2,"custom",15.0,4.7,"CleanJet")',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet")',
                   'module'    : 'WhadJetSel()',
     },
     'PreselFatJet' : {

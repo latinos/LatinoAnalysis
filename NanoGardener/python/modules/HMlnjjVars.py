@@ -147,12 +147,13 @@ class HMlnjjVarsClass(Module):
         CleanJetNotFat_col = Collection(event, 'CleanJetNotFat')
         Jet_col            = Collection(event, 'Jet')
 
-        met_pt         = getattr(event, "MET_pt")
+        met_pt         = getattr(event, "PuppiMET_pt")
+        #met_pt         = getattr(event, "MET_pt")
 
-        Wlep_pt_PF    = getattr(event, "Wlep_pt_PF")
-        Wlep_eta_PF   = getattr(event, "Wlep_eta_PF")
-        Wlep_phi_PF   = getattr(event, "Wlep_phi_PF")
-        Wlep_mass_PF  = getattr(event,"Wlep_mass_PF")
+        Wlep_pt_Puppi    = getattr(event, "Wlep_pt_Puppi")
+        Wlep_eta_Puppi   = getattr(event, "Wlep_eta_Puppi")
+        Wlep_phi_Puppi   = getattr(event, "Wlep_phi_Puppi")
+        Wlep_mass_Puppi  = getattr(event,"Wlep_mass_Puppi")
 
         Wjj_pt     = getattr(event,"Whad_pt")
         Wjj_eta    = getattr(event,"Whad_eta")
@@ -163,20 +164,15 @@ class HMlnjjVarsClass(Module):
         Wjj_ClJet1_idx= getattr(event, "idx_j2")
 
 
-
-
-
-
         if Lept_col._len < 1: return False
         Flavlnjj  = -999
         if abs(Lept_col[0]['pdgId']) == 11 : Flavlnjj = 1
         if abs(Lept_col[0]['pdgId']) == 13 : Flavlnjj = 2
 
-
-        self.Wlep_4v.SetPtEtaPhiM(Wlep_pt_PF,
-                               Wlep_eta_PF,
-                               Wlep_phi_PF,
-                               Wlep_mass_PF
+        self.Wlep_4v.SetPtEtaPhiM(Wlep_pt_Puppi,
+                               Wlep_eta_Puppi,
+                               Wlep_phi_Puppi,
+                               Wlep_mass_Puppi
                             )
 
         ##Check btagged event or not
@@ -187,9 +183,6 @@ class HMlnjjVarsClass(Module):
             if Jet_col[ jet_idx ]['btagDeepB'] > bWP:
                 if Jet_col[ jet_idx ]['pt'] > 20:
                     Wfat_Btop = True
-
-
-
 
 
         # FatJet event from FatJet module, but need to apply cut further
@@ -208,7 +201,7 @@ class HMlnjjVarsClass(Module):
             self.HlnFat_4v = self.Wfat_4v + self.Wlep_4v
             thisHlnFat_mass = self.HlnFat_4v.M()
 
-            thisWptOvHfatM = min(Wlep_pt_PF, Wfat_pt)/thisHlnFat_mass
+            thisWptOvHfatM = min(Wlep_pt_Puppi, Wfat_pt)/thisHlnFat_mass
 
             # FatJet Evt Cuts
               # These are already selected in postproduction but to make sure
@@ -239,7 +232,7 @@ class HMlnjjVarsClass(Module):
 
             Hlnjj_mass = self.Hlnjj_4v.M()
             Hlnjj_mt = self.Hlnjj_4v.Mt()
-            WptOvHak4M = min(Wlep_pt_PF, Wjj_pt)/Hlnjj_mass
+            WptOvHak4M = min(Wlep_pt_Puppi, Wjj_pt)/Hlnjj_mass
 
             Wlep_mt =  self.Wlep_4v.Mt()
 
@@ -256,9 +249,6 @@ class HMlnjjVarsClass(Module):
                 if abs(Jet_col[jdx]['eta']) > 2.4: continue
                 if Jet_col[jdx]['btagDeepB'] > bWP: Wjj_Btop = True
 
-
-
-
         # Save Event ---------------------------------
         # Evet Catagory
         Cat_Fat = [IsWfat, met_pt > 40]
@@ -268,7 +258,6 @@ class HMlnjjVarsClass(Module):
         IsJj = all(Cat_AK4)
 
         Evt_btagged = (IsFat and Wfat_Btop) or (IsJj and Wjj_Btop)
-
 
         EventVar['IsBoosted'] = IsFat
         EventVar['IsResolved'] = IsJj
