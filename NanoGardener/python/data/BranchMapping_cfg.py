@@ -100,6 +100,23 @@ _ElepT_branches = [
 from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
 _ElepT_branches.extend(NewVar_MC_dict['F'])
 
+## DYMVA
+from collections import OrderedDict
+import os
+cmssw_base = os.getenv('CMSSW_BASE')
+mvaFiles=["DYMVA_2016_cfg.py", "DYMVA_2017_cfg.py", "DYMVA_2018_cfg.py"]
+for mvaFile in mvaFiles:
+  mvaFile = cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/'+mvaFile
+  if os.path.exists(mvaFile):
+    handle = open(mvaFile,'r')
+    exec(handle)
+    handle.close()
+    for key in mvaDic.keys():
+      if key not in _ElepT_branches: 
+        _ElepT_branches.append(key)
+
+
+print _ElepT_branches
 
 branch_mapping = {}
 

@@ -1681,6 +1681,26 @@ Steps = {
                   'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\')' ,
                   'module'     : 'DYMVA()',
             } ,
+   
+  'DYMVA_ElepTup' : {
+            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTup")' ,
+                  'module'     : 'DYMVA()',
+            } ,
+
+  'DYMVA_ElepTdo' : {
+            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTdo")' ,
+                  'module'     : 'DYMVA()',
+            } ,
 
   'DYMVA_v5' : {
             #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
@@ -1894,7 +1914,7 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup'],
+                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup'],
                   #'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'LeptonSF_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup', 'formulasMC_ElepTup'],
                },
 
@@ -1909,7 +1929,7 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo'],
+                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo'],
                   #'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo'],
                },
 
