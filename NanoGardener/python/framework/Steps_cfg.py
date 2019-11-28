@@ -714,8 +714,8 @@ Steps = {
                   'selection'  :'"(  Lepton_pt[0]>30 \
 		       && ( fabs(Lepton_eta[0])  < 2.5*(abs(Lepton_pdgId[0])==11) \
 		       ||   fabs(Lepton_eta[0])  < 2.4*(abs(Lepton_pdgId[0])==13))\
-                       && ( ( Alt$( VetoLepton_pt[1],-1) < 15*( abs( Alt$(VetoLepton_pdgId[1], 11)) ==11) )\
-		       ||   ( Alt$( VetoLepton_pt[1],-1) < 10*( abs( Alt$(VetoLepton_pdgId[1], 13) ) ==13 )) )" ',
+                       && ( ( Alt$( Lepton_pt[1],-1) < 15*( abs( Alt$(Lepton_pdgId[1], 11)) ==11)*Lepton_isLoose[1] )\
+		       ||   ( Alt$( Lepton_pt[1],-1) < 10*( abs( Alt$(Lepton_pdgId[1], 13) ) ==13 )*Lepton_isLoose[1]) )" ',
 		  },
 
 
