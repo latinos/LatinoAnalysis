@@ -27,7 +27,7 @@ Trigger = {
                                                 'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v6/tightWP/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v6/tightWP/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
-                                                'EleMuLegLowPt'     : 'Full2016v6/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
                                               } ,
                                   'DZEff'  :  { 
                                                 'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_tight.txt' } ,
@@ -71,7 +71,7 @@ Trigger = {
                                                 'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v6/tightWP/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v6/tightWP/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
-                                                'EleMuLegLowPt'     : 'Full2016v6/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
                                               } ,
                                   'DZEff'  :  { 
                                                 'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_tight.txt' } ,
@@ -114,7 +114,7 @@ Trigger = {
                                                 'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
                                                 'MuEleLegLowPt'     : 'Full2016v6/tightWP/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'EleMuLegHigPt'     : 'Full2016v6/tightWP/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
-                                                'EleMuLegLowPt'     : 'Full2016v6/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
                                               } ,
                                   'DZEff'  :  { 
                                                 'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_tight.txt' } ,
