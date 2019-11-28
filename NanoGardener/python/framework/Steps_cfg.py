@@ -1606,7 +1606,26 @@ Steps = {
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\')' ,
                  },
+   
 
+  'formulasMC_ElepTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="ElepTup", suffix="_ElepTup")' ,
+                 },
+
+  'formulasMC_ElepTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="ElepTdo", suffix="_ElepTdo")' ,
+                 },
+  
   'formulasMCLP19' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1934,7 +1953,7 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup'],
+                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup', 'formulasMC_ElepTup'],
                   #'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'LeptonSF_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup', 'formulasMC_ElepTup'],
                },
 
@@ -1949,7 +1968,7 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo'],
+                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo'],
                   #'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo'],
                },
 

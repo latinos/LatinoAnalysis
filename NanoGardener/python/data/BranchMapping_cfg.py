@@ -115,8 +115,19 @@ for mvaFile in mvaFiles:
       if key not in _ElepT_branches: 
         _ElepT_branches.append(key)
 
+## formulas MC
+formulasFiles=['formulasToAdd_MC_2016.py', 'formulasToAdd_MC_2017.py', 'formulasToAdd_MC_2018.py', 'formulasToAdd_MC_MonoH.py']
+for formulaFile in formulasFiles:
+  formulasFile_path = cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/'+formulaFile
+  if os.path.exists(formulasFile_path) :
+     handle = open(formulasFile_path,'r')
+     exec(handle)
+     handle.close()
+     for key in formulas.keys():
+       if "XS" not in key:
+         if key not in _ElepT_branches:
+           _ElepT_branches.append(key)
 
-print _ElepT_branches
 
 branch_mapping = {}
 
