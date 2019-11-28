@@ -51,6 +51,7 @@ class l3KinProducer(Module):
         'ZH3l_pTlmetjj'  : (["F"], {}),
         'ZH3l_pTlmetj'   : (["F"], {}),
         'ZH3l_mTlmetjj'  : (["F"], {}),
+        'ZH3l_mTlmetj'  : (["F"], {}),
         'ZH3l_pTZ'       : (["F"], {}),
         'ZH3l_checkmZ'   : (["F"], {}),
     }
@@ -271,8 +272,18 @@ class l3KinProducer(Module):
             return self.l3KinDefault
         return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0][0]).Pt()
 
+    def ZH3l_mTlmetj(self):
+        """Return transverse mass of l+met+jet system"""
+        if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 1:
+            return self.l3KinDefault
+        jvec0 = self.ZH3l_CleanJet_4vecId[0][0]
+        lvec = self.ZH3l_XLepton[0] 
+        WWvec = self.MET + lvec + jvec0;
+        sumpt = self.MET.Pt() + lvec.Pt() + jvec0.Pt()
+        return math.sqrt(pow(sumpt,2) - pow(WWvec.Px(),2) - pow(WWvec.Py(),2));
+
     def ZH3l_mTlmetjj(self):
-        """Return pt of selected Z"""
+        """Return transverse mass of l+met+dijet system"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
             return self.l3KinDefault
         jvec0 = self.ZH3l_CleanJet_4vecId[0][0]

@@ -115,10 +115,10 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','CorrFatJetMass',
-                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','HiggsGenVars',
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
-
 
   'MCCorr2016_hmumu' : {
                      'isChain'    : True  ,
@@ -239,11 +239,10 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','CorrFatJetMass',
-                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','HiggsGenVars',  
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
-
-
 
 
   'MCCorr2017LP19' : {
@@ -317,7 +316,8 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','btagPerJet2018','CorrFatJetMass',
-                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK',  
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
 
@@ -330,6 +330,13 @@ Steps = {
                                   'baseW'],
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/MCGenOnly_outputbranches.txt'
                },
+
+  'l23Kin': {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True ,
+                  'subTargets' : ['l2Kin', 'l3Kin'],
+            },
 
 ## ------- WgStar MC:
 
@@ -681,6 +688,13 @@ Steps = {
                   'subTargets' : ['HMlnjjLepSel','HMlnjjVars'],
 		  },
 
+    'HMlnjjSelBWRew'  : {
+                  'isChain'    : True ,
+		  'do4MC'	: True ,
+		  'do4Data'	: True,
+                  'subTargets' : ['HMlnjjLepSel','BWReweight','HMlnjjVars'],
+		  },
+
                   #'subTargets' : ['l1tightOR2017v5','HMlnjjLepSel','wlepMaker','HMlnjjFatJet', 'whadJetSel', 'HMlnjjVars'],
 
 
@@ -698,15 +712,34 @@ Steps = {
 		  'do4MC'	: True	,
 		  'do4Data'	: True	,
                   'selection'  :'"(  Lepton_pt[0]>30 \
-		       && ( fabs(Lepton_eta[0])  < 2.1*(abs(Lepton_pdgId[0])==11) \
-		       ||   fabs(Lepton_eta[0])  < 2.4*(abs(Lepton_pdgId[0])==13))\
-                       && ( ( Alt$( Lepton_pt[1],-1) < 15*(Alt$(Lepton_pdgId[1], 11) * Alt$(Lepton_pdgId[1], 11) ==11*11) )\
-		       ||   ( Alt$( Lepton_pt[1],-1) < 10*(Alt$(Lepton_pdgId[1], 13) * Alt$(Lepton_pdgId[1], 13) ==13*13 )) )" ',
+		  	&& ( fabs(Lepton_eta[0])  < 2.5*(abs(Lepton_pdgId[0])==11) \
+		  	||   fabs(Lepton_eta[0])  < 2.4*(abs(Lepton_pdgId[0])==13))\
+		  	&& ( ( Alt$( Lepton_pt[1],-1) < 15*( abs( Alt$(Lepton_pdgId[1], 11)) ==11) )\
+		  	||   ( Alt$( Lepton_pt[1],-1) < 10*( abs( Alt$(Lepton_pdgId[1], 13)) ==13) )\
+		  	|| Alt$( !Lepton_isLoose[1],1 ) )\
+		  		)"',
 		  },
 
 
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
+
+## ------- MODULES: Exo analyses                                                                                                                                    
+    'TopPlusDMRunIILegacy': {
+                   'isChain'    : True ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
+                   'subTargets' : ['mT2Davis'],
+    },
+
+    'mT2Davis': {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : True ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
+                   'module'     : 'mt2Producer()' ,
+    },
 
 ## ------- MODULES: MonoHiggs
 
@@ -863,7 +896,8 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
                   'declare'    : 'wwNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
                   'module'     : 'wwNLOEWK(\'ww\')',
-                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down'
+                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down',
+                                  'WmToLNu_WmTo2J_QCD', 'WpToLNu_WpTo2J_QCD', 'WpToLNu_WmTo2J_QCD', 'WpTo2J_WmToLNu_QCD'
                                   ]
                   } ,
 
@@ -875,7 +909,8 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
                   'declare'    : 'wzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
                   'module'     : 'wzNLOEWK(\'wz\')',
-                  'onlySample' : ['WZTo3LNu', 'WZTo3LNu_ext1', 'WZ', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg'
+                  'onlySample' : ['WZTo3LNu', 'WZTo3LNu_ext1', 'WZ', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg',
+                                  'WmTo2J_ZTo2L_QCD', 'WmToLNu_ZTo2J_QCD', 'WpTo2J_ZTo2L_QCD', 'WpToLNu_ZTo2J_QCD'
                                   ]
                   } ,
 
@@ -886,9 +921,71 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
                   'declare'    : 'zzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
                   'module'     : 'zzNLOEWK(\'zz\')',
-                  'onlySample' : ['ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2', 'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2', 'ZZTo2L2Q'
+                  'onlySample' : ['ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2', 'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2', 'ZZTo2L2Q',
+                                  'ZTo2L_ZTo2J_QCD'
                                   ]
                   } ,
+
+    'wNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'wNLOEWK(\'w\')',
+                  'onlySample' : [
+                                  ####
+                                  'WJetsToLNu-LO',
+                                  'WJetsToLNu','WJetsToLNu_HT100_200','WJetsToLNu_HT200_400','WJetsToLNu_HT400_600','WJetsToLNu_HT600_800',
+                                  'WJetsToLNu_HT800_1200','WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
+                                  ]
+                  } ,
+
+    'zNLOEWK' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer' ,
+                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer()',
+                  'module'     : 'wNLOEWK(\'z\')',
+                  'onlySample' : [  
+                                   #### DY
+                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
+                                  'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2','DYJetsToLL_M-10to50-LO-ext1',
+                                   # ... Low Mass HT
+                                  'DYJetsToLL_M-4to50_HT-100to200',
+                                  'DYJetsToLL_M-4to50_HT-100to200-ext1',
+                                  'DYJetsToLL_M-4to50_HT-200to400',
+                                  'DYJetsToLL_M-4to50_HT-200to400-ext1',
+                                  'DYJetsToLL_M-4to50_HT-400to600',
+                                  'DYJetsToLL_M-4to50_HT-400to600-ext1',
+                                  'DYJetsToLL_M-4to50_HT-600toInf',
+                                  'DYJetsToLL_M-4to50_HT-600toInf-ext1',
+                                   # ... high Mass HT
+                                  'DYJetsToLL_M-50_HT-100to200',
+                                  'DYJetsToLL_M-50_HT-200to400',
+                                  'DYJetsToLL_M-50_HT-400to600',
+                                  'DYJetsToLL_M-50_HT-600to800',
+                                  'DYJetsToLL_M-50_HT-800to1200',
+                                  'DYJetsToLL_M-50_HT-1200to2500',
+                                  'DYJetsToLL_M-50_HT-2500toInf',
+                                  ]
+                  } ,
+
+
+#
+#  This woudl be for Z>nunu sample, but we currently don't use it
+#
+#    'zvvNLOEWK' : {
+#                  'isChain'    : False ,
+#                  'do4MC'      : True  ,
+#                  'do4Data'    : False  ,
+#                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer' ,
+#                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer()',
+#                  'module'     : 'wNLOEWK(\'zvv\')',
+#                  'onlySample' : [''
+#                                  ]
+#                  } ,
 
 
     'WGammaStar' : {
@@ -918,6 +1015,15 @@ Steps = {
                   'declare'    : 'BWEwkSingRew = lambda : BWEwkSingletReweighter(year=RPLME_YEAR)',
                   'module'     : 'BWEwkSingRew()',
                   'onlySample' : TwoL2NuSamples + LNuQQSamples,
+               },
+
+    'MelaDisc' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.MelaDiscriminator' ,
+                  'declare'    : 'MelaDisc = lambda : MelaDiscClass(year=RPLME_YEAR)',
+                  'module'     : 'MelaDisc()',
                },
 
     'HMvars' : { 
@@ -1064,7 +1170,7 @@ Steps = {
                   'do4MC'     : True  ,
                   'do4Data'   : True  ,
                   'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
-                  'declare'   : 'whadJetSel = lambda : WhadJetSel(2,"custom",15.0,4.7,"CleanJet")',
+                  'declare'   : 'whadJetSel = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet")',
                   'module'    : 'WhadJetSel()',
     },
     'PreselFatJet' : {
@@ -1112,6 +1218,14 @@ Steps = {
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
                  'declare'    : 'trigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=False)',
                  'module'     : 'trigMC()',
+               },
+
+  'trigMC_Cut'   : { 'isChain'    : False ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
+                 'declare'    : 'CBtrigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_CutBased_cfg.py")',
+                 'module'     : 'CBtrigMC()',
                },
 
  'TrigMC_hmumu'   : { 
