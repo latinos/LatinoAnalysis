@@ -65,7 +65,11 @@ if __name__ == '__main__':
       handle.close()
 
     ROOTinputFile = ROOT.TFile.Open( opt.inputFile, 'READ')
-       
+
+    for list_histos in ROOTinputFile.GetListOfKeys() :
+        print " --> ", list_histos
+
+    
     texOutputFile =  open( 'plot_' + opt.cutName + '.tex' ,"w")
     texOutputFile.write('\n')
 
@@ -76,6 +80,7 @@ if __name__ == '__main__':
       if nameNominal in ROOTinputFile.GetListOfKeys() :
         histoNominal = ROOTinputFile.Get(nameNominal)
         nbins = histoNominal.GetNbinsX()
+
       print " nbins = ", nbins
 
       texOutputFile.write('\n')      
@@ -86,13 +91,23 @@ if __name__ == '__main__':
       counterNuisance = 0
 
       for nuisanceName, nuisance in nuisances.iteritems(): 
-        print " nuisanceName = ", nuisanceName
+        #print " nuisanceName = ", nuisanceName
         #print " nuisance = ", nuisance
         if 'name' in nuisance.keys() :
-          nameDown = 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + 'Down'
-          nameUp   = 'histo_' + sampleName + '_CMS_' + (nuisance['name']) + 'Up'          
+          
+          if 'skipCMS' in nuisance and nuisance['skipCMS'] == 1:
+            entryName = nuisance['name']
+          else:
+            entryName = 'CMS_' + nuisance['name']
+
+          nameDown = 'histo_' + sampleName + '_' + entryName + 'Down'
+          nameUp   = 'histo_' + sampleName + '_' + entryName + 'Up'          
+          
+          print " nameDown = ", nameDown
+          print " nameUp   = ", nameUp
           
           if nameDown in ROOTinputFile.GetListOfKeys() :
+
             print ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) ')
             if opt.dryRun == None :
               os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) ')
