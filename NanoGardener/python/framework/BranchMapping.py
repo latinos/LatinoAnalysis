@@ -3,13 +3,6 @@ import types
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Object, Collection
 import LatinoAnalysis.NanoGardener.data.BranchMapping_cfg as config
 
-        if branch_map is not None:
-            try:
-                self._branch_mapping = branch_mapping[branch_map]['mapping']
-            except KeyError:
-                for branch in branch_mapping[branch_map]
-
-
 class MappedEvent(object):
     def __init__(self, event, mapping={}, branches=[], suffix='', mapname=''):
         self._event = event

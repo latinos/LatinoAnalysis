@@ -755,6 +755,26 @@ Steps = {
                   'module'   : 'MonoHiggsMVA()',
                },
 
+               
+  'MonoHiggsMVA_ElepTup' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="ElepTup")',
+                  'module'   : 'MonoHiggsMVA()',
+               },
+
+               
+  'MonoHiggsMVA_ElepTdo' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="ElepTdo")',
+                  'module'   : 'MonoHiggsMVA()',
+               },
+
 
 ## ------- MODULES: MC Kinematic
   
@@ -1525,8 +1545,27 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l3KinProducer' ,
                   'declare'    : '',
                   'module'     : 'l3KinProducer()' ,
-               },  
+               },
+  
 
+  'l3Kin_ElepTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l3KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l3KinProducer(branch_map="ElepTdo")' ,
+               },
+
+  'l3Kin_ElepTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l3KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l3KinProducer(branch_map="ElepTup")' ,
+               },
+  
   'l4Kin'    : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1534,7 +1573,26 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l4KinProducer' ,
                   'declare'    : '',
                   'module'     : 'l4KinProducer()' ,
-               },  
+               }, 
+
+  'l4Kin_ElepTup'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l4KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l4KinProducer(branch_map="ElepTup")' ,
+               }, 
+               
+
+  'l4Kin_ElepTdo'    : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l4KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l4KinProducer(branch_map="ElepTdo")' ,
+               },
 
 ## ------- MODULES: Adding Formulas
 
@@ -1548,7 +1606,26 @@ Steps = {
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\')' ,
                  },
+   
 
+  'formulasMC_ElepTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="ElepTup", suffix="_ElepTup")' ,
+                 },
+
+  'formulasMC_ElepTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="ElepTdo", suffix="_ElepTdo")' ,
+                 },
+  
   'formulasMCLP19' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1641,6 +1718,26 @@ Steps = {
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
                   'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\')' ,
+                  'module'     : 'DYMVA()',
+            } ,
+   
+  'DYMVA_ElepTup' : {
+            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTup")' ,
+                  'module'     : 'DYMVA()',
+            } ,
+
+  'DYMVA_ElepTdo' : {
+            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTdo")' ,
                   'module'     : 'DYMVA()',
             } ,
 
@@ -1856,7 +1953,7 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'l2Kin_ElepTup'],
+                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup', 'formulasMC_ElepTup'],
                   #'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'LeptonSF_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup', 'formulasMC_ElepTup'],
                },
 
@@ -1865,12 +1962,13 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
-
+                },
+  
   'ElepTdo_suffix' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'l2Kin_ElepTdo'],
+                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo'],
                   #'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo'],
                },
 
@@ -1913,6 +2011,16 @@ Steps = {
                   'module'     : 'MupTup()',
                 },
 
+                
+  'do_MupTup_suffix' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
+                  'declare'    : 'MupTup = lambda : LeppTScalerTreeMaker(kind="Up", lepFlavor="mu", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"], suffix="_MupTup")',
+                  'module'     : 'MupTup()',
+                },
+
   'do_MupTdo' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -1922,11 +2030,29 @@ Steps = {
                   'module'     : 'MupTup()',
                 },
 
+  'do_MupTdo_suffix' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
+                  'declare'    : 'MupTup = lambda : LeppTScalerTreeMaker(kind="Dn", lepFlavor="mu", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"], suffix="_MupTdo")',
+                  'module'     : 'MupTup()',
+                },
+  
   'MupTup' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
+               },
+
+
+  'MupTup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : [],
+                  #'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
   'MupTdo' :   {
@@ -1936,6 +2062,14 @@ Steps = {
                   'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
+  'MupTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : [],
+                  #'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
+               },
+  
   'MupTupLP19' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
@@ -2001,6 +2135,7 @@ Steps = {
                   'declare'    : 'fj_resdo = lambda : FatJetMassScaler(year=RPLME_YEAR, type="smear", kind="Down",collection="CleanFatJet")',
                   'module'     : 'fj_resdo()'
     },
+
 
     # chain of chains
     'systematics': {
@@ -2151,7 +2286,6 @@ Steps = {
 
 #muWP='cut_Tight80x'
 #eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']
-
   'l2tightOR2016' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2414,7 +2548,6 @@ Steps = {
       'onlySample' : LNuJJ_VBS_Samples_data2017
   },
 
-
 # ------------------------------------ SPECIAL STEPS: HADD & UEPS -------------------------------------------------
 
 ## ------- HADD 
@@ -2475,6 +2608,6 @@ Steps = {
                },
 
 
-}
 
+}
 
