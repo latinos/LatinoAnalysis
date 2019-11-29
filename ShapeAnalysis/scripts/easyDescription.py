@@ -214,6 +214,11 @@ if __name__ == '__main__':
         fileOutCuts.write("# Expanded version of cuts.py \n")
         fileOutCuts.write("# \n")
         
+        # if supercut
+        if 'supercut' in locals():
+          fileOutCuts.write("supercut = \' " + str(supercut) + " \' \n\n\n") 
+        
+        # now the cuts
 
         for cutName, cut in cuts.iteritems():
           
