@@ -2271,7 +2271,7 @@ Steps = {
                                   "' ,
                  },
 
-  'l2tightOR2017v5' : {
+  'l2tightOR2017v6' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
@@ -2280,11 +2280,19 @@ Steps = {
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight[0] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight[0] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight_SS[0] > 0.5     \
                                          || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5             ) \
                                     && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[1] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[1] > 0.5     \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[1] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight[1] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight[1] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight_SS[1] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight_SS[1] > 0.5     \
                                          || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5             ) \
                                   "' ,
                  },
@@ -2336,6 +2344,33 @@ Steps = {
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[1] > 0.5     \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[1] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5             ) \
+                                  "' ,
+                 },
+
+
+  'l2tightOR2018v6' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
+                                    && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight[0] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight[0] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight_SS[0] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight_SS[0] > 0.5     \
+                                         || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5             ) \
+                                    && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[1] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
+                                         || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[1] > 0.5     \
+                                         || Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[1] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight[1] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight[1] > 0.5        \
+                                         || Lepton_isTightElectron_cutFall17V1Iso_Tight_SS[1] > 0.5     \
+                                         || Lepton_isTightElectron_cutFall17V2Iso_Tight_SS[1] > 0.5     \
                                          || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5             ) \
                                   "' ,
                  },
