@@ -1,3 +1,5 @@
+import importlib
+
 _ElepT_branches = [
   'Lepton_pt',
   ## l2Kin
@@ -101,33 +103,18 @@ from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
 _ElepT_branches.extend(NewVar_MC_dict['F'])
 
 ## DYMVA and MonoHiggsMVA
-from collections import OrderedDict
-import os
-cmssw_base = os.getenv('CMSSW_BASE')
-mvaFiles=["DYMVA_2016_cfg.py", "DYMVA_2017_cfg.py", "DYMVA_2018_cfg.py", "MonoHiggsMVA_cfg.py"]
-for mvaFile in mvaFiles:
-  mvaFile = cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/'+mvaFile
-  if os.path.exists(mvaFile):
-    handle = open(mvaFile,'r')
-    exec(handle)
-    handle.close()
-    for key in mvaDic.keys():
-      if key not in _ElepT_branches: 
-        _ElepT_branches.append(key)
+for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_cfg"]:
+  mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
+  for key in mod.mvaDic.iterkeys():
+    if key not in _ElepT_branches: 
+      _ElepT_branches.append(key)
 
 ## formulas MC
-formulasFiles=['formulasToAdd_MC_2016.py', 'formulasToAdd_MC_2017.py', 'formulasToAdd_MC_2018.py', 'formulasToAdd_MC_MonoH.py']
-for formulaFile in formulasFiles:
-  formulasFile_path = cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/'+formulaFile
-  if os.path.exists(formulasFile_path) :
-     handle = open(formulasFile_path,'r')
-     exec(handle)
-     handle.close()
-     for key in formulas.keys():
-       if "XS" not in key:
-         if key not in _ElepT_branches:
-           _ElepT_branches.append(key)
-
+for cfg in ['formulasToAdd_MC_2016', 'formulasToAdd_MC_2017', 'formulasToAdd_MC_2018', 'formulasToAdd_MC_MonoH']:
+  mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
+  for key in mod.formulas.iterkeys():
+    if "XS" not in key and key not in _ElepT_branches:
+      _ElepT_branches.append(key)
 
 branch_mapping = {}
 

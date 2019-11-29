@@ -9,11 +9,10 @@ from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree
 
 
 class GenericFormulaAdder(Module):
-    def __init__(self,configfile="data/formulasToAdd_Data.py", branch_map="", suffix=''):
+    def __init__(self,configfile="data/formulasToAdd_Data.py", branch_map=""):
       cmssw_base = os.getenv('CMSSW_BASE') 
       formulasFile_path = cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/'+configfile
       self._branch_map = branch_map 
-      self._suffix=suffix
       if os.path.exists(formulasFile_path) :
         handle = open(formulasFile_path,'r')
         exec(handle)
@@ -32,7 +31,7 @@ class GenericFormulaAdder(Module):
         self.itree = inputTree
         for key in self.formulas.keys():
           self.formulas[key] = eval('lambda event:'+self.formulas[key])
-          self.out.branch(key+self._suffix,  'F');
+          self.out.branch(key,  'F');
     
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -41,7 +40,7 @@ class GenericFormulaAdder(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         event = mappedEvent(event, mapname=self._branch_map)
         for key in self.formulas.keys():
-          self.out.fillBranch(key+self._suffix, self.formulas[key](event))
+          self.out.fillBranch(key, self.formulas[key](event))
 
         return True
 
