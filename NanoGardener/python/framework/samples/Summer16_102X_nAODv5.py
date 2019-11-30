@@ -201,7 +201,7 @@ Samples['DYJetsToLL_M-50_HT-2500toinf'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-2500t
 
 #### DY->TauTau->MuEle Decay
 
-Samples['DYJetsToTT_MuEle_M-50_ex1'] = {'nanoAOD' :'/DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_ext1/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM'}
+Samples['DYJetsToTT_MuEle_M-50_ext1'] = {'nanoAOD' :'/DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_ext1/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM'}
 Samples['DYJetsToTT_MuEle_M-50'] = {'nanoAOD' :'/DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'}
 
 ### QCD fakes
