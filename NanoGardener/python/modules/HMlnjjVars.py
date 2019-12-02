@@ -73,6 +73,8 @@ class HMlnjjVarsClass(Module):
         self.out.branch("vbfjj_jj_dEta" , "F")
         self.out.branch("vbfjj_jj_mass" , "F")
 
+        self.out.branch("largest_nonW_mjj", "F")
+
         self.out.branch("IsVbfFat" , "O")
         self.out.branch("IsVbfjj" , "O")
 
@@ -129,6 +131,8 @@ class HMlnjjVarsClass(Module):
         vbfFat_jj_mass = -999
         vbfjj_jj_dEta  = -999
         vbfjj_jj_mass  = -999
+        # largest mjj ignoring any W candidate jets, regardless of separation in eta
+        largest_nonW_mjj = -999
 
 
         IsFat = False
@@ -300,6 +304,10 @@ class HMlnjjVarsClass(Module):
                             if mass_tmp > vbfFat_jj_mass:
                                 vbfFat_jj_dEta = dEta_tmp
                                 vbfFat_jj_mass = mass_tmp
+
+                        if mass_tmp > largest_nonW_mjj:
+                            largest_nonW_mjj = mass_tmp
+
                 if vbfFat_jj_mass > 500:
                     IsVbfFat = True
 
@@ -335,6 +343,10 @@ class HMlnjjVarsClass(Module):
                             if mass_tmp > vbfjj_jj_mass:
                                 vbfjj_jj_dEta = dEta_tmp
                                 vbfjj_jj_mass = mass_tmp
+
+                        if mass_tmp > largest_nonW_mjj:
+                            largest_nonW_mjj = mass_tmp
+
             if vbfjj_jj_mass > 500:
                 IsVbfjj = True
 
@@ -365,6 +377,8 @@ class HMlnjjVarsClass(Module):
         self.out.fillBranch( 'vbfFat_jj_mass'  , vbfFat_jj_mass)
         self.out.fillBranch( 'vbfjj_jj_dEta'    , vbfjj_jj_dEta)
         self.out.fillBranch( 'vbfjj_jj_mass'  , vbfjj_jj_mass)
+
+        self.out.fillBranch( 'largest_nonW_mjj', largest_nonW_mjj)
 
         self.out.fillBranch( 'Hlnjj_mass', Hlnjj_mass )
         self.out.fillBranch( 'WptOvHak4M', WptOvHak4M )
