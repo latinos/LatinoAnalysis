@@ -775,6 +775,24 @@ Steps = {
                   'module'   : 'MonoHiggsMVA()',
                },
 
+  'MonoHiggsMVA_MupTup' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="MupTup")',
+                  'module'   : 'MonoHiggsMVA()',
+               },
+
+               
+  'MonoHiggsMVA_MupTdo' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="MupTdo")',
+                  'module'   : 'MonoHiggsMVA()',
+               },
 
 ## ------- MODULES: MC Kinematic
   
@@ -1292,6 +1310,22 @@ Steps = {
                   'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="ElepTdo")',
                   'module'     : 'LeptonSF()',
                 },
+  'LeptonSF_MupTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
+                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="MupTup")',
+                  'module'     : 'LeptonSF()',
+                },
+  'LeptonSF_MupTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
+                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="MupTdo")',
+                  'module'     : 'LeptonSF()',
+                },
 
   'JetSF': {
                   'isChain'    : False ,
@@ -1716,7 +1750,7 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="MupTup", suffix="_MupTup")' ,
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="MupTup")' ,
                  },
 
   'formulasMC_MupTdo' : {
@@ -1725,7 +1759,7 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
                   'declare'    : '',
-                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="MupTdo", suffix="_MupTdo")' ,
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="MupTdo")' ,
                  },
   
   'formulasMCLP19' : {
@@ -2170,8 +2204,7 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : [],
-                  #'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
+                  'subTargets' : ['do_MupTup_suffix', 'trigMCKeepRun_MupTup', 'LeptonSF_MupTup', 'l2Kin_MupTup', 'l3Kin_MupTup', 'l4Kin_MupTup', 'DYMVA_MupTup', 'MonoHiggsMVA_MupTup', 'formulasMC_MupTup'],
                },
 
   'MupTdo' :   {
@@ -2185,8 +2218,7 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : [],
-                  #'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
+                  'subTargets' : ['do_MupTdo_suffix', 'trigMCKeepRun_MupTdo', 'LeptonSF_MupTdo', 'l2Kin_MupTdo', 'l3Kin_MupTdo', 'l4Kin_MupTdo', 'DYMVA_MupTdo', 'MonoHiggsMVA_MupTdo', 'formulasMC_MupTdo'],
                },
   
   'MupTupLP19' :   {
