@@ -894,8 +894,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
-                  'declare'    : 'wwNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
-                  'module'     : 'wwNLOEWK(\'ww\')',
+                  'declare'    : 'wwNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer("ww")',
+                  'module'     : 'wwNLOEWK()',
                   'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down',
                                   'WmToLNu_WmTo2J_QCD', 'WpToLNu_WpTo2J_QCD', 'WpToLNu_WmTo2J_QCD', 'WpTo2J_WmToLNu_QCD'
                                   ]
@@ -907,8 +907,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
-                  'declare'    : 'wzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
-                  'module'     : 'wzNLOEWK(\'wz\')',
+                  'declare'    : 'wzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer("wz")',
+                  'module'     : 'wzNLOEWK()',
                   'onlySample' : ['WZTo3LNu', 'WZTo3LNu_ext1', 'WZ', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg',
                                   'WmTo2J_ZTo2L_QCD', 'WmToLNu_ZTo2J_QCD', 'WpTo2J_ZTo2L_QCD', 'WpToLNu_ZTo2J_QCD'
                                   ]
@@ -919,8 +919,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
-                  'declare'    : 'zzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer()',
-                  'module'     : 'zzNLOEWK(\'zz\')',
+                  'declare'    : 'zzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer("zz")',
+                  'module'     : 'zzNLOEWK()',
                   'onlySample' : ['ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2', 'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2', 'ZZTo2L2Q',
                                   'ZTo2L_ZTo2J_QCD'
                                   ]
@@ -931,8 +931,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer' ,
-                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer()',
-                  'module'     : 'wNLOEWK(\'w\')',
+                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer("w")',
+                  'module'     : 'wNLOEWK()',
                   'onlySample' : [
                                   ####
                                   'WJetsToLNu-LO',
@@ -946,8 +946,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer' ,
-                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer()',
-                  'module'     : 'wNLOEWK(\'z\')',
+                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer("z")',
+                  'module'     : 'wNLOEWK()',
                   'onlySample' : [  
                                    #### DY
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
@@ -981,8 +981,8 @@ Steps = {
 #                  'do4MC'      : True  ,
 #                  'do4Data'    : False  ,
 #                  'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer' ,
-#                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer()',
-#                  'module'     : 'wNLOEWK(\'zvv\')',
+#                  'declare'    : 'wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer("zvv")',
+#                  'module'     : 'wNLOEWK()',
 #                  'onlySample' : [''
 #                                  ]
 #                  } ,
@@ -1488,7 +1488,7 @@ Steps = {
 
 
 
-    'fakeW'  : {
+  'fakeW'  : {
                   'isChain'    : True ,
                   'do4MC'      : False ,
                   'do4Data'    : True ,
