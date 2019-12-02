@@ -428,6 +428,7 @@ Samples['DYJetsToLL_M-10to50-LO'] = {'nanoAOD' :'/DYJetsToLL_M-10to50_TuneCP5_13
 Samples['DYJetsToLL_M-50-LO'] = {'nanoAOD' :'/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv5-Nano1June2019_102X_upgrade2018_realistic_v19-v1/NANOAODSIM'} 
 ## DY TT_MuEle_M-50 ##->Must Be HIG-RunIIAutumn18NanoAODv5-01709
 #Samples['DYJetsToTT_MuEle_M-50'] = {'nanoAOD': '/DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCP5_PSweights_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18NanoAODv5-Nano1June2019_102X_upgrade2018_realistic_v19-v1/NANOAODSIM'}
+Samples['DYJetsToTT_MuEle_M-50_private'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/','paths': ['/store/user/lviliani/NanoDYTTMuEle/2018/DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCP5_PSweights_13TeV-amcatnloFXFX-pythia8/Nano2018_DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCP5_PSweights_13TeV-amcatnloFXFX-pythia8/191119_155650/0000/']}
 
 ## DY M-50_HT
 Samples['DYJetsToLL_M-50_HT-70to100'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv5-Nano1June2019_102X_upgrade2018_realistic_v19-v1/NANOAODSIM'} 

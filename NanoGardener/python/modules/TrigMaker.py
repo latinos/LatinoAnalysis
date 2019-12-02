@@ -33,6 +33,7 @@ class TrigMaker(Module):
         self.el_minPt = 10
         self.el_maxEta = 2.5
         self.el_minEta = -2.5
+        self.cfg_path = cfg_path 
 
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
