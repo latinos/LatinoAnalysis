@@ -123,19 +123,16 @@ for cfg in ['formulasToAdd_MC_2016', 'formulasToAdd_MC_2017', 'formulasToAdd_MC_
       _ElepT_branches.append(key)
 
 ## LeptonSF
-var = {}
-execfile(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py', var)
-ElectronWP = var['ElectronWP']
-MuonWP = var['MuonWP']
+var = importlib.import_module("LatinoAnalysis.NanoGardener.data.LeptonSel_cfg")
 wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down']
-for version in ElectronWP.keys():
-  for wp in ElectronWP[version]['TightObjWP']:
+for version in var.ElectronWP.keys():
+  for wp in var.ElectronWP[version]['TightObjWP']:
     for postfix in wp_sf_pf:
       key = 'Lepton_tightElectron_'+wp + postfix
       if key not in _ElepT_branches:
         _ElepT_branches.append(key)
-for version in MuonWP.keys():
-  for wp in MuonWP[version]['TightObjWP']:
+for version in var.MuonWP.keys():
+  for wp in var.MuonWP[version]['TightObjWP']:
     for postfix in wp_sf_pf:
       if key not in _MupT_branches:
         _MupT_branches.append(key)  
