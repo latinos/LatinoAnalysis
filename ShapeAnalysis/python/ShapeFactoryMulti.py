@@ -1380,9 +1380,6 @@ class ShapeFactory:
                 exists = True
   
             if exists:
-              print ">>>>>>>>>>>>>>>>>>>>>>>>>friendtree:",friendtree
-              print ">>>>>>>>>>>>>>>>>>>>>>>>>skipMissingFiles:",skipMissingFiles
-              print ">>>>>>>>>>>>>>>>>>>>>>>>>path:",path
               if friendtree is not None:
                 paths.append(path)
               else:
