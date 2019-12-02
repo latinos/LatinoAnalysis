@@ -94,7 +94,13 @@ _ElepT_branches = [
   #'z1dPhi_lep1MET_zh4l',
   #'z1dPhi_lep2MET_zh4l',
   #'z1mindPhi_lepMET_zh4l',
+  ## LeptonSF
+  'Lepton_RecoSF',
+  'Lepton_RecoSF_Up',
+  'Lepton_RecoSF_Down',
 ]
+
+_MupT_branches = _ElepT_branches
 
 ## TrigMaker
 from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
@@ -114,6 +120,8 @@ for mvaFile in mvaFiles:
     for key in mvaDic.keys():
       if key not in _ElepT_branches: 
         _ElepT_branches.append(key)
+      if key not in _MupT_branches:
+        _MupT_branches.append(key)   
 
 ## formulas MC
 formulasFiles=['formulasToAdd_MC_2016.py', 'formulasToAdd_MC_2017.py', 'formulasToAdd_MC_2018.py', 'formulasToAdd_MC_MonoH.py']
@@ -127,6 +135,28 @@ for formulaFile in formulasFiles:
        if "XS" not in key:
          if key not in _ElepT_branches:
            _ElepT_branches.append(key)
+         if key not in _MupT_branches:
+           _MupT_branches.append(key)
+
+## LeptonSF
+var = {}
+execfile(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py', var)
+ElectronWP = var['ElectronWP']
+MuonWP = var['MuonWP']
+wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down']
+for version in ElectronWP.keys():
+  for wp in ElectronWP[version]['TightObjWP']:
+    for postfix in wp_sf_pf:
+      key = 'Lepton_tightElectron_'+wp + postfix
+      if key not in _ElepT_branches:
+        _ElepT_branches.append(key)
+for version in MuonWP.keys():
+  for wp in MuonWP[version]['TightObjWP']:
+    for postfix in wp_sf_pf:
+      if key not in _MupT_branches:
+        _MupT_branches.append(key)  
+
+
 
 
 branch_mapping = {}
@@ -139,4 +169,14 @@ branch_mapping['ElepTup'] = {
 branch_mapping['ElepTdo'] = {
   'branches': _ElepT_branches,
   'suffix': '_ElepTdo'
+}
+
+branch_mapping['MupTup'] = {
+  'branches': _MupT_branches,
+  'suffix': '_MupTup'
+}
+
+branch_mapping['MupTdo'] = {
+  'branches': _MupT_branches,
+  'suffix': '_MupTdo'
 }
