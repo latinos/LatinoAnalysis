@@ -129,6 +129,7 @@ _MET_branches = [
   'ptTOT_cut',
   'mTOT_cut',
   'WlepMt_whss',
+  'PfMetDivSumMet',
   # trigger efficiencies - added below
   ## l3kinProducer 
   'WH3l_mtlmet',
@@ -157,6 +158,51 @@ _MET_branches = [
   'z1mindPhi_lepMET_zh4l',
 ]
 
+_JES_branches = ['CleanJet_pt']
+# since JES affects MET...
+_JES_branches  += _MET_branches
+# and some more stuff
+_JES_branches += [
+  'njet',
+  'dphilljet',
+  'dphilljetjet',
+  'dphilljetjet_cut',
+  'mjj',
+  'detajj',
+  'dphijet1met',
+  'dphijet2met',
+  'dphijjmet',
+  'dphijjmet_cut',
+  'dphilep1jet1',
+  'dphilep1jet2',
+  'dphilep2jet1',
+  'dphilep2jet2',
+  'mindetajl',
+  'dphijj',
+  'maxdphilepjj',
+  'dphilep1jj',
+  'dphilep2jj',
+  'ht',
+  'vht_pt',
+  'vht_phi',
+  'pTHjj',
+  'jetpt1_cut',
+  'jetpt2_cut',
+  'dphilljet_cut',
+  'dphijet1met_cut',
+  'dphijet2met_cut',
+  'upara',
+  'uperp',
+  'm2ljj20',
+  'm2ljj30',
+  'ptTOT_cut',
+  'mTOT_cut',
+  'OLV1_cut',
+  'OLV2_cut',
+  'Ceta_cut',
+  'mlljj20_whss',
+  'mlljj30_whss',
+]
 
 ## TrigMaker
 from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
@@ -173,6 +219,8 @@ for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_
       _MupT_branches.append(key)
     if key not in _MET_branches: 
       _MET_branches.append(key)
+    if key not in _JES_branches: 
+      _JES_branches.append(key)
 
 ## formulas MC
 for cfg in ['formulasToAdd_MC_2016', 'formulasToAdd_MC_2017', 'formulasToAdd_MC_2018', 'formulasToAdd_MC_MonoH']:
@@ -182,6 +230,7 @@ for cfg in ['formulasToAdd_MC_2016', 'formulasToAdd_MC_2017', 'formulasToAdd_MC_
       _ElepT_branches.append(key)
     if "XS" not in key and key not in _MupT_branches:
       _MupT_branches.append(key)
+# DO MET VARIATIONS AFFECT FORMULAS?
 
 ## LeptonSF
 var = importlib.import_module("LatinoAnalysis.NanoGardener.data.LeptonSel_cfg")
@@ -229,5 +278,15 @@ branch_mapping['METup'] = {
 branch_mapping['METdo'] = {
   'branches': _MET_branches,
   'suffix': '_METdo'
+}
+
+branch_mapping['JESup'] = {
+  'branches': _JES_branches,
+  'suffix': '_JESup'
+}
+
+branch_mapping['JESdo'] = {
+  'branches': _JES_branches,
+  'suffix': '_JESdo'
 }
 
