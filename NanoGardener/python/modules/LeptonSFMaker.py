@@ -14,14 +14,17 @@ from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import CleanJet_br, CleanJ
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
+
 
 class LeptonSFMaker(Module):
     '''
     Produce branches with recoSF, IDIsoSF, totSF
     ''' 
 
-    def __init__(self, cmssw, WP_path = 'LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py'):
+    def __init__(self, cmssw, WP_path = 'LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py', branch_map=''):
         self.cmssw = cmssw
+        self._branch_map = branch_map
         self.minpt_mu = 10.0001
         self.maxpt_mu = 199.9999
         self.mineta_mu = -2.3999
@@ -48,7 +51,8 @@ class LeptonSFMaker(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
+        
         
         # New Branches
         self.out.branch('Lepton_RecoSF', 'F', lenVar='nLepton')
@@ -393,6 +397,7 @@ class LeptonSFMaker(Module):
         #if event._tree._ttreereaderversion > self._ttreereaderversion: # do this check at every event, as other modules might have read further branches
         #    self.initReaders(event._tree)
         # do NOT access other branches in python between the check/call to initReaders and the call to C++ worker code
+        event = mappedEvent(event, mapname=self._branch_map)
         
         lepton_col   = Collection(event, 'Lepton')
         nLep = len(lepton_col) 
