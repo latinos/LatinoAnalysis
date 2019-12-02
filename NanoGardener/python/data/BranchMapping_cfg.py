@@ -104,9 +104,64 @@ _ElepT_branches = [
 
 _MupT_branches = _ElepT_branches
 
+_MET_branches = [
+  'MET_pt',
+  'MET_phi',
+  'PuppiMET_pt',
+  'PuppiMET_phi',
+  'RawMET_pt',
+  'RawMET_phi',
+  ## l2Kin
+  'mth',
+  'mcoll',
+  'mcollWW',
+  'mTi',
+  'choiMass',
+  'mR',
+  'mT2',
+  'mtw1',
+  'mtw2',
+  'pTWW',
+  'pTHjj',
+  'recoil',
+  'upara',
+  'uperp',
+  'ptTOT_cut',
+  'mTOT_cut',
+  'WlepMt_whss',
+  # trigger efficiencies - added below
+  ## l3kinProducer 
+  'WH3l_mtlmet',
+  'WH3l_dphilmet',
+  'WH3l_ptWWW',
+  'WH3l_mtWWW',
+  'WH3l_dphilllmet',
+  'WH3l_ptW',
+  'ZH3l_dmjjmW',
+  'ZH3l_mTlmet',
+  'ZH3l_dphilmetjj',
+  'ZH3l_dphilmetj',
+  'ZH3l_pTlmetjj',
+  'ZH3l_pTlmetj',
+  'ZH3l_mTlmetjj',
+  ## l4kin producers
+  'pfmetPhi_zh4l',
+  'lep1Mt_zh4l',
+  'lep2Mt_zh4l',
+  'lep3Mt_zh4l',
+  'lep4Mt_zh4l',
+  'minMt_zh4l',
+  'z1Mt_zh4l',
+  'z1dPhi_lep1MET_zh4l',
+  'z1dPhi_lep2MET_zh4l',
+  'z1mindPhi_lepMET_zh4l',
+]
+
+
 ## TrigMaker
 from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
 _ElepT_branches.extend(NewVar_MC_dict['F'])
+_MupT_branches.extend(NewVar_MC_dict['F'])
 
 ## DYMVA and MonoHiggsMVA
 for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_cfg"]:
@@ -114,6 +169,10 @@ for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_
   for key in mod.mvaDic.iterkeys():
     if key not in _ElepT_branches: 
       _ElepT_branches.append(key)
+    if key not in _MupT_branches:  
+      _MupT_branches.append(key)
+    if key not in _MET_branches: 
+      _MET_branches.append(key)
 
 ## formulas MC
 for cfg in ['formulasToAdd_MC_2016', 'formulasToAdd_MC_2017', 'formulasToAdd_MC_2018', 'formulasToAdd_MC_MonoH']:
@@ -121,6 +180,8 @@ for cfg in ['formulasToAdd_MC_2016', 'formulasToAdd_MC_2017', 'formulasToAdd_MC_
   for key in mod.formulas.iterkeys():
     if "XS" not in key and key not in _ElepT_branches:
       _ElepT_branches.append(key)
+    if "XS" not in key and key not in _MupT_branches:
+      _MupT_branches.append(key)
 
 ## LeptonSF
 var = importlib.import_module("LatinoAnalysis.NanoGardener.data.LeptonSel_cfg")
@@ -159,3 +220,14 @@ branch_mapping['MupTdo'] = {
   'branches': _MupT_branches,
   'suffix': '_MupTdo'
 }
+
+branch_mapping['METup'] = {
+  'branches': _MET_branches,
+  'suffix': '_METup'
+}
+
+branch_mapping['METdo'] = {
+  'branches': _MET_branches,
+  'suffix': '_METdo'
+}
+
