@@ -237,6 +237,8 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
       else :
         lsCmd='ls '
         Dir = inputDir
+
+
     ##### Now get the files for Sample
     fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'.root'
     if 'root://' in inputDir:

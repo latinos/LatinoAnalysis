@@ -1339,7 +1339,10 @@ class ShapeFactory:
     # _____________________________________________________________________________
     def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
         def testFile(path):
-          if ("eoscms.cern.ch" in path or "eosuser.cern.ch" in path) and (not 'root://' in path):
+          if 'root://' in path:
+            exists = self._test_xrootdFile(path)
+            location = 'AAA'
+          elif "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
             exists = self._testEosFile(path)
             location = 'CERN'
           elif "maite.iihe.ac.be" in path:
@@ -1352,9 +1355,6 @@ class ShapeFactory:
           elif "sdfarm" in path:
             exists = self._test_sdfarm_File(path)
             location = 'sdfarm.kr'
-          elif 'root://' in path:
-            exists = self._test_xrootdFile(path)
-            location = 'AAA'
           else:
             exists = self._testLocalFile(path)
             location = 'local'
