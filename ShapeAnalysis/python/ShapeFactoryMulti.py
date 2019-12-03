@@ -715,97 +715,89 @@ class ShapeFactory:
                         self._fixNegativeBin(outputsHistoUp, outputsHisto)
                         self._fixNegativeBin(outputsHistoDo, outputsHisto)
 
-                  # if nuisanceName == 'stat'
-                  else:
-                    if 'kind' not in nuisance:
-                      continue
+                    continue
 
-                    twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+                  if 'kind' not in nuisance:
+                    continue
 
-                    histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
-                    histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+                  if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
+                    # collect the variations into one big "table" -> to be merged at hadd step
 
-                    if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
-                      def getvar(ivar):
-                        histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
-                        hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
-                        _allplots.remove(hTotalVar)
-                        outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, True, unroll2d=unroll2d)
+                    cwd = ROOT.gDirectory.GetDirectory('')
+                    outputsHisto.GetDirectory().cd()
 
-                        arrvar = rnp.hist2array(outputsHistoVar, copy=True)
+                    histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sVars' % nuisance['name']))
+                    
+                    nx = outputsHisto.GetNbinsX()
+                    nvar = len(configurationNuis)
+                    outputsHistoVars = ROOT.TH2D(histoNameVar, '', nx, 0., float(nx), nvar, 0., float(nvar))
+                    _allplots.add(outputsHistoVars)
 
-                        if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
-                          outputsHistoVar.Delete()
-                        else:
-                          _allplots.add(outputsHistoVar)
+                    cont = rnp.hist2array(outputsHistoVars, copy=False)
+                    sumw2 = rnp.array(outputsHistoVars.GetSumw2(), copy=False)
+                    # sumw2 is y-major
+                    sumw2 = np.reshape(sumw2, (nvar + 2, nx + 2))[1:-1, 1:-1]
 
-                        return arrvar
+                    entries = 0.
+                    
+                    for ivar in range(nvar):
+                      histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
+                      hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
+                      entries += hTotalVar.GetEntries()
+                      _allplots.remove(hTotalVar)
+                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, True, unroll2d=unroll2d)
 
-                      if nuisance['kind'].endswith('_envelope'):
-                        arrup = rnp.hist2array(outputsHisto, copy=True)
-                        arrdown = rnp.hist2array(outputsHisto, copy=True)
+                      vcont = rnp.hist2array(outputsHistoVar, copy=True)
+                      vsumw2 = rnp.array(outputsHistoVar.GetSumw2(), copy=True)[1:-1]
 
-                        for ivar in range(len(configurationNuis)):
-                          arrvar = getvar(ivar)
-
-                          arrup = np.maximum(arrup, arrvar)
-                          arrdown = np.minimum(arrdown, arrvar)
-
-                      elif nuisance['kind'].endswith('_rms'):
-                        arrnom = rnp.hist2array(outputsHisto, copy=False)
-                        arrv2 = np.zeros_like(arrnom)
-
-                        for ivar in range(len(configurationNuis)):
-                          arrvar = getvar(ivar)
-
-                          arrvar -= arrnom
-                          arrv2 += arrvar * arrvar
-
-                        arrv2 /= len(configurationNuis)
-                        arrv = np.sqrt(arrv2)
-                        arrup = arrnom + arrv
-                        arrdown = arrnom - arrv
-
-                      outFile.cd(cutName + catsuffix + '/' + variableName)
-                      outputsHistoUp = outputsHisto.Clone(histoNameUp)
-                      _allplots.add(outputsHistoUp)
-                      rnp.array2hist(arrup, outputsHistoUp)
-                      outputsHistoDown = outputsHisto.Clone(histoNameDown)
-                      _allplots.add(outputsHistoDown)
-                      if twosided:
-                        rnp.array2hist(arrdown, outputsHistoDown)
-
-                    # if nuisance is kind envelope or rms
-                    else:
-                      outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
-
-                      hTotalUp = outDir.Get(histoNameUp)
-                      _allplots.remove(hTotalUp)
-                      outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False, unroll2d=unroll2d)
-                      _allplots.add(outputsHistoUp)
-
-                      if twosided:
-                        hTotalDown = outDir.Get(histoNameDown)
-                        _allplots.remove(hTotalDown)
-                        outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d)
+                      if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
+                        outputsHistoVar.Delete()
                       else:
-                        outDir.cd()
-                        outputsHistoDo = outputsHisto.Clone(histoNameDown)
+                        _allplots.add(outputsHistoVar)
 
-                      _allplots.add(outputsHistoDo)
+                      cont[:, ivar] = vcont
+                      sumw2[ivar, :] = vsumw2
 
-                    # check if I need to symmetrize:
-                    #    - the up will be symmetrized
-                    #    - down ->   down - (up - down)
-                    #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
-                    if 'symmetrize' in nuisance:
-                      self._symmetrize(outputsHistoUp, outputsHistoDo)
+                    cwd.cd()
 
-                    if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
-                      # fix negative bins not consistent
-                      self._fixNegativeBin(outputsHistoUp, outputsHisto)
-                      if twosided:
-                        self._fixNegativeBin(outputsHistoDo, outputsHisto)
+                    outputsHistoVars.SetEntries(entries)
+
+                    continue
+
+                  twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+
+                  histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
+                  histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+
+                  outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
+
+                  hTotalUp = outDir.Get(histoNameUp)
+                  _allplots.remove(hTotalUp)
+                  outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False, unroll2d=unroll2d)
+                  _allplots.add(outputsHistoUp)
+
+                  if twosided:
+                    hTotalDown = outDir.Get(histoNameDown)
+                    _allplots.remove(hTotalDown)
+                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d)
+                  else:
+                    outDir.cd()
+                    outputsHistoDo = outputsHisto.Clone(histoNameDown)
+
+                  _allplots.add(outputsHistoDo)
+
+                # check if I need to symmetrize:
+                #    - the up will be symmetrized
+                #    - down ->   down - (up - down)
+                #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
+                if 'symmetrize' in nuisance:
+                  self._symmetrize(outputsHistoUp, outputsHistoDo)
+
+                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
+                  # fix negative bins not consistent
+                  self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                  if twosided:
+                    self._fixNegativeBin(outputsHistoDo, outputsHisto)
 
           # end of one sample
           print ''
@@ -1428,3 +1420,87 @@ class ShapeFactory:
         else:
           return ROOT.multidraw.ReweightSource(xexpr, wsource)
 
+    @staticmethod
+    def postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile):
+      twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+
+      for cutName, cut in cuts.iteritems():
+        if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+          continue
+
+        if 'categories' in cut:
+            catsuffixes = ['_' + catname for catname in cut['categories']]
+        else:
+          catsuffixes = ['']
+
+        for catsuffix in catsuffixes:
+          for variableName, variable in variables.iteritems():
+            if 'tree' in variable:
+              continue
+    
+            if 'cuts' in variable and cutName not in variable['cuts']:
+              continue
+
+            dname = cutName + catsuffix + '/' + variableName
+            outDir = outFile.GetDirectory(dname)
+            outDir.cd()
+
+            for sampleName, sample in samples.iteritems():
+              if sampleName not in nuisance['samples']:
+                continue
+
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
+              configurationNuis = nuisance['samples'][sampleName]
+
+              if 'outputFormat' in sample:
+                outputFormat = sample['outputFormat']
+              else:
+                outputFormat = '{sample}{subsample}{nuisance}'
+    
+              if 'subsamples' in sample:
+                slabels = list('_%s' % ss for ss in sample['subsamples'].iterkeys())
+              else:
+                slabels = ['']
+    
+              for slabel in slabels:
+                histoName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='')
+                nominal = outDir.Get(histoName)
+                histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sVars' % nuisance['name']))
+                variations = rnp.hist2array(outDir.Get(histoNameVar), copy=True)
+
+                if nuisance['kind'].endswith('_envelope'):
+                  arrup = rnp.hist2array(nominal, copy=True)
+                  arrdown = rnp.hist2array(nominal, copy=True)
+
+                  for ivar in range(len(configurationNuis)):
+                    arrvar = variations[:, ivar]
+
+                    arrup = np.maximum(arrup, arrvar)
+                    arrdown = np.minimum(arrdown, arrvar)
+
+                elif nuisance['kind'].endswith('_rms'):
+                  arrnom = rnp.hist2array(nominal, copy=False)
+                  arrv2 = np.zeros_like(arrnom)
+
+                  for ivar in range(len(configurationNuis)):
+                    arrvar = variations[:, ivar]
+
+                    arrvar -= arrnom
+                    arrv2 += np.square(arrvar)
+
+                  arrv = np.sqrt(arrv2 / len(configurationNuis))
+                  arrup = arrnom + arrv
+                  arrdown = arrnom - arrv
+
+                histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
+                histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+
+                outputsHistoUp = nominal.Clone(histoNameUp)
+                rnp.array2hist(arrup, outputsHistoUp)
+                outputsHistoUp.Write()
+                outputsHistoDown = nominal.Clone(histoNameDown)
+                if twosided:
+                  rnp.array2hist(arrdown, outputsHistoDown)
+                outputsHistoDown.Write()
