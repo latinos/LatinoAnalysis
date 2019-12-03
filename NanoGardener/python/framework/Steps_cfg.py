@@ -682,18 +682,10 @@ Steps = {
 
 
     'HMlnjjSel'  : {
-                  'isChain'    : True,
-                  'do4MC'      : True,
-		  'do4Data'    : True,
-                  #'selection'  : '"(Lepton_pt[0] > 30 && (Alt$(Lepton_pt[1], 0) < 10))"',
-                  'selection'  : '"(Lepton_pt[0] > 30 && (Alt$(Lepton_pt[1], 0) < 10)) && (\
-                                    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 || \
-                                    Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5 || \
-                                    Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5 || \
-                                    Lepton_isTightElectron_mvaFall17V2Iso_WP90_SS[0] > 0.5 || \
-                                    Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )"',
-                  #'selection'  : '"(Lepton_pt[0] > 30 && (Alt$(Lepton_pt[1], 0) < 10)) && (Lepton_isTightElectron_mvaFall17V1Iso_WP90[0]>0.5 || Lepton_isTightMuon_cut_Tight_HWWW[0]>0.5)"',
-                  'subTargets' : ['HMlnjjVars'],
+                  'isChain'    : True ,
+		  'do4MC'	: True ,
+		  'do4Data'	: True,
+                  'subTargets' : ['HMlnjjLepSel','HMlnjjVars'],
 		  },
 
     'HMlnjjSelBWRew'  : {
