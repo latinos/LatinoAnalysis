@@ -761,8 +761,8 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="ElepTup")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_ElepTup = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="ElepTup")',
+                  'module'   : 'MonoHiggsMVA_ElepTup()',
                },
 
                
@@ -771,8 +771,8 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="ElepTdo")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_ElepTdo = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="ElepTdo")',
+                  'module'   : 'MonoHiggsMVA_ElepTdo()',
                },
 
   'MonoHiggsMVA_MupTup' : { 
@@ -780,8 +780,8 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="MupTup")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_MupTup = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="MupTup")',
+                  'module'   : 'MonoHiggsMVA_MupTup()',
                },
 
                
@@ -790,16 +790,16 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="MupTdo")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_MupTdo = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="MupTdo")',
+                  'module'   : 'MonoHiggsMVA_MupTdo()',
                },
   'MonoHiggsMVA_METup' : { 
                   'isChain'  : False ,
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="METup")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_METup = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="METup")',
+                  'module'   : 'MonoHiggsMVA_METup()',
                },
 
                
@@ -808,16 +808,16 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="METdo")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_METdo = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="METdo")',
+                  'module'   : 'MonoHiggsMVA_METdo()',
                },
   'MonoHiggsMVA_JESup' : { 
                   'isChain'  : False ,
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="JESup")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_JESup = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="JESup")',
+                  'module'   : 'MonoHiggsMVA_JESup()',
                },
 
                
@@ -826,8 +826,8 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="JESdo")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'declare'  : 'MonoHiggsMVA_JESdo = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="JESdo")',
+                  'module'   : 'MonoHiggsMVA_JESdo()',
                },
 
 ## ------- MODULES: MC Kinematic
@@ -1335,32 +1335,32 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
-                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="ElepTup")',
-                  'module'     : 'LeptonSF()',
+                  'declare'    : 'LeptonSF_ElepTup = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="ElepTup")',
+                  'module'     : 'LeptonSF_ElepTup()',
                 },
   'LeptonSF_ElepTdo' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
-                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="ElepTdo")',
-                  'module'     : 'LeptonSF()',
+                  'declare'    : 'LeptonSF_ElepTdo = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="ElepTdo")',
+                  'module'     : 'LeptonSF_ElepTdo()',
                 },
   'LeptonSF_MupTup' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
-                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="MupTup")',
-                  'module'     : 'LeptonSF()',
+                  'declare'    : 'LeptonSF_MupTup = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="MupTup")',
+                  'module'     : 'LeptonSF_MupTup()',
                 },
   'LeptonSF_MupTdo' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
-                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="MupTdo")',
-                  'module'     : 'LeptonSF()',
+                  'declare'    : 'LeptonSF_MupTdo = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="MupTdo")',
+                  'module'     : 'LeptonSF_MupTdo()',
                 },
 
   'JetSF': {
@@ -2037,8 +2037,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTup")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_ElepTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTup")' ,
+                  'module'     : 'DYMVA_ElepTup()',
             } ,
 
   'DYMVA_ElepTdo' : {
@@ -2047,8 +2047,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTdo")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_ElepTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTdo")' ,
+                  'module'     : 'DYMVA_ElepTdo()',
             } ,
   'DYMVA_MupTup' : {
             #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
@@ -2056,8 +2056,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTup")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_MupTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTup")' ,
+                  'module'     : 'DYMVA_MupTup()',
             } ,
 
   'DYMVA_MupTdo' : {
@@ -2066,8 +2066,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTdo")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_MupTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTdo")' ,
+                  'module'     : 'DYMVA_MupTdo()',
             } ,
   'DYMVA_METup' : {
             #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
@@ -2075,8 +2075,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METup")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_METup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METup")' ,
+                  'module'     : 'DYMVA_METup()',
             } ,
 
   'DYMVA_METdo' : {
@@ -2085,8 +2085,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METdo")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_METdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METdo")' ,
+                  'module'     : 'DYMVA_METdo()',
             } ,
   'DYMVA_JESup' : {
             #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
@@ -2094,8 +2094,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESup")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_JESup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESup")' ,
+                  'module'     : 'DYMVA_JESup()',
             } ,
 
   'DYMVA_JESdo' : {
@@ -2104,8 +2104,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESdo")' ,
-                  'module'     : 'DYMVA()',
+                  'declare'    : 'DYMVA_JESdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESdo")' ,
+                  'module'     : 'DYMVA_JESdo()',
             } ,
 
   'DYMVA_v5' : {
@@ -2429,8 +2429,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty',
-                  'declare'    : 'MupTup = lambda : LeppTScalerTreeMaker(kind="Dn", lepFlavor="mu", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"], suffix="_MupTdo")',
-                  'module'     : 'MupTup()',
+                  'declare'    : 'MupTdo = lambda : LeppTScalerTreeMaker(kind="Dn", lepFlavor="mu", version="RPLME_CMSSW" , metCollections = ["MET", "PuppiMET", "RawMET", "TkMET"], suffix="_MupTdo")',
+                  'module'     : 'MupTdo()',
                 },
   
   'MupTup' :   {
@@ -2534,7 +2534,7 @@ Steps = {
         'isChain': True,
         'do4MC': True,
         'do4Data': False,
-        'subTargets': ['JESup_suffix', 'JESdo_suffix', 'METup_suffix', 'METdo_suffix', 'ElepTup_suffix', 'ElepTdo_suffix', 'MupTup_suffix', 'MupTdo_suffix']
+        'subTargets': ['JESup_suffix', 'JESdo_suffix', 'METup_suffix', 'METdo_suffix', 'ElepTup_suffix', 'ElepTdo_suffix', 'MupTup_suffix', ]#'MupTdo_suffix']
     },
 
 # ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
