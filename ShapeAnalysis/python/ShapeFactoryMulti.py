@@ -599,7 +599,6 @@ class ShapeFactory:
           
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
-          print 'issue here: drawer.execute'
 
           for nuisanceName in nuisanceDrawers.keys():
             ndrawers = nuisanceDrawers.pop(nuisanceName)
@@ -1415,7 +1414,12 @@ class ShapeFactory:
       for path in files:
         doesFileExist = True
         self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-        if ("eoscms.cern.ch" in path or "eosuser.cern.ch" in path) and (not "root://" in path):
+        if "root://" in path:
+          if not self._test_xrootdFile(path):
+            print 'File '+path+' doesn\'t exists @ AAA'
+            doesFileExist = False
+            raise RuntimeError('File '+path+' doesn\'t exists')
+        elif "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
           if not self._testEosFile(path):
             print 'File '+path+' doesn\'t exists'
             doesFileExist = False
@@ -1427,11 +1431,6 @@ class ShapeFactory:
             raise RuntimeError('File '+path+' doesn\'t exists')
         elif "cluster142.knu.ac.kr" in path:
           pass # already checked the file at mkShape.py
-        elif "root://" in path:
-          if not self._test_xrootdFile(path):
-            print 'File '+path+' doesn\'t exists @ AAA'
-            doesFileExist = False
-            raise RuntimeError('File '+path+' doesn\'t exists') 
         else:
           if not os.path.exists(path):
             print 'File '+path+' doesn\'t exists'
