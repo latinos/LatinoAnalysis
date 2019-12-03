@@ -2534,7 +2534,7 @@ Steps = {
         'isChain': True,
         'do4MC': True,
         'do4Data': False,
-        'subTargets': ['JESup_suffix', 'JESdo_suffix', 'METup_suffix', 'METdo_suffix', 'ElepTup_suffix', 'ElepTdo_suffix', 'MupTup_suffix', ]#'MupTdo_suffix']
+        'subTargets': ['JESup_suffix', 'JESdo_suffix', 'METup_suffix', 'METdo_suffix', 'ElepTup_suffix', 'ElepTdo_suffix', 'MupTup_suffix', 'MupTdo_suffix']
     },
 
 # ------------------------------------ SKIMS : CUTS ONLY ----------------------------------------------------------
