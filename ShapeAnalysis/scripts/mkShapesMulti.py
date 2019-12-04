@@ -481,7 +481,7 @@ if __name__ == '__main__':
               tname = '%s.%d.%d' % iTarget
           else:
             tname = iTarget
-
+      
           pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+tname+'.jid'
           if os.path.isfile(pidFile) :
             print '--> Job Running Still: '+iStep+'__'+tname
@@ -498,6 +498,7 @@ if __name__ == '__main__':
       nThreads = opt.numThreads
 
       finalname = "plots_"+opt.tag+".root"
+      finalpath = os.path.join(os.getcwd(), opt.outputDir, finalname)
 
       hadd = os.environ['CMSSW_BASE'] + '/src/LatinoAnalysis/Tools/scripts/haddfast'
 
@@ -506,11 +507,17 @@ if __name__ == '__main__':
         command.append('--compress')
       else:
         command.extend(['-j', str(nThreads)])
-      command.append(os.path.join(os.getcwd(), opt.outputDir, finalname))
+      command.append(finalpath)
       command.extend(fileList)
       print ' '.join(command)
       if not opt.dryRun:
         subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
+
+        outFile = ROOT.TFile.Open(finalpath, 'update')
+        for nuisance in nuisances.itervalues():
+          if 'kind' in nuisance and (nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')):
+            ShapeFactory.postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile)
+        outFile.Close()
   
         if not opt.doNotCleanup:
           for fname in fileList:
@@ -699,3 +706,9 @@ if __name__ == '__main__':
       factory.aliases    = aliases
 
       factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
+
+      outFile = ROOT.TFile.Open(opt.outputDir+'/plots_'+factory._tag+".root", 'update')
+      for nuisance in nuisances.itervalues():
+        if 'kind' in nuisance and (nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')):
+          ShapeFactory.postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile)
+      outFile.Close()
