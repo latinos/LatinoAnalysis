@@ -159,10 +159,10 @@ class qq2zzEWKcorrectionsWeightFiller(TreeCloner):
               if (abs(temp_idl1) == abs(temp_idl2)) :
 
                 l1 = ROOT.TLorentzVector()
-                l1.SetPtEtaPhiM(ptl1, etal1, phil1, 0) # fine approx massless leptons for check
+                l1.SetPtEtaPhiM(temp_ptl1, temp_etal1, temp_phil1, 0) # fine approx massless leptons for check
 
                 l2 = ROOT.TLorentzVector()
-                l2.SetPtEtaPhiM(ptl2, etal2, phil2, 0) # fine approx massless leptons for check
+                l2.SetPtEtaPhiM(temp_ptl2, temp_etal2, temp_phil2, 0) # fine approx massless leptons for check
                               
                 mass = (l1+l2).M()                
        
@@ -192,10 +192,10 @@ class qq2zzEWKcorrectionsWeightFiller(TreeCloner):
               if (abs(temp_idl1) == abs(temp_idl3)) :
 
                 l1 = ROOT.TLorentzVector()
-                l1.SetPtEtaPhiM(ptl1, etal1, phil1, 0) # fine approx massless leptons for check
+                l1.SetPtEtaPhiM(temp_ptl1, temp_etal1, temp_phil1, 0) # fine approx massless leptons for check
 
                 l2 = ROOT.TLorentzVector()
-                l2.SetPtEtaPhiM(ptl3, etal3, phil3, 0) # fine approx massless leptons for check
+                l2.SetPtEtaPhiM(temp_ptl3, temp_etal3, temp_phil3, 0) # fine approx massless leptons for check
                               
                 mass = (l1+l2).M()                
        
@@ -225,10 +225,10 @@ class qq2zzEWKcorrectionsWeightFiller(TreeCloner):
               if (abs(temp_idl1) == abs(temp_idl4)) :
 
                 l1 = ROOT.TLorentzVector()
-                l1.SetPtEtaPhiM(ptl1, etal1, phil1, 0) # fine approx massless leptons for check
+                l1.SetPtEtaPhiM(temp_ptl1, temp_etal1, temp_phil1, 0) # fine approx massless leptons for check
 
                 l2 = ROOT.TLorentzVector()
-                l2.SetPtEtaPhiM(ptl4, etal4, phil4, 0) # fine approx massless leptons for check
+                l2.SetPtEtaPhiM(temp_ptl4, temp_etal4, temp_phil4, 0) # fine approx massless leptons for check
                               
                 mass = (l1+l2).M()                
        
