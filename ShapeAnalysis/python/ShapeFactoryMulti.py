@@ -643,7 +643,8 @@ class ShapeFactory:
                 catsuffixes = ['']
 
               for catsuffix in catsuffixes:
-                hTotal = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoName)
+                outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
+                outDir.cd()
 
                 # fold if needed
                 if 'fold' in variable:
@@ -654,6 +655,8 @@ class ShapeFactory:
                   doFold = 0
 
                 unroll2d = 'unroll' not in variable or variable['unroll']
+
+                hTotal = outDir.Get(histoName)
 
                 _allplots.remove(hTotal)
                 outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True, unroll2d=unroll2d)
@@ -718,8 +721,6 @@ class ShapeFactory:
                   if 'kind' not in nuisance:
                     continue
 
-                  outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
-
                   if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
                     for ivar in range(len(configurationNuis)):
                       histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
@@ -743,23 +744,22 @@ class ShapeFactory:
                     _allplots.remove(hTotalDown)
                     outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d)
                   else:
-                    outDir.cd()
                     outputsHistoDo = outputsHisto.Clone(histoNameDown)
 
                   _allplots.add(outputsHistoDo)
 
-                # check if I need to symmetrize:
-                #    - the up will be symmetrized
-                #    - down ->   down - (up - down)
-                #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
-                if 'symmetrize' in nuisance:
-                  self._symmetrize(outputsHistoUp, outputsHistoDo)
-
-                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
-                  # fix negative bins not consistent
-                  self._fixNegativeBin(outputsHistoUp, outputsHisto)
-                  if twosided:
-                    self._fixNegativeBin(outputsHistoDo, outputsHisto)
+                  # check if I need to symmetrize:
+                  #    - the up will be symmetrized
+                  #    - down ->   down - (up - down)
+                  #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
+                  if 'symmetrize' in nuisance:
+                    self._symmetrize(outputsHistoUp, outputsHistoDo)
+  
+                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
+                    # fix negative bins not consistent
+                    self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                    if twosided:
+                      self._fixNegativeBin(outputsHistoDo, outputsHisto)
 
           # end of one sample
           print ''
