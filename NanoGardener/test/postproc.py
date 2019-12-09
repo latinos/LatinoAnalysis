@@ -74,10 +74,12 @@ p = PostProcessor(".", files,
                          #btagSFProducer(era='2016', algo='cmva'),
                          #BTagEventWeightProducer(),
                          #
+                         #vvNLOEWKcorrectionWeightProducer('ww')
                          #vvNLOEWKcorrectionWeightProducer('wz')
+                         vvNLOEWKcorrectionWeightProducer('zz')
                          #
                          #vNLOEWKcorrectionWeightProducer('z')
-                         vNLOEWKcorrectionWeightProducer('zvv')
+                         #vNLOEWKcorrectionWeightProducer('zvv')
                          #vNLOEWKcorrectionWeightProducer('w')
                          ],
                        provenance=True,

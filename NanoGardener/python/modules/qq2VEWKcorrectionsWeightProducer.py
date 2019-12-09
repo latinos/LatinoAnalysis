@@ -12,12 +12,11 @@
 #
 # NLO Electroweak corrections for V samples
 #
-# Credits to Adish Vartak: https://github.com/cmg-xtracks/cmgtools-lite/blob/94X_dev/TTHAnalysis/macros/xtracks/addSumWgt.py
-# Thanks to Raffaele Gerosa
+# Thanks to Raffaele Gerosa and DM team
 #
 # Inputs from: https://arxiv.org/pdf/1705.04664v2.pdf
 # Table: http://lpcc.web.cern.ch/content/dark-matter-wg-documents
-#
+# From the pdf which table to be used is described
 #
 
 
@@ -39,24 +38,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
         # change this part into correct path structure... 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
-        #self.kfactorFile = self.open_root (self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kfactors_V.root')
-        
-        #
-        # TEST: ratio w.r.t. LO ?
-        #
-        #zknum = self.get_root_obj ( self.kfactorFile , "EWKcorr/Z"      )
-        #zkden = self.get_root_obj ( self.kfactorFile , "ZJets_LO/inv_pt")
-        #wknum = self.get_root_obj ( self.kfactorFile , "EWKcorr/W"      )
-        #wkden = self.get_root_obj ( self.kfactorFile , "WJets_LO/inv_pt")
-        
-        #self.zkfact = zknum.Clone("zkfact")
-        #self.wkfact = wknum.Clone("wkfact")
-        #self.zkfact.Divide(zkden)
-        #self.wkfact.Divide(wkden)
-        
-        #print " self.zkfact = ", self.zkfact
-        #print " self.wkfact = ", self.wkfact
-        
         self.graph_zvv_kfact = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kewk_zvv_for_python.txt');
         self.graph_z_kfact   = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kewk_z_for_python.txt');
         self.graph_w_kfact   = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kewk_w_for_python.txt');
@@ -99,9 +80,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
-
-        #print " self.zkfact = ", self.zkfact
-        #print " self.wkfact = ", self.wkfact
 
         ewknloW             = -1
         ewknloWuncertainty  = -1
@@ -178,11 +156,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
             
             ewknloW = 1.0
 
-            #if vpt > 0. and vpt < 150.1 :
-              #vpt = 150.1
-            #if vpt > 1199.9 :
-              #vpt = 1199.9
-    
             if vpt > 0. and vpt < 35. :
               vpt = 35.
             if vpt > 2000. :
@@ -191,9 +164,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
             if vpt > 0. :
               ewknloW = self.graph_z_kfact.Eval(vpt)
                
-              #bin = self.wkfact.FindBin(vpt)
-              #ewknloW = self.wkfact.GetBinContent(bin);
-              
               
 #  
 #           __  / 
@@ -241,11 +211,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
             
             ewknloW = 1.0
 
-            #if vpt > 0. and vpt < 150.1 :
-              #vpt = 150.1
-            #if vpt > 1199.9 :
-              #vpt = 1199.9
-
             if vpt > 0. and vpt < 35. :
               vpt = 35.
             if vpt > 2000. :
@@ -254,8 +219,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
             if vpt > 0. :
               ewknloW = self.graph_z_kfact.Eval(vpt)
               
-              #bin = self.zkfact.FindBin(vpt)
-              #ewknloW = self.zkfact.GetBinContent(bin);
           
 
 #
@@ -305,11 +268,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
             
             ewknloW = 1.0
 
-            #if vpt > 0. and vpt < 150.1 :
-              #vpt = 150.1
-            #if vpt > 1199.9 :
-              #vpt = 1199.9
-
             if vpt > 0. and vpt < 35. :
               vpt = 35.
             if vpt > 2000. :
@@ -318,8 +276,6 @@ class vNLOEWKcorrectionWeightProducer(Module):
             if vpt > 0. :
               ewknloW = self.graph_zvv_kfact.Eval(vpt)
               
-              #bin = self.zkfact.FindBin(vpt)
-              #ewknloW = self.zkfact.GetBinContent(bin);
           
 
  
