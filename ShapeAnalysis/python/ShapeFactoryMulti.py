@@ -1333,9 +1333,14 @@ class ShapeFactory:
       xrdserver=path.lstrip("root://").split("/")[0]
       cmd='xrdfs '+xrdserver+' locate '+path.split('root://'+xrdserver)[1]
       if os.system(cmd) == 0 : return True
-      return False  
+      return False
 
-    # _____________________________________________________________________________
+    def _test_cmsdas_File(self, path):
+      cmd='ls '+path
+      if os.system(cmd) == 0 : return True
+      return False
+
+      # _____________________________________________________________________________
     def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
         def testFile(path):
           if 'root://' in path:
@@ -1354,6 +1359,9 @@ class ShapeFactory:
           elif "sdfarm" in path:
             exists = self._test_sdfarm_File(path)
             location = 'sdfarm.kr'
+          elif "cmsdas" in path:
+            exists = self._test_cmsdas_File(path)
+            location = 'cmsdas'
           else:
             exists = self._testLocalFile(path)
             location = 'local'
@@ -1431,6 +1439,10 @@ class ShapeFactory:
             raise RuntimeError('File '+path+' doesn\'t exists')
         elif "cluster142.knu.ac.kr" in path:
           pass # already checked the file at mkShape.py
+        elif "cmsdas" in path:
+          if not self._test_cmsdas_File(path):
+            doesFileExist = False
+            raise RuntimeError('File '+path+' doesn\'t exists')
         else:
           if not os.path.exists(path):
             print 'File '+path+' doesn\'t exists'
