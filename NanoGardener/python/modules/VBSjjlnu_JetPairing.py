@@ -30,7 +30,7 @@ class VBSjjlnu_JetPairing(Module):
     def __init__(self, minpt=20, etacuts=[], mode="ALL", debug = False):
         '''
         This modules performs the Jet pairing for VBS semileptonic analysis. 
-        It separates events in three categories: boosted and resolved. 
+        It separates events in two categories: boosted and resolved. 
 
         In the boosted category, only events with 1 FatJet are saved. Events with more FatJets 
         are vetoed. In the remaining jets the VBS pair is selected using the maximum invariant mass. 
