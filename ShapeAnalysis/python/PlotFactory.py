@@ -177,6 +177,10 @@ class PlotFactory:
             tgrData_evy_up = array('f')
             tgrData_evy_do = array('f')
 
+            # at least 1 "MC" should be around ... otherwise what are we plotting? Only data?
+            tgrMC_vx       = array('f')
+            tgrMC_evx      = array('f')
+
             #these vectors are needed for nuisances accounting
             nuisances_vy_up     = {}
             nuisances_vy_do     = {}
@@ -504,9 +508,17 @@ class PlotFactory:
             # fill the reference distribution with the background only distribution
             # save the central values of the bkg sum for use for the nuisance band 
 
+            #
+            # How could this be ==0 ?
+            # At least one MC sample should be defined ... 
+            # but still, let's leave the possibility 
+            #            
             if thsBackground.GetNhists() != 0:
               last = thsBackground.GetStack().Last()
               tgrMC_vy = rnp.hist2array(last, copy=True)
+              for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
+                tgrMC_vx .append(thsBackground.GetStack().Last().GetBinCenter(iBin))
+                tgrMC_evx.append(thsBackground.GetStack().Last().GetBinWidth(iBin) / 2.)
               nuisances_err2_up = rnp.array(last.GetSumw2())[1:-1]
               nuisances_err2_do = rnp.array(last.GetSumw2())[1:-1]
             else:
@@ -645,30 +657,30 @@ class PlotFactory:
             
             if len(mynuisances.keys()) != 0:
               tgrMC = ROOT.TGraphAsymmErrors()  
-              for iBin in range(0, len(tgrData_vx)) :
-                tgrMC.SetPoint     (iBin, tgrData_vx[iBin], tgrMC_vy[iBin])
+              for iBin in range(0, len(tgrMC_vx)) :
+                tgrMC.SetPoint     (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
                 if histo_total:
-                  tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
+                  tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
-                  tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
+                  tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
               
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
               tgrMCMinusMC = tgrMC.Clone("tgrMCMinusMC")  
-              for iBin in range(0, len(tgrData_vx)) :
-                tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
-                tgrMCMinusMC.SetPoint    (iBin, tgrData_vx[iBin], 0.)
+              for iBin in range(0, len(tgrMC_vx)) :
+                tgrMCOverMC.SetPoint     (iBin, tgrMC_vx[iBin], 1.)
+                tgrMCMinusMC.SetPoint    (iBin, tgrMC_vx[iBin], 0.)
                 if histo_total:
-                  tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                  tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
                   else :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
                 else :
-                  tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                  tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                   else :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
                 
                          
             

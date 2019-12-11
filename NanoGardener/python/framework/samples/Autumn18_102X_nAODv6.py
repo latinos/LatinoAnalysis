@@ -559,7 +559,6 @@ Samples['ttHToMuMu_M125_CP5down'] = {'nanoAOD' :'/ttHToMuMu_M125_TuneCP5down_PSw
 
 
 Samples['DYJetsToLL_M-105To160'] = {'nanoAOD' :'/DYJetsToLL_M-105To160_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
-Samples['DYJetsToLL_M-105To160-LO'] = {'nanoAOD' :'/DYJetsToLL_M-105To160_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 Samples['EWKZ2Jets_ZToLL_M-50'] = {'nanoAOD' :'/EWKZ2Jets_ZToLL_M-50_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'} ##!!!!
 Samples['TT_DiLept_1Jet'] = {'nanoAOD' :'/TTPlus1Jet_DiLept_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM'}
 Samples['TT_DiLept'] = {'nanoAOD' :'/TT_DiLept_TuneCP5_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM'}

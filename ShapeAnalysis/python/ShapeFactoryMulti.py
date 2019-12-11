@@ -27,10 +27,10 @@ import LatinoAnalysis.Tools.userConfig as userConfig
 
 class ShapeFactory:
     _logger = logging.getLogger('ShapeFactory')
- 
+
     # _____________________________________________________________________________
     def __init__(self):
-      
+
         variables = {}
         self._variables = variables
 
@@ -61,29 +61,29 @@ class ShapeFactory:
         self._samples   = samples
         self._cuts      = cuts
 
-        #in case some aliases need a compiled function 
+        #in case some aliases need a compiled function
         for aliasName, alias in self.aliases.iteritems():
           if alias.has_key('linesToAdd'):
             linesToAdd = alias['linesToAdd']
             for line in linesToAdd:
               ROOT.gROOT.ProcessLineSync(line)
 
-        #in case some variables need a compiled function 
+        #in case some variables need a compiled function
         for variableName, variable in self._variables.iteritems():
           if variable.has_key('linesToAdd'):
             linesToAdd = variable['linesToAdd']
             for line in linesToAdd:
               ROOT.gROOT.ProcessLineSync(line)
-        
-        #in case some samples need a compiled function 
+
+        #in case some samples need a compiled function
         for sampleName, sample in self._samples.iteritems():
           if sample.has_key('linesToAdd'):
             linesToAdd = sample['linesToAdd']
             for line in linesToAdd:
               ROOT.gROOT.ProcessLineSync(line)
-        
+
         print " supercut = ", supercut
-        
+
         if number != 99999 :
           outputFileName = outputDir+'/plots_'+self._tag+"_"+str(number)+".root"
         else :
@@ -91,7 +91,7 @@ class ShapeFactory:
 
         print " outputFileName = ", outputFileName
         os.system ("mkdir -p " + outputDir + "/")
-        
+
         ROOT.TH1.SetDefaultSumw2(True)
 
         #---- Open the output file and create the ROOT directory structure
@@ -100,7 +100,7 @@ class ShapeFactory:
         outFile = ROOT.TFile.Open(tmpPath, 'recreate')
         # Speed up TFile::Close - see https://root-forum.cern.ch/t/tfile-close-slow/24179
         ROOT.gROOT.GetListOfFiles().Remove(outFile)
-        
+
         print ''
         print '  <cuts>'
         for cutName, cut in self._cuts.iteritems():
@@ -115,7 +115,7 @@ class ShapeFactory:
 
           else:
             outFile.mkdir(cutName)
-            
+
             for variableName, variable in self._variables.iteritems():
               if 'cuts' not in variable or cutName in variable['cuts']:
                 outFile.mkdir(cutName+"/"+variableName)
@@ -153,7 +153,7 @@ class ShapeFactory:
             for item in nuisance["samples"].itervalues():
               if "zeroMCError" not in item:
                 item["zeroMCError"] = '0'
-            
+
         #############################################
         # Use MultiDraw to fill the plots in one go #
         #############################################
@@ -222,7 +222,7 @@ class ShapeFactory:
             sampleweight = ShapeFactory._make_reweight(sample['weight'])
 
           # Create the nominal drawer
-                  
+
           drawer = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
           drawer.setFilter(supercut)
 
@@ -237,7 +237,7 @@ class ShapeFactory:
 
           # Set overall weights on the nominal drawer
           drawer.setReweight(sampleweight)
-               
+
           for it, w in enumerate(treeweights):
             if w is not None:
               drawer.setTreeReweight(it, False, w)
@@ -268,7 +268,7 @@ class ShapeFactory:
             if 'folderUp' in nuisance:
               filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
               skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
-            
+
               if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
                 # Workaround for missing nuisance files - don't use this regularly!
                 if sample['name'][0].startswith('###'):
@@ -277,10 +277,10 @@ class ShapeFactory:
                   altDir = inputDir
               else:
                 altDir = ''
- 
+
               if 'unskimmedFriendTreeDir' in nuisance.keys():
                 unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
-  
+
                 try:
                   skimListFolderUp = nuisance['skimListFolderUp']
                 except KeyError:
@@ -295,7 +295,7 @@ class ShapeFactory:
                 nuisanceDrawers[nuisanceName]['Up'] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
                 if twosided:
                   nuisanceDrawers[nuisanceName]['Down'] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
-  
+
               else:
                 nuisanceDrawers[nuisanceName]['Up'] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
                 if twosided:
@@ -323,7 +323,7 @@ class ShapeFactory:
 
             for ivar, var in enumerate(variations):
               ndrawer = ndrawers[var]
-              
+
               if float(sampleVarWeights[ivar]) != 1.:
                 nuisanceShift = ShapeFactory._make_reweight(sampleVarWeights[ivar])
                 nuisanceweight = ROOT.multidraw.ReweightSource(sampleweight, nuisanceShift)
@@ -339,7 +339,7 @@ class ShapeFactory:
 
                 if 'nominalOnly' in alias and alias['nominalOnly']:
                   continue
-  
+
                 if 'class' in alias:
                   ndrawer.addAlias(aliasName, ShapeFactory._make_ttreefunction(alias))
                 else:
@@ -352,7 +352,7 @@ class ShapeFactory:
                 warnIfTreeWeight = True
               else:
                 warnIfTreeWeight = False
-  
+
               for it, w in enumerate(treeweights):
                 if w is not None:
                   ndrawer.setTreeReweight(it, False, w)
@@ -441,7 +441,7 @@ class ShapeFactory:
 
               if 'cuts' in variable and cutName not in variable['cuts']:
                 continue
-             
+
               # create histogram
               if 'name' in variable:
                 self._logger.debug('Formula: '+str(variable['name']))
@@ -465,16 +465,16 @@ class ShapeFactory:
 
                   if 'categories' in cut:
                     treelist = ROOT.TObjArray()
-                  
+
                     for catname in categoryOrdering:
                       outFile.cd(cutName + '_' + catname + '/' + variableName)
 
                       tree = ROOT.TTree(treeName, treeName)
                       _allplots.add(tree)
                       treelist.Add(tree)
-                  
+
                     filler = drawer.addTreeList(treelist, cutFullName)
-                  
+
                   else:
                     outFile.cd(cutName + '/' + variableName)
 
@@ -485,7 +485,7 @@ class ShapeFactory:
 
                   for bname in sorted(variable['tree'].iterkeys()):
                     filler.addBranch(bname, variable['tree'][bname])
-                  
+
                   if reweight is not None:
                     filler.setReweight(reweight)
 
@@ -506,7 +506,7 @@ class ShapeFactory:
                       yexpr, xexpr = variable['name']
                     else:
                       raise NotImplementedError('Cannot plot >=3D distributions')
-  
+
                 elif 'class' in variable:
                   xexpr = ShapeFactory._make_ttreefunction(variable)
                   yexpr = ''
@@ -521,34 +521,34 @@ class ShapeFactory:
 
                   if 'categories' in cut:
                     histlist = ROOT.TObjArray()
-                  
+
                     for catname in categoryOrdering:
                       outFile.cd(cutName + '_' + catname + '/' + variableName)
-                  
+
                       hTotal = self._makeshape(histoName, variable['range'])
                       _allplots.add(hTotal)
                       hTotal.SetTitle(histoName)
                       hTotal.SetName(histoName)
                       histlist.Add(hTotal)
-                  
+
                     if yexpr:
                       filler = drawer.addPlotList2D(histlist, xexpr, yexpr, cutFullName)
                     else:
                       filler = drawer.addPlotList(histlist, xexpr, cutFullName)
-                  
+
                   else:
                     outFile.cd(cutName + '/' + variableName)
-                  
+
                     hTotal = self._makeshape(histoName, variable['range'])
                     _allplots.add(hTotal)
                     hTotal.SetTitle(histoName)
                     hTotal.SetName(histoName)
-                  
+
                     if yexpr:
                       filler = drawer.addPlot2D(hTotal, xexpr, yexpr, cutFullName)
                     else:
                       filler = drawer.addPlot(hTotal, xexpr, cutFullName)
-                  
+
                   if reweight is not None:
                     filler.setReweight(reweight)
 
@@ -556,7 +556,7 @@ class ShapeFactory:
 
 
               nominal_filler = setup_filler(drawer, reweight)
-                  
+
               for nuisanceName, nuisance in applicableNuisances.iteritems():
                 if nuisanceName == 'stat' or 'kind' not in nuisance:
                   continue
@@ -574,7 +574,7 @@ class ShapeFactory:
                       variations.append('Down')
                   else:
                     variations = ['V%dVar' % ivar for ivar in range(len(sampleVarWeights))]
-                    
+
                   for ivar, var in enumerate(variations):
                     if 'tree' in variable:
                       nominal_filler.addBranch('reweight_' + nuisance['name'] + var, sampleVarWeights[ivar])
@@ -596,7 +596,7 @@ class ShapeFactory:
             pass
           tmpROOTFile = ROOT.TFile.Open(tmpfile.name, 'recreate')
           tmpROOTFile.cd()
-          
+
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
 
@@ -610,7 +610,7 @@ class ShapeFactory:
           os.unlink(tmpfile.name)
 
           print 'Postfill'
-          
+
           # Post-processing
           for cutKey, cut in cuts.iteritems():
             if type(cutKey) is tuple:
@@ -629,7 +629,7 @@ class ShapeFactory:
             for variableName, variable in self._variables.iteritems():
               if 'tree' in variable:
                 continue
-              
+
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
@@ -653,8 +653,13 @@ class ShapeFactory:
                 else:
                   doFold = 0
 
+                if 'unroll' in variable:
+                  unroll2d = variable['unroll']
+                else:
+                  unroll2d = True
+
                 _allplots.remove(hTotal)
-                outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True)
+                outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True, unroll2d=unroll2d)
                 _allplots.add(outputsHisto)
 
                 for nuisanceName, nuisance in nuisances.iteritems():
@@ -663,7 +668,7 @@ class ShapeFactory:
                     continue
 
                   configurationNuis = nuisance['samples'][sampleName]
-                    
+
                   if nuisanceName == 'stat':
                     # 'stat' has a separate treatment, it's the MC/data statistics
                     # prepare nuisance MC/data statistics
@@ -683,19 +688,19 @@ class ShapeFactory:
                       # scale up/down
                       self._scaleHistoStat(outputsHistoUp,  1)
                       self._scaleHistoStat(outputsHistoDo, -1)
-                
+
                     # bin-by-bin
                     elif configurationNuis['typeStat'] == 'bbb' :
                       #print "     >> bin-by-bin"
-                      keepNormalization = 0 # do not keep normalization, put 1 to keep normalization                       
+                      keepNormalization = 0 # do not keep normalization, put 1 to keep normalization
                       if 'keepNormalization' in configurationNuis.keys() :
                         keepNormalization = configurationNuis['keepNormalization']
                         print " keepNormalization = ", keepNormalization
-            
+
                       # scale up/down
                       zeroMC = False
                       if  configurationNuis['zeroMCError'] == '1' : zeroMC = True
-            
+
                       for iBin in range(1, outputsHisto.GetNbinsX()+1):
                         # take histogram --> outputsHisto
                         upName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='_ibin_%d_statUp' % iBin)
@@ -705,102 +710,94 @@ class ShapeFactory:
                         #print "########### DEBUG: scaleHistoStatBBB sample", sampleName
                         self._scaleHistoStatBBB(outputsHistoUp,  1, iBin, keepNormalization, zeroMC)
                         self._scaleHistoStatBBB(outputsHistoDo, -1, iBin, keepNormalization, zeroMC)
-            
+
                         # fix negative bins not consistent
                         self._fixNegativeBin(outputsHistoUp, outputsHisto)
                         self._fixNegativeBin(outputsHistoDo, outputsHisto)
-            
-                  # if nuisanceName == 'stat'
-                  else:
-                    if 'kind' not in nuisance:
-                      continue
 
-                    twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+                    continue
 
-                    histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
-                    histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+                  if 'kind' not in nuisance:
+                    continue
 
-                    if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
-                      def getvar(ivar):
-                        histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
-                        hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
-                        _allplots.remove(hTotalVar)
-                        outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, True)
-  
-                        arrvar = rnp.hist2array(outputsHistoVar, copy=True)
-  
-                        if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
-                          outputsHistoVar.Delete()
-                        else:
-                          _allplots.add(outputsHistoVar)
-  
-                        return arrvar
-  
-                      if nuisance['kind'].endswith('_envelope'):
-                        arrup = rnp.hist2array(outputsHisto, copy=True)
-                        arrdown = rnp.hist2array(outputsHisto, copy=True)
-  
-                        for ivar in range(len(configurationNuis)):
-                          arrvar = getvar(ivar)
-  
-                          arrup = np.maximum(arrup, arrvar)
-                          arrdown = np.minimum(arrdown, arrvar)
-  
-                      elif nuisance['kind'].endswith('_rms'):
-                        arrnom = rnp.hist2array(outputsHisto, copy=False)
-                        arrv2 = np.zeros_like(arrnom)
-  
-                        for ivar in range(len(configurationNuis)):
-                          arrvar = getvar(ivar)
-  
-                          arrvar -= arrnom
-                          arrv2 += arrvar * arrvar
-  
-                        arrv2 /= len(configurationNuis)
-                        arrv = np.sqrt(arrv2)
-                        arrup = arrnom + arrv
-                        arrdown = arrnom - arrv
+                  if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
+                    # collect the variations into one big "table" -> to be merged at hadd step
 
-                      outFile.cd(cutName + catsuffix + '/' + variableName)
-                      outputsHistoUp = outputsHisto.Clone(histoNameUp)
-                      _allplots.add(outputsHistoUp)
-                      rnp.array2hist(arrup, outputsHistoUp)
-                      outputsHistoDown = outputsHisto.Clone(histoNameDown)
-                      _allplots.add(outputsHistoDown)
-                      if twosided:
-                        rnp.array2hist(arrdown, outputsHistoDown)
+                    cwd = ROOT.gDirectory.GetDirectory('')
+                    outputsHisto.GetDirectory().cd()
 
-                    # if nuisance is kind envelope or rms
-                    else:
-                      outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
-                      
-                      hTotalUp = outDir.Get(histoNameUp)
-                      _allplots.remove(hTotalUp)
-                      outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False)
-                      _allplots.add(outputsHistoUp)
-                      
-                      if twosided:
-                        hTotalDown = outDir.Get(histoNameDown)
-                        _allplots.remove(hTotalDown)
-                        outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False)
+                    histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sVars' % nuisance['name']))
+                    
+                    nx = outputsHisto.GetNbinsX()
+                    nvar = len(configurationNuis)
+                    outputsHistoVars = ROOT.TH2D(histoNameVar, '', nx, 0., float(nx), nvar, 0., float(nvar))
+                    _allplots.add(outputsHistoVars)
+
+                    cont = rnp.hist2array(outputsHistoVars, copy=False)
+                    sumw2 = rnp.array(outputsHistoVars.GetSumw2(), copy=False)
+                    # sumw2 is y-major
+                    sumw2 = np.reshape(sumw2, (nvar + 2, nx + 2))[1:-1, 1:-1]
+
+                    entries = 0.
+                    
+                    for ivar in range(nvar):
+                      histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
+                      hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
+                      entries += hTotalVar.GetEntries()
+                      _allplots.remove(hTotalVar)
+                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, True, unroll2d=unroll2d)
+
+                      vcont = rnp.hist2array(outputsHistoVar, copy=True)
+                      vsumw2 = rnp.array(outputsHistoVar.GetSumw2(), copy=True)[1:-1]
+
+                      if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
+                        outputsHistoVar.Delete()
                       else:
-                        outDir.cd()
-                        outputsHistoDo = outputsHisto.Clone(histoNameDown)
+                        _allplots.add(outputsHistoVar)
 
-                      _allplots.add(outputsHistoDo)
-  
-                    # check if I need to symmetrize:
-                    #    - the up will be symmetrized
-                    #    - down ->   down - (up - down)
-                    #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
-                    if 'symmetrize' in nuisance:
-                      self._symmetrize(outputsHistoUp, outputsHistoDo)
-            
-                    if 'suppressNegativeNuisances' in sample.keys() and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
-                      # fix negative bins not consistent
-                      self._fixNegativeBin(outputsHistoUp, outputsHisto)
-                      if twosided:
-                        self._fixNegativeBin(outputsHistoDo, outputsHisto)
+                      cont[:, ivar] = vcont
+                      sumw2[ivar, :] = vsumw2
+
+                    cwd.cd()
+
+                    outputsHistoVars.SetEntries(entries)
+
+                    continue
+
+                  twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+
+                  histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
+                  histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+
+                  outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
+
+                  hTotalUp = outDir.Get(histoNameUp)
+                  _allplots.remove(hTotalUp)
+                  outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False, unroll2d=unroll2d)
+                  _allplots.add(outputsHistoUp)
+
+                  if twosided:
+                    hTotalDown = outDir.Get(histoNameDown)
+                    _allplots.remove(hTotalDown)
+                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d)
+                  else:
+                    outDir.cd()
+                    outputsHistoDo = outputsHisto.Clone(histoNameDown)
+
+                  _allplots.add(outputsHistoDo)
+
+                # check if I need to symmetrize:
+                #    - the up will be symmetrized
+                #    - down ->   down - (up - down)
+                #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
+                if 'symmetrize' in nuisance:
+                  self._symmetrize(outputsHistoUp, outputsHistoDo)
+
+                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
+                  # fix negative bins not consistent
+                  self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                  if twosided:
+                    self._fixNegativeBin(outputsHistoDo, outputsHisto)
 
           # end of one sample
           print ''
@@ -808,11 +805,11 @@ class ShapeFactory:
         outFile.cd()
         outFile.Write()
         outFile.Close()
-        
+
         print 'Copying', outFile.GetName(), 'to', outputFileName
 
         realOutDir = os.path.realpath(os.path.dirname(outputFileName))
-        
+
         for _ in range(10):
           try:
             if realOutDir.startswith('/eos/cms'):
@@ -827,26 +824,27 @@ class ShapeFactory:
             break
         else:
           raise IOError('Failed to copy output')
-        
+
         shutil.rmtree(os.path.dirname(outFile.GetName()))
 
     # _____________________________________________________________________________
-    def _symmetrize(self, hUp, hDo): 
+    @staticmethod
+    def _symmetrize(hUp, hDo):
 
         #print " >> fold underflow"
         if hUp.GetDimension() == 1:
           nx = hUp.GetNbinsX()
           for iBin in range(1, nx+1):
             valueUp = hUp.GetBinContent(iBin)
-            valueDo = hDo.GetBinContent(iBin) 
+            valueDo = hDo.GetBinContent(iBin)
             newValueDo = valueDo - (valueUp-valueDo)
             hDo.SetBinContent(iBin, newValueDo)
         else :
           print 'No way! I am not going to symmetrize something that is not already folded into 1D'
-        
+
 
     # _____________________________________________________________________________
-    def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName, evlists = []):       
+    def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName, evlists = []):
         '''
         global_weight :   the global weight for the samples
         weights       :   the wieghts 'root file' dependent
@@ -858,14 +856,14 @@ class ShapeFactory:
         numTree = 0
 
         for itree, tree in enumerate(inputs):
-          globalCut = "(" + cut + ") * (" + global_weight + ")"  
+          globalCut = "(" + cut + ") * (" + global_weight + ")"
           #print "_filterTrees globalCut = ",globalCut
           # if weights vector is not given, do not apply file dependent weights
           if len(weights) != 0 :
             # if weight is not given for a given root file, '-', do not apply file dependent weight for that root file
             if weights[numTree] != '-' :
-              globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")" 
-          
+              globalCut = "(" + globalCut + ") * (" +  weights[numTree] + ")"
+
           #print " '>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName = ", '>> myList'+'_'+str(numTree)+'_'+sampleName+'_'+cutName
           #print " ::: ", tree.GetEntries(),
           # clear list
@@ -891,19 +889,67 @@ class ShapeFactory:
           #tree.SetEntryList(myList)
           tree.SetEventList(myList)
           #print " AFTER List --> ", tree.GetEntries()
-          print "filtered."   
+          print "filtered."
           numTree += 1
 
     # _____________________________________________________________________________
-    def _postplot(self, hTotal, doFold, cutName, sample, fixZeros):
-        if doFold == 1 or doFold == 3 :
-          self._FoldOverflow(hTotal)
+    @staticmethod
+    def _postplot(hTotal, doFold, cutName, sample, fixZeros, unroll2d=True):
+        if doFold == 1 or doFold == 3:
+          ShapeFactory._fold(hTotal, 0, 1)
         if doFold == 2 or doFold == 3 :
-          self._FoldUnderflow(hTotal)
-  
-        # go 1d
-        hTotalFinal = self._h2toh1(hTotal)
-  
+          ShapeFactory._fold(hTotal, -1, -2)
+
+        if unroll2d and hTotal.InheritsFrom(ROOT.TH2.Class()):
+          # --- transform 2D into 1D
+          #
+          #      3    6    9
+          #      2    5    8
+          #      1    4    7
+          #
+          # over/underflow are discarded
+          hTotal2d = hTotal
+          cwd = ROOT.gDirectory.GetDirectory('')
+          hTotal2d.GetDirectory().cd()
+
+          nx = hTotal2d.GetNbinsX()
+          ny = hTotal2d.GetNbinsY()
+          name = hTotal.GetName()
+          hTotal2d.SetName(name + '_tmp')
+          hTotal = ROOT.TH1D(name, hTotal.GetTitle(), nx * ny, 0., float(nx * ny))
+          hTotal.GetXaxis().SetTitle(hTotal2d.GetXaxis().GetTitle())
+
+          # contents
+          cont = rnp.hist2array(hTotal2d, copy=False)
+          # array2hist for TH2 returns [x, y] arrays -> reshape -1 achieves the desired bin numbering
+          rnp.array2hist(np.reshape(cont, (-1,)), hTotal)
+
+          # sumw2
+          sumw22d = rnp.array(hTotal2d.GetSumw2(), copy=False)
+          # need to chop off overflow and underflow bins
+          nxpad = nx + 2
+          ii = np.arange(sumw22d.size)
+          indices = np.nonzero(np.all(np.stack((ii / nxpad > 0, ii / nxpad <= ny, ii % nxpad != 0, ii % nxpad != (nxpad - 1)), axis=-1), axis=1))[0]
+          sumw2vals = sumw22d[indices]
+          # sumw22d follows the ROOT bin numbering (y-major) -> transpose
+          sumw2vals = np.reshape(np.transpose(np.reshape(sumw2vals, (ny, nx)), (1, 0)), (-1,))
+          sumw2 = rnp.array(hTotal.GetSumw2(), copy=False)
+          sumw2[1:-1] = sumw2vals
+
+          # stats
+          stats2d = ROOT.TArrayD(7)
+          hTotal2d.GetStats(stats2d.GetArray())
+          stats1d = ROOT.TArrayD(4)
+          stats1d[0] = stats2d[0]
+          stats1d[1] = stats2d[1]
+          stats1d[2] = stats2d[2] + stats2d[4]
+          stats1d[3] = stats2d[3] + stats2d[5]
+          hTotal.PutStats(stats1d.GetArray())
+
+          hTotal2d.Delete()
+
+          cwd.cd()
+
         # fix negative (almost never happening)
         # don't do it here by default, because you may have interference that is actually negative!
         # do this only if triggered: use with caution!
@@ -912,135 +958,49 @@ class ShapeFactory:
         # To be used with caution -> do not use this option if you don't know what you are playing with
         #
         if fixZeros and 'suppressNegative' in sample and (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']):
-          self._fixNegativeBinAndError(hTotalFinal)
+          ShapeFactory._fixNegativeBinAndError(hTotal)
 
-        return hTotalFinal
+        return hTotal
 
+    @staticmethod
+    def _fold(h, ifrom, ito):
+      cont = rnp.hist2array(h, copy=False, include_overflow=True)
+      sumw2 = rnp.array(h.GetSumw2(), copy=False)
 
-    def _FoldUnderflow(self, h):       
+      if h.GetDimension() == 1:
+        cont[ito] += cont[ifrom]
+        cont[ifrom] = 0.
+        sumw2[ito] += sumw2[ifrom]
+        sumw2[ifrom] = 0.
 
-        #print " >> fold underflow"
-        if h.GetDimension() == 1:
-          nx = h.GetNbinsX()
-          # 0 --> 1
-          ShapeFactory._moveAddBin(h, (0,),(1,) )
-          return
-        elif h.GetDimension() == 2:
-          nx = h.GetNbinsX()
-          ny = h.GetNbinsY()
-          for i in xrange(1,nx+1):
-            ShapeFactory._moveAddBin(h,(i,0   ),(i, 1 ) )
+      elif h.GetDimension() == 2:
+        cont[ito, :] = cont[ifrom, :]
+        cont[ifrom, :] = 0.
+        cont[:, ito] = cont[:, ifrom]
+        cont[:, ifrom] = 0.
 
-          for j in xrange(1,ny+1):
-            ShapeFactory._moveAddBin(h,(0,    j),(1, j) )
-
-          # 0,0 -> 1,1
-          # 0,ny+1 -> 1,ny+1
-          # nx+1,0 -> nx+1,1
-          
-          ShapeFactory._moveAddBin(h, (0,0),(1,1) )
-          ShapeFactory._moveAddBin(h, (0,ny+1),(1,ny+1) )
-          ShapeFactory._moveAddBin(h, (nx+1,0),(nx+1,1) )
-          
-        
-        
-    def _FoldOverflow(self, h):       
-
-        #print " >> fold overflow"
-        if h.GetDimension() == 1:
-          nx = h.GetNbinsX()
-          # n+1 --> n
-          ShapeFactory._moveAddBin(h, (nx+1,),(nx,) )
-          return
-        elif h.GetDimension() == 2:
-          nx = h.GetNbinsX()
-          ny = h.GetNbinsY()
-          for i in xrange(1,nx+1):
-            ShapeFactory._moveAddBin(h,(i,ny+1),(i, ny) )
-
-          for j in xrange(1,ny+1):
-            ShapeFactory._moveAddBin(h,(nx+1, j),(nx,j) )
-
-            # 0,ny+1 -> 0,ny
-            # nx+1,0 -> nx,0
-            # nx+1,ny+1 ->nx,ny
-
-            ShapeFactory._moveAddBin(h, (0,ny+1),(0,ny) )
-            ShapeFactory._moveAddBin(h, (nx+1,0),(nx,0) )
-            ShapeFactory._moveAddBin(h, (nx+1,ny+1),(nx,ny) )
-
-
-# --- transform 2D into 1D: unrolling
-# 
-#      3    6    9
-#      2    5    8
-#      1    4    7
-#
-    def _h2toh1(self, h):
-        import array
-        
-        if not isinstance(h,ROOT.TH2):
-            return h
-
-        name = h.GetName()
-        h.GetDirectory().cd()
-
-#         H1class = getattr(ROOT,h.__class__.__name__.replace('2','1'))
+        # sumw2 is y-major
         nx = h.GetNbinsX()
         ny = h.GetNbinsY()
+        sumw2 = np.reshape(sumw2, (ny + 2, nx + 2))
+        sumw2[ito, :] = sumw2[ifrom, :]
+        sumw2[ifrom, :] = 0.
+        sumw2[:, ito] = sumw2[:, ifrom]
+        sumw2[:, ifrom] = 0.
 
-        h_flat = ROOT.TH1D(name + '_tmpflat',name,nx*ny,0,nx*ny)
- 
-        sumw2 = h.GetSumw2()
-        sumw2_flat = h_flat.GetSumw2()
-
-        for i in xrange(1,nx+1):
-            for j in xrange(1,ny+1):
-                # i,j must be mapped in 
-                b2d = h.GetBin( i,j )
-#                 b2d = h.GetBin( j,i )
-#                 b1d = ((i-1)+(j-1)*nx)+1
-                b1d = ((j-1)+(i-1)*ny)+1
-
-                h_flat.SetAt( h.At(b2d), b1d )
-                sumw2_flat.SetAt( sumw2.At(b2d), b1d ) 
-
-        h_flat.SetEntries(h.GetEntries())
-        
-        stats2d = array.array('d',[0]*7)
-        h.GetStats(stats2d)
-
-        stats1d = array.array('d',[0]*4)
-        stats1d[0] = stats2d[0]
-        stats1d[1] = stats2d[1]
-        stats1d[2] = stats2d[2]+stats2d[4]
-        stats1d[3] = stats2d[3]+stats2d[5]
-
-        h_flat.PutStats(stats1d)
-
-        xtitle = h.GetXaxis().GetTitle()
-        #v1,v2 = xtitle.split(':') # we know it's a 2d filled by an expr like y:x
-        #xtitle = '%s #times %s bin' % (v1,v2)
-
-        h_flat.GetXaxis().SetTitle(xtitle)
-
-        h.Delete()
-        h_flat.SetName(name)
-
-        return h_flat
-       
     # _____________________________________________________________________________
-    def _scaleHistoStat(self, histo, direction):
-        
+    @staticmethod
+    def _scaleHistoStat(histo, direction):
+
         for iBin in range(1, histo.GetNbinsX()+1):
           error = histo.GetBinError(iBin)
           value = histo.GetBinContent(iBin)
           newvalue = value + direction * error
           histo.SetBinContent(iBin, newvalue)
-  
+
     # _____________________________________________________________________________
     def _scaleHistoStatBBB(self, histo, direction, iBinToChange, keepNormalization, zeroMC=False):
-  
+
 
         integral = 0.
         integralVaried = 0.
@@ -1050,10 +1010,10 @@ class ShapeFactory:
             error = histo.GetBinError(iBin)
             value = histo.GetBinContent(iBin)
             integral += value
-            if iBin == iBinToChange : 
+            if iBin == iBinToChange :
               newvalue = value + direction * error
             else :
-              newvalue = value            
+              newvalue = value
 
             integralVaried += newvalue
             histo.SetBinContent(iBin, newvalue)
@@ -1089,83 +1049,46 @@ class ShapeFactory:
 
 
     # _____________________________________________________________________________
-    def _fixNegativeBin(self, histoNew, histoReference):
-        # if a histogram has a bin >/< 0
-        # than also the variation has to have the bin in the 
-        # same sign, because combine cannot handle it otherwise!
-       
-        for ibin in range(1, histoNew.GetNbinsX()+1) :
-          # Why ? 
-          if histoNew.GetBinContent(ibin) * histoReference.GetBinContent(ibin) < 0 :
-            histoNew.SetBinContent(ibin, histoReference.GetBinContent(ibin) * 0.0001)  # do not put 0 to avoid bogus pogus ...
-          # I think this is correct fix to our BOGUS problem
-	  if histoNew.GetBinContent(ibin) == 0 and not histoReference.GetBinContent(ibin) == 0 :
-            histoNew.SetBinContent(ibin, histoReference.GetBinContent(ibin) * 0.0001)  # do not put 0 to avoid bogus pogus ...
-          if not histoNew.GetBinContent(ibin) == 0 and histoReference.GetBinContent(ibin) == 0 :
-            histoNew.SetBinContent(ibin, 0)
+    @staticmethod
+    def _fixNegativeBin(histoNew, histoReference):
+      # if a histogram has a bin >/< 0
+      # than also the variation has to have the bin in the
+      # same sign, because combine cannot handle it otherwise!
 
-    # _____________________________________________________________________________
-    def _fixNegativeBinAndError(self, histogram_to_be_fixed):
-        # if a histogram has a bin < 0
-        # then put the gin content to 0
-        # and also if a histogram has uncertainties that go <0, 
-        # then put the uncertainty to the maximum allowed
-       
-        for ibin in range(1, histogram_to_be_fixed.GetNbinsX()+1) :
-          if histogram_to_be_fixed.GetBinContent(ibin)  < 0 :
-            histogram_to_be_fixed.SetBinContent(ibin, 0) 
+      cnew = rnp.hist2array(histoNew, copy=False)
+      cref = rnp.hist2array(histoReference, copy=False)
 
-        # the SetBinError does not allow asymmetric -> fine, maximum uncertainty set
-        for ibin in range(1, histogram_to_be_fixed.GetNbinsX()+1) :
-          if histogram_to_be_fixed.GetBinContent(ibin) - histogram_to_be_fixed.GetBinErrorLow(ibin)  < 0 :
-            histogram_to_be_fixed.SetBinError(ibin, histogram_to_be_fixed.GetBinContent(ibin))   
-
-
-    # _____________________________________________________________________________
-    def _getBaseW(self, histo):
- 
-      ### returns the effective baseW
-      baseW = histo.Integral()/histo.GetEntries()/self._lumi if histo.GetEntries()>0 else 0
-
-      ### old method 
-      #tree.GetEntry(0)
-      #baseW = eval("tree.baseW")     
-
-      return baseW 
+      indices = np.nonzero(cnew * cref <= 0.)[0]
+      cnew[indices] = cref[indices] * 1.e-4
 
     # _____________________________________________________________________________
     @staticmethod
-    def _moveAddBin(h, fromBin, toBin ):
-        if not isinstance(fromBin,tuple) or not isinstance(toBin,tuple):
-            raise ValueError('Arguments must be tuples')
+    def _fixNegativeBinAndError(histogram_to_be_fixed):
+      # if a histogram has a bin < 0
+      # then put the gin content to 0
+      # and also if a histogram has uncertainties that go <0,
+      # then put the uncertainty to the maximum allowed
 
-        dims = [h.GetDimension(), len(fromBin), len(toBin) ]
+      cont = rnp.hist2array(histogram_to_be_fixed, copy=False)
+      sumw2 = rnp.array(histogram_to_be_fixed.GetSumw2(), copy=False)[1:-1]
 
-        if dims.count(dims[0]) != len(dims):
-            raise ValueError('histogram and the 2 bins don\'t have the same dimension')
-        
-        #print " h = " , h.GetTitle(), " --> ", h.GetNbinsX()
-        
-        # get bins
-        b1 = h.GetBin( *fromBin )
-        b2 = h.GetBin( *toBin )
+      indices = np.nonzero(cont < 0.)[0]
+      cont[indices] = 0.
 
-        # move contents
-        c1 = h.At( b1 )
-        c2 = h.At( b2 )
+      indices = np.nonzero(cont - np.sqrt(sumw2) < 0.)[0]
+      sumw2[indices] = np.square(cont[indices])
 
-        h.SetAt(0, b1)
-        h.SetAt(c1+c2, b2)
+    # _____________________________________________________________________________
+    def _getBaseW(self, histo):
 
-        # move weights as well
-        sumw2 = h.GetSumw2()
+      ### returns the effective baseW
+      baseW = histo.Integral()/histo.GetEntries()/self._lumi if histo.GetEntries()>0 else 0
 
-        w1 = sumw2.At( b1 )
-        w2 = sumw2.At( b2 )
+      ### old method
+      #tree.GetEntry(0)
+      #baseW = eval("tree.baseW")
 
-        sumw2.SetAt(0, b1)
-        sumw2.SetAt(w1+w2, b2)
-
+      return baseW
 
     # _____________________________________________________________________________
     @staticmethod
@@ -1176,7 +1099,7 @@ class ShapeFactory:
         bins = (nx,xmin,xmax, ny,ymin,ymax)
         Variable bin width
         bins = ([x0,...,xn])
-        bins = ([x0,...,xn],[y0,...,ym])  
+        bins = ([x0,...,xn],[y0,...,ym])
         '''
 
         from array import array
@@ -1212,7 +1135,7 @@ class ShapeFactory:
         else:
             # only 1d or 2 d hist
             raise RuntimeError('What a mess!!! bin malformed!')
-        
+
         return hclass,hargs,ndim
 
     @staticmethod
@@ -1239,7 +1162,7 @@ class ShapeFactory:
             return expr[pos + 1:], expr[:pos]
 
         raise RuntimeError('Expression ' + expr + ' is not 2D')
- 
+
     # _____________________________________________________________________________
     def _connectInputs(self, process, filenames, inputDir, skipMissingFiles, friendsDir=None, skimListDir=None, altDir=''):
 	if "sdfarm" in os.uname()[1]:
@@ -1256,23 +1179,23 @@ class ShapeFactory:
         drawer.setInputMultiplexing(int(self._nThreads))
 
         # lists[process] = []
-        
+
         # if the filenames start with "###" the folder will be reset
         # and the name of the tree will start directly from the "filename" listed
         # disregarding any "inputDir" given
         #    This is useful in case we need to use multiple eos folders,
-        #    some of them under iteos, some under the standard eos          
-       
+        #    some of them under iteos, some under the standard eos
+
         # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
         files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
         self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
 
-        # if we specify a friends tree directory we need to load the friend trees and attch them 
+        # if we specify a friends tree directory we need to load the friend trees and attch them
         if friendsDir != None:
           files = [(friendsDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
           self._buildchain(drawer, files, False, friendtree=self._treeName)
 
-        #if we specify a directory with skim event lists we need to load them and skim    
+        #if we specify a directory with skim event lists we need to load them and skim
         #if skimListDir != None:
         #  eventlists = self._geteventlists("prunerlist",  [(skimListDir + '/' + f)       if '###' not in f     else     f.replace("#", "")           for f in filenames])
         #  lists[process] = eventlists
@@ -1281,14 +1204,14 @@ class ShapeFactory:
         #    eventlists[itree].Print()
         #    tree.SetEventList(eventlists[itree])
 
-        # FIXME: add possibility to add Friend Trees for new variables   
+        # FIXME: add possibility to add Friend Trees for new variables
 
         return drawer
 
     # _____________________________________________________________________________
-    def _testLocalFile(self,path): 
+    def _testLocalFile(self,path):
       if not os.path.exists(path):
-        return False 
+        return False
 
       try:
         f = ROOT.TFile.Open(path)
@@ -1301,20 +1224,20 @@ class ShapeFactory:
       return True
 
     # _____________________________________________________________________________
-    def _testEosFile(self,path): 
+    def _testEosFile(self,path):
       eoususer='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select'
-      if 'eosuser.cern.ch' in path: 
+      if 'eosuser.cern.ch' in path:
         if os.system(eoususer+' ls '+path.split('/eosuser.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
       if 'eoscms.cern.ch' in path:
         if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
-      return False 
+      return False
 
     # _____________________________________________________________________________
-    def _testIiheFile(self,path): 
-      if 'maite.iihe.ac.be' in path: 
+    def _testIiheFile(self,path):
+      if 'maite.iihe.ac.be' in path:
         return os.path.exists(path.split('dcap://maite.iihe.ac.be/')[1])
 
-    def _test_sdfarm_File(self,path): 
+    def _test_sdfarm_File(self,path):
       if 'cms-xrdr.sdfarm.kr' in path:
 	if 'xrd//store' in path:
 	  cmd = 'xrd cms-xrdr.sdfarm.kr existfile /xrd/store/'+path.split('xrd//store/')[1]
@@ -1324,7 +1247,7 @@ class ShapeFactory:
 	  #cmd = 'gfal-ls -l srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/store/'+path.split('xrd/store/')[1]
 	else : return False
 	print 'checking ', cmd
-	if os.system(cmd) == 0 : return True 
+	if os.system(cmd) == 0 : return True
 	else: return False
       else: return False
 
@@ -1333,7 +1256,7 @@ class ShapeFactory:
       xrdserver=path.lstrip("root://").split("/")[0]
       cmd='xrd '+xrdserver+' existfile '+path.split('root://'+xrdserver)[1]
       if os.system(cmd) == 0 : return True
-      return False  
+      return False
 
     # _____________________________________________________________________________
     def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
@@ -1371,27 +1294,27 @@ class ShapeFactory:
         for path in files:
           for att in range(5): # try opening the file 5 times
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-  
+
             exists = testFile(path)
             if not exists:
               if altDir and testFile(altDir + '/' + os.path.basename(path)):
                 path = altDir + '/' + os.path.basename(path)
                 exists = True
-  
+
             if exists:
               if friendtree is not None:
                 paths.append(path)
               else:
                 multidraw.addInputPath(path)
-  
+
               ntrees += 1
               break
-  
+
             elif skipMissingFiles:
               break
-                
+
             time.sleep(10)
-  
+
           else: # exhausted all attempts
             print 'File '+path+' doesn\'t exist and skipMissingFiles=False in buildChain.'
             print 'If you are trying to build a chain for a tree-based nuisance which has different number of'\
@@ -1471,7 +1394,7 @@ class ShapeFactory:
         except:
           pass
         ftmp.Close()
-      
+
       if 'class' in weight:
         expr = ShapeFactory._make_compiledsource(weight)
         return ROOT.multidraw.ReweightSource(expr, wsource)
@@ -1497,3 +1420,87 @@ class ShapeFactory:
         else:
           return ROOT.multidraw.ReweightSource(xexpr, wsource)
 
+    @staticmethod
+    def postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile):
+      twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+
+      for cutName, cut in cuts.iteritems():
+        if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+          continue
+
+        if 'categories' in cut:
+            catsuffixes = ['_' + catname for catname in cut['categories']]
+        else:
+          catsuffixes = ['']
+
+        for catsuffix in catsuffixes:
+          for variableName, variable in variables.iteritems():
+            if 'tree' in variable:
+              continue
+    
+            if 'cuts' in variable and cutName not in variable['cuts']:
+              continue
+
+            dname = cutName + catsuffix + '/' + variableName
+            outDir = outFile.GetDirectory(dname)
+            outDir.cd()
+
+            for sampleName, sample in samples.iteritems():
+              if sampleName not in nuisance['samples']:
+                continue
+
+              if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+
+              configurationNuis = nuisance['samples'][sampleName]
+
+              if 'outputFormat' in sample:
+                outputFormat = sample['outputFormat']
+              else:
+                outputFormat = '{sample}{subsample}{nuisance}'
+    
+              if 'subsamples' in sample:
+                slabels = list('_%s' % ss for ss in sample['subsamples'].iterkeys())
+              else:
+                slabels = ['']
+    
+              for slabel in slabels:
+                histoName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='')
+                nominal = outDir.Get(histoName)
+                histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sVars' % nuisance['name']))
+                variations = rnp.hist2array(outDir.Get(histoNameVar), copy=True)
+
+                if nuisance['kind'].endswith('_envelope'):
+                  arrup = rnp.hist2array(nominal, copy=True)
+                  arrdown = rnp.hist2array(nominal, copy=True)
+
+                  for ivar in range(len(configurationNuis)):
+                    arrvar = variations[:, ivar]
+
+                    arrup = np.maximum(arrup, arrvar)
+                    arrdown = np.minimum(arrdown, arrvar)
+
+                elif nuisance['kind'].endswith('_rms'):
+                  arrnom = rnp.hist2array(nominal, copy=False)
+                  arrv2 = np.zeros_like(arrnom)
+
+                  for ivar in range(len(configurationNuis)):
+                    arrvar = variations[:, ivar]
+
+                    arrvar -= arrnom
+                    arrv2 += np.square(arrvar)
+
+                  arrv = np.sqrt(arrv2 / len(configurationNuis))
+                  arrup = arrnom + arrv
+                  arrdown = arrnom - arrv
+
+                histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
+                histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+
+                outputsHistoUp = nominal.Clone(histoNameUp)
+                rnp.array2hist(arrup, outputsHistoUp)
+                outputsHistoUp.Write()
+                outputsHistoDown = nominal.Clone(histoNameDown)
+                if twosided:
+                  rnp.array2hist(arrdown, outputsHistoDown)
+                outputsHistoDown.Write()

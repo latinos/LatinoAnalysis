@@ -93,6 +93,8 @@ samples['DYJetsToEE_Pow']                  .extend( ['xsec=1997',       'kfact=1
 samples['DYJetsToTT_MuEle_M-50']           .extend( ['xsec=255.630',    'kfact=1.000',          'ref=X'] )  # (6025.20/3)*(0.352)^2
 samples['DYJetsToTT_MuEle_M-50_ext1']           .extend( ['xsec=255.630',    'kfact=1.000',          'ref=X'] )  # (6025.20/3)*(0.352)^2
 samples['DYJetsToTT_MuEle_M-50_PSWeights']           .extend( ['xsec=255.630',    'kfact=1.000',          'ref=X'] )  # (6025.20/3)*(0.352)^2
+samples['DYJetsToTT_MuEle_M-50_fix']           .extend( ['xsec=255.630',    'kfact=1.000',          'ref=X'] )  # (6025.20/3)*(0.352)^2
+
 
 ## DY (Low mass)
 samples['DYJetsToLL_M-5to50_HT-70to100']   .extend( ['xsec=303.8',  'kfact=1.000',          'ref=I'] )
@@ -914,6 +916,20 @@ samples['monoH_ZpBaryonic_MZp-10000_MChi-150'] .extend( ['xsec=0.000000000259886
 samples['monoH_ZpBaryonic_MZp-10000_MChi-10']  .extend( ['xsec=0.0000000002676616', 'kfact=1.000', 'ref=U'] ) 
 samples['monoH_ZpBaryonic_MZp-10000_MChi-1000'].extend( ['xsec=0.0000000001480138', 'kfact=1.000', 'ref=U'] ) 
 
+# monoH semilep 2HDMa
+samples['2HDMa_SemiLep_MH3_200_MH4_150_pos']  .extend( ['xsec=0.015210360197136',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_300_MH4_150_pos']  .extend( ['xsec=0.07493783178024',        'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_400_MH4_150_pos']  .extend( ['xsec=0.046148280579648',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_500_MH4_150_pos']  .extend( ['xsec=0.023652187335504',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_600_MH4_150_pos']  .extend( ['xsec=0.013931401855176',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_1200_MH4_150_pos'] .extend( ['xsec=0.0004962311561376',      'kfact=1.00',           'ref=N'] )
+
+samples['2HDMa_SemiLep_MH3_200_MH4_150_neg']  .extend( ['xsec=0.015210360197136',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_300_MH4_150_neg']  .extend( ['xsec=0.07493783178024',        'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_400_MH4_150_neg']  .extend( ['xsec=0.046148280579648',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_500_MH4_150_neg']  .extend( ['xsec=0.023652187335504',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_600_MH4_150_neg']  .extend( ['xsec=0.013931401855176',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_1200_MH4_150_neg'] .extend( ['xsec=0.0004962311561376',      'kfact=1.00',           'ref=N'] )
 
 
 # Stop T2tt FullSim

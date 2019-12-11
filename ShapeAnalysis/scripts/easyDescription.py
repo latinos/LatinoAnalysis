@@ -30,6 +30,8 @@ if __name__ == '__main__':
     parser.add_option('--outputFileSamples'     , dest='outputFileSamples'     , help='output file with samples expanded'       , default=None)
     parser.add_option('--inputFileNuisances'    , dest='inputFileNuisances'    , help='input file with nuisances'               , default=None)
     parser.add_option('--outputFileNuisances'   , dest='outputFileNuisances'   , help='output file with nuisances expanded'     , default=None)
+    parser.add_option('--inputFileCuts'         , dest='inputFileCuts'         , help='input file with cuts'                    , default=None)
+    parser.add_option('--outputFileCuts'        , dest='outputFileCuts'        , help='output file with cuts expanded'          , default=None)
     #parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with samples'                 , default=None)
           
     # read default parsing options as well
@@ -41,8 +43,10 @@ if __name__ == '__main__':
 
     print "#   inputFileSamples  =               ", opt.inputFileSamples
     print "#   outputFileSamples =               ", opt.outputFileSamples
-    print "#   inputFileNuisances  =               ", opt.inputFileNuisances
-    print "#   outputFileNuisances =               ", opt.outputFileNuisances
+    print "#   inputFileNuisances  =             ", opt.inputFileNuisances
+    print "#   outputFileNuisances =             ", opt.outputFileNuisances
+    print "#   inputFileCuts  =                  ", opt.inputFileCuts
+    print "#   outputFileCuts =                  ", opt.outputFileCuts
                     
     #                
     # unfold Samples
@@ -109,7 +113,12 @@ if __name__ == '__main__':
 
           if 'FilesPerJob' in sample :
             fileOutSamples.write("     \'FilesPerJob\'  :   " + str(sample['FilesPerJob']) + " ,\n")
-          
+         
+          if 'subsamples' in sample :
+            fileOutSamples.write("     \'subsamples\'  :   " + str(sample['subsamples']) + " ,\n")
+
+
+
                 
           fileOutSamples.write("}  \n") 
           fileOutSamples.write("   \n ") 
@@ -186,6 +195,45 @@ if __name__ == '__main__':
 
            
 
+    #                
+    # unfold Cuts
+    #
+    
+    if opt.inputFileCuts != None :
+      cuts = OrderedDict()
+      if os.path.exists(opt.inputFileCuts) :
+        handle = open(opt.inputFileCuts,'r')
+        exec(handle)
+        handle.close()
+
+      if opt.outputFileCuts != None :
+        
+        fileOutCuts = open(opt.outputFileCuts,"w") 
+
+        fileOutCuts.write("# \n")
+        fileOutCuts.write("# Expanded version of cuts.py \n")
+        fileOutCuts.write("# \n")
+        
+        # if supercut
+        if 'supercut' in locals():
+          fileOutCuts.write("supercut = \' " + str(supercut) + " \' \n\n\n") 
+        
+        # now the cuts
+
+        for cutName, cut in cuts.iteritems():
+          
+          fileOutCuts.write("cuts[\'" + cutName + "\'] = ' \\\n") 
+
+          fileOutCuts.write(" " + cut + " \\\n") 
+                
+          fileOutCuts.write(" ' \n") 
+          fileOutCuts.write("   \n ") 
+
+          
+        fileOutCuts.close() 
+
+        
+        
         
         
         
@@ -195,6 +243,7 @@ if __name__ == '__main__':
 #
 # easyDescription.py   --inputFileSamples=../../PlotsConfigurations/Configurations/ggH/Full2016/samples.py   --outputFileSamples=test.py
 # easyDescription.py   --inputFileSamples=../../PlotsConfigurations/Configurations/ggH/Full2016/samples.py  --inputFileNuisances=../../PlotsConfigurations/Configurations/ggH/Full2016/nuisances.py   --outputFileNuisances=testNuisances.py
+# easyDescription.py   --inputFileCuts=cuts.py   --outputFileCuts=cuts_expanded.py
 #
 #  NB: the "samples" file has to be defined, because some global variables are defined there (e.g. NLep)
 #
