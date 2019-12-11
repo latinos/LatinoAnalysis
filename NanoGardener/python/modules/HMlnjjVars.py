@@ -58,7 +58,7 @@ class HMlnjjVarsClass(Module):
         for myvar in self.list_WJetVar:
             self.out.branch("CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='nCleanFatJetPassMBoosted')
 
-
+        self.out.branch("idx_BestPassMBoosted", "F")
 
 
 
@@ -141,6 +141,9 @@ class HMlnjjVarsClass(Module):
         IsVbfFat = False
         IsVbfjj  = False
 
+        # keep track of boosted hadronic W candidate with highest pT
+        highestBoostedWPt = -999
+        passMBoostedIndex = -1
 
 
         ##--read vars
@@ -222,6 +225,11 @@ class HMlnjjVarsClass(Module):
                 CleanFatJetPassMBoosted['WptOvHfatM'].append(thisWptOvHfatM)
                 CleanFatJetPassMBoosted['HlnFat_mass'].append(thisHlnFat_mass)
                 CleanFatJetPassMBoosted['CFatJetIdx'].append(ix)
+
+                # keep track of highest pT
+                if highestBoostedWPt < 0 or highestBoostedWPt < Wfat_pt:
+                    highestBoostedWPt = Wfat_pt
+                    passMBoostedIndex = len(CleanFatJetPassMBoosted) - 1
 
 
         IsWfat=(len(CleanFatJetPassMBoosted['pt']) > 0 )
@@ -367,6 +375,7 @@ class HMlnjjVarsClass(Module):
         for myvar in self.list_WJetVar:
             self.out.fillBranch( "CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
 
+        self.out.fillBranch( "idx_BestPassMBoosted", passMBoostedIndex)
 
 
 
