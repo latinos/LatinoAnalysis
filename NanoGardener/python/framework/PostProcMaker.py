@@ -459,8 +459,8 @@ class PostProcMaker():
         else:
           command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
       # IFCA
-      elif self._LocalSite == 'ifca' :
-         if self._TargetSite == 'ifca' or self._TargetSite == None :
+      elif self._LocalSite == 'ifca' or self._LocalSite == 'cloud' :
+         if self._TargetSite == 'ifca' or self._TargetSite == 'cloud' or self._TargetSite == None :
             if self._redo :
                command += 'rm '+storeFile+' ; '
             if not cpMode:
