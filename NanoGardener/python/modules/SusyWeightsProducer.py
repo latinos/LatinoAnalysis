@@ -1,5 +1,6 @@
 import ROOT
 import math
+import os
 from array import array
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -35,9 +36,16 @@ class SusyWeightsProducer(Module):
             inputFileName = inputFile.GetName()
             
             chain = ROOT.TChain('Events');
-            
+              
             if '__part' in inputFileName :
                 inputFileName = inputFileName[:inputFileName.index('__part')] + '__part*.root'
+
+            # Patch to make it work on ifca gridui cluster (should be improved...)
+            if 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]:
+
+                inputDirectory = os.getenv('PWD').split('/')[-1].replace('NanoGardening__', '') + '/nanoProd__hadd__susyGen/'
+                inputDirectory = '/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/' + inputDirectory + '/'
+                inputFileName = inputDirectory + inputFileName
 
             chain.Add(inputFileName)
 
@@ -98,7 +106,7 @@ class SusyWeightsProducer(Module):
         Xsec  = event.Xsec
         massScanBin = self.massScan.FindBin(event.susyMprompt, event.susyMLSP)
         nevents = self.massScan.GetBinContent(massScanBin)
-        
+         
         baseW = 1000.*Xsec/nevents
 
         isrW = self.isrN[str(int(event.susyMprompt))+'-'+str(int(event.susyMLSP))]
