@@ -227,7 +227,7 @@ class HMlnjjVarsClass(Module):
                 CleanFatJetPassMBoosted['CFatJetIdx'].append(ix)
 
                 # keep track of highest pT
-                if highestBoostedWPt < 0 or highestBoostedWPt < Wfat_pt:
+                if highestBoostedWPt < Wfat_pt:
                     highestBoostedWPt = Wfat_pt
                     passMBoostedIndex = len(CleanFatJetPassMBoosted) - 1
 
