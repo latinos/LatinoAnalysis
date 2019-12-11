@@ -125,6 +125,79 @@ class NanoProdMaker():
             if len(self._Samples[iSample]['customise'])>1 and iCustom < len(self._Samples[iSample]['customise'])-1: cmsDrvCmd +=','
         os.system(cmsDrvCmd)    
 
+        if 'isFastSim' in self._Productions[iProd]:
+           if self._Productions[iProd]['isFastSim']:
+
+              inFile = open(self._PyCfg , "rt")
+              outFile = open(self._PyCfg.replace('.py', '_FS.py') , "wt")
+           
+              for line in inFile:
+
+                 if 'process.nanoSequenceMC' in line:
+                    outFile.write(line.replace('process.nanoSequenceMC', 'process.nanoSequenceFS'))
+                 else:
+                    outFile.write(line)
+                    
+              inFile.close()
+              outFile.close()
+
+              self._PyCfg = self._PyCfg.replace('.py', '_FS.py')
+
+        if 'tagJEC' in self._Productions[iProd]:
+           
+           inFile = open(self._PyCfg , "rt")
+           outFile = open(self._PyCfg.replace('.py', '_JEC.py') , "wt")
+           
+           for line in inFile:
+              
+              outFile.write(line)
+              if 'process.GlobalTag' in line:
+                 outFile.write("\n")
+                 outFile.write("from CondCore.DBCommon.CondDBSetup_cfi import *\n")
+                 outFile.write("dbfile='"+self._Productions[iProd]['tagJEC']+"'\n")
+                 outFile.write("process.jec = cms.ESSource('PoolDBESSource',CondDBSetup,\n")
+                 outFile.write("                           timetype = cms.string('runnumber'),\n")
+                 outFile.write("                           connect = cms.string( 'sqlite_fip:LatinoAnalysis/Gardener/python/data/jme/'+dbfile+'.db'),\n")
+                 outFile.write("                           toGet =  cms.VPSet(\n")
+                 outFile.write("                              cms.PSet(\n")
+                 outFile.write("                                 record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                                 tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK4PF'),\n")
+                 outFile.write("                                 label= cms.untracked.string('AK4PF')\n")
+                 outFile.write("                              ),\n")
+                 outFile.write("                              cms.PSet(\n")
+                 outFile.write("                                 record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                                 tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK4PFchs'),\n")
+                 outFile.write("                                 label= cms.untracked.string('AK4PFchs')\n")
+                 outFile.write("                              ),\n")
+                 outFile.write("                              #cms.PSet(\n")
+                 outFile.write("                              #    record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                              #    tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK4PFPuppi'),\n")
+                 outFile.write("                              #    label= cms.untracked.string('AK4PFPuppi')\n")
+                 outFile.write("                              #),\n")
+                 outFile.write("                              cms.PSet(\n")
+                 outFile.write("                                 record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                                 tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK8PF'),\n")
+                 outFile.write("                                 label= cms.untracked.string('AK8PF')\n")
+                 outFile.write("                              ),\n")
+                 outFile.write("                              cms.PSet(\n")
+                 outFile.write("                                 record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                                 tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK8PFchs'),\n")
+                 outFile.write("                                 label= cms.untracked.string('AK8PFchs')\n")
+                 outFile.write("                              ),\n")
+                 outFile.write("                              #cms.PSet(\n")
+                 outFile.write("                              #    record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                              #    tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK8PFPuppi'),\n")
+                 outFile.write("                              #    label= cms.untracked.string('AK8PFPuppi')\n")
+                 outFile.write("                              #),\n")
+                 outFile.write("                           )\n")
+                 outFile.write("                        )\n")
+                 outFile.write("process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')\n")
+                 
+           inFile.close()
+           outFile.close()
+               
+           self._PyCfg = self._PyCfg.replace('.py', '_JEC.py')
+
         # prepare the crab Cfg
         self._crabCfg=self._jDir+'/'+self._taskName+'_cfg.py'
         fCfg = open(self._crabCfg,'w')
@@ -136,6 +209,7 @@ class NanoProdMaker():
         fCfg.write('config.General.requestName = \''+self._taskName+'\'\n') 
         # ... JobType
         fCfg.write('config.section_(\'JobType\')\n')
+        fCfg.write('config.JobType.allowUndistributedCMSSW = True\n')
         fCfg.write('config.JobType.psetName = \''+self._PyCfg+'\'\n')
         fCfg.write('config.JobType.pluginName = \'Analysis\'\n')
         fCfg.write('config.JobType.outputFiles = [\''+self._fileOut+'\']\n')
