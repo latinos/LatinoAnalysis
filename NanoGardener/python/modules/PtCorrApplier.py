@@ -48,7 +48,8 @@ class PtCorrApplier(Module):
         for br in oBrList:
             bname = br.GetName()
             btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
-            if re.match('\A'+self.CollTC+'_', bname):
+            # GIULIO: we don't want to pick CleanJet_pt_JESup not CleanJet_jecUncert
+            if re.match('\A'+self.CollTC+'_', bname) and len(bname.split("_"))==2 and "jecUncert" not in bname:
                 if btype not in self.CollBr: self.CollBr[btype] = []
                 self.CollBr[btype].append(bname)
                 self.out.branch(bname+self._suffix, btype, lenVar='n'+self.CollTC)
