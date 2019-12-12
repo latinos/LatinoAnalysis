@@ -790,8 +790,8 @@ class ShapeFactory:
                 #    - the up will be symmetrized
                 #    - down ->   down - (up - down)
                 #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
-                if 'symmetrize' in nuisance:
-                  self._symmetrize(outputsHistoUp, outputsHistoDo)
+                  if 'symmetrize' in nuisance:
+                    self._symmetrize(outputsHistoUp, outputsHistoDo)
 
                 if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
                   # fix negative bins not consistent
