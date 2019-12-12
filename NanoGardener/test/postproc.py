@@ -14,6 +14,9 @@ from LatinoAnalysis.NanoGardener.modules.GenLeptonMatchProducer import *
 from LatinoAnalysis.NanoGardener.modules.TopGenVarsProducer import *
 from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.MetUnclustered import *
+from LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer import *
+from LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer import *
+
 
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
 from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import btagSFProducer
@@ -36,40 +39,48 @@ from LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer import *
 
 
 
-#files=["root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/8C03AD47-0613-E811-9781-0242AC1C0500.root"]
-#files=["/afs/cern.ch/user/l/lenzip/work/ww2018/CMSSW_9_4_4/src/LatinoAnalysis/NanoGardener/test/8C03AD47-0613-E811-9781-0242AC1C0500_Skim.root"]
 
-#xrdcp root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/8C03AD47-0613-E811-9781-0242AC1C0500.root .
-#files=["8C03AD47-0613-E811-9781-0242AC1C0500.root"]
-files=["8C03AD47-0613-E811-9781-0242AC1C0500.root"]
+#/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18NanoAODv5-Nano1June2019_102X_upgrade2018_realistic_v19-v1/NANOAODSIM
+#/store/mc/RunIIAutumn18NanoAODv5/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/Nano1June2019_102X_upgrade2018_realistic_v19-v1/60000/F575D852-8B1F-1C4A-B788-E049F3892AE3.root
+
+#xrdcp root://cms-xrd-global.cern.ch//store/mc/RunIIAutumn18NanoAODv5/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/Nano1June2019_102X_upgrade2018_realistic_v19-v1/60000/F575D852-8B1F-1C4A-B788-E049F3892AE3.root .
+files=["F575D852-8B1F-1C4A-B788-E049F3892AE3.root"]
 
 
-#this takes care of converting the input files from CRAB
-#from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis
-
-selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"
-
-#p=PostProcessor(".",files,cut=selection,branchsel=None,modules=[Grafter(["baseW/F=1."]), GenericFormulaAdder('data/formulasToAdd_MC.py')],provenance=True,fwkJobReport=True)
+#selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"
+selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20"
 
 p = PostProcessor(".", files,
                        cut=selection,
                        branchsel=None,
+                       #maxEntries=1000,
+                       maxEntries=10000,
                        modules=[
+                         #
+                         lepMergerLatino(),
+                         #
                          Grafter(["baseW/F=1."]),
-                         GenericFormulaAdder('data/formulasToAdd_MC.py'),
-                         PromptParticlesGenVarsProducer(),
+                         #GenericFormulaAdder('data/formulasToAdd_MC_2018.py'),
+                         #PromptParticlesGenVarsProducer(),
                          #wwNLLcorrectionWeightProducer(),
                          #MetUnclusteredTreeMaker(),
-                         lepMergerLatino(),
-                         GenLeptonMatchProducer("Lepton"),
+                         #GenLeptonMatchProducer("Lepton"),
                          #
-                         GenVarProducer(),
+                         #GenVarProducer(),
                          #
                          #l2KinProducer(),
                          #l3KinProducer(),
                          #l4KinProducer()
-                         btagSFProducer(era='2016', algo='cmva'),
-                         BTagEventWeightProducer()
+                         #btagSFProducer(era='2016', algo='cmva'),
+                         #BTagEventWeightProducer(),
+                         #
+                         #vvNLOEWKcorrectionWeightProducer('ww')
+                         #vvNLOEWKcorrectionWeightProducer('wz')
+                         vvNLOEWKcorrectionWeightProducer('zz')
+                         #
+                         #vNLOEWKcorrectionWeightProducer('z')
+                         #vNLOEWKcorrectionWeightProducer('zvv')
+                         #vNLOEWKcorrectionWeightProducer('w')
                          ],
                        provenance=True,
                        fwkJobReport=True
@@ -78,5 +89,9 @@ p = PostProcessor(".", files,
 p.run()
 
 print "DONE"
+
 os.system("ls -lR")
+
+
+
 

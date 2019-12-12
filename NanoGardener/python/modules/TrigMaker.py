@@ -32,6 +32,7 @@ class TrigMaker(Module):
         self.el_minPt = 10
         self.el_maxEta = 2.5
         self.el_minEta = -2.5
+        self.cfg_path = cfg_path 
 
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
@@ -361,10 +362,20 @@ class TrigMaker(Module):
 
          # Get Leg Efficiencies
         eff_sgl, low_eff_sgl, high_eff_sgl = self._get_LegEff (pt1, eta1, run_p, singleLeg)
+        eff_gl = self.TM_GlEff[run_p][singleLeg]
+
+        if singleLeg == 'SingleEle':
+           sys_u = (high_eff_sgl - eff_sgl)**2
+           sys_d = (eff_sgl - low_eff_sgl)**2
+           sys_u += 0.05**2
+           sys_d += 0.05**2
+           high_eff_sgl = min(1.0, eff_sgl + math.sqrt(sys_u))
+           low_eff_sgl = max(0.0, eff_sgl - math.sqrt(sys_d))
+
         eff_v=[]
-        eff_v.append(eff_sgl)
-        eff_v.append(low_eff_sgl) 
-        eff_v.append(high_eff_sgl)
+        eff_v.append(eff_sgl*eff_gl[0])
+        eff_v.append(low_eff_sgl*eff_gl[1]) 
+        eff_v.append(high_eff_sgl*eff_gl[2])
 
         # Trigger emulator
         Trig_em = [False, False, False, False, False, False]  

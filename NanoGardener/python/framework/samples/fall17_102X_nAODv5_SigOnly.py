@@ -14,7 +14,8 @@ Samples['GluGluHToTauTau_M125_ext1'] = {'nanoAOD' :'/GluGluHToTauTau_M125_13TeV_
 
 Samples["VBFHToTauTau_M125"] = {'nanoAOD': '/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17NanoAODv5_PU2017_12Apr2018_new_pmx_v1-DeepTauv2_TauPOG-v1/USER', 'dasInst' : 'prod/phys03'}
 
-#Samples["HWminusJ_HToTauTau_M125"] = {'nanoAOD': '/WminusHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17NanoAODv4-PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6-v1/NANOAODSIM'}
+#Samples["HWminusJ_HToTauTau_M125"] = {'nanoAOD': ''} ## missing
+Samples["HWminusJ_HToTauTau_M130"] = {'nanoAOD': '/WminusHToTauTau_M130_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['HWplusJ_HToTauTau_M125'] = {'nanoAOD' :'/WplusHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 Samples['HZJ_HToTauTau_M125'] = {'nanoAOD' :'/ZHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
@@ -40,9 +41,12 @@ Samples['VBFHToWWTo2L2NuPowheg_M125_CP5Up'] = {'nanoAOD' :'/VBFHToWWTo2L2Nu_M125
 #Inclusive
 
 Samples['HZJ_HToWW_M125'] = {'nanoAOD' :'/HZJ_HToWW_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['HZJ_HToWW_M130'] = {'nanoAOD' :'/HZJ_HToWW_M130_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 
 #Exclusive
+Samples['HZJ_HToWWTo2L2Nu_M120'] = {'nanoAOD' :'/HZJ_HToWWTo2L2Nu_M120_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['HZJ_HToWWTo2L2Nu_M125'] = {'nanoAOD' :'/HZJ_HToWWTo2L2Nu_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['HZJ_HToWWTo2L2Nu_M130'] = {'nanoAOD' :'/HZJ_HToWWTo2L2Nu_M130_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 
 Samples['HZJ_HToWWTo2L2Nu_ZTo2L_M125'] = {'nanoAOD' :'/HZJ_HToWWTo2L2Nu_ZTo2L_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
@@ -53,9 +57,13 @@ Samples['GluGluZH_HToWWTo2L2Nu_M125'] = {'nanoAOD' :'/GluGluZH_HToWWTo2L2Nu_M125
 Samples['GluGluZH_HToWWTo2L2Nu_ZTo2L_M125'] = {'nanoAOD' :'/GluGluZH_HToWWTo2L2Nu_ZTo2L_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
 ## WH HWW
+Samples['HWminusJ_HToWW_M120'] = {'nanoAOD' :'/HWminusJ_HToWW_M120_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['HWminusJ_HToWW_M125'] = {'nanoAOD' :'/HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['HWminusJ_HToWW_M130'] = {'nanoAOD' :'/HWminusJ_HToWW_M130_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 
+Samples['HWplusJ_HToWW_M120'] = {'nanoAOD' :'/HWplusJ_HToWW_M120_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['HWplusJ_HToWW_M125'] = {'nanoAOD' :'/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['HWplusJ_HToWW_M130'] = {'nanoAOD' :'/HWplusJ_HToWW_M130_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 
 Samples['HWminusJ_HToWW_LNu_M125'] = {'nanoAOD' :'/HWminusJ_HToWWTo2L2Nu_WTo2L_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} 
 
