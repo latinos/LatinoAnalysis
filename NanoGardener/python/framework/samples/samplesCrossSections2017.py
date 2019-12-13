@@ -916,6 +916,20 @@ samples['monoH_ZpBaryonic_MZp-10000_MChi-150'] .extend( ['xsec=0.000000000259886
 samples['monoH_ZpBaryonic_MZp-10000_MChi-10']  .extend( ['xsec=0.0000000002676616', 'kfact=1.000', 'ref=U'] ) 
 samples['monoH_ZpBaryonic_MZp-10000_MChi-1000'].extend( ['xsec=0.0000000001480138', 'kfact=1.000', 'ref=U'] ) 
 
+# monoH semilep 2HDMa
+samples['2HDMa_SemiLep_MH3_200_MH4_150_pos']  .extend( ['xsec=0.015210360197136',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_300_MH4_150_pos']  .extend( ['xsec=0.07493783178024',        'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_400_MH4_150_pos']  .extend( ['xsec=0.046148280579648',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_500_MH4_150_pos']  .extend( ['xsec=0.023652187335504',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_600_MH4_150_pos']  .extend( ['xsec=0.013931401855176',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_1200_MH4_150_pos'] .extend( ['xsec=0.0004962311561376',      'kfact=1.00',           'ref=N'] )
+
+samples['2HDMa_SemiLep_MH3_200_MH4_150_neg']  .extend( ['xsec=0.015210360197136',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_300_MH4_150_neg']  .extend( ['xsec=0.07493783178024',        'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_400_MH4_150_neg']  .extend( ['xsec=0.046148280579648',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_500_MH4_150_neg']  .extend( ['xsec=0.023652187335504',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_600_MH4_150_neg']  .extend( ['xsec=0.013931401855176',       'kfact=1.00',           'ref=N'] )
+samples['2HDMa_SemiLep_MH3_1200_MH4_150_neg'] .extend( ['xsec=0.0004962311561376',      'kfact=1.00',           'ref=N'] )
 
 
 # Stop T2tt FullSim

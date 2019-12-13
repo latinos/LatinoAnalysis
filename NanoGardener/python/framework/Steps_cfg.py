@@ -682,10 +682,11 @@ Steps = {
 
 
     'HMlnjjSel'  : {
-                  'isChain'    : True ,
-		  'do4MC'	: True ,
-		  'do4Data'	: True,
-                  'subTargets' : ['HMlnjjLepSel','HMlnjjVars'],
+                  'isChain'    : True,
+                  'do4MC'      : True,
+                  'do4Data'    : True,
+                  'selection'  : '"(Lepton_pt[0] > 30 && (Alt$(Lepton_pt[1], 0) < 10))"',
+                  'subTargets' : ['HMlnjjVars'],
 		  },
 
     'HMlnjjSelBWRew'  : {
@@ -896,7 +897,7 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
                   'declare'    : 'wwNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer("ww")',
                   'module'     : 'wwNLOEWK()',
-                  'onlySample' : ['WW-LO', 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down',
+                  'onlySample' : [ 'WWTo2L2Nu', 'WWTo2L2Nu_CP5Up', 'WWTo2L2Nu_CP5Down',
                                   'WmToLNu_WmTo2J_QCD', 'WpToLNu_WpTo2J_QCD', 'WpToLNu_WmTo2J_QCD', 'WpTo2J_WmToLNu_QCD'
                                   ]
                   } ,
@@ -909,7 +910,7 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer' ,
                   'declare'    : 'wzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer("wz")',
                   'module'     : 'wzNLOEWK()',
-                  'onlySample' : ['WZTo3LNu', 'WZTo3LNu_ext1', 'WZ', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg',
+                  'onlySample' : ['WZTo3LNu', 'WZTo3LNu_ext1', 'WZTo2L2Q', 'WZTo3LNu_mllmin01', 'WZTo3LNu_powheg',
                                   'WmTo2J_ZTo2L_QCD', 'WmToLNu_ZTo2J_QCD', 'WpTo2J_ZTo2L_QCD', 'WpToLNu_ZTo2J_QCD'
                                   ]
                   } ,

@@ -755,11 +755,12 @@ class ShapeFactory:
                   if 'symmetrize' in nuisance:
                     self._symmetrize(outputsHistoUp, outputsHistoDo)
   
-                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
-                    # fix negative bins not consistent
-                    self._fixNegativeBin(outputsHistoUp, outputsHisto)
-                    if twosided:
-                      self._fixNegativeBin(outputsHistoDo, outputsHisto)
+                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
+                  # fix negative bins not consistent
+                  self._fixNegativeBin(outputsHistoUp, outputsHisto)
+                  if twosided:
+                    self._fixNegativeBin(outputsHistoDo, outputsHisto)
+
 
           # end of one sample
           print ''
