@@ -643,7 +643,8 @@ class ShapeFactory:
                 catsuffixes = ['']
 
               for catsuffix in catsuffixes:
-                hTotal = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoName)
+                outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
+                outDir.cd()
 
                 # fold if needed
                 if 'fold' in variable:
@@ -653,10 +654,9 @@ class ShapeFactory:
                 else:
                   doFold = 0
 
-                if 'unroll' in variable:
-                  unroll2d = variable['unroll']
-                else:
-                  unroll2d = True
+                unroll2d = 'unroll' not in variable or variable['unroll']
+
+                hTotal = outDir.Get(histoName)
 
                 _allplots.remove(hTotal)
                 outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True, unroll2d=unroll2d)
@@ -666,6 +666,8 @@ class ShapeFactory:
                   if sampleName not in nuisance['samples'] or \
                      ('cuts' in nuisance and cutName not in nuisance['cuts']):
                     continue
+
+                  twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
 
                   configurationNuis = nuisance['samples'][sampleName]
 
@@ -685,6 +687,8 @@ class ShapeFactory:
                       downName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='_statDown')
                       outputsHistoUp = outputsHisto.Clone(upName)
                       outputsHistoDo = outputsHisto.Clone(downName)
+                      _allplots.add(outputsHistoUp)
+                      _allplots.add(outputsHistoDo)
                       # scale up/down
                       self._scaleHistoStat(outputsHistoUp,  1)
                       self._scaleHistoStat(outputsHistoDo, -1)
@@ -692,21 +696,18 @@ class ShapeFactory:
                     # bin-by-bin
                     elif configurationNuis['typeStat'] == 'bbb' :
                       #print "     >> bin-by-bin"
-                      keepNormalization = 0 # do not keep normalization, put 1 to keep normalization
-                      if 'keepNormalization' in configurationNuis.keys() :
-                        keepNormalization = configurationNuis['keepNormalization']
-                        print " keepNormalization = ", keepNormalization
+                      keepNormalization = 'keepNormalization' in configurationNuis and int(configurationNuis['keepNormalization'])
+                      print " keepNormalization = ", keepNormalization
+                      zeroMC = 'zeroMCError' in configurationNuis and int(configurationNuis['zeroMCError'])
 
-                      # scale up/down
-                      zeroMC = False
-                      if  configurationNuis['zeroMCError'] == '1' : zeroMC = True
-
-                      for iBin in range(1, outputsHisto.GetNbinsX()+1):
+                      for iBin in range(1, rnp.hist2array(outputsHisto, copy=False).size + 1):
                         # take histogram --> outputsHisto
                         upName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='_ibin_%d_statUp' % iBin)
                         downName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='_ibin_%d_statDown' % iBin)
                         outputsHistoUp = outputsHisto.Clone(upName)
                         outputsHistoDo = outputsHisto.Clone(downName)
+                        _allplots.add(outputsHistoUp)
+                        _allplots.add(outputsHistoDo)
                         #print "########### DEBUG: scaleHistoStatBBB sample", sampleName
                         self._scaleHistoStatBBB(outputsHistoUp,  1, iBin, keepNormalization, zeroMC)
                         self._scaleHistoStatBBB(outputsHistoDo, -1, iBin, keepNormalization, zeroMC)
@@ -721,55 +722,17 @@ class ShapeFactory:
                     continue
 
                   if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
-                    # collect the variations into one big "table" -> to be merged at hadd step
-
-                    cwd = ROOT.gDirectory.GetDirectory('')
-                    outputsHisto.GetDirectory().cd()
-
-                    histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sVars' % nuisance['name']))
-                    
-                    nx = outputsHisto.GetNbinsX()
-                    nvar = len(configurationNuis)
-                    outputsHistoVars = ROOT.TH2D(histoNameVar, '', nx, 0., float(nx), nvar, 0., float(nvar))
-                    _allplots.add(outputsHistoVars)
-
-                    cont = rnp.hist2array(outputsHistoVars, copy=False)
-                    sumw2 = rnp.array(outputsHistoVars.GetSumw2(), copy=False)
-                    # sumw2 is y-major
-                    sumw2 = np.reshape(sumw2, (nvar + 2, nx + 2))[1:-1, 1:-1]
-
-                    entries = 0.
-                    
-                    for ivar in range(nvar):
+                    for ivar in range(len(configurationNuis)):
                       histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
-                      hTotalVar = outFile.Get(cutName + catsuffix + '/' + variableName + '/' + histoNameVar)
-                      entries += hTotalVar.GetEntries()
+                      hTotalVar = outDir.Get(histoNameVar)
                       _allplots.remove(hTotalVar)
-                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, True, unroll2d=unroll2d)
-
-                      vcont = rnp.hist2array(outputsHistoVar, copy=True)
-                      vsumw2 = rnp.array(outputsHistoVar.GetSumw2(), copy=True)[1:-1]
-
-                      if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
-                        outputsHistoVar.Delete()
-                      else:
-                        _allplots.add(outputsHistoVar)
-
-                      cont[:, ivar] = vcont
-                      sumw2[ivar, :] = vsumw2
-
-                    cwd.cd()
-
-                    outputsHistoVars.SetEntries(entries)
-
+                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, False, unroll2d=unroll2d)
+                      _allplots.add(outputsHistoVar)
+                      
                     continue
-
-                  twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
 
                   histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
                   histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
-
-                  outDir = outFile.GetDirectory(cutName + catsuffix + '/' + variableName)
 
                   hTotalUp = outDir.Get(histoNameUp)
                   _allplots.remove(hTotalUp)
@@ -781,23 +744,23 @@ class ShapeFactory:
                     _allplots.remove(hTotalDown)
                     outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d)
                   else:
-                    outDir.cd()
                     outputsHistoDo = outputsHisto.Clone(histoNameDown)
 
                   _allplots.add(outputsHistoDo)
 
-                # check if I need to symmetrize:
-                #    - the up will be symmetrized
-                #    - down ->   down - (up - down)
-                #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
+                  # check if I need to symmetrize:
+                  #    - the up will be symmetrized
+                  #    - down ->   down - (up - down)
+                  #    - if we really want to symmetrize, typically the down fluctuation is set to be the default
                   if 'symmetrize' in nuisance:
                     self._symmetrize(outputsHistoUp, outputsHistoDo)
-
+  
                 if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
                   # fix negative bins not consistent
                   self._fixNegativeBin(outputsHistoUp, outputsHisto)
                   if twosided:
                     self._fixNegativeBin(outputsHistoDo, outputsHisto)
+
 
           # end of one sample
           print ''
@@ -830,18 +793,12 @@ class ShapeFactory:
     # _____________________________________________________________________________
     @staticmethod
     def _symmetrize(hUp, hDo):
+      # What is this function doing?? Symmetrize with respect to what??
+      
+      vup = rnp.hist2array(hUp, copy=False).flat
+      vdo = rnp.hist2array(hDo, copy=False).flat
 
-        #print " >> fold underflow"
-        if hUp.GetDimension() == 1:
-          nx = hUp.GetNbinsX()
-          for iBin in range(1, nx+1):
-            valueUp = hUp.GetBinContent(iBin)
-            valueDo = hDo.GetBinContent(iBin)
-            newValueDo = valueDo - (valueUp-valueDo)
-            hDo.SetBinContent(iBin, newValueDo)
-        else :
-          print 'No way! I am not going to symmetrize something that is not already folded into 1D'
-
+      vdo[:] = 2. * vdo - vup
 
     # _____________________________________________________________________________
     def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName, evlists = []):
@@ -920,21 +877,18 @@ class ShapeFactory:
           hTotal.GetXaxis().SetTitle(hTotal2d.GetXaxis().GetTitle())
 
           # contents
-          cont = rnp.hist2array(hTotal2d, copy=False)
+          cont = rnp.hist2array(hTotal2d, copy=False).reshape(-1)
           # array2hist for TH2 returns [x, y] arrays -> reshape -1 achieves the desired bin numbering
-          rnp.array2hist(np.reshape(cont, (-1,)), hTotal)
+          rnp.array2hist(cont, hTotal)
 
           # sumw2
-          sumw22d = rnp.array(hTotal2d.GetSumw2(), copy=False)
-          # need to chop off overflow and underflow bins
-          nxpad = nx + 2
-          ii = np.arange(sumw22d.size)
-          indices = np.nonzero(np.all(np.stack((ii / nxpad > 0, ii / nxpad <= ny, ii % nxpad != 0, ii % nxpad != (nxpad - 1)), axis=-1), axis=1))[0]
-          sumw2vals = sumw22d[indices]
-          # sumw22d follows the ROOT bin numbering (y-major) -> transpose
-          sumw2vals = np.reshape(np.transpose(np.reshape(sumw2vals, (ny, nx)), (1, 0)), (-1,))
+          # Sumw2 array follows the ROOT bin numbering (y-major)
+          sumw22d = rnp.array(hTotal2d.GetSumw2(), copy=False).reshape((ny + 2, nx + 2))
+          # chop off overflow and underflow bins
+          sumw22d = sumw22d[1:-1, 1:-1]
           sumw2 = rnp.array(hTotal.GetSumw2(), copy=False)
-          sumw2[1:-1] = sumw2vals
+          # transpose to change the bin numbering
+          sumw2[1:-1] = sumw22d.T.flat
 
           # stats
           stats2d = ROOT.TArrayD(7)
@@ -974,79 +928,58 @@ class ShapeFactory:
         sumw2[ifrom] = 0.
 
       elif h.GetDimension() == 2:
-        cont[ito, :] = cont[ifrom, :]
+        cont[ito, :] += cont[ifrom, :]
         cont[ifrom, :] = 0.
-        cont[:, ito] = cont[:, ifrom]
+        cont[:, ito] += cont[:, ifrom]
         cont[:, ifrom] = 0.
 
         # sumw2 is y-major
         nx = h.GetNbinsX()
         ny = h.GetNbinsY()
         sumw2 = np.reshape(sumw2, (ny + 2, nx + 2))
-        sumw2[ito, :] = sumw2[ifrom, :]
+        sumw2[ito, :] += sumw2[ifrom, :]
         sumw2[ifrom, :] = 0.
-        sumw2[:, ito] = sumw2[:, ifrom]
+        sumw2[:, ito] += sumw2[:, ifrom]
         sumw2[:, ifrom] = 0.
 
     # _____________________________________________________________________________
     @staticmethod
     def _scaleHistoStat(histo, direction):
-
-        for iBin in range(1, histo.GetNbinsX()+1):
-          error = histo.GetBinError(iBin)
-          value = histo.GetBinContent(iBin)
-          newvalue = value + direction * error
-          histo.SetBinContent(iBin, newvalue)
+      # .T ensures that cont will be in the same order as sumw2
+      cont = rnp.hist2array(histo, copy=False, include_overflow=True).T
+      sumw2 = rnp.array(histo.GetSumw2(), copy=False).reshape(cont.shape)
+      cont += np.sqrt(sumw2) * direction
 
     # _____________________________________________________________________________
     def _scaleHistoStatBBB(self, histo, direction, iBinToChange, keepNormalization, zeroMC=False):
+      cont = rnp.hist2array(histo, copy=False)
 
+      integral = np.sum(cont)
 
-        integral = 0.
-        integralVaried = 0.
-
-        if zeroMC == False:
-          for iBin in range(1, histo.GetNbinsX()+1):
-            error = histo.GetBinError(iBin)
-            value = histo.GetBinContent(iBin)
-            integral += value
-            if iBin == iBinToChange :
-              newvalue = value + direction * error
-            else :
-              newvalue = value
-
-            integralVaried += newvalue
-            histo.SetBinContent(iBin, newvalue)
-
+      if cont.flat[iBinToChange - 1] == 0. and zeroMC and direction == 1:
+        # how to handle the case when you have a bin with 0 MC
+        # if the flag is activated, put the equivalent FC coverage 1.64 * 1 MC for the up variation
+        if histo.GetEntries() > 0.:
+          basew = histo.Integral() / histo.GetEntries() / self._lumi
         else:
-          # how to handle the case when you have a bin with 0 MC
-          # if the flag is activated, put the equivalent FC coverage 1.64 * 1 MC for the up variation
-          basew = self._getBaseW(histo)
-          print "###DEBUG: Effective baseW = ", basew
-          for iBin in range(1, histo.GetNbinsX()+1):
-            error = histo.GetBinError(iBin)
-            value = histo.GetBinContent(iBin)
-            integral += value
-            if iBin == iBinToChange :
-              if value == 0:
-                print "###DEBUG: 0 MC stat --> value = ", value, " error = ", error
-                if direction == 1:
-                  print "###DEBUG: lumi = ", float(self._lumi), " basew = ", basew
-                  newvalue = 1.64*float(self._lumi)*basew
-                  print "###DEBUG: new value up = ", newvalue
-                else:
-                  newvalue = 0
-              else:
-                newvalue = value + direction * error
-            else :
-              newvalue = value
-            integralVaried += newvalue
-            histo.SetBinContent(iBin, newvalue)
+          basew = 0.
 
-        if keepNormalization == 1 :
-          if integralVaried != 0 :
-            histo.Scale (integral / integralVaried)
+        cont.flat[iBinToChange - 1] = 1.64 * float(self._lumi) * basew
 
+      else:
+        cont_uo = rnp.hist2array(histo, copy=False, include_overflow=True).T
+        sumw2 = rnp.array(histo.GetSumw2(), copy=False).reshape(cont_uo.shape)
+        # chop off the over/underflow bins and transpose to align the bin numbering with cont
+        if len(sumw2.shape) == 2:
+          sumw2 = sumw2[1:-1, 1:-1].T
+        else:
+          sumw2 = sumw2[1:-1]
+        cont.flat[iBinToChange - 1] += direction * np.sqrt(sumw2.flat[iBinToChange - 1])
+
+      if keepNormalization:
+        integralVaried = np.sum(cont)
+        if integralVaried != 0:
+          cont *= integral / integralVaried
 
     # _____________________________________________________________________________
     @staticmethod
@@ -1055,8 +988,8 @@ class ShapeFactory:
       # than also the variation has to have the bin in the
       # same sign, because combine cannot handle it otherwise!
 
-      cnew = rnp.hist2array(histoNew, copy=False)
-      cref = rnp.hist2array(histoReference, copy=False)
+      cnew = rnp.hist2array(histoNew, copy=False).flat
+      cref = rnp.hist2array(histoReference, copy=False).flat
 
       indices = np.nonzero(cnew * cref <= 0.)[0]
       cnew[indices] = cref[indices] * 1.e-4
@@ -1069,26 +1002,14 @@ class ShapeFactory:
       # and also if a histogram has uncertainties that go <0,
       # then put the uncertainty to the maximum allowed
 
-      cont = rnp.hist2array(histogram_to_be_fixed, copy=False)
-      sumw2 = rnp.array(histogram_to_be_fixed.GetSumw2(), copy=False)[1:-1]
+      cont = rnp.hist2array(histogram_to_be_fixed, copy=False, include_overflow=True).T.flat
+      sumw2 = rnp.array(histogram_to_be_fixed.GetSumw2(), copy=False).flat
 
       indices = np.nonzero(cont < 0.)[0]
       cont[indices] = 0.
 
       indices = np.nonzero(cont - np.sqrt(sumw2) < 0.)[0]
       sumw2[indices] = np.square(cont[indices])
-
-    # _____________________________________________________________________________
-    def _getBaseW(self, histo):
-
-      ### returns the effective baseW
-      baseW = histo.Integral()/histo.GetEntries()/self._lumi if histo.GetEntries()>0 else 0
-
-      ### old method
-      #tree.GetEntry(0)
-      #baseW = eval("tree.baseW")
-
-      return baseW
 
     # _____________________________________________________________________________
     @staticmethod
@@ -1467,32 +1388,29 @@ class ShapeFactory:
               for slabel in slabels:
                 histoName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='')
                 nominal = outDir.Get(histoName)
-                histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sVars' % nuisance['name']))
-                variations = rnp.hist2array(outDir.Get(histoNameVar), copy=True)
+                vnominal = rnp.hist2array(nominal, copy=False)
+
+                variations = np.empty((len(configurationNuis), vnominal.size), dtype=vnominal.dtype)
+
+                for ivar in range(len(configurationNuis)):
+                  histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
+                  hTotalVar = outDir.Get(histoNameVar)
+                  variations[ivar, :] = rnp.hist2array(hTotalVar, copy=True).flat
+                  if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
+                    outDir.Delete(histoNameVar + ';*')
 
                 if nuisance['kind'].endswith('_envelope'):
-                  arrup = rnp.hist2array(nominal, copy=True)
-                  arrdown = rnp.hist2array(nominal, copy=True)
-
-                  for ivar in range(len(configurationNuis)):
-                    arrvar = variations[:, ivar]
-
-                    arrup = np.maximum(arrup, arrvar)
-                    arrdown = np.minimum(arrdown, arrvar)
+                  arrup = np.max(variations, axis=0)
+                  arrdown = np.min(variations, axis=0)
 
                 elif nuisance['kind'].endswith('_rms'):
-                  arrnom = rnp.hist2array(nominal, copy=False)
-                  arrv2 = np.zeros_like(arrnom)
+                  arrnom = np.tile(vnominal.flat.reshape((1, -1)), (variations.shape[0], 1))
+                  arrv = np.sqrt(np.mean(np.square(variations - arrnom), axis=0))
+                  arrup = vnominal.flat + arrv
+                  arrdown = vnominal.flat - arrv
 
-                  for ivar in range(len(configurationNuis)):
-                    arrvar = variations[:, ivar]
-
-                    arrvar -= arrnom
-                    arrv2 += np.square(arrvar)
-
-                  arrv = np.sqrt(arrv2 / len(configurationNuis))
-                  arrup = arrnom + arrv
-                  arrdown = arrnom - arrv
+                arrup = arrup.reshape(vnominal.shape)
+                arrdown = arrdown.reshape(vnominal.shape)
 
                 histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
                 histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
