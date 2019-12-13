@@ -228,8 +228,11 @@ class mt2Producer(Module):
         W0, W1 = -1, -1
             
         ptmissvec3 = ROOT.TVector3()
-        ptmissvec3.SetPtEtaPhi(event.MET_pt, 0., event.MET_phi) 
-        
+        if hasattr(event, 'METFixEE2017_pt_nom'):
+            ptmissvec3.SetPtEtaPhi(event.METFixEE2017_pt_nom, 0., event.METFixEE2017_phi_nom) 
+        else:
+            ptmissvec3.SetPtEtaPhi(event.MET_pt, 0., event.MET_phi)
+
         for iLep in range(nLeptons) :
 
             if iLep in Lost :
