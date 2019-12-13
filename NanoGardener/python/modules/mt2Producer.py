@@ -144,10 +144,16 @@ class mt2Producer(Module):
 
         elif 'WZ' in self.analysisRegion :
                 
-            if nLeptons!=3 or nVetoLeptons>=4:
+            if nLeptons<3 :
                 return False
 
-            minDZM = 10.
+            minDZM = 999.
+
+            if 'WZtoWW' in self.analysisRegion:
+                minDZM = 10.
+                if nLeptons!=3 or nVetoLeptons>=4:
+                    return False
+
             lost = -1
             
             for l0 in range (nLeptons) :
