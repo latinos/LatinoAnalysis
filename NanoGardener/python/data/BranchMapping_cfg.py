@@ -290,3 +290,25 @@ branch_mapping['JESdo'] = {
   'suffix': '_JESdo'
 }
 
+# JES 11 sources
+for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
+               "BBEC1", "BBEC1_2016", "BBEC1_2017", "BBEC1_2018",
+               "EC2", "EC2_2016", "EC2_2017", "EC2_2018",
+               "FlavorQCD",
+               "HF", "HF_2016", "HF_2017", "HF_2018",
+               "RelativeBal",
+               "RelativeSample_2016", "RelativeSample_2017", "RelativeSample_2018"]:
+  branch_mapping['JES'+source+"do"] = {
+    'branches': _JES_branches,
+    'suffix': '_JES'+source+'do'
+  }
+  branch_mapping['JES'+source+"up"] = {
+    'branches': _JES_branches,
+    'suffix': '_JES'+source+'up'
+  } 
+
+
+
+
+
+
