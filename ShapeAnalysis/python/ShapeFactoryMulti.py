@@ -795,10 +795,10 @@ class ShapeFactory:
     def _symmetrize(hUp, hDo):
       # What is this function doing?? Symmetrize with respect to what??
       
-      vup = rnp.hist2array(hUp, copy=False).flat
-      vdo = rnp.hist2array(hDo, copy=False).flat
+      vup = rnp.hist2array(hUp, copy=False)
+      vdo = rnp.hist2array(hDo, copy=False)
 
-      vdo[:] = 2. * vdo - vup
+      vdo[:] = (2. * vdo - vup).flat
 
     # _____________________________________________________________________________
     def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName, evlists = []):
