@@ -14,9 +14,7 @@ Sites = {
               'lsCmd'       : 'ls' ,
               'mkDir'       : True ,
               'xrootdPath'  : 'root://eoscms.cern.ch/' ,
-              #'treeBaseDir' : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
-              'treeBaseDir' : '/eos/cms/store/user/scodella/SUSY/Nano/' ,
-              #'treeBaseDir' : '/eos/cms/store/caf/user/scodella/BTV/Nano/' ,
+              'treeBaseDir' : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
               'batchQueues' : ['8nh','1nd','2nd','1nw']
            } ,
 
