@@ -17,14 +17,12 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
 from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
-from LatinoAnalysis.NanoGardener.data.BranchMapping_cfg import branch_mapping
 
 import os.path
 
 
-
 class l2KinProducer(Module):
-    def __init__(self, branch_map=None):
+    def __init__(self, branch_map=''):
 
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
@@ -33,11 +31,8 @@ class l2KinProducer(Module):
         except RuntimeError:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWVar.C++g')
 
-        if branch_map is None:
-            self._branch_mapping = {}
-        else:
-            self._branch_mapping = branch_mapping[branch_map]['mapping']
-      
+        self._branch_map = branch_map
+                
     def beginJob(self):
         pass
 
@@ -45,7 +40,7 @@ class l2KinProducer(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = mappedOutputTree(wrappedOutputTree, mapping=self._branch_mapping)
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
         self.newbranches = [
            'mll',
            'dphill',
@@ -147,7 +142,7 @@ class l2KinProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        event = mappedEvent(event, mapping=self._branch_mapping)
+        event = mappedEvent(event, mapname=self._branch_map)
 
         #muons = Collection(event, "Muon")
         #electrons = Collection(event, "Electron")
