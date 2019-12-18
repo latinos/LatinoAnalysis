@@ -11,12 +11,14 @@ from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import Trigger
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
+
 class TrigMaker(Module):
     '''
     Trigger Maker module MC,
     ''' 
 
-    def __init__(self, cmssw = 'Full2016', isData = False, keepRunP = False, cfg_path = 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py', seeded = False):
+    def __init__(self, cmssw = 'Full2016', isData = False, keepRunP = False, cfg_path = 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py', seeded = False, branch_map=''):
         self.cmssw = cmssw
         self.isData = isData
         self.keepRunP = keepRunP
@@ -49,6 +51,8 @@ class TrigMaker(Module):
         print('TrigMaker: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
         if cfg_path != 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py':
             print('TrigMaker: loaded trigger configuration from ' + cfg_path)
+
+        self._branch_map = branch_map
  
     def beginJob(self): 
         pass
@@ -57,8 +61,8 @@ class TrigMaker(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.initReaders(inputTree) # initReaders must be called in beginFile
-        self.out = wrappedOutputTree
+        self.initReaders() # initReaders must be called in beginFile
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
         
         if self.keepRunP:
            # Check if input tree indeed contains run_period
@@ -78,7 +82,7 @@ class TrigMaker(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def initReaders(self,tree): # this function gets the pointers to Value and ArrayReaders and sets them in the C++ worker class
+    def initReaders(self): # this function gets the pointers to Value and ArrayReaders and sets them in the C++ worker class
         # Specific trigger dicts
         cmssw_base = os.getenv('CMSSW_BASE')
         self.TM_trig    = {}
@@ -509,7 +513,8 @@ class TrigMaker(Module):
     #_____Analyze
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
-
+        event = mappedEvent(event, mapname=self._branch_map)
+        
         if self.firstEvent:
             self.firstEvent = False
             if self.keepRunP and not hasattr(event, 'run_period'): raise ValueError('TrigMaker: event does not contain the \'run_period\' branch, while \'keepRunP\' is True.')

@@ -531,7 +531,7 @@ Productions = {
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv6.py' ,
                        'cmssw'   : 'Full2018v6' ,
                        'year'    : '2018' ,
-                #FIXME       'JESGT'   : 'Autumn18_V8_MC',
+                       'JESGT'   : 'Autumn18_V19_MC',
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },

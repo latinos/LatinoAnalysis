@@ -5,13 +5,15 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Object
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
+import copy
 
 class PtCorrApplier(Module):
     '''
     Module that applies pt corrections to a given collection
     '''
-    def __init__(self, Coll='CleanJet', CorrSrc='jecUncertTotal', kind='Up', doMET=True, METobjects = ['MET','PuppiMET','RawMET','TkMET','ChsMET','CaloMET']):
+    def __init__(self, Coll='CleanJet', CorrSrc='jecUncertTotal', kind='Up', doMET=True, METobjects = ['MET','PuppiMET','RawMET','TkMET','ChsMET','CaloMET'], suffix=''):
         self.CollTC = Coll
+        self._suffix=suffix
         self.CorrSrc = CorrSrc
         self.kind = kind
         self.isUp = True if kind == 'Up' else False
@@ -40,15 +42,17 @@ class PtCorrApplier(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.CollBr = {}
-        oBrList = self.out._tree.GetListOfBranches()
+        # we clone it otherwise it changes as we add more branches
+        oBrList = copy.deepcopy(self.out._tree.GetListOfBranches())
         backup_colls = []
         for br in oBrList:
             bname = br.GetName()
             btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
-            if re.match('\A'+self.CollTC+'_', bname):
+            # GIULIO: we don't want to pick CleanJet_pt_JESup not CleanJet_jecUncert
+            if re.match('\A'+self.CollTC+'_', bname) and len(bname.split("_"))==2 and "jecUncert" not in bname:
                 if btype not in self.CollBr: self.CollBr[btype] = []
                 self.CollBr[btype].append(bname)
-                self.out.branch(bname, btype, lenVar='n'+self.CollTC)
+                self.out.branch(bname+self._suffix, btype, lenVar='n'+self.CollTC)
                 # Does the collection have a mass or do we need a backup collection?
                 if bname == self.CollTC+'_mass': self.has_mass = True
                 if bname.endswith('Idx'):
@@ -83,10 +87,10 @@ class PtCorrApplier(Module):
         if self.doMET:
             
             for met in self.METobj:
-                self.out.branch(met+'_pt', 'F')
-                self.out.branch(met+'_phi', 'F')
+                self.out.branch(met+'_pt'+self._suffix, 'F')
+                self.out.branch(met+'_phi'+self._suffix, 'F')
                 if self.skip_sumEt: continue
-                self.out.branch(met+'_sumEt', 'F')
+                self.out.branch(met+'_sumEt'+self._suffix, 'F')
  
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -150,16 +154,16 @@ class PtCorrApplier(Module):
             for bname in self.CollBr[typ]:
                 if '_pt' in bname: 
                     temp_v = [new_pt[idx] for idx in order]
-                    self.out.fillBranch(bname, temp_v)
+                    self.out.fillBranch(bname+self._suffix, temp_v)
                 else:
                     temp_b = bname.replace(self.CollTC+'_', '')
                     temp_v = [coll[idx][temp_b] for idx in order]
-                    self.out.fillBranch(bname, temp_v)
+                    self.out.fillBranch(bname+self._suffix, temp_v)
         if self.doMET:
             for met in self.METobj:
-                self.out.fillBranch(met+'_pt', MET[met]['new_pt'])
-                self.out.fillBranch(met+'_phi', MET[met]['new_phi'])
+                self.out.fillBranch(met+'_pt'+self._suffix, MET[met]['new_pt'])
+                self.out.fillBranch(met+'_phi'+self._suffix, MET[met]['new_phi'])
                 if self.skip_sumEt: continue
-                self.out.fillBranch(met+'_sumEt', MET[met]['sumEt'])
+                self.out.fillBranch(met+'_sumEt'+self._suffix, MET[met]['sumEt'])
         return True 
 
