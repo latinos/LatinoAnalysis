@@ -1,12 +1,34 @@
 import types
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Object, Collection
+import LatinoAnalysis.NanoGardener.data.BranchMapping_cfg as config
 
 class MappedEvent(object):
-    def __init__(self, event, mapping):
+    def __init__(self, event, mapping={}, branches=[], suffix='', mapname=''):
         self._event = event
         self._swapmap = {}
+        self._suffix = ''
         self._collectionmap = {}
+
+        if mapname:
+            data = config.branch_mapping[mapname]
+            if 'mapping' in data:
+                mapping = data['mapping']
+            if 'branches' in data:
+                branches = data['branches']
+            if 'suffix' in data:
+                suffix = data['suffix']
+
+        # make sure we don't overwrite
+        mapping = dict(mapping)
+
+        if suffix:
+            if len(branches) != 0:
+                for branch in branches:
+                    mapping[branch] = branch + suffix
+            else:
+                self._suffix = suffix
+        
         for key, value in mapping.iteritems():
             if key.startswith('@'):
                 self._collectionmap[key[1:]] = value
@@ -17,7 +39,7 @@ class MappedEvent(object):
         try:
             name = self._swapmap[name]
         except KeyError:
-            pass
+            name += self._suffix
     
         return self._event.__getattr__(name)
 
@@ -49,16 +71,38 @@ def Collection___init__(self, event, prefix, lenVar=None):
 Collection.__init__ = Collection___init__    
 
 class MappedOutputTree(object):
-    def __init__(self, wrappedTree, mapping={}, suffix='', overwrite=False):
+    def __init__(self, wrappedTree, mapping={}, branches=[], suffix='', mapname='', overwrite=False):
         self._tree = wrappedTree
-        self._swapmap = mapping
-        self._suffix = suffix
+        self._swapmap = {}
+        self._suffix = ''
+
+        if mapname:
+            data = config.branch_mapping[mapname]
+            if 'mapping' in data:
+                mapping = data['mapping']
+            if 'branches' in data:
+                branches = data['branches']
+            if 'suffix' in data:
+                suffix = data['suffix']
+
+        # make sure we don't overwrite
+        mapping = dict(mapping)
+
+        if suffix:
+            if len(branches) != 0:
+                for branch in branches:
+                    mapping[branch] = branch + suffix
+            else:
+                self._suffix = suffix
+
+        self._swapmap = dict(mapping)
+            
         if overwrite:
             self._toskip = None
         else:
             self._toskip = set()
 
-    def branch(self, name, rootBranchType, n=1, lenVar=None, title=None,limitedPrecision=False):
+    def branch(self, name, rootBranchType, n=1, lenVar=None, title=None, limitedPrecision=False):
         try:
             name = self._swapmap[name]
         except KeyError:
@@ -74,7 +118,7 @@ class MappedOutputTree(object):
                 self._toskip.add(name)
                 return branch
 
-        return self._tree.branch(name, rootBranchType, n=n, lenVar=lenVar, title=title,limitedPrecision=limitedPrecision)
+        return self._tree.branch(name, rootBranchType, n=n, lenVar=lenVar, title=title, limitedPrecision=limitedPrecision)
 
     def fillBranch(self, name, val):
         try:
@@ -90,14 +134,14 @@ class MappedOutputTree(object):
     def __getattr__(self, attr):
         return getattr(self._tree, attr)
 
-def mappedEvent(event, mapping={}):
-    if len(mapping) == 0:
+def mappedEvent(event, mapping={}, branches=[], suffix='', mapname=''):
+    if len(mapping) == 0 and not suffix and not mapname:
         return event
     else:
-        return MappedEvent(event, mapping)
+        return MappedEvent(event, mapping=mapping, branches=branches, suffix=suffix, mapname=mapname)
 
-def mappedOutputTree(wrappedTree, mapping={}, suffix='', overwrite=False):
-    if len(mapping) == 0 and not suffix:
+def mappedOutputTree(wrappedTree, mapping={}, branches=[], suffix='', mapname='', overwrite=False):
+    if len(mapping) == 0 and not suffix and not mapname:
         return wrappedTree
     else:
-        return MappedOutputTree(wrappedTree, mapping=mapping, suffix=suffix, overwrite=overwrite)
+        return MappedOutputTree(wrappedTree, mapping=mapping, branches=branches, suffix=suffix, mapname=mapname, overwrite=overwrite)

@@ -13,6 +13,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 import math
 from itertools import combinations, permutations
@@ -56,8 +57,8 @@ class l3KinProducer(Module):
         'ZH3l_checkmZ'   : (["F"], {}),
     }
 
-    def __init__(self):
-        pass
+    def __init__(self, branch_map=''):
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -66,7 +67,7 @@ class l3KinProducer(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
         for nameBranchKey, newBranchOpt in self.newbranches.items() :
             self.out.branch(nameBranchKey, *newBranchOpt[0], **newBranchOpt[1]);
@@ -307,7 +308,7 @@ class l3KinProducer(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
-
+        event = mappedEvent(event, mapname=self._branch_map)
         # Order in pt the collection merging muons and electrons
         # lepMerger must be already called
         Lepton = Collection(event, "Lepton")

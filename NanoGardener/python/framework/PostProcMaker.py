@@ -505,25 +505,34 @@ class PostProcMaker():
      fPy.write(' \n')
 
      # Import(s) of modules
-     if self._Steps[iStep]['isChain'] :
-       for iSubStep in  self._Steps[iStep]['subTargets'] :
-         if 'import' in self._Steps[iSubStep] :
-           fPy.write('from '+self._Steps[iSubStep]['import']+' import *\n')
-     else:
-       if 'import' in self._Steps[iStep] :
-         fPy.write('from '+self._Steps[iStep]['import']+' import *\n')
+     def addImportLines(s):
+       step = self._Steps[s]
+       if step['isChain']:
+         for subtarget in step['subTargets']:
+           addImportLines(subtarget)
+       elif 'import' in step:
+         if type(step['import']) is list:
+           for mod in step['import']:
+             fPy.write('from '+mod+' import *\n')
+         else:
+           fPy.write('from '+step['import']+' import *\n')
+
+     addImportLines(iStep)
+
      fPy.write(' \n')
 
      # Declaration(s) of in-line modules
-     if self._Steps[iStep]['isChain'] :
-       for iSubStep in  self._Steps[iStep]['subTargets'] :
-         if 'declare' in self._Steps[iSubStep] :
-           #fPy.write(self._Steps[iSubStep]['declare']+'\n')
-           fPy.write(self.customizeDeclare(iSubStep)+'\n')
-     else:
-       if 'declare' in self._Steps[iStep] :
+     def addDeclareLines(s):
+       step = self._Steps[s]
+       if step['isChain']:
+         for subtarget in step['subTargets']:
+           addDeclareLines(subtarget)
+       elif 'declare' in step:
          #fPy.write(self._Steps[iStep]['declare']+'\n')
-         fPy.write(self.customizeDeclare(iStep)+'\n')
+         fPy.write(self.customizeDeclare(s)+'\n')
+
+     addDeclareLines(iStep)
+
      fPy.write(' \n')
 
      # Files
@@ -565,6 +574,20 @@ class PostProcMaker():
      fPy.write('    files.append(fname)\n\n')
 
      # Configure modules
+
+     def addModuleLines(s):
+       step = self._Steps[s]
+       if step['isChain']:
+         for subtarget in step['subTargets']:
+           addModuleLines(subtarget)
+       else:
+         if (isData and 'do4Data' in step and not step['do4Data']) or (not isData and 'do4MC' in step and not step['do4MC']):
+           return
+         if not self.selectSample(iProd, s, iSample):
+           return
+
+         fPy.write('                          '+self.customizeModule(iSample, s)+',\n')
+
      fPy.write('p = PostProcessor(  "."   ,          \n')
      fPy.write('                    files ,          \n')
      if jsonFile != None:
@@ -582,16 +605,9 @@ class PostProcMaker():
      else:
        fPy.write('                    outputbranchsel=None , \n')
      fPy.write('                    modules=[        \n')
-     if self._Steps[iStep]['isChain'] :
-       for iSubStep in  self._Steps[iStep]['subTargets'] :
-         doSubStep = False
-         if        isData and self._Steps[iSubStep]['do4Data'] : doSubStep = True
-         elif  not isData and self._Steps[iSubStep]['do4MC']   : doSubStep = True
-         # AND onlySample
-         applyStep = self.selectSample(iProd,iSubStep,iSample)
-         if doSubStep and applyStep :  fPy.write('                          '+self.customizeModule(iSample,iSubStep)+',\n')
-     else:
-       fPy.write('                          '+self.customizeModule(iSample,iStep)+'\n')
+
+     addModuleLines(iStep)
+
      fPy.write('                            ],      \n')
      fPy.write('                    provenance=True, \n')
      if self._jobMode == 'Crab':
@@ -719,13 +735,21 @@ class PostProcMaker():
 
    def checkPreBashStep(self,iStep):
      preBash = ''
-     if self._Steps[iStep]['isChain'] :
-       for iSubStep in self._Steps[iStep]['subTargets'] :
-         if 'prebash' in self._Steps[iSubStep] :
-            for iPreBash in self._Steps[iSubStep]['prebash'] : preBash += iPreBash + ' ; '
-     else:
-       if 'prebash' in self._Steps[iStep] :
-         for iPreBash in self._Steps[iStep]['prebash'] : preBash += iPreBash + ' ; '
+
+     def addCommands(s):
+       global preBash
+
+       step = self._Steps[s]
+       
+       if step['isChain']:
+         for subtarget in step['subTargets']:
+           addCommands(subtarget)
+       elif 'prebash' in step:
+         for iPreBash in step['prebash']:
+           preBash += iPreBash + ' ; '
+
+     addCommands(iStep)
+
      return preBash
 
 #------------- Hadd step
@@ -988,7 +1012,6 @@ class PostProcMaker():
                    os.system(self.mkStageOut(ftmp.name, tFile, False))
 
                  os.system('rm ' + ftmp.name)
-
 
 #------------- Main
 
