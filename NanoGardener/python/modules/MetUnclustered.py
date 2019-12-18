@@ -17,10 +17,11 @@ import os.path
 import math
 
 class MetUnclusteredTreeMaker(Module) :
-    def __init__(self, kind="Up",metCollections=['MET', 'PuppiMET', 'RawMET', 'ChsMET' , 'CaloMET']) :
+    def __init__(self, kind="Up",metCollections=['MET', 'PuppiMET', 'RawMET', 'ChsMET' , 'CaloMET'], suffix="") :
         self.metCollections = metCollections
         cmssw_base = os.getenv('CMSSW_BASE')
         self.kind = kind
+        self._suffix=suffix
 
     def beginJob(self):
         pass
@@ -31,8 +32,8 @@ class MetUnclusteredTreeMaker(Module) :
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         for x in self.metCollections:
-          self.out.branch(x+'_pt', "F")
-          self.out.branch(x+'_phi', "F")
+          self.out.branch(x+'_pt'+self._suffix, "F")
+          self.out.branch(x+'_phi'+self._suffix, "F")
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -71,8 +72,8 @@ class MetUnclusteredTreeMaker(Module) :
             met_pt_UnclEn  = math.sqrt(met_px_UnclEn**2 + met_py_UnclEn**2)
             met_phi_UnclEn = self.FixAngle(math.atan2(met_py_UnclEn, met_px_UnclEn))
 
-            self.out.fillBranch(metType+"_pt", met_pt_UnclEn)
-            self.out.fillBranch(metType+"_phi", met_phi_UnclEn)
+            self.out.fillBranch(metType+"_pt"+self._suffix, met_pt_UnclEn)
+            self.out.fillBranch(metType+"_phi"+self._suffix, met_phi_UnclEn)
 
         return True
 
