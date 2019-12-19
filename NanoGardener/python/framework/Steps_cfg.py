@@ -1013,6 +1013,7 @@ Steps = {
                                   'GluGluHToWWTo2L2NuPowheg_M125_PrivateNano',
                                   'GluGluHToWWTo2L2NuPowheg_M125',
                                   'GluGluHToWWTo2L2NuPowhegNNLOPS_M125_private',
+                                  'GluGluHToWWTo2L2NuPowhegNNLOPS_M125',
                                   'GGHjjToWWTo2L2Nu_minloHJJ_M125'
                                   ]
                   },    
