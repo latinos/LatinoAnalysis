@@ -33,6 +33,8 @@ class WlepMaker(Module):
               for var in Wlep_br[typ]:
                  if 'Wlep_' in var: self.out.branch(var+"_"+MET, typ)
 
+        self.out.branch("IsWlepEvt", "I")
+
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
@@ -70,6 +72,9 @@ class WlepMaker(Module):
        # do NOT access other branches in python between the check/call to initReaders and the call to C++ worker code
 
        #--- Set vars
+
+       ##### lepton selected at the Step stage, so it is 1 for now
+       IsWlepEvt = 1
 
        wlep_dict = {}
        for MET in self.metCollections:
@@ -141,6 +146,8 @@ class WlepMaker(Module):
        for var in wlep_dict:
            self.out.fillBranch( 'Wlep_' + var, wlep_dict[var])
            ##fillBranch(name,value)
+
+       self.out.fillBranch( 'IsWlepEvt', IsWlepEvt)
        return True
 
 

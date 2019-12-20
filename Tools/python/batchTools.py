@@ -118,8 +118,11 @@ class batchJobs :
          jFile.write('export X509_USER_PROXY=/gwpool/users/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
+       if 'CONFIGURATION_DIRECTORY' in os.environ:
+         jFile.write('export CONFIGURATION_DIRECTORY='+os.environ['CONFIGURATION_DIRECTORY']+'\n')
        jFile.write('voms-proxy-info\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
+       jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
@@ -167,6 +170,7 @@ class batchJobs :
        cmd='voms-proxy-info'
        proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
        out, err = proc.communicate()
+       proxypath = " xxx "
        for line in out.split('\n'):
         if "path" in line:
           proxypath=line.split(':')[1]

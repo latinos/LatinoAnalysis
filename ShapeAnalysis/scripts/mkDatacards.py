@@ -205,8 +205,13 @@ class DatacardFactory:
               columndef = 30
 
               # adapt column length to long bin names            
-              if len(tagNameToAppearInDatacard) >= (columndef - 5) :
+              if len(tagNameToAppearInDatacard) >= (columndef -5) :
                 columndef = len(tagNameToAppearInDatacard) + 7
+
+              for name in signals :
+                if len(name)>= (columndef -5) :
+                    columndef = len(name) + 7
+
 
               print '      processes and rates..'
             
@@ -232,6 +237,8 @@ class DatacardFactory:
 
               print '      nuisances..'
 
+              nuisanceGroups = collections.defaultdict(list)
+
               # add normalization and shape nuisances
               for nuisanceName, nuisance in nuisances.iteritems():
                 if 'type' not in nuisance:
@@ -246,7 +253,10 @@ class DatacardFactory:
                   continue
 
                 if nuisance['type'] in ['lnN', 'lnU']:
-                  card.write((nuisance['name']).ljust(80-20))
+                  # why is adding CMS_ not the default for lnN/lnU? (Y.I. 2019.11.06)
+                  entryName = nuisance['name']
+
+                  card.write(entryName.ljust(80-20))
 
                   if 'AsShape' in nuisance and float(nuisance['AsShape']) >= 1.:
                     print ">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"
@@ -263,12 +273,12 @@ class DatacardFactory:
                         histoDown.SetDirectory(self._outFile)
 
                         if '/' in nuisance['samples'][sampleName]:
-                            up, down = nuisance['samples'][sampleName].split('/')
-                            histoUp.Scale(float(up))
-                            histoDown.Scale(float(down))
+                          up, down = nuisance['samples'][sampleName].split('/')
+                          histoUp.Scale(float(up))
+                          histoDown.Scale(float(down))
                         else:
-                            histoUp.Scale(float(nuisance['samples'][sampleName]))
-                            histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
+                          histoUp.Scale(float(nuisance['samples'][sampleName]))
+                          histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
 
                         self._outFile.cd()
                         histoUp.Write()
@@ -301,9 +311,11 @@ class DatacardFactory:
                   #      For example: theoretical uncertainties on ggH with migration scheme 2017
                   #
                   if 'skipCMS' in nuisance and nuisance['skipCMS'] == 1:
-                    card.write(nuisance['name'].ljust(80-20))
+                    entryName = nuisance['name']
                   else:
-                    card.write(("CMS_" + nuisance['name']).ljust(80-20))
+                    entryName = 'CMS_' + nuisance['name']
+
+                  card.write(entryName.ljust(80-20))
 
                   if 'AsLnN' in nuisance and float(nuisance['AsLnN']) >= 1.:
                     print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
@@ -393,7 +405,14 @@ class DatacardFactory:
                       else:
                         card.write(('-').ljust(columndef))
 
+                # closing block if type == lnN or shape
                 card.write('\n')
+
+                if 'group' in nuisance:
+                  nuisanceGroups[nuisance['group']].append(entryName)
+
+              for group in sorted(nuisanceGroups.iterkeys()):
+                card.write('%s group = %s\n' % (group, ' '.join(nuisanceGroups[group])))
                 
               # done with normalization and shape nuisances.
               # now add the stat nuisances
