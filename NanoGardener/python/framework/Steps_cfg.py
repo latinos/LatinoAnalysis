@@ -708,25 +708,11 @@ Steps = {
 
 ## ------- EMBEDDING:
 
-    'Embedding2018' : { 
+    'Embedding' : { 
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['EmbeddingWeights2018','trigMCKeepRun','LeptonSF','formulasEMBED'],
-                   },
-
-    'Embedding2017' : { 
-                  'isChain'    : True  ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True  ,
-                  'subTargets' : ['EmbeddingWeights2017','trigMCKeepRun','LeptonSF','formulasEMBED'],
-                   },
-
-    'Embedding2016' : { 
-                  'isChain'    : True  ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True  ,
-                  'subTargets' : ['EmbeddingWeights2016','trigMCKeepRun','LeptonSF','formulasEMBED'],
+                  'subTargets' : ['EmbeddingWeights','trigMCKeepRun','LeptonSF','formulasEMBED'],
                    },
 
 ## ------- HIGH MASS:
@@ -1653,30 +1639,12 @@ Steps = {
 
 ## ------- MODULES: Embedding
 
-  'EmbeddingWeights2018' : { 
+  'EmbeddingWeights' : { 
                  'isChain'    : False ,
                  'do4MC'      : False ,
                  'do4Data'    : True  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
-                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_legacy_2018.root")',
-                 'module'     : 'embed()',
-               },
-
-  'EmbeddingWeights2017' : { 
-                 'isChain'    : False ,
-                 'do4MC'      : False ,
-                 'do4Data'    : True  ,
-                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
-                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_2017_v1.root")',
-                 'module'     : 'embed()',
-               },
-
-  'EmbeddingWeights2016' : { 
-                 'isChain'    : False ,
-                 'do4MC'      : False ,
-                 'do4Data'    : True  ,
-                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
-                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_v16_12_embedded.root")',
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="hww_scalefactors_XXX.root")',
                  'module'     : 'embed()',
                },
 
