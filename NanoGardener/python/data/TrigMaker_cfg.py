@@ -353,6 +353,7 @@ Trigger = {
                                                 'EleMu'     : { 'nvtx'    : 'Full2017v6/DZEff_em_mva.txt' } ,
                                               } ,
                                   # Electron HLT Zvtx Efficiency Scale Factor: 0.934+-0.005
+                                  # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2017DataRecommendations#HLT_Zvtx_Efficiency_Scale_Factor
                                   'GlEff'  :  { 'DoubleEle' : [0.934,0.005],
                                                 'DoubleMu'  : [1.0  ,0.   ],
                                                 'MuEle'     : [0.934,0.005],
@@ -399,6 +400,7 @@ Trigger = {
                                                 'EleMu'     : { 'nvtx'    : 'Full2017v6/DZEff_em_mva.txt' } ,
                                               } ,
                                   # Electron HLT Zvtx Efficiency Scale Factor: 0.992+-0.001
+                                  # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2017DataRecommendations#HLT_Zvtx_Efficiency_Scale_Factor
                                   'GlEff'  :  { 'DoubleEle' : [0.992,0.001],
                                                 'DoubleMu'  : [1.0  ,0.   ],
                                                 'MuEle'     : [0.992,0.001],
