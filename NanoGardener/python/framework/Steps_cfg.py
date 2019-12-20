@@ -3211,17 +3211,8 @@ Steps = {
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(minpt=30, mode="ALL", debug=False)',
+      'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", debug=False)',
       'module'     : 'vbs_pairing()'
-  },
-
-  'VBSjjlnu_pairing_cuthorn': {
-      'isChain'    : False ,
-      'do4MC'      : True  ,
-      'do4Data'    : True  ,
-      'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-      'declare'    : 'vbs_pairing_cut = lambda : VBSjjlnu_JetPairing(minpt=30, etacuts=[(2.5,3.2)], mode="ALL", debug=False)',
-      'module'     : 'vbs_pairing_cut()'
   },
 
 
@@ -3261,24 +3252,24 @@ Steps = {
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
-      'subTargets': ['VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : LNuJJ_VBS_Samples_data2017
-  },
-
-  'VBSjjlnuSkim2017v4cuthorn' : {
-      'isChain'    : True ,
-      'do4MC'      : True  ,
-      'do4Data'    : True  ,
-      'selection'  : '"nLepton>=1  && Lepton_pt[0]>30 \
-                          && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 \
-                             || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
-                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
-                         && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
-                             && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
-                        "',  
-      'subTargets': ['VBSjjlnu_pairing_cuthorn', 'VBSjjlnu_kin'],
+      'subTargets': ['trigMC', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
       'onlySample' : LNuJJ_VBS_Samples_signal
   },
+
+  # 'VBSjjlnuSkim2017v4cuthorn' : {
+  #     'isChain'    : True ,
+  #     'do4MC'      : True  ,
+  #     'do4Data'    : True  ,
+  #     'selection'  : '"nLepton>=1  && Lepton_pt[0]>30 \
+  #                         && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 \
+  #                            || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
+  #                       && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
+  #                        && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
+  #                            && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
+  #                       "',  
+  #     'subTargets': ['VBSjjlnu_pairing_cuthorn', 'VBSjjlnu_kin'],
+  #     'onlySample' : LNuJJ_VBS_Samples_signal
+  # },
 
   'VBSjjlnuSkim2017v3_fakesv2' : {
       'isChain'    : True ,
