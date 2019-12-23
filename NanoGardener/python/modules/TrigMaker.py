@@ -260,14 +260,7 @@ class TrigMaker(Module):
         eff = []
         for iLeg in range(len(Leg_names)):
            eff.append(self._get_LegEff(eval('pt'+str(iLeg%2 + 1)), eval('eta'+str(iLeg%2 + 1)), run_p, Leg_names[iLeg]))
-           # add 5% sys to single ele
-           if Leg_names[iLeg] == 'SingleEle':
-              sys_u = (eff[iLeg][2] - eff[iLeg][0])**2
-              sys_d = (eff[iLeg][0] - eff[iLeg][1])**2
-              sys_u += 0.05**2
-              sys_d += 0.05**2
-              eff[iLeg][2] = min(1.0, eff[iLeg][0] + math.sqrt(sys_u))
-              eff[iLeg][1] = max(0.0, eff[iLeg][0] - math.sqrt(sys_d))
+         
            # Muon tracker SF
            #if abs(pdgId1) == 13 and not iLeg%2:
            #   eff[iLeg] = [a*b for a,b in zip(eff[iLeg], self.TM_trkSFMu[run_p])] 
@@ -367,14 +360,6 @@ class TrigMaker(Module):
          # Get Leg Efficiencies
         eff_sgl, low_eff_sgl, high_eff_sgl = self._get_LegEff (pt1, eta1, run_p, singleLeg)
         eff_gl = self.TM_GlEff[run_p][singleLeg]
-
-        if singleLeg == 'SingleEle':
-           sys_u = (high_eff_sgl - eff_sgl)**2
-           sys_d = (eff_sgl - low_eff_sgl)**2
-           sys_u += 0.05**2
-           sys_d += 0.05**2
-           high_eff_sgl = min(1.0, eff_sgl + math.sqrt(sys_u))
-           low_eff_sgl = max(0.0, eff_sgl - math.sqrt(sys_d))
 
         eff_v=[]
         eff_v.append(eff_sgl*eff_gl[0])
