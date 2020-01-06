@@ -3252,8 +3252,8 @@ Steps = {
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
-      'subTargets': ['trigMC', 'CleanFatJet', 'CorrFatJetMass', 'wlepMaker', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
-      'onlySample' : LNuJJ_VBS_Samples_signal
+      'subTargets': ['trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
+      'onlySample' : LNuJJ_VBS_Samples_bkg + LNuJJ_VBS_Samples_signal 
   },
 
   # 'VBSjjlnuSkim2017v4cuthorn' : {
