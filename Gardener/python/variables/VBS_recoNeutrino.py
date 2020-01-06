@@ -1,8 +1,10 @@
 from math import *
 from ROOT import TLorentzVector
 
+W_mass = 80.379
+
 def reconstruct_neutrino(lep, met, mode="central"):
-    a = 80**2 - lep.M()**2 + 2*(lep.Px()*met.Px() 
+    a = W_mass**2 - lep.M()**2 + 2*(lep.Px()*met.Px() 
                                 + lep.Py()*met.Py())
     A = 4*(lep.E()**2  - lep.Pz()**2)
     B = -4 * a * lep.Pz()
@@ -52,7 +54,7 @@ def reconstruct_neutrino(lep, met, mode="central"):
 
 
 def reconstruct_neutrino_recursive(lep, met, mode="central"):
-    a = 80**2 - lep.M()**2 + 2*(lep.Px()*met.Px() 
+    a = W_mass**2 - lep.M()**2 + 2*(lep.Px()*met.Px() 
                                 + lep.Py()*met.Py())
     A = 4*(lep.E()**2  - lep.Pz()**2)
     B = -4 * a * lep.Pz()
@@ -107,7 +109,7 @@ def _calculate_pt_neutrino(lep, met):
     alfa = lep.Pt()*cos(met.Phi()- lep.Phi())
     a = 4*(lep.Pz()**2 - lep.E()**2 + alfa**2)
     b = 4*alfa
-    c = 80**2 - lep.M()**2
+    c = W_mass**2 - lep.M()**2
 
     sols = ((-b + sqrt(b**2 -4*a*c) )/(2*a) ,
             (-b - sqrt(b**2 -4*a*c) )/(2*a) )

@@ -1,7 +1,6 @@
 from itertools import chain
 from math import cosh, sqrt, cos
 from ROOT import TLorentzVector
-import LatinoAnalysis.Gardener.variables.VBS_recoNeutrino as RecoNeutrino
 
 VBSjjlnu_branches  = {
         "F": [
@@ -28,7 +27,7 @@ VBSjjlnu_branches  = {
             ],
         "I": ["N_jets", "N_jets_forward", "N_jets_central"]
     }
-    
+
 VBSjjlnu_vector_branches = [
     {
         "type": "I",
@@ -107,7 +106,7 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     output["deltaphi_vjet"] =  abs(vjets[0].DeltaPhi(vjets[1]))
     output["deltaeta_vjet"] = abs(vjet_etas[0] - vjet_etas[1])
     output["deltaR_vjet"] = vjets[0].DrEtaPhi(vjets[1])
-
+    
     output["recoMET"] = reco_neutrino.Pt()
     output["recoMET_pz"] = reco_neutrino.Pz() 
     output["deltaphi_lep_nu"] = abs(lepton.DeltaPhi(reco_neutrino)) 

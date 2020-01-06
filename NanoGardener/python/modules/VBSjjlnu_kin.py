@@ -5,6 +5,7 @@ from math import cosh, sqrt
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 import LatinoAnalysis.NanoGardener.data.VBSjjlnu_vars as vbs_vars
+import LatinoAnalysis.Gardener.variables.VBS_recoNeutrino as RecoNeutrino
 
 
 class VBSjjlnu_kin(Module):
@@ -66,9 +67,9 @@ class VBSjjlnu_kin(Module):
         lep.SetPtEtaPhiE(lepton_raw.pt, lepton_raw.eta,lepton_raw.phi, lepton_raw.pt * cosh(lepton_raw.eta))
         met = TLorentzVector()
         met.SetPtEtaPhiE(met_raw.pt, 0., met_raw.phi, met_raw.pt)
-        # Neutrino reconstructed from lep and MET in WlepMaker module
-        reco_neutrino = TLorentzVector()
-        reco_neutrino.SetPtEtaPhiE(event["Wlep_pt_"+self.metType], 0., event["Wlep_phi_"+self.metType], event["Wlep_E_"+self.metType])
+        
+        # Reconstruct neutrino from lepton and met
+        reco_neutrino = RecoNeutrino.reconstruct_neutrino(lep,met,mode="central")
 
         # Extract the jets four momenta using only JetNotFat but keeping 
         # a reference to the CleanJet index. 
