@@ -39,7 +39,7 @@ class VBSjjlnu_JetPairing(Module):
         In the resolved category (>= 4 jets) different algorithms can be used to 
         choose the VBS jets and V jets. 
 
-        An eta interval cut can be specified to avoid using the jets in those regions for tagging
+        Eta & pt cuts can be specified to avoid using the jets in those regions for tagging
 
         Modes (for resolved category):
         "maxmjj_massWZ" : before VBS jets with max Mjj, than V-jets with mass nearest to (mW+mZ)/2
@@ -120,8 +120,8 @@ class VBSjjlnu_JetPairing(Module):
                 V_jets =   [-1,-1]
                 # N.B. always get back CleanJet collection ids 
                 VBS_jets = [good_jets_ids[ij] for ij in algo(good_jets)]
-                self.out.fillBranch("VBS_jets_"+key, VBS_jets)
-                self.out.fillBranch("V_jets_"+key, V_jets)
+                self.out.fillBranch("VBS_jets_"+ key, VBS_jets)
+                self.out.fillBranch("V_jets_" + key, V_jets)
 
         elif len(good_jets) >= 4:
             ##############################
