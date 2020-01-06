@@ -3221,7 +3221,7 @@ Steps = {
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(minptjet=20., mode=["maxmjj","maxmjj_massWZ"], debug=False)',
+      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="Puppi", debug=False)',
       'module'     : 'vbs_vars_maker()'
   },
 
@@ -3252,7 +3252,7 @@ Steps = {
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
-      'subTargets': ['trigMC', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
+      'subTargets': ['trigMC', 'CleanFatJet', 'CorrFatJetMass', 'wlepMaker', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
       'onlySample' : LNuJJ_VBS_Samples_signal
   },
 
