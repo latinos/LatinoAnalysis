@@ -102,6 +102,9 @@ class batchJobs :
            jFile.write('#$ -cwd\n')
 
          jFile.write('export X509_USER_PROXY=/afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+       elif "cmsdas" in hostName:
+         jFile.write('#$ -N '+jName+'\n')
+         jFile.write('export X509_USER_PROXY=/home/cmsdas/'+os.environ["USER"]+'/.proxy\n')
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
@@ -124,6 +127,8 @@ class batchJobs :
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
+       if 'cmsdas' in hostName:
+         jFile.write('source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh\n')
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
        if 'knu' in hostName or 'hercules' in hostName:
@@ -141,7 +146,9 @@ class batchJobs :
              jFile.write("cd /tmp/$USER/$LSB_JOBID \n")
 
            jFile.write("pwd \n")
-
+         elif 'cmsdas' in hostName:
+           jFile.write('cd - \n')
+           jFile.write("pwd \n")
          elif "pi.infn.it" in socket.getfqdn():
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
@@ -268,8 +275,18 @@ class batchJobs :
        MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
 
        scheduler = 'condor'
-     
 
+     if 'cmsdas' in hostName:
+       flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+       runtimes = [20, 60, 120, 60 * 8, 60 * 24, 60 * 24 * 3, 60 * 24 * 7]
+       if queue not in flavours:
+         print 'Queue', queue, 'is not defined for cmsdas HTCondor.'
+         print 'Allowed values:', flavours
+         raise RuntimeError('Undefined queue')
+
+       MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
+
+       scheduler = 'condor'
 
      for jName in self.jobsList:
        if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
@@ -292,6 +309,24 @@ class batchJobs :
          if CERN_USE_LSF:
            jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
          else:
+           jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
+           jdsFile = open(jdsFileName,'w')
+           jdsFile.write('executable = '+self.subDir+subDirExtra+'/'+jName+'.sh\n')
+           jdsFile.write('universe = vanilla\n')
+           #jdsFile.write('use_x509userproxy = true\n')
+           jdsFile.write('output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
+           jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
+           jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
+           if CONDOR_ACCOUNTING_GROUP:
+             jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
+             jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
+           jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
+           jdsFile.write('+JobFlavour = "'+queue+'"\n')
+           jdsFile.write('queue\n')
+           jdsFile.close()
+           # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
+           # jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+       elif 'cmsdas' in hostName:
            jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
            jdsFile = open(jdsFileName,'w')
            jdsFile.write('executable = '+self.subDir+subDirExtra+'/'+jName+'.sh\n')
@@ -579,7 +614,16 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
       MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
 
       scheduler = 'condor'
-    
+    if 'cmsdas' in hostName:
+      flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
+      runtimes = [20, 60, 120, 60 * 8, 60 * 24, 60 * 24 * 3, 60 * 24 * 7]
+      if queue not in flavours:
+        print 'Queue', queue, 'is not defined for cmsdas HTCondor.'
+        print 'Allowed values:', flavours
+        raise RuntimeError('Undefined queue')
+      MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
+
+      scheduler = 'condor' 
 
     for iDir in DirList:
       subDir = jobDir+'/'+iDir

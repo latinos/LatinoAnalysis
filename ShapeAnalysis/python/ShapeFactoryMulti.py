@@ -1175,14 +1175,22 @@ class ShapeFactory:
     # _____________________________________________________________________________
     def _test_xrootdFile(self, path):
       xrdserver=path.lstrip("root://").split("/")[0]
-      cmd='xrd '+xrdserver+' existfile '+path.split('root://'+xrdserver)[1]
+      cmd='xrdfs '+xrdserver+' locate '+path.split('root://'+xrdserver)[1]
       if os.system(cmd) == 0 : return True
       return False
 
-    # _____________________________________________________________________________
+    def _test_cmsdas_File(self, path):
+      cmd='ls '+path
+      if os.system(cmd) == 0 : return True
+      return False
+
+      # _____________________________________________________________________________
     def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
         def testFile(path):
-          if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
+          if 'root://' in path:
+            exists = self._test_xrootdFile(path)
+            location = 'AAA'
+          elif "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
             exists = self._testEosFile(path)
             location = 'CERN'
           elif "maite.iihe.ac.be" in path:
@@ -1195,9 +1203,9 @@ class ShapeFactory:
           elif "sdfarm" in path:
             exists = self._test_sdfarm_File(path)
             location = 'sdfarm.kr'
-          elif 'root://' in path:
-            exists = self._test_xrootdFile(path)
-            location = 'AAA'
+          elif "cmsdas" in path:
+            exists = self._test_cmsdas_File(path)
+            location = 'cmsdas'
           else:
             exists = self._testLocalFile(path)
             location = 'local'
@@ -1258,7 +1266,12 @@ class ShapeFactory:
       for path in files:
         doesFileExist = True
         self._logger.debug('     '+str(os.path.exists(path))+' '+path)
-        if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
+        if "root://" in path:
+          if not self._test_xrootdFile(path):
+            print 'File '+path+' doesn\'t exists @ AAA'
+            doesFileExist = False
+            raise RuntimeError('File '+path+' doesn\'t exists')
+        elif "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
           if not self._testEosFile(path):
             print 'File '+path+' doesn\'t exists'
             doesFileExist = False
@@ -1270,6 +1283,10 @@ class ShapeFactory:
             raise RuntimeError('File '+path+' doesn\'t exists')
         elif "cluster142.knu.ac.kr" in path:
           pass # already checked the file at mkShape.py
+        elif "cmsdas" in path:
+          if not self._test_cmsdas_File(path):
+            doesFileExist = False
+            raise RuntimeError('File '+path+' doesn\'t exists')
         else:
           if not os.path.exists(path):
             print 'File '+path+' doesn\'t exists'
