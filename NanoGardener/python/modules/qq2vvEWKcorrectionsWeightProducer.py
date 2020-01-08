@@ -463,7 +463,6 @@ class vvNLOEWKcorrectionWeightProducer(Module):
               idv2  = temp_idl2    
 
            
-          #elif temp_ptq1 > 0 and temp_ptq2 > 0 :   # ---> "temp_ptq1 > 0" alone is not safe because of NLO (additional quarks!)
           elif temp_ptq1 > 0 and temp_ptq2 > 0 and temp_ptl1>0 and temp_ptl2>0 :   # ---> "temp_ptq1 > 0" alone is not safe because of NLO (additional quarks!)
 
             # W>qq  and   Z>ll
