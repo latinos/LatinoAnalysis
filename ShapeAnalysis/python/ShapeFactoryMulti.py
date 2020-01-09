@@ -237,7 +237,7 @@ class ShapeFactory:
 
             nkind = nuisance['kind']
 
-            if not (nkind.startswith('tree') or nkind.startswith('map')):
+            if not (nkind.startswith('tree') or nkind.startswith('suffix')):
               continue
 
             if sampleName not in nuisance['samples']:
@@ -246,7 +246,7 @@ class ShapeFactory:
             twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
             nuisanceDrawers[nuisanceName] = collections.OrderedDict()
 
-            if nkind == 'tree' or nkind == 'map':
+            if nkind == 'tree' or nkind == 'suffix':
               if twosided:
                 variations = ['Up', 'Down']
               else:
@@ -299,7 +299,7 @@ class ShapeFactory:
                   
                 ndrawers.append(ndrawer)
 
-            elif nkind.startswith('map'):
+            elif nkind.startswith('suffix'):
               for var in variations:
                 ndrawer = nuisanceDrawers[nuisanceName][var] = drawer.clone()
 
