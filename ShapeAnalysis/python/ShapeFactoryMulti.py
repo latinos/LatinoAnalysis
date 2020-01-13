@@ -231,7 +231,7 @@ class ShapeFactory:
           nuisanceDrawers = {}
           ndrawers = [] # flat list for convenience
 
-          filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+          basenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
 
           for nuisanceName, nuisance in nuisances.iteritems():
             if 'kind' not in nuisance:
@@ -286,10 +286,10 @@ class ShapeFactory:
                     except KeyError:
                       skimListFolderVar = None
     
-                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolder' + var], skipMissingFiles=skipMissing, friendsDir=(unskimmedFriendsDir, nuisanceName + var), skimListDir=skimListFolderVar, altDir=altDir)
+                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, basenames, nuisance['unskimmedFolder' + var], skipMissingFiles=skipMissing, friendsDir=(unskimmedFriendsDir, nuisanceName + var), skimListDir=skimListFolderVar, altDir=altDir)
     
                   else:
-                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, filenames, nuisance['folder' + var], skipMissingFiles=skipMissing, altDir=altDir)
+                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, basenames, nuisance['folder' + var], skipMissingFiles=skipMissing, altDir=altDir)
     
                 elif 'files' + var in nuisance:
                   # TODO this feature is not fully working - I can't come up with a good way to assign variation files to batch jobs
@@ -300,14 +300,17 @@ class ShapeFactory:
             elif nkind.startswith('suffix'):
               for var in variations:
                 if 'folder' + var in nuisance:
-                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False, friendsDir=(nuisance['folder' + var], nuisanceName + var))
+                  friendAlias = nuisanceName + var
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False, friendsDir=(nuisance['folder' + var], friendAlias))
+                  prefix = friendAlias + '.'
                 else:
                   ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
+                  prefix = ''
 
                 # there are various ways to set up branch mapping in NanoGardener, but in practice we use only the branches-suffix configuration
                 bmap = branch_mapping[nuisance['map' + var]]
                 for bname in bmap['branches']:
-                  ndrawer.replaceBranch(bname, bname + bmap['suffix'])
+                  ndrawer.replaceBranch(bname, prefix + bname + bmap['suffix'])
 
                 ndrawers.append(ndrawer)
 
@@ -1125,13 +1128,19 @@ class ShapeFactory:
         #    some of them under iteos, some under the standard eos
 
         # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
-        files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
+        files = []
+        for f in filenames:
+          if '###' in f: # full path given
+            files.append(f.replace('#', ''))
+          else:
+            files.append(inputDir + '/' + f)
+
         self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
 
         # if we specify a friends tree directory we need to load the friend trees and attch them
         if friendsDir is not None:
           # friendsDir is (directory, alias)
-          files = [(friendsDir[0] + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
+          files = [friendsDir[0] + '/' + os.path.basename(f) for f in filenames]
           self._buildchain(drawer, files, False, friendtree=(self._treeName, friendsDir[1]))
 
         #if we specify a directory with skim event lists we need to load them and skim
@@ -1198,7 +1207,7 @@ class ShapeFactory:
       return False
 
     # _____________________________________________________________________________
-    def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
+    def _buildchain(self, drawer, files, skipMissingFiles, friendtree=None, altDir=''):
         def testFile(path):
           if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
             exists = self._testEosFile(path)
@@ -1244,7 +1253,7 @@ class ShapeFactory:
               if friendtree is not None:
                 paths.append(path)
               else:
-                multidraw.addInputPath(path)
+                drawer.addInputPath(path)
 
               ntrees += 1
               break
@@ -1265,7 +1274,7 @@ class ShapeFactory:
           objarr = ROOT.TObjArray()
           for path in paths:
             objarr.Add(ROOT.TObjString(path))
-          multidraw.addFriend(friendtree[0], objarr, friendtree[1])
+          drawer.addFriend(friendtree[0], objarr, friendtree[1])
 
         return ntrees
 
