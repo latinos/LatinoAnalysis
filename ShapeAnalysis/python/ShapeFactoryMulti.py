@@ -231,6 +231,8 @@ class ShapeFactory:
           nuisanceDrawers = {}
           ndrawers = [] # flat list for convenience
 
+          filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+
           for nuisanceName, nuisance in nuisances.iteritems():
             if 'kind' not in nuisance:
               continue
@@ -254,6 +256,16 @@ class ShapeFactory:
             else:
               variations = ['V%dVar' % ivar for ivar in range(len(nuisance['samples'][sampleName]))]
 
+            skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
+            if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
+              # Workaround for missing nuisance files - don't use this regularly!
+              if sample['name'][0].startswith('###'):
+                altDir = os.path.dirname(sample['name'][0].replace('###', ''))
+              else:
+                altDir = inputDir
+            else:
+              altDir = ''
+
             if nkind.startswith('tree'):
               # Sept 2017
               # Tree kind nuisances can be hanndled in two ways:
@@ -264,20 +276,6 @@ class ShapeFactory:
               # Note that one has to use trees before skimming. The skimming can be applied on top is the additional tags 'skimListFolderUp' and 'skimListFolderDown'
               # are present. These tags hold the path to the directories holding the files holding the "prunerlist" event list
 
-              if 'folderUp' in nuisance:
-                filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
-                skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
-  
-                if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
-                  # Workaround for missing nuisance files - don't use this regularly!
-                  if sample['name'][0].startswith('###'):
-                    altDir = os.path.dirname(sample['name'][0].replace('###', ''))
-                  else:
-                    altDir = inputDir
-                else:
-                  altDir = ''
-
-                # TODO write case of 'folders' for tree_envelope and tree_rms
               for var in variations:
                 if 'folder' + var in nuisance:
                   if 'unskimmedFriendTreeDir' in nuisance.keys():
@@ -288,7 +286,7 @@ class ShapeFactory:
                     except KeyError:
                       skimListFolderVar = None
     
-                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolder' + var], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderVar, altDir=altDir)
+                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolder' + var], skipMissingFiles=skipMissing, friendsDir=(unskimmedFriendsDir, nuisanceName + var), skimListDir=skimListFolderVar, altDir=altDir)
     
                   else:
                     ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, filenames, nuisance['folder' + var], skipMissingFiles=skipMissing, altDir=altDir)
@@ -301,7 +299,10 @@ class ShapeFactory:
 
             elif nkind.startswith('suffix'):
               for var in variations:
-                ndrawer = nuisanceDrawers[nuisanceName][var] = drawer.clone()
+                if 'folder' + var in nuisance:
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False, friendsDir=(nuisance['folder' + var], nuisanceName + var))
+                else:
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
 
                 # there are various ways to set up branch mapping in NanoGardener, but in practice we use only the branches-suffix configuration
                 bmap = branch_mapping[nuisance['map' + var]]
@@ -1128,9 +1129,10 @@ class ShapeFactory:
         self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
 
         # if we specify a friends tree directory we need to load the friend trees and attch them
-        if friendsDir != None:
-          files = [(friendsDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-          self._buildchain(drawer, files, False, friendtree=self._treeName)
+        if friendsDir is not None:
+          # friendsDir is (directory, alias)
+          files = [(friendsDir[0] + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
+          self._buildchain(drawer, files, False, friendtree=(self._treeName, friendsDir[1]))
 
         #if we specify a directory with skim event lists we need to load them and skim
         #if skimListDir != None:
@@ -1259,10 +1261,11 @@ class ShapeFactory:
             raise RuntimeError('File '+path+' doesn\'t exist')
 
         if friendtree is not None:
+          # friendtree is (treename, alias)
           objarr = ROOT.TObjArray()
           for path in paths:
             objarr.Add(ROOT.TObjString(path))
-            multidraw.addFriend(friendtree, objarr)
+          multidraw.addFriend(friendtree[0], objarr, friendtree[1])
 
         return ntrees
 
