@@ -11,11 +11,13 @@ TwoL2NuSamples=[ 'GluGluHToWWTo2L2Nu_M115', 'GluGluHToWWTo2L2Nu_M120', 'GluGluHT
 
 LNuJJ_VBS_Samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
               'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD','WWW','WWZ','WZZ','ZZZ','WWG',
-                'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50','DYJetsToLL_M-5to50-LO','DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50-LO',
-                'DYJetsToLL_M-10to50-LO_ext1','DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50','DYJetsToLL_M-50_HT-70to100',
+                'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50',
+                'DYJetsToLL_M-5to50-LO','DYJetsToLL_M-10to50-LO','DYJetsToLL_M-50-LO',
+                'DYJetsToLL_M-10to50-LO_ext1','DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50',
                 'DYJetsToLL_M-4to50_HT-100to200','DYJetsToLL_M-4to50_HT-100to200_ext1','DYJetsToLL_M-4to50_HT-200to400',
                 'DYJetsToLL_M-4to50_HT-200to400_ext1','DYJetsToLL_M-4to50_HT-400to600','DYJetsToLL_M-4to50_HT-400to600_ext1',
-                'DYJetsToLL_M-4to50_HT-600toInf','DYJetsToLL_M-4to50_HT-600toInf_ext1','DYJetsToLL_M-50_HT-100to200',
+                'DYJetsToLL_M-4to50_HT-600toInf','DYJetsToLL_M-4to50_HT-600toInf_ext1',
+                'DYJetsToLL_M-50_HT-70to100','DYJetsToLL_M-50_HT-100to200',
                 'DYJetsToLL_M-50_HT-200to400','DYJetsToLL_M-50_HT-200to400_ext1','DYJetsToLL_M-50_HT-400to600_ext1',
                 'DYJetsToLL_M-50_HT-400to600_ext2','DYJetsToLL_M-50_HT-600to800','DYJetsToLL_M-50_HT-800to1200',
                 'DYJetsToLL_M-50_HT-1200to2500','DYJetsToLL_M-50_HT-2500toInf','ST_t-channel_top','ST_t-channel_antitop',
@@ -222,7 +224,7 @@ Steps = {
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','CorrFatJetMass',
                                      'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
-                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','HiggsGenVars',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars',
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
 
@@ -346,7 +348,7 @@ Steps = {
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','CorrFatJetMass',
                                      'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
-                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','HiggsGenVars',  
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars',  
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
 
@@ -423,7 +425,7 @@ Steps = {
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','btagPerJet2018','CorrFatJetMass',
                                      'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
-                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK',  
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK',
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
 
@@ -3276,7 +3278,7 @@ Steps = {
                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )  \
                         "',  
-      'subTargets': ['trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
+      'subTargets': ['wNLOEWK','zNLOEWK','trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
       'onlySample' : LNuJJ_VBS_Samples_bkg + LNuJJ_VBS_Samples_signal
   },
 
@@ -3304,7 +3306,7 @@ Steps = {
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
-      'subTargets': ['trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
+      'subTargets': ['wNLOEWK','zNLOEWK','trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
       'onlySample' : LNuJJ_VBS_Samples_bkg + LNuJJ_VBS_Samples_signal + LNuJJ_VBS_Samples_data2017
   },
 
@@ -3332,7 +3334,7 @@ Steps = {
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
-      'subTargets': ['trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
+      'subTargets': ['wNLOEWK','zNLOEWK','trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
       'onlySample' : LNuJJ_VBS_Samples_bkg + LNuJJ_VBS_Samples_signal 
   },
 
@@ -3348,23 +3350,6 @@ Steps = {
       'subTargets': ['fakeWstep1l','CleanFatJet', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
       'onlySample' : LNuJJ_VBS_Samples_data2018
   },
-
-
-
-  # 'VBSjjlnuSkim2017v4cuthorn' : {
-  #     'isChain'    : True ,
-  #     'do4MC'      : True  ,
-  #     'do4Data'    : True  ,
-  #     'selection'  : '"nLepton>=1  && Lepton_pt[0]>30 \
-  #                         && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 \
-  #                            || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
-  #                       && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
-  #                        && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
-  #                            && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
-  #                       "',  
-  #     'subTargets': ['VBSjjlnu_pairing_cuthorn', 'VBSjjlnu_kin'],
-  #     'onlySample' : LNuJJ_VBS_Samples_signal
-  # },
 
   'VBSjjlnuSkim2017v3_fakesv2' : {
       'isChain'    : True ,
