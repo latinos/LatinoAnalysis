@@ -361,7 +361,8 @@ float MelaReweighterWW::weightStoB(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
-  _mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
+  // After discussion with U. Sarica
+  //_mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
   if (!_isVBF)
     _mela->computeP(meS, false);
