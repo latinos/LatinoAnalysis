@@ -298,7 +298,9 @@ def getEventSumw(directory,sample,prefix):
         f = ROOT.TFile.Open(iFile.replace('###',''), "READ")
         Runs=f.Get("Runs")
         for iRun in Runs:
-            genEventSumw  += iRun.genEventSumw
+            trailer = ""
+            if hasattr(iRun, "genEventSumw_"): trailer = "_" 
+            genEventSumw  += getattr(iRun, "genEventSumw"+trailer)
         f.Close()
     nEvt = genEventSumw
     return nEvt
@@ -371,9 +373,11 @@ def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGard
         f = ROOT.TFile.Open(iFile.replace('###',''),'READ')
         Runs = f.Get("Runs")
         for iRun in Runs :
-          genEventCount += iRun.genEventCount
-          genEventSumw  += iRun.genEventSumw
-          genEventSumw2 += iRun.genEventSumw2
+          trailer = ""
+          if hasattr(iRun, "genEventSumw_"): trailer = "_" 
+          genEventCount += getattr(iRun, "genEventCount"+trailer)
+          genEventSumw  += getattr(iRun, "genEventSumw" +trailer)
+          genEventSumw2 += getattr(iRun, "genEventSumw2"+trailer)
         f.Close()
     
     ### Get XS
