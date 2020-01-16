@@ -991,7 +991,7 @@ class ShapeFactory:
       cnew = rnp.hist2array(histoNew, copy=False).flat
       cref = rnp.hist2array(histoReference, copy=False).flat
 
-      indices = np.nonzero(cnew * cref <= 0.)[0]
+      indices = np.nonzero(cnew[:] * cref[:] <= 0.)[0]
       cnew[indices] = cref[indices] * 1.e-4
 
     # _____________________________________________________________________________
@@ -1005,10 +1005,10 @@ class ShapeFactory:
       cont = rnp.hist2array(histogram_to_be_fixed, copy=False, include_overflow=True).T.flat
       sumw2 = rnp.array(histogram_to_be_fixed.GetSumw2(), copy=False).flat
 
-      indices = np.nonzero(cont < 0.)[0]
+      indices = np.nonzero(cont[:] < 0.)[0]
       cont[indices] = 0.
 
-      indices = np.nonzero(cont - np.sqrt(sumw2) < 0.)[0]
+      indices = np.nonzero(cont[:] - np.sqrt(sumw2) < 0.)[0]
       sumw2[indices] = np.square(cont[indices])
 
     # _____________________________________________________________________________
@@ -1404,10 +1404,10 @@ class ShapeFactory:
                   arrdown = np.min(variations, axis=0)
 
                 elif nuisance['kind'].endswith('_rms'):
-                  arrnom = np.tile(vnominal.flat.reshape((1, -1)), (variations.shape[0], 1))
+                  arrnom = np.tile(vnominal.flat, (variations.shape[0], 1))
                   arrv = np.sqrt(np.mean(np.square(variations - arrnom), axis=0))
-                  arrup = vnominal.flat + arrv
-                  arrdown = vnominal.flat - arrv
+                  arrup = vnominal.flat[:] + arrv
+                  arrdown = vnominal.flat[:] - arrv
 
                 arrup = arrup.reshape(vnominal.shape)
                 arrdown = arrdown.reshape(vnominal.shape)
