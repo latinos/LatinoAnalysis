@@ -3312,7 +3312,7 @@ Steps = {
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", debug=False)',
+      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], mjj_vbs_cut=250, deltaeta_vbs_cut=2, met="PuppiMET", debug=False)',
       'module'     : 'vbs_vars_maker()'
   },
 
