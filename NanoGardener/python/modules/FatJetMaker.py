@@ -95,12 +95,17 @@ class FatJetMaker(Module):
         for ifj, fj in enumerate(fatjets_coll):
             # removing attribute fetching for performance
             fj_id            = fj.jetId
-            fj_pt            = getattr(fj, "pt" + self.branch_prefix) # for systematic variations
             fj_eta           = fj.eta
             fj_phi           = fj.phi
-            fj_softdrop_mass = getattr(fj, "msoftdrop" + self.branch_prefix)
             fj_tau1          = fj.tau1
             fj_tau2          = fj.tau2
+            # Get branches with prefixes for Jes,jmr,jer
+            fj_softdrop_mass = getattr(fj, "msoftdrop" + self.branch_prefix)
+            if self.branch_prefix in ['jer', 'jes']:
+                fj_pt = getattr(fj, "pt" + self.branch_prefix) # for systematic variations
+            else:
+                fj_pt  = fj.pt  
+            
             # If the FatJet has only 1 particle remove it (rare corner case)
             if fj_tau1 == 0:  continue
             fj_tau21 = fj_tau2 / fj_tau1
