@@ -40,6 +40,33 @@ samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo
                 # 'QCD_Pt-170to300_MuEnrichedPt5','QCD_Pt-20to30_EMEnriched','QCD_Pt-30to50_EMEnriched','QCD_Pt-50to80_EMEnriched'
                 ]
 
+samples_bkg_2016 = [
+'DYJetsToLL_M-5to50_HT-70to100', # not exist 2016 DYJetsToLL_M-5to50 on das
+'DYJetsToLL_M-5to50_HT-100to200',
+'DYJetsToLL_M-5to50_HT-100to200_ext1',
+'DYJetsToLL_M-5to50_HT-200to400',
+'DYJetsToLL_M-5to50_HT-200to400_ext1',
+'DYJetsToLL_M-5to50_HT-400to600',
+'DYJetsToLL_M-5to50_HT-400to600_ext1',
+'DYJetsToLL_M-5to50_HT-600toinf_ext1',
+'DYJetsToLL_M-5to50_HT-600toinf',
+'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1',
+'DYJetsToLL_M-50',
+'DYJetsToLL_M-50_HT-70to100',
+'DYJetsToLL_M-50_HT-100to200',
+'DYJetsToLL_M-50_HT-100to200_ext1',
+'DYJetsToLL_M-50_HT-200to400',
+'DYJetsToLL_M-50_HT-200to400_ext1',
+'DYJetsToLL_M-50_HT-400to600',
+'DYJetsToLL_M-50_HT-400to600_ext1',
+'DYJetsToLL_M-50_HT-600to800',
+'DYJetsToLL_M-50_HT-800to1200',
+'DYJetsToLL_M-50_HT-1200to2500',
+'DYJetsToLL_M-50_HT-2500toinf',
+'TTWJetsToLNu_ext2',
+
+]
+
 samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpTo2J_WmToLNu','WpTo2J_ZTo2L',
                     'WpToLNu_WpTo2J', 'WpToLNu_ZTo2J','ZTo2L_ZTo2J','WpToLNu_WmTo2J',
                      'WmTo2J_ZTo2L_aQGC', 'WmToLNu_WmTo2J_aQGC','WmToLNu_ZTo2J_aQGC','WpTo2J_WmToLNu_aQGC','WpTo2J_ZTo2L_aQGC',
