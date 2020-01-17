@@ -1675,7 +1675,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyWeightsProducer' ,
-                  'module'     : 'SusyWeightsProducer("RPLME_CMSSW")' ,
+                  'module'     : 'SusyWeightsProducer("RPLME_CMSSW", "RPLME_SOURCEDIR")' ,
              },
 
 ## ------- MODULES: Embedding

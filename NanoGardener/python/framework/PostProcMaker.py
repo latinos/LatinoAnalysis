@@ -714,6 +714,10 @@ class PostProcMaker():
      if 'RPLME_YEAR' in module :
        module = module.replace('RPLME_YEAR',self._prodYear)
 
+     # SOURCEDIR
+     if 'RPLME_SOURCEDIR' in module :
+       module = module.replace('RPLME_SOURCEDIR',self._sourceDir)
+
      return module
 
 
