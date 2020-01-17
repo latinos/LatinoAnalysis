@@ -1,6 +1,5 @@
 import json
-
-steps = exec("Steps_cfg.py")
+import Steps_cfg as steps
 
 output = { k:v for k, v in steps.Steps.items() if "VBSjjlnu" in k}
 
