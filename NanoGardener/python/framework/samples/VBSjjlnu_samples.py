@@ -1,4 +1,6 @@
 ####  VBSjjlnu semileptonic samples and configs
+
+# Mainly 2017 as a inclusive starting point
 samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
                 'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD',
                 'WWW','WWZ','WZZ','ZZZ','WWG',
@@ -46,48 +48,45 @@ samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo
                 ]
 
 
-samples_bkg_2016 = [ 'WJetsToLNu', 'WJetsToLNu_ext2', 'WJetsToLNu-LO_ext2',
-                      'WJetsToLNu_HT100_200_ext2', 'WJetsToLNu_HT200_400_ext2', 'WJetsToLNu_HT400_600_ext1',
-                      'WJetsToLNu_HT600_800_ext1', 'WJetsToLNu_HT800_1200_ext1', 'WJetsToLNu_HT1200_2500_ext1',
-                      'WJetsToLNu_HT2500_inf_ext1',
-                      'WJetsToLNu_Pt100To250_ext4', 'WJetsToLNu_Pt250To400_ext4', 'WJetsToLNu_Pt400To600_ext4', 'WJetsToLNu_Pt600ToInf_ext4',
-                      'WJetsToLNu_Wpt100t0200_ext1','WJetsToLNu_Wpt200toInf_ext1', ''
+samples_bkg_2016 = [
+    'DYJetsToLL_M-5to50_HT-70to100', # not exist 2016 DYJetsToLL_M-5to50 on das
+    'DYJetsToLL_M-5to50_HT-100to200',
+    'DYJetsToLL_M-5to50_HT-100to200_ext1',
+    'DYJetsToLL_M-5to50_HT-200to400',
+    'DYJetsToLL_M-5to50_HT-200to400_ext1',
+    'DYJetsToLL_M-5to50_HT-400to600',
+    'DYJetsToLL_M-5to50_HT-400to600_ext1',
+    'DYJetsToLL_M-5to50_HT-600toinf_ext1',
+    'DYJetsToLL_M-5to50_HT-600toinf',
+    'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1',
+    'DYJetsToLL_M-50',
+    'DYJetsToLL_M-50_HT-70to100',
+    'DYJetsToLL_M-50_HT-100to200',
+    'DYJetsToLL_M-50_HT-100to200_ext1',
+    'DYJetsToLL_M-50_HT-200to400',
+    'DYJetsToLL_M-50_HT-200to400_ext1',
+    'DYJetsToLL_M-50_HT-400to600',
+    'DYJetsToLL_M-50_HT-400to600_ext1',
+    'DYJetsToLL_M-50_HT-600to800',
+    'DYJetsToLL_M-50_HT-800to1200',
+    'DYJetsToLL_M-50_HT-1200to2500',
+    'DYJetsToLL_M-50_HT-2500toinf',
+    'TTWJetsToLNu_ext2',
 
+    'WJetsToLNu', 'WJetsToLNu_ext2', 'WJetsToLNu-LO_ext2',
+    'WJetsToLNu_HT100_200_ext2', 'WJetsToLNu_HT200_400_ext2', 'WJetsToLNu_HT400_600_ext1',
+    'WJetsToLNu_HT600_800_ext1', 'WJetsToLNu_HT800_1200_ext1', 'WJetsToLNu_HT1200_2500_ext1',
+    'WJetsToLNu_HT2500_inf_ext1',
+    'WJetsToLNu_Pt100To250_ext4', 'WJetsToLNu_Pt250To400_ext4', 'WJetsToLNu_Pt400To600_ext4', 'WJetsToLNu_Pt600ToInf_ext4',
+    'WJetsToLNu_Wpt100t0200_ext1','WJetsToLNu_Wpt200toInf_ext1', ''                     
+]
 
-                        ]   
 
 samples_bkg_2018 = [  'DYJetsToLL_M-50_ext2', 'TTWJetsToLNu', 'TTToSemiLeptonic_ext3']
 
 
-samples_bkg += samples_bkg_2018
-
-samples_bkg_2016 = [
-'DYJetsToLL_M-5to50_HT-70to100', # not exist 2016 DYJetsToLL_M-5to50 on das
-'DYJetsToLL_M-5to50_HT-100to200',
-'DYJetsToLL_M-5to50_HT-100to200_ext1',
-'DYJetsToLL_M-5to50_HT-200to400',
-'DYJetsToLL_M-5to50_HT-200to400_ext1',
-'DYJetsToLL_M-5to50_HT-400to600',
-'DYJetsToLL_M-5to50_HT-400to600_ext1',
-'DYJetsToLL_M-5to50_HT-600toinf_ext1',
-'DYJetsToLL_M-5to50_HT-600toinf',
-'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1',
-'DYJetsToLL_M-50',
-'DYJetsToLL_M-50_HT-70to100',
-'DYJetsToLL_M-50_HT-100to200',
-'DYJetsToLL_M-50_HT-100to200_ext1',
-'DYJetsToLL_M-50_HT-200to400',
-'DYJetsToLL_M-50_HT-200to400_ext1',
-'DYJetsToLL_M-50_HT-400to600',
-'DYJetsToLL_M-50_HT-400to600_ext1',
-'DYJetsToLL_M-50_HT-600to800',
-'DYJetsToLL_M-50_HT-800to1200',
-'DYJetsToLL_M-50_HT-1200to2500',
-'DYJetsToLL_M-50_HT-2500toinf',
-'TTWJetsToLNu_ext2',
-]
-
 samples_bkg += samples_bkg_2016
+samples_bkg += samples_bkg_2018
 
 samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpTo2J_WmToLNu','WpTo2J_ZTo2L',
                     'WpToLNu_WpTo2J', 'WpToLNu_ZTo2J','ZTo2L_ZTo2J','WpToLNu_WmTo2J',
