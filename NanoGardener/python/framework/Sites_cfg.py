@@ -36,15 +36,11 @@ Sites = {
               'mkDir'       : True ,
               'xrootdPath'  : '' ,
               'srmPrefix'   : 'srm://srm01.ifca.es' ,
+              'treeProdDir' : '/gpfs/gaes/cms/',
               'treeBaseDir' : '/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/' ,
              },
 
-  'cloud' : {
-              'lsCmd'       : 'ls' ,
-              'mkDir'       : True ,
-              'xrootdPath'  : '' ,
-              'srmPrefix'   : 'srm://srm01.ifca.es' ,
-              'treeBaseDir' : '/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/' ,
-             }
-
 }
+
+Sites['cloud'] = Sites['ifca']
+
