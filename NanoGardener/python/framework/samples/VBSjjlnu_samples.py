@@ -35,13 +35,29 @@ samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo
                 'WJetsToLNu_HT800_1200',
                 'WJetsToLNu_HT1200_2500',
                 'WJetsToLNu_HT2500_inf',
+                'WJetsToLNu_Pt50to100',
+                'WJetsToLNu_Pt100to250',
+                'WJetsToLNu_Pt400to600',
+                'WJetsToLNu_Pt600toInf'
                 
                 # 'QCD_Pt-15to20_MuEnrichedPt5','QCD_Pt-20to30_MuEnrichedPt5','QCD_Pt-30to50_MuEnrichedPt5',
                 # 'QCD_Pt-50to80_MuEnrichedPt5','QCD_Pt-80to120_MuEnrichedPt5','QCD_Pt-120to170_MuEnrichedPt5',
                 # 'QCD_Pt-170to300_MuEnrichedPt5','QCD_Pt-20to30_EMEnriched','QCD_Pt-30to50_EMEnriched','QCD_Pt-50to80_EMEnriched'
                 ]
 
+
+samples_bkg_2016 = [ 'WJetsToLNu', 'WJetsToLNu_ext2', 'WJetsToLNu-LO_ext2',
+                      'WJetsToLNu_HT100_200_ext2', 'WJetsToLNu_HT200_400_ext2', 'WJetsToLNu_HT400_600_ext1',
+                      'WJetsToLNu_HT600_800_ext1', 'WJetsToLNu_HT800_1200_ext1', 'WJetsToLNu_HT1200_2500_ext1',
+                      'WJetsToLNu_HT2500_inf_ext1',
+                      'WJetsToLNu_Pt100To250_ext4', 'WJetsToLNu_Pt250To400_ext4', 'WJetsToLNu_Pt400To600_ext4', 'WJetsToLNu_Pt600ToInf_ext4',
+                      'WJetsToLNu_Wpt100t0200_ext1','WJetsToLNu_Wpt200toInf_ext1', ''
+
+
+                        ]   
+
 samples_bkg_2018 = [  'DYJetsToLL_M-50_ext2', 'TTWJetsToLNu', 'TTToSemiLeptonic_ext3']
+
 
 samples_bkg += samples_bkg_2018
 
