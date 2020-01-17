@@ -22,7 +22,8 @@ samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo
                 'ST_t-channel_top', 'ST_t-channel_antitop',
                 'ST_tW_antitop','ST_tW_top','ST_tW_antitop_ext1','ST_tW_top_ext1',
                 'ST_s-channel','ST_s-channel_ext1',
-                'TTTo2L2Nu','TTToSemiLeptonic',
+                'TTTo2L2Nu',
+                'TTToSemiLeptonic',
                 'TTWjets','TTWjets_ext1',
                 'TTZjets','TTZjets_ext1',
                 'WJetsToLNu-LO', 'WJetsToLNu-LO_ext1',
@@ -39,6 +40,11 @@ samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo
                 # 'QCD_Pt-50to80_MuEnrichedPt5','QCD_Pt-80to120_MuEnrichedPt5','QCD_Pt-120to170_MuEnrichedPt5',
                 # 'QCD_Pt-170to300_MuEnrichedPt5','QCD_Pt-20to30_EMEnriched','QCD_Pt-30to50_EMEnriched','QCD_Pt-50to80_EMEnriched'
                 ]
+
+samples_bkg_2018 = [  'DYJetsToLL_M-50_ext2', 'TTWJetsToLNu', 'TTToSemiLeptonic_ext3']
+
+samples_bkg += samples_bkg_2018
+
 
 samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpTo2J_WmToLNu','WpTo2J_ZTo2L',
                     'WpToLNu_WpTo2J', 'WpToLNu_ZTo2J','ZTo2L_ZTo2J','WpToLNu_WmTo2J',
