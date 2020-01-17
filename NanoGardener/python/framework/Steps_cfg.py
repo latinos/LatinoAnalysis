@@ -10,7 +10,7 @@ TwoL2NuSamples=[ 'GluGluHToWWTo2L2Nu_M115', 'GluGluHToWWTo2L2Nu_M120', 'GluGluHT
 'VBFHToWWTo2L2Nu_JHUGen698_M300', 'VBFHToWWTo2L2Nu_JHUGen698_M350', 'VBFHToWWTo2L2Nu_JHUGen698_M400', 'VBFHToWWTo2L2Nu_JHUGen698_M450', 'VBFHToWWTo2L2Nu_JHUGen698_M500', 'VBFHToWWTo2L2Nu_JHUGen698_M550', 'VBFHToWWTo2L2Nu_JHUGen698_M600', 'VBFHToWWTo2L2Nu_JHUGen698_M650', 'VBFHToWWTo2L2Nu_JHUGen698_M700', 'VBFHToWWTo2L2Nu_JHUGen698_M750', 'VBFHToWWTo2L2Nu_JHUGen698_M800', 'VBFHToWWTo2L2Nu_JHUGen698_M900', 'VBFHToWWTo2L2Nu_JHUGen698_M1000', 'VBFHToWWTo2L2Nu_JHUGen698_M1500', 'VBFHToWWTo2L2Nu_JHUGen698_M2000', 'VBFHToWWTo2L2Nu_JHUGen698_M2500', 'VBFHToWWTo2L2Nu_JHUGen698_M3000', 'VBFHToWWTo2L2Nu_JHUGen698_M4000', 'VBFHToWWTo2L2Nu_JHUGen698_M5000', 'VBFHToWWTo2L2Nu_JHUGen714_M4000', 'VBFHToWWTo2L2Nu_JHUGen714_M5000' ]
 
 # Import samples and cuts configuration for VBSjjlnu analysi
-from samples.VBSjjlnu_samples import *
+import samples.VBSjjlnu_samples as vbsjjlnu
 
 # -------------------------------------------- HERE WE GO ----------------------------------------------------
 
@@ -114,7 +114,7 @@ def prepare_VBSjjlnu_syst(basename, selection):
                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal
       }
   return dictionary
 
@@ -131,7 +131,7 @@ def prepare_VBSjjlnu_Fatjet_syst(basename, selection):
                     'trigMC', 'CorrFatJetMC', 
                     'CleanFatJet_{0}{1}'.format(syst, j), 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal
       }
   return dictionary
 
@@ -3329,7 +3329,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
       'subTargets': ['CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal + VBSjjlnu_samples_data2017
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal + vbsjjlnu.samples_data2017
   },
 
   'VBSjjlnuSkim2017v3_fakesv2' : {
@@ -3342,7 +3342,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 ) \
                         "',  
       'subTargets': ['fakeWstep1l','CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_data2017
+      'onlySample' : vbsjjlnu.samples_data2017
   },
   #########################
   ### v4 chains
@@ -3359,7 +3359,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )  \
                         "',  
       'subTargets': ['wNLOEWK','zNLOEWK','trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal
   },
 
   'VBSjjlnuSkim2016v4_data' : {
@@ -3372,7 +3372,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )  \
                         "',  
       'subTargets': ['fakeWstep1l','CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_data2016
+      'onlySample' : vbsjjlnu.samples_data2016
   },
 
   'VBSjjlnuSkim2017v4' : {
@@ -3387,7 +3387,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
       'subTargets': ['wNLOEWK','zNLOEWK','trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal + VBSjjlnu_samples_data2017
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal + vbsjjlnu.samples_data2017
   },
 
   'VBSjjlnuSkim2017v4_fakes' : {
@@ -3400,7 +3400,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 ) \
                         "',  
       'subTargets': ['fakeWstep1l','CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_data2017
+      'onlySample' : vbsjjlnu.samples_data2017
   },
 
   'VBSjjlnuSkim2018v4' : {
@@ -3415,7 +3415,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
       'subTargets': ['wNLOEWK','zNLOEWK','trigMC', 'CleanFatJet', 'CorrFatJetMass', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal 
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal 
   },
 
   'VBSjjlnuSkim2018v4_data' : {
@@ -3428,7 +3428,7 @@ Steps = {
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',  
       'subTargets': ['fakeWstep1l','CleanFatJet', 'VBSjjlnu_pairing', "VBSjjlnu_kin"],
-      'onlySample' : VBSjjlnu_samples_data2018
+      'onlySample' : vbsjjlnu.samples_data2018
   },
 
   ############ New VBSjjlnu v5 skim and systematics
@@ -3442,60 +3442,60 @@ Steps = {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
-      'selection'  : vbsjjlnu_2016_preselection_mc,
+      'selection'  : vbsjjlnu.preselection_mc_2016,
       'subTargets': ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal
   },
 
   'VBSjjlnuSkim2016v5_data' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
-      'selection'  : vbsjjlnu_2016_preselection_data,  
+      'selection'  : vbsjjlnu.preselection_data_2016,  
       'subTargets': ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_data2016
+      'onlySample' : vbsjjlnu.samples_data2016
   },
 
   'VBSjjlnuSkim2017v5' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
-      'selection'  : vbsjjlnu_2017_preselection_mc,
+      'selection'  : vbsjjlnu.preselection_mc_2017,
       'subTargets': ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal
   },
 
   'VBSjjlnuSkim2017v5_data' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
-      'selection'  : vbsjjlnu_2017_preselection_data,  
+      'selection'  : vbsjjlnu.preselection_data_2017,  
       'subTargets': ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_data2017
+      'onlySample' : vbsjjlnu.samples_data2017
   },
 
   'VBSjjlnuSkim2018v5' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
-      'selection'  : vbsjjlnu_2018_preselection_mc,
+      'selection'  : vbsjjlnu.preselection_mc_2018,
       'subTargets': ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_bkg + VBSjjlnu_samples_signal
+      'onlySample' : vbsjjlnu.samples_bkg + vbsjjlnu.samples_signal
   },
 
   'VBSjjlnuSkim2018v5_data' : {
       'isChain'    : True ,
       'do4MC'      : True  ,
       'do4Data'    : True  ,
-      'selection'  : vbsjjlnu_2018_preselection_data,  
+      'selection'  : vbsjjlnu.preselection_data_2018,  
       'subTargets': ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : VBSjjlnu_samples_data2018
+      'onlySample' : vbsjjlnu.samples_data2018
   },
 
   #### Fatjet systematics are included at the bottom
@@ -3565,10 +3565,10 @@ Steps = {
 Steps.update(addJESchainMembers())
 
 ## ADD systematics for VBSjjlnu analysis
-Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2016v5", vbsjjlnu_2016_preselection_mc))
-Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2017v5", vbsjjlnu_2017_preselection_mc))
-Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2018v5", vbsjjlnu_2018_preselection_mc))
+Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2016v5",vbsjjlnu.preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2017v5", vbsjjlnu.preselection_mc_2017))
+Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2018v5", vbsjjlnu.preselection_mc_2018))
 ## ADD fatjet systematic for VBSjjlnu analysis
-Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2016v5_fatjet", vbsjjlnu_2016_preselection_mc))
-Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2017v5_fatjet", vbsjjlnu_2017_preselection_mc))
-Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2018v5_fatjet", vbsjjlnu_2018_preselection_mc))
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2016v5_fatjet", vbsjjlnu.preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2017v5_fatjet", vbsjjlnu.preselection_mc_2017))
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2018v5_fatjet", vbsjjlnu.preselection_mc_2018))
