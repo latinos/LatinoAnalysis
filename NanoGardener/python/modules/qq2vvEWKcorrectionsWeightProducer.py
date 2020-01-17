@@ -542,9 +542,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
             
           if ptl1 == -1 or ptl2 == -1 or ptv1 == -1 or ptv2 == -1 :
             ewknloW = -2
-            print("problema")
-          else :          
-            print("ok")
+          else :       
             results_value_and_error = self.qq2wzEWKcorrections.getqq2WVEWKCorr(ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2, ptv1, etav1, phiv1, idv1, ptv2, etav2, phiv2, idv2, x1, x2, id1, id2,    1)
             ewknloW = results_value_and_error[0]
             ewknloWuncertainty = results_value_and_error[1]
