@@ -21,6 +21,10 @@ class FatJetMaker(Module):
     The list of CleanJet ids not overlapping with FatJets is saved in  CleanJetNotFat_jetIdx collection 
     and relative size nCleanJetNotFat. 
 
+    The branch_prefix parameter can be used to changed the branches to be read in case the
+    CorrFatJet module has been applied:
+    - raw: uncorrected values for pt and mass
+    - nom:  JEC and JER corrected value. JMS and JMR applied to MC
 
     Reference for FatJet ID:
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetWtagging
@@ -38,7 +42,7 @@ class FatJetMaker(Module):
 
     '''
     def __init__(self, jetid=0, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
-                    over_lepR =0.8, over_jetR = 0.8):
+                    over_lepR =0.8, over_jetR = 0.8, branch_prefix=""):
         self.jetid = jetid
         self.minpt = minpt
         self.maxeta = maxeta 
@@ -46,6 +50,10 @@ class FatJetMaker(Module):
         self.mass_range = mass_range 
         self.over_lepR = over_lepR
         self.over_jetR = over_jetR
+        if len(branch_prefix): 
+            self.branch_prefix = "_"+ branch_prefix
+        else: 
+            self.branch_prefix = ""
 
     def beginJob(self):
         pass
@@ -87,10 +95,10 @@ class FatJetMaker(Module):
         for ifj, fj in enumerate(fatjets_coll):
             # removing attribute fetching for performance
             fj_id            = fj.jetId
-            fj_pt            = fj.pt
+            fj_pt            = getattr(fj, "pt" + self.branch_prefix) # for systematic variations
             fj_eta           = fj.eta
             fj_phi           = fj.phi
-            fj_softdrop_mass = fj.msoftdrop
+            fj_softdrop_mass = getattr(fj, "msoftdrop" + self.branch_prefix)
             fj_tau1          = fj.tau1
             fj_tau2          = fj.tau2
             # If the FatJet has only 1 particle remove it (rare corner case)

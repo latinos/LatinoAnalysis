@@ -18,7 +18,7 @@ class VBSjjlnu_kin(Module):
     VBS_category.  For example mode=[maxmjj, maxmjj_massWZ] selects the maxmjj strategy 
     for Fatjet events and  maxmjj_massWZ for resolved events.
 
-    metType can be PF or Puppi.
+    metType can be MET or Puppi.
     '''
     def __init__(self, mode=[ "maxmjj", "maxmjj_massWZ"], met="Puppi", debug=False):
         self.V_jets_var = { 0: "V_jets_"+ mode[0],  1: "V_jets_"+ mode[1]}
@@ -56,10 +56,7 @@ class VBSjjlnu_kin(Module):
         self.JetNotFat_coll = Collection(event, 'CleanJetNotFat')
 
         lepton_raw = Object(event, "Lepton", index=0)
-        if self.metType == "PF":
-            met_raw    = Object(event, "MET")
-        elif self.metType == "Puppi":
-            met_raw = Object(event, "PuppiMET")
+        met_raw    = Object(event, self.metType)
 
         category = int(self.vbs_category)
 
