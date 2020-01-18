@@ -103,7 +103,7 @@ def addJESchainMembers():
 
 def prepare_VBSjjlnu_syst(basename, selection):
   dictionary = {}
-  for syst in ["JES", "Mup", "Elep", "MET"]:
+  for syst in ["JES", "MupT", "ElepT", "MET"]:
     for j in ['up', 'do']:
       dictionary[basename+"_"+ syst + j] = {
       'isChain'    : True ,
@@ -116,6 +116,8 @@ def prepare_VBSjjlnu_syst(basename, selection):
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
       'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal
       }
+      if syst == "JES":
+        dictionary[basename+"_"+ syst + j]["subTargets"] = ['JESBaseTotal'] + dictionary[basename+"_"+ syst + j]["subTargets"] 
   return dictionary
 
 def prepare_VBSjjlnu_Fatjet_syst(basename, selection):
@@ -2393,6 +2395,15 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JECMaker' ,
                   'declare'    : 'JES = lambda : JECMaker(globalTag="Regrouped_RPLME_JESGT", types=["Total", "Absolute", "Absolute_RPLME_YEAR", "BBEC1", "BBEC1_RPLME_YEAR", "EC2", "EC2_RPLME_YEAR", "FlavorQCD", "HF", "HF_RPLME_YEAR", "RelativeBal", "RelativeSample_RPLME_YEAR"], jetFlav="AK4PFchs")',
+                  'module'     : 'JES()',
+               },
+
+  'JESBaseTotal' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JECMaker' ,
+                  'declare'    : 'JES = lambda : JECMaker(globalTag="RPLME_JESGT", types=["Total"], jetFlav="AK4PFchs")',
                   'module'     : 'JES()',
                },
 
