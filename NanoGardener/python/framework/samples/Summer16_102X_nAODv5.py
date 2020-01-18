@@ -153,13 +153,13 @@ Samples['WJetsToLNu_HT2500_inf'] = {'nanoAOD' :'/WJetsToLNu_HT-2500ToInf_TuneCUE
 
 #Samples['WJetsToLNu_Wpt0To50']={'nanoAOD':'/WJetsToLNu_Wpt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/'}
 #Samples['WJetsToLNu_Wpt50To100']={'nanoAOD':'/WJetsToLNu_Wpt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/'}
-Samples['WJetsToLNu_Pt100To250_ext4']={'nanoAOD':'/WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext4-v1/NANOAODSIM'}
-Samples['WJetsToLNu_Pt250To400_ext4']={'nanoAOD':'/WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext4-v1/NANOAODSIM'}
+Samples['WJetsToLNu_Pt100to250_ext4']={'nanoAOD':'/WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext4-v1/NANOAODSIM'}
+Samples['WJetsToLNu_Pt250to400_ext4']={'nanoAOD':'/WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext4-v1/NANOAODSIM'}
 Samples['WJetsToLNu_Pt400To600_ext4']={'nanoAOD':'/WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext4-v1/NANOAODSIM'}
 Samples['WJetsToLNu_Pt600ToInf_ext4']={'nanoAOD':'/WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext4-v1/NANOAODSIM'}
 
 # Wpt binned
-Samples["WJetsToLNu_Wpt100t0200_ext1"] = {'nanoAOD': '/WJetsToLNu_Wpt-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM'}
+Samples["WJetsToLNu_Wpt100to200_ext1"] = {'nanoAOD': '/WJetsToLNu_Wpt-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM'}
 Samples["WJetsToLNu_Wpt200toInf_ext1"] = {'nanoAOD': '/WJetsToLNu_Wpt-200toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM'}
 
 ### DY+Jets

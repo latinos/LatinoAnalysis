@@ -34,7 +34,7 @@
 ## W+jets
 samples['WJetsToLNu']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu-LO']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
-samples['WJetsToLNu_HT70_100']        	.extend( ['xsec=1.0000',	'kfact=1.00',		'ref=W'] )## XS not present on XSDB
+samples['WJetsToLNu_HT70_100']          .extend( ['xsec=1292.0',	'kfact=1.00',		'ref=W'] )   
 samples['WJetsToLNu_HT100_200']        	.extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
 samples['WJetsToLNu_HT100_200_ext1']      .extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
 samples['WJetsToLNu_HT100_200_ext2']      .extend( ['xsec=1395.00',	'kfact=1.21',		'ref=W'] )
@@ -58,11 +58,11 @@ samples['WJetsToLNu-1J'] .extend( ['xsec=8966.2',       'kfact=1.00',           
 samples['WJetsToLNu-2J'] .extend( ['xsec= 3643.12',     'kfact=1.00',           'ref=I'] )
 
 
-samples['WJetsToLNu_Pt-50to100']                	.extend( ['xsec=3046.0',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt-100to250']                	.extend( ['xsec=689.749632',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt-250to400']                	.extend( ['xsec=24.5069015',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt-400to600']                	.extend( ['xsec=3.110130566',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt-600toInf']                   .extend( ['xsec=0.4683178368',	'kfact=1.0176',		'ref=XSDB'] )
+samples['WJetsToLNu_Pt50to100']                	.extend( ['xsec=3046.0',	'kfact=1.0176',		'ref=XSDB'] )
+samples['WJetsToLNu_Pt100to250']                	.extend( ['xsec=689.749632',	'kfact=1.0176',		'ref=XSDB'] )
+samples['WJetsToLNu_Pt250to400']                	.extend( ['xsec=24.5069015',	'kfact=1.0176',		'ref=XSDB'] )
+samples['WJetsToLNu_Pt400to600']                	.extend( ['xsec=3.110130566',	'kfact=1.0176',		'ref=XSDB'] )
+samples['WJetsToLNu_Pt600toInf']                   .extend( ['xsec=0.4683178368',	'kfact=1.0176',		'ref=XSDB'] )
 
 
 
