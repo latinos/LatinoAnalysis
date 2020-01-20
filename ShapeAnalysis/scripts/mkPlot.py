@@ -57,6 +57,7 @@ if __name__ == '__main__':
     parser.add_option('--fileFormats'    , dest='fileFormats'    , help='Output plot file formats (comma-separated png, pdf, root, C, and/or eps). Default "png,root"', default='png,root')
 
     parser.add_option('--plotNormalizedDistributions'  , dest='plotNormalizedDistributions'  , help='plot also normalized distributions for optimization purposes'         , default=None )
+    parser.add_option('--plotNormalizedIncludeData'    , dest='plotNormalizedIncludeData'    , help='plot also normalized distributions for data, for shape comparison purposes', default=None )
     parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
     parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' ,    action='store_true', default=False)
@@ -82,6 +83,7 @@ if __name__ == '__main__':
     print "                   inputFile =", opt.inputFile
     print "              outputDirPlots =", opt.outputDirPlots
     print " plotNormalizedDistributions =", opt.plotNormalizedDistributions
+    print "   plotNormalizedIncludeData =", opt.plotNormalizedIncludeData  
     print "          showIntegralLegend =", opt.showIntegralLegend
     print "                 scaleToPlot =", opt.scaleToPlot
     print "                     minLogC =", opt.minLogC
@@ -117,6 +119,7 @@ if __name__ == '__main__':
     factory._energy    = opt.energy
     factory._lumi      = opt.lumi
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
+    factory._plotNormalizedIncludeData = opt.plotNormalizedIncludeData
     factory._showIntegralLegend = opt.showIntegralLegend
 
     if opt.onlyPlot is not None:
