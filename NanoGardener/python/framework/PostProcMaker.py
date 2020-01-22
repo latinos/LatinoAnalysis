@@ -439,7 +439,7 @@ class PostProcMaker():
         return self._Sites[self._LocalSite]['xrootdPath']+File
       elif self._LocalSite == 'sdfarm' :
 	return File.replace('/xrootd', self._Sites[self._LocalSite]['xrootdPath']+'//xrd')
-      elif (self._LocalSite == 'ifca' or self._LocalSite == 'cloud') and self._Sites[self._LocalSite]['treeBaseDir'] not in File :
+      elif (self._LocalSite == 'ifca' or self._LocalSite == 'cloud') and self._iniStep == 'Prod' and 'root://' not in File:
         return self._Sites[self._LocalSite]['treeProdDir'] + File
       else:
         return File
