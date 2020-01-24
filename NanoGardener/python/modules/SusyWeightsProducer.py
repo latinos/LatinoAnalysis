@@ -14,7 +14,7 @@ class SusyWeightsProducer(Module):
     ###
     def __init__(self, cmssw, sourcedir):
         self.cmssw = cmssw
-        self.sourcedir = sourcedir
+        self.sourcedir = sourcedir[:sourcedir.index('__susyGen')] + '__susyGen'
         pass
 
     ###
