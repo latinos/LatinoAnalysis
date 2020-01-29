@@ -986,7 +986,7 @@ class PostProcMaker():
                    pass
 
                  sourceName = (self._targetDir+self._treeFilePrefix+tSample+'__part0.root').replace('//','/')
-                 source = ROOT.TFile.Open(source)
+                 source = ROOT.TFile.Open(sourceName)
 
                  target = ROOT.TFile.Open(ftmp.name, 'recreate')
                  for key in source.GetListOfKeys():
