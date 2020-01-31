@@ -722,7 +722,17 @@ class PlotFactory:
                   
               if sampleConfiguration['isSignal'] == 1 :
                   print "############################################################## isSignal 1", sampleNameGroup
-                  thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
+                  #
+                  # if, for some reason, you want to scale only the overlaid signal
+                  # for example to show the shape of the signal, without affecting the actual stacked (true) distribution
+                  #
+                  if 'scaleMultiplicativeOverlaid' in sampleConfiguration.keys() : 
+                    # may this clone not mess up too much with "gDirectory", see TH1::Copy
+                    temp_overlaid = histos_grouped[sampleNameGroup].Clone()
+                    temp_overlaid.Scale(sampleConfiguration['scaleMultiplicativeOverlaid'])
+                    thsSignal_grouped.Add(temp_overlaid)
+                  else :
+                    thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
               elif sampleConfiguration['isSignal'] == 2 :
                   print "############################################################## isSignal 2", sampleNameGroup
                   groupFlag = True
