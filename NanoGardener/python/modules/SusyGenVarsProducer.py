@@ -39,18 +39,21 @@ class SusyGenVarsProducer(Module):
         if self.susyModelIsSet==False :
 
             self.susyProcess = ''
+            self.susyModel = ''
 
             for process in SUSYCrossSections :
-                for susyModel in SUSYCrossSections[process]['susyModels'] :
-                    if susyModel in inputFile.GetName() :
+                for model in SUSYCrossSections[process]['susyModels'] :
+                    if model in inputFile.GetName() :
                         self.susyProcess = process
+                        self.susyModel = model
 
             if self.susyProcess=='' :
                 print 'SusyGenVarsProducer WARNING: SUSY process not found for input file', inputFile.GetName()
 
-                for susyModel in SUSYCrossSections[process]['susyModels'] :
-                    if susyModel in outputFile.GetName() :
+                for model in SUSYCrossSections[process]['susyModels'] :
+                    if model in outputFile.GetName() :
                         self.susyProcess = process
+                        self.susyModel = model
 
                 if self.susyProcess=='' :
                     print 'SusyGenVarsProducer WARNING: SUSY process not found for output file', outputFile.GetName()
@@ -71,14 +74,19 @@ class SusyGenVarsProducer(Module):
             xsUnc = xsUnc.replace('%', '')
             return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])*float(xsUnc)/100.
 
-    def getCrossSection(self, susyProcess, susyMass):
+    def getCrossSection(self, susyProcess, susyModel, susyMass):
+
+        convBR = float(SUSYCrossSections[susyProcess]['susyModels'][susyModel])
+
+        if susyProcess=='WinoC1C1' and (susyMass%25)!=0 :
+            susyMass = int(25*round(float(susyMass)/25))
 
         isusyMass = int(susyMass)
 
         if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
             
-            return [float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value']),
-                    self.getCrossSectionUncertainty(susyProcess, isusyMass)]
+            return [convBR*float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value']),
+                    convBR*self.getCrossSectionUncertainty(susyProcess, isusyMass)]
         
         elif isusyMass%5!=0 :
                     
@@ -96,7 +104,7 @@ class SusyGenVarsProducer(Module):
                 susyXsecRelUnc = (self.getCrossSectionUncertainty(susyProcess, isusyMass1)/susyXsec1 + 
                                   self.getCrossSectionUncertainty(susyProcess, isusyMass2)/susyXsec2)/2.
                 
-                return [susyXsec, susyXsec*susyXsecRelUnc]
+                return [convBR*susyXsec, convBR*susyXsec*susyXsecRelUnc]
 
         raise Exception('SusyGenVarsProducer ERROR: cross section not available for', self.susyProcess, 'at mass =', susyMass)
 
@@ -150,19 +158,22 @@ class SusyGenVarsProducer(Module):
         if self.susyModelIsSet==False:
             if massStop>-1:
                 self.susyProcess = 'StopSbottom'
+                if massChargino>-1:
+                    self.susyModel = 'T2bW'
+                else:
+                    self.susyModel = 'T2tt'
             elif massChargino>-1:
                 self.susyProcess = 'WinoC1C1'
+                if massSlepton>-1:
+                    self.susyModel = 'TChipmSlepSnu'
+                else:
+                    self.susyModel = 'TChipmWW'
             else:
                 raise Exception('SusyGenVarsProducer ERROR: SUSY process not set from gen particle inspection either')
             print 'SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection'
             self.susyModelIsSet = True
-
-        if self.susyProcess=='WinoC1C1' and (massChargino%25)!=0 :
-            print 'SusyGenVarsProducer WARNING: weird chargino mass', massChargino, '. Setting to ', 25*int(massChargino/25), 'massLSP =', massLSP, 'massSlepton =', massSlepton
-            massChargino = 25*int(massChargino/25)
-            massPrompt = massChargino 
                 
-        xSec = self.getCrossSection(self.susyProcess, massPrompt)
+        xSec = self.getCrossSection(self.susyProcess, self.susyModel, massPrompt)
         xSection = xSec[0]
         xSecUncert = xSec[1]
         
