@@ -2656,6 +2656,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['do_ElepTup_suffix','trigMCKeepRun_ElepTup','LeptonSF_ElepTup','l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup','DYMVA_ElepTup','MonoHiggsMVA_ElepTup','formulasEMBED_ElepTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
   'EmbElepTdo_suffix' :   {
@@ -2663,6 +2664,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['do_ElepTdo_suffix','trigMCKeepRun_ElepTdo','LeptonSF_ElepTdo','l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo','DYMVA_ElepTdo','MonoHiggsMVA_ElepTdo','formulasEMBED_ElepTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
 ## ------- mu-Scale
@@ -2769,6 +2771,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['do_MupTup_suffix', 'trigMCKeepRun_MupTup', 'LeptonSF_MupTup', 'l2Kin_MupTup', 'l3Kin_MupTup', 'l4Kin_MupTup', 'DYMVA_MupTup', 'MonoHiggsMVA_MupTup', 'formulasEMBED_MupTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
   'EmbMupTdo_suffix' :   {
@@ -2776,6 +2779,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['do_MupTdo_suffix', 'trigMCKeepRun_MupTdo', 'LeptonSF_MupTdo', 'l2Kin_MupTdo', 'l3Kin_MupTdo', 'l4Kin_MupTdo', 'DYMVA_MupTdo', 'MonoHiggsMVA_MupTdo', 'formulasEMBED_MupTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
 #-------------------------  Fatjet mass scale
