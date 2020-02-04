@@ -166,7 +166,7 @@ class EmbedWeights(Module):
               embed_total[wp] = embed_total[wp] / embed_hltSF[wp] # ... but remove the weight anyway, just in case
             elif embed_el_idSF[wp]>100:
               print "...because of Ele ID" # Few bins unfortunately have low statistics in T&P, especially in the problematic phi regions.
-              #embed_total[wp] = embed_total[wp] / embed_el_idSF[wp]
+              #embed_total[wp] = embed_total[wp] / embed_el_idSF[wp] # ... remove phi dependent part
             else:
               print "Don't know why!" # This doesn't occur, last I checked
               print "Norm  :", embed_norm
@@ -175,8 +175,10 @@ class EmbedWeights(Module):
               print "Mu ID :", embed_mu_idSF
               print "Mu Iso:", embed_mu_isoSF
               print "Triggr:", embed_hltSF[wp]
-              if trg_muonelectron_mu23ele12==1: print "ME TRIG"
-              if trg_muonelectron_mu12ele23==1: print "EM TRIG"
+              if trg_muonelectron_mu23ele12==1:
+                print "ME TRIG"
+              if trg_muonelectron_mu12ele23==1:
+                print "EM TRIG"
               print "e_pT: ",getattr(event, 'Electron_pt')[ele_id]
               print "e_eta:",getattr(event, 'Electron_eta')[ele_id]
               print "e_phi:",getattr(event, 'Electron_phi')[ele_id]

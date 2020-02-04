@@ -2178,6 +2178,42 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\')' ,
                  },
 
+  'formulasEMBED_ElepTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="ElepTup")' ,
+                 },
+
+  'formulasEMBED_ElepTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="ElepTdo")' ,
+                 },
+
+  'formulasEMBED_MupTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="MupTup")' ,
+                 },
+
+  'formulasEMBED_MupTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="MupTdo")' ,
+                 },
+
 ## -------- DYMVA
 
   'DYMVA' : {
@@ -2615,6 +2651,20 @@ Steps = {
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasEMBED'],
                },
 
+  'EmbElepTup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTup_suffix','trigMCKeepRun_ElepTup','LeptonSF_ElepTup','l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup','DYMVA_ElepTup','MonoHiggsMVA_ElepTup','formulasEMBED_ElepTup'],
+               },
+
+  'EmbElepTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTdo_suffix','trigMCKeepRun_ElepTdo','LeptonSF_ElepTdo','l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo','DYMVA_ElepTdo','MonoHiggsMVA_ElepTdo','formulasEMBED_ElepTdo'],
+               },
+
 ## ------- mu-Scale
 
   'do_MupTup' : {
@@ -2712,6 +2762,20 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasEMBED'],
+               },
+
+  'EmbMupTup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTup_suffix', 'trigMCKeepRun_MupTup', 'LeptonSF_MupTup', 'l2Kin_MupTup', 'l3Kin_MupTup', 'l4Kin_MupTup', 'DYMVA_MupTup', 'MonoHiggsMVA_MupTup', 'formulasEMBED_MupTup'],
+               },
+
+  'EmbMupTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTdo_suffix', 'trigMCKeepRun_MupTdo', 'LeptonSF_MupTdo', 'l2Kin_MupTdo', 'l3Kin_MupTdo', 'l4Kin_MupTdo', 'DYMVA_MupTdo', 'MonoHiggsMVA_MupTdo', 'formulasEMBED_MupTdo'],
                },
 
 #-------------------------  Fatjet mass scale
