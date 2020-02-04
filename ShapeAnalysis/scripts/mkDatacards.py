@@ -518,8 +518,8 @@ class DatacardFactory:
                     if 'limits' in nuisance.keys():
                         card.write(nuisance['limits'].ljust(20))
                 else:
-                    bondFormula, bondParameters = nuisance['bond'][variableName].items()[0]
-                    card.write(bondFormula.ljust(20))
+                    bondFormula, bondParameters = nuisance['bond'][cutName][variableName].items()[0]
+                    card.write(bondFormula.ljust(40))
                     card.write(bondParameters.ljust(20))
                 card.write('\n')
 
