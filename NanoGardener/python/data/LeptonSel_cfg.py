@@ -4113,6 +4113,11 @@ ElectronWP = {
 #ElectronWP['Study2017'] = ElectronWP['Full2016']
 ElectronWP['Full2016v5']=ElectronWP['Full2016v4']
 ElectronWP['Full2016v6']=ElectronWP['Full2016v4']
+ElectronWP['Full2017v6']['TightObjWP']['cut_WP_Tight80X']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v6/Tight80X/'
+ElectronWP['Full2017v6']['TightObjWP']['cut_WP_Tight80X_SS']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v6/Tight80X_SS/'
+ElectronWP['Full2017v6']['TightObjWP']['mva_90p_Iso2016']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v6/mva90pIso2016/'
+ElectronWP['Full2017v6']['TightObjWP']['mva_90p_Iso2016_SS']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v6/mva90pIso2016_SS/'
+
 
 ####################### Muon WP ######################################
 
