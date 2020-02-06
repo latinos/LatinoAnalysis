@@ -75,6 +75,8 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  TH1F* hRatioUp = (TH1F*) hUp->Clone("Up");
  TH1F* hRatioDo = (TH1F*) hDo->Clone("Do");
  
+ float max_ratio = 1.5;
+ 
  for (int iBin = 0; iBin < hReferenceRatio->GetNbinsX(); iBin++) {
    float ratio = 1;
    float den = hNominal->GetBinContent(iBin+1);
@@ -84,6 +86,7 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
    hRatioUp -> SetBinContent(iBin+1, ratio);
    hRatioUp -> SetBinError  (iBin+1, 0.);
 //    if (den != 0) hRatioUp -> SetBinError  (iBin+1, 1./den * hRatioUp->GetBinError(iBin+1));
+   if (max_ratio < ratio) max_ratio = ratio;
  }
   hRatioUp->SetLineColor(kGreen+2);
   hRatioUp->SetLineWidth(3);
@@ -97,6 +100,7 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
   hRatioDo -> SetBinContent(iBin+1, ratio);
   hRatioDo -> SetBinError  (iBin+1, 0.);
 //   if (den != 0) hRatioDo -> SetBinError  (iBin+1, 1./den * hRatioDo->GetBinError(iBin+1));
+  if (max_ratio < ratio) max_ratio = ratio;
  }
  hRatioDo->SetLineColor(kMagenta);
  hRatioDo->SetLineWidth(2);
@@ -137,7 +141,10 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  gPad -> SetGrid();
 
  pad2 -> cd();
-
+ 
+ hReferenceRatio->Draw();
+ float rounded_max_ratio = int( 10. * (max_ratio + 0.5) ) / 10.;
+ hReferenceRatio -> GetYaxis() -> SetRangeUser(0.0, rounded_max_ratio);
  hReferenceRatio->Draw();
  hRatioUp->Draw("same");
  hRatioDo->Draw("same");
