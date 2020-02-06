@@ -22,6 +22,7 @@ except:
   raise RuntimeError('Failed to load libMultiDraw')
 
 import LatinoAnalysis.Tools.userConfig as userConfig
+from LatinoAnalysis.NanoGardener.data.BranchMapping_cfg import branch_mapping
 
 # ----------------------------------------------------- ShapeFactory --------------------------------------
 
@@ -224,7 +225,100 @@ class ShapeFactory:
           # Create the nominal drawer
 
           drawer = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
+
+          # Create the drawers for tree- and map-type nuisances
+
+          nuisanceDrawers = {}
+          ndrawers = [] # flat list for convenience
+
+          basenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
+
+          for nuisanceName, nuisance in nuisances.iteritems():
+            if 'kind' not in nuisance:
+              continue
+
+            nkind = nuisance['kind']
+
+            if not (nkind.startswith('tree') or nkind.startswith('suffix')):
+              continue
+
+            if sampleName not in nuisance['samples']:
+              continue
+
+            twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+            nuisanceDrawers[nuisanceName] = collections.OrderedDict()
+
+            if nkind == 'tree' or nkind == 'suffix':
+              if twosided:
+                variations = ['Up', 'Down']
+              else:
+                variations = ['Up']
+            else:
+              variations = ['V%dVar' % ivar for ivar in range(len(nuisance['samples'][sampleName]))]
+
+            skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
+            if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
+              # Workaround for missing nuisance files - don't use this regularly!
+              if sample['name'][0].startswith('###'):
+                altDir = os.path.dirname(sample['name'][0].replace('###', ''))
+              else:
+                altDir = inputDir
+            else:
+              altDir = ''
+
+            if nkind.startswith('tree'):
+              # Sept 2017
+              # Tree kind nuisances can be hanndled in two ways:
+              # usual way: a full tree for the variation up and a full tree for the variation down
+              # This behavior is activated by the presence in the nuisances.py file of the tags 'folderUp' and 'folderDown'
+              # alternative way: a combination of trees holding only the varied branches and the central tree for all the unvaried branches.
+              # This behavior is activated by the presence in the nuisances.py file of the tags: 'unskimmedFolderUp', 'unskimmedFolderDown', 'unskimmedFriendTreeDir'.
+              # Note that one has to use trees before skimming. The skimming can be applied on top is the additional tags 'skimListFolderUp' and 'skimListFolderDown'
+              # are present. These tags hold the path to the directories holding the files holding the "prunerlist" event list
+
+              for var in variations:
+                if 'folder' + var in nuisance:
+                  if 'unskimmedFriendTreeDir' in nuisance.keys():
+                    unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
+    
+                    try:
+                      skimListFolderVar = nuisance['skimListFolder' + var]
+                    except KeyError:
+                      skimListFolderVar = None
+    
+                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, basenames, nuisance['unskimmedFolder' + var], skipMissingFiles=skipMissing, friendsDir=(unskimmedFriendsDir, nuisanceName + var), skimListDir=skimListFolderVar, altDir=altDir)
+    
+                  else:
+                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, basenames, nuisance['folder' + var], skipMissingFiles=skipMissing, altDir=altDir)
+    
+                elif 'files' + var in nuisance:
+                  # TODO this feature is not fully working - I can't come up with a good way to assign variation files to batch jobs
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, nuisance['files' + var][sampleName], '', skipMissingFiles=False)
+                  
+                ndrawers.append(ndrawer)
+
+            elif nkind.startswith('suffix'):
+              for var in variations:
+                if 'folder' + var in nuisance:
+                  friendAlias = nuisanceName + var
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False, friendsDir=(nuisance['folder' + var], friendAlias))
+                  prefix = friendAlias + '.'
+                else:
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
+                  prefix = ''
+
+                # there are various ways to set up branch mapping in NanoGardener, but in practice we use only the branches-suffix configuration
+                bmap = branch_mapping[nuisance['map' + var]]
+                for bname in bmap['branches']:
+                  ndrawer.replaceBranch(bname, prefix + bname + bmap['suffix'])
+
+                ndrawers.append(ndrawer)
+
+          # Filters and aliases
+
           drawer.setFilter(supercut)
+          for ndrawer in ndrawers:
+            ndrawer.setFilter(supercut)
 
           for aliasName, alias in self.aliases.iteritems():
             if 'samples' in alias and sampleName not in alias['samples']:
@@ -235,6 +329,15 @@ class ShapeFactory:
             else:
               drawer.addAlias(aliasName, alias['expr'])
 
+            if 'nominalOnly' in alias and alias['nominalOnly']:
+              continue
+
+            for ndrawer in ndrawers:
+              if 'class' in alias:
+                ndrawer.addAlias(aliasName, ShapeFactory._make_ttreefunction(alias))
+              else:
+                ndrawer.addAlias(aliasName, alias['expr'])
+
           # Set overall weights on the nominal drawer
           drawer.setReweight(sampleweight)
 
@@ -242,108 +345,20 @@ class ShapeFactory:
             if w is not None:
               drawer.setTreeReweight(it, False, w)
 
-          # Set up drawers for tree-type nuisances
-
-          nuisanceDrawers = {}
-
-          for nuisanceName, nuisance in nuisances.iteritems():
-            if ('kind' not in nuisance) or (not nuisance['kind'].startswith('tree')):
-              continue
-
-            # Sept 2017
-            # Tree kind nuisances can be hanndled in two ways:
-            # usual way: a full tree for the variation up and a full tree for the variation down
-            # This behavior is activated by the presence in the nuisances.py file of the tags 'folderUp' and 'folderDown'
-            # alternative way: a combination of trees holding only the varied branches and the central tree for all the unvaried branches.
-            # This behavior is activated by the presence in the nuisances.py file of the tags: 'unskimmedFolderUp', 'unskimmedFolderDown', 'unskimmedFriendTreeDir'.
-            # Note that one has to use trees before skimming. The skimming can be applied on top is the additional tags 'skimListFolderUp' and 'skimListFolderDown'
-            # are present. These tags hold the path to the directories holding the files holding the "prunerlist" event list
-
-            if sampleName not in nuisance['samples']:
-              continue
-
-            twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
-            nuisanceDrawers[nuisanceName] = {}
-
-            if 'folderUp' in nuisance:
-              filenames = [os.path.basename(s) if '###' in s else s for s in sample['name']]
-              skipMissing = ('synchronized' in nuisance and not nuisance['synchronized'])
-
-              if 'nominalAsAlt' in nuisance and nuisance['nominalAsAlt']:
-                # Workaround for missing nuisance files - don't use this regularly!
-                if sample['name'][0].startswith('###'):
-                  altDir = os.path.dirname(sample['name'][0].replace('###', ''))
-                else:
-                  altDir = inputDir
-              else:
-                altDir = ''
-
-              if 'unskimmedFriendTreeDir' in nuisance.keys():
-                unskimmedFriendsDir = nuisance['unskimmedFriendTreeDir']
-
-                try:
-                  skimListFolderUp = nuisance['skimListFolderUp']
-                except KeyError:
-                  skimListFolderUp = None
-
-                if twosided:
-                  try:
-                    skimListFolderDown = nuisance['skimListFolderDown']
-                  except KeyError:
-                    skimListFolderDown = None
-
-                nuisanceDrawers[nuisanceName]['Up'] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderUp'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderUp, altDir=altDir)
-                if twosided:
-                  nuisanceDrawers[nuisanceName]['Down'] = self._connectInputs(sampleName, filenames, nuisance['unskimmedFolderDown'], skipMissingFiles=skipMissing, friendsDir=unskimmedFriendsDir, skimListDir=skimListFolderDown, altDir=altDir)
-
-              else:
-                nuisanceDrawers[nuisanceName]['Up'] = self._connectInputs(sampleName, filenames, nuisance['folderUp'], skipMissingFiles=skipMissing, altDir=altDir)
-                if twosided:
-                  nuisanceDrawers[nuisanceName]['Down'] = self._connectInputs(sampleName, filenames, nuisance['folderDown'], skipMissingFiles=skipMissing, altDir=altDir)
-
-            elif 'filesUp' in nuisance and 'filesDown' in nuisance:
-              # TODO this feature is not fully working - I can't come up with a good way to assign variation files to batch jobs
-              nuisanceDrawers[nuisanceName]['Up'] = self._connectInputs(sampleName, nuisance['filesUp'][sampleName], '', skipMissingFiles=False)
-              if twosided:
-                nuisanceDrawers[nuisanceName]['Down'] = self._connectInputs(sampleName, nuisance['filesDown'][sampleName], '', skipMissingFiles=False)
-
-            # TODO write case of 'folders' for tree_envelope and tree_rms
-
           # Set overall weights on the nuisance up/down drawers
           for nuisanceName, ndrawers in nuisanceDrawers.iteritems():
             # tree-type nuisances can in addition have weights for up / down
             nuisance = nuisances[nuisanceName]
             sampleVarWeights = nuisance['samples'][sampleName]
-            if nuisance['kind'] == 'tree':
-              variations = ['Up']
-              if 'OneSided' not in nuisance or not nuisance['OneSided']:
-                variations.append('Down')
-            else:
-              variations = ['V%dVar' % ivar for ivar in range(len(ndrawers))]
 
-            for ivar, var in enumerate(variations):
-              ndrawer = ndrawers[var]
-
+            for ivar, (var, ndrawer) in enumerate(ndrawers.iteritems()):
               if float(sampleVarWeights[ivar]) != 1.:
                 nuisanceShift = ShapeFactory._make_reweight(sampleVarWeights[ivar])
                 nuisanceweight = ROOT.multidraw.ReweightSource(sampleweight, nuisanceShift)
               else:
                 nuisanceweight = sampleweight
 
-              ndrawer.setFilter(supercut)
               ndrawer.setReweight(nuisanceweight)
-
-              for aliasName, alias in self.aliases.iteritems():
-                if 'samples' in alias and sampleName not in alias['samples']:
-                  continue
-
-                if 'nominalOnly' in alias and alias['nominalOnly']:
-                  continue
-
-                if 'class' in alias:
-                  ndrawer.addAlias(aliasName, ShapeFactory._make_ttreefunction(alias))
-                else:
-                  ndrawer.addAlias(aliasName, alias['expr'])
 
               # if the nuisance drawer is built from independent files, length of chain can be
               # different from the length of tree weights
@@ -359,6 +374,8 @@ class ShapeFactory:
                   if warnIfTreeWeight:
                     print 'Nuisance', nuisanceName, 'tree filler for sample', sampleName, 'has different number of trees from the nominal filler. Tree-based reweighting may cause problems.'
                     warnIfTreeWeight = False
+
+          # Set up cuts
 
           cuts = collections.OrderedDict()
           if 'subsamples' in sample:
@@ -425,7 +442,7 @@ class ShapeFactory:
               applicableNuisances[nuisanceName] = nuisance
 
               # setup cuts for tree-type nuisances
-              if 'kind' in nuisance and nuisance['kind'].startswith('tree'):
+              if nuisanceName in nuisanceDrawers:
                 for ndrawer in nuisanceDrawers[nuisanceName].itervalues():
                   ndrawer.addCut(cutFullName, cut['expr'])
                   if 'categorization' in cut:
@@ -454,7 +471,7 @@ class ShapeFactory:
               else:
                 reweight = None
 
-              if 'tree' in variable:
+              if 'tree' in variable: # variable is actually a tree definition
                 def setup_filler(drawer, reweight, variation=''):
                   if variation:
                     nlabel = '_' + variation
@@ -491,7 +508,7 @@ class ShapeFactory:
 
                   return filler
 
-              else:
+              else: # variable is a real variable defined by an expression ('name') or an object ('class')
                 if 'name' in variable:
                   if type(variable['name']) is str:
                     try:
@@ -554,6 +571,7 @@ class ShapeFactory:
 
                   return filler
 
+              # end "if 'tree' in variable: ... else: ..."
 
               nominal_filler = setup_filler(drawer, reweight)
 
@@ -563,11 +581,11 @@ class ShapeFactory:
 
                 sampleVarWeights = nuisance['samples'][sampleName]
 
-                if nuisance['kind'].startswith('tree'):
+                if nuisanceName in nuisanceDrawers:
                   for var, ndrawer in nuisanceDrawers[nuisanceName].iteritems():
                     setup_filler(ndrawer, reweight, nuisance['name'] + var)
 
-                elif nuisance['kind'].startswith('weight'):
+                else:
                   if nuisance['kind'] == 'weight':
                     variations = ['Up']
                     if 'OneSided' not in nuisance or not nuisance['OneSided']:
@@ -577,6 +595,7 @@ class ShapeFactory:
 
                   for ivar, var in enumerate(variations):
                     if 'tree' in variable:
+                      # add a reweighting branch to the nominal tree instead of creating an entirely new tree with only the weight branch modified
                       nominal_filler.addBranch('reweight_' + nuisance['name'] + var, sampleVarWeights[ivar])
                     else:
                       reweightNuis = ROOT.multidraw.ReweightSource(sampleVarWeights[ivar])
@@ -600,6 +619,7 @@ class ShapeFactory:
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
 
+          # tree-type nuisances
           for nuisanceName in nuisanceDrawers.keys():
             ndrawers = nuisanceDrawers.pop(nuisanceName)
             for var, ndrawer in ndrawers.iteritems():
@@ -1108,13 +1128,20 @@ class ShapeFactory:
         #    some of them under iteos, some under the standard eos
 
         # use inputDir if no "###"           otherwise     just use f (after removing the "###" from the name)
-        files = [(inputDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
+        files = []
+        for f in filenames:
+          if '###' in f: # full path given
+            files.append(f.replace('#', ''))
+          else:
+            files.append(inputDir + '/' + f)
+
         self._buildchain(drawer, files, skipMissingFiles, altDir=altDir)
 
         # if we specify a friends tree directory we need to load the friend trees and attch them
-        if friendsDir != None:
-          files = [(friendsDir + '/' + f) if '###' not in f else f.replace("#", "") for f in filenames]
-          self._buildchain(drawer, files, False, friendtree=self._treeName)
+        if friendsDir is not None:
+          # friendsDir is (directory, alias)
+          files = [friendsDir[0] + '/' + os.path.basename(f) for f in filenames]
+          self._buildchain(drawer, files, False, friendtree=(self._treeName, friendsDir[1]))
 
         #if we specify a directory with skim event lists we need to load them and skim
         #if skimListDir != None:
@@ -1180,7 +1207,7 @@ class ShapeFactory:
       return False
 
     # _____________________________________________________________________________
-    def _buildchain(self, multidraw, files, skipMissingFiles, friendtree=None, altDir=''):
+    def _buildchain(self, drawer, files, skipMissingFiles, friendtree=None, altDir=''):
         def testFile(path):
           if "eoscms.cern.ch" in path or "eosuser.cern.ch" in path:
             exists = self._testEosFile(path)
@@ -1226,7 +1253,7 @@ class ShapeFactory:
               if friendtree is not None:
                 paths.append(path)
               else:
-                multidraw.addInputPath(path)
+                drawer.addInputPath(path)
 
               ntrees += 1
               break
@@ -1243,10 +1270,11 @@ class ShapeFactory:
             raise RuntimeError('File '+path+' doesn\'t exist')
 
         if friendtree is not None:
+          # friendtree is (treename, alias)
           objarr = ROOT.TObjArray()
           for path in paths:
             objarr.Add(ROOT.TObjString(path))
-            multidraw.addFriend(friendtree, objarr)
+          drawer.addFriend(friendtree[0], objarr, friendtree[1])
 
         return ntrees
 
