@@ -1130,7 +1130,7 @@ Steps = {
                   'module'     : 'wNLOEWK()',
                   'onlySample' : [
                                   ####
-                                  'WJetsToLNu-LO',
+                                  'WJetsToLNu-LO','WJetsToLNu-LO_ext1'
                                   'WJetsToLNu',
                                   'WJetsToLNu_HT70_100','WJetsToLNu_HT100_200',
                                   'WJetsToLNu_HT200_400','WJetsToLNu_HT400_600',
@@ -1148,7 +1148,9 @@ Steps = {
                   'module'     : 'wNLOEWK()',
                   'onlySample' : [  
                                    #### DY
-                                  'DYJetsToLL_M-10to50','DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-5to50-LO',
+                                  'DYJetsToLL_M-10to50',
+                                  'DYJetsToLL_M-50','DYJetsToLL_M-50_ext1',
                                   'DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
                                   'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2',

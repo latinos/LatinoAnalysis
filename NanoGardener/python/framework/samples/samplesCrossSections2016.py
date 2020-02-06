@@ -29,6 +29,7 @@
 #   W       https://cms-gen-dev.cern.ch/xsdb/
 #       Z   http://cms.cern.ch/iCMS/analysisadmin/cadilines?line=SMP-18-006
 #       Y       https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBSMAt13TeV
+#    A1 https://indico.cern.ch/event/673253/contributions/2756806/attachments/1541203/2416962/20171016_VJetsXsecsUpdate_PH-GEN.pdf 
 #	X	Unknown! - Cross section not yet there
 
 
@@ -57,16 +58,10 @@ samples['WJetsToLNu_HT1200_2500_ext1']    .extend( ['xsec=1.32900',	'kfact=1.21'
 samples['WJetsToLNu_HT2500_inf']       	.extend( ['xsec=0.03216',	'kfact=1.21',		'ref=E'] )
 samples['WJetsToLNu_HT2500_inf_ext1']     .extend( ['xsec=0.03216',	'kfact=1.21',		'ref=E'] )
 
-samples['WJetsToLNu_Pt100to250']                	.extend( ['xsec=689.749632',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt100to250_ext1']              .extend( ['xsec=689.749632',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt100to250_ext4']              .extend( ['xsec=689.749632',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt250to400']                	.extend( ['xsec=24.5069015',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt250to400_ext1']              .extend( ['xsec=24.5069015',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt250to400_ext4']              .extend( ['xsec=24.5069015',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt400to600']                	.extend( ['xsec=3.110130566',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt400to600_ext1']              .extend( ['xsec=3.110130566',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt400to600_ext4']              .extend( ['xsec=3.110130566',	'kfact=1.0176',		'ref=XSDB'] )
-samples['WJetsToLNu_Pt600toInf_ext4']              .extend( ['xsec=0.4683178368',	'kfact=1.0176',		'ref=XSDB'] )
+samples['WJetsToLNu_Pt100to250']                	.extend( ['xsec=689.749632',	'kfact=1.0',		'ref=A1'] )  
+samples['WJetsToLNu_Pt250to400']                	.extend( ['xsec=24.5069015',	'kfact=1.0',		'ref=A1'] )
+samples['WJetsToLNu_Pt400to600']                	.extend( ['xsec=3.110130566',	'kfact=1.0',		'ref=A1'] )
+samples['WJetsToLNu_Pt600toInf']                   .extend( ['xsec=0.4683178368',	'kfact=1.0',		'ref=A1'] )
 
 samples['WJetsToLNu_Wpt100to200']  .extend( [ 'xsec=457.8', 'kfact=1.0', 'ref=XSDB' ])
 samples['WJetsToLNu_Wpt200toInf']  .extend( [ 'xsec=50.48', 'kfact=1.0', 'ref=XSDB' ])
