@@ -22,7 +22,7 @@ Samples['HZJ_HToTauTau_M125'] = {'nanoAOD' :'/ZHToTauTau_M125_13TeV_powheg_pythi
 
 ##ggZH TauTau
 #Samples['GluGluZH_HToTauTau_ZTo2L_M120'] = {'nanoAOD' :'ggZH_HToTauTau_ZToLL_M120_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
-Samples['GluGluZH_HToTauTau_ZTo2L_M125'] = {'nanoAOD' :'ggZH_HToTauTau_ZToLL_M125_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['GluGluZH_HToTauTau_ZTo2L_M125'] = {'nanoAOD' :'/ggZH_HToTauTau_ZToLL_M125_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 #Samples['GluGluZH_HToTauTau_ZTo2L_M130'] = {'nanoAOD' :'ggZH_HToTauTau_ZToLL_M130_13TeV_powheg_pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 
 ## ggH HWW
