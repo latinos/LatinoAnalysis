@@ -206,13 +206,37 @@ class vvNLOEWKcorrectionWeightProducer(Module):
           temp_ptl1 = -1
           temp_ptl2 = -1
           temp_ptl3 = -1
+          temp_etal1 = -1
+          temp_etal2 = -1
+          temp_etal3 = -1
+          temp_phil1 = -1
+          temp_phil2 = -1
+          temp_phil3 = -1
+          temp_idl1 = -1
+          temp_idl2 = -1
+          temp_idl3 = -1
           
           temp_ptv1 = -1
           temp_ptv2 = -1
           temp_ptv3 = -1
+          temp_etav1 = -1
+          temp_etav2 = -1
+          temp_etav3 = -1
+          temp_phiv1 = -1
+          temp_phiv2 = -1
+          temp_phiv3 = -1
+          temp_idlv1 = -1
+          temp_idlv2 = -1
+          temp_idlv3 = -1
 
           temp_ptq1 = -1
           temp_ptq2 = -1
+          temp_etaq1 = -1
+          temp_etaq2 = -1
+          temp_phiq1 = -1
+          temp_phiq2 = -1
+          temp_idlq1 = -1
+          temp_idlq2 = -1
 
           #print " ~~ new event "
           
@@ -463,7 +487,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
               idv2  = temp_idl2    
 
            
-          elif temp_ptq1 > 0 and temp_ptq2 > 0 :   # ---> "temp_ptq1 > 0" alone is not safe because of NLO (additional quarks!)
+          elif temp_ptq1 > 0 and temp_ptq2 > 0 and temp_ptl1>0 and temp_ptl2>0 :   # ---> "temp_ptq1 > 0" alone is not safe because of NLO (additional quarks!)
 
             # W>qq  and   Z>ll
 
@@ -488,10 +512,37 @@ class vvNLOEWKcorrectionWeightProducer(Module):
             idv2  = temp_idl2   
 
           
+          
+          elif temp_ptq1 > 0 and temp_ptq2 > 0 and temp_ptl1>0 and temp_ptv1>0 : 
+
+            # W>lv  and   Z>qq
+
+            ptl1  = temp_ptl1
+            etal1 = temp_etal1
+            phil1 = temp_phil1
+            idl1  = temp_idl1
+            
+            ptv1  = temp_ptv1
+            etav1 = temp_etav1
+            phiv1 = temp_phiv1
+            idv1  = temp_idv1
+            
+            ptl2  = temp_ptq1
+            etal2 = temp_etaq1
+            phil2 = temp_phiq1
+            idl2  = temp_idq1
+           
+            ptv2  = temp_ptq2
+            etav2 = temp_etaq2
+            phiv2 = temp_phiq2
+            idv2  = temp_idq2   
+
+
+
             
           if ptl1 == -1 or ptl2 == -1 or ptv1 == -1 or ptv2 == -1 :
             ewknloW = -2
-          else :          
+          else :       
             results_value_and_error = self.qq2wzEWKcorrections.getqq2WVEWKCorr(ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2, ptv1, etav1, phiv1, idv1, ptv2, etav2, phiv2, idv2, x1, x2, id1, id2,    1)
             ewknloW = results_value_and_error[0]
             ewknloWuncertainty = results_value_and_error[1]
@@ -505,6 +556,124 @@ class vvNLOEWKcorrectionWeightProducer(Module):
 #
 
         if iszz :             
+
+
+          temp_ptl1 = -1
+          temp_ptl2 = -1
+          temp_ptl3 = -1
+          temp_ptl4 = -1
+          
+          temp_ptv1 = -1
+          temp_ptv2 = -1
+
+          temp_etal1 = -1
+          temp_etal2 = -1
+          temp_etal3 = -1
+          temp_etal4 = -1
+          
+          temp_etav1 = -1
+          temp_etav2 = -1
+
+          temp_phil1 = -1
+          temp_phil2 = -1
+          temp_phil3 = -1
+          temp_phil4 = -1
+          
+          temp_phiv1 = -1
+          temp_phiv2 = -1
+
+          temp_idl1 = -1
+          temp_idl2 = -1
+          temp_idl3 = -1
+          temp_idl4 = -1
+          
+          temp_idv1 = -1
+          temp_idv2 = -1
+
+
+
+          temp_ptq1 = -1
+          temp_ptq2 = -1
+ 
+          temp_etaq1 = -1
+          temp_etaq2 = -1
+          
+          temp_phiq1 = -1
+          temp_phiq2 = -1
+          
+          temp_idq1 = -1
+          temp_idq2 = -1
+ 
+          
+          for particle  in lheParticles :
+              
+            # lepton = 11, 13, 15
+            #          e   mu  tau
+            
+            if abs(particle.pdgId) == 11 or abs(particle.pdgId) == 13 or abs(particle.pdgId) == 15:
+     
+              if temp_ptl1 == -1 :
+                temp_ptl1   = particle.pt
+                temp_etal1  = particle.eta
+                temp_phil1  = particle.phi
+                temp_idl1   = particle.pdgId
+              elif temp_ptl2 == -1 :
+                temp_ptl2   = particle.pt
+                temp_etal2  = particle.eta
+                temp_phil2  = particle.phi
+                temp_idl2   = particle.pdgId
+              elif temp_ptl3 == -1 :
+                temp_ptl3   = particle.pt
+                temp_etal3  = particle.eta
+                temp_phil3  = particle.phi
+                temp_idl3   = particle.pdgId
+              elif temp_ptl4 == -1 :
+                temp_ptl4   = particle.pt
+                temp_etal4  = particle.eta
+                temp_phil4  = particle.phi
+                temp_idl4   = particle.pdgId
+
+            # neutrinos
+            #          12   14   16
+
+            if abs(particle.pdgId) == 12 or abs(particle.pdgId) == 14 or abs(particle.pdgId) == 16:
+     
+              if temp_ptv1 == -1 :
+                temp_ptv1   = particle.pt
+                temp_etav1  = particle.eta
+                temp_phiv1  = particle.phi
+                temp_idv1   = particle.pdgId
+              elif temp_ptv2 == -1 :
+                temp_ptv2   = particle.pt
+                temp_etav2  = particle.eta
+                temp_phiv2  = particle.phi
+                temp_idv2   = particle.pdgId
+
+
+            # quarks
+            #          1, 2, 3, 4, 5, 6
+
+            #                                                           incoming quarks have 0 pt (otherwise 2 incoming quarks are in this list)
+            if abs(particle.pdgId) <= 6 and abs(particle.pdgId) >=1 and particle.pt != 0:
+     
+              if temp_ptq1 == -1 :
+                temp_ptq1   = particle.pt
+                temp_etaq1  = particle.eta
+                temp_phiq1  = particle.phi
+                temp_idq1   = particle.pdgId
+              elif temp_ptq2 == -1 :
+                temp_ptq2   = particle.pt
+                temp_etaq2  = particle.eta
+                temp_phiq2  = particle.phi
+                temp_idq2   = particle.pdgId
+
+
+          x1 = event.Generator_x1
+          x2 = event.Generator_x2
+ 
+          id1 = event.Generator_id1
+          id2 = event.Generator_id2
+
           
           ptl1  = 0.
           etal1 = 0.
@@ -538,10 +707,10 @@ class vvNLOEWKcorrectionWeightProducer(Module):
             if (abs(temp_idl1) == abs(temp_idl2)) :
 
               l1 = ROOT.TLorentzVector()
-              l1.SetPtEtaPhiM(ptl1, etal1, phil1, 0) # fine approx massless leptons for check
+              l1.SetPtEtaPhiM(temp_ptl1, temp_etal1, temp_phil1, 0) # fine approx massless leptons for check
 
               l2 = ROOT.TLorentzVector()
-              l2.SetPtEtaPhiM(ptl2, etal2, phil2, 0) # fine approx massless leptons for check
+              l2.SetPtEtaPhiM(temp_ptl2, temp_etal2, temp_phil2, 0) # fine approx massless leptons for check
                             
               mass = (l1+l2).M()                
        
@@ -571,10 +740,10 @@ class vvNLOEWKcorrectionWeightProducer(Module):
             if (abs(temp_idl1) == abs(temp_idl3)) :
 
               l1 = ROOT.TLorentzVector()
-              l1.SetPtEtaPhiM(ptl1, etal1, phil1, 0) # fine approx massless leptons for check
+              l1.SetPtEtaPhiM(temp_ptl1, temp_etal1, temp_phil1, 0) # fine approx massless leptons for check
 
               l2 = ROOT.TLorentzVector()
-              l2.SetPtEtaPhiM(ptl3, etal3, phil3, 0) # fine approx massless leptons for check
+              l2.SetPtEtaPhiM(temp_ptl3, temp_etal3, temp_phil3, 0) # fine approx massless leptons for check
                             
               mass = (l1+l2).M()                
        
@@ -604,10 +773,10 @@ class vvNLOEWKcorrectionWeightProducer(Module):
             if (abs(temp_idl1) == abs(temp_idl4)) :
 
               l1 = ROOT.TLorentzVector()
-              l1.SetPtEtaPhiM(ptl1, etal1, phil1, 0) # fine approx massless leptons for check
+              l1.SetPtEtaPhiM(temp_ptl1, temp_etal1, temp_phil1, 0) # fine approx massless leptons for check
 
               l2 = ROOT.TLorentzVector()
-              l2.SetPtEtaPhiM(ptl4, etal4, phil4, 0) # fine approx massless leptons for check
+              l2.SetPtEtaPhiM(temp_ptl4, temp_etal4, temp_phil4, 0) # fine approx massless leptons for check
                             
               mass = (l1+l2).M()                
        

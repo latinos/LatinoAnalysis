@@ -13,6 +13,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 import math
 from itertools import combinations, permutations
@@ -38,6 +39,7 @@ class l3KinProducer(Module):
         'WH3l_ptWWW'     : (["F"], {}),
         'WH3l_mtWWW'     : (["F"], {}),
         'WH3l_dphilllmet': (["F"], {}),
+        'WH3l_ptW'       : (["F"], {}),
 
         # for ZH3l, "l" in these variables *always* refers to the lepton not associated with the Z
         'ZH3l_njet'      : (["F"], {}),
@@ -50,12 +52,13 @@ class l3KinProducer(Module):
         'ZH3l_pTlmetjj'  : (["F"], {}),
         'ZH3l_pTlmetj'   : (["F"], {}),
         'ZH3l_mTlmetjj'  : (["F"], {}),
+        'ZH3l_mTlmetj'  : (["F"], {}),
         'ZH3l_pTZ'       : (["F"], {}),
         'ZH3l_checkmZ'   : (["F"], {}),
     }
 
-    def __init__(self):
-        pass
+    def __init__(self, branch_map=''):
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -64,7 +67,7 @@ class l3KinProducer(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
         for nameBranchKey, newBranchOpt in self.newbranches.items() :
             self.out.branch(nameBranchKey, *newBranchOpt[0], **newBranchOpt[1]);
@@ -182,6 +185,19 @@ class l3KinProducer(Module):
             return self.l3KinDefault
         return abs((self.Lepton_4vecId[0][0]+self.Lepton_4vecId[1][0]+self.Lepton_4vecId[2][0]).DeltaPhi(self.MET))
 
+    def WH3l_ptW(self):
+        """Return pt of lepton least likely to be from the Higgs (proxy for associated W)"""
+        WH3l_ptW = self.l3KinDefault
+        if self.WH3l_isOk:
+            mindR = -1*self.l3KinDefault
+            for iLep, jLep, kLep in permutations(self.Lepton_4vecId, 3):
+                if iLep[1]*jLep[1] < 0:
+                    dR = iLep[0].DeltaR(jLep[0])
+                    if dR < mindR:
+                        mindR = dR
+                        WH3l_ptW = kLep[0].Pt()
+        return WH3l_ptW
+
     def _ZH3l_setXLepton(self):
         """Find the lepton least likely to be part of the Z pair by invariant mass.  Double-duty as a check for OSSF pair"""
         if not self.WH3l_isOk:
@@ -257,8 +273,18 @@ class l3KinProducer(Module):
             return self.l3KinDefault
         return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0][0]).Pt()
 
+    def ZH3l_mTlmetj(self):
+        """Return transverse mass of l+met+jet system"""
+        if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 1:
+            return self.l3KinDefault
+        jvec0 = self.ZH3l_CleanJet_4vecId[0][0]
+        lvec = self.ZH3l_XLepton[0] 
+        WWvec = self.MET + lvec + jvec0;
+        sumpt = self.MET.Pt() + lvec.Pt() + jvec0.Pt()
+        return math.sqrt(pow(sumpt,2) - pow(WWvec.Px(),2) - pow(WWvec.Py(),2));
+
     def ZH3l_mTlmetjj(self):
-        """Return pt of selected Z"""
+        """Return transverse mass of l+met+dijet system"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
             return self.l3KinDefault
         jvec0 = self.ZH3l_CleanJet_4vecId[0][0]
@@ -282,7 +308,7 @@ class l3KinProducer(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
-
+        event = mappedEvent(event, mapname=self._branch_map)
         # Order in pt the collection merging muons and electrons
         # lepMerger must be already called
         Lepton = Collection(event, "Lepton")
