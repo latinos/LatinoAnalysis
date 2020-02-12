@@ -2176,13 +2176,20 @@ class PlotFactory:
                 hentry.SetFillStyle(0)
                 hentry.SetLineWidth(3)
                 hentry.DrawNormalized("hist,same")
-  
+
+              # ~~~~~~~~~~~~~~~~~~~~
+              # include data only if required
+
+              if self._plotNormalizedIncludeData : 
+                for sampleName, plotdef in plot.iteritems():
+                  if plotdef['isData'] == 1 :
+                    histos[sampleName].DrawNormalized("p, same")
+
               frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
 
               tlegend.Draw()
               self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
          
- 
  
  
             

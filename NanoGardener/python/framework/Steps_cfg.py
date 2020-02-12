@@ -106,7 +106,7 @@ def addJESchainMembers():
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MAPNAME = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MAPNAME")'.replace("MAPNAME", mapname) ,
+                  'declare'    : 'DYMVA_MAPNAME = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MAPNAME")'.replace("MAPNAME", mapname) ,
                   'module'     : 'DYMVA_MAPNAME()'.replace("MAPNAME", mapname),
             } 
       dictionary['MonoHiggsMVA_'+mapname] = {
@@ -2245,7 +2245,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\')' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\')' ,
                   'module'     : 'DYMVA()',
             } ,
    
@@ -2255,7 +2255,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_ElepTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTup")' ,
+                  'declare'    : 'DYMVA_ElepTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="ElepTup")' ,
                   'module'     : 'DYMVA_ElepTup()',
             } ,
 
@@ -2265,7 +2265,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_ElepTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTdo")' ,
+                  'declare'    : 'DYMVA_ElepTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="ElepTdo")' ,
                   'module'     : 'DYMVA_ElepTdo()',
             } ,
   'DYMVA_MupTup' : {
@@ -2274,7 +2274,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MupTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTup")' ,
+                  'declare'    : 'DYMVA_MupTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MupTup")' ,
                   'module'     : 'DYMVA_MupTup()',
             } ,
 
@@ -2284,7 +2284,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MupTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTdo")' ,
+                  'declare'    : 'DYMVA_MupTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MupTdo")' ,
                   'module'     : 'DYMVA_MupTdo()',
             } ,
   'DYMVA_METup' : {
@@ -2293,7 +2293,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_METup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METup")' ,
+                  'declare'    : 'DYMVA_METup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="METup")' ,
                   'module'     : 'DYMVA_METup()',
             } ,
 
@@ -2303,7 +2303,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_METdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METdo")' ,
+                  'declare'    : 'DYMVA_METdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="METdo")' ,
                   'module'     : 'DYMVA_METdo()',
             } ,
   'DYMVA_JESup' : {
@@ -2312,7 +2312,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_JESup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESup")' ,
+                  'declare'    : 'DYMVA_JESup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="JESup")' ,
                   'module'     : 'DYMVA_JESup()',
             } ,
 
@@ -2322,19 +2322,19 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_JESdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESdo")' ,
+                  'declare'    : 'DYMVA_JESdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="JESdo")' ,
                   'module'     : 'DYMVA_JESdo()',
             } ,
 
-  'DYMVA_v5' : {
-            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\')' ,
-                  'module'     : 'DYMVA()',
-            } ,
+# 'DYMVA_v5' : {
+#           #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+#                 'isChain'    : False ,
+#                 'do4MC'      : True  ,
+#                 'do4Data'    : True  ,
+#                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+#                 'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\')' ,
+#                 'module'     : 'DYMVA()',
+#           } ,
 
 
 # ------------------------------------ SYSTEMATICS ----------------------------------------------------------------
@@ -2431,7 +2431,29 @@ Steps = {
                   'subTargets' : ['JESBase','do_JESup','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
-   'JESup_suffix' :   {  
+   'JESup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Total", "Up") +
+                                  createJESchain("Absolute", "Up") +
+                                  createJESchain("Absolute_RPLME_YEAR", "Up") +
+                                  createJESchain("BBEC1", "Up") +
+                                  createJESchain("BBEC1_RPLME_YEAR", "Up") +
+                                  createJESchain("EC2", "Up") +
+                                  createJESchain("EC2_RPLME_YEAR", "Up") +
+                                  createJESchain("FlavorQCD", "Up") +
+                                  createJESchain("HF", "Up") +
+                                  createJESchain("HF_RPLME_YEAR", "Up") +
+                                  createJESchain("RelativeBal", "Up") +
+                                  createJESchain("RelativeSample_RPLME_YEAR", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+                  #'subTargets' : ['JESBase','do_JESup_suffix','l2Kin_JESup', 'l3Kin_JESup', 'l4Kin_JESup','DYMVA_JESup','MonoHiggsMVA_JESup','formulasMC_JESup',
+                  #               'do_JESAbsoluteup_suffix','do_JESAbsolutedo_suffix','do_JESAbsolute_RPLME_YEARup_suffix','do_JESAbsolute_RPLME_YEARdo_suffix','do_JESBBEC1up_suffix','do_JESBBEC1do_suffix','do_JESBBEC1_RPLME_YEARup_suffix','do_JESBBEC1_RPLME_YEARdo_suffix','do_JESEC2up_suffix','do_JESEC2do_suffix','do_JESEC2_RPLME_YEARup_suffix','do_JESEC2_RPLME_YEARdo_suffix','do_JESFlavorQCDup_suffix','do_JESFlavorQCDdo_suffix','do_JESHFup_suffix','do_JESHFdo_suffix','do_JESHF_RPLME_YEARup_suffix','do_JESHF_RPLME_YEARup_suffix','do_JESRelativeBaldo_suffix','do_JESRelativeBaldo_suffix','do_JESRelativeBal_RPLME_YEARup_suffix','do_JESRelativeBal_RPLME_YEARdo_suffix'],
+               },
+
+   'JESup_suffix_redoMVA' :   {  
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2461,6 +2483,28 @@ Steps = {
                },
 
    'JESdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Total", "Do") +
+                                  createJESchain("Absolute", "Do") +
+                                  createJESchain("Absolute_RPLME_YEAR", "Do") +
+                                  createJESchain("BBEC1", "Do") +
+                                  createJESchain("BBEC1_RPLME_YEAR", "Do") +
+                                  createJESchain("EC2", "Do") +
+                                  createJESchain("EC2_RPLME_YEAR", "Do") +
+                                  createJESchain("FlavorQCD", "Do") +
+                                  createJESchain("HF", "Do") +
+                                  createJESchain("HF_RPLME_YEAR", "Do") +
+                                  createJESchain("RelativeBal", "Do") +
+                                  createJESchain("RelativeSample_RPLME_YEAR", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+                  #'subTargets' : ['JESBase','do_JESdo_suffix','l2Kin_JESdo', 'l3Kin_JESdo', 'l4Kin_JESdo','DYMVA_JESdo','MonoHiggsMVA_JESdo','formulasMC_JESdo'],
+               },
+
+
+   'JESdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2549,6 +2593,15 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
+
+   'METup_suffix_redoMVA' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METup_suffix','l2Kin_METup', 'l3Kin_METup', 'l4Kin_METup','DYMVA_METup','MonoHiggsMVA_METup','formulasMC_METup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
    'METdo' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
@@ -2557,6 +2610,14 @@ Steps = {
                },
 
    'METdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METdo_suffix','l2Kin_METdo', 'l3Kin_METdo', 'l4Kin_METdo','DYMVA_METdo','MonoHiggsMVA_METdo','formulasMC_METdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'METdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2631,14 +2692,30 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
+  'ElepTup_suffix_redoMVA' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'LeptonSF_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup', 'formulasMC_ElepTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
   'ElepTdo' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                 },
-  
+ 
   'ElepTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+ 
+  'ElepTdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2720,8 +2797,15 @@ Steps = {
                   'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
-
   'MupTup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_MupTup_suffix', 'trigMCKeepRun_MupTup', 'LeptonSF_MupTup', 'l2Kin_MupTup', 'l3Kin_MupTup', 'l4Kin_MupTup', 'DYMVA_MupTup', 'MonoHiggsMVA_MupTup', 'formulasMC_MupTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+  'MupTup_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2737,6 +2821,14 @@ Steps = {
                },
 
   'MupTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_MupTdo_suffix', 'trigMCKeepRun_MupTdo', 'LeptonSF_MupTdo', 'l2Kin_MupTdo', 'l3Kin_MupTdo', 'l4Kin_MupTdo', 'DYMVA_MupTdo', 'MonoHiggsMVA_MupTdo', 'formulasMC_MupTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+  'MupTdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2954,7 +3046,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['DYMVA_v5','MonoHiggsMVA','l3Kin'], 
+                  'subTargets' : ['DYMVA','MonoHiggsMVA','l3Kin'], 
                   'excludeSample' : LNuQQSamples
                 },
  
