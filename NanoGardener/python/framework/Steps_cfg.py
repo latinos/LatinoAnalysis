@@ -754,7 +754,9 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2016v5','PreselFatJet','whadJetSel','wlepMaker'],
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 15 && abs( Alt$(Lepton_pdgId[1], 11)) == 11) \
+                             ||   ( Alt$( Lepton_pt[1],0) < 10 && abs( Alt$(Lepton_pdgId[1], 13)) == 13) "',
+                  'subTargets' : ['l1tightOR2016v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
 
@@ -762,7 +764,9 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2017v5','PreselFatJet','whadJetSel','wlepMaker'],
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 15 && abs( Alt$(Lepton_pdgId[1], 11)) == 11) \
+                             ||   ( Alt$( Lepton_pt[1],0) < 10 && abs( Alt$(Lepton_pdgId[1], 13)) == 13) "',
+                  'subTargets' : ['l1tightOR2017v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
 
@@ -770,7 +774,9 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2018v5','PreselFatJet','whadJetSel','wlepMaker'],
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 15 && abs( Alt$(Lepton_pdgId[1], 11)) == 11) \
+                             ||   ( Alt$( Lepton_pt[1],0) < 10 && abs( Alt$(Lepton_pdgId[1], 13)) == 13) "',
+                  'subTargets' : ['l1tightOR2018v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
 
@@ -778,7 +784,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['HMvars','BWReweight'],
+                  'subTargets' : ['HMvars','HMDNNProd','HMDNNCateg','HMDNNNeut','BWReweight'],
                    },
    
 
@@ -1218,6 +1224,42 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.HMvariables' ,
                   'declare'    : 'HMvars = lambda : HighMassVariables()',
                   'module'     : 'HMvars()',
+               },
+
+    'HMDNNCateg' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ApplyDNN_categ' ,
+                  'declare'    : 'HMDNNCa = lambda : ApplyDNN_Category()',
+                  'module'     : 'HMDNNCa()',
+               },
+
+    'HMDNNNeut' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ApplyDNN_neut' ,
+                  'declare'    : 'HMDNNNe = lambda : ApplyDNN_Neutrino()',
+                  'module'     : 'HMDNNNe()',
+               },
+
+    'HMDNNProd' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ApplyDNN_prod' ,
+                  'declare'    : 'HMDNNPr = lambda : ApplyDNN_Production()',
+                  'module'     : 'HMDNNPr()',
+               },
+
+    'HMDNNProdSemi' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ApplyDNN_prod_semi' ,
+                  'declare'    : 'HMDNNPrSem = lambda : ApplyDNN_Production_Semi()',
+                  'module'     : 'HMDNNPrSem()',
                },
 
     'HMlnjjVarsGen' : {
@@ -3176,7 +3218,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>30) \
                                     && (    Lepton_isTightElectron_cut_WP_Tight80X[0] > 0.5        \
                                          || Lepton_isTightElectron_cut_WP_Tight80X_SS[0] > 0.5     \
                                          || Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5        \
@@ -3189,7 +3231,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>30) \
                                     && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \
@@ -3202,7 +3244,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>30) \
                                     && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \

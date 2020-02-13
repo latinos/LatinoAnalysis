@@ -13,7 +13,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 # Needs variables from "HiggsGenVars" module to work
 class BWEwkSingletReweighter(Module):
-    def __init__(self, year="2017", cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], relw=[0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30], mssm=True, decayWeightsFile="decayWeights.pkl"):
+    def __init__(self, year="2017", cprime=[1.0], brnew=[0.0], relw=[0.00, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.12, 0.14, 0.15, 0.16, 0.18, 0.20, 0.25, 0.30, 10.0, 100.0], mssm=False, decayWeightsFile="decayWeights.pkl"): # cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], relw=[0.00, 0.05, 0.10, 0.15, 0.20]
 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
@@ -284,7 +284,7 @@ class BWEwkSingletReweighter(Module):
             for bname in self.branchnames:
               self.out.branch(bname, "F")
 
-        # Relative width model
+        # Relative & Fixed width model
         for relw in self.relw_list:
           for appendix in ["", "_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"]:
             self.branchnames.append('RelW'+str(relw)+appendix)
@@ -404,6 +404,11 @@ class BWEwkSingletReweighter(Module):
             removethis = []
             for idx in FinalStatePartIDs:
               if abs(event.GenPart_pdgId[idx]) in [1,2,3,4,5,21]: removethis.append(idx)
+            for rem in removethis:
+              FinalStatePartIDs.remove(rem)
+          elif self.finalState == "LNuQQ" and self.productionProcess == "VBF" and self.mH == 1000.0 and self.year == "2018" and njet >2 and event.event==81522: # This happens in a single event out of ALL mass/year samples
+            print "Fixing..."
+            removethis = [26,27]
             for rem in removethis:
               FinalStatePartIDs.remove(rem)
 
@@ -571,10 +576,13 @@ class BWEwkSingletReweighter(Module):
               self.out.fillBranch(name+appendix, weights[name+appendix])
 
 
-        ########## For Relative Width model
+        ########## For Relative Width & Fixed Width model
         for relw in self.relw_list:
-          self.gsm = relw * self.mH
-          if self.gsm == 0: self.gsm = 0.001 * self.mH
+          if relw < 1.0: # Relative width
+            self.gsm = relw * self.mH
+          else: # Fixed width
+            self.gsm = relw
+          if self.gsm == 0: self.gsm = 0.001 * self.mH # Is actually 0.1% relative width
           if self.undoCPS:
             # Invert CPSweight here w.r.t. previously because it could be 0
             if self.isNewJHU:

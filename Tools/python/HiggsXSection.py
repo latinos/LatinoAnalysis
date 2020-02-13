@@ -264,7 +264,7 @@ class HiggsXSection:
      if 'H0'     in SampleName and '_ToWWTo2L2Nu' in SampleName : HiggsMass = 125.0
      #if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : HiggsMass = 125.0
      if not ProdMode == 'unknown' :
-       if float(HiggsMass) <= 130 and float(HiggsMass) >= 120: 
+       if float(HiggsMass) <= 130 and float(HiggsMass) >= 120 :
          HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
        else:
          HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass,'bsm')
@@ -286,7 +286,7 @@ class HiggsXSection:
      #if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : DecayMode = 'H_WW'
      #if 'large' in HiggsMass : DecayMode = 'unknown'
      if not DecayMode == 'unknown' :
-       if float(HiggsMass) <= 130 :
+       if float(HiggsMass) <= 130 and float(HiggsMass) >= 120 :
          HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass)
        else:
          HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass,'bsm')    
