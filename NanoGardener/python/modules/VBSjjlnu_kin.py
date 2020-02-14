@@ -18,13 +18,15 @@ class VBSjjlnu_kin(Module):
     VBS_category.  For example mode=[maxmjj, maxmjj_massWZ] selects the maxmjj strategy 
     for Fatjet events and  maxmjj_massWZ for resolved events.
 
-    metType can be PF or Puppi.
+    metType can be MET or Puppi.
     '''
-    def __init__(self, mode=[ "maxmjj", "maxmjj_massWZ"], met="Puppi", debug=False):
+    def __init__(self, mode=[ "maxmjj", "maxmjj_massWZ"], met="Puppi", debug=False, mjj_vbs_cut=0., deltaeta_vbs_cut=0.):
         self.V_jets_var = { 0: "V_jets_"+ mode[0],  1: "V_jets_"+ mode[1]}
         self.VBS_jets_var = { 0: "VBS_jets_"+mode[0], 1: "VBS_jets_" +mode[1]}
         self.metType = met
-        self.debug = debug      
+        self.debug = debug  
+        self.mjj_vbs_cut = mjj_vbs_cut
+        self.deltaeta_vbs_cut = deltaeta_vbs_cut    
 
     def beginJob(self):
         pass
@@ -56,10 +58,7 @@ class VBSjjlnu_kin(Module):
         self.JetNotFat_coll = Collection(event, 'CleanJetNotFat')
 
         lepton_raw = Object(event, "Lepton", index=0)
-        if self.metType == "PF":
-            met_raw    = Object(event, "MET")
-        elif self.metType == "Puppi":
-            met_raw = Object(event, "PuppiMET")
+        met_raw    = Object(event, self.metType)
 
         category = int(self.vbs_category)
 
@@ -87,6 +86,11 @@ class VBSjjlnu_kin(Module):
                 other_jets.append(jet)
                 other_jets_ind.append(jetind)
 
+         # Check Mjj_vbs and deltaeta_vbs cuts
+        if ((vbsjets[0]+vbsjets[1]).M() < self.mjj_vbs_cut or \
+                abs(vbsjets[0].Eta() - vbsjets[1].Eta()) < self.deltaeta_vbs_cut):
+            return False
+
         output = None
 
         if category == 0:
@@ -102,6 +106,7 @@ class VBSjjlnu_kin(Module):
             # Resolved category
             output = vbs_vars.getVBSkin_resolved(vbsjets, vjets, lep, met, reco_neutrino,
                                 other_jets, other_jets_ind, debug=self.debug )
+
 
         # Fill the branches
         for var, val in output.items():
