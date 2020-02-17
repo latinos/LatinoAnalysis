@@ -207,7 +207,7 @@ class NanoProdMaker():
         fCfg.write('config.Data.inputDataset = \''+self._Samples[iSample]['miniAOD']+'\'\n') 
         fCfg.write('config.Data.inputDBS = \'global\'\n')
         fCfg.write('config.Data.splitting = \'Automatic\'\n')
-        fCfg.write('config.Data.unitsPerJob = 1\n')
+        #fCfg.write('config.Data.unitsPerJob = 1\n')
         # ...... Output data
         fCfg.write('config.Data.publication = True\n')
         fCfg.write('config.Data.publishDBS = \'phys03\'\n')
