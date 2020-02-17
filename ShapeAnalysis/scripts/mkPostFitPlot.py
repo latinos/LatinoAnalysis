@@ -82,9 +82,20 @@ class LawnMower:
            else:
              cardName = sampleName
              shapeSource = self._cutNameInOriginal+"/"+self._variable
-
-           if sampleName not in self._samples:
-             continue
+           
+           in_samples = False
+           if sampleName in self._samples: in_samples = True
+         
+           if not in_samples:
+            # check if it is in subsamples
+            in_subsample = False
+            for _sampleName, _sample in self._samples.items():
+               if "subsamples" not in _sample: continue
+               for _subsam in  _sample["subsamples"].keys():
+                  if _sampleName+"_"+ _subsam == sampleName:
+                     in_subsample = True
+                     break
+            if not in_subsample: continue
 
            if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
              continue
@@ -130,8 +141,19 @@ class LawnMower:
              cardName = sampleName
              shapeSource = self._cutNameInOriginal+"/"+self._variable
 
-           if sampleName not in self._samples:
-             continue
+           in_samples = False
+           if sampleName in self._samples: in_samples = True
+         
+           if not in_samples:
+            # check if it is in subsamples
+            in_subsample = False
+            for _sampleName, _sample in self._samples.items():
+               if "subsamples" not in _sample: continue
+               for _subsam in  _sample["subsamples"].keys():
+                  if _sampleName+"_"+ _subsam == sampleName:
+                     in_subsample = True
+                     break
+            if not in_subsample: continue
 
            if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
              continue
