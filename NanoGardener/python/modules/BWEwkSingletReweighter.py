@@ -266,7 +266,7 @@ class BWEwkSingletReweighter(Module):
 
         # only with the old JHU samples, which did not have proper decay weights for WW, we need to load the decay weights file.
         if not self.isNewJHU:
-          with open (self.cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/'+self.decayWeightsFile) as decayWeightsFile_stream:
+          with open (self.cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/BWShifts/'+self.decayWeightsFile) as decayWeightsFile_stream:
             allparams = pickle.load(decayWeightsFile_stream)
           self.decayWeightFunction = interp1d(**allparams[str(int(self.mH))]["decayWeight"])
           self.minmass = min(allparams[str(int(self.mH))]["decayWeight"]['x'])
