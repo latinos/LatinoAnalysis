@@ -20,14 +20,14 @@ class NanoProdMaker():
      self.checkProxy()
 
      # CRAB Stage Out Config
-     #self._storageSite   = 'T2_CH_CERN'
-     self._storageSite   = 'T2_ES_IFCA'
+     self._storageSite   = 'T2_CH_CERN'
      self._outLFNDirBase = '/store/group/phys_higgs/cmshww/amassiro/NanoProd/'
 
      # CMS Stuff
      self._cmsswBasedir = os.environ["CMSSW_BASE"]
      self._cmsDriverMC   = 'cmsDriver.py myNanoProdMc   -s NANO --mc   --eventcontent NANOAODSIM --datatier NANOAODSIM --no_exec'
      self._cmsDriverDATA = 'cmsDriver.py myNanoProdData -s NANO --data --eventcontent NANOAOD    --datatier NANOAOD    --no_exec'
+     self._cmsDriverFS   = 'cmsDriver.py myNanoProdFs   -s NANO --mc   --eventcontent NANOEDMAODSIM --fast --datatier NANOAODSIM --no_exec'
      self._customiseFile = 'LatinoAnalysis/NanoProducer/nanoProdCustomise'
      self._customiseFunc = 'nanoProdCustomise_'
 
@@ -95,7 +95,12 @@ class NanoProdMaker():
 
       # Prepare Base cmsDriver command     
       if   self._Productions[iProd]['isData'] : cmsDrvBase = self._cmsDriverDATA
-      else                                 : cmsDrvBase = self._cmsDriverMC
+      elif 'isFastSim' in self._Productions[iProd]:
+         if self._Productions[iProd]['isFastSim']:
+            cmsDrvBase = self._cmsDriverFS
+         else:
+            cmsDrvBase = self._cmsDriverMC
+      else: cmsDrvBase = self._cmsDriverMC
       cmsDrvBase += ' --conditions ' + self._Productions[iProd]['GlobalTag']
       cmsDrvBase += ' --era '        + self._Productions[iProd]['EraModifiers']
       
@@ -124,25 +129,7 @@ class NanoProdMaker():
           for iCustom in range(len(self._Samples[iSample]['customise'])) :
             cmsDrvCmd +=self._customiseFile+'.'+self._customiseFunc+self._Samples[iSample]['customise'][iCustom] 
             if len(self._Samples[iSample]['customise'])>1 and iCustom < len(self._Samples[iSample]['customise'])-1: cmsDrvCmd +=','
-        os.system(cmsDrvCmd)    
-
-        if 'isFastSim' in self._Productions[iProd]:
-           if self._Productions[iProd]['isFastSim']:
-
-              inFile = open(self._PyCfg , "rt")
-              outFile = open(self._PyCfg.replace('.py', '_FS.py') , "wt")
-           
-              for line in inFile:
-
-                 if 'process.nanoSequenceMC' in line:
-                    outFile.write(line.replace('process.nanoSequenceMC', 'process.nanoSequenceFS'))
-                 else:
-                    outFile.write(line)
-                    
-              inFile.close()
-              outFile.close()
-
-              self._PyCfg = self._PyCfg.replace('.py', '_FS.py')
+        os.system(cmsDrvCmd)
 
         if 'tagJEC' in self._Productions[iProd]:
            
@@ -170,11 +157,11 @@ class NanoProdMaker():
                  outFile.write("                                 tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK4PFchs'),\n")
                  outFile.write("                                 label= cms.untracked.string('AK4PFchs')\n")
                  outFile.write("                              ),\n")
-                 outFile.write("                              #cms.PSet(\n")
-                 outFile.write("                              #    record = cms.string('JetCorrectionsRecord'),\n")
-                 outFile.write("                              #    tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK4PFPuppi'),\n")
-                 outFile.write("                              #    label= cms.untracked.string('AK4PFPuppi')\n")
-                 outFile.write("                              #),\n")
+                 outFile.write("                              cms.PSet(\n")
+                 outFile.write("                                  record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                                  tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK4PFPuppi'),\n")
+                 outFile.write("                                  label= cms.untracked.string('AK4PFPuppi')\n")
+                 outFile.write("                              ),\n")
                  outFile.write("                              cms.PSet(\n")
                  outFile.write("                                 record = cms.string('JetCorrectionsRecord'),\n")
                  outFile.write("                                 tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK8PF'),\n")
@@ -185,11 +172,11 @@ class NanoProdMaker():
                  outFile.write("                                 tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK8PFchs'),\n")
                  outFile.write("                                 label= cms.untracked.string('AK8PFchs')\n")
                  outFile.write("                              ),\n")
-                 outFile.write("                              #cms.PSet(\n")
-                 outFile.write("                              #    record = cms.string('JetCorrectionsRecord'),\n")
-                 outFile.write("                              #    tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK8PFPuppi'),\n")
-                 outFile.write("                              #    label= cms.untracked.string('AK8PFPuppi')\n")
-                 outFile.write("                              #),\n")
+                 outFile.write("                              cms.PSet(\n")
+                 outFile.write("                                  record = cms.string('JetCorrectionsRecord'),\n")
+                 outFile.write("                                  tag = cms.string('JetCorrectorParametersCollection_'+dbfile+'_AK8PFPuppi'),\n")
+                 outFile.write("                                  label= cms.untracked.string('AK8PFPuppi')\n")
+                 outFile.write("                              ),\n")
                  outFile.write("                           )\n")
                  outFile.write("                        )\n")
                  outFile.write("process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')\n")
@@ -219,8 +206,9 @@ class NanoProdMaker():
         # ...... Input Data
         fCfg.write('config.Data.inputDataset = \''+self._Samples[iSample]['miniAOD']+'\'\n') 
         fCfg.write('config.Data.inputDBS = \'global\'\n')
-        fCfg.write('config.Data.splitting = \'Automatic\'\n')
-        #fCfg.write('config.Data.unitsPerJob = 1\n')
+        #fCfg.write('config.Data.splitting = \'Automatic\'\n')
+        fCfg.write('config.Data.splitting = \'FileBased\'\n')
+        fCfg.write('config.Data.unitsPerJob = 1\n')
         # ...... Output data
         fCfg.write('config.Data.publication = True\n')
         fCfg.write('config.Data.publishDBS = \'phys03\'\n')
