@@ -1389,6 +1389,38 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyGenVarsProducer' ,
                   'module'     : 'SusyGenVarsProducer()' ,
                },
+
+## EFT VBF H->WW->2l2nu
+
+    'VBFl2EFT' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['JJHEFT','EFTGen'],
+                  'onlySample' : ['DYJetsToTT_MuEle_M-50','TTTo2L2Nu','WWTo2L2Nu','VBF_H0PM_ToWWTo2L2Nu','VBF_H0PH_ToWWTo2L2Nu','VBF_H0L1_ToWWTo2L2Nu','VBF_H0M_ToWWTo2L2Nu','VBF_H0PHf05_ToWWTo2L2Nu','VBF_H0Mf05_ToWWTo2L2Nu','VBF_H0L1f05_ToWWTo2L2Nu','GluGluHToWWTo2L2Nu_M125','GluGluHToTauTau_M125','VBFHToTauTau_M125'],
+                  },
+
+
+    'JJHEFT' : {
+                   'isChain'    : False ,
+                   'do4MC'      : True ,
+                   'do4Data'    : True ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
+                   'declare'    : 'JJHEFT = lambda : JJH_EFTVars()',
+                   'module'     : 'JJHEFT()',
+                   'onlySample' : ['DYJetsToTT_MuEle_M-50','TTTo2L2Nu','WWTo2L2Nu','VBF_H0PM_ToWWTo2L2Nu','VBF_H0PH_ToWWTo2L2Nu','VBF_H0L1_ToWWTo2L2Nu','VBF_H0M_ToWWTo2L2Nu','VBF_H0PHf05_ToWWTo2L2Nu','VBF_H0Mf05_ToWWTo2L2Nu','VBF_H0L1f05_ToWWTo2L2Nu','GluGluHToWWTo2L2Nu_M125','GluGluHToTauTau_M125','VBFHToTauTau_M125'],
+                 },
+
+    'EFTGen' : {
+                     'isChain'    : False ,
+                     'do4MC'      : True ,
+                     'do4Data'    : False ,
+                     'import'     : 'LatinoAnalysis.NanoGardener.modules.EFTReweighter' ,
+                     'declare'    : 'EFTGen = lambda : EFTReweighter()',
+                     'module'     : 'EFTGen()',
+                     'onlySample' : ['VBF_H0PM_ToWWTo2L2Nu','VBF_H0PH_ToWWTo2L2Nu','VBF_H0L1_ToWWTo2L2Nu','VBF_H0M_ToWWTo2L2Nu','VBF_H0PHf05_ToWWTo2L2Nu','VBF_H0Mf05_ToWWTo2L2Nu','VBF_H0L1f05_ToWWTo2L2Nu'],
+                    },
+
     
     ##--High Mass SemiLeptonic channel
   'wlepMaker' : {
