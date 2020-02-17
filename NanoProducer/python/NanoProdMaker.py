@@ -20,7 +20,8 @@ class NanoProdMaker():
      self.checkProxy()
 
      # CRAB Stage Out Config
-     self._storageSite   = 'T2_CH_CERN'
+     #self._storageSite   = 'T2_CH_CERN'
+     self._storageSite   = 'T2_ES_IFCA'
      self._outLFNDirBase = '/store/group/phys_higgs/cmshww/amassiro/NanoProd/'
 
      # CMS Stuff
