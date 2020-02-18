@@ -87,9 +87,9 @@ class VBSjjlnu_kin(Module):
                 other_jets_ind.append(jetind)
 
          # Check Mjj_vbs and deltaeta_vbs cuts
-        if ((vbsjets[0]+vbsjets[1]).M() < self.mjj_vbs_cut or \
-                abs(vbsjets[0].Eta() - vbsjets[1].Eta()) < self.deltaeta_vbs_cut):
-            return False
+        #if ((vbsjets[0]+vbsjets[1]).M() < self.mjj_vbs_cut or \
+        #        abs(vbsjets[0].Eta() - vbsjets[1].Eta()) < self.deltaeta_vbs_cut):
+        #    return False
 
         output = None
 

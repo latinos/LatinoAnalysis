@@ -137,6 +137,44 @@ def prepare_VBSjjlnu_Fatjet_syst(basename, selection):
       }
   return dictionary
 
+def prepare_CombJJLNu_syst(basename, selection):
+  dictionary = {}
+  for syst in ["JES", "MupT", "ElepT", "MET"]:
+    for j in ['up', 'do']:
+      dictionary[basename+"_"+ syst + j] = {
+      'isChain'    : True ,
+      'do4MC'      : True  ,
+      'do4Data'    : False  ,
+      'selection'  : selection,
+      'subTargets': ['do_{0}{1}'.format(syst, j),
+                    'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                    'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
+                    'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
+                    'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+      'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLTsysts.txt'
+      }
+      if syst == "JES":
+        dictionary[basename+"_"+ syst + j]["subTargets"] = ['JESBaseTotal'] + dictionary[basename+"_"+ syst + j]["subTargets"] 
+  return dictionary
+
+def prepare_CombJJLNu_Fatjet_syst(basename, selection):
+  dictionary = {}
+  for syst in ['JES', 'JMS']:
+    for j in ['up', 'do']:
+      dictionary[basename+ "_" + syst + j] = {
+      'isChain'    : True ,
+      'do4MC'      : True  ,
+      'do4Data'    : False  ,
+      'selection'  : selection,
+      'subTargets': ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                    'trigMC', 'CorrFatJetMC', 
+                    'CleanFatJet_{0}{1}'.format(syst, j), 
+                    'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
+                    'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+      'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLTsysts.txt'
+      }
+  return dictionary
+
 
 
 Steps = {
@@ -771,8 +809,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 15 && abs( Alt$(Lepton_pdgId[1], 11)) == 11) \
-                             ||   ( Alt$( Lepton_pt[1],0) < 10 && abs( Alt$(Lepton_pdgId[1], 13)) == 13) "',
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 10 )"',
                   'subTargets' : ['l1tightOR2016v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
@@ -781,8 +818,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 15 && abs( Alt$(Lepton_pdgId[1], 11)) == 11) \
-                             ||   ( Alt$( Lepton_pt[1],0) < 10 && abs( Alt$(Lepton_pdgId[1], 13)) == 13) "',
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 10 )"',
                   'subTargets' : ['l1tightOR2017v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
@@ -791,8 +827,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 15 && abs( Alt$(Lepton_pdgId[1], 11)) == 11) \
-                             ||   ( Alt$( Lepton_pt[1],0) < 10 && abs( Alt$(Lepton_pdgId[1], 13)) == 13) "',
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 10 )"',
                   'subTargets' : ['l1tightOR2018v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
@@ -844,6 +879,56 @@ Steps = {
 		  },
 		  #	|| Alt$( !Lepton_isLoose[1],1 ) )
 
+
+## ------- HIGH MASS & VBS COMBINATION CHAINS:
+
+    'MCCombJJLNu2016' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : vbsjjlnu_preselection_mc_2016,
+                  'subTargets' : ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+                   },
+
+    'DATACombJJLNu2016' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : vbsjjlnu_preselection_data_2016,
+                  'subTargets' : ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi'],
+                   },
+
+    'MCCombJJLNu2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : vbsjjlnu_preselection_mc_2017,
+                  'subTargets' : ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+                   },
+
+    'DATACombJJLNu2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : vbsjjlnu_preselection_data_2017,
+                  'subTargets' : ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi'],
+                   },
+
+    'MCCombJJLNu2018' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'selection'  : vbsjjlnu_preselection_mc_2018,
+                  'subTargets' : ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+                   },
+
+    'DATACombJJLNu2018' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : vbsjjlnu_preselection_data_2018,
+                  'subTargets' : ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi'],
+                   },
 
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
@@ -3450,9 +3535,9 @@ Steps = {
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
       'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", debug=False)',
-      'module'     : 'vbs_pairing()'
+      'module'     : 'vbs_pairing()',
+      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
   },
-
 
   'VBSjjlnu_kin': {
       'isChain'    : False ,
@@ -3460,7 +3545,8 @@ Steps = {
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
       'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], mjj_vbs_cut=250, deltaeta_vbs_cut=2, met="PuppiMET", debug=False)',
-      'module'     : 'vbs_vars_maker()'
+      'module'     : 'vbs_vars_maker()',
+      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
   },
 
   #### OLD SKIMS
@@ -3715,10 +3801,18 @@ Steps = {
 Steps.update(addJESchainMembers())
 
 ## ADD systematics for VBSjjlnu analysis
-Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2016v5",vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2016v5", vbsjjlnu_preselection_mc_2016))
 Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2017v5", vbsjjlnu_preselection_mc_2017))
 Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2018v5", vbsjjlnu_preselection_mc_2018))
 ## ADD fatjet systematic for VBSjjlnu analysis
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2016v5_fatjet", vbsjjlnu_preselection_mc_2016))
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2017v5_fatjet", vbsjjlnu_preselection_mc_2017))
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2018v5_fatjet", vbsjjlnu_preselection_mc_2018))
+## ADD systematics for VBSjjlnu & HMjjlnu analysis
+Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2016", vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2017", vbsjjlnu_preselection_mc_2017))
+Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2018", vbsjjlnu_preselection_mc_2018))
+## ADD fatjet systematic for VBSjjlnu & HMjjlnu analysis
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2016_fatjet", vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2017_fatjet", vbsjjlnu_preselection_mc_2017))
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2018_fatjet", vbsjjlnu_preselection_mc_2018))
