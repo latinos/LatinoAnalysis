@@ -39,7 +39,7 @@ Productions = {
                          'samples'      : 'LatinoAnalysis/NanoProducer/python/samples/Summer16FS_102X_mAODv3.py' ,
                          'GlobalTag'    : '102X_mcRun2_asymptotic_v7' ,
                          'EraModifiers' : 'Run2_2016,run2_nanoAOD_94X2016' ,
-                         'tagJEC'       : 'Spring16_25nsFastSimV1_MC', 
+                         'tagJEC'       : 'Summer16_FastSimV1_MC.db', 
    },
    'Fall17_102X_nAODv4_Full2017v4': {
                          'isData'       : False ,
