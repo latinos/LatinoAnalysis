@@ -23,7 +23,7 @@ class ApplyDNN_Production_Semi(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.classifiers = []
         self.preprocessing = []
-        for c, p in zip(["best_model_1.hdf5","best_model_0.hdf5"], ["fold0_keras_preprocessing_production.pickle","fold1_keras_preprocessing_production.pickle"]):
+        for c, p in zip(["best_model_1.hdf5","best_model_0.hdf5"], ["fold0_keras_preprocessing_productionsemi.pickle","fold1_keras_preprocessing_productionsemi.pickle"]):
           self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
