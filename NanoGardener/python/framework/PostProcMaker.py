@@ -668,7 +668,6 @@ class PostProcMaker():
        genEventSumw2 = 0.0
        for iFile in FileList:
          if DEBUG : print iFile
-         useLocal = False
          if useLocal:
            f = ROOT.TFile.Open(iFile, "READ")
          else:
