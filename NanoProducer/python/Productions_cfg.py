@@ -85,4 +85,5 @@ Productions = {
                          'EraModifiers' : 'Run2_2018,run2_nanoAOD_102Xv1' ,
                          'tagJEC'       : 'Autumn18_FastSimV1_MC', 
    }
+
 }
