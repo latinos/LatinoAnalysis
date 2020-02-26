@@ -16,3 +16,10 @@ Samples['TChipmSlepSnu_mC1_825_1500'] = {'miniAOD': '/SMS-TChipmSlepSnu_mC1_825_
 
 # TChipmWW
 Samples['TChipmWW'] = {'miniAOD': '/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-PUFall18Fast_102X_upgrade2018_realistic_v15-v1/MINIAODSIM', 'customise' : [] }
+
+# TSlepSlep
+
+Samples['TSlepSlep'] = {'miniAOD': '/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-PUFall18Fast_102X_upgrade2018_realistic_v15-v1/MINIAODSIM', 'customise' : [] }
+Samples['TSlepSlep_mSlep-500To1300'] = {'miniAOD': '/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-PUFall18Fast_102X_upgrade2018_realistic_v15-v1/MINIAODSIM', 'customise' : [] }
+
+
