@@ -161,6 +161,9 @@ _MET_branches = [
 _JES_branches = ['CleanJet_pt']
 # since JES affects MET...
 _JES_branches  += _MET_branches
+#--for fatjet
+_FATJES_branches = ['CleanFatJet_pt']
+_FATJES_branches += _MET_branches
 # and some more stuff
 _JES_branches += [
   'njet',
@@ -289,6 +292,11 @@ branch_mapping['JESdo'] = {
   'branches': _JES_branches,
   'suffix': '_JESdo'
 }
+branch_mapping['FATJESdo'] = {
+  'branches': _FATJES_branches,
+  'suffix': '_FATJESdo'
+}
+
 
 # JES 11 sources
 for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",

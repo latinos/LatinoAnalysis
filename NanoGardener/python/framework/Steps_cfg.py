@@ -14,6 +14,21 @@ exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/fra
 
 # -------------------------------------------- HERE WE GO ----------------------------------------------------
 
+def createFATJESvariation(type, kind="Up"):
+  typeShort = type
+  if type == "Total":
+    typeShort = ""
+  dictionary = {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PtCorrApplier',
+                  'declare'    : 'FATJES%s%s = lambda : PtCorrApplier(Coll="CleanFatJet", CorrSrc="jecUncert%s", kind="%s", doMET=True, METobjects = ["MET","PuppiMET","RawMET"], suffix="_FATJES%s%s")' %(typeShort, kind.lower(), type, kind, typeShort, kind.lower()),
+                  'module'     : 'FATJES%s%s()' %(typeShort, kind.lower())
+               }
+  return dictionary
+
+
 def createJESvariation(type, kind="Up"):
   typeShort = type
   if type == "Total":
@@ -39,6 +54,20 @@ def createJESchain(type, kind="Up"):
     chain.append(item.replace("VAR", toreplace))
   return chain  
     
+
+def createFATJESchain(type, kind="Up"):
+  typeShort = type
+  if type == "Total":
+    typeShort = ""
+  toreplace = typeShort+kind.lower()
+  #chainTemplate = ['do_JESVAR_suffix','l2Kin_JESVAR', 'l3Kin_JESVAR', 'l4Kin_JESVAR','DYMVA_JESVAR','MonoHiggsMVA_JESVAR','formulasMC_JESVAR']                                   
+  chainTemplate = ['do_FATJESVAR_suffix','formulasMC_FATJESVAR']
+  chain = []
+  for item in chainTemplate:
+    chain.append(item.replace("VAR", toreplace))
+  return chain
+
+
 def addJESchainMembers():
   dictionary = {}
   for type in ["Total", "Absolute", "Absolute_RPLME_YEAR", "BBEC1", "BBEC1_RPLME_YEAR", "EC2", "EC2_RPLME_YEAR", "FlavorQCD", "HF", "HF_RPLME_YEAR", "RelativeBal", "RelativeSample_RPLME_YEAR"]:
@@ -2194,6 +2223,25 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="JESdo")' ,
                  },
   
+  'formulasMC_FATJESup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="FATJESup")' ,
+                 },
+
+  'formulasMC_FATJESdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_YEAR.py\', branch_map="FATJESdo")' ,
+                 },
+
+
   'formulasMCLP19' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2409,6 +2457,15 @@ Steps = {
                   'module'     : 'JES()',
                },
 
+  'FATJESBaseTotal' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JECMaker' ,
+                  'declare'    : 'FATJES = lambda : JECMaker(globalTag="RPLME_JESGT", types=["Total"], jetFlav="AK8PFPuppi",jetCo="CleanFatJet")',
+                  'module'     : 'FATJES()',
+               },
+
   'do_JESup' : {  
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2426,6 +2483,7 @@ Steps = {
                   'module'     : 'JESDo()' 
                },
   'do_JESup_suffix' : createJESvariation("Total", "Up"),
+  'do_FATJESup_suffix' : createFATJESvariation("Total", "Up"),
 #{  
 #                  'isChain'    : False ,
 #                  'do4MC'      : True  ,
@@ -2436,6 +2494,7 @@ Steps = {
 #               },
 
   'do_JESdo_suffix' : createJESvariation("Total", "Do"),
+  'do_FATJESdo_suffix' : createFATJESvariation("Total", "Do"),
 #{  'isChain'    : False ,
 #                  'do4MC'      : True  ,
 #                  'do4Data'    : False  ,
@@ -2479,6 +2538,15 @@ Steps = {
                   'do4Data'    : False  ,
                   'subTargets' : ['JESBase','do_JESup','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
+  'FATJESup_suffix_total' :{
+    'isChain'    : True ,
+    'do4MC'      : True  ,
+    'do4Data'    : False  ,
+    'subTargets' : ['FATJESBaseTotal']+
+    createFATJESchain("Total","Up"),
+    'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+
+  },
 
    'JESup_suffix' :   {
                   'isChain'    : True ,
@@ -2551,6 +2619,18 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                   #'subTargets' : ['JESBase','do_JESdo_suffix','l2Kin_JESdo', 'l3Kin_JESdo', 'l4Kin_JESdo','DYMVA_JESdo','MonoHiggsMVA_JESdo','formulasMC_JESdo'],
                },
+
+   'FATJESdo_suffix_total' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['FATJESBaseTotal'] +
+                                  createFATJESchain("Total", "Do"),
+
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+                  #'subTargets' : ['JESBase','do_JESdo_suffix','l2Kin_JESdo', 'l3Kin_JESdo', 'l4Kin_JESdo','DYMVA_JESdo','MonoHiggsMVA_JESdo','formulasMC_JESdo'],                
+               },
+
 
 
    'JESdo_suffix_redoMVA' :   {

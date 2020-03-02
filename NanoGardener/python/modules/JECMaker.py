@@ -2,10 +2,10 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jecUncertainties impor
 
 class JECMaker(jecUncertProducer, object):
     '''
-    Jet Energy Correction Module (running on CleanJet's)
+    Jet Energy Correction Module (running on CleanJet's OR CleanFatJet's)
     ''' 
-    def __init__(self, globalTag, types=['Total'], jetFlav='AK4PFchs'):
-       super(JECMaker, self).__init__(globalTag, uncerts=types, jetFlavour=jetFlav, jetColl="CleanJet") 
+    def __init__(self, globalTag, types=['Total'], jetFlav='AK4PFchs',jetCo="CleanJet"):
+       super(JECMaker, self).__init__(globalTag, uncerts=types, jetFlavour=jetFlav, jetColl=jetCo) 
        types_str = 'CorrectionTypes = '
        for typ in types:
            types_str += typ
