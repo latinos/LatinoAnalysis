@@ -220,18 +220,18 @@ SemiLepHighMassSamples_2017 = [
   'DYJetsToLL_M-50_HT-2500toinf',
 
   'TTToSemiLeptonic',
-  'TTToSemiLeptonic_PSWeights',
+  'TTToSemiLeptonic_PSweights',
   'TTWjets',
-  'TTWjetsToLNu_PSWeights',
+  'TTWjetsToLNu_PSweights',
   'ST_t-channel_antitop',
   'ST_s-channel',
   'ST_t-channel_top',
   'ST_tW_antitop',
-  'ST_tW_antitop_PSWeights',
+  'ST_tW_antitop_PSweights',
   'ST_tW_top',
-  'ST_tW_top_PSWeights',
+  'ST_tW_top_PSweights',
 
-  'WW-LO', # 2017 doesn't have semileptonic WW. Inclusive only at LO
+  'WWToLNuQQ',
 
   'WpWmJJ_EWK',
   'WpWpJJ_EWK_powheg',
@@ -417,7 +417,7 @@ SemiLepHighMassSamples_2018 = [
   'ST_tW_antitop_ext1',
   'ST_tW_top_ext1',
 
-  'WW-LO', # 2018 doesn't have semileptonic WW. Inclusive only at LO
+  'WWToLNuQQ',
 
   'WpWmJJ_EWK',
   'WpWpJJ_EWK_powheg',
