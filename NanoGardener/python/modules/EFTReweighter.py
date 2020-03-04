@@ -19,7 +19,7 @@ class EFTReweighter(Module):
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/interface/")
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/src/")
         ROOT.gSystem.Load("libZZMatrixElementMELA.so")
-        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+self.cmssw_arch+"/libmcfm_706.so")
+        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+self.cmssw_arch+"/libmcfm_707.so")
 
         try:
             ROOT.gROOT.LoadMacro(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaHiggsEFT.C+g')
@@ -40,14 +40,12 @@ class EFTReweighter(Module):
 
         if "_VBF_H0" in filename :
           self.productionProcess = "VBF"
-          self.productionMela = ROOT.TVar.JJVBF
         elif "_H0" in filename :
           self.productionProcess = "GluGlu"
-          self.productionMela = ROOT.TVar.ZZGG 
         else:
           raise NameError(filename, "is an unrecognised simulation")
 
-        print("Running MELA EFT reweighter with " + self.productionProcess + " production configuration")
+        print("Running MELA EFT reweighter with " + self.productionProcess + " sample")
 
         self.out = wrappedOutputTree
         self.newbranches = [
@@ -136,6 +134,7 @@ class EFTReweighter(Module):
 
         # Generator id seems to be wrong in few VBF events... -> Replace pdgId 21 by whatever is in LHE collection
         if self.productionProcess == "VBF" and (genid1==21 or genid2==21) and (21 in parton_ids):
+          print "Gluons from incoming partons?!"
           options = [o for o in parton_ids if o != 21] # Should usually contain 2 entries; There are _always_ 3 LHE jets because VBF samples are NLO
           if genid1==21 and genid2!=21:
             genid1 = options[0] + options[1] - genid2 # USUALLY Sum pdgIds incoming = Sum pdgIds outgoing (exception is 2.gen <-> 1.gen quark)
@@ -170,14 +169,24 @@ class EFTReweighter(Module):
         self.mela.setInputEvent(daughter_coll, associated_coll, mother_coll, 1)
         self.mela.setCurrentCandidateFromIndex(0)
         
-        ME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0) 
+        ME1 = [1, 1, 1, 1, 1, 1]
+        ME2 = [1, 1, 1, 1, 1, 1]
 
-        gen_me_hsm   = ME[0]
-        gen_me_hm    = ME[1]
-        gen_me_hp    = ME[2]
-        gen_me_hl    = ME[3]
-        gen_me_mixhm = ME[4]
-        gen_me_mixhp = ME[5] 
+        if self.productionProcess == "VBF" :
+
+         ME1 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
+         ME2 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJVBF, 0, 0) 
+  
+        elif self.productionProcess == "GluGlu" :
+
+         ME1 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0) 
+
+        gen_me_hsm   = ME1[0]*ME2[0]
+        gen_me_hm    = ME1[1]*ME2[1]
+        gen_me_hp    = ME1[2]*ME2[2]
+        gen_me_hl    = ME1[3]*ME2[3]
+        gen_me_mixhm = ME1[4]*ME2[4]
+        gen_me_mixhp = ME1[5]*ME2[5] 
 
         self.mela.resetInputEvent()
 

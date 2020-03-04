@@ -19,7 +19,7 @@ class JJH_EFTVars(Module):
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/interface/")
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/src/")
         ROOT.gSystem.Load("libZZMatrixElementMELA.so")
-        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+self.cmssw_arch+"/libmcfm_706.so")
+        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+self.cmssw_arch+"/libmcfm_707.so")
 
         try:
             ROOT.gROOT.LoadMacro(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaHiggsEFT.C+g')
@@ -40,7 +40,7 @@ class JJH_EFTVars(Module):
         self.newbranches = [
           'hm','hpt','jj_mass','jj_deta',
           'me_vbf_hsm','me_vbf_hm','me_vbf_hp','me_vbf_hl','me_vbf_mixhm','me_vbf_mixhp',
-          'me_qcd_hsm'
+          'me_qcd_hsm','me_qcd_hm','me_qcd_hp','me_qcd_hl','me_qcd_mixhm','me_qcd_mixhp',
           ]
         
 
@@ -74,7 +74,12 @@ class JJH_EFTVars(Module):
         me_vbf_hl = -999 
         me_vbf_mixhm = -999 
         me_vbf_mixhp = -999
-        me_qcd_hsm = -999  
+        me_qcd_hsm = -999 
+        me_qcd_hm = -999 
+        me_qcd_hp = -999 
+        me_qcd_hl = -999 
+        me_qcd_mixhm = -999 
+        me_qcd_mixhp = -999
             
         if nJet > 1 and nLepton > 1:
 
@@ -148,7 +153,7 @@ class JJH_EFTVars(Module):
          self.mela.setInputEvent(daughter_coll, associated_coll, 0, 0)
          self.mela.setCurrentCandidateFromIndex(0)
         
-         ME_VBF = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJVBF, 1) 
+         ME_VBF = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJVBF, 0, 1) 
          me_vbf_hsm   = ME_VBF[0]
          me_vbf_hm    = ME_VBF[1]
          me_vbf_hp    = ME_VBF[2]
@@ -156,12 +161,17 @@ class JJH_EFTVars(Module):
          me_vbf_mixhm = ME_VBF[4]
          me_vbf_mixhp = ME_VBF[5] 
 
-         ME_QCD = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJQCD, 1)
+         ME_QCD = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJQCD, 1, 1)
          me_qcd_hsm   = ME_QCD[0]
+         me_qcd_hm    = ME_QCD[1]
+         me_qcd_hp    = ME_QCD[2]
+         me_qcd_hl    = ME_QCD[3]
+         me_qcd_mixhm = ME_QCD[4]
+         me_qcd_mixhp = ME_QCD[5] 
 
          ######### VH also possible ########
-         # ME_WH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_WH, 1)
-         # ME_ZH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_ZH, 1)
+         # ME_WH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_WH, 0, 1)
+         # ME_ZH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_ZH, 0, 1)
 
          self.mela.resetInputEvent()
        
@@ -181,6 +191,11 @@ class JJH_EFTVars(Module):
         self.out.fillBranch( 'me_vbf_mixhm',me_vbf_mixhm )
         self.out.fillBranch( 'me_vbf_mixhp',me_vbf_mixhp ) 
         self.out.fillBranch( 'me_qcd_hsm',  me_qcd_hsm )
+        self.out.fillBranch( 'me_qcd_hm',   me_qcd_hm )
+        self.out.fillBranch( 'me_qcd_hp',   me_qcd_hp ) 
+        self.out.fillBranch( 'me_qcd_hl',   me_qcd_hl )
+        self.out.fillBranch( 'me_qcd_mixhm',me_qcd_mixhm )
+        self.out.fillBranch( 'me_qcd_mixhp',me_qcd_mixhp )
 
         return True
 

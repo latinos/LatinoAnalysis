@@ -1,15 +1,12 @@
 #include <math.h>
 #include <ZZMatrixElement/MELA/interface/Mela.h>
 
-std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Production Prod, bool useConstant){
+std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Production Prod, bool IsGG, bool useConstant){
 
   std::vector<float> mes;
 
-  bool IsGG = 0;
-  if(Prod==TVar::ZZGG || Prod==TVar::JJQCD)IsGG = 1;
-
   bool Decay = 0;
-  if(Prod==TVar::ZZGG)Decay = 1;
+  if(Prod==TVar::ZZGG || Prod==TVar::ZZINDEPENDENT)Decay = 1;
 
   float me_hsm = -999;
   _mela->setProcess(TVar::HSMHiggs, ME, Prod);
