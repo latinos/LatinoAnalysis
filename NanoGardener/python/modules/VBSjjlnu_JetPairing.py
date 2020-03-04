@@ -107,7 +107,7 @@ class VBSjjlnu_JetPairing(Module):
         # We want to save a reference to the CleanJet collection.
         
         # Veto events with more than 1 FatJet
-        if self.nFatJet >1 : return False
+        #if self.nFatJet >1 : return False
 
         if self.nFatJet == 1 and len(good_jets) >= 2 :
             ###################################
@@ -123,7 +123,7 @@ class VBSjjlnu_JetPairing(Module):
                 self.out.fillBranch("VBS_jets_"+ key, VBS_jets)
                 self.out.fillBranch("V_jets_" + key, V_jets)
 
-        elif len(good_jets) >= 4:
+        elif self.nFatJet == 0 and len(good_jets) >= 4:
             ##############################
             # Resolved category
             ###########################
@@ -141,13 +141,14 @@ class VBSjjlnu_JetPairing(Module):
                     self.perform_jet_association(self.mode, good_jets, good_jets_ids, cache)
                 else:
                     print("ERROR! Selected pairing mode not found!!")
-                    return False
+                    #return False
         else:   
             # Cut the event:
             # or it's boosted but with not enough jets, 
             # or it is not boosted and it has less than 4 jets with minpt
             #print("Event removed")
-            return False    
+            #return False    
+            pass
 
 
         # Fill the category

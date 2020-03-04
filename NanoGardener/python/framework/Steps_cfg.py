@@ -4,13 +4,10 @@ import os
 
 ## --------------------------------- Some predefined sequence Chains -----------------------------------------
 
-LNuQQSamples=[ 'GluGluHToWWToLNuQQ_M1000', 'GluGluHToWWToLNuQQ_M115', 'GluGluHToWWToLNuQQ_M120', 'GluGluHToWWToLNuQQ_M124', 'GluGluHToWWToLNuQQ_M125', 'GluGluHToWWToLNuQQ_M126', 'GluGluHToWWToLNuQQ_M130', 'GluGluHToWWToLNuQQ_M135', 'GluGluHToWWToLNuQQ_M140', 'GluGluHToWWToLNuQQ_M145', 'GluGluHToWWToLNuQQ_M150', 'GluGluHToWWToLNuQQ_M1500', 'GluGluHToWWToLNuQQ_M155', 'GluGluHToWWToLNuQQ_M160', 'GluGluHToWWToLNuQQ_M165', 'GluGluHToWWToLNuQQ_M170', 'GluGluHToWWToLNuQQ_M175', 'GluGluHToWWToLNuQQ_M180', 'GluGluHToWWToLNuQQ_M190', 'GluGluHToWWToLNuQQ_M200', 'GluGluHToWWToLNuQQ_M2000', 'GluGluHToWWToLNuQQ_M210', 'GluGluHToWWToLNuQQ_M230', 'GluGluHToWWToLNuQQ_M250', 'GluGluHToWWToLNuQQ_M2500', 'GluGluHToWWToLNuQQ_M270', 'GluGluHToWWToLNuQQ_M300', 'GluGluHToWWToLNuQQ_M3000', 'GluGluHToWWToLNuQQ_M350', 'GluGluHToWWToLNuQQ_M400', 'GluGluHToWWToLNuQQ_M4000', 'GluGluHToWWToLNuQQ_M450', 'GluGluHToWWToLNuQQ_M500', 'GluGluHToWWToLNuQQ_M5000', 'GluGluHToWWToLNuQQ_M550', 'GluGluHToWWToLNuQQ_M600', 'GluGluHToWWToLNuQQ_M650', 'GluGluHToWWToLNuQQ_M700', 'GluGluHToWWToLNuQQ_M750', 'GluGluHToWWToLNuQQ_M750_NWA', 'GluGluHToWWToLNuQQ_M800', 'GluGluHToWWToLNuQQ_M900', 'VBFHToWWToLNuQQ_M1000', 'VBFHToWWToLNuQQ_M115', 'VBFHToWWToLNuQQ_M120', 'VBFHToWWToLNuQQ_M124', 'VBFHToWWToLNuQQ_M125', 'VBFHToWWToLNuQQ_M126', 'VBFHToWWToLNuQQ_M130', 'VBFHToWWToLNuQQ_M135', 'VBFHToWWToLNuQQ_M140', 'VBFHToWWToLNuQQ_M145', 'VBFHToWWToLNuQQ_M150', 'VBFHToWWToLNuQQ_M1500', 'VBFHToWWToLNuQQ_M155', 'VBFHToWWToLNuQQ_M160', 'VBFHToWWToLNuQQ_M165', 'VBFHToWWToLNuQQ_M170', 'VBFHToWWToLNuQQ_M175', 'VBFHToWWToLNuQQ_M180', 'VBFHToWWToLNuQQ_M190', 'VBFHToWWToLNuQQ_M200', 'VBFHToWWToLNuQQ_M2000', 'VBFHToWWToLNuQQ_M210', 'VBFHToWWToLNuQQ_M230', 'VBFHToWWToLNuQQ_M250', 'VBFHToWWToLNuQQ_M2500', 'VBFHToWWToLNuQQ_M270', 'VBFHToWWToLNuQQ_M300', 'VBFHToWWToLNuQQ_M3000', 'VBFHToWWToLNuQQ_M350', 'VBFHToWWToLNuQQ_M400', 'VBFHToWWToLNuQQ_M4000', 'VBFHToWWToLNuQQ_M450', 'VBFHToWWToLNuQQ_M500', 'VBFHToWWToLNuQQ_M5000', 'VBFHToWWToLNuQQ_M550', 'VBFHToWWToLNuQQ_M600', 'VBFHToWWToLNuQQ_M650', 'VBFHToWWToLNuQQ_M700', 'VBFHToWWToLNuQQ_M750', 'VBFHToWWToLNuQQ_M750_NWA', 'VBFHToWWToLNuQQ_M800', 'VBFHToWWToLNuQQ_M900' ]
-
-TwoL2NuSamples=[ 'GluGluHToWWTo2L2Nu_M115', 'GluGluHToWWTo2L2Nu_M120', 'GluGluHToWWTo2L2Nu_M124', 'GluGluHToWWTo2L2Nu_M125', 'GluGluHToWWTo2L2Nu_M126', 'GluGluHToWWTo2L2Nu_M130', 'GluGluHToWWTo2L2Nu_M135', 'GluGluHToWWTo2L2Nu_M140', 'GluGluHToWWTo2L2Nu_M145', 'GluGluHToWWTo2L2Nu_M150', 'GluGluHToWWTo2L2Nu_M155', 'GluGluHToWWTo2L2Nu_M160', 'GluGluHToWWTo2L2Nu_M165', 'GluGluHToWWTo2L2Nu_M170', 'GluGluHToWWTo2L2Nu_M175', 'GluGluHToWWTo2L2Nu_M180', 'GluGluHToWWTo2L2Nu_M190', 'GluGluHToWWTo2L2Nu_M200', 'GluGluHToWWTo2L2Nu_M210', 'GluGluHToWWTo2L2Nu_M230', 'GluGluHToWWTo2L2Nu_M250', 'GluGluHToWWTo2L2Nu_M270', 'GluGluHToWWTo2L2Nu_M300', 'GluGluHToWWTo2L2Nu_M350', 'GluGluHToWWTo2L2Nu_M400', 'GluGluHToWWTo2L2Nu_M450', 'GluGluHToWWTo2L2Nu_M500', 'GluGluHToWWTo2L2Nu_M550', 'GluGluHToWWTo2L2Nu_M600', 'GluGluHToWWTo2L2Nu_M650', 'GluGluHToWWTo2L2Nu_M700', 'GluGluHToWWTo2L2Nu_M750', 'GluGluHToWWTo2L2Nu_M800', 'GluGluHToWWTo2L2Nu_M900', 'GluGluHToWWTo2L2Nu_M1000', 'GluGluHToWWTo2L2Nu_M1500', 'GluGluHToWWTo2L2Nu_M2000', 'GluGluHToWWTo2L2Nu_M2500', 'GluGluHToWWTo2L2Nu_M3000', 'GluGluHToWWTo2L2Nu_M4000', 'GluGluHToWWTo2L2Nu_M5000', 'GluGluHToWWTo2L2Nu_JHUGen698_M300', 'GluGluHToWWTo2L2Nu_JHUGen698_M350', 'GluGluHToWWTo2L2Nu_JHUGen698_M400', 'GluGluHToWWTo2L2Nu_JHUGen698_M450', 'GluGluHToWWTo2L2Nu_JHUGen698_M500', 'GluGluHToWWTo2L2Nu_JHUGen698_M550', 'GluGluHToWWTo2L2Nu_JHUGen698_M600', 'GluGluHToWWTo2L2Nu_JHUGen698_M650', 'GluGluHToWWTo2L2Nu_JHUGen698_M700', 'GluGluHToWWTo2L2Nu_JHUGen698_M750', 'GluGluHToWWTo2L2Nu_JHUGen698_M800', 'GluGluHToWWTo2L2Nu_JHUGen698_M900', 'GluGluHToWWTo2L2Nu_JHUGen698_M1000', 'GluGluHToWWTo2L2Nu_JHUGen698_M1500', 'GluGluHToWWTo2L2Nu_JHUGen698_M2000', 'GluGluHToWWTo2L2Nu_JHUGen698_M2500', 'GluGluHToWWTo2L2Nu_JHUGen698_M3000', 'GluGluHToWWTo2L2Nu_JHUGen698_M4000', 'GluGluHToWWTo2L2Nu_JHUGen698_M5000', 'GluGluHToWWTo2L2Nu_JHUGen714_M4000', 'GluGluHToWWTo2L2Nu_JHUGen714_M5000', 'VBFHToWWTo2L2Nu_M115', 'VBFHToWWTo2L2Nu_M120', 'VBFHToWWTo2L2Nu_M124', 'VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2Nu_M126', 'VBFHToWWTo2L2Nu_M130', 'VBFHToWWTo2L2Nu_M135', 'VBFHToWWTo2L2Nu_M140', 'VBFHToWWTo2L2Nu_M145', 'VBFHToWWTo2L2Nu_M150', 'VBFHToWWTo2L2Nu_M155', 'VBFHToWWTo2L2Nu_M160', 'VBFHToWWTo2L2Nu_M165', 'VBFHToWWTo2L2Nu_M170', 'VBFHToWWTo2L2Nu_M175', 'VBFHToWWTo2L2Nu_M180', 'VBFHToWWTo2L2Nu_M190', 'VBFHToWWTo2L2Nu_M200', 'VBFHToWWTo2L2Nu_M210', 'VBFHToWWTo2L2Nu_M230', 'VBFHToWWTo2L2Nu_M250', 'VBFHToWWTo2L2Nu_M270', 'VBFHToWWTo2L2Nu_M300', 'VBFHToWWTo2L2Nu_M350', 'VBFHToWWTo2L2Nu_M400', 'VBFHToWWTo2L2Nu_M450', 'VBFHToWWTo2L2Nu_M500', 'VBFHToWWTo2L2Nu_M550', 'VBFHToWWTo2L2Nu_M600', 'VBFHToWWTo2L2Nu_M650', 'VBFHToWWTo2L2Nu_M700', 'VBFHToWWTo2L2Nu_M750', 'VBFHToWWTo2L2Nu_M800', 'VBFHToWWTo2L2Nu_M900', 'VBFHToWWTo2L2Nu_M1000', 'VBFHToWWTo2L2Nu_M1500', 'VBFHToWWTo2L2Nu_M2000', 'VBFHToWWTo2L2Nu_M2500', 'VBFHToWWTo2L2Nu_M3000', 'VBFHToWWTo2L2Nu_M4000', 'VBFHToWWTo2L2Nu_M5000', 
-'VBFHToWWTo2L2Nu_JHUGen698_M300', 'VBFHToWWTo2L2Nu_JHUGen698_M350', 'VBFHToWWTo2L2Nu_JHUGen698_M400', 'VBFHToWWTo2L2Nu_JHUGen698_M450', 'VBFHToWWTo2L2Nu_JHUGen698_M500', 'VBFHToWWTo2L2Nu_JHUGen698_M550', 'VBFHToWWTo2L2Nu_JHUGen698_M600', 'VBFHToWWTo2L2Nu_JHUGen698_M650', 'VBFHToWWTo2L2Nu_JHUGen698_M700', 'VBFHToWWTo2L2Nu_JHUGen698_M750', 'VBFHToWWTo2L2Nu_JHUGen698_M800', 'VBFHToWWTo2L2Nu_JHUGen698_M900', 'VBFHToWWTo2L2Nu_JHUGen698_M1000', 'VBFHToWWTo2L2Nu_JHUGen698_M1500', 'VBFHToWWTo2L2Nu_JHUGen698_M2000', 'VBFHToWWTo2L2Nu_JHUGen698_M2500', 'VBFHToWWTo2L2Nu_JHUGen698_M3000', 'VBFHToWWTo2L2Nu_JHUGen698_M4000', 'VBFHToWWTo2L2Nu_JHUGen698_M5000', 'VBFHToWWTo2L2Nu_JHUGen714_M4000', 'VBFHToWWTo2L2Nu_JHUGen714_M5000' ]
-
-# Import samples and cuts configuration for VBSjjlnu analysi
+# Import samples and cuts configuration for VBSjjlnu analysis
 exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/VBSjjlnu_samples.py"))
+# ... and samples for HM (2l2nu + jjlnu) analysis
+exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/HMjjlnu_samples.py"))
 
 # -------------------------------------------- HERE WE GO ----------------------------------------------------
 
@@ -86,7 +83,7 @@ def addJESchainMembers():
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MAPNAME = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MAPNAME")'.replace("MAPNAME", mapname) ,
+                  'declare'    : 'DYMVA_MAPNAME = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MAPNAME")'.replace("MAPNAME", mapname) ,
                   'module'     : 'DYMVA_MAPNAME()'.replace("MAPNAME", mapname),
             } 
       dictionary['MonoHiggsMVA_'+mapname] = {
@@ -134,6 +131,44 @@ def prepare_VBSjjlnu_Fatjet_syst(basename, selection):
                     'CleanFatJet_{0}{1}'.format(syst, j), 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
       'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal
+      }
+  return dictionary
+
+def prepare_CombJJLNu_syst(basename, selection):
+  dictionary = {}
+  for syst in ["JES", "MupT", "ElepT", "MET"]:
+    for j in ['up', 'do']:
+      dictionary[basename+"_"+ syst + j] = {
+      'isChain'    : True ,
+      'do4MC'      : True  ,
+      'do4Data'    : False  ,
+      'selection'  : selection,
+      'subTargets': ['do_{0}{1}'.format(syst, j),
+                    'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                    'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
+                    'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
+                    'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+      'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
+      }
+      if syst == "JES":
+        dictionary[basename+"_"+ syst + j]["subTargets"] = ['JESBaseTotal'] + dictionary[basename+"_"+ syst + j]["subTargets"] 
+  return dictionary
+
+def prepare_CombJJLNu_Fatjet_syst(basename, selection):
+  dictionary = {}
+  for syst in ['JES', 'JMS']:
+    for j in ['up', 'do']:
+      dictionary[basename+ "_" + syst + j] = {
+      'isChain'    : True ,
+      'do4MC'      : True  ,
+      'do4Data'    : False  ,
+      'selection'  : selection,
+      'subTargets': ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                    'trigMC', 'CorrFatJetMC', 
+                    'CleanFatJet_{0}{1}'.format(syst, j), 
+                    'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
+                    'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+      'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
       }
   return dictionary
 
@@ -771,7 +806,8 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2016v5','PreselFatJet','whadJetSel','wlepMaker'],
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 10 )"',
+                  'subTargets' : ['l1tightOR2016v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
 
@@ -779,7 +815,8 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2017v5','PreselFatJet','whadJetSel','wlepMaker'],
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 10 )"',
+                  'subTargets' : ['l1tightOR2017v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
 
@@ -787,7 +824,8 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['l1tightOR2018v5','PreselFatJet','whadJetSel','wlepMaker'],
+                  'selection'  :'"( Alt$( Lepton_pt[1],0) < 10 )"',
+                  'subTargets' : ['l1tightOR2018v5','PreselFatJet','whadJetSel','wlepMaker','BWReweight','HMlnjjVars','HMDNNProdSemi'],
                   #'onlySample' : LNuQQSamples,
                    },
 
@@ -795,7 +833,8 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['HMvars','BWReweight'],
+                  'subTargets' : ['HMvars','HMDNNProd','HMDNNCateg','HMDNNNeut','BWReweight'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
    
 
@@ -838,6 +877,62 @@ Steps = {
 		  },
 		  #	|| Alt$( !Lepton_isLoose[1],1 ) )
 
+
+## ------- HIGH MASS & VBS COMBINATION CHAINS:
+
+    'MCCombJJLNu2016' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : vbsjjlnu_preselection_mc_2016,
+                  'subTargets' : ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+                  'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2016
+                   },
+
+    'DATACombJJLNu2016' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : vbsjjlnu_preselection_data_2016,
+                  'subTargets' : ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi'],
+                  'onlySample' : vbsjjlnu_samples_data2016
+                   },
+
+    'MCCombJJLNu2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : vbsjjlnu_preselection_mc_2017,
+                  'subTargets' : ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+                  'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2017
+                   },
+
+    'DATACombJJLNu2017' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : vbsjjlnu_preselection_data_2017,
+                  'subTargets' : ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi'],
+                  'onlySample' : vbsjjlnu_samples_data2017
+                   },
+
+    'MCCombJJLNu2018' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'selection'  : vbsjjlnu_preselection_mc_2018,
+                  'subTargets' : ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
+                  'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2018
+                   },
+
+    'DATACombJJLNu2018' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : vbsjjlnu_preselection_data_2018,
+                  'subTargets' : ['fakeWstep1l','CorrFatJetData', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi'],
+                  'onlySample' : vbsjjlnu_samples_data2018
+                   },
 
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
@@ -1237,6 +1332,42 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.HMvariables' ,
                   'declare'    : 'HMvars = lambda : HighMassVariables()',
                   'module'     : 'HMvars()',
+               },
+
+    'HMDNNCateg' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_categ' ,
+                  'declare'    : 'HMDNNCa = lambda : ApplyDNN_Category()',
+                  'module'     : 'HMDNNCa()',
+               },
+
+    'HMDNNNeut' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_neut' ,
+                  'declare'    : 'HMDNNNe = lambda : ApplyDNN_Neutrino()',
+                  'module'     : 'HMDNNNe()',
+               },
+
+    'HMDNNProd' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_prod' ,
+                  'declare'    : 'HMDNNPr = lambda : ApplyDNN_Production()',
+                  'module'     : 'HMDNNPr()',
+               },
+
+    'HMDNNProdSemi' : { 
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : True ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_prod_semi' ,
+                  'declare'    : 'HMDNNPrSem = lambda : ApplyDNN_Production_Semi()',
+                  'module'     : 'HMDNNPrSem()',
                },
 
     'HMlnjjVarsGen' : {
@@ -2285,7 +2416,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\')' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\')' ,
                   'module'     : 'DYMVA()',
             } ,
    
@@ -2295,7 +2426,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_ElepTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTup")' ,
+                  'declare'    : 'DYMVA_ElepTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="ElepTup")' ,
                   'module'     : 'DYMVA_ElepTup()',
             } ,
 
@@ -2305,7 +2436,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_ElepTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="ElepTdo")' ,
+                  'declare'    : 'DYMVA_ElepTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="ElepTdo")' ,
                   'module'     : 'DYMVA_ElepTdo()',
             } ,
   'DYMVA_MupTup' : {
@@ -2314,7 +2445,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MupTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTup")' ,
+                  'declare'    : 'DYMVA_MupTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MupTup")' ,
                   'module'     : 'DYMVA_MupTup()',
             } ,
 
@@ -2324,7 +2455,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MupTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="MupTdo")' ,
+                  'declare'    : 'DYMVA_MupTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MupTdo")' ,
                   'module'     : 'DYMVA_MupTdo()',
             } ,
   'DYMVA_METup' : {
@@ -2333,7 +2464,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_METup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METup")' ,
+                  'declare'    : 'DYMVA_METup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="METup")' ,
                   'module'     : 'DYMVA_METup()',
             } ,
 
@@ -2343,7 +2474,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_METdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="METdo")' ,
+                  'declare'    : 'DYMVA_METdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="METdo")' ,
                   'module'     : 'DYMVA_METdo()',
             } ,
   'DYMVA_JESup' : {
@@ -2352,7 +2483,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_JESup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESup")' ,
+                  'declare'    : 'DYMVA_JESup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="JESup")' ,
                   'module'     : 'DYMVA_JESup()',
             } ,
 
@@ -2362,19 +2493,19 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_JESdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_cfg.py\', branch_map="JESdo")' ,
+                  'declare'    : 'DYMVA_JESdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="JESdo")' ,
                   'module'     : 'DYMVA_JESdo()',
             } ,
 
-  'DYMVA_v5' : {
-            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\')' ,
-                  'module'     : 'DYMVA()',
-            } ,
+# 'DYMVA_v5' : {
+#           #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+#                 'isChain'    : False ,
+#                 'do4MC'      : True  ,
+#                 'do4Data'    : True  ,
+#                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+#                 'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\')' ,
+#                 'module'     : 'DYMVA()',
+#           } ,
 
 
 # ------------------------------------ SYSTEMATICS ----------------------------------------------------------------
@@ -2480,7 +2611,29 @@ Steps = {
                   'subTargets' : ['JESBase','do_JESup','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
-   'JESup_suffix' :   {  
+   'JESup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Total", "Up") +
+                                  createJESchain("Absolute", "Up") +
+                                  createJESchain("Absolute_RPLME_YEAR", "Up") +
+                                  createJESchain("BBEC1", "Up") +
+                                  createJESchain("BBEC1_RPLME_YEAR", "Up") +
+                                  createJESchain("EC2", "Up") +
+                                  createJESchain("EC2_RPLME_YEAR", "Up") +
+                                  createJESchain("FlavorQCD", "Up") +
+                                  createJESchain("HF", "Up") +
+                                  createJESchain("HF_RPLME_YEAR", "Up") +
+                                  createJESchain("RelativeBal", "Up") +
+                                  createJESchain("RelativeSample_RPLME_YEAR", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+                  #'subTargets' : ['JESBase','do_JESup_suffix','l2Kin_JESup', 'l3Kin_JESup', 'l4Kin_JESup','DYMVA_JESup','MonoHiggsMVA_JESup','formulasMC_JESup',
+                  #               'do_JESAbsoluteup_suffix','do_JESAbsolutedo_suffix','do_JESAbsolute_RPLME_YEARup_suffix','do_JESAbsolute_RPLME_YEARdo_suffix','do_JESBBEC1up_suffix','do_JESBBEC1do_suffix','do_JESBBEC1_RPLME_YEARup_suffix','do_JESBBEC1_RPLME_YEARdo_suffix','do_JESEC2up_suffix','do_JESEC2do_suffix','do_JESEC2_RPLME_YEARup_suffix','do_JESEC2_RPLME_YEARdo_suffix','do_JESFlavorQCDup_suffix','do_JESFlavorQCDdo_suffix','do_JESHFup_suffix','do_JESHFdo_suffix','do_JESHF_RPLME_YEARup_suffix','do_JESHF_RPLME_YEARup_suffix','do_JESRelativeBaldo_suffix','do_JESRelativeBaldo_suffix','do_JESRelativeBal_RPLME_YEARup_suffix','do_JESRelativeBal_RPLME_YEARdo_suffix'],
+               },
+
+   'JESup_suffix_redoMVA' :   {  
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2510,6 +2663,28 @@ Steps = {
                },
 
    'JESdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Total", "Do") +
+                                  createJESchain("Absolute", "Do") +
+                                  createJESchain("Absolute_RPLME_YEAR", "Do") +
+                                  createJESchain("BBEC1", "Do") +
+                                  createJESchain("BBEC1_RPLME_YEAR", "Do") +
+                                  createJESchain("EC2", "Do") +
+                                  createJESchain("EC2_RPLME_YEAR", "Do") +
+                                  createJESchain("FlavorQCD", "Do") +
+                                  createJESchain("HF", "Do") +
+                                  createJESchain("HF_RPLME_YEAR", "Do") +
+                                  createJESchain("RelativeBal", "Do") +
+                                  createJESchain("RelativeSample_RPLME_YEAR", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+                  #'subTargets' : ['JESBase','do_JESdo_suffix','l2Kin_JESdo', 'l3Kin_JESdo', 'l4Kin_JESdo','DYMVA_JESdo','MonoHiggsMVA_JESdo','formulasMC_JESdo'],
+               },
+
+
+   'JESdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2598,6 +2773,15 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
+
+   'METup_suffix_redoMVA' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METup_suffix','l2Kin_METup', 'l3Kin_METup', 'l4Kin_METup','DYMVA_METup','MonoHiggsMVA_METup','formulasMC_METup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
    'METdo' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
@@ -2606,6 +2790,14 @@ Steps = {
                },
 
    'METdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_METdo_suffix','l2Kin_METdo', 'l3Kin_METdo', 'l4Kin_METdo','DYMVA_METdo','MonoHiggsMVA_METdo','formulasMC_METdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'METdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2680,14 +2872,30 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
+  'ElepTup_suffix_redoMVA' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_ElepTup_suffix', 'trigMCKeepRun_ElepTup', 'LeptonSF_ElepTup', 'l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup', 'DYMVA_ElepTup', 'MonoHiggsMVA_ElepTup', 'formulasMC_ElepTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
   'ElepTdo' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                 },
-  
+ 
   'ElepTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+ 
+  'ElepTdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2769,8 +2977,15 @@ Steps = {
                   'subTargets' : ['do_MupTup','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
-
   'MupTup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_MupTup_suffix', 'trigMCKeepRun_MupTup', 'LeptonSF_MupTup', 'l2Kin_MupTup', 'l3Kin_MupTup', 'l4Kin_MupTup', 'DYMVA_MupTup', 'MonoHiggsMVA_MupTup', 'formulasMC_MupTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+  'MupTup_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -2786,6 +3001,14 @@ Steps = {
                },
 
   'MupTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['do_MupTdo_suffix', 'trigMCKeepRun_MupTdo', 'LeptonSF_MupTdo', 'l2Kin_MupTdo', 'l3Kin_MupTdo', 'l4Kin_MupTdo', 'DYMVA_MupTdo', 'MonoHiggsMVA_MupTdo', 'formulasMC_MupTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+  'MupTdo_suffix_redoMVA' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
@@ -3029,7 +3252,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['DYMVA_v5','MonoHiggsMVA','l3Kin'], 
+                  'subTargets' : ['DYMVA','MonoHiggsMVA','l3Kin'], 
                   'excludeSample' : LNuQQSamples
                 },
  
@@ -3251,7 +3474,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>30) \
                                     && (    Lepton_isTightElectron_cut_WP_Tight80X[0] > 0.5        \
                                          || Lepton_isTightElectron_cut_WP_Tight80X_SS[0] > 0.5     \
                                          || Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5        \
@@ -3264,7 +3487,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>30) \
                                     && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \
@@ -3277,7 +3500,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>18) \
+                  'selection'  : '" (nLepton>=1 && Lepton_pt[0]>30) \
                                     && (    Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V2Iso_WP90[0] > 0.5        \
                                          || Lepton_isTightElectron_mvaFall17V1Iso_WP90_SS[0] > 0.5     \
@@ -3316,9 +3539,9 @@ Steps = {
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
       'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", debug=False)',
-      'module'     : 'vbs_pairing()'
+      'module'     : 'vbs_pairing()',
+      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
   },
-
 
   'VBSjjlnu_kin': {
       'isChain'    : False ,
@@ -3326,7 +3549,8 @@ Steps = {
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
       'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], mjj_vbs_cut=250, deltaeta_vbs_cut=2, met="PuppiMET", debug=False)',
-      'module'     : 'vbs_vars_maker()'
+      'module'     : 'vbs_vars_maker()',
+      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
   },
 
   #### OLD SKIMS
@@ -3532,14 +3756,15 @@ Steps = {
                },
 
 ## ------- UEPS 
+## ------- UEPS 
 
   'UEPS'     : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'onlySample' : [
-                                    'GluGluHToWWTo2L2NuPowheg_M125_CP5Up', 'VBFHToWWTo2L2NuPowheg_M125_CP5Up', 'WWTo2L2Nu_CP5Up',
-                                    'GluGluHToWWTo2L2NuPowheg_M125_CP5Down', 'VBFHToWWTo2L2NuPowheg_M125_CP5Down', 'WWTo2L2Nu_CP5Down',
+                                    'GluGluHToWWTo2L2NuPowheg_M125_CP5Up', 'VBFHToWWTo2L2NuPowheg_M125_CP5Up', 'VBFHToWWTo2L2Nu_M125_CP5Up', 'WWTo2L2Nu_CP5Up',
+                                    'GluGluHToWWTo2L2NuPowheg_M125_CP5Down', 'VBFHToWWTo2L2NuPowheg_M125_CP5Down', 'VBFHToWWTo2L2Nu_M125_CP5Down', 'WWTo2L2Nu_CP5Down',
                                     'GluGluHToWWTo2L2Nu_M125_CUETDown' , 'VBFHToWWTo2L2Nu_M125_CUETDown' , 'WWTo2L2Nu_CUETDown' ,
                                     'GluGluHToWWTo2L2Nu_M125_CUETUp'   , 'VBFHToWWTo2L2Nu_M125_CUETUp'   , 'WWTo2L2Nu_CUETUp'   ,
                                     'GluGluHToWWTo2L2NuHerwigPS_M125'  , 'VBFHToWWTo2L2NuHerwigPS_M125'  , 'WWTo2L2NuHerwigPS'  ,
@@ -3549,14 +3774,16 @@ Steps = {
                               'UEdo' : {
                                           'GluGluHToWWTo2L2NuPowheg_M125_CP5Down' : ['GluGluHToWWTo2L2NuPowheg_M125_PrivateNano' ,'GluGluHToWWTo2L2NuPowheg_M125'],
                                           'VBFHToWWTo2L2NuPowheg_M125_CP5Down'    : ['VBFHToWWTo2L2NuPowheg_M125_PrivateNano','VBFHToWWTo2L2NuPowheg_M125']    ,
+                                          'VBFHToWWTo2L2Nu_M125_CP5Down'    : ['VBFHToWWTo2L2Nu_M125']    ,
                                           'WWTo2L2Nu_CP5Down'               : ['WWTo2L2Nu_PrivateNano', 'WWTo2L2Nu'] ,
                                           'GluGluHToWWTo2L2Nu_M125_CUETDown' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
                                           'VBFHToWWTo2L2Nu_M125_CUETDown'    : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125']    ,
-                                          'WWTo2L2Nu_CUETDown'               : ['WWTo2L2Nu'] , 
+                                          'WWTo2L2Nu_CUETDown'               : ['WWTo2L2Nu'] ,
                                        },
                               'UEup' : {
                                           'GluGluHToWWTo2L2NuPowheg_M125_CP5Up' : ['GluGluHToWWTo2L2NuPowheg_M125_PrivateNano' ,'GluGluHToWWTo2L2NuPowheg_M125'],
                                           'VBFHToWWTo2L2NuPowheg_M125_CP5Up'    : ['VBFHToWWTo2L2NuPowheg_M125_PrivateNano','VBFHToWWTo2L2NuPowheg_M125']    ,
+                                          'VBFHToWWTo2L2Nu_M125_CP5Up'    : ['VBFHToWWTo2L2Nu_M125']    ,
                                           'WWTo2L2Nu_CP5Up'               : ['WWTo2L2Nu_PrivateNano', 'WWTo2L2Nu'] ,
                                           'GluGluHToWWTo2L2Nu_M125_CUETUp'   : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
                                           'VBFHToWWTo2L2Nu_M125_CUETUp'      : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125']    ,
@@ -3564,7 +3791,7 @@ Steps = {
                                        },
                               'PS'   : {
                                           'GluGluHToWWTo2L2NuHerwigPS_M125'  : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
-                                          'GluGluHToWWTo2L2Nu_M125_herwigpp' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'], 
+                                          'GluGluHToWWTo2L2Nu_M125_herwigpp' : ['GluGluHToWWTo2L2Nu_M125' ,'GluGluHToWWTo2L2NuPowheg_M125'],
                                           'VBFHToWWTo2L2NuHerwigPS_M125'     : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125'] ,
                                           'VBFHToWWTo2L2Nu_M125_herwigpp'    : ['VBFHToWWTo2L2Nu_M125', 'VBFHToWWTo2L2NuPowheg_M125', 'VBFHToWWTo2L2Nu_alternative_M125'] ,
                                           'WWTo2L2NuHerwigPS'                : ['WWTo2L2Nu'] ,
@@ -3578,10 +3805,18 @@ Steps = {
 Steps.update(addJESchainMembers())
 
 ## ADD systematics for VBSjjlnu analysis
-Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2016v5",vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2016v5", vbsjjlnu_preselection_mc_2016))
 Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2017v5", vbsjjlnu_preselection_mc_2017))
 Steps.update(prepare_VBSjjlnu_syst("VBSjjlnuSkim2018v5", vbsjjlnu_preselection_mc_2018))
 ## ADD fatjet systematic for VBSjjlnu analysis
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2016v5_fatjet", vbsjjlnu_preselection_mc_2016))
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2017v5_fatjet", vbsjjlnu_preselection_mc_2017))
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2018v5_fatjet", vbsjjlnu_preselection_mc_2018))
+## ADD systematics for VBSjjlnu & HMjjlnu analysis
+Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2016", vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2017", vbsjjlnu_preselection_mc_2017))
+Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2018", vbsjjlnu_preselection_mc_2018))
+## ADD fatjet systematic for VBSjjlnu & HMjjlnu analysis
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2016_fatjet", vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2017_fatjet", vbsjjlnu_preselection_mc_2017))
+Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2018_fatjet", vbsjjlnu_preselection_mc_2018))
