@@ -143,7 +143,8 @@ def prepare_CombJJLNu_syst(basename, selection):
       'do4MC'      : True  ,
       'do4Data'    : False  ,
       'selection'  : selection,
-      'subTargets': ['do_{0}{1}'.format(syst, j),
+      'subTargets': ['baseW', 
+                    'do_{0}{1}'.format(syst, j),
                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
@@ -163,7 +164,7 @@ def prepare_CombJJLNu_Fatjet_syst(basename, selection):
       'do4MC'      : True  ,
       'do4Data'    : False  ,
       'selection'  : selection,
-      'subTargets': ['wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+      'subTargets': ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 
                     'CleanFatJet_{0}{1}'.format(syst, j), 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
@@ -1231,6 +1232,14 @@ Steps = {
                                   'WJetsToLNu_HT200_400','WJetsToLNu_HT400_600',
                                   'WJetsToLNu_HT600_800','WJetsToLNu_HT800_1200',
                                   'WJetsToLNu_HT1200_2500','WJetsToLNu_HT2500_inf',
+                                  'WJetsToLNu_Pt50to100',
+                                  'WJetsToLNu_Pt100to250',
+                                  'WJetsToLNu_Pt250to400',
+                                  'WJetsToLNu_Pt400to600',
+                                  'WJetsToLNu_Pt600toInf'
+                                  'WJetsToLNu_Pt100To250_ext4', 'WJetsToLNu_Pt250To400_ext4', 
+                                  'WJetsToLNu_Pt400To600_ext4', 'WJetsToLNu_Pt600ToInf_ext4',
+                                  'WJetsToLNu_Wpt100t0200_ext1','WJetsToLNu_Wpt200toInf_ext1', 
                                   ]
                   } ,
 
@@ -1250,6 +1259,7 @@ Steps = {
                                   'DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
                                   'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2',
                                   'DYJetsToLL_M-10to50-LO-ext1',
+                                  'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1',
                                    # ... Low Mass HT
                                   'DYJetsToLL_M-4to50_HT-100to200',
                                   'DYJetsToLL_M-4to50_HT-100to200-ext1',
@@ -1262,12 +1272,26 @@ Steps = {
                                    # ... high Mass HT
                                   'DYJetsToLL_M-50_HT-70to100',
                                   'DYJetsToLL_M-50_HT-100to200',
+                                  'DYJetsToLL_M-50_HT-100to200_ext1',
                                   'DYJetsToLL_M-50_HT-200to400',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1',
                                   'DYJetsToLL_M-50_HT-400to600',
+                                  'DYJetsToLL_M-50_HT-400to600_ext1',
                                   'DYJetsToLL_M-50_HT-600to800',
                                   'DYJetsToLL_M-50_HT-800to1200',
                                   'DYJetsToLL_M-50_HT-1200to2500',
-                                  'DYJetsToLL_M-50_HT-2500toInf',
+                                  'DYJetsToLL_M-50_HT-2500toinf',
+
+                                  'DYJetsToLL_M-5to50_HT-70to100', 
+                                  'DYJetsToLL_M-5to50_HT-100to200',
+                                  'DYJetsToLL_M-5to50_HT-100to200_ext1',
+                                  'DYJetsToLL_M-5to50_HT-200to400',
+                                  'DYJetsToLL_M-5to50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-5to50_HT-400to600',
+                                  'DYJetsToLL_M-5to50_HT-400to600_ext1',
+                                  'DYJetsToLL_M-5to50_HT-600toinf_ext1',
+                                  'DYJetsToLL_M-5to50_HT-600toinf',
+                                                        
                                   ]
                   } ,
 
@@ -3548,11 +3572,12 @@ Steps = {
       'do4MC'      : True  ,
       'do4Data'    : True  ,
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], mjj_vbs_cut=250, deltaeta_vbs_cut=2, met="PuppiMET", debug=False)',
+      'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", debug=False)',
       'module'     : 'vbs_vars_maker()',
       'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
   },
 
+  ###########################################
   #### OLD SKIMS
   'VBSjjlnuSkim2017v3' : {
       'isChain'    : True ,
@@ -3813,10 +3838,10 @@ Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2016v5_fatjet", vbsjjlnu_
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2017v5_fatjet", vbsjjlnu_preselection_mc_2017))
 Steps.update(prepare_VBSjjlnu_Fatjet_syst("VBSjjlnuSkim2018v5_fatjet", vbsjjlnu_preselection_mc_2018))
 ## ADD systematics for VBSjjlnu & HMjjlnu analysis
-Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2016", vbsjjlnu_preselection_mc_2016))
-Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2017", vbsjjlnu_preselection_mc_2017))
-Steps.update(prepare_VBSjjlnu_syst("CombJJLNu2018", vbsjjlnu_preselection_mc_2018))
+Steps.update(prepare_CombJJLNu_syst("CombJJLNu2016", vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_CombJJLNu_syst("CombJJLNu2017", vbsjjlnu_preselection_mc_2017))
+Steps.update(prepare_CombJJLNu_syst("CombJJLNu2018", vbsjjlnu_preselection_mc_2018))
 ## ADD fatjet systematic for VBSjjlnu & HMjjlnu analysis
-Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2016_fatjet", vbsjjlnu_preselection_mc_2016))
-Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2017_fatjet", vbsjjlnu_preselection_mc_2017))
-Steps.update(prepare_VBSjjlnu_Fatjet_syst("CombJJLNu2018_fatjet", vbsjjlnu_preselection_mc_2018))
+Steps.update(prepare_CombJJLNu_Fatjet_syst("CombJJLNu2016_fatjet", vbsjjlnu_preselection_mc_2016))
+Steps.update(prepare_CombJJLNu_Fatjet_syst("CombJJLNu2017_fatjet", vbsjjlnu_preselection_mc_2017))
+Steps.update(prepare_CombJJLNu_Fatjet_syst("CombJJLNu2018_fatjet", vbsjjlnu_preselection_mc_2018))

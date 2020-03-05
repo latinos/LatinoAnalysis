@@ -33,6 +33,16 @@ VBSjjlnu_vector_branches = [
         "type": "I",
         "len": "N_jets", 
         "name": "other_jets_index"
+    },
+    {
+        "type": "F", 
+        "len": 4, 
+        "name": "Whad_vec"
+    },
+    {
+        "type": "F", 
+        "len": 4, 
+        "name": "Wlep_vec"
     }
 ]
 
@@ -44,7 +54,10 @@ def getDefault():
     for br in VBSjjlnu_branches["I"]:
         output[br] = -999
     for vec_br in VBSjjlnu_vector_branches:
-        output[vec_br["name"]] = []
+        if type(vec_br["len"]) == int:
+            output[vec_br["name"]] = [-999.]*vec_br["len"]
+        else:
+            output[vec_br["name"]] = []
     return output
 
 
@@ -140,6 +153,11 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     #WW variables
     w_lep = lepton + reco_neutrino
     w_had = vjets[0] + vjets[1]
+
+    # Save four momenta
+    output["Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
+    output["Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
+
     w_lep_t = w_lep.Vect()
     w_lep_t.SetZ(0)
     w_had_t = w_had.Vect()
@@ -259,6 +277,11 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     #WW variables
     w_lep = lepton + reco_neutrino
     w_had = fatjet
+
+     # Save four momenta
+    output["Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
+    output["Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
+
     w_lep_t = w_lep.Vect()
     w_lep_t.SetZ(0)
     w_had_t = w_had.Vect()
