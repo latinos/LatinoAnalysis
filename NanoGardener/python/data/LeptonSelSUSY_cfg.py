@@ -677,7 +677,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]  >=   1' ,
+                        'electron_col[LF_idx]["cutBased"]  >=   1' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -695,7 +695,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]  >=   1' ,
+                        'electron_col[LF_idx]["cutBased"]  >=   1' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -714,7 +714,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  3' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  3' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -740,7 +740,34 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  3' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  3' ,
+                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+                        ] ,
+                    } ,
+                'tkSF':  { 
+                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/EGM2D_BtoH_combineLowEt_RecoSF_Legacy2016.root' ,
+                    } ,
+                'susySF':  {
+                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/2016LegacyReReco_ElectronMedium_Fall17V2.root#EGamma_SF2D' ,  
+                    } ,
+                'fsSF': {
+                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                    },
+                #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_ele_cut_WP_Tight80X/' ,
+                } ,
+
+            'cutBasedMediumPOGV1' : {
+                'cuts' : { 
+                    'True' :
+                        [
+                        'electron_col[LF_idx]["pt"]                 >  15.' ,
+                        'abs(electron_col[LF_idx]["eta"])           <  2.4' ,
+                        'electron_col[LF_idx]["cutBased_Fall17_V1"] >=  3' ,
+                        'abs(electron_col[LF_idx]["sip3d"])         <   4.' ,
+                        'abs(electron_col[LF_idx]["dxy"])           < 0.05' ,
+                        'abs(electron_col[LF_idx]["dz"])            < 0.10' ,
                         ] ,
                     } ,
                 'tkSF':  { 
@@ -761,7 +788,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  4' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  4' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -787,7 +814,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  4' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  4' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -883,7 +910,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]  >=   1' ,
+                        'electron_col[LF_idx]["cutBased"]       >=   1' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -901,7 +928,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]  >=   1' ,
+                        'electron_col[LF_idx]["cutBased"]       >=   1' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -920,7 +947,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  3' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  3' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -953,7 +980,41 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  3' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  3' ,
+                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+                        ] ,
+                    } ,
+                'tkSF':  { 
+                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runB_passingRECO_combineLowEt.root',
+                    '2-2' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runC_passingRECO_combineLowEt.root',
+                    '3-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runD_passingRECO_combineLowEt.root',
+                    '4-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runE_passingRECO_combineLowEt.root',
+                    '5-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runF_passingRECO_combineLowEt.root',
+                  } ,
+                'susySF':  {
+                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronMedium_POG.root#EGamma_SF2D' , 
+                    '2-2' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronMedium_POG.root#EGamma_SF2D' , 
+                    '3-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronMedium_POG.root#EGamma_SF2D' , 
+                    '4-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronMedium_POG.root#EGamma_SF2D' , 
+                    '5-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronMedium_POG.root#EGamma_SF2D' , 
+                    } ,
+                'fsSF': {
+                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                    },
+                } ,
+
+            'cutBasedMediumPOGV1' : {
+                'cuts' : { 
+                    'True' :
+                        [
+                        'electron_col[LF_idx]["pt"]                 >  15.' ,
+                        'abs(electron_col[LF_idx]["eta"])           <  2.4' ,
+                        'electron_col[LF_idx]["cutBased_Fall17_V1"] >=  3' ,
+                        'abs(electron_col[LF_idx]["sip3d"])         <   4.' ,
+                        'abs(electron_col[LF_idx]["dxy"])           < 0.05' ,
+                        'abs(electron_col[LF_idx]["dz"])            < 0.10' ,
                         ] ,
                     } ,
                 'tkSF':  { 
@@ -981,7 +1042,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  4' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  4' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -1014,7 +1075,7 @@ ElectronWP = {
                         [
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  4' ,
+                        'electron_col[LF_idx]["cutBased"]       >=  4' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -1194,26 +1255,6 @@ ElectronWP = {
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
                         'electron_col[LF_idx]["cutBased"]       >=  3' ,
-                        ] ,
-                    } ,
-                'tkSF':  { 
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/egammaEffi.txt_EGM2D_updatedAll.root',
-                    } ,
-                'susySF':  {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/2018_ElectronMedium_POG.root#EGamma_SF2D' ,  
-                    } ,
-                'fsSF': {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_ele_full_fast_sf_18.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
-                } ,
-
-            'cutBasedMediumPOGIP' : {
-                'cuts' : { 
-                    'True' :
-                        [
-                        'electron_col[LF_idx]["pt"]             >  15.' ,
-                        'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'electron_col[LF_idx]["cutBased"]       >=  3' ,
                         'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
                         'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
                         'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
@@ -1237,6 +1278,9 @@ ElectronWP = {
                         'electron_col[LF_idx]["pt"]             >  15.' ,
                         'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
                         'electron_col[LF_idx]["cutBased_Fall17_V1"]   >=  3' ,
+                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
                         ] ,
                     } ,
                 'tkSF':  { 
