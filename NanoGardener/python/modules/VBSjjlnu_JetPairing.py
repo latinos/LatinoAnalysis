@@ -30,7 +30,7 @@ pairing_strategies_fatjet = {
 
 class VBSjjlnu_JetPairing(Module):
     
-    def __init__(self, year, mode="ALL", debug = False):
+    def __init__(self, year, mode="ALL", branch_map='', debug = False):
         '''
         This modules performs the Jet pairing for VBS semileptonic analysis. 
         It separates events in two categories: boosted and resolved. 
@@ -60,6 +60,7 @@ class VBSjjlnu_JetPairing(Module):
         self.etacuts = pairing_cuts[year]["etacuts"]
         self.ptcuts = pairing_cuts[year]["ptcuts"]
         self.debug = debug
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -67,8 +68,8 @@ class VBSjjlnu_JetPairing(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        #self.initReaders(inputTree)
-        self.out = wrappedOutputTree
+        # Using branchmap (Only JEs and Fatjet systematics change the pairing)
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
         # New Branches
         for key in pairing_strategies_resolved.keys():
@@ -89,6 +90,8 @@ class VBSjjlnu_JetPairing(Module):
         # Read branches that may be created by previous step in the chain
         # It's important to read them like this in case they 
         # are created by the step before in a PostProcessor chain. 
+        event = mappedEvent(event, mapname=self._branch_map)
+        
         self.nFatJet = event.nCleanFatJet
         self.rawJet_coll    = Collection(event, 'Jet')
         self.Jet_coll       = Collection(event, 'CleanJet')

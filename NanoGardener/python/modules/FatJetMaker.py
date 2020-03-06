@@ -42,7 +42,7 @@ class FatJetMaker(Module):
 
     '''
     def __init__(self, jetid=0, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
-                    over_lepR =0.8, over_jetR = 0.8, branch_prefix=""):
+                    over_lepR =0.8, over_jetR = 0.8, branch_map=""):
         self.jetid = jetid
         self.minpt = minpt
         self.maxeta = maxeta 
@@ -50,10 +50,12 @@ class FatJetMaker(Module):
         self.mass_range = mass_range 
         self.over_lepR = over_lepR
         self.over_jetR = over_jetR
-        if len(branch_prefix): 
+        
+        if branch_map != '':
+            # Branch name for output (branch_map = jmsUp,jerUp etc)
+            self._output_branch_map = "fatjet_"+branch_map
             self.branch_prefix = "_"+ branch_prefix
-        else: 
-            self.branch_prefix = ""
+
 
     def beginJob(self):
         pass
@@ -61,7 +63,7 @@ class FatJetMaker(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._output_branch_map)
         # New Branches
         for typ in CleanFatJet_br:
             for var in CleanFatJet_br[typ]:
@@ -79,6 +81,8 @@ class FatJetMaker(Module):
     def analyze(self, event):
         leptons_coll = Collection(event, "Lepton")
         fatjets_coll = Collection(event, "FatJet")
+        # We don't need to catch variations of CleanJet in this module
+        # because we only use eta and pt of jets
         jets_coll = Collection(event, "CleanJet")
         nFatJet = len(fatjets_coll)
         nLep = len(leptons_coll)
@@ -101,7 +105,8 @@ class FatJetMaker(Module):
             fj_tau2          = fj.tau2
             # Get branches with prefixes for Jes,jmr,jer
             fj_softdrop_mass = getattr(fj, "msoftdrop" + self.branch_prefix)
-            if self.branch_prefix in ['jer', 'jes']:
+            if 'jms' not in self.branch_prefix:
+                print("Reading Fatjet variaton: ", self.branch_prefix)
                 fj_pt = getattr(fj, "pt" + self.branch_prefix) # for systematic variations
             else:
                 fj_pt  = fj.pt  
