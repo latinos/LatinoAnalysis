@@ -4,6 +4,8 @@ import re
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
+
 from LatinoAnalysis.NanoGardener.modules.PairingUtils import *
 from LatinoAnalysis.NanoGardener.data.VBSjjlnu_pairing_cuts import pairing_cuts
 
@@ -147,8 +149,7 @@ class VBSjjlnu_JetPairing(Module):
             # or it's boosted but with not enough jets, 
             # or it is not boosted and it has less than 4 jets with minpt
             #print("Event removed")
-            #return False    
-            pass
+            category = -1
 
 
         # Fill the category

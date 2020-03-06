@@ -4,6 +4,8 @@ from ROOT import TLorentzVector
 from math import cosh, sqrt
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
+
 import LatinoAnalysis.NanoGardener.data.VBSjjlnu_vars as vbs_vars
 import LatinoAnalysis.Gardener.variables.VBS_recoNeutrino as RecoNeutrino
 
@@ -42,7 +44,10 @@ class VBSjjlnu_kin(Module):
             for var in branches:
                 self.out.branch(var, typ)
         for vec_branch in vbs_vars.VBSjjlnu_vector_branches:
-            self.out.branch(vec_branch["name"], vec_branch["type"], lenVar=vec_branch["len"])
+            if type(vec_branch["len"])==str:
+                self.out.branch(vec_branch["name"], vec_branch["type"], lenVar=vec_branch["len"])
+            elif type(vec_branch["len"])==int:
+                self.out.branch(vec_branch["name"], vec_branch["type"], n=vec_branch["len"])
         
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -61,6 +66,14 @@ class VBSjjlnu_kin(Module):
         met_raw    = Object(event, self.metType)
 
         category = int(self.vbs_category)
+
+        # Check if VBS category
+        if category not in [0,1]:
+            output = vbs_vars.getDefault() 
+            # Fill the branches
+            for var, val in output.items():
+                self.out.fillBranch(var, val)         
+            return True
 
         lep = TLorentzVector()
         lep.SetPtEtaPhiE(lepton_raw.pt, lepton_raw.eta,lepton_raw.phi, lepton_raw.pt * cosh(lepton_raw.eta))
@@ -87,9 +100,9 @@ class VBSjjlnu_kin(Module):
                 other_jets_ind.append(jetind)
 
          # Check Mjj_vbs and deltaeta_vbs cuts
-        #if ((vbsjets[0]+vbsjets[1]).M() < self.mjj_vbs_cut or \
-        #        abs(vbsjets[0].Eta() - vbsjets[1].Eta()) < self.deltaeta_vbs_cut):
-        #    return False
+        if ((vbsjets[0]+vbsjets[1]).M() < self.mjj_vbs_cut or \
+               abs(vbsjets[0].Eta() - vbsjets[1].Eta()) < self.deltaeta_vbs_cut):
+           return False
 
         output = None
 
@@ -106,8 +119,7 @@ class VBSjjlnu_kin(Module):
             # Resolved category
             output = vbs_vars.getVBSkin_resolved(vbsjets, vjets, lep, met, reco_neutrino,
                                 other_jets, other_jets_ind, debug=self.debug )
-
-
+        
         # Fill the branches
         for var, val in output.items():
             self.out.fillBranch(var, val)        
