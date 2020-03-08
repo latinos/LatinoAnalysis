@@ -55,6 +55,9 @@ class FatJetMaker(Module):
             # Branch name for output (branch_map = jmsUp,jerUp etc)
             self._output_branch_map = "fatjet_"+branch_map
             self.branch_prefix = "_"+ branch_prefix
+        else:
+            # nominal vars from NanoAODtools
+            self.branch_prefix = "nom"
 
 
     def beginJob(self):
