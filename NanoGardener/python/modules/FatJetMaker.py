@@ -5,6 +5,7 @@ from math import sqrt
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 from LatinoAnalysis.NanoGardener.data.FatJetMaker_cfg import CleanFatJet_br, CleanFatJet_var
 
 class FatJetMaker(Module):
@@ -42,7 +43,7 @@ class FatJetMaker(Module):
 
     '''
     def __init__(self, jetid=0, minpt=200.0, maxeta=2.4, max_tau21=0.45, mass_range=[65, 105], 
-                    over_lepR =0.8, over_jetR = 0.8, branch_map=""):
+                    over_lepR =0.8, over_jetR = 0.8, input_branch_suffix="", output_branch_map=""):
         self.jetid = jetid
         self.minpt = minpt
         self.maxeta = maxeta 
@@ -50,14 +51,13 @@ class FatJetMaker(Module):
         self.mass_range = mass_range 
         self.over_lepR = over_lepR
         self.over_jetR = over_jetR
+        self._output_branch_map = output_branch_map
         
-        if branch_map != '':
-            # Branch name for output (branch_map = jmsUp,jerUp etc)
-            self._output_branch_map = "fatjet_"+branch_map
-            self.branch_prefix = "_"+ branch_prefix
+        if input_branch_suffix != '':
+            self._input_branch_prefix = "_"+ input_branch_suffix
         else:
             # nominal vars from NanoAODtools
-            self.branch_prefix = "nom"
+            self._input_branch_prefix = "_nom"
 
 
     def beginJob(self):
@@ -67,14 +67,26 @@ class FatJetMaker(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = mappedOutputTree(wrappedOutputTree, mapname=self._output_branch_map)
-        # New Branches
-        for typ in CleanFatJet_br:
-            for var in CleanFatJet_br[typ]:
-                self.out.branch(var, typ, lenVar='nCleanFatJet')
-        #vector of CleanJet idx not overlapping with Fatjets
-        self.out.branch('CleanJetNotFat_jetIdx', "I", lenVar="nCleanJetNotFat") 
-        # Distance from the first FatJet
-        self.out.branch('CleanJetNotFat_deltaR', "F", lenVar="nCleanJetNotFat")
+        if self._output_branch_map == "":
+            # New Branches
+            for typ in CleanFatJet_br:
+                for var in CleanFatJet_br[typ]:
+                    self.out.branch(var, typ, lenVar='nCleanFatJet')
+            #vector of CleanJet idx not overlapping with Fatjets
+            self.out.branch('CleanJetNotFat_jetIdx', "I", lenVar="nCleanJetNotFat") 
+            # Distance from the first FatJet
+            self.out.branch('CleanJetNotFat_deltaR', "F", lenVar="nCleanJetNotFat")
+        else:
+            ##################
+            #N.B little hack for lenVar with variation
+            # New Branches
+            for typ in CleanFatJet_br:
+                for var in CleanFatJet_br[typ]:
+                    self.out.branch(var, typ, lenVar='nCleanFatJet_'+ self._output_branch_map)
+            #vector of CleanJet idx not overlapping with Fatjets
+            self.out.branch('CleanJetNotFat_jetIdx', "I", lenVar="nCleanJetNotFat_"+ self._output_branch_map) 
+            # Distance from the first FatJet
+            self.out.branch('CleanJetNotFat_deltaR', "F", lenVar="nCleanJetNotFat_"+ self._output_branch_map)
 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -107,10 +119,9 @@ class FatJetMaker(Module):
             fj_tau1          = fj.tau1
             fj_tau2          = fj.tau2
             # Get branches with prefixes for Jes,jmr,jer
-            fj_softdrop_mass = getattr(fj, "msoftdrop" + self.branch_prefix)
-            if 'jms' not in self.branch_prefix:
-                print("Reading Fatjet variaton: ", self.branch_prefix)
-                fj_pt = getattr(fj, "pt" + self.branch_prefix) # for systematic variations
+            fj_softdrop_mass = getattr(fj, "msoftdrop" + self._input_branch_prefix)
+            if 'jes' in self._input_branch_prefix:
+                fj_pt = getattr(fj, "pt" + self._input_branch_prefix) # for systematic variations
             else:
                 fj_pt  = fj.pt  
             
@@ -161,6 +172,8 @@ class FatJetMaker(Module):
                         jets_coll[clj].phi, jets_coll[clj].eta,
                         output_vars["CleanFatJet_phi"][0], output_vars["CleanFatJet_eta"][0] ) 
     
+        output_vars["nCleanFatJet"] = len(output_vars["CleanFatJet_pt"])
+        output_vars["nCleanJetNotFat"] = len(cleanjet_not_overlap)
 
         # Fill all branches
         for var in output_vars:

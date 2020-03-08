@@ -327,34 +327,34 @@ branch_mapping['JESdo'] = {
   'suffix': '_JESdo'
 }
 
-branch_mapping["fatjet_jmsUp"] = {
+branch_mapping["fatjetJMSup"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjet_JMSup'
+  'suffix': '_fatjetJMSup'
 }
 
-branch_mapping["fatjet_jmsDown"] = {
+branch_mapping["fatjetJMSdo"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjet_JMSdo'
+  'suffix': '_fatjetJMSdo'
 }
 
-branch_mapping["fatjet_jmrUp"] = {
+branch_mapping["fatjetJMRup"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjet_JMRup'
+  'suffix': '_fatjetJMRup'
 }
 
-branch_mapping["fatjet_jmrDown"] = {
+branch_mapping["fatjetJMRdo"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjet_JMRdo'
+  'suffix': '_fatjetJMRdo'
 }
 
-branch_mapping["fatjet_jesTotalUp"] = {
+branch_mapping["fatjetJESTotalup"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjet_JESTotalup'
+  'suffix': '_fatjetJESTotalup'
 }
 
-branch_mapping["fatjet_jesTotalDown"] = {
+branch_mapping["fatjetJESTotaldo"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjet_JESTotaldo'
+  'suffix': '_fatjetJESTotaldo'
 }
 
 # JES 11 sources
