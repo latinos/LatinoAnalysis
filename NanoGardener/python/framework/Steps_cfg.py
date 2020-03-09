@@ -125,8 +125,8 @@ def addSystChainMembers_CombJJLNu():
         'do4MC'      : True  ,
         'do4Data'    : True  ,
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-        'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="%s", debug=False)' %mapname,
-        'module'     : 'vbs_pairing()',
+        'declare'    : 'vbs_pairing_{0} = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="{0}", debug=False)'.format(mapname),
+        'module'     : 'vbs_pairing_{0}()'.format(mapname),
         'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
        }
 
@@ -135,8 +135,8 @@ def addSystChainMembers_CombJJLNu():
         'do4MC'      : True  ,
         'do4Data'    : True  ,
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-        'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="%s", debug=False)' %mapname,
-        'module'     : 'vbs_vars_maker()',
+        'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
+        'module'     : 'vbs_vars_maker_{0}()'.format(mapname),
         'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
       ## Add all modules that need JES variation
@@ -148,8 +148,8 @@ def addSystChainMembers_CombJJLNu():
         'do4MC'      : True  ,
         'do4Data'    : True  ,
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-        'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="%s", debug=False)' %mapname,
-        'module'     : 'vbs_pairing()',
+        'declare'    : 'vbs_pairing_{0} = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="{0}", debug=False)'.format(mapname),
+        'module'     : 'vbs_pairing_{0}()'.format(mapname),
         'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
        }
 
@@ -158,8 +158,8 @@ def addSystChainMembers_CombJJLNu():
         'do4MC'      : True  ,
         'do4Data'    : True  ,
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-        'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="%s", debug=False)' %mapname,
-        'module'     : 'vbs_vars_maker()',
+        'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
+        'module'     : 'vbs_vars_maker_{0}()',
         'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
@@ -179,7 +179,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'selection'  : selection,
           'subTargets' : ['JESBase','baseW', 
                         'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
-                        'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
+                        'trigMCKeepRun', 'CorrFatJetMC', 'CleanFatJet', 
                         #To be changed here
                         #'whadJetSel', 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'
                         ] +
@@ -964,7 +964,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : CombJJLNu_preselections["2016"]["MC"],
-                  'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 
+                  'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMCKeepRun', 
                                   'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 
                                   'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2016,
@@ -987,7 +987,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : CombJJLNu_preselections["2017"]["MC"],
-                  'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 'CorrFatJetMC',
+                  'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMCKeepRun', 'CorrFatJetMC',
                                   'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 'wlepMaker', 
                                   'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2017,
@@ -1010,7 +1010,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'selection'  : CombJJLNu_preselections["2018"]["MC"],
-                  'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMC', 
+                  'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMCKeepRun', 
                                 'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 
                                 'wlepMaker', 'BWReweight', 'HMlnjjVars', 'HMDNNProdSemi'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2018,
