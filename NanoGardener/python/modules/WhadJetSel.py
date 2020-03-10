@@ -37,10 +37,10 @@ class WhadJetSel(Module):
         #self.out.branch('Whad_pz','F')
         #self.out.branch('Whad_E','F')
         
-        self.out.branch('Whad_pt','F')
-        self.out.branch('Whad_eta','F')
-        self.out.branch('Whad_phi','F')
-        self.out.branch('Whad_mass','F')
+        self.out.branch('HM_Whad_pt','F')
+        self.out.branch('HM_Whad_eta','F')
+        self.out.branch('HM_Whad_phi','F')
+        self.out.branch('HM_Whad_mass','F')
 
         self.out.branch('idx_j1','I')
         self.out.branch('idx_j2','I')
@@ -152,15 +152,15 @@ class WhadJetSel(Module):
 
         #self.out.fillBranch()
 
-        self.out.fillBranch('Whad_px',whad_px)
-        self.out.fillBranch('Whad_py',whad_py)
-        self.out.fillBranch('Whad_pz',whad_pz)
-        self.out.fillBranch('Whad_E',whad_E)
+        #self.out.fillBranch('Whad_px',whad_px)
+        #self.out.fillBranch('Whad_py',whad_py)
+        #self.out.fillBranch('Whad_pz',whad_pz)
+        #self.out.fillBranch('Whad_E',whad_E)
 
-        self.out.fillBranch('Whad_pt',whad_pt)
-        self.out.fillBranch('Whad_eta',whad_eta)
-        self.out.fillBranch('Whad_phi',whad_phi)
-        self.out.fillBranch('Whad_mass',whad_mass)
+        self.out.fillBranch('HM_Whad_pt',whad_pt)
+        self.out.fillBranch('HM_Whad_eta',whad_eta)
+        self.out.fillBranch('HM_Whad_phi',whad_phi)
+        self.out.fillBranch('HM_Whad_mass',whad_mass)
 
         self.out.fillBranch('idx_j1',idx_j1)
         self.out.fillBranch('idx_j2',idx_j2)

@@ -48,37 +48,37 @@ class HMlnjjVarsClass(Module):
 
         #New Branches ##For Event
 
-        self.out.branch("Flavlnjj" , "I")
+        self.out.branch("HM_Flavlnjj" , "I")
 
 
-        self.out.branch("IsBoosted", "O")
-        self.out.branch("IsResolved", "O")
-        self.out.branch("IsBTopTagged", "O")
+        self.out.branch("HM_IsBoosted", "O")
+        self.out.branch("HM_IsResolved", "O")
+        self.out.branch("HM_IsBTopTagged", "O")
 
         ##For Boosted Selection ##For FatJet
         self.list_WJetVar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass','CFatJetIdx']
         for myvar in self.list_WJetVar:
-            self.out.branch("CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='nCleanFatJetPassMBoosted')
+            self.out.branch("HM_CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='nCleanFatJetPassMBoosted')
 
 
 
 
 
 
-        self.out.branch("WptOvHak4M", "F")
-        self.out.branch("Hlnjj_mass" , "F")
+        self.out.branch("HM_WptOvHak4M", "F")
+        self.out.branch("HM_Hlnjj_mass" , "F")
         #self.out.branch("Wlep_mt" , "F")
-        self.out.branch("Hlnjj_mt" , "F")
+        self.out.branch("HM_Hlnjj_mt" , "F")
 
-        self.out.branch("vbfFat_jj_dEta" , "F")
-        self.out.branch("vbfFat_jj_mass" , "F")
-        self.out.branch("vbfjj_jj_dEta" , "F")
-        self.out.branch("vbfjj_jj_mass" , "F")
+        self.out.branch("HM_vbfFat_jj_dEta" , "F")
+        self.out.branch("HM_vbfFat_jj_mass" , "F")
+        self.out.branch("HM_vbfjj_jj_dEta" , "F")
+        self.out.branch("HM_vbfjj_jj_mass" , "F")
 
-        self.out.branch("largest_nonW_mjj", "F")
+        self.out.branch("HM_largest_nonW_mjj", "F")
 
-        self.out.branch("IsVbfFat" , "O")
-        self.out.branch("IsVbfjj" , "O")
+        self.out.branch("HM_IsVbfFat" , "O")
+        self.out.branch("HM_IsVbfjj" , "O")
 
         #self.out.branch("GenDrAk8Ak4", "F", lenVar="nGenDrAk8Ak4")
 
@@ -123,7 +123,7 @@ class HMlnjjVarsClass(Module):
         IsWfat = False
         IsWjj  = False
 
-        Wlep_mt  = getattr(event, "Wlep_mt")
+        Wlep_mt  = getattr(event, "HM_Wlep_mt")
         Hlnjj_mt = -999
 
         ##Event variable
@@ -159,15 +159,15 @@ class HMlnjjVarsClass(Module):
         met_pt         = getattr(event, "PuppiMET_pt")
         #met_pt         = getattr(event, "MET_pt")
 
-        Wlep_pt_Puppi    = getattr(event, "Wlep_pt_Puppi")
-        Wlep_eta_Puppi   = getattr(event, "Wlep_eta_Puppi")
-        Wlep_phi_Puppi   = getattr(event, "Wlep_phi_Puppi")
-        Wlep_mass_Puppi  = getattr(event,"Wlep_mass_Puppi")
+        Wlep_pt_Puppi    = getattr(event, "HM_Wlep_pt_Puppi")
+        Wlep_eta_Puppi   = getattr(event, "HM_Wlep_eta_Puppi")
+        Wlep_phi_Puppi   = getattr(event, "HM_Wlep_phi_Puppi")
+        Wlep_mass_Puppi  = getattr(event,"HM_Wlep_mass_Puppi")
 
-        Wjj_pt     = getattr(event,"Whad_pt")
-        Wjj_eta    = getattr(event,"Whad_eta")
-        Wjj_phi    = getattr(event,"Whad_phi")
-        Wjj_mass   = getattr(event,"Whad_mass")
+        Wjj_pt     = getattr(event,"HM_Whad_pt")
+        Wjj_eta    = getattr(event,"HM_Whad_eta")
+        Wjj_phi    = getattr(event,"HM_Whad_phi")
+        Wjj_mass   = getattr(event,"HM_Whad_mass")
 
         Wjj_ClJet0_idx= getattr(event, "idx_j1")
         Wjj_ClJet1_idx= getattr(event, "idx_j2")
@@ -364,31 +364,31 @@ class HMlnjjVarsClass(Module):
 
 
 
-        self.out.fillBranch( 'Flavlnjj' , Flavlnjj)
+        self.out.fillBranch( 'HM_Flavlnjj' , Flavlnjj)
         ##--Event Categorization--##
         list_myvar=['IsBoosted','IsResolved','IsBTopTagged','IsVbfFat','IsVbfjj']
         for myvar in list_myvar:
-            self.out.fillBranch( myvar, EventVar[myvar] )
+            self.out.fillBranch( 'HM_'+myvar, EventVar[myvar] )
 
         ##--Boosted FatJet--##
         for myvar in self.list_WJetVar:
-            self.out.fillBranch( "CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
+            self.out.fillBranch( "HM_CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
 
 
 
 
         #self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)
-        self.out.fillBranch( 'Hlnjj_mt'  , Hlnjj_mt)
+        self.out.fillBranch( 'HM_Hlnjj_mt'  , Hlnjj_mt)
 
-        self.out.fillBranch( 'vbfFat_jj_dEta'    , vbfFat_jj_dEta)
-        self.out.fillBranch( 'vbfFat_jj_mass'  , vbfFat_jj_mass)
-        self.out.fillBranch( 'vbfjj_jj_dEta'    , vbfjj_jj_dEta)
-        self.out.fillBranch( 'vbfjj_jj_mass'  , vbfjj_jj_mass)
+        self.out.fillBranch( 'HM_vbfFat_jj_dEta'    , vbfFat_jj_dEta)
+        self.out.fillBranch( 'HM_vbfFat_jj_mass'  , vbfFat_jj_mass)
+        self.out.fillBranch( 'HM_vbfjj_jj_dEta'    , vbfjj_jj_dEta)
+        self.out.fillBranch( 'HM_vbfjj_jj_mass'  , vbfjj_jj_mass)
 
-        self.out.fillBranch( 'largest_nonW_mjj', largest_nonW_mjj)
+        self.out.fillBranch( 'HM_largest_nonW_mjj', largest_nonW_mjj)
 
-        self.out.fillBranch( 'Hlnjj_mass', Hlnjj_mass )
-        self.out.fillBranch( 'WptOvHak4M', WptOvHak4M )
+        self.out.fillBranch( 'HM_Hlnjj_mass', Hlnjj_mass )
+        self.out.fillBranch( 'HM_WptOvHak4M', WptOvHak4M )
 
         return True
 
