@@ -202,6 +202,43 @@ _JES_branches += [
   'Ceta_cut',
   'mlljj20_whss',
   'mlljj30_whss',
+
+  'VBS_category',
+  'VBS_jets_maxmjj_massWZ',
+  'VBS_jets_maxmjj_maxPt',
+  'VBS_jets_maxPt_massWZ',
+  'VBS_jets_massWZ_maxmjj',
+  'VBS_jets_massWZ_maxPt',
+  'V_jets_maxmjj_massWZ',
+  'V_jets_maxmjj_maxPt',
+  'V_jets_maxPt_massWZ',
+  'V_jets_massWZ_maxmjj',
+  'V_jets_massWZ_maxPt',
+]
+
+_Fatjet_syst_branches = [
+  'nCleanFatJet',
+  'nCleanJetNotFat',
+  'CleanFatJet_pt',
+  'CleanFatJet_eta',
+  'CleanFatJet_phi',
+  'CleanFatJet_mass',
+  'CleanFatJet_tau21',
+  'CleanFatJet_jetIdx',
+  'CleanJetNotFat_jetIdx',
+  'CleanJetNotFat_deltaR',
+  
+  'VBS_category',
+  'VBS_jets_maxmjj_massWZ',
+  'VBS_jets_maxmjj_maxPt',
+  'VBS_jets_maxPt_massWZ',
+  'VBS_jets_massWZ_maxmjj',
+  'VBS_jets_massWZ_maxPt',
+  'V_jets_maxmjj_massWZ',
+  'V_jets_maxmjj_maxPt',
+  'V_jets_maxPt_massWZ',
+  'V_jets_massWZ_maxmjj',
+  'V_jets_massWZ_maxPt',
 ]
 
 ## TrigMaker
@@ -288,6 +325,36 @@ branch_mapping['JESup'] = {
 branch_mapping['JESdo'] = {
   'branches': _JES_branches,
   'suffix': '_JESdo'
+}
+
+branch_mapping["fatjetJMSup"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJMSup'
+}
+
+branch_mapping["fatjetJMSdo"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJMSdo'
+}
+
+branch_mapping["fatjetJMRup"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJMRup'
+}
+
+branch_mapping["fatjetJMRdo"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJMRdo'
+}
+
+branch_mapping["fatjetJESTotalup"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJESTotalup'
+}
+
+branch_mapping["fatjetJESTotaldo"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJESTotaldo'
 }
 
 # JES 11 sources

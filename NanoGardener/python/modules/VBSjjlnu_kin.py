@@ -22,13 +22,14 @@ class VBSjjlnu_kin(Module):
 
     metType can be MET or Puppi.
     '''
-    def __init__(self, mode=[ "maxmjj", "maxmjj_massWZ"], met="Puppi", debug=False, mjj_vbs_cut=0., deltaeta_vbs_cut=0.):
+    def __init__(self, mode=[ "maxmjj", "maxmjj_massWZ"], met="Puppi", branch_map='', debug=False, mjj_vbs_cut=0., deltaeta_vbs_cut=0.):
         self.V_jets_var = { 0: "V_jets_"+ mode[0],  1: "V_jets_"+ mode[1]}
         self.VBS_jets_var = { 0: "VBS_jets_"+mode[0], 1: "VBS_jets_" +mode[1]}
         self.metType = met
         self.debug = debug  
         self.mjj_vbs_cut = mjj_vbs_cut
-        self.deltaeta_vbs_cut = deltaeta_vbs_cut    
+        self.deltaeta_vbs_cut = deltaeta_vbs_cut   
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -36,8 +37,8 @@ class VBSjjlnu_kin(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        #self.initReaders(inputTree)
-        self.out = wrappedOutputTree
+        #using suffix instead of mapname to save all branches with same suffix. 
+        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._branch_map)
 
         # New Branches
         for typ, branches in vbs_vars.VBSjjlnu_branches.items():
@@ -57,6 +58,8 @@ class VBSjjlnu_kin(Module):
         # Read branches that may be created by previous step in the chain
         # It's important to read them like this in case they 
         # are created by the step before in a PostProcessor chain. 
+        event = mappedEvent(event, mapname=self._branch_map)
+
         self.vbs_category = event.VBS_category
         self.rawJet_coll    = Collection(event, 'Jet')
         self.Jet_coll       = Collection(event, 'CleanJet')
