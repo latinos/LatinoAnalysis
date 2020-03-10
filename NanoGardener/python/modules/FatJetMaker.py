@@ -97,7 +97,7 @@ class FatJetMaker(Module):
         leptons_coll = Collection(event, "Lepton")
         fatjets_coll = Collection(event, "FatJet")
         # We don't need to catch variations of CleanJet in this module
-        # because we only use eta and pt of jets
+        # because we only use eta and phi of jets
         jets_coll = Collection(event, "CleanJet")
         nFatJet = len(fatjets_coll)
         nLep = len(leptons_coll)

@@ -7,11 +7,12 @@ from math import sqrt
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 Wmass=80.4
 
 class HMlnjjVarsClass(Module):
-    def __init__(self,year):
+    def __init__(self,year, branch_map=''):
         self.HlnFat_4v  = ROOT.TLorentzVector()
         self.Hlnjj_4v   = ROOT.TLorentzVector()
         self.Wlep_4v   = ROOT.TLorentzVector()
@@ -19,6 +20,7 @@ class HMlnjjVarsClass(Module):
         self.Wjj_4v   = ROOT.TLorentzVector()
         print "@@Year->",year
         self.year=year
+        self._branch_map = branch_map
         # b-tag WP && tau21 (Wtag)
         self.bWP=0.2217 ##2016legacy
         self.tau21WP=0.4 ##2016 legacy
@@ -42,7 +44,7 @@ class HMlnjjVarsClass(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._branch_map)
 
         #New Branches ##For Event
 
@@ -65,7 +67,7 @@ class HMlnjjVarsClass(Module):
 
         self.out.branch("WptOvHak4M", "F")
         self.out.branch("Hlnjj_mass" , "F")
-        self.out.branch("Wlep_mt" , "F")
+        #self.out.branch("Wlep_mt" , "F")
         self.out.branch("Hlnjj_mt" , "F")
 
         self.out.branch("vbfFat_jj_dEta" , "F")
@@ -89,6 +91,9 @@ class HMlnjjVarsClass(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+        event = mappedEvent(event, mapname=self._branch_map)
+
         # do this check at every event, as other modules might have read further branches
         #if event._tree._ttreereaderversion > self._ttreereaderversion:
         #    self.initReaders(event._tree)
@@ -118,7 +123,7 @@ class HMlnjjVarsClass(Module):
         IsWfat = False
         IsWjj  = False
 
-        Wlep_mt  = -999
+        Wlep_mt  = getattr(event, "Wlep_mt")
         Hlnjj_mt = -999
 
         ##Event variable
@@ -235,10 +240,12 @@ class HMlnjjVarsClass(Module):
             self.Hlnjj_4v = self.Wlep_4v + self.Wjj_4v
 
             Hlnjj_mass = self.Hlnjj_4v.M()
-            Hlnjj_mt = self.Hlnjj_4v.Mt()
+            #Hlnjj_mt = self.Hlnjj_4v.Mt() # This is sqrt(E*E - Pz*Pz) = sqrt(M*M + PT*PT)
+            Hlnjj_mt = sqrt( 2. * self.Wlep_4v.Pt() * self.Wjj_4v.Pt() * ( 1. - cos (self.Wlep_4v.Phi() - self.Wjj_4v.Phi()) ))
             WptOvHak4M = min(Wlep_pt_Puppi, Wjj_pt)/Hlnjj_mass
 
-            Wlep_mt =  self.Wlep_4v.Mt()
+            #Wlep_mt =  self.Wlep_4v.Mt() # This is sqrt(E*E - Pz*Pz) = sqrt(M*M + PT*PT)
+            # Need Lept & Neut -> Moved to WlepMaker
 
             #cutjj_Base = [ met_pt>30, Wlep_mt>50, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
             cutjj_Base = [ Wlep_mt>50, Wjj_mass > 40 and Wjj_mass < 250, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
@@ -370,7 +377,7 @@ class HMlnjjVarsClass(Module):
 
 
 
-        self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)
+        #self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)
         self.out.fillBranch( 'Hlnjj_mt'  , Hlnjj_mt)
 
         self.out.fillBranch( 'vbfFat_jj_dEta'    , vbfFat_jj_dEta)

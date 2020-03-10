@@ -8,11 +8,13 @@ import pickle
 import math
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class ApplyDNN_Production_Semi(Module):
-    def __init__(self):
+    def __init__(self, branch_map=''):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.pathtotraining = cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/HM_DNN/Prod_Semilep/"
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -27,7 +29,7 @@ class ApplyDNN_Production_Semi(Module):
           self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._suffix)
         self.out.branch("DNN_isVBF", "F")
 
 
@@ -36,6 +38,8 @@ class ApplyDNN_Production_Semi(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+        event = mappedEvent(event, mapname=self._branch_map)
 
         if self.GetValue(event, "nCleanFatJetPassMBoosted") >= 1:
           wpt = self.GetValue(event, "CleanFatJetPassMBoosted_pt[0]")
@@ -56,8 +60,11 @@ class ApplyDNN_Production_Semi(Module):
           wpt = self.GetValue(event, "Whad_pt")
           weta = self.GetValue(event, "Whad_eta")
           wphi = self.GetValue(event, "Whad_phi")
-          WWmass = self.GetValue(event, "Hlnjj_mass[0]")
+          WWmass = self.GetValue(event, "Hlnjj_mass")
           nojet = [int(self.GetValue(event, "idx_j1")), int(self.GetValue(event, "idx_j2"))]
+          if -1 in nojet: # Events has less than 2 jets and shouldn't be considered anyway
+            self.out.fillBranch("DNN_isVBF", 0.0)
+            return True
 
           wr1pt = self.GetValue(event, "CleanJet_pt["+str(nojet[0])+"]")
           wr1eta = self.GetValue(event, "CleanJet_eta["+str(nojet[0])+"]")
@@ -114,9 +121,9 @@ class ApplyDNN_Production_Semi(Module):
         values.append(wpt * math.cos(wphi))
         values.append(wpt * math.sin(wphi))
         values.append(wpt * math.sinh(weta))
-        values.append(self.GetValue(event, "Wlep_pt_Puppi[0]") * math.cos(self.GetValue(event, "Wlep_phi_Puppi[0]")))
-        values.append(self.GetValue(event, "Wlep_pt_Puppi[0]") * math.sin(self.GetValue(event, "Wlep_phi_Puppi[0]")))
-        values.append(self.GetValue(event, "Wlep_pt_Puppi[0]") * math.sinh(self.GetValue(event, "Wlep_eta_Puppi[0]")))
+        values.append(self.GetValue(event, "Wlep_pt_Puppi") * math.cos(self.GetValue(event, "Wlep_phi_Puppi")))
+        values.append(self.GetValue(event, "Wlep_pt_Puppi") * math.sin(self.GetValue(event, "Wlep_phi_Puppi")))
+        values.append(self.GetValue(event, "Wlep_pt_Puppi") * math.sinh(self.GetValue(event, "Wlep_eta_Puppi")))
         values.append(wr1pt * math.cos(wr1phi))
         values.append(wr1pt * math.sin(wr1phi))
         values.append(wr1pt * math.sinh(wr1eta))

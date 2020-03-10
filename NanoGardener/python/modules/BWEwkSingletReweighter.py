@@ -274,11 +274,11 @@ class BWEwkSingletReweighter(Module):
 
         self.out = wrappedOutputTree
         self.branchnames = []
-        self.branches = ["_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"] # Don't really need all of them
-        #if self.finalState == "LNuQQ":
-        #  self.branches = ["_I", "_B"]
-        #else:
-        #  self.branches = ["_I"]
+        #self.branches = ["_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"] # Don't really need all of them
+        if self.finalState == "LNuQQ":
+          self.branches = ["_I", "_B"]
+        else:
+          self.branches = ["_I"]
 
         # SM width model
         for cprime in self.cprime_list:
@@ -557,11 +557,11 @@ class BWEwkSingletReweighter(Module):
                                                          mothers, motherIDs)
             addweight = {}
             addweight["_I"] = self.mela.weightStoI()
-            addweight["_I_Honly"] = self.mela.weightStoI_H()
-            addweight["_I_Bonly"] = self.mela.weightStoI_B()
-            addweight["_I_HB"] = self.mela.weightStoI_HB()
+            #addweight["_I_Honly"] = self.mela.weightStoI_H()
+            #addweight["_I_Bonly"] = self.mela.weightStoI_B()
+            #addweight["_I_HB"] = self.mela.weightStoI_HB()
             addweight["_B"] = self.mela.weightStoB()
-            addweight["_H"] = self.mela.weightStoH()
+            #addweight["_H"] = self.mela.weightStoH()
 
             for appendix in self.branches:
               if math.isnan(addweight[appendix]) or math.isinf(addweight[appendix]): #dirty protection for occasional failures
@@ -604,11 +604,11 @@ class BWEwkSingletReweighter(Module):
                                                        mothers, motherIDs)
           addweight = {}
           addweight["_I"] = self.mela.weightStoI()
-          addweight["_I_Honly"] = self.mela.weightStoI_H()
-          addweight["_I_Bonly"] = self.mela.weightStoI_B()
-          addweight["_I_HB"] = self.mela.weightStoI_HB()
+          #addweight["_I_Honly"] = self.mela.weightStoI_H()
+          #addweight["_I_Bonly"] = self.mela.weightStoI_B()
+          #addweight["_I_HB"] = self.mela.weightStoI_HB()
           addweight["_B"] = self.mela.weightStoB()
-          addweight["_H"] = self.mela.weightStoH()
+          #addweight["_H"] = self.mela.weightStoH()
 
           for appendix in self.branches:
             if math.isnan(addweight[appendix]) or math.isinf(addweight[appendix]): #dirty protection for occasional failures

@@ -5,9 +5,10 @@ import re
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class WhadJetSel(Module):
-    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="CleanJet"):
+    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="CleanJet", branch_map=''):
         # Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto
         # jetId = userInt('tightId')*2+4*userInt('tightIdLepVeto')
         # >=2 -> ask tightId
@@ -23,17 +24,18 @@ class WhadJetSel(Module):
         self.minpt   = minpt
         self.maxeta  = maxeta 
         self.jetColl = jetColl
+        self._branch_map = branch_map
     def beginJob(self):
         pass
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         
-        self.out = wrappedOutputTree
-        self.out.branch('Whad_px','F')
-        self.out.branch('Whad_py','F')
-        self.out.branch('Whad_pz','F')
-        self.out.branch('Whad_E','F')
+        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._branch_map)
+        #self.out.branch('Whad_px','F')
+        #self.out.branch('Whad_py','F')
+        #self.out.branch('Whad_pz','F')
+        #self.out.branch('Whad_E','F')
         
         self.out.branch('Whad_pt','F')
         self.out.branch('Whad_eta','F')
@@ -50,6 +52,7 @@ class WhadJetSel(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
+        event = mappedEvent(event, mapname=self._branch_map)
 
         jet_coll = Collection(event, self.jetColl )
         nJet     = jet_coll._len

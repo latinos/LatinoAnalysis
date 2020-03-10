@@ -100,6 +100,12 @@ _ElepT_branches = [
   'Lepton_RecoSF',
   'Lepton_RecoSF_Up',
   'Lepton_RecoSF_Down',
+  ## High Mass Semileptonic
+  'Wlep_pt_Puppi',
+  'Wlep_eta_Puppi',
+  'Wlep_phi_Puppi',
+  'Wlep_mass_Puppi',
+  'Wlep_mt',
 ]
 
 _MupT_branches = _ElepT_branches
@@ -156,6 +162,12 @@ _MET_branches = [
   'z1dPhi_lep1MET_zh4l',
   'z1dPhi_lep2MET_zh4l',
   'z1mindPhi_lepMET_zh4l',
+  ## High Mass Semileptonic
+  'Wlep_pt_Puppi',
+  'Wlep_eta_Puppi',
+  'Wlep_phi_Puppi',
+  'Wlep_mass_Puppi',
+  'Wlep_mt',
 ]
 
 _JES_branches = ['CleanJet_pt']
@@ -214,6 +226,10 @@ _JES_branches += [
   'V_jets_maxPt_massWZ',
   'V_jets_massWZ_maxmjj',
   'V_jets_massWZ_maxPt',
+  'Whad_pt',
+  'Whad_eta',
+  'Whad_phi',
+  'Whad_mass',
 ]
 
 _Fatjet_syst_branches = [
@@ -239,6 +255,10 @@ _Fatjet_syst_branches = [
   'V_jets_maxPt_massWZ',
   'V_jets_massWZ_maxmjj',
   'V_jets_massWZ_maxPt',
+  'Whad_pt',
+  'Whad_eta',
+  'Whad_phi',
+  'Whad_mass',
 ]
 
 ## TrigMaker
