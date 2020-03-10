@@ -42,8 +42,8 @@ class WhadJetSel(Module):
         self.out.branch('HM_Whad_phi','F')
         self.out.branch('HM_Whad_mass','F')
 
-        self.out.branch('idx_j1','I')
-        self.out.branch('idx_j2','I')
+        self.out.branch('HM_idx_j1','I')
+        self.out.branch('HM_idx_j2','I')
 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -162,8 +162,8 @@ class WhadJetSel(Module):
         self.out.fillBranch('HM_Whad_phi',whad_phi)
         self.out.fillBranch('HM_Whad_mass',whad_mass)
 
-        self.out.fillBranch('idx_j1',idx_j1)
-        self.out.fillBranch('idx_j2',idx_j2)
+        self.out.fillBranch('HM_idx_j1',idx_j1)
+        self.out.fillBranch('HM_idx_j2',idx_j2)
 
 
 
