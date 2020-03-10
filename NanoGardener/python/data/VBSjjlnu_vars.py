@@ -37,12 +37,12 @@ VBSjjlnu_vector_branches = [
     {
         "type": "F", 
         "len": 4, 
-        "name": "Whad_vec"
+        "name": "VBS_Whad_vec"
     },
     {
         "type": "F", 
         "len": 4, 
-        "name": "Wlep_vec"
+        "name": "VBS_Wlep_vec"
     }
 ]
 
@@ -155,8 +155,8 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     w_had = vjets[0] + vjets[1]
 
     # Save four momenta
-    output["Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
-    output["Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
+    output["VBS_Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
+    output["VBS_Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
 
     w_lep_t = w_lep.Vect()
     w_lep_t.SetZ(0)
@@ -279,8 +279,8 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     w_had = fatjet
 
      # Save four momenta
-    output["Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
-    output["Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
+    output["VBS_Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
+    output["VBS_Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
 
     w_lep_t = w_lep.Vect()
     w_lep_t.SetZ(0)
