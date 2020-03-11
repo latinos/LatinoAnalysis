@@ -732,6 +732,10 @@ class PostProcMaker():
      if 'RPLME_YEAR' in declare :
        declare = declare.replace('RPLME_YEAR',self._prodYear)
 
+     # SAMPLE
+     if 'RPLME_SAMPLE' in module :
+       module = module.replace('RPLME_SAMPLE',iSample)
+
      return declare
 
 
