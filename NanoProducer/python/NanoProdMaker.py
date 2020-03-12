@@ -27,7 +27,7 @@ class NanoProdMaker():
      self._cmsswBasedir = os.environ["CMSSW_BASE"]
      self._cmsDriverMC   = 'cmsDriver.py myNanoProdMc   -s NANO --mc   --eventcontent NANOAODSIM --datatier NANOAODSIM --no_exec'
      self._cmsDriverDATA = 'cmsDriver.py myNanoProdData -s NANO --data --eventcontent NANOAOD    --datatier NANOAOD    --no_exec'
-     self._cmsDriverFS   = 'cmsDriver.py myNanoProdFs   -s NANO --mc   --eventcontent NANOEDMAODSIM --fast --datatier NANOAODSIM --no_exec'
+     self._cmsDriverFS   = 'cmsDriver.py myNanoProdFs   -s NANO --mc   --eventcontent NANOAODSIM --fast --datatier NANOAODSIM --customise_commands="process.add_(cms.Service(\'InitRootHandlers\', EnableIMT = cms.untracked.bool(False)))" --no_exec'
      self._customiseFile = 'LatinoAnalysis/NanoProducer/nanoProdCustomise'
      self._customiseFunc = 'nanoProdCustomise_'
 
