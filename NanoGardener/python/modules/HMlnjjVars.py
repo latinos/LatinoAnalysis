@@ -44,7 +44,7 @@ class HMlnjjVarsClass(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._branch_map)
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
         #New Branches ##For Event
 
@@ -58,7 +58,7 @@ class HMlnjjVarsClass(Module):
         ##For Boosted Selection ##For FatJet
         self.list_WJetVar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass','CFatJetIdx']
         for myvar in self.list_WJetVar:
-            self.out.branch("HM_CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='nCleanFatJetPassMBoosted')
+            self.out.branch("HM_CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='HM_nCleanFatJetPassMBoosted')
 
 
 

@@ -8,11 +8,13 @@ import pickle
 import math
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class ApplyDNN_Production(Module):
-    def __init__(self):
+    def __init__(self, branch_map=''):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.pathtotraining = cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/HM_DNN/Prod/"
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -27,7 +29,7 @@ class ApplyDNN_Production(Module):
           self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._suffix)
         self.out.branch("DNN_isVBF", "F")
 
 
@@ -36,6 +38,8 @@ class ApplyDNN_Production(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+        event = mappedEvent(event, mapname=self._branch_map)
 
         values = []
         ev = event.event
@@ -71,8 +75,8 @@ class ApplyDNN_Production(Module):
         values.append(self.GetValue(event, "detajj"))
         values.append(self.GetValue(event, "mTi"))
         values.append(self.GetValue(event, "ht"))
-        values.append(self.GetValue(event, "vht_pt")) # values.append(self.GetValue(event, "vht_pt") * math.cos(self.GetValue(event, "vht_phi")))
-        values.append(self.GetValue(event, "vht_phi")) # values.append(self.GetValue(event, "vht_pt") * math.sin(self.GetValue(event, "vht_phi")))
+        values.append(self.GetValue(event, "vht_pt") * math.cos(self.GetValue(event, "vht_phi")))
+        values.append(self.GetValue(event, "vht_pt") * math.sin(self.GetValue(event, "vht_phi")))
 
 
         values_stacked = np.hstack(values).reshape(1, len(values))

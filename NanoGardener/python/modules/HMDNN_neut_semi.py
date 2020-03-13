@@ -10,7 +10,7 @@ import math
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
-class ApplyDNN_Production_Semi(Module):
+class ApplyDNN_Neutrino_Semi(Module):
     def __init__(self, branch_map=''):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.pathtotraining = cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/HM_DNN/Prod_Semilep/"
@@ -25,12 +25,12 @@ class ApplyDNN_Production_Semi(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.classifiers = []
         self.preprocessing = []
-        for c, p in zip(["best_model_1.hdf5","best_model_0.hdf5"], ["fold0_keras_preprocessing_productionsemi.pickle","fold1_keras_preprocessing_productionsemi.pickle"]):
+        for c, p in zip(["best_model_1.hdf5","best_model_0.hdf5"], ["fold0_keras_preprocessing_neutrinosemi.pickle","fold1_keras_preprocessing_neutrinosemi.pickle"]):
           self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
         self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._suffix)
-        self.out.branch("DNN_isVBF", "F")
+        self.out.branch("DNN_mth", "F")
 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -47,6 +47,8 @@ class ApplyDNN_Production_Semi(Module):
           wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi[0]")
           wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass")
           WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass[0]")
+          wptmww = self.GetValue(event, "HM_CleanFatJetPassMBoosted_WptOvHfatM")
+          tau21 = self.GetValue(event, "HM_CleanFatJetPassMBoosted_tau21")
 
           wr1pt = 0.0
           wr1eta = 0.0
@@ -64,6 +66,8 @@ class ApplyDNN_Production_Semi(Module):
           wphi = self.GetValue(event, "HM_Whad_phi")
           wmass = self.GetValue(event, "HM_Whad_mass")
           WWmass = self.GetValue(event, "HM_Hlnjj_mass")
+          wptmww = self.GetValue(event, "HM_WptOvHak4M")
+          tau21 = 0.0
 
           nojet = [int(self.GetValue(event, "HM_idx_j1")), int(self.GetValue(event, "HM_idx_j2"))]
           if -1 in nojet: # Events has less than 2 jets and shouldn't be considered anyway
@@ -139,10 +143,8 @@ class ApplyDNN_Production_Semi(Module):
 
         values.append(self.GetValue(event, "PuppiMET_pt") * math.cos(self.GetValue(event, "PuppiMET_phi")))
         values.append(self.GetValue(event, "PuppiMET_pt") * math.sin(self.GetValue(event, "PuppiMET_phi")))
-        values.append(self.GetValue(event, "nCleanJet"))
-        values.append(mjj)
-        values.append(self.GetValue(event, "HM_largest_nonW_mjj"))
-        values.append(detajj)
+        values.append(wptmww)
+        values.append(tau21)
         values.append(WWmass)
 
 
@@ -151,7 +153,7 @@ class ApplyDNN_Production_Semi(Module):
         response = self.classifiers[ev % 2].predict(values_preprocessed)
         response = np.squeeze(response)
 
-        self.out.fillBranch("DNN_isVBF", response[0])
+        self.out.fillBranch("DNN_mth", response[0])
 
         return True
 

@@ -8,11 +8,13 @@ import pickle
 import math
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class ApplyDNN_Category(Module):
-    def __init__(self):
+    def __init__(self, branch_map=''):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.pathtotraining = cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/HM_DNN/Categ/"
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -27,8 +29,8 @@ class ApplyDNN_Category(Module):
           self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
-        self.out = wrappedOutputTree
-        self.classes = ["WW", "ggH125", "ggH130", "ggH140", "ggH150", "ggH160", "ggH170", "ggH180", "ggH190", "ggH200", "ggH210", "ggH230", "ggH250", "ggH270", "ggH300", "ggH350", "ggH400", "ggH450", "ggH500", "ggH550", "ggH600", "ggH650", "ggH700", "ggH750", "ggH800", "ggH900", "ggH1000", "ggH1500", "ggH2000", "ggH2500", "ggH3000", "ggH4000", "ggH5000", "VBF125", "VBF130", "VBF140", "VBF150", "VBF160", "VBF170", "VBF180", "VBF190", "VBF200", "VBF210", "VBF230", "VBF250", "VBF270", "VBF300", "VBF350", "VBF400", "VBF450", "VBF500", "VBF550", "VBF600", "VBF650", "VBF700", "VBF750", "VBF800", "VBF900", "VBF1000", "VBF1500", "VBF2000", "VBF2500", "VBF3000", "VBF4000", "VBF5000", "other"]
+        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._suffix)
+        self.classes = ["WW", "ggH115_190", "ggH200_450", "ggH500_5000", "VBF115_190", "VBF200_450", "VBF500_5000", "other"]
         for cla in self.classes:
           self.out.branch("DNN_"+cla, "F")
         self.out.branch("DNN_categ", "I")
@@ -41,6 +43,8 @@ class ApplyDNN_Category(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+        event = mappedEvent(event, mapname=self._branch_map)
 
         values = []
         ev = event.event
@@ -88,8 +92,8 @@ class ApplyDNN_Category(Module):
         values.append(self.GetValue(event, "ptll"))
         values.append(self.GetValue(event, "mcoll"))
         values.append(self.GetValue(event, "mcollWW"))
-        values.append(self.GetValue(event, "vht_pt")) # values.append(self.GetValue(event, "vht_pt") * math.cos(self.GetValue(event, "vht_phi")))
-        values.append(self.GetValue(event, "vht_phi")) # values.append(self.GetValue(event, "vht_pt") * math.sin(self.GetValue(event, "vht_phi")))
+        values.append(self.GetValue(event, "vht_pt") * math.cos(self.GetValue(event, "vht_phi")))
+        values.append(self.GetValue(event, "vht_pt") * math.sin(self.GetValue(event, "vht_phi")))
 
 
         if ev%64 < 32:
@@ -113,8 +117,8 @@ class ApplyDNN_Category(Module):
             secondmax = r
 
         self.out.fillBranch("DNN_categ", maxindex)
-        self.out.fillBranch("DNN_cat_maxscore", maxscore)
-        self.out.fillBranch("DNN_cat_difftosecond", maxscore-secondmax)
+        self.out.fillBranch("DNN_categ_maxscore", maxscore)
+        self.out.fillBranch("DNN_categ_difftosecond", maxscore-secondmax)
 
         return True
 

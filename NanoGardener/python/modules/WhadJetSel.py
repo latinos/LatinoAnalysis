@@ -31,7 +31,7 @@ class WhadJetSel(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         
-        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._branch_map)
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
         #self.out.branch('Whad_px','F')
         #self.out.branch('Whad_py','F')
         #self.out.branch('Whad_pz','F')

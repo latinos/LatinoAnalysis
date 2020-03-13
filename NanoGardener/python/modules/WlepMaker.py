@@ -27,7 +27,7 @@ class WlepMaker(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
-        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._branch_map)
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
         self.metCollections = {"Puppi":"PuppiMET"} # Name for branch and name of MET collection # "PF":"MET", 
         # New branches
         for MET in self.metCollections:
