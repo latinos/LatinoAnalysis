@@ -9,4 +9,3 @@ Samples["HZJ_HToWW_M125"] = { 'miniAOD': "/HZJ_HToWW_M125_13TeV_powheg_jhugen714
 Samples["HWplusJ_HToWW_M125"] = { 'miniAOD': "/HWplusJ_HToWW_M125_13TeV_powheg_jhugen724_pythia8_TuneCP5/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"}
 Samples["HZJ_HToWWTo2L2Nu_ZTo2L_M125"] = { 'miniAOD': "/HZJ_HToWWTo2L2Nu_ZTo2L_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"}
 Samples["VBFHToWWTo2L2NuPowheg_M125"] = { 'miniAOD': "/VBFHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM"}
-
