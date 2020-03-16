@@ -38,7 +38,8 @@ class VBSjjlnu_kin(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         #using suffix instead of mapname to save all branches with same suffix. 
-        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._branch_map)
+        suffix = "" if self._branch_map == "" else "_" + self._branch_map
+        self.out = mappedOutputTree(wrappedOutputTree, suffix=suffix)
 
         # New Branches
         for typ, branches in vbs_vars.VBSjjlnu_branches.items():
