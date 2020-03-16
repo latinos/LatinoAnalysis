@@ -43,7 +43,7 @@ def createJESchain_CombJJLNu(type, kind="Up"):
     typeShort = ""
   toreplace = typeShort+kind.lower()  
   chainTemplate = ['do_JESVAR_suffix', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR', 
-                  'whadJetSel_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR']
+                  'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
@@ -146,7 +146,17 @@ def addSystChainMembers_CombJJLNu():
         'do4Data'    : True  ,
         'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
         'declare'   : 'whadJetSel_{0} = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet" , branch_map="{0}")'.format(mapname),
-        'module'    : 'WhadJetSel_{0}()'.format(mapname),
+        'module'    : 'whadJetSel_{0}()'.format(mapname),
+        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+      }
+
+      dictionary['wlepMaker_'+mapname] = {
+        'isChain'    : False ,
+        'do4MC'      : True  ,
+        'do4Data'    : True  ,
+        'import'    : 'LatinoAnalysis.NanoGardener.modules.WlepMaker',
+        'declare'   : 'wlepMkr_{0} = lambda : WlepMaker(branch_map="{0}")'.format(mapname),
+        'module'    : 'wlepMkr_{0}()'.format(mapname),
         'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
@@ -209,7 +219,7 @@ def addSystChainMembers_CombJJLNu():
         'do4Data'    : True  ,
         'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
         'declare'   : 'whadJetSel_{0} = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet" , branch_map="{0}")'.format(mapname),
-        'module'    : 'WhadJetSel_{0}()'.format(mapname),
+        'module'    : 'whadJetSel_{0}()'.format(mapname),
         'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
@@ -1747,7 +1757,7 @@ Steps = {
                   'do4Data'   : True  ,
                   'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
                   'declare'   : 'whadJetSel = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet")',
-                  'module'    : 'WhadJetSel()',
+                  'module'    : 'whadJetSel()',
     },
     'PreselFatJet' : {
                   'isChain'    : False ,

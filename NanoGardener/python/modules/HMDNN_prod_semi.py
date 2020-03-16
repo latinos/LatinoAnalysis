@@ -29,7 +29,8 @@ class ApplyDNN_Production_Semi(Module):
           self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
-        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._suffix)
+        suffix = "" if self._branch_map=="" else "_"+self._branch_map
+        self.out = mappedOutputTree(wrappedOutputTree, suffix=suffix)
         self.out.branch("DNN_isVBF", "F")
 
 
@@ -45,7 +46,7 @@ class ApplyDNN_Production_Semi(Module):
           wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt[0]")
           weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta[0]")
           wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi[0]")
-          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass")
+          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass[0]")
           WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass[0]")
 
           wr1pt = 0.0
@@ -80,16 +81,20 @@ class ApplyDNN_Production_Semi(Module):
           goodjet = [alpha for alpha in range(4) if alpha not in nojet]
           jetidx1 = goodjet[0]
           jetidx2 = goodjet[1]
-        if jetidx1==0 and jetidx2==1:
-          mjj = self.GetValue(event, "mjj")
-          detajj = self.GetValue(event, "detajj")
-        else:
+        #if jetidx1==0 and jetidx2==1:
+        #  mjj = self.GetValue(event, "mjj")
+        #  detajj = self.GetValue(event, "detajj")
+        #else:
+        try:
           J1 = ROOT.TLorentzVector()
           J2 = ROOT.TLorentzVector()
           J1.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx1)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx1)+"]]"))
           J2.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx2)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx2)+"]]"))
           mjj = (J1+J2).M()
           detajj = abs(J1.Eta()-J2.Eta())
+        except IndexError:
+          mjj = -9999.0
+          detajj = -9999.0
 
         if self.GetValue(event, "nCleanJet")>=1+jetidx1:
           jetpt1 = self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]")

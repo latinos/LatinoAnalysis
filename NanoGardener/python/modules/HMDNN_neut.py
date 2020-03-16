@@ -86,7 +86,7 @@ class ApplyDNN_Neutrino(Module):
         response = self.classifiers[ev % 2].predict(values_preprocessed)
         response = np.squeeze(response)
 
-        self.out.fillBranch("DNN_mth", response[0])
+        self.out.fillBranch("DNN_mth", response)
 
         return True
 

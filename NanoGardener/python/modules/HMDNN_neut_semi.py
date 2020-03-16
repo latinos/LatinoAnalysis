@@ -13,7 +13,7 @@ from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree
 class ApplyDNN_Neutrino_Semi(Module):
     def __init__(self, branch_map=''):
         cmssw_base = os.getenv('CMSSW_BASE')
-        self.pathtotraining = cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/HM_DNN/Prod_Semilep/"
+        self.pathtotraining = cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/HM_DNN/Neutrino_Semilep/"
         self._branch_map = branch_map
 
     def beginJob(self):
@@ -29,7 +29,8 @@ class ApplyDNN_Neutrino_Semi(Module):
           self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
-        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._suffix)
+        suffix = "" if self._branch_map=="" else "_"+self._branch_map
+        self.out = mappedOutputTree(wrappedOutputTree, suffix=suffix)
         self.out.branch("DNN_mth", "F")
 
 
@@ -45,10 +46,10 @@ class ApplyDNN_Neutrino_Semi(Module):
           wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt[0]")
           weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta[0]")
           wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi[0]")
-          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass")
+          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass[0]")
           WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass[0]")
-          wptmww = self.GetValue(event, "HM_CleanFatJetPassMBoosted_WptOvHfatM")
-          tau21 = self.GetValue(event, "HM_CleanFatJetPassMBoosted_tau21")
+          wptmww = self.GetValue(event, "HM_CleanFatJetPassMBoosted_WptOvHfatM[0]")
+          tau21 = self.GetValue(event, "HM_CleanFatJetPassMBoosted_tau21[0]")
 
           wr1pt = 0.0
           wr1eta = 0.0
@@ -84,16 +85,20 @@ class ApplyDNN_Neutrino_Semi(Module):
           goodjet = [alpha for alpha in range(4) if alpha not in nojet]
           jetidx1 = goodjet[0]
           jetidx2 = goodjet[1]
-        if jetidx1==0 and jetidx2==1:
-          mjj = self.GetValue(event, "mjj")
-          detajj = self.GetValue(event, "detajj")
-        else:
+        #if jetidx1==0 and jetidx2==1:
+        #  mjj = self.GetValue(event, "mjj")
+        #  detajj = self.GetValue(event, "detajj")
+        #else:
+        try:
           J1 = ROOT.TLorentzVector()
           J2 = ROOT.TLorentzVector()
           J1.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx1)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx1)+"]]"))
           J2.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx2)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx2)+"]]"))
           mjj = (J1+J2).M()
           detajj = abs(J1.Eta()-J2.Eta())
+        except IndexError:
+          mjj = -9999.0
+          detajj = -9999.0
 
         if self.GetValue(event, "nCleanJet")>=1+jetidx1:
           jetpt1 = self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]")
@@ -153,7 +158,7 @@ class ApplyDNN_Neutrino_Semi(Module):
         response = self.classifiers[ev % 2].predict(values_preprocessed)
         response = np.squeeze(response)
 
-        self.out.fillBranch("DNN_mth", response[0])
+        self.out.fillBranch("DNN_mth", response)
 
         return True
 

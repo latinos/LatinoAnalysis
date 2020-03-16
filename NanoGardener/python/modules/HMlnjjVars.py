@@ -3,7 +3,7 @@ import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 import re
 import os
-from math import sqrt
+from math import sqrt, cos
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
@@ -169,8 +169,8 @@ class HMlnjjVarsClass(Module):
         Wjj_phi    = getattr(event,"HM_Whad_phi")
         Wjj_mass   = getattr(event,"HM_Whad_mass")
 
-        Wjj_ClJet0_idx= getattr(event, "idx_j1")
-        Wjj_ClJet1_idx= getattr(event, "idx_j2")
+        Wjj_ClJet0_idx= getattr(event, "HM_idx_j1")
+        Wjj_ClJet1_idx= getattr(event, "HM_idx_j2")
 
 
         if Lept_col._len < 1: return False
