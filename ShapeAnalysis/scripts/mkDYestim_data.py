@@ -4,6 +4,12 @@ import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import math
 
+import ROOT
+from ROOT import *
+#from ROOT import TCanvas, TPad, TFile, TPaveText, TLegend
+#from ROOT import gBenchmark, gStyle, gROOT, TStyle
+#from ROOT import TH1F, TF1, TGraphErrors, TMultiGraph
+
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
 
@@ -16,7 +22,7 @@ if __name__ == '__main__':
     parser.add_option('--dycfg'          , dest='dycfg'          , help='DY estimation dictionary'                   , default='dyestim.py') 
     parser.add_option('--outputDir'      , dest='outputDir'      , help='output directory'                           , default='./')
     parser.add_option('--tag'            , dest='tag'            , help='Tag used for the shape file name'           , default=None)
-    parser.add_option('--DYtag'          , dest='DYtag'          , help='Tag added to the shape file name'           , default='DYEstim')
+    parser.add_option('--DYtag'          , dest='DYtag'          , help='Tag added to the shape file name'           , default='DYEstimDATA')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='DEFAULT')
     parser.add_option('--outputFile'     , dest='outputFile'     , help='output file with histograms'                , default='DEFAULT')
  
@@ -78,12 +84,18 @@ if __name__ == '__main__':
     DYCalc = ROOT.DYCalc()
 
     # Compute Rinout and K_ff
-    Rinout = {}
-    K_ff   = {}
+    Rinout  = {}
+    K_ff    = {}
+    Rfile   = {}
+    thelist = {}
+    DataR   = {}
 
     for iRAndKff in RAndKff :
-      Rinout[iRAndKff] = {}
-      K_ff[iRAndKff] = {}
+      Rinout[iRAndKff]  = {}
+      Rfile[iRAndKff]   = {}
+      thelist[iRAndKff] = {}
+      DataR[iRAndKff]   = {}
+      K_ff[iRAndKff]    = {}
 
       print iRAndKff
 
@@ -91,13 +103,54 @@ if __name__ == '__main__':
         print iRegion
 #       print iRegion ,' k = ' , DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen']),' +/- ', DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
 #       print iRegion ,' R = ' , DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen']),' +/- ', DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
-        K_ff[iRAndKff][iRegion] = {}
+        K_ff[iRAndKff][iRegion] = {} 
+        RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions']
         K_ff[iRAndKff][iRegion]['val'] = DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
         K_ff[iRAndKff][iRegion]['err'] = DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
-        Rinout[iRAndKff][iRegion] = {} 
-        Rinout[iRAndKff][iRegion]['val'] = DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
-        Rinout[iRAndKff][iRegion]['err'] = DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
-        print 'R calc. Num = ',  RAndKff[iRAndKff]['Regions'][iRegion]['RNum'], ' / Den = ', RAndKff[iRAndKff]['Regions'][iRegion]['RDen']
+        #R{out/in}
+        Rinout[iRAndKff][iRegion] = {}
+        DataR[iRAndKff][iRegion]  = {}
+        print 'file = ', RAndKff[iRAndKff]['RFile']
+        Rfile[iRAndKff] = TFile(RAndKff[iRAndKff]['RFile'])
+        thelist[iRAndKff] = Rfile[iRAndKff].GetListOfKeys()
+        for dirs in thelist[iRAndKff] :
+          if RAndKff[iRAndKff]['Regions'][iRegion]['RNum'] in dirs.GetName():
+            currentdir = dirs.ReadObj()
+            for subdir in currentdir.GetListOfKeys():
+              if subdir.GetName()!='events':
+                continue
+              currentsubdir = subdir.ReadObj()
+              previoussample=''
+              for sample in currentsubdir.GetListOfKeys():
+                if sample.GetName()==previoussample:
+                  continue
+                previoussample = sample.GetName()
+                #if 'histo_DATA' in sample.GetName() or 'histo_DY' in sample.GetName():
+                if 'histo_DY' in sample.GetName():
+                  DataR[iRAndKff][iRegion]['RNum'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
+          if RAndKff[iRAndKff]['Regions'][iRegion]['RDen'] in dirs.GetName():
+            currentdir = dirs.ReadObj()
+            currentdir = dirs.ReadObj()
+            for subdir in currentdir.GetListOfKeys():
+              if subdir.GetName()!='events':
+                continue
+              currentsubdir = subdir.ReadObj()
+              previoussample=''
+              for sample in currentsubdir.GetListOfKeys():
+                if sample.GetName()==previoussample:
+                  continue
+                previoussample = sample.GetName()
+                #if 'histo_DATA' in sample.GetName() or 'histo_DY' in sample.GetName():
+                if 'histo_DY' in sample.GetName():
+                  DataR[iRAndKff][iRegion]['RDen'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
+                  #DataNum[iRAndKff][iRegion]['RNum'].Add(histos[sample.GetName()+dirs.GetName()],-1)
+
+        DataR[iRAndKff][iRegion]['val'] = TH1F("HR_outin_MC","HR_outin_MC",1,0,2)
+        #DataR[iRAndKff][iRegion]['val'].Divide(DataR[iRAndKff][iRegion]['RNum'],DataR[iRAndKff][iRegion]['RDen'],1,1,"b")
+        DataR[iRAndKff][iRegion]['val'].Divide(DataR[iRAndKff][iRegion]['RNum'],DataR[iRAndKff][iRegion]['RDen'],1,1,"b")
+        Rinout[iRAndKff][iRegion]['val'] = DataR[iRAndKff][iRegion]['val'].GetBinContent(1)
+        Rinout[iRAndKff][iRegion]['err'] = DataR[iRAndKff][iRegion]['val'].GetBinError(1)
+        print 'R calc. Num = ',  DataR[iRAndKff][iRegion]['RNum'].Integral(), ' / Den = ', DataR[iRAndKff][iRegion]['RDen'].Integral(), ' | R(out/in) = ', Rinout[iRAndKff][iRegion]['val'], ' +/- ', Rinout[iRAndKff][iRegion]['err'] 
 
     print ' ----- Rinout -----'
     print Rinout

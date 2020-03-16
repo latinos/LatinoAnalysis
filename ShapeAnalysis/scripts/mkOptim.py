@@ -32,8 +32,10 @@ if __name__ == '__main__':
 
     # FOM methods 
     fomDic = {}
-    fomDic ['SExpPre'] = '-M ProfileLikelihood --signif --expectSignal=1 -t -1' 
-    fomDic ['BestFit'] = '-M MaxLikelihoodFit  --rMin=-5 --rMax=10 -t -1 --expectSignal=1' 
+    fomDic ['SExpPre'] = '-M Significance --expectSignal=1 -t -1' 
+    #fomDic ['BestFit'] = '-M FitDiagnostics  --rMin=-5 --rMax=20 -t -1 --expectSignal=1 --robustFit=1' 
+    #fomDic ['BestFit'] = '-M FitDiagnostics  --rMin=-5 --rMax=20 -t -1 --expectSignal=1 --robustFit=1 --cminDefaultMinimizerStrategy 0' 
+    fomDic ['BestFit'] = '-M FitDiagnostics  --rMin=-5 --rMax=20 -t -1 --expectSignal=1 --robustFit=1 --cminDefaultMinimizerStrategy 0' 
 
     # Filter fomList
 
