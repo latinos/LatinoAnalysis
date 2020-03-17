@@ -78,62 +78,62 @@ class SusyGenVarsProducer(Module):
             xsUnc = xsUnc.replace('%', '')
             return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])*float(xsUnc)/100.
         
-        def getCrossSection(self, susyProcess, susyModel, susyMass):
+    def getCrossSection(self, susyProcess, susyModel, susyMass):
 
-            convBR = float(SUSYCrossSections[susyProcess]['susyModels'][susyModel])
+        convBR = float(SUSYCrossSections[susyProcess]['susyModels'][susyModel])
         
-            isusyMass = int(susyMass)
+        isusyMass = int(susyMass)
         
-            if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
+        if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
         
-                susyXsec = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])
+            susyXsec = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])
 
-                return [ convBR*susyXsec,
-                         convBR*(susyXsec+self.getCrossSectionUncertainty(susyProcess, isusyMass, 'Up')),
-                         convBR*(susyXsec-self.getCrossSectionUncertainty(susyProcess, isusyMass, 'Down')) ]
+            return [ convBR*susyXsec,
+                     convBR*(susyXsec+self.getCrossSectionUncertainty(susyProcess, isusyMass, 'Up')),
+                     convBR*(susyXsec-self.getCrossSectionUncertainty(susyProcess, isusyMass, 'Down')) ]
         
-            else: # Try to extrapolate
+        else: # Try to extrapolate
 
-                step = 5 # T2tt
+            step = 5 # T2tt
             
-                if 'Slepton' in susyProcess:
-                    if isusyMass<=400:
-                        step =  20
-                    elif isusyMass<=440:
-                        step =  40
-                    elif isusyMass<=500:
-                        step =  60
-                    elif isusyMass<=1000:
-                        step = 100
+            if 'Slepton' in susyProcess:
+                if isusyMass<=400:
+                    step =  20
+                elif isusyMass<=440:
+                    step =  40
+                elif isusyMass<=500:
+                    step =  60
+                elif isusyMass<=1000:
+                    step = 100
  
-                isusyMass1 = step*(isusyMass/step)
-                isusyMass2 = step*(isusyMass/step+1)
+            isusyMass1 = step*(isusyMass/step)
+            isusyMass2 = step*(isusyMass/step+1)
 
-                if 'Slepton' in susyProcess:
-                    if step==60:
-                        isusyMass1 =  440
-                        isusyMass2 =  500
-                    elif isusyMass>1000:
-                        isusyMass1 =  900
-                        isusyMass2 = 1000
+            if 'Slepton' in susyProcess:
+                if step==60:
+                    isusyMass1 =  440
+                    isusyMass2 =  500
+                elif isusyMass>1000:
+                    isusyMass1 =  900
+                    isusyMass2 = 1000
 
-                if str(isusyMass1) in SUSYCrossSections[susyProcess]['massPoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
+            if str(isusyMass1) in SUSYCrossSections[susyProcess]['massPoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
 
-                    susyXsec1 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass1)]['value'])
-                    susyXsec2 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass2)]['value'])
+                susyXsec1 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass1)]['value'])
+                susyXsec2 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass2)]['value'])
             
-                    slope = -math.log(susyXsec2/susyXsec1)/(isusyMass2-isusyMass1)
-                    susyXsec = susyXsec1*math.exp(-slope*(isusyMass-isusyMass1))
+                slope = -math.log(susyXsec2/susyXsec1)/(isusyMass2-isusyMass1)
+                susyXsec = susyXsec1*math.exp(-slope*(isusyMass-isusyMass1))
             
-                    susyXsecRelUncUp = (self.getCrossSectionUncertainty(susyProcess, isusyMass1, 'Up')/susyXsec1 + 
-                                        self.getCrossSectionUncertainty(susyProcess, isusyMass2, 'Up')/susyXsec2)/2.
+                susyXsecRelUncUp = (self.getCrossSectionUncertainty(susyProcess, isusyMass1, 'Up')/susyXsec1 + 
+                                    self.getCrossSectionUncertainty(susyProcess, isusyMass2, 'Up')/susyXsec2)/2.
             
-                    susyXsecRelUncDown = (self.getCrossSectionUncertainty(susyProcess, isusyMass1, 'Down')/susyXsec1 + 
-                                          self.getCrossSectionUncertainty(susyProcess, isusyMass2, 'Down')/susyXsec2)/2.
+                susyXsecRelUncDown = (self.getCrossSectionUncertainty(susyProcess, isusyMass1, 'Down')/susyXsec1 + 
+                                      self.getCrossSectionUncertainty(susyProcess, isusyMass2, 'Down')/susyXsec2)/2.
             
-                    return [convBR*susyXsec, convBR*susyXsec*(1.+susyXsecRelUncUp), convBR*susyXsec*(1.-susyXsecRelUncDown)]
+                return [convBR*susyXsec, convBR*susyXsec*(1.+susyXsecRelUncUp), convBR*susyXsec*(1.-susyXsecRelUncDown)]
             
-                raise Exception('susyCrossSections ERROR: cross section not available for', self.susyProcess, 'at mass =', susyMass)
+            raise Exception('susyCrossSections ERROR: cross section not available for', self.susyProcess, 'at mass =', susyMass)
 
     ###
     def analyze(self, event):
