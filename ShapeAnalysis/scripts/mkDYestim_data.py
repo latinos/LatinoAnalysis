@@ -119,31 +119,35 @@ if __name__ == '__main__':
             for subdir in currentdir.GetListOfKeys():
               if subdir.GetName()!='events':
                 continue
+              DataR[iRAndKff][iRegion]['NumDATA'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/histo_DATA')
+              DataR[iRAndKff][iRegion]['RNum'] = TH1D.Clone(DataR[iRAndKff][iRegion]['NumDATA'])
               currentsubdir = subdir.ReadObj()
               previoussample=''
               for sample in currentsubdir.GetListOfKeys():
                 if sample.GetName()==previoussample:
                   continue
                 previoussample = sample.GetName()
-                #if 'histo_DATA' in sample.GetName() or 'histo_DY' in sample.GetName():
-                if 'histo_DY' in sample.GetName():
-                  DataR[iRAndKff][iRegion]['RNum'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
+                if not 'histo_DY' in sample.GetName() and not 'histo_DATA' in sample.GetName():
+                  DataR[iRAndKff][iRegion][sample.GetName()]= Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
+                  DataR[iRAndKff][iRegion]['RNum'].Add(DataR[iRAndKff][iRegion][sample.GetName()],-1)
+
           if RAndKff[iRAndKff]['Regions'][iRegion]['RDen'] in dirs.GetName():
             currentdir = dirs.ReadObj()
             currentdir = dirs.ReadObj()
             for subdir in currentdir.GetListOfKeys():
               if subdir.GetName()!='events':
                 continue
+              DataR[iRAndKff][iRegion]['DenDATA'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/histo_DATA')
+              DataR[iRAndKff][iRegion]['RDen'] = TH1D.Clone(DataR[iRAndKff][iRegion]['DenDATA'])
               currentsubdir = subdir.ReadObj()
               previoussample=''
               for sample in currentsubdir.GetListOfKeys():
                 if sample.GetName()==previoussample:
                   continue
                 previoussample = sample.GetName()
-                #if 'histo_DATA' in sample.GetName() or 'histo_DY' in sample.GetName():
-                if 'histo_DY' in sample.GetName():
-                  DataR[iRAndKff][iRegion]['RDen'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
-                  #DataNum[iRAndKff][iRegion]['RNum'].Add(histos[sample.GetName()+dirs.GetName()],-1)
+                if not 'histo_DY' in sample.GetName() and not 'histo_DATA' in sample.GetName():
+                  DataR[iRAndKff][iRegion][sample.GetName()]= Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
+                  DataR[iRAndKff][iRegion]['RDen'].Add(DataR[iRAndKff][iRegion][sample.GetName()],-1)
 
         DataR[iRAndKff][iRegion]['val'] = TH1F("HR_outin_MC","HR_outin_MC",1,0,2)
         #DataR[iRAndKff][iRegion]['val'].Divide(DataR[iRAndKff][iRegion]['RNum'],DataR[iRAndKff][iRegion]['RDen'],1,1,"b")
