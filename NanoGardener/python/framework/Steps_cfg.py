@@ -880,6 +880,14 @@ Steps = {
                   'module'   : 'MHTrigMC()',
                },
 ####
+  'MHSemiLepVars' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
+                  'module'   : 'MHSemiLepVars()',
+               },
+
   'MHSwitch' : { 
                   'isChain'  : False ,
                   'do4MC'    : True  ,
