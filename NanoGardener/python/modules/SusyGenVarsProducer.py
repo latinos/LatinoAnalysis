@@ -216,7 +216,7 @@ class SusyGenVarsProducer(Module):
             self.susyModelIsSet = True
                 
     
-        susyMass = int(25*round(float(massPrompt)/25)) if ((susyMass%25)>=21 or (susyMass%25)<=4) else massPrompt
+        susyMass = int(25*round(float(massPrompt)/25)) if ((massPrompt%25)>=21 or (massPrompt%25)<=4) else massPrompt
         xSection, xSectionUp, xSectionDown = self.getCrossSection(self.susyProcess, self.susyModel, susyMass)
         
         if nSusyParticles==2 :
