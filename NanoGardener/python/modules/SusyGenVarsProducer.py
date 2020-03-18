@@ -212,8 +212,9 @@ class SusyGenVarsProducer(Module):
                         self.susyModel = 'TSmuonSmuonHL'
             else:
                 raise Exception('SusyGenVarsProducer ERROR: SUSY process not set from gen particle inspection either')
-            print 'SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection'
-            self.susyModelIsSet = True
+            if self.susyProcess=='StopSbottom' or self.susyProcess=='WinoC1C1':
+                print 'SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection'
+                self.susyModelIsSet = True
                 
     
         susyMass = int(25*round(float(massPrompt)/25)) if ((massPrompt%25)>=21 or (massPrompt%25)<=4) else massPrompt
