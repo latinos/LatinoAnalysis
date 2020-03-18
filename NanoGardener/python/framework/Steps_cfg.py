@@ -953,25 +953,11 @@ Steps = {
 
 ## ------- EMBEDDING:
 
-    'Embedding2018' : { 
+    'Embedding' : { 
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
-                  'subTargets' : ['EmbeddingWeights2018','trigMCKeepRun','LeptonSF','formulasEMBED'],
-                   },
-
-    'Embedding2017' : { 
-                  'isChain'    : True  ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True  ,
-                  'subTargets' : ['EmbeddingWeights2017','trigMCKeepRun','LeptonSF','formulasEMBED'],
-                   },
-
-    'Embedding2016' : { 
-                  'isChain'    : True  ,
-                  'do4MC'      : False ,
-                  'do4Data'    : True  ,
-                  'subTargets' : ['EmbeddingWeights2016','trigMCKeepRun','LeptonSF','formulasEMBED'],
+                  'subTargets' : ['EmbeddingWeights','trigMCKeepRun','LeptonSF','formulasEMBED'],
                    },
 
 ## ------- HIGH MASS:
@@ -2080,30 +2066,12 @@ Steps = {
 
 ## ------- MODULES: Embedding
 
-  'EmbeddingWeights2018' : { 
+  'EmbeddingWeights' : { 
                  'isChain'    : False ,
                  'do4MC'      : False ,
                  'do4Data'    : True  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
-                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_v18_1_em-channel.root")',
-                 'module'     : 'embed()',
-               },
-
-  'EmbeddingWeights2017' : { 
-                 'isChain'    : False ,
-                 'do4MC'      : False ,
-                 'do4Data'    : True  ,
-                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
-                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_2017_v1.root")',
-                 'module'     : 'embed()',
-               },
-
-  'EmbeddingWeights2016' : { 
-                 'isChain'    : False ,
-                 'do4MC'      : False ,
-                 'do4Data'    : True  ,
-                 'import'     : 'LatinoAnalysis.NanoGardener.modules.EmbeddedWeights' ,
-                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="htt_scalefactors_v16_12_embedded.root")',
+                 'declare'    : 'embed = lambda : EmbedWeights(workspacefile="hww_scalefactors_XXX.root")',
                  'module'     : 'embed()',
                },
 
@@ -2637,6 +2605,42 @@ Steps = {
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\')' ,
                  },
 
+  'formulasEMBED_ElepTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="ElepTup")' ,
+                 },
+
+  'formulasEMBED_ElepTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="ElepTdo")' ,
+                 },
+
+  'formulasEMBED_MupTup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="MupTup")' ,
+                 },
+
+  'formulasEMBED_MupTdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_EMBED_RPLME_YEAR.py\', branch_map="MupTdo")' ,
+                 },
+
 ## -------- DYMVA
 
   'DYMVA' : {
@@ -3159,6 +3163,22 @@ Steps = {
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasEMBED'],
                },
 
+  'EmbElepTup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTup_suffix','trigMCKeepRun_ElepTup','LeptonSF_ElepTup','l2Kin_ElepTup', 'l3Kin_ElepTup', 'l4Kin_ElepTup','DYMVA_ElepTup','MonoHiggsMVA_ElepTup','formulasEMBED_ElepTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+  'EmbElepTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_ElepTdo_suffix','trigMCKeepRun_ElepTdo','LeptonSF_ElepTdo','l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo','DYMVA_ElepTdo','MonoHiggsMVA_ElepTdo','formulasEMBED_ElepTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
 ## ------- mu-Scale
 
   'do_MupTup' : {
@@ -3271,6 +3291,22 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'subTargets' : ['do_MupTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasEMBED'],
+               },
+
+  'EmbMupTup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTup_suffix', 'trigMCKeepRun_MupTup', 'LeptonSF_MupTup', 'l2Kin_MupTup', 'l3Kin_MupTup', 'l4Kin_MupTup', 'DYMVA_MupTup', 'MonoHiggsMVA_MupTup', 'formulasEMBED_MupTup'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+  'EmbMupTdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['do_MupTdo_suffix', 'trigMCKeepRun_MupTdo', 'LeptonSF_MupTdo', 'l2Kin_MupTdo', 'l3Kin_MupTdo', 'l4Kin_MupTdo', 'DYMVA_MupTdo', 'MonoHiggsMVA_MupTdo', 'formulasEMBED_MupTdo'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
 #-------------------------  Fatjet mass scale
