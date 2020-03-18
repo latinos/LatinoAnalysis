@@ -8,3 +8,9 @@ keep *MupTup
 keep *MupTdo
 keep *METup
 keep *METdo
+keep *fatjetJES*up
+keep *fatjetJES*do
+keep *fatjetJMSup
+keep *fatjetJMSdo
+keep *fatjetJMRup
+keep *fatjetJMRdo

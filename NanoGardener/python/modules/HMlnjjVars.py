@@ -3,15 +3,16 @@ import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 import re
 import os
-from math import sqrt
+from math import sqrt, cos
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 Wmass=80.4
 
 class HMlnjjVarsClass(Module):
-    def __init__(self,year):
+    def __init__(self,year, branch_map=''):
         self.HlnFat_4v  = ROOT.TLorentzVector()
         self.Hlnjj_4v   = ROOT.TLorentzVector()
         self.Wlep_4v   = ROOT.TLorentzVector()
@@ -19,6 +20,7 @@ class HMlnjjVarsClass(Module):
         self.Wjj_4v   = ROOT.TLorentzVector()
         print "@@Year->",year
         self.year=year
+        self._branch_map = branch_map
         # b-tag WP && tau21 (Wtag)
         self.bWP=0.2217 ##2016legacy
         self.tau21WP=0.4 ##2016 legacy
@@ -42,41 +44,41 @@ class HMlnjjVarsClass(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
         #New Branches ##For Event
 
-        self.out.branch("Flavlnjj" , "I")
+        self.out.branch("HM_Flavlnjj" , "I")
 
 
-        self.out.branch("IsBoosted", "O")
-        self.out.branch("IsResolved", "O")
-        self.out.branch("IsBTopTagged", "O")
+        self.out.branch("HM_IsBoosted", "O")
+        self.out.branch("HM_IsResolved", "O")
+        self.out.branch("HM_IsBTopTagged", "O")
 
         ##For Boosted Selection ##For FatJet
         self.list_WJetVar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass','CFatJetIdx']
         for myvar in self.list_WJetVar:
-            self.out.branch("CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='nCleanFatJetPassMBoosted')
+            self.out.branch("HM_CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='HM_nCleanFatJetPassMBoosted')
 
 
 
 
 
 
-        self.out.branch("WptOvHak4M", "F")
-        self.out.branch("Hlnjj_mass" , "F")
-        self.out.branch("Wlep_mt" , "F")
-        self.out.branch("Hlnjj_mt" , "F")
+        self.out.branch("HM_WptOvHak4M", "F")
+        self.out.branch("HM_Hlnjj_mass" , "F")
+        #self.out.branch("Wlep_mt" , "F")
+        self.out.branch("HM_Hlnjj_mt" , "F")
 
-        self.out.branch("vbfFat_jj_dEta" , "F")
-        self.out.branch("vbfFat_jj_mass" , "F")
-        self.out.branch("vbfjj_jj_dEta" , "F")
-        self.out.branch("vbfjj_jj_mass" , "F")
+        self.out.branch("HM_vbfFat_jj_dEta" , "F")
+        self.out.branch("HM_vbfFat_jj_mass" , "F")
+        self.out.branch("HM_vbfjj_jj_dEta" , "F")
+        self.out.branch("HM_vbfjj_jj_mass" , "F")
 
-        self.out.branch("largest_nonW_mjj", "F")
+        self.out.branch("HM_largest_nonW_mjj", "F")
 
-        self.out.branch("IsVbfFat" , "O")
-        self.out.branch("IsVbfjj" , "O")
+        self.out.branch("HM_IsVbfFat" , "O")
+        self.out.branch("HM_IsVbfjj" , "O")
 
         #self.out.branch("GenDrAk8Ak4", "F", lenVar="nGenDrAk8Ak4")
 
@@ -89,6 +91,9 @@ class HMlnjjVarsClass(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+        event = mappedEvent(event, mapname=self._branch_map)
+
         # do this check at every event, as other modules might have read further branches
         #if event._tree._ttreereaderversion > self._ttreereaderversion:
         #    self.initReaders(event._tree)
@@ -118,7 +123,7 @@ class HMlnjjVarsClass(Module):
         IsWfat = False
         IsWjj  = False
 
-        Wlep_mt  = -999
+        Wlep_mt  = getattr(event, "HM_Wlep_mt")
         Hlnjj_mt = -999
 
         ##Event variable
@@ -154,18 +159,18 @@ class HMlnjjVarsClass(Module):
         met_pt         = getattr(event, "PuppiMET_pt")
         #met_pt         = getattr(event, "MET_pt")
 
-        Wlep_pt_Puppi    = getattr(event, "Wlep_pt_Puppi")
-        Wlep_eta_Puppi   = getattr(event, "Wlep_eta_Puppi")
-        Wlep_phi_Puppi   = getattr(event, "Wlep_phi_Puppi")
-        Wlep_mass_Puppi  = getattr(event,"Wlep_mass_Puppi")
+        Wlep_pt_Puppi    = getattr(event, "HM_Wlep_pt_Puppi")
+        Wlep_eta_Puppi   = getattr(event, "HM_Wlep_eta_Puppi")
+        Wlep_phi_Puppi   = getattr(event, "HM_Wlep_phi_Puppi")
+        Wlep_mass_Puppi  = getattr(event,"HM_Wlep_mass_Puppi")
 
-        Wjj_pt     = getattr(event,"Whad_pt")
-        Wjj_eta    = getattr(event,"Whad_eta")
-        Wjj_phi    = getattr(event,"Whad_phi")
-        Wjj_mass   = getattr(event,"Whad_mass")
+        Wjj_pt     = getattr(event,"HM_Whad_pt")
+        Wjj_eta    = getattr(event,"HM_Whad_eta")
+        Wjj_phi    = getattr(event,"HM_Whad_phi")
+        Wjj_mass   = getattr(event,"HM_Whad_mass")
 
-        Wjj_ClJet0_idx= getattr(event, "idx_j1")
-        Wjj_ClJet1_idx= getattr(event, "idx_j2")
+        Wjj_ClJet0_idx= getattr(event, "HM_idx_j1")
+        Wjj_ClJet1_idx= getattr(event, "HM_idx_j2")
 
 
         if Lept_col._len < 1: return False
@@ -235,10 +240,12 @@ class HMlnjjVarsClass(Module):
             self.Hlnjj_4v = self.Wlep_4v + self.Wjj_4v
 
             Hlnjj_mass = self.Hlnjj_4v.M()
-            Hlnjj_mt = self.Hlnjj_4v.Mt()
+            #Hlnjj_mt = self.Hlnjj_4v.Mt() # This is sqrt(E*E - Pz*Pz) = sqrt(M*M + PT*PT)
+            Hlnjj_mt = sqrt( 2. * self.Wlep_4v.Pt() * self.Wjj_4v.Pt() * ( 1. - cos (self.Wlep_4v.Phi() - self.Wjj_4v.Phi()) ))
             WptOvHak4M = min(Wlep_pt_Puppi, Wjj_pt)/Hlnjj_mass
 
-            Wlep_mt =  self.Wlep_4v.Mt()
+            #Wlep_mt =  self.Wlep_4v.Mt() # This is sqrt(E*E - Pz*Pz) = sqrt(M*M + PT*PT)
+            # Need Lept & Neut -> Moved to WlepMaker
 
             #cutjj_Base = [ met_pt>30, Wlep_mt>50, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
             cutjj_Base = [ Wlep_mt>50, Wjj_mass > 40 and Wjj_mass < 250, Hlnjj_mt > 60, WptOvHak4M > 0.35 ]
@@ -357,31 +364,31 @@ class HMlnjjVarsClass(Module):
 
 
 
-        self.out.fillBranch( 'Flavlnjj' , Flavlnjj)
+        self.out.fillBranch( 'HM_Flavlnjj' , Flavlnjj)
         ##--Event Categorization--##
         list_myvar=['IsBoosted','IsResolved','IsBTopTagged','IsVbfFat','IsVbfjj']
         for myvar in list_myvar:
-            self.out.fillBranch( myvar, EventVar[myvar] )
+            self.out.fillBranch( 'HM_'+myvar, EventVar[myvar] )
 
         ##--Boosted FatJet--##
         for myvar in self.list_WJetVar:
-            self.out.fillBranch( "CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
+            self.out.fillBranch( "HM_CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
 
 
 
 
-        self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)
-        self.out.fillBranch( 'Hlnjj_mt'  , Hlnjj_mt)
+        #self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)
+        self.out.fillBranch( 'HM_Hlnjj_mt'  , Hlnjj_mt)
 
-        self.out.fillBranch( 'vbfFat_jj_dEta'    , vbfFat_jj_dEta)
-        self.out.fillBranch( 'vbfFat_jj_mass'  , vbfFat_jj_mass)
-        self.out.fillBranch( 'vbfjj_jj_dEta'    , vbfjj_jj_dEta)
-        self.out.fillBranch( 'vbfjj_jj_mass'  , vbfjj_jj_mass)
+        self.out.fillBranch( 'HM_vbfFat_jj_dEta'    , vbfFat_jj_dEta)
+        self.out.fillBranch( 'HM_vbfFat_jj_mass'  , vbfFat_jj_mass)
+        self.out.fillBranch( 'HM_vbfjj_jj_dEta'    , vbfjj_jj_dEta)
+        self.out.fillBranch( 'HM_vbfjj_jj_mass'  , vbfjj_jj_mass)
 
-        self.out.fillBranch( 'largest_nonW_mjj', largest_nonW_mjj)
+        self.out.fillBranch( 'HM_largest_nonW_mjj', largest_nonW_mjj)
 
-        self.out.fillBranch( 'Hlnjj_mass', Hlnjj_mass )
-        self.out.fillBranch( 'WptOvHak4M', WptOvHak4M )
+        self.out.fillBranch( 'HM_Hlnjj_mass', Hlnjj_mass )
+        self.out.fillBranch( 'HM_WptOvHak4M', WptOvHak4M )
 
         return True
 

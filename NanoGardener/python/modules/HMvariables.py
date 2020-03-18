@@ -36,28 +36,33 @@ class HighMassVariables(Module):
         jets = Collection(event, "CleanJet")
         norigjets = getattr(event, "nJet")
         origjets = Collection(event, "Jet")
-        ngenjets = getattr(event, "nGenJet")
-        genjets = Collection(event, "GenJet")
+        try:
+          ngenjets = getattr(event, "nGenJet")
+          genjets = Collection(event, "GenJet")
+          isData=0
+        except RuntimeError:
+          isData=1
 
-        # Getting mjjGen is easier here than it was in HIG-17-033, because we already have a lepton-cleaned jet collection
-        usingGenJets = []
-        for cjet in jets:
-          jetidx = cjet.jetIdx
-          if jetidx == -1 or jetidx >= norigjets: continue # Should never happen, but does very rarely
-          genjetidx = origjets[jetidx].genJetIdx
-          if genjetidx == -1 or genjetidx >= ngenjets: continue
-          usingGenJets.append(genjetidx)
-          if len(usingGenJets) == 2: break
+        if not isData:
+          # Getting mjjGen is easier here than it was in HIG-17-033, because we already have a lepton-cleaned jet collection
+          usingGenJets = []
+          for cjet in jets:
+            jetidx = cjet.jetIdx
+            if jetidx == -1 or jetidx >= norigjets: continue # Should never happen, but does very rarely
+            genjetidx = origjets[jetidx].genJetIdx
+            if genjetidx == -1 or genjetidx >= ngenjets: continue
+            usingGenJets.append(genjetidx)
+            if len(usingGenJets) == 2: break
 
-        mjjgen = 0
-        if len(usingGenJets) == 2:
-          J1 = ROOT.TLorentzVector()
-          J2 = ROOT.TLorentzVector()
-          J1.SetPtEtaPhiM(genjets[usingGenJets[0]].pt,genjets[usingGenJets[0]].eta,genjets[usingGenJets[0]].phi,0)
-          J2.SetPtEtaPhiM(genjets[usingGenJets[1]].pt,genjets[usingGenJets[1]].eta,genjets[usingGenJets[1]].phi,0)
-          mjjgen = (J1+J2).M()
+          mjjgen = 0
+          if len(usingGenJets) == 2:
+            J1 = ROOT.TLorentzVector()
+            J2 = ROOT.TLorentzVector()
+            J1.SetPtEtaPhiM(genjets[usingGenJets[0]].pt,genjets[usingGenJets[0]].eta,genjets[usingGenJets[0]].phi,0)
+            J2.SetPtEtaPhiM(genjets[usingGenJets[1]].pt,genjets[usingGenJets[1]].eta,genjets[usingGenJets[1]].phi,0)
+            mjjgen = (J1+J2).M()
 
-        self.out.fillBranch("mjjGen", mjjgen)
+          self.out.fillBranch("mjjGen", mjjgen)
 
         l1_eta = getattr(event, 'Lepton_eta')[0]
         l2_eta = getattr(event, 'Lepton_eta')[1]
