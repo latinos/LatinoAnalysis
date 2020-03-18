@@ -114,7 +114,13 @@ class FatJetMassScaler(Module):
             # get the base smearing given by resolution at the beginning
             # This is Gaus(0, res_MC) used for nominal smearing (relative to nominal (scaled) mass)
             raw_mass = mass / current_smear
-            sigma_MC_relative = (current_smear -1)  / ( sqrt(res_SF_central**2 -1))
+            sigma_MC_relative = 1
+
+            if res_SF_central!=1: ## if res_SF_central==1, denominator==0
+                sigma_MC_relative = (current_smear -1)  / ( sqrt(res_SF_central**2 -1))
+            else:
+                sigma_MC = self.rnd.Gaus(0, res_MC)
+                sigma_MC_relative= (sigma_MC/mass)
             
             if res_SF_var > 1:
                 smearfactor = 1 + sigma_MC_relative*sqrt(res_SF_var**2 - 1)

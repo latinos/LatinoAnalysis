@@ -4,7 +4,10 @@ import re
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
+
 from LatinoAnalysis.NanoGardener.modules.PairingUtils import *
+from LatinoAnalysis.NanoGardener.data.VBSjjlnu_pairing_cuts import pairing_cuts
 
 nearest_massWZ = lambda jets: nearest_mass_pair(jets,85.7863)
 nearest_massWZ.__name__ = "nearest_massWZ"
@@ -27,10 +30,10 @@ pairing_strategies_fatjet = {
 
 class VBSjjlnu_JetPairing(Module):
     
-    def __init__(self, minpt=20, etacuts=[], mode="ALL", debug = False):
+    def __init__(self, year, mode="ALL", branch_map='', debug = False):
         '''
         This modules performs the Jet pairing for VBS semileptonic analysis. 
-        It separates events in three categories: boosted and resolved. 
+        It separates events in two categories: boosted and resolved. 
 
         In the boosted category, only events with 1 FatJet are saved. Events with more FatJets 
         are vetoed. In the remaining jets the VBS pair is selected using the maximum invariant mass. 
@@ -38,7 +41,7 @@ class VBSjjlnu_JetPairing(Module):
         In the resolved category (>= 4 jets) different algorithms can be used to 
         choose the VBS jets and V jets. 
 
-        An eta interval cut can be specified to avoid using the jets in those regions for tagging
+        Eta & pt cuts can be specified to avoid using the jets in those regions for tagging
 
         Modes (for resolved category):
         "maxmjj_massWZ" : before VBS jets with max Mjj, than V-jets with mass nearest to (mW+mZ)/2
@@ -52,10 +55,12 @@ class VBSjjlnu_JetPairing(Module):
        
 
         '''
-        self.minpt = minpt
         self.mode = mode
-        self.etacuts = etacuts
+        self.year = year
+        self.etacuts = pairing_cuts[year]["etacuts"]
+        self.ptcuts = pairing_cuts[year]["ptcuts"]
         self.debug = debug
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -63,8 +68,8 @@ class VBSjjlnu_JetPairing(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        #self.initReaders(inputTree)
-        self.out = wrappedOutputTree
+        # Using branchmap (Only JEs and Fatjet systematics change the pairing)
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
         # New Branches
         for key in pairing_strategies_resolved.keys():
@@ -85,6 +90,8 @@ class VBSjjlnu_JetPairing(Module):
         # Read branches that may be created by previous step in the chain
         # It's important to read them like this in case they 
         # are created by the step before in a PostProcessor chain. 
+        event = mappedEvent(event, mapname=self._branch_map)
+        
         self.nFatJet = event.nCleanFatJet
         self.rawJet_coll    = Collection(event, 'Jet')
         self.Jet_coll       = Collection(event, 'CleanJet')
@@ -99,13 +106,13 @@ class VBSjjlnu_JetPairing(Module):
         # Take the 4-momenta of the CleanJets.
         # If FatJets are present only the CleanJetNotFat are taken. A list of indexes
         # referring to the CleanJet collection is keeps to save the final result
-        good_jets, good_jets_ids = self.get_jets_vectors(self.minpt, self.etacuts)
+        good_jets, good_jets_ids = self.get_jets_vectors(self.etacuts, self.ptcuts)
          # N.B. The VBS_jets and V_jets index are positions in the list of 
         # good_jets (Jet not overlapping with Fatjet with a minpt). 
         # We want to save a reference to the CleanJet collection.
         
         # Veto events with more than 1 FatJet
-        if self.nFatJet >1 : return False
+        #if self.nFatJet >1 : return False
 
         if self.nFatJet == 1 and len(good_jets) >= 2 :
             ###################################
@@ -118,10 +125,10 @@ class VBSjjlnu_JetPairing(Module):
                 V_jets =   [-1,-1]
                 # N.B. always get back CleanJet collection ids 
                 VBS_jets = [good_jets_ids[ij] for ij in algo(good_jets)]
-                self.out.fillBranch("VBS_jets_"+key, VBS_jets)
-                self.out.fillBranch("V_jets_"+key, V_jets)
+                self.out.fillBranch("VBS_jets_"+ key, VBS_jets)
+                self.out.fillBranch("V_jets_" + key, V_jets)
 
-        elif len(good_jets) >= 4:
+        elif self.nFatJet == 0 and len(good_jets) >= 4:
             ##############################
             # Resolved category
             ###########################
@@ -139,13 +146,13 @@ class VBSjjlnu_JetPairing(Module):
                     self.perform_jet_association(self.mode, good_jets, good_jets_ids, cache)
                 else:
                     print("ERROR! Selected pairing mode not found!!")
-                    return False
+                    #return False
         else:   
             # Cut the event:
             # or it's boosted but with not enough jets, 
             # or it is not boosted and it has less than 4 jets with minpt
             #print("Event removed")
-            return False    
+            category = -1
 
 
         # Fill the category
@@ -155,14 +162,17 @@ class VBSjjlnu_JetPairing(Module):
         return True
  
 
-    def get_jets_vectors(self, ptmin, etacuts=[]):
+    def get_jets_vectors(self, etacuts=[], ptcuts=[]):
         '''
         Returns a list of 4-momenta for jets looking only at jets
         that are cleaned from FatJets.
         A list of indexes in the collection of CleanJet is returned as a reference. 
 
-        Inserted here an eta interval cut to avoid using the jets in a specified region for 
+        Inserted here an eta interval and pt range cut to avoid using the jets in a specified region for 
         tagging. 
+        etacuts= [ (2.5,3.2), (3,5)]
+        ptcuts= [(0, 50), (50, 100)]
+        the application is: Etacuts[i] AND ptcuts[i]
         '''
         jets = []
         coll_ids = []
@@ -175,12 +185,9 @@ class VBSjjlnu_JetPairing(Module):
                         self.Jet_coll[jetindex].phi, \
                         self.rawJet_coll[rawjetid].mass
 
-            if pt < ptmin or pt<0: 
-                break
-
             passetacut = True
-            for cut in etacuts:
-                if abs(eta) > cut[0] and abs(eta) < cut[1]: 
+            for etacut, ptcut in zip(etacuts, ptcuts):
+                if abs(eta) > etacut[0] and abs(eta) < etacut[1] and pt > ptcut[0] and pt< ptcut[1]: 
                     passetacut = False
                     if self.debug: 
                         print "Jet index: ", jetindex, " CUT > pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass

@@ -45,6 +45,20 @@ CleanJet_br = {
                     ],
               }
 
+CleanbJet_br = {
+               'F': [
+                     'CleanbJet_pt',
+                     'CleanbJet_eta',
+                     'CleanbJet_phi',
+                    ],
+
+               'I': [
+                     'CleanbJet_bjetIdx',
+                    ],
+              }
+
+
 Lepton_var = ['pt', 'eta', 'phi', 'pdgId'] #, 'eCorr']
 VetoLepton_var = ['pt', 'eta', 'phi', 'pdgId'] # , 'eCorr']
 CleanJet_var = ['pt', 'eta', 'phi']
+CleanbJet_var = ['pt', 'eta', 'phi']
