@@ -1,4 +1,4 @@
-
+ 
 SUSYISRCorrections = {
                                    
     'njetISR' : { 'susyPromptParticles' : [ '1000005', '1000006', '2000005', '2000006' ],
