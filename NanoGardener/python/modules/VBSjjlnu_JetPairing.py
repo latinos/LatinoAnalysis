@@ -4,6 +4,8 @@ import re
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
+
 from LatinoAnalysis.NanoGardener.modules.PairingUtils import *
 from LatinoAnalysis.NanoGardener.data.VBSjjlnu_pairing_cuts import pairing_cuts
 
@@ -28,7 +30,7 @@ pairing_strategies_fatjet = {
 
 class VBSjjlnu_JetPairing(Module):
     
-    def __init__(self, year, mode="ALL", debug = False):
+    def __init__(self, year, mode="ALL", branch_map='', debug = False):
         '''
         This modules performs the Jet pairing for VBS semileptonic analysis. 
         It separates events in two categories: boosted and resolved. 
@@ -58,6 +60,7 @@ class VBSjjlnu_JetPairing(Module):
         self.etacuts = pairing_cuts[year]["etacuts"]
         self.ptcuts = pairing_cuts[year]["ptcuts"]
         self.debug = debug
+        self._branch_map = branch_map
 
     def beginJob(self):
         pass
@@ -65,8 +68,8 @@ class VBSjjlnu_JetPairing(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        #self.initReaders(inputTree)
-        self.out = wrappedOutputTree
+        # Using branchmap (Only JEs and Fatjet systematics change the pairing)
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
         # New Branches
         for key in pairing_strategies_resolved.keys():
@@ -87,6 +90,8 @@ class VBSjjlnu_JetPairing(Module):
         # Read branches that may be created by previous step in the chain
         # It's important to read them like this in case they 
         # are created by the step before in a PostProcessor chain. 
+        event = mappedEvent(event, mapname=self._branch_map)
+        
         self.nFatJet = event.nCleanFatJet
         self.rawJet_coll    = Collection(event, 'Jet')
         self.Jet_coll       = Collection(event, 'CleanJet')
@@ -107,7 +112,7 @@ class VBSjjlnu_JetPairing(Module):
         # We want to save a reference to the CleanJet collection.
         
         # Veto events with more than 1 FatJet
-        if self.nFatJet >1 : return False
+        #if self.nFatJet >1 : return False
 
         if self.nFatJet == 1 and len(good_jets) >= 2 :
             ###################################
@@ -123,7 +128,7 @@ class VBSjjlnu_JetPairing(Module):
                 self.out.fillBranch("VBS_jets_"+ key, VBS_jets)
                 self.out.fillBranch("V_jets_" + key, V_jets)
 
-        elif len(good_jets) >= 4:
+        elif self.nFatJet == 0 and len(good_jets) >= 4:
             ##############################
             # Resolved category
             ###########################
@@ -141,13 +146,13 @@ class VBSjjlnu_JetPairing(Module):
                     self.perform_jet_association(self.mode, good_jets, good_jets_ids, cache)
                 else:
                     print("ERROR! Selected pairing mode not found!!")
-                    return False
+                    #return False
         else:   
             # Cut the event:
             # or it's boosted but with not enough jets, 
             # or it is not boosted and it has less than 4 jets with minpt
             #print("Event removed")
-            return False    
+            category = -1
 
 
         # Fill the category

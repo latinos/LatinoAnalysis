@@ -7,14 +7,16 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.data.WlepMaker_cfg import Wlep_br, Wlep_var
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class WlepMaker(Module):
     '''                                                                                                                        
     put this file in LatinoAnalysis/NanoGardener/python/modules/                                                               
     Add extra variables to NANO tree                                                                                           
     '''
-    def __init__(self):
+    def __init__(self, branch_map=''):
         
+        self._branch_map = branch_map
         print('WlepMaker:')
         
     def beginJob(self):
@@ -25,15 +27,16 @@ class WlepMaker(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.initReaders(inputTree) # initReaders must be called in beginFile
-        self.out = wrappedOutputTree
-        self.metCollections = {"PF":"MET", "Puppi":"PuppiMET"} # Name for branch and name of MET collection
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
+        self.metCollections = {"Puppi":"PuppiMET"} # Name for branch and name of MET collection # "PF":"MET", 
         # New branches
         for MET in self.metCollections:
            for typ in Wlep_br:
               for var in Wlep_br[typ]:
-                 if 'Wlep_' in var: self.out.branch(var+"_"+MET, typ)
+                 if 'Wlep_' in var: self.out.branch("HM_"+var+"_"+MET, typ)
 
-        self.out.branch("IsWlepEvt", "I")
+        #self.out.branch("IsWlepEvt", "I")
+        self.out.branch("HM_Wlep_mt" , "F")
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -67,6 +70,8 @@ class WlepMaker(Module):
     def analyze(self, event):
        """process event, return True (go to next module) or False (fail, go to next event)"""
 
+       event = mappedEvent(event, mapname=self._branch_map)
+
        if event._tree._ttreereaderversion > self._ttreereaderversion: # do this check at every event, as other modules might have read further branches
            self.initReaders(event._tree)
        # do NOT access other branches in python between the check/call to initReaders and the call to C++ worker code
@@ -74,7 +79,7 @@ class WlepMaker(Module):
        #--- Set vars
 
        ##### lepton selected at the Step stage, so it is 1 for now
-       IsWlepEvt = 1
+       #IsWlepEvt = 1
 
        wlep_dict = {}
        for MET in self.metCollections:
@@ -88,6 +93,7 @@ class WlepMaker(Module):
        lep_phi=self.lep_var['Lepton_phi'][0]
        lep_pz =lep_pt*math.sinh(lep_eta) ##pz = pt*sinh(eta)
        lep_E  =lep_pt*math.cosh(lep_eta) ## p = pt*cosh(eta)
+       Wlep_mt = -9999.0
 
 
        for MET,METtype in self.metCollections.items():
@@ -134,20 +140,22 @@ class WlepMaker(Module):
            wlep_dict['eta'+"_"+MET]  = v_wlep.Eta()
            wlep_dict['phi'+"_"+MET]  = v_wlep.Phi()
            wlep_dict['mass'+"_"+MET] = v_wlep.M()
-           wlep_dict['px'+"_"+MET] = v_wlep.Px()
-           wlep_dict['py'+"_"+MET] = v_wlep.Py()
-           wlep_dict['pz'+"_"+MET] = v_wlep.Pz()
-           wlep_dict['E'+"_"+MET] = v_wlep.E()
+           #wlep_dict['px'+"_"+MET] = v_wlep.Px()
+           #wlep_dict['py'+"_"+MET] = v_wlep.Py()
+           #wlep_dict['pz'+"_"+MET] = v_wlep.Pz()
+           #wlep_dict['E'+"_"+MET] = v_wlep.E()
+           Wlep_mt = math.sqrt( 2. * lep_pt * met_pt * ( 1. - math.cos (lep_phi - met_phi) ))
 
 
 
        #--- Fill branches                                                                                                     
                    
        for var in wlep_dict:
-           self.out.fillBranch( 'Wlep_' + var, wlep_dict[var])
+           self.out.fillBranch( 'HM_Wlep_' + var, wlep_dict[var])
            ##fillBranch(name,value)
 
-       self.out.fillBranch( 'IsWlepEvt', IsWlepEvt)
+       #self.out.fillBranch( 'IsWlepEvt', IsWlepEvt)
+       self.out.fillBranch( 'HM_Wlep_mt', Wlep_mt)
        return True
 
 

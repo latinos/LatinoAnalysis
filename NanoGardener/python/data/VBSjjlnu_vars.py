@@ -11,10 +11,6 @@ VBSjjlnu_branches  = {
             "mjj_vbs", "mjj_vjet",
             "deltaeta_vbs",  "deltaphi_vbs", 
             "deltaeta_vjet", "deltaphi_vjet", 
-            "deltaphi_lep_vbs_0", "deltaphi_lep_vbs_1", 
-            "deltaeta_lep_vbs_0", "deltaeta_lep_vbs_1", 
-            "deltaphi_lep_vjet_0", "deltaphi_lep_vjet_1",
-            "deltaeta_lep_vjet_0", "deltaeta_lep_vjet_1",
             "deltaR_lep_vbs", "deltaR_lep_vjet",
             "deltaphi_lep_nu", "deltaeta_lep_nu",
             "deltaR_lep_nu", "deltaR_vbs", "deltaR_vjet",
@@ -33,6 +29,16 @@ VBSjjlnu_vector_branches = [
         "type": "I",
         "len": "N_jets", 
         "name": "other_jets_index"
+    },
+    {
+        "type": "F", 
+        "len": 4, 
+        "name": "VBS_Whad_vec"
+    },
+    {
+        "type": "F", 
+        "len": 4, 
+        "name": "VBS_Wlep_vec"
     }
 ]
 
@@ -44,7 +50,10 @@ def getDefault():
     for br in VBSjjlnu_branches["I"]:
         output[br] = -999
     for vec_br in VBSjjlnu_vector_branches:
-        output[vec_br["name"]] = []
+        if type(vec_br["len"]) == int:
+            output[vec_br["name"]] = [-999.]*vec_br["len"]
+        else:
+            output[vec_br["name"]] = []
     return output
 
 
@@ -111,17 +120,7 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     output["recoMET_pz"] = reco_neutrino.Pz() 
     output["deltaphi_lep_nu"] = abs(lepton.DeltaPhi(reco_neutrino)) 
     output["deltaeta_lep_nu"] = abs(lepton.Eta() - reco_neutrino.Eta())
-    output["deltaR_lep_nu"] = lepton.DrEtaPhi(reco_neutrino)
-    # Delta Phi with lepton
-    output["deltaphi_lep_vbs_0"] = abs(lepton.DeltaPhi(vbsjets[0]))
-    output["deltaphi_lep_vbs_1"] = abs(lepton.DeltaPhi(vbsjets[1]))
-    output["deltaphi_lep_vjet_0"] = abs(lepton.DeltaPhi(vjets[0]))
-    output["deltaphi_lep_vjet_1"] = abs(lepton.DeltaPhi(vjets[1]))
-    # Delta Eta with lepton
-    output["deltaeta_lep_vbs_0"] = abs(lepton.Eta() - vbs_etas[0])
-    output["deltaeta_lep_vbs_1"]  = abs(lepton.Eta() - vbs_etas[1])
-    output["deltaeta_lep_vjet_0"] = abs(lepton.Eta() - vjet_etas[0])
-    output["deltaeta_lep_vjet_1"] = abs(lepton.Eta() - vjet_etas[1])
+    output["deltaR_lep_nu"] = lepton.DrEtaPhi(reco_neutrino)    
     # Look for nearest vbs jet from lepton
     output["deltaR_lep_vbs"] = min( [ lepton.DrEtaPhi(vbsjets[0]), lepton.DrEtaPhi(vbsjets[1])])
     output["deltaR_lep_vjet"] = min( [ lepton.DrEtaPhi(vjets[0]), lepton.DrEtaPhi(vjets[1])])
@@ -140,6 +139,11 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     #WW variables
     w_lep = lepton + reco_neutrino
     w_had = vjets[0] + vjets[1]
+
+    # Save four momenta
+    output["VBS_Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
+    output["VBS_Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
+
     w_lep_t = w_lep.Vect()
     w_lep_t.SetZ(0)
     w_had_t = w_had.Vect()
@@ -236,14 +240,7 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     output["deltaphi_lep_nu"] = abs(lepton.DeltaPhi(reco_neutrino)) 
     output["deltaeta_lep_nu"] = abs(lepton.Eta() - reco_neutrino.Eta())
     output["deltaR_lep_nu"] = lepton.DrEtaPhi(reco_neutrino)
-    # Delta Phi with lepton
-    output["deltaphi_lep_vbs_0"] = abs(lepton.DeltaPhi(vbsjets[0]))
-    output["deltaphi_lep_vbs_1"] = abs(lepton.DeltaPhi(vbsjets[1]))
-    output["deltaphi_lep_vjet_0"] = abs(lepton.DeltaPhi(fatjet))
-    # Delta Eta with lepton
-    output["deltaeta_lep_vbs_0"] = abs(lepton.Eta() - vbs_etas[0])
-    output["deltaeta_lep_vbs_1"]  = abs(lepton.Eta() - vbs_etas[1])
-    output["deltaeta_lep_vjet_0"] = abs(lepton.Eta() - vjet_eta)
+
     # Look for nearest vbs jet from lepton
     output["deltaR_lep_vbs"] = min( [ lepton.DrEtaPhi(vbsjets[0]), lepton.DrEtaPhi(vbsjets[1])])
     output["deltaR_lep_vjet"] = lepton.DrEtaPhi(fatjet)
@@ -259,6 +256,11 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     #WW variables
     w_lep = lepton + reco_neutrino
     w_had = fatjet
+
+     # Save four momenta
+    output["VBS_Wlep_vec"] = [w_lep.Pt(), w_lep.Eta(), w_lep.Phi(), w_lep.M()]
+    output["VBS_Whad_vec"] = [w_had.Pt(), w_had.Eta(), w_had.Phi(), w_had.M()]
+
     w_lep_t = w_lep.Vect()
     w_lep_t.SetZ(0)
     w_had_t = w_had.Vect()
