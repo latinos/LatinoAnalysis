@@ -225,6 +225,8 @@ mvaDic['dymva_alt_bdt_VBF']['inputVars']['dphillmet']       = 'event.dphillmet'
 mvaDic['dymva_alt_bdt_VBF']['inputVars']['MET_pt']          = 'event.MET_pt'
 mvaDic['dymva_alt_bdt_VBF']['inputVars']['dphilljetjet_cut']= 'event.dphilljetjet_cut'
 mvaDic['dymva_alt_bdt_VBF']['inputVars']['uperp']           = 'event.uperp'
+mvaDic['dymva_alt_bdt_VBF']['inputVars']['PuppiMET_pt']     = 'event.PuppiMET_pt'
+mvaDic['dymva_alt_bdt_VBF']['inputVars']['recoil']          = 'event.recoil'
 
 mvaDic['dymva_alt_dnn_VBF']['inputVars']['ptll']            = 'event.ptll'
 mvaDic['dymva_alt_dnn_VBF']['inputVars']['mth']             = 'event.mth'
