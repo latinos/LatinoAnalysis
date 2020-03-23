@@ -40,6 +40,10 @@ class EFTReweighter(Module):
 
         if "_VBF_H0" in filename :
           self.productionProcess = "VBF"
+        elif "_ZH_H0" in filename :
+          self.productionProcess = "ZH"
+        elif "_WH_H0" in filename :
+          self.productionProcess = "WH"
         elif "_H0" in filename :
           self.productionProcess = "GluGlu"
         else:
@@ -70,18 +74,11 @@ class EFTReweighter(Module):
 
         self.LHE = Collection(event,"LHEPart")
         Gen = Collection(event,"GenPart")
-        LHEjetIdx = []
 
-        for idx,part in enumerate(self.LHE):
-          if abs(part.pdgId) in [1,2,3,4,5,21]:
-            LHEjetIdx.append(idx)
+        daughters   = ROOT.vector('TLorentzVector')()
+        daughterIDs = ROOT.vector('int')()
 
-        LHEjetIdx = self.pTorder(event, LHEjetIdx)
-
-        daughters=[]
-        daughterIDs=[]
-
-        FinalStateIdx = []
+        HFinalStateIdx = []
         for gid,gen in enumerate(Gen):
           if abs(gen.pdgId) >= 21: continue 
           mid = event.GenPart_genPartIdxMother[gid]
@@ -90,21 +87,18 @@ class EFTReweighter(Module):
           gmid = event.GenPart_genPartIdxMother[mid]
           if gmid == -1: continue
           if abs(event.GenPart_pdgId[gmid]) != 25: continue 
-          if abs(gen.pdgId) in [11,12,13,14,15,16]: FinalStateIdx.append(gid) 
+          HFinalStateIdx.append(gid) 
 
-        LHEFinalState = self.getLHE(event, FinalStateIdx) 
+        LHEHFinalState = self.getLHE(event, HFinalStateIdx) 
 
-        if len(LHEFinalState)!=4:
-          print "SOMETHING WENT WRONG!"
-          print "Event no.:",event.event
-          print LHEFinalState
-          print FinalStateIdx
+        if len(LHEHFinalState)!=4:
+          print "SOMETHING WENT WRONG!, WW final state", LHEHFinalState
 
-        for ipart in LHEFinalState:
-          l = ROOT.TLorentzVector()
-          l.SetPtEtaPhiM(LHEFinalState[ipart][0], LHEFinalState[ipart][1], LHEFinalState[ipart][2], 0.)
-          daughters.append(l)
-          daughterIDs.append(LHEFinalState[ipart][3])                            
+        for ipart in LHEHFinalState:
+          d = ROOT.TLorentzVector()
+          d.SetPtEtaPhiM(LHEHFinalState[ipart][0], LHEHFinalState[ipart][1], LHEHFinalState[ipart][2], 0.)
+          daughters.push_back(d)
+          daughterIDs.push_back(LHEHFinalState[ipart][3])                            
 
         mothers = ROOT.vector('TLorentzVector')()
         motherIDs = ROOT.vector('int')()
@@ -116,41 +110,64 @@ class EFTReweighter(Module):
         mothers.push_back(incoming2)
         genid1 = int(event.Generator_id1)
         genid2 = int(event.Generator_id2)
-
-        partons   = ROOT.vector('TLorentzVector')()
-        partonIDs = ROOT.vector('int')()
-        parton_ids = []
-
-        for ijet in LHEjetIdx:
-          parton = ROOT.TLorentzVector()
-          parton.SetPtEtaPhiM(event.LHEPart_pt[ijet], event.LHEPart_eta[ijet], event.LHEPart_phi[ijet], 0.)
-          partons.push_back(parton)
-          partonIDs.push_back(int(event.LHEPart_pdgId[ijet]))
-          parton_ids.append(int(event.LHEPart_pdgId[ijet]))
-
-        if self.productionProcess == "VBF" and len(partons) !=2 :
-         print "Number of partons does not equal 2! Setup is not appropiate for this simulation"
-         print len(partons)
-
-        # Generator id seems to be wrong in few VBF events... -> Replace pdgId 21 by whatever is in LHE collection
-        if self.productionProcess == "VBF" and (genid1==21 or genid2==21) and (21 in parton_ids):
-          print "Gluons from incoming partons?!"
-          options = [o for o in parton_ids if o != 21] # Should usually contain 2 entries; There are _always_ 3 LHE jets because VBF samples are NLO
-          if genid1==21 and genid2!=21:
-            genid1 = options[0] + options[1] - genid2 # USUALLY Sum pdgIds incoming = Sum pdgIds outgoing (exception is 2.gen <-> 1.gen quark)
-            print "INFO: Replaced incoming particle ID1 to", genid1, "in event", event.event
-          elif genid1!=21 and genid2==21:
-            genid2 = options[0] + options[1] - genid1
-            print "INFO: Replaced incoming particle ID2 to", genid2, "in event", event.event
-          elif genid1==21 and genid2==21: # Assuming qq -> ZZ -> H
-            genid1 = options[0]
-            genid2 = options[1]
-            print "INFO: Replaced incoming particle ID1 to", genid1, "_AND_ ID2 to", genid2, " in event", event.event
-          print "incoming:", [genid1, genid2]
-          print "outgoing:", parton_ids
-
         motherIDs.push_back(genid1)
-        motherIDs.push_back(genid2)        
+        motherIDs.push_back(genid2)       
+
+        adds   = ROOT.vector('TLorentzVector')()
+        addIDs = ROOT.vector('int')()
+
+        if self.productionProcess == "ZH" or  self.productionProcess == "WH": 
+
+         VFinalStateIdx = []
+         for gid,gen in enumerate(Gen):
+          if abs(gen.pdgId) >= 21: continue 
+          mid = event.GenPart_genPartIdxMother[gid]
+          if mid == -1: continue
+
+          if abs(event.GenPart_pdgId[mid]) == 23 and self.productionProcess == "ZH": 
+           VFinalStateIdx.append(gid) 
+           if abs(gen.pdgId) in [1,2,3,4,5]:
+            self.productionMela = ROOT.TVar.Had_ZH
+           elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
+            self.productionMela = ROOT.TVar.Lep_ZH
+
+          if abs(event.GenPart_pdgId[mid]) == 24 and self.productionProcess == "WH": 
+           gmid = event.GenPart_genPartIdxMother[mid]
+           if abs(event.GenPart_pdgId[gmid]) != 25: 
+            VFinalStateIdx.append(gid) 
+            if abs(gen.pdgId) in [1,2,3,4,5]:
+             self.productionMela = ROOT.TVar.Had_WH
+            elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
+             self.productionMela = ROOT.TVar.Lep_WH
+         
+         LHEVFinalState = self.getLHE(event, VFinalStateIdx) 
+         if len(LHEVFinalState)!=2:
+          print "SOMETHING WENT WRONG!, V final state ", LHEVFinalState
+
+         for ipart in LHEVFinalState:
+          add = ROOT.TLorentzVector()
+          add.SetPtEtaPhiM(LHEVFinalState[ipart][0], LHEVFinalState[ipart][1], LHEVFinalState[ipart][2], 0.)
+          adds.push_back(add)
+          addIDs.push_back(LHEVFinalState[ipart][3]) 
+
+        elif self.productionProcess == "VBF" : 
+
+         LHEjetIdx = []
+         for idx,part in enumerate(self.LHE):
+          if abs(part.pdgId) in [1,2,3,4,5,21]:
+           LHEjetIdx.append(idx)
+
+         LHEjetIdx = self.pTorder(event, LHEjetIdx)
+
+         for ijet in LHEjetIdx:
+          add = ROOT.TLorentzVector()
+          add.SetPtEtaPhiM(event.LHEPart_pt[ijet], event.LHEPart_eta[ijet], event.LHEPart_phi[ijet], 0.)
+          adds.push_back(add)
+          addIDs.push_back(int(event.LHEPart_pdgId[ijet]))
+        
+         if len(adds) !=2 : 
+          print "Number of additional particles does not equal 2! Setup is not appropiate for this VBF simulation"
+         
 
         daughter_coll = ROOT.SimpleParticleCollection_t() 
         associated_coll = ROOT.SimpleParticleCollection_t()        
@@ -159,8 +176,8 @@ class EFTReweighter(Module):
         for idx, dau in enumerate(daughters):
          daughter_coll.push_back(ROOT.SimpleParticle_t(daughterIDs[idx], dau)) 
         
-        for idx, par in enumerate(partons):
-         associated_coll.push_back(ROOT.SimpleParticle_t(partonIDs[idx], par))
+        for idx, par in enumerate(adds):
+         associated_coll.push_back(ROOT.SimpleParticle_t(addIDs[idx], par))
         
         for idx, mot in enumerate(mothers):
          mother_coll.push_back(ROOT.SimpleParticle_t(motherIDs[idx], mot))
@@ -169,10 +186,15 @@ class EFTReweighter(Module):
         self.mela.setInputEvent(daughter_coll, associated_coll, mother_coll, 1)
         self.mela.setCurrentCandidateFromIndex(0)
         
-        ME1 = [1, 1, 1, 1, 1, 1]
+        ME1 = [1, 1, 1, 1, 1, 1] 
         ME2 = [1, 1, 1, 1, 1, 1]
 
-        if self.productionProcess == "VBF" :
+        if self.productionProcess == "ZH" or self.productionProcess == "WH" :
+
+         ME1 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
+         ME2 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
+
+        elif self.productionProcess == "VBF" :
 
          ME1 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
          ME2 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJVBF, 0, 0) 

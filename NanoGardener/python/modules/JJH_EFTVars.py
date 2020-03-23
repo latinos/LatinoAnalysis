@@ -27,7 +27,6 @@ class JJH_EFTVars(Module):
             ROOT.gROOT.LoadMacro(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaHiggsEFT.C++g')
       
         self.mela = ROOT.Mela(13, 125,  ROOT.TVar.SILENT) 
-        self.UseHMJetPair = False
 
     def beginJob(self):
         pass
@@ -38,9 +37,11 @@ class JJH_EFTVars(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.newbranches = [
-          'hm','hpt','jj_mass','jj_deta',
+          'hm','hpt',
           'me_vbf_hsm','me_vbf_hm','me_vbf_hp','me_vbf_hl','me_vbf_mixhm','me_vbf_mixhp',
-          'me_qcd_hsm','me_qcd_hm','me_qcd_hp','me_qcd_hl','me_qcd_mixhm','me_qcd_mixhp',
+          'me_wh_hsm','me_wh_hm','me_wh_hp','me_wh_hl','me_wh_mixhm','me_wh_mixhp',
+          'me_zh_hsm','me_zh_hm','me_zh_hp','me_zh_hl','me_zh_mixhm','me_zh_mixhp',
+          'me_qcd_hsm',
           ]
         
 
@@ -64,22 +65,25 @@ class JJH_EFTVars(Module):
 
         hm = -999
         hpt = -999
-        j1_pt = -999
-        j2_pt = -999
-        jj_mass = -999
-        jj_deta = -999
         me_vbf_hsm = -999 
         me_vbf_hm = -999 
         me_vbf_hp = -999 
         me_vbf_hl = -999 
         me_vbf_mixhm = -999 
         me_vbf_mixhp = -999
+        me_wh_hsm = -999 
+        me_wh_hm = -999 
+        me_wh_hp = -999 
+        me_wh_hl = -999 
+        me_wh_mixhm = -999 
+        me_wh_mixhp = -999
+        me_zh_hsm = -999 
+        me_zh_hm = -999 
+        me_zh_hp = -999 
+        me_zh_hl = -999 
+        me_zh_mixhm = -999 
+        me_zh_mixhp = -999
         me_qcd_hsm = -999 
-        me_qcd_hm = -999 
-        me_qcd_hp = -999 
-        me_qcd_hl = -999 
-        me_qcd_mixhm = -999 
-        me_qcd_mixhp = -999
             
         if nJet > 1 and nLepton > 1:
 
@@ -110,33 +114,12 @@ class JJH_EFTVars(Module):
          indx_j1 = 0
          indx_j2 = 1 
 
-         if nJet > 2 and self.UseHMJetPair :
-          max_mass = 0          
-          tJ1 = ROOT.TLorentzVector()  
-          tJ2 = ROOT.TLorentzVector()  
-          for i in range(nJet):
-           for j in range(nJet):
-            oi = Jet[i].jetIdx
-            oj = Jet[j].jetIdx
-            tJ1.SetPtEtaPhiM(Jet[i].pt, Jet[i].eta, Jet[i].phi, OrigJet[oi].mass)
-            tJ2.SetPtEtaPhiM(Jet[j].pt, Jet[j].eta, Jet[j].phi, OrigJet[oj].mass)
-            tMass = (tJ1 + tJ2).M()
-            if tMass > max_mass:
-             max_mass = tMass
-             indx_j1 = i
-             indx_j2 = j    
-
          J1 = ROOT.TLorentzVector()
          J2 = ROOT.TLorentzVector() 
          indx_oj1 = Jet[indx_j1].jetIdx
          indx_oj2 = Jet[indx_j2].jetIdx
          J1.SetPtEtaPhiM(Jet[indx_j1].pt, Jet[indx_j1].eta, Jet[indx_j1].phi, OrigJet[indx_oj1].mass)
          J2.SetPtEtaPhiM(Jet[indx_j2].pt, Jet[indx_j2].eta, Jet[indx_j2].phi, OrigJet[indx_oj2].mass)
- 
-         j1_pt = J1.Pt()
-         j2_pt = J2.Pt()
-         jj_mass = (J1 + J2).M()
-         jj_deta = abs(J1.Eta() - J2.Eta())
 
          daughter_coll = ROOT.SimpleParticleCollection_t() 
          associated_coll = ROOT.SimpleParticleCollection_t()
@@ -161,41 +144,49 @@ class JJH_EFTVars(Module):
          me_vbf_mixhm = ME_VBF[4]
          me_vbf_mixhp = ME_VBF[5] 
 
+         ME_WH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_WH, 0, 1)
+         me_wh_hsm   = ME_WH[0]
+         me_wh_hm    = ME_WH[1]
+         me_wh_hp    = ME_WH[2]
+         me_wh_hl    = ME_WH[3]
+         me_wh_mixhm = ME_WH[4]
+         me_wh_mixhp = ME_WH[5] 
+   
+         ME_ZH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_ZH, 0, 1)
+         me_zh_hsm   = ME_ZH[0]
+         me_zh_hm    = ME_ZH[1]
+         me_zh_hp    = ME_ZH[2]
+         me_zh_hl    = ME_ZH[3]
+         me_zh_mixhm = ME_ZH[4]
+         me_zh_mixhp = ME_ZH[5] 
+
          ME_QCD = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJQCD, 1, 1)
          me_qcd_hsm   = ME_QCD[0]
-         me_qcd_hm    = ME_QCD[1]
-         me_qcd_hp    = ME_QCD[2]
-         me_qcd_hl    = ME_QCD[3]
-         me_qcd_mixhm = ME_QCD[4]
-         me_qcd_mixhp = ME_QCD[5] 
-
-         ######### VH also possible ########
-         # ME_WH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_WH, 0, 1)
-         # ME_ZH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_ZH, 0, 1)
 
          self.mela.resetInputEvent()
-       
-      #  else:
-      #   return False         
-      #  if j1_pt < 30 or j2_pt < 30 :
-      #    return False 
+         
 
-        self.out.fillBranch( 'hm',         hm )
-        self.out.fillBranch( 'hpt',        hpt )
-        self.out.fillBranch( 'jj_mass',    jj_mass )
-        self.out.fillBranch( 'jj_deta',    jj_deta )
+        self.out.fillBranch( 'hm',          hm )
+        self.out.fillBranch( 'hpt',         hpt )
         self.out.fillBranch( 'me_vbf_hsm',  me_vbf_hsm )
         self.out.fillBranch( 'me_vbf_hm',   me_vbf_hm )
         self.out.fillBranch( 'me_vbf_hp',   me_vbf_hp ) 
         self.out.fillBranch( 'me_vbf_hl',   me_vbf_hl )
         self.out.fillBranch( 'me_vbf_mixhm',me_vbf_mixhm )
         self.out.fillBranch( 'me_vbf_mixhp',me_vbf_mixhp ) 
+        self.out.fillBranch( 'me_wh_hsm',   me_wh_hsm )
+        self.out.fillBranch( 'me_wh_hm',    me_wh_hm )
+        self.out.fillBranch( 'me_wh_hp',    me_wh_hp ) 
+        self.out.fillBranch( 'me_wh_hl',    me_wh_hl )
+        self.out.fillBranch( 'me_wh_mixhm', me_wh_mixhm )
+        self.out.fillBranch( 'me_wh_mixhp', me_wh_mixhp ) 
+        self.out.fillBranch( 'me_zh_hsm',   me_zh_hsm )
+        self.out.fillBranch( 'me_zh_hm',    me_zh_hm )
+        self.out.fillBranch( 'me_zh_hp',    me_zh_hp ) 
+        self.out.fillBranch( 'me_zh_hl',    me_zh_hl )
+        self.out.fillBranch( 'me_zh_mixhm', me_zh_mixhm )
+        self.out.fillBranch( 'me_zh_mixhp', me_zh_mixhp ) 
         self.out.fillBranch( 'me_qcd_hsm',  me_qcd_hsm )
-        self.out.fillBranch( 'me_qcd_hm',   me_qcd_hm )
-        self.out.fillBranch( 'me_qcd_hp',   me_qcd_hp ) 
-        self.out.fillBranch( 'me_qcd_hl',   me_qcd_hl )
-        self.out.fillBranch( 'me_qcd_mixhm',me_qcd_mixhm )
-        self.out.fillBranch( 'me_qcd_mixhp',me_qcd_mixhp )
 
         return True
 
