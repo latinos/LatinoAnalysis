@@ -416,6 +416,15 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],  
                   },
 
+  'MCl1loose2016v7' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  },
+
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
   'MCCorr2016' : {
@@ -453,6 +462,17 @@ Steps = {
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars',
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
+
+  'MCCorr2016v7' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars',
+                                     'MHTrigMC','MHSwitch','formulasMCMH' ],
+                },
+
 
   'MCCorr2016_hmumu' : {
                      'isChain'    : True  ,
@@ -551,6 +571,15 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],  
                   },
 
+  'MCl1loose2017v7' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  },
+
 
   'MCCorr2017' : {
                      'isChain'    : True  ,
@@ -578,6 +607,15 @@ Steps = {
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
 
+  'MCCorr2017v7' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars',
+                                     'MHTrigMC','MHSwitch','formulasMCMH' ],
+                },
 
   'MCCorr2017LP19' : {
                      'isChain'    : True  ,
@@ -629,6 +667,17 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],  
                   },
 
+  'MCl1loose2018v7' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                  },
+
+
+
   'MCCorr2018' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -646,6 +695,16 @@ Steps = {
                 },
 
   'MCCorr2018v6' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJet2018',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK',
+                                     'MHTrigMC','MHSwitch','formulasMCMH' ],
+                },
+
+  'MCCorr2018v7' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
@@ -814,6 +873,13 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet','rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
                  },
 
+  'DATAl1loose2016v7': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet','rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
+                 },
 
   'DATAl1loose2017': {
                   'isChain'    : True  ,
@@ -840,6 +906,14 @@ Steps = {
                 },
 
   'DATAl1loose2017v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
+                },
+
+  'DATAl1loose2017v7': {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
@@ -889,6 +963,14 @@ Steps = {
 
 
   'DATAl1loose2018v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
+                },
+
+  'DATAl1loose2018v7': {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
