@@ -248,7 +248,7 @@ if __name__ == '__main__':
                       nHis = inputFile.Get(baseDir+'/'+subDir+'/histo_'+DYestim[iDYestim]['DYProc']).Integral()
                       if nHis == 0 : nHis = nHisDummy
                       Acc  = 1.
-                      EAcc = 0.
+                      EAcc = 0.01
                       if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
                         hNum = inputFile.Get(DYestim[iDYestim]['AccNum']).Clone()
                         hDen = inputFile.Get(DYestim[iDYestim]['AccDen']).Clone()
@@ -257,6 +257,11 @@ if __name__ == '__main__':
                         hAcc.Divide(hNum,hDen,1,1,"b") 
                         Acc  = hAcc.Integral()
                         EAcc = hAcc.GetBinError(1)
+                        #Forcing non null acceptance due to low stats
+                        print 'LOW STATS FOR ACCEPTANCE! Setting Acc to 0.01 +/- 0.01'
+                        if Acc == 0 : 
+                          Acc  = 0.01
+                          EAcc = 0.01
                     else:
                       Nout = DYestim[iDYestim]['Nout']
                       NUp  = Nout
@@ -266,9 +271,9 @@ if __name__ == '__main__':
                       nHis = inputFile.Get(baseDir+'/'+subDir+'/histo_'+DYestim[iDYestim]['DYProc']).Integral()
                       if nHis == 0 : nHis = nHisDummy
                       Acc  = 1.
-                      EAcc = 0.
+                      EAcc = 0.01
                       Eout = 0.5*((Nout-NDo)+(NUp-Nout))
-                    if 'asyst' in DYestim[iDYestim] : EAcc = math.sqrt(pow(EAcc,2)+pow(DYestim[iDYestim]['asyst'],2)) 
+                    if 'asyst' in DYestim[iDYestim] : EAcc = math.sqrt(pow(EAcc,2)+pow(DYestim[iDYestim]['asyst'],2))
                     print 'Acc = ',Acc," +- ",EAcc
                     # Central value or systematics not related to DY ESTIM
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
