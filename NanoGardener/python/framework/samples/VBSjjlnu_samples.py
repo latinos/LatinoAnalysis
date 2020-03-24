@@ -84,7 +84,7 @@ vbsjjlnu_samples_bkg_2016 = [
 
 
 vbsjjlnu_samples_bkg_2018 = [  'DYJetsToLL_M-50_ext2', 'TTWJetsToLNu', 'TTToSemiLeptonic_ext3', 
-                                   'Zg', 'Wg_AMCNLOFXFX']
+                                   'Zg', 'Wg_AMCNLOFXFX','WZTo3LNu_mllmin01','Wg_MADGRAPHMLM']
 
 
 vbsjjlnu_samples_bkg += vbsjjlnu_samples_bkg_2016
