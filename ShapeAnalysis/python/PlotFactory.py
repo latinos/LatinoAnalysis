@@ -354,7 +354,7 @@ class PlotFactory:
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                     sigForAdditionalDifferenceList[sampleName] = histos[sampleName]
                 else :
-                  nexpected += histos[sampleName].Integral(-1,-1)
+                  nexpected += histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())   # it was (-1, -1) in the past, correct now
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
 
@@ -722,7 +722,17 @@ class PlotFactory:
                   
               if sampleConfiguration['isSignal'] == 1 :
                   print "############################################################## isSignal 1", sampleNameGroup
-                  thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
+                  #
+                  # if, for some reason, you want to scale only the overlaid signal
+                  # for example to show the shape of the signal, without affecting the actual stacked (true) distribution
+                  #
+                  if 'scaleMultiplicativeOverlaid' in sampleConfiguration.keys() : 
+                    # may this clone not mess up too much with "gDirectory", see TH1::Copy
+                    temp_overlaid = histos_grouped[sampleNameGroup].Clone()
+                    temp_overlaid.Scale(sampleConfiguration['scaleMultiplicativeOverlaid'])
+                    thsSignal_grouped.Add(temp_overlaid)
+                  else :
+                    thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
               elif sampleConfiguration['isSignal'] == 2 :
                   print "############################################################## isSignal 2", sampleNameGroup
                   groupFlag = True
@@ -897,18 +907,18 @@ class PlotFactory:
                         tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "F")
                       else :
                         if variable["divideByBinWidth"] == 1:
-                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width") 
+                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width") 
                         else:
-                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                         tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "F")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "F")
                
               for sampleName in reversedSampleNames:
@@ -923,18 +933,18 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
@@ -946,9 +956,9 @@ class PlotFactory:
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
                   if variable["divideByBinWidth"] == 1:
-                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1,"width")
+                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX(),"width")
                   else:
-                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1)
+                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX())
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
               for sampleName in reversedSampleNames:
@@ -966,9 +976,9 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
@@ -976,9 +986,9 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], sampleName , "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
@@ -2166,13 +2176,20 @@ class PlotFactory:
                 hentry.SetFillStyle(0)
                 hentry.SetLineWidth(3)
                 hentry.DrawNormalized("hist,same")
-  
+
+              # ~~~~~~~~~~~~~~~~~~~~
+              # include data only if required
+
+              if self._plotNormalizedIncludeData : 
+                for sampleName, plotdef in plot.iteritems():
+                  if plotdef['isData'] == 1 :
+                    histos[sampleName].DrawNormalized("p, same")
+
               frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
 
               tlegend.Draw()
               self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
          
- 
  
  
             

@@ -8,12 +8,10 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 class EmbedWeights(Module):
-    def __init__(self, workspacefile="htt_scalefactors_2017_v1.root"):
+    def __init__(self, workspacefile="hww_scalefactors_XXX.root"):
 
-        cmssw_base = os.getenv('CMSSW_BASE')
-
-        self.workspace_file = self.open_root(cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/embedded_data/" + workspacefile)
-        self.workspace = self.get_root_obj(self.workspace_file, 'w')
+        self.cmssw_base = os.getenv('CMSSW_BASE')
+        self.workspacefilename = workspacefile
 
     def open_root(self, path):
         r_file = ROOT.TFile(path, 'r')
@@ -32,7 +30,7 @@ class EmbedWeights(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        filename = str(inputFile)[str(inputFile).find("/nanoLatino")+1:str(inputFile).find(".root")+5]
+        filename = str(inputFile)[str(inputFile).find("nanoLatino"):str(inputFile).find(".root")+5]
         filenameFormat = "nanoLatino_DYToTT_MuEle_Embedded_Run(2016|2017|2018)(A|B|C|D|E|F|G|H).*\.root"
         pattern = re.match(filenameFormat, filename)
         if pattern == None:
@@ -40,8 +38,22 @@ class EmbedWeights(Module):
         self.year = pattern.group(1)
         self.run = pattern.group(2)
 
+        if 'XXX' in self.workspacefilename: self.workspacefilename = self.workspacefilename.replace('XXX',self.year+'FULL') #+self.run
+        self.workspace_file = self.open_root(self.cmssw_base + "/src/LatinoAnalysis/NanoGardener/python/data/embedded_data/" + self.workspacefilename)
+        self.workspace = self.get_root_obj(self.workspace_file, 'w')
+
+        if self.year == '2016':
+          self.WPs = ['mva16'] #['cutSum16', 'mva16', 'cutSum16_SS', 'mva16_SS']
+        else:
+          self.WPs = ['WP90V1'] #['CutV1', 'CutV2', 'WP90V1', 'WP90V2', 'CutV1_SS', 'CutV2_SS', 'WP90V1_SS', 'WP90V2_SS']
+
         self.out = wrappedOutputTree
-        self.branchnames = ["embed_norm", "embed_mu_isoSF", "embed_mu_idSF", "embed_el_isoSF", "embed_el_idSF", "embed_hltSF", "embed_stitching", "embed_total"]
+        self.branchnames = ["embed_norm", "embed_mu_isoSF", "embed_mu_idSF"]
+        for wp in self.WPs:
+          self.branchnames.append("embed_el_idSF_"+wp)
+          self.branchnames.append("embed_el_isoSF_"+wp)
+          self.branchnames.append("embed_hltSF_"+wp)
+          self.branchnames.append("embed_total_"+wp)
         for bname in self.branchnames:
           self.out.branch(bname, "F")
 
@@ -84,86 +96,102 @@ class EmbedWeights(Module):
 
         w.var("e_pt").setVal(getattr(event, 'Electron_pt')[ele_id])
         w.var("e_eta").setVal(getattr(event, 'Electron_eta')[ele_id])
-        w.var("e_iso").setVal(getattr(event, 'Electron_pfRelIso03_all')[ele_id])
+        w.var("e_phi").setVal(getattr(event, 'Electron_phi')[ele_id])
+        #w.var("e_iso").setVal(getattr(event, 'Electron_pfRelIso03_all')[ele_id])
         w.var("m_pt").setVal(getattr(event, 'Muon_pt')[mu_id])
         w.var("m_eta").setVal(getattr(event, 'Muon_eta')[mu_id])
-        w.var("m_iso").setVal(getattr(event, 'Muon_pfRelIso04_all')[mu_id])
+        #w.var("m_iso").setVal(getattr(event, 'Muon_pfRelIso04_all')[mu_id])
 
         ### Get Isolation and ID scalefactors
-        if self.year == "2017" or self.year == "2018":
-          embed_mu_isoSF = w.function("m_looseiso_binned_embed_ratio").getValV()
-          embed_el_isoSF = w.function("e_iso_binned_embed_ratio").getValV()
-          embed_mu_idSF = w.function("m_id_embed_ratio").getValV()
-          embed_el_idSF = w.function("e_id_embed_ratio").getValV()
-        elif self.year == "2016":
-          embed_mu_isoSF = w.function("m_looseiso_ratio").getValV()
-          embed_el_isoSF = w.function("e_looseiso_ratio").getValV()
-          embed_mu_idSF = w.function("m_id_ratio").getValV()
-          embed_el_idSF = w.function("e_id_ratio").getValV()
+        embed_mu_isoSF = w.function("m_iso_embed_WW_ratio").getValV()
+        embed_mu_idSF = w.function("m_id_embed_WW_ratio").getValV()
         self.out.fillBranch("embed_mu_isoSF", embed_mu_isoSF)
-        self.out.fillBranch("embed_el_isoSF", embed_el_isoSF)
         self.out.fillBranch("embed_mu_idSF", embed_mu_idSF)
-        self.out.fillBranch("embed_el_idSF", embed_el_idSF)
+
+        embed_el_isoSF = {}
+        embed_el_idSF = {}
+        for wp in self.WPs:
+          embed_el_isoSF[wp] = w.function("e_iso_embed_"+wp+"_WW_ratio").getValV()
+          embed_el_idSF[wp] = w.function("e_id_embed_"+wp+"_WW_ratio").getValV()
+          self.out.fillBranch("embed_el_isoSF_"+wp, embed_el_isoSF[wp])
+          self.out.fillBranch("embed_el_idSF_"+wp, embed_el_idSF[wp])
 
         ### Determine Trigger scalefactor
-        # The actual HLT triggers used here (w/ or w/o "_DZ") don't exactly correspond to what we use in the end,
-        # but they're the ones that were used to compute der Trigger scale factors, so they NEED to be used here
-        if self.year == "2017" or self.year == "2018":
-          trigger_12_data_Weight_1 = w.function("e_trg_binned_12_data").getValV()
-          trigger_23_data_Weight_2 = w.function("m_trg_binned_23_data").getValV()
-          trigger_23_data_Weight_1 = w.function("e_trg_binned_23_data").getValV()
-          trigger_8_data_Weight_2 = w.function("m_trg_binned_8_data").getValV()
-          trigger_12_embed_Weight_1 = w.function("e_trg_binned_12_embed").getValV()
-          trigger_23_embed_Weight_2 = w.function("m_trg_binned_23_embed").getValV()
-          trigger_23_embed_Weight_1 = w.function("e_trg_binned_23_embed").getValV()
-          trigger_8_embed_Weight_2 = w.function("m_trg_binned_8_embed").getValV()
+        embed_hltSF = {}
+        trigger_23_data_Weight_2 = w.function("m_trg23_WW_data").getValV()
+        trigger_12_data_Weight_2 = w.function("m_trg12_WW_data").getValV()
+        trigger_23_embed_Weight_2 = w.function("m_trg23_WW_embed").getValV()
+        trigger_12_embed_Weight_2 = w.function("m_trg12_WW_embed").getValV()
+        if (self.year == '2017' and self.run == 'B') or (self.year == '2016' and event.run >= 278273):
           trg_muonelectron_mu23ele12 = getattr(event, 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ')
-          trg_muonelectron_mu8ele23 = getattr(event, 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ')
-        elif self.year == "2016":
-          trigger_12_data_Weight_1 = w.function("e_trg12_binned_ic_data").getValV()
-          trigger_23_data_Weight_2 = w.function("m_trg23_binned_ic_data").getValV()
-          trigger_23_data_Weight_1 = w.function("e_trg23_binned_ic_data").getValV()
-          trigger_8_data_Weight_2 = w.function("m_trg8_binned_ic_data").getValV()
-          trigger_12_embed_Weight_1 = w.function("e_trg12_binned_ic_embed").getValV()
-          trigger_23_embed_Weight_2 = w.function("m_trg23_binned_ic_embed").getValV()
-          trigger_23_embed_Weight_1 = w.function("e_trg23_binned_ic_embed").getValV()
-          trigger_8_embed_Weight_2 = w.function("m_trg8_binned_ic_embed").getValV()
-          if self.run in ["B", "C", "D", "E", "F"]:
-            trg_muonelectron_mu23ele12 = getattr(event, 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL')
-            trg_muonelectron_mu8ele23 = getattr(event, 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL')
-          elif self.run in ["G", "H"]:
-            trg_muonelectron_mu23ele12 = getattr(event, 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ')
-            trg_muonelectron_mu8ele23 = getattr(event, 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ')
-
-        numerator = (trigger_23_data_Weight_2*trigger_12_data_Weight_1*(trg_muonelectron_mu23ele12==1)+trigger_23_data_Weight_1*trigger_8_data_Weight_2*(trg_muonelectron_mu8ele23==1) - trigger_23_data_Weight_2*trigger_23_data_Weight_1*((trg_muonelectron_mu8ele23==1)*(trg_muonelectron_mu23ele12==1)))
-        denominator = (trigger_23_embed_Weight_2*trigger_12_embed_Weight_1*(trg_muonelectron_mu23ele12==1)+trigger_23_embed_Weight_1*trigger_8_embed_Weight_2*(trg_muonelectron_mu8ele23==1) - trigger_23_embed_Weight_2*trigger_23_embed_Weight_1*((trg_muonelectron_mu8ele23==1)*(trg_muonelectron_mu23ele12==1)))
-
-        if denominator == 0:
-          embed_hltSF = 0
         else:
-          embed_hltSF = numerator/denominator
+          trg_muonelectron_mu23ele12 = getattr(event, 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL')
+        if self.year == '2016' and event.run < 278273:
+          trigger_12_data_Weight_2 = w.function("m_trg8_WW_data").getValV()
+          trigger_12_embed_Weight_2 = w.function("m_trg8_WW_embed").getValV()
+          trg_muonelectron_mu12ele23 = getattr(event, 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL')
+        else:
+          trg_muonelectron_mu12ele23 = getattr(event, 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ')
 
-        if embed_hltSF == 0 and ((trg_muonelectron_mu8ele23==1) or (trg_muonelectron_mu23ele12==1)):
-          print "Weird trigger SF: Numerator",numerator,", Denominator",denominator
+        for wp in self.WPs:
+          trigger_12_data_Weight_1 = w.function("e_trg12_"+wp+"_WW_data").getValV()
+          trigger_23_data_Weight_1 = w.function("e_trg23_"+wp+"_WW_data").getValV()
+          trigger_12_embed_Weight_1 = w.function("e_trg12_"+wp+"_WW_embed").getValV()
+          trigger_23_embed_Weight_1 = w.function("e_trg23_"+wp+"_WW_embed").getValV()
 
-        self.out.fillBranch("embed_hltSF", embed_hltSF)
+          numerator = (trigger_23_data_Weight_2*trigger_12_data_Weight_1*(trg_muonelectron_mu23ele12==1)+trigger_23_data_Weight_1*trigger_12_data_Weight_2*(trg_muonelectron_mu12ele23==1) - trigger_23_data_Weight_2*trigger_23_data_Weight_1*((trg_muonelectron_mu12ele23==1)*(trg_muonelectron_mu23ele12==1)))
+          denominator = (trigger_23_embed_Weight_2*trigger_12_embed_Weight_1*(trg_muonelectron_mu23ele12==1)+trigger_23_embed_Weight_1*trigger_12_embed_Weight_2*(trg_muonelectron_mu12ele23==1) - trigger_23_embed_Weight_2*trigger_23_embed_Weight_1*((trg_muonelectron_mu12ele23==1)*(trg_muonelectron_mu23ele12==1)))
 
-        ### Stitching for 2016 samples
-        embed_stitching = 1.0
-        if self.year == "2016":
-          if   self.run == "B": embed_stitching = 1.0/0.891 # runnr >= 272007 and runnr < 275657
-          elif self.run == "C": embed_stitching = 1.0/0.910 # runnr >= 275657 and runnr < 276315
-          elif self.run == "D": embed_stitching = 1.0/0.953 # runnr >= 276315 and runnr < 276831
-          elif self.run == "E": embed_stitching = 1.0/0.947 # runnr >= 276831 and runnr < 277772
-          elif self.run == "F": embed_stitching = 1.0/0.942 # runnr >= 277772 and runnr < 278820
-          elif self.run == "G": embed_stitching = 1.0/0.906 # runnr >= 278820 and runnr < 280919
-          elif self.run == "H": embed_stitching = 1.0/0.950 # runnr >= 280919 and runnr < 284045
-        self.out.fillBranch("embed_stitching", embed_stitching)
+          if denominator == 0:
+            embed_hltSF[wp] = 0
+          else:
+            embed_hltSF[wp] = numerator/denominator
+          if embed_hltSF[wp] == 0 and ((trg_muonelectron_mu12ele23==1) or (trg_muonelectron_mu23ele12==1)):
+            print "Weird trigger SF: Numerator",numerator,", Denominator",denominator
+
+          self.out.fillBranch("embed_hltSF_"+wp, embed_hltSF[wp])
 
         ### Total
-        embed_total = embed_norm * embed_mu_isoSF * embed_el_isoSF * embed_mu_idSF * embed_el_idSF * embed_hltSF * embed_stitching
-        if embed_total == 0: return False # Remove event; it's 0 anyway
-        self.out.fillBranch("embed_total", embed_total)
+        embed_total = {}
+        totaltotal=0.0
+        for wp in self.WPs:
+          embed_total[wp] = embed_norm * embed_mu_isoSF * embed_el_isoSF[wp] * embed_mu_idSF * embed_el_idSF[wp] * embed_hltSF[wp]
+
+          if embed_total[wp]>1000:
+            print '=========='
+            print "Too large weight!", embed_total[wp]
+
+            if ( trg_muonelectron_mu23ele12 and (getattr(event, 'Electron_pt')[ele_id]<12 or getattr(event, 'Muon_pt')[mu_id]<23) ) or ( trg_muonelectron_mu12ele23 and (getattr(event, 'Electron_pt')[ele_id]<23 or getattr(event, 'Muon_pt')[mu_id]<12) ):
+              print "...because of Trigger SF" # The Trigger SF is always the reason for too large weights; occurs from few events where the lepton pT is smaller than Trigger leg requirement -> Should be cut in analysis
+              embed_total[wp] = embed_total[wp] / embed_hltSF[wp] # ... but remove the weight anyway, just in case
+            elif embed_el_idSF[wp]>100:
+              print "...because of Ele ID" # Few bins unfortunately have low statistics in T&P, especially in the problematic phi regions.
+              #embed_total[wp] = embed_total[wp] / embed_el_idSF[wp] # ... remove phi dependent part
+            else:
+              print "Don't know why!" # This doesn't occur, last I checked
+              print "Norm  :", embed_norm
+              print "El ID :", embed_el_idSF[wp]
+              print "El Iso:", embed_el_isoSF[wp]
+              print "Mu ID :", embed_mu_idSF
+              print "Mu Iso:", embed_mu_isoSF
+              print "Triggr:", embed_hltSF[wp]
+              if trg_muonelectron_mu23ele12==1:
+                print "ME TRIG"
+              if trg_muonelectron_mu12ele23==1:
+                print "EM TRIG"
+              print "e_pT: ",getattr(event, 'Electron_pt')[ele_id]
+              print "e_eta:",getattr(event, 'Electron_eta')[ele_id]
+              print "e_phi:",getattr(event, 'Electron_phi')[ele_id]
+              print "m_pT: ",getattr(event, 'Muon_pt')[mu_id]
+              print "m_eta:",getattr(event, 'Muon_eta')[mu_id]
+
+
+
+          totaltotal += embed_total[wp]
+        if totaltotal == 0.0: return False # Remove event; it's 0 anyway
+
+        for wp in self.WPs:
+          self.out.fillBranch("embed_total_"+wp, embed_total[wp])
 
         return True
 

@@ -5,9 +5,10 @@ import re
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class WhadJetSel(Module):
-    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="CleanJet"):
+    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="CleanJet", branch_map=''):
         # Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto
         # jetId = userInt('tightId')*2+4*userInt('tightIdLepVeto')
         # >=2 -> ask tightId
@@ -23,25 +24,26 @@ class WhadJetSel(Module):
         self.minpt   = minpt
         self.maxeta  = maxeta 
         self.jetColl = jetColl
+        self._branch_map = branch_map
     def beginJob(self):
         pass
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         
-        self.out = wrappedOutputTree
-        self.out.branch('Whad_px','F')
-        self.out.branch('Whad_py','F')
-        self.out.branch('Whad_pz','F')
-        self.out.branch('Whad_E','F')
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
+        #self.out.branch('Whad_px','F')
+        #self.out.branch('Whad_py','F')
+        #self.out.branch('Whad_pz','F')
+        #self.out.branch('Whad_E','F')
         
-        self.out.branch('Whad_pt','F')
-        self.out.branch('Whad_eta','F')
-        self.out.branch('Whad_phi','F')
-        self.out.branch('Whad_mass','F')
+        self.out.branch('HM_Whad_pt','F')
+        self.out.branch('HM_Whad_eta','F')
+        self.out.branch('HM_Whad_phi','F')
+        self.out.branch('HM_Whad_mass','F')
 
-        self.out.branch('idx_j1','I')
-        self.out.branch('idx_j2','I')
+        self.out.branch('HM_idx_j1','I')
+        self.out.branch('HM_idx_j2','I')
 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -50,6 +52,7 @@ class WhadJetSel(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
+        event = mappedEvent(event, mapname=self._branch_map)
 
         jet_coll = Collection(event, self.jetColl )
         nJet     = jet_coll._len
@@ -149,18 +152,18 @@ class WhadJetSel(Module):
 
         #self.out.fillBranch()
 
-        self.out.fillBranch('Whad_px',whad_px)
-        self.out.fillBranch('Whad_py',whad_py)
-        self.out.fillBranch('Whad_pz',whad_pz)
-        self.out.fillBranch('Whad_E',whad_E)
+        #self.out.fillBranch('Whad_px',whad_px)
+        #self.out.fillBranch('Whad_py',whad_py)
+        #self.out.fillBranch('Whad_pz',whad_pz)
+        #self.out.fillBranch('Whad_E',whad_E)
 
-        self.out.fillBranch('Whad_pt',whad_pt)
-        self.out.fillBranch('Whad_eta',whad_eta)
-        self.out.fillBranch('Whad_phi',whad_phi)
-        self.out.fillBranch('Whad_mass',whad_mass)
+        self.out.fillBranch('HM_Whad_pt',whad_pt)
+        self.out.fillBranch('HM_Whad_eta',whad_eta)
+        self.out.fillBranch('HM_Whad_phi',whad_phi)
+        self.out.fillBranch('HM_Whad_mass',whad_mass)
 
-        self.out.fillBranch('idx_j1',idx_j1)
-        self.out.fillBranch('idx_j2',idx_j2)
+        self.out.fillBranch('HM_idx_j1',idx_j1)
+        self.out.fillBranch('HM_idx_j2',idx_j2)
 
 
 

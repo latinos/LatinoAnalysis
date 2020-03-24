@@ -148,7 +148,7 @@ class HiggsXSection:
      if not model     in self._YR[YRversion]                      : return 0
      if not 'xs'      in self._YR[YRversion][model]               : return 0
      if not energy    in self._YR[YRversion][model]['xs']         : return 0
-     if proc in ['HWplus','HWminus'] :
+     if proc in ['HWplus','HWminus','HW'] :
        if not 'WH'      in self._YR[YRversion][model]['xs'][energy]  : return 0 
      else:
        if not proc      in self._YR[YRversion][model]['xs'][energy]  : return 0 
@@ -169,6 +169,11 @@ class HiggsXSection:
      elif proc == 'HWminus' :
        if 'YR4' in YRversion :
          return self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['WH'],mh,'XS_W_minus_pb')
+       else:
+         return 0.
+     elif proc == 'HW' :
+       if 'YR4' in YRversion :
+         return self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['WH'],mh,'XS_W_plus_pb') + self.GetYRVal(self._YR[YRversion][model]['xs'][energy]['WH'],mh,'XS_W_minus_pb')
        else:
          return 0.
      else:
@@ -253,6 +258,9 @@ class HiggsXSection:
      elif 'ttH'      in SampleName : ProdMode = 'ttH'  
      # Alternative JCP gg->H samples
      elif 'VBF_H0' in SampleName and '_ToWWTo2L2Nu' in SampleName : ProdMode = 'vbfH'  
+     elif 'WH_H0'  in SampleName and '_ToWWTo2L2Nu' in SampleName : ProdMode = 'HW'
+     elif 'ZH_H0'  in SampleName and '_ToWWTo2L2Nu' in SampleName : ProdMode = 'ZH' 
+     elif 'ttH_H0' in SampleName and '_ToWWTo2L2Nu' in SampleName : ProdMode = 'ttH'
      elif 'H0'     in SampleName and '_ToWWTo2L2Nu' in SampleName : ProdMode = 'ggH'  
      #elif 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : ProdMode = 'ggH'
      HiggsMass   = 0.
@@ -264,7 +272,7 @@ class HiggsXSection:
      if 'H0'     in SampleName and '_ToWWTo2L2Nu' in SampleName : HiggsMass = 125.0
      #if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : HiggsMass = 125.0
      if not ProdMode == 'unknown' :
-       if float(HiggsMass) <= 130 and float(HiggsMass) >= 120: 
+       if float(HiggsMass) <= 130 and float(HiggsMass) >= 120 :
          HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass)
        else:
          HiggsProdXS = self.GetHiggsProdXS(YRVersion,energy,ProdMode,HiggsMass,'bsm')
@@ -286,7 +294,7 @@ class HiggsXSection:
      #if 'H0ph_ToWWTo2L2Nu' in SampleName or 'H0m_ToWWTo2L2Nu' in SampleName or 'H0pm_ToWWTo2L2Nu' in SampleName or 'H0L1_ToWWTo2L2Nu' in SampleName : DecayMode = 'H_WW'
      #if 'large' in HiggsMass : DecayMode = 'unknown'
      if not DecayMode == 'unknown' :
-       if float(HiggsMass) <= 130 :
+       if float(HiggsMass) <= 130 and float(HiggsMass) >= 120 :
          HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass)
        else:
          HiggsBR = self.GetHiggsBR(YRVersion,DecayMode,HiggsMass,'bsm')    

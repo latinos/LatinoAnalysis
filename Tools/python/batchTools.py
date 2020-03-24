@@ -361,7 +361,7 @@ class batchJobs :
          jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
          jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
          jdsFile.write('accounting_group=group_cms\n')
-         
+         jdsFile.write('JobBatchName = '+jName.split('__')[0]+'__'+jName.split('__')[1]+'__'+jName.split('__')[2]+'\n')         
          if 'ui10' in hostName:
             jdsFile.write('requirements = ( HasSingularity == true ) \n')
             jdsFile.write('+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/opensciencegrid/osgvo-el6:latest" \n')

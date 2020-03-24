@@ -36,5 +36,5 @@ Productions = {
                          'samples'      : 'LatinoAnalysis/NanoProducer/python/samples/Autumn18_102X_mAODv3.py' ,
                          'GlobalTag'    : '102X_upgrade2018_realistic_v16' ,
                          'EraModifiers' : 'Run2_2018,run2_nanoAOD_102Xv1' ,
-   }
+   },
 }
