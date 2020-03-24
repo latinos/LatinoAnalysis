@@ -199,17 +199,17 @@ class SusyGenVarsProducer(Module):
                     self.susyModel = 'TChipmWW'
             elif massSlepton>-1:
                 if idPrompt>=2000000:
-                    self.susyProcess = 'SleptonHR'
+                    self.susyProcess = 'SleptonRH'
                     if idPrompt==2000011:
-                        self.susyModel = 'TSelectronSelectronHR'
+                        self.susyModel = 'TSelectronSelectronRH'
                     elif idPrompt==2000013:
-                        self.susyModel = 'TSmuonSmuonHR'
+                        self.susyModel = 'TSmuonSmuonRH'
                 else:
-                    self.susyProcess = 'SleptonHL'
+                    self.susyProcess = 'SleptonLH'
                     if idPrompt==1000011:
-                        self.susyModel = 'TSelectronSelectronHL'
+                        self.susyModel = 'TSelectronSelectronLH'
                     elif idPrompt==1000013:
-                        self.susyModel = 'TSmuonSmuonHL'
+                        self.susyModel = 'TSmuonSmuonLH'
             else:
                 raise Exception('SusyGenVarsProducer ERROR: SUSY process not set from gen particle inspection either')
             if self.susyProcess=='StopSbottom' or self.susyProcess=='WinoC1C1':
