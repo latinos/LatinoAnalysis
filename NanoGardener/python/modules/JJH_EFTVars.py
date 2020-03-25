@@ -37,7 +37,7 @@ class JJH_EFTVars(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.newbranches = [
-          'hm','hpt',
+          'hm',
           'me_vbf_hsm','me_vbf_hm','me_vbf_hp','me_vbf_hl','me_vbf_mixhm','me_vbf_mixhp',
           'me_wh_hsm','me_wh_hm','me_wh_hp','me_wh_hl','me_wh_mixhm','me_wh_mixhp',
           'me_zh_hsm','me_zh_hm','me_zh_hp','me_zh_hl','me_zh_mixhm','me_zh_mixhp',
@@ -64,7 +64,6 @@ class JJH_EFTVars(Module):
         nOrigJet = len(OrigJet)
 
         hm = -999
-        hpt = -999
         me_vbf_hsm = -999 
         me_vbf_hm = -999 
         me_vbf_hp = -999 
@@ -109,7 +108,6 @@ class JJH_EFTVars(Module):
          Higgs = ROOT.TLorentzVector()
          Higgs = LL + NuNu
          hm  = Higgs.M()
-         hpt = Higgs.Pt()
 
          indx_j1 = 0
          indx_j2 = 1 
@@ -167,7 +165,6 @@ class JJH_EFTVars(Module):
          
 
         self.out.fillBranch( 'hm',          hm )
-        self.out.fillBranch( 'hpt',         hpt )
         self.out.fillBranch( 'me_vbf_hsm',  me_vbf_hsm )
         self.out.fillBranch( 'me_vbf_hm',   me_vbf_hm )
         self.out.fillBranch( 'me_vbf_hp',   me_vbf_hp ) 
