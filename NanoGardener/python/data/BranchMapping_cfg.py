@@ -110,6 +110,27 @@ _ElepT_branches = [
   'HM_WptOvHak4M',
   'HM_Hlnjj_mass',
   'HM_Hlnjj_mt',
+  ## EFT MEs
+  'hm'
+  'me_vbf_hsm'
+  'me_vbf_hm'
+  'me_vbf_hp'
+  'me_vbf_hl'
+  'me_vbf_mixhm'
+  'me_vbf_mixhp'
+  'me_wh_hsm'
+  'me_wh_hm'
+  'me_wh_hp'
+  'me_wh_hl'
+  'me_wh_mixhm'
+  'me_wh_mixhp'
+  'me_zh_hsm'
+  'me_zh_hm'
+  'me_zh_hp'
+  'me_zh_hl'
+  'me_zh_mixhm'
+  'me_zh_mixhp'
+  'me_qcd_hsm'
 ]
 
 _MupT_branches = _ElepT_branches
@@ -185,6 +206,27 @@ _MET_branches = [
   'HM_vbfjj_jj_mass',
   'HM_IsVbfFat',
   'HM_IsVbfjj',
+  ## EFT MEs
+  'hm'
+  'me_vbf_hsm'
+  'me_vbf_hm'
+  'me_vbf_hp'
+  'me_vbf_hl'
+  'me_vbf_mixhm'
+  'me_vbf_mixhp'
+  'me_wh_hsm'
+  'me_wh_hm'
+  'me_wh_hp'
+  'me_wh_hl'
+  'me_wh_mixhm'
+  'me_wh_mixhp'
+  'me_zh_hsm'
+  'me_zh_hm'
+  'me_zh_hp'
+  'me_zh_hl'
+  'me_zh_mixhm'
+  'me_zh_mixhp'
+  'me_qcd_hsm'
 ]
 
 _JES_branches = ['CleanJet_pt']
@@ -261,6 +303,27 @@ _JES_branches += [
   'HM_largest_nonW_mjj',
   'HM_IsVbfFat',
   'HM_IsVbfjj',
+  ## EFT MEs
+  'hm'
+  'me_vbf_hsm'
+  'me_vbf_hm'
+  'me_vbf_hp'
+  'me_vbf_hl'
+  'me_vbf_mixhm'
+  'me_vbf_mixhp'
+  'me_wh_hsm'
+  'me_wh_hm'
+  'me_wh_hp'
+  'me_wh_hl'
+  'me_wh_mixhm'
+  'me_wh_mixhp'
+  'me_zh_hsm'
+  'me_zh_hm'
+  'me_zh_hp'
+  'me_zh_hl'
+  'me_zh_mixhm'
+  'me_zh_mixhp'
+  'me_qcd_hsm'
 ]
 
 _Fatjet_syst_branches = [
