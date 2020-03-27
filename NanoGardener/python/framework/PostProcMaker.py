@@ -732,6 +732,10 @@ class PostProcMaker():
      if 'RPLME_YEAR' in declare :
        declare = declare.replace('RPLME_YEAR',self._prodYear)
 
+     # SAMPLE
+     if 'RPLME_SAMPLE' in module :
+       module = module.replace('RPLME_SAMPLE',iSample)
+
      return declare
 
 
@@ -951,25 +955,26 @@ class PostProcMaker():
                if nin > nnom:
                  # If there are more nuisance variation files than the nominal files, merge the variations
                  # mkShapes cannot process the nuisance variations with more files than nominal
-                 nmerge = nin / nnom
-                 if nin % nnom != 0:
-                   nmerge += 1
 
-                 merging = self.buildHadd(iSample, FileInList, cutby='filecount', threshold=nmerge)
+                 NewFileInList = []
+                 for index,f in enumerate(FileInList):
+                   NewFileInList.append(re.sub("part.*root","part"+str(index)+".root",f))
+
+                 nmerge = nin - nnom
+                 for iFile in NewFileInList[:nnom-1]:
+                   tFile = self._targetDir + os.path.basename(iFile).replace(iSample,tSample)
+                   if not tFile in FileOutList or self._redo:
+                     os.system(self.mkStageOut(iFile,tFile,True))
 
                  tmpdir = tempfile.mkdtemp()
 
-                 for ttFile, sFiles in merging.iteritems():
-                   tFile = ttFile.replace(iSample, tSample)
-                   if tFile in FileOutList and not self._redo:
-                     continue
-                   
-                   tmpFile = tmpdir + '/' + os.path.basename(tFile)
-                   cmd = self._cmsswBasedir+'/src/'+self._haddnano+' '+tmpFile+' '
-                   cmd += ' '.join(self.getStageIn(sFile) for sFile in sFiles)
-                   os.system(cmd)
-                   os.system(self.mkStageOut(tmpFile, tFile, False))
-                   os.system('rm ' + tmpFile)
+                 tFile = self._targetDir+self._treeFilePrefix+tSample+'__part'+str(nnom-1)+'.root'.replace("//","/")
+                 tmpFile = tmpdir + '/' + os.path.basename(tFile)
+                 cmd = self._cmsswBasedir+'/src/'+self._haddnano+' '+tmpFile+' '
+                 cmd += ' '.join(self.getStageIn(sFile) for sFile in NewFileInList[-nmerge-1:])
+                 os.system(cmd)
+                 os.system(self.mkStageOut(tmpFile, tFile, False))
+                 os.system('rm ' + tmpFile)
 
                  os.system('rmdir ' + tmpdir)
 

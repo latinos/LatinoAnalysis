@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 import os
@@ -1817,6 +1818,35 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyGenVarsProducer' ,
                   'module'     : 'SusyGenVarsProducer()' ,
                },
+
+## EFT JJH->WW->2l2nu
+
+    'JJHl2EFT' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'subTargets' : ['JJHEFT','EFTGen'],
+                  },
+
+    'JJHEFT' : {
+                   'isChain'    : False ,
+                   'do4MC'      : True ,
+                   'do4Data'    : True ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
+                   'declare'    : 'JJHEFT = lambda : JJH_EFTVars()',
+                   'module'     : 'JJHEFT()',
+                 },
+
+    'EFTGen' : {
+                     'isChain'    : False ,
+                     'do4MC'      : True ,
+                     'do4Data'    : False ,
+                     'import'     : 'LatinoAnalysis.NanoGardener.modules.EFTReweighter' ,
+                     'declare'    : 'EFTGen = lambda : EFTReweighter()',
+                     'module'     : 'EFTGen()',
+                     'onlySample' : ['H0PM_ToWWTo2L2Nu','H0PH_ToWWTo2L2Nu','H0L1_ToWWTo2L2Nu','H0M_ToWWTo2L2Nu','H0PHf05_ToWWTo2L2Nu','H0Mf05_ToWWTo2L2Nu','VBF_H0PM_ToWWTo2L2Nu','VBF_H0PH_ToWWTo2L2Nu','VBF_H0L1_ToWWTo2L2Nu','VBF_H0M_ToWWTo2L2Nu','VBF_H0PHf05_ToWWTo2L2Nu','VBF_H0Mf05_ToWWTo2L2Nu','WH_H0PM_ToWWTo2L2Nu','WH_H0PH_ToWWTo2L2Nu','WH_H0L1_ToWWTo2L2Nu','WH_H0M_ToWWTo2L2Nu','WH_H0PHf05_ToWWTo2L2Nu','WH_H0Mf05_ToWWTo2L2Nu','ZH_H0PM_ToWWTo2L2Nu','ZH_H0PH_ToWWTo2L2Nu','ZH_H0L1_ToWWTo2L2Nu','ZH_H0M_ToWWTo2L2Nu','ZH_H0PHf05_ToWWTo2L2Nu','ZH_H0Mf05_ToWWTo2L2Nu'],
+                    },
+
     
     ##--High Mass SemiLeptonic channel
   'wlepMaker' : {
