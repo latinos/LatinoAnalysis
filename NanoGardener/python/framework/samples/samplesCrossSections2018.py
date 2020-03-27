@@ -700,7 +700,7 @@ samples['GJets_HT40To100-ext1'] .extend( ['xsec=18740', 'kfact=1.000', 'ref=I'] 
 
 # VBS
 samples['WpWpJJ_EWK_QCD']   			.extend( ['xsec=0.05454',	'kfact=1.000',	'ref=I'] )
-samples['WpWpJJ_EWK']                           .extend( ['xsec=0.02526',       'kfact=1.000',  'ref=I'] )
+samples['WpWpJJ_EWK']                           .extend( ['xsec=0.01999',       'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_madgraph'] .extend( ['xsec=0.02526', 'kfact=1.000', 'ref=I'] )
 samples['WpWpJJ_QCD']                           .extend( ['xsec=0.02474',       'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_QCD_aQGC']                  .extend( ['xsec=0.1390',        'kfact=1.000',  'ref=I'] )
