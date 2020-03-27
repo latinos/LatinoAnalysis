@@ -7,11 +7,12 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 import os.path
 
 class JJH_EFTVars(Module):
-    def __init__(self):
+    def __init__(self, branch_map=''):
         
         self.cmssw_base = os.getenv('CMSSW_BASE')
         self.cmssw_arch = os.getenv('SCRAM_ARCH')
@@ -28,6 +29,8 @@ class JJH_EFTVars(Module):
       
         self.mela = ROOT.Mela(13, 125,  ROOT.TVar.SILENT) 
 
+        self._branch_map = branch_map
+
     def beginJob(self):
         pass
 
@@ -35,7 +38,7 @@ class JJH_EFTVars(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
         self.newbranches = [
           'hm',
           'me_vbf_hsm','me_vbf_hm','me_vbf_hp','me_vbf_hl','me_vbf_mixhm','me_vbf_mixhp',
@@ -53,6 +56,8 @@ class JJH_EFTVars(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+        event = mappedEvent(event, mapname=self._branch_map)
 
         Lepton = Collection(event, "Lepton")
         nLepton = len(Lepton)
