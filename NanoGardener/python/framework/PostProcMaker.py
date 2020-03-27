@@ -371,7 +371,9 @@ class PostProcMaker():
      # batchMode Preparation
      elif self._jobMode == 'Batch':
        print "INFO: Using Local Batch"
-       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True)
+       if 'slc7' in os.environ['SCRAM_ARCH'] and self._Sites[self._LocalSite]['slc_ver'] == 6 : use_singularity = True
+       else : use_singularity = False
+       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)
        self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
        self._jobs.Add2All(preBash)
        self._jobs.AddPy2Sh()
@@ -408,8 +410,12 @@ class PostProcMaker():
              else                 : print command
            # Batch
            elif self._jobMode == 'Batch' :
-             self._jobs.Add(iStep,iTarget,stageOutCmd)
-             self._jobs.Add(iStep,iTarget,rmGarbageCmd)
+             if use_singularity :
+               self._jobs.AddSing(iStep,iTarget,stageOutCmd)
+               self._jobs.AddSing(iStep,iTarget,rmGarbageCmd)
+             else: 
+               self._jobs.Add(iStep,iTarget,stageOutCmd)
+               self._jobs.Add(iStep,iTarget,rmGarbageCmd)
            elif self._jobMode == 'Crab':
              self._crab.AddInputFile(pyFile)
              self._crab.AddCommand(iStep,iTarget,'python '+os.path.basename(pyFile))
@@ -447,11 +453,11 @@ class PostProcMaker():
       # IIHE
       if   self._LocalSite == 'iihe' :
         if self._redo :
-          command += 'srmrm '+self._Sites[self._LocalSite]['srmPrefix']+storeFile+' ; '
+          command += 'gfal-rm '+self._Sites[self._LocalSite]['srmPrefix']+storeFile+' ; '
         if not cpMode:
-          command += 'lcg-cp '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
+          command += 'gfal-copy '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
         else:
-          command += 'lcg-cp '+self._Sites[self._LocalSite]['srmPrefix']+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
+          command += 'gfal-copy '+self._Sites[self._LocalSite]['srmPrefix']+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
       # CERN
       elif self._LocalSite == 'cern' :
         if not cpMode:
