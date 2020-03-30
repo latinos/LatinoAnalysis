@@ -433,7 +433,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'CorrFatJetMC', 'CleanFatJet',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
   # FIXME: check btagPerJet2016, btagPerEvent
@@ -588,7 +588,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
 
@@ -684,7 +684,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons'],
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
   'test2018v7' :  {
@@ -3730,7 +3730,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['DYMVA','MonoHiggsMVA','l3Kin'], 
+                  'subTargets' : ['DYMVA','MonoHiggsMVA','JJHEFT'], 
                   'excludeSample' : LNuQQSamples
                 },
  
