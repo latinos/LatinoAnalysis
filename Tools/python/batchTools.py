@@ -159,6 +159,7 @@ class batchJobs :
            jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' in hostName or 'knu' in hostName:
            jFile.write('cd '+self.subDir+subDirExtra+'\n')
+           jFile.write('cd ${_CONDOR_SCRATCH_DIR}\n')
          elif 'hercules' in hostName:
            tmpdataDir = jobDir + "/tmp/" + baseName +"_"+prodName
            jFile.write("mkdir "+ jobDir + "/tmp\n")
