@@ -644,3 +644,64 @@ Samples['ggZZ4m_ext'] = {'nanoAOD' :'/GluGluToContinToZZTo4mu_13TeV_MCFM701_pyth
 Samples['ggZZ4m_CP5'] = {'nanoAOD' :'/GluGluToContinToZZTo4mu_13TeV_TuneCP5_MCFM701_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 Samples['ggZZ4m_ext1'] = {'nanoAOD' :'/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7_ext1-v1/NANOAODSIM'}
 
+
+####################################################
+# Spin/Parity/EFT alternative signals
+####################################################
+
+########## Alternative ggH #########################
+Samples['H0PM_ToWWTo2L2Nu']    = {'nanoAOD' :'/Higgs0PMToWW_M125_13TeV_powheg2_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['H0PH_ToWWTo2L2Nu']    = {'nanoAOD' :'/Higgs0PHToWW_M125_13TeV_powheg2_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['H0M_ToWWTo2L2Nu']     = {'nanoAOD' :'/Higgs0MToWW_M125_13TeV_powheg2_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['H0L1_ToWWTo2L2Nu']    = {'nanoAOD' :'/Higgs0L1ToWW_M125_13TeV_powheg2_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+Samples['H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/Higgs0PHf05ph0ToWW_M125_13TeV_powheg2_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['H0Mf05_ToWWTo2L2Nu']  = {'nanoAOD' :'/Higgs0Mf05ph0ToWW_M125_13TeV_powheg2_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/NANOAODSIM'}
+Samples['H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :'/Higgs0L1f05ph0ToWW_M125_13TeV_powheg2_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+########## Alternative VBF #########################
+
+Samples['VBF_H0PM_ToWWTo2L2Nu']    = {'nanoAOD' :'/VBFHiggs0PMToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['VBF_H0PH_ToWWTo2L2Nu']    = {'nanoAOD' :'/VBFHiggs0PHToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['VBF_H0L1_ToWWTo2L2Nu']    = {'nanoAOD' :'/VBFHiggs0L1ToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['VBF_H0M_ToWWTo2L2Nu']     = {'nanoAOD' :'/VBFHiggs0MToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+Samples['VBF_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0PHf05ph0ToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['VBF_H0Mf05_ToWWTo2L2Nu']  = {'nanoAOD' :'/VBFHiggs0Mf05ph0ToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['VBF_H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1f05ph0ToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['VBF_H0L1Zgf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1Zgf05ph0ToWWTo2L2Nu_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+########## Alternative WH ##########################
+
+Samples['WH_H0PM_ToWWTo2L2Nu']    = {'nanoAOD' :'/WHiggs0PMToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['WH_H0PH_ToWWTo2L2Nu']    = {'nanoAOD' :'/WHiggs0PHToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['WH_H0L1_ToWWTo2L2Nu']    = {'nanoAOD' :'/WHiggs0L1ToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['WH_H0M_ToWWTo2L2Nu']     = {'nanoAOD' :'/WHiggs0MToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+Samples['WH_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/WHiggs0PHf05ph0ToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/NANOAODSIM'}
+Samples['WH_H0Mf05_ToWWTo2L2Nu']  = {'nanoAOD' :'/WHiggs0Mf05ph0ToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['WH_H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :'/WHiggs0L1f05ph0ToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+########### Alternative ZH ##########################
+
+Samples['ZH_H0PM_ToWWTo2L2Nu']    = {'nanoAOD' :'/ZHiggs0PMToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['ZH_H0PH_ToWWTo2L2Nu']    = {'nanoAOD' :'/ZHiggs0PHToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['ZH_H0L1_ToWWTo2L2Nu']    = {'nanoAOD' :'/ZHiggs0L1ToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['ZH_H0M_ToWWTo2L2Nu']     = {'nanoAOD' :'/ZHiggs0MToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+Samples['ZH_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/ZHiggs0PHf05ph0ToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['ZH_H0Mf05_ToWWTo2L2Nu']  = {'nanoAOD' :'/ZHiggs0Mf05ph0ToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['ZH_H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :'/ZHiggs0L1f05ph0ToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['ZH_H0LZgf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/ZHiggs0LZgf05ph0ToWW_2Lfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+
+########### Alternative ttH #########################
+
+Samples['ttH_H0PM_ToWWTo2L2Nu']    = {'nanoAOD' :'/ttHiggs0PMToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+##Samples['ttH_H0PH_ToWWTo2L2Nu']    = {'nanoAOD' :''}
+##Samples['ttH_H0L1_ToWWTo2L2Nu']    = {'nanoAOD' :''}
+Samples['ttH_H0M_ToWWTo2L2Nu']     = {'nanoAOD' :'/ttHiggs0MToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+#
+##Samples['ttH_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :''}
+Samples['ttH_H0Mf05_ToWWTo2L2Nu']  = {'nanoAOD' :'/ttHiggs0Mf05ph0ToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+##Samples['ttH_H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :''}
+
