@@ -4,7 +4,20 @@ As these are not available in the Yellow Report 4 (https://twiki.cern.ch/twiki/b
 
 ### ggH
 
-Nothing yet, still working on this
+The ggH cross section was obtained using iHixs 2.0 (https://github.com/dulatf/ihixs). This is NOT the same tool that was used to compute the values listed in the YR4. However, in the YR4 values the top and bottom mass effects are only up to NLO, while the cross sections themselves are at NNLO+NNLL (QCD only) accuracy. The NNLO corrections are not valid for MH > 400 GeV. iHixs contains fixed order numbers for large Higgs masses.
+
+Follow the documentation on the GitHub page to install iHixs. Additionaly it requires LHAPDF v6, Boost v1.6 and Cuba v4.2 to run. The first two are available on lxplus, while Cuba (http://www.feynarts.de/cuba/) can be installed separately with no problems.
+
+An example command to run the program:
+
+    ./ihixs -i default.card
+
+# References:
+iHixs 2:
+    https://arxiv.org/abs/1802.00827
+
+Cuba 4.2:
+    http://www.feynarts.de/cuba/
 
 ### VBF
 
