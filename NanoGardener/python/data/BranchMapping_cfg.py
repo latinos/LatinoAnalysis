@@ -38,7 +38,7 @@ _ElepT_branches = [
   ## TrigMaker
   'TriggerEmulator',
   # trigger efficiencies - added below
-  ## l3kinProducer 
+  ## l3kinProducer
   'WH3l_ZVeto',
   'WH3l_flagOSSF',
   #'WH3l_njet',
@@ -110,6 +110,8 @@ _ElepT_branches = [
   'HM_WptOvHak4M',
   'HM_Hlnjj_mass',
   'HM_Hlnjj_mt',
+  'HM_idxWfat_noTau21Cut',
+  'HM_HlnFatMass_noTau21Cut',
   ## EFT MEs
   'hm'
   'me_vbf_hsm'
@@ -162,7 +164,7 @@ _MET_branches = [
   'WlepMt_whss',
   'PfMetDivSumMet',
   # trigger efficiencies - added below
-  ## l3kinProducer 
+  ## l3kinProducer
   'WH3l_mtlmet',
   'WH3l_dphilmet',
   'WH3l_ptWWW',
@@ -206,6 +208,8 @@ _MET_branches = [
   'HM_vbfjj_jj_mass',
   'HM_IsVbfFat',
   'HM_IsVbfjj',
+  'HM_idxWfat_noTau21Cut',
+  'HM_HlnFatMass_noTau21Cut',
   ## EFT MEs
   'hm'
   'me_vbf_hsm'
@@ -337,7 +341,7 @@ _Fatjet_syst_branches = [
   'CleanFatJet_jetIdx',
   'CleanJetNotFat_jetIdx',
   'CleanJetNotFat_deltaR',
-  
+
   'VBS_category',
   'VBS_jets_maxmjj_massWZ',
   'VBS_jets_maxmjj_maxPt',
@@ -370,6 +374,8 @@ _Fatjet_syst_branches = [
   'HM_vbfFat_jj_dEta',
   'HM_vbfFat_jj_mass',
   'HM_IsVbfFat',
+  'HM_idxWfat_noTau21Cut',
+  'HM_HlnFatMass_noTau21Cut'
 ]
 
 ## TrigMaker
@@ -381,13 +387,13 @@ _MupT_branches.extend(NewVar_MC_dict['F'])
 for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_cfg"]:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
   for key in mod.mvaDic.iterkeys():
-    if key not in _ElepT_branches: 
+    if key not in _ElepT_branches:
       _ElepT_branches.append(key)
-    if key not in _MupT_branches:  
+    if key not in _MupT_branches:
       _MupT_branches.append(key)
-    if key not in _MET_branches: 
+    if key not in _MET_branches:
       _MET_branches.append(key)
-    if key not in _JES_branches: 
+    if key not in _JES_branches:
       _JES_branches.append(key)
 
 ## formulas MC
@@ -413,7 +419,7 @@ for version in var.MuonWP.keys():
   for wp in var.MuonWP[version]['TightObjWP']:
     for postfix in wp_sf_pf:
       if key not in _MupT_branches:
-        _MupT_branches.append(key)  
+        _MupT_branches.append(key)
 
 
 branch_mapping = {}
@@ -503,10 +509,4 @@ for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
   branch_mapping['JES'+source+"up"] = {
     'branches': _JES_branches,
     'suffix': '_JES'+source+'up'
-  } 
-
-
-
-
-
-
+  }
