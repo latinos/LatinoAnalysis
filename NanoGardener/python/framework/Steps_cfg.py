@@ -1258,6 +1258,38 @@ Steps = {
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
                   'module'   : 'MHSemiLepVars()',
                },
+  'MH2HDMaBDTsplit' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MVAsplitter' ,
+                  'module'   : 'MVAsplitter("RPLME_SAMPLE", "LatinoAnalysis/NanoGardener/python/data/MH2HDMaBDTsplitter_cfg.py", "MH2HDMaBDT")',
+               },
+  'MHSemiLepMVA' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
+                  'module'   : 'MonoHiggsMVA()',
+               },
+
+  'MHskim4BDT' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/MHskim4BDT_branches.txt',
+                  #'selection': '"MH2HDMaBDT_isTrainingEvent && idx_j1 > -0.5 && Whad_mass > 65. && Whad_mass < 105."',
+                  'selection': '"(nLepton >= 1 && \
+                               Alt$(Lepton_pt[1],0) < 10. && \
+                               (Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5) && \
+                               PuppiMET_pt > 50. && \
+                               Lepton_pt[0] > 30 && \
+                               Sum$(CleanJet_pt>30.)>=2 && \
+                               idx_j1 > -0.5 && \
+                               MH2HDMaBDT_isTrainingEvent && \
+                               Whad_mass > 65. && Whad_mass < 105.)"',
+               },
 
   'MHSwitch' : { 
                   'isChain'  : False ,
