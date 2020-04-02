@@ -225,11 +225,12 @@ class HMlnjjVarsClass(Module):
             cutJ_base = [Wfat_pt > 200, abs(Wfat_eta)<2.4, thisWptOvHfatM > 0.4]
 
             if  all(cutJ_base):
-                idxWfat_noTau21Cut = ix
-                HlnFatMass_noTau21Cut = thisHlnFat_mass
-                
+                if idxWfat_noTau21Cut == -999:
+                    idxWfat_noTau21Cut = ix
+                    HlnFatMass_noTau21Cut = thisHlnFat_mass
+
                 # require tau21 cut for standard boosted category
-                if (Wfat_tau21 < self.tau21WP):
+                if Wfat_tau21 < self.tau21WP:
                     CleanFatJetPassMBoosted['pt'].append(Wfat_pt)
                     CleanFatJetPassMBoosted['mass'].append(Wfat_mass)
                     CleanFatJetPassMBoosted['eta'].append(Wfat_eta)
