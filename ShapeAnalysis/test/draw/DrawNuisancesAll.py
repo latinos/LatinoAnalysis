@@ -32,7 +32,7 @@ if __name__ == '__main__':
     parser.add_option('--dryRun'         , dest='dryRun'         , help='allow a dry run only '                      , default=None )
     parser.add_option('--drawYields'     , dest='drawYields'     , help='draw yields of the plots '                  , default='0' )
     parser.add_option('--joinSubsamples' , dest='joinSubsamples' , help='Add the histograms of subsamples'           , default='0' )
-    parser.add_option('--onlySample+'    , dest='onlySample'     , help='Only plot the requested sample '            , default=None )
+    parser.add_option('--onlySample'    , dest='onlySample'     , help='Only plot the requested sample '            , default=None )
     
 
     (opt, args) = parser.parse_args()
