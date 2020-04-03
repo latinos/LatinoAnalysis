@@ -529,7 +529,7 @@ class PostProcMaker():
            addDeclareLines(subtarget)
        elif 'declare' in step:
          #fPy.write(self._Steps[iStep]['declare']+'\n')
-         fPy.write(self.customizeDeclare(s)+'\n')
+         fPy.write(self.customizeDeclare(s, iSample)+'\n')
 
      addDeclareLines(iStep)
 
@@ -722,7 +722,7 @@ class PostProcMaker():
      return module
 
 
-   def customizeDeclare(self,iStep):
+   def customizeDeclare(self,iStep, iSample):
      declare = self._Steps[iStep]['declare']
 
      # "CMSSW" version
