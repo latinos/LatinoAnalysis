@@ -1,3 +1,4 @@
+import copy
 Trigger = {
 
 
@@ -631,11 +632,11 @@ Trigger = {
                        }
 }
 
-Trigger['Full2016v4'] = Trigger['Full2016v2'] 
-Trigger['Full2016v5'] = Trigger['Full2016v2'] # TODO: update eff new Ele WP 
-Trigger['Full2016v5_mh'] = Trigger['Full2016v2'] # TODO: update eff new Ele WP 
-Trigger['Full2017v4'] = Trigger['Full2017v2'] 
-Trigger['Full2017v5'] = Trigger['Full2017v2'] 
+Trigger['Full2016v4']    = copy.deepcopy(Trigger['Full2016v2']) 
+Trigger['Full2016v5']    = copy.deepcopy(Trigger['Full2016v2']) # TODO: update eff new Ele WP 
+Trigger['Full2016v5_mh'] = copy.deepcopy(Trigger['Full2016v2']) # TODO: update eff new Ele WP 
+Trigger['Full2017v4']    = copy.deepcopy(Trigger['Full2017v2']) 
+Trigger['Full2017v5']    = copy.deepcopy(Trigger['Full2017v2']) 
 
 for period in Trigger['Full2017v5']:
     for leg in Trigger['Full2017v5'][period]['LegEff']:
@@ -649,12 +650,16 @@ for period in Trigger['Full2017v5']:
         
     
 
-Trigger['Full2018v4'] = Trigger['Full2018'] 
+Trigger['Full2018v4'] = copy.deepcopy(Trigger['Full2018'])
 
 
-Trigger['Full2016v6'] = Trigger['Full2016v5']
-Trigger['Full2017v6'] = Trigger['Full2017v5']
-Trigger['Full2018v6'] = Trigger['Full2018']
+Trigger['Full2016v6'] = copy.deepcopy(Trigger['Full2016v5'])
+Trigger['Full2017v6'] = copy.deepcopy(Trigger['Full2017v5'])
+Trigger['Full2018v6'] = copy.deepcopy(Trigger['Full2018'])
+
+Trigger['Full2016v7'] = copy.deepcopy(Trigger['Full2016v6'])
+Trigger['Full2017v7'] = copy.deepcopy(Trigger['Full2017v6'])
+Trigger['Full2018v7'] = copy.deepcopy(Trigger['Full2018v6'])
 
 
 NewVar_MC_dict = {
