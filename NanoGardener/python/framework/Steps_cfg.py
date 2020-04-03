@@ -4097,6 +4097,27 @@ Steps = {
                                 ] ,
                  },
 
+  'trainDYMVA_0j'   : {
+                 'isChain'    : False ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : True  ,
+                 'selection'  : '"(Alt$(CleanJet_pt[0], 0) < 30 \
+                                   && mll>12 && Lepton_pt[0]>25 && Lepton_pt[1]>10 && (nLepton>=2 && Alt$(Lepton_pt[2],0)<10) \
+                                   && abs(Lepton_eta[0])<2.5 && abs(Lepton_eta[1])<2.5 \
+                                   && ptll>30 && PuppiMET_pt > 20 && fabs(91.1876 - mll) > 15 \
+                                   && ((Lepton_pdgId[0]*Lepton_pdgId[1] == -11*11) || (Lepton_pdgId[0]*Lepton_pdgId[1] == -13*13)))"' ,
+                 'onlySample' : [
+                                 ##   2016   ###
+                                 #### DY
+                                 'DYJetsToLL_M-10to50','DYJetsToLL_M-10to50-LO','DYJetsToLL_M-10to50_ext1',
+                                 'DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-50-LO_ext2',
+                                 #### Higgs
+                                 'GluGluHToWWTo2L2Nu_M125_CUETDown','GluGluHToWWTo2L2Nu_M125_CUETDown',
+                                 'GluGluHToWWTo2L2NuAMCNLO_M125','GluGluHToWWTo2L2NuPowheg_M125'
+                                ] ,
+                 },
+
+
   ##################################################################
   ########### VBSjjlnu semileptonic analysis SKIM
   #################################################################
