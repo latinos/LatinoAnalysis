@@ -73,7 +73,7 @@ def addJESchainMembers():
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.l3KinProducer' ,
                   'declare'    : '',
-                  'module'     : 'l4KinProducer(branch_map="%s")' %mapname ,
+                  'module'     : 'l3KinProducer(branch_map="%s")' %mapname ,
                }
       dictionary['l4Kin_'+mapname] = {
                   'isChain'    : False ,
