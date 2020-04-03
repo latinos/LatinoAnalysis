@@ -1828,7 +1828,7 @@ Steps = {
                 'do4MC': False,
                 'do4Data': True,
                 'import': 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2',
-                'declare': 'corr_fatjet_data = createJMECorrector(isMC=False,dataYear=RPLME_YEAR,jesUncert="Total", redojec=True, jetType="AK8PFPuppi")',
+                'declare': 'corr_fatjet_data = createJMECorrector(isMC=False,dataYear=RPLME_YEAR, runPeriod="RPLME_RUNPERIOD", jesUncert="Total", redojec=True, jetType="AK8PFPuppi")',
                 'module':  'corr_fatjet_data()'
     },
 
@@ -1837,7 +1837,7 @@ Steps = {
                 'do4MC': True,
                 'do4Data': False,
                 'import': 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2',
-                'declare': 'corr_fatjet_mc = createJMECorrector(isMC=True,dataYear=RPLME_YEAR, jesUncert="Total", redojec=True, jetType="AK8PFPuppi")',
+                'declare': 'corr_fatjet_mc = createJMECorrector(isMC=True,dataYear=RPLME_YEAR,  jesUncert="Total", redojec=True, jetType="AK8PFPuppi")',
                 'module':  'corr_fatjet_mc()'
     },
 

@@ -535,7 +535,7 @@ class PostProcMaker():
            addDeclareLines(subtarget)
        elif 'declare' in step:
          #fPy.write(self._Steps[iStep]['declare']+'\n')
-         fPy.write(self.customizeDeclare(s)+'\n')
+         fPy.write(self.customizeDeclare(s, iSample)+'\n')
 
      addDeclareLines(iStep)
 
@@ -724,10 +724,11 @@ class PostProcMaker():
      if 'RPLME_SAMPLE' in module :
        module = module.replace('RPLME_SAMPLE',iSample)
 
+
      return module
 
 
-   def customizeDeclare(self,iStep):
+   def customizeDeclare(self,iStep, iSample):
      declare = self._Steps[iStep]['declare']
 
      # "CMSSW" version
@@ -741,6 +742,13 @@ class PostProcMaker():
     # YEAR
      if 'RPLME_YEAR' in declare :
        declare = declare.replace('RPLME_YEAR',self._prodYear)
+
+     if 'RPLME_RUNPERIOD' in declare:
+       pattern = r"\S_Run2018(?P<period>[A-Z])-"
+       match = re.search(pattern,iSample)
+       if match:
+        print "Run period", match.group('period')
+        declare = declare.replace('RPLME_RUNPERIOD', match.group('period') )
 
      return declare
 
