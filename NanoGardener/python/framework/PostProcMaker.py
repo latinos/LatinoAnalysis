@@ -718,6 +718,7 @@ class PostProcMaker():
      if 'RPLME_SAMPLE' in module :
        module = module.replace('RPLME_SAMPLE',iSample)
 
+
      return module
 
 
@@ -735,6 +736,13 @@ class PostProcMaker():
     # YEAR
      if 'RPLME_YEAR' in declare :
        declare = declare.replace('RPLME_YEAR',self._prodYear)
+
+     if 'RPLME_RUNPERIOD' in declare:
+       pattern = r"\S_Run2018(?P<period>[A-Z])-"
+       match = re.search(pattern,iSample)
+       if match:
+        print "Run period", match.group('period')
+        declare = declare.replace('RPLME_RUNPERIOD', match.group('period') )
 
      return declare
 
