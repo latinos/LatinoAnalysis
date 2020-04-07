@@ -38,7 +38,7 @@ _ElepT_branches = [
   ## TrigMaker
   'TriggerEmulator',
   # trigger efficiencies - added below
-  ## l3kinProducer 
+  ## l3kinProducer
   'WH3l_ZVeto',
   'WH3l_flagOSSF',
   #'WH3l_njet',
@@ -108,8 +108,34 @@ _ElepT_branches = [
   'HM_Wlep_mt',
   'HM_Flavlnjj',
   'HM_WptOvHak4M',
+  'HM_CleanFatJetPassMBoosted_WptOvHfatM',
+  'HM_CleanFatJetPassMBoosted_HlnFat_mass',
+  'HM_CleanFatJetPassMBoosted_CFatJetIdx',
   'HM_Hlnjj_mass',
   'HM_Hlnjj_mt',
+  'HM_idxWfat_noTau21Cut',
+  'HM_HlnFatMass_noTau21Cut',
+  ## EFT MEs
+  'hm'
+  'me_vbf_hsm'
+  'me_vbf_hm'
+  'me_vbf_hp'
+  'me_vbf_hl'
+  'me_vbf_mixhm'
+  'me_vbf_mixhp'
+  'me_wh_hsm'
+  'me_wh_hm'
+  'me_wh_hp'
+  'me_wh_hl'
+  'me_wh_mixhm'
+  'me_wh_mixhp'
+  'me_zh_hsm'
+  'me_zh_hm'
+  'me_zh_hp'
+  'me_zh_hl'
+  'me_zh_mixhm'
+  'me_zh_mixhp'
+  'me_qcd_hsm'
 ]
 
 _MupT_branches = _ElepT_branches
@@ -141,7 +167,7 @@ _MET_branches = [
   'WlepMt_whss',
   'PfMetDivSumMet',
   # trigger efficiencies - added below
-  ## l3kinProducer 
+  ## l3kinProducer
   'WH3l_mtlmet',
   'WH3l_dphilmet',
   'WH3l_ptWWW',
@@ -177,6 +203,9 @@ _MET_branches = [
   'HM_IsResolved',
   'HM_IsBTopTagged',
   'HM_WptOvHak4M',
+  'HM_CleanFatJetPassMBoosted_WptOvHfatM',
+  'HM_CleanFatJetPassMBoosted_HlnFat_mass',
+  'HM_CleanFatJetPassMBoosted_CFatJetIdx',
   'HM_Hlnjj_mass',
   'HM_Hlnjj_mt',
   'HM_vbfFat_jj_dEta',
@@ -185,6 +214,29 @@ _MET_branches = [
   'HM_vbfjj_jj_mass',
   'HM_IsVbfFat',
   'HM_IsVbfjj',
+  'HM_idxWfat_noTau21Cut',
+  'HM_HlnFatMass_noTau21Cut',
+  ## EFT MEs
+  'hm'
+  'me_vbf_hsm'
+  'me_vbf_hm'
+  'me_vbf_hp'
+  'me_vbf_hl'
+  'me_vbf_mixhm'
+  'me_vbf_mixhp'
+  'me_wh_hsm'
+  'me_wh_hm'
+  'me_wh_hp'
+  'me_wh_hl'
+  'me_wh_mixhm'
+  'me_wh_mixhp'
+  'me_zh_hsm'
+  'me_zh_hm'
+  'me_zh_hp'
+  'me_zh_hl'
+  'me_zh_mixhm'
+  'me_zh_mixhp'
+  'me_qcd_hsm'
 ]
 
 _JES_branches = ['CleanJet_pt']
@@ -261,6 +313,27 @@ _JES_branches += [
   'HM_largest_nonW_mjj',
   'HM_IsVbfFat',
   'HM_IsVbfjj',
+  ## EFT MEs
+  'hm'
+  'me_vbf_hsm'
+  'me_vbf_hm'
+  'me_vbf_hp'
+  'me_vbf_hl'
+  'me_vbf_mixhm'
+  'me_vbf_mixhp'
+  'me_wh_hsm'
+  'me_wh_hm'
+  'me_wh_hp'
+  'me_wh_hl'
+  'me_wh_mixhm'
+  'me_wh_mixhp'
+  'me_zh_hsm'
+  'me_zh_hm'
+  'me_zh_hp'
+  'me_zh_hl'
+  'me_zh_mixhm'
+  'me_zh_mixhp'
+  'me_qcd_hsm'
 ]
 
 _Fatjet_syst_branches = [
@@ -274,7 +347,7 @@ _Fatjet_syst_branches = [
   'CleanFatJet_jetIdx',
   'CleanJetNotFat_jetIdx',
   'CleanJetNotFat_deltaR',
-  
+
   'VBS_category',
   'VBS_jets_maxmjj_massWZ',
   'VBS_jets_maxmjj_maxPt',
@@ -307,6 +380,8 @@ _Fatjet_syst_branches = [
   'HM_vbfFat_jj_dEta',
   'HM_vbfFat_jj_mass',
   'HM_IsVbfFat',
+  'HM_idxWfat_noTau21Cut',
+  'HM_HlnFatMass_noTau21Cut'
 ]
 
 ## TrigMaker
@@ -318,17 +393,17 @@ _MupT_branches.extend(NewVar_MC_dict['F'])
 for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_cfg"]:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
   for key in mod.mvaDic.iterkeys():
-    if key not in _ElepT_branches: 
+    if key not in _ElepT_branches:
       _ElepT_branches.append(key)
-    if key not in _MupT_branches:  
+    if key not in _MupT_branches:
       _MupT_branches.append(key)
-    if key not in _MET_branches: 
+    if key not in _MET_branches:
       _MET_branches.append(key)
-    if key not in _JES_branches: 
+    if key not in _JES_branches:
       _JES_branches.append(key)
 
 ## formulas MC
-for cfg in ['formulasToAdd_MC_2016', 'formulasToAdd_MC_2017', 'formulasToAdd_MC_2018', 'formulasToAdd_MC_MonoH']:
+for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formulasToAdd_MC_Full2017v6', 'formulasToAdd_MC_Full2017v7', 'formulasToAdd_MC_Full2018v6', 'formulasToAdd_MC_Full2018v7', 'formulasToAdd_MC_MonoH']:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
   for key in mod.formulas.iterkeys():
     if "XS" not in key and key not in _ElepT_branches:
@@ -350,7 +425,7 @@ for version in var.MuonWP.keys():
   for wp in var.MuonWP[version]['TightObjWP']:
     for postfix in wp_sf_pf:
       if key not in _MupT_branches:
-        _MupT_branches.append(key)  
+        _MupT_branches.append(key)
 
 
 branch_mapping = {}
@@ -440,10 +515,4 @@ for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
   branch_mapping['JES'+source+"up"] = {
     'branches': _JES_branches,
     'suffix': '_JES'+source+'up'
-  } 
-
-
-
-
-
-
+  }

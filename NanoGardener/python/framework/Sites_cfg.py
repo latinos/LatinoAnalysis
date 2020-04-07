@@ -4,10 +4,13 @@ Sites = {
   'iihe' : { 
               'lsCmd'       : 'ls' ,
               'mkDir'       : False , 
-              'xrootdPath'  : 'dcap://maite.iihe.ac.be/' ,
+              #'xrootdPath'  : 'dcap://maite.iihe.ac.be/' ,
+              'xrootdPath'  : '',
               'srmPrefix'   : 'srm://maite.iihe.ac.be:8443' ,
-              'treeBaseDir' : '/pnfs/iihe/cms/store/user/xjanssen/HWWNano/' ,
-              'batchQueues' : ['localgrid@cream02']
+              #'treeBaseDir' : '/pnfs/iihe/cms/store/user/xjanssen/HWWNano/' ,
+              'treeBaseDir' : '/pnfs/iihe/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
+              'batchQueues' : ['localgrid@cream02'],
+              'slc_ver'     : 6
            } ,
 
   'cern' : {
@@ -15,7 +18,8 @@ Sites = {
               'mkDir'       : True ,
               'xrootdPath'  : 'root://eoscms.cern.ch/' ,
               'treeBaseDir' : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
-              'batchQueues' : ['8nh','1nd','2nd','1nw']
+              'batchQueues' : ['8nh','1nd','2nd','1nw'],
+              'slc_ver'     : 7
            } ,
 
   'sdfarm' : {

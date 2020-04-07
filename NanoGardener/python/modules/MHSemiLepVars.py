@@ -42,10 +42,24 @@ class MHSemiLepVars(Module):
             for obj in self.obj:
                 self.out.branch('MHlnjj_'+var+'_'+obj, 'F')
 
+        self.out.branch('MHlnjj_pt_l',     'F')
+        self.out.branch('MHlnjj_pt_j1',    'F')
+        self.out.branch('MHlnjj_pt_j2',    'F')
+
+        self.out.branch('MHlnjj_eta_l',     'F')
+        self.out.branch('MHlnjj_eta_j1',    'F')
+        self.out.branch('MHlnjj_eta_j2',    'F')
+
+        self.out.branch('MHlnjj_idx_j3',    'I')
+
         self.out.branch('MHlnjj_PTljj_D_PTmet',     'F')
         self.out.branch('MHlnjj_PTljj_D_Mlmetjj',   'F')
         self.out.branch('MHlnjj_MINPTlj_D_PTmet',   'F')
         self.out.branch('MHlnjj_MINPTlj_D_Mlmetjj', 'F')
+        self.out.branch('MHlnjj_MAXPTlj_D_PTmet',   'F')
+        self.out.branch('MHlnjj_MAXPTlj_D_Mlmetjj', 'F')
+        self.out.branch('MHlnjj_MTljj_D_PTmet',     'F')
+        self.out.branch('MHlnjj_MTljj_D_Mlmetjj',   'F')
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -72,7 +86,15 @@ class MHSemiLepVars(Module):
         if var == 'dphi':   val = abs(obj1.DeltaPhi(obj2)) 
         elif var == 'deta': val = abs(obj1.Eta() - obj2.Eta()) 
         elif var == 'dr':   val = obj1.DeltaR(obj2)
-        elif var == 'mt':   val = obj1.Mt()
+        elif var == 'mt':
+            if obj == 'met': val = obj1.Pt()  
+            elif 'met' in obj:
+                met, temp = self.getVec('met')
+                r_obj, temp = self.getVec(obj.replace('met', ''))
+                val = math.sqrt( r_obj.M()**2 + 2 * (r_obj.Et()*met.Pt() - r_obj.Pt()*met.Pt()*math.cos(r_obj.DeltaPhi(met))))
+            else: 
+                obj1, obj2 = self.getVec(obj[0]+'V'+obj[1:])
+                val = math.sqrt( obj1.M()**2 + obj2.M()**2 + 2 * (obj1.Et()*obj2.Et() - obj1.Pt()*obj2.Pt()*math.cos(obj1.DeltaPhi(obj2))))
         elif var == 'pz':   val = obj1.Pz()
         elif var == 'pt':   val = obj1.Pt()
         elif var == 'm':    val = obj1.M()
@@ -81,7 +103,8 @@ class MHSemiLepVars(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        jets = Collection(event, 'Jet')
+        jets = Collection(event, 'CleanJet')
+        org_jets = Collection(event, 'Jet')
         leps = Collection(event, 'Lepton')
 
         if event.idx_j1 < 0 or event.idx_j2 < 0:
@@ -93,10 +116,24 @@ class MHSemiLepVars(Module):
                 for obj in self.obj:
                     self.out.fillBranch('MHlnjj_'+var+'_'+obj, -999.)
 
+            self.out.fillBranch('MHlnjj_pt_l',     -999.)
+            self.out.fillBranch('MHlnjj_pt_j1',    -999.)
+            self.out.fillBranch('MHlnjj_pt_j2',    -999.)
+
+            self.out.fillBranch('MHlnjj_eta_l',     -999.)
+            self.out.fillBranch('MHlnjj_eta_j1',    -999.)
+            self.out.fillBranch('MHlnjj_eta_j2',    -999.)
+
+            self.out.fillBranch('MHlnjj_idx_j3',    -1)
+
             self.out.fillBranch('MHlnjj_PTljj_D_PTmet',     -999.)
             self.out.fillBranch('MHlnjj_PTljj_D_Mlmetjj',   -999.)
             self.out.fillBranch('MHlnjj_MINPTlj_D_PTmet',   -999.)
             self.out.fillBranch('MHlnjj_MINPTlj_D_Mlmetjj', -999.)
+            self.out.fillBranch('MHlnjj_MAXPTlj_D_PTmet',   -999.)
+            self.out.fillBranch('MHlnjj_MAXPTlj_D_Mlmetjj', -999.)
+            self.out.fillBranch('MHlnjj_MTljj_D_PTmet',     -999.)
+            self.out.fillBranch('MHlnjj_MTljj_D_Mlmetjj',   -999.)
              
             return True
 
@@ -105,8 +142,11 @@ class MHSemiLepVars(Module):
         #self.MET.SetPtEtaPhiE(getattr(event, "PuppiMET_pt"), 0.0, getattr(event, "PuppiMET_phi"), getattr(event, "PuppiMET_sumEt"))
         
         # Jets
-        self.J1.SetPtEtaPhiM(jets[event.idx_j1].pt, jets[event.idx_j1].eta, jets[event.idx_j1].phi, jets[event.idx_j1].mass)
-        self.J2.SetPtEtaPhiM(jets[event.idx_j2].pt, jets[event.idx_j2].eta, jets[event.idx_j2].phi, jets[event.idx_j2].mass)
+        #self.J1.SetPtEtaPhiM(jets[event.idx_j1].pt, jets[event.idx_j1].eta, jets[event.idx_j1].phi, jets[event.idx_j1].mass)
+        #self.J2.SetPtEtaPhiM(jets[event.idx_j2].pt, jets[event.idx_j2].eta, jets[event.idx_j2].phi, jets[event.idx_j2].mass)
+        self.J1.SetPtEtaPhiM(jets[event.idx_j1].pt, jets[event.idx_j1].eta, jets[event.idx_j1].phi, org_jets[jets[event.idx_j1].jetIdx].mass)
+        self.J2.SetPtEtaPhiM(jets[event.idx_j2].pt, jets[event.idx_j2].eta, jets[event.idx_j2].phi, org_jets[jets[event.idx_j2].jetIdx].mass)
+        
 
         # LEP
         if abs(leps[0].pdgId) == 11:
@@ -128,10 +168,27 @@ class MHSemiLepVars(Module):
             for obj in self.obj:
                 self.out.fillBranch('MHlnjj_'+var+'_'+obj, self.getVal(var, obj))
 
+        self.out.fillBranch('MHlnjj_pt_l',     self.LEP.Pt())
+        self.out.fillBranch('MHlnjj_pt_j1',    jets[event.idx_j1].pt)
+        self.out.fillBranch('MHlnjj_pt_j2',    jets[event.idx_j2].pt)
+
+        self.out.fillBranch('MHlnjj_eta_l',     self.LEP.Eta())
+        self.out.fillBranch('MHlnjj_eta_j1',    jets[event.idx_j1].eta)
+        self.out.fillBranch('MHlnjj_eta_j2',    jets[event.idx_j2].eta)
+
         self.out.fillBranch('MHlnjj_PTljj_D_PTmet',     self.LJJ.Pt()/self.MET.Pt())
         self.out.fillBranch('MHlnjj_PTljj_D_Mlmetjj',   self.LJJ.Pt()/self.LMETJJ.M())
         self.out.fillBranch('MHlnjj_MINPTlj_D_PTmet',   min(self.LEP.Pt(), self.J2.Pt())/self.MET.Pt())
         self.out.fillBranch('MHlnjj_MINPTlj_D_Mlmetjj', min(self.LEP.Pt(), self.J2.Pt())/self.LMETJJ.M())
+        self.out.fillBranch('MHlnjj_MAXPTlj_D_PTmet',   max(self.LEP.Pt(), self.J1.Pt())/self.MET.Pt())
+        self.out.fillBranch('MHlnjj_MAXPTlj_D_Mlmetjj', max(self.LEP.Pt(), self.J1.Pt())/self.LMETJJ.M())
+        self.out.fillBranch('MHlnjj_MTljj_D_PTmet',     self.getVal('mt', 'ljj')/self.MET.Pt())
+        self.out.fillBranch('MHlnjj_MTljj_D_Mlmetjj',   self.getVal('mt', 'ljj')/self.LMETJJ.M())
 
+        all_cj = range(len(jets))
+        all_cj.remove(event.idx_j1)
+        all_cj.remove(event.idx_j2)
+        if len(all_cj) > 0: self.out.fillBranch('MHlnjj_idx_j3',    all_cj[0])
+        else: self.out.fillBranch('MHlnjj_idx_j3',    -1)
         return True
 

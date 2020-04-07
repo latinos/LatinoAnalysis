@@ -60,6 +60,9 @@ class HMlnjjVarsClass(Module):
         for myvar in self.list_WJetVar:
             self.out.branch("HM_CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='HM_nCleanFatJetPassMBoosted')
 
+        # For Boosted-like selection, not requiring tau21 cut
+        self.out.branch("HM_idxWfat_noTau21Cut", "I")
+        self.out.branch("HM_HlnFatMass_noTau21Cut", "F")
 
 
 
@@ -112,6 +115,9 @@ class HMlnjjVarsClass(Module):
         for myvar in self.list_WJetVar:
             CleanFatJetPassMBoosted[myvar]=[]
 
+        # Boosted-like category, not requiring tau21 cut
+        idxWfat_noTau21Cut = -999
+        HlnFatMass_noTau21Cut = -999.
 
         Wfat_Btop   = False
         Wjj_Btop    = False
@@ -216,17 +222,23 @@ class HMlnjjVarsClass(Module):
               # These are already selected in postproduction but to make sure
             # N-subjettiness tau21 = tau2/tau1
               ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetWtagging#2016_scale_factors_and_correctio , high purity cut
-            cutJ_base = [Wfat_pt > 200, abs(Wfat_eta)<2.4,
-                         Wfat_tau21 < self.tau21WP, thisWptOvHfatM > 0.4]
+            cutJ_base = [Wfat_pt > 200, abs(Wfat_eta)<2.4, thisWptOvHfatM > 0.4]
+
             if  all(cutJ_base):
-                CleanFatJetPassMBoosted['pt'].append(Wfat_pt)
-                CleanFatJetPassMBoosted['mass'].append(Wfat_mass)
-                CleanFatJetPassMBoosted['eta'].append(Wfat_eta)
-                CleanFatJetPassMBoosted['phi'].append(Wfat_phi)
-                CleanFatJetPassMBoosted['tau21'].append(Wfat_tau21)
-                CleanFatJetPassMBoosted['WptOvHfatM'].append(thisWptOvHfatM)
-                CleanFatJetPassMBoosted['HlnFat_mass'].append(thisHlnFat_mass)
-                CleanFatJetPassMBoosted['CFatJetIdx'].append(ix)
+                if idxWfat_noTau21Cut == -999:
+                    idxWfat_noTau21Cut = ix
+                    HlnFatMass_noTau21Cut = thisHlnFat_mass
+
+                # require tau21 cut for standard boosted category
+                if Wfat_tau21 < self.tau21WP:
+                    CleanFatJetPassMBoosted['pt'].append(Wfat_pt)
+                    CleanFatJetPassMBoosted['mass'].append(Wfat_mass)
+                    CleanFatJetPassMBoosted['eta'].append(Wfat_eta)
+                    CleanFatJetPassMBoosted['phi'].append(Wfat_phi)
+                    CleanFatJetPassMBoosted['tau21'].append(Wfat_tau21)
+                    CleanFatJetPassMBoosted['WptOvHfatM'].append(thisWptOvHfatM)
+                    CleanFatJetPassMBoosted['HlnFat_mass'].append(thisHlnFat_mass)
+                    CleanFatJetPassMBoosted['CFatJetIdx'].append(ix)
 
 
         IsWfat=(len(CleanFatJetPassMBoosted['pt']) > 0 )
@@ -374,7 +386,8 @@ class HMlnjjVarsClass(Module):
         for myvar in self.list_WJetVar:
             self.out.fillBranch( "HM_CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
 
-
+        self.out.fillBranch( "HM_idxWfat_noTau21Cut"   , idxWfat_noTau21Cut )
+        self.out.fillBranch( "HM_HlnFatMass_noTau21Cut", HlnFatMass_noTau21Cut)
 
 
         #self.out.fillBranch( 'Wlep_mt'   , Wlep_mt)

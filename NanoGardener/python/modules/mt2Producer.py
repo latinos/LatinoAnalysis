@@ -34,12 +34,24 @@ class mt2Producer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
 
-        self.out.branch("channel",         "I")
-        self.out.branch("mll",             "F")
-
         self.out.branch("ptmiss",          "F")
         self.out.branch("ptmiss_phi",      "F")
-        self.out.branch("mt2ll",           "F")
+
+        if 'Fake' in self.analysisRegion:
+
+            self.out.branch("mt2llfake0",      "F")
+            self.out.branch("mt2llfake1",      "F")
+            self.out.branch("mt2llfake2",      "F")
+
+        else:
+
+            self.out.branch("channel",         "I")
+            self.out.branch("mll",             "F")
+            self.out.branch("mt2ll",           "F")
+
+            if 'WZ' in self.analysisRegion or 'ttZ' in self.analysisRegion:
+                
+                self.out.branch("deltaMassZ",          "F")
 
         if self.analysisRegion=='':
 
@@ -110,14 +122,19 @@ class mt2Producer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
+        if math.isnan(event.MET_pt): 
+            print 'mt2Producer warning: MET_pt is nan'
+            return False
+
         nLeptons = event.nLepton
 
         if nLeptons<2 :
             return False
 
-        mll       = -1.
-        ptmiss    = -1.
-        mt2ll     = -1.
+        mll        = -1.
+        ptmiss     = -1.
+        mt2ll      = -1.
+        deltaMassZ = -1.
 
         nVetoLeptons = event.nVetoLepton
         
@@ -130,6 +147,12 @@ class mt2Producer(Module):
             lepton = ROOT.TLorentzVector()
             lepton.SetPtEtaPhiM(leptons[iLep].pt, leptons[iLep].eta, leptons[iLep].phi, self.getLeptonMass(leptons[iLep].pdgId))
             lepVect.push_back(lepton)
+            
+        ptmissvec3 = ROOT.TVector3()
+        if hasattr(event, 'METFixEE2017_pt_nom'):
+            ptmissvec3.SetPtEtaPhi(event.METFixEE2017_pt_nom, 0., event.METFixEE2017_phi_nom) 
+        else:
+            ptmissvec3.SetPtEtaPhi(event.MET_pt, 0., event.MET_phi)
         
         # Looking for the leptons to turn into neutrinos
         Lost = []
@@ -145,6 +168,42 @@ class mt2Producer(Module):
             if nLeptons>2 or nVetoLeptons>2: return False
             if leptons[0].pdgId*leptons[1].pdgId<0 : return False
 
+        elif 'Fake' in self.analysisRegion :
+    
+            if nLeptons!=3 or nVetoLeptons>3: return False
+
+            ptmissvec4 = ROOT.TLorentzVector()  
+            ptmissvec4.SetPtEtaPhiM(ptmissvec3.Pt(), 0., ptmissvec3.Phi(), 0.)
+
+            mt2llfakes = [ ] 
+
+            for lref in range (nLeptons) :
+
+                mt2ll_ref = 0.
+
+                for l0 in range (nLeptons) :
+                    if l0!=lref and lepVect[l0].Pt()>=25.:
+                        for l1 in range (l0+1, nLeptons) :
+                            if l1!=lref and lepVect[l1].Pt()>=20.:
+                                if (lepVect[l0] + lepVect[l1]).M()>=20.:
+                                    if leptons[l0].pdgId*leptons[l1].pdgId<0:
+
+                                        mt2ll_ref = self.computeMT2(lepVect[l0], lepVect[l1], ptmissvec4)
+                                        
+                mt2llfakes.append(mt2ll_ref)
+
+            if sum(mt2llfakes)>0.:
+
+                for lref in range (nLeptons):
+                    self.out.fillBranch("mt2llfake"+str(lref), mt2llfakes[lref])
+
+                self.out.fillBranch("ptmiss", ptmissvec3.Pt())
+                self.out.fillBranch("ptmiss_phi", ptmissvec3.Phi())
+
+                return True
+            
+            return False
+
         elif 'WZ' in self.analysisRegion :
                 
             if nLeptons<3 :
@@ -153,7 +212,7 @@ class mt2Producer(Module):
             minDZM = 999.
 
             if 'WZtoWW' in self.analysisRegion:
-                minDZM = 10.
+                minDZM = 15.
                 if nLeptons!=3 or nVetoLeptons>=4:
                     return False
 
@@ -178,6 +237,8 @@ class mt2Producer(Module):
                               
             if lost==-1 :
                 return False
+
+            deltaMassZ = minDZM
 
             if 'WZtoWW' in self.analysisRegion :
                 Lost.append(lost)
@@ -210,7 +271,7 @@ class mt2Producer(Module):
 
                                                         lost0, lost1 = l0, l1
                                                         cutDZM1 = DZM1
-                    
+
                                                     elif 'ZZ' in self.analysisRegion :
 
                                                         if abs(leptons[l2].pdgId)==abs(leptons[l3].pdgId) :
@@ -229,18 +290,14 @@ class mt2Producer(Module):
                                                                     
             if lost0==-1 or lost1==-1 :
                 return False
+                
+            deltaMassZ = cutDZM1
             
             Lost.append(lost0)
             Lost.append(lost1)
 
         # Computing variables to be added to the tree
         W0, W1 = -1, -1
-            
-        ptmissvec3 = ROOT.TVector3()
-        if hasattr(event, 'METFixEE2017_pt_nom'):
-            ptmissvec3.SetPtEtaPhi(event.METFixEE2017_pt_nom, 0., event.METFixEE2017_phi_nom) 
-        else:
-            ptmissvec3.SetPtEtaPhi(event.MET_pt, 0., event.MET_phi)
 
         for iLep in range(nLeptons) :
 
@@ -270,6 +327,9 @@ class mt2Producer(Module):
 
         self.out.fillBranch("channel",    channel)
         self.out.fillBranch("mll",        mll)
+
+        if 'WZ' in self.analysisRegion or 'ttZ' in self.analysisRegion:
+            self.out.fillBranch("deltaMassZ",        deltaMassZ)
 
         if self.analysisRegion=='' or self.analysisRegion=='gen' or self.analysisRegion=='reco':
 

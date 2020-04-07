@@ -25,7 +25,6 @@ Samples = {}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Giulio
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Samples['Zg'] = {'nanoAOD' :'/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM'}
 Samples['Wg_AMCNLOFXFX'] = {'nanoAOD' :'/WGToLNuG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM'} ##!!!!
 Samples['WZTo3LNu'] = {'nanoAOD' :'/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 Samples['WZTo3LNu_ext1'] = {'nanoAOD' :'/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM'}
@@ -59,7 +58,7 @@ Samples['GluGluToWWToTNTN'] = {'nanoAOD' :'/GluGluToWWToTNTN_TuneCP5_13TeV_MCFM7
 
 
 #Signals
-Samples['GluGluHToWWTo2L2NuPowhegNNLOPS_M125_private'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths": ['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluHToWWTo2L2Nu_M125_TuneCP5_MINLO_NNLOPS_13TeV-powheg-JHUGen-pythia8/nanoAOD__Autumn18_102X_nAODv6_Full2018v6_NNLOPS__GluGluHToWWTo2L2NuPowhegNNLOPS_M125_private/200115_095238/0000/']}
+#XJ Samples['GluGluHToWWTo2L2NuPowhegNNLOPS_M125_private'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths": ['/store/group/phys_higgs/cmshww/amassiro/NanoProd/GluGluHToWWTo2L2Nu_M125_TuneCP5_MINLO_NNLOPS_13TeV-powheg-JHUGen-pythia8/nanoAOD__Autumn18_102X_nAODv6_Full2018v6_NNLOPS__GluGluHToWWTo2L2NuPowhegNNLOPS_M125_private/200115_095238/0000/']}
 Samples['GluGluHToWWTo2L2NuPowhegNNLOPS_M125'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M125_TuneCP5_MINLO_NNLOPS_13TeV-powheg-JHUGen-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 #Samples['VBFHToWWTo2L2NuPowheg_M125'] = {'nanoAOD' :'/VBFHToWWTo2L2NuPowheg_M125/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 Samples['VBFHToWWTo2L2Nu_M125_CP5Up'] = {'nanoAOD' :'/VBFHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_CP5Up/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'} ##!!!!
@@ -594,8 +593,8 @@ Samples['VBF_H0PM_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0PMToWWTo2L2Nu_M125_Tune
 Samples['VBF_H0M_ToWWTo2L2Nu'] = {'nanoAOD' : '/VBFHiggs0MToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-powheg2-jhu7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 Samples['VBF_H0Mf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0Mf05ph0ToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 Samples['VBF_H0PH_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0PHToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
-#Samples['VBF_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0PHf05ph0ToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
-#Samples['VBF_H0L1_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1f05ph0ToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
+Samples['VBF_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0PHf05ph0ToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
+Samples['VBF_H0L1_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1ToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 Samples['VBF_H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1f05ph0ToWW2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 Samples['VBF_H0L1Zgf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1Zgf05ph0ToWWTo2L2Nu_M125_TuneCP5_PSw_13TeV-jhugen7-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 

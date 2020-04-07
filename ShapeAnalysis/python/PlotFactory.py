@@ -651,7 +651,7 @@ class PlotFactory:
             else:
               histo_total = fileIn.Get(special_shapeName)
 
-            if variable['divideByBinWidth'] == 1:
+            if variable['divideByBinWidth'] == 1 and histo_total != None:
               histo_total.Scale(1,"width")
             print ' --> ', histo_total
             
