@@ -51,7 +51,7 @@ class mt2Producer(Module):
 
             if 'WZ' in self.analysisRegion or 'ttZ' in self.analysisRegion:
                 
-                self.out.branch("deltaMassZ",          "F")
+                self.out.branch("deltaMassZ",  "F")
 
         if self.analysisRegion=='':
 
