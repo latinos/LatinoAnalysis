@@ -11,8 +11,8 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger im
 import os.path
 
 class EFTReweighter(Module):
-    def __init__(self):
-        
+    def __init__(self, sample):
+        self.sample = sample
         self.cmssw_base = os.getenv('CMSSW_BASE')
         self.cmssw_arch = os.getenv('SCRAM_ARCH')
 
@@ -36,18 +36,16 @@ class EFTReweighter(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
 
-        filename = str(inputFile)[str(inputFile).find("nanoLatino"):str(inputFile).find(".root")+5]
-
-        if "_VBF_H0" in filename :
+        if "VBF_H0" in self.sample :
           self.productionProcess = "VBF"
-        elif "_ZH_H0" in filename :
+        elif "ZH_H0" in self.sample :
           self.productionProcess = "ZH"
-        elif "_WH_H0" in filename :
+        elif "WH_H0" in self.sample :
           self.productionProcess = "WH"
-        elif "_H0" in filename :
+        elif "H0" in self.sample :
           self.productionProcess = "GluGlu"
         else:
-          raise NameError(filename, "is an unrecognised simulation")
+          raise NameError(self.sample, "is an unrecognised simulation")
 
         print("Running MELA EFT reweighter with " + self.productionProcess + " sample")
 
