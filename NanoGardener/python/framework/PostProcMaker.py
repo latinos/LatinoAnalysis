@@ -371,7 +371,9 @@ class PostProcMaker():
      # batchMode Preparation
      elif self._jobMode == 'Batch':
        print "INFO: Using Local Batch"
-       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True)
+       if 'slc7' in os.environ['SCRAM_ARCH'] and self._Sites[self._LocalSite]['slc_ver'] == 6 : use_singularity = True
+       else : use_singularity = False
+       self._jobs = batchJobs('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)
        self._jobs.Add2All('cp '+self._cmsswBasedir+'/src/'+self._haddnano+' .')
        self._jobs.Add2All(preBash)
        self._jobs.AddPy2Sh()
@@ -408,8 +410,12 @@ class PostProcMaker():
              else                 : print command
            # Batch
            elif self._jobMode == 'Batch' :
-             self._jobs.Add(iStep,iTarget,stageOutCmd)
-             self._jobs.Add(iStep,iTarget,rmGarbageCmd)
+             if use_singularity :
+               self._jobs.AddSing(iStep,iTarget,stageOutCmd)
+               self._jobs.AddSing(iStep,iTarget,rmGarbageCmd)
+             else: 
+               self._jobs.Add(iStep,iTarget,stageOutCmd)
+               self._jobs.Add(iStep,iTarget,rmGarbageCmd)
            elif self._jobMode == 'Crab':
              self._crab.AddInputFile(pyFile)
              self._crab.AddCommand(iStep,iTarget,'python '+os.path.basename(pyFile))
@@ -447,11 +453,11 @@ class PostProcMaker():
       # IIHE
       if   self._LocalSite == 'iihe' :
         if self._redo :
-          command += 'srmrm '+self._Sites[self._LocalSite]['srmPrefix']+storeFile+' ; '
+          command += 'gfal-rm '+self._Sites[self._LocalSite]['srmPrefix']+storeFile+' ; '
         if not cpMode:
-          command += 'lcg-cp '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
+          command += 'gfal-copy '+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
         else:
-          command += 'lcg-cp '+self._Sites[self._LocalSite]['srmPrefix']+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
+          command += 'gfal-copy '+self._Sites[self._LocalSite]['srmPrefix']+prodFile+' '+self._Sites[self._LocalSite]['srmPrefix']+storeFile
       # CERN
       elif self._LocalSite == 'cern' :
         if not cpMode:
@@ -529,7 +535,7 @@ class PostProcMaker():
            addDeclareLines(subtarget)
        elif 'declare' in step:
          #fPy.write(self._Steps[iStep]['declare']+'\n')
-         fPy.write(self.customizeDeclare(s)+'\n')
+         fPy.write(self.customizeDeclare(s, iSample)+'\n')
 
      addDeclareLines(iStep)
 
@@ -714,10 +720,15 @@ class PostProcMaker():
      if 'RPLME_YEAR' in module :
        module = module.replace('RPLME_YEAR',self._prodYear)
 
+     # SAMPLE
+     if 'RPLME_SAMPLE' in module :
+       module = module.replace('RPLME_SAMPLE',iSample)
+
+
      return module
 
 
-   def customizeDeclare(self,iStep):
+   def customizeDeclare(self,iStep, iSample):
      declare = self._Steps[iStep]['declare']
 
      # "CMSSW" version
@@ -731,6 +742,13 @@ class PostProcMaker():
     # YEAR
      if 'RPLME_YEAR' in declare :
        declare = declare.replace('RPLME_YEAR',self._prodYear)
+
+     if 'RPLME_RUNPERIOD' in declare:
+       pattern = r"\S_Run"+ str(self._prodYear)+r"(?P<period>[A-Z])-"
+       match = re.search(pattern,iSample)
+       if match:
+        print "Run period", match.group('period')
+        declare = declare.replace('RPLME_RUNPERIOD', match.group('period') )
 
      return declare
 
@@ -951,25 +969,26 @@ class PostProcMaker():
                if nin > nnom:
                  # If there are more nuisance variation files than the nominal files, merge the variations
                  # mkShapes cannot process the nuisance variations with more files than nominal
-                 nmerge = nin / nnom
-                 if nin % nnom != 0:
-                   nmerge += 1
 
-                 merging = self.buildHadd(iSample, FileInList, cutby='filecount', threshold=nmerge)
+                 NewFileInList = []
+                 for index,f in enumerate(FileInList):
+                   NewFileInList.append(re.sub("part.*root","part"+str(index)+".root",f))
+
+                 nmerge = nin - nnom
+                 for iFile in NewFileInList[:nnom-1]:
+                   tFile = self._targetDir + os.path.basename(iFile).replace(iSample,tSample)
+                   if not tFile in FileOutList or self._redo:
+                     os.system(self.mkStageOut(iFile,tFile,True))
 
                  tmpdir = tempfile.mkdtemp()
 
-                 for ttFile, sFiles in merging.iteritems():
-                   tFile = ttFile.replace(iSample, tSample)
-                   if tFile in FileOutList and not self._redo:
-                     continue
-                   
-                   tmpFile = tmpdir + '/' + os.path.basename(tFile)
-                   cmd = self._cmsswBasedir+'/src/'+self._haddnano+' '+tmpFile+' '
-                   cmd += ' '.join(self.getStageIn(sFile) for sFile in sFiles)
-                   os.system(cmd)
-                   os.system(self.mkStageOut(tmpFile, tFile, False))
-                   os.system('rm ' + tmpFile)
+                 tFile = self._targetDir+self._treeFilePrefix+tSample+'__part'+str(nnom-1)+'.root'.replace("//","/")
+                 tmpFile = tmpdir + '/' + os.path.basename(tFile)
+                 cmd = self._cmsswBasedir+'/src/'+self._haddnano+' '+tmpFile+' '
+                 cmd += ' '.join(self.getStageIn(sFile) for sFile in NewFileInList[-nmerge-1:])
+                 os.system(cmd)
+                 os.system(self.mkStageOut(tmpFile, tFile, False))
+                 os.system('rm ' + tmpFile)
 
                  os.system('rmdir ' + tmpdir)
 

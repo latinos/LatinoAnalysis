@@ -97,6 +97,7 @@ if __name__ == '__main__':
         Rinout[iRAndKff][iRegion] = {} 
         Rinout[iRAndKff][iRegion]['val'] = DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
         Rinout[iRAndKff][iRegion]['err'] = DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
+        print 'R calc. Num = ',  RAndKff[iRAndKff]['Regions'][iRegion]['RNum'], ' / Den = ', RAndKff[iRAndKff]['Regions'][iRegion]['RDen']
 
     print ' ----- Rinout -----'
     print Rinout
@@ -214,7 +215,11 @@ if __name__ == '__main__':
                     print 'Acc = ',Acc," +- ",EAcc
                     # Central value or systematics not related to DY ESTIM
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
-                      Scale = Nout / nHis 
+                      Scale = Nout / nHis
+                      if Scale < 0:
+                        print '----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------' 
+                        Scale = 1
+                        Nout = nHis
                       print 'Nout= ' , Nout , ' +- ',Eout, '(Nout_MC = ',nHis,') -> Scale = ',Scale 
                       print 'Nout*Acc= ' , Nout*Acc , iDYestim
                       for iBin in range(0,hTmp.GetNbinsX()+2) :
@@ -232,8 +237,12 @@ if __name__ == '__main__':
                       print '---  UP  ---' 
                       outputFile.cd(baseDir+'/'+subDir)
                       Scale = NUp / nHis
+                      if Scale < 0:
+                        print '----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'
+                        Scale = 1
+                        NUp = nHis
                       print 'NUp= ' , NUp , '(Nout_MC = ',nHis,') -> Scale = ',Scale
-                      print 'Nup*Acc = ' , NUp*(Acc+EAcc)
+                      print 'NUp*Acc = ' , NUp*(Acc+EAcc)
                       for iBin in range(0,hUp.GetNbinsX()+2) :
                         BinContent = hUp.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*(Acc+EAcc)
@@ -248,14 +257,21 @@ if __name__ == '__main__':
                       print '---  DOWN  ---'
                       outputFile.cd(baseDir+'/'+subDir)
                       Scale = NDo / nHis
+                      if Scale < 0:
+                        print '----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'
+                        Scale = 1
+                        NDo = nHis
                       print 'NDo= ' , NDo , '(Nout_MC = ',nHis,') -> Scale = ',Scale
-                      print 'NDo*Acc= ' , NDo*(Acc-EAcc)
+                      accDown = Acc-EAcc
+                      if (Acc-EAcc) < 0:
+                        accDown = 0.0001
+                      print 'NDo*Acc= ' , NDo*accDown
                       for iBin in range(0,hDo.GetNbinsX()+2) :
                         BinContent = hDo.GetBinContent(iBin)
-                        NewBinContent = BinContent*Scale*(Acc-EAcc)
+                        NewBinContent = BinContent*Scale*accDown
                         hDo.SetBinContent(iBin,NewBinContent)
                         BinError = hDo.GetBinError(iBin)
-                        NewBinError = BinError*abs(Scale)*(Acc-EAcc)
+                        NewBinError = BinError*abs(Scale)*accDown
                         NewBinError = 0.
                         hDo.SetBinError(iBin,NewBinError)
                         #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
