@@ -1965,8 +1965,8 @@ Steps = {
                      'do4MC'      : True ,
                      'do4Data'    : False ,
                      'import'     : 'LatinoAnalysis.NanoGardener.modules.EFTReweighter' ,
-                     'declare'    : 'EFTGen = lambda : EFTReweighter()',
-                     'module'     : 'EFTGen("RPLME_SAMPLE")',
+                     'declare'    : 'EFTGen = lambda : EFTReweighter("RPLME_SAMPLE")',
+                     'module'     : 'EFTGen()',
                      'onlySample' : ['H0PM_ToWWTo2L2Nu','H0PH_ToWWTo2L2Nu','H0L1_ToWWTo2L2Nu','H0M_ToWWTo2L2Nu','H0PHf05_ToWWTo2L2Nu','H0Mf05_ToWWTo2L2Nu','VBF_H0PM_ToWWTo2L2Nu','VBF_H0PH_ToWWTo2L2Nu','VBF_H0L1_ToWWTo2L2Nu','VBF_H0M_ToWWTo2L2Nu','VBF_H0PHf05_ToWWTo2L2Nu','VBF_H0Mf05_ToWWTo2L2Nu','WH_H0PM_ToWWTo2L2Nu','WH_H0PH_ToWWTo2L2Nu','WH_H0L1_ToWWTo2L2Nu','WH_H0M_ToWWTo2L2Nu','WH_H0PHf05_ToWWTo2L2Nu','WH_H0Mf05_ToWWTo2L2Nu','ZH_H0PM_ToWWTo2L2Nu','ZH_H0PH_ToWWTo2L2Nu','ZH_H0L1_ToWWTo2L2Nu','ZH_H0M_ToWWTo2L2Nu','ZH_H0PHf05_ToWWTo2L2Nu','ZH_H0Mf05_ToWWTo2L2Nu'],
                     },
 

@@ -12,6 +12,7 @@ import os.path
 
 class EFTReweighter(Module):
     def __init__(self, sample):
+        print '####################', sample
         self.sample = sample
         self.cmssw_base = os.getenv('CMSSW_BASE')
         self.cmssw_arch = os.getenv('SCRAM_ARCH')
