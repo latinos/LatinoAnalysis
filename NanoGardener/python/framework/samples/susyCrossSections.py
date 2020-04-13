@@ -687,7 +687,8 @@ SUSYCrossSections = {
     ##    https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVslepslep#NLO_NLL_any_single_generation_of
     ##    NLO-NLL (2019-11-20)
    
-    'SleptonLH'   : { 'susyModels' : {   'TSelectronSelectronLH' : '1.',
+    'SleptonLH'   : { 'susyModels' : {   'TSlepSlepLH'           : '2.',
+                                         'TSelectronSelectronLH' : '1.',
                                          'TSmuonSmuonLH'         : '1.',
                                        },
                       'massPoints' : { '50'  : { 'value' :  '3.991'	, 'uncertaintyDown' : '3.9%' , 'uncertaintyUp' : '2.2%' },
@@ -728,11 +729,12 @@ SUSYCrossSections = {
     ##    https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVslepslep#NLO_NLL_any_single_generatio_AN1
     ##    NLO-NLL (2019-11-20)
    
-    'SleptonRH'   : { 'susyModels' : {   'TSelectronSelectronRH' : '1.',
+    'SleptonRH'   : { 'susyModels' : {   'TSlepSlepRH'           : '2.',
+                                         'TSelectronSelectronRH' : '1.',
                                          'TSmuonSmuonRH'         : '1.',
                                        },
                       'massPoints' : { '50'  : { 'value' :   '1.377' ,   'uncertaintyDown' :  '3.9%' , 'uncertaintyUp' : '2.3%' },  
-                                       '80' : { 'value' :   '0.2104' ,  'uncertaintyDown' :  '2.3%' , 'uncertaintyUp' :   '1.9%' },  
+                                       '80'  : { 'value' :   '0.2104' ,  'uncertaintyDown' :  '2.3%' , 'uncertaintyUp' :   '1.9%' },  
                                        '100' : { 'value' :   '0.09779' , 'uncertaintyDown' :   '2.1%' , 'uncertaintyUp' :    '1.9%' },  
                                        '120' : { 'value' :   '0.05214' , 'uncertaintyDown' :   '2.0%' , 'uncertaintyUp' :    '2.0%' },  
                                        '125' : { 'value' :   '0.04524' , 'uncertaintyDown' :   '2.1%' , 'uncertaintyUp' :    '2.1%' },  
@@ -764,6 +766,47 @@ SUSYCrossSections = {
                                        '1000' : { 'value' :   '4.326e-06' , 'uncertaintyDown' :   '5.5%' , 'uncertaintyUp' :    '5.5%' },  
                                    },
                    },
+                   
+    ## NLO-NLL : any single generation, sum of left- and right-handed sleptons
+    ##    https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVslepslep#NLO_NLL_any_single_generation_su
+   
+    'Slepton'   : { 'susyModels' : {   'TSlepSlep'           : '2.'.,
+                                       'TSelectronSelectron' : '1.',
+                                       'TSmuonSmuon'         : '1.',
+                                       },
+                      'massPoints' : { '50' : { 'value' : '5.368',	 'uncertaintyDown' : '3.9%' , 'uncertaintyUp' : '2.2%' },
+                                       '80' : { 'value' : '0.8014',	 'uncertaintyDown' : '2.1%' , 'uncertaintyUp' : '1.7%' },
+                                       '100' : { 'value' : '0.3657',	 'uncertaintyDown' : '1.8%' , 'uncertaintyUp' : '1.7%' },
+                                       '120' : { 'value' : '0.1928',	 'uncertaintyDown' : '1.7%' , 'uncertaintyUp' : '1.7%' },
+                                       '125' : { 'value' : '0.1669',	 'uncertaintyDown' : '1.7%' , 'uncertaintyUp' : '1.7%' },
+                                       '140' : { 'value' : '0.1116',	 'uncertaintyDown' : '1.7%' , 'uncertaintyUp' : '1.7%' },
+                                       '150' : { 'value' : '0.08712',	 'uncertaintyDown' : '1.7%' , 'uncertaintyUp' : '1.7%' },
+                                       '160' : { 'value' : '0.06896',	 'uncertaintyDown' : '1.8%' , 'uncertaintyUp' : '1.8%' },
+                                       '175' : { 'value' : '0.04975',	 'uncertaintyDown' : '1.9%' , 'uncertaintyUp' : '1.9%' },
+                                       '180' : { 'value' : '0.04485',	 'uncertaintyDown' : '1.9%' , 'uncertaintyUp' : '1.9%' },
+                                       '200' : { 'value' : '0.03031',	 'uncertaintyDown' : '2.0%' , 'uncertaintyUp' : '2.0%' },
+                                       '220' : { 'value' : '0.02115',	 'uncertaintyDown' : '2.0%' , 'uncertaintyUp' : '2.1%' },
+                                       '225' : { 'value' : '0.01941',	 'uncertaintyDown' : '2.0%' , 'uncertaintyUp' : '2.1%' },
+                                       '240' : { 'value' : '0.01514',	 'uncertaintyDown' : '2.0%' , 'uncertaintyUp' : '2.1%' },
+                                       '250' : { 'value' : '0.01292',	 'uncertaintyDown' : '2.0%' , 'uncertaintyUp' : '2.1%' },
+                                       '260' : { 'value' : '0.01108',	 'uncertaintyDown' : '2.0%' , 'uncertaintyUp' : '2.2%' },
+                                       '275' : { 'value' : '0.008875',	 'uncertaintyDown' : '2.0%' , 'uncertaintyUp' : '2.2%' },
+                                       '280' : { 'value' : '0.008259',	 'uncertaintyDown' : '2.1%' , 'uncertaintyUp' : '2.2%' },
+                                       '300' : { 'value' : '0.006254',	 'uncertaintyDown' : '2.1%' , 'uncertaintyUp' : '2.3%' },
+                                       '320' : { 'value' : '0.004802',	 'uncertaintyDown' : '2.2%' , 'uncertaintyUp' : '2.3%' },
+                                       '340' : { 'value' : '0.003732',	 'uncertaintyDown' : '2.3%' , 'uncertaintyUp' : '2.5%' },
+                                       '360' : { 'value' : '0.002931',	 'uncertaintyDown' : '2.5%' , 'uncertaintyUp' : '2.6%' },
+                                       '380' : { 'value' : '0.002325',	 'uncertaintyDown' : '2.6%' , 'uncertaintyUp' : '2.8%' },
+                                       '400' : { 'value' : '0.001859',	 'uncertaintyDown' : '2.8%' , 'uncertaintyUp' : '2.9%' },
+                                       '440' : { 'value' : '0.001216',	 'uncertaintyDown' : '3.0%' , 'uncertaintyUp' : '3.1%' },
+                                       '500' : { 'value' : '0.0006736',	 'uncertaintyDown' : '3.2%' , 'uncertaintyUp' : '3.3%' },
+                                       '600' : { 'value' : '0.0002763',	 'uncertaintyDown' : '3.6%' , 'uncertaintyUp' : '3.6%' },
+                                       '700' : { 'value' : '0.0001235',	 'uncertaintyDown' : '3.8%' , 'uncertaintyUp' : '3.8%' },
+                                       '800' : { 'value' : '5.863e-05',	 'uncertaintyDown' : '4.2%' , 'uncertaintyUp' : '4.2%' },
+                                       '900' : { 'value' : '2.918e-05',	 'uncertaintyDown' : '4.6%' , 'uncertaintyUp' : '4.6%' },
+                                       '1000' : { 'value' : '1.504e-05', 'uncertaintyDown' : '5.2%' , 'uncertaintyUp' : '5.1%' },
+                                   },
+                },
 
 }
 
