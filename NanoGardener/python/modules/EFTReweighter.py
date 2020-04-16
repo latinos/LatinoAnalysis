@@ -83,15 +83,19 @@ class EFTReweighter(Module):
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
           if abs(event.GenPart_pdgId[mid]) != 24: continue 
-          gmid = event.GenPart_genPartIdxMother[mid]
-          if gmid == -1: continue
-          if abs(event.GenPart_pdgId[gmid]) != 25: continue 
+          if self.FromH(event, gid) == False: continue
           HFinalStateIdx.append(gid) 
+
+        if len(HFinalStateIdx) != 4:      
+         HFinalStateIdx = self.RemoveGammaW(event, HFinalStateIdx)
+
+        if len(HFinalStateIdx) != 4: 
+         HFinalStateIdx = self.RemoveAddHadron(event, HFinalStateIdx)
 
         LHEHFinalState = self.getLHE(event, HFinalStateIdx) 
 
         if len(LHEHFinalState)!=4:
-          print "SOMETHING WENT WRONG!, WW final state", LHEHFinalState
+          print "SOMETHING WENT WRONG!, WW final state", len(LHEHFinalState), LHEHFinalState
 
         for ipart in LHEHFinalState:
           d = ROOT.TLorentzVector()
@@ -120,6 +124,7 @@ class EFTReweighter(Module):
          VFinalStateIdx = []
          for gid,gen in enumerate(Gen):
           if abs(gen.pdgId) >= 21: continue 
+          if self.FromH(event, gid) == True: continue 
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
 
@@ -131,17 +136,22 @@ class EFTReweighter(Module):
             self.productionMela = ROOT.TVar.Lep_ZH
 
           if abs(event.GenPart_pdgId[mid]) == 24 and self.productionProcess == "WH": 
-           gmid = event.GenPart_genPartIdxMother[mid]
-           if abs(event.GenPart_pdgId[gmid]) != 25: 
-            VFinalStateIdx.append(gid) 
-            if abs(gen.pdgId) in [1,2,3,4,5]:
-             self.productionMela = ROOT.TVar.Had_WH
-            elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
-             self.productionMela = ROOT.TVar.Lep_WH
+           VFinalStateIdx.append(gid) 
+           if abs(gen.pdgId) in [1,2,3,4,5]:
+            self.productionMela = ROOT.TVar.Had_WH
+           elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
+            self.productionMela = ROOT.TVar.Lep_WH
          
+         if len(VFinalStateIdx) != 2 and self.productionProcess == "WH":      
+          VFinalStateIdx = self.RemoveGammaW(event, VFinalStateIdx)
+
+         if len(VFinalStateIdx) != 2: 
+          VFinalStateIdx = self.RemoveAddHadron(event, VFinalStateIdx)
+
          LHEVFinalState = self.getLHE(event, VFinalStateIdx) 
+
          if len(LHEVFinalState)!=2:
-          print "SOMETHING WENT WRONG!, V final state ", LHEVFinalState
+          print "SOMETHING WENT WRONG!, V final state ", len(LHEVFinalState), VFinalStateIdx
 
          for ipart in LHEVFinalState:
           add = ROOT.TLorentzVector()
@@ -232,6 +242,40 @@ class EFTReweighter(Module):
             order[j] += 1
       newlist = [oldlist[i] for i in order]
       return newlist
+
+    def FromH(self, event, pid):
+      while event.GenPart_genPartIdxMother[pid] != -1:
+	pid = event.GenPart_genPartIdxMother[pid]
+	if event.GenPart_pdgId[pid] == 25: return True
+      return False
+
+    def RemoveGammaW(self, event, FinalStateIdx): # Remove W -> gamma W -> e+ e- W   
+       removethis = []
+       for pi1,p1 in enumerate(FinalStateIdx):
+        for pi2,p2 in enumerate(FinalStateIdx):
+         if pi1>=pi2: continue
+         if event.GenPart_genPartIdxMother[p1] != event.GenPart_genPartIdxMother[p2]: continue
+         if event.GenPart_pdgId[p1] + event.GenPart_pdgId[p2] == 0:
+          if p1 not in removethis: removethis.append(p1)
+          if p2 not in removethis: removethis.append(p2)
+       for rem in removethis:
+        FinalStateIdx.remove(rem)
+       return FinalStateIdx
+
+    def RemoveAddHadron(self, event, FinalStateIdx): # Remove rare additonal hadrons
+        removethis = []
+        for pi1,p1 in enumerate(FinalStateIdx):
+         mom_id = event.GenPart_genPartIdxMother[p1]
+         NumWithThisID = 0
+         for pi2,p2 in enumerate(FinalStateIdx):
+          if event.GenPart_genPartIdxMother[p2] == mom_id: NumWithThisID += 1
+         if NumWithThisID != 2:
+          for pi2,p2 in enumerate(FinalStateIdx):
+           if (event.GenPart_genPartIdxMother[p2] == mom_id) and (p2 not in removethis):
+            removethis.append(p2)
+        for rem in removethis:
+         FinalStateIdx.remove(rem)
+        return FinalStateIdx
 
     def getLHE(self, event, genlist): # Particles in LHE collection have higher precision -> Find LHE particles with closest match to GenParticles
       LHElist = {}
