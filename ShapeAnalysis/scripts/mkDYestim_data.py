@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
@@ -200,8 +201,8 @@ if __name__ == '__main__':
                        print '!!!!!!!!!!!!!!!!!!!!! nBin = ',hTmp.GetNbinsX()
                        for iBin in range(1,hTmp.GetNbinsX()+1) : 
                           nHisDummy += 1.
-                          hTmp.SetBinContent(iBin,1.)
-                          hTmp.SetBinError(iBin,1.)
+                          hTmp.SetBinContent(iBin,0.00001)
+                          hTmp.SetBinError(iBin,0.00001)
                     if hName == 'histo_'+DYestim[iDYestim]['DYProc']:
                       hUp = hTmp.Clone('histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up')
                       hDo = hTmp.Clone('histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down')
@@ -246,7 +247,10 @@ if __name__ == '__main__':
                       # Protect against error giving negative yield
                       NDo  = max(Nout-Eout,Nout*0.000000001)
                       nHis = inputFile.Get(baseDir+'/'+subDir+'/histo_'+DYestim[iDYestim]['DYProc']).Integral()
-                      if nHis == 0 : nHis = nHisDummy
+                      if nHis == 0 : 
+                        #nHis = nHisDummy
+                        print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!'
+                        nHis = 0.00001
                       Acc  = 1.
                       EAcc = 0.01
                       if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
@@ -258,9 +262,9 @@ if __name__ == '__main__':
                         Acc  = hAcc.Integral()
                         EAcc = hAcc.GetBinError(1)
                         #Forcing non null acceptance due to low stats
-                        print 'LOW STATS FOR ACCEPTANCE! Setting Acc to 0.01 +/- 0.01'
                         if Acc == 0 : 
-                          Acc  = 0.01
+                          print 'LOW STATS FOR ACCEPTANCE! Setting Acc to 0.001 +/- 0.01'
+                          Acc  = 0.001
                           EAcc = 0.01
                     else:
                       Nout = DYestim[iDYestim]['Nout']
@@ -269,7 +273,10 @@ if __name__ == '__main__':
                       if 'NUp' in DYestim[iDYestim] : NUp = DYestim[iDYestim]['NUp']
                       if 'NDo' in DYestim[iDYestim] : NDo = DYestim[iDYestim]['NDo']
                       nHis = inputFile.Get(baseDir+'/'+subDir+'/histo_'+DYestim[iDYestim]['DYProc']).Integral()
-                      if nHis == 0 : nHis = nHisDummy
+                      if nHis == 0 :  
+                        #nHis = nHisDummy
+                        print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!'
+                        nHis = 0.00001
                       Acc  = 1.
                       EAcc = 0.01
                       Eout = 0.5*((Nout-NDo)+(NUp-Nout))
@@ -313,8 +320,8 @@ if __name__ == '__main__':
                         NewBinError = BinError*abs(Scale)*(Acc+EAcc)
                         NewBinError = 0.
                         hUp.SetBinError(iBin,NewBinError)
-                        #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
-                        #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
+                        print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
+                        print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
                       hUp.Write()
                       print '---  DOWN  ---'
                       outputFile.cd(baseDir+'/'+subDir)
@@ -336,8 +343,8 @@ if __name__ == '__main__':
                         NewBinError = BinError*abs(Scale)*accDown
                         NewBinError = 0.
                         hDo.SetBinError(iBin,NewBinError)
-                        #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
-                        #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
+                        print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
+                        print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
                       hDo.Write()
 
               if iDYestimKeep == 'NONE': hTmp.Write()

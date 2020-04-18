@@ -33,7 +33,7 @@ except NameError:
    AUTO_CONDOR_RETRY = False 
 
 class batchJobs :
-   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False):
+   def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False,USE_SINGULARITY=False):
      # baseName   = Gardening, Plotting, ....
      # prodName   = 21Oct_25ns , ...
      # stepList   = list of steps (like l2sel or a set of plots to produce)
@@ -44,6 +44,7 @@ class batchJobs :
      self.baseName = baseName
      self.prodName = prodName
      self.JOB_DIR_SPLIT_READY = JOB_DIR_SPLIT_READY
+     self.USE_SINGULARITY     = USE_SINGULARITY
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY:
        if len(stepList) == 1 : StepName = stepList[0]
        else:
@@ -100,6 +101,9 @@ class batchJobs :
        jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','w')
        if usePython : pFile = open(self.subDir+subDirExtra+'/'+jName+'.py','w') 
        jFile.write('#!/bin/bash\n')
+       if self.USE_SINGULARITY : 
+         jFileSing = open(self.subDir+subDirExtra+'/'+jName+'_Sing.sh','w')
+         if 'iihe' in hostName: jFileSing.write('sl7 '+self.subDir+subDirExtra+'/'+jName+'.sh \n')
        if 'cern' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          if CERN_USE_LSF:
@@ -123,14 +127,17 @@ class batchJobs :
          jFile.write('export X509_USER_PROXY=/gwpool/users/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
+         if self.USE_SINGULARITY : jFileSing.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        if 'CONFIGURATION_DIRECTORY' in os.environ:
          jFile.write('export CONFIGURATION_DIRECTORY='+os.environ['CONFIGURATION_DIRECTORY']+'\n')
        jFile.write('voms-proxy-info\n')
+       if self.USE_SINGULARITY : jFileSing.write('voms-proxy-info\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
        jFile.write('cd '+CMSSW+'\n')
        jFile.write('eval `scramv1 ru -sh`\n')
+               
        if 'knu' in hostName or 'hercules' in hostName:
          pass
        else:
@@ -138,6 +145,8 @@ class batchJobs :
        if    useBatchDir : 
          if 'iihe' in hostName:
            jFile.write('cd $TMPDIR \n')
+           if self.USE_SINGULARITY : 
+              jFileSing.write('cd $TMPDIR \n')
          elif 'cern' in hostName:
            if not CERN_USE_LSF:
              jFile.write('cd $TMPDIR \n')
@@ -155,6 +164,7 @@ class batchJobs :
            jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
          elif 'sdfarm' in hostName or 'knu' in hostName:
            jFile.write('cd '+self.subDir+subDirExtra+'\n')
+           jFile.write('cd ${_CONDOR_SCRATCH_DIR}\n')
          elif 'hercules' in hostName:
            tmpdataDir = jobDir + "/tmp/" + baseName +"_"+prodName
            jFile.write("mkdir "+ jobDir + "/tmp\n")
@@ -169,6 +179,10 @@ class batchJobs :
        jFile.close()
        if usePython : pFile.close()
        os.system('chmod +x '+self.subDir+subDirExtra+'/'+jName+'.sh')
+       if self.USE_SINGULARITY :
+         jFileSing.write('ls -l \n')
+         jFileSing.close()
+         os.system('chmod +x '+self.subDir+subDirExtra+'/'+jName+'_Sing.sh')
 
      # Create Proxy at IIHE
      if 'cern'  in hostName:
@@ -203,6 +217,18 @@ class batchJobs :
      jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a') 
      jFile.write(command+'\n')
      jFile.close()
+
+   def AddSing (self,iStep,iTarget,command):
+     jName= self.jobsDic[iStep][iTarget]
+     if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
+       subDirExtra = '/' + jName.split('__')[3]
+     else:
+       subDirExtra =''
+     #print 'Adding to ',self.subDir+'/'+jName  
+     jFile = open(self.subDir+subDirExtra+'/'+jName+'_Sing.sh','a')
+     jFile.write(command+'\n')
+     jFile.close()
+
 
    def Add2All (self,command):
      for jName in self.jobsList:
@@ -283,14 +309,16 @@ class batchJobs :
          subDirExtra =''
        os.system('cd '+self.subDir+subDirExtra)
        print self.subDir+subDirExtra+'/'+jName
-       jobFile=self.subDir+subDirExtra+'/'+jName+'.sh' 
+       if self.USE_SINGULARITY :
+         jobFile=self.subDir+subDirExtra+'/'+jName+'_Sing.sh' 
+       else:
+         jobFile=self.subDir+subDirExtra+'/'+jName+'.sh' 
        errFile=self.subDir+subDirExtra+'/'+jName+'.err'
        outFile=self.subDir+subDirExtra+'/'+jName+'.out'
        jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
-       jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
+       jFile = open(jobFile,'a')
        jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
        jFile.close()
-       jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
        print 'Submit',jName, ' on ', queue
 
        if 'cern' in hostName:
@@ -323,7 +351,11 @@ class batchJobs :
          nTry=0
          while nTry < 3 : 
            nTry+=1
-           jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+           if self.USE_SINGULARITY :
+             print 'ssh m8 qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+             jobid=os.system('ssh m8 qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
+           else:
+             jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
            print 'TRY #:', nTry , '--> Jobid : ' , jobid
            if jobid == 0 : nTry = 999
            else:  os.system('rm '+jidFile)

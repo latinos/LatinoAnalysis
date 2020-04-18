@@ -700,7 +700,7 @@ samples['GJets_HT40To100-ext1'] .extend( ['xsec=18740', 'kfact=1.000', 'ref=I'] 
 
 # VBS
 samples['WpWpJJ_EWK_QCD']   			.extend( ['xsec=0.05454',	'kfact=1.000',	'ref=I'] )
-samples['WpWpJJ_EWK']                           .extend( ['xsec=0.02526',       'kfact=1.000',  'ref=I'] )
+samples['WpWpJJ_EWK']                           .extend( ['xsec=0.01999',       'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_madgraph'] .extend( ['xsec=0.02526', 'kfact=1.000', 'ref=I'] )
 samples['WpWpJJ_QCD']                           .extend( ['xsec=0.02474',       'kfact=1.000',  'ref=I'] )
 samples['WpWpJJ_EWK_QCD_aQGC']                  .extend( ['xsec=0.1390',        'kfact=1.000',  'ref=I'] )
@@ -708,7 +708,7 @@ samples['WpWpJJ_EWK_aQGC']                  	.extend( ['xsec=0.1174',        'kf
 samples['WpWpJJ_EWK_powheg']			.extend( ['xsec=0.02093',	'kfact=1.000',	'ref=I'] )
 samples['WmWmJJ_EWK_powheg']			.extend( ['xsec=0.007868',	'kfact=1.000',	'ref=I'] )
 samples['WpWmJJ_EWK_QCD_noTop']   		.extend( ['xsec=2.66300',	'kfact=1.000',	'ref=I'] )
-samples['WpWmJJ_EWK_noTop']   			.extend( ['xsec=0.34520',	'kfact=1.000',	'ref=I'] )
+samples['WpWmJJ_EWK_noTop']   			.extend( ['xsec=0.08875',	'kfact=1.000',	'ref=I'] ) #it was 0.34520 before
 samples['WpWmJJ_QCD_noTop']   			.extend( ['xsec=2.160',	'kfact=1.000',	'ref=I'] ) #it was 2.42300 before
 samples['WpWmJJ_EWK_QCD_noTop_noHiggs']         .extend( ['xsec=2.241',       'kfact=1.000',  'ref=I'] ) #it was 2.61600 before
 samples['WpWmJJ_EWK_QCD_noHiggs']               .extend( ['xsec=35.45',       'kfact=1.000',  'ref=I'] ) #it was 39.88 before
