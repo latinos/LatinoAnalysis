@@ -750,6 +750,63 @@ Steps = {
                   'subTargets' : ['l2Kin', 'l3Kin'],
             },
 
+## ------- T&P Skims
+
+ 'MCTandP' : { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"(nElectron>=2 || nMuon>=2) && ($Sum(Muon_pt > 10 && abs(Muon_eta)<2.4) >1 || $Sum(Electron_pt > 10 && abs(Electron_eta)<2.5) >1)"' , 
+                  'subTargets' : ['puW','baseW'] ,
+                  'onlySample' : [ 
+                                  'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2' 
+                                 ] ,
+              }, 
+
+  'DataTandP' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'selection'  : '"(nElectron>=2 || nMuon>=2) && ($Sum(Muon_pt > 10 && abs(Muon_eta)<2.4) >1 || $Sum(Electron_pt > 10 && abs(Electron_eta)<2.5) >1)"' ,
+                  'onlySample' : [
+                                  # Run2016 v6
+                                  'SingleElectron_Run2016B-Nano25Oct2019_ver2-v1',
+                                  'SingleElectron_Run2016C-Nano25Oct2019-v1',      
+                                  'SingleElectron_Run2016D-Nano25Oct2019-v1',      
+                                  'SingleElectron_Run2016E-Nano25Oct2019-v1',      
+                                  'SingleElectron_Run2016F-Nano25Oct2019-v1',      
+                                  'SingleElectron_Run2016G-Nano25Oct2019-v1',      
+                                  'SingleElectron_Run2016H-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2016B-Nano25Oct2019_ver2-v1',
+                                  'SingleMuon_Run2016C-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2016D-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2016E-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2016F-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2016G-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2016H-Nano25Oct2019-v1',      
+                                  # Run2017 v6
+                                  'SingleElectron_Run2017B-Nano25Oct2019-v1',
+                                  'SingleElectron_Run2017C-Nano25Oct2019-v1',
+                                  'SingleElectron_Run2017D-Nano25Oct2019-v1',
+                                  'SingleElectron_Run2017E-Nano25Oct2019-v1',
+                                  'SingleElectron_Run2017F-Nano25Oct2019-v1',
+                                  'SingleMuon_Run2017B-Nano25Oct2019-v1',
+                                  'SingleMuon_Run2017C-Nano25Oct2019-v1',
+                                  'SingleMuon_Run2017D-Nano25Oct2019-v1',
+                                  'SingleMuon_Run2017E-Nano25Oct2019-v1',
+                                  'SingleMuon_Run2017F-Nano25Oct2019-v1',
+                                  # Run2018 v6
+                                  'EGamma_Run2018A-Nano25Oct2019-v1',      
+                                  'EGamma_Run2018B-Nano25Oct2019-v1',      
+                                  'EGamma_Run2018C-Nano25Oct2019-v1',      
+                                  'EGamma_Run2018D-Nano25Oct2019_ver2-v1',
+                                  'SingleMuon_Run2018A-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2018B-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2018C-Nano25Oct2019-v1',      
+                                  'SingleMuon_Run2018D-Nano25Oct2019_ver2-v1'
+                                 ] ,
+              }, 
+
 ## ------- WgStar MC:
 
   'MCWgStar2017' : { 
