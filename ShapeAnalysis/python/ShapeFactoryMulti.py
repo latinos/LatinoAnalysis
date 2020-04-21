@@ -781,6 +781,10 @@ class ShapeFactory:
                     if twosided:
                       self._fixNegativeBin(outputsHistoDo, outputsHisto)
 
+                  # Normalize Up/Down variations to same yield as nominal distribution
+                  if 'normalize' in nuisance:
+                    self._normalize(outputsHistoUp, outputsHistoDo, outputsHisto)
+
 
           # end of one sample
           print ''
@@ -819,6 +823,19 @@ class ShapeFactory:
       vdo = rnp.hist2array(hDo, copy=False)
 
       vdo[:] = (2. * vdo - vup).flat
+
+    # _____________________________________________________________________________
+    @staticmethod
+    def _normalize(hUp, hDo, hRef):
+
+      vup = rnp.hist2array(hUp, copy=False)
+      vdo = rnp.hist2array(hDo, copy=False)
+      vref = rnp.hist2array(hRef, copy=False)
+
+      ratio = 1.0 if np.sum(vup)==0 else np.sum(vref) / np.sum(vup)
+      vup[:] = (ratio * vup).flat
+      ratio = 1.0 if np.sum(vdo)==0 else np.sum(vref) / np.sum(vdo)
+      vdo[:] = (ratio * vdo).flat
 
     # _____________________________________________________________________________
     def _filterTrees(self, global_weight, weights, cut, inputs, cutName, sampleName, evlists = []):
