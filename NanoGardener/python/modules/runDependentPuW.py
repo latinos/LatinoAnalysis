@@ -18,6 +18,7 @@ class runDependentPuW(Module):
         self.targeth['beginRP']    = []
         self.targeth['endRP']      = []
         self.targeth['hist']       = []
+        self.targeth['name']       = []
         if self.PUWeightCfg['doSysVar']:
             self.targeth['hist_plus']  = [] 
             self.targeth['hist_minus'] = [] 
@@ -25,6 +26,7 @@ class runDependentPuW(Module):
           self.targeth['beginRP'] .append(int(rpr.split('-')[0]))
           self.targeth['endRP']   .append(int(rpr.split('-')[1])) 
           self.targeth['hist']    .append(self.loadHisto(cmssw_base+'/src/'+self.PUWeightCfg['targetfiles'][rpr],self.PUWeightCfg['targethist']))
+          self.targeth['name']    .append(self.PUWeightCfg['targetfiles'][rpr].split('/')[-1].split('.')[0].replace('_PU',''))  
           if self.PUWeightCfg['doSysVar']:
             self.targeth['hist_plus']  .append(self.loadHisto(cmssw_base+'/src/'+self.PUWeightCfg['targetfiles'][rpr],self.PUWeightCfg['targethist']+"_plus"))
             self.targeth['hist_minus'] .append(self.loadHisto(cmssw_base+'/src/'+self.PUWeightCfg['targetfiles'][rpr],self.PUWeightCfg['targethist']+"_minus"))
@@ -44,6 +46,7 @@ class runDependentPuW(Module):
         self.verbose = self.PUWeightCfg['verbose']
         self.nvtxVar = self.PUWeightCfg['nvtx_var']
         self.doSysVar = self.PUWeightCfg['doSysVar']
+        self.doSplitPU = True
 
         #Try to load module via python dictionaries
         try:
@@ -70,6 +73,7 @@ class runDependentPuW(Module):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+        self.out = wrappedOutputTree
         if self.autoPU :
            self.myh.Reset()
            print "Computing PU profile for this file"
@@ -82,17 +86,20 @@ class runDependentPuW(Module):
         self._worker = []
         for i in range(len(self.targeth['hist'])):
           self._worker .append ( ROOT.WeightCalculatorFromHistogram(self.myh,self.targeth['hist'][i],self.norm,self.fixLargeWeights,self.verbose)  )
-        self.out = wrappedOutputTree
+          if self.doSplitPU : self.out.branch(self.name+'_'+self.targeth['name'][i],"F")
         self.out.branch(self.name, "F")
         if self.doSysVar:
           self._worker_plus  = []
           for i in range(len(self.targeth['hist_plus'])):
             self._worker_plus .append ( ROOT.WeightCalculatorFromHistogram(self.myh,self.targeth['hist_plus'][i],self.norm,self.fixLargeWeights,self.verbose) )
+            if self.doSplitPU : self.out.branch(self.name+'_'+self.targeth['name'][i]+"Up","F")
+          self.out.branch(self.name+"Up","F")
           self._worker_minus = []
           for i in range(len(self.targeth['hist_minus'])):
             self._worker_minus .append ( ROOT.WeightCalculatorFromHistogram(self.myh,self.targeth['hist_minus'][i],self.norm,self.fixLargeWeights,self.verbose) )
-          self.out.branch(self.name+"Up","F")
+            if self.doSplitPU : self.out.branch(self.name+'_'+self.targeth['name'][i]+"Down","F")
           self.out.branch(self.name+"Down","F")
+        
         pass 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -116,5 +123,15 @@ class runDependentPuW(Module):
         if self.doSysVar:
             self.out.fillBranch(self.name+"Up",weight_plus)
             self.out.fillBranch(self.name+"Down",weight_minus)
+        # Store PU for subperiod as a whole
+        if self.doSplitPU :
+          for idx in range(len(self.targeth['name'])):
+            weight = self._worker[idx].getWeight(nvtx) if nvtx < self.myh.GetNbinsX() else 1
+            self.out.fillBranch(self.name+'_'+self.targeth['name'][idx],weight)
+            if self.doSysVar:
+              weight_plus = self._worker_plus[idx].getWeight(nvtx) if nvtx < self.myh.GetNbinsX() else 1
+              weight_minus = self._worker_minus[idx].getWeight(nvtx) if nvtx < self.myh.GetNbinsX() else 1
+              self.out.fillBranch(self.name+'_'+self.targeth['name'][idx]+"Up",weight_plus)
+              self.out.fillBranch(self.name+'_'+self.targeth['name'][idx]+"Down",weight_minus) 
         return True
 
