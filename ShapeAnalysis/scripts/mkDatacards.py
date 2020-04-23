@@ -149,6 +149,14 @@ class DatacardFactory:
                     
                   yields[sampleName] = histo.Integral()
   
+                #
+                # Remove statistical uncertainty from the histogram
+                # This may be used to suppress the effect on "autoMCstat" of a specific
+                # sample, by means of putting its uncertainty to 0
+                #
+                if 'removeStatUnc' in structureFile[sampleName] :
+                  self._removeStatUncertainty (histo)
+                 
                 self._outFile.cd()
                 histo.Write()
 
@@ -586,6 +594,13 @@ class DatacardFactory:
             print shapeName, 'not found'
       
         return histo
+
+
+    # _____________________________________________________________________________
+    def _removeStatUncertainty(self, histo):
+        for iBin in range(0,histo.GetNbinsX()+2) :
+          histo.SetBinError(iBin,0.)
+
 
 
 if __name__ == '__main__':
