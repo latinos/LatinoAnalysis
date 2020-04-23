@@ -154,7 +154,7 @@ class DatacardFactory:
                 # This may be used to suppress the effect on "autoMCstat" of a specific
                 # sample, by means of putting its uncertainty to 0
                 #
-                if 'removeStatUnc' in structureFile[sampleName] :
+                if 'removeStatUnc' in structureFile[sampleName] and structureFile[sampleName]['removeStatUnc']:
                   self._removeStatUncertainty (histo)
                  
                 self._outFile.cd()
