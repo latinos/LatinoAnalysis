@@ -2057,6 +2057,7 @@ ElectronWP = {
                     } ,
                 'fsSF': {
                     '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#MVATightTightIP2D3D_sf#ConvIHit0_sf' , 
+                    },
                 } ,
 
             },
