@@ -56,20 +56,20 @@ class SusyWeightsProducer(Module):
 
             self.isrObservable = ''
 
-            for isrObs in SUSYISRCorrections:
-                if str(idPrompt) in SUSYISRCorrections[isrObs]['susyPromptParticles']:
-                    for isrVer in SUSYISRCorrections[isrObs]['version']:
-                        if self.cmssw in SUSYISRCorrections[isrObs]['version'][isrVer]['production']:
+            for process in SUSYISRCorrections:
+                if str(idPrompt) in SUSYISRCorrections[process]['susyPromptParticles']:
+                    for isrVer in SUSYISRCorrections[process]['version']:
+                        if self.cmssw in SUSYISRCorrections[process]['version'][isrVer]['production']:
 
-                            self.isrObservable = isrObs
+                            self.isrObservable = SUSYISRCorrections[process]['version'][isrVer]['observable']
                         
                             self.isrEdge = []
                             self.isrCorrection = []
 
-                            for edge in sorted(SUSYISRCorrections[isrObs]['version'][isrVer]['correction'].keys()) :
+                            for edge in sorted(SUSYISRCorrections[process]['version'][isrVer]['correction'].keys()) :
                                     
                                 self.isrEdge.append( float(edge) )
-                                self.isrCorrection.append( float(SUSYISRCorrections[isrObs]['version'][isrVer]['correction'][edge]) )
+                                self.isrCorrection.append( float(SUSYISRCorrections[process]['version'][isrVer]['correction'][edge]) )
 
                             self.isrBins = len(self.isrEdge) - 1
 
