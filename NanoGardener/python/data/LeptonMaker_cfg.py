@@ -4,8 +4,6 @@ Lepton_br = {
                      'Lepton_pt',
                      'Lepton_eta',
                      'Lepton_phi',
-                     'Lepton_dz',
-                     'Lepton_dxy',
                      #'Lepton_eCorr',
                     ],
 
