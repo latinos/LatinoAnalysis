@@ -239,7 +239,7 @@ class ShapeFactory:
 
             nkind = nuisance['kind']
 
-            if not (nkind.startswith('tree') or nkind.startswith('suffix')):
+            if not (nkind.startswith('tree') or nkind.startswith('suffix') or nkind.startswith('branch_custom')): ##
               continue
 
             if sampleName not in nuisance['samples']:
@@ -248,7 +248,7 @@ class ShapeFactory:
             twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
             nuisanceDrawers[nuisanceName] = collections.OrderedDict()
 
-            if nkind == 'tree' or nkind == 'suffix':
+            if nkind == 'tree' or nkind == 'suffix' or nkind == 'branch_custom': ##jhchoi
               if twosided:
                 variations = ['Up', 'Down']
               else:
@@ -313,7 +313,17 @@ class ShapeFactory:
                   ndrawer.replaceBranch(bname, prefix + bname + bmap['suffix'])
 
                 ndrawers.append(ndrawer)
-
+            elif nkind.startswith('branch_custom'): ##[jhchoi]pick up sysbranch and sysfiles to replace given nominal
+              print "--branch_custom--"
+              for var in variations:
+                
+                friendAlias = nuisanceName + var
+                ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False, friendsDir=(nuisance['folder' + var], friendAlias))
+                prefix = friendAlias+'.' ##read friendAlias as treename
+                for From,To in nuisance['BrFromTo'+var].items(): ##nuisance['BrFromToUp]  : a dictionary whose key =From , value ; To
+                  ndrawer.replaceBranch(From,prefix+To)
+                  print "From=",From,"To",To
+                ndrawers.append(ndrawer)
           # Filters and aliases
 
           drawer.setFilter(supercut)
