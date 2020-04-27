@@ -1866,11 +1866,11 @@ ElectronWP = {
                     '5-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/egammaEffi.txt_EGM2D_runF_passingRECO_combineLowEt.root',
                   } ,
                 'susySF':  {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG#EGamma_SF2D' , 
-                    '2-2' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG#EGamma_SF2D' , 
-                    '3-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG#EGamma_SF2D' , 
-                    '4-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG#EGamma_SF2D' , 
-                    '5-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG#EGamma_SF2D' , 
+                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG.root#EGamma_SF2D' , 
+                    '2-2' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG.root#EGamma_SF2D' , 
+                    '3-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG.root#EGamma_SF2D' , 
+                    '4-4' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG.root#EGamma_SF2D' , 
+                    '5-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/2017_ElectronWPVeto_Fall17V2_POG.root#EGamma_SF2D' , 
                     } ,
                 'fsSF': {
                     #'1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedVetoNoIso94XV2_sf' , 
@@ -3310,7 +3310,7 @@ MuonWP = {
          } ,
         
         'WgStarObjWP' : {
-            'null' : { 
+            'null' : {
                 'cuts' : { 
                     'True' :
                     [
