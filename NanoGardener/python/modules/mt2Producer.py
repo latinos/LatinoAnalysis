@@ -156,10 +156,10 @@ class mt2Producer(Module):
 
             isLooseLepton = False
             if abs(leptons[iLep].pdgId)==11:
-                if self.looseEleWP=='' or (hasattr(leptons[iLep], 'isTightElectron_'+self.looseEleWP))==1: 
+                if self.looseEleWP=='' or (getattr(leptons[iLep], 'isTightElectron_'+self.looseEleWP))==1: 
                     isLooseLepton = True
             elif abs(leptons[iLep].pdgId)==13:
-                if self.looseMuoWP=='' or (hasattr(leptons[iLep], 'isTightMuon_'+self.looseMuoWP))==1:
+                if self.looseMuoWP=='' or (getattr(leptons[iLep], 'isTightMuon_'+self.looseMuoWP))==1:
                     isLooseLepton = True
 
             if isLooseLepton:
