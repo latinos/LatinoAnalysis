@@ -5,6 +5,7 @@ import copy
 import os.path
 import shutil
 import time
+import math
 import collections
 import tempfile
 import subprocess
@@ -293,7 +294,17 @@ class ShapeFactory:
     
                 elif 'files' + var in nuisance:
                   # TODO this feature is not fully working - I can't come up with a good way to assign variation files to batch jobs
-                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, nuisance['files' + var][sampleName], '', skipMissingFiles=False)
+                  #BHO sample['iFileBlock'], sample['nFileBlocks']
+                  if 'iFileBlock' in sample and 'nFileBlocks' in sample:
+                    iFileBlock, nFileBlocks = sample['iFileBlock'], sample['nFileBlocks']
+                    files = nuisance['files' + var][sampleName]
+                    if nFileBlocks > len(files):
+                      raise RuntimeError(" nFileBlocks > len(files) ")
+                    filesPerJob = float(len(files))/float(nFileBlocks) # it could be non integer
+                    sub_files = files[int(math.ceil(iFileBlock*filesPerJob)):int(math.ceil((iFileBlock+1)*filesPerJob))]
+                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sub_files, '', skipMissingFiles=False)
+                  else:
+                    ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, nuisance['files' + var][sampleName], '', skipMissingFiles=False)
                   
                 ndrawers.append(ndrawer)
 

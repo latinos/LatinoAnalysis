@@ -412,6 +412,12 @@ if __name__ == '__main__':
 
             clone = copy.deepcopy(sample)
             clone['name'] = sample['name'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
+            #BHO 'for tree type nuisance filesUp/filesDown in batch'
+            clone['iFileBlock']  = iFileBlock
+            nFiles = len(sample['name'])
+            nFileBlocks = int(math.ceil(float(nFiles) / filesPerJob))
+            clone['nFileBlocks'] = nFileBlocks
+            #
             if 'weights' in sample:
               clone['weights'] = sample['weights'][filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
 
