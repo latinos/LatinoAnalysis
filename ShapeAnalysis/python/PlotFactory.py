@@ -2224,14 +2224,15 @@ class PlotFactory:
                 if (temp_maxY_normalized > maxY_normalized) :
                   maxY_normalized = temp_maxY_normalized
                 
-              for hentry in thsBackground_grouped.GetHists():               
-                num_bins = hentry.GetNbinsX()
-                for ibin in range( num_bins ) :
-                  hentry.SetBinError(ibin+1, 0.000001)
-                hentry.SetFillStyle(0)
-                hentry.SetLineWidth(3)
-                hentry.Scale(normalization_factor_background)
-                thsBackground_grouped_normalized.Add(hentry)
+              for hentry in thsBackground_grouped.GetHists():  
+                if hentry not in thsSignal_grouped.GetHists() :   # since signal is part of the "background" for plotting reason
+                  num_bins = hentry.GetNbinsX()
+                  for ibin in range( num_bins ) :
+                    hentry.SetBinError(ibin+1, 0.000001)
+                  hentry.SetFillStyle(0)
+                  hentry.SetLineWidth(3)
+                  hentry.Scale(normalization_factor_background)
+                  thsBackground_grouped_normalized.Add(hentry)
 
               for hentry in thsSignal_grouped.GetHists():               
                 num_bins = hentry.GetNbinsX()
