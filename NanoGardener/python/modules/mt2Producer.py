@@ -36,6 +36,7 @@ class mt2Producer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
 
+        self.out.branch("nLooseLepton",    "I")
         self.out.branch("ptmiss",          "F")
         self.out.branch("ptmiss_phi",      "F")
         self.out.branch("lep0idx",         "I")
@@ -222,6 +223,7 @@ class mt2Producer(Module):
                 for lref in range(nLooseLeptons):
                     self.out.fillBranch("mt2llfake"+str(lref), mt2llfakes[lref])
 
+                self.out.fillBranch("nLooseLepton", nLooseLeptons)
                 self.out.fillBranch("ptmiss", ptmissvec3.Pt())
                 self.out.fillBranch("ptmiss_phi", ptmissvec3.Phi())
                 self.out.fillBranch("lep0idx", lepLoose[0])
@@ -353,10 +355,11 @@ class mt2Producer(Module):
         if leptons[lepLoose[W0]].pdgId*leptons[lepLoose[W1]].pdgId<0:
             channel *= -1
 
-        self.out.fillBranch("channel",    channel)
-        self.out.fillBranch("mll",        mll)
-        self.out.fillBranch("lep0idx",    lepLoose[W0])
-        self.out.fillBranch("lep1idx",    lepLoose[W1])
+        self.out.fillBranch("nLooseLepton", nLooseLeptons)
+        self.out.fillBranch("channel",      channel)
+        self.out.fillBranch("mll",          mll)
+        self.out.fillBranch("lep0idx",      lepLoose[W0])
+        self.out.fillBranch("lep1idx",      lepLoose[W1])
 
         if W2>=0:
             self.out.fillBranch("lep2idx", lepLoose[W2])
