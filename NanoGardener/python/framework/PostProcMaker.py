@@ -938,7 +938,9 @@ class PostProcMaker():
              self._crab.AddJobOutputFile(iStep,iTarget,outFile)
              self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd])
 
-     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
+     if   self._jobMode == 'Batch' and not self._pretend : 
+	if self._LocalSite=='ifca' or self._LocalSite=='cloud': self._jobs.Sub(self._batchQueue)
+	else: self._jobs.Sub()	
      elif self._jobMode == 'Crab':
         self._crab.mkCrabCfg()
         if not self._pretend : self._crab.Sub()
