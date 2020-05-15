@@ -1598,35 +1598,35 @@ ElectronWP = {
     'Full2016v7': {
         
         'VetoObjWP' : { 
-            'baseele' : { 
-                'cuts' : { 
-                    'True' :
-                        [
-                        'electron_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
-                        'electron_col[LF_idx]["convVeto"] ==  1',
-                        ] ,             
-                    },
-                } ,
+            #'baseele' : { 
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'electron_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
+            #            'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+            #            'electron_col[LF_idx]["convVeto"] ==  1',
+            #            ] ,             
+            #        },
+            #    } ,
             } ,
   
         'FakeObjWP'  : { 
-            'baseele' : { 
-                'cuts' : { 
-                    'True' :
-                        [
-                        'electron_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
-                        'electron_col[LF_idx]["convVeto"] ==  1',
-                        ] ,             
-                    },
-                } ,
+            #'baseele' : { 
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'electron_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
+            #            'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+            #            'electron_col[LF_idx]["convVeto"] ==  1',
+            #            ] ,             
+            #        },
+            #    } ,
             } ,
         
         'TightObjWP' : {
@@ -1815,35 +1815,35 @@ ElectronWP = {
     'Full2017v7': {
         
         'VetoObjWP' : { 
-            'baseele' : { 
-                'cuts' : { 
-                    'True' :
-                        [
-                        'electron_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
-                        'electron_col[LF_idx]["convVeto"] ==  1',
-                        ] ,             
-                    },
-                } ,
+            #'baseele' : { 
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'electron_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
+            #            'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+            #            'electron_col[LF_idx]["convVeto"] ==  1',
+            #            ] ,             
+            #        },
+            #    } ,
             } ,
   
         'FakeObjWP'  : { 
-            'baseele' : { 
-                'cuts' : { 
-                    'True' :
-                        [
-                        'electron_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
-                        'electron_col[LF_idx]["convVeto"] ==  1',
-                        ] ,             
-                    },
-                } ,
+            #'baseele' : { 
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'electron_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
+            #            'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+            #            'electron_col[LF_idx]["convVeto"] ==  1',
+            #            ] ,             
+            #        },
+            #    } ,
             } ,
         
         'TightObjWP' : {
@@ -2080,35 +2080,35 @@ ElectronWP = {
     'Full2018v7': {
         
         'VetoObjWP' : { 
-            'baseele' : { 
-                'cuts' : { 
-                    'True' :
-                        [
-                        'electron_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
-                        'electron_col[LF_idx]["convVeto"] ==  1',
-                        ] ,             
-                    },
-                } ,
+            #'baseele' : { 
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'electron_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
+            #            'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+            #            'electron_col[LF_idx]["convVeto"] ==  1',
+            #            ] ,             
+            #        },
+            #    } ,
             } ,
   
         'FakeObjWP'  : { 
-            'baseele' : { 
-                'cuts' : { 
-                    'True' :
-                        [
-                        'electron_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
-                        'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
-                        'electron_col[LF_idx]["convVeto"] ==  1',
-                        ] ,             
-                    },
-                } ,
+            #'baseele' : { 
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'electron_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(electron_col[LF_idx]["eta"])       <  2.4' ,
+            #            'abs(electron_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(electron_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(electron_col[LF_idx]["dz"])        < 0.10' ,
+            #            'electron_col[LF_idx]["convVeto"] ==  1',
+            #            ] ,             
+            #        },
+            #    } ,
             } ,
         
         'TightObjWP' : {
@@ -2295,6 +2295,13 @@ ElectronWP = {
         },
 
 }
+
+ElectronWP['Full2016v7']['VetoObjWP']['baseele'] = ElectronWP['Full2016v7']['TightObjWP']['SusyMVAVLoose']
+ElectronWP['Full2016v7']['FakeObjWP']['baseele'] = ElectronWP['Full2016v7']['TightObjWP']['SusyMVAVLoose']
+ElectronWP['Full2017v7']['VetoObjWP']['baseele'] = ElectronWP['Full2017v7']['TightObjWP']['SusyMVAVLoose']
+ElectronWP['Full2017v7']['FakeObjWP']['baseele'] = ElectronWP['Full2017v7']['TightObjWP']['SusyMVAVLoose']
+ElectronWP['Full2018v7']['VetoObjWP']['baseele'] = ElectronWP['Full2018v7']['TightObjWP']['SusyMVAVLoose']
+ElectronWP['Full2018v7']['FakeObjWP']['baseele'] = ElectronWP['Full2018v7']['TightObjWP']['SusyMVAVLoose']
 
 MuonWP = {
 
@@ -2758,35 +2765,35 @@ MuonWP = {
     'Full2016v7': {
 
         'VetoObjWP' : { 
-            'loosenoiso' : {
-                'cuts' : { 
-                    'True' :
-                        [
-                        'muon_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(muon_col[LF_idx]["eta"])       <  2.4' ,  
-                        'muon_col[LF_idx]["looseId"]        ==   1' ,
-                        'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
-                        ]
-                    } ,
-                }
+            #'loosenoiso' : {
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'muon_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(muon_col[LF_idx]["eta"])       <  2.4' ,  
+            #            'muon_col[LF_idx]["looseId"]        ==   1' ,
+            #            'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
+            #            ]
+            #        } ,
+            #    }
             } ,
         
         'FakeObjWP'  : {
-            'loosenoiso' : {
-                'cuts' : { 
-                    'True' :
-                        [
-                        'muon_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(muon_col[LF_idx]["eta"])       <  2.4' ,
-                        'muon_col[LF_idx]["looseId"]        ==   1' , 
-                        'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
-                        ] ,
-                    } ,    
-                } ,
+            #'loosenoiso' : {
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'muon_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(muon_col[LF_idx]["eta"])       <  2.4' ,
+            #            'muon_col[LF_idx]["looseId"]        ==   1' , 
+            #            'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
+            #            ] ,
+            #        } ,    
+            #    } ,
             } ,
 
         'TightObjWP' :  {
@@ -2972,35 +2979,35 @@ MuonWP = {
     'Full2017v7': {
 
         'VetoObjWP' : { 
-            'loosenoiso' : {
-                'cuts' : { 
-                    'True' :
-                        [
-                        'muon_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
-                        'muon_col[LF_idx]["looseId"]        ==   1' , 
-                        'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
-                        ]
-                    } ,
-                }
+            #'loosenoiso' : {
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'muon_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
+            #            'muon_col[LF_idx]["looseId"]        ==   1' , 
+            #            'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
+            #            ]
+            #        } ,
+            #    }
             } ,
         
         'FakeObjWP'  : {
-            'loosenoiso' : {
-                'cuts' : { 
-                    'True' :
-                        [
-                        'muon_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
-                        'muon_col[LF_idx]["looseId"]        ==   1' , 
-                        'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
-                        ] ,
-                    } ,    
-                } ,
+            #'loosenoiso' : {
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'muon_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
+            #            'muon_col[LF_idx]["looseId"]        ==   1' , 
+            #            'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
+            #            ] ,
+            #        } ,    
+            #    } ,
             } ,
 
         'TightObjWP' :  {
@@ -3149,35 +3156,35 @@ MuonWP = {
     'Full2018v7': {
 
         'VetoObjWP' : { 
-            'loosenoiso' : {
-                'cuts' : { 
-                    'True' :
-                        [
-                        'muon_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
-                        'muon_col[LF_idx]["looseId"]        ==   1' ,
-                        'abs(muon_col[LF_idx]["sip3d"])     <   4.' , 
-                        'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
-                        ]
-                    } ,
-                }
+            #'loosenoiso' : {
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'muon_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
+            #            'muon_col[LF_idx]["looseId"]        ==   1' ,
+            #            'abs(muon_col[LF_idx]["sip3d"])     <   4.' , 
+            #            'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(muon_col[LF_idx]["dz"])        < 0.10' ,
+            #            ]
+            #        } ,
+            #    }
             } ,
         
         'FakeObjWP'  : {
-            'loosenoiso' : {
-                'cuts' : { 
-                    'True' :
-                        [
-                        'muon_col[LF_idx]["pt"]             >  10.' ,
-                        'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
-                        'muon_col[LF_idx]["looseId"]        ==   1' , 
-                        'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
-                        'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
-                        'abs(muon_col[LF_idx]["dz"])        < 0.10' , 
-                        ] ,
-                    } ,    
-                } ,
+            #'loosenoiso' : {
+            #    'cuts' : { 
+            #        'True' :
+            #            [
+            #            'muon_col[LF_idx]["pt"]             >  10.' ,
+            #            'abs(muon_col[LF_idx]["eta"])       <  2.4' , 
+            #            'muon_col[LF_idx]["looseId"]        ==   1' , 
+            #            'abs(muon_col[LF_idx]["sip3d"])     <   4.' ,
+            #            'abs(muon_col[LF_idx]["dxy"])       < 0.05' ,
+            #            'abs(muon_col[LF_idx]["dz"])        < 0.10' , 
+            #            ] ,
+            #        } ,    
+            #    } ,
             } ,
 
         'TightObjWP' :  {
@@ -3328,6 +3335,13 @@ MuonWP = {
 MuonWP['Full2016v6'] = MuonWP['Full2016v4']
 MuonWP['Full2017v6'] = MuonWP['Full2017v4']
 MuonWP['Full2018v6'] = MuonWP['Full2018v4']
+
+MuonWP['Full2016v7']['VetoObjWP']['basemuo'] = MuonWP['Full2016v7']['TightObjWP']['looseMiniIsoLoose']
+MuonWP['Full2016v7']['FakeObjWP']['basemuo'] = MuonWP['Full2016v7']['TightObjWP']['looseMiniIsoLoose']
+MuonWP['Full2017v7']['VetoObjWP']['basemuo'] = MuonWP['Full2017v7']['TightObjWP']['looseMiniIsoLoose']
+MuonWP['Full2017v7']['FakeObjWP']['basemuo'] = MuonWP['Full2017v7']['TightObjWP']['looseMiniIsoLoose']
+MuonWP['Full2018v7']['VetoObjWP']['basemuo'] = MuonWP['Full2018v7']['TightObjWP']['looseMiniIsoLoose']
+MuonWP['Full2018v7']['FakeObjWP']['basemuo'] = MuonWP['Full2018v7']['TightObjWP']['looseMiniIsoLoose']
 
 if __name__ == '__main__':
     print('_______________LepFilter_dict___________')
