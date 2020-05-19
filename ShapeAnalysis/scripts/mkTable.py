@@ -106,7 +106,7 @@ def get_latex(tab, pre_fit, b_only, s_b, do_csv):
             tmp = pd.DataFrame(formatted)[formatted[0].keys()].to_latex(index=False).replace('+/-', '$\pm$')
             for expr in ['\\toprule', '\\midrule', '\\bottomrule']:
                 tmp = tmp.replace(expr, '\hline')
-            outfile.write(tmp)
+            outfile.write(tmp.replace('tabular', 'longtable'))
 
 
 def read_input(raw_input):
