@@ -97,7 +97,7 @@ def addJESchainMembers():
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MAPNAME = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MAPNAME")'.replace("MAPNAME", mapname) ,
+                  'declare'    : 'DYMVA_MAPNAME = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="MAPNAME")'.replace("MAPNAME", mapname) ,
                   'module'     : 'DYMVA_MAPNAME()'.replace("MAPNAME", mapname),
             } 
       dictionary['MonoHiggsMVA_'+mapname] = {
@@ -115,10 +115,8 @@ def addJESchainMembers():
                     'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
                     'declare'    : 'JJHEFT_MAPNAME = lambda : JJH_EFTVars(branch_map="MAPNAME")'.replace("MAPNAME", mapname),
                     'module'     : 'JJHEFT_MAPNAME()'.replace("MAPNAME", mapname),
-                 },
+                 } 
 
-
-  
   return dictionary 
 
 
@@ -759,7 +757,7 @@ Steps = {
                   'selection'  : '"(nElectron>=2 || nMuon>=2) && (Sum$(Muon_pt > 10 && abs(Muon_eta)<2.4) >1 || Sum$(Electron_pt > 10 && abs(Electron_eta)<2.5) >1)"' , 
                   'subTargets' : ['RunPeriodMC','puW','baseW'] ,
                   'onlySample' : [ 
-                                  'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2' 
+                                  'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO',
                                  ] ,
               }, 
 
@@ -816,7 +814,7 @@ Steps = {
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.addTnpTree' ,
                   'declare'  : 'TnPMu = lambda : addTnpTree(int("RPLME_YEAR"),"Muon")', 
                   'module'   : 'TnPMu()', 
-                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2',
+                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO',
                                   # Run2016 v6
                                   'SingleMuon_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleMuon_Run2016C-Nano25Oct2019-v1',
@@ -847,7 +845,7 @@ Steps = {
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.addTnpTree' ,
                   'declare'  : 'TnPEle = lambda : addTnpTree(int("RPLME_YEAR"),"Electron")',
                   'module'   : 'TnPEle()', 
-                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2',
+                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO',
                                   # Run2016 v6
                                   'SingleElectron_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleElectron_Run2016C-Nano25Oct2019-v1',
@@ -2062,23 +2060,23 @@ Steps = {
                     'module'     : 'JJHEFT_METdo()',
                  },
 
-    'JJHEFT_JESup' : {
-                    'isChain'    : False ,
-                    'do4MC'      : True  ,
-                    'do4Data'    : True  ,
-                    'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
-                    'declare'    : 'JJHEFT_JESup = lambda : JJH_EFTVars(branch_map="JESup")',
-                    'module'     : 'JJHEFT_JESup()',
-                 },
-  
-    'JJHEFT_JESdo' : {
-                    'isChain'    : False ,
-                    'do4MC'      : True  ,
-                    'do4Data'    : True  ,
-                    'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
-                    'declare'    : 'JJHEFT_JESdo = lambda : JJH_EFTVars(branch_map="JESdo")',
-                    'module'     : 'JJHEFT_JESdo()',
-                 },
+#   'JJHEFT_JESup' : {
+#                   'isChain'    : False ,
+#                   'do4MC'      : True  ,
+#                   'do4Data'    : True  ,
+#                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
+#                   'declare'    : 'JJHEFT_JESup = lambda : JJH_EFTVars(branch_map="JESup")',
+#                   'module'     : 'JJHEFT_JESup()',
+#                },
+
+#   'JJHEFT_JESdo' : {
+#                   'isChain'    : False ,
+#                   'do4MC'      : True  ,
+#                   'do4Data'    : True  ,
+#                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
+#                   'declare'    : 'JJHEFT_JESdo = lambda : JJH_EFTVars(branch_map="JESdo")',
+#                   'module'     : 'JJHEFT_JESdo()',
+#                },
 
 
     'EFTGen' : {
@@ -3027,7 +3025,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\')' ,
+                  'declare'    : 'DYMVA = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\')' ,
                   'module'     : 'DYMVA()',
             } ,
 
@@ -3037,7 +3035,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_ElepTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="ElepTup")' ,
+                  'declare'    : 'DYMVA_ElepTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="ElepTup")' ,
                   'module'     : 'DYMVA_ElepTup()',
             } ,
 
@@ -3047,7 +3045,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_ElepTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="ElepTdo")' ,
+                  'declare'    : 'DYMVA_ElepTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="ElepTdo")' ,
                   'module'     : 'DYMVA_ElepTdo()',
             } ,
   'DYMVA_MupTup' : {
@@ -3056,7 +3054,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MupTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MupTup")' ,
+                  'declare'    : 'DYMVA_MupTup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="MupTup")' ,
                   'module'     : 'DYMVA_MupTup()',
             } ,
 
@@ -3066,7 +3064,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_MupTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="MupTdo")' ,
+                  'declare'    : 'DYMVA_MupTdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="MupTdo")' ,
                   'module'     : 'DYMVA_MupTdo()',
             } ,
   'DYMVA_METup' : {
@@ -3075,7 +3073,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_METup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="METup")' ,
+                  'declare'    : 'DYMVA_METup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="METup")' ,
                   'module'     : 'DYMVA_METup()',
             } ,
 
@@ -3085,7 +3083,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_METdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="METdo")' ,
+                  'declare'    : 'DYMVA_METdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="METdo")' ,
                   'module'     : 'DYMVA_METdo()',
             } ,
   'DYMVA_JESup' : {
@@ -3094,7 +3092,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_JESup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="JESup")' ,
+                  'declare'    : 'DYMVA_JESup = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="JESup")' ,
                   'module'     : 'DYMVA_JESup()',
             } ,
 
@@ -3104,7 +3102,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'    : 'DYMVA_JESdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_v5_cfg.py\', branch_map="JESdo")' ,
+                  'declare'    : 'DYMVA_JESdo = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="JESdo")' ,
                   'module'     : 'DYMVA_JESdo()',
             } ,
 

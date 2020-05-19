@@ -402,6 +402,18 @@ for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_
     if key not in _JES_branches:
       _JES_branches.append(key)
 
+for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
+  mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
+  for key in mod.mvaDic.iterkeys():
+    if key not in _ElepT_branches:
+      _ElepT_branches.append(key)
+    if key not in _MupT_branches:
+      _MupT_branches.append(key)
+    if key not in _MET_branches:
+      _MET_branches.append(key)
+    if key not in _JES_branches:
+      _JES_branches.append(key)
+
 ## formulas MC
 for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formulasToAdd_MC_Full2017v6', 'formulasToAdd_MC_Full2017v7', 'formulasToAdd_MC_Full2018v6', 'formulasToAdd_MC_Full2018v7', 'formulasToAdd_MC_MonoH']:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
