@@ -232,6 +232,18 @@ def get_latex_reduced(tab, do_merged_only, show_unc, do_csv):
             outfile.write(tmp)
 
 
+def remove_processes(tab, procs_to_remove):
+    df = tab
+    procs = []
+    for proc in df['process'].values:
+        if proc not in procs: procs.append(proc)
+    for proc in procs_to_remove:
+        if proc in procs:
+            df = df[df['process'] != proc]
+        else:
+            print('WARNING: process {} found in processes_to_remove but absent in workspace, skipping')
+
+    return df
 
 #------- Command line parsing ----------------------------------------------------------------------------------------------------------------------------#
 
@@ -274,6 +286,9 @@ if __name__ == '__main__':
             try: processes_to_merge = merging_map.processes_to_merge
             except: print('--> processes_to_merge not found in {}, skipping'.format(args.mergingMap))
 
+            try: processes_to_remove = merging_map.processes_to_remove
+            except: pass
+
             if 'categories_to_merge' in locals():
                 for cat_merge in categories_to_merge:
                     df = merge_categories(df, cat_merge['old_names'], cat_merge['new_name'])
@@ -283,6 +298,10 @@ if __name__ == '__main__':
                 for proc_merge in processes_to_merge:
                     df = merge_processes(df, proc_merge['old_names'], proc_merge['new_name'])
                 print('--> processes merged succesfully')
+
+            if 'processes_to_remove' in locals():
+                print('--> Removing unwanted processes')
+                df = remove_processes(df, processes_to_remove)
 
     if not args.fancyTable: get_latex(df, args.expected, args.background, args.signal, args.csv)
     else: get_latex_reduced(df, args.mergedOnly, args.uncertainties, args.csv)
