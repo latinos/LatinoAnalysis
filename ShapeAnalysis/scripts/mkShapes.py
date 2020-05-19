@@ -309,9 +309,12 @@ if __name__ == '__main__':
                 if os.path.isfile(pidFile) :
                   print '--> Job Running already : '+iStep+'__'+iTarget
                   exit()  
-            
+           
+            if 'slc7' in os.environ['SCRAM_ARCH'] and 'iihe' in os.uname()[1] : use_singularity = True
+            else : use_singularity = False
+ 
             bpostFix='' 
-            jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,batchSplit,bpostFix,True)            
+            jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,batchSplit,bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)            
 
             jobs.AddPy2Sh()
             jobs.InitPy("from LatinoAnalysis.ShapeAnalysis.ShapeFactory import ShapeFactory\n")
