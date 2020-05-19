@@ -370,8 +370,11 @@ if __name__ == '__main__':
 
       nThreads = opt.numThreads
 
+      if 'slc7' in os.environ['SCRAM_ARCH'] and 'iihe' in os.uname()[1] : use_singularity = True
+      else : use_singularity = False
+
       bpostFix=''
-      jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,True)
+      jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)
       jobs.nThreads = nThreads
 
       jobs.AddPy2Sh()
