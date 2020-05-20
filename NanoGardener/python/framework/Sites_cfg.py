@@ -40,7 +40,6 @@ Sites = {
               'mkDir'       : True ,
               'xrootdPath'  : '' ,
               'srmPrefix'   : 'srm://srm01.ifca.es' ,
-              'treeProdDir' : '/gpfs/gaes/cms/',
               'treeBaseDir' : '/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/' ,
               'batchQueues' : ['gridui_sort','gridui_medium'],
               'slc_ver'     : 7
