@@ -24,3 +24,4 @@ Further options include:
     --csv: produces .csv file instead of .tex file
     --mergedOnly: restricts the table to only show the categories specified in the merging scheme
     
+Hopefully writing those Analysis Notes willi be a little easier now!
