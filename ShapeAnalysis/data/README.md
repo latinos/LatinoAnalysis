@@ -16,7 +16,7 @@ By default pre-fit, b-only fit and s+b fit results are included; use any combina
 
     mkTable.py fitDiagnostics.root -e -b
     
-produces a table including pre-fit and b-only fit reults. In case you need the table to be in a "Process VS Category" format, use the `--fancyTable` option.
+produces a table including pre-fit and b-only fit reults. In case you need the table to be in a "Process VS Category" format, use the `--fancyTable` option. In this case the s+b fit results are used, with the pre-fit values displayed in parenthesis.
     
 Further options include:
 
