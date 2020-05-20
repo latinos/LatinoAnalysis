@@ -8,7 +8,7 @@ After this, running
 
     mkTable.py fitDiagnostics.root
 
-produces a .tex file containing a table odd all yields. In case you want to merge a set of processes and/or categories, you may specify a merging scheme following merging_map_template.py, and feeding the file through the --mergingMap option:
+produces a .tex file containing a table odd all yields. In case you want to merge a set of processes and/or categories, you may specify a merging scheme following merging_map_template.py, and feeding the file through the `--mergingMap` option:
 
     mkTable.py fitDiagnostics.root --mergingMap merging_map.py
     
