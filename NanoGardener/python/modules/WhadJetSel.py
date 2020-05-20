@@ -8,7 +8,7 @@ from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class WhadJetSel(Module):
-    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="CleanJet", branch_map=''):
+    def __init__(self,jetid=1,pujetid='none',minpt=30.0,maxeta=2.4,jetColl="CleanJet", branch_map='', prefix='HM_'):
         # Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto
         # jetId = userInt('tightId')*2+4*userInt('tightIdLepVeto')
         # >=2 -> ask tightId
@@ -25,6 +25,7 @@ class WhadJetSel(Module):
         self.maxeta  = maxeta 
         self.jetColl = jetColl
         self._branch_map = branch_map
+        self.prefix = prefix
     def beginJob(self):
         pass
     def endJob(self):
@@ -37,13 +38,13 @@ class WhadJetSel(Module):
         #self.out.branch('Whad_pz','F')
         #self.out.branch('Whad_E','F')
         
-        self.out.branch('HM_Whad_pt','F')
-        self.out.branch('HM_Whad_eta','F')
-        self.out.branch('HM_Whad_phi','F')
-        self.out.branch('HM_Whad_mass','F')
+        self.out.branch(self.prefix+'Whad_pt','F')
+        self.out.branch(self.prefix+'Whad_eta','F')
+        self.out.branch(self.prefix+'Whad_phi','F')
+        self.out.branch(self.prefix+'Whad_mass','F')
 
-        self.out.branch('HM_idx_j1','I')
-        self.out.branch('HM_idx_j2','I')
+        self.out.branch(self.prefix+'idx_j1','I')
+        self.out.branch(self.prefix+'idx_j2','I')
 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -157,13 +158,13 @@ class WhadJetSel(Module):
         #self.out.fillBranch('Whad_pz',whad_pz)
         #self.out.fillBranch('Whad_E',whad_E)
 
-        self.out.fillBranch('HM_Whad_pt',whad_pt)
-        self.out.fillBranch('HM_Whad_eta',whad_eta)
-        self.out.fillBranch('HM_Whad_phi',whad_phi)
-        self.out.fillBranch('HM_Whad_mass',whad_mass)
+        self.out.fillBranch(self.prefix+'Whad_pt',whad_pt)
+        self.out.fillBranch(self.prefix+'Whad_eta',whad_eta)
+        self.out.fillBranch(self.prefix+'Whad_phi',whad_phi)
+        self.out.fillBranch(self.prefix+'Whad_mass',whad_mass)
 
-        self.out.fillBranch('HM_idx_j1',idx_j1)
-        self.out.fillBranch('HM_idx_j2',idx_j2)
+        self.out.fillBranch(self.prefix+'idx_j1',idx_j1)
+        self.out.fillBranch(self.prefix+'idx_j2',idx_j2)
 
 
 
