@@ -548,7 +548,7 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]:
         storeLocation = ''
-        if 'store' in inputFile:
+        if not '/gpfs/' in inputFile and 'store' in inputFile:
             storeLocation = '/gpfs/gaes/cms/'
         return subprocess.check_output("ls -l " + storeLocation + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "pi.infn.it" in socket.getfqdn():
