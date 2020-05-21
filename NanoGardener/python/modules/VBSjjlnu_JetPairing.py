@@ -12,20 +12,23 @@ from LatinoAnalysis.NanoGardener.data.VBSjjlnu_pairing_cuts import pairing_cuts
 nearest_massWZ = lambda jets: nearest_mass_pair(jets,85.7863)
 nearest_massWZ.__name__ = "nearest_massWZ"
 
+# Require at least one jet in the pair to have a minimum Pt of 50 GeV
+max_mjj_pair_minpt50 = lambda jets: max_mjj_pair_minpt(jets, 50)
+
 # The dictionary define the name of the tagging strategy and functions to 
 # use. The order of the list defines the order of the tagging of VBS and V jets
 pairing_strategies_resolved = {
-    "maxmjj_massWZ"      : [("VBS", max_mjj_pair),("V", nearest_massWZ)],
-    "maxmjj_maxPt"       : [("VBS", max_mjj_pair),("V", max_pt_pair)],
+    "maxmjj_massWZ"      : [("VBS", max_mjj_pair_minpt50),("V", nearest_massWZ)],
+    "maxmjj_maxPt"       : [("VBS", max_mjj_pair_minpt50),("V", max_pt_pair)],
     "maxPt_massWZ"       : [("VBS", max_pt_pair), ("V", nearest_massWZ)],
+    # In case the VBS jets are selected after Vjets the min50Pt criteria is removed
     "massWZ_maxmjj"      : [("V", nearest_massWZ), ("VBS", max_mjj_pair)],
     "massWZ_maxPt"       : [("V", nearest_massWZ), ("VBS",max_pt_pair)]
 }
 pairing_strategies_fatjet = {
-    "maxmjj": max_mjj_pair,
+    "maxmjj": max_mjj_pair_minpt50,
     "maxPt" : max_pt_pair
 }
-
 
 
 class VBSjjlnu_JetPairing(Module):
@@ -52,13 +55,14 @@ class VBSjjlnu_JetPairing(Module):
 
         "massWZ_maxmjj": before V jets with mass nearest to W,Z, then VBS jets with MaxMjj
         "massWZ_maxPt" :before V jets with mass nearest to W,Z, then VBS jets with pair with max Pt
-       
+
+        At least 50 GeV are required for the leading VBS jet.       
 
         '''
         self.mode = mode
         self.year = year
-        self.etacuts = pairing_cuts[year]["etacuts"]
-        self.ptcuts = pairing_cuts[year]["ptcuts"]
+        # self.etacuts = pairing_cuts[year]["etacuts"]
+        # self.ptcuts = pairing_cuts[year]["ptcuts"]
         self.debug = debug
         self._branch_map = branch_map
 
@@ -106,13 +110,10 @@ class VBSjjlnu_JetPairing(Module):
         # Take the 4-momenta of the CleanJets.
         # If FatJets are present only the CleanJetNotFat are taken. A list of indexes
         # referring to the CleanJet collection is keeps to save the final result
-        good_jets, good_jets_ids = self.get_jets_vectors(self.etacuts, self.ptcuts)
+        good_jets, good_jets_ids = self.get_jets_vectors()
          # N.B. The VBS_jets and V_jets index are positions in the list of 
         # good_jets (Jet not overlapping with Fatjet with a minpt). 
         # We want to save a reference to the CleanJet collection.
-        
-        # Veto events with more than 1 FatJet
-        #if self.nFatJet >1 : return False
 
         if self.nFatJet == 1 and len(good_jets) >= 2 :
             ###################################
@@ -161,18 +162,14 @@ class VBSjjlnu_JetPairing(Module):
         """return True (go to next module) or False (fail, go to next event)"""
         return True
  
-
-    def get_jets_vectors(self, etacuts=[], ptcuts=[]):
+    def get_jets_vectors(self):
         '''
         Returns a list of 4-momenta for jets looking only at jets
         that are cleaned from FatJets.
         A list of indexes in the collection of CleanJet is returned as a reference. 
 
-        Inserted here an eta interval and pt range cut to avoid using the jets in a specified region for 
-        tagging. 
-        etacuts= [ (2.5,3.2), (3,5)]
-        ptcuts= [(0, 50), (50, 100)]
-        the application is: Etacuts[i] AND ptcuts[i]
+        Pt > 30 GeV is required for all jets. At lease one jet with Pt > 50 is required
+        Selection of jets in 2017 is performed.
         '''
         jets = []
         coll_ids = []
@@ -185,18 +182,26 @@ class VBSjjlnu_JetPairing(Module):
                         self.Jet_coll[jetindex].phi, \
                         self.rawJet_coll[rawjetid].mass
 
-            passetacut = True
-            for etacut, ptcut in zip(etacuts, ptcuts):
-                if abs(eta) > etacut[0] and abs(eta) < etacut[1] and pt > ptcut[0] and pt< ptcut[1]: 
-                    passetacut = False
+            puid = self.rawJet_coll[rawjetid].puId
+
+            passcut = True
+            # We need to have at least 1 jet with 50 GeV. Since they are ordered in Pt we can do..
+            if len(jets) == 0:
+                if pt < 50: passcut = False
+            else:
+                if pt < 30: passcut = False
+            # Remove non tight PU Id jets WITH LESS THAN 50 GeV of Pt in 2017 in the horn region
+            if self.year == 2017 and abs(eta) > 2.65 and abs(eta) < 3.139 and pt < 50:
+                # Ask for tight PU id
+                if not bool(puId & (1 << 0)): 
+                    passcut = False
                     if self.debug: 
-                        print "Jet index: ", jetindex, " CUT > pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
-            if not passetacut : continue
+                        print "Jet removed for PUID in horn index: ", jetindex, " CUT > pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
+                       
+            if not passcut : continue
             
-            p = pt * cosh(eta)
-            en = sqrt(p**2 + mass**2)
             vec = TLorentzVector()
-            vec.SetPtEtaPhiE(pt, eta, phi, en)
+            vec.SetPtEtaPhiM(pt, eta, phi, mass)
             # check if different from the previous one
             if self.debug:
                 print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass

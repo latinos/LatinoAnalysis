@@ -80,9 +80,9 @@ class VBSjjlnu_kin(Module):
             return True
 
         lep = TLorentzVector()
-        lep.SetPtEtaPhiE(lepton_raw.pt, lepton_raw.eta,lepton_raw.phi, lepton_raw.pt * cosh(lepton_raw.eta))
+        lep.SetPtEtaPhiM(lepton_raw.pt, lepton_raw.eta,lepton_raw.phi,0)
         met = TLorentzVector()
-        met.SetPtEtaPhiE(met_raw.pt, 0., met_raw.phi, met_raw.pt)
+        met.SetPtEtaPhiM(met_raw.pt, 0., met_raw.phi, 0)
         
         # Reconstruct neutrino from lepton and met
         reco_neutrino = RecoNeutrino.reconstruct_neutrino(lep,met,mode="central")
@@ -149,10 +149,8 @@ class VBSjjlnu_kin(Module):
                         self.rawJet_coll[rawjetid].mass
 
             if abs(eta) > 10 : continue
-            p = pt * cosh(eta)
-            en = sqrt(p**2 + mass**2)
             vec = TLorentzVector()
-            vec.SetPtEtaPhiE(pt, eta, phi, en)
+            vec.SetPtEtaPhiM(pt, eta, phi, mass)
             # check if different from the previous one
             if self.debug:
                 print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass

@@ -78,12 +78,12 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     mean_eta_vbs = sum(vbs_etas) / 2 
     output["vbs_0_pt"] = vbs_pts[0]
     output["vbs_1_pt"] = vbs_pts[1]
-    output["vbs_0_eta"] = abs(vbs_etas[0])
-    output["vbs_1_eta"] = abs(vbs_etas[1])
-    output["vbs_0_phi"] = abs(vbs_phis[0])
-    output["vbs_1_phi"] = abs(vbs_phis[1])
-    output["vbs_0_E"] = abs(vbs_Es[0])
-    output["vbs_1_E"] = abs(vbs_Es[1])
+    output["vbs_0_eta"] = vbs_etas[0]
+    output["vbs_1_eta"] = vbs_etas[1]
+    output["vbs_0_phi"] = vbs_phis[0]
+    output["vbs_1_phi"] = vbs_phis[1]
+    output["vbs_0_E"] = vbs_Es[0]
+    output["vbs_1_E"] = vbs_Es[1]
     output["mjj_vbs"] = total_vbs.M()
     output["deltaeta_vbs"] = deltaeta_vbs
     output["deltaphi_vbs"] = abs(vbsjets[0].DeltaPhi(vbsjets[1]))
@@ -105,12 +105,12 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
         print "Vjet etas", vjet_etas
     output["vjet_0_pt"] = vjet_pts[0]
     output["vjet_1_pt"] = vjet_pts[1]
-    output["vjet_0_eta"] = abs(vjet_etas[0])
-    output["vjet_1_eta"] = abs(vjet_etas[1])
-    output["vjet_0_phi"] = abs(vjet_phis[0])
-    output["vjet_1_phi"] = abs(vjet_phis[1])
-    output["vjet_0_E"] = abs(vjet_Es[0])
-    output["vjet_1_E"] = abs(vjet_Es[1])
+    output["vjet_0_eta"] = vjet_etas[0]
+    output["vjet_1_eta"] = vjet_etas[1]
+    output["vjet_0_phi"] = vjet_phis[0]
+    output["vjet_1_phi"] = vjet_phis[1]
+    output["vjet_0_E"] = vjet_Es[0]
+    output["vjet_1_E"] = vjet_Es[1]
     output["mjj_vjet"] = total_vjet.M()
     output["deltaphi_vjet"] =  abs(vjets[0].DeltaPhi(vjets[1]))
     output["deltaeta_vjet"] = abs(vjet_etas[0] - vjet_etas[1])
@@ -161,7 +161,7 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     #Centrality
     eta_ww = (w_lep.Eta() + w_had.Eta())/2
     if deltaeta_vbs != 0.:
-        output["Centr_vbs"] = abs(vbs_etas[0] - eta_ww - vbs_etas[1]) / deltaeta_vbs
+        output["Centr_vbs"] = abs(deltaeta_vbs - eta_ww) / deltaeta_vbs
     deltaeta_plus = max(vbs_etas) - max([w_lep.Eta(), w_had.Eta()])
     deltaeta_minus = min([w_lep.Eta(), w_had.Eta()]) - min(vbs_etas)
     output["Centr_ww"] = min([deltaeta_plus, deltaeta_minus])
@@ -212,12 +212,12 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     mean_eta_vbs = sum(vbs_etas) / 2 
     output["vbs_0_pt"] = vbs_pts[0]
     output["vbs_1_pt"] = vbs_pts[1]
-    output["vbs_0_eta"] = abs(vbs_etas[0])
-    output["vbs_1_eta"] = abs(vbs_etas[1])
-    output["vbs_0_phi"] = abs(vbs_phis[0])
-    output["vbs_1_phi"] = abs(vbs_phis[1])
-    output["vbs_0_E"] = abs(vbs_Es[0])
-    output["vbs_1_E"] = abs(vbs_Es[1])
+    output["vbs_0_eta"] = vbs_etas[0]
+    output["vbs_1_eta"] = vbs_etas[1]
+    output["vbs_0_phi"] = vbs_phis[0]
+    output["vbs_1_phi"] = vbs_phis[1]
+    output["vbs_0_E"] = vbs_Es[0]
+    output["vbs_1_E"] = vbs_Es[1]
     output["mjj_vbs"] = total_vbs.M()
     output["deltaeta_vbs"] = deltaeta_vbs
     output["deltaphi_vbs"] = abs(vbsjets[0].DeltaPhi(vbsjets[1]))
@@ -278,7 +278,7 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     #Centrality
     eta_ww = (w_lep.Eta() + w_had.Eta())/2
     if deltaeta_vbs != 0.:
-        output["Centr_vbs"] = abs(vbs_etas[0] - eta_ww - vbs_etas[1]) / deltaeta_vbs
+        output["Centr_vbs"] = abs(deltaeta_vbs - eta_ww) / deltaeta_vbs
     deltaeta_plus = max(vbs_etas) - max([w_lep.Eta(), w_had.Eta()])
     deltaeta_minus = min([w_lep.Eta(), w_had.Eta()]) - min(vbs_etas)
     output["Centr_ww"] = min([deltaeta_plus, deltaeta_minus])
