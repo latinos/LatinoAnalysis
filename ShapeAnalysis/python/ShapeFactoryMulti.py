@@ -628,16 +628,20 @@ class ShapeFactory:
 
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
+          tmpROOTFile.Close()
+          os.unlink(tmpfile.name)
 
           # tree-type nuisances
           for nuisanceName in nuisanceDrawers.keys():
+            tmpROOTFile = ROOT.TFile.Open(tmpfile.name, 'recreate')
+            tmpROOTFile.cd()
             ndrawers = nuisanceDrawers.pop(nuisanceName)
             for var, ndrawer in ndrawers.iteritems():
               print 'Start', nuisanceName + var, 'histogram fill'
               ndrawer.execute(nevents, firstEvent)
-
-          tmpROOTFile.Close()
-          os.unlink(tmpfile.name)
+            tmpROOTFile.Close()
+            os.unlink(tmpfile.name)
+          
 
           print 'Postfill'
 
