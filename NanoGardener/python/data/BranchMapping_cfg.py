@@ -136,6 +136,12 @@ _ElepT_branches = [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'pjjSm_wh',
+  'pjjTr_wh',
+  'pjjSm_zh',
+  'pjjTr_zh',
+  'meAvg_wh',
+  'meAvg_zh',
   ## MonoHiggs Semileptonic
   # deltas
   'MHlnjj_dphi_ljjVmet',
@@ -263,6 +269,12 @@ _MET_branches = [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'pjjSm_wh',
+  'pjjTr_wh',
+  'pjjSm_zh',
+  'pjjTr_zh',
+  'meAvg_wh',
+  'meAvg_zh',
   ## MonoHiggs Semileptonic
   # deltas
   'MHlnjj_dphi_ljjVmet',
@@ -390,6 +402,12 @@ _JES_branches += [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'pjjSm_wh',
+  'pjjTr_wh',
+  'pjjSm_zh',
+  'pjjTr_zh',
+  'meAvg_wh',
+  'meAvg_zh',
   ## MonoHiggs Semileptonic
   # deltas
   'MHlnjj_dphi_ljjVmet',
