@@ -1,3 +1,4 @@
+
 #include <math.h>
 #include <ZZMatrixElement/MELA/interface/Mela.h>
 
@@ -6,26 +7,8 @@ std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Produ
   std::vector<float> mes;
 
   bool Decay = 0;
-  double g2=1;
-  double g4=1;
 
   if(Prod==TVar::ZZGG || Prod==TVar::ZZINDEPENDENT)Decay = 1;
-
-  if(!IsReco){
-   if(Decay==1){
-    g2 = 1.133582;
-    g4 = 1.76132;
-   }else if(Prod==TVar::JJVBF){
-    g2 = 0.27196538;
-    g4 = 0.297979018705;
-   }else if(Prod==TVar::Had_ZH || Prod==TVar::Lep_ZH){
-    g2 = 0.112481;
-    g4 = 0.144057;
-   }else if(Prod==TVar::Had_WH || Prod==TVar::Lep_WH){
-    g2 = 0.0998956;
-    g4 = 0.1236136;
-   }
-  }
 
   float me_hsm = -999;
   _mela->setProcess(TVar::HSMHiggs, ME, Prod);
@@ -54,7 +37,7 @@ std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Produ
   float me_mixhm = -999;
   _mela->setProcess(TVar::SelfDefine_spin0, ME, Prod);
   _mela->selfDHzzcoupl[0][gHIGGS_VV_1][0] = 1.;
-  _mela->selfDHzzcoupl[0][gHIGGS_VV_4][0] = g4;    
+  _mela->selfDHzzcoupl[0][gHIGGS_VV_4][0] = 1.;    
   if(IsGG) _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;        
   if(Decay)_mela->computeP(me_mixhm , IsReco);
   else     _mela->computeProdP(me_mixhm , IsReco);
@@ -63,11 +46,41 @@ std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Produ
   float me_mixhp = -999;
   _mela->setProcess(TVar::SelfDefine_spin0, ME, Prod);
   _mela->selfDHzzcoupl[0][gHIGGS_VV_1][0]= 1.;
-  _mela->selfDHzzcoupl[0][gHIGGS_VV_2][0]= g2;   
-  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;                                                
+  _mela->selfDHzzcoupl[0][gHIGGS_VV_2][0]= 1.;   
+  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;                    
   if(Decay) _mela->computeP(me_mixhp, IsReco);
   else      _mela->computeProdP(me_mixhp, IsReco);
   mes.push_back(me_mixhp);
+
+  float me_mixhl = -999;
+  _mela->setProcess(TVar::SelfDefine_spin0, ME, Prod);
+  _mela->selfDHzzcoupl[0][gHIGGS_VV_1][0]= 1.;
+  _mela->selfDHzzcoupl[0][gHIGGS_VV_1_PRIME2][0]= 1.;   
+  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;                         
+  if(Decay) _mela->computeP(me_mixhl, IsReco);
+  else      _mela->computeProdP(me_mixhl, IsReco); 
+  mes.push_back(me_mixhl);
+
+  /////// VH corrections //////
+  // replace the true BW V shape with a parameterized one more suitable for smearing effects on jets.
+  // Average ME constant for int KDs, depends on mH
+
+  if((Prod==TVar::Had_WH || Prod==TVar::Had_ZH) && IsReco){
+
+   float PjjSmeared = -999;
+   float PjjTrue    = -999;
+   float avgME      = -999;
+
+   _mela->setProcess(TVar::HSMHiggs, ME, Prod);
+   _mela->computeDijetConvBW(PjjSmeared, false);
+   _mela->computeDijetConvBW(PjjTrue, true);
+   _mela->computeProdP(avgME, IsReco); 
+   _mela->getConstant(avgME); // call after computeProdP
+
+   mes.push_back(PjjSmeared); 
+   mes.push_back(PjjTrue);
+   mes.push_back(avgME); 
+  }
 
   return mes;
 
