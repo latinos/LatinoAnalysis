@@ -41,8 +41,14 @@ vbsjjlnu_samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_Q
                 'WJetsToLNu_Pt100to250',
                 'WJetsToLNu_Pt250to400',
                 'WJetsToLNu_Pt400to600',
-                'WJetsToLNu_Pt600toInf'
-                
+                'WJetsToLNu_Pt600toInf',
+                'WJetsToLNu_0J',
+                'WJetsToLNu_1J',
+                'WJetsToLNu_2J',
+                'WJetsToLNu-LO_1J',
+                'WJetsToLNu-LO_2J',
+                'WJetsToLNu-LO_3J',
+                'WJetsToLNu-LO_4J',
                 # 'QCD_Pt-15to20_MuEnrichedPt5','QCD_Pt-20to30_MuEnrichedPt5','QCD_Pt-30to50_MuEnrichedPt5',
                 # 'QCD_Pt-50to80_MuEnrichedPt5','QCD_Pt-80to120_MuEnrichedPt5','QCD_Pt-120to170_MuEnrichedPt5',
                 # 'QCD_Pt-170to300_MuEnrichedPt5','QCD_Pt-20to30_EMEnriched','QCD_Pt-30to50_EMEnriched','QCD_Pt-50to80_EMEnriched'

@@ -66,7 +66,14 @@ samples['WJetsToLNu_Pt400to600']                	.extend( ['xsec=3.110130566',	'
 samples['WJetsToLNu_Pt600toInf']                   .extend( ['xsec=0.4683178368',	'kfact=1.0',		'ref=A1'] )
 
 
+Samples['WJetsToLNu-LO_1J'].extend( [ 'xsec=9578.0', 'kfact=1.0', 'ref=W'])
+Samples['WJetsToLNu-LO_2J'].extend( [ 'xsec=2793.0', 'kfact=1.0', 'ref=W'])
+Samples['WJetsToLNu-LO_3J'].extend( [ 'xsec=992.5', 'kfact=1.0', 'ref=W'])
+Samples['WJetsToLNu-LO_4J'].extend( [ 'xsec=544.3', 'kfact=1.0', 'ref=W'])
 
+samples['DYJetsToLL_0J']  .extend( [ 'xsec=4620.52', 'kfact=1.0', 'ref=A1' ])
+samples['DYJetsToLL_1J']  .extend( [ 'xsec=859.59', 'kfact=1.0', 'ref=A1' ])
+samples['DYJetsToLL_2J']  .extend( [ 'xsec=338.26', 'kfact=1.0', 'ref=A1' ])
 
 ## DY
 samples['DYJetsToLL_M-10to50']        	   .extend( ['xsec=18610.0',	'kfact=1.000',		'ref=E'] )
