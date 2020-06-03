@@ -149,7 +149,7 @@ class VBSjjlnu_JetPairing(Module):
                     print("ERROR! Selected pairing mode not found!!")
                     #return False
         else:   
-            # Cut the event:
+            # Don't use event in VBSjjlnu analysis
             # or it's boosted but with not enough jets, 
             # or it is not boosted and it has less than 4 jets with minpt
             #print("Event removed")

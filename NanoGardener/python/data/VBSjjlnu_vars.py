@@ -16,7 +16,7 @@ VBSjjlnu_branches  = {
             "deltaR_lep_nu", "deltaR_vbs", "deltaR_vjet",
             "Rvjets_0", "Rvjets_1",
             "Zvjets_0", "Zvjets_1", "Zlep",
-            "Asym_vbs", "Asym_vjet", "Mw_lep", "Mtw_lep", "w_lep_pt", 
+            "Asym_vbs", "Asym_vjet", "Mw_lep", "Mtw_lep", "w_lep_pt", "w_had_pt",
             "Mww", "R_ww", "R_mw", "A_ww",
             "Centr_vbs", "Centr_ww", "Lep_proj", "Lep_projw",
             "recoMET", "recoMET_pz" ,
@@ -150,6 +150,8 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
     w_had_t.SetZ(0)
     ww_vec = w_lep + w_had
     output["w_lep_pt"] = w_lep.Pt()
+    output["w_had_pt"] = w_had_t.Pt()
+
     output["Mw_lep"] = w_lep.M()
     #output["Mtw_lep"] = w_lep_t.M()
     output["Mtw_lep"] = sqrt(2 * lepton.Pt() * met.Pt() * (1 - cos( lepton.DeltaPhi(met))));
@@ -267,6 +269,8 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     w_had_t.SetZ(0)
     ww_vec = w_lep + w_had
     output["w_lep_pt"] = w_lep.Pt()
+    output["w_had_pt"] = w_had_t.Pt()
+
     output["Mw_lep"] = w_lep.M()
     #output["Mtw_lep"] = w_lep_t.M()
     output["Mtw_lep"] = sqrt(2 * lepton.Pt() * met.Pt() * (1 - cos( lepton.DeltaPhi(met))));
