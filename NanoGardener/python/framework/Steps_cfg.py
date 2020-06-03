@@ -27,6 +27,20 @@ def createJESvariation(type, kind="Up"):
                }
   return dictionary 
 
+def createFatjetJESvariation(type_, kind="Up"):
+  dictionary = {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
+                  # The branch prefix needs to be used if the CleanFatJet module is run on top of CorrFatJet* modules
+                  'declare'    : 'fatjetMaker_jes{0}{1} = lambda : FatJetMaker( input_branch_suffix="jes{0}{1}", output_branch_map="fatjetJES{0}{2}", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)' .format(type_, kind, kind.lower()),
+                  'module'     : 'fatjetMaker_jes{0}{1}()'.format(type_, kind)
+    }
+  return dictionary
+
+
+
 def createJESchain(type, kind="Up"):
   typeShort = type
   if type == "Total":
@@ -37,6 +51,7 @@ def createJESchain(type, kind="Up"):
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
   return chain  
+
 
 def createJESchain_CombJJLNu(type, kind="Up"):
   typeShort = type
@@ -49,6 +64,20 @@ def createJESchain_CombJJLNu(type, kind="Up"):
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
   return chain  
+
+
+def createfatjetJESchain_CombJJLNu(type, kind="Up"):
+  typeShort = type
+  if type == "Total":
+    typeShort = ""
+  toreplace = typeShort+kind.lower()  
+  chainTemplate = ['CleanFatJet_fatjetJESVAR', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR', 
+                  'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR']
+  chain = []
+  for item in chainTemplate:
+    chain.append(item.replace("VAR", toreplace))
+  return chain  
+    
     
 def addJESchainMembers():
   dictionary = {}
@@ -124,84 +153,89 @@ def addJESchainMembers():
 
 def addSystChainMembers_CombJJLNu():
   dictionary = {}
-  for typ in ["Total", "Absolute", "Absolute_RPLME_YEAR", "BBEC1", "BBEC1_RPLME_YEAR", "EC2", "EC2_RPLME_YEAR", "FlavorQCD", "HF", "HF_RPLME_YEAR", "RelativeBal", "RelativeSample_RPLME_YEAR"]:
-    for kind in ["Up", "Do"]:
-      typeShort = typ
-      if typ == "Total":
-        typeShort = ""  
-      mapname = "JES"+typeShort+kind.lower()
+  for jetType in ["AK4", "AK8"]:
+    for typ in ["Total", "Absolute", "Absolute_RPLME_YEAR", "BBEC1", "BBEC1_RPLME_YEAR", "EC2", "EC2_RPLME_YEAR", "FlavorQCD", "HF", "HF_RPLME_YEAR", "RelativeBal", "RelativeSample_RPLME_YEAR"]:
+      for kind in ["Up", "Do"]:
+        typeShort = typ
+        if typ == "Total":
+          typeShort = ""  
 
-      dictionary['VBSjjlnu_pairing_'+mapname] = {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True  ,
-        'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
-        'declare'    : 'vbs_pairing_{0} = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="{0}", debug=False)'.format(mapname),
-        'module'     : 'vbs_pairing_{0}()'.format(mapname),
-        'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-       }
+        if jetType == "AK4":
+          mapname = "JES"+typeShort+kind.lower()
+        elif jetType == "AK8":
+          mapname = "fatjetJES"+typeShort+kind.lower()
 
-      dictionary['VBSjjlnu_kin_'+mapname] = {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True  ,
-        'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
-        'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
-        'module'     : 'vbs_vars_maker_{0}()'.format(mapname),
-        'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-      }
+        dictionary['VBSjjlnu_pairing_'+mapname] = {
+          'isChain'    : False ,
+          'do4MC'      : True  ,
+          'do4Data'    : True  ,
+          'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
+          'declare'    : 'vbs_pairing_{0} = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="{0}", debug=False)'.format(mapname),
+          'module'     : 'vbs_pairing_{0}()'.format(mapname),
+          'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        }
 
-      dictionary['whadJetSel_'+mapname] = {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True  ,
-        'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
-        'declare'   : 'whadJetSel_{0} = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet" , branch_map="{0}")'.format(mapname),
-        'module'    : 'whadJetSel_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-      }
+        dictionary['VBSjjlnu_kin_'+mapname] = {
+          'isChain'    : False ,
+          'do4MC'      : True  ,
+          'do4Data'    : True  ,
+          'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
+          'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
+          'module'     : 'vbs_vars_maker_{0}()'.format(mapname),
+          'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        }
 
-      dictionary['wlepMaker_'+mapname] = {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True  ,
-        'import'    : 'LatinoAnalysis.NanoGardener.modules.WlepMaker',
-        'declare'   : 'wlepMkr_{0} = lambda : WlepMaker(branch_map="{0}")'.format(mapname),
-        'module'    : 'wlepMkr_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-      }
+        dictionary['whadJetSel_'+mapname] = {
+          'isChain'    : False ,
+          'do4MC'      : True  ,
+          'do4Data'    : True  ,
+          'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
+          'declare'   : 'whadJetSel_{0} = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet" , branch_map="{0}")'.format(mapname),
+          'module'    : 'whadJetSel_{0}()'.format(mapname),
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        }
 
-      dictionary['HMlnjjVars_'+mapname] = {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True  ,
-        'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVars' ,
-        'declare'    : 'HMlnjjVars_{0} = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map="{0}")'.format(mapname),
-        'module'     : 'HMlnjjVars_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-      }
+        dictionary['wlepMaker_'+mapname] = {
+          'isChain'    : False ,
+          'do4MC'      : True  ,
+          'do4Data'    : True  ,
+          'import'    : 'LatinoAnalysis.NanoGardener.modules.WlepMaker',
+          'declare'   : 'wlepMkr_{0} = lambda : WlepMaker(branch_map="{0}")'.format(mapname),
+          'module'    : 'wlepMkr_{0}()'.format(mapname),
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        }
 
-      dictionary['HMDNNProdSemi_'+mapname] = {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True  ,
-        'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_prod_semi' ,
-        'declare'    : 'HMDNNPrSem_{0} = lambda : ApplyDNN_Production_Semi(branch_map="{0}")'.format(mapname),
-        'module'     : 'HMDNNPrSem_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-      }
+        dictionary['HMlnjjVars_'+mapname] = {
+          'isChain'    : False ,
+          'do4MC'      : True  ,
+          'do4Data'    : True  ,
+          'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVars' ,
+          'declare'    : 'HMlnjjVars_{0} = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map="{0}")'.format(mapname),
+          'module'     : 'HMlnjjVars_{0}()'.format(mapname),
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        }
 
-      dictionary['HMDNNNeutSemi_'+mapname] = {
-        'isChain'    : False ,
-        'do4MC'      : True  ,
-        'do4Data'    : True  ,
-        'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi' ,
-        'declare'    : 'HMDNNNeSem_{0} = lambda : ApplyDNN_Neutrino_Semi(branch_map="{0}")'.format(mapname),
-        'module'     : 'HMDNNNeSem_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-      }
+        dictionary['HMDNNProdSemi_'+mapname] = {
+          'isChain'    : False ,
+          'do4MC'      : True  ,
+          'do4Data'    : True  ,
+          'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_prod_semi' ,
+          'declare'    : 'HMDNNPrSem_{0} = lambda : ApplyDNN_Production_Semi(branch_map="{0}")'.format(mapname),
+          'module'     : 'HMDNNPrSem_{0}()'.format(mapname),
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        }
 
-  for typ in ["ElepT", "MupT", "MET", "fatjetJESTotal", "fatjetJMS", "fatjetJMR"]:
+        dictionary['HMDNNNeutSemi_'+mapname] = {
+          'isChain'    : False ,
+          'do4MC'      : True  ,
+          'do4Data'    : True  ,
+          'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi' ,
+          'declare'    : 'HMDNNNeSem_{0} = lambda : ApplyDNN_Neutrino_Semi(branch_map="{0}")'.format(mapname),
+          'module'     : 'HMDNNNeSem_{0}()'.format(mapname),
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        }
+
+  for typ in ["ElepT", "MupT", "MET", "fatjetJMS", "fatjetJMR", "fatjetJER",]:
     for kind in ["Up", "Do"]:
       mapname = typ+kind.lower()
       dictionary['VBSjjlnu_pairing_'+mapname] = {
@@ -279,7 +313,7 @@ def addSystChainMembers_CombJJLNu():
 
 def prepare_CombJJLNu_syst(basename, selection):
   dictionary = {}
-  for syst in ["JES", "MupT", "ElepT", "MET", "fatjetJESTotal", "fatjetJMS", "fatjetJMR"]:
+  for syst in ["JES", "MupT", "ElepT", "MET", "fatjetJES", "fatjetJMS", "fatjetJMR", "fatjetJER"]:
     for kind in ['up', 'do']:
       torep = syst + kind.lower()
       if syst == "JES":
@@ -288,9 +322,8 @@ def prepare_CombJJLNu_syst(basename, selection):
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets' : ['JESBase','baseW', 
-                        'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
-                        'trigMCKeepRun', 'CorrFatJetMC', 'CleanFatJet'
+          'subTargets' : [,'baseW', 'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                          'JESBase', 'trigMCKeepRun', 'CorrFatJetMC', 'CleanFatJet'
                         ] +
                           createJESchain_CombJJLNu("Total", "Up") +
                           createJESchain_CombJJLNu("Absolute", "Up") +
@@ -305,8 +338,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                           createJESchain_CombJJLNu("RelativeBal", "Up") +
                           createJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", "Up"),   
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
-          }
-
+        }
+  
         # other systematics
       elif syst in ["ElepT", "MupT"]:
         dictionary[basename+"_"+ syst + kind] = {
@@ -314,11 +347,10 @@ def prepare_CombJJLNu_syst(basename, selection):
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets': ['baseW', 
+          'subTargets': ['baseW', 'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                         'do_{0}_suffix'.format(torep), 
                         'trigMCKeepRun_{0}'.format(torep), 
                         'LeptonSF_{0}'.format(torep),
-                        'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                         'CorrFatJetMC', 'CleanFatJet', 
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
                         'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
@@ -331,29 +363,52 @@ def prepare_CombJJLNu_syst(basename, selection):
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets': ['baseW', 
+          'subTargets': ['baseW', 'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                         'do_{0}_suffix'.format(torep), 
-                        'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
-                        'CorrFatJetMC', 'CleanFatJet', 
+                        'trigMCKeepRun','CorrFatJetMC', 'CleanFatJet', 
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
                         'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
-      elif "fatjet" in syst:
+      elif syst  in ["fatjetJMS", "fatjetJMR", "fatjetJER"]:
         dictionary[basename+"_"+ syst + kind] = {
           'isChain'    : True ,
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets': ['baseW', 
-                        'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
-                        'CorrFatJetMC', 'CleanFatJet_{0}'.format(torep), 
+          'subTargets': ['baseW', 'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                        'trigMCKeepRun','CorrFatJetMC', 
+                        'CleanFatJet_{0}'.format(torep), 
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
                         'whadJetSel_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
+      elif syst == "fatjetJES":
+        dictionary[basename +"_"+ syst+kind] = {
+          'isChain'    : True ,
+          'do4MC'      : True  ,
+          'do4Data'    : False  ,
+          'selection'  : selection,
+          'subTargets' : ['baseW', 
+                        'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                        'trigMCKeepRun', 'CorrFatJetMC'] +
+                          createfatjetJESchain_CombJJLNu("Total", "Up") +
+                          createfatjetJESchain_CombJJLNu("Absolute", "Up") +
+                          createfatjetJESchain_CombJJLNu("Absolute_RPLME_YEAR", "Up") +
+                          createfatjetJESchain_CombJJLNu("BBEC1", "Up") +
+                          createfatjetJESchain_CombJJLNu("BBEC1_RPLME_YEAR", "Up") +
+                          createfatjetJESchain_CombJJLNu("EC2", "Up") +
+                          createfatjetJESchain_CombJJLNu("EC2_RPLME_YEAR", "Up") +
+                          createfatjetJESchain_CombJJLNu("FlavorQCD", "Up") +
+                          createfatjetJESchain_CombJJLNu("HF", "Up") +
+                          createfatjetJESchain_CombJJLNu("HF_RPLME_YEAR", "Up") +
+                          createfatjetJESchain_CombJJLNu("RelativeBal", "Up") +
+                          createfatjetJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", "Up"), ,
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+        }
+
   #pprint(dictionary)
   return dictionary
 
@@ -1895,8 +1950,8 @@ Steps = {
                 'isChain': False,
                 'do4MC': True,
                 'do4Data': False,
-                'import': 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2',
-                'declare': 'corr_fatjet_mc = createJMECorrector(isMC=True,dataYear=RPLME_YEAR,  jesUncert="Total", redojec=True, jetType="AK8PFPuppi")',
+                'import': 'LatinoAnalysis.NanoGardener.modules.FatJetCorrHelper',
+                'declare': 'corr_fatjet_mc = createFatjetCorrector( globalTag="Regrouped_RPLME_JESGT", dataYear=RPLME_YEAR, jetType="AK8PFPuppi", isMC=True, jesUncert=["Total", "Absolute", "Absolute_RPLME_YEAR", "BBEC1", "BBEC1_RPLME_YEAR", "EC2", "EC2_RPLME_YEAR", "FlavorQCD", "HF", "HF_RPLME_YEAR", "RelativeBal", "RelativeSample_RPLME_YEAR"], redojec=True, applySmearing=True)',
                 'module':  'corr_fatjet_mc()'
     },
 
@@ -3658,6 +3713,29 @@ Steps = {
                   'module'     : 'fatjetMaker_jesdo()'
     },
 
+   'CleanFatJet_fatjetJESAbsoluteup' : createFatjetJESvariation("Absolute", "Up"), 
+   'CleanFatJet_fatjetJESAbsolutedo' : createFatjetJESvariation("Absolute", "Do"), 
+   'CleanFatJet_fatjetJESAbsolute_RPLME_YEARup' : createFatjetJESvariation("Absolute_RPLME_YEAR", "Up"), 
+   'CleanFatJet_fatjetJESAbsolute_RPLME_YEARdo' : createFatjetJESvariation("Absolute_RPLME_YEAR", "Do"), 
+   'CleanFatJet_fatjetJESBBEC1up' : createFatjetJESvariation("BBEC1", "Up"), 
+   'CleanFatJet_fatjetJESBBEC1do' : createFatjetJESvariation("BBEC1", "Do"), 
+   'CleanFatJet_fatjetJESBBEC1_RPLME_YEARup' : createFatjetJESvariation("BBEC1_RPLME_YEAR", "Up"), 
+   'CleanFatJet_fatjetJESBBEC1_RPLME_YEARdo' : createFatjetJESvariation("BBEC1_RPLME_YEAR", "Do"), 
+   'CleanFatJet_fatjetJESEC2up' : createFatjetJESvariation("EC2", "Up"), 
+   'CleanFatJet_fatjetJESEC2do' : createFatjetJESvariation("EC2", "Do"), 
+   'CleanFatJet_fatjetJESEC2_RPLME_YEARup' : createFatjetJESvariation("EC2_RPLME_YEAR", "Up"), 
+   'CleanFatJet_fatjetJESEC2_RPLME_YEARdo' : createFatjetJESvariation("EC2_RPLME_YEAR", "Do"), 
+   'CleanFatJet_fatjetJESFlavorQCDup' : createFatjetJESvariation("FlavorQCD", "Up"), 
+   'CleanFatJet_fatjetJESFlavorQCDdo' : createFatjetJESvariation("FlavorQCD", "Do"), 
+   'CleanFatJet_fatjetJESHFup' : createFatjetJESvariation("HF", "Up"), 
+   'CleanFatJet_fatjetJESHFdo' : createFatjetJESvariation("HF", "Do"), 
+   'CleanFatJet_fatjetJESHF_RPLME_YEARup' : createFatjetJESvariation("HF_RPLME_YEAR", "Up"), 
+   'CleanFatJet_fatjetJESHF_RPLME_YEARdo' : createFatjetJESvariation("HF_RPLME_YEAR", "Do"), 
+   'CleanFatJet_fatjetJESRelativeBalup' : createFatjetJESvariation("RelativeBal", "Up"), 
+   'CleanFatJet_fatjetJESRelativeBaldo' : createFatjetJESvariation("RelativeBal", "Do"), 
+   'CleanFatJet_fatjetJESRelativeSample_RPLME_YEARup' : createFatjetJESvariation("RelativeSample_RPLME_YEAR", "Up"), 
+   'CleanFatJet_fatjetJESRelativeSample_RPLME_YEARdo' : createFatjetJESvariation("RelativeSample_RPLME_YEAR", "Do"), 
+
     'CleanFatJet_fatjetJMSup' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -3697,6 +3775,27 @@ Steps = {
                   'declare'    : 'fatjetMaker_jmrdo = lambda : FatJetMaker( input_branch_suffix="jmrDown",output_branch_map="fatjetJMRdo", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
                   'module'     : 'fatjetMaker_jmrdo()'
     },
+
+     'CleanFatJet_fatjetJERup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
+                  # The branch prefix needs to be used if the CleanFatJet module is run on top of CorrFatJet* modules
+                  'declare'    : 'fatjetMaker_jerup = lambda : FatJetMaker( input_branch_suffix="jerUp", output_branch_map="fatjetJERup",jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
+                  'module'     : 'fatjetMaker_jerup()'
+    },
+
+     'CleanFatJet_fatjetJERdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
+                  # The branch prefix needs to be used if the CleanFatJet module is run on top of CorrFatJet* modules
+                  'declare'    : 'fatjetMaker_jerdo = lambda : FatJetMaker( input_branch_suffix="jerDown",output_branch_map="fatjetJERdo", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
+                  'module'     : 'fatjetMaker_jerdo()'
+    },
+
   
 
 

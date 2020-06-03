@@ -337,6 +337,10 @@ _JES_branches += [
 ]
 
 _Fatjet_syst_branches = [
+  'FatJet_pt',
+  'FatJet_mass',
+  'FatJet_msoftdrop',
+
   'nCleanFatJet',
   'nCleanJetNotFat',
   'CleanFatJet_pt',
@@ -490,6 +494,16 @@ branch_mapping["fatjetJMRdo"] = {
   'suffix': '_fatjetJMRdo'
 }
 
+branch_mapping["fatjetJERup"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJERup'
+}
+
+branch_mapping["fatjetJERdo"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJERdo'
+}
+
 branch_mapping["fatjetJESTotalup"] = {
   'branches': _Fatjet_syst_branches,
   'suffix': '_fatjetJESTotalup'
@@ -515,4 +529,12 @@ for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
   branch_mapping['JES'+source+"up"] = {
     'branches': _JES_branches,
     'suffix': '_JES'+source+'up'
+  }
+  branch_mapping['fatejetJES'+source+"do"] = {
+    'branches': _Fatjet_syst_branches,
+    'suffix': '_fatjetJES'+source+'do'
+  }
+  branch_mapping['fatjetJES'+source+"up"] = {
+    'branches': _Fatjet_syst_branches,
+    'suffix': '_fatjetJES'+source+'up'
   }

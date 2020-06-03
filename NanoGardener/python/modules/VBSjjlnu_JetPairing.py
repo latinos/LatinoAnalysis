@@ -99,7 +99,7 @@ class VBSjjlnu_JetPairing(Module):
         self.nFatJet = event.nCleanFatJet
         self.rawJet_coll    = Collection(event, 'Jet')
         self.Jet_coll       = Collection(event, 'CleanJet')
-        self.JetNotFat_coll = Collection(event,'CleanJetNotFat')
+        self.JetNotFat_coll = Collection(event, 'CleanJetNotFat')
         
         # do this check at every event, as other modules might have read further branches
         # if event._tree._ttreereaderversion > self._ttreereaderversion: 

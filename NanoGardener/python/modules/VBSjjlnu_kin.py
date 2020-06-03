@@ -22,7 +22,7 @@ class VBSjjlnu_kin(Module):
 
     metType can be MET or Puppi.
     '''
-    def __init__(self, mode=[ "maxmjj", "maxmjj_massWZ"], met="Puppi", branch_map='', debug=False, mjj_vbs_cut=0., deltaeta_vbs_cut=0.):
+    def __init__(self, mode=[ "maxmjj", "maxmjj_massWZ"], met="Puppi", branch_map='', debug=False, mjj_vbs_cut=-1, deltaeta_vbs_cut=-1):
         self.V_jets_var = { 0: "V_jets_"+ mode[0],  1: "V_jets_"+ mode[1]}
         self.VBS_jets_var = { 0: "VBS_jets_"+mode[0], 1: "VBS_jets_" +mode[1]}
         self.metType = met
