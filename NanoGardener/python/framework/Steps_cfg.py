@@ -332,7 +332,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets' : [,'baseW', 'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+          'subTargets' : ['baseW', 'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                           'JESBase', 'trigMCKeepRun', 'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF'
                         ] +
                           createJESchain_CombJJLNu("Total", "Up") +
@@ -415,7 +415,7 @@ def prepare_CombJJLNu_syst(basename, selection):
                           createfatjetJESchain_CombJJLNu("HF", "Up") +
                           createfatjetJESchain_CombJJLNu("HF_RPLME_YEAR", "Up") +
                           createfatjetJESchain_CombJJLNu("RelativeBal", "Up") +
-                          createfatjetJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", "Up"), ,
+                          createfatjetJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", "Up"), 
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
 
@@ -1982,7 +1982,7 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BoostedWtagSF',
                   'declare'    : 'boostedWtagsf = lambda : BoostedWtagSF(year=RPLME_YEAR, jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)',
                   'module'     : 'boostedWtagsf()'
-    }
+    },
 
     # 'CorrFatJetMass' : {
     #               'isChain'    : False ,

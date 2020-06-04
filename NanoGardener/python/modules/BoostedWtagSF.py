@@ -115,7 +115,7 @@ class BoostedWtagSF(Module):
                 goodfatjet_tau21s.append(fj_tau21)
     
 
-        # First of all check if there is one Fatjet passing tau21
+        # Apply the tau21 cut on all the fatjets passing the kinematical cuts
         tau21cut = list(map(lambda t: t<=self.max_tau21))
 
         if any(tau21cut):
