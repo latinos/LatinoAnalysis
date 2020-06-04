@@ -62,7 +62,7 @@ jmsValues = { '2016' : [1.00, 0.9906, 1.0094], #nominal, down, up
               '2018' : [0.997, 0.993, 1.001]
             }
 
-def createFatjetCorrector(globalTag, dataYear, jetType="AK8PFPuppi", isMC=True, jesUncert=["Total"], redojec=False, applySmearing=True, isFastSim=False):
+def createFatjetCorrector(globalTag, dataYear, jetType="AK8PFPuppi", isMC=True, jesUncert=["Total"], redojec=True, applySmearing=True, isFastSim=False):
     
     noGroom=False
 

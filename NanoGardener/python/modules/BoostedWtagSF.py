@@ -1,5 +1,7 @@
 import ROOT
+from math import sqrt
 ROOT.PyConfig.IgnoreCommandLineOptions = True
+
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
@@ -116,7 +118,7 @@ class BoostedWtagSF(Module):
     
 
         # Apply the tau21 cut on all the fatjets passing the kinematical cuts
-        tau21cut = list(map(lambda t: t<=self.max_tau21))
+        tau21cut = list(map(lambda t: t<=self.max_tau21, goodfatjet_tau21s))
 
         if any(tau21cut):
             #  we have found at least one fatjet passing kin cuts and also tau21 ID --> high purity SF region
@@ -140,6 +142,8 @@ class BoostedWtagSF(Module):
         self.out.fillBranch("BoostedWtagSF_nominal", output_SF[0])
         self.out.fillBranch("BoostedWtagSF_up",      output_SF[1])  
         self.out.fillBranch("BoostedWtagSF_down",    output_SF[2])
+        
+        return True
                
             
     def getDeltaR(self, phi1, eta1, phi2, eta2):
