@@ -1271,8 +1271,9 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : CombJJLNu_preselections["2016"]["MC"],
                   'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMCKeepRun', 
-                                  'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 
-                                  'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi'],
+                                  'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF',
+                                  'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
+                                  'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2016,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
@@ -1294,8 +1295,8 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : CombJJLNu_preselections["2017"]["MC"],
                   'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMCKeepRun', 
-                                  'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 
-                                  'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi'],
+                                  'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF', 'VBSjjlnu_pairing', 'VBSjjlnu_kin',  
+                                  'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2017,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
@@ -1317,8 +1318,8 @@ Steps = {
                   'do4Data'    : False  ,
                   'selection'  : CombJJLNu_preselections["2018"]["MC"],
                   'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMCKeepRun', 
-                                'CorrFatJetMC', 'CleanFatJet', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 'whadJetSel', 
-                                'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi'],
+                                'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF', 'VBSjjlnu_pairing', 'VBSjjlnu_kin', 
+                                'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2018,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
