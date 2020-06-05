@@ -7,5 +7,8 @@ if len(sys.argv)>1:
 else:
     output = steps.Steps
 
+for k, item in output.items():
+    if "onlySample" in item:  item.pop("onlySample")
+
 
 json.dump(output, open("Steps_cfg_unfold.json", "w"), indent=4)
