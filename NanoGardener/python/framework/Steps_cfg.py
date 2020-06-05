@@ -28,25 +28,37 @@ def createJESvariation(type, kind="Up"):
   return dictionary 
 
 def createFatjetJESvariation(type_, kind="Up"):
+  if kind == "Up":
+    input_suffix_fatjet = type_ + "Up"
+  elif kind == "Do":
+    input_suffix_fatjet = type_ + "Down"
+  if type_=="Total":
+    type_ = ""
   dictionary = {
           'isChain'    : False ,
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
           # The branch prefix needs to be used if the CleanFatJet module is run on top of CorrFatJet* modules
-          'declare'    : 'fatjetMaker_jes{0}{1} = lambda : FatJetMaker( input_branch_suffix="jes{0}{1}", output_branch_map="fatjetJES{0}{2}", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)' .format(type_, kind, kind.lower()),
-          'module'     : 'fatjetMaker_jes{0}{1}()'.format(type_, kind)
+          'declare'    : 'fatjetMaker_jes{0}{1} = lambda : FatJetMaker( input_branch_suffix="jes{2}", output_branch_map="fatjetJES{0}{1}", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)' .format(type_, kind.lower(),input_suffix_fatjet),
+          'module'     : 'fatjetMaker_jes{0}{1}()'.format(type_, kind.lower())
   }
   return dictionary
 
 def createFatjetJESvariation_Wtagging(type_, kind="Up"):
+  if kind == "Up":
+    input_suffix_fatjet = type_ + "Up"
+  elif kind == "Do":
+    input_suffix_fatjet = type_ + "Down"
+  if type_=="Total":
+    type_ = ""
   dictionary = {
           'isChain'    : False ,
           'do4MC'      : True  ,
           'do4Data'    : True  ,
           'import'     : 'LatinoAnalysis.NanoGardener.modules.BoostedWtagSF',
-          'declare'    : 'boostedWtagsf_jes{0}{1} = lambda : BoostedWtagSF(input_branch_suffix="jes{0}{1}", output_branch_map="fatjetJES{0}{2}", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)'.format(type_, kind, kind.lower()),
-          'module'     : 'boostedWtagsf_jes{0}{1}()'.format(type_, kind),
+          'declare'    : 'boostedWtagsf_jes{0}{1} = lambda : BoostedWtagSF(input_branch_suffix="jes{2}", output_branch_map="fatjetJES{0}{1}", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)'.format(type_, kind.lower(), input_suffix_fatjet),
+          'module'     : 'boostedWtagsf_jes{0}{1}()'.format(type_, kind.lower()),
    }
   return dictionary
 
@@ -81,7 +93,7 @@ def createfatjetJESchain_CombJJLNu(type, kind="Up"):
   if type == "Total":
     typeShort = ""
   toreplace = typeShort+kind.lower()  
-  chainTemplate = ['CleanFatJet_fatjetJESVAR', 'BoostedWtagSF_fatjetJESVAR', 'VBSjjlnu_pairing_fatjetJESVAR', 'VBSjjlnu_kin_fatjetJESVAR', 
+  chainTemplate = ['CleanFatJet_fatjetJESVAR', 'BoostedWtagSF_fatjetJESVAR', 'VBSjjlnu_pairing_fatjetJESVAR', 'VBSjjlnu_kin_fatjetJESVAR',
                   'whadJetSel_fatjetJESVAR', 'wlepMaker_fatjetJESVAR', 'HMlnjjVars_fatjetJESVAR', 'HMDNNProdSemi_fatjetJESVAR' , 'HMDNNNeutSemi_fatjetJESVAR']
   chain = []
   for item in chainTemplate:
@@ -324,10 +336,10 @@ def addSystChainMembers_CombJJLNu():
 def prepare_CombJJLNu_syst(basename, selection):
   dictionary = {}
   for syst in ["JES", "MupT", "ElepT", "MET", "fatjetJES", "fatjetJMS", "fatjetJMR", "fatjetJER"]:
-    for kind in ['up', 'do']:
+    for kind in ['Up', 'Do']:
       torep = syst + kind.lower()
       if syst == "JES":
-        dictionary[basename +"_"+ syst+kind] = {
+        dictionary[basename +"_"+ syst+kind.lower()] = {
           'isChain'    : True ,
           'do4MC'      : True  ,
           'do4Data'    : False  ,
@@ -336,24 +348,24 @@ def prepare_CombJJLNu_syst(basename, selection):
                           'JESBase', 'trigMCKeepRun',
                            'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF'
                         ] +
-                          createJESchain_CombJJLNu("Total", "Up") +
-                          createJESchain_CombJJLNu("Absolute", "Up") +
-                          createJESchain_CombJJLNu("Absolute_RPLME_YEAR", "Up") +
-                          createJESchain_CombJJLNu("BBEC1", "Up") +
-                          createJESchain_CombJJLNu("BBEC1_RPLME_YEAR", "Up") +
-                          createJESchain_CombJJLNu("EC2", "Up") +
-                          createJESchain_CombJJLNu("EC2_RPLME_YEAR", "Up") +
-                          createJESchain_CombJJLNu("FlavorQCD", "Up") +
-                          createJESchain_CombJJLNu("HF", "Up") +
-                          createJESchain_CombJJLNu("HF_RPLME_YEAR", "Up") +
-                          createJESchain_CombJJLNu("RelativeBal", "Up") +
-                          createJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", "Up"),   
+                          createJESchain_CombJJLNu("Total", kind) +
+                          createJESchain_CombJJLNu("Absolute", kind) +
+                          createJESchain_CombJJLNu("Absolute_RPLME_YEAR", kind) +
+                          createJESchain_CombJJLNu("BBEC1", kind) +
+                          createJESchain_CombJJLNu("BBEC1_RPLME_YEAR", kind) +
+                          createJESchain_CombJJLNu("EC2", kind) +
+                          createJESchain_CombJJLNu("EC2_RPLME_YEAR", kind) +
+                          createJESchain_CombJJLNu("FlavorQCD", kind) +
+                          createJESchain_CombJJLNu("HF", kind) +
+                          createJESchain_CombJJLNu("HF_RPLME_YEAR", kind) +
+                          createJESchain_CombJJLNu("RelativeBal", kind) +
+                          createJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", kind),   
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
   
         # other systematics
       elif syst in ["ElepT", "MupT"]:
-        dictionary[basename+"_"+ syst + kind] = {
+        dictionary[basename+"_"+ syst + kind.lower()] = {
           'isChain'    : True ,
           'do4MC'      : True  ,
           'do4Data'    : False  ,
@@ -369,7 +381,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
       elif syst == "MET":
-        dictionary[basename+"_"+ syst + kind] = {
+        dictionary[basename+"_"+ syst + kind.lower()] = {
           'isChain'    : True ,
           'do4MC'      : True  ,
           'do4Data'    : False  ,
@@ -383,7 +395,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
       elif syst  in ["fatjetJMS", "fatjetJMR", "fatjetJER"]:
-        dictionary[basename+"_"+ syst + kind] = {
+        dictionary[basename+"_"+ syst + kind.lower()] = {
           'isChain'    : True ,
           'do4MC'      : True  ,
           'do4Data'    : False  ,
@@ -397,7 +409,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
       elif syst == "fatjetJES":
-        dictionary[basename +"_"+ syst+kind] = {
+        dictionary[basename +"_"+ syst+kind.lower()] = {
           'isChain'    : True ,
           'do4MC'      : True  ,
           'do4Data'    : False  ,
@@ -405,18 +417,18 @@ def prepare_CombJJLNu_syst(basename, selection):
           'subTargets' : ['baseW', 
                         'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                         'trigMCKeepRun', 'CorrFatJetMC_fatjetJESBase'] +
-                          createfatjetJESchain_CombJJLNu("Total", "Up") +
-                          createfatjetJESchain_CombJJLNu("Absolute", "Up") +
-                          createfatjetJESchain_CombJJLNu("Absolute_RPLME_YEAR", "Up") +
-                          createfatjetJESchain_CombJJLNu("BBEC1", "Up") +
-                          createfatjetJESchain_CombJJLNu("BBEC1_RPLME_YEAR", "Up") +
-                          createfatjetJESchain_CombJJLNu("EC2", "Up") +
-                          createfatjetJESchain_CombJJLNu("EC2_RPLME_YEAR", "Up") +
-                          createfatjetJESchain_CombJJLNu("FlavorQCD", "Up") +
-                          createfatjetJESchain_CombJJLNu("HF", "Up") +
-                          createfatjetJESchain_CombJJLNu("HF_RPLME_YEAR", "Up") +
-                          createfatjetJESchain_CombJJLNu("RelativeBal", "Up") +
-                          createfatjetJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", "Up"), 
+                          createfatjetJESchain_CombJJLNu("Total", kind) +
+                          createfatjetJESchain_CombJJLNu("Absolute", kind) +
+                          createfatjetJESchain_CombJJLNu("Absolute_RPLME_YEAR", kind) +
+                          createfatjetJESchain_CombJJLNu("BBEC1", kind) +
+                          createfatjetJESchain_CombJJLNu("BBEC1_RPLME_YEAR", kind) +
+                          createfatjetJESchain_CombJJLNu("EC2", kind) +
+                          createfatjetJESchain_CombJJLNu("EC2_RPLME_YEAR", kind) +
+                          createfatjetJESchain_CombJJLNu("FlavorQCD", kind) +
+                          createfatjetJESchain_CombJJLNu("HF", kind) +
+                          createfatjetJESchain_CombJJLNu("HF_RPLME_YEAR", kind) +
+                          createfatjetJESchain_CombJJLNu("RelativeBal", kind) +
+                          createfatjetJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", kind), 
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
 
@@ -1296,7 +1308,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : CombJJLNu_preselections["2017"]["MC"],
                   'subTargets' : ['baseW','wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK', 'trigMCKeepRun', 
-                                  'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF', 'VBSjjlnu_pairing', 'VBSjjlnu_kin',  
+                                  'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF', 'VBSjjlnu_pairing', 'VBSjjlnu_kin'  
                                   'whadJetSel', 'wlepMaker', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2017,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
@@ -3724,26 +3736,8 @@ Steps = {
                 'module':  'corr_fatjet_mc_alljes()'
     },
 
-    'CleanFatJet_fatjetJESTotalup' : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                  # The branch prefix needs to be used if the CleanFatJet module is run on top of CorrFatJet* modules
-                  'declare'    : 'fatjetMaker_jesup = lambda : FatJetMaker( input_branch_suffix="jesTotalUp", output_branch_map="fatjetJESTotalup", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
-                  'module'     : 'fatjetMaker_jesup()'
-    },
-
-     'CleanFatJet_fatjetJESTotaldo' : {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
-                  # The branch prefix needs to be used if the CleanFatJet module is run on top of CorrFatJet* modules
-                  'declare'    : 'fatjetMaker_jesdo = lambda : FatJetMaker( input_branch_suffix="jesTotalDown", output_branch_map="fatjetJESTotaldo", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
-                  'module'     : 'fatjetMaker_jesdo()'
-    },
-
+   'CleanFatJet_fatjetJESup' : createFatjetJESvariation("Total", "Up"), 
+   'CleanFatJet_fatjetJESdo' : createFatjetJESvariation("Total", "Do"), 
    'CleanFatJet_fatjetJESAbsoluteup' : createFatjetJESvariation("Absolute", "Up"), 
    'CleanFatJet_fatjetJESAbsolutedo' : createFatjetJESvariation("Absolute", "Do"), 
    'CleanFatJet_fatjetJESAbsolute_RPLME_YEARup' : createFatjetJESvariation("Absolute_RPLME_YEAR", "Up"), 
@@ -3883,7 +3877,8 @@ Steps = {
                     'module'     : 'boostedWtagsf_jerDo()'
       },
 
-
+    'BoostedWtagSF_fatjetJESup' : createFatjetJESvariation_Wtagging("Total", "Up"), 
+    'BoostedWtagSF_fatjetJESdo' : createFatjetJESvariation_Wtagging("Total", "Do"),
     'BoostedWtagSF_fatjetJESAbsoluteup' : createFatjetJESvariation_Wtagging("Absolute", "Up"), 
     'BoostedWtagSF_fatjetJESAbsolutedo' : createFatjetJESvariation_Wtagging("Absolute", "Do"), 
     'BoostedWtagSF_fatjetJESAbsolute_RPLME_YEARup' : createFatjetJESvariation_Wtagging("Absolute_RPLME_YEAR", "Up"), 
