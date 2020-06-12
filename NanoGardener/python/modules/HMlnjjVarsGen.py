@@ -10,7 +10,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 Wmass=80.4
 
-class HMlnjjVarsGen(Module):
+class HMlnjjVarsGenClass(Module):
 
     def __init__(self,dataMc):
         self.DataMc = dataMc
@@ -91,9 +91,6 @@ class HMlnjjVarsGen(Module):
 	self.gW_Ak8_v4.SetPtEtaPhiM(0,0,0,0)
 	self.gW_Ak4_v4.SetPtEtaPhiM(0,0,0,0)
 
-        Lept_col        = Collection(event, 'Lepton')
-        CleanJet_col    = Collection(event, 'CleanJet')
-        FatJet_col      = Collection(event, 'FatJet')
 
         if self.DataMc == 'MC':
           genSemiLeptFatJetEvt = False
@@ -114,6 +111,7 @@ class HMlnjjVarsGen(Module):
           gMet_phi  = getattr(event, "GenMET_phi")
           # For single lepton evt
           singleLeptEvt = False
+          secondLeptEvt = False
           gSingleLept_id  = -999
           gSingleLept_pt  = -1000
           gSingleLept_eta = -999
@@ -127,7 +125,7 @@ class HMlnjjVarsGen(Module):
             if not singleLeptEvt:
               if gLept_pt > 30:
                 if abs(gLept_id) == 11:
-                  if abs(gLept_eta) < 2.1:
+                  if abs(gLept_eta) < 2.5:
                     singleLeptEvt = True
                     gSingleLept_id = gLept_id
                     gSingleLept_pt = gLept_pt
@@ -147,7 +145,7 @@ class HMlnjjVarsGen(Module):
             # check additional lepton
             if singleLeptEvt == True :
               if abs(gLept_id) == 11:
-                if abs(gLept_eta) < 2.1 and gLept_pt > 15:
+                if abs(gLept_eta) < 2.5 and gLept_pt > 15:
                   singleLeptEvt = False
                   break
               elif abs(gLept_id) == 13:
@@ -172,18 +170,19 @@ class HMlnjjVarsGen(Module):
 
             # Check if Boosted Evt ########################
             for igAk8 in range(GenAK8_col._len):
-	      if genIsAk8_B_evt : break
-              if genSemiLeptFatJetEvt : break
               gW_Ak8_pt    = GenAK8_col[igAk8]['pt']
               gW_Ak8_eta   = GenAK8_col[igAk8]['eta']
               gW_Ak8_phi   = GenAK8_col[igAk8]['phi']
               gW_Ak8_mass  = GenAK8_col[igAk8]['mass']
               if gW_Ak8_pt < 200: continue
               if abs(gW_Ak8_eta) > 2.4: continue
+	      if gW_Ak8_mass > 105: continue
+	      if gW_Ak8_mass < 65: continue
+              dRAk8Lept = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gSingleLept_phi, gSingleLept_eta)
+	      if dRAk8Lept < 0.8: continue
               genSemiLeptFatJetEvt = True
 
-              dRAk8Lept = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gSingleLept_phi, gSingleLept_eta)
-
+              # passing b-veto
               for igAk4 in range(GenAK4_col._len):
                 gAk4_pt 	= GenAK4_col[igAk4]['pt']
                 gAk4_eta        = GenAK4_col[igAk4]['eta']
@@ -193,17 +192,27 @@ class HMlnjjVarsGen(Module):
                 dRAk8Ak4 = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gAk4_phi, gAk4_eta)
 	        # b-veto for W_Ak8 evet
 		if dRAk8Ak4 > 0.8 and abs(gAk4_id) == 5 and gAk4_pt > 20:
-		  genIsAk8_B_evt = True
 		  genSemiLeptFatJetEvt = False
 		  break
-                elif gAk4_pt > 30:
+	      if genSemiLeptFatJetEvt:
+                for igAk4 in range(GenAK4_col._len):
+                  gAk4_pt 	= GenAK4_col[igAk4]['pt']
+                  gAk4_eta        = GenAK4_col[igAk4]['eta']
+                  gAk4_phi        = GenAK4_col[igAk4]['phi']
+                  gAk4_id         = GenAK4_col[igAk4]['partonFlavour']
+                  if abs(gAk4_eta) > 2.4: continue
+                  if gAk4_pt < 30: continue
+                  dRAk8Ak4 = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gAk4_phi, gAk4_eta)
                   dRAk8Ak4_list.append( dRAk8Ak4 )
-		else: pass
+		# done for selecting Ak8 #############
+		break
+		
+
 
             # Check if Resolved Evt ####################################
-            if not genSemiLeptFatJetEvt and not genIsAk8_B_evt:
+            if not genSemiLeptFatJetEvt :
               for idx in range(GenAK4_col._len):
-                gAk4_0_pt               = GenAK4_col[idx]['pt']
+                gAk4_0_pt       = GenAK4_col[idx]['pt']
                 gAk4_0_eta      = GenAK4_col[idx]['eta']
                 if gAk4_0_pt < 30: continue
                 if abs(gAk4_0_eta) > 2.4: continue
@@ -341,5 +350,5 @@ class HMlnjjVarsGen(Module):
         return metPz
  
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed                    
-HMlnjjVarsGen = lambda : HMlnjjVarsGen()
+HMlnjjVarsGen = lambda : HMlnjjVarsGenClass()
 
