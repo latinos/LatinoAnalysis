@@ -176,5 +176,5 @@ class JERMaker(jetSmearer, object):
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
 JERMakerMC16 = lambda : JERMaker("2016","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Summer16_25nsV1_MC",jmr_vals=[1.0, 1.2, 0.8])   
 JERMakerMC17 = lambda : JERMaker("2017","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Fall17_V3_MC"      ,jmr_vals=[1.09, 1.14, 1.04])
-JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Autumn18_V7_MC"    ,jmr_vals=[1.24, 1.20, 1.28])          
+JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag=""    ,jmr_vals=[1.24, 1.20, 1.28])          
 
