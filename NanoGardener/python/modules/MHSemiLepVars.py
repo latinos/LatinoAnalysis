@@ -34,11 +34,7 @@ class MHSemiLepVars(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        if hasattr(inputTree, 'idx_j1'): self.jet_idx_name = 'idx_j'
-        elif hasattr(inputTree, 'HM_idx_j1'): self.jet_idx_name = 'HM_idx_j'
-        else: raise ValueError('MHSemiLepVars: input tree has no variable named "idx_j1" or "HM_idx_j1"')
-
-        print('MHSemiLepVars: jet index string is "'+self.jet_idx_name+'"')
+        self.jet_idx_name = ''
 
         self.out = wrappedOutputTree
         for var in self.angle_var:
@@ -108,6 +104,11 @@ class MHSemiLepVars(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+        if self.jet_idx_name=='':
+          if hasattr(event, 'idx_j1'): self.jet_idx_name = 'idx_j'
+          elif hasattr(event, 'HM_idx_j1'): self.jet_idx_name = 'HM_idx_j'
+          else: raise ValueError('MHSemiLepVars: input tree has no variable named "idx_j1" or "HM_idx_j1"')
+          print('MHSemiLepVars: jet index string is "'+self.jet_idx_name+'"')
 
         jets = Collection(event, 'CleanJet')
         org_jets = Collection(event, 'Jet')
