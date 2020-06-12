@@ -16,14 +16,13 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
-
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 import os.path
 
 
-
 class l2KinProducer(Module):
-    def __init__(self):
+    def __init__(self, branch_map=''):
 
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
@@ -32,8 +31,8 @@ class l2KinProducer(Module):
         except RuntimeError:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WWVar.C++g')
 
-
-      
+        self._branch_map = branch_map
+                
     def beginJob(self):
         pass
 
@@ -41,7 +40,7 @@ class l2KinProducer(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
         self.newbranches = [
            'mll',
            'dphill',
@@ -90,8 +89,14 @@ class l2KinProducer(Module):
            'dphilep1jet1', 
            'dphilep1jet2', 
            'dphilep2jet1', 
-           'dphilep2jet2', 
-           
+           'dphilep2jet2',
+           'mindetajl',
+           'detall',
+           'dphijj',
+           'maxdphilepjj',
+           'dphilep1jj',
+           'dphilep2jj',
+          
            'ht',
            'vht_pt',
            'vht_phi',
@@ -102,6 +107,7 @@ class l2KinProducer(Module):
            'mpmet',
            
            'pTWW',
+           'pTHjj',
 
            'recoil',
            'jetpt1_cut',
@@ -122,7 +128,9 @@ class l2KinProducer(Module):
            'Ceta_cut',
 #whss
            'mlljj20_whss',
-           'mlljj30_whss'
+           'mlljj30_whss',
+           'WlepPt_whss',
+           'WlepMt_whss'
           ]
         
         for nameBranches in self.newbranches :
@@ -134,9 +142,10 @@ class l2KinProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
+        event = mappedEvent(event, mapname=self._branch_map)
+
         #muons = Collection(event, "Muon")
         #electrons = Collection(event, "Electron")
-
         
         # order in pt the collection merging muons and electrons
         # lepMerger must be already called
@@ -207,8 +216,7 @@ class l2KinProducer(Module):
             
             
         for nameBranches in self.newbranches :
-          self.out.fillBranch(nameBranches  ,  getattr(WW, nameBranches)());
-
+          self.out.fillBranch(nameBranches  ,  getattr(WW, nameBranches)())
 
         return True
 

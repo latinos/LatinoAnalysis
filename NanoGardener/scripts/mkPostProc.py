@@ -101,6 +101,10 @@ if __name__ == '__main__':
 # ---------------------------------------- Compile all root macros before sending jobs
 
     if options.runBatch :
+      #pathLib = CMSSW + '/lib/'+os.listdir(CMSSW + '/lib/')[0]+'/'
+      #for fn in ["libZZMatrixElementMELA.so", "libMelaAnalyticsCandidateLOCaster.so"]: # Needed to compile MELA macros
+      #  if os.path.isfile(pathLib+fn):
+      #    ROOT.gSystem.Load(fn)
       pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
       for fn in os.listdir(pathRootMacro):
         if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):

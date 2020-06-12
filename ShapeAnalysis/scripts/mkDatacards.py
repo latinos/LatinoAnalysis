@@ -24,9 +24,6 @@ class DatacardFactory:
     # _____________________________________________________________________________
     def __init__(self):
       
-        self._variables = {}
-        self._cuts = {}
-        self._samples = {}
         self._fileIn = None
         self._skipMissingNuisance = False
 
@@ -39,14 +36,10 @@ class DatacardFactory:
         print "==== makeDatacards ===="
         print "======================="
         
-        self._variables = variables
-        self._samples   = samples
-        self._cuts      = cuts
-
         if os.path.isdir(inputFile):
           # ONLY COMPATIBLE WITH OUTPUTS MERGED TO SAMPLE LEVEL!!
           self._fileIn = {}
-          for sampleName in self._samples:
+          for sampleName in samples:
             self._fileIn[sampleName] = ROOT.TFile.Open(inputFile+'/plots_%s_ALL_%s.root' % (self._tag, sampleName))
             if not self._fileIn[sampleName]:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
@@ -63,7 +56,7 @@ class DatacardFactory:
         # divide the list of samples among signal, background and data
         isig = 0
         ibkg = 1
-        for sampleName in self._samples:
+        for sampleName in samples:
           if structureFile[sampleName]['isSignal'] != 0:
             signal_ids[sampleName] = isig
             isig -= 1
@@ -86,7 +79,7 @@ class DatacardFactory:
           os.mkdir(outputDirDatacard + "/")
 
         # loop over cuts. One directory per cut will be created
-        for cutName in self._cuts:
+        for cutName in cuts:
           print "cut = ", cutName
           try:
             shutil.rmtree(outputDirDatacard + "/" + cutName)
@@ -111,7 +104,7 @@ class DatacardFactory:
           print "  sampleNames = ", cut_signals + cut_backgrounds
           
           # loop over variables
-          for variableName, variable in self._variables.iteritems():
+          for variableName, variable in variables.iteritems():
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
               
@@ -124,7 +117,8 @@ class DatacardFactory:
             os.mkdir(outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/") # and the folder for the root files 
 
             self._outFile = ROOT.TFile.Open(outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/histos_" + tagNameToAppearInDatacard + ".root", 'recreate')
-                    
+            ROOT.gROOT.GetListOfFiles().Remove(self._outFile)
+
             # prepare yields
             yieldsSig  = {}
             yieldsBkg  = {}
@@ -211,8 +205,13 @@ class DatacardFactory:
               columndef = 30
 
               # adapt column length to long bin names            
-              if len(tagNameToAppearInDatacard) >= (columndef - 5) :
+              if len(tagNameToAppearInDatacard) >= (columndef -5) :
                 columndef = len(tagNameToAppearInDatacard) + 7
+
+              for name in signals :
+                if len(name)>= (columndef -5) :
+                    columndef = len(name) + 7
+
 
               print '      processes and rates..'
             
@@ -238,6 +237,8 @@ class DatacardFactory:
 
               print '      nuisances..'
 
+              nuisanceGroups = collections.defaultdict(list)
+
               # add normalization and shape nuisances
               for nuisanceName, nuisance in nuisances.iteritems():
                 if 'type' not in nuisance:
@@ -249,22 +250,57 @@ class DatacardFactory:
 
                 # check if a nuisance can be skipped because not in this particular cut
                 if 'cuts' in nuisance and cutName not in nuisance['cuts']:
-                    if 'sampleCuts' not in nuisance or len(set((proc, cutName) for proc in processes) & set(nuisance['samplesCuts'])) == 0:
-                        continue
+                  continue
 
                 if nuisance['type'] in ['lnN', 'lnU']:
-                  card.write((nuisance['name']).ljust(80-20))
-                  card.write((nuisance['type']).ljust(20))
-                  if 'all' in nuisance and nuisance ['all'] == 1: # for all samples
-                    card.write(''.join(('%-.4f' % nuisance['value']).ljust(columndef) for _ in processes))
-                  else:
-                    # apply only to selected samples
+                  # why is adding CMS_ not the default for lnN/lnU? (Y.I. 2019.11.06)
+                  entryName = nuisance['name']
+
+                  card.write(entryName.ljust(80-20))
+
+                  if 'AsShape' in nuisance and float(nuisance['AsShape']) >= 1.:
+                    print ">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"
+                    card.write(('shape').ljust(20))
                     for sampleName in processes:
-                      if sampleName in nuisance['samples'] or ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
-                        # in this case nuisance['samples'] is a dict mapping sample name to nuisance values in string
-                        card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                      if ('all' in nuisance and nuisance['all'] == 1) or \
+                              ('samples' in nuisance and sampleName in nuisance['samples']):
+
+                        histo = self._getHisto(cutName, variableName, sampleName)
+
+                        histoUp = histo.Clone('%s_%sUp' % (histo.GetName(), nuisance['name']))
+                        histoDown = histo.Clone('%s_%sDown' % (histo.GetName(), nuisance['name']))
+                        histoUp.SetDirectory(self._outFile)
+                        histoDown.SetDirectory(self._outFile)
+
+                        if '/' in nuisance['samples'][sampleName]:
+                          up, down = nuisance['samples'][sampleName].split('/')
+                          histoUp.Scale(float(up))
+                          histoDown.Scale(float(down))
+                        else:
+                          histoUp.Scale(float(nuisance['samples'][sampleName]))
+                          histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
+
+                        self._outFile.cd()
+                        histoUp.Write()
+                        histoDown.Write()
+
+                        card.write('1.000'.ljust(columndef))
+
                       else:
                         card.write(('-').ljust(columndef))
+
+                  else:
+                    card.write((nuisance['type']).ljust(20))
+                    if 'all' in nuisance and nuisance ['all'] == 1: # for all samples
+                      card.write(''.join(('%-.4f' % nuisance['value']).ljust(columndef) for _ in processes))
+                    else:
+                      # apply only to selected samples
+                      for sampleName in processes:
+                        if sampleName in nuisance['samples']:
+                          # in this case nuisance['samples'] is a dict mapping sample name to nuisance values in string
+                          card.write(('%s' % nuisance['samples'][sampleName]).ljust(columndef))
+                        else:
+                          card.write(('-').ljust(columndef))
                 
                 elif nuisance['type'] == 'shape':
                   #
@@ -275,17 +311,18 @@ class DatacardFactory:
                   #      For example: theoretical uncertainties on ggH with migration scheme 2017
                   #
                   if 'skipCMS' in nuisance and nuisance['skipCMS'] == 1:
-                    card.write(nuisance['name'].ljust(80-20))
+                    entryName = nuisance['name']
                   else:
-                    card.write(("CMS_" + nuisance['name']).ljust(80-20))
+                    entryName = 'CMS_' + nuisance['name']
+
+                  card.write(entryName.ljust(80-20))
 
                   if 'AsLnN' in nuisance and float(nuisance['AsLnN']) >= 1.:
                     print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
                     card.write(('lnN').ljust(20))
                     for sampleName in processes:
                       if ('all' in nuisance and nuisance['all'] == 1) or \
-                              ('samples' in nuisance and sampleName in nuisance['samples']) or \
-                              ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
+                              ('samples' in nuisance and sampleName in nuisance['samples']):
                         histo = self._getHisto(cutName, variableName, sampleName)
                         histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up') 
                         histoDown = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Down')
@@ -336,10 +373,13 @@ class DatacardFactory:
                         #                  except for some strange coincidence of "AsLnN" ... 
                         #                  This fix is left, just for sake of safety
                         #
-                        if lnNUp==0: lnNUp = 1
-                        if lnNDo==0: lnNDo = 1
-            
-                        card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
+                        if lnNUp==0: lnNUp = 1.
+                        if lnNDo==0: lnNDo = 1.
+
+                        if abs(lnNUp - 1.) < 5.e-4 and abs(lnNDo - 1.) < 5.e-4:
+                          card.write(('-').ljust(columndef))
+                        else:
+                          card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
                       else:
                         card.write(('-').ljust(columndef)) 
 
@@ -347,8 +387,7 @@ class DatacardFactory:
                     card.write('shape'.ljust(20))
                     for sampleName in processes:
                       if ('all' in nuisance and nuisance ['all'] == 1) or \
-                              ('samples' in nuisance and sampleName in nuisance['samples']) or \
-                              ('samplesCuts' in nuisance and (sampleName, cutName) in nuisance['samplesCuts']):
+                              ('samples' in nuisance and sampleName in nuisance['samples']):
                         # save the nuisance histograms in the root file
                         if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
                           suffixOut = None
@@ -366,7 +405,14 @@ class DatacardFactory:
                       else:
                         card.write(('-').ljust(columndef))
 
+                # closing block if type == lnN or shape
                 card.write('\n')
+
+                if 'group' in nuisance:
+                  nuisanceGroups[nuisance['group']].append(entryName)
+
+              for group in sorted(nuisanceGroups.iterkeys()):
+                card.write('%s group = %s\n' % (group, ' '.join(nuisanceGroups[group])))
                 
               # done with normalization and shape nuisances.
               # now add the stat nuisances
@@ -463,7 +509,7 @@ class DatacardFactory:
                   raise RuntimeError('Invalid rateParam: number of samples != 1')
 
                 sampleName, initialValue = nuisance['samples'].items()[0]
-                if sampleName not in self._samples:
+                if sampleName not in samples:
                   raise RuntimeError('Invalid rateParam: unknown sample %s' % sampleName)
 
                 card.write(sampleName.ljust(20))
@@ -535,6 +581,9 @@ class DatacardFactory:
         else:
             # Merged single ROOT file
             histo = self._fileIn.Get(shapeName)
+
+        if not histo:
+            print shapeName, 'not found'
       
         return histo
 
@@ -580,13 +629,20 @@ if __name__ == '__main__':
     print " outputDirDatacard =          ", opt.outputDirDatacard
  
     if not opt.debug:
-        pass
+      pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
-        logging.basicConfig( level=logging.DEBUG )
+      print 'Logging level set to DEBUG (%d)' % opt.debug
+      logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
-        logging.basicConfig( level=logging.INFO )
+      print 'Logging level set to INFO (%d)' % opt.debug
+      logging.basicConfig( level=logging.INFO )
+
+    if opt.nuisancesFile == None :
+      print " Please provide the nuisances structure if you want to add nuisances "
+
+    if opt.structureFile == None :
+      print " Please provide the datacard structure "
+      exit ()
 
     ROOT.TH1.SetDefaultSumw2(True)
       
@@ -594,25 +650,51 @@ if __name__ == '__main__':
     factory._tag       = opt.tag
     factory._skipMissingNuisance = opt.skipMissingNuisance
     
-    # ~~~~
+    ## load the samples
     samples = {}
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
-   
+
+    ## load the cuts
     cuts = {}
     if os.path.exists(opt.cutsFile) :
       handle = open(opt.cutsFile,'r')
       exec(handle)
       handle.close()
 
+    ## load the variables
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
       exec(handle)
       handle.close()
-      
+
+    ## load the nuisances
+    nuisances = collections.OrderedDict()
+    if os.path.exists(opt.nuisancesFile) :
+      handle = open(opt.nuisancesFile,'r')
+      exec(handle)
+      handle.close()
+
+    import LatinoAnalysis.ShapeAnalysis.utils as utils
+
+    subsamplesmap = utils.flatten_samples(samples)
+    categoriesmap = utils.flatten_cuts(cuts)
+
+    utils.update_variables_with_categories(variables, categoriesmap)
+    utils.update_nuisances_with_subsamples(nuisances, subsamplesmap)
+    utils.update_nuisances_with_categories(nuisances, categoriesmap)
+
+    ## load the structure file (use flattened sample and cut names)
+    structure = collections.OrderedDict()
+    if os.path.exists(opt.structureFile) :
+      handle = open(opt.structureFile,'r')
+      exec(handle)
+      handle.close()
+
+    ## command-line cuts restrictions
     if len(opt.cardList)>0:
       try:
         newCuts = []
@@ -627,26 +709,5 @@ if __name__ == '__main__':
       for iCut in cuts:
         if not iCut in opt.cardList : cut2del.append(iCut)
       for iCut in cut2del : del cuts[iCut]   
-  
-    # ~~~~
-    nuisances = collections.OrderedDict()
-    if opt.nuisancesFile == None :
-       print " Please provide the nuisances structure if you want to add nuisances "
-       
-    if os.path.exists(opt.nuisancesFile) :
-      handle = open(opt.nuisancesFile,'r')
-      exec(handle)
-      handle.close()
-
-    # ~~~~
-    structure = collections.OrderedDict()
-    if opt.structureFile == None :
-       print " Please provide the datacard structure "
-       exit ()
-       
-    if os.path.exists(opt.structureFile) :
-      handle = open(opt.structureFile,'r')
-      exec(handle)
-      handle.close()
     
     factory.makeDatacards( opt.inputFile ,opt.outputDirDatacard, variables, cuts, samples, structure, nuisances)

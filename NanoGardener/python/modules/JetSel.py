@@ -71,6 +71,9 @@ class JetSel(Module):
           if self.pujetid == 'loose'  and not pu_loose  : goodJet = False
           if self.pujetid == 'medium' and not pu_medium : goodJet = False
           if self.pujetid == 'tight'  and not pu_tight  : goodJet = False
+          if self.pujetid == 'custom' and pt <= 50 :
+            if not pu_loose  : goodJet = False
+            #if abs(eta) > 2.5 and not pu_medium : goodJet = False
 
           if goodJet : order.append(iJet)
 

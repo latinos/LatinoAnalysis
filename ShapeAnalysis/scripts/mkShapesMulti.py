@@ -46,14 +46,18 @@ class Worker(threading.Thread):
         energy = params[8]
         lumi = params[9]
         tag = params[10]
+        aliases = params[11]
 
         infile = ""
+        infile += "from collections import OrderedDict\n"
         infile += "from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory\n\n"
         infile += "factory = ShapeFactory()\n"
         infile += "factory._treeName  = '"+opt.treeName+"'\n"
         infile += "factory._energy    = '"+str(energy)+"'\n"
         infile += "factory._lumi      = "+str(lumi)+"\n"
         infile += "factory._tag       = '"+str(tag)+"'\n"
+        infile += "factory._nThreads  = 1\n"
+        infile += "factory.aliases    = "+aliases+"\n"
 
         #infile += "factory.makeNominals('"+inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts)+","+str(samples)+","+str(nuisances)+",'"+supercut+"',"+str(number)+")\n"
 
@@ -288,6 +292,13 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
+    #in case some aliases need a compiled function 
+    for aliasName, alias in aliases.iteritems():
+      if alias.has_key('linesToAdd'):
+        linesToAdd = alias['linesToAdd']
+        for line in linesToAdd:
+          ROOT.gROOT.ProcessLineSync(line)
+
     supercut = '1'
     cuts = collections.OrderedDict()
     if os.path.exists(opt.cutsFile) :
@@ -359,8 +370,11 @@ if __name__ == '__main__':
 
       nThreads = opt.numThreads
 
+      if 'slc7' in os.environ['SCRAM_ARCH'] and 'iihe' in os.uname()[1] : use_singularity = True
+      else : use_singularity = False
+
       bpostFix=''
-      jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,True)
+      jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)
       jobs.nThreads = nThreads
 
       jobs.AddPy2Sh()
@@ -470,7 +484,7 @@ if __name__ == '__main__':
               tname = '%s.%d.%d' % iTarget
           else:
             tname = iTarget
-
+      
           pidFile = jobDir+'mkShapes__'+opt.tag+'/mkShapes__'+opt.tag+'__'+iStep+'__'+tname+'.jid'
           if os.path.isfile(pidFile) :
             print '--> Job Running Still: '+iStep+'__'+tname
@@ -487,6 +501,7 @@ if __name__ == '__main__':
       nThreads = opt.numThreads
 
       finalname = "plots_"+opt.tag+".root"
+      finalpath = os.path.join(os.getcwd(), opt.outputDir, finalname)
 
       hadd = os.environ['CMSSW_BASE'] + '/src/LatinoAnalysis/Tools/scripts/haddfast'
 
@@ -495,11 +510,17 @@ if __name__ == '__main__':
         command.append('--compress')
       else:
         command.extend(['-j', str(nThreads)])
-      command.append(os.path.join(os.getcwd(), opt.outputDir, finalname))
+      command.append(finalpath)
       command.extend(fileList)
       print ' '.join(command)
       if not opt.dryRun:
         subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
+
+        outFile = ROOT.TFile.Open(finalpath, 'update')
+        for nuisance in nuisances.itervalues():
+          if 'kind' in nuisance and (nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')):
+            ShapeFactory.postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile)
+        outFile.Close()
   
         if not opt.doNotCleanup:
           for fname in fileList:
@@ -634,14 +655,14 @@ if __name__ == '__main__':
                 samples_new[sam_k]['name'] = fileListPerJob
                 if len(thisSampleWeights) != 0:
                   samples_new[sam_k]['weights'] = weightListPerJob
-                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+                queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag, str(aliases)] )
                 number += 1
                 fileListPerJob=[]
                 weightListPerJob=[]
           else:
             samples_new = {}
             samples_new[sam_k] = copy.deepcopy(sam_v)
-            queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag] )
+            queue.put( [opt.inputDir ,opt.outputDir, variables, cuts_new, samples_new, nuisances, supercut, number, opt.energy, opt.lumi, opt.tag, str(aliases)] )
             number += 1
       queue.join()
 
@@ -688,3 +709,9 @@ if __name__ == '__main__':
       factory.aliases    = aliases
 
       factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
+
+      outFile = ROOT.TFile.Open(opt.outputDir+'/plots_'+factory._tag+".root", 'update')
+      for nuisance in nuisances.itervalues():
+        if 'kind' in nuisance and (nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')):
+          ShapeFactory.postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile)
+      outFile.Close()

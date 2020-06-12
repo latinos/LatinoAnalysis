@@ -262,7 +262,9 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
 	#if "sdfarm" in os.uname()[1]:
 	#  if 'xrootd' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
         if not FromPostProc :
-          FileTarget.append('###'+xrootdPath+iFile)
+            if "sdfarm" in os.uname()[1]:
+                if '/xrootd/' in iFile: iFile = '/xrd/'+iFile.split('xrootd')[1]
+            FileTarget.append('###'+xrootdPath+iFile)
         else:
           FileTarget.append(iFile)
       else       : FileTarget.append(os.path.basename(iFile)) 
@@ -287,6 +289,22 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       
+#### To add ext samples
+def getEventSumw(directory,sample,prefix):
+    Files=getSampleFiles(directory,sample,False,prefix)
+    genEventSumw  = 0.0
+    for iFile in Files:
+        f = ROOT.TFile.Open(iFile.replace('###',''), "READ")
+        Runs=f.Get("Runs")
+        for iRun in Runs:
+            trailer = ""
+            if hasattr(iRun, "genEventSumw_"): trailer = "_" 
+            genEventSumw  += getattr(iRun, "genEventSumw"+trailer)
+        f.Close()
+    nEvt = genEventSumw
+    return nEvt
+
+
 
 #### BaseW across sample _ext
 
@@ -340,6 +358,65 @@ def getBaseW(directory,Samples = [] ):
     return str(baseW)
 
 #### Print samples dic:
+
+def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGardener/python/framework/Productions_cfg.py' ):
+
+    # Compute #evts
+    genEventCount = 0
+    genEventSumw  = 0.0
+    genEventSumw2 = 0.0
+
+    for iSample in Samples :
+      FileList = getSampleFiles(directory,iSample,True,'nanoLatino_')
+      for iFile in FileList:
+        f = ROOT.TFile.Open(iFile.replace('###',''),'READ')
+        Runs = f.Get("Runs")
+        for iRun in Runs :
+          trailer = ""
+          if hasattr(iRun, "genEventSumw_"): trailer = "_" 
+          genEventCount += getattr(iRun, "genEventCount"+trailer)
+          genEventSumw  += getattr(iRun, "genEventSumw" +trailer)
+          genEventSumw2 += getattr(iRun, "genEventSumw2"+trailer)
+        f.Close()
+    
+    ### Get XS
+
+    # Load Producton Cfg + check
+    CMSSW=os.environ["CMSSW_BASE"]
+    if os.path.exists(CMSSW+'/src/'+prodCfg) :
+      handle = open(CMSSW+'/src/'+prodCfg)
+      exec(handle)
+      handle.close()
+      prodList =  Productions.keys()   
+    else:
+      print 'ERROR: Please specify the input data config'
+      exit(1)
+    if not iProd in prodList:
+      print 'ERROR: iProd not in prodList: ',prodList 
+
+    # Load X-section
+    xsDB = xsectionDB()
+    xsDB.readPython(CMSSW+'/src/'+Productions[iProd]['xsFile'])
+    xsDB.readYR(Productions[iProd]['YRver'][0],Productions[iProd]['YRver'][1])
+
+    # Get x-sections + checks
+    xs = []
+    for iSample in Samples : 
+      if   '_ext' in iSample : iSampleXS = iSample.split('_ext')[0]
+      elif '-ext' in iSample : iSampleXS = iSample.split('-ext')[0]
+      else:                    iSampleXS = iSample
+      xs.append( xsDB.get(iSampleXS) )
+    for iEntry in range(len(xs)):
+      if not xs[iEntry] == xs[0] :
+        print 'ERROR: getBaseW: Trying to mix samples with different x-section'
+        exit()
+
+    ### AND NOW: Compute new baseW
+    nEvt = genEventSumw
+    Xsec  = xsDB.get(iSampleXS)
+    baseW = float(Xsec)*1000./nEvt
+
+    return str(baseW)
  
 def printSampleDic(sampleDic):
 

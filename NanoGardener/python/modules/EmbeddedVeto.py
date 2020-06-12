@@ -27,15 +27,16 @@ class EmbedVeto(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         taus = 0
-        for lep in range(2):
-          pdgid = abs(getattr(event, 'Lepton_pdgId')[lep])
-          if pdgid == 11:
-            idx = getattr(event, 'Lepton_electronIdx')[lep]
-            genflav = ord(getattr(event, 'Electron_genPartFlav')[idx])
-          elif pdgid == 13:
-            idx = getattr(event, 'Lepton_muonIdx')[lep]
-            genflav = ord(getattr(event, 'Muon_genPartFlav')[idx])
-          if genflav == 15: taus += 1
+        if event.nLepton >= 2 and getattr(event, 'Trigger_ElMu') == 1: # Only events from embedded samples passing the ElMu Trigger are used. If an MC event doesn't pass this trigger, it won't be double-counted, so it shouldn't be veto-ed.
+          for lep in range(2):
+            pdgid = abs(getattr(event, 'Lepton_pdgId')[lep])
+            if pdgid == 11:
+              idx = getattr(event, 'Lepton_electronIdx')[lep]
+              genflav = ord(getattr(event, 'Electron_genPartFlav')[idx])
+            elif pdgid == 13:
+              idx = getattr(event, 'Lepton_muonIdx')[lep]
+              genflav = ord(getattr(event, 'Muon_genPartFlav')[idx])
+            if genflav == 15: taus += 1
 
         if taus == 2:
           self.out.fillBranch("embed_tautauveto", 0.0)

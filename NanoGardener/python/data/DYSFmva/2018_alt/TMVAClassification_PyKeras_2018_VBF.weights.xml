@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<MethodSetup Method="PyKeras::PyKeras_2018_VBF">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.2.1 [262657]"/>
+    <Info name="ROOT Release" value="6.18/04 [397828]"/>
+    <Info name="Creator" value="ddicroce"/>
+    <Info name="Date" value="Sat Mar 21 19:33:42 2020"/>
+    <Info name="Host" value="Linux cmsbuild14.cern.ch 3.10.0-957.21.3.el7.x86_64 #1 SMP Tue Jun 18 16:35:19 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/afs/cern.ch/work/d/ddicroce/DNN/CMSSW_11_0_0_pre10_ROOT618/src/2018/v2"/>
+    <Info name="Training events" value="51939"/>
+    <Info name="TrainingTime" value="1.24472295e+02"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="Yes">N</Option>
+    <Option name="H" modified="Yes">True</Option>
+    <Option name="CreateMVAPdfs" modified="No">False</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="Yes">True</Option>
+    <Option name="FilenameModel" modified="Yes">model_2018_VBF.h5</Option>
+    <Option name="FilenameTrainedModel" modified="No">/user/xjanssen/HWWRun2/CMSSW_10_6_4/src/LatinoAnalysis/NanoGardener/python/data/DYSFmva/2018_alt/TrainedModel_PyKeras_2018_VBF.h5</Option>
+    <Option name="BatchSize" modified="Yes">768</Option>
+    <Option name="NumEpochs" modified="Yes">400</Option>
+    <Option name="Verbose" modified="No">1</Option>
+    <Option name="ContinueTraining" modified="No">False</Option>
+    <Option name="SaveBestOnly" modified="No">True</Option>
+    <Option name="TriesEarlyStopping" modified="Yes">20</Option>
+    <Option name="LearningRateSchedule" modified="No"/>
+  </Options>
+  <Variables NVar="25">
+    <Variable VarIndex="0" Expression="ptll" Label="ptll" Title="ptll" Unit="" Internal="ptll" Type="F" Min="3.00004196e+01" Max="7.73298706e+02"/>
+    <Variable VarIndex="1" Expression="mth" Label="mth" Title="mth" Unit="" Internal="mth" Type="F" Min="0.00000000e+00" Max="6.42430725e+02"/>
+    <Variable VarIndex="2" Expression="jetpt1_cut" Label="jetpt1_cut" Title="jetpt1_cut" Unit="" Internal="jetpt1_cut" Type="F" Min="3.03125000e+01" Max="1.03200000e+03"/>
+    <Variable VarIndex="3" Expression="uperp" Label="uperp" Title="uperp" Unit="" Internal="uperp" Type="F" Min="-6.80887024e+02" Max="1.34076172e+03"/>
+    <Variable VarIndex="4" Expression="PfMetDivSumMet" Label="PfMetDivSumMet" Title="PfMetDivSumMet" Unit="" Internal="PfMetDivSumMet" Type="F" Min="5.92671096e-01" Max="2.42502441e+01"/>
+    <Variable VarIndex="5" Expression="recoil" Label="recoil" Title="recoil" Unit="" Internal="recoil" Type="F" Min="4.67172176e-01" Max="1.12351160e+03"/>
+    <Variable VarIndex="6" Expression="mpmet" Label="mpmet" Title="mpmet" Unit="" Internal="mpmet" Type="F" Min="0.00000000e+00" Max="2.32322571e+02"/>
+    <Variable VarIndex="7" Expression="PuppiMET_pt" Label="PuppiMET_pt" Title="PuppiMET_pt" Unit="" Internal="PuppiMET_pt" Type="F" Min="2.00006142e+01" Max="7.49603271e+02"/>
+    <Variable VarIndex="8" Expression="MET_pt" Label="MET_pt" Title="MET_pt" Unit="" Internal="MET_pt" Type="F" Min="4.57594395e-01" Max="7.52467651e+02"/>
+    <Variable VarIndex="9" Expression="TkMET_pt" Label="TkMET_pt" Title="TkMET_pt" Unit="" Internal="TkMET_pt" Type="F" Min="4.62402344e-01" Max="5.30578369e+02"/>
+    <Variable VarIndex="10" Expression="projtkmet" Label="projtkmet" Title="projtkmet" Unit="" Internal="projtkmet" Type="F" Min="2.24384340e-03" Max="5.08234314e+02"/>
+    <Variable VarIndex="11" Expression="projpfmet" Label="projpfmet" Title="projpfmet" Unit="" Internal="projpfmet" Type="F" Min="0.00000000e+00" Max="2.73975647e+02"/>
+    <Variable VarIndex="12" Expression="dphilljet_cut" Label="dphilljet_cut" Title="dphilljet_cut" Unit="" Internal="dphilljet_cut" Type="F" Min="1.24776689e-03" Max="3.14157391e+00"/>
+    <Variable VarIndex="13" Expression="dphijet1met_cut" Label="dphijet1met_cut" Title="dphijet1met_cut" Unit="" Internal="dphijet1met_cut" Type="F" Min="1.13487244e-04" Max="3.14158964e+00"/>
+    <Variable VarIndex="14" Expression="dphillmet" Label="dphillmet" Title="dphillmet" Unit="" Internal="dphillmet" Type="F" Min="8.98733488e-05" Max="3.14145541e+00"/>
+    <Variable VarIndex="15" Expression="dphilmet1" Label="dphilmet1" Title="dphilmet1" Unit="" Internal="dphilmet1" Type="F" Min="0.00000000e+00" Max="3.14152050e+00"/>
+    <Variable VarIndex="16" Expression="dphilmet2" Label="dphilmet2" Title="dphilmet2" Unit="" Internal="dphilmet2" Type="F" Min="0.00000000e+00" Max="3.14154863e+00"/>
+    <Variable VarIndex="17" Expression="jetpt2_cut" Label="jetpt2_cut" Title="jetpt2_cut" Unit="" Internal="jetpt2_cut" Type="F" Min="3.00000000e+01" Max="4.11000000e+02"/>
+    <Variable VarIndex="18" Expression="dphijet2met_cut" Label="dphijet2met_cut" Title="dphijet2met_cut" Unit="" Internal="dphijet2met_cut" Type="F" Min="3.09944153e-06" Max="3.14152670e+00"/>
+    <Variable VarIndex="19" Expression="dphilljetjet_cut" Label="dphilljetjet_cut" Title="dphilljetjet_cut" Unit="" Internal="dphilljetjet_cut" Type="F" Min="5.23388502e-04" Max="3.14158654e+00"/>
+    <Variable VarIndex="20" Expression="dphijjmet_cut" Label="dphijjmet_cut" Title="dphijjmet_cut" Unit="" Internal="dphijjmet_cut" Type="F" Min="2.48502125e-04" Max="3.14158082e+00"/>
+    <Variable VarIndex="21" Expression="ptTOT_cut" Label="ptTOT_cut" Title="ptTOT_cut" Unit="" Internal="ptTOT_cut" Type="F" Min="1.06990963e-01" Max="3.65256042e+02"/>
+    <Variable VarIndex="22" Expression="mTOT_cut" Label="mTOT_cut" Title="mTOT_cut" Unit="" Internal="mTOT_cut" Type="F" Min="4.76742615e+02" Max="7.90701318e+03"/>
+    <Variable VarIndex="23" Expression="Ceta_cut" Label="Ceta_cut" Title="Ceta_cut" Unit="" Internal="Ceta_cut" Type="F" Min="1.63095188e-03" Max="4.78296757e+00"/>
+    <Variable VarIndex="24" Expression="PV_npvsGood" Label="PV_npvsGood" Title="PV_npvsGood" Unit="" Internal="PV_npvsGood" Type="F" Min="2.00000000e+00" Max="7.30000000e+01"/>
+  </Variables>
+  <Spectators NSpec="0"/>
+  <Classes NClass="2">
+    <Class Name="Signal" Index="0"/>
+    <Class Name="Background" Index="1"/>
+  </Classes>
+  <Transformations NTransformations="1">
+    <Transform Name="Normalize">
+      <Selection>
+        <Input NInputs="25">
+          <Input Type="Variable" Label="ptll" Expression="ptll"/>
+          <Input Type="Variable" Label="mth" Expression="mth"/>
+          <Input Type="Variable" Label="jetpt1_cut" Expression="jetpt1_cut"/>
+          <Input Type="Variable" Label="uperp" Expression="uperp"/>
+          <Input Type="Variable" Label="PfMetDivSumMet" Expression="PfMetDivSumMet"/>
+          <Input Type="Variable" Label="recoil" Expression="recoil"/>
+          <Input Type="Variable" Label="mpmet" Expression="mpmet"/>
+          <Input Type="Variable" Label="PuppiMET_pt" Expression="PuppiMET_pt"/>
+          <Input Type="Variable" Label="MET_pt" Expression="MET_pt"/>
+          <Input Type="Variable" Label="TkMET_pt" Expression="TkMET_pt"/>
+          <Input Type="Variable" Label="projtkmet" Expression="projtkmet"/>
+          <Input Type="Variable" Label="projpfmet" Expression="projpfmet"/>
+          <Input Type="Variable" Label="dphilljet_cut" Expression="dphilljet_cut"/>
+          <Input Type="Variable" Label="dphijet1met_cut" Expression="dphijet1met_cut"/>
+          <Input Type="Variable" Label="dphillmet" Expression="dphillmet"/>
+          <Input Type="Variable" Label="dphilmet1" Expression="dphilmet1"/>
+          <Input Type="Variable" Label="dphilmet2" Expression="dphilmet2"/>
+          <Input Type="Variable" Label="jetpt2_cut" Expression="jetpt2_cut"/>
+          <Input Type="Variable" Label="dphijet2met_cut" Expression="dphijet2met_cut"/>
+          <Input Type="Variable" Label="dphilljetjet_cut" Expression="dphilljetjet_cut"/>
+          <Input Type="Variable" Label="dphijjmet_cut" Expression="dphijjmet_cut"/>
+          <Input Type="Variable" Label="ptTOT_cut" Expression="ptTOT_cut"/>
+          <Input Type="Variable" Label="mTOT_cut" Expression="mTOT_cut"/>
+          <Input Type="Variable" Label="Ceta_cut" Expression="Ceta_cut"/>
+          <Input Type="Variable" Label="PV_npvsGood" Expression="PV_npvsGood"/>
+        </Input>
+        <Output NOutputs="25">
+          <Output Type="Variable" Label="ptll" Expression="ptll"/>
+          <Output Type="Variable" Label="mth" Expression="mth"/>
+          <Output Type="Variable" Label="jetpt1_cut" Expression="jetpt1_cut"/>
+          <Output Type="Variable" Label="uperp" Expression="uperp"/>
+          <Output Type="Variable" Label="PfMetDivSumMet" Expression="PfMetDivSumMet"/>
+          <Output Type="Variable" Label="recoil" Expression="recoil"/>
+          <Output Type="Variable" Label="mpmet" Expression="mpmet"/>
+          <Output Type="Variable" Label="PuppiMET_pt" Expression="PuppiMET_pt"/>
+          <Output Type="Variable" Label="MET_pt" Expression="MET_pt"/>
+          <Output Type="Variable" Label="TkMET_pt" Expression="TkMET_pt"/>
+          <Output Type="Variable" Label="projtkmet" Expression="projtkmet"/>
+          <Output Type="Variable" Label="projpfmet" Expression="projpfmet"/>
+          <Output Type="Variable" Label="dphilljet_cut" Expression="dphilljet_cut"/>
+          <Output Type="Variable" Label="dphijet1met_cut" Expression="dphijet1met_cut"/>
+          <Output Type="Variable" Label="dphillmet" Expression="dphillmet"/>
+          <Output Type="Variable" Label="dphilmet1" Expression="dphilmet1"/>
+          <Output Type="Variable" Label="dphilmet2" Expression="dphilmet2"/>
+          <Output Type="Variable" Label="jetpt2_cut" Expression="jetpt2_cut"/>
+          <Output Type="Variable" Label="dphijet2met_cut" Expression="dphijet2met_cut"/>
+          <Output Type="Variable" Label="dphilljetjet_cut" Expression="dphilljetjet_cut"/>
+          <Output Type="Variable" Label="dphijjmet_cut" Expression="dphijjmet_cut"/>
+          <Output Type="Variable" Label="ptTOT_cut" Expression="ptTOT_cut"/>
+          <Output Type="Variable" Label="mTOT_cut" Expression="mTOT_cut"/>
+          <Output Type="Variable" Label="Ceta_cut" Expression="Ceta_cut"/>
+          <Output Type="Variable" Label="PV_npvsGood" Expression="PV_npvsGood"/>
+        </Output>
+      </Selection>
+      <Class ClassIndex="0">
+        <Ranges>
+          <Range Index="0" Min="3.0000419616699219e+01" Max="7.2912640380859375e+02"/>
+          <Range Index="1" Min="0.0000000000000000e+00" Max="4.9849972534179688e+02"/>
+          <Range Index="2" Min="3.0312500000000000e+01" Max="1.0320000000000000e+03"/>
+          <Range Index="3" Min="-4.4056365966796875e+02" Max="5.2804052734375000e+02"/>
+          <Range Index="4" Min="6.8174970149993896e-01" Max="2.4250244140625000e+01"/>
+          <Range Index="5" Min="4.6717217564582825e-01" Max="1.1235115966796875e+03"/>
+          <Range Index="6" Min="0.0000000000000000e+00" Max="2.3232257080078125e+02"/>
+          <Range Index="7" Min="2.0000614166259766e+01" Max="7.4960327148437500e+02"/>
+          <Range Index="8" Min="4.5759439468383789e-01" Max="7.5246765136718750e+02"/>
+          <Range Index="9" Min="4.6240234375000000e-01" Max="5.3057836914062500e+02"/>
+          <Range Index="10" Min="2.2438433952629566e-03" Max="5.0823431396484375e+02"/>
+          <Range Index="11" Min="0.0000000000000000e+00" Max="2.7397564697265625e+02"/>
+          <Range Index="12" Min="1.2477668933570385e-03" Max="3.1415011882781982e+00"/>
+          <Range Index="13" Min="1.1348724365234375e-04" Max="3.1415896415710449e+00"/>
+          <Range Index="14" Min="8.9873348770197481e-05" Max="3.1414554119110107e+00"/>
+          <Range Index="15" Min="0.0000000000000000e+00" Max="3.1415205001831055e+00"/>
+          <Range Index="16" Min="0.0000000000000000e+00" Max="3.1415486335754395e+00"/>
+          <Range Index="17" Min="3.0000000000000000e+01" Max="4.1100000000000000e+02"/>
+          <Range Index="18" Min="1.8310546875000000e-04" Max="3.1415266990661621e+00"/>
+          <Range Index="19" Min="5.2338850218802691e-04" Max="3.1415865421295166e+00"/>
+          <Range Index="20" Min="2.4850212503224611e-04" Max="3.1415808200836182e+00"/>
+          <Range Index="21" Min="1.0699096322059631e-01" Max="3.6525604248046875e+02"/>
+          <Range Index="22" Min="4.7674261474609375e+02" Max="7.9070131835937500e+03"/>
+          <Range Index="23" Min="1.6309518832713366e-03" Max="4.7829675674438477e+00"/>
+          <Range Index="24" Min="2.0000000000000000e+00" Max="7.3000000000000000e+01"/>
+        </Ranges>
+      </Class>
+      <Class ClassIndex="1">
+        <Ranges>
+          <Range Index="0" Min="3.0027076721191406e+01" Max="7.7329870605468750e+02"/>
+          <Range Index="1" Min="3.6944814026355743e-02" Max="6.4243072509765625e+02"/>
+          <Range Index="2" Min="3.0718750000000000e+01" Max="8.2300000000000000e+02"/>
+          <Range Index="3" Min="-6.8088702392578125e+02" Max="1.3407617187500000e+03"/>
+          <Range Index="4" Min="5.9267109632492065e-01" Max="1.5522226333618164e+01"/>
+          <Range Index="5" Min="2.0447351932525635e+00" Max="7.3884783935546875e+02"/>
+          <Range Index="6" Min="0.0000000000000000e+00" Max="2.0857467651367188e+02"/>
+          <Range Index="7" Min="2.0003932952880859e+01" Max="4.2466836547851562e+02"/>
+          <Range Index="8" Min="9.4840520620346069e-01" Max="4.0515701293945312e+02"/>
+          <Range Index="9" Min="5.4918467998504639e-01" Max="4.8450000000000000e+02"/>
+          <Range Index="10" Min="1.1948465369641781e-02" Max="4.8450000000000000e+02"/>
+          <Range Index="11" Min="0.0000000000000000e+00" Max="2.0857467651367188e+02"/>
+          <Range Index="12" Min="7.7200182713568211e-03" Max="3.1415739059448242e+00"/>
+          <Range Index="13" Min="4.1550248861312866e-03" Max="3.1413426399230957e+00"/>
+          <Range Index="14" Min="5.8719888329505920e-04" Max="3.1414315700531006e+00"/>
+          <Range Index="15" Min="0.0000000000000000e+00" Max="3.1402709484100342e+00"/>
+          <Range Index="16" Min="8.9830160140991211e-04" Max="3.1404857635498047e+00"/>
+          <Range Index="17" Min="3.0000000000000000e+01" Max="2.8350000000000000e+02"/>
+          <Range Index="18" Min="3.0994415283203125e-06" Max="3.1410953998565674e+00"/>
+          <Range Index="19" Min="8.6438106372952461e-03" Max="3.1410944461822510e+00"/>
+          <Range Index="20" Min="2.5589897995814681e-04" Max="3.1412978172302246e+00"/>
+          <Range Index="21" Min="3.9196667075157166e-01" Max="2.9600057983398438e+02"/>
+          <Range Index="22" Min="5.1452886962890625e+02" Max="4.9891630859375000e+03"/>
+          <Range Index="23" Min="2.9481999576091766e-02" Max="4.7802381515502930e+00"/>
+          <Range Index="24" Min="5.0000000000000000e+00" Max="6.5000000000000000e+01"/>
+        </Ranges>
+      </Class>
+      <Class ClassIndex="2">
+        <Ranges>
+          <Range Index="0" Min="3.0000419616699219e+01" Max="7.7329870605468750e+02"/>
+          <Range Index="1" Min="0.0000000000000000e+00" Max="6.4243072509765625e+02"/>
+          <Range Index="2" Min="3.0312500000000000e+01" Max="1.0320000000000000e+03"/>
+          <Range Index="3" Min="-6.8088702392578125e+02" Max="1.3407617187500000e+03"/>
+          <Range Index="4" Min="5.9267109632492065e-01" Max="2.4250244140625000e+01"/>
+          <Range Index="5" Min="4.6717217564582825e-01" Max="1.1235115966796875e+03"/>
+          <Range Index="6" Min="0.0000000000000000e+00" Max="2.3232257080078125e+02"/>
+          <Range Index="7" Min="2.0000614166259766e+01" Max="7.4960327148437500e+02"/>
+          <Range Index="8" Min="4.5759439468383789e-01" Max="7.5246765136718750e+02"/>
+          <Range Index="9" Min="4.6240234375000000e-01" Max="5.3057836914062500e+02"/>
+          <Range Index="10" Min="2.2438433952629566e-03" Max="5.0823431396484375e+02"/>
+          <Range Index="11" Min="0.0000000000000000e+00" Max="2.7397564697265625e+02"/>
+          <Range Index="12" Min="1.2477668933570385e-03" Max="3.1415739059448242e+00"/>
+          <Range Index="13" Min="1.1348724365234375e-04" Max="3.1415896415710449e+00"/>
+          <Range Index="14" Min="8.9873348770197481e-05" Max="3.1414554119110107e+00"/>
+          <Range Index="15" Min="0.0000000000000000e+00" Max="3.1415205001831055e+00"/>
+          <Range Index="16" Min="0.0000000000000000e+00" Max="3.1415486335754395e+00"/>
+          <Range Index="17" Min="3.0000000000000000e+01" Max="4.1100000000000000e+02"/>
+          <Range Index="18" Min="3.0994415283203125e-06" Max="3.1415266990661621e+00"/>
+          <Range Index="19" Min="5.2338850218802691e-04" Max="3.1415865421295166e+00"/>
+          <Range Index="20" Min="2.4850212503224611e-04" Max="3.1415808200836182e+00"/>
+          <Range Index="21" Min="1.0699096322059631e-01" Max="3.6525604248046875e+02"/>
+          <Range Index="22" Min="4.7674261474609375e+02" Max="7.9070131835937500e+03"/>
+          <Range Index="23" Min="1.6309518832713366e-03" Max="4.7829675674438477e+00"/>
+          <Range Index="24" Min="2.0000000000000000e+00" Max="7.3000000000000000e+01"/>
+        </Ranges>
+      </Class>
+    </Transform>
+  </Transformations>
+  <MVAPdfs/>
+</MethodSetup>

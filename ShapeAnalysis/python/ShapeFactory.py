@@ -207,8 +207,6 @@ class ShapeFactory:
               #print " >> nuisanceName : ", nuisanceName, " -> ",    list_of_trees_to_connect  , " from ",    nuisance['folderUp'] , " / " , nuisance['folderDown'] 
 
 
-
-
         ## test with LOOP: not very fast ... to be improved ...
 
         ##---- now plot and save into output root file
@@ -1179,19 +1177,22 @@ class ShapeFactory:
         return os.path.exists(path.split('dcap://maite.iihe.ac.be/')[1])
 
     def _test_sdfarm_File(self,path): 
-      if 'cms-xrdr.sdfarm.kr' in path:
-	if 'xrd//store' in path:
-	  cmd = 'xrd cms-xrdr.sdfarm.kr existfile /xrd/store/'+path.split('xrd//store/')[1]
-	  #cmd = 'gfal-ls -l srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/store/'+path.split('xrd//store/')[1]
-	elif 'xrd/store' in path:
-	  cmd = 'xrd cms-xrdr.sdfarm.kr existfile /xrd/store/'+path.split('xrd/store/')[1]
-	  #cmd = 'gfal-ls -l srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/store/'+path.split('xrd/store/')[1]
-	else : return False
-	print 'checking ', cmd
-	if os.system(cmd) == 0 : return True 
-	else: return False
-      else: return False
-
+      #if 'cms-xrdr.sdfarm.kr' in path:
+	#if 'xrd//store' in path:
+	#  cmd = 'xrd cms-xrdr.sdfarm.kr existfile /xrd/store/'+path.split('xrd//store/')[1]
+	#  #cmd = 'gfal-ls -l srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/store/'+path.split('xrd//store/')[1]
+	#elif 'xrd/store' in path:
+	#  cmd = 'xrd cms-xrdr.sdfarm.kr existfile /xrd/store/'+path.split('xrd/store/')[1]
+	#  #cmd = 'gfal-ls -l srm://cms-se.sdfarm.kr:8443/srm/v2/server?SFN=/xrootd/store/'+path.split('xrd/store/')[1]
+	#else : return False
+	#print 'checking ', cmd
+	#if os.system(cmd) == 0 : return True 
+	#else: return False
+      #else: return False
+      if ROOT.TFile.Open(path):
+          return True
+      else:
+          return False
 
     # _____________________________________________________________________________
     def _buildchain(self, treeName, files, skipMissingFiles):
@@ -1211,7 +1212,7 @@ class ShapeFactory:
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
 	    elif "cluster142.knu.ac.kr" in path:
 	      pass # already checked the file at mkShape.py
-            elif "sdfarm" in path:
+            elif "sdfarm" in path or 'cms-xrdr.private.lo:2094' in path:
               if not self._test_sdfarm_File(path):
                 print 'File '+path+' doesn\'t exists @ sdfarm.kr'
                 doesFileExist = False

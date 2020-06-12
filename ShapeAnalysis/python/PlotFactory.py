@@ -14,6 +14,8 @@ import traceback
 from array import array
 from collections import OrderedDict
 import math
+import numpy as np
+import root_numpy as rnp
 
 
 # ----------------------------------------------------- PlotFactory --------------------------------------
@@ -35,6 +37,10 @@ class PlotFactory:
         samples = OrderedDict()
         self._samples = samples
 
+        self._plotsToWrite = ['c', 'cratio', 'cdifference']
+        self._plotLinear = True
+        self._plotLog = True
+
         outputDirPlots = {}
         self._outputDirPlots = outputDirPlots
         
@@ -42,6 +48,8 @@ class PlotFactory:
         # 0 is no
 
         self._FigNamePF = ''
+
+        self._fileFormats = ['png', 'root']
 
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
@@ -169,26 +177,13 @@ class PlotFactory:
             tgrData_evy_up = array('f')
             tgrData_evy_do = array('f')
 
-            #print " ... how is this still a thing ..."
+            # at least 1 "MC" should be around ... otherwise what are we plotting? Only data?
+            tgrMC_vx       = array('f')
+            tgrMC_evx      = array('f')
 
             #these vectors are needed for nuisances accounting
             nuisances_vy_up     = {}
-            #print " ... one "
             nuisances_vy_do     = {}
-            #print " ... two"
-            tgrMC_vy            = array('f')
- 
-            #print 'before thstack ...'
-            #print 'really before thstack ...'
-
-
-            #thsData       = ROOT.THStack ("thsData",      "thsData")
-            #thsSignal     = ROOT.THStack ("thsSignal",    "thsSignal")
-            #thsBackground = ROOT.THStack ("thsBackground","thsBackground")
-    
-            #thsSignal_grouped     = ROOT.THStack ("thsSignal_grouped",    "thsSignal_grouped")
-            #thsBackground_grouped = ROOT.THStack ("thsBackground_grouped","thsBackground_grouped")
-    
  
             ROOT.gROOT.cd()
  
@@ -227,32 +222,15 @@ class PlotFactory:
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
-              if 'subsamples' in plotdef:
-                histos[sampleName] = None
-                for subsample in plotdef['subsamples']:
-                  shapeName = cutName+"/"+variableName+'/histo_' + sampleName + '_' + subsample
-                  print '     -> shapeName = ', shapeName
-                  if type(fileIn) is dict:
-                    histo = fileIn[sampleName].Get(shapeName)
-                  else:
-                    histo = fileIn.Get(shapeName)
-                  print ' --> ', histo
-                  print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
-                  if histos[sampleName] is None:
-                    histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
-                  else:
-                    histos[sampleName].Add(histo)
-                    
+              shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+              print '     -> shapeName = ', shapeName
+              if type(fileIn) is dict:
+                histo = fileIn[sampleName].Get(shapeName)
               else:
-                shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-                print '     -> shapeName = ', shapeName
-                if type(fileIn) is dict:
-                  histo = fileIn[sampleName].Get(shapeName)
-                else:
-                  histo = fileIn.Get(shapeName)
-                print ' --> ', histo
-                print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
-                histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)                      
+                histo = fileIn.Get(shapeName)
+              print ' --> ', histo
+              print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
+              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
@@ -266,46 +244,43 @@ class PlotFactory:
 
               # apply cut dependent scale factors
               # for example when plotting different phase spaces
-              if 'cuts' in plotdef.keys() : 
-                if cutName in plotdef['cuts'] :
-                  histos[sampleName].Scale( float( plotdef['cuts'][cutName] ) )
+              if 'cuts' in plotdef.keys() and cutName in plotdef['cuts']:
+                histos[sampleName].Scale( float( plotdef['cuts'][cutName] ) )
      
-
-              if plotdef['isData'] == 1 :  
-                if variable['divideByBinWidth'] == 1:
-                  histos[sampleName].Scale(1,"width")
-                  thsData.Add(histos[sampleName])
-                else:
-                  thsData.Add(histos[sampleName])
-
-
-
               # data style
               if plotdef['isData'] == 1 :
+                if variable['divideByBinWidth'] == 1:
+                  histos[sampleName].Scale(1,"width")
+
                 #print ' plot[', sampleName, '][color] = ' , plotdef['color']
                 histos[sampleName].SetMarkerColor(plotdef['color'])
+
                 histos[sampleName].SetMarkerSize(1)
                 histos[sampleName].SetMarkerStyle(20)
-                histos[sampleName].SetLineColor(plotdef['color'])
+                histos[sampleName].SetLineColor(self._getColor(plotdef['color']))
                 
                 # blind data
-                if 'isBlind' in plotdef.keys() :
-                  if plotdef['isBlind'] == 1 :
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      histos[sampleName].SetBinContent(iBin, 0)
-                      histos[sampleName].SetBinError  (iBin, 0)
-                    #but_how_is_it_possible = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
-                    #print " what is it = ", sampleName
-                    #print " but_how_is_it_possible [", sampleName, "] = ", but_how_is_it_possible
-                    #but_how_is_it_possible_low_high = histos[sampleName].Integral(-1, -1)
-                    #print " but_how_is_it_possible_low_high [", sampleName, "] = ", but_how_is_it_possible_low_high
-                    histos[sampleName].Reset()
-                    #but_how_is_it_possible_low_high_reset = histos[sampleName].Integral(-1, -1)
-                    #print " but_how_is_it_possible_low_high_reset [", sampleName, "] = ", but_how_is_it_possible_low_high_reset
-                    
-                      
-                
-                #thsData.Add(histos[sampleName])
+                if 'isBlind' in plotdef.keys() and plotdef['isBlind'] == 1:
+                  histos[sampleName].Reset()
+
+                # Per variable blinding
+                if 'blind' in variable:
+                  if cutName in variable['blind']:
+                    blind_range = variable['blind'][cutName]
+                    if blind_range == "full":
+                      for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                        histos[sampleName].SetBinContent(iBin, 0)
+                        histos[sampleName].SetBinError  (iBin, 0)
+                      histos[sampleName].Reset()
+                    elif type(blind_range) in [list,tuple] and len(blind_range)==2:
+                      b0 = histos[sampleName].FindBin(blind_range[0])
+                      b1 = histos[sampleName].FindBin(blind_range[1])
+                      for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                        if iBin >= b0 and iBin <= b1:
+                          histos[sampleName].SetBinContent(iBin, 0)
+                          histos[sampleName].SetBinError  (iBin, 0)
+
+                thsData.Add(histos[sampleName])
 
                 # first time fill vectors X axis
                 if len(tgrData_vx) == 0 :
@@ -339,317 +314,166 @@ class PlotFactory:
                         tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                         tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) )
                     
-                    
-
-              # MC style
-              if plotdef['isData'] == 0 :
+              # if plotdef['isData'] == 1:
+              else:
+                # MC style
                 # only background "filled" histogram
                 if plotdef['isSignal'] == 0:
                   #histos[sampleName].SetFillStyle(1001)
-                  #histos[sampleName].SetFillColorAlpha(plotdef['color'], 0.5)
-                  #histos[sampleName].SetFillColor(plotdef['color'])
-                  #histos[sampleName].SetLineColor(plotdef['color']+1)
-                  histos[sampleName].SetFillColor(plotdef['color'])
-                  histos[sampleName].SetFillStyle(3001)
+                  #histos[sampleName].SetFillColorAlpha(self._getColor(plotdef['color'],) 0.5)
+                  #histos[sampleName].SetFillColor(self._getColor(plotdef['color']))
+                  #histos[sampleName].SetLineColor(self._getColor(plotdef['color']+)1)
+                  histos[sampleName].SetFillColor(self._getColor(plotdef['color']))
+                  if 'fill' in plotdef:
+                    histos[sampleName].SetFillStype(plotdef['fill'])
+                  else:
+                    histos[sampleName].SetFillStyle(3001)
                 else :
                   histos[sampleName].SetFillStyle(0)
                   histos[sampleName].SetLineWidth(2)
              
-                histos[sampleName].SetLineColor(plotdef['color'])
+                histos[sampleName].SetLineColor(self._getColor(plotdef['color']))
                 # scale to luminosity if MC
                 #histos[sampleName].Scale(self._lumi)  ---> NO! They are already scaled to luminosity in mkShape!
                 
                 if plotdef['isSignal'] == 1 :
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
-                    thsSignal.Add(histos[sampleName])
-                  else:
-                    thsSignal.Add(histos[sampleName])
 
+                  thsSignal.Add(histos[sampleName])
 
                 elif plotdef['isSignal'] == 2 or plotdef['isSignal'] == 3 :
                   #print "SigSup histo: ", histos[sampleName]
                   if  variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
-                    sigSupList.append(histos[sampleName])
-                  else:
-                    sigSupList.append(histos[sampleName])
+
+                  sigSupList.append(histos[sampleName])
+
                   if plotdef['isSignal'] == 3 :
                     #print "sigForAdditionalRatio histo: ", histos[sampleName]
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                     sigForAdditionalDifferenceList[sampleName] = histos[sampleName]
                 else :
-                  nexpected += histos[sampleName].Integral(-1,-1)
+                  nexpected += histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())   # it was (-1, -1) in the past, correct now
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
-                    thsBackground.Add(histos[sampleName])
-                  else:
-                    thsBackground.Add(histos[sampleName])
+
+                  thsBackground.Add(histos[sampleName])
                   #print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
                 # "massage" the list of nuisances accordingly
                 for nuisanceName, nuisance in nuisances.iteritems():         
+                  if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+                    continue
+                  # run only if this nuisance will affect the phase space defined in "cut"
 
-                  if ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) :   # run only if this nuisance will affect the phase space defined in "cut"
-                    
-                    #print " nuisanceName = ", nuisanceName
-                    if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-                      #print " nuisance = ", nuisance
-                      if 'samples' in nuisance.keys():
-                        if sampleName in nuisance['samples'].keys() :
-                          #print " stat nuisances for ", sampleName
-                          if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
-                            print 'In principle nothing to be done here ... just wait'
-                          if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
-                            # add N ad hoc nuisances, one for each bin
-                            for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                              if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
-                                #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
-                                #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
-                                mynuisances['ibin_' + str(iBin) + '_stat'] = {
-                                  'samples'  : {   sampleName : '1.00', },
-                                }
-                              else :  # otherwise just add the new sample in the list of samples to be considered
-                                mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
-                    else :
-                      if nuisanceName not in mynuisances.keys() :
-                        if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
-                          pass
-                          #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
-                        else :
-                          mynuisances[nuisanceName] = nuisances[nuisanceName]
+                  #print " nuisanceName = ", nuisanceName
+                  if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
+                    #print " nuisance = ", nuisance
+                    if 'samples' in nuisance.keys():
+                      if sampleName in nuisance['samples'].keys() :
+                        #print " stat nuisances for ", sampleName
+                        if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
+                          print 'In principle nothing to be done here ... just wait'
+                        if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
+                          # add N ad hoc nuisances, one for each bin
+                          for iBin in range(1, histos[sampleName].GetNbinsX()+1):
+                            if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
+                              #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
+                              #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
+                              mynuisances['ibin_' + str(iBin) + '_stat'] = {
+                                'samples'  : {   sampleName : '1.00', },
+                              }
+                            else :  # otherwise just add the new sample in the list of samples to be considered
+                              mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
+                  else :
+                    if nuisanceName not in mynuisances.keys() :
+                      if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
+                        pass
+                        #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
+                      else :
+                        mynuisances[nuisanceName] = nuisances[nuisanceName]
                  
-                # prepare the reference distribution
-                #if len(tgrMC_vy) == 0:
-                  #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    #tgrMC_vy.append(0.)
-                # fill the reference distribution, and add each "sample" that is not "signal"
-                #if plotdef['isSignal'] == 0:
-                  #for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                    #tgrMC_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
+                nuisanceHistos = ({}, {})
                  
                 for nuisanceName, nuisance in mynuisances.iteritems():
                   # is this nuisance to be considered for this background?
-                  is_this_nuisance_to_be_considered = False
-                  if 'samples' in nuisance.keys() :
-                    for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                      if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                        is_this_nuisance_to_be_considered = True
-                  elif 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                    is_this_nuisance_to_be_considered = True
+                  if 'samples' in nuisance:
+                    if sampleName not in nuisance['samples']:
+                      continue
+                  elif 'all' not in nuisance or nuisance['all'] != 1:
+                    continue
 
-                  #print " sampleName = ", sampleName, " nuisanceName = ", nuisanceName, " is_this_nuisance_to_be_considered = ", is_this_nuisance_to_be_considered
-                  
-                  histoUp = None
-                  histoDown = None
- 
-                  if not ( ('cuts' not in nuisance) or ( ('cuts' in nuisance) and (cutName in nuisance['cuts']) ) ) :   # run only if this nuisance will affect the phase space defined in "cut"
-                    is_this_nuisance_to_be_considered = False
- 
-                  if is_this_nuisance_to_be_considered :
-                    if 'name' in nuisance:
-                      shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Up"
-                    else:
-                      shapeNameUp = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Up"
-                    #print "loading shape variation", shapeNameUp
-                    if type(fileIn) is dict:
-                      histoUp = fileIn[sampleName].Get(shapeNameUp)
-                    else:
-                      histoUp = fileIn.Get(shapeNameUp)
-                    if 'name' in nuisance:
-                      shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+"Down"
-                    else:
-                      shapeNameDown = cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+"Down"
-                    #print "loading shape variation", shapeNameDown
-                    if type(fileIn) is dict:
-                      histoUp = fileIn[sampleName].Get(shapeNameDown)
-                    else:
-                      histoDown = fileIn.Get(shapeNameDown)
+                  if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+                    continue
 
-                    if histoUp == None:
-                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                         if nuisance['type'] == 'lnN' :                             
-                           # example:
-                           #              'samples'  : {
-                           #                   'WW' : '1.00',    
-                           #                   'ggH': '1.23/0.97'
-                           #                },                              
-                           down_variation = 0.
-                           up_variation = 0.
-                           
-                           if "/" in nuisance['value'] :
-                             #print " nuisance['value'] = ", nuisance['value']
-                             twovariations = nuisance['value'].split("/")
-                             #print " twovariations = ", twovariations
-                             down_variation = float(twovariations[0])
-                             up_variation   = float(twovariations[1]) 
-                           else :
-                             down_variation = 2. - float(nuisance['value'])
-                             up_variation   = float(nuisance['value']) 
-                           
-                           # don't use  histos[sampleName], or the second "scale" will fail!!!
-                           if 'name' in nuisance:
-                             histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
-                           else:
-                             histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
-                           histoUp.Scale(up_variation)
-                    
-                      elif 'samples' in nuisance.keys():
-                        for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                          if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                            if 'type' in nuisance.keys() :
-                              if nuisance['type'] == 'lnN' :                             
-                                # example:
-                                #              'samples'  : {
-                                #                   'WW' : '1.00',    
-                                #                   'ggH': '1.23/0.97'
-                                #                },                              
-                                down_variation = 0.
-                                up_variation = 0.
+                  if 'name' in nuisance:
+                    shapeNameVars = tuple(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisance['name']+var for var in ['Up', 'Down'])
+                  else:
+                    shapeNameVars = tuple(cutName+"/"+variableName+'/histo_' + sampleName+"_"+nuisanceName+var for var in ['Up', 'Down'])
 
-                                #print " configurationNuis samples = ", configurationNuis
-                                
-                                if "/" in configurationNuis :
-                                  #print " configurationNuis samples = ", configurationNuis
-                                  twovariations = configurationNuis.split("/")
-                                  #print " twovariations = ", twovariations
-                                  down_variation = float(twovariations[0])
-                                  up_variation   = float(twovariations[1]) 
-                                else :
-                                  down_variation = 2. - float(configurationNuis)
-                                  up_variation   = float(configurationNuis) 
-                                
-                                # don't use  histos[sampleName], or the second "scale" will fail!!!
-                                if 'name' in nuisance:
-                                  histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Up")
-                                else:
-                                  histoUp   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Up")
-                                histoUp.Scale(up_variation)
-                                #print " histos[sampleName].GetBinContent(10) = ", histos[sampleName].GetBinContent(10)
-                                
-                                
-                              #else :
-                                #print "Warning! No", nuisanceName, " up variation for", sampleName, ' of kind lnN'
-                            
-                    if histoDown == None:
-                      if 'all' in nuisance.keys() and nuisance ['all'] == 1 : # for all samples
-                         if nuisance['type'] == 'lnN' :                             
-                           # example:
-                           #              'samples'  : {
-                           #                   'WW' : '1.00',    
-                           #                   'ggH': '1.23/0.97'
-                           #                },                              
-                           down_variation = 0.
-                           up_variation = 0.
-                           
-                           if "/" in nuisance['value'] :
-                             #print " nuisance['value'] down = ", nuisance['value']
-                             twovariations = nuisance['value'].split("/")
-                             down_variation = float(twovariations[0])
-                             up_variation   = float(twovariations[1]) 
-                           else :
-                             down_variation = 2. - float(nuisance['value'])
-                             up_variation   = float(nuisance['value']) 
-                           
-                           # don't use  histos[sampleName], or the second "scale" will fail!!!
-                           if 'name' in nuisance:
-                             histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
-                           else:
-                             histoDown   = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
-                           histoDown.Scale(down_variation)
-                           
-                      elif 'samples' in nuisance.keys():
-                        for sampleNuisName, configurationNuis in nuisance['samples'].iteritems() :
-                          if sampleNuisName == sampleName: # complain only if the nuisance was supposed to show up
-                            if 'type' in nuisance.keys() :
-                              if nuisance['type'] == 'lnN' :                             
-                                # example:
-                                #              'samples'  : {
-                                #                   'WW' : '1.00',    
-                                #                   'ggH': '1.23/0.97'
-                                #                },
-                                down_variation = 0.
-                                up_variation = 0.
-                                
-                                if "/" in configurationNuis :
-                                  #print " configurationNuis down samples = ", configurationNuis
-                                  twovariations = configurationNuis.split("/")
-                                  down_variation = float(twovariations[0])
-                                  up_variation   = float(twovariations[1]) 
-                                else :
-                                  down_variation = 2. - float(configurationNuis)
-                                  up_variation   = float(configurationNuis) 
-                                
-                                # don't use  histos[sampleName], or the second "scale" will fail!!!
-                                if 'name' in nuisance:
-                                  histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisance['name']+"Down")
-                                else:
-                                  histoDown = histo.Clone(cutName+"_"+variableName+'_histo_' + sampleName+"_"+nuisanceName+"Down")
-                                histoDown.Scale(down_variation)
-                              #else :
-                                #print "Warning! No", nuisanceName, " down variation for", sampleName, ' of kind lnN'
-                  
-                  
-                  if 'scale' in plotdef.keys() : 
-                    if histoDown != None:  
-                      #print " histoDown integral = ", histoDown.Integral()
-                      histoDown.Scale(plotdef['scale'])
-                      #print " ---> plot[", sampleName, "]['scale'] = ", plotdef['scale']
-                      #print " --> histoDown integral = ", histoDown.Integral()
+                  if 'type' in nuisance and nuisance['type'] == 'lnN':
+                    if 'samples' in nuisance:
+                      values = nuisance['samples'][sampleName]
+                      # example:
+                      #              'samples'  : {
+                      #                   'WW' : '1.00',    
+                      #                   'ggH': '1.23/0.97'
+                      #                },                              
+                    else: # 'all'
+                      values = nuisance['value']
+
+                    if '/' in values:
+                      variations = map(float, values.split('/'))
+                    else:
+                      variations = (float(values), 2. - float(values))
                       
-                    if histoUp != None:  
-                      histoUp.Scale(plotdef['scale'])
-                                 
+                    # don't use  histos[sampleName], or the second "scale" will fail!!!
+                    for ivar, shapeNameVar in enumerate(shapeNameVars):
+                      histoVar = histo.Clone(shapeNameVar.replace('/', '__'))
+                      histoVar.Scale(variations[ivar])
 
-                  # apply cut dependent scale factors
-                  # for example when plotting different phase spaces
-                  if 'cuts' in plotdef.keys() : 
-                    if cutName in plotdef['cuts'] :
-                      if histoDown != None:  
-                        #print " rescaling: ", sampleName, " - ", cutName, " = ", plotdef['cuts'][cutName]
-                        histoDown.Scale( float(plotdef['cuts'][cutName]) )
-                      if histoUp != None:  
-                        histoUp.Scale( float(plotdef['cuts'][cutName]) )
+                      nuisanceHistos[ivar][nuisanceName] = histoVar
 
-                  if variable["divideByBinWidth"] == 1:
-                    if histoUp != None:
-                      histoUp.Scale(1,"width")
-                    if histoDown != None:
-                      histoDown.Scale(1,"width")
- 
-                  # now, even if not considered this nuisance, I need to add it, 
-                  # so that in case is "empty" it will add the nominal value
-                  # for this sample that is not affected by the nuisance
-                  
-                  if nuisanceName not in nuisances_vy_up.keys() or nuisanceName not in nuisances_vy_do.keys():  
-                    nuisances_vy_up[nuisanceName] = array('f')
-                    nuisances_vy_do[nuisanceName] = array('f')
-                  if (len(nuisances_vy_up[nuisanceName]) == 0):
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      nuisances_vy_up[nuisanceName].append(0.)
-                  if (len(nuisances_vy_do[nuisanceName]) == 0):
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      nuisances_vy_do[nuisanceName].append(0.)
-                  # get the background sum
-                  if plotdef['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
-                    #print "plot[", sampleName, "]['isSignal'] == ", plotdef['isSignal']
-                    for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                      if histoUp != None:
-                        #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoUp.GetBinContent (", iBin, ") = ", histoUp.GetBinContent (iBin), \
-                              #"while default was: ", histos[sampleName].GetBinContent (iBin)
-                        nuisances_vy_up[nuisanceName][iBin-1] += histoUp.GetBinContent (iBin)
+                  else:
+                    for ivar, shapeNameVar in enumerate(shapeNameVars):
+                      if type(fileIn) is dict:
+                        histoVar = fileIn[sampleName].Get(shapeNameVar)
                       else:
-                        # add the central sample 
-                        nuisances_vy_up[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)  
-                      if histoDown != None:  
-                        #print " nuisanceName[", iBin, "] = ", nuisanceName, " sampleName = ", sampleName, " histoDown.GetBinContent (", iBin, ") = ", histoDown.GetBinContent (iBin), \
-                              #"while default was: ", histos[sampleName].GetBinContent (iBin)
-                        nuisances_vy_do[nuisanceName][iBin-1] += histoDown.GetBinContent (iBin)
-                      else:
-                        # add the central sample 
-                        nuisances_vy_do[nuisanceName][iBin-1] += histos[sampleName].GetBinContent (iBin)
-            
+                        histoVar = fileIn.Get(shapeNameVar)
+  
+                      nuisanceHistos[ivar][nuisanceName] = histoVar
+
+                for ivar, nuisances_vy in enumerate([nuisances_vy_up, nuisances_vy_do]):
+                  for nuisanceName, nuisance in mynuisances.iteritems():
+                    try:
+                      histoVar = nuisanceHistos[ivar][nuisanceName]
+                    except KeyError:
+                      # now, even if not considered this nuisance, I need to add it, 
+                      # so that in case is "empty" it will add the nominal value
+                      # for this sample that is not affected by the nuisance
+                      histoVar = histos[sampleName]
+                    else:
+                      if 'scale' in plotdef:
+                        histoVar.Scale(plotdef['scale'])
+                                   
+                      # apply cut dependent scale factors
+                      # for example when plotting different phase spaces
+                      if 'cuts' in plotdef and cutName in plotdef['cuts']:
+                        histoVar.Scale(float(plotdef['cuts'][cutName]))
+    
+                      if variable["divideByBinWidth"] == 1:
+                        histoVar.Scale(1., "width")
+                    
+                    try:
+                      vy = nuisances_vy[nuisanceName]
+                    except KeyError:
+                      vy = nuisances_vy[nuisanceName] = np.zeros_like(rnp.hist2array(histo, copy=False))
+
+                    # get the background sum
+                    if plotdef['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
+                      vy += rnp.hist2array(histoVar, copy=False)
 
               # create the group of histograms to plot
               # this has to be done after the scaling of the previous lines
@@ -661,31 +485,46 @@ class PlotFactory:
                   else :
                     histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
 
+            # end sample loop
 
             # set the colors for the groups of samples
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
               if sampleNameGroup in histos_grouped.keys() :
-                histos_grouped[sampleNameGroup].SetLineColor(sampleConfiguration['color'])
+                histos_grouped[sampleNameGroup].SetLineColor(self._getColor(sampleConfiguration['color']))
                 if sampleConfiguration['isSignal'] == 0:
                   #histos_grouped[sampleNameGroup].SetFillStyle(1001)
-                  #histos_grouped[sampleNameGroup].SetFillColorAlpha(sampleConfiguration['color'], 0.5)
-                  #histos_grouped[sampleNameGroup].SetFillColor(sampleConfiguration['color'])
-                  #histos_grouped[sampleNameGroup].SetLineColor(sampleConfiguration['color']+1)
-                  histos_grouped[sampleNameGroup].SetFillColor(sampleConfiguration['color'])
-                  histos_grouped[sampleNameGroup].SetFillStyle(3001)
+                  #histos_grouped[sampleNameGroup].SetFillColorAlpha(self._getColor(sampleConfiguration['color'],) 0.5)
+                  #histos_grouped[sampleNameGroup].SetFillColor(self._getColor(sampleConfiguration['color']))
+                  #histos_grouped[sampleNameGroup].SetLineColor(self._getColor(sampleConfiguration['color']+)1)
+                  histos_grouped[sampleNameGroup].SetFillColor(self._getColor(sampleConfiguration['color']))
+                  if 'fill' in sampleConfiguration:
+                    histos_grouped[sampleNameGroup].SetFillStyle(sampleConfiguration['fill'])
+                  else:
+                    histos_grouped[sampleNameGroup].SetFillStyle(3001)
                 else :
                   histos_grouped[sampleNameGroup].SetFillStyle(0)
                   histos_grouped[sampleNameGroup].SetLineWidth(2)
             
             # fill the reference distribution with the background only distribution
             # save the central values of the bkg sum for use for the nuisance band 
+
             #
-            #print " tgrMC_vy = ", tgrMC_vy
+            # How could this be ==0 ?
+            # At least one MC sample should be defined ... 
+            # but still, let's leave the possibility 
+            #            
             if thsBackground.GetNhists() != 0:
               last = thsBackground.GetStack().Last()
-              for iBin in range(1, last.GetNbinsX()+1):
-                tgrMC_vy.append(last.GetBinContent(iBin))
-            
+              tgrMC_vy = rnp.hist2array(last, copy=True)
+              for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
+                tgrMC_vx .append(thsBackground.GetStack().Last().GetBinCenter(iBin))
+                tgrMC_evx.append(thsBackground.GetStack().Last().GetBinWidth(iBin) / 2.)
+              nuisances_err2_up = rnp.array(last.GetSumw2())[1:-1]
+              nuisances_err2_do = rnp.array(last.GetSumw2())[1:-1]
+            else:
+              tgrMC_vy = np.zeros((0,))
+              nuisances_err2_up = np.zeros((0,))
+              nuisances_err2_do = np.zeros((0,))
                         
             #
             # and now  let's add the signal on top of the background stack 
@@ -719,34 +558,18 @@ class PlotFactory:
                 #    tgrBkg_evy_up[iBin-1] = SumQ ( tgrBkg_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                 #    tgrBkg_evy_do[iBin-1] = SumQ ( tgrBkg_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) ) 
 
-            nuisances_err_up = array('f')
-            nuisances_err_do = array('f')
             for nuisanceName in mynuisances.keys():
-              #print " nuisanceName = " , nuisanceName
-              if len(nuisances_err_up) == 0 : 
-                for iBin in range(len(tgrMC_vy)):
-                  nuisances_err_up.append(0.)
-                  nuisances_err_do.append(0.)
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
-              for iBin in range(len(tgrMC_vy)):
-                #print "bin", iBin, " nuisances_vy_up[", nuisanceName, "][", iBin, "] = ", nuisances_vy_up[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     #" diff = ", nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     #" new global error = ", nuisances_err_up[iBin]
-                #print "bin", iBin, " nuisances_vy_do[", nuisanceName, "][", iBin, "] = ", nuisances_vy_do[nuisanceName][iBin], " central = ", tgrMC_vy[iBin] , " --> " \
-                     #" diff = ", nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin],  \
-                     #" new global error = ", nuisances_err_do[iBin]
-                
-                if nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin] > 0:
-                  nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin])
-                  nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin])
-                else:
-                  nuisances_err_up[iBin] = self.SumQ (nuisances_err_up[iBin], nuisances_vy_do[nuisanceName][iBin] - tgrMC_vy[iBin])
-                  nuisances_err_do[iBin] = self.SumQ (nuisances_err_do[iBin], nuisances_vy_up[nuisanceName][iBin] - tgrMC_vy[iBin]) 
+              up = nuisances_vy_up[nuisanceName]
+              do = nuisances_vy_do[nuisanceName]
+              up_is_up = (up > tgrMC_vy)
+              dup2 = np.square(up - tgrMC_vy)
+              ddo2 = np.square(do - tgrMC_vy)
+              nuisances_err2_up += np.where(up_is_up, dup2, ddo2)
+              nuisances_err2_do += np.where(up_is_up, ddo2, dup2)
 
-                #print "nuisances_err_up[", iBin, "] = ", nuisances_err_up[iBin], " --> ", \
-                      #"nuisances_err_do[", iBin, "] = ", nuisances_err_do[iBin], " --> " 
-
-              
+            nuisances_err_up = np.sqrt(nuisances_err2_up)
+            nuisances_err_do = np.sqrt(nuisances_err2_do)
 
             tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
@@ -828,36 +651,36 @@ class PlotFactory:
             else:
               histo_total = fileIn.Get(special_shapeName)
 
-            if variable['divideByBinWidth'] == 1:
+            if variable['divideByBinWidth'] == 1 and histo_total != None:
               histo_total.Scale(1,"width")
             print ' --> ', histo_total
             
             if len(mynuisances.keys()) != 0:
               tgrMC = ROOT.TGraphAsymmErrors()  
-              for iBin in range(0, len(tgrData_vx)) :
-                tgrMC.SetPoint     (iBin, tgrData_vx[iBin], tgrMC_vy[iBin])
+              for iBin in range(0, len(tgrMC_vx)) :
+                tgrMC.SetPoint     (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
                 if histo_total:
-                  tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
+                  tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
-                  tgrMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
+                  tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
               
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
               tgrMCMinusMC = tgrMC.Clone("tgrMCMinusMC")  
-              for iBin in range(0, len(tgrData_vx)) :
-                tgrMCOverMC.SetPoint     (iBin, tgrData_vx[iBin], 1.)
-                tgrMCMinusMC.SetPoint    (iBin, tgrData_vx[iBin], 0.)
+              for iBin in range(0, len(tgrMC_vx)) :
+                tgrMCOverMC.SetPoint     (iBin, tgrMC_vx[iBin], 1.)
+                tgrMCMinusMC.SetPoint    (iBin, tgrMC_vx[iBin], 0.)
                 if histo_total:
-                  tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                  tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
                   else :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
                 else :
-                  tgrMCOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                  tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                   else :
-                    tgrMCMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
+                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
                 
                          
             
@@ -899,7 +722,17 @@ class PlotFactory:
                   
               if sampleConfiguration['isSignal'] == 1 :
                   print "############################################################## isSignal 1", sampleNameGroup
-                  thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
+                  #
+                  # if, for some reason, you want to scale only the overlaid signal
+                  # for example to show the shape of the signal, without affecting the actual stacked (true) distribution
+                  #
+                  if 'scaleMultiplicativeOverlaid' in sampleConfiguration.keys() : 
+                    # may this clone not mess up too much with "gDirectory", see TH1::Copy
+                    temp_overlaid = histos_grouped[sampleNameGroup].Clone()
+                    temp_overlaid.Scale(sampleConfiguration['scaleMultiplicativeOverlaid'])
+                    thsSignal_grouped.Add(temp_overlaid)
+                  else :
+                    thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
               elif sampleConfiguration['isSignal'] == 2 :
                   print "############################################################## isSignal 2", sampleNameGroup
                   groupFlag = True
@@ -1074,18 +907,18 @@ class PlotFactory:
                         tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "F")
                       else :
                         if variable["divideByBinWidth"] == 1:
-                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width") 
+                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width") 
                         else:
-                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                          nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                         tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "F")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "F")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "F")
                
               for sampleName in reversedSampleNames:
@@ -1100,18 +933,18 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], sampleName, "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
@@ -1123,9 +956,9 @@ class PlotFactory:
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
                   if variable["divideByBinWidth"] == 1:
-                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1,"width")
+                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX(),"width")
                   else:
-                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX()+1)
+                    nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX())
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'] + " [" +  str(round(nevents,1)) + "]" , "F")
                
               for sampleName in reversedSampleNames:
@@ -1143,9 +976,9 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
@@ -1153,9 +986,9 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], sampleName , "EPL")
                     else :
                       if variable["divideByBinWidth"] == 1:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1,"width")
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
-                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX()+1)
+                        nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
@@ -1184,6 +1017,8 @@ class PlotFactory:
               CMS_lumi.lumi_sqrtS = legend['sqrt']
             if 'lumi' in legend.keys() :
               CMS_lumi.lumi_13TeV = legend['lumi']
+            else:
+              CMS_lumi.lumi_13TeV = 'L = %.1f fb^{-1}' % self._lumi
         
             # Simple example of macro: plot with CMS name and lumi text
             #  (this script does not pretend to work in all configurations)
@@ -1206,75 +1041,24 @@ class PlotFactory:
             # draw back all the axes            
             #frame.Draw("AXIS")
             tcanvas.RedrawAxis()
-            
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".png")
-            tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".root")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".C")
-            #tcanvas.SaveAs(self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF + ".eps")
-            
-            text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
-            
-            # log Y axis
-            frame.GetYaxis().SetRangeUser( max(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
-            #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
-            tcanvas.SetLogy()
-            tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".png")
-            #tcanvas.SaveAs(self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF + ".eps")
-            tcanvas.SetLogy(0)
+            if 'c' in self._plotsToWrite:
+                if self._plotLinear:
+                    self._saveCanvas(tcanvas, self._outputDirPlots + "/" + canvasNameTemplate + self._FigNamePF)
+
+                if self._plotLog:
+                    # log Y axis
+                    frame.GetYaxis().SetRangeUser( max(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
+                    #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
+                    tcanvas.SetLogy(True)
+                    # if plotLinear is true, we have already saved root and C (if in the list of formats)
+                    self._saveCanvas(tcanvas, self._outputDirPlots + "/log_" + canvasNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
+                    tcanvas.SetLogy(False)
+
+                if 'root' in self._fileFormats:
+                    text_file_html.write(canvasNameTemplate + self._FigNamePF + ".root;\n")
 
 
-            if self._plotNormalizedDistributions :
-              # ~~~~~~~~~~~~~~~~~~~~
-              # plot signal vs background normalized
-              tcanvasSigVsBkg.cd()
-  
-              frameNorm = ROOT.TH1F
-              frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
-  
-              frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
-              # setup axis names
-              if 'xaxis' in variable.keys() : 
-                frameNorm.GetXaxis().SetTitle(variable['xaxis'])
-              tcanvasSigVsBkg.RedrawAxis()
-  
-              maxY_normalized=0.0
-
-              for hentry in thsBackground_grouped.GetHists():
-                num_bins = hentry.GetNbinsX()
-                if hentry.Integral() > 0.:
-                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
-                  if y_normalized > maxY_normalized:
-                    maxY_normalized = y_normalized
-
-                for ibin in range( num_bins ) :
-                  hentry.SetBinError(ibin+1, 0.000001)
-
-                hentry.SetFillStyle(0)
-                hentry.SetLineWidth(3)
-                hentry.DrawNormalized("hist,same")
-                  
-              for hentry in thsSignal_grouped.GetHists():
-                num_bins = hentry.GetNbinsX()
-                if hentry.Integral() > 0.:
-                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
-                  if y_normalized > maxY_normalized:
-                    maxY_normalized = y_normalized
-
-                for ibin in range( num_bins ) :
-                  hentry.SetBinError(ibin+1, 0.000001)
-
-                hentry.SetFillStyle(0)
-                hentry.SetLineWidth(3)
-                hentry.DrawNormalized("hist,same")
-  
-              frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
-
-              tlegend.Draw()
-              tcanvasSigVsBkg.SaveAs(self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF + ".png")
-         
-
-            
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
             print "- draw with ratio"
@@ -1427,7 +1211,7 @@ class PlotFactory:
                 
                 for sampleName, sample in self._samples.iteritems():
                     ##if sampleName.find('total') == 1: 
-## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
+                    ## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
                     if 'total' in sampleName:
                         tgrDataOverPF.SetMarkerColor(plot[sampleName]['color'])
                         tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
@@ -1450,19 +1234,24 @@ class PlotFactory:
             #frameRatio.Draw("AXIS")
             pad2.RedrawAxis()
             pad2.SetGrid()
-            
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".png")
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF + ".root")
 
-            text_file_html.write(canvasRatioNameTemplate + ".root;\n")
+            if 'cratio' in self._plotsToWrite:
+                if self._plotLinear:
+                    self._saveCanvas(tcanvasRatio, self._outputDirPlots + "/" + canvasRatioNameTemplate + self._FigNamePF)
+
+                if self._plotLog:
+                    # log Y axis
+                    #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+                    pad1.SetLogy(True)
+                    self._saveCanvas(tcanvasRatio, self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
+                    pad1.SetLogy(False)
+
+
+            if 'root' in self._fileFormats:
+                text_file_html.write(canvasRatioNameTemplate + ".root;\n")
 
             
-            # log Y axis
-            #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
-            frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
-            pad1.SetLogy()
-            tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF + ".png")
-            pad1.SetLogy(0)
 
 
 
@@ -1639,21 +1428,21 @@ class PlotFactory:
             #frameDifference.Draw("AXIS")
             pad2difference.RedrawAxis()
             pad2difference.SetGrid()
-            
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF + ".root")
-            
-            text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
-            
-            # log Y axis
-            #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
-            frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
-            pad1difference.SetLogy()
-            tcanvasDifference.SaveAs(self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF + ".png")
-            pad1difference.SetLogy(0)
 
+            if 'cdifference' in self._plotsToWrite:
+                if self._plotLinear:
+                    self._saveCanvas(tcanvasDifference, self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF)
 
+                if self._plotLog:
+                    # log Y axis
+                    #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+                    pad1difference.SetLogy(True)
+                    self._saveCanvas(tcanvasDifference, self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
+                    pad1difference.SetLogy(False)
 
+                if 'root' in self._fileFormats:
+                    text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
 
 
 
@@ -2237,10 +2026,10 @@ class PlotFactory:
                     #weight_X_frameRatio.Draw("AXIS")
                     weight_X_pad2.RedrawAxis()
                     
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root")
-                    
-                    text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
+                    self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF)
+
+                    if 'root' in self._fileFormats:
+                        text_file_html.write(weight_X_canvasRatioNameTemplate + ".root;\n")
                     
                     # save also all the TH1F separately for later combination
                     temp_file = ROOT.TFile (self._outputDirPlots + "/" + weight_X_canvasRatioNameTemplate + self._FigNamePF + ".root", "UPDATE")
@@ -2273,10 +2062,11 @@ class PlotFactory:
  
  
                     # log Y axis
-                    weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
-                    weight_X_pad1.SetLogy()
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate + ".png")
-                    weight_X_pad1.SetLogy(0)
+                    if self._plotLog:
+                        weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
+                        weight_X_pad1.SetLogy(True)
+                        self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate, imageOnly=True)
+                        weight_X_pad1.SetLogy(False)
 
 
  
@@ -2330,12 +2120,76 @@ class PlotFactory:
                       weight_X_canvasDifferenceNameTemplate = 'cdifference_relative_weight_X_' + cutName + '_' + variableName
                     else :
                       weight_X_canvasDifferenceNameTemplate = 'cdifference_weight_X_' + cutName + '_' + variableName
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".png")
-                    weight_X_tcanvasRatio.SaveAs(self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate + ".root")
+
+                    self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/" + weight_X_canvasDifferenceNameTemplate)
+
+                    if 'root' in self._fileFormats:
+                      text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
  
-                    text_file_html.write(weight_X_canvasDifferenceNameTemplate + ".root;\n")
- 
- 
+
+            #
+            # This is performed at the end because it will change the "FillStyle" of the histograms
+            # and you don't want to change it in the previous plots!
+            # All histograms will become "transparent" as far as fill style is concerned
+            #
+
+            if self._plotNormalizedDistributions :
+              # ~~~~~~~~~~~~~~~~~~~~
+              # plot signal vs background normalized
+              tcanvasSigVsBkg.cd()
+  
+              frameNorm = ROOT.TH1F
+              frameNorm = tcanvasSigVsBkg.DrawFrame(minXused, 0.0, maxXused, 1.0)
+  
+              frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
+              # setup axis names
+              if 'xaxis' in variable.keys() : 
+                frameNorm.GetXaxis().SetTitle(variable['xaxis'])
+              tcanvasSigVsBkg.RedrawAxis()
+  
+              maxY_normalized=0.0
+
+              for hentry in thsBackground_grouped.GetHists():
+                num_bins = hentry.GetNbinsX()
+                if hentry.Integral() > 0.:
+                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
+                  if y_normalized > maxY_normalized:
+                    maxY_normalized = y_normalized
+
+                for ibin in range( num_bins ) :
+                  hentry.SetBinError(ibin+1, 0.000001)
+
+                hentry.SetFillStyle(0)
+                hentry.SetLineWidth(3)
+                hentry.DrawNormalized("hist,same")
+                  
+              for hentry in thsSignal_grouped.GetHists():
+                num_bins = hentry.GetNbinsX()
+                if hentry.Integral() > 0.:
+                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
+                  if y_normalized > maxY_normalized:
+                    maxY_normalized = y_normalized
+
+                for ibin in range( num_bins ) :
+                  hentry.SetBinError(ibin+1, 0.000001)
+
+                hentry.SetFillStyle(0)
+                hentry.SetLineWidth(3)
+                hentry.DrawNormalized("hist,same")
+
+              # ~~~~~~~~~~~~~~~~~~~~
+              # include data only if required
+
+              if self._plotNormalizedIncludeData : 
+                for sampleName, plotdef in plot.iteritems():
+                  if plotdef['isData'] == 1 :
+                    histos[sampleName].DrawNormalized("p, same")
+
+              frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
+
+              tlegend.Draw()
+              self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
+         
  
  
             
@@ -2525,3 +2379,27 @@ class PlotFactory:
         
         return hnew
       
+    def _saveCanvas(self, tcanvas, nameBase, imageOnly=False):
+        if 'png' in self._fileFormats:
+            tcanvas.SaveAs(nameBase + ".png")
+        if 'pdf' in self._fileFormats:
+            tcanvas.SaveAs(nameBase + ".pdf")
+        if 'eps' in self._fileFormats:
+            tcanvas.SaveAs(nameBase + ".eps")
+
+        if not imageOnly:
+            if 'root' in self._fileFormats:
+                tcanvas.SaveAs(nameBase + ".root")
+            if 'C' in self._fileFormats:
+                tcanvas.SaveAs(nameBase + ".C")
+
+    def _getColor(self, color):
+      if type(color) == int:
+        return color
+      elif type(color) == tuple:
+        # RGB
+        return ROOT.TColor.GetColor(*color)
+      elif type(color) == str:
+        # hex string
+        return ROOT.TColor.GetColor(color)
+

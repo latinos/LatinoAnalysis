@@ -1,0 +1,15 @@
+drop *
+keep run
+keep luminosityBlock
+keep event
+keep genWeight
+keep nGenPart
+keep GenPart_*
+keep LHE_*
+keep nLHEPart
+keep LHEPart_*
+keep GenMET_*
+keep Pileup_*
+keep nGenDressedLepton
+keep GenDressedLepton_*
+keep HTXS_*

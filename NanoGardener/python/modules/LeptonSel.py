@@ -152,7 +152,6 @@ class LeptonSel(Module):
                     for wp in self.MuonWP[self.cmssw]['WgStarObjWP']: 
                         WPdict = self.MuonWP[self.cmssw]['WgStarObjWP'][wp]
                 pt = 0
-                #FIX ME
                 cone_size = WPdict['iso'][1]
                 for jLep in range(nLep):
                     if not passWG[jLep]: continue

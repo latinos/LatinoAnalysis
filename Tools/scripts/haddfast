@@ -8,17 +8,18 @@ import time
 import multiprocessing
 import tempfile
 import logging
+import subprocess
 import shutil
 _argv = sys.argv
 sys.argv = sys.argv[:1]
 import ROOT
 
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
 
 tdirectoryfile = ROOT.TDirectoryFile.Class()
 
-def merge(indir, outdir, pname = ''):
+def merge(indir, outdir, pname=''):
     """
     Write histograms in indir (TDirectoryFile) into outdir (TDirectoryFile). Add if target already exists.
     Histograms are written to disk at each call and not kept in memory. There will be multiple versions
@@ -97,7 +98,7 @@ def merge(indir, outdir, pname = ''):
 
     return nnew, nadd
 
-def writeto(sourcePaths, targetPath):
+def writeto(sourcePaths, targetPath, eosDownload=False):
     """
     Write contents of sourcePaths (list of path strings) into targetPath (string).
     Target is closed after processing each source to clean memory.
@@ -112,6 +113,26 @@ def writeto(sourcePaths, targetPath):
     _nadd = 0
 
     for path in sourcePaths:
+        pathOrig = path
+        pathReal = os.path.realpath(pathOrig)
+        if eosDownload and pathReal.startswith('/eos'):
+            for _ in range(5):
+                with tempfile.NamedTemporaryFile(suffix='.root', delete=False) as tmp:
+                    pass
+                proc = subprocess.Popen(['xrdcp', '-f', 'root://eoscms.cern.ch/' + pathReal, tmp.name])
+                proc.communicate()
+                if proc.returncode == 0:
+                    path = tmp.name
+                    break
+                else:
+                    try:
+                        os.unlink(tmp.name)
+                    except:
+                        pass
+                    time.sleep(5)
+            else:
+                raise RuntimeError('Failed to download ' + pathOrig)
+
         start = time.time()
         source = ROOT.TFile.Open(path)
         ROOT.gROOT.GetListOfFiles().Remove(source)
@@ -121,10 +142,10 @@ def writeto(sourcePaths, targetPath):
         source.Close()
         target.Close() # closing target at each iteration to flush out in-memory objects
 
-        LOG.info('%s -> %s: %d new, %d merged (%.1f s)', path, targetPath, nnew, nadd, time.time() - start)
+        LOG.info('%s -> %s: %d new, %d merged (%.1f s)', pathOrig, targetPath, nnew, nadd, time.time() - start)
 
         _nadd += nadd
-        if path != sourcePaths[-1]:
+        if pathOrig != sourcePaths[-1]:
             if _nadd > 1000000:
                 # purge duplicate keys by compressing
                 os.rename(targetPath, targetPath + '.tmp')
@@ -135,18 +156,25 @@ def writeto(sourcePaths, targetPath):
             target = ROOT.TFile.Open(targetPath, 'update')
             ROOT.gROOT.GetListOfFiles().Remove(target)
 
+        if eosDownload and pathReal.startswith('/eos'):
+            try:
+                os.unlink(path)
+            except:
+                pass
+
 if __name__ == '__main__':
     sys.argv = _argv
 
     from argparse import ArgumentParser
     
-    argParser = ArgumentParser(description = 'Faster hadd for histogram-only files.')
-    argParser.add_argument('target', metavar = 'PATH', help = 'Target file.')
-    argParser.add_argument('source', metavar = 'PATH', nargs = '+', help = 'Source files.')
-    argParser.add_argument('--write-direct', '-D', action = 'store_true', dest = 'writeDirect', help = 'Write directly to the target path.')
-    argParser.add_argument('--force-write', '-f', action = 'store_true', dest = 'forceWrite', help = 'Overwrite existing output file.')
-    argParser.add_argument('--compress', '-C', action = 'store_true', dest = 'compress', help = 'Remake the output file to purge multi-key entries.')
-    argParser.add_argument('--num-procs', '-j', metavar = 'N', dest = 'numProcs', type = int, default = 1, help = 'Number of subprocesses to invoke.')
+    argParser = ArgumentParser(description='Faster hadd for histogram-only files.')
+    argParser.add_argument('target', metavar='PATH', help='Target file.')
+    argParser.add_argument('source', metavar='PATH', nargs='+', help='Source files.')
+    argParser.add_argument('--write-direct', '-D', action='store_true', dest='writeDirect', help='Write directly to the target path.')
+    argParser.add_argument('--force-write', '-f', action='store_true', dest='forceWrite', help='Overwrite existing output file.')
+    argParser.add_argument('--compress', '-C', action='store_true', dest='compress', help='Remake the output file to purge multi-key entries.')
+    argParser.add_argument('--num-procs', '-j', metavar='N', dest='numProcs', type=int, default=1, help='Number of subprocesses to invoke.')
+    argParser.add_argument('--eos-download', '-E', action='store_true', dest='eosDownload', help='If input is on EOS, xrdcp to local temp area first.')
     
     args = argParser.parse_args()
    
@@ -168,7 +196,7 @@ if __name__ == '__main__':
         targetName = '%s/target.root' % dtemp
 
     if args.numProcs == 1:
-        writeto(sourcePaths, targetName)
+        writeto(sourcePaths, targetName, args.eosDownload)
     else:
         allSources = [(path, False) for path in sourcePaths]
         sources = {}
@@ -208,7 +236,7 @@ if __name__ == '__main__':
                 sourcePaths = [s[0] for s in sources[jobid]]
                 dtemp = tempfile.mkdtemp()
                 targetPath = dtemp + '/tmp.root'
-                proc = multiprocessing.Process(target = writeto, args = (sourcePaths, targetPath), name = jobid)
+                proc = multiprocessing.Process(target=writeto, args=(sourcePaths, targetPath, args.eosDownload), name=jobid)
                 proc.daemon = True
                 proc.start()
                 processes.append((proc, targetPath))

@@ -32,8 +32,6 @@ formulas['METFilter_DATA'] = METFilter_DATA
 
 #for eleWP in eleWPlist: 
 
-  formulas['LepCut2l__mu_cut_Tight80x__mu_cut_Medium80x'] = '((event.Lepton_isTightMuon_cut_Tight80x[0]>0.5 or event.Lepton_isTightMuon_cut_Medium80x[0]>0.5) and \
+formulas['LepCut2l__mu_cut_Tight80x__mu_cut_Medium80x'] = '((event.Lepton_isTightMuon_cut_Tight80x[0]>0.5 or event.Lepton_isTightMuon_cut_Medium80x[0]>0.5) and \
                                                     (event.Lepton_isTightMuon_cut_Tight80x[1]>0.5 or event.Lepton_isTightMuon_cut_Medium80x[1]>0.5)) \
                                                    if event.nLepton > 1 else 0.'
-
--

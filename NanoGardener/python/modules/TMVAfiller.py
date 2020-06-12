@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 #      mvaDic = { 'nameMva' : {
 #                                'type'      : 'BDT' ,  
@@ -18,7 +19,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 #               } 
 
 class TMVAfiller(Module):
-    def __init__(self,mvaCfgFile):
+    def __init__(self,mvaCfgFile,branch_map=''):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         mvaFile = cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/'+mvaCfgFile
@@ -29,12 +30,16 @@ class TMVAfiller(Module):
           handle.close()
         print self.mvaDic
         self.mvaDic = mvaDic
+        self._branch_map = branch_map
 
         #PyKeras
         loadKeras = False
         for iMva in self.mvaDic : 
           if self.mvaDic[iMva]['type'] == 'PyKeras' : loadKeras = True  
-        if loadKeras : ROOT.TMVA.PyMethodBase.PyInitialize()
+        if loadKeras : 
+          from os import environ
+          environ['KERAS_BACKEND'] = 'tensorflow'
+          ROOT.TMVA.PyMethodBase.PyInitialize()
 
         cmssw_base = os.getenv('CMSSW_BASE') 
         for iMva in self.mvaDic :
@@ -52,7 +57,7 @@ class TMVAfiller(Module):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map) 
         self.itree = inputTree
         for iMva in self.mvaDic :
           self.out.branch(iMva, 'F')
@@ -62,6 +67,7 @@ class TMVAfiller(Module):
     
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+        event = mappedEvent(event, mapname=self._branch_map)
         for iMva in self.mvaDic :
           jVar=0
           for iVar in self.mvaDic[iMva]['inputVars'] :  

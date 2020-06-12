@@ -50,12 +50,19 @@ formulas['SFweight4l'] = 'event.puWeight*\
                           event.EMTFbug_veto \
                           if event.nLepton > 3 else 0.'
 
+# MonoHiggs
+formulas['SFweight2lMH'] = 'event.puWeight*\
+                          event.MHTriggerEffWeight_2l*\
+                          event.Lepton_RecoSF[0]*\
+                          event.Lepton_RecoSF[1]*\
+                          event.EMTFbug_veto \
+                          if event.nLepton > 1 and hasattr(event, \'MHTriggerEffWeight_2l\') else 0.'
 
 # Lepton WP
 
 muWP='cut_Tight_HWWW'
 eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
-
+eleWPlist += ['cutFall17V1Iso_Tight','cutFall17V1Iso_Tight_SS','cutFall17V2Iso_Tight','cutFall17V2Iso_Tight_SS']
 for eleWP in eleWPlist: 
 
   formulas['LepSF2l__ele_'+eleWP+'__mu_'+muWP] = 'event.Lepton_tightElectron_'+eleWP+'_IdIsoSF'+'[0]*\

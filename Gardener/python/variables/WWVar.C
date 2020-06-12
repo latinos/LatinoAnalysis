@@ -48,6 +48,7 @@ public:
  float m2ljj30();
 
  float pTWW();
+ float pTHjj();
  float mTi();
  float mTe();
  float choiMass();
@@ -97,6 +98,12 @@ public:
  float dphilep1jet2(); 
  float dphilep2jet1(); 
  float dphilep2jet2(); 
+ float maxdphilepjj();
+ float dphilep2jj();
+ float dphilep1jj();
+
+ float mindetajl();
+ float detall();
 
  float vht_pt();
  float vht_phi();
@@ -122,6 +129,8 @@ public:
 //whss
  float mlljj20_whss();
  float mlljj30_whss();
+ float WlepPt_whss();
+ float WlepMt_whss();
  
 private:
  //! variables
@@ -521,6 +530,72 @@ float WW::dphilljetjet(){
  }
  else {
   return -9999.0;
+ }
+}
+
+float WW::maxdphilepjj(){
+ if (_isOk && _jetOk >= 2) {
+float d1 = fabs(L1.DeltaPhi(J1+J2));
+float d2 = fabs(L2.DeltaPhi(J1+J2));
+if(d1>d2) return d1;
+else return d2;
+}
+else {
+ return -9999.0;
+ }
+}
+
+float WW::dphilep1jj(){
+ if (_isOk && _jetOk >= 2) {
+ return fabs(L1.DeltaPhi(J1+J2));
+}
+else {
+ return -9999.0;
+ }
+}
+
+float WW::dphilep2jj(){
+ if (_isOk && _jetOk >= 2) {
+ return fabs(L2.DeltaPhi(J1+J2));
+}
+else {
+ return -9999.0;
+ }
+}
+
+float WW::WlepPt_whss(){
+ if (_isOk && _jetOk >= 2) {
+float d3 = fabs(L1.DeltaPhi(J1+J2));
+float d4 = fabs(L2.DeltaPhi(J1+J2));
+if(d3>d4) return L1.Pt();
+else return L2.Pt();
+}
+else if(_isOk && _jetOk == 1) {
+float d5 = fabs(L1.DeltaPhi(J1));
+float d6 = fabs(L2.DeltaPhi(J1));
+if(d5>d6) return L1.Pt();
+else return L2.Pt();
+}
+else {
+ return -9999.0;
+ }
+}
+
+float WW::WlepMt_whss(){
+ if (_isOk && _jetOk >= 2) {
+float d3 = fabs(L1.DeltaPhi(J1+J2));
+float d4 = fabs(L2.DeltaPhi(J1+J2));
+if(d3>d4) return sqrt(2 * pt1() * pfmet() * (1 - cos( dphilmet1() )));
+else return sqrt(2 * pt2() * pfmet() * (1 - cos( dphilmet2() )));
+}
+else if(_isOk && _jetOk == 1) {
+float d5 = fabs(L1.DeltaPhi(J1));
+float d6 = fabs(L2.DeltaPhi(J1));
+if(d5>d6) return sqrt(2 * pt1() * pfmet() * (1 - cos( dphilmet1() )));
+else return sqrt(2 * pt2() * pfmet() * (1 - cos( dphilmet2() )));
+}
+else {
+ return -9999.0;
  }
 }
 
@@ -1078,6 +1153,41 @@ float WW::dphilep2jet2(){
 }
 
 
+float WW::mindetajl()
+{
+  if (_isOk && _jetOk >= 2) {
+
+    float themin = 999;
+
+    float detaj1l1 = fabs(J1.Eta() - L1.Eta());
+    float detaj1l2 = fabs(J1.Eta() - L2.Eta());
+    float detaj2l1 = fabs(J2.Eta() - L1.Eta());
+    float detaj2l2 = fabs(J2.Eta() - L2.Eta());
+
+    if (detaj1l1 < themin) themin = detaj1l1;
+    if (detaj1l2 < themin) themin = detaj1l2;
+    if (detaj2l1 < themin) themin = detaj2l1;
+    if (detaj2l2 < themin) themin = detaj2l2;
+
+    return themin;
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
+float WW::detall()
+{
+  if (_isOk) {
+    return fabs(L1.Eta() - L2.Eta());
+  }
+  else {
+    return -9999.0;
+  }
+}
+
+
 float WW::m2ljj20(){
  if (_isOk && _jetOk >= 1 && J1.Pt()>30) {
   if (J2.Pt()>20) 
@@ -1176,6 +1286,14 @@ float WW::vht_phi(){
  }
 }
 
+float WW::pTHjj(){
+  if (_isOk && _jetOk >= 2) {
+  return (L1+L2+J1+J2+MET).Pt();
+ }
+ else {
+  return -9999.0;
+ }
+}
 
 
 //
