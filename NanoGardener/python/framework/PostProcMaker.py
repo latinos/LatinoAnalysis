@@ -764,7 +764,6 @@ class PostProcMaker():
        global preBash
 
        step = self._Steps[s]
-       
        if step['isChain']:
          for subtarget in step['subTargets']:
            addCommands(subtarget)
