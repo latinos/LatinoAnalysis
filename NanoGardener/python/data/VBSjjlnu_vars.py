@@ -229,8 +229,8 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     vjet_eta = fatjet.Eta()
     vjet_pt = fatjet.Pt()
     if debug:
-        print "Vjet pts", vjet_pts
-        print "Vjet etas", vjet_etas
+        print "Vjet pt", vjet_pt
+        print "Vjet eta", vjet_eta
     output["vjet_0_pt"] = vjet_pt
     output["vjet_0_eta"] = vjet_eta
     output["vjet_0_phi"] = fatjet.Phi()

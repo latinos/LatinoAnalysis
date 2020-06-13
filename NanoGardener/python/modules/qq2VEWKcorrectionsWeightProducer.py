@@ -280,7 +280,7 @@ class vNLOEWKcorrectionWeightProducer(Module):
 
  
         # now finally fill the branch ...
- 
+        #print ewknloW
         self.out.fillBranch("ewknloW",               ewknloW)
         self.out.fillBranch("ewknloWuncertainty",    ewknloWuncertainty)
 
