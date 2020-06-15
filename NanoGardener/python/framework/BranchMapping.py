@@ -126,7 +126,7 @@ class MappedOutputTree(object):
         except KeyError:
             name += self._suffix
 
-        if not self._toskip is not None and name in self._toskip:
+        if self._toskip is not None and name in self._toskip:
             return
 
         self._tree.fillBranch(name, val)
