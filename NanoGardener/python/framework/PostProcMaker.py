@@ -750,6 +750,10 @@ class PostProcMaker():
         print "Run period", match.group('period')
         declare = declare.replace('RPLME_RUNPERIOD', match.group('period') )
 
+     # SAMPLE
+     if 'RPLME_SAMPLE' in declare :
+       declare = declare.replace('RPLME_SAMPLE',iSample)
+
      return declare
 
 
@@ -760,7 +764,6 @@ class PostProcMaker():
        global preBash
 
        step = self._Steps[s]
-       
        if step['isChain']:
          for subtarget in step['subTargets']:
            addCommands(subtarget)

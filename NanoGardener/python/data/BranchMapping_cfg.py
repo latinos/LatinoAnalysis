@@ -116,26 +116,58 @@ _ElepT_branches = [
   'HM_idxWfat_noTau21Cut',
   'HM_HlnFatMass_noTau21Cut',
   ## EFT MEs
-  'hm'
-  'me_vbf_hsm'
-  'me_vbf_hm'
-  'me_vbf_hp'
-  'me_vbf_hl'
-  'me_vbf_mixhm'
-  'me_vbf_mixhp'
-  'me_wh_hsm'
-  'me_wh_hm'
-  'me_wh_hp'
-  'me_wh_hl'
-  'me_wh_mixhm'
-  'me_wh_mixhp'
-  'me_zh_hsm'
-  'me_zh_hm'
-  'me_zh_hp'
-  'me_zh_hl'
-  'me_zh_mixhm'
-  'me_zh_mixhp'
-  'me_qcd_hsm'
+  'hm',
+  'me_vbf_hsm',
+  'me_vbf_hm',
+  'me_vbf_hp',
+  'me_vbf_hl',
+  'me_vbf_mixhm',
+  'me_vbf_mixhp',
+  'me_wh_hsm',
+  'me_wh_hm',
+  'me_wh_hp',
+  'me_wh_hl',
+  'me_wh_mixhm',
+  'me_wh_mixhp',
+  'me_zh_hsm',
+  'me_zh_hm',
+  'me_zh_hp',
+  'me_zh_hl',
+  'me_zh_mixhm',
+  'me_zh_mixhp',
+  'me_qcd_hsm',
+  'pjjSm_wh',
+  'pjjTr_wh',
+  'pjjSm_zh',
+  'pjjTr_zh',
+  'meAvg_wh',
+  'meAvg_zh',
+  ## MonoHiggs Semileptonic
+  # deltas
+  'MHlnjj_dphi_ljjVmet',
+  'MHlnjj_deta_ljjVmet',
+  'MHlnjj_dr_ljjVmet',
+  # composed objects 
+  'MHlnjj_mt_lmet',
+  'MHlnjj_mt_lmetjj',
+  'MHlnjj_mt_ljj',
+  'MHlnjj_pt_lmet',
+  'MHlnjj_pt_lmetjj',
+  'MHlnjj_pt_ljj',
+  'MHlnjj_m_lmet',
+  'MHlnjj_m_lmetjj',
+  'MHlnjj_m_ljj',
+  # single objects
+  #'MHlnjj_pt_l',
+  # fractions
+  'MHlnjj_PTljj_D_PTmet',     
+  'MHlnjj_PTljj_D_Mlmetjj',   
+  'MHlnjj_MINPTlj_D_PTmet',   
+  'MHlnjj_MINPTlj_D_Mlmetjj', 
+  'MHlnjj_MAXPTlj_D_PTmet',   
+  'MHlnjj_MAXPTlj_D_Mlmetjj', 
+  'MHlnjj_MTljj_D_PTmet',     
+  'MHlnjj_MTljj_D_Mlmetjj',   
 ]
 
 _MupT_branches = _ElepT_branches
@@ -217,26 +249,62 @@ _MET_branches = [
   'HM_idxWfat_noTau21Cut',
   'HM_HlnFatMass_noTau21Cut',
   ## EFT MEs
-  'hm'
-  'me_vbf_hsm'
-  'me_vbf_hm'
-  'me_vbf_hp'
-  'me_vbf_hl'
-  'me_vbf_mixhm'
-  'me_vbf_mixhp'
-  'me_wh_hsm'
-  'me_wh_hm'
-  'me_wh_hp'
-  'me_wh_hl'
-  'me_wh_mixhm'
-  'me_wh_mixhp'
-  'me_zh_hsm'
-  'me_zh_hm'
-  'me_zh_hp'
-  'me_zh_hl'
-  'me_zh_mixhm'
-  'me_zh_mixhp'
-  'me_qcd_hsm'
+  'hm',
+  'me_vbf_hsm',
+  'me_vbf_hm',
+  'me_vbf_hp',
+  'me_vbf_hl',
+  'me_vbf_mixhm',
+  'me_vbf_mixhp',
+  'me_wh_hsm',
+  'me_wh_hm',
+  'me_wh_hp',
+  'me_wh_hl',
+  'me_wh_mixhm',
+  'me_wh_mixhp',
+  'me_zh_hsm',
+  'me_zh_hm',
+  'me_zh_hp',
+  'me_zh_hl',
+  'me_zh_mixhm',
+  'me_zh_mixhp',
+  'me_qcd_hsm',
+  'pjjSm_wh',
+  'pjjTr_wh',
+  'pjjSm_zh',
+  'pjjTr_zh',
+  'meAvg_wh',
+  'meAvg_zh',
+  ## MonoHiggs Semileptonic
+  # deltas
+  'MHlnjj_dphi_ljjVmet',
+  'MHlnjj_dphi_lVmet',
+  'MHlnjj_dphi_jjVmet',
+  'MHlnjj_deta_ljjVmet',
+  'MHlnjj_deta_lVmet',
+  'MHlnjj_deta_jjVmet',
+  'MHlnjj_dr_ljjVmet',
+  'MHlnjj_dr_lVmet',
+  'MHlnjj_dr_jjVmet',
+  # composed objects 
+  'MHlnjj_mt_lmet',
+  'MHlnjj_mt_lmetjj',
+  'MHlnjj_mt_met',
+  'MHlnjj_pt_lmet',
+  'MHlnjj_pt_lmetjj',
+  'MHlnjj_pt_met',
+  'MHlnjj_m_lmet',
+  'MHlnjj_m_lmetjj',
+  'MHlnjj_m_met',
+  # fractions
+  'MHlnjj_PTljj_D_PTmet',     
+  'MHlnjj_PTljj_D_Mlmetjj',   
+  'MHlnjj_MINPTlj_D_PTmet',   
+  'MHlnjj_MINPTlj_D_Mlmetjj', 
+  'MHlnjj_MAXPTlj_D_PTmet',   
+  'MHlnjj_MAXPTlj_D_Mlmetjj', 
+  'MHlnjj_MTljj_D_PTmet',     
+  'MHlnjj_MTljj_D_Mlmetjj',   
 ]
 
 _JES_branches = ['CleanJet_pt']
@@ -314,26 +382,71 @@ _JES_branches += [
   'HM_IsVbfFat',
   'HM_IsVbfjj',
   ## EFT MEs
-  'hm'
-  'me_vbf_hsm'
-  'me_vbf_hm'
-  'me_vbf_hp'
-  'me_vbf_hl'
-  'me_vbf_mixhm'
-  'me_vbf_mixhp'
-  'me_wh_hsm'
-  'me_wh_hm'
-  'me_wh_hp'
-  'me_wh_hl'
-  'me_wh_mixhm'
-  'me_wh_mixhp'
-  'me_zh_hsm'
-  'me_zh_hm'
-  'me_zh_hp'
-  'me_zh_hl'
-  'me_zh_mixhm'
-  'me_zh_mixhp'
-  'me_qcd_hsm'
+  'hm',
+  'me_vbf_hsm',
+  'me_vbf_hm',
+  'me_vbf_hp',
+  'me_vbf_hl',
+  'me_vbf_mixhm',
+  'me_vbf_mixhp',
+  'me_wh_hsm',
+  'me_wh_hm',
+  'me_wh_hp',
+  'me_wh_hl',
+  'me_wh_mixhm',
+  'me_wh_mixhp',
+  'me_zh_hsm',
+  'me_zh_hm',
+  'me_zh_hp',
+  'me_zh_hl',
+  'me_zh_mixhm',
+  'me_zh_mixhp',
+  'me_qcd_hsm',
+  'pjjSm_wh',
+  'pjjTr_wh',
+  'pjjSm_zh',
+  'pjjTr_zh',
+  'meAvg_wh',
+  'meAvg_zh',
+  ## MonoHiggs Semileptonic
+  # deltas
+  'MHlnjj_dphi_ljjVmet',
+  'MHlnjj_dphi_jVj',
+  'MHlnjj_dphi_jjVl',
+  'MHlnjj_dphi_jjVmet',
+  'MHlnjj_deta_ljjVmet',
+  'MHlnjj_deta_jVj',
+  'MHlnjj_deta_jjVl',
+  'MHlnjj_deta_jjVmet',
+  'MHlnjj_dr_ljjVmet',
+  'MHlnjj_dr_jVj',
+  'MHlnjj_dr_jjVl',
+  'MHlnjj_dr_jjVmet',
+  # composed objects 
+  'MHlnjj_mt_lmetjj',
+  'MHlnjj_mt_jj',
+  'MHlnjj_mt_ljj',
+  'MHlnjj_pt_lmetjj',
+  'MHlnjj_pt_jj',
+  'MHlnjj_pt_ljj',
+  'MHlnjj_m_lmetjj',
+  'MHlnjj_m_jj',
+  'MHlnjj_m_ljj',
+  # single objects
+  'MHlnjj_pt_j1',
+  'MHlnjj_pt_j2',
+  'MHlnjj_eta_j1',
+  'MHlnjj_eta_j2',
+  'MHlnjj_idx_j3',
+  # fractions
+  'MHlnjj_PTljj_D_PTmet',     
+  'MHlnjj_PTljj_D_Mlmetjj',   
+  'MHlnjj_MINPTlj_D_PTmet',   
+  'MHlnjj_MINPTlj_D_Mlmetjj', 
+  'MHlnjj_MAXPTlj_D_PTmet',   
+  'MHlnjj_MAXPTlj_D_Mlmetjj', 
+  'MHlnjj_MTljj_D_PTmet',     
+  'MHlnjj_MTljj_D_Mlmetjj',   
 ]
 
 _Fatjet_syst_branches = [
@@ -391,6 +504,18 @@ _MupT_branches.extend(NewVar_MC_dict['F'])
 
 ## DYMVA and MonoHiggsMVA
 for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_cfg"]:
+  mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
+  for key in mod.mvaDic.iterkeys():
+    if key not in _ElepT_branches:
+      _ElepT_branches.append(key)
+    if key not in _MupT_branches:
+      _MupT_branches.append(key)
+    if key not in _MET_branches:
+      _MET_branches.append(key)
+    if key not in _JES_branches:
+      _JES_branches.append(key)
+
+for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
   for key in mod.mvaDic.iterkeys():
     if key not in _ElepT_branches:

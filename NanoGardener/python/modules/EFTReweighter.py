@@ -11,8 +11,9 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger im
 import os.path
 
 class EFTReweighter(Module):
-    def __init__(self):
-        
+    def __init__(self, sample):
+        print '####################', sample
+        self.sample = sample
         self.cmssw_base = os.getenv('CMSSW_BASE')
         self.cmssw_arch = os.getenv('SCRAM_ARCH')
 
@@ -36,25 +37,28 @@ class EFTReweighter(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
 
-        filename = str(inputFile)[str(inputFile).find("nanoLatino"):str(inputFile).find(".root")+5]
-
-        if "_VBF_H0" in filename :
+        if "VBF_H0" in self.sample :
           self.productionProcess = "VBF"
-        elif "_ZH_H0" in filename :
+          self.XHProcess = True
+        elif "ZH_H0" in self.sample :
           self.productionProcess = "ZH"
-        elif "_WH_H0" in filename :
+          self.XHProcess = True
+        elif "WH_H0" in self.sample :
           self.productionProcess = "WH"
-        elif "_H0" in filename :
+          self.XHProcess = True
+        elif "H0" in self.sample :
           self.productionProcess = "GluGlu"
+          self.XHProcess = False
         else:
-          raise NameError(filename, "is an unrecognised simulation")
+          raise NameError(self.sample, "is an unrecognised simulation")
 
         print("Running MELA EFT reweighter with " + self.productionProcess + " sample")
 
         self.out = wrappedOutputTree
-        self.newbranches = [
-        'gen_me_hsm','gen_me_hm','gen_me_hp','gen_me_hl','gen_me_mixhm','gen_me_mixhp'  
-          ]
+        self.newbranches = ['gen_dme_hsm','gen_dme_hm','gen_dme_hp','gen_dme_hl','gen_dme_mixhm','gen_dme_mixhp','gen_dme_mixhl' ]
+
+        if self.XHProcess == True:
+         self.newbranches += ['gen_pme_hsm','gen_pme_hm','gen_pme_hp','gen_pme_hl','gen_pme_mixhm','gen_pme_mixhp','gen_pme_mixhl' ]
         
         for nameBranches in self.newbranches :
           self.out.branch(nameBranches  ,  "F");
@@ -65,12 +69,21 @@ class EFTReweighter(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        gen_me_hsm   = -999
-        gen_me_hm    = -999
-        gen_me_hp    = -999
-        gen_me_hl    = -999
-        gen_me_mixhm = -999
-        gen_me_mixhp = -999 
+        gen_dme_hsm   = -999
+        gen_dme_hm    = -999
+        gen_dme_hp    = -999
+        gen_dme_hl    = -999
+        gen_dme_mixhm = -999
+        gen_dme_mixhp = -999 
+        gen_dme_mixhl = -999 
+
+        gen_pme_hsm   = -999
+        gen_pme_hm    = -999
+        gen_pme_hp    = -999
+        gen_pme_hl    = -999
+        gen_pme_mixhm = -999
+        gen_pme_mixhp = -999 
+        gen_pme_mixhl = -999 
 
         self.LHE = Collection(event,"LHEPart")
         Gen = Collection(event,"GenPart")
@@ -84,15 +97,19 @@ class EFTReweighter(Module):
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
           if abs(event.GenPart_pdgId[mid]) != 24: continue 
-          gmid = event.GenPart_genPartIdxMother[mid]
-          if gmid == -1: continue
-          if abs(event.GenPart_pdgId[gmid]) != 25: continue 
+          if self.FromH(event, gid) == False: continue
           HFinalStateIdx.append(gid) 
+
+        if len(HFinalStateIdx) != 4:      
+         HFinalStateIdx = self.RemoveGammaW(event, HFinalStateIdx)
+
+        if len(HFinalStateIdx) != 4: 
+         HFinalStateIdx = self.RemoveAddHadron(event, HFinalStateIdx)
 
         LHEHFinalState = self.getLHE(event, HFinalStateIdx) 
 
         if len(LHEHFinalState)!=4:
-          print "SOMETHING WENT WRONG!, WW final state", LHEHFinalState
+          print "SOMETHING WENT WRONG!, WW final state", len(LHEHFinalState), LHEHFinalState
 
         for ipart in LHEHFinalState:
           d = ROOT.TLorentzVector()
@@ -121,6 +138,7 @@ class EFTReweighter(Module):
          VFinalStateIdx = []
          for gid,gen in enumerate(Gen):
           if abs(gen.pdgId) >= 21: continue 
+          if self.FromH(event, gid) == True: continue 
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
 
@@ -132,17 +150,22 @@ class EFTReweighter(Module):
             self.productionMela = ROOT.TVar.Lep_ZH
 
           if abs(event.GenPart_pdgId[mid]) == 24 and self.productionProcess == "WH": 
-           gmid = event.GenPart_genPartIdxMother[mid]
-           if abs(event.GenPart_pdgId[gmid]) != 25: 
-            VFinalStateIdx.append(gid) 
-            if abs(gen.pdgId) in [1,2,3,4,5]:
-             self.productionMela = ROOT.TVar.Had_WH
-            elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
-             self.productionMela = ROOT.TVar.Lep_WH
+           VFinalStateIdx.append(gid) 
+           if abs(gen.pdgId) in [1,2,3,4,5]:
+            self.productionMela = ROOT.TVar.Had_WH
+           elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
+            self.productionMela = ROOT.TVar.Lep_WH
          
+         if len(VFinalStateIdx) != 2 and self.productionProcess == "WH":      
+          VFinalStateIdx = self.RemoveGammaW(event, VFinalStateIdx)
+
+         if len(VFinalStateIdx) != 2: 
+          VFinalStateIdx = self.RemoveAddHadron(event, VFinalStateIdx)
+
          LHEVFinalState = self.getLHE(event, VFinalStateIdx) 
+
          if len(LHEVFinalState)!=2:
-          print "SOMETHING WENT WRONG!, V final state ", LHEVFinalState
+          print "SOMETHING WENT WRONG!, V final state ", len(LHEVFinalState), VFinalStateIdx
 
          for ipart in LHEVFinalState:
           add = ROOT.TLorentzVector()
@@ -151,6 +174,8 @@ class EFTReweighter(Module):
           addIDs.push_back(LHEVFinalState[ipart][3]) 
 
         elif self.productionProcess == "VBF" : 
+
+         self.productionMela = ROOT.TVar.JJVBF
 
          LHEjetIdx = []
          for idx,part in enumerate(self.LHE):
@@ -186,38 +211,53 @@ class EFTReweighter(Module):
         self.mela.setInputEvent(daughter_coll, associated_coll, mother_coll, 1)
         self.mela.setCurrentCandidateFromIndex(0)
         
-        ME1 = [1, 1, 1, 1, 1, 1] 
-        ME2 = [1, 1, 1, 1, 1, 1]
+        DME = [1, 1, 1, 1, 1, 1, 1] 
+        PME = [1, 1, 1, 1, 1, 1, 1]
 
-        if self.productionProcess == "ZH" or self.productionProcess == "WH" :
+        if self.XHProcess == True:
 
-         ME1 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
-         ME2 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
-
-        elif self.productionProcess == "VBF" :
-
-         ME1 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
-         ME2 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJVBF, 0, 0) 
+         DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
+         PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
   
         elif self.productionProcess == "GluGlu" :
 
-         ME1 = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0) 
+         DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0) 
 
-        gen_me_hsm   = ME1[0]*ME2[0]
-        gen_me_hm    = ME1[1]*ME2[1]
-        gen_me_hp    = ME1[2]*ME2[2]
-        gen_me_hl    = ME1[3]*ME2[3]
-        gen_me_mixhm = ME1[4]*ME2[4]
-        gen_me_mixhp = ME1[5]*ME2[5] 
+        gen_dme_hsm   = DME[0]
+        gen_dme_hm    = DME[1]
+        gen_dme_hp    = DME[2]
+        gen_dme_hl    = DME[3]
+        gen_dme_mixhm = DME[4]
+        gen_dme_mixhp = DME[5] 
+        gen_dme_mixhl = DME[6] 
+
+        gen_pme_hsm   = PME[0]
+        gen_pme_hm    = PME[1]
+        gen_pme_hp    = PME[2]
+        gen_pme_hl    = PME[3]
+        gen_pme_mixhm = PME[4]
+        gen_pme_mixhp = PME[5] 
+        gen_pme_mixhl = PME[6] 
+
+        self.out.fillBranch( 'gen_dme_hsm',    gen_dme_hsm )
+        self.out.fillBranch( 'gen_dme_hm',     gen_dme_hm )
+        self.out.fillBranch( 'gen_dme_hp',     gen_dme_hp )
+        self.out.fillBranch( 'gen_dme_hl',     gen_dme_hl )
+        self.out.fillBranch( 'gen_dme_mixhm',  gen_dme_mixhm )
+        self.out.fillBranch( 'gen_dme_mixhp',  gen_dme_mixhp )
+        self.out.fillBranch( 'gen_dme_mixhl',  gen_dme_mixhl )
+
+        if self.XHProcess == True:
+
+         self.out.fillBranch( 'gen_pme_hsm',    gen_pme_hsm )
+         self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
+         self.out.fillBranch( 'gen_pme_hp',     gen_pme_hp )
+         self.out.fillBranch( 'gen_pme_hl',     gen_pme_hl )
+         self.out.fillBranch( 'gen_pme_mixhm',  gen_pme_mixhm )
+         self.out.fillBranch( 'gen_pme_mixhp',  gen_pme_mixhp )
+         self.out.fillBranch( 'gen_pme_mixhl',  gen_pme_mixhl )
 
         self.mela.resetInputEvent()
-
-        self.out.fillBranch( 'gen_me_hsm',  gen_me_hsm )
-        self.out.fillBranch( 'gen_me_hm',   gen_me_hm )
-        self.out.fillBranch( 'gen_me_hp',   gen_me_hp )
-        self.out.fillBranch( 'gen_me_hl',   gen_me_hl )
-        self.out.fillBranch( 'gen_me_mixhm',  gen_me_mixhm )
-        self.out.fillBranch( 'gen_me_mixhp',  gen_me_mixhp )
 
         return True   
 
@@ -233,6 +273,40 @@ class EFTReweighter(Module):
             order[j] += 1
       newlist = [oldlist[i] for i in order]
       return newlist
+
+    def FromH(self, event, pid): # Iterate over mothers to find Higgs
+      while event.GenPart_genPartIdxMother[pid] != -1:
+	pid = event.GenPart_genPartIdxMother[pid]
+	if event.GenPart_pdgId[pid] == 25: return True
+      return False
+
+    def RemoveGammaW(self, event, FinalStateIdx): # Remove W -> gamma W -> e+ e- W   
+       removethis = []
+       for pi1,p1 in enumerate(FinalStateIdx):
+        for pi2,p2 in enumerate(FinalStateIdx):
+         if pi1>=pi2: continue
+         if event.GenPart_genPartIdxMother[p1] != event.GenPart_genPartIdxMother[p2]: continue
+         if event.GenPart_pdgId[p1] + event.GenPart_pdgId[p2] == 0:
+          if p1 not in removethis: removethis.append(p1)
+          if p2 not in removethis: removethis.append(p2)
+       for rem in removethis:
+        FinalStateIdx.remove(rem)
+       return FinalStateIdx
+
+    def RemoveAddHadron(self, event, FinalStateIdx): # Remove rare additonal hadrons
+        removethis = []
+        for pi1,p1 in enumerate(FinalStateIdx):
+         mom_id = event.GenPart_genPartIdxMother[p1]
+         NumWithThisID = 0
+         for pi2,p2 in enumerate(FinalStateIdx):
+          if event.GenPart_genPartIdxMother[p2] == mom_id: NumWithThisID += 1
+         if NumWithThisID != 2:
+          for pi2,p2 in enumerate(FinalStateIdx):
+           if (event.GenPart_genPartIdxMother[p2] == mom_id) and (p2 not in removethis):
+            removethis.append(p2)
+        for rem in removethis:
+         FinalStateIdx.remove(rem)
+        return FinalStateIdx
 
     def getLHE(self, event, genlist): # Particles in LHE collection have higher precision -> Find LHE particles with closest match to GenParticles
       LHElist = {}

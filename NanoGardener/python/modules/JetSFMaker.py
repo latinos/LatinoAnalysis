@@ -6,7 +6,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 
 class JetSFMaker(Module):
     """
-    Add branches for Jet ID scale factors and uncertainties.
+    Add branches for Jet ID scale factors.
     """
 
     def __init__(self, cmssw, puid_sf_config='LatinoAnalysis/NanoGardener/python/data/JetPUID_cfg.py'):
@@ -69,7 +69,7 @@ class JetSFMaker(Module):
             self.out.fillBranch('Jet_PUIDSF_%s_staterr' % wp, sfstat_errs[wp])
             self.out.fillBranch('Jet_PUIDSF_%s_systerr' % wp, sfsyst_errs[wp])
             self.out.fillBranch('Jet_PUIDEFF_%s' % wp, effs[wp])
-            
+
         return True
 
     def get_sf_and_eff(self, jtype, wp, jet):

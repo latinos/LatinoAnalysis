@@ -34,6 +34,8 @@ class MHSemiLepVars(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+        self.jet_idx_name = ''
+
         self.out = wrappedOutputTree
         for var in self.angle_var:
             for obj in self.angle_obj:
@@ -102,12 +104,19 @@ class MHSemiLepVars(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+        if self.jet_idx_name=='':
+          if hasattr(event, 'idx_j1'): self.jet_idx_name = 'idx_j'
+          elif hasattr(event, 'HM_idx_j1'): self.jet_idx_name = 'HM_idx_j'
+          else: raise ValueError('MHSemiLepVars: input tree has no variable named "idx_j1" or "HM_idx_j1"')
+          print('MHSemiLepVars: jet index string is "'+self.jet_idx_name+'"')
 
         jets = Collection(event, 'CleanJet')
         org_jets = Collection(event, 'Jet')
         leps = Collection(event, 'Lepton')
+        idx_j1 = getattr(event, self.jet_idx_name+'1')
+        idx_j2 = getattr(event, self.jet_idx_name+'2')
 
-        if event.idx_j1 < 0 or event.idx_j2 < 0:
+        if idx_j1 < 0 or idx_j2 < 0:
             for var in self.angle_var:
                 for obj in self.angle_obj:
                     self.out.fillBranch('MHlnjj_'+var+'_'+obj, -999.)
@@ -142,10 +151,10 @@ class MHSemiLepVars(Module):
         #self.MET.SetPtEtaPhiE(getattr(event, "PuppiMET_pt"), 0.0, getattr(event, "PuppiMET_phi"), getattr(event, "PuppiMET_sumEt"))
         
         # Jets
-        #self.J1.SetPtEtaPhiM(jets[event.idx_j1].pt, jets[event.idx_j1].eta, jets[event.idx_j1].phi, jets[event.idx_j1].mass)
-        #self.J2.SetPtEtaPhiM(jets[event.idx_j2].pt, jets[event.idx_j2].eta, jets[event.idx_j2].phi, jets[event.idx_j2].mass)
-        self.J1.SetPtEtaPhiM(jets[event.idx_j1].pt, jets[event.idx_j1].eta, jets[event.idx_j1].phi, org_jets[jets[event.idx_j1].jetIdx].mass)
-        self.J2.SetPtEtaPhiM(jets[event.idx_j2].pt, jets[event.idx_j2].eta, jets[event.idx_j2].phi, org_jets[jets[event.idx_j2].jetIdx].mass)
+        #self.J1.SetPtEtaPhiM(jets[idx_j1].pt, jets[idx_j1].eta, jets[idx_j1].phi, jets[idx_j1].mass)
+        #self.J2.SetPtEtaPhiM(jets[idx_j2].pt, jets[idx_j2].eta, jets[idx_j2].phi, jets[idx_j2].mass)
+        self.J1.SetPtEtaPhiM(jets[idx_j1].pt, jets[idx_j1].eta, jets[idx_j1].phi, org_jets[jets[idx_j1].jetIdx].mass)
+        self.J2.SetPtEtaPhiM(jets[idx_j2].pt, jets[idx_j2].eta, jets[idx_j2].phi, org_jets[jets[idx_j2].jetIdx].mass)
         
 
         # LEP
@@ -169,12 +178,12 @@ class MHSemiLepVars(Module):
                 self.out.fillBranch('MHlnjj_'+var+'_'+obj, self.getVal(var, obj))
 
         self.out.fillBranch('MHlnjj_pt_l',     self.LEP.Pt())
-        self.out.fillBranch('MHlnjj_pt_j1',    jets[event.idx_j1].pt)
-        self.out.fillBranch('MHlnjj_pt_j2',    jets[event.idx_j2].pt)
+        self.out.fillBranch('MHlnjj_pt_j1',    jets[idx_j1].pt)
+        self.out.fillBranch('MHlnjj_pt_j2',    jets[idx_j2].pt)
 
         self.out.fillBranch('MHlnjj_eta_l',     self.LEP.Eta())
-        self.out.fillBranch('MHlnjj_eta_j1',    jets[event.idx_j1].eta)
-        self.out.fillBranch('MHlnjj_eta_j2',    jets[event.idx_j2].eta)
+        self.out.fillBranch('MHlnjj_eta_j1',    jets[idx_j1].eta)
+        self.out.fillBranch('MHlnjj_eta_j2',    jets[idx_j2].eta)
 
         self.out.fillBranch('MHlnjj_PTljj_D_PTmet',     self.LJJ.Pt()/self.MET.Pt())
         self.out.fillBranch('MHlnjj_PTljj_D_Mlmetjj',   self.LJJ.Pt()/self.LMETJJ.M())
@@ -186,8 +195,8 @@ class MHSemiLepVars(Module):
         self.out.fillBranch('MHlnjj_MTljj_D_Mlmetjj',   self.getVal('mt', 'ljj')/self.LMETJJ.M())
 
         all_cj = range(len(jets))
-        all_cj.remove(event.idx_j1)
-        all_cj.remove(event.idx_j2)
+        all_cj.remove(idx_j1)
+        all_cj.remove(idx_j2)
         if len(all_cj) > 0: self.out.fillBranch('MHlnjj_idx_j3',    all_cj[0])
         else: self.out.fillBranch('MHlnjj_idx_j3',    -1)
         return True
