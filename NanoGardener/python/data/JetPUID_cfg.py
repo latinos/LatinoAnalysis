@@ -16,7 +16,9 @@ for jet, jetTag in [('real','eff'), ('pu','mistag')]:
     for wp, iwp in [('loose', 'L'), ('medium', 'M'), ('tight', 'T')]:
         for year, jcfg in _jet_puid_sf.iteritems():
             jcfg['%s_%s' % (jet, wp)] = 'h2_%s_sf%s_%s' % (jetTag, year, iwp)
-            jcfg['%s_%s_uncty' % (jet, wp)] = 'h2_%s_sf%s_%s_Systuncty' % (jetTag, year, iwp) 
+            jcfg['%s_mc_%s' % (jet, wp)] = 'h2_%s_mc%s_%s' % (jetTag, year, iwp)
+            jcfg['%s_%s_uncty' % (jet, wp)] = 'h2_%s_sf%s_%s_Systuncty' % (jetTag, year, iwp)
+             
 
 jet_puid_sf = {}
 
