@@ -430,7 +430,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'CorrFatJetMC', 'CleanFatJet',
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'CorrFatJetMC', 'CleanFatJet','JERsMC2016',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
@@ -585,7 +585,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet','JERsMC2017',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
@@ -681,7 +681,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet','JERsMC2018',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
@@ -2237,7 +2237,34 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
                   'module'     : 'jetRecalib2017RPLME_RUN()', ### <--- TODO
-                 },    
+                 }, 
+
+## ------- MODULES: JER
+    'JERsMC2016': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
+                  'declare'    : 'JERMakerMC16 = lambda : JERMaker("2016","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Summer16_25nsV1_MC",jmr_vals=[1.0, 1.2, 0.8])',
+                  'module'     : 'JERMakerMC16()',
+                 },   
+    'JERsMC2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
+                  'declare'    : 'JERMakerMC17 = lambda : JERMaker("2017","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Fall17_V3_MC",jmr_vals=[1.09, 1.14, 1.04])',
+                  'module'     : 'JERMakerMC17()',
+                 },
+    'JERsMC2018': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
+                  'declare'    : 'JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="",jmr_vals=[1.24, 1.20, 1.28])',
+                  'module'     : 'JERMakerMC18()',
+                 },
+    #jerTag for 2018 is missing on purpose, 2017 JERs are used instead (for a moment)
 
 ## ------- MODULES: MC Weights
 
