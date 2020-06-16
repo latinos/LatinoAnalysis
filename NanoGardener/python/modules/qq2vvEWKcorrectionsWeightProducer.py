@@ -161,6 +161,230 @@ class vvNLOEWKcorrectionWeightProducer(Module):
                 phiv2  = particle.phi
                 idv2   = particle.pdgId
 
+      
+          #
+          # if the code was unable to find 2 leptons -> 
+          # WW and not 2 leptons means it is semileptonic decay WW>lvjj.
+          # Then associate the pair "2" to the two quarks from W
+          #
+          if ptl2 == -1 :
+            #
+            # find the two quarks from W 
+            #
+            # It can be written in a more python-like manner, more performing ...
+            #
+            #
+            
+            temp_ptq1 = -1
+            temp_ptq2 = -1
+            temp_ptq3 = -1
+            temp_ptq4 = -1
+            temp_etaq1 = -1
+            temp_etaq2 = -1
+            temp_etaq3 = -1
+            temp_etaq4 = -1
+            temp_phiq1 = -1
+            temp_phiq2 = -1
+            temp_phiq3 = -1
+            temp_phiq4 = -1
+            temp_idq1 = -1
+            temp_idq2 = -1
+            temp_idq3 = -1
+            temp_idq4 = -1
+
+            temp_m12 = -1
+            temp_m13 = -1
+            temp_m14 = -1
+            temp_m23 = -1
+            temp_m24 = -1
+            temp_m34 = -1
+
+            q1 = ROOT.TLorentzVector()
+            q2 = ROOT.TLorentzVector()
+            q3 = ROOT.TLorentzVector()
+            q4 = ROOT.TLorentzVector()
+
+            num_quarks = 0
+            for particle  in lheParticles :      
+              # quarks
+              #          1, 2, 3, 4, 5, 6
+              if abs(particle.pdgId) <= 6 and abs(particle.pdgId) >=1 and particle.pt != 0:
+                num_quarks+=1
+  
+            for particle  in lheParticles :      
+              # quarks
+              #          1, 2, 3, 4, 5, 6
+              if abs(particle.pdgId) <= 6 and abs(particle.pdgId) >=1 and particle.pt != 0:
+             
+                if temp_ptq1 == -1 :
+                  temp_ptq1   = particle.pt
+                  temp_etaq1  = particle.eta
+                  temp_phiq1  = particle.phi
+                  temp_idq1   = particle.pdgId
+                  q1.SetPtEtaPhiM(temp_ptq1, temp_etaq1, temp_phiq1, 0) # fine approx massless quarks for check
+                elif temp_ptq2 == -1 :
+                  temp_ptq2   = particle.pt
+                  temp_etaq2  = particle.eta
+                  temp_phiq2  = particle.phi
+                  temp_idq2   = particle.pdgId
+                  q2.SetPtEtaPhiM(temp_ptq2, temp_etaq2, temp_phiq2, 0) # fine approx massless quarks for check
+                elif temp_ptq3 == -1 :
+                  temp_ptq3   = particle.pt
+                  temp_etaq3  = particle.eta
+                  temp_phiq3  = particle.phi
+                  temp_idq3   = particle.pdgId
+                  q3.SetPtEtaPhiM(temp_ptq3, temp_etaq3, temp_phiq3, 0) # fine approx massless quarks for check
+                elif temp_ptq4 == -1 :
+                  temp_ptq4   = particle.pt
+                  temp_etaq4  = particle.eta
+                  temp_phiq4  = particle.phi
+                  temp_idq4   = particle.pdgId
+                  q4.SetPtEtaPhiM(temp_ptq4, temp_etaq4, temp_phiq4, 0) # fine approx massless quarks for check
+            
+            # easy life ...
+            if num_quarks == 2:
+              
+                ptl2   = temp_ptq1  
+                etal2  = temp_etaq1 
+                phil2  = temp_phiq1 
+                idl2   = temp_idq1  
+
+                ptv2   = temp_ptq2  
+                etav2  = temp_etaq2 
+                phiv2  = temp_phiq2 
+                idv2   = temp_idq2  
+
+            # W mass = 80.385
+            # more complex: 3 combinations
+            elif num_quarks == 3:
+              temp_m12 = abs( (q1+q2).M() - 80.385 )
+              temp_m13 = abs( (q1+q3).M() - 80.385 )
+              temp_m23 = abs( (q1+q3).M() - 80.385 )
+             
+              if (temp_m12 < temp_m13) and (temp_m12 < temp_m23) :
+                
+                ptl2   = temp_ptq1  
+                etal2  = temp_etaq1 
+                phil2  = temp_phiq1 
+                idl2   = temp_idq1  
+
+                ptv2   = temp_ptq2  
+                etav2  = temp_etaq2 
+                phiv2  = temp_phiq2 
+                idv2   = temp_idq2  
+             
+              elif (temp_m13 < temp_m23) and (temp_m13 < temp_m12) :
+                
+                ptl2   = temp_ptq1  
+                etal2  = temp_etaq1 
+                phil2  = temp_phiq1 
+                idl2   = temp_idq1  
+
+                ptv2   = temp_ptq3  
+                etav2  = temp_etaq3 
+                phiv2  = temp_phiq3 
+                idv2   = temp_idq3  
+                
+              elif (temp_m23 < temp_m13) and (temp_m23 < temp_m12) :
+                
+                ptl2   = temp_ptq2  
+                etal2  = temp_etaq2 
+                phil2  = temp_phiq2 
+                idl2   = temp_idq2  
+
+                ptv2   = temp_ptq3  
+                etav2  = temp_etaq3 
+                phiv2  = temp_phiq3 
+                idv2   = temp_idq3  
+              
+            # W mass = 80.385
+            # and now the nightmare: 6 combinations
+            elif num_quarks == 5:
+              temp_m12 = abs( (q1+q2).M() - 80.385 )
+              temp_m13 = abs( (q1+q3).M() - 80.385 )
+              temp_m14 = abs( (q1+q4).M() - 80.385 )
+              temp_m23 = abs( (q2+q3).M() - 80.385 )
+              temp_m24 = abs( (q2+q4).M() - 80.385 )
+              temp_m34 = abs( (q3+q4).M() - 80.385 )
+             
+              list_of_mass_combinations = [temp_m12, temp_m13, temp_m14, temp_m23, temp_m24, temp_m34]
+              the_smallest_mass_combination = list_of_mass_combinations.index(min(list_of_mass_combinations))
+              
+              if the_smallest_mass_combination == 0 : 
+
+                ptl2   = temp_ptq1  
+                etal2  = temp_etaq1 
+                phil2  = temp_phiq1 
+                idl2   = temp_idq1  
+
+                ptv2   = temp_ptq2  
+                etav2  = temp_etaq2 
+                phiv2  = temp_phiq2 
+                idv2   = temp_idq2  
+             
+              elif the_smallest_mass_combination == 1 :
+                
+                ptl2   = temp_ptq1  
+                etal2  = temp_etaq1 
+                phil2  = temp_phiq1 
+                idl2   = temp_idq1  
+
+                ptv2   = temp_ptq3  
+                etav2  = temp_etaq3 
+                phiv2  = temp_phiq3 
+                idv2   = temp_idq3  
+            
+              elif the_smallest_mass_combination == 2 :
+                
+                ptl2   = temp_ptq1  
+                etal2  = temp_etaq1 
+                phil2  = temp_phiq1 
+                idl2   = temp_idq1  
+
+                ptv2   = temp_ptq4  
+                etav2  = temp_etaq4 
+                phiv2  = temp_phiq4 
+                idv2   = temp_idq4  
+            
+              elif the_smallest_mass_combination == 3 :
+                
+                ptl2   = temp_ptq2  
+                etal2  = temp_etaq2 
+                phil2  = temp_phiq2 
+                idl2   = temp_idq2  
+
+                ptv2   = temp_ptq3  
+                etav2  = temp_etaq3 
+                phiv2  = temp_phiq3 
+                idv2   = temp_idq3  
+            
+              elif the_smallest_mass_combination == 4 :
+                
+                ptl2   = temp_ptq2  
+                etal2  = temp_etaq2 
+                phil2  = temp_phiq2 
+                idl2   = temp_idq2  
+
+                ptv2   = temp_ptq4  
+                etav2  = temp_etaq4 
+                phiv2  = temp_phiq4 
+                idv2   = temp_idq4  
+            
+              elif the_smallest_mass_combination == 5 :
+                
+                ptl2   = temp_ptq3  
+                etal2  = temp_etaq3 
+                phil2  = temp_phiq3 
+                idl2   = temp_idq3  
+
+                ptv2   = temp_ptq4  
+                etav2  = temp_etaq4 
+                phiv2  = temp_phiq4 
+                idv2   = temp_idq4  
+            
+           
+
+
           #  Generator [back to top]
           #  Object property Type    Description
           #  Generator_binvar        Float_t MC generation binning value
@@ -235,8 +459,8 @@ class vvNLOEWKcorrectionWeightProducer(Module):
           temp_etaq2 = -1
           temp_phiq1 = -1
           temp_phiq2 = -1
-          temp_idlq1 = -1
-          temp_idlq2 = -1
+          temp_idq1 = -1
+          temp_idq2 = -1
 
           #print " ~~ new event "
           
