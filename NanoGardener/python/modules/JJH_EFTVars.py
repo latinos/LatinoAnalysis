@@ -45,9 +45,9 @@ class JJH_EFTVars(Module):
           'me_wh_hsm','me_wh_hm','me_wh_hp','me_wh_hl','me_wh_mixhm','me_wh_mixhp',
           'me_zh_hsm','me_zh_hm','me_zh_hp','me_zh_hl','me_zh_mixhm','me_zh_mixhp',
           'me_qcd_hsm',
+          'pjjSm_wh','pjjTr_wh','pjjSm_zh','pjjTr_zh','meAvg_wh','meAvg_zh'
           ]
         
-
         for nameBranches in self.newbranches :
           self.out.branch(nameBranches  ,  "F");
 
@@ -64,9 +64,8 @@ class JJH_EFTVars(Module):
 
         Jet   = Collection(event, "CleanJet")
         nJet = len(Jet)
- 
+
         OrigJet = Collection(event, "Jet")
-        nOrigJet = len(OrigJet)
 
         hm = -999
         me_vbf_hsm = -999 
@@ -88,9 +87,16 @@ class JJH_EFTVars(Module):
         me_zh_mixhm = -999 
         me_zh_mixhp = -999
         me_qcd_hsm = -999 
-            
-        if nJet > 1 and nLepton > 1:
 
+        pjjSm_wh = -999 
+        pjjTr_wh = -999
+        pjjSm_zh = -999 
+        pjjTr_zh = -999
+        meAvg_wh = -999
+        meAvg_zh = -999
+
+        if nJet > 1 and nLepton > 1 :
+         
          L1 = ROOT.TLorentzVector()
          L2 = ROOT.TLorentzVector()
          L1.SetPtEtaPhiM(Lepton[0].pt, Lepton[0].eta, Lepton[0].phi, 0)
@@ -105,8 +111,8 @@ class JJH_EFTVars(Module):
          NuNu = ROOT.TLorentzVector()
          nunu_px = MET_pt*math.cos(MET_phi)
          nunu_py = MET_pt*math.sin(MET_phi)
-         nunu_pz = LL.Pz()                                                                                                                  
-         nunu_m  = 30.0                                                                                                                                                                                      
+         nunu_pz = LL.Pz()
+         nunu_m  = 30.0
          nunu_e  = math.sqrt(nunu_px*nunu_px + nunu_py*nunu_py + nunu_pz*nunu_pz + nunu_m*nunu_m)
          NuNu.SetPxPyPzE(nunu_px, nunu_py, nunu_pz, nunu_e)
 
@@ -131,14 +137,14 @@ class JJH_EFTVars(Module):
          associated1 = ROOT.SimpleParticle_t(0, J1)
          associated2 = ROOT.SimpleParticle_t(0, J2)
 
-         daughter_coll.push_back(daughter)                                                           
+         daughter_coll.push_back(daughter)                                                         
          associated_coll.push_back(associated1)
          associated_coll.push_back(associated2)
 
          self.mela.setCandidateDecayMode(ROOT.TVar.CandidateDecay_Stable)   
          self.mela.setInputEvent(daughter_coll, associated_coll, 0, 0)
          self.mela.setCurrentCandidateFromIndex(0)
-        
+
          ME_VBF = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJVBF, 0, 1) 
          me_vbf_hsm   = ME_VBF[0]
          me_vbf_hm    = ME_VBF[1]
@@ -154,6 +160,10 @@ class JJH_EFTVars(Module):
          me_wh_hl    = ME_WH[3]
          me_wh_mixhm = ME_WH[4]
          me_wh_mixhp = ME_WH[5] 
+
+         pjjSm_wh    = ME_WH[7] 
+         pjjTr_wh    = ME_WH[8] 
+         meAvg_wh    = ME_WH[9] 
    
          ME_ZH = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.Had_ZH, 0, 1)
          me_zh_hsm   = ME_ZH[0]
@@ -163,19 +173,25 @@ class JJH_EFTVars(Module):
          me_zh_mixhm = ME_ZH[4]
          me_zh_mixhp = ME_ZH[5] 
 
+         pjjSm_zh    = ME_ZH[7] 
+         pjjTr_zh    = ME_ZH[8] 
+         meAvg_zh    = ME_ZH[9] 
+
          ME_QCD = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJQCD, 1, 1)
          me_qcd_hsm   = ME_QCD[0]
 
          self.mela.resetInputEvent()
-         
+
 
         self.out.fillBranch( 'hm',          hm )
+
         self.out.fillBranch( 'me_vbf_hsm',  me_vbf_hsm )
         self.out.fillBranch( 'me_vbf_hm',   me_vbf_hm )
         self.out.fillBranch( 'me_vbf_hp',   me_vbf_hp ) 
         self.out.fillBranch( 'me_vbf_hl',   me_vbf_hl )
         self.out.fillBranch( 'me_vbf_mixhm',me_vbf_mixhm )
         self.out.fillBranch( 'me_vbf_mixhp',me_vbf_mixhp ) 
+
         self.out.fillBranch( 'me_wh_hsm',   me_wh_hsm )
         self.out.fillBranch( 'me_wh_hm',    me_wh_hm )
         self.out.fillBranch( 'me_wh_hp',    me_wh_hp ) 
@@ -189,6 +205,13 @@ class JJH_EFTVars(Module):
         self.out.fillBranch( 'me_zh_mixhm', me_zh_mixhm )
         self.out.fillBranch( 'me_zh_mixhp', me_zh_mixhp ) 
         self.out.fillBranch( 'me_qcd_hsm',  me_qcd_hsm )
+
+        self.out.fillBranch( 'pjjSm_wh', pjjSm_wh )
+        self.out.fillBranch( 'pjjTr_wh', pjjTr_wh )
+        self.out.fillBranch( 'pjjSm_zh', pjjSm_zh )
+        self.out.fillBranch( 'pjjTr_zh', pjjTr_zh )
+        self.out.fillBranch( 'meAvg_wh', meAvg_wh )
+        self.out.fillBranch( 'meAvg_zh', meAvg_zh )
 
         return True
 
