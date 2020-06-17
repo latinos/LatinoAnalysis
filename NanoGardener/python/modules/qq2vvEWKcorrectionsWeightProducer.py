@@ -415,7 +415,42 @@ class vvNLOEWKcorrectionWeightProducer(Module):
           #
           if ptl1 == -1 or ptl2 == -1 or ptv1 == -1 or ptv2 == -1 :
             ewknloW = -2
-          else :          
+          else :         
+            #
+            # After lookig carefully at the referenced paper arXiv:1401.3964,
+            # in order to have the "t" Mandelstam variable defined in the standard way for qq>WW
+            # we check the charge of q1 and W1, such that charge (q1) has the same sign of the charge (W1)
+            # https://en.wikipedia.org/wiki/Mandelstam_variables
+            #
+            #   d 1  -1/3          ~d -1  +1/3
+            #   u 2  +2/3          ~u -2  -2/3
+            #   s 3  -1/3          ~s -3  +1/3
+            #   c 4  +2/3          ~c -4  -2/3
+            #   b 5  -1/3          ~b -5  +1/3
+            #   t 6  +2/3          ~t -6  -2/3
+            #
+            # W+   >     u ~d,    c ~s,    t ~b      --> sum id =  1
+            # W-   >    ~u  d,   ~c  s,   ~t  b      --> sum id = -1
+            
+            swap = False
+            #                                                    <---              fully leptonic            --->     <---     semileptonic                  --->
+            #            u              c              t    > 0            e-               mu-              tau-             W+ is the other -> 1 is W-         < 0
+            if ((id1 ==  2) or (id1 ==  4) or (id1 ==  6)) and  ((idl1 ==  11) or (idl1 ==  13) or (idl1 ==  15)  or             (idl2+idv2 ==  1)               ) :
+              swap = True
+            #           ~u             ~c             ~t    < 0            e+               mu+              tau+             W- is the other -> -1 is W+         > 0
+            if ((id1 == -2) or (id1 == -4) or (id1 == -6)) and  ((idl1 == -11) or (idl1 == -13) or (idl1 == -15)  or             (idl2+idv2 == -1)               ) :
+              swap = True
+            #            d              s              b    < 0            e+               mu+              tau+             W- is the other -> -1 is W+         > 0
+            if ((id1 ==  1) or (id1 ==  3) or (id1 ==  5)) and  ((idl1 == -11) or (idl1 == -13) or (idl1 == -15)  or             (idl2+idv2 == -1)               ) :
+              swap = True
+            #           ~d             ~s             ~b    > 0            e-               mu-              tau-             W+ is the other -> 1 is W-         < 0
+            if ((id1 == -1) or (id1 == -3) or (id1 == -5)) and  ((idl1 ==  11) or (idl1 ==  13) or (idl1 ==  15)  or             (idl2+idv2 == 1)                ) :  
+              swap = True
+                         
+            if swap :
+              ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2  =  ptl2, etal2, phil2, idl2, ptl1, etal1, phil1, idl1
+              ptv1, etav1, phiv1, idv1, ptv2, etav2, phiv2, idv2  =  ptv2, etav2, phiv2, idv2, ptv1, etav1, phiv1, idv1
+              
             ewknloW = self.qq2wwEWKcorrections.getqq2WWEWKCorr(ptl1, etal1, phil1, idl1, ptl2, etal2, phil2, idl2, ptv1, etav1, phiv1, ptv2, etav2, phiv2, x1, x2, id1, id2)
 
 #  
