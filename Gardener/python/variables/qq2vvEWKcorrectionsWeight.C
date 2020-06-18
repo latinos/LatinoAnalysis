@@ -4,6 +4,19 @@
 #include <vector>
 #include <string>
 
+//
+// Email exchange after DIS2014
+//
+// From theorist colleague, Tobias Kasprzik
+// arXiv:1401.3964
+// 
+// arXiv:1208.3147
+// arXiv:1311.5491
+// arXiv:1310.3972
+// arXiv:1305.5402
+//
+
+
 class qq2vvEWKcorrections {
 public:
  //! constructor
@@ -144,11 +157,14 @@ float qq2vvEWKcorrections::getqq2WWEWKCorr(
  //---- swap 1 <->2 for leptons and neutrinos, to get correctly association l-v:
  //---- use as test invariatn mass of di-leptons
  //----    needed because leptons are ordered by "pt" and not by "mother" in the input! 
- if ((W1.M() - 80.385) > 0.1 && (W2.M() - 80.385) > 0.1) {
-  W1 = l1+v2; // W1
-  W2 = l2+v1; // W2
-  WW = W1+W2;
- }
+ //
+ // -> 1.0 value is arbitrary and coming from old code (it was 0.1) and run-1 latino trees
+ //
+ // if (fabs(W1.M() - 80.385) > 1.0 && fabs(W2.M() - 80.385) > 1.0) {
+ //  W1 = l1+v2; // W1
+ //  W2 = l2+v1; // W2
+ //  WW = W1+W2;
+ // }
  //---- end FIX
  
  

@@ -139,6 +139,7 @@
             "jetSelCustom", 
             "CorrFatJetMC", 
             "CleanFatJet", 
+            "JERsMC2016", 
             "PromptParticlesGenVars", 
             "GenVar", 
             "GenLeptonMatch", 
@@ -286,11 +287,12 @@
         "declare": "whadJetSel_MupTup = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"MupTup\")"
     }, 
     "MCCombJJLNu2018_MupTup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -498,11 +500,12 @@
         "declare": "boostedWtagsf_jesFlavorQCDdo = lambda : BoostedWtagSF(input_branch_suffix=\"jesFlavorQCDDown\", output_branch_map=\"fatjetJESFlavorQCDdo\", year=\"RPLME_YEAR\", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)"
     }, 
     "MCCombJJLNu2018_fatjetJERdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -623,7 +626,7 @@
         "declare": "wlepMkr_fatjetJESHF_RPLME_YEARup = lambda : WlepMaker(branch_map=\"fatjetJESHF_RPLME_YEARup\")"
     }, 
     "MCCombJJLNu2016_fatjetJESup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
@@ -801,7 +804,7 @@
         "module": "DYMVA_JESHFdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESHFdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESHFdo\")"
+        "declare": "DYMVA_JESHFdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESHFdo\")"
     }, 
     "whadJetSel_JESAbsolute_RPLME_YEARup": {
         "do4MC": true, 
@@ -905,13 +908,21 @@
         "import": "LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin", 
         "declare": "vbs_vars_maker_fatjetJESRelativeSample_RPLME_YEARup = lambda : VBSjjlnu_kin(mode=[\"maxmjj\",\"maxmjj_massWZ\"], met=\"PuppiMET\", branch_map=\"fatjetJESRelativeSample_RPLME_YEARup\", debug=False)"
     }, 
+    "l3Kin_JESHF_RPLME_YEARup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "l3KinProducer(branch_map=\"JESHF_RPLME_YEARup\")", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
+        "declare": ""
+    }, 
     "DYMVA_JESEC2up": {
         "do4MC": true, 
         "isChain": false, 
         "module": "DYMVA_JESEC2up()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESEC2up = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESEC2up\")"
+        "declare": "DYMVA_JESEC2up = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESEC2up\")"
     }, 
     "EmbeddingVeto": {
         "do4MC": true, 
@@ -955,7 +966,7 @@
         "do4Data": false
     }, 
     "VBSjjlnuSkim2016v5_data": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                         && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                         && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "fakeWstep1l", 
@@ -989,7 +1000,7 @@
         "module": "DYMVA_JESHF_RPLME_YEARup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESHF_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESHF_RPLME_YEARup\")"
+        "declare": "DYMVA_JESHF_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESHF_RPLME_YEARup\")"
     }, 
     "HMDNNProdSemi_fatjetJESRelativeSample_RPLME_YEARup": {
         "do4MC": true, 
@@ -1026,7 +1037,7 @@
     "l3Kin_JESRelativeSample_RPLME_YEARdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESRelativeSample_RPLME_YEARdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESRelativeSample_RPLME_YEARdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -1039,16 +1050,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.WlepMaker", 
         "declare": "wlepMkr_JESHF_RPLME_YEARdo = lambda : WlepMaker(branch_map=\"JESHF_RPLME_YEARdo\")"
     }, 
-    "JJHEFT_JESBBEC1_RPLME_YEARdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESBBEC1_RPLME_YEARdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESBBEC1_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESBBEC1_RPLME_YEARdo\")"
-        }
-    ], 
+    "JJHEFT_JESBBEC1_RPLME_YEARdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESBBEC1_RPLME_YEARdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESBBEC1_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESBBEC1_RPLME_YEARdo\")"
+    }, 
     "MonoHiggsMVA_JESAbsoluteup": {
         "do4MC": true, 
         "isChain": false, 
@@ -1079,7 +1088,7 @@
         "module": "DYMVA_JESBBEC1_RPLME_YEARdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESBBEC1_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESBBEC1_RPLME_YEARdo\")"
+        "declare": "DYMVA_JESBBEC1_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESBBEC1_RPLME_YEARdo\")"
     }, 
     "wlepMaker_fatjetJESBBEC1up": {
         "do4MC": true, 
@@ -1107,6 +1116,7 @@
             "formulasMC", 
             "EmbeddingVeto", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -1136,6 +1146,7 @@
             "formulasMC", 
             "EmbeddingVeto", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -1313,7 +1324,7 @@
         "module": "DYMVA_ElepTup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_ElepTup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"ElepTup\")"
+        "declare": "DYMVA_ElepTup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"ElepTup\")"
     }, 
     "HMvars": {
         "do4MC": true, 
@@ -1353,7 +1364,7 @@
         "module": "DYMVA_JESup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESup\")"
+        "declare": "DYMVA_JESup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESup\")"
     }, 
     "GenLeptonMatch": {
         "do4MC": true, 
@@ -1369,7 +1380,7 @@
         "module": "DYMVA_JESFlavorQCDdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESFlavorQCDdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESFlavorQCDdo\")"
+        "declare": "DYMVA_JESFlavorQCDdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESFlavorQCDdo\")"
     }, 
     "HMDNNNeutSemi_JESAbsolutedo": {
         "do4MC": true, 
@@ -1484,11 +1495,12 @@
         "declare": "whadJetSel_JESEC2_RPLME_YEARdo = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"JESEC2_RPLME_YEARdo\")"
     }, 
     "MCCombJJLNu2016_fatjetJMSdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -1522,7 +1534,7 @@
         "module": "DYMVA()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py')"
+        "declare": "DYMVA = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py')"
     }, 
     "CleanFatJet_fatjetJMRdo": {
         "do4MC": true, 
@@ -1611,23 +1623,13 @@
         "import": "LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer", 
         "declare": "wzNLOEWK = lambda : vvNLOEWKcorrectionWeightProducer(\"wz\")"
     }, 
-    "VBSjjlnuSkim2018v5": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+    "whadJetSel_JESEC2_RPLME_YEARup": {
         "do4MC": true, 
-        "subTargets": [
-            "wwNLOEWK", 
-            "wzNLOEWK", 
-            "zzNLOEWK", 
-            "zNLOEWK", 
-            "wNLOEWK", 
-            "trigMC", 
-            "CorrFatJetMC", 
-            "CleanFatJet", 
-            "VBSjjlnu_pairing", 
-            "VBSjjlnu_kin"
-        ], 
-        "isChain": true, 
-        "do4Data": true
+        "isChain": false, 
+        "module": "whadJetSel_JESEC2_RPLME_YEARup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
+        "declare": "whadJetSel_JESEC2_RPLME_YEARup = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"JESEC2_RPLME_YEARup\")"
     }, 
     "wlepMaker_JESRelativeBaldo": {
         "do4MC": true, 
@@ -1686,7 +1688,7 @@
         "declare": ""
     }, 
     "MCCombJJLNu2017_fatjetJESup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
@@ -1835,11 +1837,12 @@
         "declare": "JESRelativeSample_RPLME_YEARdo = lambda : PtCorrApplier(Coll=\"CleanJet\", CorrSrc=\"jecUncertRelativeSample_RPLME_YEAR\", kind=\"Do\", doMET=True, METobjects = [\"MET\",\"PuppiMET\",\"RawMET\"], suffix=\"_JESRelativeSample_RPLME_YEARdo\")"
     }, 
     "MCCombJJLNu2016_JESdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -2006,16 +2009,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.LeptonSel", 
         "declare": "leptonSel = lambda : LeptonSel(\"RPLME_CMSSW\", \"Loose\", 1)"
     }, 
-    "JJHEFT_JESRelativeBalup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESRelativeBalup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESRelativeBalup = lambda : JJH_EFTVars(branch_map=\"JESRelativeBalup\")"
-        }
-    ], 
+    "JJHEFT_JESRelativeBalup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESRelativeBalup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESRelativeBalup = lambda : JJH_EFTVars(branch_map=\"JESRelativeBalup\")"
+    }, 
     "VBSjjlnu_pairing_JESAbsolutedo": {
         "do4MC": true, 
         "isChain": false, 
@@ -2056,21 +2057,13 @@
         "import": "LatinoAnalysis.NanoGardener.modules.PtCorrApplier", 
         "declare": "JESup = lambda : PtCorrApplier(Coll=\"CleanJet\", CorrSrc=\"jecUncertTotal\", kind=\"Up\", doMET=True, METobjects = [\"MET\",\"PuppiMET\",\"RawMET\"], suffix=\"_JESup\")"
     }, 
-    "MupTdo": {
+    "formulasMC": {
         "do4MC": true, 
+        "isChain": false, 
+        "module": "GenericFormulaAdder('data/formulasToAdd_MC_RPLME_CMSSW.py')", 
         "do4Data": false, 
-        "isChain": true, 
-        "subTargets": [
-            "do_MupTdo", 
-            "trigMCKeepRun", 
-            "LeptonSF", 
-            "l2Kin", 
-            "l3Kin", 
-            "l4Kin", 
-            "DYMVA", 
-            "MonoHiggsMVA", 
-            "formulasMC"
-        ]
+        "import": "LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder", 
+        "declare": ""
     }, 
     "l4Kin_JESRelativeSample_RPLME_YEARup": {
         "do4MC": true, 
@@ -2166,11 +2159,12 @@
         "declare": "HMDNNNeSem_fatjetJMSup = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"fatjetJMSup\")"
     }, 
     "MCCombJJLNu2017_JESup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -2440,11 +2434,12 @@
         "declare": "wlepMkr_JESRelativeSample_RPLME_YEARdo = lambda : WlepMaker(branch_map=\"JESRelativeSample_RPLME_YEARdo\")"
     }, 
     "MCCombJJLNu2018_METdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -2596,16 +2591,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.BoostedWtagSF", 
         "declare": "boostedWtagsf_jesHFup = lambda : BoostedWtagSF(input_branch_suffix=\"jesHFUp\", output_branch_map=\"fatjetJESHFup\", year=\"RPLME_YEAR\", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)"
     }, 
-    "JJHEFT_JESRelativeSample_RPLME_YEARdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESRelativeSample_RPLME_YEARdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESRelativeSample_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESRelativeSample_RPLME_YEARdo\")"
-        }
-    ], 
+    "JJHEFT_JESRelativeSample_RPLME_YEARdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESRelativeSample_RPLME_YEARdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESRelativeSample_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESRelativeSample_RPLME_YEARdo\")"
+    }, 
     "wlepMaker_ElepTup": {
         "do4MC": true, 
         "isChain": false, 
@@ -2641,17 +2634,18 @@
     "l3Kin_JESAbsoluteup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESAbsoluteup\")", 
+        "module": "l3KinProducer(branch_map=\"JESAbsoluteup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
     }, 
     "MCCombJJLNu2018_fatjetJMSdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -2695,16 +2689,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.PtCorrApplier", 
         "declare": "JESFlavorQCDdo = lambda : PtCorrApplier(Coll=\"CleanJet\", CorrSrc=\"jecUncertFlavorQCD\", kind=\"Do\", doMET=True, METobjects = [\"MET\",\"PuppiMET\",\"RawMET\"], suffix=\"_JESFlavorQCDdo\")"
     }, 
-    "JJHEFT_JESAbsolute_RPLME_YEARup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESAbsolute_RPLME_YEARup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESAbsolute_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESAbsolute_RPLME_YEARup\")"
-        }
-    ], 
+    "JJHEFT_JESAbsolute_RPLME_YEARup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESAbsolute_RPLME_YEARup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESAbsolute_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESAbsolute_RPLME_YEARup\")"
+    }, 
     "BoostedWtagSF_fatjetJESBBEC1do": {
         "do4MC": true, 
         "isChain": false, 
@@ -2787,11 +2779,12 @@
         "declare": "wlepMkr_JESup = lambda : WlepMaker(branch_map=\"JESup\")"
     }, 
     "MCCombJJLNu2017_MupTdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -2880,11 +2873,12 @@
         "declare": "HMDNNNeSem_JESEC2up = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"JESEC2up\")"
     }, 
     "MCCombJJLNu2016_fatjetJMRdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -2918,7 +2912,7 @@
         "module": "DYMVA_JESAbsolutedo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESAbsolutedo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESAbsolutedo\")"
+        "declare": "DYMVA_JESAbsolutedo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESAbsolutedo\")"
     }, 
     "MonoHiggsMVA_JESEC2do": {
         "do4MC": true, 
@@ -3093,7 +3087,7 @@
     "l3Kin_JESAbsolute_RPLME_YEARdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESAbsolute_RPLME_YEARdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESAbsolute_RPLME_YEARdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -3112,7 +3106,7 @@
         "module": "DYMVA_JESAbsolute_RPLME_YEARdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESAbsolute_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESAbsolute_RPLME_YEARdo\")"
+        "declare": "DYMVA_JESAbsolute_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESAbsolute_RPLME_YEARdo\")"
     }, 
     "VBSjjlnu_kin_JESdo": {
         "do4MC": true, 
@@ -3146,6 +3140,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.WlepMaker", 
         "declare": "wlepMkr_fatjetJERdo = lambda : WlepMaker(branch_map=\"fatjetJERdo\")"
     }, 
+    "JERsMC2018": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JERMakerMC18()", 
+        "do4Data": false, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JERMaker", 
+        "declare": "JERMakerMC18 = lambda : JERMaker(\"2018\",\"\",jetType=\"AK4PFchs\",jetColl=\"CleanJet\",jerTag=\"\",jmr_vals=[1.24, 1.20, 1.28])"
+    }, 
     "HMlnjjVars_fatjetJESBBEC1_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
@@ -3161,6 +3163,22 @@
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
         "declare": "whadJetSel_JESEC2up = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"JESEC2up\")"
+    }, 
+    "JERsMC2017": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JERMakerMC17()", 
+        "do4Data": false, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JERMaker", 
+        "declare": "JERMakerMC17 = lambda : JERMaker(\"2017\",\"\",jetType=\"AK4PFchs\",jetColl=\"CleanJet\",jerTag=\"Fall17_V3_MC\",jmr_vals=[1.09, 1.14, 1.04])"
+    }, 
+    "JERsMC2016": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JERMakerMC16()", 
+        "do4Data": false, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JERMaker", 
+        "declare": "JERMakerMC16 = lambda : JERMaker(\"2016\",\"\",jetType=\"AK4PFchs\",jetColl=\"CleanJet\",jerTag=\"Summer16_25nsV1_MC\",jmr_vals=[1.0, 1.2, 0.8])"
     }, 
     "HMlnjjVars_ElepTdo": {
         "do4MC": true, 
@@ -3237,7 +3255,7 @@
     "l3Kin_JESFlavorQCDdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESFlavorQCDdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESFlavorQCDdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -3253,7 +3271,7 @@
     "l3Kin_JESBBEC1up": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESBBEC1up\")", 
+        "module": "l3KinProducer(branch_map=\"JESBBEC1up\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -3329,10 +3347,10 @@
     "zNLOEWK": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "wNLOEWK()", 
+        "module": "zNLOEWK()", 
         "do4Data": false, 
         "import": "LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer", 
-        "declare": "wNLOEWK = lambda : vNLOEWKcorrectionWeightProducer(\"z\")"
+        "declare": "zNLOEWK = lambda : vNLOEWKcorrectionWeightProducer(\"z\")"
     }, 
     "VBSjjlnu_kin_JESRelativeSample_RPLME_YEARdo": {
         "do4MC": true, 
@@ -3422,11 +3440,12 @@
         "declare": ""
     }, 
     "MCCombJJLNu2018_MupTdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -3497,11 +3516,12 @@
         "declare": "HMlnjjVars_MupTup = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map=\"MupTup\")"
     }, 
     "MCCombJJLNu2018_JESdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -3620,13 +3640,13 @@
         "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
         "declare": "whadJetSel_JESup = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"JESup\")"
     }, 
-    "LeptonSF_ElepTup": {
+    "MonoHiggsMVA_JESBBEC1up": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "LeptonSF_ElepTup()", 
-        "do4Data": false, 
-        "import": "LatinoAnalysis.NanoGardener.modules.LeptonSFMaker", 
-        "declare": "LeptonSF_ElepTup = lambda : LeptonSFMaker(\"RPLME_CMSSW\", branch_map=\"ElepTup\")"
+        "module": "MonoHiggsMVA_JESBBEC1up()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
+        "declare": "MonoHiggsMVA_JESBBEC1up = lambda : TMVAfiller(\"data/MonoHiggsMVA_cfg.py\", branch_map=\"JESBBEC1up\")"
     }, 
     "whadJetSel_ElepTdo": {
         "do4MC": true, 
@@ -3661,11 +3681,12 @@
         "declare": ""
     }, 
     "MCCombJJLNu2018_ElepTup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -3786,7 +3807,7 @@
         "module": "DYMVA_JESdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESdo\")"
+        "declare": "DYMVA_JESdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESdo\")"
     }, 
     "VBSjjlnu_pairing_JESEC2do": {
         "do4MC": true, 
@@ -3854,18 +3875,16 @@
         "module": "DYMVA_METup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_METup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"METup\")"
+        "declare": "DYMVA_METup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"METup\")"
     }, 
-    "JJHEFT_JESEC2_RPLME_YEARup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESEC2_RPLME_YEARup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESEC2_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESEC2_RPLME_YEARup\")"
-        }
-    ], 
+    "JJHEFT_JESEC2_RPLME_YEARup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESEC2_RPLME_YEARup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESEC2_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESEC2_RPLME_YEARup\")"
+    }, 
     "MonoHiggsMVA_JESEC2_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
@@ -3964,6 +3983,7 @@
             "jetSelCustom", 
             "CorrFatJetMC", 
             "CleanFatJet", 
+            "JERsMC2017", 
             "PromptParticlesGenVars", 
             "GenVar", 
             "GenLeptonMatch", 
@@ -4140,7 +4160,7 @@
         "declare": "HMDNNPrSem_fatjetJMSup = lambda : ApplyDNN_Production_Semi(branch_map=\"fatjetJMSup\")"
     }, 
     "MCCombJJLNu2016_fatjetJESdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
@@ -4275,17 +4295,18 @@
     "l3Kin_JESRelativeSample_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESRelativeSample_RPLME_YEARup\")", 
+        "module": "l3KinProducer(branch_map=\"JESRelativeSample_RPLME_YEARup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
     }, 
     "MCCombJJLNu2018_fatjetJMRup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -4306,7 +4327,7 @@
         "do4Data": false
     }, 
     "VBSjjlnuSkim2018v5_data": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "fakeWstep1l", 
@@ -4318,13 +4339,23 @@
         "isChain": true, 
         "do4Data": true
     }, 
-    "whadJetSel_fatjetJESHF_RPLME_YEARdo": {
+    "MupTdo_suffix": {
         "do4MC": true, 
-        "isChain": false, 
-        "module": "whadJetSel_fatjetJESHF_RPLME_YEARdo()", 
-        "do4Data": true, 
-        "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
-        "declare": "whadJetSel_fatjetJESHF_RPLME_YEARdo = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"fatjetJESHF_RPLME_YEARdo\")"
+        "do4Data": false, 
+        "isChain": true, 
+        "subTargets": [
+            "do_MupTdo_suffix", 
+            "trigMCKeepRun_MupTdo", 
+            "LeptonSF_MupTdo", 
+            "l2Kin_MupTdo", 
+            "l3Kin_MupTdo", 
+            "l4Kin_MupTdo", 
+            "DYMVA_MupTdo", 
+            "MonoHiggsMVA_MupTdo", 
+            "formulasMC_MupTdo", 
+            "JJHEFT_MupTdo"
+        ], 
+        "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt"
     }, 
     "HMDNNNeutSemi_fatjetJESEC2_RPLME_YEARup": {
         "do4MC": true, 
@@ -4636,6 +4667,7 @@
             "formulasMC", 
             "EmbeddingVeto", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -4664,6 +4696,7 @@
             "formulasMC", 
             "EmbeddingVeto", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -4803,16 +4836,22 @@
         "import": "LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi", 
         "declare": "HMDNNNeSem_fatjetJESBBEC1_RPLME_YEARup = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"fatjetJESBBEC1_RPLME_YEARup\")"
     }, 
-    "JJHEFT_JESAbsoluteup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESAbsoluteup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESAbsoluteup = lambda : JJH_EFTVars(branch_map=\"JESAbsoluteup\")"
-        }
-    ], 
+    "JJHEFT_JESAbsoluteup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESAbsoluteup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESAbsoluteup = lambda : JJH_EFTVars(branch_map=\"JESAbsoluteup\")"
+    }, 
+    "addTnPMuon": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "TnPMu()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.addTnpTree", 
+        "declare": "TnPMu = lambda : addTnpTree(int(\"RPLME_YEAR\"),\"Muon\")"
+    }, 
     "MupTdo_suffix_redoMVA": {
         "do4MC": true, 
         "do4Data": false, 
@@ -4907,7 +4946,7 @@
         "module": "DYMVA_JESEC2do()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESEC2do = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESEC2do\")"
+        "declare": "DYMVA_JESEC2do = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESEC2do\")"
     }, 
     "VBSjjlnu_kin_fatjetJERup": {
         "do4MC": true, 
@@ -4980,6 +5019,7 @@
             "jetSelCustom", 
             "CorrFatJetMC", 
             "CleanFatJet", 
+            "JERsMC2018", 
             "PromptParticlesGenVars", 
             "GenVar", 
             "GenLeptonMatch", 
@@ -5020,7 +5060,7 @@
         "module": "DYMVA_ElepTdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_ElepTdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"ElepTdo\")"
+        "declare": "DYMVA_ElepTdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"ElepTdo\")"
     }, 
     "trigMCKeepRun_MupTdo": {
         "do4MC": true, 
@@ -5055,11 +5095,12 @@
         "declare": "puWeight = lambda : runDependentPuW(\"RPLME_CMSSW\")"
     }, 
     "MCCombJJLNu2017_fatjetJMRdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -5120,16 +5161,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.Switch", 
         "declare": "MHSwitch = lambda : Switch(cmssw=\"RPLME_CMSSW\", cfg_path=\"LatinoAnalysis/NanoGardener/python/data/switch/MH_triggerSwitch_cfg.py\")"
     }, 
-    "JJHEFT_JESup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESup = lambda : JJH_EFTVars(branch_map=\"JESup\")"
-        }
-    ], 
+    "LeptonSF_ElepTup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "LeptonSF_ElepTup()", 
+        "do4Data": false, 
+        "import": "LatinoAnalysis.NanoGardener.modules.LeptonSFMaker", 
+        "declare": "LeptonSF_ElepTup = lambda : LeptonSFMaker(\"RPLME_CMSSW\", branch_map=\"ElepTup\")"
+    }, 
     "formulasMC_JESFlavorQCDdo": {
         "do4MC": true, 
         "isChain": false, 
@@ -5137,6 +5176,123 @@
         "do4Data": false, 
         "import": "LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder", 
         "declare": ""
+    }, 
+    "MCCombJJLNu2017_JESdo": {
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "do4MC": true, 
+        "subTargets": [
+            "baseW", 
+            "wwNLOEWK", 
+            "wwNLOEWK2", 
+            "wzNLOEWK", 
+            "zzNLOEWK", 
+            "zNLOEWK", 
+            "wNLOEWK", 
+            "JESBase", 
+            "trigMCKeepRun", 
+            "CorrFatJetMC", 
+            "CleanFatJet", 
+            "BoostedWtagSF", 
+            "do_JESdo_suffix", 
+            "VBSjjlnu_pairing_JESdo", 
+            "VBSjjlnu_kin_JESdo", 
+            "whadJetSel_JESdo", 
+            "wlepMaker_JESdo", 
+            "HMlnjjVars_JESdo", 
+            "HMDNNProdSemi_JESdo", 
+            "HMDNNNeutSemi_JESdo", 
+            "do_JESAbsolutedo_suffix", 
+            "VBSjjlnu_pairing_JESAbsolutedo", 
+            "VBSjjlnu_kin_JESAbsolutedo", 
+            "whadJetSel_JESAbsolutedo", 
+            "wlepMaker_JESAbsolutedo", 
+            "HMlnjjVars_JESAbsolutedo", 
+            "HMDNNProdSemi_JESAbsolutedo", 
+            "HMDNNNeutSemi_JESAbsolutedo", 
+            "do_JESAbsolute_RPLME_YEARdo_suffix", 
+            "VBSjjlnu_pairing_JESAbsolute_RPLME_YEARdo", 
+            "VBSjjlnu_kin_JESAbsolute_RPLME_YEARdo", 
+            "whadJetSel_JESAbsolute_RPLME_YEARdo", 
+            "wlepMaker_JESAbsolute_RPLME_YEARdo", 
+            "HMlnjjVars_JESAbsolute_RPLME_YEARdo", 
+            "HMDNNProdSemi_JESAbsolute_RPLME_YEARdo", 
+            "HMDNNNeutSemi_JESAbsolute_RPLME_YEARdo", 
+            "do_JESBBEC1do_suffix", 
+            "VBSjjlnu_pairing_JESBBEC1do", 
+            "VBSjjlnu_kin_JESBBEC1do", 
+            "whadJetSel_JESBBEC1do", 
+            "wlepMaker_JESBBEC1do", 
+            "HMlnjjVars_JESBBEC1do", 
+            "HMDNNProdSemi_JESBBEC1do", 
+            "HMDNNNeutSemi_JESBBEC1do", 
+            "do_JESBBEC1_RPLME_YEARdo_suffix", 
+            "VBSjjlnu_pairing_JESBBEC1_RPLME_YEARdo", 
+            "VBSjjlnu_kin_JESBBEC1_RPLME_YEARdo", 
+            "whadJetSel_JESBBEC1_RPLME_YEARdo", 
+            "wlepMaker_JESBBEC1_RPLME_YEARdo", 
+            "HMlnjjVars_JESBBEC1_RPLME_YEARdo", 
+            "HMDNNProdSemi_JESBBEC1_RPLME_YEARdo", 
+            "HMDNNNeutSemi_JESBBEC1_RPLME_YEARdo", 
+            "do_JESEC2do_suffix", 
+            "VBSjjlnu_pairing_JESEC2do", 
+            "VBSjjlnu_kin_JESEC2do", 
+            "whadJetSel_JESEC2do", 
+            "wlepMaker_JESEC2do", 
+            "HMlnjjVars_JESEC2do", 
+            "HMDNNProdSemi_JESEC2do", 
+            "HMDNNNeutSemi_JESEC2do", 
+            "do_JESEC2_RPLME_YEARdo_suffix", 
+            "VBSjjlnu_pairing_JESEC2_RPLME_YEARdo", 
+            "VBSjjlnu_kin_JESEC2_RPLME_YEARdo", 
+            "whadJetSel_JESEC2_RPLME_YEARdo", 
+            "wlepMaker_JESEC2_RPLME_YEARdo", 
+            "HMlnjjVars_JESEC2_RPLME_YEARdo", 
+            "HMDNNProdSemi_JESEC2_RPLME_YEARdo", 
+            "HMDNNNeutSemi_JESEC2_RPLME_YEARdo", 
+            "do_JESFlavorQCDdo_suffix", 
+            "VBSjjlnu_pairing_JESFlavorQCDdo", 
+            "VBSjjlnu_kin_JESFlavorQCDdo", 
+            "whadJetSel_JESFlavorQCDdo", 
+            "wlepMaker_JESFlavorQCDdo", 
+            "HMlnjjVars_JESFlavorQCDdo", 
+            "HMDNNProdSemi_JESFlavorQCDdo", 
+            "HMDNNNeutSemi_JESFlavorQCDdo", 
+            "do_JESHFdo_suffix", 
+            "VBSjjlnu_pairing_JESHFdo", 
+            "VBSjjlnu_kin_JESHFdo", 
+            "whadJetSel_JESHFdo", 
+            "wlepMaker_JESHFdo", 
+            "HMlnjjVars_JESHFdo", 
+            "HMDNNProdSemi_JESHFdo", 
+            "HMDNNNeutSemi_JESHFdo", 
+            "do_JESHF_RPLME_YEARdo_suffix", 
+            "VBSjjlnu_pairing_JESHF_RPLME_YEARdo", 
+            "VBSjjlnu_kin_JESHF_RPLME_YEARdo", 
+            "whadJetSel_JESHF_RPLME_YEARdo", 
+            "wlepMaker_JESHF_RPLME_YEARdo", 
+            "HMlnjjVars_JESHF_RPLME_YEARdo", 
+            "HMDNNProdSemi_JESHF_RPLME_YEARdo", 
+            "HMDNNNeutSemi_JESHF_RPLME_YEARdo", 
+            "do_JESRelativeBaldo_suffix", 
+            "VBSjjlnu_pairing_JESRelativeBaldo", 
+            "VBSjjlnu_kin_JESRelativeBaldo", 
+            "whadJetSel_JESRelativeBaldo", 
+            "wlepMaker_JESRelativeBaldo", 
+            "HMlnjjVars_JESRelativeBaldo", 
+            "HMDNNProdSemi_JESRelativeBaldo", 
+            "HMDNNNeutSemi_JESRelativeBaldo", 
+            "do_JESRelativeSample_RPLME_YEARdo_suffix", 
+            "VBSjjlnu_pairing_JESRelativeSample_RPLME_YEARdo", 
+            "VBSjjlnu_kin_JESRelativeSample_RPLME_YEARdo", 
+            "whadJetSel_JESRelativeSample_RPLME_YEARdo", 
+            "wlepMaker_JESRelativeSample_RPLME_YEARdo", 
+            "HMlnjjVars_JESRelativeSample_RPLME_YEARdo", 
+            "HMDNNProdSemi_JESRelativeSample_RPLME_YEARdo", 
+            "HMDNNNeutSemi_JESRelativeSample_RPLME_YEARdo"
+        ], 
+        "isChain": true, 
+        "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt", 
+        "do4Data": false
     }, 
     "do_ElepTup": {
         "do4MC": true, 
@@ -5162,16 +5318,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi", 
         "declare": "HMDNNNeSem_JESRelativeSample_RPLME_YEARup = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"JESRelativeSample_RPLME_YEARup\")"
     }, 
-    "JJHEFT_JESRelativeBaldo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESRelativeBaldo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESRelativeBaldo = lambda : JJH_EFTVars(branch_map=\"JESRelativeBaldo\")"
-        }
-    ], 
+    "JJHEFT_JESRelativeBaldo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESRelativeBaldo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESRelativeBaldo = lambda : JJH_EFTVars(branch_map=\"JESRelativeBaldo\")"
+    }, 
     "HMlnjjVars_fatjetJERup": {
         "do4MC": true, 
         "isChain": false, 
@@ -5189,10 +5343,11 @@
         "declare": "JESUp = lambda : PtCorrApplier(Coll=\"CleanJet\", CorrSrc=\"jecUncertTotal\", kind=\"Up\", doMET=True, METobjects = [\"MET\",\"PuppiMET\",\"RawMET\"])"
     }, 
     "VBSjjlnuSkim2016v5": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -5250,16 +5405,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.l2KinProducer", 
         "declare": ""
     }, 
-    "JJHEFT_JESEC2up": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESEC2up()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESEC2up = lambda : JJH_EFTVars(branch_map=\"JESEC2up\")"
-        }
-    ], 
+    "JJHEFT_JESEC2up": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESEC2up()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESEC2up = lambda : JJH_EFTVars(branch_map=\"JESEC2up\")"
+    }, 
     "VBSjjlnu_kin": {
         "do4MC": true, 
         "isChain": false, 
@@ -5361,7 +5514,7 @@
         "module": "DYMVA_JESAbsoluteup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESAbsoluteup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESAbsoluteup\")"
+        "declare": "DYMVA_JESAbsoluteup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESAbsoluteup\")"
     }, 
     "BWReweight": {
         "do4MC": true, 
@@ -5388,11 +5541,12 @@
         "declare": "HMDNNPrSem = lambda : ApplyDNN_Production_Semi()"
     }, 
     "MCCombJJLNu2017_MupTup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -5436,11 +5590,12 @@
         "declare": ""
     }, 
     "MCCombJJLNu2016_ElepTup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -5609,7 +5764,7 @@
         "module": "DYMVA_JESBBEC1up()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESBBEC1up = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESBBEC1up\")"
+        "declare": "DYMVA_JESBBEC1up = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESBBEC1up\")"
     }, 
     "l2Kin_JESBBEC1up": {
         "do4MC": true, 
@@ -5627,16 +5782,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder", 
         "declare": ""
     }, 
-    "JJHEFT_JESBBEC1do": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESBBEC1do()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESBBEC1do = lambda : JJH_EFTVars(branch_map=\"JESBBEC1do\")"
-        }
-    ], 
+    "JJHEFT_JESBBEC1do": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESBBEC1do()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESBBEC1do = lambda : JJH_EFTVars(branch_map=\"JESBBEC1do\")"
+    }, 
     "do_JESBBEC1_RPLME_YEARup_suffix": {
         "do4MC": true, 
         "isChain": false, 
@@ -5656,7 +5809,7 @@
     "l3Kin_JESup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESup\")", 
+        "module": "l3KinProducer(branch_map=\"JESup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -5811,14 +5964,15 @@
         "module": "DYMVA_JESRelativeSample_RPLME_YEARup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESRelativeSample_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESRelativeSample_RPLME_YEARup\")"
+        "declare": "DYMVA_JESRelativeSample_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESRelativeSample_RPLME_YEARup\")"
     }, 
     "MCCombJJLNu2018_JESup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -6039,7 +6193,7 @@
         "module": "DYMVA_JESRelativeSample_RPLME_YEARdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESRelativeSample_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESRelativeSample_RPLME_YEARdo\")"
+        "declare": "DYMVA_JESRelativeSample_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESRelativeSample_RPLME_YEARdo\")"
     }, 
     "l23Kin": {
         "do4MC": true, 
@@ -6127,11 +6281,12 @@
         "declare": ""
     }, 
     "MCCombJJLNu2016_MupTup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -6200,14 +6355,6 @@
         "do4Data": false, 
         "import": "PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer", 
         "declare": "pufile_data2017=\"%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileup_Cert_294927-306462_13TeV_PromptReco_Collisions17_withVar.root\" % os.environ[\"CMSSW_BASE\"]"
-    }, 
-    "VBSjjlnu_pairing_fatjetJMSdo": {
-        "do4MC": true, 
-        "isChain": false, 
-        "module": "vbs_pairing_fatjetJMSdo()", 
-        "do4Data": true, 
-        "import": "LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing", 
-        "declare": "vbs_pairing_fatjetJMSdo = lambda : VBSjjlnu_JetPairing(year=\"RPLME_YEAR\", mode=\"ALL\", branch_map=\"fatjetJMSdo\", debug=False)"
     }, 
     "Semilep2017": {
         "do4MC": true, 
@@ -6278,11 +6425,12 @@
         "declare": "HMlnjjVars_Dev = lambda : HMlnjjVarsClass_Dev(RPLME_YEAR)"
     }, 
     "MCCombJJLNu2016_METdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -6350,16 +6498,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin", 
         "declare": "vbs_vars_maker_JESAbsoluteup = lambda : VBSjjlnu_kin(mode=[\"maxmjj\",\"maxmjj_massWZ\"], met=\"PuppiMET\", branch_map=\"JESAbsoluteup\", debug=False)"
     }, 
-    "JJHEFT_JESRelativeSample_RPLME_YEARup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESRelativeSample_RPLME_YEARup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESRelativeSample_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESRelativeSample_RPLME_YEARup\")"
-        }
-    ], 
+    "JJHEFT_JESRelativeSample_RPLME_YEARup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESRelativeSample_RPLME_YEARup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESRelativeSample_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESRelativeSample_RPLME_YEARup\")"
+    }, 
     "l4Kin_JESAbsolute_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
@@ -6443,7 +6589,7 @@
     "l3Kin_JESHF_RPLME_YEARdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESHF_RPLME_YEARdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESHF_RPLME_YEARdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -6515,7 +6661,7 @@
     "l3Kin_JESBBEC1do": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESBBEC1do\")", 
+        "module": "l3KinProducer(branch_map=\"JESBBEC1do\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -6537,7 +6683,7 @@
         "declare": "MupTup = lambda : LeppTScalerTreeMaker(kind=\"Up\", lepFlavor=\"mu\", version=\"RPLME_CMSSW\" , metCollections = [\"MET\", \"PuppiMET\", \"RawMET\", \"TkMET\"], suffix=\"_MupTup\")"
     }, 
     "VBSjjlnuSkim2017v5_data": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "fakeWstep1l", 
@@ -6586,11 +6732,12 @@
         ]
     }, 
     "MCCombJJLNu2016_ElepTdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -6742,11 +6889,12 @@
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt"
     }, 
     "MCCombJJLNu2018": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -6759,9 +6907,12 @@
             "VBSjjlnu_kin", 
             "whadJetSel", 
             "wlepMaker", 
+            "wwNLL", 
             "HMlnjjVars", 
             "HMDNNProdSemi", 
-            "HMDNNNeutSemi"
+            "HMDNNNeutSemi", 
+            "MHSemiLepVars", 
+            "MHSemiLepMVA"
         ], 
         "isChain": true, 
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt", 
@@ -6775,16 +6926,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.LepPtScaleUncertainty", 
         "declare": "ElepTdo = lambda : LeppTScalerTreeMaker(kind=\"Dn\", lepFlavor=\"ele\", version=\"RPLME_CMSSW\" , metCollections = [\"MET\", \"PuppiMET\", \"RawMET\", \"TkMET\"], suffix=\"_ElepTdo\")"
     }, 
-    "JJHEFT_JESHF_RPLME_YEARdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESHF_RPLME_YEARdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESHF_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESHF_RPLME_YEARdo\")"
-        }
-    ], 
+    "JJHEFT_JESHF_RPLME_YEARdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESHF_RPLME_YEARdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESHF_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESHF_RPLME_YEARdo\")"
+    }, 
     "rochesterDATA": {
         "do4MC": false, 
         "isChain": false, 
@@ -6808,11 +6957,12 @@
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/MCGenOnly_outputbranches.txt"
     }, 
     "MCCombJJLNu2016": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -6825,20 +6975,24 @@
             "VBSjjlnu_kin", 
             "whadJetSel", 
             "wlepMaker", 
+            "wwNLL", 
             "HMlnjjVars", 
             "HMDNNProdSemi", 
-            "HMDNNNeutSemi"
+            "HMDNNNeutSemi", 
+            "MHSemiLepVars", 
+            "MHSemiLepMVA"
         ], 
         "isChain": true, 
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt", 
         "do4Data": false
     }, 
     "MCCombJJLNu2017": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -6848,11 +7002,15 @@
             "CleanFatJet", 
             "BoostedWtagSF", 
             "VBSjjlnu_pairing", 
-            "VBSjjlnu_kinwhadJetSel", 
+            "VBSjjlnu_kin", 
+            "whadJetSel", 
             "wlepMaker", 
+            "wwNLL", 
             "HMlnjjVars", 
             "HMDNNProdSemi", 
-            "HMDNNNeutSemi"
+            "HMDNNNeutSemi", 
+            "MHSemiLepVars", 
+            "MHSemiLepMVA"
         ], 
         "isChain": true, 
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt", 
@@ -6927,7 +7085,7 @@
         "declare": "vbs_vars_maker_JESEC2_RPLME_YEARdo = lambda : VBSjjlnu_kin(mode=[\"maxmjj\",\"maxmjj_massWZ\"], met=\"PuppiMET\", branch_map=\"JESEC2_RPLME_YEARdo\", debug=False)"
     }, 
     "MCCombJJLNu2017_fatjetJESdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
@@ -7093,11 +7251,12 @@
         "declare": "HMDNNCa = lambda : ApplyDNN_Category()"
     }, 
     "MCCombJJLNu2016_JESup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -7235,6 +7394,14 @@
             "formulasDATALP19"
         ]
     }, 
+    "HMlnjjVars_fatjetJESEC2do": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "HMlnjjVars_fatjetJESEC2do()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.HMlnjjVars", 
+        "declare": "HMlnjjVars_fatjetJESEC2do = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map=\"fatjetJESEC2do\")"
+    }, 
     "HMDNNNeutSemi_fatjetJERdo": {
         "do4MC": true, 
         "isChain": false, 
@@ -7257,7 +7424,7 @@
         "module": "DYMVA_JESRelativeBaldo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESRelativeBaldo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESRelativeBaldo\")"
+        "declare": "DYMVA_JESRelativeBaldo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESRelativeBaldo\")"
     }, 
     "HMlnjjVars_JESAbsolute_RPLME_YEARdo": {
         "do4MC": true, 
@@ -7359,16 +7526,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.WlepMaker", 
         "declare": "wlepMkr_JESAbsolute_RPLME_YEARup = lambda : WlepMaker(branch_map=\"JESAbsolute_RPLME_YEARup\")"
     }, 
-    "JJHEFT_JESAbsolutedo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESAbsolutedo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESAbsolutedo = lambda : JJH_EFTVars(branch_map=\"JESAbsolutedo\")"
-        }
-    ], 
+    "JJHEFT_JESAbsolutedo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESAbsolutedo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESAbsolutedo = lambda : JJH_EFTVars(branch_map=\"JESAbsolutedo\")"
+    }, 
     "VBSjjlnu_kin_fatjetJESRelativeSample_RPLME_YEARdo": {
         "do4MC": true, 
         "isChain": false, 
@@ -7432,11 +7597,12 @@
         "declare": "HMDNNNeSem_fatjetJESEC2up = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"fatjetJESEC2up\")"
     }, 
     "MCCombJJLNu2017_fatjetJMRup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -7497,12 +7663,12 @@
         "module": "DYMVA_METdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_METdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"METdo\")"
+        "declare": "DYMVA_METdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"METdo\")"
     }, 
     "l3Kin_JESRelativeBaldo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESRelativeBaldo\")", 
+        "module": "l3KinProducer(branch_map=\"JESRelativeBaldo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -7587,11 +7753,12 @@
         "declare": "HMlnjjVars_fatjetJESHF_RPLME_YEARdo = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map=\"fatjetJESHF_RPLME_YEARdo\")"
     }, 
     "MCCombJJLNu2017_fatjetJMSdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -7681,16 +7848,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.HiggsGenVarsProducer", 
         "declare": "HiggsGenVars = lambda : HiggsGenVarsProducer()"
     }, 
-    "JJHEFT_JESBBEC1up": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESBBEC1up()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESBBEC1up = lambda : JJH_EFTVars(branch_map=\"JESBBEC1up\")"
-        }
-    ], 
+    "JJHEFT_JESBBEC1up": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESBBEC1up()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESBBEC1up = lambda : JJH_EFTVars(branch_map=\"JESBBEC1up\")"
+    }, 
     "MCnofilter": {
         "do4MC": true, 
         "do4Data": false, 
@@ -7708,11 +7873,12 @@
         "declare": "boostedWtagsf_jesAbsolute_RPLME_YEARdo = lambda : BoostedWtagSF(input_branch_suffix=\"jesAbsolute_RPLME_YEARDown\", output_branch_map=\"fatjetJESAbsolute_RPLME_YEARdo\", year=\"RPLME_YEAR\", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)"
     }, 
     "MCCombJJLNu2017_METdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -7774,7 +7940,7 @@
         "declare": "wlepMkr_JESEC2_RPLME_YEARup = lambda : WlepMaker(branch_map=\"JESEC2_RPLME_YEARup\")"
     }, 
     "MCCombJJLNu2018_fatjetJESup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
@@ -7904,7 +8070,7 @@
         "module": "DYMVA_MupTup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_MupTup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"MupTup\")"
+        "declare": "DYMVA_MupTup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"MupTup\")"
     }, 
     "VBSjjlnu_kin_fatjetJESAbsolute_RPLME_YEARdo": {
         "do4MC": true, 
@@ -7925,7 +8091,7 @@
     "l3Kin_JESdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -8013,7 +8179,7 @@
     "l3Kin_JESEC2up": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESEC2up\")", 
+        "module": "l3KinProducer(branch_map=\"JESEC2up\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -8021,7 +8187,7 @@
     "l3Kin_JESBBEC1_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESBBEC1_RPLME_YEARup\")", 
+        "module": "l3KinProducer(branch_map=\"JESBBEC1_RPLME_YEARup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -8203,7 +8369,7 @@
         ]
     }, 
     "MCCombJJLNu2018_fatjetJESdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
@@ -8343,13 +8509,13 @@
         "import": "LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi", 
         "declare": "HMDNNNeSem_fatjetJMRdo = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"fatjetJMRdo\")"
     }, 
-    "MonoHiggsMVA_JESBBEC1up": {
+    "VBSjjlnu_pairing_fatjetJMSdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "MonoHiggsMVA_JESBBEC1up()", 
+        "module": "vbs_pairing_fatjetJMSdo()", 
         "do4Data": true, 
-        "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "MonoHiggsMVA_JESBBEC1up = lambda : TMVAfiller(\"data/MonoHiggsMVA_cfg.py\", branch_map=\"JESBBEC1up\")"
+        "import": "LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing", 
+        "declare": "vbs_pairing_fatjetJMSdo = lambda : VBSjjlnu_JetPairing(year=\"RPLME_YEAR\", mode=\"ALL\", branch_map=\"fatjetJMSdo\", debug=False)"
     }, 
     "formulasMC_JESFlavorQCDup": {
         "do4MC": true, 
@@ -8383,16 +8549,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
         "declare": "MonoHiggsMVA_JESRelativeBalup = lambda : TMVAfiller(\"data/MonoHiggsMVA_cfg.py\", branch_map=\"JESRelativeBalup\")"
     }, 
-    "JJHEFT_JESdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESdo = lambda : JJH_EFTVars(branch_map=\"JESdo\")"
-        }
-    ], 
+    "JJHEFT_JESdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESdo = lambda : JJH_EFTVars(branch_map=\"JESdo\")"
+    }, 
     "CleanFatJet_fatjetJMSdo": {
         "do4MC": true, 
         "isChain": false, 
@@ -8425,10 +8589,11 @@
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt"
     }, 
     "VBSjjlnuSkim2017v5": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -8474,22 +8639,21 @@
         "import": "LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin", 
         "declare": "vbs_vars_maker_fatjetJESFlavorQCDup = lambda : VBSjjlnu_kin(mode=[\"maxmjj\",\"maxmjj_massWZ\"], met=\"PuppiMET\", branch_map=\"fatjetJESFlavorQCDup\", debug=False)"
     }, 
-    "JJHEFT_JESHFup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESHFup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESHFup = lambda : JJH_EFTVars(branch_map=\"JESHFup\")"
-        }
-    ], 
+    "JJHEFT_JESHFup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESHFup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESHFup = lambda : JJH_EFTVars(branch_map=\"JESHFup\")"
+    }, 
     "MCCombJJLNu2016_METup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -8510,16 +8674,14 @@
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt", 
         "do4Data": false
     }, 
-    "JJHEFT_JESFlavorQCDup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESFlavorQCDup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESFlavorQCDup = lambda : JJH_EFTVars(branch_map=\"JESFlavorQCDup\")"
-        }
-    ], 
+    "JJHEFT_JESFlavorQCDup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESFlavorQCDup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESFlavorQCDup = lambda : JJH_EFTVars(branch_map=\"JESFlavorQCDup\")"
+    }, 
     "VBSjjlnu_pairing_fatjetJESHFup": {
         "do4MC": true, 
         "isChain": false, 
@@ -8584,18 +8746,16 @@
         "import": "LatinoAnalysis.NanoGardener.modules.l4KinProducer", 
         "declare": ""
     }, 
-    "JJHEFT_JESEC2do": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESEC2do()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESEC2do = lambda : JJH_EFTVars(branch_map=\"JESEC2do\")"
-        }
-    ], 
+    "JJHEFT_JESEC2do": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESEC2do()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESEC2do = lambda : JJH_EFTVars(branch_map=\"JESEC2do\")"
+    }, 
     "DATACombJJLNu2016": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                         && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                         && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": false, 
         "subTargets": [
             "fakeWstep1l", 
@@ -8607,14 +8767,16 @@
             "wlepMaker", 
             "HMlnjjVars", 
             "HMDNNProdSemi", 
-            "HMDNNNeutSemi"
+            "HMDNNNeutSemi", 
+            "MHSemiLepVars", 
+            "MHSemiLepMVA"
         ], 
         "isChain": true, 
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt", 
         "do4Data": true
     }, 
     "DATACombJJLNu2017": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": false, 
         "subTargets": [
             "fakeWstep1l", 
@@ -8626,7 +8788,9 @@
             "wlepMaker", 
             "HMlnjjVars", 
             "HMDNNProdSemi", 
-            "HMDNNNeutSemi"
+            "HMDNNNeutSemi", 
+            "MHSemiLepVars", 
+            "MHSemiLepMVA"
         ], 
         "isChain": true, 
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt", 
@@ -8638,7 +8802,7 @@
         "module": "DYMVA_JESHFup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESHFup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESHFup\")"
+        "declare": "DYMVA_JESHFup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESHFup\")"
     }, 
     "MCCorr2018v5": {
         "do4MC": true, 
@@ -8675,6 +8839,7 @@
             "formulasMC", 
             "EmbeddingVeto", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -8702,6 +8867,7 @@
             "formulasMC", 
             "EmbeddingVeto", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -8744,7 +8910,7 @@
         "declare": "HMDNNNeSem_fatjetJESBBEC1do = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"fatjetJESBBEC1do\")"
     }, 
     "DATACombJJLNu2018": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": false, 
         "subTargets": [
             "fakeWstep1l", 
@@ -8756,7 +8922,9 @@
             "wlepMaker", 
             "HMlnjjVars", 
             "HMDNNProdSemi", 
-            "HMDNNNeutSemi"
+            "HMDNNNeutSemi", 
+            "MHSemiLepVars", 
+            "MHSemiLepMVA"
         ], 
         "isChain": true, 
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt", 
@@ -9009,11 +9177,12 @@
         "declare": "whadJetSel = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\")"
     }, 
     "MCCombJJLNu2018_METup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -9120,11 +9289,12 @@
         "declare": "JESFlavorQCDup = lambda : PtCorrApplier(Coll=\"CleanJet\", CorrSrc=\"jecUncertFlavorQCD\", kind=\"Up\", doMET=True, METobjects = [\"MET\",\"PuppiMET\",\"RawMET\"], suffix=\"_JESFlavorQCDup\")"
     }, 
     "MCCombJJLNu2017_fatjetJERdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -9163,7 +9333,7 @@
     "l3Kin_JESHFup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESHFup\")", 
+        "module": "l3KinProducer(branch_map=\"JESHFup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -9191,7 +9361,7 @@
         "module": "DYMVA_JESEC2_RPLME_YEARdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESEC2_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESEC2_RPLME_YEARdo\")"
+        "declare": "DYMVA_JESEC2_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESEC2_RPLME_YEARdo\")"
     }, 
     "VBSjjlnu_pairing_fatjetJESdo": {
         "do4MC": true, 
@@ -9274,16 +9444,14 @@
             "formulasDATA"
         ]
     }, 
-    "JJHEFT_JESHF_RPLME_YEARup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESHF_RPLME_YEARup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESHF_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESHF_RPLME_YEARup\")"
-        }
-    ], 
+    "JJHEFT_JESHF_RPLME_YEARup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESHF_RPLME_YEARup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESHF_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESHF_RPLME_YEARup\")"
+    }, 
     "VBSjjlnu_kin_fatjetJESEC2_RPLME_YEARdo": {
         "do4MC": true, 
         "isChain": false, 
@@ -9381,7 +9549,7 @@
         "module": "DYMVA_JESAbsolute_RPLME_YEARup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESAbsolute_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESAbsolute_RPLME_YEARup\")"
+        "declare": "DYMVA_JESAbsolute_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESAbsolute_RPLME_YEARup\")"
     }, 
     "ChargeFlip": {
         "do4MC": true, 
@@ -9426,11 +9594,12 @@
         "declare": "JES = lambda : JECMaker(globalTag=\"RPLME_JESGT\", types=[\"Total\"], jetFlav=\"AK4PFchs\")"
     }, 
     "MCCombJJLNu2016_fatjetJERup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -9665,7 +9834,7 @@
         "module": "DYMVA_JESBBEC1do()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESBBEC1do = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESBBEC1do\")"
+        "declare": "DYMVA_JESBBEC1do = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESBBEC1do\")"
     }, 
     "ElepTupLP19": {
         "do4MC": true, 
@@ -9746,11 +9915,12 @@
         "declare": "vbs_pairing_JESHFup = lambda : VBSjjlnu_JetPairing(year=\"RPLME_YEAR\", mode=\"ALL\", branch_map=\"JESHFup\", debug=False)"
     }, 
     "MCCombJJLNu2018_fatjetJMSup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -9787,11 +9957,12 @@
         "declare": "wlepMkr_fatjetJESAbsolute_RPLME_YEARdo = lambda : WlepMaker(branch_map=\"fatjetJESAbsolute_RPLME_YEARdo\")"
     }, 
     "MCCombJJLNu2017_fatjetJMSup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -9894,7 +10065,7 @@
     "l3Kin_JESBBEC1_RPLME_YEARdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESBBEC1_RPLME_YEARdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESBBEC1_RPLME_YEARdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -9916,11 +10087,12 @@
         "declare": "HMDNNPrSem_fatjetJESRelativeBalup = lambda : ApplyDNN_Production_Semi(branch_map=\"fatjetJESRelativeBalup\")"
     }, 
     "MCCombJJLNu2017_METup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -10043,21 +10215,19 @@
     "l3Kin_JESEC2_RPLME_YEARdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESEC2_RPLME_YEARdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESEC2_RPLME_YEARdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
     }, 
-    "JJHEFT_JESEC2_RPLME_YEARdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESEC2_RPLME_YEARdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESEC2_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESEC2_RPLME_YEARdo\")"
-        }
-    ], 
+    "JJHEFT_JESEC2_RPLME_YEARdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESEC2_RPLME_YEARdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESEC2_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESEC2_RPLME_YEARdo\")"
+    }, 
     "do_ElepTup_suffix": {
         "do4MC": true, 
         "isChain": false, 
@@ -10067,11 +10237,12 @@
         "declare": "ElepTup = lambda : LeppTScalerTreeMaker(kind=\"Up\", lepFlavor=\"ele\", version=\"RPLME_CMSSW\" , metCollections = [\"MET\", \"PuppiMET\", \"RawMET\", \"TkMET\"], suffix=\"_ElepTup\")"
     }, 
     "MCCombJJLNu2018_ElepTdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -10174,11 +10345,12 @@
         "declare": "whadJetSel_fatjetJESEC2do = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"fatjetJESEC2do\")"
     }, 
     "MCCombJJLNu2018_fatjetJERup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -10198,13 +10370,13 @@
         "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt", 
         "do4Data": false
     }, 
-    "l3Kin_JESHF_RPLME_YEARup": {
+    "wwNLOEWK2": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESHF_RPLME_YEARup\")", 
-        "do4Data": true, 
-        "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
-        "declare": ""
+        "module": "wwNLOEWK2()", 
+        "do4Data": false, 
+        "import": "LatinoAnalysis.NanoGardener.modules.qq2vv2lnujjEWKcorrectionsWeightProducer", 
+        "declare": "wwNLOEWK2 = lambda : qq2vv2lnujjEWKcorrectionsWeightProducer()"
     }, 
     "PromptParticlesGenVars": {
         "do4MC": true, 
@@ -10287,11 +10459,12 @@
         "declare": ""
     }, 
     "MCCombJJLNu2017_ElepTdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -10540,13 +10713,13 @@
         "import": "LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing", 
         "declare": "vbs_pairing_JESRelativeBalup = lambda : VBSjjlnu_JetPairing(year=\"RPLME_YEAR\", mode=\"ALL\", branch_map=\"JESRelativeBalup\", debug=False)"
     }, 
-    "HMlnjjVars_fatjetJESEC2do": {
+    "JJHEFT_JESup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "HMlnjjVars_fatjetJESEC2do()", 
+        "module": "JJHEFT_JESup()", 
         "do4Data": true, 
-        "import": "LatinoAnalysis.NanoGardener.modules.HMlnjjVars", 
-        "declare": "HMlnjjVars_fatjetJESEC2do = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map=\"fatjetJESEC2do\")"
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESup = lambda : JJH_EFTVars(branch_map=\"JESup\")"
     }, 
     "formulasMC_JESHFdo": {
         "do4MC": true, 
@@ -10642,7 +10815,7 @@
         "module": "DYMVA_JESRelativeBalup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESRelativeBalup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESRelativeBalup\")"
+        "declare": "DYMVA_JESRelativeBalup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESRelativeBalup\")"
     }, 
     "DYMVA_JESFlavorQCDup": {
         "do4MC": true, 
@@ -10650,7 +10823,7 @@
         "module": "DYMVA_JESFlavorQCDup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESFlavorQCDup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESFlavorQCDup\")"
+        "declare": "DYMVA_JESFlavorQCDup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESFlavorQCDup\")"
     }, 
     "DATAWgStar2016v5": {
         "do4MC": false, 
@@ -10675,7 +10848,7 @@
         "module": "DYMVA_MupTdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_MupTdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"MupTdo\")"
+        "declare": "DYMVA_MupTdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"MupTdo\")"
     }, 
     "l2Kin_JESRelativeSample_RPLME_YEARdo": {
         "do4MC": true, 
@@ -10730,11 +10903,12 @@
         "declare": "MonoHiggsMVA_JESFlavorQCDdo = lambda : TMVAfiller(\"data/MonoHiggsMVA_cfg.py\", branch_map=\"JESFlavorQCDdo\")"
     }, 
     "MCCombJJLNu2018_fatjetJMRdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -10771,11 +10945,12 @@
         "declare": "rochesterMC = lambda : rochester_corr(False,RPLME_YEAR)"
     }, 
     "MCCombJJLNu2017_fatjetJERup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -10801,13 +10976,21 @@
         "selection": "\"((MET_pt < 20 || PuppiMET_pt < 20) && mtw1 < 20)\"", 
         "isChain": false
     }, 
-    "whadJetSel_JESEC2_RPLME_YEARup": {
+    "MupTdo": {
         "do4MC": true, 
-        "isChain": false, 
-        "module": "whadJetSel_JESEC2_RPLME_YEARup()", 
-        "do4Data": true, 
-        "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
-        "declare": "whadJetSel_JESEC2_RPLME_YEARup = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"JESEC2_RPLME_YEARup\")"
+        "do4Data": false, 
+        "isChain": true, 
+        "subTargets": [
+            "do_MupTdo", 
+            "trigMCKeepRun", 
+            "LeptonSF", 
+            "l2Kin", 
+            "l3Kin", 
+            "l4Kin", 
+            "DYMVA", 
+            "MonoHiggsMVA", 
+            "formulasMC"
+        ]
     }, 
     "DATAWgStar2017LP19": {
         "do4MC": false, 
@@ -10830,7 +11013,7 @@
     "l3Kin_JESFlavorQCDup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESFlavorQCDup\")", 
+        "module": "l3KinProducer(branch_map=\"JESFlavorQCDup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -10905,7 +11088,7 @@
     "l3Kin_JESRelativeBalup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESRelativeBalup\")", 
+        "module": "l3KinProducer(branch_map=\"JESRelativeBalup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -10966,23 +11149,13 @@
         "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
         "declare": "whadJetSel_fatjetJESRelativeSample_RPLME_YEARup = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"fatjetJESRelativeSample_RPLME_YEARup\")"
     }, 
-    "MupTdo_suffix": {
+    "addTnPEle": {
         "do4MC": true, 
-        "do4Data": false, 
-        "isChain": true, 
-        "subTargets": [
-            "do_MupTdo_suffix", 
-            "trigMCKeepRun_MupTdo", 
-            "LeptonSF_MupTdo", 
-            "l2Kin_MupTdo", 
-            "l3Kin_MupTdo", 
-            "l4Kin_MupTdo", 
-            "DYMVA_MupTdo", 
-            "MonoHiggsMVA_MupTdo", 
-            "formulasMC_MupTdo", 
-            "JJHEFT_MupTdo"
-        ], 
-        "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt"
+        "isChain": false, 
+        "module": "TnPEle()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.addTnpTree", 
+        "declare": "TnPEle = lambda : addTnpTree(int(\"RPLME_YEAR\"),\"Electron\")"
     }, 
     "jetSelfix": {
         "do4MC": true, 
@@ -10998,7 +11171,7 @@
     "l3Kin_JESEC2do": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESEC2do\")", 
+        "module": "l3KinProducer(branch_map=\"JESEC2do\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -11086,16 +11259,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.WlepMaker", 
         "declare": "wlepMkr_JESRelativeSample_RPLME_YEARup = lambda : WlepMaker(branch_map=\"JESRelativeSample_RPLME_YEARup\")"
     }, 
-    "JJHEFT_JESFlavorQCDdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESFlavorQCDdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESFlavorQCDdo = lambda : JJH_EFTVars(branch_map=\"JESFlavorQCDdo\")"
-        }
-    ], 
+    "JJHEFT_JESFlavorQCDdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESFlavorQCDdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESFlavorQCDdo = lambda : JJH_EFTVars(branch_map=\"JESFlavorQCDdo\")"
+    }, 
     "VBSjjlnu_kin_fatjetJESRelativeBaldo": {
         "do4MC": true, 
         "isChain": false, 
@@ -11110,7 +11281,7 @@
         "module": "DYMVA_JESBBEC1_RPLME_YEARup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESBBEC1_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESBBEC1_RPLME_YEARup\")"
+        "declare": "DYMVA_JESBBEC1_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESBBEC1_RPLME_YEARup\")"
     }, 
     "HMDNNProdSemi_JESEC2_RPLME_YEARdo": {
         "do4MC": true, 
@@ -11164,16 +11335,14 @@
             "HMDNNNeutSemi"
         ]
     }, 
-    "JJHEFT_JESBBEC1_RPLME_YEARup": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESBBEC1_RPLME_YEARup()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESBBEC1_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESBBEC1_RPLME_YEARup\")"
-        }
-    ], 
+    "JJHEFT_JESBBEC1_RPLME_YEARup": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESBBEC1_RPLME_YEARup()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESBBEC1_RPLME_YEARup = lambda : JJH_EFTVars(branch_map=\"JESBBEC1_RPLME_YEARup\")"
+    }, 
     "VBSjjlnu_kin_fatjetJESEC2_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
@@ -11198,16 +11367,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
         "declare": "whadJetSel_JESBBEC1do = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"JESBBEC1do\")"
     }, 
-    "JJHEFT_JESAbsolute_RPLME_YEARdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESAbsolute_RPLME_YEARdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESAbsolute_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESAbsolute_RPLME_YEARdo\")"
-        }
-    ], 
+    "JJHEFT_JESAbsolute_RPLME_YEARdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESAbsolute_RPLME_YEARdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESAbsolute_RPLME_YEARdo = lambda : JJH_EFTVars(branch_map=\"JESAbsolute_RPLME_YEARdo\")"
+    }, 
     "HMDNNProdSemi_fatjetJESBBEC1do": {
         "do4MC": true, 
         "isChain": false, 
@@ -11262,7 +11429,7 @@
         "module": "MonoHiggsMVA()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "MonoHiggsMVA = lambda : TMVAfiller(\"data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py\")"
+        "declare": "MonoHiggsMVA = lambda : TMVAfiller(\"data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py\")"
     }, 
     "HMDNNNeutSemi_JESFlavorQCDdo": {
         "do4MC": true, 
@@ -11307,7 +11474,7 @@
     "l3Kin_JESAbsolutedo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESAbsolutedo\")", 
+        "module": "l3KinProducer(branch_map=\"JESAbsolutedo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -11401,11 +11568,12 @@
         "declare": "vbs_pairing_JESBBEC1do = lambda : VBSjjlnu_JetPairing(year=\"RPLME_YEAR\", mode=\"ALL\", branch_map=\"JESBBEC1do\", debug=False)"
     }, 
     "MCCombJJLNu2016_fatjetJMRup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -11564,11 +11732,12 @@
         "declare": "wlepMkr_fatjetJESEC2up = lambda : WlepMaker(branch_map=\"fatjetJESEC2up\")"
     }, 
     "MCCombJJLNu2016_fatjetJERdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -11594,7 +11763,7 @@
         "module": "DYMVA_JESHF_RPLME_YEARdo()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESHF_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESHF_RPLME_YEARdo\")"
+        "declare": "DYMVA_JESHF_RPLME_YEARdo = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESHF_RPLME_YEARdo\")"
     }, 
     "HMlnjjVars_JESAbsoluteup": {
         "do4MC": true, 
@@ -11742,13 +11911,24 @@
         "import": "LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing", 
         "declare": "vbs_pairing_fatjetJERdo = lambda : VBSjjlnu_JetPairing(year=\"RPLME_YEAR\", mode=\"ALL\", branch_map=\"fatjetJERdo\", debug=False)"
     }, 
-    "formulasMC": {
+    "VBSjjlnuSkim2018v5": {
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
-        "isChain": false, 
-        "module": "GenericFormulaAdder('data/formulasToAdd_MC_RPLME_CMSSW.py')", 
-        "do4Data": false, 
-        "import": "LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder", 
-        "declare": ""
+        "subTargets": [
+            "wwNLOEWK", 
+            "wwNLOEWK2", 
+            "wzNLOEWK", 
+            "zzNLOEWK", 
+            "zNLOEWK", 
+            "wNLOEWK", 
+            "trigMC", 
+            "CorrFatJetMC", 
+            "CleanFatJet", 
+            "VBSjjlnu_pairing", 
+            "VBSjjlnu_kin"
+        ], 
+        "isChain": true, 
+        "do4Data": true
     }, 
     "BoostedWtagSF_fatjetJESBBEC1up": {
         "do4MC": true, 
@@ -11777,7 +11957,7 @@
     "l3Kin_JESHFdo": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESHFdo\")", 
+        "module": "l3KinProducer(branch_map=\"JESHFdo\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -11788,7 +11968,7 @@
         "module": "DYMVA_JESEC2_RPLME_YEARup()", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.TMVAfiller", 
-        "declare": "DYMVA_JESEC2_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_v5_cfg.py', branch_map=\"JESEC2_RPLME_YEARup\")"
+        "declare": "DYMVA_JESEC2_RPLME_YEARup = lambda : TMVAfiller('data/DYMVA_RPLME_YEAR_alt_cfg.py', branch_map=\"JESEC2_RPLME_YEARup\")"
     }, 
     "DYMVA_alt": {
         "do4MC": true, 
@@ -11801,7 +11981,7 @@
     "l3Kin_JESAbsolute_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESAbsolute_RPLME_YEARup\")", 
+        "module": "l3KinProducer(branch_map=\"JESAbsolute_RPLME_YEARup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -11840,11 +12020,12 @@
         "module": "jetRecalib2017RPLME_RUN()"
     }, 
     "MCCombJJLNu2016_MupTdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -11906,16 +12087,14 @@
         "import": "LatinoAnalysis.NanoGardener.modules.LeptonSFMaker", 
         "declare": "LeptonSF = lambda : LeptonSFMaker(\"RPLME_CMSSW\")"
     }, 
-    "JJHEFT_JESHFdo": [
-        {
-            "do4MC": true, 
-            "isChain": false, 
-            "module": "JJHEFT_JESHFdo()", 
-            "do4Data": true, 
-            "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
-            "declare": "JJHEFT_JESHFdo = lambda : JJH_EFTVars(branch_map=\"JESHFdo\")"
-        }
-    ], 
+    "JJHEFT_JESHFdo": {
+        "do4MC": true, 
+        "isChain": false, 
+        "module": "JJHEFT_JESHFdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.JJH_EFTVars", 
+        "declare": "JJHEFT_JESHFdo = lambda : JJH_EFTVars(branch_map=\"JESHFdo\")"
+    }, 
     "BoostedWtagSF_fatjetJESRelativeBaldo": {
         "do4MC": true, 
         "isChain": false, 
@@ -12002,121 +12181,13 @@
         "import": "LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi", 
         "declare": "HMDNNNeSem_fatjetJESRelativeBaldo = lambda : ApplyDNN_Neutrino_Semi(branch_map=\"fatjetJESRelativeBaldo\")"
     }, 
-    "MCCombJJLNu2017_JESdo": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+    "whadJetSel_fatjetJESHF_RPLME_YEARdo": {
         "do4MC": true, 
-        "subTargets": [
-            "baseW", 
-            "wwNLOEWK", 
-            "wzNLOEWK", 
-            "zzNLOEWK", 
-            "zNLOEWK", 
-            "wNLOEWK", 
-            "JESBase", 
-            "trigMCKeepRun", 
-            "CorrFatJetMC", 
-            "CleanFatJet", 
-            "BoostedWtagSF", 
-            "do_JESdo_suffix", 
-            "VBSjjlnu_pairing_JESdo", 
-            "VBSjjlnu_kin_JESdo", 
-            "whadJetSel_JESdo", 
-            "wlepMaker_JESdo", 
-            "HMlnjjVars_JESdo", 
-            "HMDNNProdSemi_JESdo", 
-            "HMDNNNeutSemi_JESdo", 
-            "do_JESAbsolutedo_suffix", 
-            "VBSjjlnu_pairing_JESAbsolutedo", 
-            "VBSjjlnu_kin_JESAbsolutedo", 
-            "whadJetSel_JESAbsolutedo", 
-            "wlepMaker_JESAbsolutedo", 
-            "HMlnjjVars_JESAbsolutedo", 
-            "HMDNNProdSemi_JESAbsolutedo", 
-            "HMDNNNeutSemi_JESAbsolutedo", 
-            "do_JESAbsolute_RPLME_YEARdo_suffix", 
-            "VBSjjlnu_pairing_JESAbsolute_RPLME_YEARdo", 
-            "VBSjjlnu_kin_JESAbsolute_RPLME_YEARdo", 
-            "whadJetSel_JESAbsolute_RPLME_YEARdo", 
-            "wlepMaker_JESAbsolute_RPLME_YEARdo", 
-            "HMlnjjVars_JESAbsolute_RPLME_YEARdo", 
-            "HMDNNProdSemi_JESAbsolute_RPLME_YEARdo", 
-            "HMDNNNeutSemi_JESAbsolute_RPLME_YEARdo", 
-            "do_JESBBEC1do_suffix", 
-            "VBSjjlnu_pairing_JESBBEC1do", 
-            "VBSjjlnu_kin_JESBBEC1do", 
-            "whadJetSel_JESBBEC1do", 
-            "wlepMaker_JESBBEC1do", 
-            "HMlnjjVars_JESBBEC1do", 
-            "HMDNNProdSemi_JESBBEC1do", 
-            "HMDNNNeutSemi_JESBBEC1do", 
-            "do_JESBBEC1_RPLME_YEARdo_suffix", 
-            "VBSjjlnu_pairing_JESBBEC1_RPLME_YEARdo", 
-            "VBSjjlnu_kin_JESBBEC1_RPLME_YEARdo", 
-            "whadJetSel_JESBBEC1_RPLME_YEARdo", 
-            "wlepMaker_JESBBEC1_RPLME_YEARdo", 
-            "HMlnjjVars_JESBBEC1_RPLME_YEARdo", 
-            "HMDNNProdSemi_JESBBEC1_RPLME_YEARdo", 
-            "HMDNNNeutSemi_JESBBEC1_RPLME_YEARdo", 
-            "do_JESEC2do_suffix", 
-            "VBSjjlnu_pairing_JESEC2do", 
-            "VBSjjlnu_kin_JESEC2do", 
-            "whadJetSel_JESEC2do", 
-            "wlepMaker_JESEC2do", 
-            "HMlnjjVars_JESEC2do", 
-            "HMDNNProdSemi_JESEC2do", 
-            "HMDNNNeutSemi_JESEC2do", 
-            "do_JESEC2_RPLME_YEARdo_suffix", 
-            "VBSjjlnu_pairing_JESEC2_RPLME_YEARdo", 
-            "VBSjjlnu_kin_JESEC2_RPLME_YEARdo", 
-            "whadJetSel_JESEC2_RPLME_YEARdo", 
-            "wlepMaker_JESEC2_RPLME_YEARdo", 
-            "HMlnjjVars_JESEC2_RPLME_YEARdo", 
-            "HMDNNProdSemi_JESEC2_RPLME_YEARdo", 
-            "HMDNNNeutSemi_JESEC2_RPLME_YEARdo", 
-            "do_JESFlavorQCDdo_suffix", 
-            "VBSjjlnu_pairing_JESFlavorQCDdo", 
-            "VBSjjlnu_kin_JESFlavorQCDdo", 
-            "whadJetSel_JESFlavorQCDdo", 
-            "wlepMaker_JESFlavorQCDdo", 
-            "HMlnjjVars_JESFlavorQCDdo", 
-            "HMDNNProdSemi_JESFlavorQCDdo", 
-            "HMDNNNeutSemi_JESFlavorQCDdo", 
-            "do_JESHFdo_suffix", 
-            "VBSjjlnu_pairing_JESHFdo", 
-            "VBSjjlnu_kin_JESHFdo", 
-            "whadJetSel_JESHFdo", 
-            "wlepMaker_JESHFdo", 
-            "HMlnjjVars_JESHFdo", 
-            "HMDNNProdSemi_JESHFdo", 
-            "HMDNNNeutSemi_JESHFdo", 
-            "do_JESHF_RPLME_YEARdo_suffix", 
-            "VBSjjlnu_pairing_JESHF_RPLME_YEARdo", 
-            "VBSjjlnu_kin_JESHF_RPLME_YEARdo", 
-            "whadJetSel_JESHF_RPLME_YEARdo", 
-            "wlepMaker_JESHF_RPLME_YEARdo", 
-            "HMlnjjVars_JESHF_RPLME_YEARdo", 
-            "HMDNNProdSemi_JESHF_RPLME_YEARdo", 
-            "HMDNNNeutSemi_JESHF_RPLME_YEARdo", 
-            "do_JESRelativeBaldo_suffix", 
-            "VBSjjlnu_pairing_JESRelativeBaldo", 
-            "VBSjjlnu_kin_JESRelativeBaldo", 
-            "whadJetSel_JESRelativeBaldo", 
-            "wlepMaker_JESRelativeBaldo", 
-            "HMlnjjVars_JESRelativeBaldo", 
-            "HMDNNProdSemi_JESRelativeBaldo", 
-            "HMDNNNeutSemi_JESRelativeBaldo", 
-            "do_JESRelativeSample_RPLME_YEARdo_suffix", 
-            "VBSjjlnu_pairing_JESRelativeSample_RPLME_YEARdo", 
-            "VBSjjlnu_kin_JESRelativeSample_RPLME_YEARdo", 
-            "whadJetSel_JESRelativeSample_RPLME_YEARdo", 
-            "wlepMaker_JESRelativeSample_RPLME_YEARdo", 
-            "HMlnjjVars_JESRelativeSample_RPLME_YEARdo", 
-            "HMDNNProdSemi_JESRelativeSample_RPLME_YEARdo", 
-            "HMDNNNeutSemi_JESRelativeSample_RPLME_YEARdo"
-        ], 
-        "isChain": true, 
-        "outputbranchsel": "/afs/cern.ch/work/d/dvalsecc/private/CMSSW_10_2_0/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt", 
-        "do4Data": false
+        "isChain": false, 
+        "module": "whadJetSel_fatjetJESHF_RPLME_YEARdo()", 
+        "do4Data": true, 
+        "import": "LatinoAnalysis.NanoGardener.modules.WhadJetSel", 
+        "declare": "whadJetSel_fatjetJESHF_RPLME_YEARdo = lambda : WhadJetSel(2,\"custom\",30.0,4.7,\"CleanJet\" , branch_map=\"fatjetJESHF_RPLME_YEARdo\")"
     }, 
     "VBSjjlnu_kin_MupTup": {
         "do4MC": true, 
@@ -12129,7 +12200,7 @@
     "l3Kin_JESEC2_RPLME_YEARup": {
         "do4MC": true, 
         "isChain": false, 
-        "module": "l4KinProducer(branch_map=\"JESEC2_RPLME_YEARup\")", 
+        "module": "l3KinProducer(branch_map=\"JESEC2_RPLME_YEARup\")", 
         "do4Data": true, 
         "import": "LatinoAnalysis.NanoGardener.modules.l3KinProducer", 
         "declare": ""
@@ -12201,11 +12272,12 @@
         ]
     }, 
     "MCCombJJLNu2016_fatjetJMSup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
@@ -12234,11 +12306,12 @@
         "declare": "wlepMkr_JESAbsoluteup = lambda : WlepMaker(branch_map=\"JESAbsoluteup\")"
     }, 
     "MCCombJJLNu2017_ElepTup": {
-        "selection": "\"nLepton>=1  && Lepton_pt[0]>30                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
+        "selection": "\"nLepton>=1  && Lepton_pt[0]>25                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 )                         && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )                          \"", 
         "do4MC": true, 
         "subTargets": [
             "baseW", 
             "wwNLOEWK", 
+            "wwNLOEWK2", 
             "wzNLOEWK", 
             "zzNLOEWK", 
             "zNLOEWK", 
