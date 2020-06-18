@@ -174,6 +174,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
             # It can be written in a more python-like manner, more performing ...
             #
             #
+            #print " it is semileptonic "
             
             temp_ptq1 = -1
             temp_ptq2 = -1
@@ -261,7 +262,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
               temp_m13 = abs( (q1+q3).M() - 80.385 )
               temp_m23 = abs( (q1+q3).M() - 80.385 )
              
-              if (temp_m12 < temp_m13) and (temp_m12 < temp_m23) :
+              if (temp_m12 <= temp_m13) and (temp_m12 <= temp_m23) :
                 
                 ptl2   = temp_ptq1  
                 etal2  = temp_etaq1 
@@ -273,7 +274,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
                 phiv2  = temp_phiq2 
                 idv2   = temp_idq2  
              
-              elif (temp_m13 < temp_m23) and (temp_m13 < temp_m12) :
+              elif (temp_m13 <= temp_m23) and (temp_m13 <= temp_m12) :
                 
                 ptl2   = temp_ptq1  
                 etal2  = temp_etaq1 
@@ -285,7 +286,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
                 phiv2  = temp_phiq3 
                 idv2   = temp_idq3  
                 
-              elif (temp_m23 < temp_m13) and (temp_m23 < temp_m12) :
+              elif (temp_m23 <= temp_m13) and (temp_m23 <= temp_m12) :
                 
                 ptl2   = temp_ptq2  
                 etal2  = temp_etaq2 
@@ -382,7 +383,11 @@ class vvNLOEWKcorrectionWeightProducer(Module):
                 phiv2  = temp_phiq4 
                 idv2   = temp_idq4  
             
-           
+            #print " num_quarks = " , num_quarks
+            
+          #else :
+            #print " it is NOT semileptonic "
+
 
 
           #  Generator [back to top]
@@ -415,6 +420,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
           #
           if ptl1 == -1 or ptl2 == -1 or ptv1 == -1 or ptv2 == -1 :
             ewknloW = -2
+            #print " ewknloW ==  -2 ??? "
           else :         
             #
             # After lookig carefully at the referenced paper arXiv:1401.3964,
