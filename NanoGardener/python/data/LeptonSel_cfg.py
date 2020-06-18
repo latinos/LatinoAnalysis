@@ -5795,11 +5795,16 @@ MuonWP = {
                                  ] ,
                                   } ,
                          'idSF':  {
-                                   # '1-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/muonID_TH2_SFs_pt_eta.root' ] ,
+                                    '1-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/muonID_TH2_SFs_pt_eta.root' ] ,
                                   } ,
                          'isoSF':  {
-                                   # '1-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/muonISO_TH2_SFs_pt_eta.root' ] ,
+                                    '1-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/muonISO_TH2_SFs_pt_eta.root' ] ,
                                    } ,
+                         'tthMvaSF' : {
+                                    '1-7' : [ 'ttHMVA0p8_TightHWWCut', # Hist name
+                                              'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/ttHMVA0p8_TightHWWCut_SFs_2016.root' , # Nominal + stat
+                                              'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/ttHMVA0p8_TightHWWCut_SFs_SYS_2016.root', ] # Syst
+                                   },
                          #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016/', 
 
                        } ,
