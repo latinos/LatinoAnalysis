@@ -28,3 +28,9 @@ NanoAOD content in:
 
     https://cms-nanoaod-integration.web.cern.ch/integration/master-102X/mc102X_doc.html
 
+
+    
+    
+Tests for debug:
+
+    python test.py
