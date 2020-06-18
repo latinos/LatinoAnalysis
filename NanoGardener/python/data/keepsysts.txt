@@ -14,3 +14,5 @@ keep *fatjetJMSup
 keep *fatjetJMSdo
 keep *fatjetJMRup
 keep *fatjetJMRdo
+keep *fatjetJERup
+keep *fatjetJERdo

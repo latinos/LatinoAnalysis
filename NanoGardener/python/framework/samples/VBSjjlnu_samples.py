@@ -41,8 +41,14 @@ vbsjjlnu_samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_Q
                 'WJetsToLNu_Pt100to250',
                 'WJetsToLNu_Pt250to400',
                 'WJetsToLNu_Pt400to600',
-                'WJetsToLNu_Pt600toInf'
-                
+                'WJetsToLNu_Pt600toInf',
+                'WJetsToLNu_0J',
+                'WJetsToLNu_1J',
+                'WJetsToLNu_2J',
+                'WJetsToLNu-LO_1J',
+                'WJetsToLNu-LO_2J',
+                'WJetsToLNu-LO_3J',
+                'WJetsToLNu-LO_4J',
                 # 'QCD_Pt-15to20_MuEnrichedPt5','QCD_Pt-20to30_MuEnrichedPt5','QCD_Pt-30to50_MuEnrichedPt5',
                 # 'QCD_Pt-50to80_MuEnrichedPt5','QCD_Pt-80to120_MuEnrichedPt5','QCD_Pt-120to170_MuEnrichedPt5',
                 # 'QCD_Pt-170to300_MuEnrichedPt5','QCD_Pt-20to30_EMEnriched','QCD_Pt-30to50_EMEnriched','QCD_Pt-50to80_EMEnriched'
@@ -83,7 +89,8 @@ vbsjjlnu_samples_bkg_2016 = [
 ]
 
 
-vbsjjlnu_samples_bkg_2018 = [  'DYJetsToLL_M-50_ext2', 'TTWJetsToLNu', 'TTToSemiLeptonic_ext3']
+vbsjjlnu_samples_bkg_2018 = [  'DYJetsToLL_M-50_ext2', 'TTWJetsToLNu', 'TTToSemiLeptonic_ext3', 
+                                   'Zg', 'Wg_AMCNLOFXFX','WZTo3LNu_mllmin01','Wg_MADGRAPHMLM']
 
 
 vbsjjlnu_samples_bkg += vbsjjlnu_samples_bkg_2016
@@ -114,43 +121,43 @@ vbsjjlnu_samples_data2018 = ['SingleMuon_Run2018A-Nano25Oct2019-v1','SingleMuon_
 
 CombJJLNu_preselections = {
      "2016": {
-          "MC": '"nLepton>=1  && Lepton_pt[0]>30 \
+          "MC": '"nLepton>=1  && Lepton_pt[0]>25 \
                           && (  Lepton_isTightElectron_mva_90p_Iso2016[0] > 0.5 \
                              || Lepton_isTightMuon_cut_Tight80x[0] > 0.5 ) \
-                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
+                        && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5 \
                          && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )  \
                         "',
-         "DATA": '"nLepton>=1  && Lepton_pt[0]>30 \
-                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
+         "DATA": '"nLepton>=1  && Lepton_pt[0]>25 \
+                        && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5 \
                         && (  Alt$(Lepton_isTightElectron_mva_90p_Iso2016[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight80x[1],0) < 0.5 )  \
                         "'
      }, 
      "2017": {
-          "MC": '"nLepton>=1  && Lepton_pt[0]>30 \
+          "MC": '"nLepton>=1  && Lepton_pt[0]>25 \
                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 \
                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
-                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
+                        && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5 \
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',
-          "DATA":  '"nLepton>=1  && Lepton_pt[0]>30 \
-                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
+          "DATA":  '"nLepton>=1  && Lepton_pt[0]>25 \
+                        && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5 \
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "'
      }, 
      "2018": {
-          "MC": '"nLepton>=1  && Lepton_pt[0]>30 \
+          "MC": '"nLepton>=1  && Lepton_pt[0]>25 \
                           && (  Lepton_isTightElectron_mvaFall17V1Iso_WP90[0] > 0.5 \
                              || Lepton_isTightMuon_cut_Tight_HWWW[0] > 0.5 ) \
-                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
+                        && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5 \
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "',
-          "DATA":  '"nLepton>=1  && Lepton_pt[0]>30 \
-                        && Alt$(Lepton_pt[1],0)<=10 && Alt$(Lepton_isLoose[1],1)> 0.5 \
+          "DATA":  '"nLepton>=1  && Lepton_pt[0]>25 \
+                        && Alt$(Lepton_pt[1],0)<=15 && Alt$(Lepton_isLoose[1],1)> 0.5 \
                          && (  Alt$(Lepton_isTightElectron_mvaFall17V1Iso_WP90[1], 0) < 0.5 \
                              && Alt$(Lepton_isTightMuon_cut_Tight_HWWW[1],0) < 0.5 )  \
                         "'
