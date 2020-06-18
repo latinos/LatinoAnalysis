@@ -85,21 +85,22 @@ class LawnMower:
            
            in_samples = False
            if sampleName in self._samples: in_samples = True
-         
+           
            if not in_samples:
-            # check if it is in subsamples
-            in_subsample = False
-            for _sampleName, _sample in self._samples.items():
+             # check if it is in subsamples
+             in_subsample = False
+             for _sampleName, _sample in self._samples.items():
                if "subsamples" not in _sample: continue
                for _subsam in  _sample["subsamples"].keys():
-                  if _sampleName+"_"+ _subsam == sampleName:
-                     in_subsample = True
-                     break
-            if not in_subsample: continue
-
-           if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
+                 if _sampleName+"_"+ _subsam == sampleName:
+                   in_subsample = True
+                   break
+             if not in_subsample: continue
+           
+           if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
              continue
-
+           
+           
            # 
            # propagate signal from pre-fit if triggered
            # NB: this is needed for exclusion analyses, where the fitted signal is 0
@@ -121,12 +122,6 @@ class LawnMower:
              histo.Write()              
              
              template_histogram = histo.Clone ("template")
-
-
-
-          
-
-
 
 
         #print " template_histogram = " , template_histogram
@@ -155,7 +150,7 @@ class LawnMower:
                      break
             if not in_subsample: continue
 
-           if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
+           if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
              continue
 
            print " sampleName = ", sampleName
