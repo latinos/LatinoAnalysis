@@ -12,7 +12,7 @@ _jet_puid_sf = {
     '2018': {'source': 'LatinoAnalysis/NanoGardener/python/data/PUID_80XTraining_EffSFandUncties.root'}
 }
 
-for jet in ['real', 'pu']:
+for jet, jetTag in [('real','eff'), ('pu','mistag')]:
     for wp, iwp in [('loose', 'L'), ('medium', 'M'), ('tight', 'T')]:
         for year, jcfg in _jet_puid_sf.iteritems():
             jcfg['%s_%s' % (jet, wp)] = 'h2_%s_sf%s_%s' % (jetTag, year, iwp)
