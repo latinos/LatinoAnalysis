@@ -27,6 +27,11 @@ try:
 except NameError:
    CONDOR_ACCOUNTING_GROUP = ''
 
+try: 
+   AUTO_CONDOR_RETRY = autoCondorRetry 
+except NameError:
+   AUTO_CONDOR_RETRY = False 
+
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False,USE_SINGULARITY=False):
      # baseName   = Gardening, Plotting, ....
@@ -331,6 +336,9 @@ class batchJobs :
            if CONDOR_ACCOUNTING_GROUP:
              jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
              jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
+           if AUTO_CONDOR_RETRY:
+             jdsFile.write('on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)\n')
+             jdsFile.write('periodic_release =  (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*3))\n')
            jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')

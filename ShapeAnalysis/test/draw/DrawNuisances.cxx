@@ -143,7 +143,7 @@ void DrawNuisances(std::string inputRootFile, std::string histoNominal, std::str
  pad2 -> cd();
  
  hReferenceRatio->Draw();
- float rounded_max_ratio = int( 10. * (max_ratio + 0.5) ) / 10.;
+ float rounded_max_ratio = int( 10. * (max_ratio + 0.3) ) / 10.;
  hReferenceRatio -> GetYaxis() -> SetRangeUser(0.0, rounded_max_ratio);
  hReferenceRatio->Draw();
  hRatioUp->Draw("same");
