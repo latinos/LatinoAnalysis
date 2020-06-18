@@ -403,9 +403,21 @@ class LeptonSFMaker(Module):
                 #tkSF_id_sys = math.sqrt( float(dot[8])**2 + float(dot[9])**2 + float(dot[10])**2 + float(dot[11])**2)
                 #tkSF_id_sys /= mc_id
 
-            tkSF_up = tkSF_id * tkSF_iso * math.sqrt(tkSF_id_up*tkSF_id_up/tkSF_id/tkSF_id +  tkSF_iso_up*tkSF_iso_up/tkSF_iso/tkSF_iso)
-            tkSF_dwn = tkSF_id * tkSF_iso * math.sqrt(tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id +  tkSF_iso_dwn*tkSF_iso_dwn/tkSF_iso/tkSF_iso)
-            tkSF = tkSF_id*tkSF_iso
+            if self.SF_dict[kin_str][wp]['hastthMvaSF']:
+                tthMvaSF , tthMvaSF_err = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['nominal'][run_idx], eta, pt)
+                dummy    , tthMvaSF_sys = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['syst'][run_idx], eta, pt)   
+                tkSF     = tkSF_id*tkSF_iso*tthMvaSF
+                tkSF_up  = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_up*tkSF_id_up/tkSF_id/tkSF_id
+                                                                  + tkSF_iso_up *tkSF_iso_up /tkSF_iso/tkSF_iso
+                                                                  + (tthMvaSF_err*tthMvaSF_err+tthMvaSF_sys*tthMvaSF_sys)/tthMvaSF/tthMvaSF )
+                tkSF_dwn = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id
+                                                                  + tkSF_iso_dwn*tkSF_iso_dwn/tkSF_iso/tkSF_iso
+                                                                  + (tthMvaSF_err*tthMvaSF_err+tthMvaSF_sys*tthMvaSF_sys)/tthMvaSF/tthMvaSF ) 
+            else:  
+               # Only ID*ISO:
+               tkSF_up  = tkSF_id * tkSF_iso * math.sqrt(tkSF_id_up *tkSF_id_up /tkSF_id/tkSF_id +  tkSF_iso_up *tkSF_iso_up /tkSF_iso/tkSF_iso)
+               tkSF_dwn = tkSF_id * tkSF_iso * math.sqrt(tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id +  tkSF_iso_dwn*tkSF_iso_dwn/tkSF_iso/tkSF_iso)
+               tkSF = tkSF_id*tkSF_iso
             return tkSF, tkSF_dwn, tkSF_up, 0.0
         return tkSF, tkSF_err, tkSF_err, tkSF_sys
 
