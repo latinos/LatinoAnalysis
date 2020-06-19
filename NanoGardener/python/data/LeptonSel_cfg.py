@@ -3659,7 +3659,7 @@ ElectronWP = {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/EGM2D_BtoH_combineLowEt_RecoSF_Legacy2016.root' ,
                                   } ,
                          'wpSF':  {
-                                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_passingMVA80Xwp90Iso16.txt' ,
+                                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_passingMVA80Xwp90Iso16_SS.txt' ,
                                   } ,
                          #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016_SS/',
                               } ,
@@ -3696,7 +3696,7 @@ ElectronWP = {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/EGM2D_BtoH_combineLowEt_RecoSF_Legacy2016.root' ,
                                   } ,
                          'wpSF':  {
-                                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_TightHWW_ttHMVA_0p7_SFs_2016.txt' ,
+                                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_TightHWW_SS_ttHMVA_0p7_SFs_2016.txt' ,
                                   } ,
                          # FIXME: Update with new fakes
                          #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016_SS/',
