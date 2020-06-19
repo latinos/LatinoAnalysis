@@ -498,7 +498,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'CorrFatJetMC', 'CleanFatJet','JERsMC2016',
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'CorrFatJetMC', 'CleanFatJet',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
@@ -544,10 +544,9 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016',
+                     'subTargets' : ['baseW','JERsMC2016','PrefCorr2016','btagPerJet2016','JetPUID_SF_16',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars',
-                                     'MHTrigMC','MHSwitch','formulasMCMH',
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
                 },
 
@@ -654,7 +653,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet','JERsMC2017',
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
@@ -689,11 +688,11 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017',
+
+                     'subTargets' : ['baseW','JERsMC2017','PrefCorr2017','btagPerJet2017','JetPUID_SF_17',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars',
-                                     'MHTrigMC','MHSwitch','formulasMCMH',
-                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
+                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
                 },
 
   'MCCorr2017LP19' : {
@@ -751,7 +750,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet','JERsMC2018',
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
@@ -795,11 +794,10 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','btagPerJet2018',
+                     'subTargets' : ['baseW','JERsMC2018','btagPerJet2018','JetPUID_SF_18',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
-                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK',
-                                     'MHTrigMC','MHSwitch','formulasMCMH',
-                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK', 
+                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
                 },
 
 
@@ -2359,6 +2357,32 @@ Steps = {
                   'module'     : 'JERMakerMC18()',
                  },
     #jerTag for 2018 is missing on purpose, 2017 JERs are used instead (for a moment)
+
+## ------- MODULES: MC PU ID SF, EFF and (stat/syst) uncertainty creator 
+    'JetPUID_SF_16': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSFMaker' ,
+                  'declare'    : 'JetPUID_SFMaker16 = lambda : JetSFMaker("Full2016v7")',
+                  'module'     : 'JetPUID_SFMaker16()',
+                 },
+    'JetPUID_SF_17': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSFMaker' ,
+                  'declare'    : 'JetPUID_SFMaker17 = lambda : JetSFMaker("Full2017v7")',
+                  'module'     : 'JetPUID_SFMaker17()',
+                 },
+    'JetPUID_SF_18': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSFMaker' ,
+                  'declare'    : 'JetPUID_SFMaker18 = lambda : JetSFMaker("Full2018v7")',
+                  'module'     : 'JetPUID_SFMaker18()',
+                 },
 
 ## ------- MODULES: MC Weights
 
