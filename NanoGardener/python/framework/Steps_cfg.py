@@ -256,26 +256,26 @@ def addSystChainMembers_CombJJLNu():
         }
 
         # MonoHiggs Steps, we only need AK4 JES
-        if jetType == "AK8": continue
-        dictionary['MHSemiLepVars_'+mapname] = {
-            'isChain'  : False ,
-            'do4MC'    : True  ,
-            'do4Data'  : True ,
-            'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
-            'declare'  : 'MHSemiLepVars_{0} = lambda : MHSemiLepVars(branch_map="{0}")'.format(mapname),
-            'module'   : 'MHSemiLepVars_{0}()'.format(mapname),
-            'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-        }
-        dictionary['MHSemiLepMVA_'+mapname] = {
-            'isChain'  : False ,
-            'do4MC'    : True  ,
-            'do4Data'  : True ,
-            'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-            'declare'  : 'MonoHiggsMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map={0})'.format(mapname),
-            #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
-            'module'   : 'MonoHiggsMVA_{0}()'.format(mapname),
-            'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
-        }
+        if jetType == "AK4": 
+            dictionary['MHSemiLepVars_'+mapname] = {
+                'isChain'  : False ,
+                'do4MC'    : True  ,
+                'do4Data'  : True ,
+                'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
+                'declare'  : 'MHSemiLepVars_{0} = lambda : MHSemiLepVars(branch_map="{0}")'.format(mapname),
+                'module'   : 'MHSemiLepVars_{0}()'.format(mapname),
+                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+            }
+            dictionary['MHSemiLepMVA_'+mapname] = {
+                'isChain'  : False ,
+                'do4MC'    : True  ,
+                'do4Data'  : True ,
+                'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                'declare'  : 'MonoHiggsMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map={0})'.format(mapname),
+                #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
+                'module'   : 'MonoHiggsMVA_{0}()'.format(mapname),
+                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+            }
 
   for typ in ["ElepT", "MupT", "MET", "fatjetJMS", "fatjetJMR", "fatjetJER",]:
     for kind in ["Up", "Do"]:
