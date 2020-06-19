@@ -31,7 +31,9 @@ if __name__ == '__main__':
     parser.add_option('--splitStat'      , dest='splitStat'      , help='draw statistics one bin per plot'           , default=None )
     parser.add_option('--dryRun'         , dest='dryRun'         , help='allow a dry run only '                      , default=None )
     parser.add_option('--drawYields'     , dest='drawYields'     , help='draw yields of the plots '                  , default='0' )
-
+    parser.add_option('--joinSubsamples' , dest='joinSubsamples' , help='Add the histograms of subsamples'           , default='0' )
+    parser.add_option('--onlySample'    , dest='onlySample'     , help='Only plot the requested sample '            , default=None )
+    
 
     (opt, args) = parser.parse_args()
 
@@ -46,7 +48,9 @@ if __name__ == '__main__':
     print " splitStat =           ", opt.splitStat
     print " dryRun  =             ", opt.dryRun
     print " drawYields  =         ", opt.drawYields
-    
+    print " joinSubsamples  =     ", opt.joinSubsamples
+    print " onlySample  =         ", opt.onlySample
+
     
     
     os.system ("mkdir " + opt.outputDirPlots + "/") 
@@ -58,6 +62,15 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
+    if opt.joinSubsamples == '0':
+      subsamples = {}
+      for sampleName, sample in samples.items():
+        if "subsamples" in sample: 
+          for subs in sample["subsamples"]:
+            subsamples[sampleName+"_"+subs] = {}
+      samples.update(subsamples)
+      
+
     nuisances = {}
     if os.path.exists(opt.nuisancesFile) :
       handle = open(opt.nuisancesFile,'r')
@@ -66,8 +79,8 @@ if __name__ == '__main__':
 
     ROOTinputFile = ROOT.TFile.Open( opt.inputFile, 'READ')
 
-    for list_histos in ROOTinputFile.GetListOfKeys() :
-        print " --> ", list_histos
+    # for list_histos in ROOTinputFile.GetListOfKeys() :
+    #     print " --> ", list_histos
 
     
     texOutputFile =  open( 'plot_' + opt.cutName + '.tex' ,"w")
@@ -75,6 +88,8 @@ if __name__ == '__main__':
 
     # loop over nuisances
     for sampleName, sample in samples.iteritems():
+      if opt.onlySample and opt.onlySample not in sampleName: continue
+    
       nameNominal = 'histo_' + sampleName
       nbins = 100
       if nameNominal in ROOTinputFile.GetListOfKeys() :
