@@ -501,6 +501,8 @@ _Fatjet_syst_branches = [
   'HM_HlnFatMass_noTau21Cut'
 ]
 
+_JER_branches = _JES_branches
+
 ## TrigMaker
 from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
 _ElepT_branches.extend(NewVar_MC_dict['F'])
@@ -518,6 +520,8 @@ for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_
       _MET_branches.append(key)
     if key not in _JES_branches:
       _JES_branches.append(key)
+    if key not in _JER_branches:
+      _JER_branches.append(key)
 
 for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
@@ -530,6 +534,8 @@ for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
       _MET_branches.append(key)
     if key not in _JES_branches:
       _JES_branches.append(key)
+    if key not in _JER_branches:
+      _JER_branches.append(key)
 
 ## formulas MC
 for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formulasToAdd_MC_Full2017v6', 'formulasToAdd_MC_Full2017v7', 'formulasToAdd_MC_Full2018v6', 'formulasToAdd_MC_Full2018v7', 'formulasToAdd_MC_MonoH']:
@@ -597,6 +603,16 @@ branch_mapping['JESup'] = {
 branch_mapping['JESdo'] = {
   'branches': _JES_branches,
   'suffix': '_JESdo'
+}
+
+branch_mapping['JERup'] = {
+  'branches': _JER_branches,
+  'suffix': '_JERup'
+}
+
+branch_mapping['JERdo'] = {
+  'branches': _JER_branches,
+  'suffix': '_JERdo'
 }
 
 branch_mapping["fatjetJMSup"] = {
