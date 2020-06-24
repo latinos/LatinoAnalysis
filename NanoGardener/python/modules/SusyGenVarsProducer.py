@@ -231,7 +231,8 @@ class SusyGenVarsProducer(Module):
 
         for jet in jetColl :
             # https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L372-L395
-            if jet.jetId & 1 : # is loose 
+            #if jet.jetId & 1 : # does not work in 2017 and 2018 
+            if jet.jetId > 0 : # is loose 
                 # https://github.com/manuelfs/babymaker/blob/11e7a6f26ed6c1efcd0027c8b4219eb69a997bae/bmaker/interface/jet_met_tools.hh
                 if jet.pt>30 and abs(jet.eta)<2.4 :
                     
