@@ -299,6 +299,8 @@ samples['GluGluHToWWTo2L2Nu_JHUGen698_M1500']     .extend( ['xsec=0.00096',     
 samples['GluGluHToWWTo2L2Nu_JHUGen698_M2000']     .extend( ['xsec=0.00041',     'kfact=1.000',          'ref=KF'] ) # 0.006227*0.621*0.108*0.108*9
 samples['GluGluHToWWTo2L2Nu_JHUGen698_M2500']     .extend( ['xsec=0.00016',     'kfact=1.000',          'ref=KF'] ) # 0.002515*0.621*0.108*0.108*9
 samples['GluGluHToWWTo2L2Nu_JHUGen698_M3000']     .extend( ['xsec=0.000078',     'kfact=1.000',         'ref=KF'] ) # 0.001186*0.621*0.108*0.108*9
+samples['GluGluHToWWTo2L2Nu_JHUGen714_M4000']     .extend( ['xsec=0.000001917',     'kfact=1.000',         'ref=X'] ) # Self derived
+samples['GluGluHToWWTo2L2Nu_JHUGen714_M5000']     .extend( ['xsec=0.0000001250',     'kfact=1.000',         'ref=X'] ) # Self derived
 
 
 samples['GluGluHToWWTo2L2NuAMCNLO_M125']   .extend( ['xsec=0.9913',	'kfact=1.000',		'ref=CF'] ) # 43.92*0.215*0.108*0.108*9
