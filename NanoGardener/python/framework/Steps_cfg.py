@@ -81,7 +81,8 @@ def createJESchain_CombJJLNu(type, kind="Up"):
     typeShort = ""
   toreplace = typeShort+kind.lower()  
   chainTemplate = ['do_JESVAR_suffix', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR',
-                  'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR']
+                  'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR',
+                  'MHSemiLepVars_JESVAR', 'MHSemiLepMVA_JESVAR']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
@@ -413,7 +414,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'trigMCKeepRun_{0}'.format(torep), 
                         'LeptonSF_{0}'.format(torep),
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
-                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
+                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
+                        'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
@@ -425,7 +427,8 @@ def prepare_CombJJLNu_syst(basename, selection):
           'selection'  : selection,
           'subTargets': ['do_{0}_suffix'.format(torep), 
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
-                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
+                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
+                        'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
@@ -1379,7 +1382,7 @@ Steps = {
                   'selection'  : CombJJLNu_preselections["2016"]["MC"],
                   'subTargets' : ['VBSjjlnu_pairing', 'VBSjjlnu_kin' ,
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
-                                 'MHSemiLepVars', 'MHSemiLepMVA'],
+                                  'MHSemiLepVars', 'MHSemiLepMVA'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2016,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
@@ -4730,7 +4733,7 @@ Steps = {
 Steps.update(addJESchainMembers())
 Steps.update(addSystChainMembers_CombJJLNu())
 
-# ## ADD systematics for VBSjjlnu & HMjjlnu analysis
+# ## ADD systematics for VBSjjlnu & HMjjlnu analysis & MonoHiggsSemiLep
 Steps.update(prepare_CombJJLNu_syst("MCCombJJLNu2016", CombJJLNu_preselections["2016"]["MC"]))
 Steps.update(prepare_CombJJLNu_syst("MCCombJJLNu2017", CombJJLNu_preselections["2017"]["MC"]))
 Steps.update(prepare_CombJJLNu_syst("MCCombJJLNu2018", CombJJLNu_preselections["2018"]["MC"]))
