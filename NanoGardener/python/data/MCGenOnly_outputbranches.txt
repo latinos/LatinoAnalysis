@@ -3,6 +3,8 @@ keep run
 keep luminosityBlock
 keep event
 keep genWeight
+keep gen*
+keep lhe*
 keep nGenPart
 keep GenPart_*
 keep LHE_*
@@ -12,4 +14,12 @@ keep GenMET_*
 keep Pileup_*
 keep nGenDressedLepton
 keep GenDressedLepton_*
+kepp *LeptonGen_*
+kepp *NeutrinoGen_*
+kepp *PhotonGen_*
 keep HTXS_*
+keep ggH*
+keep qqH*
+keep baseW
+keep Xsec
+keep higgs* 

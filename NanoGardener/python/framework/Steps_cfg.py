@@ -805,7 +805,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'subTargets' : ['PromptParticlesGenVars','GenVar', 'HiggsGenVars', 'ggHTheoryUncertainty', 'DressedLeptons',
+                  'subTargets' : ['PromptParticlesGenVars','GenVar', 'HiggsGenVars', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons',
                                   'baseW'],
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/MCGenOnly_outputbranches.txt'
                },
@@ -1647,6 +1647,29 @@ Steps = {
                                   'GluGluHToWWTo2L2NuPowhegNNLOPS_M125_private',
                                   'GluGluHToWWTo2L2NuPowhegNNLOPS_M125',
                                   'GGHjjToWWTo2L2Nu_minloHJJ_M125'
+                                  ]
+                  },    
+   'qqHTheoryUncertainty':  {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False  ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.QQHUncertaintyProducer' ,
+                   'declare'    : 'qqHUncertaintyProducer = lambda : QQHUncertaintyProducer()',
+                   'module'     : 'qqHUncertaintyProducer()',
+                   'onlySample' : [
+                                  'VBFHToWWTo2L2NuPowheg_M125',
+                                  'VBFHToWWTo2L2Nu_M125',
+                                  'VBFHToWWTo2L2NuPowheg_M125_CP5Up',
+                                  'VBFHToWWTo2L2Nu_M125_CP5Up',
+                                  'VBFHToWWTo2L2NuPowheg_M125_CP5Down',
+                                  'VBFHToWWTo2L2Nu_M125_CP5Down',
+                                  'HWminusJ_HToWW_LNu_M125',
+                                  'HWplusJ_HToWW_LNu_M125',
+                                  'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToWW_M125',
+                                  'HZJ_HToWWTo2L2Nu_M125',
+                                  'HZJ_HToWWTo2L2Nu_ZTo2L_M125',
+                                  'HZJ_HToWW_M125'
                                   ]
                   },    
 
