@@ -297,7 +297,7 @@ def addSystChainMembers_CombJJLNu():
         'do4Data'    : True  ,
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
         'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
-        'module'     : 'vbs_vars_maker_{0}()',
+        'module'     : 'vbs_vars_maker_{0}()'.format(mapname),
         'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
@@ -366,7 +366,7 @@ def addSystChainMembers_CombJJLNu():
           'do4MC'    : True  ,
           'do4Data'  : True ,
           'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-          'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map={0})'.format(mapname),
+          'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map="{0}")'.format(mapname),
           #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
           'module'   : 'MHSemiLepMVA_{0}()'.format(mapname),
           'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018

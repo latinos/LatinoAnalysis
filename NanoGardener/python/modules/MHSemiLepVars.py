@@ -28,6 +28,7 @@ class MHSemiLepVars(Module):
         self.el_mass = 0.000511
         self.mu_mass = 0.106
         self._branch_map = branch_map
+        if not self._branch_map == '': print('MHSemiLepVars: branch_map='+self._branch_map)
 
     def beginJob(self):
         pass
