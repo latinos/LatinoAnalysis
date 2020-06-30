@@ -386,7 +386,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets' : ['JESBase', 
+          'subTargets' : ['JESBase', 'l2Kin_{0}'.format(torep), 
                         ] +
                           createJESchain_CombJJLNu("Total", kind) +
                           createJESchain_CombJJLNu("Absolute", kind) +
@@ -415,7 +415,7 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'LeptonSF_{0}'.format(torep),
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
                         'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
-                        'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
+                        'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
@@ -428,7 +428,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'subTargets': ['do_{0}_suffix'.format(torep), 
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
                         'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
-                        'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
+                        'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
