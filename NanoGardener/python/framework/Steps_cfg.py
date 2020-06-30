@@ -272,9 +272,9 @@ def addSystChainMembers_CombJJLNu():
                 'do4MC'    : True  ,
                 'do4Data'  : True ,
                 'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                'declare'  : 'MonoHiggsMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map={0})'.format(mapname),
+                'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map="{0}")'.format(mapname),
                 #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
-                'module'   : 'MonoHiggsMVA_{0}()'.format(mapname),
+                'module'   : 'MHSemiLepMVA_{0}()'.format(mapname),
                 'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
             }
 
@@ -366,9 +366,9 @@ def addSystChainMembers_CombJJLNu():
           'do4MC'    : True  ,
           'do4Data'  : True ,
           'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-          'declare'  : 'MonoHiggsMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map={0})'.format(mapname),
+          'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map={0})'.format(mapname),
           #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
-          'module'   : 'MonoHiggsMVA_{0}()'.format(mapname),
+          'module'   : 'MHSemiLepMVA_{0}()'.format(mapname),
           'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
@@ -1508,9 +1508,9 @@ Steps = {
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py")',
+                  'declare'  : 'MHSemiLepMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py")',
                   #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'module'   : 'MHSemiLepMVA()',
                },
 
   'MHskim4BDT' : { 
