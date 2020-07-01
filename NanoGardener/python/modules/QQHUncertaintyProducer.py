@@ -45,7 +45,7 @@ class QQHUncertaintyProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         
-        allUnc = ROOT.get_all_qqH_uncertainties(int(event.HTXS_stage1_1_cat_pTjet30GeV))
+        allUnc = ROOT.get_all_qqH_uncertainties(int(event.HTXS_stage1_1_fine_cat_pTjet30GeV))
         
         for iunc,unc in enumerate(self.uncertaintyVariables):
           self.out.fillBranch(unc, allUnc[iunc])
