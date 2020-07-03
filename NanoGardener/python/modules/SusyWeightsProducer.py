@@ -1,6 +1,7 @@
 import ROOT
 import math
 import os
+import subprocess
 from array import array
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -14,7 +15,7 @@ class SusyWeightsProducer(Module):
     ###
     def __init__(self, cmssw, sourcedir):
         self.cmssw = cmssw
-        self.sourcedir = sourcedir[:sourcedir.index('__susyGen')] + '__susyGen'
+        self.sourcedir = sourcedir[:sourcedir.index('susyGen')] + 'susyGen'
         pass
 
     ###
@@ -37,8 +38,19 @@ class SusyWeightsProducer(Module):
               
         if '__part' in inputFileName :
             inputFileName = inputFileName[:inputFileName.index('__part')] + '__part*.root'
-            
-        chain.Add(self.sourcedir + '/' + inputFileName)
+            nInputTrees = int(subprocess.check_output('ls ' + self.sourcedir + '/' + inputFileName + ' | grep -c root', shell=True).strip('\n'))
+            for part in range(nInputTrees):
+                partFileName = self.sourcedir + '/' + inputFileName.replace('__part*.root', '__part' + str(part) + '.root')
+                if os.path.isfile(partFileName) :
+                    chain.Add(partFileName)
+                else:
+                    raise Exception('SusyWeightsProducer ERROR: input susyGen file', partFileName, 'does not exist')
+
+        else:
+            chain.Add(self.sourcedir + '/' + inputFileName)
+            nInputTrees = 1
+
+        print 'SusyWeightsProducer: read', nInputTrees, 'input susyGen files with', chain.GetEntries(), 'events'
 
         self.massPointN = { }
 
