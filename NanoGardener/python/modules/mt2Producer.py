@@ -58,9 +58,7 @@ class mt2Producer(Module):
             if 'WZ' in self.analysisRegion or 'ttZ' in self.analysisRegion or 'ZZ' in self.analysisRegion:
 
                 self.out.branch("lep2idx",     "I")
-
-                if 'WZ' in self.analysisRegion or 'ttZ' in self.analysisRegion:
-                    self.out.branch("deltaMassZ",  "F")
+                self.out.branch("deltaMassZ",  "F")
             
                 if 'ttZ' in self.analysisRegion or self.analysisRegion or 'ZZ' in self.analysisRegion:
                     self.out.branch("lep3idx",     "I")
@@ -275,7 +273,7 @@ class mt2Producer(Module):
             if nLooseLeptons<4 :
                 return False
 
-            cutDZM1, cutDZM2, minDZMT = 15., 30., 999.
+            cutDZM1, cutDZM2, minZ2, minDZMT = 15., 30., 30., 999.
             lost0, lost1 = -1, -1
 
             for l0 in range (nLooseLeptons) :
@@ -296,27 +294,30 @@ class mt2Producer(Module):
 
                                                         lost0, lost1 = l0, l1
                                                         cutDZM1 = DZM1
+                                                        deltaMassZ = cutDZM1
 
                                                     elif 'ZZ' in self.analysisRegion :
 
                                                         if abs(leptons[lepLoose[l2]].pdgId)==abs(leptons[lepLoose[l3]].pdgId) :
 
-                                                            DZM2 = abs((lepVect[l2] + lepVect[l3]).M() - self.Zmass)
-                                                            if DZM2<cutDZM2 :
+                                                            ZM2 = (lepVect[l2] + lepVect[l3]).M()
+                                                            DZM2 = abs(ZM2 - self.Zmass)
+                                                            if ZM2>minZ2 :
+                                                            #if DZM2<cutDZM2 :
                                                                 
                                                                 DZMT = math.sqrt(DZM1*DZM1 + DZM2*DZM2)
                                                                 if DZMT<minDZMT :
 
                                                                     if DZM1<DZM2 :
                                                                         lost0, lost1 = l0, l1
+                                                                        deltaMassZ = DZM1
                                                                     else :
                                                                         lost0, lost1 = l2, l3
+                                                                        deltaMassZ = DZM2
                                                                     minDZMT = DZMT
                                                                     
             if lost0==-1 or lost1==-1 :
                 return False
-                
-            deltaMassZ = cutDZM1
             
             Lost.append(lost0)
             Lost.append(lost1)
@@ -366,7 +367,7 @@ class mt2Producer(Module):
             if W3>=0:
                 self.out.fillBranch("lep3idx", lepLoose[W3])
 
-        if 'WZ' in self.analysisRegion or 'ttZ' in self.analysisRegion:
+        if 'WZ' in self.analysisRegion or 'ttZ' in self.analysisRegion or 'ZZ' in self.analysisRegion:
             self.out.fillBranch("deltaMassZ",        deltaMassZ)
 
         if self.analysisRegion=='' or self.analysisRegion=='gen' or self.analysisRegion=='reco':
