@@ -81,7 +81,8 @@ def createJESchain_CombJJLNu(type, kind="Up"):
     typeShort = ""
   toreplace = typeShort+kind.lower()  
   chainTemplate = ['do_JESVAR_suffix', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR',
-                  'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR']
+                  'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR',
+                  'MHSemiLepVars_JESVAR', 'MHSemiLepMVA_JESVAR']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
@@ -255,6 +256,28 @@ def addSystChainMembers_CombJJLNu():
           'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
         }
 
+        # MonoHiggs Steps, we only need AK4 JES
+        if jetType == "AK4": 
+            dictionary['MHSemiLepVars_'+mapname] = {
+                'isChain'  : False ,
+                'do4MC'    : True  ,
+                'do4Data'  : True ,
+                'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
+                'declare'  : 'MHSemiLepVars_{0} = lambda : MHSemiLepVars(branch_map="{0}")'.format(mapname),
+                'module'   : 'MHSemiLepVars_{0}()'.format(mapname),
+                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+            }
+            dictionary['MHSemiLepMVA_'+mapname] = {
+                'isChain'  : False ,
+                'do4MC'    : True  ,
+                'do4Data'  : True ,
+                'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map="{0}")'.format(mapname),
+                #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
+                'module'   : 'MHSemiLepMVA_{0}()'.format(mapname),
+                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+            }
+
   for typ in ["ElepT", "MupT", "MET", "fatjetJMS", "fatjetJMR", "fatjetJER",]:
     for kind in ["Up", "Do"]:
       mapname = typ+kind.lower()
@@ -274,7 +297,7 @@ def addSystChainMembers_CombJJLNu():
         'do4Data'    : True  ,
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
         'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
-        'module'     : 'vbs_vars_maker_{0}()',
+        'module'     : 'vbs_vars_maker_{0}()'.format(mapname),
         'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
@@ -328,6 +351,27 @@ def addSystChainMembers_CombJJLNu():
         'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
+      # MonoHiggs Steps
+      dictionary['MHSemiLepVars_'+mapname] = {
+          'isChain'  : False ,
+          'do4MC'    : True  ,
+          'do4Data'  : True ,
+          'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
+          'declare'  : 'MHSemiLepVars_{0} = lambda : MHSemiLepVars(branch_map="{0}")'.format(mapname),
+          'module'   : 'MHSemiLepVars_{0}()'.format(mapname),
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+      }
+      dictionary['MHSemiLepMVA_'+mapname] = {
+          'isChain'  : False ,
+          'do4MC'    : True  ,
+          'do4Data'  : True ,
+          'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+          'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map="{0}")'.format(mapname),
+          #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
+          'module'   : 'MHSemiLepMVA_{0}()'.format(mapname),
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+      }
+
   return dictionary 
 
 
@@ -342,7 +386,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets' : ['JESBase', 
+          'subTargets' : ['JESBase', 'l2Kin_{0}'.format(torep), 
                         ] +
                           createJESchain_CombJJLNu("Total", kind) +
                           createJESchain_CombJJLNu("Absolute", kind) +
@@ -370,7 +414,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'trigMCKeepRun_{0}'.format(torep), 
                         'LeptonSF_{0}'.format(torep),
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
-                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
+                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
+                        'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
@@ -382,7 +427,8 @@ def prepare_CombJJLNu_syst(basename, selection):
           'selection'  : selection,
           'subTargets': ['do_{0}_suffix'.format(torep), 
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
-                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
+                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
+                        'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
@@ -499,7 +545,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom', 'CorrFatJetMC', 'CleanFatJet',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
   # FIXME: check btagPerJet2016, btagPerEvent
@@ -654,7 +700,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty','DressedLeptons','EFTGen'],
                   },
 
 
@@ -751,7 +797,7 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
   'test2018v7' :  {
@@ -805,7 +851,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
-                  'subTargets' : ['PromptParticlesGenVars','GenVar', 'HiggsGenVars', 'ggHTheoryUncertainty', 'DressedLeptons',
+                  'subTargets' : ['PromptParticlesGenVars','GenVar', 'HiggsGenVars', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons',
                                   'baseW'],
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/MCGenOnly_outputbranches.txt'
                },
@@ -1336,7 +1382,7 @@ Steps = {
                   'selection'  : CombJJLNu_preselections["2016"]["MC"],
                   'subTargets' : ['VBSjjlnu_pairing', 'VBSjjlnu_kin' ,
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
-                                 'MHSemiLepVars', 'MHSemiLepMVA'],
+                                  'MHSemiLepVars', 'MHSemiLepMVA'],
                   'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + SemiLepHighMassSamples_2016,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
@@ -1443,13 +1489,6 @@ Steps = {
                   'module'   : 'MHTrigMC()',
                },
 ####
-  'MHSemiLepVars' : { 
-                  'isChain'  : False ,
-                  'do4MC'    : True  ,
-                  'do4Data'  : True ,
-                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
-                  'module'   : 'MHSemiLepVars()',
-               },
   'MH2HDMaBDTsplit' : { 
                   'isChain'  : False ,
                   'do4MC'    : True  ,
@@ -1457,14 +1496,21 @@ Steps = {
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.MVAsplitter' ,
                   'module'   : 'MVAsplitter("RPLME_SAMPLE", "LatinoAnalysis/NanoGardener/python/data/MH2HDMaBDTsplitter_cfg.py", "MH2HDMaBDT")',
                },
+  'MHSemiLepVars' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
+                  'module'   : 'MHSemiLepVars()',
+               },
   'MHSemiLepMVA' : { 
                   'isChain'  : False ,
                   'do4MC'    : True  ,
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
-                  'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py")',
+                  'declare'  : 'MHSemiLepMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py")',
                   #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
-                  'module'   : 'MonoHiggsMVA()',
+                  'module'   : 'MHSemiLepMVA()',
                },
 
   'MHskim4BDT' : { 
@@ -1647,6 +1693,29 @@ Steps = {
                                   'GluGluHToWWTo2L2NuPowhegNNLOPS_M125_private',
                                   'GluGluHToWWTo2L2NuPowhegNNLOPS_M125',
                                   'GGHjjToWWTo2L2Nu_minloHJJ_M125'
+                                  ]
+                  },    
+   'qqHTheoryUncertainty':  {
+                   'isChain'    : False ,
+                   'do4MC'      : True  ,
+                   'do4Data'    : False  ,
+                   'import'     : 'LatinoAnalysis.NanoGardener.modules.QQHUncertaintyProducer' ,
+                   'declare'    : 'qqHUncertaintyProducer = lambda : QQHUncertaintyProducer()',
+                   'module'     : 'qqHUncertaintyProducer()',
+                   'onlySample' : [
+                                  'VBFHToWWTo2L2NuPowheg_M125',
+                                  'VBFHToWWTo2L2Nu_M125',
+                                  'VBFHToWWTo2L2NuPowheg_M125_CP5Up',
+                                  'VBFHToWWTo2L2Nu_M125_CP5Up',
+                                  'VBFHToWWTo2L2NuPowheg_M125_CP5Down',
+                                  'VBFHToWWTo2L2Nu_M125_CP5Down',
+                                  'HWminusJ_HToWW_LNu_M125',
+                                  'HWplusJ_HToWW_LNu_M125',
+                                  'HWminusJ_HToWW_M125',
+                                  'HWplusJ_HToWW_M125',
+                                  'HZJ_HToWWTo2L2Nu_M125',
+                                  'HZJ_HToWWTo2L2Nu_ZTo2L_M125',
+                                  'HZJ_HToWW_M125'
                                   ]
                   },    
 
@@ -4072,6 +4141,7 @@ Steps = {
                                   #### DY
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
                                   'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2','DYJetsToLL_M-10to50-LO-ext1',
+                                  'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50-LO_ext2',
                                    # ... Low Mass HT
                                   'DYJetsToLL_M-4to50_HT-100to200',
                                   'DYJetsToLL_M-4to50_HT-100to200-ext1',
@@ -4688,7 +4758,7 @@ Steps = {
 Steps.update(addJESchainMembers())
 Steps.update(addSystChainMembers_CombJJLNu())
 
-# ## ADD systematics for VBSjjlnu & HMjjlnu analysis
+# ## ADD systematics for VBSjjlnu & HMjjlnu analysis & MonoHiggsSemiLep
 Steps.update(prepare_CombJJLNu_syst("MCCombJJLNu2016", CombJJLNu_preselections["2016"]["MC"]))
 Steps.update(prepare_CombJJLNu_syst("MCCombJJLNu2017", CombJJLNu_preselections["2017"]["MC"]))
 Steps.update(prepare_CombJJLNu_syst("MCCombJJLNu2018", CombJJLNu_preselections["2018"]["MC"]))

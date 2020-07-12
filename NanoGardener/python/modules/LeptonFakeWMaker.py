@@ -487,6 +487,10 @@ class LeptonFakeWMaker(Module):
             for mupt in [10,15,20,25,30,35,45]:
                 for elept in [25,35,45]:
                     fakeVarExt.append("_mu{}_ele{}".format(mupt,elept))
+                    fakeVarExt.append("_mu{}_ele{}_statMuUp".format(mupt,elept))
+                    fakeVarExt.append("_mu{}_ele{}_statMuDown".format(mupt,elept))
+                    fakeVarExt.append("_mu{}_ele{}_statElUp".format(mupt,elept))
+                    fakeVarExt.append("_mu{}_ele{}_statElDown".format(mupt,elept))
             
 
         for iTag in self.FakeWeights:
