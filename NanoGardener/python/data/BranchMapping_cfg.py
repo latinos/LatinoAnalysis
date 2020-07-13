@@ -450,10 +450,6 @@ _JES_branches += [
 ]
 
 _Fatjet_syst_branches = [
-  'FatJet_pt',
-  'FatJet_mass',
-  'FatJet_msoftdrop',
-
   'nCleanFatJet',
   'nCleanJetNotFat',
   'CleanFatJet_pt',
