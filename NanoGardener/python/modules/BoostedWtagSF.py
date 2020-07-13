@@ -86,8 +86,8 @@ class BoostedWtagSF(Module):
             fj_tau1          = fj.tau1
             fj_tau2          = fj.tau2
             # Get branches with prefixes for Jes,jmr,jer
-            fj_softdrop_mass = getattr(fj, "msoftdrop" + self._input_branch_prefix)
-            if "jes" in self._input_branch_prefix or "jer" in self._input_branch_prefix :
+            fj_softdrop_mass = getattr(fj, 'msoftdrop' + self._input_branch_prefix)
+            if 'jes' in self._input_branch_prefix or 'jer' in self._input_branch_prefix :
                 fj_pt = getattr(fj, "pt" + self._input_branch_prefix) # for systematic variations
             else:
                 fj_pt  = fj.pt  

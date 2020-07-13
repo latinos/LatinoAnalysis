@@ -7,13 +7,12 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 from LatinoAnalysis.NanoGardener.modules.PairingUtils import *
-from LatinoAnalysis.NanoGardener.data.VBSjjlnu_pairing_cuts import pairing_cuts
 
 nearest_massWZ = lambda jets: nearest_mass_pair(jets,85.7863)
 nearest_massWZ.__name__ = "nearest_massWZ"
 
 # Require at least one jet in the pair to have a minimum Pt of 50 GeV
-max_mjj_pair_minpt50 = lambda jets: max_mjj_pair_minpt(jets, 50)
+max_mjj_pair_minpt50 = lambda jets: max_mjj_pair_minpt(jets, 50.)
 
 # The dictionary define the name of the tagging strategy and functions to 
 # use. The order of the list defines the order of the tagging of VBS and V jets
@@ -169,7 +168,7 @@ class VBSjjlnu_JetPairing(Module):
         A list of indexes in the collection of CleanJet is returned as a reference. 
 
         Pt > 30 GeV is required for all jets. At lease one jet with Pt > 50 is required
-        Selection of jets in 2017 is performed.
+        PuID Selection of jets in 2017 is performed.
         '''
         jets = []
         coll_ids = []
@@ -187,13 +186,13 @@ class VBSjjlnu_JetPairing(Module):
             passcut = True
             # We need to have at least 1 jet with 50 GeV. Since they are ordered in Pt we can do..
             if len(jets) == 0:
-                if pt < 50: passcut = False
+                if pt < 50. : passcut = False
             else:
-                if pt < 30: passcut = False
+                if pt < 30. : passcut = False
             # Remove non tight PU Id jets WITH LESS THAN 50 GeV of Pt in 2017 in the horn region
-            if self.year == 2017 and abs(eta) > 2.65 and abs(eta) < 3.139 and pt < 50:
+            if self.year == 2017 and abs(eta) > 2.65 and abs(eta) < 3.139 and pt < 50. :
                 # Ask for tight PU id
-                if not bool(puId & (1 << 0)): 
+                if not bool(puid & (1 << 0)): 
                     passcut = False
                     if self.debug: 
                         print "Jet removed for PUID in horn index: ", jetindex, " CUT > pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
@@ -202,7 +201,6 @@ class VBSjjlnu_JetPairing(Module):
             
             vec = TLorentzVector()
             vec.SetPtEtaPhiM(pt, eta, phi, mass)
-            # check if different from the previous one
             if self.debug:
                 print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
             jets.append(vec)
