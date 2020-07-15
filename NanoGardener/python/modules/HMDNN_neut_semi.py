@@ -42,8 +42,12 @@ class ApplyDNN_Neutrino_Semi(Module):
 
         event = mappedEvent(event, mapname=self._branch_map)
 
-        if self.GetValue(event, "HM_nCleanFatJetPassMBoosted") >= 1:
+        try:
           wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt[0]")
+          ValidEntry=True
+        except IndexError:
+          ValidEntry=False
+        if self.GetValue(event, "HM_nCleanFatJetPassMBoosted") >= 1 and ValidEntry:
           weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta[0]")
           wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi[0]")
           wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass[0]")
@@ -103,10 +107,10 @@ class ApplyDNN_Neutrino_Semi(Module):
           jeteta2 = 0.0
           jetphi2 = 0.0
 
-        if jetidx1==0 and jetidx2==1:
-          mjj = self.GetValue(event, "mjj")
-          detajj = self.GetValue(event, "detajj")
-        elif self.GetValue(event, "nCleanJet")>=1+jetidx2:
+        #if jetidx1==0 and jetidx2==1:
+        #  mjj = self.GetValue(event, "mjj")
+        #  detajj = self.GetValue(event, "detajj")
+        if self.GetValue(event, "nCleanJet")>=1+jetidx2:
           J1 = ROOT.TLorentzVector()
           J2 = ROOT.TLorentzVector()
           J1.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx1)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx1)+"]]"))
