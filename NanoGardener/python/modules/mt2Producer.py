@@ -414,6 +414,9 @@ class mt2Producer(Module):
                         ptmiss = ptmiss_gen
                         mt2ll = mt2ll_gen
 
+        if self.metSystematic!='nom' and self.dataType=='fastsim': 
+            if ptmiss<100.: return False
+
         self.out.fillBranch("ptmiss",     ptmiss)
         self.out.fillBranch("ptmiss_phi", ptmiss_phi)
         self.out.fillBranch("mt2ll",      mt2ll)
