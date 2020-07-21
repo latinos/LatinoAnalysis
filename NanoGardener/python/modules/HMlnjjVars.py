@@ -57,8 +57,9 @@ class HMlnjjVarsClass(Module):
 
         ##For Boosted Selection ##For FatJet
         self.list_WJetVar=['pt','eta','phi','mass','tau21','WptOvHfatM','HlnFat_mass','CFatJetIdx']
+        self.suffix = '' if (self._branch_map=='' or 'fatjet' not in self._branch_map) else '_'+self._branch_map
         for myvar in self.list_WJetVar:
-            self.out.branch("HM_CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='HM_nCleanFatJetPassMBoosted')
+            self.out.branch("HM_CleanFatJetPassMBoosted_"+myvar, 'F', lenVar='HM_nCleanFatJetPassMBoosted'+self.suffix)
 
         # For Boosted-like selection, not requiring tau21 cut
         self.out.branch("HM_idxWfat_noTau21Cut", "I")
@@ -385,6 +386,7 @@ class HMlnjjVarsClass(Module):
         ##--Boosted FatJet--##
         for myvar in self.list_WJetVar:
             self.out.fillBranch( "HM_CleanFatJetPassMBoosted_"+myvar , CleanFatJetPassMBoosted[myvar])
+        self.out.fillBranch( "HM_nCleanFatJetPassMBoosted"  , len(CleanFatJetPassMBoosted['pt']) )
 
         self.out.fillBranch( "HM_idxWfat_noTau21Cut"   , idxWfat_noTau21Cut )
         self.out.fillBranch( "HM_HlnFatMass_noTau21Cut", HlnFatMass_noTau21Cut)

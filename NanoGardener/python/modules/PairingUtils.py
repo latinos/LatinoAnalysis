@@ -78,11 +78,11 @@ def max_mjj_pair_minpt(vectors, minpt):
     l = []
     for i ,k  in combinations(range(len(vectors)),2):
         # exclude the pair if both jets have pt less than the minimum
-        if vectors[i].Pt() < minpt and vectors[k].Pt() < minpt: continue
+        if (vectors[i].Pt() - minpt) < -0.001 and (vectors[k].Pt() - minpt) < -0.001: continue
         l.append( ([i,k], (vectors[i]+ vectors[k]).M() ))
     l = sorted(l, key=itemgetter(1), reverse=True)
     if len(l) == 0:
-        print("No pairs found!")
+        print ">>> No pairs found!"
         return [-1,-1]
     return l[0][0]
 

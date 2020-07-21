@@ -358,6 +358,10 @@ _JES_branches += [
   'VBS_jets_maxPt_massWZ',
   'VBS_jets_massWZ_maxmjj',
   'VBS_jets_massWZ_maxPt',
+  'VBS_jets_maxmjj',
+  'VBS_jets_maxPt',
+  'V_jets_maxmjj',
+  'V_jets_maxPt',
   'V_jets_maxmjj_massWZ',
   'V_jets_maxmjj_maxPt',
   'V_jets_maxPt_massWZ',
@@ -450,10 +454,6 @@ _JES_branches += [
 ]
 
 _Fatjet_syst_branches = [
-  'FatJet_pt',
-  'FatJet_mass',
-  'FatJet_msoftdrop',
-
   'nCleanFatJet',
   'nCleanJetNotFat',
   'CleanFatJet_pt',
@@ -471,6 +471,10 @@ _Fatjet_syst_branches = [
   'VBS_jets_maxPt_massWZ',
   'VBS_jets_massWZ_maxmjj',
   'VBS_jets_massWZ_maxPt',
+  'VBS_jets_maxmjj',
+  'VBS_jets_maxPt',
+  'V_jets_maxmjj',
+  'V_jets_maxPt',
   'V_jets_maxmjj_massWZ',
   'V_jets_maxmjj_maxPt',
   'V_jets_maxPt_massWZ',
