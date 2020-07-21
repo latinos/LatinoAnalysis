@@ -9,12 +9,14 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 class mt2Producer(Module):
 
     ###
-    def __init__(self, analysisRegion = '',  dataType = 'mc', looseEleWP = '', looseMuoWP = ''):
+    def __init__(self, analysisRegion = '',  dataType = 'mc', looseEleWP = '', looseMuoWP = '', metType = 'type1pf', metSystematic = 'nom'):
 
         self.analysisRegion = analysisRegion
         self.dataType = dataType
         self.looseEleWP = looseEleWP
         self.looseMuoWP = looseMuoWP
+        self.metType = metType
+        self.metSystematic = metSystematic
 
         self.Zmass = 91.1876
 
@@ -173,11 +175,20 @@ class mt2Producer(Module):
         if nLooseLeptons<2: return False
  
         ptmissvec3 = ROOT.TVector3()
-        if hasattr(event, 'METFixEE2017_pt_nom'):
-            ptmissvec3.SetPtEtaPhi(event.METFixEE2017_pt_nom, 0., event.METFixEE2017_phi_nom) 
-        else:
-            ptmissvec3.SetPtEtaPhi(event.MET_pt, 0., event.MET_phi)
-        
+
+        metBranch = 'MET' 
+        if hasattr(event, 'METFixEE2017_pt_nom'): metBranch = 'METFixEE2017' 
+        if self.metType=='puppi':  metBranch = 'PuppiMET' 
+
+        metSystem = '_'+self.metSystematic 
+        if not hasattr(event, metBranch+'_pt'+metSystem):
+            if self.metSystematic=='nom':
+                metSystem = ''
+            else:    
+                raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
+
+        ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
+
         # Looking for the leptons to turn into neutrinos
         Lost = []
         Skip = []
@@ -336,6 +347,9 @@ class mt2Producer(Module):
                 if W0==-1 : W0 = iLep
                 elif W1==-1 : W1 = iLep
 
+        if self.metSystematic!='nom' and self.dataType!='fastsim': 
+            if ptmissvec3.Pt()<100.: return False
+
         if lepVect[W0].Pt()<25. : return False
         if lepVect[W1].Pt()<20. : return False
 
@@ -399,7 +413,6 @@ class mt2Producer(Module):
                     elif self.analysisRegion=='gen':
                         ptmiss = ptmiss_gen
                         mt2ll = mt2ll_gen
- 
 
         self.out.fillBranch("ptmiss",     ptmiss)
         self.out.fillBranch("ptmiss_phi", ptmiss_phi)
