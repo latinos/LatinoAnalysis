@@ -80,7 +80,7 @@ def createJESchain_CombJJLNu(type, kind="Up"):
   if type == "Total":
     typeShort = ""
   toreplace = typeShort+kind.lower()  
-  chainTemplate = ['do_JESVAR_suffix', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR',
+  chainTemplate = ['do_JESVAR_suffix', 'l2Kin_JESVAR', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR',
                   'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR',
                   'MHSemiLepVars_JESVAR', 'MHSemiLepMVA_JESVAR']
   chain = []
@@ -386,7 +386,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'do4MC'      : True  ,
           'do4Data'    : False  ,
           'selection'  : selection,
-          'subTargets' : ['JESBase', 'l2Kin_{0}'.format(torep), 
+          'subTargets' : ['JESBase', 
                         ] +
                           createJESchain_CombJJLNu("Total", kind) +
                           createJESchain_CombJJLNu("Absolute", kind) +
@@ -414,7 +414,7 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'trigMCKeepRun_{0}'.format(torep), 
                         'LeptonSF_{0}'.format(torep),
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
-                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
+                        'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
                         'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
@@ -427,7 +427,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'selection'  : selection,
           'subTargets': ['do_{0}_suffix'.format(torep), 
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
-                        'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
+                        'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
                         'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
@@ -440,7 +440,7 @@ def prepare_CombJJLNu_syst(basename, selection):
           'selection'  : selection,
           'subTargets': ['CorrFatJetMC', 'CleanFatJet_{0}'.format(torep), 'BoostedWtagSF_{0}'.format(torep),
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep),  
-                        'whadJetSel_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
+                        'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
                         ],
           'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
@@ -2794,6 +2794,126 @@ Steps = {
               },
 
 
+## ------- MODULES: Recoil corrections
+
+  'recoilCorr'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.RecoilCorr',
+                  'declare'    : 'Recoil = lambda : RecoilCorr(RPLME_YEAR)',
+                  'module'     : 'Recoil()',
+                  'onlySample' : ['DYJetsToLL_M-5to50-LO',
+                                  'DYJetsToLL_M-10to50-LO',
+                                  'DYJetsToLL_M-10to50-LO_ext1',
+                                  'DYJetsToLL_M-10to50-LO_ext2',
+                                  'DYJetsToLL_M-10to50-LO_newpmx',
+                                  'DYJetsToLL_M-10to50',
+                                  'DYJetsToLL_M-10to50_ext1',
+                                  'DYJetsToLL_M-50-LO',
+                                  'DYJetsToLL_M-50-LO_ext1',
+                                  'DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_ext1',
+                                  'DYJetsToLL_M-50_ext2',
+                                  'DYJetsToLL_M-50_newpmx',
+                                  'DYJetsToLL_M-50-UEup',
+                                  'DYJetsToLL_M-50-UEdo',
+                                  'DYJetsToLL_M-50-PSup',
+                                  'DYJetsToLL_M-50-PSdo',
+                                  'DYJetsToLL_M-4to50_HT-100to200',
+                                  'DYJetsToLL_M-4to50_HT-100to200_ext1',
+                                  'DYJetsToLL_M-4to50_HT-100to200_newpmx',
+                                  'DYJetsToLL_M-4to50_HT-200to400',
+                                  'DYJetsToLL_M-4to50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-4to50_HT-200to400_newpmx',
+                                  'DYJetsToLL_M-4to50_HT-400to600',
+                                  'DYJetsToLL_M-4to50_HT-400to600_ext1',
+                                  'DYJetsToLL_M-4to50_HT-600toInf',
+                                  'DYJetsToLL_M-4to50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-5to50_HT-70to100', 
+                                  'DYJetsToLL_M-5to50_HT-100to200',
+                                  'DYJetsToLL_M-5to50_HT-100to200_ext1',
+                                  'DYJetsToLL_M-5to50_HT-200to400',
+                                  'DYJetsToLL_M-5to50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-5to50_HT-400to600',
+                                  'DYJetsToLL_M-5to50_HT-400to600_ext1',
+                                  'DYJetsToLL_M-5to50_HT-600toinf_ext1',
+                                  'DYJetsToLL_M-5to50_HT-600toinf',
+                                  'DYJetsToLL_M-50_HT-70to100',
+                                  'DYJetsToLL_M-50_HT-100to200',
+                                  'DYJetsToLL_M-50_HT-100to200_ext1',
+                                  'DYJetsToLL_M-50_HT-100to200_newpmx',
+                                  'DYJetsToLL_M-50_HT-200to400',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-400to600',
+                                  'DYJetsToLL_M-50_HT-400to600_ext1',
+                                  'DYJetsToLL_M-50_HT-400to600_ext2',
+                                  'DYJetsToLL_M-50_HT-400to600_newpmx',
+                                  'DYJetsToLL_M-50_HT-600to800',
+                                  'DYJetsToLL_M-50_HT-800to1200',
+                                  'DYJetsToLL_M-50_HT-1200to2500',
+                                  'DYJetsToLL_M-50_HT-2500toinf'],
+              },
+
+   'recoilDYMVA' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'selection'  : '"(nLepton>=2)"' ,
+                  'subTargets' : ['recoilCorr','l2Kin','DYMVA'],
+                  'onlySample' : ['DYJetsToLL_M-5to50-LO',
+                                  'DYJetsToLL_M-10to50-LO',
+                                  'DYJetsToLL_M-10to50-LO_ext1',
+                                  'DYJetsToLL_M-10to50-LO_ext2',
+                                  'DYJetsToLL_M-10to50-LO_newpmx',
+                                  'DYJetsToLL_M-10to50',
+                                  'DYJetsToLL_M-10to50_ext1',
+                                  'DYJetsToLL_M-50-LO',
+                                  'DYJetsToLL_M-50-LO_ext1',
+                                  'DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_ext1',
+                                  'DYJetsToLL_M-50_ext2',
+                                  'DYJetsToLL_M-50_newpmx',
+                                  'DYJetsToLL_M-50-UEup',
+                                  'DYJetsToLL_M-50-UEdo',
+                                  'DYJetsToLL_M-50-PSup',
+                                  'DYJetsToLL_M-50-PSdo',
+                                  'DYJetsToLL_M-4to50_HT-100to200',
+                                  'DYJetsToLL_M-4to50_HT-100to200_ext1',
+                                  'DYJetsToLL_M-4to50_HT-100to200_newpmx',
+                                  'DYJetsToLL_M-4to50_HT-200to400',
+                                  'DYJetsToLL_M-4to50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-4to50_HT-200to400_newpmx',
+                                  'DYJetsToLL_M-4to50_HT-400to600',
+                                  'DYJetsToLL_M-4to50_HT-400to600_ext1',
+                                  'DYJetsToLL_M-4to50_HT-600toInf',
+                                  'DYJetsToLL_M-4to50_HT-600toInf_ext1',
+                                  'DYJetsToLL_M-5to50_HT-70to100',
+                                  'DYJetsToLL_M-5to50_HT-100to200',
+                                  'DYJetsToLL_M-5to50_HT-100to200_ext1',
+                                  'DYJetsToLL_M-5to50_HT-200to400',
+                                  'DYJetsToLL_M-5to50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-5to50_HT-400to600',
+                                  'DYJetsToLL_M-5to50_HT-400to600_ext1',
+                                  'DYJetsToLL_M-5to50_HT-600toinf_ext1',
+                                  'DYJetsToLL_M-5to50_HT-600toinf',
+                                  'DYJetsToLL_M-50_HT-70to100',
+                                  'DYJetsToLL_M-50_HT-100to200',
+                                  'DYJetsToLL_M-50_HT-100to200_ext1',
+                                  'DYJetsToLL_M-50_HT-100to200_newpmx',
+                                  'DYJetsToLL_M-50_HT-200to400',
+                                  'DYJetsToLL_M-50_HT-200to400_ext1',
+                                  'DYJetsToLL_M-50_HT-400to600',
+                                  'DYJetsToLL_M-50_HT-400to600_ext1',
+                                  'DYJetsToLL_M-50_HT-400to600_ext2',
+                                  'DYJetsToLL_M-50_HT-400to600_newpmx',
+                                  'DYJetsToLL_M-50_HT-600to800',
+                                  'DYJetsToLL_M-50_HT-800to1200',
+                                  'DYJetsToLL_M-50_HT-1200to2500',
+                                  'DYJetsToLL_M-50_HT-2500toinf'],
+              },
+
+
 ## ------- MODULES: Kinematic
 
   'l2Kin'    : {
@@ -4029,7 +4149,7 @@ Steps = {
                     'do4MC'      : True  ,
                     'do4Data'    : True  ,
                     'import'     : 'LatinoAnalysis.NanoGardener.modules.BoostedWtagSF',
-                    'declare'    : 'boostedWtagsf_jmsDo = lambda : BoostedWtagSF(input_branch_suffix="jmsDo",output_branch_map="fatjetJMSdo", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)',
+                    'declare'    : 'boostedWtagsf_jmsDo = lambda : BoostedWtagSF(input_branch_suffix="jmsDown",output_branch_map="fatjetJMSdo", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)',
                     'module'     : 'boostedWtagsf_jmsDo()'
       },
 
@@ -4047,7 +4167,7 @@ Steps = {
                     'do4MC'      : True  ,
                     'do4Data'    : True  ,
                     'import'     : 'LatinoAnalysis.NanoGardener.modules.BoostedWtagSF',
-                    'declare'    : 'boostedWtagsf_jmrDo = lambda : BoostedWtagSF(input_branch_suffix="jmrDo",output_branch_map="fatjetJMRdo", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)',
+                    'declare'    : 'boostedWtagsf_jmrDo = lambda : BoostedWtagSF(input_branch_suffix="jmrDown",output_branch_map="fatjetJMRdo", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)',
                     'module'     : 'boostedWtagsf_jmrDo()'
       },
 
@@ -4065,7 +4185,7 @@ Steps = {
                     'do4MC'      : True  ,
                     'do4Data'    : True  ,
                     'import'     : 'LatinoAnalysis.NanoGardener.modules.BoostedWtagSF',
-                    'declare'    : 'boostedWtagsf_jerDo = lambda : BoostedWtagSF(input_branch_suffix="jerDo",output_branch_map="fatjetJERdo", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)',
+                    'declare'    : 'boostedWtagsf_jerDo = lambda : BoostedWtagSF(input_branch_suffix="jerDown",output_branch_map="fatjetJERdo", year="RPLME_YEAR", jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8)',
                     'module'     : 'boostedWtagsf_jerDo()'
       },
 
@@ -4243,7 +4363,7 @@ Steps = {
                   'subTargets' : ['DYMVA','MonoHiggsMVA','JJHEFT'], 
                   'excludeSample' : LNuQQSamples
                 },
- 
+
 
 #muWP='cut_Tight80x'
 #eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']

@@ -2,6 +2,9 @@
 # call to branches have to be in the form event.branchName
 # if you want to use logical operators, the have to be the python ones (i.e "and" not " and ")
 
+from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import ElectronWP
+from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import MuonWP
+
 formulas = {}
 
 # from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Moriond_2018
@@ -26,11 +29,6 @@ formulas['XSWeight'] = 'event.baseW*\
                         if hasattr(event, \'genWeight\') else event.baseW'
 
 
-#muWP='cut_Tight_HWWW'
-#eleWPlist = ['mvaFall17V1Iso_WP90', 'mvaFall17V1Iso_WP90_SS','mvaFall17V2Iso_WP90', 'mvaFall17V2Iso_WP90_SS']
-#eleWPlist += ['cutFall17V1Iso_Tight','cutFall17V1Iso_Tight_SS','cutFall17V2Iso_Tight','cutFall17V2Iso_Tight_SS']
-from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import ElectronWP
-from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import MuonWP
 muWPlist = [wp for wp in MuonWP['Full2017v7']['TightObjWP']]
 eleWPlist = [wp for wp in ElectronWP['Full2017v7']['TightObjWP']]
 
