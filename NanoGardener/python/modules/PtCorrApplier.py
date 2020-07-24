@@ -23,7 +23,12 @@ class PtCorrApplier(Module):
         self.has_mass = False
         self.backup_coll = []
         self.skip_sumEt = False
-        prt_str = 'PtCorrApplier: CollectionToCorrect = ' + self.CollTC + ', CorrectionsToAplly = ' + self.CorrSrc + ', CorrectionType = ' + self.kind + ', PropagateToMET = ' + str(self.doMET)
+        self.jerApplied = True if "JER" in self._suffix else False 
+        if not self.jerApplied:
+            prt_str = 'PtCorrApplier: CollectionToCorrect = ' + self.CollTC + ', CorrectionsToAplly = ' + self.CorrSrc + ', CorrectionType = ' + self.kind + ', PropagateToMET = ' + str(self.doMET)
+        else:
+            self.doMET = False 
+            prt_str = 'PtCorrApplier: JER Corrections already applied. CollectionToCopy = ' + self.CollTC + ', CorrectionType = ' + self.kind + ', PropagateToMET = ' + str(self.doMET)
         print(prt_str)
 
     def beginJob(self):
@@ -49,7 +54,8 @@ class PtCorrApplier(Module):
             bname = br.GetName()
             btype = Type_dict[br.GetListOfLeaves()[0].GetTypeName()]
             # GIULIO: we don't want to pick CleanJet_pt_JESup not CleanJet_jecUncert
-            if re.match('\A'+self.CollTC+'_', bname) and len(bname.split("_"))==2 and "jecUncert" not in bname:
+            # KELLO: will exclude CleanJet_pt_JERup, CleanJet_corr_JER as well  
+            if re.match('\A'+self.CollTC+'_', bname) and len(bname.split("_"))==2 and "jecUncert" not in bname and "corr_JER" not in bname:
                 if btype not in self.CollBr: self.CollBr[btype] = []
                 self.CollBr[btype].append(bname)
                 self.out.branch(bname+self._suffix, btype, lenVar='n'+self.CollTC)
@@ -61,6 +67,7 @@ class PtCorrApplier(Module):
                         bcoll = split_name[1][0:-3]
                         #self.backup_coll.append(bcoll.capitalize())
                         backup_colls.append(bcoll)
+                
         for br in oBrList:
             bname = br.GetName()
             for bcoll in backup_colls:
@@ -114,9 +121,21 @@ class PtCorrApplier(Module):
                 
         # Create new pt
         new_pt = []
+        new_mass = []  
         for iObj in range(nColl):
-            if self.isUp: tmp_pt = coll[iObj]['pt'] + coll[iObj][self.CorrSrc]*coll[iObj]['pt']
-            else: tmp_pt = coll[iObj]['pt'] - coll[iObj][self.CorrSrc]*coll[iObj]['pt']
+            if not self.jerApplied:
+                if self.isUp:
+                    tmp_pt = coll[iObj]['pt'] + coll[iObj][self.CorrSrc]*coll[iObj]['pt']
+                else:
+                    tmp_pt = coll[iObj]['pt'] - coll[iObj][self.CorrSrc]*coll[iObj]['pt'] 
+            else:
+                if self.isUp:
+                    tmp_pt = coll[iObj]['pt_JERUp']
+                    tmp_mass = coll[iObj]['mass_JERUp'] 
+                else: 
+                    tmp_pt = coll[iObj]['pt_JERDown']
+                    tmp_mass = coll[iObj]['mass_JERDown'] 
+                new_mass.append(tmp_mass)        
             new_pt.append(tmp_pt)
 
             # MET
@@ -154,6 +173,9 @@ class PtCorrApplier(Module):
             for bname in self.CollBr[typ]:
                 if '_pt' in bname: 
                     temp_v = [new_pt[idx] for idx in order]
+                    self.out.fillBranch(bname+self._suffix, temp_v)
+                elif '_mass' in bname and self.jerApplied and len(new_mass)>0:
+                    temp_v = [new_mass[idx] for idx in order]
                     self.out.fillBranch(bname+self._suffix, temp_v)
                 else:
                     temp_b = bname.replace(self.CollTC+'_', '')
