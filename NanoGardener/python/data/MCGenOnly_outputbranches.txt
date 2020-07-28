@@ -14,9 +14,9 @@ keep GenMET_*
 keep Pileup_*
 keep nGenDressedLepton
 keep GenDressedLepton_*
-kepp *LeptonGen_*
-kepp *NeutrinoGen_*
-kepp *PhotonGen_*
+keep *LeptonGen_*
+keep *NeutrinoGen_*
+keep *PhotonGen_*
 keep HTXS_*
 keep ggH*
 keep qqH*
