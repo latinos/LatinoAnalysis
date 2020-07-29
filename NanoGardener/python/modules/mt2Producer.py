@@ -14,7 +14,7 @@ class mt2Producer(Module):
         self.analysisRegion = analysisRegion
         self.suffix = ''
         if 'region' not in filterRegion:
-            if analysisRegion!='' and analysisRegion!='SameSign':
+            if analysisRegion!='' and analysisRegion!='dilepton':
                 self.suffix = '_'+analysisRegion
         self.metKind = metKind
         self.looseEleWP = looseEleWP
@@ -251,7 +251,7 @@ class mt2Producer(Module):
 
                     return True
 
-            if 'region' not in filterRegion:
+            if 'region' not in self.filterRegion:
                 
                 self.out.fillBranch("mt2llfake0",             -1.)
                 self.out.fillBranch("mt2llfake1",             -1.)
@@ -382,7 +382,7 @@ class mt2Producer(Module):
                     if W0==-1 : W0 = iLep
                     elif W1==-1 : W1 = iLep
 
-            if 'syst' in filterRegion and self.isSystematic and self.metKind=='reco': 
+            if 'syst' in self.filterRegion and self.isSystematic and self.metKind=='reco': 
                 if ptmissvec3.Pt()<100.: return False
 
             if lepVect[W0].Pt()>=25. and lepVect[W1].Pt()>=20.:
@@ -411,7 +411,7 @@ class mt2Producer(Module):
                         channel *= -1
 
         # Apply filter if required            
-        if 'region' in filterRegion and lep0idx<0:
+        if 'region' in self.filterRegion and lep0idx<0:
             return False
 
         if self.metKind=='fast' or self.metKind=='gen':
@@ -440,7 +440,7 @@ class mt2Producer(Module):
                 ptmiss = ptmiss_gen
                 mt2ll = mt2ll_gen
 
-            if 'syst' in filterRegion and self.isSystematic: 
+            if 'syst' in self.filterRegion and self.isSystematic: 
                 if ptmiss<100.: return False
 
         self.out.fillBranch("mll"+self.suffix,        mll)
