@@ -338,16 +338,16 @@ class mt2Producer(Module):
                                                                 if ZM2>minZ2 :
                                                                 #if DZM2<cutDZM2 :
                                                                 
-                                                                DZMT = math.sqrt(DZM1*DZM1 + DZM2*DZM2)
-                                                                if DZMT<minDZMT :
+                                                                    DZMT = math.sqrt(DZM1*DZM1 + DZM2*DZM2)
+                                                                    if DZMT<minDZMT :
 
-                                                                    if DZM1<DZM2 :
-                                                                        lost0, lost1 = l0, l1
-                                                                        deltaMassZ = DZM1
-                                                                    else :
-                                                                        lost0, lost1 = l2, l3
-                                                                        deltaMassZ = DZM2
-                                                                    minDZMT = DZMT
+                                                                        if DZM1<DZM2 :
+                                                                            lost0, lost1 = l0, l1
+                                                                            deltaMassZ = DZM1
+                                                                        else :
+                                                                            lost0, lost1 = l2, l3
+                                                                            deltaMassZ = DZM2
+                                                                        minDZMT = DZMT
                                                                     
                 if lost0>-1 and lost1>-1 :
             
