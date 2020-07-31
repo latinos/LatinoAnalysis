@@ -67,7 +67,7 @@ class mt2Producer(Module):
                 self.out.branch("lep2idx"+self.suffix,    "I")
                 self.out.branch("deltaMassZ"+self.suffix, "F")
             
-                if 'ttZ' in self.analysisRegion or self.analysisRegion or 'ZZ' in self.analysisRegion:
+                if 'ttZ' in self.analysisRegion or 'ZZ' in self.analysisRegion:
                     self.out.branch("lep3idx"+self.suffix, "I")
 
         if self.metKind=='fast' and not self.isSystematic:
