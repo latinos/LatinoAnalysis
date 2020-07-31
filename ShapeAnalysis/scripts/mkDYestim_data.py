@@ -9,7 +9,7 @@ import math
 #from ROOT import *
 #from ROOT import gBenchmark, gStyle, gROOT, TStyle
 from ROOT import TCanvas, TPad, TFile, TPaveText, TLegend
-from ROOT import TH1F, TF1, TGraphErrors, TMultiGraph
+from ROOT import TH1D, TH1F, TF1, TGraphErrors, TMultiGraph
 
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
