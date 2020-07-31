@@ -87,6 +87,12 @@ class LawnMower:
         #
         # find list of cuts that have been combined 
         #
+
+        folder_fit_name = "prefit"
+        if self._kind == 'p' :
+          folder_fit_name = "prefit"  
+        elif  self._kind == 'P' :
+          folder_fit_name = "postfit" 
      
         cuts = []
         folders = []
@@ -98,7 +104,7 @@ class LawnMower:
           obj = key.ReadObj()
           #print " --> " , obj.IsA().GetName()
           if (obj.IsA().GetName() == "TDirectoryFile") :
-            if "_prefit" in obj.GetName():
+            if ("_" + folder_fit_name) in obj.GetName():
               #print "obj.GetName() = " , obj.GetName() 
               cuts.append (obj.GetName()[:-7])   # length of "_prefit" = 7
               folders.append(obj)
@@ -117,13 +123,6 @@ class LawnMower:
 
         self._outFile.cd ( self._cutName + "/" + self._variable )
 
-        folder_fit_name = "prefit"
-        if self._kind == 'p' :
-          folder_fit_name = "prefit"  
-        elif  self._kind == 'P' :
-          folder_fit_name = "postfit" 
-        
-
         #
         # get the different histograms in the proper folders and add them if they have the same name
         # namely, if it is the same process
@@ -134,24 +133,17 @@ class LawnMower:
           keys = folder.GetListOfKeys()
           for key in keys:
             obj = key.ReadObj()
-            print " obj ----> " , obj
-            print "           " , obj.IsA().GetName()
-            print "           " , obj.InheritsFrom("TH1")
             if (obj.IsA().GetName() != "TProfile"
                  and 
                  obj.InheritsFrom("TH1")
                ) :
-              print " it's an histogram "
-        
               if obj.GetName() != "data_obs" and obj.GetName() != "TotalBkg" and obj.GetName() != "TotalProcs" and obj.GetName() != "TotalSig":
-                print " SOMETHING "
                 if (obj.GetName() in histos.keys()) :
                   histos[obj.GetName()].Add(obj)
                 else :
                   histos[obj.GetName()] = obj
            
         print " histos selected = ", histos
-        
         total_MC = self._AddHistos(histos, "histo_total")
         
         
@@ -185,281 +177,58 @@ class LawnMower:
         # And prepare the TGraphAsymmErrors for total predicted distribution
         #
 
-        total_MC_gr = ROOT.TGraphAsymmErrors(total_MC_gr.GetNbinsX())
+        total_MC_gr = ROOT.TGraphAsymmErrors(total_MC.GetNbinsX())
        
-        for iBin in range(0, total_MC_gr.GetNbinsX()) : 
+        for iBin in range(0, total_MC.GetNbinsX()) : 
           total_MC_gr.SetPoint     (iBin, total_MC.GetBinCenter(iBin+1), total_MC.GetBinContent(iBin+1))
           
           low_variation =  total_MC.GetBinContent(iBin+1) -  (total_MC_Errors.GetBinContent(iBin+1) - total_MC_Errors.GetBinError(iBin+1))
-          up_variation  =  (total_MC_Errors.GetBinContent(iBin+1) + total_MC_Errors.GetBinError(iBin+1))  -   total_MC.GetBinContent(iBin+1)
-          
+          up_variation  =  (total_MC_Errors.GetBinContent(iBin+1) + total_MC_Errors.GetBinError(iBin+1))  -   total_MC.GetBinContent(iBin+1)          
+          #print " " , total_MC.GetBinContent(iBin+1), "   " , total_MC_Errors.GetBinContent(iBin+1) , "   ",  total_MC_Errors.GetBinError(iBin+1)
           total_MC_gr.SetPointError(iBin, 0, 0, low_variation, up_variation)
-        
+          
+          total_MC.SetBinError(iBin+1, total_MC_Errors.GetBinError(iBin+1))
+       
        
         #
         # now save
         #
+
+        for histoName, histo in histos.iteritems():
+          histo.SetName("histo_" + histo.GetName())
+        total_data.SetName ("histo_data")
+        total_MC_gr.SetName ("gr_total")
+
         self._outFile.cd ( self._cutName + "/" + self._variable )
         total_MC_gr.Write()
+        total_MC.Write()
         total_data.Write()
         for histoName, histo in histos.iteritems():
           histo.Write()
           
         
         
+        #
+        # Do I really need to define myself a cut for cuts.py with the "combined" ?
+        # And the simplified variables.py with only the combined variable?
+        #
         
-        #template_histogram = 0
         
-        #for sampleName, structureDef in self._structure.iteritems():
-           #if '/' in sampleName:
-             #cardName = sampleName.replace('/', '__')
-             #binName = sampleName[sampleName.find('/') + 1:]
-             #shapeSource = 'binned/' + binName + '/' + self._cutNameInOriginal + "/" + self._variable
-             #sampleName = sampleName[:sampleName.find('/')]
-           #else:
-             #cardName = sampleName
-             #shapeSource = self._cutNameInOriginal+"/"+self._variable
-           
-           #in_samples = False
-           #if sampleName in self._samples: in_samples = True
-           
-           #if not in_samples:
-             ## check if it is in subsamples
-             #in_subsample = False
-             #for _sampleName, _sample in self._samples.items():
-               #if "subsamples" not in _sample: continue
-               #for _subsam in  _sample["subsamples"].keys():
-                 #if _sampleName+"_"+ _subsam == sampleName:
-                   #in_subsample = True
-                   #break
-             #if not in_subsample: continue
-           
-           #if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
-             #continue
-           
-           
-           ## 
-           ## propagate signal from pre-fit if triggered
-           ## NB: this is needed for exclusion analyses, where the fitted signal is 0
-           ##     or to show the signal in the background only fit 
-           ##
-           #if (self._getSignalFromPrefit == 1 and structureDef['isSignal'] == 1 ) or sampleName == "DATA" :
-             
-             #print "THISFILE:",self._inputFile
-             #fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
-
-             #self._outFile.cd (self._cutNameInOriginal+"/"+self._variable)
-
-             #print shapeSource + "/histo_" + sampleName
-             #histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
-             #print histo
-             #print 'histo_' + cardName
-             #histo.SetName  ('histo_' + cardName)
-             #histo.SetTitle ('histo_' + cardName)
-             #histo.Write()              
-             
-             #template_histogram = histo.Clone ("template")
-
-
-        ##print " template_histogram = " , template_histogram
-         
-        #for sampleName, structureDef in self._structure.iteritems():
-           #if '/' in sampleName:
-             #cardName = sampleName.replace('/', '__')
-             #binName = sampleName[sampleName.find('/') + 1:]
-             #shapeSource = 'binned/' + binName + '/' + self._cutNameInOriginal + "/" + self._variable
-             #sampleName = sampleName[:sampleName.find('/')]
-           #else:
-             #cardName = sampleName
-             #shapeSource = self._cutNameInOriginal+"/"+self._variable
-
-           #in_samples = False
-           #if sampleName in self._samples: in_samples = True
-         
-           #if not in_samples:
-            ## check if it is in subsamples
-            #in_subsample = False
-            #for _sampleName, _sample in self._samples.items():
-               #if "subsamples" not in _sample: continue
-               #for _subsam in  _sample["subsamples"].keys():
-                  #if _sampleName+"_"+ _subsam == sampleName:
-                     #in_subsample = True
-                     #break
-            #if not in_subsample: continue
-
-           #if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
-             #continue
-
-           #print " sampleName = ", sampleName
-           
-           #copied_from_original = False
-           
-           ##if samples_key != "DATA" :
-           #if not ((self._getSignalFromPrefit == 1 and structureDef['isSignal'] == 1 ) or sampleName == "DATA"):
-             #if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(cardName) ):
-               #print "Sample ", cardName, " does not exist in ", fileIn
-               ##
-               ## If for some reason this histogram is not available in the combine output
-               ## get the histogram from the input root file, the output of mkShape
-               ## and scale that to 0, so that it is propagated to be used by mkPlot
-               ## but it will have 0 contribution, as expected (but legends and all the rest will be ok and nice)
-               ##
-               ## continue
-               ##
-               #fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
-
-               #self._outFile.cd(self._cutNameInOriginal+"/"+self._variable)
-
-               #histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
-               #histo.SetName  ('histo_' + cardName)
-               #histo.SetTitle ('histo_' + cardName)
-               #histo.Write()  
-               
-               #copied_from_original = True
-
-             ##
-             ##
-             ##
-             #if not copied_from_original :  
-               
-               #histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + cardName)
-               #print folder_fit_name + "/" + self._cut + "/" + cardName
-               
-               #histo.SetName  ('histo_' + cardName)
-               #histo.SetTitle ('histo_' + cardName)
-               
-               ## fix the binning copying from "DATA" binning, if available
-               #if (template_histogram != 0) :
-                 #histo = self._ChangeBin(histo, template_histogram)
-               
-               #histo.Write()              
-
-
-        ##
-        ## total signal and total background, and total
-        ##
         
-        ##
-        ## total signal
-        #histo_total_signal = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_signal")      
-
-        #if histo_total_signal:
-          #histo_total_signal.SetName  ('histo_' + 'total_signal')
-          #histo_total_signal.SetTitle ('histo_' + 'total_signal')
-          
-          ## fix the binning copying from "DATA" binning, if available
-          #if (template_histogram != 0) :
-            #histo_total_signal = self._ChangeBin(histo_total_signal, template_histogram)
-          
-          #histo_total_signal.Write()              
-
-        ##
-        ## total background
-        #histo_total_background = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total_background")      
-        #histo_total_background.SetName  ('histo_' + 'total_background')
-        #histo_total_background.SetTitle ('histo_' + 'total_background')
         
-        #histo_total_background_prefit  = fileIn.Get("shapes_prefit/" + self._cut + "/" + "total_background")      
-        #histo_total_background_prefit.SetName  ('histo_total_background_prefit')
-        #histo_total_background_prefit.SetTitle ('histo_total_background_prefit')
-
-        #histo_total_background_postfit_s = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total_background")      
-        #histo_total_background_postfit_s.SetName  ('histo_total_background_postfit_s')
-        #histo_total_background_postfit_s.SetTitle ('histo_total_background_postfit_s')
-
-        #histo_total_background_postfit_b = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total_background")      
-        #histo_total_background_postfit_b.SetName  ('histo_total_background_postfit_b')
-        #histo_total_background_postfit_b.SetTitle ('histo_total_background_postfit_b')
-
-        ## fix the binning copying from "DATA" binning, if available
-        #if (template_histogram != 0) :
-          #histo_total_background = self._ChangeBin(histo_total_background, template_histogram)
-          #histo_total_background_prefit = self._ChangeBin(histo_total_background_prefit, template_histogram)
-          #histo_total_background_postfit_s = self._ChangeBin(histo_total_background_postfit_s, template_histogram)
-          #histo_total_background_postfit_b = self._ChangeBin(histo_total_background_postfit_b, template_histogram)
         
-        #histo_total_background.Write()              
-        #histo_total_background_prefit.Write()              
-        #histo_total_background_postfit_s.Write()              
-        #histo_total_background_postfit_b.Write()              
         
-        ##
-        ## total
-        #histo_total = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + "total")      
-        
-        #histo_total.SetName  ('histo_' + 'total')
-        #histo_total.SetTitle ('histo_' + 'total')
-        
-        #histo_total_prefit  = fileIn.Get("shapes_prefit/" + self._cut + "/" + "total")      
-        #histo_total_prefit.SetName  ('histo_total_prefit')
-        #histo_total_prefit.SetTitle ('histo_total_prefit')
-
-        #histo_total_postfit_s = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total")      
-        #histo_total_postfit_s.SetName  ('histo_total_postfit_s')
-        #histo_total_postfit_s.SetTitle ('histo_total_postfit_s')
-
-        #histo_total_postfit_b = fileIn.Get("shapes_fit_s/" + self._cut + "/" + "total")      
-        #histo_total_postfit_b.SetName  ('histo_total_postfit_b')
-        #histo_total_postfit_b.SetTitle ('histo_total_postfit_b')
-
-        ## fix the binning copying from "DATA" binning, if available
-        #if (template_histogram != 0) :
-          #histo_total = self._ChangeBin(histo_total, template_histogram)
-          #histo_total_prefit = self._ChangeBin(histo_total_prefit, template_histogram)
-          #histo_total_postfit_s = self._ChangeBin(histo_total_postfit_s, template_histogram)
-          #histo_total_postfit_b = self._ChangeBin(histo_total_postfit_b, template_histogram)
-        
-        #histo_total.Write()              
-        #histo_total_prefit.Write()      
-        #histo_total_postfit_s.Write()        
-        #histo_total_postfit_b.Write()
-
-    ## _____________________________________________________________________________
-    #def _ChangeBin(self, myhisto, templatehisto): 
-
-        #nx = templatehisto.GetNbinsX()
-        
-        #binLowEdge = []
-
-        #for iBin in range(1, nx+1):
-          #binLowEdge.append(templatehisto.GetXaxis().GetBinLowEdge(iBin))
-        #binLowEdge.append(templatehisto.GetXaxis().GetBinLowEdge(nx+1))
-        ##print " binLowEdge = ", binLowEdge
-
-        #new_histo = ROOT.TH1F("temporary","",nx,array('d',binLowEdge))
-          
-        #for iBin in range(1, nx+1):
-          #new_histo.SetBinContent(iBin, myhisto.GetBinContent(iBin))
-          #new_histo.SetBinError  (iBin, myhisto.GetBinError(iBin))
-          
-        #new_histo.SetName  (myhisto.GetName())
-        #new_histo.SetTitle (myhisto.GetTitle())
-        
-        #return new_histo
         
     # _____________________________________________________________________________
     def _AddHistos(self, histos, nameHisto): 
 
-        print "histos = ", histos
+        list_histo = [histo for histoName, histo in histos.iteritems()]
+        new_histo = list_histo[0].Clone(nameHisto)
         
-        iterator = iter(histos.values())
-        templatehisto = next(iterator)
-        
-        nx = templatehisto.GetNbinsX()
-        
-        binLowEdge = []
-
-        for iBin in range(1, nx+1):
-          binLowEdge.append(templatehisto.GetXaxis().GetBinLowEdge(iBin))
-        binLowEdge.append(templatehisto.GetXaxis().GetBinLowEdge(nx+1))
-
-        new_histo = ROOT.TH1F(nameHisto,nameHisto,nx,array('d',binLowEdge))
-
-        for histoName, histo in histos.iteritems():
-          new_histo.Add (histo)
-          
+        for i in range(len(list_histo)-1) :
+          new_histo.Add (list_histo[i+1])
+               
         return new_histo
-        
 
 
 
