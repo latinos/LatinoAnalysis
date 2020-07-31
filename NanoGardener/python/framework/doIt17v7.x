@@ -1,4 +1,4 @@
-S=WZTo3LNu_noPSweights,ZTo2L_ZTo2J_QCD_LO,ttHToNonbb_M125_alternative,ggZZ2m2t_v3
+S=ZTo2L_ZTo2J_QCD_LO,ggZZ2e2m_CP5
 
 while :
 do

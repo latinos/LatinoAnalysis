@@ -161,12 +161,11 @@ class PtCorrApplier(Module):
                 MET[met]['new_phi'] = math.atan2(MET[met]['py'], MET[met]['px'])
 
         # Reorder
-        order = []
-        for idx1, pt1 in enumerate(new_pt):
-            pt_idx = 0
-            for idx2, pt2 in enumerate(new_pt):
-                if pt1 < pt2 or (pt1 == pt2 and idx1 > idx2): pt_idx += 1
-            order.append(pt_idx)
+        #
+        # e.g. if pt is         [ 26, 24, 27 ]
+        #      you get: order = [ 2, 0, 1]
+        #
+        order = sorted(range(len(new_pt)), key=new_pt.__getitem__, reverse=True)
  
         # Fill branches
         for typ in self.CollBr:

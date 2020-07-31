@@ -142,13 +142,12 @@ class JERMaker(jetSmearer, object):
             jets_mass_JERUp  .append(jet_mass_JERUp)
             jets_mass_JERDown.append(jet_mass_JERDown) 
       
-        #Reorder
-        order = []
-        for idx1, pt1 in enumerate(jets_pt_nom):
-            pt_idx = 0
-            for idx2, pt2 in enumerate(jets_pt_nom):
-                if pt1 < pt2 or (pt1 == pt2 and idx1 > idx2): pt_idx += 1
-            order.append(pt_idx)
+        # Reorder
+        #
+        # e.g. if pt is         [ 26, 24, 27 ]
+        #      you get: order = [ 2, 0, 1]
+        #
+        order = sorted(range(len(jets_pt_nom)), key=jets_pt_nom.__getitem__, reverse=True)
 
         #Save to updated branches to jet collection
         for typ in self.collBr:
