@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-import os
+#import os
 
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import math
 
-import ROOT
-from ROOT import *
-#from ROOT import TCanvas, TPad, TFile, TPaveText, TLegend
+#import ROOT
+#from ROOT import *
 #from ROOT import gBenchmark, gStyle, gROOT, TStyle
-#from ROOT import TH1F, TF1, TGraphErrors, TMultiGraph
+from ROOT import TCanvas, TPad, TFile, TPaveText, TLegend
+from ROOT import TH1F, TF1, TGraphErrors, TMultiGraph
 
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
