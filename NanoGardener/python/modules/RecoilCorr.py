@@ -64,7 +64,7 @@ class RecoilCorr(Module):
         for gid,gen in enumerate(Gen):
           pdgId = abs(gen.pdgId)
           sFlag = gen.statusFlags
-          if (pdgId>=11 and pdgId <=16 and (sFlag >> 8 & 1)) or (sFlag >> 9 & 1):
+          if (pdgId>=11 and pdgId <=16 and (sFlag >> 8 & 1) and (gen.status == 1)) or (sFlag >> 10 & 1):
             IdxGen.append(gid)
             genPx += (gen.pt * math.cos(gen.phi))
             genPy += (gen.pt * math.sin(gen.phi))
