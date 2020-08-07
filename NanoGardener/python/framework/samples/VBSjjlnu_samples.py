@@ -37,11 +37,11 @@ vbsjjlnu_samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_Q
                 'WJetsToLNu_HT800_1200',
                 'WJetsToLNu_HT1200_2500',
                 'WJetsToLNu_HT2500_inf',
-                'WJetsToLNu_Pt50to100',
-                'WJetsToLNu_Pt100to250',
-                'WJetsToLNu_Pt250to400',
-                'WJetsToLNu_Pt400to600',
-                'WJetsToLNu_Pt600toInf',
+               #  'WJetsToLNu_Pt50to100',
+               #  'WJetsToLNu_Pt100to250',
+               #  'WJetsToLNu_Pt250to400',
+               #  'WJetsToLNu_Pt400to600',
+               #  'WJetsToLNu_Pt600toInf',
                 'WJetsToLNu_0J',
                 'WJetsToLNu_1J',
                 'WJetsToLNu_2J',
@@ -84,8 +84,8 @@ vbsjjlnu_samples_bkg_2016 = [
     'WJetsToLNu_HT100_200_ext2', 'WJetsToLNu_HT200_400_ext2', 'WJetsToLNu_HT400_600_ext1',
     'WJetsToLNu_HT600_800_ext1', 'WJetsToLNu_HT800_1200_ext1', 'WJetsToLNu_HT1200_2500_ext1',
     'WJetsToLNu_HT2500_inf_ext1',
-    'WJetsToLNu_Pt100To250_ext4', 'WJetsToLNu_Pt250To400_ext4', 'WJetsToLNu_Pt400To600_ext4', 'WJetsToLNu_Pt600ToInf_ext4',
-    'WJetsToLNu_Wpt100t0200_ext1','WJetsToLNu_Wpt200toInf_ext1',                    
+#     'WJetsToLNu_Pt100To250_ext4', 'WJetsToLNu_Pt250To400_ext4', 'WJetsToLNu_Pt400To600_ext4', 'WJetsToLNu_Pt600ToInf_ext4',
+#     'WJetsToLNu_Wpt100t0200_ext1','WJetsToLNu_Wpt200toInf_ext1',                    
 ]
 
 
@@ -101,22 +101,34 @@ vbsjjlnu_samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpT
                      'WmTo2J_ZTo2L_aQGC', 'WmToLNu_WmTo2J_aQGC','WmToLNu_ZTo2J_aQGC','WpTo2J_WmToLNu_aQGC','WpTo2J_ZTo2L_aQGC',
                     'WpToLNu_WpTo2J_aQGC', 'WpToLNu_ZTo2J_aQGC','ZTo2L_ZTo2J_aQGC','WpToLNu_WmTo2J_aQGC']
 
-vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-Nano1June2019_ver2-v1','SingleElectron_Run2016C-Nano1June2019-v1',
-                            'SingleElectron_Run2016D-Nano1June2019-v1','SingleElectron_Run2016E-Nano1June2019-v1',
-                             'SingleElectron_Run2016F-Nano1June2019-v1','SingleElectron_Run2016G-Nano1June2019-v1', 
-                             'SingleElectron_Run2016H-Nano1June2019-v1','SingleMuon_Run2016B-Nano1June2019_ver2-v1',
-                             'SingleMuon_Run2016C-Nano1June2019-v1','SingleMuon_Run2016D-Nano1June2019-v1',
-                             'SingleMuon_Run2016E-Nano1June2019-v1', 'SingleMuon_Run2016F-Nano1June2019-v1',
-                             'SingleMuon_Run2016G-Nano1June2019-v1', 'SingleMuon_Run2016H-Nano1June2019-v1']
-vbsjjlnu_samples_data2017 = ['SingleElectron_Run2017B-Nano1June2019-v1','SingleElectron_Run2017C-Nano1June2019-v1',
-                            'SingleElectron_Run2017D-Nano1June2019-v1','SingleElectron_Run2017E-Nano1June2019-v1',
-                             'SingleElectron_Run2017F-Nano1June2019-v1','SingleMuon_Run2017B-Nano1June2019-v1',
-                             'SingleMuon_Run2017C-Nano1June2019-v1','SingleMuon_Run2017D-Nano1June2019-v1',
-                             'SingleMuon_Run2017E-Nano1June2019-v1','SingleMuon_Run2017F-Nano1June2019-v1']
-vbsjjlnu_samples_data2018 = ['SingleMuon_Run2018A-Nano25Oct2019-v1','SingleMuon_Run2018B-Nano25Oct2019-v1',
-                              'SingleMuon_Run2018C-Nano25Oct2019-v1','SingleMuon_Run2018D-Nano25Oct2019_ver2-v1',
-                              'EGamma_Run2018A-Nano25Oct2019-v1','EGamma_Run2018B-Nano25Oct2019-v1',
-                              'EGamma_Run2018C-Nano25Oct2019-v1','EGamma_Run2018D-Nano25Oct2019_ver2-v1']
+vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-02Apr2020_ver1-v1',
+                             'SingleElectron_Run2016B-02Apr2020_ver2-v1',
+                             'SingleElectron_Run2016C-02Apr2020-v1'
+                             'SingleElectron_Run2016D-02Apr2020-v1',
+                             'SingleElectron_Run2016E-02Apr2020-v1',
+                             'SingleElectron_Run2016F-02Apr2020-v1',
+                             'SingleElectron_Run2016G-02Apr2020-v1', 
+                             'SingleElectron_Run2016H-02Apr2020-v1',
+                             
+                             'SingleMuon_Run2016B-02Apr2020_ver1-v1',
+                             'SingleMuon_Run2016B-02Apr2020_ver2-v1'
+                             'SingleMuon_Run2016C-02Apr2020-v1',
+                             'SingleMuon_Run2016D-02Apr2020-v1',
+                             'SingleMuon_Run2016E-02Apr2020-v1',
+                             'SingleMuon_Run2016F-02Apr2020-v1',
+                             'SingleMuon_Run2016G-02Apr2020-v1', 
+                             'SingleMuon_Run2016H-02Apr2020-v1']
+                             
+vbsjjlnu_samples_data2017 = ['SingleElectron_Run2017B-02Apr2020-v1','SingleElectron_Run2017C-02Apr2020-v1',
+                            'SingleElectron_Run2017D-02Apr2020-v1','SingleElectron_Run2017E-02Apr2020-v1',
+                             'SingleElectron_Run2017F-02Apr2020-v1',
+                             'SingleMuon_Run2017B-02Apr2020-v1',
+                             'SingleMuon_Run2017C-02Apr2020-v1','SingleMuon_Run2017D-02Apr2020-v1',
+                             'SingleMuon_Run2017E-02Apr2020-v1','SingleMuon_Run2017F-02Apr2020-v1']
+vbsjjlnu_samples_data2018 = ['SingleMuon_Run2018A-02Apr2020-v1','SingleMuon_Run2018B-02Apr2020-v1',
+                              'SingleMuon_Run2018C-02Apr2020-v1','SingleMuon_Run2018D-02Apr2020_ver2-v1',
+                              'EGamma_Run2018A-02Apr2020-v1','EGamma_Run2018B-02Apr2020-v1',
+                              'EGamma_Run2018C-02Apr2020-v1','EGamma_Run2018D-02Apr2020_ver2-v1']
 
 
 CombJJLNu_preselections = {
