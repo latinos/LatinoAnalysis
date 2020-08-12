@@ -820,3 +820,14 @@ for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
     'branches': _Fatjet_syst_branches,
     'suffix': '_fatjetJES'+source+'up'
   }
+
+# MET recoil sources
+for source in ["Response", "Resolution"]:
+  branch_mapping['MET'+source+"do"] = {
+    'branches': _MET_branches,
+    'suffix': '_MET'+source+'do'
+  }
+  branch_mapping['MET'+source+"up"] = {
+    'branches': _MET_branches,
+    'suffix': '_MET'+source+'up'
+  }
