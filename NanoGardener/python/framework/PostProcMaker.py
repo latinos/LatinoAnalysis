@@ -278,9 +278,12 @@ class PostProcMaker():
      else:
        useGfal2Py = False
 
+     if FORCE_GFAL_SHELL:
+       useGfal2Py = False
+
      if 'X509_CERT_DIR' not in os.environ and os.path.isdir('/etc/grid-security/certificates'):
        os.environ['X509_CERT_DIR'] = '/etc/grid-security/certificates'
-
+     useGfal2Py = False
      FileList = []
      for path in paths:
        if useGfal2Py:
@@ -288,7 +291,7 @@ class PostProcMaker():
          dircont = ctx.listdir(srmprefix + path)
          files = [f for f in dircont if f.endswith('.root')]
        else:
-         command = 'gfal-ls '+srmprefix+path+ " | grep root"
+         command = '(eval `scram unsetenv -sh`; gfal-ls '+srmprefix+path+ " | grep root)"
          proc=subprocess.Popen(command, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
          out, err = proc.communicate()
          if not proc.returncode == 0 :
