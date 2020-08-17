@@ -539,7 +539,7 @@ Samples['ggZZ4m_ext1'] = {'nanoAOD' :'/GluGluToContinToZZTo4mu_13TeV_MCFM701_pyt
 #
 #
 #############
-## VBS Semileptonic samples MC 2017
+## VBS Semileptonic samples MC 2018
 ## >Sample string for mkPostProd
 ## WmTo2J_ZTo2L,WmToLNu_WmTo2J,WmToLNu_ZTo2J,WpTo2J_WmToLNu,WpTo2J_ZTo2L,WpToLNu_WpTo2J,WpToLNu_ZTo2J,ZTo2L_ZTo2J,WpToLNu_WmTo2J
 ############
@@ -565,7 +565,7 @@ Samples['ZTo2L_ZTo2J'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/',
                "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/ZTo2LZTo2JJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2018v6/200810_095356/0000/']}
 
 #
-## QCD di-boson production for VBS Semileptonic analysis  MC 2017
+## QCD di-boson production for VBS Semileptonic analysis  MC 2018
 ## >Sample string for mkPostProd
 ## WmTo2J_ZTo2L_QCD,WmToLNu_WmTo2J_QCD,WmToLNu_ZTo2J_QCD,WpTo2J_WmToLNu_QCD,WpTo2J_ZTo2L_QCD,WpToLNu_WpTo2J_QCD,WpToLNu_ZTo2J_QCD,ZTo2L_ZTo2J_QCD,WpToLNu_WmTo2J_QCD
 ############
