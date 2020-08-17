@@ -33,9 +33,9 @@ except NameError:
    AUTO_CONDOR_RETRY = False 
 
 try: 
-  FORSE_GFAL_SHELL = forceGfalShell
+  FORCE_GFAL_SHELL = forceGfalShell
 except NameError:
-  FORSE_GFAL_SHELL = False
+  FORCE_GFAL_SHELL = False
 
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False,USE_SINGULARITY=False):
