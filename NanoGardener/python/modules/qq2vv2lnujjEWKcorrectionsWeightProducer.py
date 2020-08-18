@@ -223,7 +223,9 @@ class qq2vv2lnujjEWKcorrectionsWeightProducer(Module):
         V_vec = []
         V_sgn = []
         for w in lhe_W:
-            if len(lhe_W[w]['idx']) != 2: print('Warning: V has '+str(len(lhe_W[w]['idx']))+' daughters!')
+            if len(lhe_W[w]['idx']) != 2: 
+                print('Warning: V has '+str(len(lhe_W[w]['idx']))+' quark or lepton daughters! Dropping this V')
+                continue
             V = ROOT.TLorentzVector()
             for d in lhe_W[w]['idx']:
                 if d < 0: 
