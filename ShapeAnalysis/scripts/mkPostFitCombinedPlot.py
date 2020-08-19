@@ -18,6 +18,7 @@ from collections import OrderedDict
 import math
 
 #import os.path
+import shutil
 
 
 
@@ -196,7 +197,7 @@ class LawnMower:
 
         for histoName, histo in histos.iteritems():
           histo.SetName("histo_" + histo.GetName())
-        total_data.SetName ("histo_data")
+        total_data.SetName ("histo_DATA")
         total_MC_gr.SetName ("gr_total")
 
         self._outFile.cd ( self._cutName + "/" + self._variable )
@@ -211,12 +212,109 @@ class LawnMower:
         #
         # Do I really need to define myself a cut for cuts.py with the "combined" ?
         # And the simplified variables.py with only the combined variable?
+        # Yes: doing it now (it will easy your life) 
+        # 
+        
+        
+        # start creating the variables file 
+        path = "variables_combined.py"
+        variables_file = open( path ,"w")
+
+
+        #
+        #  e.g.
+        #
+        #  variables['mll']  = {   'name': 'mll',
+        #                          'range' : (20, 12,200),
+        #                          'xaxis' : 'm_{ll} [GeV]',
+        #                          'fold' : 0
+        #                          }
+
+        variables_file.write("variables['%s'] = {  \n" % self._variable)
+        variables_file.write("           'name' : '%s'   ,\n" % self._variable)
+        variables_file.write("           'range' : (%d, %-.4f, %-.4f)   ,\n" % (total_MC.GetNbinsX(), total_MC.GetBinLowEdge(1), total_MC.GetBinLowEdge(total_MC.GetNbinsX()+1)) )
+        variables_file.write("           'xaxis' : '%s'   ,\n" % self._variable)
+        variables_file.write("           'fold' : 3    \n")
+        variables_file.write("           }             \n")
+  
+        variables_file.write("\n")
+        variables_file.close()
+
+
+        # ... and now creating the cuts file 
+        path = "cuts_combined.py"
+        cuts_file = open( path ,"w")
+
+        #
+        #  e.g.
+        #
+        #  supercut = '1'
+        #  cuts['ww2l2v_13TeV'] = ' mll > 10 '
+        #
         #
         
+        cuts_file.write("cuts['%s'] = '1' \n" % self._cutName)
+ 
+        cuts_file.write("\n")
+        cuts_file.close()
+
+  
+        #
+        # Now it creates a combined configuration.py file
+        # 
         
+        path = "configuration_combined.py"
+        configuration_file = open( path ,"w")
+
+        #
+        #  e.g.
+        #
+        #  supercut = '1'
+        #  cuts['ww2l2v_13TeV'] = ' mll > 10 '
+        #
+        #
         
-        
-        
+        configuration_file.write("tag = 'combined'  \n")
+        configuration_file.write("outputDir = './'  \n")
+        configuration_file.write("variablesFile = 'variables_combined.py'  \n")
+        configuration_file.write("cutsFile = 'cuts_combined.py'  \n")
+        #configuration_file.write("samplesFile = 'samples_combined.py'  \n")
+        configuration_file.write("plotFile = 'plot_combined.py'   \n")
+        #configuration_file.write("lumi = %-.4f \n"  % self._lumi)
+        configuration_file.write("outputDirPlots = 'plot_'+tag   \n")
+        configuration_file.write("structureFile = 'structure_combined.py'   \n")
+        #configuration_file.write("nuisancesFile = 'nuisances.py'  \n")
+        configuration_file.write("\n")
+        configuration_file.close()
+
+  
+  
+
+  
+        #
+        # Now copy the structureFile to have it at hand and be able to modify it
+        # 
+        if self._structureFile != None :
+          shutil.copyfile(self._structureFile, 'structure_combined.py')
+
+        #
+        # Now copy the structureFile to have it at hand and be able to modify it
+        # 
+        if self._plotFile != None :
+          shutil.copyfile(self._plotFile, 'plot_combined.py')
+          #
+          # One thing you may want to update, maybe automatically
+          # 
+          # legend['lumi'] = 'L = 35.9/fb'
+          #
+ 
+          plot_file = open(  'plot_combined.py' ,"a+")
+          plot_file.write("legend['lumi'] = 'L = %s'  \n" % self._lumiText)
+          plot_file.write("\n")
+          plot_file.close()
+
+  
+  
         
         
     # _____________________________________________________________________________
@@ -256,15 +354,12 @@ if __name__ == '__main__':
 
     parser.add_option('--inputFilePostFitShapesFromWorkspace'      , dest='inputFilePostFitShapesFromWorkspace'      , help='input file with roofit results, mlfit'                          , default='input.root')
     parser.add_option('--outputFile'            , dest='outputFile'            , help='output file with histograms, same format as mkShape.py output'  , default='output.root')
-    parser.add_option('--inputFile'             , dest='inputFile'             , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
     parser.add_option('--kind'                  , dest='kind'                  , help='which kind of pre/post-fit distribution: p = prefit, P = postfit'  , default='P')
     parser.add_option('--cutName'               , dest='cutName'               , help='cut name as will appear in cuts.py'  , default='combined')
     parser.add_option('--variable'              , dest='variable'              , help='variable name'  , default='mll')
-    #parser.add_option('--cut'                   , dest='cut'                   , help='cut name'  , default='0j')
-    #parser.add_option('--cutNameInOriginal'     , dest='cutNameInOriginal'     , help='cut name as appears in cuts.py'  , default='')
-    #parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
-    #parser.add_option('--getSignalFromPrefit'   , dest='getSignalFromPrefit'   , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
-          
+    parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
+    parser.add_option('--lumiText'              , dest='lumiText'              , help='text for luminosity to be shown in legend'  , default="100/fb")
+       
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -278,17 +373,13 @@ if __name__ == '__main__':
     print " inputFilePostFitShapesFromWorkspace      =          ", opt.inputFilePostFitShapesFromWorkspace
     print " outputFile            =          ", opt.outputFile
     print " variable              =          ", opt.variable
-    #print " cut                   =          ", opt.cut
     print " kind                  =          ", opt.kind
-    #print " getSignalFromPrefit   =          ", opt.getSignalFromPrefit
-    #print " structureFile         =          ", opt.structureFile
-    #print " inputFile (for DATA)  =          ", opt.inputFile
     print " cutName               =          ", opt.cutName
+    print " structureFile         =          ", opt.structureFile
+    print " plotFile              =          ", opt.plotFile
+    print " lumiText              =          ", opt.lumiText
 
 
-    #if opt.cutNameInOriginal == '' :
-      #opt.cutNameInOriginal = opt.cut
-    #print " cutNameInOriginal     =          ", opt.cutNameInOriginal
 
 
     if not opt.debug:
@@ -304,40 +395,13 @@ if __name__ == '__main__':
     factory._inputFilePostFitShapesFromWorkspace  = opt.inputFilePostFitShapesFromWorkspace
     factory._outputFileName    = opt.outputFile
     factory._variable          = opt.variable
-    #factory._cut               = opt.cut
-    #factory._cutNameInOriginal = opt.cutNameInOriginal
-    factory._kind              = opt.kind
-    
+    factory._kind              = opt.kind    
     factory._cutName           = opt.cutName
-    
-    #factory._getSignalFromPrefit = opt.getSignalFromPrefit
-    
-
-    # ~~~~
-    #samples = OrderedDict()
-    #if os.path.exists(opt.samplesFile) :
-      #handle = open(opt.samplesFile,'r')
-      #exec(handle)
-      #handle.close()
-
-    #factory._samples = samples
-
-    # ~~~~
-    #structure = {}
-    #if opt.structureFile == None :
-       #print " Please provide the datacard structure "
-       ##exit ()
-
-    #elif os.path.exists(opt.structureFile) :
-      #handle = open(opt.structureFile,'r')
-      #exec(handle)
-      #handle.close()
-
-
-    #factory._structure = structure
-    
-    #factory._inputFile = opt.inputFile
-    
+    factory._structureFile     = opt.structureFile
+    factory._plotFile          = opt.plotFile
+    factory._lumiText          = opt.lumiText
+ 
+ 
     factory.makePostFitCombinedPlot()
     
     print '... and now closing ...'
