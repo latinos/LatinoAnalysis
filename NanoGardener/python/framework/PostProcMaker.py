@@ -283,7 +283,7 @@ class PostProcMaker():
 
      if 'X509_CERT_DIR' not in os.environ and os.path.isdir('/etc/grid-security/certificates'):
        os.environ['X509_CERT_DIR'] = '/etc/grid-security/certificates'
-     useGfal2Py = False
+     
      FileList = []
      for path in paths:
        if useGfal2Py:
