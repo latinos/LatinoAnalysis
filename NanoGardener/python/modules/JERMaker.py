@@ -27,11 +27,17 @@ class JERMaker(jetSmearer, object):
            self.jerUncertaintyInputFileName = jerTag+"_SF_"+jetType+".txt"
        else:
            if era == "2016":
-               self.jerInputFileName = "Summer16_25nsV1b_MC_PtResolution_" + jetType + ".txt"
-               self.jerUncertaintyInputFileName = "Summer16_25nsV1b_MC_SF_" + jetType + ".txt"
+               #'b'-version of sources extra affects jets with pT<30 
+               #self.jerInputFileName = "Summer16_25nsV1b_MC_PtResolution_" + jetType + ".txt"  
+               #self.jerUncertaintyInputFileName = "Summer16_25nsV1b_MC_SF_" + jetType + ".txt"
+               self.jerInputFileName = "Summer16_25nsV1_MC_PtResolution_" + jetType + ".txt"  
+               self.jerUncertaintyInputFileName = "Summer16_25nsV1_MC_SF_" + jetType + ".txt"
            elif era == "2017":
-               self.jerInputFileName = "Fall17_V3b_MC_PtResolution_" + jetType + ".txt"
-               self.jerUncertaintyInputFileName = "Fall17_V3b_MC_SF_" + jetType + ".txt"
+               #'b'-version of sources extra affects jets with pT<30
+               #self.jerInputFileName = "Fall17_V3b_MC_PtResolution_" + jetType + ".txt"
+               #self.jerUncertaintyInputFileName = "Fall17_V3b_MC_SF_" + jetType + ".txt"
+               self.jerInputFileName = "Fall17_V3_MC_PtResolution_" + jetType + ".txt"
+               self.jerUncertaintyInputFileName = "Fall17_V3_MC_SF_" + jetType + ".txt"
            elif era == "2018": 
                self.jerInputFileName = "Autumn18_V7b_MC_PtResolution_" + jetType + ".txt"
                self.jerUncertaintyInputFileName = "Autumn18_V7b_MC_SF_" + jetType + ".txt"
@@ -174,7 +180,7 @@ class JERMaker(jetSmearer, object):
         return True
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
-JERMakerMC16 = lambda : JERMaker("2016","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Summer16_25nsV1b_MC",jmr_vals=[1.0, 1.2, 0.8])   
-JERMakerMC17 = lambda : JERMaker("2017","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Fall17_V3b_MC"      ,jmr_vals=[1.09, 1.14, 1.04])
+JERMakerMC16 = lambda : JERMaker("2016","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Summer16_25nsV1_MC",jmr_vals=[1.0, 1.2, 0.8])   
+JERMakerMC17 = lambda : JERMaker("2017","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Fall17_V3_MC"      ,jmr_vals=[1.09, 1.14, 1.04])
 JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Autumn18_V7b_MC"    ,jmr_vals=[1.24, 1.20, 1.28])          
 
