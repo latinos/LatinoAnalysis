@@ -2537,7 +2537,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
-                  'declare'    : 'JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="",jmr_vals=[1.24, 1.20, 1.28])',
+                  'declare'    : 'JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Autumn18_V7b_MC",jmr_vals=[1.24, 1.20, 1.28])',
                   'module'     : 'JERMakerMC18()',
                  },
     #jerTag for 2018 is missing on purpose, 2017 JERs are used instead (for a moment)
