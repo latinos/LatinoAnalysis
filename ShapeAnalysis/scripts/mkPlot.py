@@ -155,7 +155,9 @@ if __name__ == '__main__':
     
     #samples = {}
     samples = OrderedDict()
-    if os.path.exists(opt.samplesFile) :
+    if opt.samplesFile == None :
+      print " Please provide the samples structure (not strictly needed in mkPlot, since list of samples read from plot.py) "    
+    elif os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()

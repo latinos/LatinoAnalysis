@@ -206,6 +206,15 @@ class qq2vv2lnujjEWKcorrectionsWeightProducer(Module):
                             lhe_W[w_gen_idx]['dpt'][d_idx] = dpt
                             lhe_W[w_gen_idx]['idx'][d_idx] = idx
 
+        # Filter out V with only 1 daugther
+        bad_w = []
+        for w in lhe_W:
+            if len(lhe_W[w]['idx']) < 2:
+                print('Warning: V has less then 2 quark or lepton daughters! Dropping this V')
+                bad_w.append(w)
+        for w in bad_w:
+            del lhe_W[w]
+
         # If there are more then 2 Vbosons filter out worst LHE Gen pt matches 
         if len(lhe_W.keys()) != 2: 
             prt = True 
@@ -223,7 +232,9 @@ class qq2vv2lnujjEWKcorrectionsWeightProducer(Module):
         V_vec = []
         V_sgn = []
         for w in lhe_W:
-            if len(lhe_W[w]['idx']) != 2: print('Warning: V has '+str(len(lhe_W[w]['idx']))+' daughters!')
+            if len(lhe_W[w]['idx']) != 2: 
+                print('Warning: V has '+str(len(lhe_W[w]['idx']))+' quark or lepton daughters! Dropping this V')
+                continue
             V = ROOT.TLorentzVector()
             for d in lhe_W[w]['idx']:
                 if d < 0: 

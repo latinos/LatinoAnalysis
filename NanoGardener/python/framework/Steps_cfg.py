@@ -360,7 +360,7 @@ def addSystChainMembers_CombJJLNu():
                 'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
             }
 
-  for typ in ["ElepT", "MupT", "MET", "fatjetJMS", "fatjetJMR", "fatjetJER",]:
+  for typ in ["JER", "ElepT", "MupT", "MET", "fatjetJMS", "fatjetJMR", "fatjetJER",]:
     for kind in ["Up", "Do"]:
       mapname = typ+kind.lower()
       dictionary['VBSjjlnu_pairing_'+mapname] = {
@@ -459,7 +459,7 @@ def addSystChainMembers_CombJJLNu():
 
 def prepare_CombJJLNu_syst(basename, selection):
   dictionary = {}
-  for syst in ["JES", "MupT", "ElepT", "MET", "fatjetJES", "fatjetJMS", "fatjetJMR", "fatjetJER"]:
+  for syst in ["JES", "JER", "MupT", "ElepT", "MET", "fatjetJES", "fatjetJMS", "fatjetJMR", "fatjetJER"]:
     for kind in ['Up', 'Do']:
       torep = syst + kind.lower()
       if syst == "JES":
@@ -484,7 +484,21 @@ def prepare_CombJJLNu_syst(basename, selection):
                           createJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", kind),   
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
         }
-  
+
+      elif syst == "JER":
+        dictionary[basename+"_"+ syst + kind.lower()] = {
+          'isChain'    : True ,
+          'do4MC'      : True  ,
+          'do4Data'    : False  ,
+          'selection'  : selection,
+          'subTargets': ['do_{0}_suffix'.format(torep), 
+                        'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep), 
+                        'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
+                        'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
+                        ],
+          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+        }
+
         # other systematics
       elif syst in ["ElepT", "MupT"]:
         dictionary[basename+"_"+ syst + kind.lower()] = {
@@ -2523,7 +2537,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
-                  'declare'    : 'JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="",jmr_vals=[1.24, 1.20, 1.28])',
+                  'declare'    : 'JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Autumn18_V7b_MC",jmr_vals=[1.24, 1.20, 1.28])',
                   'module'     : 'JERMakerMC18()',
                  },
     #jerTag for 2018 is missing on purpose, 2017 JERs are used instead (for a moment)
