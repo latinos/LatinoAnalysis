@@ -24,16 +24,22 @@ keep dphilmet1
 keep dphilmet2
 
 # New variables
+
 keep mt2ll
 keep metpt
 keep metsig
 keep specialMCWeigths
 keep nbtaggedJets
 keep LepSF2l
-keep *Parametrized*Mass*
 keep EventSplit_*
 keep lep1pt
 keep lep2pt
+
+# Signal model
+
+keep GenModel_*
+keep darkHiggs_*
+keep 2HDMa_*
 
 # aliases variables
 
@@ -122,3 +128,4 @@ keep TriggerEffWeight_2l*
 keep puWeight*
 keep LHEScaleWeight
 keep ggH_*
+keep qqH_*

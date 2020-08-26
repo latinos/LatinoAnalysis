@@ -50,11 +50,11 @@ class MHDiLepVars2016(Module):
         elif '_WWTo2L2Nu_' in str(self.inputFile):
             MCweight = event.nllW
         elif '_M-50' in str(self.inputFile): #DY high mass
-            MCweight = (0.876979+event.gen_ptll*(4.11598e-03)-(2.35520e-05)*event.gen_ptll*event.gen_ptll)*(1.10211 * (0.958512 - 0.131835*TMath::Erf((event.gen_ptll-14.1972)/10.1525)))*(event.gen_ptll<140)+0.891188*(event.gen_ptll>=140)
+            MCweight = (0.876979+event.gen_ptll*(4.11598e-03)-(2.35520e-05)*event.gen_ptll*event.gen_ptll)*(1.10211 * (0.958512 - 0.131835*ROOT.TMath.Erf((event.gen_ptll-14.1972)/10.1525)))*(event.gen_ptll<140)+0.891188*(event.gen_ptll>=140)
         elif '_M-10to50' in str(self.inputFile): #DY low mass
-            MCweight = (8.61313e-01+event.gen_ptll*4.46807e-03-1.52324e-05*event.gen_ptll*event.gen_ptll)*(1.08683 * (0.95 - 0.0657370*TMath::Erf((event.gen_ptll-11.)/5.51582)))*(event.gen_ptll<140)+1.141996*(event.gen_ptll>=140)
+            MCweight = (8.61313e-01+event.gen_ptll*4.46807e-03-1.52324e-05*event.gen_ptll*event.gen_ptll)*(1.08683 * (0.95 - 0.0657370*ROOT.TMath.Erf((event.gen_ptll-11.)/5.51582)))*(event.gen_ptll<140)+1.141996*(event.gen_ptll>=140)
         elif '50_HT' in str(self.inputFile): #DY low mass
-            MCweight = (8.61313e-01+event.gen_ptll*4.46807e-03-1.52324e-05*event.gen_ptll*event.gen_ptll)*(1.08683 * (0.95 - 0.0657370*TMath::Erf((event.gen_ptll-11.)/5.51582)))*(event.gen_ptll<140)+1.141996*(event.gen_ptll>=140)
+            MCweight = (8.61313e-01+event.gen_ptll*4.46807e-03-1.52324e-05*event.gen_ptll*event.gen_ptll)*(1.08683 * (0.95 - 0.0657370*ROOT.TMath.Erf((event.gen_ptll-11.)/5.51582)))*(event.gen_ptll<140)+1.141996*(event.gen_ptll>=140)
         elif (('GluGluWWTo2' in str(self.inputFile)) or ('GluGluToWW' in str(self.inputFile))):
             MCweight = 1.53/1.4
         elif (('ZZTo2L2Nu' in str(self.inputFile)) or ('ZZTo2L2Q' in str(self.inputFile)) or ('ZZTo4L' in str(self.inputFile)) or ('WZTo2L2Q' in str(self.inputFile))):
