@@ -45,14 +45,16 @@ class MHDiLepVars2018(Module):
                 nbtagged += 1
             else:
                 continue
-                
+        
         if 'TTTo2L2Nu' in str(self.inputFile):
-            MCweight = (event.topGenPt * event.antitopGenPt > 0.) * (ROOT.TMath.Sqrt(ROOT.TMath.Exp(-1.43717e-02 - 1.18358e-04*event.topGenPt - 1.70651e-07*event.topGenPt*event.topGenPt + 4.47969/(event.topGenPt+28.7)) * ROOT.TMath.Exp(-1.43717e-02 - 1.18358e-04*event.antitopGenPt - 1.70651e-07*event.antitopGenPt*event.antitopGenPt + 4.47969/(event.antitopGenPt+28.7)))) + (event.topGenPt * event.antitopGenPt <= 0.)
+            MCweight = (ROOT.TMath.Sqrt(ROOT.TMath.Exp(-1.43717e-02 - 1.18358e-04*event.topGenPt - 1.70651e-07*event.topGenPt*event.topGenPt + 4.47969/(event.topGenPt+28.7)) * ROOT.TMath.Exp(-1.43717e-02 - 1.18358e-04*event.antitopGenPt - 1.70651e-07*event.antitopGenPt*event.antitopGenPt + 4.47969/(event.antitopGenPt+28.7))))
         elif '_WWTo2L2Nu_' in str(self.inputFile):
             MCweight = event.nllW
-        elif 'DYJetsToLL_M-50' in str(self.inputFile):
-            MCweight = (((0.623108 + 0.0722934*event.gen_ptll - 0.00364918*event.gen_ptll*event.gen_ptll + 6.97227e-05*event.gen_ptll*event.gen_ptll*event.gen_ptll - 4.52903e-07*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll)*(event.gen_ptll<45)*(event.gen_ptll>0) + 1*(event.gen_ptll>=45))*(ROOT.TMath.Abs(event.gen_mll-90)<3) + (ROOT.TMath.Abs(event.gen_mll-90)>3))
-        elif 'DYJetsToLL_M-10to50-LO' in str(self.inputFile):
+        elif '_M-50' in str(self.inputFile): #DY high mass
+            MCweight = (0.87*(event.gen_ptll<10)+(0.379119+0.099744*event.gen_ptll-0.00487351*event.gen_ptll*event.gen_ptll+9.19509e-05*event.gen_ptll*event.gen_ptll*event.gen_ptll-6.0212e-07*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll)*(event.gen_ptll>=10 and event.gen_ptll<45)+(9.12137e-01+1.11957e-04*event.gen_ptll-3.15325e-06*event.gen_ptll*event.gen_ptll-4.29708e-09*event.gen_ptll*event.gen_ptll*event.gen_ptll+3.35791e-11*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll)*(event.gen_ptll>=45 and event.gen_ptll<200) + 1*(event.gen_ptll>200))
+        elif '_M-10to50-LO' in str(self.inputFile): # DY low mass
+            MCweight = ((0.632927+0.0456956*event.gen_ptll-0.00154485*event.gen_ptll*event.gen_ptll+2.64397e-05*event.gen_ptll*event.gen_ptll*event.gen_ptll-2.19374e-07*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll+6.99751e-10*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll)*(event.gen_ptll>0)*(event.gen_ptll<100)+(1.41713-0.00165342*event.gen_ptll)*(event.gen_ptll>=100)*(event.gen_ptll<300)+1*(event.gen_ptll>=300))
+        elif '50_HT' in str(self.inputFile): # DY HT binned samples
             MCweight = ((0.632927+0.0456956*event.gen_ptll-0.00154485*event.gen_ptll*event.gen_ptll+2.64397e-05*event.gen_ptll*event.gen_ptll*event.gen_ptll-2.19374e-07*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll+6.99751e-10*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll*event.gen_ptll)*(event.gen_ptll>0)*(event.gen_ptll<100)+(1.41713-0.00165342*event.gen_ptll)*(event.gen_ptll>=100)*(event.gen_ptll<300)+1*(event.gen_ptll>=300))
         elif (('GluGluWWTo2' in str(self.inputFile)) or ('GluGluToWW' in str(self.inputFile))):
             MCweight = 1.53/1.4

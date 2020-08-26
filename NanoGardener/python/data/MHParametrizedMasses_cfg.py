@@ -1,57 +1,108 @@
 masses_darkHiggs = [195,200,295,300,400,500,800,1000,1200,1500]
-masses_2HDMa = [150,300,500,1000] # for testing
+masses_2HDMa = [200,300,400,500,600,700,800,900] # for testing
 
-
-masses_signal = {
-
-    'darkHiggs_ToWWTo2L2Nu' : 200,
-    'pseudoscalar2HDMa_ToWWTo2L2Nu' : 200,
-
-}
 
 isSignal = {
-
-    # Signals:
-
     'darkHiggs_ToWWTo2L2Nu' : 1,
     'pseudoscalar2HDMa_ToWWTo2L2Nu' : 1,
-
-    # backgrounds:
-
     'DYJetsToTT_MuEle_M-50' : 0,
     'DYJetsToLL_M-10to50-LO' : 0,
+    'DYJetsToLL_M-50_ext' : 0,
+    'DYJetsToLL_M-50' : 0,
     'TTTo2L2Nu' : 0,
+    'TTTo2L2Nu_PSWeights' : 0,
     'ST_s-channel' : 0,
+    'ST_s-channel_ext1' : 0,
     'ST_t-channel_antitop' : 0,
     'ST_t-channel_top' : 0,
     'ST_tW_antitop' : 0,
+    'ST_tW_antitop_ext1': 0,
     'ST_tW_top' : 0,
+    'ST_tW_top_ext1' : 0,
     'WWTo2L2Nu' : 0,
     'WpWmJJ_EWK_noTop' : 0,
     'GluGluWWTo2L2Nu_MCFM' : 0,
+    'GluGluToWWToENEN' : 0,
+    'GluGluToWWToMNTN' : 0,
+    'GluGluToWWToMNEN' : 0,
+    'GluGluToWWToMNMN' : 0,
+    'GluGluToWWToENMN' : 0,
+    'GluGluToWWToTNTN' : 0,
+    'GluGluToWWToTNMN' : 0,
+    'GluGluToWWToTNEN' : 0,
+    'GluGluToWWToENTN' : 0,
     'Wg_MADGRAPHMLM' : 0,
     'Zg' : 0,
     'WZTo3LNu_mllmin01' : 0,
     'ZZTo2L2Nu' : 0,
+    'ZZTo2L2Nu_ext1' : 0,
     'ZZTo2L2Q' : 0,
     'ZZTo4L' : 0,
+    'ZZTo4L_ext1' : 0,
     'WZTo2L2Q' : 0,
+    'ZGToLLG' : 0,
     'ZZZ' : 0,
     'WZZ' : 0,
     'WWZ' : 0,
     'WWW' : 0,
+    'GluGluHToWWTo2L2Nu_M125' : 0,
+    'GluGluHToWWTo2L2Nu_alternative_M125' : 0,
     'GluGluHToWWTo2L2NuPowheg_M125' : 0,
+    'GGHjjToWWTo2L2Nu_minloHJJ_M125' : 0,
     'VBFHToWWTo2L2Nu_M125' : 0,
+    'VBFHToWWTo2L2NuPowheg_M125' : 0,
     'HZJ_HtoWW_M125' : 0,
     'ggZH_HtoWW_M125' : 0,
     'HWplusJ_HToWW_M125' : 0,
+    'ttHToNonbb_M125' : 0,
     'HWminusJ_HToWW_M125' : 0,
     'GluGluHToTauTau_M125' : 0,
+    'GluGluHToTauTau_M125_ext1' : 0,
     'VBFHToTauTau_M125' : 0,
     'HZJ_HToTauTau_M125' : 0,
+    'GluGluZH_HToWWTo2L2Nu_M125' : 0,
+    'HZJ_HToWW_M125' : 0,
+    'ggZH_HToWW_M125' : 0,
+    'HZJ_HToWWTo2L2Nu_M125' : 0,
     'HWplusJ_HToTauTau_M125' : 0,
     'HWminusJ_HToTauTau_M125' : 0,
-    'DYJetsToLL_M-50' : 0,
-
-
+    'DYJetsToLL_M-5to50_HT-70to100' : 0,
+    'DYJetsToLL_M-5to50_HT-100to200_ext1' : 0,
+    'DYJetsToLL_M-5to50_HT-200to400_ext1' : 0,
+    'DYJetsToLL_M-5to50_HT-400to600_ext1' : 0,
+    'DYJetsToLL_M-5to50_HT-600toinf' : 0,
+    'DYJetsToLL_M-50_HT-70to100' : 0,
+    'DYJetsToLL_M-50_HT-100to200_ext1' : 0,
+    'DYJetsToLL_M-50_HT-200to400_ext1' : 0,
+    'DYJetsToLL_M-50_HT-400to600_ext1' : 0,
+    'DYJetsToLL_M-50_HT-600to800' : 0,
+    'DYJetsToLL_M-50_HT-800to1200' : 0,
+    'DYJetsToLL_M-50_HT-1200to2500' : 0,
+    'DYJetsToLL_M-50_HT-2500toinf' : 0,
+    'DYJetsToLL_M-4to50_HT-100to200' : 0,
+    'DYJetsToLL_M-4to50_HT-200to400' : 0,
+    'DYJetsToLL_M-4to50_HT-400to600' : 0,
+    'DYJetsToLL_M-4to50_HT-600toInf' : 0,
+    'DYJetsToLL_M-50_HT-100to200' : 0,
+    'DYJetsToLL_M-50_HT-200to400' : 0,
+    'DYJetsToLL_M-50_HT-400to600_ext1' : 0,
+    'DYJetsToLL_M-50_HT-600to800' : 0,
+    'DYJetsToLL_M-50_HT-800to1200' : 0,
+    'DYJetsToLL_M-50_HT-1200to2500' : 0,
+    'DYJetsToLL_M-50_HT-2500toInf' : 0,
+    'DYJetsToLL_M-50_HT-70to100' : 0,
+    'DYJetsToLL_M-50_HT-100to200' : 0,
+    'DYJetsToLL_M-50_HT-200to400' : 0,
+    'DYJetsToLL_M-50_HT-400to600' : 0,
+    'DYJetsToLL_M-50_HT-600to800' : 0,
+    'DYJetsToLL_M-50_HT-800to1200' : 0,
+    'DYJetsToLL_M-50_HT-1200to2500' : 0,
+    'DYJetsToLL_M-50_HT-2500toInf' : 0,
 }
+
+bitmap_darkHiggs=['GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_100_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_150_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_160_mx_200_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_100_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_150_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_180_mx_200_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_100_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_1500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_195_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_295_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_300_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_400_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_500_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_800_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_1000_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_1200_TuneCP5_13TeV','GenModel_DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_200_mZp_1500_TuneCP5_13TeV']
+
+bitmap_2HDMa = ['GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_200_MH4_150_MH2_200_MHC_200_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_150_MH2_400_MHC_400_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_600_MH4_150_MH2_600_MHC_600_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_250_MH2_400_MHC_400_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_250_MH2_500_MHC_500_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_600_MH4_250_MH2_600_MHC_600_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_700_MH4_250_MH2_700_MHC_700_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_800_MH4_250_MH2_800_MHC_800_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_350_MH2_400_MHC_400_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_350_MH2_500_MHC_500_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_600_MH4_350_MH2_600_MHC_600_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_700_MH4_350_MH2_700_MHC_700_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_800_MH4_350_MH2_800_MHC_800_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p0_mXd_10_MH3_900_MH4_350_MH2_900_MHC_900_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_200_MH4_150_MH2_200_MHC_200_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_150_MH2_400_MHC_400_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_150_MH2_500_MHC_500_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_600_MH4_150_MH2_600_MHC_600_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_250_MH2_400_MHC_400_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_250_MH2_500_MHC_500_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_600_MH4_250_MH2_600_MHC_600_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_700_MH4_250_MH2_700_MHC_700_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_800_MH4_250_MH2_800_MHC_800_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_400_MH4_350_MH2_400_MHC_400_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_500_MH4_350_MH2_500_MHC_500_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_600_MH4_350_MH2_600_MHC_600_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_700_MH4_350_MH2_700_MHC_700_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_800_MH4_350_MH2_800_MHC_800_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p0_mXd_10_MH3_900_MH4_350_MH2_900_MHC_900_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_0p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_2p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_4p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_8p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_0p5_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_1p5_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_2p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_4p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p35_tanb_8p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_0p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_2p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_4p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_8p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_0p5_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_1p5_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_2p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_4p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p35_tanb_8p0_mXd_10_MH3_300_MH4_250_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p7_tanb_0p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p7_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p7_tanb_1p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p7_tanb_2p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p7_tanb_4p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_bb_sinp_0p7_tanb_8p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p7_tanb_0p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p7_tanb_1p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p7_tanb_1p5_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p7_tanb_2p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p7_tanb_4p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia','GenModel_HWWTollnunu_gg_sinp_0p7_tanb_8p0_mXd_10_MH3_300_MH4_150_MH2_300_MHC_300_13TeV_madgraph-pythia']
+
+
+
