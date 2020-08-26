@@ -902,7 +902,9 @@ class PlotFactory:
 
                 if plotdef['isData'] == 0 :
                   if 'nameHR' in plotdef.keys() :
-                    if plotdef['nameHR'] != '' :
+                    if plotdef['nameHR'] == '' :
+                      pass
+                    else:
                       if self._showIntegralLegend == 0 :
                         tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "F")
                       else :
@@ -951,8 +953,9 @@ class PlotFactory:
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
                 if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
                   continue
-                  
-                if self._showIntegralLegend == 0 :
+                if sampleConfiguration['nameHR']=='':
+                  pass
+                elif self._showIntegralLegend == 0 :
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
                   if variable["divideByBinWidth"] == 1:
@@ -1019,6 +1022,9 @@ class PlotFactory:
               CMS_lumi.lumi_13TeV = legend['lumi']
             else:
               CMS_lumi.lumi_13TeV = 'L = %.1f fb^{-1}' % self._lumi
+            #BHO
+            if 'extraText' in legend.keys() :
+              CMS_lumi.extraText = legend['extraText']
         
             # Simple example of macro: plot with CMS name and lumi text
             #  (this script does not pretend to work in all configurations)
@@ -1069,7 +1075,10 @@ class PlotFactory:
             canvasPad1Name = 'pad1_' + cutName + "_" + variableName
             pad1 = ROOT.TPad(canvasPad1Name,canvasPad1Name, 0, 1-0.72, 1, 1)
             pad1.SetTopMargin(0.098)
-            pad1.SetBottomMargin(0.000) 
+            #BHO
+            #pad1.SetBottomMargin(0.000) 
+            pad1.SetBottomMargin(0.02) 
+            pad1.SetFrameFillStyle(4000)
             pad1.Draw()
             #pad1.cd().SetGrid()
             
@@ -1077,6 +1086,9 @@ class PlotFactory:
             #print " pad1 = ", pad1
             canvasFrameDistroName = 'frame_distro_' + cutName + "_" + variableName
             frameDistro = pad1.DrawFrame(minXused, 0.0, maxXused, 1.0, canvasFrameDistroName)
+            #BHO
+            frameDistro.GetXaxis().SetLabelOffset(1)
+            frameDistro.GetYaxis().SetLabelSize(0.04)
             #print " pad1 = ", pad1
             
             # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
@@ -1162,7 +1174,11 @@ class PlotFactory:
             tcanvasRatio.cd()
             canvasPad2Name = 'pad2_' + cutName + "_" + variableName
             pad2 = ROOT.TPad(canvasPad2Name,canvasPad2Name,0,0,1,1-0.72)
+            #BHO
             pad2.SetTopMargin(0.000)
+            #pad2.SetTopMargin(0.025)
+            #BHO
+            #pad2.SetFrameFillStyle(4000)
             pad2.SetBottomMargin(0.392)
             pad2.Draw()
             #pad2.cd().SetGrid()
@@ -2253,7 +2269,8 @@ class PlotFactory:
          yaxis.SetNdivisions ( 505)
          yaxis.SetTitleFont ( 42)
          yaxis.SetTitleOffset( .6)
-         yaxis.SetTitleSize ( 0.11)
+         #yaxis.SetTitleSize ( 0.11)
+         yaxis.SetTitleSize ( 0.1)
  
  
  
