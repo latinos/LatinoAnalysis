@@ -327,10 +327,13 @@ class ShapeFactory:
             elif nkind.startswith('branch_custom'): ##[jhchoi]pick up sysbranch and sysfiles to replace given nominal
               print "--branch_custom--"
               for var in variations:
-                
-                friendAlias = nuisanceName + var
-                ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False, friendsDir=(nuisance['folder' + var], friendAlias))
-                prefix = friendAlias+'.' ##read friendAlias as treename
+                if 'folder' + var in nuisance:
+                  friendAlias = nuisanceName + var
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False, friendsDir=(nuisance['folder' + var], friendAlias))
+                  prefix = friendAlias+'.' ##read friendAlias as treename
+                else:
+                  ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sample['name'], inputDir, skipMissingFiles=False)
+                  prefix = ''
                 for From,To in nuisance['BrFromTo'+var].items(): ##nuisance['BrFromToUp]  : a dictionary whose key =From , value ; To
                   ndrawer.replaceBranch(From,prefix+To)
                   print "From=",From,"To",To
