@@ -305,7 +305,7 @@ class ShapeFactory:
                     ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sub_files, '', skipMissingFiles=False)
                     # tree weights
                     treeweights_filesVar = {}
-                    treeweights_filesVar[var] = len(sub_files)*treeweights[0] if len(treeweights)>0 else []
+                    treeweights_filesVar[var] = len(sub_files)*[treeweights[0]] if len(treeweights)>0 else []
                     
                   else:
                     ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, nuisance['files' + var][sampleName], '', skipMissingFiles=False)
