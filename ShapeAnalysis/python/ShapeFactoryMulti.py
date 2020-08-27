@@ -294,12 +294,12 @@ class ShapeFactory:
     
                 elif 'files' + var in nuisance:
                   # TODO this feature is not fully working - I can't come up with a good way to assign variation files to batch jobs
-                  #BHO sample['iFileBlock'], sample['nFileBlocks']
+                  #BHO sample['iFileBlock'], sample['nFileBlocks'] are defined in mkShapesMulti.py
                   if 'iFileBlock' in sample and 'nFileBlocks' in sample:
                     iFileBlock, nFileBlocks = sample['iFileBlock'], sample['nFileBlocks']
                     files = nuisance['files' + var][sampleName]
                     if nFileBlocks > len(files):
-                      raise RuntimeError(" nFileBlocks > len(files) ")
+                      raise RuntimeError(" nFileBlocks > len(files), adjust FilesPerJob in sample")
                     filesPerJob = float(len(files))/float(nFileBlocks) # it could be non integer
                     sub_files = files[int(math.ceil(iFileBlock*filesPerJob)):int(math.ceil((iFileBlock+1)*filesPerJob))]
                     ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sub_files, '', skipMissingFiles=False)
