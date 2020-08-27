@@ -303,6 +303,10 @@ class ShapeFactory:
                     filesPerJob = float(len(files))/float(nFileBlocks) # it could be non integer
                     sub_files = files[int(math.ceil(iFileBlock*filesPerJob)):int(math.ceil((iFileBlock+1)*filesPerJob))]
                     ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sub_files, '', skipMissingFiles=False)
+                    # tree weights
+                    treeweights_filesVar = {}
+                    treeweights_filesVar[var] = len(sub_files)*treeweights[0] if len(treeweights)>0 else []
+                    
                   else:
                     ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, nuisance['files' + var][sampleName], '', skipMissingFiles=False)
                   
@@ -392,12 +396,19 @@ class ShapeFactory:
               else:
                 warnIfTreeWeight = False
 
-              for it, w in enumerate(treeweights):
-                if w is not None:
-                  ndrawer.setTreeReweight(it, False, w)
-                  if warnIfTreeWeight:
-                    print 'Nuisance', nuisanceName, 'tree filler for sample', sampleName, 'has different number of trees from the nominal filler. Tree-based reweighting may cause problems.'
+              if warnIfTreeWeight:
+                print 'Nuisance', nuisanceName, 'tree filler for sample', sampleName, 'has different number of trees from the nominal filler. Tree-based reweighting may cause problems.'
+                print 'Tree-based reweighting in nominal', treeweights 
+                print 'Tree-based reweighting in', tocheck, treeweights_filesVar[var]
+                for it, w in enumerate(treeweights_filesVar[var]):
+                  if w is not None:
+                    ndrawer.setTreeReweight(it, False, w)
                     warnIfTreeWeight = False
+              else:
+                for it, w in enumerate(treeweights):
+                  if w is not None:
+                    ndrawer.setTreeReweight(it, False, w)
+
 
           # Set up cuts
 
