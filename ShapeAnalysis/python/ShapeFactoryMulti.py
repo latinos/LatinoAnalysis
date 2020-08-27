@@ -277,6 +277,8 @@ class ShapeFactory:
               # Note that one has to use trees before skimming. The skimming can be applied on top is the additional tags 'skimListFolderUp' and 'skimListFolderDown'
               # are present. These tags hold the path to the directories holding the files holding the "prunerlist" event list
 
+              # tree-based weights for filesUp/Down
+              treeweights_filesVar = {}
               for var in variations:
                 if 'folder' + var in nuisance:
                   if 'unskimmedFriendTreeDir' in nuisance.keys():
@@ -303,8 +305,6 @@ class ShapeFactory:
                     filesPerJob = float(len(files))/float(nFileBlocks) # it could be non integer
                     sub_files = files[int(math.ceil(iFileBlock*filesPerJob)):int(math.ceil((iFileBlock+1)*filesPerJob))]
                     ndrawer = nuisanceDrawers[nuisanceName][var] = self._connectInputs(sampleName, sub_files, '', skipMissingFiles=False)
-                    # tree weights
-                    treeweights_filesVar = {}
                     treeweights_filesVar[var] = len(sub_files)*[treeweights[0]] if len(treeweights)>0 else []
                     
                   else:
