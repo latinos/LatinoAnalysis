@@ -358,6 +358,10 @@ _JES_branches += [
   'VBS_jets_maxPt_massWZ',
   'VBS_jets_massWZ_maxmjj',
   'VBS_jets_massWZ_maxPt',
+  'VBS_jets_maxmjj',
+  'VBS_jets_maxPt',
+  'V_jets_maxmjj',
+  'V_jets_maxPt',
   'V_jets_maxmjj_massWZ',
   'V_jets_maxmjj_maxPt',
   'V_jets_maxPt_massWZ',
@@ -467,6 +471,10 @@ _Fatjet_syst_branches = [
   'VBS_jets_maxPt_massWZ',
   'VBS_jets_massWZ_maxmjj',
   'VBS_jets_massWZ_maxPt',
+  'VBS_jets_maxmjj',
+  'VBS_jets_maxPt',
+  'V_jets_maxmjj',
+  'V_jets_maxPt',
   'V_jets_maxmjj_massWZ',
   'V_jets_maxmjj_maxPt',
   'V_jets_maxPt_massWZ',
@@ -497,6 +505,145 @@ _Fatjet_syst_branches = [
   'HM_HlnFatMass_noTau21Cut'
 ]
 
+_JER_branches = ['CleanJet_pt'] + [
+  'njet',
+  'dphilljet',
+  'dphilljetjet',
+  'dphilljetjet_cut',
+  'mjj',
+  'detajj',
+  'dphijet1met',
+  'dphijet2met',
+  'dphijjmet',
+  'dphijjmet_cut',
+  'dphilep1jet1',
+  'dphilep1jet2',
+  'dphilep2jet1',
+  'dphilep2jet2',
+  'mindetajl',
+  'dphijj',
+  'maxdphilepjj',
+  'dphilep1jj',
+  'dphilep2jj',
+  'ht',
+  'vht_pt',
+  'vht_phi',
+  'pTHjj',
+  'jetpt1_cut',
+  'jetpt2_cut',
+  'dphilljet_cut',
+  'dphijet1met_cut',
+  'dphijet2met_cut',
+  'upara',
+  'uperp',
+  'uperp',
+  'm2ljj20',
+  'm2ljj30',
+  'ptTOT_cut',
+  'mTOT_cut',
+  'OLV1_cut',
+  'OLV2_cut',
+  'Ceta_cut',
+  'mlljj20_whss',
+  'mlljj30_whss',
+
+  'VBS_category',
+  'VBS_jets_maxmjj_massWZ',
+  'VBS_jets_maxmjj_maxPt',
+  'VBS_jets_maxPt_massWZ',
+  'VBS_jets_massWZ_maxmjj',
+  'VBS_jets_massWZ_maxPt',
+  'V_jets_maxmjj_massWZ',
+  'V_jets_maxmjj_maxPt',
+  'V_jets_maxPt_massWZ',
+  'V_jets_massWZ_maxmjj',
+  'V_jets_massWZ_maxPt',
+  'HM_Whad_pt',
+  'HM_Whad_eta',
+  'HM_Whad_phi',
+  'HM_Whad_mass',
+  'HM_idx_j1',
+  'HM_idx_j2',
+  'HM_IsResolved',
+  'HM_IsBTopTagged',
+  'HM_WptOvHak4M',
+  'HM_Hlnjj_mass',
+  'HM_Hlnjj_mt',
+  'HM_vbfFat_jj_dEta',
+  'HM_vbfFat_jj_mass',
+  'HM_vbfjj_jj_dEta',
+  'HM_vbfjj_jj_mass',
+  'HM_largest_nonW_mjj',
+  'HM_IsVbfFat',
+  'HM_IsVbfjj',
+  ## EFT MEs
+  'hm',
+  'me_vbf_hsm',
+  'me_vbf_hm',
+  'me_vbf_hp',
+  'me_vbf_hl',
+  'me_vbf_mixhm',
+  'me_vbf_mixhp',
+  'me_wh_hsm',
+  'me_wh_hm',
+  'me_wh_hp',
+  'me_wh_hl',
+  'me_wh_mixhm',
+  'me_wh_mixhp',
+  'me_zh_hsm',
+  'me_zh_hm',
+  'me_zh_hp',
+  'me_zh_hl',
+  'me_zh_mixhm',
+  'me_zh_mixhp',
+  'me_qcd_hsm',
+  'pjjSm_wh',
+  'pjjTr_wh',
+  'pjjSm_zh',
+  'pjjTr_zh',
+  'meAvg_wh',
+  'meAvg_zh',
+  ## MonoHiggs Semileptonic
+  # deltas
+  'MHlnjj_dphi_ljjVmet',
+  'MHlnjj_dphi_jVj',
+  'MHlnjj_dphi_jjVl',
+  'MHlnjj_dphi_jjVmet',
+  'MHlnjj_deta_ljjVmet',
+  'MHlnjj_deta_jVj',
+  'MHlnjj_deta_jjVl',
+  'MHlnjj_deta_jjVmet',
+  'MHlnjj_dr_ljjVmet',
+  'MHlnjj_dr_jVj',
+  'MHlnjj_dr_jjVl',
+  'MHlnjj_dr_jjVmet',
+  # composed objects 
+  'MHlnjj_mt_lmetjj',
+  'MHlnjj_mt_jj',
+  'MHlnjj_mt_ljj',
+  'MHlnjj_pt_lmetjj',
+  'MHlnjj_pt_jj',
+  'MHlnjj_pt_ljj',
+  'MHlnjj_m_lmetjj',
+  'MHlnjj_m_jj',
+  'MHlnjj_m_ljj',
+  # single objects
+  'MHlnjj_pt_j1',
+  'MHlnjj_pt_j2',
+  'MHlnjj_eta_j1',
+  'MHlnjj_eta_j2',
+  'MHlnjj_idx_j3',
+  # fractions
+  'MHlnjj_PTljj_D_PTmet',
+  'MHlnjj_PTljj_D_Mlmetjj',
+  'MHlnjj_MINPTlj_D_PTmet',
+  'MHlnjj_MINPTlj_D_Mlmetjj',
+  'MHlnjj_MAXPTlj_D_PTmet',
+  'MHlnjj_MAXPTlj_D_Mlmetjj',
+  'MHlnjj_MTljj_D_PTmet',
+  'MHlnjj_MTljj_D_Mlmetjj',
+]
+
 ## TrigMaker
 from LatinoAnalysis.NanoGardener.data.TrigMaker_cfg import NewVar_MC_dict
 _ElepT_branches.extend(NewVar_MC_dict['F'])
@@ -514,6 +661,8 @@ for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_
       _MET_branches.append(key)
     if key not in _JES_branches:
       _JES_branches.append(key)
+    if key not in _JER_branches:
+      _JER_branches.append(key)
 
 for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
@@ -526,6 +675,8 @@ for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
       _MET_branches.append(key)
     if key not in _JES_branches:
       _JES_branches.append(key)
+    if key not in _JER_branches:
+      _JER_branches.append(key)
 
 ## formulas MC
 for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formulasToAdd_MC_Full2017v6', 'formulasToAdd_MC_Full2017v7', 'formulasToAdd_MC_Full2018v6', 'formulasToAdd_MC_Full2018v7', 'formulasToAdd_MC_MonoH']:
@@ -595,6 +746,16 @@ branch_mapping['JESdo'] = {
   'suffix': '_JESdo'
 }
 
+branch_mapping['JERup'] = {
+  'branches': _JER_branches,
+  'suffix': '_JERup'
+}
+
+branch_mapping['JERdo'] = {
+  'branches': _JER_branches,
+  'suffix': '_JERdo'
+}
+
 branch_mapping["fatjetJMSup"] = {
   'branches': _Fatjet_syst_branches,
   'suffix': '_fatjetJMSup'
@@ -615,14 +776,24 @@ branch_mapping["fatjetJMRdo"] = {
   'suffix': '_fatjetJMRdo'
 }
 
-branch_mapping["fatjetJESTotalup"] = {
+branch_mapping["fatjetJERup"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjetJESTotalup'
+  'suffix': '_fatjetJERup'
 }
 
-branch_mapping["fatjetJESTotaldo"] = {
+branch_mapping["fatjetJERdo"] = {
   'branches': _Fatjet_syst_branches,
-  'suffix': '_fatjetJESTotaldo'
+  'suffix': '_fatjetJERdo'
+}
+
+branch_mapping["fatjetJESup"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJESup'
+}
+
+branch_mapping["fatjetJESdo"] = {
+  'branches': _Fatjet_syst_branches,
+  'suffix': '_fatjetJESdo'
 }
 
 # JES 11 sources
@@ -640,4 +811,12 @@ for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
   branch_mapping['JES'+source+"up"] = {
     'branches': _JES_branches,
     'suffix': '_JES'+source+'up'
+  }
+  branch_mapping['fatjetJES'+source+"do"] = {
+    'branches': _Fatjet_syst_branches,
+    'suffix': '_fatjetJES'+source+'do'
+  }
+  branch_mapping['fatjetJES'+source+"up"] = {
+    'branches': _Fatjet_syst_branches,
+    'suffix': '_fatjetJES'+source+'up'
   }

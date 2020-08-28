@@ -2,6 +2,8 @@ drop *
 keep *_suffix
 keep *JES*do
 keep *JES*up
+keep *JERup
+keep *JERdo
 keep *ElepTup
 keep *ElepTdo
 keep *MupTup
@@ -14,3 +16,5 @@ keep *fatjetJMSup
 keep *fatjetJMSdo
 keep *fatjetJMRup
 keep *fatjetJMRdo
+keep *fatjetJERup
+keep *fatjetJERdo

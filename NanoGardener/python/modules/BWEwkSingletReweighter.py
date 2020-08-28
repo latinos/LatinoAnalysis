@@ -13,7 +13,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 # Needs variables from "HiggsGenVars" module to work
 class BWEwkSingletReweighter(Module):
-    def __init__(self, year="2017", cprime=[1.0], brnew=[0.0], relw=[0.00, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.12, 0.14, 0.15, 0.16, 0.18, 0.20, 0.25, 0.30, 10.0, 100.0], decayWeightsFile="decayWeights.pkl"): # cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], relw=[0.00, 0.05, 0.10, 0.15, 0.20]
+    def __init__(self, year="2017", cprime=[], brnew=[], relw=[0.00, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.12, 0.14, 0.15, 0.16, 0.18, 0.20, 0.25, 0.30, 10.0, 100.0], decayWeightsFile="decayWeights.pkl"): # cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], relw=[0.00, 0.05, 0.10, 0.15, 0.20]
 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
@@ -214,7 +214,7 @@ class BWEwkSingletReweighter(Module):
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/src/")
         ROOT.gSystem.Load("libZZMatrixElementMELA.so")
         ROOT.gSystem.Load("libMelaAnalyticsCandidateLOCaster.so")
-        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_706.so")
+        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_707.so")
         try:
             ROOT.gROOT.LoadMacro(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaReweighterWW.C+g')
         except RuntimeError:
@@ -258,7 +258,7 @@ class BWEwkSingletReweighter(Module):
         # Looks like 714 needs the same treatment as 698. I assume the same goes for 710.
         # So only JHUgen628 from 2016 needs the special treatment
         if self.year == "2016" and pattern.group(3) == "" and self.finalState == "2L2Nu": self.isNewJHU = False
-        if self.year == "2016" and self.finalState == "LNuQQ" and ((self.mH == 125.0) or (self.productionProcess == "VBF" and ((self.mH == 210.0) or (self.mH == 250.0)))): self.isNewJHU = False # Cherry picking v628 semileptonic samples
+        if self.year == "2016" and self.finalState == "LNuQQ" and ((self.mH == 125.0) or (self.productionProcess == "VBF" and ((self.mH == 200.0) or (self.mH == 250.0)))): self.isNewJHU = False # Cherry picking v628 semileptonic samples
 
         self.gsm = self.g.GetBinContent(self.g.FindBin(self.mH))
         self.gsmCPS = self.gCPS.GetBinContent(self.gCPS.FindBin(self.mH))
@@ -328,7 +328,7 @@ class BWEwkSingletReweighter(Module):
           #  elif abs(part.pdgId) in [12,14,16]:
           #    LHEneuId.append(idx)
           if abs(part.pdgId) in [1,2,3,4,5,21]:
-            LHEjetId.append(idx)
+            if part.status==1: LHEjetId.append(idx) # nanoAODv7 introduces more LHE variables. These new unneeded ones have status -1.
 
         #LHElepId = self.pTorder(event, LHElepId)
         #LHEneuId = self.pTorder(event, LHEneuId)
@@ -678,6 +678,7 @@ class BWEwkSingletReweighter(Module):
         #print "====="
         #print gid,pdgid,eta,phi
         for lid,lhe in enumerate(self.LHE):
+          if lhe.status!=1: continue # nanoAODv7 introduces more LHE variables. These new unneeded ones have status -1.
           #print lhe.pdgId,lhe.eta,lhe.phi
           if lhe.pdgId != pdgid: continue
           dphi = phi-lhe.phi

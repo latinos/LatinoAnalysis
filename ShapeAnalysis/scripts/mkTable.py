@@ -71,7 +71,7 @@ def merge_processes(tab, procs_to_merge, merged_name):
     return pd.concat([new_df, sub_df], ignore_index=True)
 
 
-def get_latex(tab, pre_fit, b_only, s_b, do_csv):
+def get_latex(tab, pre_fit, b_only, s_b, do_csv, nDec):
 
     if not pre_fit and not b_only and not s_b: full = True
     else: full = False
@@ -83,18 +83,18 @@ def get_latex(tab, pre_fit, b_only, s_b, do_csv):
         for index, row in tab.iterrows():
             formatted.append({'category' : row['category'],
                             'process' : row['process'],
-                            'pre_fit' : '{0} +/- {1}'.format(row["pre_fit"], row["pre_fit_error"]),
-                            's+b_fit' : '{0} +/- {1}'.format(row["s+b_fit"], row["s+b_fit_error"]),
-                            'b_only_fit' : '{0} +/- {1}'.format(row["b_only_fit"], row["b_only_fit_error"])})
+                            'pre_fit' : '{0:.{x}f} +/- {1:.{x}f}'.format(row["pre_fit"], row["pre_fit_error"], x=nDec),
+                            's+b_fit' : '{0:.{x}f} +/- {1:.{x}f}'.format(row["s+b_fit"], row["s+b_fit_error"], x=nDec),
+                            'b_only_fit' : '{0:.{x}f} +/- {1:.{x}f}'.format(row["b_only_fit"], row["b_only_fit_error"], x=nDec)})
     
     else:
         for index, row in tab.iterrows():
             entry = {}
             entry['category'] = row['category']
             entry['process'] = row['process']
-            if pre_fit: entry['pre_fit'] = '{0} +/- {1}'.format(row["pre_fit"], row["pre_fit_error"])
-            if s_b: entry['s+b_fit'] = '{0} +/- {1}'.format(row["s+b_fit"], row["s+b_fit_error"])
-            if b_only: entry['b_only_fit'] = '{0} +/- {1}'.format(row["b_only_fit"], row["b_only_fit_error"])
+            if pre_fit: entry['pre_fit'] = '{0:.{x}f} +/- {1:.{x}f}'.format(row["pre_fit"], row["pre_fit_error"], x=nDec)
+            if s_b: entry['s+b_fit'] = '{0:.{x}f} +/- {1:.{x}f}'.format(row["s+b_fit"], row["s+b_fit_error"], x=nDec)
+            if b_only: entry['b_only_fit'] = '{0:.{x}f} +/- {1:.{x}f}'.format(row["b_only_fit"], row["b_only_fit_error"], x=nDec)
             formatted.append(entry)
 
     if do_csv:
@@ -166,7 +166,7 @@ def read_input(raw_input):
     return df[table[0].keys()]
 
 
-def get_latex_reduced(tab, do_merged_only, show_unc, do_csv):
+def get_latex_reduced(tab, do_merged_only, show_unc, do_csv, nDec):
 
     formatted = []
     procs = []
@@ -179,19 +179,19 @@ def get_latex_reduced(tab, do_merged_only, show_unc, do_csv):
             entry = {'Process' : proc}
             for cat in df[df['process'] == proc]['category'].values:
                 if show_unc:
-                    try: post_fit = '{0:.2f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0])
+                    try: post_fit = '{0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
                     except: post_fit = '0.0 +/- '
-                    try: post_fit_error = '{0:.2f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit_error'].values[0])
+                    try: post_fit_error = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit_error'].values[0], x=nDec)
                     except: post_fit_error = 'n.a.'
-                    try: pre_fit = ' ({0:.2f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0])
+                    try: pre_fit = ' ({0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
                     except: pre_fit = ' (0.0 +/- '
-                    try: pre_fit_error = '{0:.2f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit_error'].values[0])
+                    try: pre_fit_error = '{0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit_error'].values[0], x=nDec)
                     except: 'n.a.)'
                     entry[cat] = post_fit+post_fit_error+pre_fit+pre_fit_error
                 else:
-                    try: post_fit = '{0:.2f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0])
+                    try: post_fit = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
                     except: post_fit = '0.0'
-                    try: pre_fit = ' ({0:.2f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0])
+                    try: pre_fit = ' ({0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
                     except: pre_fit = ' (0)'
                     entry[cat] = post_fit+pre_fit
             formatted.append(entry)
@@ -202,19 +202,19 @@ def get_latex_reduced(tab, do_merged_only, show_unc, do_csv):
                 entry = {'Process' : proc}
                 for cat in [c['new_name'] for c in categories_to_merge]:
                     if show_unc:
-                        try: post_fit = '{0:.2f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0])
+                        try: post_fit = '{0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
                         except: post_fit = '0.0 +/- '
-                        try: post_fit_error = '{0:.2f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit_error'].values[0])
+                        try: post_fit_error = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit_error'].values[0], x=nDec)
                         except: post_fit_error = 'n.a.'
-                        try: pre_fit = ' ({0:.2f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0])
+                        try: pre_fit = ' ({0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
                         except: pre_fit = ' (0.0 +/- '
-                        try: pre_fit_error = '{0:.2f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit_error'].values[0])
+                        try: pre_fit_error = '{0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit_error'].values[0], x=nDec)
                         except: 'n.a.)'
                         entry[cat] = post_fit+post_fit_error+pre_fit+pre_fit_error
                     else:
-                        try: post_fit = '{0:.2f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0])
+                        try: post_fit = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
                         except: post_fit = '0.0'
-                        try: pre_fit = ' ({0:.2f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0])
+                        try: pre_fit = ' ({0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
                         except: pre_fit = ' (0)'
                         entry[cat] = post_fit+pre_fit
                 formatted.append(entry)
@@ -257,6 +257,7 @@ parser.add_argument('--fancyTable', help='Produce table of yields in sample VS c
 parser.add_argument('--mergedOnly', help='Use only categories that have been merged in the table', action='store_true')
 parser.add_argument('-u', '--uncertainties', help='If --reducedTable is selected, adds uncertainties to the table', action='store_true')
 parser.add_argument('--csv', help='Outputs table in .csv format', action='store_true')
+parser.add_argument('--decimals', help='Number of decimals to be shown', type=int, default=2)
 args = parser.parse_args()
 
 #------- Main --------------------------------------------------------------------------------------------------------------------------------------------#
@@ -303,5 +304,5 @@ if __name__ == '__main__':
                 print('--> Removing unwanted processes')
                 df = remove_processes(df, processes_to_remove)
 
-    if not args.fancyTable: get_latex(df, args.expected, args.background, args.signal, args.csv)
-    else: get_latex_reduced(df, args.mergedOnly, args.uncertainties, args.csv)
+    if not args.fancyTable: get_latex(df, args.expected, args.background, args.signal, args.csv, args.decimals)
+    else: get_latex_reduced(df, args.mergedOnly, args.uncertainties, args.csv, args.decimals)

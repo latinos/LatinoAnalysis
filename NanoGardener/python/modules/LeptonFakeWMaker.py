@@ -484,11 +484,17 @@ class LeptonFakeWMaker(Module):
 
         if self.min_nlep == 1:
             fakeVarExt = [ ]
-            for mupt in [10,15,20,25,30,35,45]:
-                for elept in [25,35,45]:
-                    fakeVarExt.append("_mu{}_ele{}".format(mupt,elept))
+            for mupt in [20, 25, 35]:
+                fakeVarExt.append('_1l_mu{}_ele35'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_ElUp'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_ElDown'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_statElUp'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_statElDown'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_MuUp'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_MuDown'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_statMuUp'.format(mupt)) 
+                fakeVarExt.append('_1l_mu{}_ele35_statMuDown'.format(mupt)) 
             
-
         for iTag in self.FakeWeights:
           for iVarExt in fakeVarExt : 
             print 'Creating  : ','fakeW_'+iTag+iVarExt
@@ -544,14 +550,21 @@ class LeptonFakeWMaker(Module):
 
         # Now compute the fakes 
         for iTag in self.FakeWeights:
-            if self.min_nlep == 1 and selectedLepton == 1:
-               for mupt in [10,15,20,25,30,35,45]:
-                  for elept in [25,35,45]:
-                     self.out.fillBranch('fakeW_{}_mu{}_ele{}'.format(        iTag, mupt, elept) , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet{}'.format(mupt), 'ElFR_jet{}'.format(elept), 'Nominal'))
-                     self.out.fillBranch('fakeW_{}_mu{}_ele{}_statMuUp'.format(   iTag, mupt, elept) , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet{}'.format(mupt), 'ElFR_jet{}'.format(elept), 'MuUp'))
-                     self.out.fillBranch('fakeW_{}_mu{}_ele{}_statMuDown'.format( iTag, mupt, elept) , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet{}'.format(mupt), 'ElFR_jet{}'.format(elept), 'MuDown'))
-                     self.out.fillBranch('fakeW_{}_mu{}_ele{}_statElUp'.format(   iTag, mupt, elept) , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet{}'.format(mupt), 'ElFR_jet{}'.format(elept), 'ElUp'))
-                     self.out.fillBranch('fakeW_{}_mu{}_ele{}_statElDown'.format( iTag, mupt, elept) , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet{}'.format(mupt), 'ElFR_jet{}'.format(elept), 'ElDown'))
+            if self.min_nlep == 1:
+                for mupt in [20, 25, 35]:
+                    fakeVarExt.append('_1l_mu{}_ele35'.format(mupt)) 
+                
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35'           , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt), 'ElFR_jet35', 'Nominal'))
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_ElUp'      , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt), 'ElFR_jet45', 'Nominal'))
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_ElDown'    , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt), 'ElFR_jet25', 'Nominal'))
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_statElUp'  , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt), 'ElFR_jet35', 'ElUp'   ))
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_statElDown', self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt), 'ElFR_jet35', 'ElDown' ))
+
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_MuUp'      , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt+10), 'ElFR_jet35', 'Nominal'))
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_MuDown'    , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt-10), 'ElFR_jet35', 'Nominal'))
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_statMuUp'  , self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt), 'ElFR_jet35', 'MuUp'   ))
+                    self.out.fillBranch('fakeW_'+iTag+'_1l_mu'+str(mupt)+'ele35_statMuDown', self.FakeWeights[iTag]['fakeW']._get1lWeight(Leptons[iTag], 'MuFR_jet'+str(mupt), 'ElFR_jet35', 'MuDown' ))
+
             else:   
                self.out.fillBranch('fakeW_'+iTag+'_2l0j'          , self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet20', 'ElFR_jet35', 'Nominal') )
                self.out.fillBranch('fakeW_'+iTag+'_2l0jMuUp'      , self.FakeWeights[iTag]['fakeW']._get2lWeight(Leptons[iTag], 'MuFR_jet30', 'ElFR_jet35', 'Nominal') )

@@ -66,6 +66,20 @@ samples['WJetsToLNu_Pt600toInf']                   .extend( ['xsec=0.4683178368'
 samples['WJetsToLNu_Wpt100to200']  .extend( [ 'xsec=457.8', 'kfact=1.0', 'ref=XSDB' ])
 samples['WJetsToLNu_Wpt200toInf']  .extend( [ 'xsec=50.48', 'kfact=1.0', 'ref=XSDB' ])
 
+samples['WJetsToLNu_0J']  .extend( [ 'xsec=50131.98', 'kfact=1.0', 'ref=A1' ])
+samples['WJetsToLNu_1J']  .extend( [ 'xsec=8426.09', 'kfact=1.0', 'ref=A1' ])
+samples['WJetsToLNu_2J']  .extend( [ 'xsec=3172.96', 'kfact=1.0', 'ref=A1' ])
+
+samples['WJetsToLNu-LO_1J'].extend( [ 'xsec=9578.0', 'kfact=1.0', 'ref=W'])
+samples['WJetsToLNu-LO_2J'].extend( [ 'xsec=3154.0', 'kfact=1.0', 'ref=W'])
+samples['WJetsToLNu-LO_3J'].extend( [ 'xsec=958.0',  'kfact=1.0', 'ref=W'])
+samples['WJetsToLNu-LO_4J'].extend( [ 'xsec=495.7',  'kfact=1.0', 'ref=W'])
+
+samples['DYJetsToLL_0J']  .extend( [ 'xsec=4620.52', 'kfact=1.0', 'ref=A1' ])
+samples['DYJetsToLL_1J']  .extend( [ 'xsec=859.59', 'kfact=1.0', 'ref=A1' ])
+samples['DYJetsToLL_2J']  .extend( [ 'xsec=338.26', 'kfact=1.0', 'ref=A1' ])
+
+
 ## DY
 samples['DYJetsToLL_M-10to50']        	   .extend( ['xsec=18610.0',	'kfact=1.000',		'ref=E'] )
 samples['DYJetsToLL_M-10to50_ext1']        	   .extend( ['xsec=18610.0',	'kfact=1.000',		'ref=E'] )
@@ -285,6 +299,8 @@ samples['GluGluHToWWTo2L2Nu_JHUGen698_M1500']     .extend( ['xsec=0.00096',     
 samples['GluGluHToWWTo2L2Nu_JHUGen698_M2000']     .extend( ['xsec=0.00041',     'kfact=1.000',          'ref=KF'] ) # 0.006227*0.621*0.108*0.108*9
 samples['GluGluHToWWTo2L2Nu_JHUGen698_M2500']     .extend( ['xsec=0.00016',     'kfact=1.000',          'ref=KF'] ) # 0.002515*0.621*0.108*0.108*9
 samples['GluGluHToWWTo2L2Nu_JHUGen698_M3000']     .extend( ['xsec=0.000078',     'kfact=1.000',         'ref=KF'] ) # 0.001186*0.621*0.108*0.108*9
+samples['GluGluHToWWTo2L2Nu_JHUGen714_M4000']     .extend( ['xsec=0.000001917',     'kfact=1.000',         'ref=X'] ) # Self derived
+samples['GluGluHToWWTo2L2Nu_JHUGen714_M5000']     .extend( ['xsec=0.0000001250',     'kfact=1.000',         'ref=X'] ) # Self derived
 
 
 samples['GluGluHToWWTo2L2NuAMCNLO_M125']   .extend( ['xsec=0.9913',	'kfact=1.000',		'ref=CF'] ) # 43.92*0.215*0.108*0.108*9

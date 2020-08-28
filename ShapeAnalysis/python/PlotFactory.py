@@ -99,8 +99,9 @@ class PlotFactory:
         list_thsBackground = {}
 
         list_thsSignal_grouped     = {}
-        list_thsSignalSup_grouped  = {}
         list_thsBackground_grouped = {}
+        list_thsSignal_grouped_normalized = {}
+        list_thsBackground_grouped_normalized = {}
 
         list_tcanvas               = {}
         list_tcanvasRatio          = {}
@@ -108,6 +109,7 @@ class PlotFactory:
         list_tcanvasDifference          = {}
         list_weight_X_tcanvasDifference = {}
         list_tcanvasSigVsBkg       = {}
+        list_tcanvasSigVsBkgTHstack = {}
 
         generalCounter = 0
 
@@ -147,6 +149,9 @@ class PlotFactory:
             weight_X_tcanvasDifference = ROOT.TCanvas( "weight_X_tcanvasDifference" + cutName + "_" + variableName, "weight_X_tcanvasDifference", 800, 800 )
             if self._plotNormalizedDistributions :
               tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
+
+            if self._plotNormalizedDistributionsTHstack :
+              tcanvasSigVsBkgTHstack    = ROOT.TCanvas( "ccTHstackSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
  
             list_tcanvas                 [generalCounter] = tcanvas
             list_tcanvasRatio            [generalCounter] = tcanvasRatio
@@ -155,6 +160,8 @@ class PlotFactory:
             list_weight_X_tcanvasDifference   [generalCounter] = weight_X_tcanvasDifference
             if self._plotNormalizedDistributions :
               list_tcanvasSigVsBkg         [generalCounter] = tcanvasSigVsBkg
+            if self._plotNormalizedDistributionsTHstack :
+              list_tcanvasSigVsBkgTHstack         [generalCounter] = tcanvasSigVsBkgTHstack
 
 
 
@@ -203,6 +210,14 @@ class PlotFactory:
             list_thsBackground         [generalCounter] = thsBackground
             list_thsSignal_grouped     [generalCounter] = thsSignal_grouped
             list_thsBackground_grouped [generalCounter] = thsBackground_grouped
+
+            # for special case of plotting normalized
+            thsSignal_grouped_normalized     = ROOT.THStack ("thsSignal_grouped_normalized_" + cutName + "_" + variableName,    "thsSignal_grouped_normalized_" + cutName + "_" + variableName)
+            thsBackground_grouped_normalized = ROOT.THStack ("thsBackground_grouped_normalized_" + cutName + "_" + variableName,"thsBackground_grouped_normalized_" + cutName + "_" + variableName)
+            list_thsSignal_grouped_normalized     [generalCounter] = thsSignal_grouped_normalized
+            list_thsBackground_grouped_normalized [generalCounter] = thsBackground_grouped_normalized
+
+
             generalCounter += 1
             
             #print '... after thstack ...'
@@ -653,9 +668,10 @@ class PlotFactory:
 
             if variable['divideByBinWidth'] == 1 and histo_total != None:
               histo_total.Scale(1,"width")
-            print ' --> ', histo_total
+            print '--> histo_total = ', histo_total
             
-            if len(mynuisances.keys()) != 0:
+            #                                  if there is "histo_total" there is no need of explicit nuisances
+            if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrMC_vx)) :
                 tgrMC.SetPoint     (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
@@ -856,7 +872,8 @@ class PlotFactory:
               
             
             # if there is a systematic band draw it
-            if len(mynuisances.keys()) != 0:
+            #                               if there is "histo_total" there is no need of explicit nuisances
+            if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC.SetLineColor(12)
               tgrMC.SetFillColor(12)
               tgrMC.SetLineWidth(2)
@@ -993,7 +1010,8 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
               
-            if len(mynuisances.keys()) != 0:
+            #                               if there is "histo_total" there is no need of explicit nuisances
+            if len(mynuisances.keys()) != 0 or histo_total!= None:
                 if self._showIntegralLegend == 0 :
                     tlegend.AddEntry(tgrMC, "All MC", "F")
                 else :
@@ -1129,7 +1147,8 @@ class PlotFactory:
                 for histo in sigSupList_grouped: 
                   histo.Draw("hist same")
            
-            if (len(mynuisances.keys())!=0):
+            #                               if there is "histo_total" there is no need of explicit nuisances
+            if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC.Draw("2")
              
             #     - then the superimposed MC
@@ -1187,7 +1206,8 @@ class PlotFactory:
             #frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
             frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
             self.Pad2TAxis(frameRatio)
-            if (len(mynuisances.keys())!=0):
+            #                               if there is "histo_total" there is no need of explicit nuisances
+            if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMCOverMC.Draw("2") 
             
             tgrDataOverMC.Draw("P0")
@@ -1338,7 +1358,8 @@ class PlotFactory:
                 for histo in sigSupList_grouped: 
                   histo.Draw("hist same")
            
-            if (len(mynuisances.keys())!=0):
+            #                               if there is "histo_total" there is no need of explicit nuisances
+            if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC.Draw("2")
              
             #     - then the superimposed MC
@@ -1401,7 +1422,8 @@ class PlotFactory:
               frameDifference.GetYaxis().SetTitle("Data - Expected")
               frameDifference.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - 2 ),  int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + 2 ) )
             self.Pad2TAxis(frameDifference)
-            if (len(mynuisances.keys())!=0):
+            #                               if there is "histo_total" there is no need of explicit nuisances
+            if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMCMinusMC.SetLineColor(12)
               tgrMCMinusMC.SetFillColor(12)
               tgrMCMinusMC.SetLineWidth(2)
@@ -1957,7 +1979,8 @@ class PlotFactory:
                     if weight_X_thsSignal.GetNhists() != 0:
                       weight_X_thsSignal.Draw("hist same noclear")
                     
-                    if (len(mynuisances.keys())!=0):
+                    #                               if there is "histo_total" there is no need of explicit nuisances
+                    if len(mynuisances.keys()) != 0 or histo_total!= None:
                       weight_X_tgrMC.SetLineColor(12)
                       weight_X_tgrMC.SetFillColor(12)
                       weight_X_tgrMC.SetFillStyle(3004)
@@ -2008,7 +2031,8 @@ class PlotFactory:
                     weight_X_frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
                     self.Pad2TAxis(weight_X_frameRatio)
                     
-                    if (len(mynuisances.keys())!=0):
+                    #                               if there is "histo_total" there is no need of explicit nuisances
+                    if len(mynuisances.keys()) != 0 or histo_total!= None:
                       weight_X_tgrMCOverMC.SetLineColor(12)
                       weight_X_tgrMCOverMC.SetFillColor(12)
                       weight_X_tgrMCOverMC.SetFillStyle(3004)
@@ -2040,7 +2064,8 @@ class PlotFactory:
                     
                     weight_X_tgrMCOverMC.Write()
                     weight_X_tgrDataOverMC.Write()
-                    if (len(mynuisances.keys())!=0):
+                    #                               if there is "histo_total" there is no need of explicit nuisances
+                    if len(mynuisances.keys()) != 0 or histo_total!= None:
                       weight_X_tgrMC.Write("weight_X_tgrMC")
                     if weight_X_tgrData.GetN() != 0:
                       weight_X_tgrData.Write("weight_X_tgrData")
@@ -2099,7 +2124,8 @@ class PlotFactory:
 
                     self.Pad2TAxis(weight_X_frameRatio)
 
-                    if (len(mynuisances.keys())!=0):
+                    #                               if there is "histo_total" there is no need of explicit nuisances
+                    if len(mynuisances.keys()) != 0 or histo_total!= None:
                       weight_X_tgrMCMinusMC.SetLineColor(12)
                       weight_X_tgrMCMinusMC.SetFillColor(12)
                       weight_X_tgrMCMinusMC.SetFillStyle(3004)
@@ -2192,7 +2218,68 @@ class PlotFactory:
          
  
  
-            
+            if self._plotNormalizedDistributionsTHstack :
+              # ~~~~~~~~~~~~~~~~~~~~
+              #
+              # Plot signal vs background normalized
+              # All the backgrounds or signals will be shown as stacked
+              # All contributions will be shown as well as in the normal stack distribution
+              # keeping though the integral of background and signal set to 1
+              #
+              
+              tcanvasSigVsBkgTHstack.cd()
+  
+              frameNormTHstack = ROOT.TH1F
+              frameNormTHstack = tcanvasSigVsBkgTHstack.DrawFrame(minXused, 0.0, maxXused, 1.0)
+  
+              frameNormTHstack.GetYaxis().SetRangeUser( 0, 1.5 )
+              # setup axis names
+              if 'xaxis' in variable.keys() : 
+                frameNormTHstack.GetXaxis().SetTitle(variable['xaxis'])
+              tcanvasSigVsBkgTHstack.RedrawAxis()
+  
+              maxY_normalized=0.0
+
+              h_sum_of_backgrounds = thsBackground_grouped.GetStack().Last() 
+              h_sum_of_signals = thsSignal_grouped.GetStack().Last() 
+              
+              normalization_factor_background = 1. / h_sum_of_backgrounds.Integral()
+              normalization_factor_signal = 1. / h_sum_of_signals.Integral()
+
+              if h_sum_of_backgrounds.Integral() > 0.:
+                maxY_normalized = h_sum_of_backgrounds.GetBinContent(h_sum_of_backgrounds.GetMaximumBin())/h_sum_of_backgrounds.Integral()
+              if h_sum_of_signals.Integral() > 0.:
+                temp_maxY_normalized = h_sum_of_signals.GetBinContent(h_sum_of_signals.GetMaximumBin())/h_sum_of_signals.Integral()
+                if (temp_maxY_normalized > maxY_normalized) :
+                  maxY_normalized = temp_maxY_normalized
+                
+              for hentry in thsBackground_grouped.GetHists():  
+                if hentry not in thsSignal_grouped.GetHists() :   # since signal is part of the "background" for plotting reason
+                  num_bins = hentry.GetNbinsX()
+                  for ibin in range( num_bins ) :
+                    hentry.SetBinError(ibin+1, 0.000001)
+                  hentry.SetFillStyle(0)
+                  hentry.SetLineWidth(3)
+                  hentry.Scale(normalization_factor_background)
+                  thsBackground_grouped_normalized.Add(hentry)
+
+              for hentry in thsSignal_grouped.GetHists():               
+                num_bins = hentry.GetNbinsX()
+                for ibin in range( num_bins ) :
+                  hentry.SetBinError(ibin+1, 0.000001)
+                hentry.SetFillStyle(0)
+                hentry.SetLineWidth(3)
+                hentry.Scale(normalization_factor_signal)
+                thsSignal_grouped_normalized.Add(hentry)
+
+              thsSignal_grouped_normalized.Draw("hist same noclear")
+              thsBackground_grouped_normalized.Draw("hist same noclear")
+
+              frameNormTHstack.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
+
+              tlegend.Draw()
+              self._saveCanvas(tcanvasSigVsBkgTHstack, self._outputDirPlots + "/" + 'ccTHstackSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
+         
 
             # some cleaning 
             

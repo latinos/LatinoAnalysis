@@ -149,6 +149,14 @@ class DatacardFactory:
                     
                   yields[sampleName] = histo.Integral()
   
+                #
+                # Remove statistical uncertainty from the histogram
+                # This may be used to suppress the effect on "autoMCstat" of a specific
+                # sample, by means of putting its uncertainty to 0
+                #
+                if 'removeStatUnc' in structureFile[sampleName] and structureFile[sampleName]['removeStatUnc']:
+                  self._removeStatUncertainty (histo)
+                 
                 self._outFile.cd()
                 histo.Write()
 
@@ -502,7 +510,7 @@ class DatacardFactory:
                   continue
 
                 card.write(nuisance['name'].ljust(80-20))
-                card.write('rateParam'.ljust(20))
+                card.write('rateParam'.ljust(25))
                 card.write(tagNameToAppearInDatacard.ljust(columndef))   # the bin
                 # there can be only 1 sample per rateParam
                 if len(nuisance['samples']) != 1:
@@ -512,7 +520,7 @@ class DatacardFactory:
                 if sampleName not in samples:
                   raise RuntimeError('Invalid rateParam: unknown sample %s' % sampleName)
 
-                card.write(sampleName.ljust(20))
+                card.write(sampleName.ljust(25))
                 card.write(('%-.4f' % float(initialValue)).ljust(columndef))
                 card.write('\n')
 
@@ -586,6 +594,13 @@ class DatacardFactory:
             print shapeName, 'not found'
       
         return histo
+
+
+    # _____________________________________________________________________________
+    def _removeStatUncertainty(self, histo):
+        for iBin in range(0,histo.GetNbinsX()+2) :
+          histo.SetBinError(iBin,0.)
+
 
 
 if __name__ == '__main__':
