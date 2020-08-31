@@ -935,15 +935,25 @@ samples['VBF_H0Mf05_ToWWTo2L2Nu'] .extend( ['xsec=0.0846',	'kfact=1.000',		'ref=
 
 # VBSlnujj semileptonic 
 
-samples['WpToLNu_WmTo2J']   .extend( ['xsec=0.9114',    'kfact=1.000',   'ref=Z' ])
-samples['WpTo2J_WmToLNu']   .extend( ['xsec=0.9107',    'kfact=1.000',   'ref=Z' ])
-samples['WpToLNu_WpTo2J']   .extend( ['xsec=0.0879',    'kfact=1.000',   'ref=Z' ])
-samples['WmToLNu_WmTo2J']   .extend( ['xsec=0.0326',    'kfact=1.000',   'ref=Z' ])
-samples['WpToLNu_ZTo2J']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=Z' ])
-samples['WpTo2J_ZTo2L']     .extend( ['xsec=0.0540',    'kfact=1.000',   'ref=Z' ])
-samples['WmToLNu_ZTo2J']    .extend( ['xsec=0.1000',    'kfact=1.000',   'ref=Z' ])
-samples['WmTo2J_ZTo2L']     .extend(['xsec=0.0298',     'kfact=1.000',   'ref=Z' ])
-samples['ZTo2L_ZTo2J']      .extend(['xsec=0.0159',     'kfact=1.000',   'ref=Z' ])
+samples['WmTo2J_ZTo2L']     .extend(['xsec=0.02982',     'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_WmTo2J']   .extend( ['xsec=0.03259',    'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_ZTo2J']    .extend( ['xsec=0.1000',    'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_WmToLNu']   .extend( ['xsec=0.9108',    'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_ZTo2L']     .extend( ['xsec=0.05401',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WpTo2J']   .extend( ['xsec=0.08793',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WmTo2J']   .extend( ['xsec=0.9115',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_ZTo2J']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=I' ])
+samples['ZTo2L_ZTo2J']      .extend(['xsec=0.01589',     'kfact=1.000',   'ref=I' ])
+
+samples['WmTo2J_ZTo2L_QCD']     .extend( ['xsec=0.3866',    'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_WmTo2J_QCD']   .extend( ['xsec=0.03774',   'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_ZTo2J_QCD']    .extend( ['xsec=1.302',     'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_WmToLNu_QCD']   .extend( ['xsec=5.567',     'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_ZTo2L_QCD']     .extend( ['xsec=0.6404',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WpTo2J_QCD']   .extend( ['xsec=0.08642',   'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WmTo2J_QCD']   .extend( ['xsec=5.548',     'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_ZTo2J_QCD']    .extend( ['xsec=2.159',     'kfact=1.000',   'ref=I' ])
+samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   'ref=I' ])
 
 
 # HH_WWbb_bblnujj semileptonic 2016

@@ -482,7 +482,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                           createJESchain_CombJJLNu("HF_RPLME_YEAR", kind) +
                           createJESchain_CombJJLNu("RelativeBal", kind) +
                           createJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", kind),   
-                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+            'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt',
+            'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc
         }
 
       elif syst == "JER":
@@ -496,7 +497,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
                         'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
-          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt',
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc
         }
 
         # other systematics
@@ -513,7 +515,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
                         'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
-          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt',
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc
         }
       elif syst == "MET":
         dictionary[basename+"_"+ syst + kind.lower()] = {
@@ -526,7 +529,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep),
                         'l2Kin_{0}'.format(torep), 'MHSemiLepVars_{0}'.format(torep), 'MHSemiLepMVA_{0}'.format(torep),
                         ],
-          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt',
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc
         }
       elif syst  in ["fatjetJMS", "fatjetJMR", "fatjetJER"]:
         dictionary[basename+"_"+ syst + kind.lower()] = {
@@ -538,7 +542,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                         'VBSjjlnu_pairing_{0}'.format(torep), 'VBSjjlnu_kin_{0}'.format(torep),  
                         'whadJetSel_{0}'.format(torep), 'wlepMaker_{0}'.format(torep), 'HMlnjjVars_{0}'.format(torep), 'HMDNNProdSemi_{0}'.format(torep), 'HMDNNNeutSemi_{0}'.format(torep)
                         ],
-          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt',
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc
         }
       elif syst == "fatjetJES":
         dictionary[basename +"_"+ syst+kind.lower()] = {
@@ -559,7 +564,8 @@ def prepare_CombJJLNu_syst(basename, selection):
                           createfatjetJESchain_CombJJLNu("HF_RPLME_YEAR", kind) +
                           createfatjetJESchain_CombJJLNu("RelativeBal", kind) +
                           createfatjetJESchain_CombJJLNu("RelativeSample_RPLME_YEAR", kind), 
-                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+          'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt',
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc
         }
 
   #pprint(dictionary)
