@@ -1,6 +1,7 @@
 
 import ROOT
 import math 
+import numpy
 import ctypes
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -93,7 +94,7 @@ class EFTReweighter(Module):
 
         HFinalStateIdx = []
         for gid,gen in enumerate(Gen):
-          if abs(gen.pdgId) >= 21: continue 
+          if abs(gen.pdgId) >= 21: continue
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
           if abs(event.GenPart_pdgId[mid]) != 24: continue 
@@ -116,6 +117,14 @@ class EFTReweighter(Module):
           d.SetPtEtaPhiM(LHEHFinalState[ipart][0], LHEHFinalState[ipart][1], LHEHFinalState[ipart][2], 0.)
           daughters.push_back(d)
           daughterIDs.push_back(LHEHFinalState[ipart][3])                            
+
+        # Check First lnu pair to catch 1 bad pdgid event in H0L1f05 2016 file
+        if abs(daughterIDs[0]) in [11,13,15] and abs(daughterIDs[1]) in [12,14,16]  : 
+         LNuID = daughterIDs[0]*daughterIDs[1] 
+         if LNuID not in [-11*12, -13*14, -15*16] : 
+          print "Lep Nu IDs not matching : ", daughterIDs[0], daughterIDs[1]
+          daughterIDs[1]  = -1*numpy.sign(daughterIDs[0])*(abs(daughterIDs[0])+1)
+          print "Change Nu ID to match Lep : ", daughterIDs[0], daughterIDs[1] 
 
         mothers = ROOT.vector('TLorentzVector')()
         motherIDs = ROOT.vector('int')()

@@ -101,6 +101,8 @@ vbsjjlnu_samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpT
                      'WmTo2J_ZTo2L_aQGC', 'WmToLNu_WmTo2J_aQGC','WmToLNu_ZTo2J_aQGC','WpTo2J_WmToLNu_aQGC','WpTo2J_ZTo2L_aQGC',
                     'WpToLNu_WpTo2J_aQGC', 'WpToLNu_ZTo2J_aQGC','ZTo2L_ZTo2J_aQGC','WpToLNu_WmTo2J_aQGC']
 
+vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal
+
 vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-02Apr2020_ver1-v1',
                              'SingleElectron_Run2016B-02Apr2020_ver2-v1',
                              'SingleElectron_Run2016C-02Apr2020-v1'
