@@ -3584,7 +3584,7 @@ ElectronWP = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_passingMVA80Xwp90Iso16.txt' ,
                                   } ,
-                         #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016/',
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v7/mva90pIso2016/',
                               } ,
 
           'mva_90p_Iso2016_tthmva_70':  {
@@ -3619,8 +3619,7 @@ ElectronWP = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_TightHWW_ttHMVA_0p7_SFs_2016.txt' ,
                                   } ,
-                         # FIXME: Update with new fakes
-                         #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v7/mva90pIso2016/',
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v7/mva90pIso2016_tthMVA/',
                               } ,
 
           'mva_90p_Iso2016_SS':  {
@@ -3656,7 +3655,7 @@ ElectronWP = {
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_passingMVA80Xwp90Iso16_SS.txt' ,
                                   } ,
-                         #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016_SS/',
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v7/mva90pIso2016_SS/',
                               } ,
 
           'mva_90p_Iso2016_SS_tthmva_70':  {
@@ -3686,15 +3685,13 @@ ElectronWP = {
                                      'electron_col[LF_idx]["pfRelIso03_all"] < 0.0571',
                                    ] ,
                                   } ,
-                         #FIXME: Update with new SFs
                          'tkSF':  {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/EGM2D_BtoH_combineLowEt_RecoSF_Legacy2016.root' ,
                                   } ,
                          'wpSF':  {
                                     '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/egammaEffi_TightHWW_SS_ttHMVA_0p7_SFs_2016.txt' ,
                                   } ,
-                         # FIXME: Update with new fakes
-                         #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016_SS/',
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v7/mva90pIso2016_SS_tthMVA/',
                               } ,
 
                 } ,
@@ -5773,7 +5770,7 @@ MuonWP = {
                          'isoSF':  {
                                     '1-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/muonISO_TH2_SFs_pt_eta.root' ] ,
                                    } ,
-                         #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016/', 
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v7/Tight80X/', 
 
                        } ,
 
@@ -5811,7 +5808,7 @@ MuonWP = {
                                               'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/ttHMVA0p8_TightHWWCut_SFs_2016.root' , # Nominal + stat
                                               'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v7/ttHMVA0p8_TightHWWCut_SFs_SYS_2016.root', ] # Syst
                                    },
-                         #'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016/mva90pIso2016/', 
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2016v7/Tight80X_tthMVA/', 
 
                        } ,
 
