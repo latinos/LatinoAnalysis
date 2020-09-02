@@ -942,6 +942,16 @@ Steps = {
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
                 },
 
+  'MCCorr2018v7fixJER' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMC2018','btagPerJet2018','JetPUID_SF_18',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
+                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
+                },
+
 
   'MCGenOnly': {
                   'isChain'    : True  ,
