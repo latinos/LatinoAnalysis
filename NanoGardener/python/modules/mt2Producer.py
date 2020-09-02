@@ -182,7 +182,7 @@ class mt2Producer(Module):
         if hasattr(event, 'METFixEE2017_pt_nom'): metBranch = 'METFixEE2017' 
         if self.metType=='puppi':  metBranch = 'PuppiMET' 
 
-        metSystem = '_'+self.metSystematic 
+        metSystem = '_'+self.metSystematic.replace('Smear', '') 
         if not hasattr(event, metBranch+'_pt'+metSystem):
             if self.metSystematic=='nom':
                 metSystem = ''
@@ -190,6 +190,14 @@ class mt2Producer(Module):
                 raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
 
         ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
+
+        if 'Smear' in self.metSystematic:
+            ptmissnom = ROOT.TVector3()
+            ptmissjer = ROOT.TVector3()
+            ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_pt_nom'), 0., getattr(event, metBranch+'_phi_nom'))
+            ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_pt_jer'), 0., getattr(event, metBranch+'_phi_jer'))
+            #ptmissvec3 = ptmissjer + (ptmissvec3 - ptmissnom)
+            ptmissvec3 += ptmissjer - ptmissnom
 
         passRegion = False
 
