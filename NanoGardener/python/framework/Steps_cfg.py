@@ -688,11 +688,12 @@ Steps = {
                                      'MHTrigMC','MHSwitch','formulasMCMH' ],
                 },
 
+  # JERsMC2016 removed due to bugs in the jet eta "horn" region 
   'MCCorr2016v7' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','JERsMC2016','PrefCorr2016','btagPerJet2016','JetPUID_SF_16',
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','JetPUID_SF_16',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
