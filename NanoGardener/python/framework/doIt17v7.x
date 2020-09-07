@@ -26,9 +26,11 @@ do
 #      for iSyst in JESup_suffix JESdo_suffix ; do
 #        mkPostProc.py -p Fall2017_102X_nAODv7_Full2017v7 -s $iSyst -i MCl1loose2017v7__MCCorr2017v7__l2loose__l2tightOR2017v7 -b -Q nextweek
 #      done
-
+       for iSyst in JERup_suffix JERdo_suffix ; do
+         mkPostProc.py -p Fall2017_102X_nAODv7_Full2017v7 -s $iSyst -i MCl1loose2017v7__MCCorr2017v7__l2loose__l2tightOR2017v7 -b 
+       done
 #      for iSyst in METup_suffix METdo_suffix MupTup_suffix MupTdo_suffix ElepTup_suffix ElepTdo_suffix ; do
-#        mkPostProc.py -p Fall2017_102X_nAODv7_Full2017v7 -s $iSyst -i MCl1loose2017v7__MCCorr2017v7__l2loose__l2tightOR2017v7 -b -Q nextweek
+#        mkPostProc.py -p Fall2017_102X_nAODv7_Full2017v7 -s $iSyst -i MCl1loose2017v7__MCCorr2017v7__l2loose__l2tightOR2017v7 -b
 #      done
 
 #      mkPostProc.py -p Fall2017_102X_nAODv7_Full2017v7 -s MCWgStar201Xv7 -b
