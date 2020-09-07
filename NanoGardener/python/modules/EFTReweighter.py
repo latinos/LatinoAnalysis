@@ -99,7 +99,7 @@ class EFTReweighter(Module):
           if mid == -1: continue
           if abs(event.GenPart_pdgId[mid]) != 24: continue 
           if self.FromH(event, gid) == False: continue
-          HFinalStateIdx.append(gid) 
+          HFinalStateIdx.append(gid)
 
         if len(HFinalStateIdx) != 4:      
          HFinalStateIdx = self.RemoveGammaW(event, HFinalStateIdx)
@@ -118,14 +118,17 @@ class EFTReweighter(Module):
           daughters.push_back(d)
           daughterIDs.push_back(LHEHFinalState[ipart][3])                            
 
-        # Check First lnu pair to catch 1 bad pdgid event in H0L1f05 2016 file
-        if abs(daughterIDs[0]) in [11,13,15] and abs(daughterIDs[1]) in [12,14,16]  : 
-         LNuID = daughterIDs[0]*daughterIDs[1] 
-         if LNuID not in [-11*12, -13*14, -15*16] : 
-          print "Lep Nu IDs not matching : ", daughterIDs[0], daughterIDs[1]
-          daughterIDs[1]  = -1*numpy.sign(daughterIDs[0])*(abs(daughterIDs[0])+1)
-          print "Change Nu ID to match Lep : ", daughterIDs[0], daughterIDs[1] 
+        # Check lnu pairs to catch corrupted pdgid events (in H0L1f05 part0 2016 nAODv7)
 
+        if self.sample is "H0L1f05_ToWWTo2L2Nu" :
+         if abs(daughterIDs[0]) in [11,13,15] and abs(daughterIDs[1]) in [12,14,16] and abs(daughterIDs[2]) in [12,14,16] and abs(daughterIDs[3]) in [11,13,15] :
+          if self.MatchLNuIDs(daughterIDs[0], daughterIDs[1]) is False : 
+           print "1st Lep-Nu pair IDs not matching : ", daughterIDs[0], daughterIDs[1]
+           daughterIDs[1]  = -1*numpy.sign(daughterIDs[0])*(abs(daughterIDs[0])+1)        
+          if self.MatchLNuIDs(daughterIDs[3], daughterIDs[2]) is False : 
+           print "2nd Lep-Nu pair IDs not matching : ", daughterIDs[3], daughterIDs[2]
+           daughterIDs[2]  = -1*numpy.sign(daughterIDs[3])*(abs(daughterIDs[3])+1)
+          
         mothers = ROOT.vector('TLorentzVector')()
         motherIDs = ROOT.vector('int')()
         incoming1=ROOT.TLorentzVector()
@@ -138,6 +141,8 @@ class EFTReweighter(Module):
         genid2 = int(event.Generator_id2)
         motherIDs.push_back(genid1)
         motherIDs.push_back(genid2)       
+
+        # additional particles (WH, ZH, VBF)
 
         adds   = ROOT.vector('TLorentzVector')()
         addIDs = ROOT.vector('int')()
@@ -188,7 +193,7 @@ class EFTReweighter(Module):
 
          LHEjetIdx = []
          for idx,part in enumerate(self.LHE):
-          if abs(part.pdgId) in [1,2,3,4,5,21]:
+          if abs(part.pdgId) in [1,2,3,4,5,21] and part.pt>0:
            LHEjetIdx.append(idx)
 
          LHEjetIdx = self.pTorder(event, LHEjetIdx)
@@ -198,10 +203,11 @@ class EFTReweighter(Module):
           add.SetPtEtaPhiM(event.LHEPart_pt[ijet], event.LHEPart_eta[ijet], event.LHEPart_phi[ijet], 0.)
           adds.push_back(add)
           addIDs.push_back(int(event.LHEPart_pdgId[ijet]))
-        
+
          if len(adds) !=2 : 
-          print "Number of additional particles does not equal 2! Setup is not appropiate for this VBF simulation"
-         
+          print "SOMETHING WENT WRONG!, VBF associated partons ", len(adds)
+
+        # Get MEs from MELA
 
         daughter_coll = ROOT.SimpleParticleCollection_t() 
         associated_coll = ROOT.SimpleParticleCollection_t()        
@@ -282,6 +288,10 @@ class EFTReweighter(Module):
             order[j] += 1
       newlist = [oldlist[i] for i in order]
       return newlist
+
+    def MatchLNuIDs(self, idL, idNu): 
+      if idNu == -1*numpy.sign(idL)*(abs(idL)+1) : return True
+      else : return False
 
     def FromH(self, event, pid): # Iterate over mothers to find Higgs
       while event.GenPart_genPartIdxMother[pid] != -1:
