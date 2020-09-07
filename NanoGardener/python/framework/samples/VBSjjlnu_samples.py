@@ -1,8 +1,7 @@
 ####  VBSjjlnu semileptonic samples and configs
 
 # Mainly 2017 as a inclusive starting point
-vbsjjlnu_samples_bkg = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
-                'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD',
+vbsjjlnu_samples_bkg = [
                 'WWW','WWZ','WZZ','ZZZ','WWG',
                 'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50',
                 'DYJetsToLL_M-5to50-LO',
@@ -100,6 +99,9 @@ vbsjjlnu_samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpT
                     'WpToLNu_WpTo2J', 'WpToLNu_ZTo2J','ZTo2L_ZTo2J','WpToLNu_WmTo2J',
                      'WmTo2J_ZTo2L_aQGC', 'WmToLNu_WmTo2J_aQGC','WmToLNu_ZTo2J_aQGC','WpTo2J_WmToLNu_aQGC','WpTo2J_ZTo2L_aQGC',
                     'WpToLNu_WpTo2J_aQGC', 'WpToLNu_ZTo2J_aQGC','ZTo2L_ZTo2J_aQGC','WpToLNu_WmTo2J_aQGC']
+
+vbsjjlnu_samples_qcdvv = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
+                'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD']
 
 #vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal
 vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg 
