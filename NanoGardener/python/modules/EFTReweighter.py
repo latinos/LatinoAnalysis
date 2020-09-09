@@ -169,7 +169,7 @@ class EFTReweighter(Module):
             self.productionMela = ROOT.TVar.Had_WH
            elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
             self.productionMela = ROOT.TVar.Lep_WH
-         
+
          if len(VFinalStateIdx) != 2 and self.productionProcess == "WH":      
           VFinalStateIdx = self.RemoveGammaW(event, VFinalStateIdx)
 
@@ -193,7 +193,7 @@ class EFTReweighter(Module):
 
          LHEjetIdx = []
          for idx,part in enumerate(self.LHE):
-          if abs(part.pdgId) in [1,2,3,4,5,21] and part.pt>0:
+          if abs(part.pdgId) in [1,2,3,4,5,21] and part.status==1:
            LHEjetIdx.append(idx)
 
          LHEjetIdx = self.pTorder(event, LHEjetIdx)
@@ -253,6 +253,9 @@ class EFTReweighter(Module):
         gen_pme_mixhm = PME[4]
         gen_pme_mixhp = PME[5] 
         gen_pme_mixhl = PME[6] 
+
+        if math.isnan(gen_pme_hsm) : print "SOMETHING WENT WRONG!, Production ME is nan "
+        if math.isnan(gen_dme_hsm) : print "SOMETHING WENT WRONG!, Decay ME is nan "
 
         self.out.fillBranch( 'gen_dme_hsm',    gen_dme_hsm )
         self.out.fillBranch( 'gen_dme_hm',     gen_dme_hm )
@@ -337,6 +340,7 @@ class EFTReweighter(Module):
         deltaR = 9999
         LHEid = -1
         for lid,lhe in enumerate(self.LHE):
+          if lhe.status!=1:continue
           if lhe.pdgId != pdgid: continue
           dphi = phi-lhe.phi
           if dphi > math.pi: dphi -= 2*math.pi
