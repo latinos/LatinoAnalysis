@@ -10,7 +10,7 @@ do
 
 #      mkPostProc.py -p Run2017_102X_nAODv7_Full2017v7 -s fakeW -i DATAl1loose2017v7__l2loose -b
 
-#      mkPostProc.py -p Run2017_102X_nAODv7_Full2017v7 -s DATAWgStar2017v7 -b
+#      mkPostProc.py -p Run2017_102X_nAODv7_Full2017v7 -s DATAWgStar201Xv7 -b
 
        mkPostProc.py -p Fall2017_102X_nAODv7_Full2017v7 -s MCl1loose2017v7 -b -Q nextweek
 #      mkPostProc.py -p Fall2017_102X_nAODv7_Full2017v7 -s MCCorr2017v7 -i MCl1loose2017v7 -b -Q nextweek -E $S
