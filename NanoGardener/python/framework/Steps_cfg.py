@@ -1496,7 +1496,7 @@ Steps = {
                   'subTargets' : ['VBSjjlnu_pairing', 'VBSjjlnu_kin' ,
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
                                   'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
-                  'onlySample' : vbsjjlnu_samples_bkg  + SemiLepHighMassSamples_2016, #vbsjjlnu_samples_signal
+                  'onlySample' : vbsjjlnu_samples_mc  + SemiLepHighMassSamples_2016,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
 
@@ -1521,7 +1521,7 @@ Steps = {
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
                                   'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
 
-                  'onlySample' : vbsjjlnu_samples_bkg  + SemiLepHighMassSamples_2017,#vbsjjlnu_samples_signal
+                  'onlySample' : vbsjjlnu_samples_mc  + SemiLepHighMassSamples_2017,#vbsjjlnu_samples_signal
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
 
@@ -1545,7 +1545,7 @@ Steps = {
                   'subTargets' :  ['VBSjjlnu_pairing', 'VBSjjlnu_kin', 
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
                                   'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
-                  'onlySample' : vbsjjlnu_samples_bkg + SemiLepHighMassSamples_2018,#vbsjjlnu_samples_signal
+                  'onlySample' : vbsjjlnu_samples_mc + SemiLepHighMassSamples_2018,#vbsjjlnu_samples_signal
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
 
