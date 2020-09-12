@@ -11,7 +11,7 @@ do
 
 #      mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s fakeW -i DATAl1loose2016v7__l2loose -b
 
-#      mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s DATAWgStar2016v7 -b
+#      mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s DATAWgStar201Xv7 -b
 
        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCl1loose2016v7 -b -Q nextweek
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCCorr2016v7 -i MCl1loose2016v7 -b -Q nextweek -E $Samples
@@ -32,8 +32,8 @@ do
 #      done
 
 
-#      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStar201Xv5 -b
-#      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStarCorr2016v7 -i MCWgStar201Xv5 -b
+#      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStar201Xv7 -b
+#      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStarCorr2016v7 -i MCWgStar201Xv7 -b
 
 
        echo "Press [CTRL+C] to stop.."

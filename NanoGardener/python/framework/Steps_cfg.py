@@ -1211,6 +1211,77 @@ Steps = {
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto'],
                    }, 
 
+#   ---> v7
+
+ 'MCWgStar201Xv7' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"((nElectron+nMuon)>1)"' ,
+                     'subTargets' : ['leptonMaker','WgSSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
+                                     'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar','ggHTheoryUncertainty', 'qqHTheoryUncertainty' , 'DressedLeptons','EFTGen'],
+                     'onlySample' : [
+                                   'Wg500',
+                                   'Wg_AMCNLOFXFX','Wg_AMCNLOFXFX_ext2','Wg_AMCNLOFXFX_ext3',
+                                   'WZTo3LNu','WZTo3LNu_ext1',
+                                   'WZTo3LNu_mllmin01',
+                                   'WZTo3LNu_powheg',
+                                   'Wg_MADGRAPHMLM',
+                                   #'Wg500','Wg_AMCNLOFXFX','WZTo3LNu','WgStarLNuEE','WgStarLNuMuMu','Wg_MADGRAPHMLM',
+                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-10to50_ext1',
+                                   'DYJetsToLL_M-50','DYJetsToLL_M-50_ext','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2',
+                                   'DYJetsToLL_M-5to50-LO',
+                                   'DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50-LO_ext2',
+                                   'TTTo2L2Nu',
+                                   'ST_tW_antitop','ST_tW_antitop_ext1','ST_tW_antitop_noHad','ST_tW_antitop_noHad_ext1',
+                                   'ST_tW_top','ST_tW_top_ext1','ST_tW_top_noHad','ST_tW_top_noHad_ext1',
+                                   'ST_s-channel','ST_s-channel_ext1',
+                                   'ST_t-channel_antitop',
+                                   'ST_t-channel_top',
+                                   'ZZTo2L2Nu','ZZTo2L2Nu_ext1','ZZTo2L2Nu_ext2',
+                                   'ZZTo4L','ZZTo4L_ext1','ZZTo4L_ext2',
+                                   'ZZTo2L2Q',
+                                   'WWW', 'WWZ', 'WZZ', 'ZZZ',
+                                   'GluGluToWWToENEN',
+                                   'GluGluToWWToENMN',
+                                   'GluGluToWWToENTN',
+                                   'GluGluToWWToMNEN',
+                                   'GluGluToWWToMNMN',
+                                   'GluGluToWWToMNTN',
+                                   'GluGluToWWToTNEN',
+                                   'GluGluToWWToTNMN',
+                                   'GluGluToWWToTNTN',
+                                   'WZTo2L2Q','Zg',
+                                 ]
+                   },
+
+  'MCWgStarCorr2016v7' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','JetPUID_SF_16',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ], 
+                   },
+
+  'MCWgStarCorr2017v7' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMC2017','PrefCorr2017','btagPerJet2017','JetPUID_SF_17',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
+                   },
+
+  'MCWgStarCorr2018v7' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','baseW','JERsMC2018','btagPerJet2018','JetPUID_SF_18',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
+                                     'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
+                   },
 
 ## ------- DATA:
     
@@ -1396,6 +1467,18 @@ Steps = {
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker','WgSSel', 'rochesterDATA','jetSelCustom', 'l2Kin', 'l3Kin', 'l4Kin','trigData','formulasDATA'],
+
+                   },
+
+##     --> v7
+
+    'DATAWgStar201Xv7' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','WgSSel', 'jetSelCustom','CorrFatJetData','CleanFatJet','rochesterDATA' , 
+                                  'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                    },
 
 

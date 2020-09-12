@@ -10,7 +10,7 @@ do
 
 #      mkPostProc.py -p Run2018_102X_nAODv7_Full2018v7 -s fakeW -i DATAl1loose2018v7__l2loose -b
 
-#      mkPostProc.py -p Run2018_102X_nAODv7_Full2018v7 -s DATAWgStar2018v7 -b
+#      mkPostProc.py -p Run2018_102X_nAODv7_Full2018v7 -s DATAWgStar201Xv7 -b
 
        mkPostProc.py -p Autumn18_102X_nAODv7_Full2018v7 -s MCl1loose2018v7 -b 
 #      mkPostProc.py -p Autumn18_102X_nAODv7_Full2018v7 -s MCCorr2018v7 -i MCl1loose2018v7 -b -E $samples
