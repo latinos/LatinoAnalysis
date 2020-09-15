@@ -3155,12 +3155,12 @@ Steps = {
                   'onlySample' : allDY,
               },
 
-   'recoilDYMVA' :  {
+   'recoilDY' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['recoilCorr','l2Kin','DYMVA'],
+                  'subTargets' : ['recoilCorr','l2Kin','l3Kin','l4Kin','formulasMC','DYMVA','MonoHiggsMVA','JJHEFT'],
                   'onlySample' : allDY,
               },
 
