@@ -10,6 +10,8 @@ from pprint import pprint
 exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/VBSjjlnu_samples.py"))
 # ... and samples for HM (2l2nu + jjlnu) analysis
 exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/HMjjlnu_samples.py"))
+# List of DY samples
+allDY = ['DYJetsToLL_M-5to50-LO', 'DYJetsToLL_M-10to50-LO', 'DYJetsToLL_M-10to50-LO_ext1', 'DYJetsToLL_M-10to50-LO_ext2', 'DYJetsToLL_M-10to50-LO_newpmx', 'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1', 'DYJetsToLL_M-50-LO', 'DYJetsToLL_M-50-LO_ext1', 'DYJetsToLL_M-50', 'DYJetsToLL_M-50_ext1', 'DYJetsToLL_M-50_ext2', 'DYJetsToLL_M-50_newpmx', 'DYJetsToLL_M-50-UEup', 'DYJetsToLL_M-50-UEdo', 'DYJetsToLL_M-50-PSup', 'DYJetsToLL_M-50-PSdo', 'DYJetsToLL_M-4to50_HT-100to200', 'DYJetsToLL_M-4to50_HT-100to200_ext1', 'DYJetsToLL_M-4to50_HT-100to200_newpmx', 'DYJetsToLL_M-4to50_HT-200to400', 'DYJetsToLL_M-4to50_HT-200to400_ext1', 'DYJetsToLL_M-4to50_HT-200to400_newpmx', 'DYJetsToLL_M-4to50_HT-400to600', 'DYJetsToLL_M-4to50_HT-400to600_ext1', 'DYJetsToLL_M-4to50_HT-600toInf', 'DYJetsToLL_M-4to50_HT-600toInf_ext1', 'DYJetsToLL_M-5to50_HT-70to100', 'DYJetsToLL_M-5to50_HT-100to200', 'DYJetsToLL_M-5to50_HT-100to200_ext1', 'DYJetsToLL_M-5to50_HT-200to400', 'DYJetsToLL_M-5to50_HT-200to400_ext1', 'DYJetsToLL_M-5to50_HT-400to600', 'DYJetsToLL_M-5to50_HT-400to600_ext1', 'DYJetsToLL_M-5to50_HT-600toinf_ext1', 'DYJetsToLL_M-5to50_HT-600toinf', 'DYJetsToLL_M-50_HT-70to100', 'DYJetsToLL_M-50_HT-100to200', 'DYJetsToLL_M-50_HT-100to200_ext1', 'DYJetsToLL_M-50_HT-100to200_newpmx', 'DYJetsToLL_M-50_HT-200to400', 'DYJetsToLL_M-50_HT-200to400_ext1', 'DYJetsToLL_M-50_HT-400to600', 'DYJetsToLL_M-50_HT-400to600_ext1', 'DYJetsToLL_M-50_HT-400to600_ext2', 'DYJetsToLL_M-50_HT-400to600_newpmx', 'DYJetsToLL_M-50_HT-600to800', 'DYJetsToLL_M-50_HT-800to1200', 'DYJetsToLL_M-50_HT-1200to2500', 'DYJetsToLL_M-50_HT-2500toinf']
 
 # -------------------------------------------- HERE WE GO ----------------------------------------------------
 
@@ -185,6 +187,83 @@ def addJESchainMembers():
                     'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
                     'declare'    : 'JJHEFT_MAPNAME = lambda : JJH_EFTVars(branch_map="MAPNAME")'.replace("MAPNAME", mapname),
                     'module'     : 'JJHEFT_MAPNAME()'.replace("MAPNAME", mapname),
+                 } 
+
+  return dictionary 
+
+
+def addMETchainMembers():
+  dictionary = {}
+  for type in ["Response", "Resolution"]:
+    for kind in ["Up", "Do"]:
+      typeShort = type
+      if type == "Total":
+        typeShort = ""  
+      mapname = "MET"+typeShort+kind.lower()
+      #print 'l2Kin_'+mapname
+      dictionary['l2Kin_'+mapname] = {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l2KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l2KinProducer(branch_map="%s")' %mapname ,
+                  'onlySample' : allDY,
+               }
+      dictionary['l3Kin_'+mapname] = {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l3KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l3KinProducer(branch_map="%s")' %mapname ,
+                  'onlySample' : allDY,
+               }
+      dictionary['l4Kin_'+mapname] = {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.l4KinProducer' ,
+                  'declare'    : '',
+                  'module'     : 'l4KinProducer(branch_map="%s")' %mapname ,
+                  'onlySample' : allDY,
+               }
+      dictionary['formulasMC_'+mapname] = {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_CMSSW.py\', branch_map="%s")' %mapname ,
+                  'onlySample' : allDY,
+                 }
+      dictionary['DYMVA_'+mapname] = {
+            #     'prebash'    : ['source /cvmfs/sft.cern.ch/lcg/views/LCG_92/x86_64-centos7-gcc62-opt/setup.sh'] ,
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'    : 'DYMVA_MAPNAME = lambda : TMVAfiller(\'data/DYMVA_RPLME_YEAR_alt_cfg.py\', branch_map="MAPNAME")'.replace("MAPNAME", mapname) ,
+                  'module'     : 'DYMVA_MAPNAME()'.replace("MAPNAME", mapname),
+                  'onlySample' : allDY,
+            } 
+      dictionary['MonoHiggsMVA_'+mapname] = {
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.TMVAfiller' ,
+                  'declare'  : 'MonoHiggsMVA_MAPNAME = lambda : TMVAfiller("data/MonoHiggsMVA_cfg.py", branch_map="MAPNAME")'.replace("MAPNAME", mapname),
+                  'module'   : 'MonoHiggsMVA_MAPNAME()'.replace("MAPNAME", mapname),
+                  'onlySample' : allDY,
+               }
+      dictionary['JJHEFT_'+mapname] = {
+                    'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : True  ,
+                    'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
+                    'declare'    : 'JJHEFT_MAPNAME = lambda : JJH_EFTVars(branch_map="MAPNAME")'.replace("MAPNAME", mapname),
+                    'module'     : 'JJHEFT_MAPNAME()'.replace("MAPNAME", mapname),
+                    'onlySample' : allDY,
                  } 
 
   return dictionary 
@@ -3033,114 +3112,56 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.RecoilCorr',
                   'declare'    : 'Recoil = lambda : RecoilCorr(RPLME_YEAR)',
                   'module'     : 'Recoil()',
-                  'onlySample' : ['DYJetsToLL_M-5to50-LO',
-                                  'DYJetsToLL_M-10to50-LO',
-                                  'DYJetsToLL_M-10to50-LO_ext1',
-                                  'DYJetsToLL_M-10to50-LO_ext2',
-                                  'DYJetsToLL_M-10to50-LO_newpmx',
-                                  'DYJetsToLL_M-10to50',
-                                  'DYJetsToLL_M-10to50_ext1',
-                                  'DYJetsToLL_M-50-LO',
-                                  'DYJetsToLL_M-50-LO_ext1',
-                                  'DYJetsToLL_M-50',
-                                  'DYJetsToLL_M-50_ext1',
-                                  'DYJetsToLL_M-50_ext2',
-                                  'DYJetsToLL_M-50_newpmx',
-                                  'DYJetsToLL_M-50-UEup',
-                                  'DYJetsToLL_M-50-UEdo',
-                                  'DYJetsToLL_M-50-PSup',
-                                  'DYJetsToLL_M-50-PSdo',
-                                  'DYJetsToLL_M-4to50_HT-100to200',
-                                  'DYJetsToLL_M-4to50_HT-100to200_ext1',
-                                  'DYJetsToLL_M-4to50_HT-100to200_newpmx',
-                                  'DYJetsToLL_M-4to50_HT-200to400',
-                                  'DYJetsToLL_M-4to50_HT-200to400_ext1',
-                                  'DYJetsToLL_M-4to50_HT-200to400_newpmx',
-                                  'DYJetsToLL_M-4to50_HT-400to600',
-                                  'DYJetsToLL_M-4to50_HT-400to600_ext1',
-                                  'DYJetsToLL_M-4to50_HT-600toInf',
-                                  'DYJetsToLL_M-4to50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-5to50_HT-70to100', 
-                                  'DYJetsToLL_M-5to50_HT-100to200',
-                                  'DYJetsToLL_M-5to50_HT-100to200_ext1',
-                                  'DYJetsToLL_M-5to50_HT-200to400',
-                                  'DYJetsToLL_M-5to50_HT-200to400_ext1',
-                                  'DYJetsToLL_M-5to50_HT-400to600',
-                                  'DYJetsToLL_M-5to50_HT-400to600_ext1',
-                                  'DYJetsToLL_M-5to50_HT-600toinf_ext1',
-                                  'DYJetsToLL_M-5to50_HT-600toinf',
-                                  'DYJetsToLL_M-50_HT-70to100',
-                                  'DYJetsToLL_M-50_HT-100to200',
-                                  'DYJetsToLL_M-50_HT-100to200_ext1',
-                                  'DYJetsToLL_M-50_HT-100to200_newpmx',
-                                  'DYJetsToLL_M-50_HT-200to400',
-                                  'DYJetsToLL_M-50_HT-200to400_ext1',
-                                  'DYJetsToLL_M-50_HT-400to600',
-                                  'DYJetsToLL_M-50_HT-400to600_ext1',
-                                  'DYJetsToLL_M-50_HT-400to600_ext2',
-                                  'DYJetsToLL_M-50_HT-400to600_newpmx',
-                                  'DYJetsToLL_M-50_HT-600to800',
-                                  'DYJetsToLL_M-50_HT-800to1200',
-                                  'DYJetsToLL_M-50_HT-1200to2500',
-                                  'DYJetsToLL_M-50_HT-2500toinf'],
+                  'onlySample' : allDY,
               },
 
-   'recoilDYMVA' :  {
+  'do_METResponseup_suffix'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.RecoilCorr',
+                  'declare'    : 'RecoilRespUp = lambda : RecoilCorr(RPLME_YEAR, variation=1, variationType=0, suffix="_METResponseup")',
+                  'module'     : 'RecoilRespUp()',
+                  'onlySample' : allDY,
+              },
+
+  'do_METResponsedo_suffix'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.RecoilCorr',
+                  'declare'    : 'RecoilRespDo = lambda : RecoilCorr(RPLME_YEAR, variation=-1, variationType=0, suffix="_METResponsedo")',
+                  'module'     : 'RecoilRespDo()',
+                  'onlySample' : allDY,
+              },
+
+  'do_METResolutionup_suffix'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.RecoilCorr',
+                  'declare'    : 'RecoilResoUp = lambda : RecoilCorr(RPLME_YEAR, variation=1, variationType=1, suffix="_METResolutionup")',
+                  'module'     : 'RecoilResoUp()',
+                  'onlySample' : allDY,
+              },
+
+  'do_METResolutiondo_suffix'   : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.RecoilCorr',
+                  'declare'    : 'RecoilResoDo = lambda : RecoilCorr(RPLME_YEAR, variation=-1, variationType=1, suffix="_METResolutiondo")',
+                  'module'     : 'RecoilResoDo()',
+                  'onlySample' : allDY,
+              },
+
+   'recoilDY' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['recoilCorr','l2Kin','DYMVA'],
-                  'onlySample' : ['DYJetsToLL_M-5to50-LO',
-                                  'DYJetsToLL_M-10to50-LO',
-                                  'DYJetsToLL_M-10to50-LO_ext1',
-                                  'DYJetsToLL_M-10to50-LO_ext2',
-                                  'DYJetsToLL_M-10to50-LO_newpmx',
-                                  'DYJetsToLL_M-10to50',
-                                  'DYJetsToLL_M-10to50_ext1',
-                                  'DYJetsToLL_M-50-LO',
-                                  'DYJetsToLL_M-50-LO_ext1',
-                                  'DYJetsToLL_M-50',
-                                  'DYJetsToLL_M-50_ext1',
-                                  'DYJetsToLL_M-50_ext2',
-                                  'DYJetsToLL_M-50_newpmx',
-                                  'DYJetsToLL_M-50-UEup',
-                                  'DYJetsToLL_M-50-UEdo',
-                                  'DYJetsToLL_M-50-PSup',
-                                  'DYJetsToLL_M-50-PSdo',
-                                  'DYJetsToLL_M-4to50_HT-100to200',
-                                  'DYJetsToLL_M-4to50_HT-100to200_ext1',
-                                  'DYJetsToLL_M-4to50_HT-100to200_newpmx',
-                                  'DYJetsToLL_M-4to50_HT-200to400',
-                                  'DYJetsToLL_M-4to50_HT-200to400_ext1',
-                                  'DYJetsToLL_M-4to50_HT-200to400_newpmx',
-                                  'DYJetsToLL_M-4to50_HT-400to600',
-                                  'DYJetsToLL_M-4to50_HT-400to600_ext1',
-                                  'DYJetsToLL_M-4to50_HT-600toInf',
-                                  'DYJetsToLL_M-4to50_HT-600toInf_ext1',
-                                  'DYJetsToLL_M-5to50_HT-70to100',
-                                  'DYJetsToLL_M-5to50_HT-100to200',
-                                  'DYJetsToLL_M-5to50_HT-100to200_ext1',
-                                  'DYJetsToLL_M-5to50_HT-200to400',
-                                  'DYJetsToLL_M-5to50_HT-200to400_ext1',
-                                  'DYJetsToLL_M-5to50_HT-400to600',
-                                  'DYJetsToLL_M-5to50_HT-400to600_ext1',
-                                  'DYJetsToLL_M-5to50_HT-600toinf_ext1',
-                                  'DYJetsToLL_M-5to50_HT-600toinf',
-                                  'DYJetsToLL_M-50_HT-70to100',
-                                  'DYJetsToLL_M-50_HT-100to200',
-                                  'DYJetsToLL_M-50_HT-100to200_ext1',
-                                  'DYJetsToLL_M-50_HT-100to200_newpmx',
-                                  'DYJetsToLL_M-50_HT-200to400',
-                                  'DYJetsToLL_M-50_HT-200to400_ext1',
-                                  'DYJetsToLL_M-50_HT-400to600',
-                                  'DYJetsToLL_M-50_HT-400to600_ext1',
-                                  'DYJetsToLL_M-50_HT-400to600_ext2',
-                                  'DYJetsToLL_M-50_HT-400to600_newpmx',
-                                  'DYJetsToLL_M-50_HT-600to800',
-                                  'DYJetsToLL_M-50_HT-800to1200',
-                                  'DYJetsToLL_M-50_HT-1200to2500',
-                                  'DYJetsToLL_M-50_HT-2500toinf'],
+                  'subTargets' : ['recoilCorr','l2Kin','l3Kin','l4Kin','formulasMC','DYMVA','MonoHiggsMVA','JJHEFT'],
+                  'onlySample' : allDY,
               },
 
 
@@ -4053,7 +4074,9 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_METup_suffix','l2Kin_METup', 'l3Kin_METup', 'l4Kin_METup','DYMVA_METup','MonoHiggsMVA_METup','formulasMC_METup','JJHEFT_METup'],
+                  'subTargets' : ['do_METup_suffix','l2Kin_METup', 'l3Kin_METup', 'l4Kin_METup','DYMVA_METup','MonoHiggsMVA_METup','formulasMC_METup','JJHEFT_METup'] + 
+                                 [item.replace("JES", "MET") for item in createJESchain("Response", "Up")] + 
+                                 [item.replace("JES", "MET") for item in createJESchain("Resolution", "Up")],
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
@@ -4077,7 +4100,9 @@ Steps = {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_METdo_suffix','l2Kin_METdo', 'l3Kin_METdo', 'l4Kin_METdo','DYMVA_METdo','MonoHiggsMVA_METdo','formulasMC_METdo','JJHEFT_METdo'],
+                  'subTargets' : ['do_METdo_suffix','l2Kin_METdo', 'l3Kin_METdo', 'l4Kin_METdo','DYMVA_METdo','MonoHiggsMVA_METdo','formulasMC_METdo','JJHEFT_METdo'] + 
+                                 [item.replace("JES", "MET") for item in createJESchain("Response", "Do")] + 
+                                 [item.replace("JES", "MET") for item in createJESchain("Resolution", "Do")],
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
@@ -5200,6 +5225,7 @@ Steps = {
 
 }
 Steps.update(addJESchainMembers())
+Steps.update(addMETchainMembers())
 Steps.update(addSystChainMembers_CombJJLNu())
 
 # ## ADD systematics for VBSjjlnu & HMjjlnu analysis & MonoHiggsSemiLep

@@ -36,6 +36,13 @@ do
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStarCorr2016v7 -i MCWgStar201Xv7 -b
 
 
+#### recoil DY
+
+       mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s recoilDY -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b
+       for iSyst in JESup_suffix JESdo_suffix METup_suffix METdo_suffix MupTup_suffix MupTdo_suffix ElepTup_suffix ElepTdo_suffix ; do
+         mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7__recoilDY -b -Q nextweek
+       done
+ 
        echo "Press [CTRL+C] to stop.."
        sleep 1200
 
