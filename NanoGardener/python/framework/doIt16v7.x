@@ -31,6 +31,15 @@ do
 #        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b -Q nextweek
 #      done
 
+#      for iSyst in JESTotalup_suffix JESAbsoluteup_suffix JESBBEC1up_suffix JESEC2up_suffix JESHFup_suffix JESFlavorQCDup_suffix JESRelativeup_suffix ; do
+#        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b -Q nextweek
+#      done
+#      for iSyst in JESTotaldo_suffix JESAbsolutedo_suffix JESBBEC1do_suffix JESEC2do_suffix JESHFdo_suffix JESFlavorQCDdo_suffix JESRelativedo_suffix ; do
+#        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b -Q nextweek
+#      done
+
+
+
 
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStar201Xv7 -b
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStarCorr2016v7 -i MCWgStar201Xv7 -b
