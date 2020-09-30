@@ -238,6 +238,7 @@ if __name__ == '__main__':
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
     parser.add_option("-n", "--dry-run"  , dest="dryRun"         , help="do not make shapes"                         , default=False, action="store_true")
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
+    parser.add_option('--FixNegativeAfterHadd' , dest='FixNegativeAfterHadd' , help='When using "suppressNegative(Nuisances)", only fix after hadd step' , action='store_true', default=False)
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -521,6 +522,13 @@ if __name__ == '__main__':
           if 'kind' in nuisance and (nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')):
             ShapeFactory.postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile)
         outFile.Close()
+
+        if opt.FixNegativeAfterHadd:
+          for sampleName, sample in samples.iteritems():
+            if 'suppressNegative' in sample or 'suppressNegativeNuisances' in sample:
+              outFile = ROOT.TFile.Open(finalpath, 'update')
+              ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
+              outFile.Close()
   
         if not opt.doNotCleanup:
           for fname in fileList:
@@ -707,6 +715,7 @@ if __name__ == '__main__':
       factory._tag       = opt.tag
       factory._nThreads  = opt.numThreads
       factory.aliases    = aliases
+      factory.FixNegativeAfterHadd = opt.FixNegativeAfterHadd
 
       factory.makeNominals( opt.inputDir ,opt.outputDir, variables, cuts, samples, nuisances, supercut)
 

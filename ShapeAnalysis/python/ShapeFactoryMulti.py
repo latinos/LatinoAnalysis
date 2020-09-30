@@ -785,7 +785,7 @@ class ShapeFactory:
                   if 'symmetrize' in nuisance:
                     self._symmetrize(outputsHistoUp, outputsHistoDo)
   
-                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
+                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) and not self.FixNegativeAfterHadd:
                     # fix negative bins not consistent
                     self._fixNegativeBin(outputsHistoUp, outputsHisto)
                     if twosided:
@@ -941,7 +941,7 @@ class ShapeFactory:
         #
         # To be used with caution -> do not use this option if you don't know what you are playing with
         #
-        if fixZeros and 'suppressNegative' in sample and (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']):
+        if fixZeros and 'suppressNegative' in sample and (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) and not self.FixNegativeAfterHadd:
           ShapeFactory._fixNegativeBinAndError(hTotal)
 
         return hTotal
@@ -1020,9 +1020,14 @@ class ShapeFactory:
 
       cnew = rnp.hist2array(histoNew, copy=False).flat
       cref = rnp.hist2array(histoReference, copy=False).flat
+      changed = False
 
       indices = np.nonzero(cnew[:] * cref[:] <= 0.)[0]
-      cnew[indices] = cref[indices] * 1.e-4
+      if not indices.size == 0 and cref[indices].any():
+        changed = True
+        cnew[indices] = cref[indices] * 1.e-4
+
+      return changed
 
     # _____________________________________________________________________________
     @staticmethod
@@ -1034,12 +1039,19 @@ class ShapeFactory:
 
       cont = rnp.hist2array(histogram_to_be_fixed, copy=False, include_overflow=True).T.flat
       sumw2 = rnp.array(histogram_to_be_fixed.GetSumw2(), copy=False).flat
+      changed = False
 
       indices = np.nonzero(cont[:] < 0.)[0]
-      cont[indices] = 0.
+      if not indices.size == 0:
+        changed = True
+        cont[indices] = 0.
 
       indices = np.nonzero(cont[:] - np.sqrt(sumw2) < 0.)[0]
-      sumw2[indices] = np.square(cont[indices])
+      if not indices.size == 0:
+        changed = True
+        sumw2[indices] = np.square(cont[indices])
+
+      return changed
 
     # _____________________________________________________________________________
     @staticmethod
@@ -1455,10 +1467,100 @@ class ShapeFactory:
 
                 outputsHistoUp = nominal.Clone(histoNameUp)
                 rnp.array2hist(arrup, outputsHistoUp)
-                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']): ShapeFactory._fixNegativeBin(outputsHistoUp, nominal)
+                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) and not self.FixNegativeAfterHadd: ShapeFactory._fixNegativeBin(outputsHistoUp, nominal)
                 outputsHistoUp.Write()
                 outputsHistoDown = nominal.Clone(histoNameDown)
                 if twosided:
                   rnp.array2hist(arrdown, outputsHistoDown)
-                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']): ShapeFactory._fixNegativeBin(outputsHistoDown, nominal)
+                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) and not self.FixNegativeAfterHadd: ShapeFactory._fixNegativeBin(outputsHistoDown, nominal)
                 outputsHistoDown.Write()
+
+    @staticmethod
+    def postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile):
+
+      if 'suppressNegative' in sample:
+        for cutName, cut in cuts.iteritems():
+          if not (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']): continue
+
+          if 'categories' in cut:
+            catsuffixes = ['_' + catname for catname in cut['categories']]
+          else:
+            catsuffixes = ['']
+
+          for catsuffix in catsuffixes:
+            for variableName, variable in variables.iteritems():
+              if 'tree' in variable: continue
+              if 'cuts' in variable and cutName not in variable['cuts']: continue
+              if 'samples' in variable and sampleName not in variable['samples']: continue
+
+              dname = cutName + catsuffix + '/' + variableName
+              outDir = outFile.GetDirectory(dname)
+              outDir.cd()
+
+              if 'outputFormat' in sample:
+                outputFormat = sample['outputFormat']
+              else:
+                outputFormat = '{sample}{subsample}{nuisance}'
+    
+              if 'subsamples' in sample:
+                slabels = list('_%s' % ss for ss in sample['subsamples'].iterkeys())
+              else:
+                slabels = ['']
+    
+              for slabel in slabels:
+                histoName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='')
+                nominal = outDir.Get(histoName)
+
+                if ShapeFactory._fixNegativeBinAndError(nominal): nominal.Write()
+
+      if 'suppressNegativeNuisances' in sample:
+        for nuisance in nuisances.itervalues():
+          if sampleName not in nuisance['samples']: continue
+          #if 'kind' not in nuisance: continue
+          #if not (nuisance['kind'].startswith('tree') or nuisance['kind'].startswith('suffix') or nuisance['kind'].startswith('branch_custom')): continue
+          if 'type' not in nuisance: continue
+          if not nuisance['type'].startswith('shape'): continue
+          for cutName, cut in cuts.iteritems():
+            if not (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']): continue
+
+            twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+
+            if 'cuts' in nuisance and cutName not in nuisance['cuts']: continue
+
+            if 'categories' in cut:
+              catsuffixes = ['_' + catname for catname in cut['categories']]
+            else:
+              catsuffixes = ['']
+
+            for catsuffix in catsuffixes:
+              for variableName, variable in variables.iteritems():
+                if 'tree' in variable: continue
+                if 'cuts' in variable and cutName not in variable['cuts']: continue
+                if 'samples' in variable and sampleName not in variable['samples']: continue
+
+                dname = cutName + catsuffix + '/' + variableName
+                outDir = outFile.GetDirectory(dname)
+                outDir.cd()
+
+                if 'outputFormat' in sample:
+                  outputFormat = sample['outputFormat']
+                else:
+                  outputFormat = '{sample}{subsample}{nuisance}'
+    
+                if 'subsamples' in sample:
+                  slabels = list('_%s' % ss for ss in sample['subsamples'].iterkeys())
+                else:
+                  slabels = ['']
+    
+                for slabel in slabels:
+                  histoName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='')
+                  nominal = outDir.Get(histoName)
+                  histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
+                  outputsHistoUp = outDir.Get(histoNameUp)
+                  histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+                  outputsHistoDown = outDir.Get(histoNameDown)
+
+                  if ShapeFactory._fixNegativeBin(outputsHistoUp, nominal): outputsHistoUp.Write()
+                  if twosided:
+                    if ShapeFactory._fixNegativeBin(outputsHistoDown, nominal): outputsHistoDown.Write()
+
