@@ -729,6 +729,16 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
+  'MCl1loose2016v7_jetIDtest' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom_looseJetID_noPUID', 'CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                  },
+
+
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
   'MCCorr2016' : {
@@ -2119,12 +2129,13 @@ Steps = {
                                   'WJetsToLNu_Pt100to250',
                                   'WJetsToLNu_Pt250to400',
                                   'WJetsToLNu_Pt400to600',
-                                  'WJetsToLNu_Pt600toInf'
+                                  'WJetsToLNu_Pt600toInf', 
                                   'WJetsToLNu_Pt100To250_ext4', 'WJetsToLNu_Pt250To400_ext4', 
                                   'WJetsToLNu_Pt400To600_ext4', 'WJetsToLNu_Pt600ToInf_ext4',
                                   'WJetsToLNu_Wpt100t0200_ext1','WJetsToLNu_Wpt200toInf_ext1', 
                                   'WJetsToLNu-LO', 'WJetsToLNu-LO_ext1',
                                   'WJetsToLNu_0J','WJetsToLNu_1J','WJetsToLNu_2J',
+                                  'WJetsToLNu-0J','WJetsToLNu-1J','WJetsToLNu-2J',
                                   'WJetsToLNu-LO_1J', 'WJetsToLNu-LO_2J','WJetsToLNu-LO_3J', 'WJetsToLNu-LO_4J',
                                   ]
                   } ,
@@ -2380,6 +2391,16 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
                   # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
                   'declare'    : 'jetSel = lambda : JetSel(2,"custom",15.0,4.7,"CleanJet")' ,
+                  'module'     : 'jetSel()' ,
+               },
+
+   'jetSelCustom_looseJetID_noPUID' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
+                  'declare'    : 'jetSel = lambda : JetSel(1,"none",15.0,4.7,"CleanJet")' ,
                   'module'     : 'jetSel()' ,
                },
 
@@ -3938,6 +3959,146 @@ Steps = {
                   #'subTargets' : ['JESBase','do_JESup_suffix','l2Kin_JESup', 'l3Kin_JESup', 'l4Kin_JESup','DYMVA_JESup','MonoHiggsMVA_JESup','formulasMC_JESup',
                   #               'do_JESAbsoluteup_suffix','do_JESAbsolutedo_suffix','do_JESAbsolute_RPLME_YEARup_suffix','do_JESAbsolute_RPLME_YEARdo_suffix','do_JESBBEC1up_suffix','do_JESBBEC1do_suffix','do_JESBBEC1_RPLME_YEARup_suffix','do_JESBBEC1_RPLME_YEARdo_suffix','do_JESEC2up_suffix','do_JESEC2do_suffix','do_JESEC2_RPLME_YEARup_suffix','do_JESEC2_RPLME_YEARdo_suffix','do_JESFlavorQCDup_suffix','do_JESFlavorQCDdo_suffix','do_JESHFup_suffix','do_JESHFdo_suffix','do_JESHF_RPLME_YEARup_suffix','do_JESHF_RPLME_YEARup_suffix','do_JESRelativeBaldo_suffix','do_JESRelativeBaldo_suffix','do_JESRelativeBal_RPLME_YEARup_suffix','do_JESRelativeBal_RPLME_YEARdo_suffix'],
                },
+
+## Split JES steps to have faster jobs
+   'JESTotalup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Total", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESAbsoluteup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Absolute", "Up") +
+                                  createJESchain("Absolute_RPLME_YEAR", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESBBEC1up_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("BBEC1", "Up") +
+                                  createJESchain("BBEC1_RPLME_YEAR", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESEC2up_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("EC2", "Up") +
+                                  createJESchain("EC2_RPLME_YEAR", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESFlavorQCDup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("FlavorQCD", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESHFup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("HF", "Up") +
+                                  createJESchain("HF_RPLME_YEAR", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESRelativeup_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("RelativeBal", "Up") +
+                                  createJESchain("RelativeSample_RPLME_YEAR", "Up"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+
+
+   'JESTotaldo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Total", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESAbsolutedo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("Absolute", "Do") +
+                                  createJESchain("Absolute_RPLME_YEAR", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESBBEC1do_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("BBEC1", "Do") +
+                                  createJESchain("BBEC1_RPLME_YEAR", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESEC2do_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("EC2", "Do") +
+                                  createJESchain("EC2_RPLME_YEAR", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESFlavorQCDdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("FlavorQCD", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESHFdo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("HF", "Do") +
+                                  createJESchain("HF_RPLME_YEAR", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
+   'JESRelativedo_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : ['JESBase'] +
+                                  createJESchain("RelativeBal", "Do") +
+                                  createJESchain("RelativeSample_RPLME_YEAR", "Do"),
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+               },
+
 
    'JESup_suffix_redoMVA' :   {  
                   'isChain'    : True ,

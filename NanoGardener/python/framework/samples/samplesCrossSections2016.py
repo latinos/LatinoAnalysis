@@ -983,3 +983,10 @@ samples['HWminusJ_HToTauTau_M125_PrivateNano']  .extend( ['xsec=0.0341',        
 samples['HWplusJ_HToTauTau_M125_PrivateNano']   .extend( ['xsec=0.0532',        'kfact=1.000',          'ref=EF'] ) # 0.842*0.0632
 samples['HZJ_HToWW_M125_PrivateNano']           .extend( ['xsec=0.187',         'kfact=1.000',          'ref=EF'] ) # 0.8696*0.215
 samples['bbHToWWTo2L2Nu_M125_ybyt_PrivateNano']     .extend( ['xsec=0.000743225',    'kfact=1.000',         'ref=N'] ) # 0.000743225 = -0.03293*0.215*0.108*0.108*9
+
+# Polarized EW WZ
+samples['WZJJ_Inclusive'].extend( ['xsec=0.01612',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LT'].extend( ['xsec=0.002796',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TL'].extend( ['xsec=0.003156',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TT'].extend( ['xsec=0.008765',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LL'].extend( ['xsec=0.001368',    'kfact=1.000',   'ref=W' ])
