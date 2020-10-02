@@ -33,7 +33,11 @@ class PostProcMaker():
      self._aaaXrootd = 'root://xrootd-cms.infn.it/'
 
      self._haddnano  = 'PhysicsTools/NanoAODTools/scripts/haddnano.py'
-
+     if '/usr/lib64/python2.7/site-packages' not in sys.path:
+       sys.path.append('/usr/lib64/python2.7/site-packages')
+       import gfal2
+     self.ctx = gfal2.creat_context()
+ 
      # root tree prefix
      self._treeFilePrefix= 'nanoLatino_'
 
@@ -287,8 +291,7 @@ class PostProcMaker():
      FileList = []
      for path in paths:
        if useGfal2Py:
-         ctx = gfal2.creat_context()
-         dircont = ctx.listdir(srmprefix + path)
+         dircont = self.ctx.listdir(srmprefix + path)
          files = [f for f in dircont if f.endswith('.root')]
        else:
          command = '(eval `scram unsetenv -sh`; gfal-ls '+srmprefix+path+ " | grep root)"
