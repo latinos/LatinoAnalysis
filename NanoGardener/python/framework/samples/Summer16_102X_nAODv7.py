@@ -340,6 +340,7 @@ Samples['GluGluHToWWTo2L2Nu_JHUGen698_M2000'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu
 Samples['GluGluHToWWTo2L2Nu_JHUGen698_M2500'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M2500_13TeV_powheg_JHUgenv698_pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['GluGluHToWWTo2L2Nu_JHUGen698_M3000'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M3000_13TeV_powheg_JHUgenv698_pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['GluGluHToWWTo2L2Nu_JHUGen714_M4000'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M4000_13TeV_powheg_JHUgenv714_pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} ##!!!!
+Samples['GluGluHToWWTo2L2Nu_JHUGen714_M5000'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M5000_TuneCUETP8M1_13TeV_powheg_JHUgenv714_pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} ##!!!!
 #
 Samples['GluGluHToWWTo2L2NuAMCNLO_M125'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M125_13TeV_amcatnloFXFX_pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['GluGluHToWWTo2L2NuPowheg_M125'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} ##!!!!
