@@ -354,7 +354,7 @@ def addSystChainMembers_CombJJLNu():
           'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
           'declare'    : 'vbs_pairing_{0} = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="{0}", debug=False)'.format(mapname),
           'module'     : 'vbs_pairing_{0}()'.format(mapname),
-          'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+          'onlySample' : vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
         }
 
         dictionary['VBSjjlnu_kin_'+mapname] = {
@@ -364,7 +364,7 @@ def addSystChainMembers_CombJJLNu():
           'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
           'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
           'module'     : 'vbs_vars_maker_{0}()'.format(mapname),
-          'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+          'onlySample' : vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
         }
 
         dictionary['whadJetSel_'+mapname] = {
@@ -449,7 +449,7 @@ def addSystChainMembers_CombJJLNu():
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
         'declare'    : 'vbs_pairing_{0} = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", branch_map="{0}", debug=False)'.format(mapname),
         'module'     : 'vbs_pairing_{0}()'.format(mapname),
-        'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        'onlySample' : vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
        }
 
       dictionary['VBSjjlnu_kin_'+mapname] = {
@@ -459,7 +459,7 @@ def addSystChainMembers_CombJJLNu():
         'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
         'declare'    : 'vbs_vars_maker_{0} = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", branch_map="{0}", debug=False)'.format(mapname),
         'module'     : 'vbs_vars_maker_{0}()'.format(mapname),
-        'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+        'onlySample' : vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
       }
 
       dictionary['whadJetSel_'+mapname] = {
@@ -5076,7 +5076,7 @@ Steps = {
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_JetPairing',
       'declare'    : 'vbs_pairing = lambda : VBSjjlnu_JetPairing(year="RPLME_YEAR", mode="ALL", debug=False)',
       'module'     : 'vbs_pairing()',
-      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+      'onlySample' : vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
   },
 
   'VBSjjlnu_kin': {
@@ -5086,7 +5086,7 @@ Steps = {
       'import'     : 'LatinoAnalysis.NanoGardener.modules.VBSjjlnu_kin',
       'declare'    : 'vbs_vars_maker = lambda : VBSjjlnu_kin(mode=["maxmjj","maxmjj_massWZ"], met="PuppiMET", debug=False)',
       'module'     : 'vbs_vars_maker()',
-      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
+      'onlySample' : vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018
   },
 
 
@@ -5105,7 +5105,7 @@ Steps = {
       'subTargets': ['wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal
+      'onlySample' : vbsjjlnu_samples_mc
   },
 
   'VBSjjlnuSkim2016v5_data' : {
@@ -5125,7 +5125,7 @@ Steps = {
       'subTargets': ['wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal
+      'onlySample' : vbsjjlnu_samples_mc
   },
 
   'VBSjjlnuSkim2017v5_data' : {
@@ -5145,7 +5145,7 @@ Steps = {
       'subTargets': ['wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK',
                     'trigMC', 'CorrFatJetMC', 'CleanFatJet', 
                     'VBSjjlnu_pairing', 'VBSjjlnu_kin'],
-      'onlySample' : vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal
+      'onlySample' : vbsjjlnu_samples_mc
   },
 
   'VBSjjlnuSkim2018v5_data' : {
