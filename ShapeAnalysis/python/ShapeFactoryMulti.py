@@ -1022,10 +1022,32 @@ class ShapeFactory:
       cref = rnp.hist2array(histoReference, copy=False).flat
       changed = False
 
-      indices = np.nonzero(cnew[:] * cref[:] <= 0.)[0]
-      if not indices.size == 0 and cref[indices].any():
+      # If ref and variation both != 0 -> Bring variation to same sign
+      indices = np.nonzero(cnew[:] * cref[:] < 0.)[0]
+      if not indices.size == 0:
         changed = True
         cnew[indices] = cref[indices] * 1.e-4
+
+      # If ref != 0 but variation == 0 -> Make variation same sign as signal
+      indices = np.nonzero(cnew[:] == 0.)[0]
+      if (not indices.size == 0) and np.any(cref[indices]):
+        changed = True
+        cnew[indices] = cref[indices] * 1.e-4
+
+      # If variation != 0 but ref == 0 (e.g. after fixed negative bins in ref) -> Find overall sign of ref and adjust variation
+      indices = np.nonzero(cref[:] < 0.)[0]
+      if indices.size == 0:
+        indices = np.nonzero(cnew[:] < 0.)[0]
+        if not indices.size == 0:
+          changed = True
+          cnew[indices] = cref[indices] * 1.e-4
+      indices = np.nonzero(cref[:] > 0.)[0]
+      if indices.size == 0:
+        indices = np.nonzero(cnew[:] > 0.)[0]
+        if not indices.size == 0:
+          changed = True
+          cnew[indices] = cref[indices] * 1.e-4
+      # If ref does not have the same sign in each bin -> Not clear how to proceed; variation could be genuine on top of 0 yield bin in ref
 
       return changed
 
