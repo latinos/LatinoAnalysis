@@ -1733,6 +1733,60 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
 
+# mnonoH dileptonic skims
+
+  'monoHSkim2016' : { 
+                  'isChain'  : True ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'selection': '"(nLepton >= 2 && \
+                               LepCut2l__ele_mva_90p_Iso2016__mu_cut_Tight80x == 1 && \
+                               Alt$(Lepton_pt[2],0) < 10. && \
+                               Lepton_pdgId[0]*Lepton_pdgId[1] < 0 && \
+                               Lepton_pt[0] > 25. && \
+                               Lepton_pt[1] > 20. && \
+                               mll > 12. && \
+                               PuppiMET_pt > 20. && \
+                               ptll > 30.)"',
+                  'subTargets' : ['mT2Davis', 'MHDileptonMVAsplit','MHGetParametrizedMass_darkHiggs','MHGetParametrizedMass_2HDMa', 'MHDiLepVars2016'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/monoHskim.txt'
+               },
+
+  'monoHSkim2017' : { 
+                  'isChain'  : True ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'selection': '"(nLepton >= 2 && \
+                               LepCut2l__ele_mvaFall17V1Iso_WP90__mu_cut_Tight_HWWW == 1 && \
+                               Alt$(Lepton_pt[2],0) < 10. && \
+                               Lepton_pdgId[0]*Lepton_pdgId[1] < 0 && \
+                               Lepton_pt[0] > 25. && \
+                               Lepton_pt[1] > 20. && \
+                               mll > 12. && \
+                               PuppiMET_pt > 20. && \
+                               ptll > 30.)"',
+                  'subTargets' : ['mT2Davis', 'MHDileptonMVAsplit','MHGetParametrizedMass_darkHiggs','MHGetParametrizedMass_2HDMa', 'MHDiLepVars2017'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/monoHskim.txt'
+               },
+
+  'monoHSkim2018' : { 
+                  'isChain'  : True ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'selection': '"(nLepton >= 2 && \
+                               LepCut2l__ele_mvaFall17V1Iso_WP90__mu_cut_Tight_HWWW == 1 && \
+                               Alt$(Lepton_pt[2],0) < 10. && \
+                               Lepton_pdgId[0]*Lepton_pdgId[1] < 0 && \
+                               Lepton_pt[0] > 25. && \
+                               Lepton_pt[1] > 20. && \
+                               mll > 12. && \
+                               PuppiMET_pt > 20. && \
+                               ptll > 30.)"',
+                  'subTargets' : ['mT2Davis', 'MHDileptonMVAsplit','MHGetParametrizedMass_darkHiggs','MHGetParametrizedMass_2HDMa', 'MHDiLepVars2018'],
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/monoHskim.txt'
+               },
+
+
 
 # ------------------------------------------------ MODULES ---------------------------------------------------
 
@@ -1774,6 +1828,53 @@ Steps = {
                   'module'   : 'MHTrigMC()',
                },
 ####
+
+  'MHDiLepVars2016' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHDiLepVars2016' ,
+                  'module'   : 'MHDiLepVars2016()',
+               },
+  'MHDiLepVars2017' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHDiLepVars2017' ,
+                  'module'   : 'MHDiLepVars2017()',
+               },
+  'MHDiLepVars2018' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHDiLepVars2018' ,
+                  'module'   : 'MHDiLepVars2018()',
+               },
+
+  'MHDileptonMVAsplit' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MVAsplitter' ,
+                  'module'   : 'MVAsplitter("RPLME_SAMPLE", "LatinoAnalysis/NanoGardener/python/data/MH2HDMaBDTsplitter_cfg.py", "EventSplit")',
+               },
+
+  'MHGetParametrizedMass_darkHiggs' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHParametrizedMasses' ,
+                  'module'   : 'MHParametrizedMasses("RPLME_SAMPLE", "LatinoAnalysis/NanoGardener/python/data/MHParametrizedMasses_cfg.py", "darkHiggs")',
+               },
+
+  'MHGetParametrizedMass_2HDMa' : { 
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MHParametrizedMasses' ,
+                  'module'   : 'MHParametrizedMasses("RPLME_SAMPLE", "LatinoAnalysis/NanoGardener/python/data/MHParametrizedMasses_cfg.py", "2HDMa")',
+               },
+
   'MH2HDMaBDTsplit' : { 
                   'isChain'  : False ,
                   'do4MC'    : True  ,

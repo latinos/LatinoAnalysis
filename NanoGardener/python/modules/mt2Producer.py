@@ -34,21 +34,7 @@ class mt2Producer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
 
-        self.out.branch("channel",         "I")
-        self.out.branch("mll",             "F")
-
-        self.out.branch("ptmiss",          "F")
         self.out.branch("mt2ll",           "F")
-
-        if self.analysisRegion=='':
-
-            self.out.branch("ptmiss_reco",          "F")
-            self.out.branch("mt2ll_reco",           "F")
-
-            if self.dataType!='data':
-
-                self.out.branch("ptmiss_gen",       "F")
-                self.out.branch("mt2ll_gen",        "F")
 
     ###    
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -112,11 +98,7 @@ class mt2Producer(Module):
         if nLeptons<2 :
             return False
 
-        mll       = -1.
-        ptmiss    = -1.
         mt2ll     = -1.
-
-        nVetoLeptons = event.nVetoLepton
         
         leptons   = Collection(event, 'Lepton')
 
@@ -132,103 +114,14 @@ class mt2Producer(Module):
         Lost = []
         Skip = []
 
-        if self.analysisRegion=='' or self.analysisRegion=='gen' or self.analysisRegion=='reco':
-
-            if nLeptons>2 or nVetoLeptons>2: return False
-            if leptons[0].pdgId*leptons[1].pdgId>0 : return False
-        
-        elif 'SameSign' in self.analysisRegion :
-
-            if nLeptons>2 or nVetoLeptons>2: return False
-            if leptons[0].pdgId*leptons[1].pdgId<0 : return False
-
-        elif 'WZ' in self.analysisRegion :
-                
-            if nLeptons!=3 or nVetoLeptons>=4:
-                return False
-
-            minDZM = 10.
-            lost = -1
-            
-            for l0 in range (nLeptons) :
-                for l1 in range (l0+1, nLeptons) :
-                    if abs(leptons[l0].pdgId)==abs(leptons[l1].pdgId) :
-                        if leptons[l0].pdgId*leptons[l1].pdgId<0 :
-                            if abs((lepVect[l0] + lepVect[l1]).M() - self.Zmass)<minDZM :
-                                
-                                # There might be a more elegant way ...
-                                for l2 in range (nLeptons) :
-                                    if l2!=l0 and l2!=l1 :
-                                        
-                                        if leptons[l2].pdgId*leptons[l0].pdgId>0 :
-                                            lost = l0
-                                        else :
-                                            lost = l1
-                                                
-                                minDZM = abs((lepVect[l0] + lepVect[l1]).M() - self.Zmass)
-                              
-            if lost==-1 :
-                return False
-
-            if 'WZtoWW' in self.analysisRegion :
-                Lost.append(lost)
-            else :
-                Skip.append(lost)
-
-        elif 'ZZ' in self.analysisRegion or 'ttZ' in self.analysisRegion :
- 
-            if nLeptons<4 :
-                return False
-
-            cutDZM1, cutDZM2, minDZMT = 15., 30., 999.
-            lost0, lost1 = -1, -1
-
-            for l0 in range (nLeptons) :
-                for l1 in range (l0+1, nLeptons) :
-                    if abs(leptons[l0].pdgId)==abs(leptons[l1].pdgId) :
-                        if leptons[l0].pdgId*leptons[l1].pdgId<0 :
-
-                            DZM1 = abs((lepVect[l0] + lepVect[l1]).M() - self.Zmass)
-                            if DZM1<cutDZM1 :
-                            
-                                for l2 in range (nLeptons) :
-                                    if l2!=l0 and l2!=l1 :
-                                        for l3 in range (l2+1, nLeptons) :
-                                            if l3!=l0 and l3!=l1 :
-                                                if leptons[l2].pdgId*leptons[l3].pdgId<0 :
-                                                    
-                                                    if 'ttZ' in self.analysisRegion :
-
-                                                        lost0, lost1 = l0, l1
-                                                        cutDZM1 = DZM1
-                    
-                                                    elif 'ZZ' in self.analysisRegion :
-
-                                                        if abs(leptons[l2].pdgId)==abs(leptons[l3].pdgId) :
-
-                                                            DZM2 = abs((lepVect[l2] + lepVect[l3]).M() - self.Zmass)
-                                                            if DZM2<cutDZM2 :
-                                                                
-                                                                DZMT = math.sqrt(DZM1*DZM1 + DZM2*DZM2)
-                                                                if DZMT<minDZMT :
-
-                                                                    if DZM1<DZM2 :
-                                                                        lost0, lost1 = l0, l1
-                                                                    else :
-                                                                        lost0, lost1 = l2, l3
-                                                                    minDZMT = DZMT
-                                                                    
-            if lost0==-1 or lost1==-1 :
-                return False
-            
-            Lost.append(lost0)
-            Lost.append(lost1)
+        #if nLeptons>2 or nVetoLeptons>2: return False
+        if leptons[0].pdgId*leptons[1].pdgId>0 : return False
 
         # Computing variables to be added to the tree
         W0, W1 = -1, -1
             
         ptmissvec3 = ROOT.TVector3()
-        ptmissvec3.SetPtEtaPhi(event.MET_pt, 0., event.MET_phi) 
+        ptmissvec3.SetPtEtaPhi(event.PuppiMET_pt, 0., event.PuppiMET_phi) 
         
         for iLep in range(nLeptons) :
 
@@ -243,50 +136,14 @@ class mt2Producer(Module):
 
         mll = (lepVect[W0] + lepVect[W1]).M()  
 
-        if mll<20. : return False
+        if mll<12. : return False
 
         ptmissvec = ROOT.TLorentzVector()  
         ptmissvec.SetPtEtaPhiM(ptmissvec3.Pt(), 0., ptmissvec3.Phi(), 0.)
             
         ptmiss = ptmissvec.Pt()
         mt2ll = self.computeMT2(lepVect[W0], lepVect[W1], ptmissvec)
-
-        channel = 0
-        if abs(leptons[W0].pdgId)==13 : channel += 1
-        if abs(leptons[W1].pdgId)==13 : channel += 1
-
-        self.out.fillBranch("channel",    channel)
-        self.out.fillBranch("mll",        mll)
-
-        if self.analysisRegion=='' or self.analysisRegion=='gen' or self.analysisRegion=='reco':
-
-            if self.analysisRegion=='':
-                self.out.fillBranch("ptmiss_reco",   ptmiss)
-                self.out.fillBranch("mt2ll_reco",    mt2ll)
-
-            if self.dataType!='data':
-
-                ptmissgenvec = ROOT.TLorentzVector()
-                ptmissgenvec.SetPtEtaPhiM(event.GenMET_pt, 0., event.GenMET_phi, 0.)
-            
-                ptmiss_gen = ptmissgenvec.Pt()
-                mt2ll_gen = self.computeMT2(lepVect[0], lepVect[1], ptmissgenvec)
-
-                if self.analysisRegion=='':
-                    self.out.fillBranch("ptmiss_gen",   ptmiss_gen)
-                    self.out.fillBranch("mt2ll_gen",    mt2ll_gen)
-
-                if self.dataType=='fastsim':
-           
-                    if self.analysisRegion=='':
-                        ptmiss = (ptmiss + ptmiss_gen)/2.
-                        mt2ll = (mt2ll + mt2ll_gen)/2.
-                    elif self.analysisRegion=='gen':
-                        ptmiss = ptmiss_gen
-                        mt2ll = mt2ll_gen
  
-
-        self.out.fillBranch("ptmiss",     ptmiss)
         self.out.fillBranch("mt2ll",      mt2ll)
 
         return True
