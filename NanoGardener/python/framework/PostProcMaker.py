@@ -33,7 +33,11 @@ class PostProcMaker():
      self._aaaXrootd = 'root://xrootd-cms.infn.it/'
 
      self._haddnano  = 'PhysicsTools/NanoAODTools/scripts/haddnano.py'
-
+     if '/usr/lib64/python2.7/site-packages' not in sys.path:
+       sys.path.append('/usr/lib64/python2.7/site-packages')
+       import gfal2
+     self.ctx = gfal2.creat_context()
+ 
      # root tree prefix
      self._treeFilePrefix= 'nanoLatino_'
 
@@ -278,17 +282,19 @@ class PostProcMaker():
      else:
        useGfal2Py = False
 
+     if FORCE_GFAL_SHELL:
+       useGfal2Py = False
+
      if 'X509_CERT_DIR' not in os.environ and os.path.isdir('/etc/grid-security/certificates'):
        os.environ['X509_CERT_DIR'] = '/etc/grid-security/certificates'
-
+     
      FileList = []
      for path in paths:
        if useGfal2Py:
-         ctx = gfal2.creat_context()
-         dircont = ctx.listdir(srmprefix + path)
+         dircont = self.ctx.listdir(srmprefix + path)
          files = [f for f in dircont if f.endswith('.root')]
        else:
-         command = 'gfal-ls '+srmprefix+path+ " | grep root"
+         command = '(eval `scram unsetenv -sh`; gfal-ls '+srmprefix+path+ " | grep root)"
          proc=subprocess.Popen(command, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
          out, err = proc.communicate()
          if not proc.returncode == 0 :

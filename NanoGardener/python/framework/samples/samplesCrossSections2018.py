@@ -522,6 +522,7 @@ samples['VBFHToWWTo2L2Nu_JHUGen698_M2000']              .extend( ['xsec=0.0023',
 samples['VBFHToWWTo2L2Nu_JHUGen698_M2500']              .extend( ['xsec=0.0015',        'kfact=1.000',          'ref=KF'] ) # 0.02165*0.621*0.108*0.108*9
 samples['VBFHToWWTo2L2Nu_JHUGen698_M3000']              .extend( ['xsec=0.00092',       'kfact=1.000',          'ref=KF'] ) # 0.01413*0.621*0.108*0.108*9
 
+samples['VBFHToWWTo2L2Nu_M125_DipoleRecoil_private']    .extend( ['xsec=0.0846',       'kfact=1.000',          'ref=EF'] ) # 3.75*0.215*0.108*0.108*9
 samples['VBFHToWWTo2L2NuPowheg_M125'] 	 .extend( ['xsec=0.0846',	'kfact=1.000',	   	'ref=EF'] ) # 3.75*0.215*0.108*0.108*9
 samples['VBFHToWWTo2L2NuPowheg_M125_private'] 	 .extend( ['xsec=0.0846',	'kfact=1.000',	   	'ref=EF'] ) # 3.75*0.215*0.108*0.108*9
 samples['VBFHToWWTo2L2NuPowheg_M125_CP5Up'] 	 .extend( ['xsec=0.0846',	'kfact=1.000',	   	'ref=EF'] ) # 3.75*0.215*0.108*0.108*9
@@ -1015,3 +1016,10 @@ samples['WmTo2L_ZTo2J_aQGC']       .extend( ['xsec=0.7416',    'kfact=1.000',   
 # Insert xsec value in pb for each mass point in samples.py
 samples['darkHiggs_ToWWTo2L2Nu']        .extend(['xsec=0.0224333712', 'kfact=1.000', 'ref=??']) # 1*0.2137*0.104976
 samples['pseudoscalar2HDMa_ToWWTo2L2Nu'].extend(['xsec=0.0224333712', 'kfact=1.000', 'ref=??']) # 1*0.2137*0.104976
+
+# Polarized EW WZ
+samples['WZJJ_Inclusive'].extend( ['xsec=0.01633',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LT'].extend( ['xsec=0.002846',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TL'].extend( ['xsec=0.003198',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TT'].extend( ['xsec=0.008885',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LL'].extend( ['xsec=0.00138',    'kfact=1.000',   'ref=W' ])
