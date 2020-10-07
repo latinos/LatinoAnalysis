@@ -2028,6 +2028,48 @@ Steps = {
                   'module'   : 'MonoHiggsMVA_JERdo()',
                },
 
+## ------------------------MODULES : EFT analysis -----------------------------------
+
+  'EFTaBDTsplit' : {
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'import'   : 'LatinoAnalysis.NanoGardener.modules.MVAsplitter' ,
+                  'module'   : 'MVAsplitter("RPLME_SAMPLE", "LatinoAnalysis/NanoGardener/python/data/EFTaBDTsplitter_cfg.py", "EFTaBDT")',
+               },
+  'EFTskim4analysis' : {
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'selection': '"EFTaBDT_isAnalysisEvent"',
+               },
+
+  'EFTskim4BDT' : {
+                  'isChain'  : False ,
+                  'do4MC'    : True  ,
+                  'do4Data'  : True ,
+                  'selection': '"EFTaBDT_isTrainingEvent"',
+                 # 'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/EFTskim4BDT_branches.txt',
+                 # 'selection': '"PuppiMET_pt > 30 \
+                  #              && WH3l_mOSll > 12 \
+                  #              && EFTaBDT_isTrainingEvent \
+                  #              && Lepton_pt[0] > 25 \
+                  #              && Lepton_pt[1] > 20 \
+                  #              && Lepton_pt[2] > 15 \
+                  #              && Alt$(Lepton_pt[3],0)<10 \
+                  #              && abs(WH3l_chlll) == 1 "',
+                              },
+                 #'selection': '"PuppiMET_pt > 20 \
+                 #              && Lepton_pt[0] > 25 \
+                 #              && Lepton_pt[1] > 15 \
+                 #              && Lepton_pt[2] > 10 \
+                 #              && Lepton_pt[3] > 10 \
+                 #              && chllll_zh4l == 0 \
+                 #              && Alt$(Lepton_pt[4],0)<10 \
+                 #              && abs(z0Mass_zh4l-91.1876)< 15 \
+                 #              && mll > 12"',
+                 #             },
+
 ## ------- MODULES: MC Kinematic
   
   'PromptParticlesGenVars' : {
