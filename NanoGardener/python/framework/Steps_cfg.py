@@ -2036,7 +2036,9 @@ Steps = {
                   'do4Data'  : True ,
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.MVAsplitter' ,
                   'module'   : 'MVAsplitter("RPLME_SAMPLE", "LatinoAnalysis/NanoGardener/python/data/EFTaBDTsplitter_cfg.py", "EFTaBDT")',
+                  'onlySample' : ['H0PM_ToWWTo2L2Nu','H0PH_ToWWTo2L2Nu','H0L1_ToWWTo2L2Nu','H0M_ToWWTo2L2Nu','H0PHf05_ToWWTo2L2Nu','H0Mf05_ToWWTo2L2Nu','VBF_H0PM_ToWWTo2L2Nu','VBF_H0PH_ToWWTo2L2Nu','VBF_H0L1_ToWWTo2L2Nu','VBF_H0M_ToWWTo2L2Nu','VBF_H0PHf05_ToWWTo2L2Nu','VBF_H0Mf05_ToWWTo2L2Nu','WH_H0PM_ToWWTo2L2Nu','WH_H0PH_ToWWTo2L2Nu','WH_H0L1_ToWWTo2L2Nu','WH_H0M_ToWWTo2L2Nu','WH_H0PHf05_ToWWTo2L2Nu','WH_H0Mf05_ToWWTo2L2Nu','ZH_H0PM_ToWWTo2L2Nu','ZH_H0PH_ToWWTo2L2Nu','ZH_H0L1_ToWWTo2L2Nu','ZH_H0M_ToWWTo2L2Nu','ZH_H0PHf05_ToWWTo2L2Nu','ZH_H0Mf05_ToWWTo2L2Nu','H0L1f05_ToWWTo2L2Nu','VBF_H0L1f05_ToWWTo2L2Nu','ZH_H0L1f05_ToWWTo2L2Nu','WH_H0L1f05_ToWWTo2L2Nu'],
                },
+
   'EFTskim4analysis' : {
                   'isChain'  : False ,
                   'do4MC'    : True  ,
@@ -5075,7 +5077,7 @@ Steps = {
                  },
 
   'l2tightOR2016v7' : {
-                  'isChain'    : False ,
+                  'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
@@ -5092,6 +5094,7 @@ Steps = {
                                          || Lepton_isTightMuon_cut_Tight80x[1] > 0.5              \
                                          || Lepton_isTightMuon_cut_Tight80x_tthmva_80[1] > 0.5             ) \
                                   "' ,
+                  'subTargets' : ['EFTaBDTsplit'],
                  },
 
   'l2tightOR2017' : {
@@ -5171,7 +5174,7 @@ Steps = {
                  },
 
   'l2tightOR2017v7' : {
-                  'isChain'    : False ,
+                  'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
@@ -5188,6 +5191,7 @@ Steps = {
                                          || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5              \
                                          || Lepton_isTightMuon_cut_Tight_HWWW_tthmva_80[1] > 0.5             ) \
                                   "' ,
+                  'subTargets' : ['EFTaBDTsplit'],
                  },
 
   'l2tightOR2018' : {
@@ -5268,7 +5272,7 @@ Steps = {
                  },
 
   'l2tightOR2018v7' : {
-                  'isChain'    : False ,
+                  'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'selection'  : '" (nLepton>=2 && Lepton_pt[0]>18 && Lepton_pt[1]>8 ) \
@@ -5285,6 +5289,7 @@ Steps = {
                                          || Lepton_isTightMuon_cut_Tight_HWWW[1] > 0.5              \
                                          || Lepton_isTightMuon_cut_Tight_HWWW_tthmva_80[1] > 0.5             ) \
                                   "' ,
+                  'subTargets' : ['EFTaBDTsplit'],
                  },
 
 ## ------- 1-Lepton: tightOR (For LNuQQ samples)
