@@ -652,3 +652,8 @@ Samples['ttH_H0M_ToWWTo2L2Nu']     = {'nanoAOD' :'/ttHiggs0MToWW_2LFilter_M125_1
 ##Samples['ttH_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :''}
 Samples['ttH_H0Mf05_ToWWTo2L2Nu']  = {'nanoAOD' :'/ttHiggs0Mf05ph0ToWW_2LFilter_M125_13TeV_JHUGenV6_pythia8/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'}
 ##Samples['ttH_H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :''}
+
+################### monoH dileptonic ##########################################
+
+Samples['darkHiggs_ToWWTo2L2Nu']          = {'nanoAOD' :'/DarkHiggs_MonoHs_HsToWWTo2l2nu_TuneCP5_13TeV-Madgraph_pythia8/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_rp_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'}
+Samples['pseudoscalar2HDMa_ToWWTo2L2Nu']  = {'nanoAOD' :'/monoH_ppTochichihWWTollnunu_TuneCUETP8M1_13TeV_madgraph-pythia/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_rp_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'}
