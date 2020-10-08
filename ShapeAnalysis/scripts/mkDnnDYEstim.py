@@ -153,13 +153,13 @@ for dirs in thelist :
   histos['VV_'+dirs.GetName()] = TH1D('VV_'+dirs.GetName(), 'VV_'+dirs.GetName(), histos['DY_'+dirs.GetName()].GetNbinsX(), histos['DY_'+dirs.GetName()].GetXaxis().GetXbins().GetArray())
   
   # CREATING k histograms
-  if 'in' in dirs.GetName() and not 'btag' in dirs.GetName() and not 'df' in dirs.GetName() and not 'H_' in dirs.GetName() and not 'ww_' in dirs.GetName() and jet_bin in dirs.GetName():
+  if 'in' in dirs.GetName() and not 'btag' in dirs.GetName() and not 'df' in dirs.GetName() and not dirs.GetName().startswith('H_') and not 'ww_' in dirs.GetName() and jet_bin in dirs.GetName():
   # not '1j' in dirs.GetName() and not '2j' in dirs.GetName() and not 'VBF' in dirs.GetName() and not 'VH' in dirs.GetName():
     #print('Histos for K and R: ', dirs.GetName())
     histos['k_MC_'+dirs.GetName()] = TH1D('k_MC_'+dirs.GetName(), 'k_MC_'+dirs.GetName(), histos['DY_'+dirs.GetName()].GetNbinsX(), histos['DY_'+dirs.GetName()].GetXaxis().GetXbins().GetArray())
     histos['k_DATA_'+dirs.GetName()] = TH1D('k_DATA_'+dirs.GetName(), 'k_DATA_'+dirs.GetName(), histos['DATA_'+dirs.GetName()].GetNbinsX(), histos['DATA_'+dirs.GetName()].GetXaxis().GetXbins().GetArray())
   # CREATING R histograms
-  if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not 'H_' in dirs.GetName() and not 'ww_' in dirs.GetName():
+  if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not dirs.GetName().startswith('H_') and not 'ww_' in dirs.GetName():
     #print('R dirs', dirs.GetName())
     histos['R_MC_'+dirs.GetName()] = TH1D('R_MC_'+dirs.GetName(), 'R_MC_'+dirs.GetName(), histos['DY_'+dirs.GetName()].GetNbinsX(), histos['DY_'+dirs.GetName()].GetXaxis().GetXbins().GetArray())
     histos['R_DATA_'+dirs.GetName()] = TH1D('R_DATA_'+dirs.GetName(), 'R_DATA_'+dirs.GetName(), histos['DATA_'+dirs.GetName()].GetNbinsX(), histos['DATA_'+dirs.GetName()].GetXaxis().GetXbins().GetArray())
@@ -196,7 +196,7 @@ for dirs in thelist :
 
 # Filling k histos
 for dirs in thelist :
-  if 'in' in dirs.GetName() and not 'btag' in dirs.GetName() and not 'df' in dirs.GetName() and not 'H_' in dirs.GetName() and not 'ww_' in dirs.GetName() and jet_bin in dirs.GetName():
+  if 'in' in dirs.GetName() and not 'btag' in dirs.GetName() and not 'df' in dirs.GetName() and not dirs.GetName().startswith('H_') and not 'ww_' in dirs.GetName() and jet_bin in dirs.GetName():
   # not '1j' in dirs.GetName() and not '2j' in dirs.GetName() and not 'VBF' in dirs.GetName() and not 'VH' in dirs.GetName(): 
     lastbin = histos['k_MC_'+dirs.GetName()].GetNbinsX() + 1
     for iBin in range(1, lastbin):
@@ -221,7 +221,7 @@ for dirs in thelist :
 
 #Fillin R histos
 for dirs in thelist :
-  if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not 'H_' in dirs.GetName() and not 'ww_' in dirs.GetName() and jet_bin in dirs.GetName():
+  if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not dirs.GetName().startswith('H_') and not 'ww_' in dirs.GetName() and jet_bin in dirs.GetName():
   #not '1j' in dirs.GetName() and not '2j' in dirs.GetName() and not 'VBF' in dirs.GetName() and not 'VH' in dirs.GetName():
     print(dirs.GetName())
     if 'btag' not in dirs.GetName():
@@ -324,7 +324,7 @@ for dirs in thelist :
     print('Integral of DY from DATA is ', histos['DYDATA_'+dirs.GetName()].Integral())
     print('Integral of DY from R is    ', histos['DATA_fromR_'+dirs.GetName()].Integral())
 
-    if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not 'H_' in dirs.GetName() and not 'ww_' in dirs.GetName() and 'btag' not in dirs.GetName() and jet_bin in dirs.GetName():
+    if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not dirs.GetName().startswith('H_') and not 'ww_' in dirs.GetName() and 'btag' not in dirs.GetName() and jet_bin in dirs.GetName():
     #not '1j' in dirs.GetName() and not '2j' in dirs.GetName() and not 'VBF' in dirs.GetName() and not 'VH' in dirs.GetName():
       print(values['A_ww_MC_'+dirs.GetName()])
       print(errors['A_ww_MC_'+dirs.GetName()])
