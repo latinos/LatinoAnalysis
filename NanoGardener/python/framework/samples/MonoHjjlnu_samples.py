@@ -1,8 +1,10 @@
 
 MonoHjjlnu_samples_2016 = [
+    'WWTo2L2Nu',
 ]
 
 MonoHjjlnu_samples_2017 = [
+    'WWTo2L2Nu',
     #2HDMa
     '2HDMa_SemiLep_MH3_200_MH4_150_pos',
     '2HDMa_SemiLep_MH3_200_MH4_150_neg',
@@ -36,4 +38,5 @@ MonoHjjlnu_samples_2017 = [
 ]
 
 MonoHjjlnu_samples_2018 = [
+    'WWTo2L2Nu',
 ]
