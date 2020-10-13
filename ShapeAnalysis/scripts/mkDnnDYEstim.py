@@ -499,7 +499,6 @@ for dirs in thelist :
 
 # Output rootfile
 file_save_name = "{}/DYestim_{}.root".format(output_dir, jet_bin)
-#filetosave = TFile('DYestim.root','recreate')
 filetosave = TFile(file_save_name, 'recreate')
 filetosave.cd()
 for histo in histos:
@@ -517,7 +516,6 @@ for histo in histos:
     histos[histo].SetLineWidth(2)
     histos[histo].GetYaxis().SetRangeUser(0,1)
     histo_x_title = "DYMVA_{DNN}^{" + jet_bin + "}"
-    #print(histo_x_title)
     histos[histo].SetXTitle(histo_x_title)
     if 'ee' in histo: 
        histos[histo].SetYTitle("R^{ee}")
@@ -554,9 +552,9 @@ for histo in histos:
     fitDATA.Draw('same')
 
     # Prepare legend with results
-    legend.SetHeader("DATA/MC Difference = {0:.3f}".format(abs(p0MC - p0DATA)))
+    # legend.SetHeader("DATA/MC Difference = {0:.3f}".format(abs(p0MC - p0DATA)))
     legend.AddEntry(histos[histo], 'DY MC','lf')
-    legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + '#pm' + "{0:.3f}".format(e0MC), 'lf')
+    legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + '#pm' + "{0:.3f}".format(e0MC) + '#pm' + "{0:.3f}".format(abs(p0MC - p0DATA)), 'lf')
     legend.AddEntry(histos[dataword], 'DY DATA','lf')
     legend.AddEntry(fitDATA, "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA), 'lf')
     CMS_lumi.CMS_lumi(canvas, 4, iPos)
@@ -567,51 +565,7 @@ for histo in histos:
     canvas.SaveAs(output_dir + '/' + histo + '.png')
     #canvas.SaveAs(histo+'.root')
 
-  '''
-  if 'R_MC' in histo and 'btag' in histo  and not '1j' in histo and not '2j' in histo and not 'VBF' in histo and not 'VH' in histo:
-    print(histo)
-    canvas = loadcanvas()
-    canvas.cd()
-    legend = loadlegend(canvas.GetTopMargin(), canvas.GetBottomMargin(), canvas.GetLeftMargin(), canvas.GetRightMargin())
-    histos[histo].SetLineColor(2)
-    histos[histo].SetLineWidth(2)
-    histos[histo].GetYaxis().SetRangeUser(0,1)
-    if '0j' in histo  :  histos[histo].SetXTitle("DYMVA_{DNN}^{0j}")
-    if 'ee' in histo   : histos[histo].SetYTitle("R^{ee}")
-    elif 'mm' in histo : histos[histo].SetYTitle("R^{#mu#mu}")
-    histos[histo].Draw()
-    histos[histo].Fit("pol0","","",0.975,1)
-    fitMC = histos[histo].FindObject("pol0")
-    p0MC = fitMC.GetParameter(0)
-    e0MC = fitMC.GetParError(0)
-    fitMC = histos[histo].FindObject("pol0")
-    fitMC.SetLineColor(2)
-    fitMC.Draw('same')
-    #bvetoword=histo.replace('R_MC','R_DATA')
-    bvetoword=histo.replace('R_MC','R_fromDATAR')
-    histos[bvetoword].SetLineColor(4)
-    histos[bvetoword].SetLineWidth(2)
-    histos[bvetoword].Draw('same')
-    histos[bvetoword].Fit("pol0","","",0.975,1)
-    fitbveto = histos[bvetoword].FindObject("pol0")
-    p0bveto = fitbveto.GetParameter(0)
-    e0bveto = fitbveto.GetParError(0)
-    fitbveto = histos[bvetoword].FindObject("pol0")
-    fitbveto.SetLineColor(4)
-    fitbveto.Draw('same')
 
-    legend.AddEntry(histos[histo], 'DY MC (btag)','lf')
-    #legend.AddEntry(fitMC, "{0:.3f}".format(p0MC)+'#pm'+"{0:.3f}".format(e0MC) , 'lf')
-    legend.AddEntry(histos[bvetoword],'DY DATA (btag)','lf')
-    #legend.AddEntry(fitbveto, "{0:.3f}".format(p0bveto)+'#pm'+"{0:.3f}".format(e0bveto) , 'lf')
-    CMS_lumi.CMS_lumi(canvas, 4, iPos)
-    canvas.Update()
-    legend.Draw()
-    #canvas.SaveAs(histo+'.png')
-    #canvas.SaveAs(histo+'.root')
-  '''
-
-  
   # Saving k histos as plots
   if 'k_MC' in histo and 'btag' not in histo and jet_bin in histo:
     print(histo)
@@ -657,11 +611,14 @@ for histo in histos:
     fitDATA.SetLineColor(4)
     fitDATA.Draw('same')
 
+    # Second source of uncertainty in data: difference between data and MC k values
+    e1DATA = abs(p0DATA - p0MC)
+
     # Write legend
     legend.AddEntry(histos[histo], 'DY MC', 'lf')
     legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + '#pm' + "{0:.3f}".format(e0MC) , 'lf')
     legend.AddEntry(histos[dataword], 'DY DATA', 'lf')
-    legend.AddEntry(fitDATA, "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA) , 'lf')
+    legend.AddEntry(fitDATA, "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA) + '#pm' + "{0:.3f}".format(e1DATA), 'lf')
     CMS_lumi.CMS_lumi(canvas, 4, iPos)
 
     # Save plot
@@ -670,7 +627,7 @@ for histo in histos:
     canvas.SaveAs(output_dir + '/' + histo + '.png')
     #canvas.SaveAs(histo+'.root')
 
-# Saving Acceptance histos as plots
+# Saving Acceptance graphs as plots
 for graph in graphs:
   if 'MC' in graph and jet_bin in graph:
     print(graph)
@@ -679,8 +636,8 @@ for graph in graphs:
     legend = loadlegend(canvas.GetTopMargin(), canvas.GetBottomMargin(), canvas.GetLeftMargin(), canvas.GetRightMargin())
     graphs[graph].SetLineColor(2)
     graphs[graph].SetLineWidth(2)
-    graphs[graph].GetYaxis().SetRangeUser(0,1)
-    graphs[graph].GetXaxis().SetRangeUser(0,1)
+    graphs[graph].GetYaxis().SetRangeUser(0, 1.5)
+    graphs[graph].GetXaxis().SetRangeUser(0, 1.0)
     graph_x_title = "DYMVA_{DNN}^{" + jet_bin + "}"
     graphs[graph].GetXaxis().SetTitle(graph_x_title)
     if 'A_ww'   in graph and 'ee' in graph : graphs[graph].GetYaxis().SetTitle("A_{WW}^{ee}")
@@ -725,8 +682,8 @@ for graph in graphs:
     #fitDATA.Draw('SAME')
 
     # Prepare legend
-    legend.AddEntry(graphs[graph],    "DY MC   " "{0:.3f}".format(p0MC)   + '#pm' + "{0:.3f}".format(e0MC),  'lp')
-    legend.AddEntry(graphs[dataword], "DY DATA " "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA),'lp')
+    legend.AddEntry(graphs[graph],    "DY MC   " "{0:.3f}".format(p0MC)   + '#pm' + "{0:.3f}".format(e0MC), 'lp')
+    legend.AddEntry(graphs[dataword], "DY DATA " "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA) + '#pm' + "{0:.3f}".format(abs(p0DATA - p0MC)),'lp')
     CMS_lumi.CMS_lumi(canvas, 4, iPos)
 
     # Save plot
