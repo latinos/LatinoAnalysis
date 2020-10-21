@@ -2302,7 +2302,7 @@ Steps = {
                                   'DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
                                   'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2',
-                                  'DYJetsToLL_M-10to50-LO-ext1',
+                                  'DYJetsToLL_M-10to50-LO_ext1',
                                   'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1',
                                    # ... Low Mass HT
                                   'DYJetsToLL_M-4to50_HT-100to200',
@@ -2324,7 +2324,7 @@ Steps = {
                                   'DYJetsToLL_M-50_HT-600to800',
                                   'DYJetsToLL_M-50_HT-800to1200',
                                   'DYJetsToLL_M-50_HT-1200to2500',
-                                  'DYJetsToLL_M-50_HT-2500toinf',
+                                  'DYJetsToLL_M-50_HT-2500toInf',
 
                                   'DYJetsToLL_M-5to50_HT-70to100', 
                                   'DYJetsToLL_M-5to50_HT-100to200',
@@ -2334,7 +2334,7 @@ Steps = {
                                   'DYJetsToLL_M-5to50_HT-400to600',
                                   'DYJetsToLL_M-5to50_HT-400to600_ext1',
                                   'DYJetsToLL_M-5to50_HT-600toinf_ext1',
-                                  'DYJetsToLL_M-5to50_HT-600toinf',
+                                  'DYJetsToLL_M-5to50_HT-600toInf',
                                                         
                                   ]
                   } ,
