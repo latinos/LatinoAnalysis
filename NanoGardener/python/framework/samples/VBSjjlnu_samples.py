@@ -89,7 +89,7 @@ vbsjjlnu_samples_bkg_2016 = [
 
 
 vbsjjlnu_samples_bkg_2018 = [  'DYJetsToLL_M-50_ext2', 'TTWJetsToLNu', 'TTToSemiLeptonic_ext3', 
-                                   'Zg', 'Wg_AMCNLOFXFX','WZTo3LNu_mllmin01','Wg_MADGRAPHMLM']
+                                   'Zg', 'ZGToLLG', 'Wg_AMCNLOFXFX','WZTo3LNu_mllmin01','Wg_MADGRAPHMLM']
 
 
 vbsjjlnu_samples_bkg += vbsjjlnu_samples_bkg_2016
@@ -106,17 +106,15 @@ vbsjjlnu_samples_qcdvv = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J
 #vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_qcdvv
 vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg 
 
-vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-02Apr2020_ver1-v1',
-                             'SingleElectron_Run2016B-02Apr2020_ver2-v1',
-                             'SingleElectron_Run2016C-02Apr2020-v1'
+vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-02Apr2020_ver2-v1',
+                             'SingleElectron_Run2016C-02Apr2020-v1',
                              'SingleElectron_Run2016D-02Apr2020-v1',
                              'SingleElectron_Run2016E-02Apr2020-v1',
                              'SingleElectron_Run2016F-02Apr2020-v1',
                              'SingleElectron_Run2016G-02Apr2020-v1', 
                              'SingleElectron_Run2016H-02Apr2020-v1',
                              
-                             'SingleMuon_Run2016B-02Apr2020_ver1-v1',
-                             'SingleMuon_Run2016B-02Apr2020_ver2-v1'
+                             'SingleMuon_Run2016B-02Apr2020_ver2-v1',
                              'SingleMuon_Run2016C-02Apr2020-v1',
                              'SingleMuon_Run2016D-02Apr2020-v1',
                              'SingleMuon_Run2016E-02Apr2020-v1',
@@ -124,16 +122,27 @@ vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-02Apr2020_ver1-v1',
                              'SingleMuon_Run2016G-02Apr2020-v1', 
                              'SingleMuon_Run2016H-02Apr2020-v1']
                              
-vbsjjlnu_samples_data2017 = ['SingleElectron_Run2017B-02Apr2020-v1','SingleElectron_Run2017C-02Apr2020-v1',
-                            'SingleElectron_Run2017D-02Apr2020-v1','SingleElectron_Run2017E-02Apr2020-v1',
+vbsjjlnu_samples_data2017 = ['SingleElectron_Run2017B-02Apr2020-v1',
+                             'SingleElectron_Run2017C-02Apr2020-v1',
+                             'SingleElectron_Run2017D-02Apr2020-v1',
+                             'SingleElectron_Run2017E-02Apr2020-v1',
                              'SingleElectron_Run2017F-02Apr2020-v1',
                              'SingleMuon_Run2017B-02Apr2020-v1',
-                             'SingleMuon_Run2017C-02Apr2020-v1','SingleMuon_Run2017D-02Apr2020-v1',
-                             'SingleMuon_Run2017E-02Apr2020-v1','SingleMuon_Run2017F-02Apr2020-v1']
-vbsjjlnu_samples_data2018 = ['SingleMuon_Run2018A-02Apr2020-v1','SingleMuon_Run2018B-02Apr2020-v1',
-                              'SingleMuon_Run2018C-02Apr2020-v1','SingleMuon_Run2018D-02Apr2020_ver2-v1',
-                              'EGamma_Run2018A-02Apr2020-v1','EGamma_Run2018B-02Apr2020-v1',
-                              'EGamma_Run2018C-02Apr2020-v1','EGamma_Run2018D-02Apr2020_ver2-v1']
+                             'SingleMuon_Run2017C-02Apr2020-v1',
+                             'SingleMuon_Run2017D-02Apr2020-v1',
+                             'SingleMuon_Run2017E-02Apr2020-v1',
+                             'SingleMuon_Run2017F-02Apr2020-v1'
+                             ]
+                             
+vbsjjlnu_samples_data2018 = [ 'SingleMuon_Run2018A-02Apr2020-v1',
+                              'SingleMuon_Run2018B-02Apr2020-v1',
+                              'SingleMuon_Run2018C-02Apr2020-v1',
+                              'SingleMuon_Run2018D-02Apr2020-v1',
+                              'EGamma_Run2018A-02Apr2020-v1',
+                              'EGamma_Run2018B-02Apr2020-v1',
+                              'EGamma_Run2018C-02Apr2020-v1',
+                              'EGamma_Run2018D-02Apr2020-v1'
+                              ]
 
 
 CombJJLNu_preselections = {
