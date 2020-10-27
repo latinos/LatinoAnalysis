@@ -32,6 +32,11 @@ try:
 except NameError:
    AUTO_CONDOR_RETRY = False 
 
+try: 
+  FORCE_GFAL_SHELL = forceGfalShell
+except NameError:
+  FORCE_GFAL_SHELL = False
+
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False,USE_SINGULARITY=False):
      # baseName   = Gardening, Plotting, ....
@@ -111,6 +116,9 @@ class batchJobs :
            jFile.write('#$ -cwd\n')
 
          jFile.write('export X509_USER_PROXY=/afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+         if 'latino' in hostName:
+           jFile.write('export X509_USER_PROXY=/eos/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+           jFile.write('export EOS_MGM_URL=root://eoscms.cern.ch\n')
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')

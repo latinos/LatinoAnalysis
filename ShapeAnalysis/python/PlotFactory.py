@@ -536,6 +536,9 @@ class PlotFactory:
                 tgrMC_evx.append(thsBackground.GetStack().Last().GetBinWidth(iBin) / 2.)
               nuisances_err2_up = rnp.array(last.GetSumw2())[1:-1]
               nuisances_err2_do = rnp.array(last.GetSumw2())[1:-1]
+              if (self._removeMCStat):
+                nuisances_err2_up.fill(0)
+                nuisances_err2_do.fill(0)
             else:
               tgrMC_vy = np.zeros((0,))
               nuisances_err2_up = np.zeros((0,))
