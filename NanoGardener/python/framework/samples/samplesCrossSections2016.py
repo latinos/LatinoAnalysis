@@ -998,5 +998,5 @@ samples['WZJJ_TT'].extend( ['xsec=0.008765',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_LL'].extend( ['xsec=0.001368',    'kfact=1.000',   'ref=W' ])
 
 # monoH semileptonic samples
-samples['pseudoscalar2HDMa_ToWWToLNujj'].extend(['xsec=1.',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
-samples['darkHiggs_ToWWToLNujj']        .extend(['xsec=1.',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
+samples['pseudoscalar2HDMa_ToWWToLNujj'].extend(['xsec=0',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
+samples['darkHiggs_ToWWToLNujj']        .extend(['xsec=0',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
