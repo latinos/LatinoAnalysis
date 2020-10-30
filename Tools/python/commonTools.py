@@ -359,7 +359,17 @@ def getBaseW(directory,Samples = [] ):
 
 #### Print samples dic:
 
-def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGardener/python/framework/Productions_cfg.py' ):
+def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGardener/python/framework/Productions_cfg.py', model=None):
+    '''
+    Compute the baseW of MC events based on "genEventSumw"
+    Some samples have mergeded all models (e.g. mass points) in the same file, 
+    by specifying the "model" option, you can extract the baseW for 1 specific model.
+    This requires a specific setup:
+       - Runs tree must have genEventSumw_<model>
+       - X-sec file must contain entry for Samples[i]_<model>
+    '''
+    model_str = ''
+    if not model is None: model_str = '_'+model
 
     # Compute #evts
     genEventCount = 0
@@ -372,8 +382,8 @@ def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGard
         f = ROOT.TFile.Open(iFile.replace('###',''),'READ')
         Runs = f.Get("Runs")
         for iRun in Runs :
-          trailer = ""
-          if hasattr(iRun, "genEventSumw_"): trailer = "_" 
+          trailer = model_str
+          if hasattr(iRun, "genEventSumw"+trailer+"_"): trailer += "_" 
           genEventCount += getattr(iRun, "genEventCount"+trailer)
           genEventSumw  += getattr(iRun, "genEventSumw" +trailer)
           genEventSumw2 += getattr(iRun, "genEventSumw2"+trailer)
@@ -405,7 +415,7 @@ def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGard
       if   '_ext' in iSample : iSampleXS = iSample.split('_ext')[0]
       elif '-ext' in iSample : iSampleXS = iSample.split('-ext')[0]
       else:                    iSampleXS = iSample
-      xs.append( xsDB.get(iSampleXS) )
+      xs.append( xsDB.get(iSampleXS+model_str) )
     for iEntry in range(len(xs)):
       if not xs[iEntry] == xs[0] :
         print 'ERROR: getBaseW: Trying to mix samples with different x-section'
