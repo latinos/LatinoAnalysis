@@ -55,6 +55,11 @@ class EFTweightCalculator(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
+    def __init__(self, cmssw, CF_cfg = 'LatinoAnalysis/NanoGardener/python/data/configuration_positions_cfg.py'):
+
+        print "initialize"
+        
+
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
@@ -74,9 +79,6 @@ class EFTweightCalculator(Module):
           'index1' : 1,   # index of LHEReweightingWeight for x1
           'index2' : 2,   # index of LHEReweightingWeight for x2  
           }
-
-    def __init__(self, cmssw, CF_cfg = 'LatinoAnalysis/NanoGardener/python/data/ChargeFlip_cfg.py'):
-
 
         #x1 = 1.0
         #x2 = -1.0
@@ -113,7 +115,7 @@ class EFTweightCalculator(Module):
 #
 
   
-      return True
+        return True
 
 
 
