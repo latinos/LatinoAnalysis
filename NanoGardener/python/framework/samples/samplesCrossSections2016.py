@@ -996,3 +996,10 @@ samples['WZJJ_LT'].extend( ['xsec=0.002796',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_TL'].extend( ['xsec=0.003156',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_TT'].extend( ['xsec=0.008765',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_LL'].extend( ['xsec=0.001368',    'kfact=1.000',   'ref=W' ])
+
+# Polarized EW OSWW
+
+samples['WpWmJJ_EWK_pol_LL'].extend( ['xsec=0.04821',    'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_LT'].extend( ['xsec=0.07277',    'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_TL'].extend( ['xsec=0.07367',      'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_TT'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
