@@ -376,7 +376,7 @@ def addSystChainMembers_CombJJLNu():
           'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
           'declare'   : 'whadJetSel_{0} = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet" , branch_map="{0}")'.format(mapname),
           'module'    : 'whadJetSel_{0}()'.format(mapname),
-          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc +  vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
         }
 
         dictionary['wlepMaker_'+mapname] = {
@@ -386,7 +386,7 @@ def addSystChainMembers_CombJJLNu():
           'import'    : 'LatinoAnalysis.NanoGardener.modules.WlepMaker',
           'declare'   : 'wlepMkr_{0} = lambda : WlepMaker(branch_map="{0}")'.format(mapname),
           'module'    : 'wlepMkr_{0}()'.format(mapname),
-          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc +  vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
         }
 
         dictionary['HMlnjjVars_'+mapname] = {
@@ -396,7 +396,7 @@ def addSystChainMembers_CombJJLNu():
           'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVars' ,
           'declare'    : 'HMlnjjVars_{0} = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map="{0}")'.format(mapname),
           'module'     : 'HMlnjjVars_{0}()'.format(mapname),
-          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc +  vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
         }
 
         dictionary['HMDNNProdSemi_'+mapname] = {
@@ -406,7 +406,7 @@ def addSystChainMembers_CombJJLNu():
           'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_prod_semi' ,
           'declare'    : 'HMDNNPrSem_{0} = lambda : ApplyDNN_Production_Semi(branch_map="{0}")'.format(mapname),
           'module'     : 'HMDNNPrSem_{0}()'.format(mapname),
-          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
         }
 
         dictionary['HMDNNNeutSemi_'+mapname] = {
@@ -416,7 +416,7 @@ def addSystChainMembers_CombJJLNu():
           'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi' ,
           'declare'    : 'HMDNNNeSem_{0} = lambda : ApplyDNN_Neutrino_Semi(branch_map="{0}")'.format(mapname),
           'module'     : 'HMDNNNeSem_{0}()'.format(mapname),
-          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
         }
 
         # MonoHiggs Steps, we only need AK4 JES
@@ -428,7 +428,7 @@ def addSystChainMembers_CombJJLNu():
                 'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
                 'declare'  : 'MHSemiLepVars_{0} = lambda : MHSemiLepVars(branch_map="{0}")'.format(mapname),
                 'module'   : 'MHSemiLepVars_{0}()'.format(mapname),
-                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
             }
             dictionary['MHSemiLepMVA_'+mapname] = {
                 'isChain'  : False ,
@@ -438,7 +438,7 @@ def addSystChainMembers_CombJJLNu():
                 'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map="{0}")'.format(mapname),
                 #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
                 'module'   : 'MHSemiLepMVA_{0}()'.format(mapname),
-                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+                'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
             }
 
   for typ in ["JER", "ElepT", "MupT", "MET", "fatjetJMS", "fatjetJMR", "fatjetJER",]:
@@ -471,7 +471,7 @@ def addSystChainMembers_CombJJLNu():
         'import'    : 'LatinoAnalysis.NanoGardener.modules.WhadJetSel',
         'declare'   : 'whadJetSel_{0} = lambda : WhadJetSel(2,"custom",30.0,4.7,"CleanJet" , branch_map="{0}")'.format(mapname),
         'module'    : 'whadJetSel_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
       }
 
       dictionary['wlepMaker_'+mapname] = {
@@ -481,7 +481,7 @@ def addSystChainMembers_CombJJLNu():
         'import'    : 'LatinoAnalysis.NanoGardener.modules.WlepMaker',
         'declare'   : 'wlepMkr_{0} = lambda : WlepMaker(branch_map="{0}")'.format(mapname),
         'module'    : 'wlepMkr_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
       }
 
       dictionary['HMlnjjVars_'+mapname] = {
@@ -491,7 +491,7 @@ def addSystChainMembers_CombJJLNu():
         'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVars' ,
         'declare'    : 'HMlnjjVars_{0} = lambda : HMlnjjVarsClass(RPLME_YEAR, branch_map="{0}")'.format(mapname),
         'module'     : 'HMlnjjVars_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
       }
 
       dictionary['HMDNNProdSemi_'+mapname] = {
@@ -501,7 +501,7 @@ def addSystChainMembers_CombJJLNu():
         'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_prod_semi' ,
         'declare'    : 'HMDNNPrSem_{0} = lambda : ApplyDNN_Production_Semi(branch_map="{0}")'.format(mapname),
         'module'     : 'HMDNNPrSem_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
       }
 
       dictionary['HMDNNNeutSemi_'+mapname] = {
@@ -511,7 +511,7 @@ def addSystChainMembers_CombJJLNu():
         'import'     : 'LatinoAnalysis.NanoGardener.modules.HMDNN_neut_semi' ,
         'declare'    : 'HMDNNNeSem_{0} = lambda : ApplyDNN_Neutrino_Semi(branch_map="{0}")'.format(mapname),
         'module'     : 'HMDNNNeSem_{0}()'.format(mapname),
-        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+        'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
       }
 
       # MonoHiggs Steps
@@ -522,7 +522,7 @@ def addSystChainMembers_CombJJLNu():
           'import'   : 'LatinoAnalysis.NanoGardener.modules.MHSemiLepVars' ,
           'declare'  : 'MHSemiLepVars_{0} = lambda : MHSemiLepVars(branch_map="{0}")'.format(mapname),
           'module'   : 'MHSemiLepVars_{0}()'.format(mapname),
-          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
       }
       dictionary['MHSemiLepMVA_'+mapname] = {
           'isChain'  : False ,
@@ -532,7 +532,7 @@ def addSystChainMembers_CombJJLNu():
           'declare'  : 'MHSemiLepMVA_{0} = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/SemiLep_cfg.py", branch_map="{0}")'.format(mapname),
           #'declare'  : 'MonoHiggsMVA = lambda : TMVAfiller("data/MVA/monoHiggs/SemiLep/2HDMa/2HDMaBDT_cfg.py")',
           'module'   : 'MHSemiLepMVA_{0}()'.format(mapname),
-          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
+          'onlySample' : SemiLepHighMassSamples_2016 + SemiLepHighMassSamples_2017 + SemiLepHighMassSamples_2018 + vbsjjlnu_samples_mc + vbsjjlnu_samples_data2016 + vbsjjlnu_samples_data2017 + vbsjjlnu_samples_data2018 + MonoHjjlnu_samples_2016 + MonoHjjlnu_samples_2017 + MonoHjjlnu_samples_2018
       }
 
   return dictionary 
