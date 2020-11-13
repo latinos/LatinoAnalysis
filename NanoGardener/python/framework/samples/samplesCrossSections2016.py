@@ -1003,3 +1003,5 @@ samples['WpWmJJ_EWK_pol_LL'].extend( ['xsec=0.04821',    'kfact=1.000',   'ref=I
 samples['WpWmJJ_EWK_pol_LT'].extend( ['xsec=0.07277',    'kfact=1.000',   'ref=I' ])
 samples['WpWmJJ_EWK_pol_TL'].extend( ['xsec=0.07367',      'kfact=1.000',   'ref=I' ])
 samples['WpWmJJ_EWK_pol_TT'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
+# EFT dim8 OSWW
+samples['WWjj_OS_EWK_dim8'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
