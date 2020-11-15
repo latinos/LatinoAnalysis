@@ -8,6 +8,7 @@ import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import os.path
 import logging
+import imp
 from array import array
 from collections import OrderedDict
 
@@ -73,6 +74,7 @@ if __name__ == '__main__':
 
     parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
 
+    parser.add_option('--customize', dest='customizeKey', help="Optional parameters for the customizations script", default=None)
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -100,8 +102,9 @@ if __name__ == '__main__':
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
-    print "                    postFit  =", opt.postFit
-    print "               removeMCStat  =", opt.removeMCStat
+    print "                     postFit =", opt.postFit
+    print "                removeMCStat =", opt.removeMCStat
+    print "                  customized =", opt.customizeKey
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -227,7 +230,20 @@ if __name__ == '__main__':
       handle = open(opt.plotFile,'r')
       exec(handle)
       handle.close()
+
+    
+    # if present load the customization script
+    customized_module = None
+    if opt.customizeScript != None:
+      print "Loading the customization script"
+      customized_module = imp.load_source('customize_module', opt.customizeScript)
+      # Call the script customize method with the key from options
+      if hasattr(customized_module, 'customize'):
+        samples,cuts,variables,nuisances,plot,groupPlot = customized_module.customize(samples,cuts,variables,nuisances,plot,groupPlot, key=opt.customizeKey)
+      else:
+        print "Customization script missing *customize* method! skipping it"
    
+  
     factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     
     print '... and now closing ...'
