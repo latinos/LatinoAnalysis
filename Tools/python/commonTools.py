@@ -4,6 +4,7 @@ import subprocess
 from cookielib import CookieJar
 from urllib2 import build_opener, HTTPCookieProcessor
 import socket
+import collections
 
 from LatinoAnalysis.Tools.HiggsXSection  import *
 
