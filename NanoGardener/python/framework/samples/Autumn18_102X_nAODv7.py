@@ -665,6 +665,15 @@ Samples['WZJJ_LL'] = {'nanoAOD' :'/WZJJ_EWK_LLPolarization_TuneCP5_13TeV_madgrap
 Samples['WZJJ_TL'] = {'nanoAOD' :'/WZJJ_EWK_TLPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'} 
 Samples['WZJJ_LT'] = {'nanoAOD' :'/WZJJ_EWK_LTPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'} 
 Samples['WZJJ_TT'] = {'nanoAOD' :'/WZJJ_EWK_TTPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'} 
+
+### Semi-Lep MonoHiggs samples
+#2HDMa semileptonic signal
+# FIXME: not there yet
+#Samples['pseudoscalar2HDMa_ToWWToLNujj'] = {'nanoAOD' : ''}
+
+#DarkHiggs semileptonic signal
+Samples['darkHiggs_ToWWToLNujj'] = {'nanoAOD' :'/MonoHToWWToLNujj_ZpBaryonic_TuneCP5_13TeV_madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_rp_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
+
 ####### EFT samples for ssWW
 Samples['SSWW'] = {'nanoAOD' :'/SSWW_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
 Samples['VBS_SSWW_cW_INT'] = {'nanoAOD' :'/VBS_SSWW_cW_INT_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
