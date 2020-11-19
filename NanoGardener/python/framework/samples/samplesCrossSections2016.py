@@ -990,13 +990,6 @@ samples['bbHToWWTo2L2Nu_M125_ybyt_PrivateNano']     .extend( ['xsec=0.000743225'
 samples['darkHiggs_ToWWTo2L2Nu']        .extend(['xsec=0.0224333712', 'kfact=1.000', 'ref=??']) # 1*0.2137*0.104976
 samples['pseudoscalar2HDMa_ToWWTo2L2Nu'].extend(['xsec=0.0224333712', 'kfact=1.000', 'ref=??']) # 1*0.2137*0.104976
 
-# Polarized EW WZ
-samples['WZJJ_Inclusive'].extend( ['xsec=0.01612',    'kfact=1.000',   'ref=W' ])
-samples['WZJJ_LT'].extend( ['xsec=0.002796',    'kfact=1.000',   'ref=W' ])
-samples['WZJJ_TL'].extend( ['xsec=0.003156',    'kfact=1.000',   'ref=W' ])
-samples['WZJJ_TT'].extend( ['xsec=0.008765',    'kfact=1.000',   'ref=W' ])
-samples['WZJJ_LL'].extend( ['xsec=0.001368',    'kfact=1.000',   'ref=W' ])
-
 # monoH semileptonic samples
 samples['pseudoscalar2HDMa_ToWWToLNujj'].extend(['xsec=0',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
 samples['darkHiggs_ToWWToLNujj']        .extend(['xsec=0',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
@@ -1100,3 +1093,19 @@ samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp
 samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_1000'].extend(['xsec=0.045022465',    'kfact=1.000',   'ref=??' ]) # 0.10250*(((0.1086*3)*0.6741)*2)
 samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_1200'].extend(['xsec=0.032363466',    'kfact=1.000',   'ref=??' ]) # 0.07368*(((0.1086*3)*0.6741)*2)
 samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_1500'].extend(['xsec=0.017648806',    'kfact=1.000',   'ref=??' ]) # 0.04018*(((0.1086*3)*0.6741)*2)
+
+# Polarized EW WZ
+samples['WZJJ_Inclusive'].extend( ['xsec=0.01612',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LT'].extend( ['xsec=0.002796',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TL'].extend( ['xsec=0.003156',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TT'].extend( ['xsec=0.008765',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LL'].extend( ['xsec=0.001368',    'kfact=1.000',   'ref=W' ])
+
+# Polarized EW OSWW
+
+samples['WpWmJJ_EWK_pol_LL'].extend( ['xsec=0.04821',    'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_LT'].extend( ['xsec=0.07277',    'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_TL'].extend( ['xsec=0.07367',      'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_TT'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
+# EFT dim8 OSWW
+samples['WWjj_OS_EWK_dim8'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
