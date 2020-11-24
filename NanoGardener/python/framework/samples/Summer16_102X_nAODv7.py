@@ -699,3 +699,10 @@ Samples['WZJJ_LL'] = {'nanoAOD' :'/WZJJ_EWK_LLPolarization_TuneCUETP8M1_13TeV_ma
 Samples['WZJJ_TL'] = {'nanoAOD' :'/WZJJ_EWK_TLPolarization_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} 
 Samples['WZJJ_LT'] = {'nanoAOD' :'/WZJJ_EWK_LTPolarization_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} 
 Samples['WZJJ_TT'] = {'nanoAOD' :'/WZJJ_EWK_TTPolarization_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'} 
+
+### Semi-Lep MonoHiggs samples
+#2HDMa semileptonic signal
+Samples['pseudoscalar2HDMa_ToWWToLNujj'] = {'nanoAOD' : '/MonoHToWWToLNujj_2HDMa_TuneCUETP8M1_13TeV_madgraph-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_rp_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'}
+
+#DarkHiggs semileptonic signal
+Samples['darkHiggs_ToWWToLNujj'] = {'nanoAOD' :'/MonoHToWWToLNujj_ZpBaryonic_TuneCP5_13TeV_madgraph-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_rp_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'}
