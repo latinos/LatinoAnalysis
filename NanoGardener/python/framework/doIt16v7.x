@@ -4,7 +4,7 @@ Samples=WJetsToLNu_Wpt600ToInf,WJetsToLNu_Wpt100To250,WJetsToLNu_Wpt400To600_ext
 while :
 do
 
-       mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s DATAl1loose2016v7 -b
+#       mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s DATAl1loose2016v7 -b
 #      mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s fakeSel -i DATAl1loose2016v7 -b
 #      mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s l2loose -i DATAl1loose2016v7 -b
 #      mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s l2tightOR2016v7 -i DATAl1loose2016v7__l2loose -b
@@ -14,11 +14,11 @@ do
 #      mkPostProc.py -p Run2016_102X_nAODv7_Full2016v7 -s DATAWgStar201Xv7 -b
 
        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCl1loose2016v7 -b -Q nextweek
-#      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCCorr2016v7 -i MCl1loose2016v7 -b -Q nextweek -E $Samples
+       mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCCorr2016v7 -i MCl1loose2016v7 -b -Q nextweek -E $Samples
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s fakeSelMC -i MCl1loose2016v7__MCCorr2016v7 -b
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s fakeSelKinMC i MCl1loose2016v7 -b
-#      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s l2loose -i MCl1loose2016v7__MCCorr2016v7 -b
-#      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s l2tightOR2016v7 -i MCl1loose2016v7__MCCorr2016v7__l2loose -b
+       mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s l2loose -i MCl1loose2016v7__MCCorr2016v7 -b
+       mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s l2tightOR2016v7 -i MCl1loose2016v7__MCCorr2016v7__l2loose -b
 
 #      for iSyst in JESup JESdo METup METdo MupTup MupTdo ElepTup ElepTdo ; do
 #        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b
@@ -27,9 +27,9 @@ do
 #      for iSyst in JESup_suffix JESdo_suffix ; do
 #        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b -Q nextweek
 #      done
-#      for iSyst in METup_suffix METdo_suffix MupTup_suffix MupTdo_suffix ElepTup_suffix ElepTdo_suffix ; do
-#        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b -Q nextweek
-#      done
+       for iSyst in METup_suffix METdo_suffix MupTup_suffix MupTdo_suffix ElepTup_suffix ElepTdo_suffix ; do
+         mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b -Q nextweek
+       done
 
 #Samples=DYJetsToLL_M-50-LO_ext1,DYJetsToLL_M-50-LO_ext2,DYJetsToLL_M-50-PSup,DYJetsToLL_M-50_HT-100to200,DYJetsToLL_M-50_HT-200to400_ext1,DYJetsToLL_M-50_HT-600to800,DYJetsToLL_M-50_ext2,DYJetsToLL_M-5to50_HT-200to400,DYJetsToLL_M-5to50_HT-400to600,DYJetsToTT_MuEle_M-50_ext1,GJetsDR04_HT200To400,GluGluHToWWTo2L2Nu_Mlarge,GluGluHToZZTo4L_M125,GluGluZH_HToTauTau_ZTo2L_M125,H0L1_ToWWTo2L2Nu,H0L1f05_ToWWTo2L2Nu,H0M_ToWWTo2L2Nu,H0Mf05_ToWWTo2L2Nu,H0PM_ToWWTo2L2Nu,QCD_Pt-120to170_EMEnriched,QCD_Pt-50to80_EMEnriched_ext1,ST_t-channel_antitop,ST_t-channel_top,TTJets_DiLept,TTJets_DiLept_ext1,TTJets_more,TTTo2L2Nu,TTWJetsToQQ,TTZToLLNuNu_M-10_ext2,TT_TuneCUETP8M2T4,VBFHToWWTo2L2Nu_JHUGen698_M2500,VBFHToWWTo2L2Nu_JHUGen698_M500,VBFHToWWTo2L2Nu_M126,VBF_H0L1f05_ToWWTo2L2Nu,VBF_H0Mf05_ToWWTo2L2Nu,VBF_H0PM_ToWWTo2L2Nu,VVTo2L2Nu_ext1,WH_H0L1_ToWWTo2L2Nu,WH_H0L1f05_ToWWTo2L2Nu,WJetsToLNu_HT100_200_ext1,WJetsToLNu_HT100_200_ext2,WJetsToLNu_HT200_400_ext2,WJetsToLNu_ext2,WLLJJToLNu_M-50_QCD_2Jet,WLLJJToLNu_M-50_QCD_3Jet,WLLJJ_WToLNu_EWK,WZTo1L1Nu2Q,WZTo2L2Q,WZTo3LNu_AMCNLO,WZTo3LNu_ext1,WZTo3LNu_mllmin01_ext1,WpWmJJ_EWK_QCD_noTop,WpWpJJ_EWK_POWHEG,ZH_H0L1_ToWWTo2L2Nu,ZH_H0M_ToWWTo2L2Nu,ZH_H0PHf05_ToWWTo2L2Nu,ZH_H0PM_ToWWTo2L2Nu,ZZTo2L2Nu,ZZTo2L2Nu_ext1,ZZTo4L,ZZTo4L_ext1,ggZZ2e2m,ggZZ2m2t,ggZZ4m,tZq_ll_4f,tZq_ll_4f_PSweightsu
 #      for iSyst in JESTotalup_suffix JESAbsoluteup_suffix JESBBEC1up_suffix JESEC2up_suffix JESHFup_suffix JESFlavorQCDup_suffix JESRelativeup_suffix ; do
@@ -42,6 +42,12 @@ do
 
 
 
+       for iSyst in JESTotalup_suffix JESAbsoluteup_suffix JESBBEC1up_suffix JESEC2up_suffix JESFlavorQCDup_suffix JESHFup_suffix JESRelativeup_suffix ; do
+        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b 
+       done
+       for iSyst in JESTotaldo_suffix JESAbsolutedo_suffix JESBBEC1do_suffix JESEC2do_suffix JESFlavorQCDdo_suffix JESHFdo_suffix JESRelativedo_suffix ; do
+        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7 -b
+       done
 
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStar201Xv7 -b
 #      mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s MCWgStarCorr2016v7 -i MCWgStar201Xv7 -b
@@ -53,16 +59,16 @@ do
        for iSyst in JESup_suffix JESdo_suffix METup_suffix METdo_suffix MupTup_suffix MupTdo_suffix ElepTup_suffix ElepTdo_suffix ; do
          mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7__recoilDY -b -Q nextweek
        done
+       for iSyst in JESTotalup_suffix JESAbsoluteup_suffix JESBBEC1up_suffix JESEC2up_suffix JESFlavorQCDup_suffix JESHFup_suffix JESRelativeup_suffix ; do
+        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7__recoilDY -b 
+       done
+       for iSyst in JESTotaldo_suffix JESAbsolutedo_suffix JESBBEC1do_suffix JESEC2do_suffix JESFlavorQCDdo_suffix JESHFdo_suffix JESRelativedo_suffix ; do
+        mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7__recoilDY -b
+       done
  
        echo "Press [CTRL+C] to stop.."
        sleep 1200
 
 
-for iSyst in JESTotalup_suffix JESAbsoluteup_suffix JESBBEC1up_suffix JESEC2up_suffix JESFlavorQCDup_suffix JESHFup_suffix JESRelativeup_suffix ; do
-  mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7__recoilDY -b 
-done
-for iSyst in JESTotaldo_suffix JESAbsolutedo_suffix JESBBEC1do_suffix JESEC2do_suffix JESFlavorQCDdo_suffix JESHFdo_suffix JESRelativedo_suffix ; do
-  mkPostProc.py -p Summer16_102X_nAODv7_Full2016v7 -s $iSyst -i MCl1loose2016v7__MCCorr2016v7__l2loose__l2tightOR2016v7__recoilDY -b
-done
 
 done
