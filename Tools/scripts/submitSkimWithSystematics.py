@@ -3,24 +3,25 @@
 import os
 import math
 import argparse
-from LatinoAnalysis.Tools.commonTools import *
-from LatinoAnalysis.Tools.batchTools  import *
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--tag", type=str, default="ntuples")
-parser.add_argument("--basedir", type=str, required=True)
-parser.add_argument("--targetdir", type=str, required=True)
-parser.add_argument("--step", type=str, required=True)
-parser.add_argument("--samples-file", type=str, help="File containing the list of samples to elaborate", required=True)
-parser.add_argument("-v",'--variations', nargs="+", type=str, required=True)
-parser.add_argument("-br",'--branches-remove', nargs="+", type=str, default = [])
-parser.add_argument("-bk",'--branches-keep', nargs="+", type=str, default=['*'])
-parser.add_argument("-c",'--cut', type=str, required=True)
-parser.add_argument("-q",'--queue', type=str, required=True)
-parser.add_argument("-fj",'--files-per-job', type=int, default=1)
-parser.add_argument('--do-hadd', action="store_true")
-parser.add_argument('--dry-run', action="store_true")
+parser.add_argument("--tag", type=str, default="ntuples", help="Jobs tag")
+parser.add_argument("--basedir", type=str, required=True, help="Production basedir")
+parser.add_argument("--targetdir", type=str, required=True, help="Targer directory where both nuisances and systematics folders will be copied")
+parser.add_argument("--step", type=str, required=True, help="Baseline step")
+parser.add_argument("-v",'--variations', nargs="+", type=str, required=True, help="List of systematic variations to use: e.g. JES JER MET")
+parser.add_argument("--samples-file", type=str, required=True, help="File containing the list of samples to elaborate")
+parser.add_argument("-br",'--branches-remove', nargs="+", type=str, default = [], help="Branches to remove from trees in the copy")
+parser.add_argument("-bk",'--branches-keep', nargs="+", type=str, default=['*'], help="Branche to keep from trees in the copy (default all)")
+parser.add_argument("-c",'--cut', type=str, required=True, help="Cut to apply for the skim. It will varied for the variations.")
+parser.add_argument("-q",'--queue', type=str, required=True, help="Condor queue")
+parser.add_argument("-fj",'--files-per-job', type=int, default=1, help="Number of original tree files to handle in 1 job")
+parser.add_argument('--do-hadd', action="store_true", help="If True all the skimmed parts in a single job will be hadded.")
+parser.add_argument('--dry-run', action="store_true", help="Only create files for the submission. Do not run")
 args = parser.parse_args()
+
+from LatinoAnalysis.Tools.commonTools import *
+from LatinoAnalysis.Tools.batchTools  import *
 
 # get list of samples name
 samples = [ ] 
@@ -99,7 +100,6 @@ for iTarget in targetList:
                                                 "['"+"','".join(args.branches_keep)+"']",
                                                 "['"+"','".join(args.branches_remove)+"']"))
 
-
 jobs.InitPy(
 """skimmer.compute_entrylist()
 skimmer.copy_trees()"""
@@ -115,5 +115,6 @@ if args.do_hadd:
 else:
   jobs.Add2All("rsync -avz outputs_tmp/ "+ args.targetdir)
 
+#submit jobs
 if not args.dry_run:
    jobs.Sub(args.queue)
