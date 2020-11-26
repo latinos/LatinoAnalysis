@@ -127,8 +127,8 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
     
 class Skimmer:
 
-    def __init__(self,filename,basedir, targetdir, step, variations, cut, dry_run, branches_to_keep=['*'], branched_to_remove=[]):
-        self.filename = filename
+    def __init__(self,filenames,basedir, targetdir, step, variations, cut, dry_run, branches_to_keep=['*'], branched_to_remove=[]):
+        self.filenames = filenames
         self.basedir = basedir
         self.step = step
         self.variations = variations 
@@ -146,13 +146,19 @@ class Skimmer:
                 os.makedirs(os.path.join(self.targetdir, self.step + "_" +variation +d ))
                 self.variations_dict[variation + d] = self.step + "_"+variation+d
 
+        self.entrylists = {}
+
     def compute_entrylist(self):
-        self.entrylist = get_entrylist(self.cut, self.filename, self.variations_dict, self.basedir)
-        self.entrylist.Print("all")
+        for filename in self.filenames:
+            print "\n\n>>>>>>>>>>> Extracting entrylist on file: ", filename
+            self.entrylists[filename] = get_entrylist(self.cut, filename, self.variations_dict, self.basedir)
+            self.entrylists[filename].Print("all")
 
     def copy_trees(self):
         if self.dry_run: return
-        copy_trees(self.entrylist, self.filename, self.variations_dict, 
-                    self.basedir, self.targetdir, 
-                    branches_to_keep=self.branches_to_keep, branches_to_remove=self.branches_to_remove)
+        for filename, entrylist in self.entrylists.items():
+            print "\n\n>>>>>>>>>>> Copying trees for file: ", filename
+            copy_trees(entrylist, filename, self.variations_dict, 
+                        self.basedir, self.targetdir, 
+                        branches_to_keep=self.branches_to_keep, branches_to_remove=self.branches_to_remove)
 

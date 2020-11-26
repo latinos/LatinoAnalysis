@@ -1,6 +1,7 @@
 
 # Common Tools & batch
 import os
+import math
 import argparse
 from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
@@ -16,6 +17,7 @@ parser.add_argument("-br",'--branches-remove', nargs="+", type=str, default = []
 parser.add_argument("-bk",'--branches-keep', nargs="+", type=str, default=['*'])
 parser.add_argument("-c",'--cut', type=str, required=True)
 parser.add_argument("-q",'--queue', type=str, required=True)
+parser.add_argument("-fj",'--files-per-job', type=int, default=1)
 parser.add_argument("-d",'--dry-run', action="store_true")
 args = parser.parse_args()
 
@@ -23,20 +25,36 @@ args = parser.parse_args()
 samples = [ ] 
 exec(open(args.samples_file))
 
-targetList = []
-filesList = [ ] 
+filesPerJob = args.files_per_job
 
+def makeTargetList(samples):
+  """
+  Return a list of draw targets or merge sources. Entry of the list can be a sample name string,
+  a 2-tuple (sample name, fileblock), or a 3-tuple (sample name, fileblock, eventblock).
+  """
+
+  targetList=[]
+  for sam_k, sam_v in samples.iteritems():
+
+    nFiles = len(sam_v)
+    nFileBlocks = int(math.ceil(float(nFiles) / filesPerJob))
+
+    if nFileBlocks == 1:
+      targetList.append(sam_k)
+    else:
+      targetList.extend((sam_k, iFileBlock) for iFileBlock in range(nFileBlocks))
+  return targetList
+
+samples_dict = {}
 for sample in samples:
   files_list = getSampleFiles(os.path.join(args.basedir,args.step), sample, True, 'nanoLatino_')
-  for i, file in enumerate(files_list):
-    # keepingt only the file name
-    targetList.append(( sample + "." + str(i)))
-    filesList.append(file[  file.rfind("/")+1:] )
+  samples_dict[sample] = [ file[file.rfind("/")+1:] for file in files_list]
 
+# Create job target list
+targetList = makeTargetList(samples_dict)
 
 batchSplit = []
 stepList=['ALL']
-
 if targetList[0] != 'ALL':
   batchSplit.append('Targets')
 
@@ -45,7 +63,7 @@ print "stepList", stepList
 print "targetList", targetList
 for iStep in stepList:
   for iTarget in targetList:
-    tname = iTarget
+    tname = '%s.%d' % iTarget
     pidFile = jobDir+'mkShapes__skim/mkShapes__'+args.tag+'__'+iStep+'__'+tname+'.jid'
     #print pidFile
     if os.path.isfile(pidFile) :
@@ -62,15 +80,21 @@ jobs = batchJobs('skim',args.tag,stepList,targetList,','.join(batchSplit),bpostF
 jobs.AddPy2Sh()
 jobs.InitPy("from LatinoAnalysis.Tools.skimWithSystematics import *")
 
-for iTarget, iFile in zip(targetList, filesList):
-  jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer('{}','{}','tmp_outputs','{}',{},'{}',{}, {}, {})".format(iFile, args.basedir,  
+
+for iTarget in targetList:
+  tname = '%s.%d' % iTarget
+  samples_files = samples_dict[iTarget[0]]
+  iFileBlock = iTarget[1]
+  files = samples_files[filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
+
+  jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','tmp_outputs','{}',{},'{}',{}, {}, {})".format(
+                                              "['"+"','".join(files)+"']", args.basedir,  
                                                 args.step, "['"+"','".join(args.variations)+"']", 
                                                 args.cut, args.dry_run, 
                                                 "['"+"','".join(args.branches_keep)+"']",
                                                 "['"+"','".join(args.branches_remove)+"']"))
 
 
-                              
 jobs.InitPy(
 """skimmer.compute_entrylist()
 skimmer.copy_trees()"""
@@ -79,6 +103,5 @@ skimmer.copy_trees()"""
 jobs.Add2All("rsync -avz tmp_outputs/ "+ args.targetdir)
 
 
-#if not args.dry_run:
-#
-#    jobs.Sub(args.queue)
+if not args.dry_run:
+   jobs.Sub(args.queue)
