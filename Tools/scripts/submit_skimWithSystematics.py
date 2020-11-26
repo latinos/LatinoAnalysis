@@ -18,7 +18,8 @@ parser.add_argument("-bk",'--branches-keep', nargs="+", type=str, default=['*'])
 parser.add_argument("-c",'--cut', type=str, required=True)
 parser.add_argument("-q",'--queue', type=str, required=True)
 parser.add_argument("-fj",'--files-per-job', type=int, default=1)
-parser.add_argument("-d",'--dry-run', action="store_true")
+parser.add_argument('--do-hadd', action="store_true")
+parser.add_argument('--dry-run', action="store_true")
 args = parser.parse_args()
 
 # get list of samples name
@@ -77,6 +78,10 @@ else : use_singularity = False
 bpostFix=''
 jobs = batchJobs('skim',args.tag,stepList,targetList,','.join(batchSplit),bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)
 
+_haddnano  = 'PhysicsTools/NanoAODTools/scripts/haddnano.py'
+_cmsswBasedir = os.environ["CMSSW_BASE"]
+jobs.Add2All('cp '+_cmsswBasedir+'/src/'+ _haddnano+' .')
+
 jobs.AddPy2Sh()
 jobs.InitPy("from LatinoAnalysis.Tools.skimWithSystematics import *")
 
@@ -87,7 +92,7 @@ for iTarget in targetList:
   iFileBlock = iTarget[1]
   files = samples_files[filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
 
-  jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','tmp_outputs','{}',{},'{}',{}, {}, {})".format(
+  jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','outputs_tmp','{}',{},'{}',{}, {}, {})".format(
                                               "['"+"','".join(files)+"']", args.basedir,  
                                                 args.step, "['"+"','".join(args.variations)+"']", 
                                                 args.cut, args.dry_run, 
@@ -100,8 +105,15 @@ jobs.InitPy(
 skimmer.copy_trees()"""
 )
 
-jobs.Add2All("rsync -avz tmp_outputs/ "+ args.targetdir)
+if args.do_hadd:
+  for iTarget in targetList:
+    outputfile = 'nanoLatino_%s__part%d.root' % iTarget
+    jobs.AddPy("ALL", iTarget, "skimmer.hadd('{}','{}','{}')".format('outputs_hadd', outputfile, 'haddnano.py'))
 
+  jobs.Add2All("rsync -avz outputs_hadd/ "+ args.targetdir)
+
+else:
+  jobs.Add2All("rsync -avz outputs_tmp/ "+ args.targetdir)
 
 if not args.dry_run:
    jobs.Sub(args.queue)

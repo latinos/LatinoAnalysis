@@ -4,10 +4,29 @@ import re
 import os
 import time
 import argparse 
+import subprocess
 from LatinoAnalysis.NanoGardener.data.BranchMapping_cfg import branch_mapping
 
 
+'''
+This script implements a consistent skimming of events from nominal and suffix-based variation trees. 
+
+The skimming cut can contain branches that are varied in the systematic trees: the brancMapping
+mechanism is used to replace the branch and hava consistent selection. 
+
+All the variation trees are joint to the nominal as Friends. 
+Then the list of nominal and varied selection cut is applied to get entrylists. 
+Finally an OR of the entry list is performed. 
+
+(The entrylist calculation is not done using a single gigantic cut because of ROOT limitations).
+
+Once the most inclusive set of entries to be kept has been calculated the trees are copied. 
+Branches to keep and remove can be specified.
+
+'''
+
 def format_selection_variation(selection , variation):
+    '''Function to replace the varied branches with regex'''
     if variation in  branch_mapping:
         suffix = branch_mapping[variation]['suffix'] 
         for br in branch_mapping[variation]['branches']:
@@ -19,8 +38,14 @@ def format_selection_variation(selection , variation):
 
 def get_entrylist(selection, filename, variations_dict, basedir):
     '''
-    variation_dict:  a dictionary with ("variation_name" : folder). It needs to contain a "nominal" variation
+    Function that gets the most inclusive list of entries with a selection on 
+    nominal and variation trees.  The selection string is modified to take into account 
+    branch variations. 
+    
+    - filename:  e.g. WJetsToLNu_LO__part1.root
+    - variation_dict:  a dictionary with ("variation_name" : folder). It needs to contain a "nominal" variation
     where branch mappings are not used
+    - basedir:  folder containing nominal and variations folder
     '''
     root_files = []
     total_selection = None
@@ -49,6 +74,7 @@ def get_entrylist(selection, filename, variations_dict, basedir):
         print variation_name
         if variation_name in ['JESup','JESdo', 'fatjetJESup', 'fatjetJESdo']: 
             suffixed_selection = None
+            # Apply mapping for all the JES sources
             for source in JES_sources:
                 mapping_key = variation_name.replace('JES', 'JES'+source)
                 tmp_suffixed_selection = format_selection_variation(selection, mapping_key)
@@ -61,6 +87,7 @@ def get_entrylist(selection, filename, variations_dict, basedir):
             suffixed_selection = format_selection_variation(selection, variation_name)
             print 'Variation: ', variation_name, " --> ", suffixed_selection
         
+        #build the total list of selections
         varied_selections.append(suffixed_selection)
 
         #Open friend tree checking for file presence
@@ -71,6 +98,7 @@ def get_entrylist(selection, filename, variations_dict, basedir):
             print "ERROR! Cannot read file: ", os.path.join(basedir,folder,filename)
             exit(1)
         
+        # Add the varied tree as a friend of the nominal one
         friend_tree = friend_file.Get("Events")
         total_tree.AddFriend(friend_tree)
         
@@ -79,16 +107,25 @@ def get_entrylist(selection, filename, variations_dict, basedir):
         # Add the entries to the same total list to do an OR of the selections
         total_tree.Draw(">>+total_list", vselection)
     
+    # Extract the entrylist from the TFile
     total_entrylist = R.gDirectory.Get("total_list")
     total_entrylist.SetDirectory(0)
     
+    #cleanup
     for root_file in root_files:
         root_file.Close()
     
     return total_entrylist
 
-def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branches_to_keep=["*"],branches_to_remove=[]):
 
+def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branches_to_keep=["*"],branches_to_remove=[]):
+    '''
+    Function that copies the trees using an entrylist to restrict the events to be copied. 
+    Branches to keep and remove can be specified optionally. 
+
+    - basedir:  folder containing nominal and variations folder
+    - targetdir:  folder in which the resulting trees will be produced (usually temporary folder)
+    '''
     for variation_name, folder in variations_dict.items():
         print 'Variation: ', variation_name 
         try:
@@ -111,9 +148,10 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
         except:
             print "ERROR! Cannot read file: ", os.path.join(targetdir,folder,filename)
             exit(1)
+        # Copy only the entries in the entrylist
         newTree = oldTree.CopyTree("")
 
-        # Copy also other trees
+        # Copy also other metadata in the file
         Runs_tree =  iFile.Get("Runs").CopyTree("")
         ParameterSets_tree = iFile.Get("ParameterSets").CopyTree("")
         LuminosityBlocks_tree = iFile.Get("LuminosityBlocks").CopyTree("")
@@ -127,12 +165,12 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
     
 class Skimmer:
 
-    def __init__(self,filenames,basedir, targetdir, step, variations, cut, dry_run, branches_to_keep=['*'], branched_to_remove=[]):
+    def __init__(self,filenames, basedir, targetdir, step, variations, selection, dry_run, branches_to_keep=['*'], branched_to_remove=[]):
         self.filenames = filenames
         self.basedir = basedir
         self.step = step
         self.variations = variations 
-        self.cut = cut 
+        self.selection = selection 
         self.dry_run = dry_run
         self.targetdir = targetdir
         self.branches_to_keep = branches_to_keep
@@ -151,7 +189,7 @@ class Skimmer:
     def compute_entrylist(self):
         for filename in self.filenames:
             print "\n\n>>>>>>>>>>> Extracting entrylist on file: ", filename
-            self.entrylists[filename] = get_entrylist(self.cut, filename, self.variations_dict, self.basedir)
+            self.entrylists[filename] = get_entrylist(self.selection, filename, self.variations_dict, self.basedir)
             self.entrylists[filename].Print("all")
 
     def copy_trees(self):
@@ -162,3 +200,14 @@ class Skimmer:
                         self.basedir, self.targetdir, 
                         branches_to_keep=self.branches_to_keep, branches_to_remove=self.branches_to_remove)
 
+    def hadd(self, outputfolder, outputfilename, hadd_script):
+        for folder in self.variations_dict.values():
+            #create destination folder
+            os.makedirs(os.path.join(outputfolder, folder))
+            print "hadd ",folder
+            files = [os.path.join(self.targetdir, folder,f) for f in os.listdir(os.path.join(self.targetdir, folder))]
+            proc=subprocess.Popen(["python", hadd_script, os.path.join(outputfolder, folder, outputfilename)]+files, 
+                                stderr = subprocess.PIPE,stdout = subprocess.PIPE)
+            out, err = proc.communicate()
+            print out
+            print err
