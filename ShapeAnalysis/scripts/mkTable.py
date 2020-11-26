@@ -46,7 +46,8 @@ def merge_processes(tab, procs_to_merge, merged_name):
 
     for proc in procs_to_merge:
         if proc not in tab['process'].values:
-            print('ERROR: requested process "{0}" for merging not found in input table. Please check merging_map!'.format(proc)); exit()
+            print('WARNING: requested process "{0}" for merging not found in input table. Please double check the merging map!'.format(proc))
+            procs_to_merge.remove(proc)
     
     new_df = tab[tab['process'] != procs_to_merge[0]]
     sub_df = tab[tab['process'] == procs_to_merge[0]]
@@ -137,13 +138,8 @@ def read_input(raw_input):
     ### In these cases the corresponding row is absent, leading to messes when merging processes. This simply
     ### adds back in the missing lines setting everything to 0.
 
-    procs = []
-    for proc in df['process'].values:
-        if proc not in procs: procs.append(proc)
-    
-    cats =  []
-    for cat in df['category'].values:
-        if cat not in cats: cats.append(cat)
+    procs = set(df['process'].tolist())
+    cats = set(df['category'].tolist())
 
     hole_filler = []
 
