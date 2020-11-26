@@ -678,6 +678,10 @@ for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
     if key not in _JER_branches:
       _JER_branches.append(key)
 
+vbsjjlnu_mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.VBSjjlnu_vars')
+for branches in [_ElepT_branches,_MupT_branches, _MET_branches, _JES_branches,_JER_branches, _Fatjet_syst_branches ]:
+  branches += vbsjjlnu_mod.VBSjjlnu_all_branches
+
 ## formulas MC
 for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formulasToAdd_MC_Full2017v6', 'formulasToAdd_MC_Full2017v7', 'formulasToAdd_MC_Full2018v6', 'formulasToAdd_MC_Full2018v7', 'formulasToAdd_MC_MonoH']:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
