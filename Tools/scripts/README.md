@@ -66,7 +66,8 @@ usage: submitSkimWithSystematics.py [-h] [--tag TAG] --basedir BASEDIR
                                     [-br BRANCHES_REMOVE [BRANCHES_REMOVE ...]]
                                     [-bk BRANCHES_KEEP [BRANCHES_KEEP ...]] -c
                                     CUT -q QUEUE [-fj FILES_PER_JOB]
-                                    [--do-hadd] [--dry-run]
+                                    [--do-hadd] [--only-entrylist]
+                                    [--save-entrylists] [--dry-run]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -92,5 +93,8 @@ optional arguments:
                         Number of original tree files to handle in 1 job
   --do-hadd             If True all the skimmed parts in a single job will be
                         hadded.
+  --only-entrylist      Do not copy trees, only extract entrylists
+  --save-entrylists     If True the entrylists are saved in a folder in the
+                        targetdir, one for each original tree part
   --dry-run             Only create files for the submission. Do not run
 ```

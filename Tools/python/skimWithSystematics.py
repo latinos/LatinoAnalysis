@@ -146,7 +146,7 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
         try:
             oFile = R.TFile.Open(os.path.join(targetdir,folder,filename), "RECREATE")
         except:
-            print "ERROR! Cannot read file: ", os.path.join(targetdir,folder,filename)
+            print "ERROR! Cannot create file: ", os.path.join(targetdir,folder,filename)
             exit(1)
         # Copy only the entries in the entrylist
         newTree = oldTree.CopyTree("")
@@ -165,23 +165,24 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
     
 class Skimmer:
 
-    def __init__(self,filenames, basedir, targetdir, step, variations, selection, dry_run, branches_to_keep=['*'], branched_to_remove=[]):
+    def __init__(self,filenames, basedir, targetdir, step, variations, selection,branches_to_keep=['*'], branched_to_remove=[]):
         self.filenames = filenames
         self.basedir = basedir
         self.step = step
         self.variations = variations 
         self.selection = selection 
-        self.dry_run = dry_run
         self.targetdir = targetdir
         self.branches_to_keep = branches_to_keep
         self.branches_to_remove = branched_to_remove
 
-        os.makedirs(os.path.join(self.targetdir, self.step))
+        if not os.path.exists(os.path.join(self.targetdir, self.step)):
+            os.makedirs(os.path.join(self.targetdir, self.step))
         self.variations_dict =  { "nominal" : self.step }
 
         for variation in self.variations:
             for d in ["up","do"]:
-                os.makedirs(os.path.join(self.targetdir, self.step + "_" +variation +d ))
+                path = os.path.join(self.targetdir, self.step + "_" +variation +d )
+                if not os.path.exists(path): os.makedirs(path)
                 self.variations_dict[variation + d] = self.step + "_"+variation+d
 
         self.entrylists = {}
@@ -193,12 +194,22 @@ class Skimmer:
             self.entrylists[filename].Print("all")
 
     def copy_trees(self):
-        if self.dry_run: return
         for filename, entrylist in self.entrylists.items():
             print "\n\n>>>>>>>>>>> Copying trees for file: ", filename
             copy_trees(entrylist, filename, self.variations_dict, 
                         self.basedir, self.targetdir, 
                         branches_to_keep=self.branches_to_keep, branches_to_remove=self.branches_to_remove)
+
+    def save_entrylists(self, outputdir):
+        if not os.path.exists(outputdir): os.makedirs(outputdir)
+        for filename, entrylist in self.entrylists.items():
+            try:
+                out = R.TFile.Open(os.path.join(outputdir, filename), "RECREATE")
+                entrylist.Write()
+                out.Close()
+            except:
+                print "ERROR! Cannot create entrylist file: ", os.path.join(outputdir, filename)
+                exit(1)
 
     def hadd(self, outputfolder, outputfilename, hadd_script):
         for folder in self.variations_dict.values():

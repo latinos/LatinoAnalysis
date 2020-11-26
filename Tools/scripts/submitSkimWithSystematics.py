@@ -17,6 +17,8 @@ parser.add_argument("-c",'--cut', type=str, required=True, help="Cut to apply fo
 parser.add_argument("-q",'--queue', type=str, required=True, help="Condor queue")
 parser.add_argument("-fj",'--files-per-job', type=int, default=1, help="Number of original tree files to handle in 1 job")
 parser.add_argument('--do-hadd', action="store_true", help="If True all the skimmed parts in a single job will be hadded.")
+parser.add_argument('--only-entrylist', action="store_true", help="Do not copy trees, only extract entrylists")
+parser.add_argument('--save-entrylists',action="store_true", help="If True the entrylists are saved in a folder in the targetdir, one for each original tree part")
 parser.add_argument('--dry-run', action="store_true", help="Only create files for the submission. Do not run")
 args = parser.parse_args()
 
@@ -28,6 +30,9 @@ samples = [ ]
 exec(open(args.samples_file))
 
 filesPerJob = args.files_per_job
+
+if not os.path.exists(args.targetdir):
+  os.makedirs(args.targetdir)
 
 def makeTargetList(samples):
   """
@@ -65,7 +70,10 @@ print "stepList", stepList
 print "targetList", targetList
 for iStep in stepList:
   for iTarget in targetList:
-    tname = '%s.%d' % iTarget
+    if type(iTarget) is tuple:
+      tname = '%s.%d' % iTarget
+    else:
+      tname = iTarget
     pidFile = jobDir+'mkShapes__skim/mkShapes__'+args.tag+'__'+iStep+'__'+tname+'.jid'
     #print pidFile
     if os.path.isfile(pidFile) :
@@ -88,32 +96,40 @@ jobs.InitPy("from LatinoAnalysis.Tools.skimWithSystematics import *")
 
 
 for iTarget in targetList:
-  tname = '%s.%d' % iTarget
-  samples_files = samples_dict[iTarget[0]]
-  iFileBlock = iTarget[1]
-  files = samples_files[filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
+  if type(iTarget) is tuple:
+    samples_files = samples_dict[iTarget[0]]
+    iFileBlock = iTarget[1]
+    files = samples_files[filesPerJob * iFileBlock:filesPerJob * (iFileBlock + 1)]
+  else:
+    files = samples_dict[iTarget]
 
-  jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','outputs_tmp','{}',{},'{}',{}, {}, {})".format(
+  jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','outputs_tmp','{}',{},'{}', {}, {})".format(
                                               "['"+"','".join(files)+"']", args.basedir,  
-                                                args.step, "['"+"','".join(args.variations)+"']", 
-                                                args.cut, args.dry_run, 
+                                                args.step, "['"+"','".join(args.variations)+"']", args.cut,
                                                 "['"+"','".join(args.branches_keep)+"']",
                                                 "['"+"','".join(args.branches_remove)+"']"))
 
-jobs.InitPy(
-"""skimmer.compute_entrylist()
-skimmer.copy_trees()"""
-)
+# Start computing the entrylist
+jobs.InitPy("skimmer.compute_entrylist()")
 
-if args.do_hadd:
-  for iTarget in targetList:
-    outputfile = 'nanoLatino_%s__part%d.root' % iTarget
-    jobs.AddPy("ALL", iTarget, "skimmer.hadd('{}','{}','{}')".format('outputs_hadd', outputfile, 'haddnano.py'))
+# If requested export the entrylists
+if args.save_entrylists:
+  jobs.InitPy("skimmer.save_entrylists('entrylists')")
 
-  jobs.Add2All("rsync -avz outputs_hadd/ "+ args.targetdir)
+# if also the copy is requested
+if not args.only_entrylist:
+  jobs.InitPy("skimmer.copy_trees()")
+  if args.do_hadd:
+    for iTarget in targetList:
+      outputfile = 'nanoLatino_%s__part%d.root' % iTarget
+      jobs.AddPy("ALL", iTarget, "skimmer.hadd('{}','{}','{}')".format('outputs_hadd', outputfile, 'haddnano.py'))
 
-else:
-  jobs.Add2All("rsync -avz outputs_tmp/ "+ args.targetdir)
+    jobs.Add2All("rsync -avz outputs_hadd/ "+ args.targetdir)
+
+  else:
+    jobs.Add2All("rsync -avz outputs_tmp/ "+ args.targetdir)
+
+jobs.Add2All("rsync -avz entrylists "+ args.targetdir)
 
 #submit jobs
 if not args.dry_run:
