@@ -9,7 +9,7 @@ parser.add_argument("--tag", type=str, default="ntuples", help="Jobs tag")
 parser.add_argument("--basedir", type=str, required=True, help="Production basedir")
 parser.add_argument("--targetdir", type=str, required=True, help="Targer directory where both nuisances and systematics folders will be copied")
 parser.add_argument("--step", type=str, required=True, help="Baseline step")
-parser.add_argument("-v",'--variations', nargs="+", type=str, required=True, help="List of systematic variations to use: e.g. JES JER MET")
+parser.add_argument("-v",'--variations', nargs="+", type=str, default=[], help="List of systematic variations to use: e.g. JES JER MET")
 parser.add_argument("--samples-file", type=str, required=True, help="File containing the list of samples to elaborate")
 parser.add_argument("-br",'--branches-remove', nargs="+", type=str, default = [], help="Branches to remove from trees in the copy")
 parser.add_argument("-bk",'--branches-keep', nargs="+", type=str, default=['*'], help="Branche to keep from trees in the copy (default all)")
@@ -26,8 +26,8 @@ from LatinoAnalysis.Tools.commonTools import *
 from LatinoAnalysis.Tools.batchTools  import *
 
 # get list of samples name
-samples = [ ] 
-exec(open(args.samples_file))
+samples = [ f.strip() for f in open(args.samples_file).readlines() if not f.startswith("#")]
+print samples
 
 filesPerJob = args.files_per_job
 
@@ -37,9 +37,8 @@ if not os.path.exists(args.targetdir):
 def makeTargetList(samples):
   """
   Return a list of draw targets or merge sources. Entry of the list can be a sample name string,
-  a 2-tuple (sample name, fileblock), or a 3-tuple (sample name, fileblock, eventblock).
+  a 2-tuple (sample name, fileblock)
   """
-
   targetList=[]
   for sam_k, sam_v in samples.iteritems():
 
@@ -103,11 +102,18 @@ for iTarget in targetList:
   else:
     files = samples_dict[iTarget]
 
-  jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','outputs_tmp','{}',{},'{}', {}, {})".format(
-                                              "['"+"','".join(files)+"']", args.basedir,  
-                                                args.step, "['"+"','".join(args.variations)+"']", args.cut,
-                                                "['"+"','".join(args.branches_keep)+"']",
-                                                "['"+"','".join(args.branches_remove)+"']"))
+  if len(args.variations)>0:
+    jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','outputs_tmp','{}',{},'{}', {}, {})".format(
+                                                "['"+"','".join(files)+"']", args.basedir,  
+                                                  args.step, "['"+"','".join(args.variations)+"']", args.cut,
+                                                  "['"+"','".join(args.branches_keep)+"']",
+                                                  "['"+"','".join(args.branches_remove)+"']"))
+  else:
+    jobs.AddPy( "ALL", iTarget,  "skimmer = Skimmer({},'{}','outputs_tmp','{}',[],'{}', {}, {})".format(
+                                                "['"+"','".join(files)+"']", args.basedir,  
+                                                  args.step, args.cut,
+                                                  "['"+"','".join(args.branches_keep)+"']",
+                                                  "['"+"','".join(args.branches_remove)+"']"))
 
 # Start computing the entrylist
 jobs.InitPy("skimmer.compute_entrylist()")
@@ -124,12 +130,13 @@ if not args.only_entrylist:
       outputfile = 'nanoLatino_%s__part%d.root' % iTarget
       jobs.AddPy("ALL", iTarget, "skimmer.hadd('{}','{}','{}')".format('outputs_hadd', outputfile, 'haddnano.py'))
 
-    jobs.Add2All("rsync -avz outputs_hadd/ "+ args.targetdir)
+    jobs.Add2All("if [ $? -eq 0 ]; then rsync -avz outputs_hadd/ "+ args.targetdir + "; fi")
 
   else:
-    jobs.Add2All("rsync -avz outputs_tmp/ "+ args.targetdir)
+    jobs.Add2All("if [ $? -eq 0 ]; then  rsync -avz outputs_tmp/ "+ args.targetdir + "; fi")
 
-jobs.Add2All("rsync -avz entrylists "+ args.targetdir)
+if args.save_entrylists:
+  jobs.Add2All("rsync -avz entrylists "+ args.targetdir)
 
 #submit jobs
 if not args.dry_run:

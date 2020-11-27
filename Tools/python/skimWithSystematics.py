@@ -51,12 +51,12 @@ def get_entrylist(selection, filename, variations_dict, basedir):
     total_selection = None
     try:
         rfile = R.TFile.Open( os.path.join(basedir,variations_dict['nominal'],filename) ,"READ")
+        total_tree = rfile.Get("Events")
         root_files.append(rfile)
     except:
         print "ERROR! Cannot read file: ", os.path.join(basedir,variations_dict['nominal'],filename) 
         exit(1)
-    total_tree = rfile.Get("Events")
-
+   
     varied_selections = [] 
 
     # restrict alternative JES source
@@ -90,17 +90,18 @@ def get_entrylist(selection, filename, variations_dict, basedir):
         #build the total list of selections
         varied_selections.append(suffixed_selection)
 
+        # do not load nominal tree again
+        if variation_name == "nominal" : continue
         #Open friend tree checking for file presence
         try:
             friend_file = R.TFile.Open(os.path.join(basedir,folder,filename), "READ")
             root_files.append(friend_file)
+            # Add the varied tree as a friend of the nominal one
+            friend_tree = friend_file.Get("Events")
+            total_tree.AddFriend(friend_tree)
         except:
             print "ERROR! Cannot read file: ", os.path.join(basedir,folder,filename)
             exit(1)
-        
-        # Add the varied tree as a friend of the nominal one
-        friend_tree = friend_file.Get("Events")
-        total_tree.AddFriend(friend_tree)
         
     for vselection in varied_selections:
         print "Applying selection --> ", vselection
@@ -130,11 +131,11 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
         print 'Variation: ', variation_name 
         try:
             iFile = R.TFile.Open(os.path.join(basedir,folder,filename), "READ")
+            oldTree = iFile.Get("Events")
         except:
             print "ERROR! Cannot read file: ", os.path.join(basedir,folder,filename)
             exit(1)
 
-        oldTree = iFile.Get("Events")
         # Set branches
         for br in branches_to_keep:
             oldTree.SetBranchStatus(br, 1)
@@ -145,23 +146,23 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
         # new file 
         try:
             oFile = R.TFile.Open(os.path.join(targetdir,folder,filename), "RECREATE")
+            # Copy only the entries in the entrylist
+            newTree = oldTree.CopyTree("")
+
+            # Copy also other metadata in the file
+            if iFile.GetListOfKeys().Contains("Runs"):             Runs_tree =  iFile.Get("Runs").CopyTree("")
+            if iFile.GetListOfKeys().Contains("ParameterSets"):    ParameterSets_tree = iFile.Get("ParameterSets").CopyTree("")
+            if iFile.GetListOfKeys().Contains("LuminosityBlocks"): LuminosityBlocks_tree = iFile.Get("LuminosityBlocks").CopyTree("")
+            if iFile.GetListOfKeys().Contains("MetaData"):         MetaData_tree = iFile.Get("MetaData").CopyTree("")
+            if iFile.GetListOfKeys().Contains("autoPU"):           autoPU_histo = iFile.Get("autoPU").Clone()
+
+            oFile.Write()
+            oFile.Close()
+            iFile.Close()
+
         except:
             print "ERROR! Cannot create file: ", os.path.join(targetdir,folder,filename)
             exit(1)
-        # Copy only the entries in the entrylist
-        newTree = oldTree.CopyTree("")
-
-        # Copy also other metadata in the file
-        Runs_tree =  iFile.Get("Runs").CopyTree("")
-        ParameterSets_tree = iFile.Get("ParameterSets").CopyTree("")
-        LuminosityBlocks_tree = iFile.Get("LuminosityBlocks").CopyTree("")
-        MetaData_tree = iFile.Get("MetaData").CopyTree("")
-        autoPU_histo = iFile.Get("autoPU").Clone()
-
-        oFile.Write()
-        oFile.Close()
-        iFile.Close()
-
     
 class Skimmer:
 
