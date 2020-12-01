@@ -87,7 +87,7 @@ def createJESchain(type, kind="Up"):
 
 def createJERchain(type="", kind="Up"):
   toreplace = type+kind.lower()
-  chainTemplate = ['do_JERVAR_suffix','l2Kin_JERVAR', 'l3Kin_JERVAR', 'l4Kin_JERVAR','formulasMC_JERVAR']
+  chainTemplate = ['do_JERVAR_suffix','l2Kin_JERVAR', 'l3Kin_JERVAR', 'l4Kin_JERVAR','DYMVA_JERVAR','MonoHiggsMVA_JERVAR','formulasMC_JERVAR','JJHEFT_JERVAR']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
