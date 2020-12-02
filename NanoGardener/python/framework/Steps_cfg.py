@@ -790,6 +790,13 @@ Steps = {
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
                 },
 
+  'MCTRGFixv7' : { 
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['trigMCKeepRun', 'formulasMC' , 'EFTGen' , 'JJHEFT' ] ,
+                 } ,  
+
 
   'MCCorr2016_hmumu' : {
                      'isChain'    : True  ,
