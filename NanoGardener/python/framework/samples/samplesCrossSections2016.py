@@ -231,6 +231,7 @@ samples['TTJets_DiLept_ext1']           .extend( ['xsec=87.310',        'kfact=1
 ## GluGluWW
 samples['GluGluWWTo2L2Nu_MCFM']      	.extend( ['xsec=0.5905',	'kfact=1.000',		'ref=E'] ) # 1.4*3.974*0.1086*.1086*9 --> 1.4 is a k-factor, 3.974 comes from the comment on the qqWW samples in reference E
 samples['GluGluWWTo2L2NuHiggs_MCFM'] 	.extend( ['xsec=0.9544',	'kfact=1.000',		'ref=X'] ) # 1.4*0.6817 --> 1.4 is the same k-factor, 0.6817 is 0.07574*9, first number comes from MCFM, 9 is the lepton combinations
+samples['GluGluWWToLNuQQ']      	.extend( ['xsec=1.7956',	'kfact=1.000',		'ref=X'] ) # 4.099 (aMCatNLO: https://arxiv.org/pdf/1507.00020.pdf) * 0.6760 * 0.1080 * 3 * 2 
 
 
 ## ggH,HWW
