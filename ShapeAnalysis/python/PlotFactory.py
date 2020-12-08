@@ -1493,8 +1493,6 @@ class PlotFactory:
               tcanvasDifference_Fancy.cd()
               canvasPad1differenceName = 'pad1difference_' + cutName + "_" + variableName + "_Fancy"
               pad1difference = ROOT.TPad(canvasPad1differenceName,canvasPad1differenceName, 0, 0, 1, 1)
-              #pad1difference.SetTopMargin(0.098)
-              #pad1difference.SetBottomMargin(0.098) 
               pad1difference.Draw()
               
               pad1difference.cd()
@@ -1541,26 +1539,26 @@ class PlotFactory:
                 tgrMCMinusMC.SetLineWidth(2)
                 tgrMCMinusMC.SetFillStyle(3004)
                 tgrMCMinusMC.Draw("2") 
-                #for iii in range(tgrMCMinusMC.GetN()) :
-                  #print " --> " , iii, " = " , tgrMCMinusMC.GetY()[iii] , " + " , tgrMCMinusMC.GetErrorYhigh (iii) , " - ", tgrMCMinusMC.GetErrorYlow (iii)
-              
+
+              #---- the Legend
+              special_tlegend = ROOT.TLegend(0.40, 0.75, 0.90, 0.90)
+              special_tlegend.SetFillColor(0)
+              special_tlegend.SetTextFont(42)
+              special_tlegend.SetTextSize(0.035)
+              special_tlegend.SetLineColor(0)
+              special_tlegend.SetShadowColor(0)
+              special_tlegend.AddEntry( tgrDataMinusMC , 'Data', "L")      
+              special_tlegend.AddEntry( tgrMCMinusMC, "Systematics", "F")
               
               if self._showDataMinusBkgOnly :
-                tgrMCSigMinusMCBkg.SetLineWidth(2)
+                tgrMCSigMinusMCBkg.SetLineWidth(3)
                 tgrMCSigMinusMCBkg.SetLineColor(2)   # red
                 tgrMCSigMinusMCBkg.SetMarkerColor(2) # red
                 tgrMCSigMinusMCBkg.SetMarkerSize(0)         
                 tgrMCSigMinusMCBkg.Draw("P")
+                special_tlegend.AddEntry( tgrMCSigMinusMCBkg , 'Signal', "EPL")      
               
-              #for samplesToDifferenceGrName, samplesGrToDifference in tgrDifferenceList.iteritems() :
-                #print " -------------> draw " , samplesToDifferenceGrName, " --> ", samplesGrToDifference
-                #samplesGrToDifference.Draw("P")
-                ##samplesGrToDifference.Draw("hist same noclear")  ---> thstack
-                #for iii in range(samplesGrToDifference.GetN()) :
-                  #print " --> " , iii, " = " , samplesGrToDifference.GetY()[iii] , " + " , samplesGrToDifference.GetErrorYhigh (iii) , " - ", samplesGrToDifference.GetErrorYlow (iii)
-                
               # draw the data - MC
-              #tgrDataMinusMC.Draw("P0")
               tgrDataMinusMC.Draw("P")
 
               CMS_lumi.CMS_lumi(tcanvasDifference_Fancy, iPeriod, iPos)    
@@ -1570,6 +1568,7 @@ class PlotFactory:
               oneLine2.SetLineWidth(3)
               oneLine2.Draw("same")
               
+              special_tlegend.Draw()
   
               # draw back all the axes            
               pad1difference.RedrawAxis()
