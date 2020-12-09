@@ -259,6 +259,7 @@ parser.add_argument('--mergedOnly', help='Use only categories that have been mer
 parser.add_argument('-u', '--uncertainties', help='If --fancyTable is selected, adds uncertainties (all or post) to the table')
 parser.add_argument('--csv', help='Outputs table in .csv format', action='store_true')
 parser.add_argument('--decimals', help='Number of decimals to be shown', type=int, default=2)
+parser.add_argument('--unblind', help='Include data in table', action='store_true')
 args = parser.parse_args()
 
 #------- Main --------------------------------------------------------------------------------------------------------------------------------------------#
@@ -312,6 +313,9 @@ if __name__ == '__main__':
 
     try: show_unc = args.uncertainties
     except: show_unc = None
+
+    if not args.unblind:
+        df = remove_processes(df,['Data'])
 
     if not args.fancyTable: get_latex(df, args.expected, args.background, args.signal, args.csv, args.decimals)
     else: get_latex_reduced(df, args.mergedOnly, args.expected, show_unc, args.csv, args.decimals, sample_order)
