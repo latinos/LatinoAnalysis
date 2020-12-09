@@ -73,6 +73,8 @@ if __name__ == '__main__':
 
     parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
 
+    parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
+
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -102,6 +104,7 @@ if __name__ == '__main__':
     print "                    invertXY =", opt.invertXY    
     print "                    postFit  =", opt.postFit
     print "               removeMCStat  =", opt.removeMCStat
+    print "                  plotFancy  =", opt.plotFancy
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -157,7 +160,10 @@ if __name__ == '__main__':
     factory._postFit = opt.postFit
 
     factory._removeMCStat = opt.removeMCStat
-    
+
+    factory._plotFancy = opt.plotFancy
+
+
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :

@@ -110,7 +110,7 @@ def get_latex(tab, pre_fit, b_only, s_b, do_csv, nDec):
             outfile.write(tmp.replace('tabular', 'longtable'))
 
 
-def read_input(raw_input):
+def read_input(raw_input, card):
     
     table = []
 
@@ -159,7 +159,35 @@ def read_input(raw_input):
 
     df = pd.concat([df, pd.DataFrame(hole_filler)], ignore_index=True)
 
-    return df[table[0].keys()]
+    # Check if a datacard was passed
+    if not card is None:
+        # Extract the data yields from the card
+        k_data = 0
+        with open(card) as infile:
+            lines = infile.readlines()
+            bins = []
+            yields = []
+            for i, line in enumerate(lines):
+                if 'observ' in line.split()[0]:
+                    bins = lines[i-1].split()[1:]
+                    yields = lines[i].split()[1:]
+                    break
+
+            data_entries = []
+
+            for cat, data in zip(bins, yields):
+                data_entries.append({'category' : cat,
+                                     'process' : 'DATA',
+                                     'pre_fit' : int(data),
+                                     'pre_fit_error' : 0.0,
+                                     's+b_fit' : int(data),
+                                     's+b_fit_error' : 0.0,
+                                     'b_only_fit' : int(data),
+                                     'b_only_fit_error' : 0.0})
+
+        return pd.concat([df[table[0].keys()], pd.DataFrame(data_entries)], ignore_index=True, sort=False)
+    
+    else: return df[table[0].keys()]
 
 
 def get_latex_reduced(tab, do_merged_only, show_unc, do_csv, nDec):
@@ -172,31 +200,9 @@ def get_latex_reduced(tab, do_merged_only, show_unc, do_csv, nDec):
 
     if not do_merged_only:
         for proc in procs:
-            entry = {'Process' : proc}
-            for cat in df[df['process'] == proc]['category'].values:
-                if show_unc:
-                    try: post_fit = '{0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
-                    except: post_fit = '0.0 +/- '
-                    try: post_fit_error = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit_error'].values[0], x=nDec)
-                    except: post_fit_error = 'n.a.'
-                    try: pre_fit = ' ({0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
-                    except: pre_fit = ' (0.0 +/- '
-                    try: pre_fit_error = '{0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit_error'].values[0], x=nDec)
-                    except: 'n.a.)'
-                    entry[cat] = post_fit+post_fit_error+pre_fit+pre_fit_error
-                else:
-                    try: post_fit = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
-                    except: post_fit = '0.0'
-                    try: pre_fit = ' ({0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
-                    except: pre_fit = ' (0)'
-                    entry[cat] = post_fit+pre_fit
-            formatted.append(entry)
-    
-    else:
-        if 'categories_to_merge' in globals():
-            for proc in procs:
+            if proc != 'DATA':
                 entry = {'Process' : proc}
-                for cat in [c['new_name'] for c in categories_to_merge]:
+                for cat in df[df['process'] == proc]['category'].values:
                     if show_unc:
                         try: post_fit = '{0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
                         except: post_fit = '0.0 +/- '
@@ -213,18 +219,57 @@ def get_latex_reduced(tab, do_merged_only, show_unc, do_csv, nDec):
                         try: pre_fit = ' ({0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
                         except: pre_fit = ' (0)'
                         entry[cat] = post_fit+pre_fit
+            formatted.append(entry)
+
+    else:
+        if 'categories_to_merge' in globals():
+            for proc in procs:
+                if proc != 'DATA':
+                    entry = {'Process' : proc}
+                    for cat in [c['new_name'] for c in categories_to_merge]:
+                        if show_unc:
+                            try: post_fit = '{0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
+                            except: post_fit = '0.0 +/- '
+                            try: post_fit_error = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit_error'].values[0], x=nDec)
+                            except: post_fit_error = 'n.a.'
+                            try: pre_fit = ' ({0:.{x}f} +/- '.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
+                            except: pre_fit = ' (0.0 +/- '
+                            try: pre_fit_error = '{0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit_error'].values[0], x=nDec)
+                            except: 'n.a.)'
+                            entry[cat] = post_fit+post_fit_error+pre_fit+pre_fit_error
+                        else:
+                            try: post_fit = '{0:.{x}f}'.format(df[(df['category'] == cat) & (df['process'] == proc)]['s+b_fit'].values[0], x=nDec)
+                            except: post_fit = '0.0'
+                            try: pre_fit = ' ({0:.{x}f})'.format(df[(df['category'] == cat) & (df['process'] == proc)]['pre_fit'].values[0], x=nDec)
+                            except: pre_fit = ' (0)'
+                            entry[cat] = post_fit+pre_fit
                 formatted.append(entry)
         else: print('Reduced table with merged categories requested, but no categories to merge in merging_map!'); exit()
+
+    # Check if the table includes data
+    if 'DATA' in procs:
+        data_entry = {'Process' : 'DATA'}
+        if not do_merged_only:
+            for cat in df[df['process'] == proc]['category'].values:
+                data_entry[cat] = '{0:.0f}'.format(df[(df['category'] == cat) & (df['process'] == 'DATA')]['s+b_fit'].values[0])
+        else:
+            if 'categories_to_merge' in globals():
+                for cat in [c['new_name'] for c in categories_to_merge]:
+                    data_entry[cat] = '{0:.0f}'.format(df[(df['category'] == cat) & (df['process'] == 'DATA')]['s+b_fit'].values[0])
 
     if do_csv:
         with open('yields_table.csv','w') as outfile:
             outfile.write(pd.DataFrame(formatted).to_csv(index=False))
+            if 'DATA' in procs: outfile.write(pd.DataFrame([data_entry]).to_csv(index=False, header=False))
 
     else:
         with open('yields_table.tex','w') as outfile:
             tmp = pd.DataFrame(formatted).to_latex(index=False).replace('+/-', '$\pm$')
-            for expr in ['\\toprule', '\\midrule', '\\bottomrule']:
-                tmp = tmp.replace(expr, '\hline')
+            for expr in ['\\toprule', '\\midrule', '\\bottomrule']: tmp = tmp.replace(expr, '\hline')
+            if 'DATA' in procs:
+                tmp = '\n'.join(tmp.split('\n')[:-2]) # Removes last 2 rows from table
+                tmp += '\n' + '\n'.join(pd.DataFrame([data_entry]).to_latex(index=False, header=False).split('\n')[2:])
+                for expr in ['\\toprule', '\\midrule', '\\bottomrule']: tmp = tmp.replace(expr, '\hline')
             outfile.write(tmp)
 
 
@@ -254,6 +299,7 @@ parser.add_argument('--mergedOnly', help='Use only categories that have been mer
 parser.add_argument('-u', '--uncertainties', help='If --reducedTable is selected, adds uncertainties to the table', action='store_true')
 parser.add_argument('--csv', help='Outputs table in .csv format', action='store_true')
 parser.add_argument('--decimals', help='Number of decimals to be shown', type=int, default=2)
+parser.add_argument('-d', '--datacard', help='Datacard to extract data yields and add them to the table. Be careful not to accidentally unblind :)')
 args = parser.parse_args()
 
 #------- Main --------------------------------------------------------------------------------------------------------------------------------------------#
@@ -264,9 +310,15 @@ if __name__ == '__main__':
     if not os.path.exists(args.input_file):
         print('Error: specified input file does not exist!')
         exit()
+
+    try: datacard = args.datacard
+    except: datacard = None
+
+    if not datacard is None and not os.path.exists(datacard):
+        print('Error: specified datacard does not exist!'); exit()
     
     # Run mlFitNormsToText and save output
-    df = read_input(subprocess.check_output(['mlfitNormsToText.py', args.input_file, '-u']))
+    df = read_input(subprocess.check_output(['mlfitNormsToText.py', args.input_file, '-u']), datacard)
 
     try: map_path = args.mergingMap
     except: map_path = None
@@ -286,15 +338,15 @@ if __name__ == '__main__':
             try: processes_to_remove = merging_map.processes_to_remove
             except: pass
 
-            if 'categories_to_merge' in locals():
-                for cat_merge in categories_to_merge:
-                    df = merge_categories(df, cat_merge['old_names'], cat_merge['new_name'])
-                print('--> categories merged succesfully')
-            
             if 'processes_to_merge' in locals():
                 for proc_merge in processes_to_merge:
                     df = merge_processes(df, proc_merge['old_names'], proc_merge['new_name'])
                 print('--> processes merged succesfully')
+
+            if 'categories_to_merge' in locals():
+                for cat_merge in categories_to_merge:
+                    df = merge_categories(df, cat_merge['old_names'], cat_merge['new_name'])
+                print('--> categories merged succesfully')
 
             if 'processes_to_remove' in locals():
                 print('--> Removing unwanted processes')
