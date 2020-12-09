@@ -44,7 +44,7 @@ class JJH_EFTVars(Module):
           'me_vbf_hsm','me_vbf_hm','me_vbf_hp','me_vbf_hl','me_vbf_mixhm','me_vbf_mixhp',
           'me_wh_hsm','me_wh_hm','me_wh_hp','me_wh_hl','me_wh_mixhm','me_wh_mixhp',
           'me_zh_hsm','me_zh_hm','me_zh_hp','me_zh_hl','me_zh_mixhm','me_zh_mixhp',
-          'me_qcd_hsm',
+          'me_qcd_hsm','me_qcd_hm','me_qcd_mixhm',
           'pjjSm_wh','pjjTr_wh','pjjSm_zh','pjjTr_zh','meAvg_wh','meAvg_zh'
           ]
         
@@ -87,6 +87,8 @@ class JJH_EFTVars(Module):
         me_zh_mixhm = -999 
         me_zh_mixhp = -999
         me_qcd_hsm = -999 
+        me_qcd_hm    = -999 
+        me_qcd_mixhm = -999 
 
         pjjSm_wh = -999 
         pjjTr_wh = -999
@@ -179,6 +181,8 @@ class JJH_EFTVars(Module):
 
          ME_QCD = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.JJQCD, 1, 1)
          me_qcd_hsm   = ME_QCD[0]
+         me_qcd_hm    = ME_QCD[1]
+         me_qcd_mixhm = ME_QCD[4]
 
          self.mela.resetInputEvent()
 
@@ -191,7 +195,6 @@ class JJH_EFTVars(Module):
         self.out.fillBranch( 'me_vbf_hl',   me_vbf_hl )
         self.out.fillBranch( 'me_vbf_mixhm',me_vbf_mixhm )
         self.out.fillBranch( 'me_vbf_mixhp',me_vbf_mixhp ) 
-
         self.out.fillBranch( 'me_wh_hsm',   me_wh_hsm )
         self.out.fillBranch( 'me_wh_hm',    me_wh_hm )
         self.out.fillBranch( 'me_wh_hp',    me_wh_hp ) 
@@ -205,6 +208,8 @@ class JJH_EFTVars(Module):
         self.out.fillBranch( 'me_zh_mixhm', me_zh_mixhm )
         self.out.fillBranch( 'me_zh_mixhp', me_zh_mixhp ) 
         self.out.fillBranch( 'me_qcd_hsm',  me_qcd_hsm )
+        self.out.fillBranch( 'me_qcd_hm',   me_qcd_hm )
+        self.out.fillBranch( 'me_qcd_mixhm',me_qcd_mixhm )
 
         self.out.fillBranch( 'pjjSm_wh', pjjSm_wh )
         self.out.fillBranch( 'pjjTr_wh', pjjTr_wh )

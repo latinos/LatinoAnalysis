@@ -164,7 +164,6 @@ if __name__ == '__main__':
     factory._plotFancy = opt.plotFancy
 
 
-
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :

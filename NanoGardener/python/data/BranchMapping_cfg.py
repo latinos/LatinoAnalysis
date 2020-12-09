@@ -136,6 +136,8 @@ _ElepT_branches = [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -269,6 +271,8 @@ _MET_branches = [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -406,6 +410,8 @@ _JES_branches += [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -597,6 +603,8 @@ _JER_branches = ['CleanJet_pt'] + [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -819,4 +827,15 @@ for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
   branch_mapping['fatjetJES'+source+"up"] = {
     'branches': _Fatjet_syst_branches,
     'suffix': '_fatjetJES'+source+'up'
+  }
+
+# MET recoil sources
+for source in ["Response", "Resolution"]:
+  branch_mapping['MET'+source+"do"] = {
+    'branches': _MET_branches,
+    'suffix': '_MET'+source+'do'
+  }
+  branch_mapping['MET'+source+"up"] = {
+    'branches': _MET_branches,
+    'suffix': '_MET'+source+'up'
   }

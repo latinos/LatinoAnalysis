@@ -1,0 +1,131 @@
+drop *
+
+# Analysis variables
+
+keep nLepton
+keep Lepton_pdgId
+keep Lepton_pt
+keep mll
+keep PuppiMET_pt
+keep mpmet
+keep ptll
+keep mth
+keep drll
+keep TkMET_pt
+keep dphillmet
+keep dphill
+keep Lepton_eta
+keep Lepton_phi
+keep PV_npvsGood
+keep mtw2
+keep mtw1
+keep dphilmet
+keep dphilmet1
+keep dphilmet2
+
+# New variables
+
+keep mt2ll
+keep metpt
+keep metsig
+keep specialMCWeigths
+keep nbtaggedJets
+keep LepSF2l
+keep EventSplit_*
+keep lep1pt
+keep lep2pt
+
+# Signal model
+
+keep GenModel_*
+keep darkHiggs_*
+keep 2HDMa_*
+
+# aliases variables
+
+#2016
+keep LepCut2l__ele_mva_90p_Iso2016__mu_cut_Tight80x
+keep LepSF2l__ele_mva_90p_Iso2016*
+keep LepSF2l__mu_cut_Tight80x*
+keep LepSF2l__ele_mva_90p_Iso2016__mu_cut_Tight80x
+keep fakeW2l_ele_mva_90p_Iso2016_mu_cut_Tight80x*
+keep Gen_ZGstar_mass
+keep Lepton_promptgenmatched
+keep topGenPt
+keep antitopGenPt
+keep CleanJet_pt
+keep CleanJet_eta
+keep CleanJet_phi
+keep Jet_btagDeepB
+keep CleanJet_jetIdx
+keep Jet_btagSF_shape*
+keep SFweight2l
+keep PrefireWeight*
+keep LHEPart_pt
+keep LHEPart_eta
+keep LHEPart_phi
+keep nJet
+keep Jet_pt
+keep Jet_eta
+keep Jet_phi
+keep Jet_genJetIdx
+
+#2017
+keep LepCut2l__mvaFall17V1Iso_WP90__mu_cut_Tight_HWWW
+keep LepSF2l__mvaFall17V1Iso_WP90*
+keep LepSF2l__mu_cut_Tight_HWWW*
+keep LepSF2l__mvaFall17V1Iso_WP90__mu_cut_Tight_HWWW
+keep fakeW2l_mvaFall17V1Iso_WP90_mu_cut_Tight_HWWW*
+
+
+#newWP
+
+keep LepCut2l__ele_mva_90p_Iso2016_tthmva_70__mu_cut_Tight80x_tthmva_80
+keep LepSF2l__ele_mva_90p_Iso2016_tthmva_70*
+keep LepSF2l__mu_cut_Tight80x_tthmva_80*
+keep LepSF2l__ele_mva_90p_Iso2016_tthmva_70__mu_cut_Tight80x_tthmva_80
+keep fakeW2l_ele_mva_90p_Iso2016_tthmva_70_mu_cut_Tight80x_tthmva_80*
+keep LepCut2l__mvaFall17V1Iso_WP90_tthmva_70__mu_cut_Tight_HWWW_tthmva_80
+keep LepSF2l__mvaFall17V1Iso_WP90_tthmva_70*
+keep LepSF2l__mu_cut_Tight_HWWW_tthmva_80*
+keep LepSF2l__mvaFall17V1Iso_WP90_tthmva_70__mu_cut_Tight_HWWW_tthmva_80
+keep fakeW2l_mvaFall17V1Iso_WP90_tthmva_70_mu_cut_Tight_HWWW_tthmva_80*
+keep Muon_mvaTTH
+keep Lepton_muonIdx
+keep Electron_mvaTTH
+keep Lepton_electronIdx
+keep run_period
+keep Lepton_RecoSF*
+
+# samples variables
+
+keep Trigger_*
+keep XSWeight
+keep METFilter_MC
+keep PromptGenLepMatch2l
+keep gen_ptll
+keep gen_mll
+keep PhotonGen_isPrompt
+keep PhotonGen_pt
+keep PhotonGen_eta
+keep LeptonGen_isPrompt
+keep LeptonGen_pt
+keep Top_pTrw
+keep nllW*
+keep GenPart_pdgId
+keep GenPart_statusFlags
+keep lhe_mW1
+keep lhe_mW2
+keep HTXS_njets30
+keep HTXS_Higgs_pt
+keep METFilter_DATA
+keep fakeW
+keep LHE_HT
+
+# nuisances variables
+
+keep TriggerEffWeight_2l*
+keep puWeight*
+keep LHEScaleWeight
+keep ggH_*
+keep qqH_*

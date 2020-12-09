@@ -231,6 +231,7 @@ samples['TTJets_DiLept_ext1']           .extend( ['xsec=87.310',        'kfact=1
 ## GluGluWW
 samples['GluGluWWTo2L2Nu_MCFM']      	.extend( ['xsec=0.5905',	'kfact=1.000',		'ref=E'] ) # 1.4*3.974*0.1086*.1086*9 --> 1.4 is a k-factor, 3.974 comes from the comment on the qqWW samples in reference E
 samples['GluGluWWTo2L2NuHiggs_MCFM'] 	.extend( ['xsec=0.9544',	'kfact=1.000',		'ref=X'] ) # 1.4*0.6817 --> 1.4 is the same k-factor, 0.6817 is 0.07574*9, first number comes from MCFM, 9 is the lepton combinations
+samples['GluGluWWToLNuQQ']      	.extend( ['xsec=1.7956',	'kfact=1.000',		'ref=X'] ) # 4.099 (aMCatNLO: https://arxiv.org/pdf/1507.00020.pdf) * 0.6760 * 0.1080 * 3 * 2 
 
 
 ## ggH,HWW
@@ -935,15 +936,25 @@ samples['VBF_H0Mf05_ToWWTo2L2Nu'] .extend( ['xsec=0.0846',	'kfact=1.000',		'ref=
 
 # VBSlnujj semileptonic 
 
-samples['WpToLNu_WmTo2J']   .extend( ['xsec=0.9114',    'kfact=1.000',   'ref=Z' ])
-samples['WpTo2J_WmToLNu']   .extend( ['xsec=0.9107',    'kfact=1.000',   'ref=Z' ])
-samples['WpToLNu_WpTo2J']   .extend( ['xsec=0.0879',    'kfact=1.000',   'ref=Z' ])
-samples['WmToLNu_WmTo2J']   .extend( ['xsec=0.0326',    'kfact=1.000',   'ref=Z' ])
-samples['WpToLNu_ZTo2J']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=Z' ])
-samples['WpTo2J_ZTo2L']     .extend( ['xsec=0.0540',    'kfact=1.000',   'ref=Z' ])
-samples['WmToLNu_ZTo2J']    .extend( ['xsec=0.1000',    'kfact=1.000',   'ref=Z' ])
-samples['WmTo2J_ZTo2L']     .extend(['xsec=0.0298',     'kfact=1.000',   'ref=Z' ])
-samples['ZTo2L_ZTo2J']      .extend(['xsec=0.0159',     'kfact=1.000',   'ref=Z' ])
+samples['WmTo2J_ZTo2L']     .extend(['xsec=0.02982',     'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_WmTo2J']   .extend( ['xsec=0.03259',    'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_ZTo2J']    .extend( ['xsec=0.1000',    'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_WmToLNu']   .extend( ['xsec=0.9108',    'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_ZTo2L']     .extend( ['xsec=0.05401',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WpTo2J']   .extend( ['xsec=0.08793',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WmTo2J']   .extend( ['xsec=0.9115',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_ZTo2J']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=I' ])
+samples['ZTo2L_ZTo2J']      .extend(['xsec=0.01589',     'kfact=1.000',   'ref=I' ])
+
+samples['WmTo2J_ZTo2L_QCD']     .extend( ['xsec=0.3866',    'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_WmTo2J_QCD']   .extend( ['xsec=0.03774',   'kfact=1.000',   'ref=I' ])
+samples['WmToLNu_ZTo2J_QCD']    .extend( ['xsec=1.302',     'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_WmToLNu_QCD']   .extend( ['xsec=5.567',     'kfact=1.000',   'ref=I' ])
+samples['WpTo2J_ZTo2L_QCD']     .extend( ['xsec=0.6404',    'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WpTo2J_QCD']   .extend( ['xsec=0.08642',   'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_WmTo2J_QCD']   .extend( ['xsec=5.548',     'kfact=1.000',   'ref=I' ])
+samples['WpToLNu_ZTo2J_QCD']    .extend( ['xsec=2.159',     'kfact=1.000',   'ref=I' ])
+samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   'ref=I' ])
 
 
 # HH_WWbb_bblnujj semileptonic 2016
@@ -973,3 +984,129 @@ samples['HWminusJ_HToTauTau_M125_PrivateNano']  .extend( ['xsec=0.0341',        
 samples['HWplusJ_HToTauTau_M125_PrivateNano']   .extend( ['xsec=0.0532',        'kfact=1.000',          'ref=EF'] ) # 0.842*0.0632
 samples['HZJ_HToWW_M125_PrivateNano']           .extend( ['xsec=0.187',         'kfact=1.000',          'ref=EF'] ) # 0.8696*0.215
 samples['bbHToWWTo2L2Nu_M125_ybyt_PrivateNano']     .extend( ['xsec=0.000743225',    'kfact=1.000',         'ref=N'] ) # 0.000743225 = -0.03293*0.215*0.108*0.108*9
+
+
+# monoH dileptonic for FullRun2 analysis
+# Insert xsec value in pb for each mass point in samples.py
+samples['darkHiggs_ToWWTo2L2Nu']        .extend(['xsec=0.0224333712', 'kfact=1.000', 'ref=??']) # 1*0.2137*0.104976
+samples['pseudoscalar2HDMa_ToWWTo2L2Nu'].extend(['xsec=0.0224333712', 'kfact=1.000', 'ref=??']) # 1*0.2137*0.104976
+
+# monoH semileptonic samples
+samples['pseudoscalar2HDMa_ToWWToLNujj'].extend(['xsec=0',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
+samples['darkHiggs_ToWWToLNujj']        .extend(['xsec=0',    'kfact=1.000',   'ref=??' ]) #generic Xsec, to be overwritten in samples.py
+
+# X-sec from datacards
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_195'] .extend(['xsec=0.006579869',    'kfact=1.000',   'ref=??' ]) # 0.01498*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_200'] .extend(['xsec=0.010225590',    'kfact=1.000',   'ref=??' ]) # 0.02328*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_295'] .extend(['xsec=0.363649743',    'kfact=1.000',   'ref=??' ]) # 0.82790*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_300'] .extend(['xsec=0.369623456',    'kfact=1.000',   'ref=??' ]) # 0.84150*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_400'] .extend(['xsec=0.351526621',    'kfact=1.000',   'ref=??' ]) # 0.80030*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_500'] .extend(['xsec=0.333078392',    'kfact=1.000',   'ref=??' ]) # 0.75830*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_800'] .extend(['xsec=0.199636198',    'kfact=1.000',   'ref=??' ]) # 0.45450*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_1000'].extend(['xsec=0.120879828',    'kfact=1.000',   'ref=??' ]) # 0.27520*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_1200'].extend(['xsec=0.072035944',    'kfact=1.000',   'ref=??' ]) # 0.16400*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_100_mZp_1500'].extend(['xsec=0.033637272',    'kfact=1.000',   'ref=??' ]) # 0.07658*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_195'] .extend(['xsec=0.001642771',    'kfact=1.000',   'ref=??' ]) # 0.00374*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_200'] .extend(['xsec=0.001783329',    'kfact=1.000',   'ref=??' ]) # 0.00406*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_295'] .extend(['xsec=0.007976663',    'kfact=1.000',   'ref=??' ]) # 0.01816*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_300'] .extend(['xsec=0.010761467',    'kfact=1.000',   'ref=??' ]) # 0.02450*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_400'] .extend(['xsec=0.167571418',    'kfact=1.000',   'ref=??' ]) # 0.38150*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_500'] .extend(['xsec=0.183208489',    'kfact=1.000',   'ref=??' ]) # 0.41710*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_800'] .extend(['xsec=0.146926971',    'kfact=1.000',   'ref=??' ]) # 0.33450*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_1000'].extend(['xsec=0.099049423',    'kfact=1.000',   'ref=??' ]) # 0.22550*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_1200'].extend(['xsec=0.062548283',    'kfact=1.000',   'ref=??' ]) # 0.14240*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_150_mZp_1500'].extend(['xsec=0.030659200',    'kfact=1.000',   'ref=??' ]) # 0.06980*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_195'] .extend(['xsec=0.001159603',    'kfact=1.000',   'ref=??' ]) # 0.00264*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_200'] .extend(['xsec=0.001229882',    'kfact=1.000',   'ref=??' ]) # 0.00280*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_295'] .extend(['xsec=0.001796506',    'kfact=1.000',   'ref=??' ]) # 0.00409*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_300'] .extend(['xsec=0.001827253',    'kfact=1.000',   'ref=??' ]) # 0.00416*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_400'] .extend(['xsec=0.006733604',    'kfact=1.000',   'ref=??' ]) # 0.01533*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_500'] .extend(['xsec=0.084027293',    'kfact=1.000',   'ref=??' ]) # 0.19130*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_800'] .extend(['xsec=0.098741952',    'kfact=1.000',   'ref=??' ]) # 0.22480*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_1000'].extend(['xsec=0.076120909',    'kfact=1.000',   'ref=??' ]) # 0.17330*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_1200'].extend(['xsec=0.052138211',    'kfact=1.000',   'ref=??' ]) # 0.11870*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_160_mx_200_mZp_1500'].extend(['xsec=0.027329734',    'kfact=1.000',   'ref=??' ]) # 0.06222*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_195'] .extend(['xsec=0.011415940',    'kfact=1.000',   'ref=??' ]) # 0.02599*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_200'] .extend(['xsec=0.016085099',    'kfact=1.000',   'ref=??' ]) # 0.03662*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_295'] .extend(['xsec=0.321438437',    'kfact=1.000',   'ref=??' ]) # 0.73180*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_300'] .extend(['xsec=0.325128083',    'kfact=1.000',   'ref=??' ]) # 0.74020*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_400'] .extend(['xsec=0.294337110',    'kfact=1.000',   'ref=??' ]) # 0.67010*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_500'] .extend(['xsec=0.271496444',    'kfact=1.000',   'ref=??' ]) # 0.61810*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_800'] .extend(['xsec=0.179211372',    'kfact=1.000',   'ref=??' ]) # 0.40800*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_1000'].extend(['xsec=0.111480016',    'kfact=1.000',   'ref=??' ]) # 0.25380*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_1200'].extend(['xsec=0.067994903',    'kfact=1.000',   'ref=??' ]) # 0.15480*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_100_mZp_1500'].extend(['xsec=0.032420567',    'kfact=1.000',   'ref=??' ]) # 0.07381*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_195'] .extend(['xsec=0.003013211',    'kfact=1.000',   'ref=??' ]) # 0.00686*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_200'] .extend(['xsec=0.002991249',    'kfact=1.000',   'ref=??' ]) # 0.00681*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_295'] .extend(['xsec=0.007181632',    'kfact=1.000',   'ref=??' ]) # 0.01635*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_300'] .extend(['xsec=0.009593079',    'kfact=1.000',   'ref=??' ]) # 0.02184*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_400'] .extend(['xsec=0.143369098',    'kfact=1.000',   'ref=??' ]) # 0.32640*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_500'] .extend(['xsec=0.159708958',    'kfact=1.000',   'ref=??' ]) # 0.36360*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_800'] .extend(['xsec=0.130499262',    'kfact=1.000',   'ref=??' ]) # 0.29710*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_1000'].extend(['xsec=0.090615946',    'kfact=1.000',   'ref=??' ]) # 0.20630*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_1200'].extend(['xsec=0.058902561',    'kfact=1.000',   'ref=??' ]) # 0.13410*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_150_mZp_1500'].extend(['xsec=0.029477635',    'kfact=1.000',   'ref=??' ]) # 0.06711*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_195'] .extend(['xsec=0.002130331',    'kfact=1.000',   'ref=??' ]) # 0.00485*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_200'] .extend(['xsec=0.002060052',    'kfact=1.000',   'ref=??' ]) # 0.00469*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_295'] .extend(['xsec=0.001642771',    'kfact=1.000',   'ref=??' ]) # 0.00374*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_300'] .extend(['xsec=0.001660341',    'kfact=1.000',   'ref=??' ]) # 0.00378*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_400'] .extend(['xsec=0.005793623',    'kfact=1.000',   'ref=??' ]) # 0.01319*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_500'] .extend(['xsec=0.073090128',    'kfact=1.000',   'ref=??' ]) # 0.16640*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_800'] .extend(['xsec=0.087058074',    'kfact=1.000',   'ref=??' ]) # 0.19820*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_1000'].extend(['xsec=0.069268709',    'kfact=1.000',   'ref=??' ]) # 0.15770*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_1200'].extend(['xsec=0.048360716',    'kfact=1.000',   'ref=??' ]) # 0.11010*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_180_mx_200_mZp_1500'].extend(['xsec=0.026108637',    'kfact=1.000',   'ref=??' ]) # 0.05944*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_195'] .extend(['xsec=0.006790705',    'kfact=1.000',   'ref=??' ]) # 0.01546*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_200'] .extend(['xsec=0.009531585',    'kfact=1.000',   'ref=??' ]) # 0.02170*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_295'] .extend(['xsec=0.191158797',    'kfact=1.000',   'ref=??' ]) # 0.43520*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_300'] .extend(['xsec=0.193047545',    'kfact=1.000',   'ref=??' ]) # 0.43950*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_400'] .extend(['xsec=0.175433878',    'kfact=1.000',   'ref=??' ]) # 0.39940*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_500'] .extend(['xsec=0.160982765',    'kfact=1.000',   'ref=??' ]) # 0.36650*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_800'] .extend(['xsec=0.113324838',    'kfact=1.000',   'ref=??' ]) # 0.25800*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_1000'].extend(['xsec=0.073265826',    'kfact=1.000',   'ref=??' ]) # 0.16680*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_1200'].extend(['xsec=0.045198162',    'kfact=1.000',   'ref=??' ]) # 0.10290*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_100_mZp_1500'].extend(['xsec=0.022137875',    'kfact=1.000',   'ref=??' ]) # 0.05040*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_195'] .extend(['xsec=0.001884355',    'kfact=1.000',   'ref=??' ]) # 0.00429*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_200'] .extend(['xsec=0.001862393',    'kfact=1.000',   'ref=??' ]) # 0.00424*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_295'] .extend(['xsec=0.004401220',    'kfact=1.000',   'ref=??' ]) # 0.01002*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_300'] .extend(['xsec=0.005798015',    'kfact=1.000',   'ref=??' ]) # 0.01320*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_400'] .extend(['xsec=0.087848712',    'kfact=1.000',   'ref=??' ]) # 0.20000*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_500'] .extend(['xsec=0.098610179',    'kfact=1.000',   'ref=??' ]) # 0.22450*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_800'] .extend(['xsec=0.082182470',    'kfact=1.000',   'ref=??' ]) # 0.18710*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_1000'].extend(['xsec=0.059253956',    'kfact=1.000',   'ref=??' ]) # 0.13490*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_1200'].extend(['xsec=0.039184918',    'kfact=1.000',   'ref=??' ]) # 0.08921*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_150_mZp_1500'].extend(['xsec=0.020077823',    'kfact=1.000',   'ref=??' ]) # 0.04571*(((0.1086*3)*0.6741)*2)
+
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_195'] .extend(['xsec=0.001330908',    'kfact=1.000',   'ref=??' ]) # 0.00303*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_200'] .extend(['xsec=0.001286984',    'kfact=1.000',   'ref=??' ]) # 0.00293*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_295'] .extend(['xsec=0.001027830',    'kfact=1.000',   'ref=??' ]) # 0.00234*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_300'] .extend(['xsec=0.001036615',    'kfact=1.000',   'ref=??' ]) # 0.00236*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_400'] .extend(['xsec=0.003597405',    'kfact=1.000',   'ref=??' ]) # 0.00819*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_500'] .extend(['xsec=0.045637406',    'kfact=1.000',   'ref=??' ]) # 0.10390*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_800'] .extend(['xsec=0.054641899',    'kfact=1.000',   'ref=??' ]) # 0.12440*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_1000'].extend(['xsec=0.045022465',    'kfact=1.000',   'ref=??' ]) # 0.10250*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_1200'].extend(['xsec=0.032363466',    'kfact=1.000',   'ref=??' ]) # 0.07368*(((0.1086*3)*0.6741)*2)
+samples['darkHiggs_ToWWToLNujj_DarkHiggs_MonoHs_HsToWWTojjlnu_mhs_200_mx_200_mZp_1500'].extend(['xsec=0.017648806',    'kfact=1.000',   'ref=??' ]) # 0.04018*(((0.1086*3)*0.6741)*2)
+
+# Polarized EW WZ
+samples['WZJJ_Inclusive'].extend( ['xsec=0.01612',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LT'].extend( ['xsec=0.002796',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TL'].extend( ['xsec=0.003156',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_TT'].extend( ['xsec=0.008765',    'kfact=1.000',   'ref=W' ])
+samples['WZJJ_LL'].extend( ['xsec=0.001368',    'kfact=1.000',   'ref=W' ])
+
+# Polarized EW OSWW
+
+samples['WpWmJJ_EWK_pol_LL'].extend( ['xsec=0.04821',    'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_LT'].extend( ['xsec=0.07277',    'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_TL'].extend( ['xsec=0.07367',      'kfact=1.000',   'ref=I' ])
+samples['WpWmJJ_EWK_pol_TT'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
+# EFT dim8 OSWW
+samples['WWjj_OS_EWK_dim8'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
