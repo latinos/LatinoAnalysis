@@ -71,6 +71,8 @@ if __name__ == '__main__':
 
     parser.add_option('--postFit', dest='postFit', help='Plot sum of post-fit backgrounds, and the data/post-fit ratio.' , default='n') 
 
+    parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
+
     parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
 
 
@@ -101,6 +103,7 @@ if __name__ == '__main__':
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
     print "                    postFit  =", opt.postFit
+    print "               removeMCStat  =", opt.removeMCStat
     print "                  plotFancy  =", opt.plotFancy
     print ""
 
@@ -155,6 +158,8 @@ if __name__ == '__main__':
     factory._fileFormats = opt.fileFormats.split(',')
     
     factory._postFit = opt.postFit
+
+    factory._removeMCStat = opt.removeMCStat
 
     factory._plotFancy = opt.plotFancy
 
