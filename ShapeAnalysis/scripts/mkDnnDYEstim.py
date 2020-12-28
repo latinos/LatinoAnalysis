@@ -688,7 +688,7 @@ for graph in graphs:
     e1MC = abs(graphs[graph].Eval(0.95) - graphs[graph].Eval(0.9))
 
     # Total MC uncertainty
-    etotMC = np.sqrt(e0MC*e0MC + e1MC*e1MC)
+    eTotMC = np.sqrt(e0MC*e0MC + e1MC*e1MC)
 
     # Fit to Data using a horizontal line
     dataword=graph.replace('_MC_','_DATA_')
@@ -711,7 +711,7 @@ for graph in graphs:
 
     # Prepare legend
     legend.AddEntry(graphs[graph], 'Acc value (from MC)','lf')
-    legend.AddEntry(fitMC, "{0:.3f}".format(p0DATA) + ' #pm ' + "{0:.3f}".format(eTotDATA) + ' (' + "{0:.3f}".format(e0DATA) + " #pm {0:.3f}".format(e1DATA) + ")", 'lf')
+    legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + ' #pm ' + "{0:.3f}".format(eTotMC) + ' (' + "{0:.3f}".format(e0MC) + " #pm {0:.3f}".format(e1MC) + ")", 'lf')
     #legend.AddEntry(graphs[graph],    "Acc value (from MC)   " "{0:.3f}".format(p0MC)   + '#pm' + "{0:.3f}".format(etotMC) + ' (' + "{0:.3f}".format(e0MC)   + '#pm' + "{0:.3f}".format(e1MC) + ")", 'lp')
     #legend.AddEntry(graphs[dataword], "DY DATA " "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA), 'lp') # + '#pm' + "{0:.3f}".format(abs(p0DATA - p0MC)),'lp')
     CMS_lumi.CMS_lumi(canvas, 4, iPos)
