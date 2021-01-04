@@ -98,8 +98,8 @@ vbsjjlnu_samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpT
 vbsjjlnu_samples_qcdvv = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
                 'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD']
 
-#vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_qcdvv
-vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg 
+vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_qcdvv
+#vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg 
 
 vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-02Apr2020_ver2-v1',
                              'SingleElectron_Run2016C-02Apr2020-v1',

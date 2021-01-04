@@ -19,7 +19,7 @@ SemiLepHighMassSamples_2016 = [
   'DYJetsToLL_M-50_HT-600to800',
   'DYJetsToLL_M-50_HT-800to1200',
   'DYJetsToLL_M-50_HT-1200to2500',
-  'DYJetsToLL_M-50_HT-2500toinf',
+  'DYJetsToLL_M-50_HT-2500toInf',
 
   'TTToSemiLeptonic',
   'TTWJetsToLNu_ext1',
@@ -32,6 +32,7 @@ SemiLepHighMassSamples_2016 = [
   'WWToLNuQQ',
   'WWToLNuQQ_ext1',
   'WWToLNuQQ_AMCNLOFXFX',
+  'GluGluWWToLNuQQ',
 
   'WpWmJJ_EWK',
   'WpWmJJ_EWK_POWHEG',
@@ -137,6 +138,7 @@ SemiLepHighMassSamples_2017 = [
   'DYJetsToLL_M-50_newpmx',
   'DYJetsToLL_M-50_HT-70to100',
   'DYJetsToLL_M-50_HT-100to200',
+  'DYJetsToLL_M-50_HT-100to200_ext1',
   'DYJetsToLL_M-50_HT-100to200_newpmx',
   'DYJetsToLL_M-50_HT-200to400_ext1',
   'DYJetsToLL_M-50_HT-200to400_newpmx',
@@ -145,7 +147,7 @@ SemiLepHighMassSamples_2017 = [
   'DYJetsToLL_M-50_HT-600to800',
   'DYJetsToLL_M-50_HT-800to1200',
   'DYJetsToLL_M-50_HT-1200to2500',
-  'DYJetsToLL_M-50_HT-2500toinf',
+  'DYJetsToLL_M-50_HT-2500toInf',
 
   'TTToSemiLeptonic',
   'TTToSemiLeptonic_PSweights',
@@ -160,6 +162,7 @@ SemiLepHighMassSamples_2017 = [
   'ST_tW_top_PSweights',
 
   'WWToLNuQQ',
+  'GluGluWWToLNuQQ',
 
   'WpWmJJ_EWK',
   'WpWpJJ_EWK_powheg',
@@ -260,7 +263,7 @@ SemiLepHighMassSamples_2018 = [
   'DYJetsToLL_M-50_HT-600to800',
   'DYJetsToLL_M-50_HT-800to1200',
   'DYJetsToLL_M-50_HT-1200to2500',
-  'DYJetsToLL_M-50_HT-2500toinf',
+  'DYJetsToLL_M-50_HT-2500toInf',
 
   'TTToSemiLeptonic',
   'TTToSemiLeptonic_ext3',
@@ -275,6 +278,7 @@ SemiLepHighMassSamples_2018 = [
 
   'WW-LO',
   'WWToLNuQQ',
+  'GluGluWWToLNuQQ',
 
   'WpWmJJ_EWK',
   'WpWpJJ_EWK_powheg',

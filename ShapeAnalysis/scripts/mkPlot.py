@@ -75,6 +75,8 @@ if __name__ == '__main__':
     parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
 
     parser.add_option('--customize', dest='customizeKey', help="Optional parameters for the customizations script", default=None)
+    parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
+
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -105,6 +107,7 @@ if __name__ == '__main__':
     print "                     postFit =", opt.postFit
     print "                removeMCStat =", opt.removeMCStat
     print "                  customized =", opt.customizeKey
+    print "                  plotFancy  =", opt.plotFancy
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -122,7 +125,6 @@ if __name__ == '__main__':
     elif opt.debug == 1:
         print 'Logging level set to INFO (%d)' % opt.debug
         logging.basicConfig( level=logging.INFO )
-
 
     #samples = {}
     samples = OrderedDict()
@@ -232,6 +234,7 @@ if __name__ == '__main__':
       factory._postFit = opt.postFit
 
       factory._removeMCStat = opt.removeMCStat
+      factory._plotFancy = opt.plotFancy
 
       factory.makePlot(inputFile ,outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     
