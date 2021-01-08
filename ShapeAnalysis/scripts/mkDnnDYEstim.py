@@ -52,7 +52,19 @@ mkdir_command = "mkdir -p {0}".format(output_dir)
 os.system(mkdir_command)
 
 # Change the CMS_lumi variables (see CMS_lumi.py)
-CMS_lumi.lumi_13TeV = '35.9 fb^{-1}'
+CMS_lumi.lumi_13TeV = ''
+
+if '2016' in inputFile:
+   CMS_lumi.lumi_13TeV = '35.9 fb^{-1}'
+elif '2017' in inputFile:
+   CMS_lumi.lumi_13TeV = '41.5 fb^{-1}'
+elif '2018' in inputFile:
+   CMS_lumi.lumi_13TeV = '59.7 fb^{-1}'
+else:
+   print("I idon't know the lumi! Set XXX.X as value in legend")
+   CMS_lumi.lumi_13TeV = 'XXX.X fb^{-1}'
+
+
 CMS_lumi.writeExtraText = 1
 #CMS_lumi.extraText = 'Preliminary'
 CMS_lumi.extraText = ''
