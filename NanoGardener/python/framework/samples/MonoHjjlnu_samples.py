@@ -52,6 +52,9 @@ MonoHjjlnu_samples_2017 = [
 MonoHjjlnu_samples_2018 = [
     'WWTo2L2Nu',
     'WJetsToLNu',
+    'WJetsToLNu-0J',
+    'WJetsToLNu-1J',
+    'WJetsToLNu-2J',
     #2HDMa
     'pseudoscalar2HDMa_ToWWToLNujj',
     #DarkHiggs
