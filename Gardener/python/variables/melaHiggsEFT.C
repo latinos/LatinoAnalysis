@@ -7,8 +7,10 @@ std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Produ
   std::vector<float> mes;
 
   bool Decay = 0;
+  bool IsGGjj = 0;
 
   if(Prod==TVar::ZZGG || Prod==TVar::ZZINDEPENDENT)Decay = 1;
+  if(Prod==TVar::JJQCD) IsGGjj = 1;
 
   float me_hsm = -999;
   _mela->setProcess(TVar::HSMHiggs, ME, Prod);
@@ -37,17 +39,18 @@ std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Produ
   float me_mixhm = -999;
   _mela->setProcess(TVar::SelfDefine_spin0, ME, Prod);
   _mela->selfDHzzcoupl[0][gHIGGS_VV_1][0] = 1.;
-  _mela->selfDHzzcoupl[0][gHIGGS_VV_4][0] = 1.;    
-  if(IsGG) _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;        
-  if(Decay)_mela->computeP(me_mixhm , IsReco);
-  else     _mela->computeProdP(me_mixhm , IsReco);
+  _mela->selfDHzzcoupl[0][gHIGGS_VV_4][0] = 1.;   
+  if(IsGGjj)_mela->selfDHggcoupl[0][gHIGGS_GG_4][0]=1;    
+  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;      
+  if(Decay) _mela->computeP(me_mixhm , IsReco);
+  else      _mela->computeProdP(me_mixhm , IsReco);
   mes.push_back(me_mixhm);
 
   float me_mixhp = -999;
   _mela->setProcess(TVar::SelfDefine_spin0, ME, Prod);
   _mela->selfDHzzcoupl[0][gHIGGS_VV_1][0]= 1.;
   _mela->selfDHzzcoupl[0][gHIGGS_VV_2][0]= 1.;   
-  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;                    
+  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;                 
   if(Decay) _mela->computeP(me_mixhp, IsReco);
   else      _mela->computeProdP(me_mixhp, IsReco);
   mes.push_back(me_mixhp);
@@ -55,11 +58,11 @@ std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Produ
   float me_mixhl = -999;
   _mela->setProcess(TVar::SelfDefine_spin0, ME, Prod);
   _mela->selfDHzzcoupl[0][gHIGGS_VV_1][0]= 1.;
-  _mela->selfDHzzcoupl[0][gHIGGS_VV_1_PRIME2][0]= 1.;   
-  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;                         
+  _mela->selfDHzzcoupl[0][gHIGGS_VV_1_PRIME2][0]= 1;   
+  if(IsGG)  _mela->selfDHggcoupl[0][gHIGGS_GG_2][0]=1;
   if(Decay) _mela->computeP(me_mixhl, IsReco);
   else      _mela->computeProdP(me_mixhl, IsReco); 
-  mes.push_back(me_mixhl);
+  mes.push_back(me_mixhl);  
 
   /////// VH corrections //////
   // replace the true BW V shape with a parameterized one more suitable for smearing effects on jets.
