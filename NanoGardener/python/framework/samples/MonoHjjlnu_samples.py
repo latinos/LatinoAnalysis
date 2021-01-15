@@ -1,6 +1,7 @@
 
 MonoHjjlnu_samples_2016 = [
     'WWTo2L2Nu',
+    'WJetsToLNu',
     #2HDMa
     'pseudoscalar2HDMa_ToWWToLNujj',
     #DarkHiggs
@@ -9,6 +10,7 @@ MonoHjjlnu_samples_2016 = [
 
 MonoHjjlnu_samples_2017 = [
     'WWTo2L2Nu',
+    'WJetsToLNu',
     #2HDMa
     # private samples
     '2HDMa_SemiLep_MH3_200_MH4_150_pos',
@@ -49,6 +51,10 @@ MonoHjjlnu_samples_2017 = [
 
 MonoHjjlnu_samples_2018 = [
     'WWTo2L2Nu',
+    'WJetsToLNu',
+    'WJetsToLNu-0J',
+    'WJetsToLNu-1J',
+    'WJetsToLNu-2J',
     #2HDMa
     'pseudoscalar2HDMa_ToWWToLNujj',
     #DarkHiggs
