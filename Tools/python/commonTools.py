@@ -4,6 +4,7 @@ import subprocess
 from cookielib import CookieJar
 from urllib2 import build_opener, HTTPCookieProcessor
 import socket
+import collections
 
 from LatinoAnalysis.Tools.HiggsXSection  import *
 
@@ -418,6 +419,63 @@ def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGard
     baseW = float(Xsec)*1000./nEvt
 
     return str(baseW)
+
+
+def getModelDict(inputDir, production, sample, models, absPath=True, rooFilePrefix='nanoLatino_',FromPostProc=False, prodCfg='LatinoAnalysis/NanoGardener/python/framework/Productions_cfg.py'):
+    '''
+    Look in sample for models from the models list 
+    (genEventSumw_<model>(_) should be present in the Runs tree)
+    return dictionary containing the baseW and file list for each model
+    ''' 
+    FileList = getSampleFiles(inputDir,sample,absPath,rooFilePrefix,FromPostProc)
+    ModelDict = collections.OrderedDict() 
+    for iFile in FileList:
+        f = ROOT.TFile.Open(iFile.replace('###',''),'READ')
+        Runs = f.Get("Runs")
+        for model in models:
+            if not model in ModelDict:
+                ModelDict[model] = {}
+                ModelDict[model]['genEventSumw'] = 0.
+                ModelDict[model]['fileList'] = []
+            for iRun in Runs :
+                trailer = ""
+                if hasattr(iRun, "genEventSumw_"+model+"_"): trailer = "_" 
+                if not hasattr(iRun, "genEventSumw_"+model+trailer): continue 
+                ModelDict[model]['genEventSumw'] += getattr(iRun, "genEventSumw_"+model+trailer)
+                ModelDict[model]['fileList'].append(iFile)
+        f.Close()
+      
+    # Load Producton Cfg + check
+    CMSSW=os.environ["CMSSW_BASE"]
+    if os.path.exists(CMSSW+'/src/'+prodCfg) :
+        handle = open(CMSSW+'/src/'+prodCfg)
+        exec(handle)
+        handle.close()
+        prodList =  Productions.keys()   
+    else:
+        print 'ERROR: Please specify the input data config'
+        exit(1)
+    if not production in prodList:
+        print 'ERROR: "'+production+'" not in prodList: ',prodList 
+    
+    # Load X-section
+    xsDB = xsectionDB()
+    xsDB.readPython(CMSSW+'/src/'+Productions[production]['xsFile'])
+    xsDB.readYR(Productions[production]['YRver'][0],Productions[production]['YRver'][1])
+                
+    for model in models:
+        if len(ModelDict[model]['fileList']) == 0: 
+            print('getModelDict: Warning, model "'+model+'" not found in any of the files from sample"'+sample+'"')
+
+        if   '_ext' in sample: sampleXS = sample.split('_ext')[0]
+        elif '-ext' in sample: sampleXS = sample.split('-ext')[0]
+        else:                  sampleXS = sample
+        ModelDict[model]['Xsec'] = xsDB.get(sampleXS+'_'+model)       
+        nEvt  = ModelDict[model]['genEventSumw']
+        Xsec  = ModelDict[model]['Xsec']
+        baseW = float(Xsec)*1000./nEvt
+        ModelDict[model]['baseW'] = str(baseW)
+    return ModelDict
  
 def printSampleDic(sampleDic):
 

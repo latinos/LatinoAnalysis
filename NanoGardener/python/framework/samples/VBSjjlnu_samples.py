@@ -3,7 +3,7 @@
 # Mainly 2017 as a inclusive starting point
 vbsjjlnu_samples_bkg = [
                 'WWW','WWZ','WZZ','ZZZ','WWG',
-                'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50','EWKZ2Jets_ZToLL_M-50_newpmx'
+                'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50','EWKZ2Jets_ZToLL_M-50_newpmx', 'EWK_LNuJJ',
                 'DYJetsToLL_M-5to50-LO',
                 'DYJetsToLL_M-10to50-LO', 'DYJetsToLL_M-10to50-LO_ext1', 
                 'DYJetsToLL_M-50-LO', 'DYJetsToLL_M-50-LO_ext1', 
@@ -103,8 +103,8 @@ vbsjjlnu_samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpT
 vbsjjlnu_samples_qcdvv = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
                 'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD']
 
-#vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_qcdvv
-vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg 
+vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg + vbsjjlnu_samples_signal + vbsjjlnu_samples_qcdvv
+#vbsjjlnu_samples_mc = vbsjjlnu_samples_bkg 
 
 vbsjjlnu_samples_data2016 = ['SingleElectron_Run2016B-02Apr2020_ver2-v1',
                              'SingleElectron_Run2016C-02Apr2020-v1',

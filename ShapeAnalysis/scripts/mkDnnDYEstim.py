@@ -52,7 +52,19 @@ mkdir_command = "mkdir -p {0}".format(output_dir)
 os.system(mkdir_command)
 
 # Change the CMS_lumi variables (see CMS_lumi.py)
-CMS_lumi.lumi_13TeV = '35.9 fb^{-1}'
+CMS_lumi.lumi_13TeV = ''
+
+if '2016' in inputFile:
+   CMS_lumi.lumi_13TeV = '35.9 fb^{-1}'
+elif '2017' in inputFile:
+   CMS_lumi.lumi_13TeV = '41.5 fb^{-1}'
+elif '2018' in inputFile:
+   CMS_lumi.lumi_13TeV = '59.7 fb^{-1}'
+else:
+   print("I idon't know the lumi! Set XXX.X as value in legend")
+   CMS_lumi.lumi_13TeV = 'XXX.X fb^{-1}'
+
+
 CMS_lumi.writeExtraText = 1
 #CMS_lumi.extraText = 'Preliminary'
 CMS_lumi.extraText = ''
@@ -521,7 +533,7 @@ for histo in histos:
        histos[histo].SetYTitle("R^{ee}")
     elif 'mm' in histo: 
        histos[histo].SetYTitle("R^{#mu#mu}")
-    histos[histo].Draw()
+    #histos[histo].Draw()
 
     # Fit to MC using a horizontal line
     # Basically, get the mean of two R values:
@@ -534,29 +546,40 @@ for histo in histos:
     e0MC  = fitMC.GetParError(0)
     fitMC = histos[histo].FindObject("pol0")
     fitMC.SetLineColor(2)
-    fitMC.Draw('same')
+    #fitMC.Draw('same')
 
     # Fit to DATA using a horizontal line
     dataword=histo.replace('R_MC','R_DATA')
+    histos[dataword].GetYaxis().SetRangeUser(0,1)
+    histos[dataword].SetXTitle(histo_x_title)
+    if 'ee' in histo: 
+       histos[dataword].SetYTitle("R^{ee}")
+    elif 'mm' in histo: 
+       histos[dataword].SetYTitle("R^{#mu#mu}")
     histos[dataword].SetLineColor(4)
     histos[dataword].SetLineWidth(2)
-    histos[dataword].Draw('same')
+    #histos[dataword].Draw('same')
+    histos[dataword].Draw()
     histos[dataword].Fit("pol0","","",0.9,0.95)
     fitDATA = histos[dataword].FindObject("pol0")
     p0DATA = fitDATA.GetParameter(0)
-    # e0DATA = fitDATA.GetParError(0)
-    # Uncertainty in Data: maximum difference between R values
-    e0DATA = abs(histos[dataword].GetBinContent(10) - histos[dataword].GetBinContent(8))
+    e0DATA = fitDATA.GetParError(0)
+
+    # Second source of uncertainty in Data: maximum difference between R values
+    e1DATA = abs(histos[dataword].GetBinContent(10) - histos[dataword].GetBinContent(8))
     fitDATA = histos[dataword].FindObject("pol0")
     fitDATA.SetLineColor(4)
     fitDATA.Draw('same')
 
+    # Total R uncertainty in Data
+    eTotDATA = np.sqrt(e0DATA*e0DATA + e1DATA*e1DATA)
+
     # Prepare legend with results
     # legend.SetHeader("DATA/MC Difference = {0:.3f}".format(abs(p0MC - p0DATA)))
-    legend.AddEntry(histos[histo], 'DY MC','lf')
-    legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + '#pm' + "{0:.3f}".format(e0MC) + '#pm' + "{0:.3f}".format(abs(p0MC - p0DATA)), 'lf')
-    legend.AddEntry(histos[dataword], 'DY DATA','lf')
-    legend.AddEntry(fitDATA, "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA), 'lf')
+    #legend.AddEntry(histos[histo], 'DY MC','lf')
+    #legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + '#pm' + "{0:.3f}".format(e0MC) + '#pm' + "{0:.3f}".format(abs(p0MC - p0DATA)), 'lf')
+    legend.AddEntry(histos[dataword], 'R value (from DATA)','lf')
+    legend.AddEntry(fitDATA, "{0:.3f}".format(p0DATA) + ' #pm ' + "{0:.3f}".format(eTotDATA) + ' (' + "{0:.3f}".format(e0DATA) + " #pm {0:.3f}".format(e1DATA) + ")", 'lf')
     CMS_lumi.CMS_lumi(canvas, 4, iPos)
 
     # Save plot
@@ -572,6 +595,7 @@ for histo in histos:
     canvas = loadcanvas()
     canvas.cd()
     legend = loadlegend(canvas.GetTopMargin(), canvas.GetBottomMargin(), canvas.GetLeftMargin(), canvas.GetRightMargin())
+
     histos[histo].SetLineColor(2)
     histos[histo].SetLineWidth(2)
     histo_x_title = "DYMVA_{DNN}^{" + jet_bin + "}"
@@ -582,7 +606,7 @@ for histo in histos:
     elif 'mm' in histo: 
       histos[histo].SetYTitle("k^{#mu#mu}")
       histos[histo].GetYaxis().SetRangeUser(1,2)
-    histos[histo].Draw()
+    #histos[histo].Draw()
 
     # Fit to MC using a horizontal line
     # Basically, get the mean of two k values:
@@ -595,13 +619,19 @@ for histo in histos:
     e0MC  = fitMC.GetParError(0)
     fitMC = histos[histo].FindObject("pol0")
     fitMC.SetLineColor(2)
-    fitMC.Draw('same')
+    #fitMC.Draw('same')
 
     # Fit to Data using a horizontal line
     dataword=histo.replace('k_MC','k_DATA')
+    if 'ee' in histo: 
+      histos[dataword].SetYTitle("k^{ee}")
+      histos[dataword].GetYaxis().SetRangeUser(0.5,1)
+    elif 'mm' in histo: 
+      histos[dataword].SetYTitle("k^{#mu#mu}")
+      histos[dataword].GetYaxis().SetRangeUser(1,2)
     histos[dataword].SetLineColor(4)
     histos[dataword].SetLineWidth(2)
-    histos[dataword].Draw('same')
+    histos[dataword].Draw()
     histos[dataword].Fit("pol0","","",0.8,0.9)
     fitDATA = histos[dataword].FindObject("pol0")
     p0DATA  = fitDATA.GetParameter(0)
@@ -611,14 +641,17 @@ for histo in histos:
     fitDATA.SetLineColor(4)
     fitDATA.Draw('same')
 
-    # Second source of uncertainty in data: difference between data and MC k values
-    e1DATA = abs(p0DATA - p0MC)
+    # Second source of uncertainty in data: k variation across bins 8, 9, and 10 (it was the difference between data and MC k values)
+    e1DATA = abs(histos[dataword].GetBinContent(10) - histos[dataword].GetBinContent(8)) #abs(p0DATA - p0MC)
+
+    # Total K uncertainty
+    eTotDATA = np.sqrt(e0DATA*e0DATA + e1DATA*e1DATA)
 
     # Write legend
-    legend.AddEntry(histos[histo], 'DY MC', 'lf')
-    legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + '#pm' + "{0:.3f}".format(e0MC) , 'lf')
-    legend.AddEntry(histos[dataword], 'DY DATA', 'lf')
-    legend.AddEntry(fitDATA, "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA) + '#pm' + "{0:.3f}".format(e1DATA), 'lf')
+    #legend.AddEntry(histos[histo], 'DY MC', 'lf')
+    #legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + '#pm' + "{0:.3f}".format(e0MC) , 'lf')
+    legend.AddEntry(histos[dataword], 'K value (from DATA)', 'lf')
+    legend.AddEntry(fitDATA, "{0:.3f}".format(p0DATA) + ' #pm ' + "{0:.3f}".format(eTotDATA) + ' (' + "{0:.3f}".format(e0DATA) + " #pm {0:.3f}".format(e1DATA) + ")", 'lf')
     CMS_lumi.CMS_lumi(canvas, 4, iPos)
 
     # Save plot
@@ -661,13 +694,19 @@ for graph in graphs:
     else:
       p0MC = 0
       e0MC = 0.01
-    #fitMC.Draw('SAME')
+    fitMC.Draw('SAME')
+
+    # Second source of uncertainty in MC: maximum difference between Acc values
+    e1MC = abs(graphs[graph].Eval(0.95) - graphs[graph].Eval(0.9))
+
+    # Total MC uncertainty
+    eTotMC = np.sqrt(e0MC*e0MC + e1MC*e1MC)
 
     # Fit to Data using a horizontal line
     dataword=graph.replace('_MC_','_DATA_')
     graphs[dataword].SetLineColor(4)
     graphs[dataword].SetLineWidth(2)
-    graphs[dataword].Draw('P')
+    #graphs[dataword].Draw('P')
     graphs[dataword].Fit("pol0","","",0.9,0.95)
     fitDATA = graphs[dataword].FindObject("pol0")
     if fitDATA:
@@ -681,9 +720,12 @@ for graph in graphs:
       e0DATA = 0.01 
     #fitDATA.Draw('SAME')
 
+
     # Prepare legend
-    legend.AddEntry(graphs[graph],    "DY MC   " "{0:.3f}".format(p0MC)   + '#pm' + "{0:.3f}".format(e0MC), 'lp')
-    legend.AddEntry(graphs[dataword], "DY DATA " "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA) + '#pm' + "{0:.3f}".format(abs(p0DATA - p0MC)),'lp')
+    legend.AddEntry(graphs[graph], 'Acc value (from MC)','lf')
+    legend.AddEntry(fitMC, "{0:.3f}".format(p0MC) + ' #pm ' + "{0:.3f}".format(eTotMC) + ' (' + "{0:.3f}".format(e0MC) + " #pm {0:.3f}".format(e1MC) + ")", 'lf')
+    #legend.AddEntry(graphs[graph],    "Acc value (from MC)   " "{0:.3f}".format(p0MC)   + '#pm' + "{0:.3f}".format(etotMC) + ' (' + "{0:.3f}".format(e0MC)   + '#pm' + "{0:.3f}".format(e1MC) + ")", 'lp')
+    #legend.AddEntry(graphs[dataword], "DY DATA " "{0:.3f}".format(p0DATA) + '#pm' + "{0:.3f}".format(e0DATA), 'lp') # + '#pm' + "{0:.3f}".format(abs(p0DATA - p0MC)),'lp')
     CMS_lumi.CMS_lumi(canvas, 4, iPos)
 
     # Save plot

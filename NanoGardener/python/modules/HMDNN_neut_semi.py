@@ -42,18 +42,23 @@ class ApplyDNN_Neutrino_Semi(Module):
 
         event = mappedEvent(event, mapname=self._branch_map)
 
+        withindex = "[0]" # There was a case once where the entries in a sample weren't a list, for some reason
         try:
-          wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt[0]")
+          wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt"+withindex)
           ValidEntry=True
         except IndexError:
           ValidEntry=False
-        if self.GetValue(event, "HM_nCleanFatJetPassMBoosted") >= 1 and ValidEntry:
-          weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta[0]")
-          wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi[0]")
-          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass[0]")
-          WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass[0]")
-          wptmww = self.GetValue(event, "HM_CleanFatJetPassMBoosted_WptOvHfatM[0]")
-          tau21 = self.GetValue(event, "HM_CleanFatJetPassMBoosted_tau21[0]")
+        except TypeError:
+          withindex = ''
+
+        if self.GetValue(event, "HM_nCleanFatJetPassMBoosted") >= 1 and ValidEntry: # Boosted
+          wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt"+withindex)
+          weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta"+withindex)
+          wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi"+withindex)
+          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass"+withindex)
+          WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass"+withindex)
+          wptmww = self.GetValue(event, "HM_CleanFatJetPassMBoosted_WptOvHfatM"+withindex)
+          tau21 = self.GetValue(event, "HM_CleanFatJetPassMBoosted_tau21"+withindex)
 
           wr1pt = 0.0
           wr1eta = 0.0
@@ -62,10 +67,10 @@ class ApplyDNN_Neutrino_Semi(Module):
           wr2eta = 0.0
           wr2phi = 0.0
 
-
           jetidx1 = 0
           jetidx2 = 1
-        else:
+
+        elif int(self.GetValue(event, "HM_idx_j1")) != -1: # Resolved
           wpt = self.GetValue(event, "HM_Whad_pt")
           weta = self.GetValue(event, "HM_Whad_eta")
           wphi = self.GetValue(event, "HM_Whad_phi")
@@ -75,9 +80,6 @@ class ApplyDNN_Neutrino_Semi(Module):
           tau21 = 0.0
 
           nojet = [int(self.GetValue(event, "HM_idx_j1")), int(self.GetValue(event, "HM_idx_j2"))]
-          if -1 in nojet: # Events has less than 2 jets and shouldn't be considered anyway
-            self.out.fillBranch("DNN_isVBF", 0.0)
-            return True
 
           wr1pt = self.GetValue(event, "CleanJet_pt["+str(nojet[0])+"]")
           wr1eta = self.GetValue(event, "CleanJet_eta["+str(nojet[0])+"]")
@@ -89,6 +91,10 @@ class ApplyDNN_Neutrino_Semi(Module):
           goodjet = [alpha for alpha in range(4) if alpha not in nojet]
           jetidx1 = goodjet[0]
           jetidx2 = goodjet[1]
+
+        else: # Neither boosted nor resolved: Event not selected
+          self.out.fillBranch("DNN_mth", 0.0)
+          return True
 
         if self.GetValue(event, "nCleanJet")>=1+jetidx1:
           jetpt1 = self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]")
@@ -106,20 +112,6 @@ class ApplyDNN_Neutrino_Semi(Module):
           jetpt2 = 0.0
           jeteta2 = 0.0
           jetphi2 = 0.0
-
-        #if jetidx1==0 and jetidx2==1:
-        #  mjj = self.GetValue(event, "mjj")
-        #  detajj = self.GetValue(event, "detajj")
-        if self.GetValue(event, "nCleanJet")>=1+jetidx2:
-          J1 = ROOT.TLorentzVector()
-          J2 = ROOT.TLorentzVector()
-          J1.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx1)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx1)+"]]"))
-          J2.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx2)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx2)+"]]"))
-          mjj = (J1+J2).M()
-          detajj = abs(J1.Eta()-J2.Eta())
-        else:
-          mjj = -9999.0
-          detajj = -9999.0
 
         values = []
         ev = event.event
