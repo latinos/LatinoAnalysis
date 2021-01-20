@@ -10,6 +10,8 @@ import sys, os
 argv = sys.argv
 sys.argv = argv[:1]
 
+import re
+
 import ROOT
 
 from ROOT import TFile, TH1D, TCanvas, TLegend, gStyle
@@ -30,6 +32,7 @@ parser.add_option('--input_file', dest='input_file', help='histograms file',    
 parser.add_option('--cut',        dest='cut',        help='cut to inspect',              default='0j_ee_in') 
 parser.add_option('--variable',   dest='variable',   help='variable to use for the fit', default='mth') 
 parser.add_option('--output_dir', dest='output_dir', help='output directory',            default='Fit_results') 
+parser.add_option('--fit_func',   dest='fit_func',   help='fit function (use polX)',     default='pol1') 
 
 (opt, args) = parser.parse_args()
 
@@ -41,12 +44,14 @@ print("Input rootfile:   {0}".format(opt.input_file))
 print("Cut:              {0}".format(opt.cut))
 print("Variable:         {0}".format(opt.variable))
 print("Output directory: {0}".format(opt.output_dir))
+print("Fit function:     {0}".format(opt.fit_func))
 
 # Assigning inputs to variables
 input_file = opt.input_file 
 cut        = opt.cut
 variable   = opt.variable
 output_dir = opt.output_dir 
+fit_func   = opt.fit_func
 
 mkdir_command = "mkdir -p {0}".format(output_dir)
 os.system(mkdir_command)
@@ -94,17 +99,29 @@ for folder in folders_list:
                 x_min = h_Ratio.GetXaxis().GetXmin()
                 x_max = h_Ratio.GetXaxis().GetXmax()
 
-                # Fit (for the moment just with a pol1)
-                h_Ratio.Fit("pol1", "", "", x_min, x_max)
+                # Fit
+                h_Ratio.Fit(fit_func, "", "", x_min, x_max)
 
-                # Fit result = a + bx
-                fit_result = h_Ratio.FindObject("pol1")
-                a = fit_result.GetParameter(0)
-                a_err = fit_result.GetParError(0)
-                print("a = {} +- {}".format(a, a_err))
-                b = fit_result.GetParameter(1)
-                b_err = fit_result.GetParError(1)
-                print("b = {} +- {}".format(b, b_err))
+                # Fit result
+                fit_result = h_Ratio.FindObject(fit_func)
+                
+                # Fitting parameters
+                fit_parameters = []
+                fit_par_errors = []
+
+                # Get polX grade
+                grade = map(int, re.findall('\d+', fit_func))
+                print(grade[0])
+
+                # Get all fit parameters
+                grade_loop = 0
+                while grade_loop < grade[0]+1:
+                    fit_parameters.append(fit_result.GetParameter(grade_loop))
+                    fit_par_errors.append(fit_result.GetParError(grade_loop))
+                    print("Par {0}: {1:.3f} +/- {2:.3f}".format(grade_loop, fit_parameters[grade_loop], fit_par_errors[grade_loop]))
+                    grade_loop += 1
+                print(fit_parameters)
+                print(fit_par_errors)
 
                 # Plot Ratio histogram with Fit
                 c1 = TCanvas("c1", "c1", 600, 600)
@@ -118,10 +135,46 @@ for folder in folders_list:
                 leg.SetTextSize(0.035)
                 leg.SetLineColor(0)
                 leg.SetShadowColor(0)
-                leg.AddEntry(fit_result, "Fit parameters: {0:.3f} + {1:.3f} x".format(a,b),'lf')
+                leg_string = []
+                leg_string.append("Fit parameters: ")
+                for i in range(0, grade[0]+1):
+                    leg_string.append("{0:.3f} x^{1}".format(fit_parameters[i],i))
+
+                print(leg_string)
+                s = ""
+                for string in leg_string:
+                    s += string
+                leg.AddEntry(fit_result, s,'lf')
                 leg.Draw()
 
                 # Save plot
                 output_name = output_dir + "/Fit_" + cut + "_" + variable + ".png"
                 c1.Print(output_name)
 
+                # Print weight to put in samples.py
+                phrase = []
+                phrase.append("({}".format(fit_parameters[0]))
+                for i in range(1, grade[0]+1):
+                    if fit_parameters[i] > 0:
+                        phrase.append(" + {}".format(fit_parameters[i]))
+                    else:
+                        phrase.append(" {}".format(fit_parameters[i]))
+                    for j in range(0, i):
+                        phrase.append(" * {}".format(variable))
+                phrase.append(") *")
+                if cut.split('_')[0] == "0j": 
+                    phrase.append("zeroJet")
+                elif cut.split('_')[0] == "1j": 
+                    phrase.append("oneJet")
+                elif cut.split('_')[0] == "2j": 
+                    phrase.append("2jggH")
+                elif cut.split('_')[0] == "VBF": 
+                    phrase.append("2jVBF")
+                elif cut.split('_')[0] == "VH": 
+                    phrase.append("2jVH")
+
+                print(phrase)
+
+                # Copy this in samples.py as an additional weight
+                message = ''.join(str(e) for e in phrase)
+                print(message)
