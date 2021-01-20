@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# This script aims to find an effective correction to improve the enhance the Drell-Yan (DY) MC
+# This script aims to find an effective correction to enhance the Drell-Yan (DY) MC
 # description of the process.
 # In particular, we assume that subtracting from Data all processes except Drell-Yan, we would
 # get the real Drell-Yan contribution. Dividing this histogram by the DY MC histogram and fitting
