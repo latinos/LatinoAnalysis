@@ -12,7 +12,7 @@ sys.argv = argv[:1]
 
 import ROOT
 
-from ROOT import TFile, TH1D, TCanvas
+from ROOT import TFile, TH1D, TCanvas, TLegend, gStyle
 
 # input_file = "rootFile/plots_ggH_SF_2016_v7_DY_CR.root"
 # cut = "0j_ee_in"
@@ -51,6 +51,8 @@ output_dir = opt.output_dir
 mkdir_command = "mkdir -p {0}".format(output_dir)
 os.system(mkdir_command)
 
+gStyle.SetOptFit(0)
+gStyle.SetOptStat(0)
 
 # Here starts the actual script
 my_file = TFile(input_file)
@@ -108,5 +110,18 @@ for folder in folders_list:
                 c1 = TCanvas("c1", "c1", 600, 600)
                 c1.cd()
                 h_Ratio.Draw()
+
+                # Put results in legend
+                leg = TLegend(0.20, 0.65, 0.80, 0.88)
+                leg.SetFillColor(0)
+                leg.SetTextFont(42)
+                leg.SetTextSize(0.035)
+                leg.SetLineColor(0)
+                leg.SetShadowColor(0)
+                leg.AddEntry(fit_result, "Fit parameters: {0:.3f} + {1:.3f} x".format(a,b),'lf')
+                leg.Draw()
+
+                # Save plot
                 output_name = output_dir + "/Fit_" + cut + "_" + variable + ".png"
                 c1.Print(output_name)
+
