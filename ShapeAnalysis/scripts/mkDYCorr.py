@@ -126,6 +126,7 @@ for folder in folders_list:
                 # Plot Ratio histogram with Fit
                 c1 = TCanvas("c1", "c1", 600, 600)
                 c1.cd()
+                h_Ratio.GetYaxis().SetRangeUser(-1, 4)
                 h_Ratio.Draw()
 
                 # Put results in legend
@@ -135,21 +136,23 @@ for folder in folders_list:
                 leg.SetTextSize(0.035)
                 leg.SetLineColor(0)
                 leg.SetShadowColor(0)
-                leg_string = []
-                leg_string.append("Fit parameters: ")
-                for i in range(0, grade[0]+1):
-                    leg_string.append("{0:.3f} x^{1}".format(fit_parameters[i],i))
+                #leg_string = []
+                #leg_string.append("Fit with a {}".format(fit_func))
+                leg_string = "Fit with a {}".format(fit_func)
+                # for i in range(0, grade[0]+1):
+                #     leg_string.append("{0:.3f} x^{1}".format(fit_parameters[i],i))
 
                 print(leg_string)
-                s = ""
-                for string in leg_string:
-                    s += string
-                leg.AddEntry(fit_result, s,'lf')
+                # s = ""
+                # for string in leg_string:
+                #     s += string
+                # leg.AddEntry(fit_result, s,'lf')
+                leg.AddEntry(fit_result, leg_string, 'lf')
                 leg.Draw()
 
                 # Save plot
-                output_name = output_dir + "/Fit_" + cut + "_" + variable + ".png"
-                c1.Print(output_name)
+                output_name = output_dir + "/Fit_" + cut + "_" + variable
+                c1.Print(output_name + ".png")
 
                 # Print weight to put in samples.py
                 phrase = []
@@ -163,18 +166,30 @@ for folder in folders_list:
                         phrase.append(" * {}".format(variable))
                 phrase.append(") *")
                 if cut.split('_')[0] == "0j": 
-                    phrase.append("zeroJet")
+                    phrase.append(" (zeroJet)")
                 elif cut.split('_')[0] == "1j": 
-                    phrase.append("oneJet")
+                    phrase.append(" (oneJet)")
                 elif cut.split('_')[0] == "2j": 
-                    phrase.append("2jggH")
+                    phrase.append(" (2jggH)")
                 elif cut.split('_')[0] == "VBF": 
-                    phrase.append("2jVBF")
+                    phrase.append(" (2jVBF)")
                 elif cut.split('_')[0] == "VH": 
-                    phrase.append("2jVH")
+                    phrase.append(" (2jVH)")
+                else: 
+                    print("I don't know this cut")
 
-                print(phrase)
+                if "ee" in cut:
+                    phrase.append(" * (Lepton_pdgId[0]*Lepton_pdgId[1] == -11*11)")
+                elif "mm" in cut:
+                    phrase.append(" * (Lepton_pdgId[0]*Lepton_pdgId[1] == -13*13)")
+                else: 
+                    print("I don't know this cut")
+
+                #print(phrase)
 
                 # Copy this in samples.py as an additional weight
                 message = ''.join(str(e) for e in phrase)
                 print(message)
+
+                # Output in a txt file
+                os.system("echo '{}' > {}.txt".format(message, output_name))
