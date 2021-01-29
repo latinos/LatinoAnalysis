@@ -3,7 +3,7 @@
 # Mainly 2017 as a inclusive starting point
 vbsjjlnu_samples_bkg = [
                 'WWW','WWZ','WZZ','ZZZ','WWG',
-                'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50','EWKZ2Jets_ZToLL_M-50_newpmx', 'EWK_LNuJJ',
+                'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50','EWKZ2Jets_ZToLL_M-50_newpmx', 'EWK_LNuJJ','EWK_LLJJ',
                 'DYJetsToLL_M-5to50-LO',
                 'DYJetsToLL_M-10to50-LO', 'DYJetsToLL_M-10to50-LO_ext1', 
                 'DYJetsToLL_M-50-LO', 'DYJetsToLL_M-50-LO_ext1', 
@@ -25,7 +25,7 @@ vbsjjlnu_samples_bkg = [
                 'ST_s-channel','ST_s-channel_ext1',
                 'TTTo2L2Nu',
                 'TTToSemiLeptonic',
-                'TTWjets','TTWjets_ext1','TTWjetsToLNu_PSweights_newpmx',
+                'TTWjets','TTWjets_ext1','TTWjetsToLNu_PSweights_newpmx','TTWJetsToLNu_ext2','TTWJetsToLNu_ext1',
                 'TTZjets','TTZjets_ext1',
                 'WJetsToLNu-LO', 'WJetsToLNu-LO_ext1',
                 'WJetsToLNu_HT70_100',
@@ -48,6 +48,7 @@ vbsjjlnu_samples_bkg = [
                 'WJetsToLNu-LO_2J',
                 'WJetsToLNu-LO_3J',
                 'WJetsToLNu-LO_4J',
+                'GluGluWWToLNuQQ'
                 # 'QCD_Pt-15to20_MuEnrichedPt5','QCD_Pt-20to30_MuEnrichedPt5','QCD_Pt-30to50_MuEnrichedPt5',
                 # 'QCD_Pt-50to80_MuEnrichedPt5','QCD_Pt-80to120_MuEnrichedPt5','QCD_Pt-120to170_MuEnrichedPt5',
                 # 'QCD_Pt-170to300_MuEnrichedPt5','QCD_Pt-20to30_EMEnriched','QCD_Pt-30to50_EMEnriched','QCD_Pt-50to80_EMEnriched'
