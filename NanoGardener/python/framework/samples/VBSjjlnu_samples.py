@@ -25,7 +25,7 @@ vbsjjlnu_samples_bkg = [
                 'ST_s-channel','ST_s-channel_ext1',
                 'TTTo2L2Nu',
                 'TTToSemiLeptonic',
-                'TTWjets','TTWjets_ext1','TTWjetsToLNu_PSweights_newpmx',
+                'TTWjets','TTWjets_ext1','TTWjetsToLNu_PSweights_newpmx','TTWJetsToLNu_ext2','TTWJetsToLNu_ext1',
                 'TTZjets','TTZjets_ext1',
                 'WJetsToLNu-LO', 'WJetsToLNu-LO_ext1',
                 'WJetsToLNu_HT70_100',

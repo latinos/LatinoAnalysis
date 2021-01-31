@@ -123,7 +123,7 @@ class FatJetMaker(Module):
             if 'jes' in self._input_branch_prefix or 'jer' in self._input_branch_prefix:
                 fj_pt = getattr(fj, "pt" + self._input_branch_prefix) # for systematic variations
             else:
-                fj_pt  = fj.pt  
+                fj_pt  = fj.pt  # It should be nom!
             
             # If the FatJet has only 1 particle remove it (rare corner case)
             if fj_tau1 == 0:  continue
