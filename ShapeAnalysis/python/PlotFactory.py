@@ -111,6 +111,11 @@ class PlotFactory:
         list_tcanvasSigVsBkg       = {}
         list_tcanvasSigVsBkgTHstack = {}
 
+        # standalont data-bkg plot
+        list_tcanvasDifference_Fancy = {}
+
+
+
         generalCounter = 0
 
         if os.path.isdir(inputFile):
@@ -163,7 +168,8 @@ class PlotFactory:
             if self._plotNormalizedDistributionsTHstack :
               list_tcanvasSigVsBkgTHstack         [generalCounter] = tcanvasSigVsBkgTHstack
 
-
+            tcanvasDifference_Fancy       = ROOT.TCanvas( "ccDifference_Fancy" + cutName + "_" + variableName, "ccDifference_Fancy", 800, 800 )
+            list_tcanvasDifference_Fancy  [generalCounter] = tcanvasDifference_Fancy
 
             histos = {}
             histos_grouped = {}
@@ -617,6 +623,7 @@ class PlotFactory:
 
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             tgrDataMinusMC = tgrData.Clone("tgrDataMinusMC")
+            tgrMCSigMinusMCBkg = tgrData.Clone("tgrMCSigMinusMCBkg")  # is like saying "signal"
             for iBin in range(0, len(tgrData_vx)) :
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , last.GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], last.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], last.GetBinContent(iBin+1)) )
@@ -647,6 +654,8 @@ class PlotFactory:
                 if self._showDataMinusBkgOnly :
                   tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , tgrMC_vy[iBin]   ) )
                   tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
+                  tgrMCSigMinusMCBkg.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(last.GetBinContent(iBin+1) , tgrMC_vy[iBin]   ) )
+                  tgrMCSigMinusMCBkg.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], 0 , 0 )  # error set to 0 for sake of simplicity
                 else :
                   tgrDataMinusMC.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , last.GetBinContent(iBin+1)) )
                   tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
@@ -674,7 +683,7 @@ class PlotFactory:
             print '--> histo_total = ', histo_total
             
             #                                  if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if (not self._removeMCStat) or len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrMC_vx)) :
                 tgrMC.SetPoint     (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
@@ -698,6 +707,7 @@ class PlotFactory:
                   tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
                     tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                    print iBin, self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin])
                   else :
                     tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
                 
@@ -876,7 +886,7 @@ class PlotFactory:
             
             # if there is a systematic band draw it
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if (not self._removeMCStat) or len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC.SetLineColor(12)
               tgrMC.SetFillColor(12)
               tgrMC.SetLineWidth(2)
@@ -1014,7 +1024,7 @@ class PlotFactory:
               
               
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if (not self._removeMCStat) or len(mynuisances.keys()) != 0 or histo_total!= None:
                 if self._showIntegralLegend == 0 :
                     tlegend.AddEntry(tgrMC, "All MC", "F")
                 else :
@@ -1151,7 +1161,7 @@ class PlotFactory:
                   histo.Draw("hist same")
            
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if (not self._removeMCStat) or len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC.Draw("2")
              
             #     - then the superimposed MC
@@ -1207,10 +1217,11 @@ class PlotFactory:
             frameRatio.GetYaxis().SetTitle("Data/Expected")
             #frameRatio.GetYaxis().SetTitle("Data/MC")
             #frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
+            #frameRatio.GetYaxis().SetRangeUser( 0.8, 1.2 )
             frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
             self.Pad2TAxis(frameRatio)
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if (not self._removeMCStat)  or len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMCOverMC.Draw("2") 
             
             tgrDataOverMC.Draw("P0")
@@ -1362,7 +1373,7 @@ class PlotFactory:
                   histo.Draw("hist same")
            
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if (not self._removeMCStat) or len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC.Draw("2")
              
             #     - then the superimposed MC
@@ -1426,7 +1437,7 @@ class PlotFactory:
               frameDifference.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - 2 ),  int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + 2 ) )
             self.Pad2TAxis(frameDifference)
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if (not self._removeMCStat) or len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMCMinusMC.SetLineColor(12)
               tgrMCMinusMC.SetFillColor(12)
               tgrMCMinusMC.SetLineWidth(2)
@@ -1474,6 +1485,109 @@ class PlotFactory:
 
 
 
+
+            # ~~~~~~~~~~~~~~~~~~~~
+            # plot with difference plot Fancy : data - bkg subtracted     
+            #
+            # only IF we have the difference and not the ratio --> _showRelativeRatio
+            #
+            
+            if self._plotFancy and not self._showRelativeRatio:
+              print "- draw with difference Fancy"
+              
+              canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName + "_Fancy"
+  
+              tcanvasDifference_Fancy.cd()
+              canvasPad1differenceName = 'pad1difference_' + cutName + "_" + variableName + "_Fancy"
+              pad1difference = ROOT.TPad(canvasPad1differenceName,canvasPad1differenceName, 0, 0, 1, 1)
+              pad1difference.Draw()
+              
+              pad1difference.cd()
+              canvasFrameDistroName = 'frame_fancy_' + cutName + "_" + variableName
+              frameDistro_Fancy = pad1difference.DrawFrame(minXused,
+                                                     int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetEYlow ()) ) - 20 ), 
+                                                     maxXused, 
+                                                     int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetEYhigh()) ) + 20 ),
+                                                     canvasFrameDistroName)
+
+              # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
+              xAxisDistro = frameDistro_Fancy.GetXaxis()
+              xAxisDistro.SetNdivisions(6,5,0)
+  
+              if 'xaxis' in variable.keys() :
+                frameDistro_Fancy.GetXaxis().SetTitle(variable['xaxis'])
+                if variable["divideByBinWidth"] == 1:
+                  if "GeV" in variable['xaxis']: 
+                    ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+                  else:
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variable['xaxis'])
+                else:
+                  if 'yaxis' in variable.keys() : 
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected " + variable['yaxis'])
+                  else :
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected Events")
+              else :
+                frameDistro_Fancy.GetXaxis().SetTitle(variableName)
+                if variable["divideByBinWidth"] == 1:
+                  frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variableName)
+                else:
+                  if 'yaxis' in variable.keys() : 
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected " + variable['yaxis'])
+                  else :
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected Events")
+              frameDistro_Fancy.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetEYlow ()) ) - 20 ),
+                                                    int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetEYhigh()) ) + 20 ) )
+  
+              #                               if there is "histo_total" there is no need of explicit nuisances
+              if (not self._removeMCStat)  or len(mynuisances.keys()) != 0 or histo_total!= None:
+                tgrMCMinusMC.SetLineColor(12)
+                tgrMCMinusMC.SetFillColor(12)
+                tgrMCMinusMC.SetLineWidth(2)
+                tgrMCMinusMC.SetFillStyle(3004)
+                tgrMCMinusMC.Draw("2") 
+
+              #---- the Legend
+              special_tlegend = ROOT.TLegend(0.40, 0.75, 0.90, 0.90)
+              special_tlegend.SetFillColor(0)
+              special_tlegend.SetTextFont(42)
+              special_tlegend.SetTextSize(0.035)
+              special_tlegend.SetLineColor(0)
+              special_tlegend.SetShadowColor(0)
+              special_tlegend.AddEntry( tgrDataMinusMC , 'Data', "L")      
+              special_tlegend.AddEntry( tgrMCMinusMC, "Systematics", "F")
+              
+              if self._showDataMinusBkgOnly :
+                tgrMCSigMinusMCBkg.SetLineWidth(3)
+                tgrMCSigMinusMCBkg.SetLineColor(2)   # red
+                tgrMCSigMinusMCBkg.SetMarkerColor(2) # red
+                tgrMCSigMinusMCBkg.SetMarkerSize(0)         
+                tgrMCSigMinusMCBkg.Draw("P")
+                special_tlegend.AddEntry( tgrMCSigMinusMCBkg , 'Signal', "EPL")      
+              
+              # draw the data - MC
+              tgrDataMinusMC.Draw("P")
+
+              CMS_lumi.CMS_lumi(tcanvasDifference_Fancy, iPeriod, iPos)    
+
+              oneLine2 = ROOT.TLine(frameDistro_Fancy.GetXaxis().GetXmin(), 0,  frameDistro_Fancy.GetXaxis().GetXmax(), 0);
+              oneLine2.SetLineStyle(3)
+              oneLine2.SetLineWidth(3)
+              oneLine2.Draw("same")
+              
+              special_tlegend.Draw()
+  
+              # draw back all the axes            
+              pad1difference.RedrawAxis()
+              pad1difference.SetGrid()
+  
+              if 'cdifference' in self._plotsToWrite:
+                  self._saveCanvas(tcanvasDifference_Fancy, self._outputDirPlots + "/" + canvasDifferenceNameTemplate + self._FigNamePF)
+  
+                  if 'root' in self._fileFormats:
+                      text_file_html.write(canvasDifferenceNameTemplate + ".root;\n")
+  
+          
           
             #
             # draw weighted plot

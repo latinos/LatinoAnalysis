@@ -68,3 +68,42 @@ while True:
             row = ["%-40s"%m.group(1), "%-25s"%m.group(2), "%10.3f"%(norm_s.getVal()),"%10.3f"%(norm_b.getVal())]
 	    print("{:<40} {:25} {:>20} {:>20}").format(*row)
             #print "%-30s %-30s %7.3f %7.3f" % (m.group(1), m.group(2), norm_s.getVal(), norm_b.getVal())
+
+# Get totals and data as well?
+categories = [key.GetName() for key in file.Get('shapes_prefit').GetListOfKeys()]
+for cat in categories:
+    for total in ['total','total_signal','total_background']:
+        vals = []
+        for fit in ['prefit','fit_s','fit_b']:
+            hist = file.Get("shapes_"+fit+"/"+cat+"/"+total)
+            err = ROOT.Double()
+            norm = hist.IntegralAndError(1,hist.GetNbinsX(),err)
+            vals += [norm,err]
+
+        if prefit and norm_p and errors:
+            row = ["%-40s"%cat, "%-25s"%total, "%10.3f +/- %-10.3f"%(vals[0],vals[1]), "%10.3f +/- %-10.3f"%(vals[2],vals[3]),"%10.3f +/- %-10.3f"%(vals[4],vals[5])]
+            print("{:<40} {:25} {:10} {:10} {:10}").format(*row)
+        else:
+            if norm_p and prefit:
+                row = ["%-40s"%cat, "%-25s"%total, "%10.3f"%(vals[0]), "%10.3f"%(vals[2]),"%10.3f"%(vals[4])]
+                print("{:<40} {:25} {:>20} {:>20} {:>20}").format(*row)
+            else:
+                row = ["%-40s"%cat, "%-25s"%total, "%10.3f"%(vals[2]),"%10.3f"%(vals[4])]
+                print("{:<40} {:25} {:>20} {:>20}").format(*row)
+
+    tgr = file.Get('shapes_prefit/'+cat+'/data')
+    data = sum(list(tgr.GetY()))
+
+    if prefit and norm_p and errors:
+        row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f +/- %-10.3f"%(data,0), "%10.3f +/- %-10.3f"%(data,0),"%10.3f +/- %-10.3f"%(data,0)]
+        print("{:<40} {:25} {:10} {:10} {:10}").format(*row)
+    else:
+        if norm_p and prefit:
+            row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f"%(data), "%10.3f"%(data),"%10.3f"%(data)]
+            print("{:<40} {:25} {:>20} {:>20} {:>20}").format(*row)
+        else:
+            row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f"%(data),"%10.3f"%(data)]
+            print("{:<40} {:25} {:>20} {:>20}").format(*row)
+
+
+

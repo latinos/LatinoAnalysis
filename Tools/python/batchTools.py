@@ -19,7 +19,7 @@ except NameError:
 try:
   JOB_DIR_SPLIT = ( jobDirSplit == True ) 
 except NameError:
-  JOB_DIR_SPLIT = False
+  JOB_DIR_SPLIT = True
 #Avoid using this feature for tools that are not ready for it -> change it in the tool after loading the library
 
 try:

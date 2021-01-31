@@ -655,50 +655,54 @@ class PostProcMaker():
      elif '_newpmx' in iSample : iSampleXS = iSample.split('_newpmx')[0]
      else:                    iSampleXS = iSample
      if not iSample in self._baseW:
-       useLocal = False
-
-       FileList = self.getFiles(iSample)
-
-       # Always check #nAOD files !
-       if self._iniStep == 'Prod':
-         if 'srmPrefix' in self._Samples[iSample]:
-           useLocal = True
-       else:
-         useLocal = True
-         nAODFileList = self.getFilesFromSource(iSample)
-
-         # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
-         if not len(nAODFileList) == len(FileList):
-           print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
-  #        print ' EXIT !!!!'
-  #        exit()
-           FileList = nAODFileList
-           if 'srmPrefix' in self._Samples[iSample]:
-             useLocal = False
-
-       # Now compute #evts
-       genEventCount = 0
-       genEventSumw  = 0.0
-       genEventSumw2 = 0.0
-       for iFile in FileList:
-         if DEBUG : print iFile
-         if useLocal:
-           f = ROOT.TFile.Open(iFile, "READ")
-         else:
-           f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
-         Runs = f.Get("Runs")
-         for iRun in Runs :
-           trailer = ""
-           if hasattr(iRun, "genEventSumw_"): trailer = "_" 
-           if DEBUG : print '---> genEventSumw = ', getattr(iRun , "genEventSumw"+trailer)
-           genEventCount += getattr(iRun, "genEventCount"+trailer)
-           genEventSumw  += getattr(iRun, "genEventSumw"+trailer)
-           genEventSumw2 += getattr(iRun, "genEventSumw2"+trailer)
-         f.Close()
-       # get the X-section and baseW
-       nEvt = genEventSumw
        Xsec  = self._xsDB.get(iSampleXS)
-       baseW = float(Xsec)*1000./nEvt
+       if float(Xsec) == 0.: 
+           nEvt = 0
+           baseW = 1
+       else:    
+           useLocal = False
+
+           FileList = self.getFiles(iSample)
+
+           # Always check #nAOD files !
+           if self._iniStep == 'Prod':
+             if 'srmPrefix' in self._Samples[iSample]:
+               useLocal = True
+           else:
+             useLocal = True
+             nAODFileList = self.getFilesFromSource(iSample)
+
+             # Fallback to nAOD in case of missing files (!!! will always fall back in case of hadd !!!)
+             if not len(nAODFileList) == len(FileList):
+               print ' ################## WARNING: Falling back to original nAOD for baseW : ',iSample, len(nAODFileList) , len(FileList)
+  #            print ' EXIT !!!!'
+  #            exit()
+               FileList = nAODFileList
+               if 'srmPrefix' in self._Samples[iSample]:
+                 useLocal = False
+
+           # Now compute #evts
+           genEventCount = 0
+           genEventSumw  = 0.0
+           genEventSumw2 = 0.0
+           for iFile in FileList:
+             if DEBUG : print iFile
+             if useLocal:
+               f = ROOT.TFile.Open(iFile, "READ")
+             else:
+               f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
+             Runs = f.Get("Runs")
+             for iRun in Runs :
+               trailer = ""
+               if hasattr(iRun, "genEventSumw_"): trailer = "_" 
+               if DEBUG : print '---> genEventSumw = ', getattr(iRun , "genEventSumw"+trailer)
+               #genEventCount += getattr(iRun, "genEventCount"+trailer)
+               genEventSumw  += getattr(iRun, "genEventSumw"+trailer)
+               genEventSumw2 += getattr(iRun, "genEventSumw2"+trailer)
+             f.Close()
+           # get the X-section and baseW
+           nEvt = genEventSumw
+           baseW = float(Xsec)*1000./nEvt
        print 'baseW: xs,N -> W', Xsec , nEvt , baseW
        # Store Info
        self._baseW[iSample] = { 'baseW' : baseW , 'Xsec' : Xsec }
