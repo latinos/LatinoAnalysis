@@ -470,9 +470,9 @@ if __name__ == '__main__':
                     txt_file.write("  'samples': {\n")
                     # Anticorrelate syst between ee and mm by exchanging up/down variations 
                     if DYestim[iDYestim]['flavour'] == 'ee':
-                        txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 + Err_out_k/Nout, 1 / (1 + Err_out_k/Nout)))
-                    elif DYestim[iDYestim]['flavour'] == 'mm':
                         txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 / (1 + Err_out_k/Nout), 1 + Err_out_k/Nout))
+                    elif DYestim[iDYestim]['flavour'] == 'mm':
+                        txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 + Err_out_k/Nout, 1 / (1 + Err_out_k/Nout)))
                     txt_file.write("  },\n")
                     txt_file.write("  'cuts' : ['" + baseDir + "'] \n")
                     txt_file.write("}\n")
@@ -494,7 +494,7 @@ if __name__ == '__main__':
                     txt_file.write("  'name': 'DYnorm_R_" + DYestim[iDYestim]['njet'] + "_" + opt.year + "',\n")
                     txt_file.write("  'type': 'lnN',\n")
                     txt_file.write("  'samples': {\n")
-                    txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 + Err_out_rest/Nout, 1 / (1 + Err_out_rest/Nout)))
+                    txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 / (1 + Err_out_rest/Nout), 1 + Err_out_rest/Nout))
                     txt_file.write("  },\n")
                     txt_file.write("  'cuts' : ['" + baseDir + "'] \n")
                     txt_file.write("}\n")
@@ -505,7 +505,7 @@ if __name__ == '__main__':
                     txt_file.write("  'name': 'DYnorm_Acc_" + DYestim[iDYestim]['njet'] + "_" + opt.year + "',\n")
                     txt_file.write("  'type': 'lnN',\n")
                     txt_file.write("  'samples': {\n")
-                    txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 + EAcc/Acc, 1 / (1 + EAcc/Acc)))
+                    txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 / (1 + EAcc/Acc), 1 + EAcc/Acc))
                     txt_file.write("  },\n")
                     txt_file.write("  'cuts' : ['" + baseDir + "'] \n")
                     txt_file.write("}\n")
