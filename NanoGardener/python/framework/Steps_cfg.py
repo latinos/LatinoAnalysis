@@ -2869,6 +2869,43 @@ Steps = {
                   'module'     : 'jetRecalib2017RPLME_RUN()', ### <--- TODO
                  }, 
 
+# Check HEM15/16 ISSUE for 2018
+
+  'JECupdateMC2018': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'selection': '"(nLepton>=2 && Lepton_pdgId[0]*Lepton_pdgId[1] == -11*13 && \
+                               Alt$(Lepton_pt[2],0) < 10. && \
+                               Lepton_pt[0] > 25. && \
+                               Lepton_pt[1] > 20. && \
+                               mpmet > 20. && \
+                               PuppiMET_pt > 20. && \
+                               drll < 2.5 && \
+                               mll > 12. && \
+                               ptll > 30.)"',
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
+                  'declare'    : 'jetRecalib2018MC = lambda : jetRecalib(globalTag="Autumn18_V19_MC", jetCollections=["CleanJet"], metCollections=["PuppiMET"], jetType = "AK4PFchs")',
+                  'module'     : 'jetRecalib2018MC()',
+                 },    
+
+  'JECupdateDATA2018': {
+                  'isChain'    : False ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True  ,
+                  'selection': '"(nLepton>=2 && Lepton_pdgId[0]*Lepton_pdgId[1] == -11*13 && \
+                               Alt$(Lepton_pt[2],0) < 10. && \
+                               Lepton_pt[0] > 25. && \
+                               Lepton_pt[1] > 20. && \
+                               mpmet > 20. && \
+                               PuppiMET_pt > 20. && \
+                               drll < 2.5 && \
+                               mll > 12. && \
+                               ptll > 30.)"',
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
+                  'module'     : 'jetRecalib2018RPLME_RUN()', ### <--- TODO
+                 }, 
+
 ## ------- MODULES: JER
     'JERsMC2016': {
                   'isChain'    : False ,
