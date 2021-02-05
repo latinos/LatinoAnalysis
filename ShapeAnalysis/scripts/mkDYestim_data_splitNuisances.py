@@ -468,17 +468,14 @@ if __name__ == '__main__':
                     txt_file.write("  'name': 'DYnorm_k_" + DYestim[iDYestim]['njet'] + "_" + opt.year + "',\n")
                     txt_file.write("  'type': 'lnN',\n")
                     txt_file.write("  'samples': {\n")
-                    # Anticorrelate syst between ee and mm by exchanging up/down variations 
-                    if DYestim[iDYestim]['flavour'] == 'ee':
-                        txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 / (1 + Err_out_k/Nout), 1 + Err_out_k/Nout))
-                    elif DYestim[iDYestim]['flavour'] == 'mm':
-                        txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 + Err_out_k/Nout, 1 / (1 + Err_out_k/Nout)))
+                    # Anticorrelate syst between ee and mm but we are using k_ee and k_mm --> some down/up variation --> anticorrelated with DY yields
+                    txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 + Err_out_k/Nout, 1 / (1 + Err_out_k/Nout)))
                     txt_file.write("  },\n")
                     txt_file.write("  'cuts' : ['" + baseDir + "'] \n")
                     txt_file.write("}\n")
                     txt_file.write("\n")
 
-                    # N_eu: correlated between ee and mm
+                    # N_eu: correlated between ee and mm --> anticorrelated with DY yields
                     txt_file.write("nuisances['DYnorm_em_" + add_to_title + "'] = {\n")
                     txt_file.write("  'name': 'DYnorm_em_" + DYestim[iDYestim]['njet'] + "_" + opt.year + "',\n")
                     txt_file.write("  'type': 'lnN',\n")
@@ -489,9 +486,9 @@ if __name__ == '__main__':
                     txt_file.write("}\n")
                     txt_file.write("\n")
 
-                    # R: correlated between ee and mm
+                    # R: uncorrelated between ee and mm --> correlated with DY yields
                     txt_file.write("nuisances['DYnorm_R_" + add_to_title + "'] = {\n")
-                    txt_file.write("  'name': 'DYnorm_R_" + DYestim[iDYestim]['njet'] + "_" + opt.year + "',\n")
+                    txt_file.write("  'name': 'DYnorm_R_" + DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_" + opt.year + "',\n")
                     txt_file.write("  'type': 'lnN',\n")
                     txt_file.write("  'samples': {\n")
                     txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 / (1 + Err_out_rest/Nout), 1 + Err_out_rest/Nout))
@@ -500,9 +497,9 @@ if __name__ == '__main__':
                     txt_file.write("}\n")
                     txt_file.write("\n")
 
-                    # Acc: correlated between ee and mm
+                    # Acc: uncorrelated between ee and mm --> correlated with DY yields
                     txt_file.write("nuisances['DYnorm_Acc_" + add_to_title + "'] = {\n")
-                    txt_file.write("  'name': 'DYnorm_Acc_" + DYestim[iDYestim]['njet'] + "_" + opt.year + "',\n")
+                    txt_file.write("  'name': 'DYnorm_Acc_" + DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_" + opt.year + "',\n")
                     txt_file.write("  'type': 'lnN',\n")
                     txt_file.write("  'samples': {\n")
                     txt_file.write("    'DY': '{0:.3f}/{1:.3f}',\n".format(1 / (1 + EAcc/Acc), 1 + EAcc/Acc))
