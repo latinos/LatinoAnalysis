@@ -72,6 +72,7 @@ if __name__ == '__main__':
     parser.add_option('--postFit', dest='postFit', help='Plot sum of post-fit backgrounds, and the data/post-fit ratio.' , default='n') 
 
     parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
+    parser.add_option('--extraLegend'   , dest='extraLegend'   , help='User-specified additional legend'          , default=None)
 
     parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
 
@@ -163,7 +164,8 @@ if __name__ == '__main__':
 
     factory._plotFancy = opt.plotFancy
 
-
+    factory._extraLegend = opt.extraLegend
+    
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :
