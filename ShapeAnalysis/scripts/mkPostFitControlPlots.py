@@ -91,9 +91,6 @@ class AddMCunc:
         h_err.Write()
         graphFinal.Write()
         
-        
-        self._variable = 'mll'
-        
         histo_total = outputFile.Get(self._cutName + "/" + self._variable + "/" + "histo_total")
         print(histo_total)
         histo_total_old = histo_total.Clone(self._cutName + "/" + self._variable + "/" + "histo_total_old")
