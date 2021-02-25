@@ -20,6 +20,9 @@ import math
 #import os.path
 import shutil
 
+import numpy
+import root_numpy
+
 
 
 # ----------------------------------------------------- LawnMower --------------------------------------
@@ -190,7 +193,62 @@ class LawnMower:
           
           total_MC.SetBinError(iBin+1, total_MC_Errors.GetBinError(iBin+1))
        
-       
+
+        #
+        # If this is not a fitted variable ("self._nonFitVariable == True"), we need to add the MC stat uncertainty 
+        # as got from the prefit histograms.
+        # We should have given this code the list of root files from the different datacards
+        # that have been combined to have the final variable *to plot* (not to fit!), namely "self._listOfFilesOriginal"
+        #
+        if self._nonFitVariable :
+   
+          # The variable "self._plotFile" is needed because I need the list of 
+          # histograms to be added. E.g. if different signals are included, 
+          # only the ones that I would plot I want to hadd, to then propagate the MC stat uncertainty
+          
+          groupPlot = OrderedDict()
+          plot = {}
+          legend = {}
+          if os.path.exists(self._plotFile) :
+            handle = open(self._plotFile,'r')
+            exec(handle)
+            handle.close()
+   
+   
+          ROOT.TH1.SetDefaultSumw2(True)
+          hStackTotal = ROOT.THStack("total",'')
+          
+          for fileInMkShape in self._listOfFilesOriginal:
+              inputFile = ROOT.TFile.Open(fileInMkShape,  "READ")
+              for sampleName, plotdef in plot.iteritems():
+                if sampleName != 'DATA' :    # 'DATA' should not be added/stacked!
+                  try:
+                    histo = inputFile.Get("histo_" + sampleName)
+                    hStackTotal.Add(histo)
+                  except:
+                    print "missing histo: histo_" + sampleName
+          
+          
+          #Final histogram -> get MC errors
+          histo_sum = hStackTotal.GetStack().Last()
+          err_up = numpy.sqrt(numpy.array(histo_sum.GetSumw2())[1:-1]) # GetSumw2 -> array of sum squares of weights
+          err_do = numpy.sqrt(numpy.array(histo_sum.GetSumw2())[1:-1]) # GetSumw2 -> array of sum squares of weights
+          
+          nominal = root_numpy.hist2array(histo_sum, copy=False)
+          
+          # err_rel_up = err_up / nom 
+          # err_rel_do = err_do / nom 
+          # print err_rel_up, err_rel_do
+
+          for iBin in range(1, histo_sum.GetNbinsX()+1):
+        
+              old_err = total_MC.GetBinError(iBin)
+              new_err = math.sqrt( old_err*old_err + err_up[iBin-1]*err_up[iBin-1] )
+              total_MC.SetBinError(iBin, new_err)              
+              total_MC_gr.SetPointError(iBin-1, 0.,0., -new_err, new_err)
+
+
+ 
         #
         # now save
         #
@@ -331,7 +389,9 @@ class LawnMower:
 
 
 
-        
+def foo_callback(option, opt, value, parser):
+  setattr(parser.values, option.dest, value.split(','))
+       
 
 
 if __name__ == '__main__':
@@ -359,8 +419,9 @@ if __name__ == '__main__':
     parser.add_option('--variable'              , dest='variable'              , help='variable name'  , default='mll')
     parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
     parser.add_option('--lumiText'              , dest='lumiText'              , help='text for luminosity to be shown in legend'  , default="100/fb")
+    parser.add_option('--nonFitVariable'        , dest='nonFitVariable'        , help='Is this a variable not used in the fit? (default False = it is the variable fitted)', action='store_true', default=False)
+    parser.add_option('--listOfFilesOriginal'   , dest='listOfFilesOriginal'   , help='list of files with the original histograms, from which to extract the MC stat' , default='one.root,two.root', type='string', action='callback', callback=foo_callback) # these are the histograms as defined in the root files of the single datacards
        
-          
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
@@ -378,7 +439,10 @@ if __name__ == '__main__':
     print " structureFile         =          ", opt.structureFile
     print " plotFile              =          ", opt.plotFile
     print " lumiText              =          ", opt.lumiText
-
+    print " nonFitVariable        =          ", opt.nonFitVariable
+    if opt.nonFitVariable :
+      print " listOfFilesOriginal   =    ", opt.listOfFilesOriginal
+  
 
 
 
@@ -393,13 +457,15 @@ if __name__ == '__main__':
 
     factory = LawnMower()
     factory._inputFilePostFitShapesFromWorkspace  = opt.inputFilePostFitShapesFromWorkspace
-    factory._outputFileName    = opt.outputFile
-    factory._variable          = opt.variable
-    factory._kind              = opt.kind    
-    factory._cutName           = opt.cutName
-    factory._structureFile     = opt.structureFile
-    factory._plotFile          = opt.plotFile
-    factory._lumiText          = opt.lumiText
+    factory._outputFileName      = opt.outputFile
+    factory._variable            = opt.variable
+    factory._kind                = opt.kind    
+    factory._cutName             = opt.cutName
+    factory._structureFile       = opt.structureFile
+    factory._plotFile            = opt.plotFile
+    factory._lumiText            = opt.lumiText
+    factory._nonFitVariable      = opt.nonFitVariable
+    factory._listOfFilesOriginal = opt.listOfFilesOriginal
  
  
     factory.makePostFitCombinedPlot()
