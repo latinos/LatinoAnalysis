@@ -127,8 +127,13 @@ class JERMaker(jetSmearer, object):
             if not self.hasMass: 
                 jet.mass = backupJets[jet.jetIdx].mass
 
-            #evaluate JER SF for central and up/down variations
-            ( jet_pt_jerNomVal, jet_pt_jerUpVal, jet_pt_jerDownVal ) = self.getSmearValsPt(jet, genJet, rho) #super
+            if self.era=="2016" and jet.pt<50 and abs(jet.eta)>2.5:
+              # Special treatment in 2016: We observed that jet horns arise in MC when applying JER to all jets in 2016 (causing data/MC disagreement)
+              # Recipe agreed on with JetMET: Don't apply 2016 JER on low pT jets in the forward region
+              ( jet_pt_jerNomVal, jet_pt_jerUpVal, jet_pt_jerDownVal ) = ( 1.0, 1.0, 1.0 )
+            else:
+              #evaluate JER SF for central and up/down variations
+              ( jet_pt_jerNomVal, jet_pt_jerUpVal, jet_pt_jerDownVal ) = self.getSmearValsPt(jet, genJet, rho) #super
             jet_pt_nom       = jet.pt   * jet_pt_jerNomVal
             jet_pt_JERUp     = jet.pt   * jet_pt_jerUpVal
             jet_pt_JERDown   = jet.pt   * jet_pt_jerDownVal
