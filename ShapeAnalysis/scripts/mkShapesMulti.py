@@ -388,6 +388,7 @@ if __name__ == '__main__':
       jobs.InitPy("factory._tag       = '"+str(opt.tag)+"'")
       jobs.InitPy("factory._nThreads  = "+str(nThreads))
       jobs.InitPy("factory.aliases    = "+str(aliases))
+      jobs.InitPy("factory.FixNegativeAfterHadd    = "+str(opt.FixNegativeAfterHadd))
 
       jobs.InitPy("\n")
 

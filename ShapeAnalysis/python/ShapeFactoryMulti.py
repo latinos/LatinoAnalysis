@@ -689,7 +689,7 @@ class ShapeFactory:
                 hTotal = outDir.Get(histoName)
 
                 _allplots.remove(hTotal)
-                outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True, unroll2d=unroll2d)
+                outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                 _allplots.add(outputsHisto)
 
                 for nuisanceName, nuisance in nuisances.iteritems():
@@ -756,7 +756,7 @@ class ShapeFactory:
                       histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
                       hTotalVar = outDir.Get(histoNameVar)
                       _allplots.remove(hTotalVar)
-                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, False, unroll2d=unroll2d)
+                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, False, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                       _allplots.add(outputsHistoVar)
                       
                     continue
@@ -766,13 +766,13 @@ class ShapeFactory:
 
                   hTotalUp = outDir.Get(histoNameUp)
                   _allplots.remove(hTotalUp)
-                  outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False, unroll2d=unroll2d)
+                  outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                   _allplots.add(outputsHistoUp)
 
                   if twosided:
                     hTotalDown = outDir.Get(histoNameDown)
                     _allplots.remove(hTotalDown)
-                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d)
+                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                   else:
                     outputsHistoDo = outputsHisto.Clone(histoNameDown)
 
@@ -881,7 +881,7 @@ class ShapeFactory:
 
     # _____________________________________________________________________________
     @staticmethod
-    def _postplot(hTotal, doFold, cutName, sample, fixZeros, unroll2d=True):
+    def _postplot(hTotal, doFold, cutName, sample, fixZeros, unroll2d=True, FixNegativeAfterHadd=False):
         if doFold == 1 or doFold == 3:
           ShapeFactory._fold(hTotal, 0, 1)
         if doFold == 2 or doFold == 3 :
@@ -941,7 +941,7 @@ class ShapeFactory:
         #
         # To be used with caution -> do not use this option if you don't know what you are playing with
         #
-        if fixZeros and 'suppressNegative' in sample and (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) and not self.FixNegativeAfterHadd:
+        if fixZeros and 'suppressNegative' in sample and (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) and not FixNegativeAfterHadd:
           ShapeFactory._fixNegativeBinAndError(hTotal)
 
         return hTotal
