@@ -1724,8 +1724,8 @@ Steps = {
                   'do4Data'    : False  ,
                   'selection'  : CombJJLNu_preselections["2018"]["MC"],
                   'subTargets' :  ['VBSjjlnu_pairing', 'VBSjjlnu_kin', ],
-                                  'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
-                                  'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
+                                  # 'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
+                                  # 'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
                   'onlySample' : vbsjjlnu_samples_mc + SemiLepHighMassSamples_2018 + MonoHjjlnu_samples_2018,#vbsjjlnu_samples_signal
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
