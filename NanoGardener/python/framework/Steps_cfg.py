@@ -102,9 +102,9 @@ def createJESchain_CombJJLNu(type, kind="Up"):
   if type == "Total":
     typeShort = ""
   toreplace = typeShort+kind.lower()  
-  chainTemplate = ['do_JESVAR_suffix', 'l2Kin_JESVAR', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR',
-                  'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR',
-                  'MHSemiLepVars_JESVAR', 'MHSemiLepMVA_JESVAR']
+  chainTemplate = ['do_JESVAR_suffix', 'l2Kin_JESVAR', 'VBSjjlnu_pairing_JESVAR', 'VBSjjlnu_kin_JESVAR',]
+                  # 'whadJetSel_JESVAR', 'wlepMaker_JESVAR', 'HMlnjjVars_JESVAR', 'HMDNNProdSemi_JESVAR' , 'HMDNNNeutSemi_JESVAR',
+                  # 'MHSemiLepVars_JESVAR', 'MHSemiLepMVA_JESVAR']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
@@ -116,8 +116,8 @@ def createfatjetJESchain_CombJJLNu(type, kind="Up"):
   if type == "Total":
     typeShort = ""
   toreplace = typeShort+kind.lower()  
-  chainTemplate = ['CleanFatJet_fatjetJESVAR', 'BoostedWtagSF_fatjetJESVAR', 'VBSjjlnu_pairing_fatjetJESVAR', 'VBSjjlnu_kin_fatjetJESVAR',
-                  'whadJetSel_fatjetJESVAR', 'wlepMaker_fatjetJESVAR', 'HMlnjjVars_fatjetJESVAR', 'HMDNNProdSemi_fatjetJESVAR' , 'HMDNNNeutSemi_fatjetJESVAR']
+  chainTemplate = ['CleanFatJet_fatjetJESVAR', 'BoostedWtagSF_fatjetJESVAR', 'VBSjjlnu_pairing_fatjetJESVAR', 'VBSjjlnu_kin_fatjetJESVAR',]
+                  # 'whadJetSel_fatjetJESVAR', 'wlepMaker_fatjetJESVAR', 'HMlnjjVars_fatjetJESVAR', 'HMDNNProdSemi_fatjetJESVAR' , 'HMDNNNeutSemi_fatjetJESVAR']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
@@ -1723,7 +1723,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'selection'  : CombJJLNu_preselections["2018"]["MC"],
-                  'subTargets' :  ['VBSjjlnu_pairing', 'VBSjjlnu_kin', 
+                  'subTargets' :  ['VBSjjlnu_pairing', 'VBSjjlnu_kin', ],
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
                                   'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
                   'onlySample' : vbsjjlnu_samples_mc + SemiLepHighMassSamples_2018 + MonoHjjlnu_samples_2018,#vbsjjlnu_samples_signal
