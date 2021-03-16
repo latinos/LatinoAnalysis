@@ -215,7 +215,8 @@ class Skimmer:
     def hadd(self, outputfolder, outputfilename, hadd_script):
         for folder in self.variations_dict.values():
             #create destination folder
-            os.makedirs(os.path.join(outputfolder, folder))
+            if not os.path.exists(os.path.join(outputfolder, folder)):
+                os.makedirs(os.path.join(outputfolder, folder))
             print "hadd ",folder
             files = [os.path.join(self.targetdir, folder,f) for f in os.listdir(os.path.join(self.targetdir, folder))]
             proc=subprocess.Popen(["python", hadd_script, os.path.join(outputfolder, folder, outputfilename)]+files, 

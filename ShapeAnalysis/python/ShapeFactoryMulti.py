@@ -310,6 +310,7 @@ class ShapeFactory:
                 # there are various ways to set up branch mapping in NanoGardener, but in practice we use only the branches-suffix configuration
                 bmap = branch_mapping[nuisance['map' + var]]
                 for bname in bmap['branches']:
+                  #print "Replacing branch: ", bname, " --> ",  prefix + bname + bmap['suffix']
                   ndrawer.replaceBranch(bname, prefix + bname + bmap['suffix'])
 
                 ndrawers.append(ndrawer)
