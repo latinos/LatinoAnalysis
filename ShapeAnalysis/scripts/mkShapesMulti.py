@@ -102,11 +102,14 @@ class Worker(threading.Thread):
         print "Error: %s" % str(e)
 
 
-def getEffectiveBaseW(histo, lumi):
+def getEffectiveEntries(histo):
 
   ### returns the effective baseW
-  baseW = histo.Integral()/histo.GetEntries()/lumi if histo.GetEntries()>0 else 0.
-  return baseW
+  #find total number of events in the plot:
+  totentries = 0
+  for i in range(1, histo.GetNbinsX()+1):
+    totentries+=(histo.GetBinContent(i)/histo.GetBinError(i))**2 if histo.GetBinError(i) > 0 else 0. 
+  return totentries
 
 #BUGFIX by Andrea: adding central distribution to variables in the function
 def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
@@ -115,7 +118,7 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
 
   # how to handle the case when you have a bin with 0 MC
   # if the flag is activated, put the equivalent FC coverage 1.64 * 1 MC for the up variation
-  basew = getEffectiveBaseW(histo, lumi)
+  entries = getEffectiveEntries(histo)
   #print "###DEBUG: Effective baseW = ", basew
   for iBin in range(1, histo.GetNbinsX()+1):
     error = histo.GetBinError(iBin)
@@ -126,13 +129,14 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
         if value == 0:
           #print "###DEBUG: 0 MC stat --> value = ", value, " error = ", error
           if direction == 1:
-            #print "###DEBUG: lumi = ", float(lumi), " basew = ", basew
-            newvalue = 1.64*float(lumi)*basew
+            #print "###DEBUG: lumi = ", float(lumi), " entries, integral = ", entries, histo.Integral()
+            #newvalue = 1.64*float(lumi)*basew
+            newvalue = (1 - ROOT.TMath.Power(0.16, 1./entries)) * histo.Integral()/entries if entries > 0 else 0. 
             #print "###DEBUG: new value up = ", newvalue
           else:
             #newvalue = 0
             #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
-            newvalue = float(lumi)*basew * 0.0001
+            newvalue = entries * 0.0001
         else:
           newvalue = value + direction * error
           #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
@@ -542,7 +546,20 @@ if __name__ == '__main__':
         if 'stat' in nuisances.keys()  and  not nuisances['stat']['samples']=={} :
           os.chdir(os.getcwd()+"/"+opt.outputDir)
           filein=ROOT.TFile('plots_'+opt.tag+'.root', 'update')
-          for sample in samples.keys():
+          import LatinoAnalysis.ShapeAnalysis.utils as utils
+          subsamplesmap = utils.flatten_samples(samples)
+          print subsamplesmap
+          categoriesmap = utils.flatten_cuts(cuts)
+          print categoriesmap
+          updatedSamples = [sample for sample in samples if sample not in subsamplesmap]
+          for iss in subsamplesmap:
+            updatedSamples.extend(iss[1])
+          updatedCuts = [cut for cut in cuts if cut not in categoriesmap]
+          for icc in categoriesmap:
+            updatedCuts.extend(icc[1])
+          print updatedSamples 
+          print updatedCuts
+          for sample in set(updatedSamples):
             if sample == "DATA":
               continue
             zeroMCerror = 0
@@ -552,9 +569,11 @@ if __name__ == '__main__':
                   zeroMCerror = 1
               if zeroMCerror == 1:
                 print "special treatment of 0 MC events active for sample", sample
-              for cut in cuts.keys():
+              for cut in set(updatedCuts):
                 for variable in variables.keys():
                   hcentral = filein.Get(cut+"/"+variable+"/histo_"+sample)
+                  # this is kept to the original before any error is reset
+                  hcentralClone = hcentral.Clone()
                   if hcentral == None:
                     print "Warning, missing", sample, cut, variable
                     continue
@@ -590,8 +609,8 @@ if __name__ == '__main__':
                         othersup[other] = hupother
                         othersdo[other] = hdoother
                         othersce[other] = hcentralother
-                    scaleHistoStat(hcentral, hup,  1, ibin, opt.lumi, zeroMCerror)
-                    scaleHistoStat(hcentral, hdo, -1, ibin, opt.lumi, zeroMCerror)
+                    scaleHistoStat(hcentralClone, hup,  1, ibin, opt.lumi, zeroMCerror)
+                    scaleHistoStat(hcentralClone, hdo, -1, ibin, opt.lumi, zeroMCerror)
                     hcentral.SetBinError(ibin, 0)
                     if 'correlate' in nuisances['stat']['samples'][sample].keys():
                       for other in nuisances['stat']['samples'][sample]['correlate']:
@@ -600,7 +619,7 @@ if __name__ == '__main__':
                         othersce[other].SetBinError(ibin,0)
                     #BUGFIX by Andrea: hcentral is now the firt variable in the function
                     #original text: scaleHistoStat(hup,  1, ibin, lumi, zeroMCerror)
-                    hcentral.Write("",ROOT.TObject.kOverwrite)
+                    #hcentral.Write("",ROOT.TObject.kOverwrite)
                     print "Saviing histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statUp"
                     hup.Write("",ROOT.TObject.kOverwrite)
                     print "Saving histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statDown"
@@ -612,7 +631,6 @@ if __name__ == '__main__':
                         print "Also saving correlated variation", cut+"/"+variable+"/histo_"+other+tag + str(ibin) + "_statDown"
                         othersdo[other].Write("",ROOT.TObject.kOverwrite)
                         othersce[other].Write("",ROOT.TObject.kOverwrite)
-
 
         print "All done!"
 

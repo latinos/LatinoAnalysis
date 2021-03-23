@@ -1489,12 +1489,12 @@ class ShapeFactory:
 
                 outputsHistoUp = nominal.Clone(histoNameUp)
                 rnp.array2hist(arrup, outputsHistoUp)
-                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) and not self.FixNegativeAfterHadd: ShapeFactory._fixNegativeBin(outputsHistoUp, nominal)
+                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) : ShapeFactory._fixNegativeBin(outputsHistoUp, nominal)
                 outputsHistoUp.Write()
                 outputsHistoDown = nominal.Clone(histoNameDown)
                 if twosided:
                   rnp.array2hist(arrdown, outputsHistoDown)
-                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) and not self.FixNegativeAfterHadd: ShapeFactory._fixNegativeBin(outputsHistoDown, nominal)
+                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) : ShapeFactory._fixNegativeBin(outputsHistoDown, nominal)
                 outputsHistoDown.Write()
 
     @staticmethod
