@@ -602,7 +602,6 @@ Samples['WpToLNu_ZTo2J_herwig7'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eo
 Samples['ZTo2L_ZTo2J_herwig7'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
                "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoGEN/ZTo2LZToJJJJ_VBS_Herwig7/RunIISummer15wmLHEGS/210208_095109/0000/']}
 
-
 Samples['WmTo2J_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
                "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusTo2JZTo2LJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2018v6/210311_111639/0000/']}
 Samples['WmToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
@@ -648,7 +647,13 @@ Samples['WpToLNu_ZTo2J_QCD'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cm
 Samples['ZTo2L_ZTo2J_QCD'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
                "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/ZTo2LZTo2JJJ_QCD_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2018v6/200810_095405/0000/']}
 
-#
+####################### VBS jjlnu EWK-QCD interference
+Samples['WmToLNuWpTo2J_EWKQCD'] = {'nanoAOD':'/WminusToLNuWplusTo2JJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
+Samples['WpToLNuWmTo2J_EWKQCD'] = {'nanoAOD': '/WplusToLNuWminusTo2JJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
+Samples['WToLNuZTo2J_EWKQCD'] =   {'nanoAOD':'/WToLNuZTo2JJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
+Samples['WToJJZToLL_EWKQCD'] =    {'nanoAOD':'/WTo2JZToLNuJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
+Samples['ZToLLZToJJ_EWKQCD'] =    {'nanoAOD': '/ZZJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'}
+
 ####
 ## EWK W+Jets for Semileptonic VBS analysis
 Samples['WLNuJJ_EWK'] = {'nanoAOD' :'/LNuJJ_EWK_SM_5f_LO_NoWH_TuneCP5_13TeV_madgraph-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'} ##!!!!
