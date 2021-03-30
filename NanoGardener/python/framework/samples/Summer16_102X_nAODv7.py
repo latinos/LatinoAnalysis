@@ -682,23 +682,23 @@ Samples["WpToLNu_WpTo2J"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/'
 
 # Dipole recoil private samples
 Samples['WmToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmLNuWmJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083606/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmLNuWmJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104111/0000/']}
 Samples['WmToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmLNuZJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083629/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmLNuZJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104134/0000/']}
 Samples['WpToLNu_WpTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuWpJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083619/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104122/0000/']}
 Samples['WpToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuZJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083639/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuZJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104145/0000/']}
 Samples['WpToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuWmJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083648/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuWmJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104156/0000/']}
 Samples['WpTo2J_WmToLNu_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpJJWmLNu_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083658/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpJJWmLNu_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104207/0000/']}
 Samples['WmToJJ_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmJJZLL_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083717/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmJJZLL_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104220/0000/']}
 Samples['WpToJJ_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpJJZLL_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083726/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpJJZLL_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104231/0000/']}
 Samples['ZTo2L_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
-               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/ZLLZJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_083707/0000/']}
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/ZLLZJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia_dipole/VVjj_2016v7/210330_104245/0000/']}
 
 
 # EWK W production
