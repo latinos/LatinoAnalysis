@@ -221,7 +221,7 @@ if __name__ == '__main__':
     if opt.onlyCut != None :
       list_to_remove = []
       for cutName, cutExtended in cuts.iteritems():
-         if cutName != opt.onlyCut :
+         if cutName not in opt.onlyCut :
            list_to_remove.append(cutName)
       for toRemove in list_to_remove:
         del cuts[toRemove]
