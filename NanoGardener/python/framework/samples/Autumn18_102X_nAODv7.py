@@ -602,6 +602,7 @@ Samples['WpToLNu_ZTo2J_herwig7'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eo
 Samples['ZTo2L_ZTo2J_herwig7'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
                "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoGEN/ZTo2LZToJJJJ_VBS_Herwig7/RunIISummer15wmLHEGS/210208_095109/0000/']}
 
+# Dipole recoil private samples
 Samples['WmTo2J_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
                "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusTo2JZTo2LJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2018v6/210311_111639/0000/']}
 Samples['WmToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 

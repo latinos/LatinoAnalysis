@@ -1019,14 +1019,14 @@ samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   're
 samples['WmToLNuWpTo2J_EWKQCD'].extend(['xsec=1.0',  'kfact=1.000', 'ref=I'])
 samples['WpToLNuWmTo2J_EWKQCD'].extend(['xsec=1.0',  'kfact=1.000', 'ref=I'])
 samples['WToLNuZTo2J_EWKQCD'] .extend(['xsec=0.05948',  'kfact=1.000', 'ref=I'])
-samples['WTo2JZToLL_EWKQCD'] .extend(['xsec=0.05953',  'kfact=1.000', 'ref=I'])
+samples['WToJJZToLL_EWKQCD'] .extend(['xsec=0.05953',  'kfact=1.000', 'ref=I'])
 samples['ZToLLZToJJ_EWKQCD'] .extend(['xsec=0.01211',  'kfact=1.000', 'ref=I'])
 
 
 # Wjets EWK production semileptonic analysis
 # XS from AN CMS-SMP-17-161
 samples['WLNuJJ_EWK'].extend (['xsec=20.44', 'kfact=1.000', 'ref=SMP-17-161'])
-
+samples['WLNuJJ_EWK_jpt15'].extend (['xsec=26.01', 'kfact=1.000', 'ref='])
 # HH bblnu
 samples['GluGluToHHTo2B2WToLNu2J'].extend(['xsec=1.97', 'kfact=1.000', 'ref=?'])
 

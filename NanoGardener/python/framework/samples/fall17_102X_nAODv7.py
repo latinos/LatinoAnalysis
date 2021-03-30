@@ -586,6 +586,26 @@ Samples["WpToLNu_ZTo2J"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/',
 Samples["WpTo2J_ZTo2L"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JZTo2LJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v6/200810_101406/0000/']}
 Samples["WpToLNu_WpTo2J"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWplusTo2JJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v6/200810_101446/0000/']}
 
+
+Samples['WmToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmLNuWmJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_082803/0000/']}
+Samples['WmToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmLNuZJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_082824/0000/']}
+Samples['WpToLNu_WpTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuWpJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_082814/0000/']}
+Samples['WpToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuZJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_082834/0000/']}
+Samples['WpToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpLNuWmJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_082843/0000/']}
+Samples['WpTo2J_WmToLNu_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpJJWmLNu_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_083331/0000/']}
+Samples['WmToJJ_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WmJJZLL_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_083340/0000/']}
+Samples['WpToJJ_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WpJJZLL_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_083350/0000/']}
+Samples['ZTo2L_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/ZLLZJJ_EWK_TuneCP5_13TeV-madgraph-pythia_dipole/VVjj_2017v7/210330_082903/0000/']}
+#
 #
 ## QCD di-boson production for VBS Semileptonic analysis  MC 2017
 ## >Sample string for mkPostProd

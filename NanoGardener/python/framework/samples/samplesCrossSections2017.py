@@ -1029,6 +1029,17 @@ samples['WpToLNu_WmTo2J']   .extend( ['xsec=0.9114',    'kfact=1.000',   'ref=W'
 samples['WpToLNu_ZTo2J']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=W' ])
 samples['ZTo2L_ZTo2J']      .extend( ['xsec=0.0159',    'kfact=1.000',   'ref=W' ])
 
+samples['WmTo2J_ZTo2L_dipoleRecoil']     .extend(['xsec=0.0298',     'kfact=1.000',   'ref=W' ])
+samples['WmToLNu_WmTo2J_dipoleRecoil']   .extend( ['xsec=0.0326',    'kfact=1.000',   'ref=W' ])
+samples['WmToLNu_ZTo2J_dipoleRecoil']    .extend( ['xsec=0.1000',    'kfact=1.000',   'ref=W' ])
+samples['WpTo2J_WmToLNu_dipoleRecoil']   .extend( ['xsec=0.9107',    'kfact=1.000',   'ref=W' ])
+samples['WpTo2J_ZTo2L_dipoleRecoil']     .extend( ['xsec=0.0540',    'kfact=1.000',   'ref=W' ])
+samples['WpToLNu_WpTo2J_dipoleRecoil']   .extend( ['xsec=0.0879',    'kfact=1.000',   'ref=W' ])
+samples['WpToLNu_WmTo2J_dipoleRecoil']   .extend( ['xsec=0.9114',    'kfact=1.000',   'ref=W' ])
+samples['WpToLNu_ZTo2J_dipoleRecoil']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=W' ])
+samples['ZTo2L_ZTo2J_dipoleRecoil']      .extend( ['xsec=0.0159',    'kfact=1.000',   'ref=W' ])
+
+
 
 # VV QCD production semilptonic
 samples['WmTo2J_ZTo2L_QCD']     .extend( ['xsec=0.3862',    'kfact=1.000',   'ref=W' ])
@@ -1044,7 +1055,7 @@ samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   're
 samples['WmToLNuWpTo2J_EWKQCD'].extend(['xsec=1.0',  'kfact=1.000', 'ref=I'])
 samples['WpToLNuWmTo2J_EWKQCD'].extend(['xsec=1.0',  'kfact=1.000', 'ref=I'])
 samples['WToLNuZTo2J_EWKQCD']  .extend(['xsec=0.05948',  'kfact=1.000', 'ref=I'])
-samples['WTo2JZToLL_EWKQCD'].extend(['xsec=0.05953',  'kfact=1.000', 'ref=I'])
+samples['WToJJZToLL_EWKQCD'].extend(['xsec=0.05953',  'kfact=1.000', 'ref=I'])
 samples['ZToLLZToJJ_EWKQCD']   .extend(['xsec=0.01211',  'kfact=1.000', 'ref=I'])
 # Wjets EWK production semileptonic analysis
 # XS from AN CMS-SMP-17-161

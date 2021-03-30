@@ -96,7 +96,8 @@ vbsjjlnu_samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpT
                     'WmTo2J_ZTo2L_dipoleRecoil','WmToLNu_WmTo2J_dipoleRecoil','WmToLNu_ZTo2J_dipoleRecoil','WpTo2J_WmToLNu_dipoleRecoil','WpTo2J_ZTo2L_dipoleRecoil',
                     'WpToLNu_WpTo2J_dipoleRecoil', 'WpToLNu_ZTo2J_dipoleRecoil','ZTo2L_ZTo2J_dipoleRecoil','WpToLNu_WmTo2J_dipoleRecoil',
                      'WmTo2J_ZTo2L_aQGC', 'WmToLNu_WmTo2J_aQGC','WmToLNu_ZTo2J_aQGC','WpTo2J_WmToLNu_aQGC','WpTo2J_ZTo2L_aQGC',
-                    'WpToLNu_WpTo2J_aQGC', 'WpToLNu_ZTo2J_aQGC','ZTo2L_ZTo2J_aQGC','WpToLNu_WmTo2J_aQGC']
+                    'WpToLNu_WpTo2J_aQGC', 'WpToLNu_ZTo2J_aQGC','ZTo2L_ZTo2J_aQGC','WpToLNu_WmTo2J_aQGC',
+                    'WmToLNuWpTo2J_EWKQCD','WpToLNuWmTo2J_EWKQCD','WToLNuZTo2J_EWKQCD','WToJJZToLL_EWKQCD','ZToLLZToJJ_EWKQCD']
 
 vbsjjlnu_samples_qcdvv = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
                 'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD']
