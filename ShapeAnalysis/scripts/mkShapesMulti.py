@@ -129,10 +129,10 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
         if value == 0:
           #print "###DEBUG: 0 MC stat --> value = ", value, " error = ", error
           if direction == 1:
-            #print "###DEBUG: lumi = ", float(lumi), " entries, integral = ", entries, histo.Integral()
+            print "###DEBUG: lumi = ", float(lumi), " entries, integral = ", entries, histo.Integral()
             #newvalue = 1.64*float(lumi)*basew
-            newvalue = (1 - ROOT.TMath.Power(0.16, 1./entries)) * histo.Integral()/entries if entries > 0 else 0. 
-            #print "###DEBUG: new value up = ", newvalue
+            newvalue = (1 - ROOT.TMath.Power(0.32, 1./entries)) * histo.Integral() if entries > 0 else 0. 
+            print "###DEBUG: new value up = ", newvalue
           else:
             #newvalue = 0
             #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
@@ -148,7 +148,7 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
     else :
       newvalue = value
     integralVaried += newvalue
-    hvaried.SetBinContent(iBin, newvalue)
+    hvaried.SetBinContent(iBin, max(0.0001, newvalue))
 #BUGFIX by Andrea: The modified histograms now have the new values computed starting from the nominal ones
 
 def makeTargetList(options, samples):
@@ -540,6 +540,14 @@ if __name__ == '__main__':
             os.unlink(opt.outputDir + '/' + fname)
 
     elif opt.doHadd != 0 or opt.redoStat != 0:
+      finalpath = os.path.join(os.getcwd(), opt.outputDir, 'plots_'+opt.tag+'.root')
+      if opt.FixNegativeAfterHadd:
+        for sampleName, sample in samples.iteritems():
+          if 'suppressNegative' in sample or 'suppressNegativeNuisances' in sample:
+            outFile = ROOT.TFile.Open(finalpath, 'update')
+            ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
+            outFile.Close()
+
       ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option
       if ('AsMuchAsPossible' in opt.batchSplit and opt.doHadd != 0) or opt.redoStat != 0:
         ## do this only if we want to add the MC stat nuisances in the old way
