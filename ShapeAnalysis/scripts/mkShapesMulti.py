@@ -102,14 +102,15 @@ class Worker(threading.Thread):
         print "Error: %s" % str(e)
 
 
-def getEffectiveEntries(histo):
+def getEffectiveBaseW(histo, lumi):
 
   ### returns the effective baseW
   #find total number of events in the plot:
   totentries = 0
   for i in range(1, histo.GetNbinsX()+1):
-    totentries+=(histo.GetBinContent(i)/histo.GetBinError(i))**2 if histo.GetBinError(i) > 0 else 0. 
-  return totentries
+    totentries+=(histo.GetBinContent(i)/histo.GetBinError(i))**2 if histo.GetBinError(i) > 0 else 0.
+  baseW = histo.Integral()/totentries/lumi if totentries>0 else 0 
+  return baseW
 
 #BUGFIX by Andrea: adding central distribution to variables in the function
 def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
@@ -118,7 +119,7 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
 
   # how to handle the case when you have a bin with 0 MC
   # if the flag is activated, put the equivalent FC coverage 1.64 * 1 MC for the up variation
-  entries = getEffectiveEntries(histo)
+  basew = getEffectiveBaseW(histo, lumi)
   #print "###DEBUG: Effective baseW = ", basew
   for iBin in range(1, histo.GetNbinsX()+1):
     error = histo.GetBinError(iBin)
@@ -129,14 +130,15 @@ def scaleHistoStat(histo, hvaried, direction, iBinToChange, lumi, zeroMCerror):
         if value == 0:
           #print "###DEBUG: 0 MC stat --> value = ", value, " error = ", error
           if direction == 1:
-            print "###DEBUG: lumi = ", float(lumi), " entries, integral = ", entries, histo.Integral()
-            #newvalue = 1.64*float(lumi)*basew
-            newvalue = (1 - ROOT.TMath.Power(0.32, 1./entries)) * histo.Integral() if entries > 0 else 0. 
+            print "###DEBUG: lumi = ", float(lumi), " integral = ", histo.Integral()
+            #1.84 is the poissonian upper limit if we observe 0 in a central interval (alpha is 16%)
+            newvalue = 1.84*float(lumi)*basew
+            #newvalue = (1 - ROOT.TMath.Power(0.32, 1./entries)) * histo.Integral() if entries > 0 else 0. 
             print "###DEBUG: new value up = ", newvalue
           else:
             #newvalue = 0
             #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
-            newvalue = entries * 0.0001
+            newvalue = basew * 0.0001
         else:
           newvalue = value + direction * error
           #BUGFIX by Xavier: never put real Zero (BOGUS combine error)
@@ -243,6 +245,7 @@ if __name__ == '__main__':
     parser.add_option("-n", "--dry-run"  , dest="dryRun"         , help="do not make shapes"                         , default=False, action="store_true")
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
     parser.add_option('--FixNegativeAfterHadd' , dest='FixNegativeAfterHadd' , help='When using "suppressNegative(Nuisances)", only fix after hadd step' , action='store_true', default=False)
+    parser.add_option('--addUncertaintyOn0bincontent' , dest='addUncertaintyOn0bincontent' , help='add a symmetrical statistical error on bins with 0 bin content corresponding to the 68% upper limit' , action='store_true', default=False)
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -547,6 +550,36 @@ if __name__ == '__main__':
             outFile = ROOT.TFile.Open(finalpath, 'update')
             ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
             outFile.Close()
+      if opt.addUncertaintyOn0bincontent:
+        for sampleName, sample in samples.iteritems():
+          outFile = ROOT.TFile.Open(finalpath, 'update')
+          import LatinoAnalysis.ShapeAnalysis.utils as utils
+          subsamplesmap = utils.flatten_samples(samples)
+          print subsamplesmap
+          categoriesmap = utils.flatten_cuts(cuts)
+          print categoriesmap
+          updatedSamples = [sample for sample in samples if sample not in subsamplesmap]
+          for iss in subsamplesmap:
+            updatedSamples.extend(iss[1])
+          updatedCuts = [cut for cut in cuts if cut not in categoriesmap]
+          for icc in categoriesmap:
+            updatedCuts.extend(icc[1])
+          print updatedSamples
+          print updatedCuts
+          for sample in set(updatedSamples):
+            if "DATA" in sample:
+              continue
+            for cut in set(updatedCuts):
+                for variable in variables.keys():
+                  hcentral = outFile.Get(cut+"/"+variable+"/histo_"+sample)
+                  changed = ShapeFactory._addUncertaintyOn0bincontent(hcentral)
+                  outFile.cd(cut+"/"+variable)
+                  hcentral.Write("",ROOT.TObject.kOverwrite)
+                  if changed:
+                    print "changed", sample, cut, variable, changed
+          outFile.Close()       
+            
+
 
       ## Fix the MC stat nuisances that are not treated correctly in case of AsMuchAsPossible option
       if ('AsMuchAsPossible' in opt.batchSplit and opt.doHadd != 0) or opt.redoStat != 0:
