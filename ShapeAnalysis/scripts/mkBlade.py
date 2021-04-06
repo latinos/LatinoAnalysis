@@ -62,179 +62,187 @@ class BladeFactory:
           for variableName, variable in variables.iteritems():
             self._fileOut.mkdir ( cutName + "/" + variableName)
 
-        #
-        # loop over cuts
-        #
-        for cutName in cuts:
-          
-          #
-          # prepare the signals and background list of samples
-          # after removing the ones not to be used in this specific phase space
-          #
-  
-          for sampleName in samples:
-          
-            # loop over variables
-            for variableName, variable in variables.iteritems():
-              
-              self._fileOut.cd ( cutName + "/" + variableName)
-              
-              #
-              # check if this variable is available only for a selected list of cuts
-              #
-              if 'cuts' in variable and cutName not in variable['cuts']:
-                continue
-                
-              #print "  variableName = ", variableName
-  
-              histo = self._getHisto(cutName, variableName, sampleName)
-              
-              if structureFile[sampleName]['isData'] == 1 :
-                pass
-              else :
-                #
-                # only if not data!
-                # now modify the histogram ...
-                #
-                #
-                #       'splitbin' : {
-                #                     'DY'     : { 'all'      : {16: [16,17]} },    # all stands for 'all cuts'
-                #                     'Vg'     : { 'sr_highZ' : {16: [16,17]} },    # in this case it is applied only in this phase space
-                #                     'VVV'    : { 'sr_highZ' : {16: [16,17]} },    # 
-                #                     'VZ'     : { 'sr_highZ' : {16: [16,17]} },    # binning starts from 1!
-                #                     'VgS_H'  : { 'sr_highZ' : {                   #
-                #                                                16 : [16,17],      # more than one split can be applied: in this case 16 -> 16,17
-                #                                                19 : [19,20,21],   #                                              and 19 -> 19,20,21
-                #                                               }                   #            
-                #                                },
-                #                     'VgS_L'  : { 'sr_highZ' :                     #          
-                #                                               {                   #            
-                #                                                16 : [16,17],      #                         
-                #                                                  19 : [19,20],    #                          
-                #                                               },                  #            
-                #                                 }                                 #
-                #                    }  
-                #                                     
-                #                                     
-                #                                     
-                #                                     
-                #      The content of bin '2' of DY is split between the bins '2,3,4,5' democratically
-                #      The relative uncertainty of bin '2' is propagated to bin '3,4,5' too 
-                #
-                #
-                
-                if 'splitbin' in variable :
-                  if sampleName in variable['splitbin'].keys() :
-                    if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
-                      name_phasespace = cutName
-                      if 'all' in variable['splitbin'][sampleName].keys():
-                        name_phasespace = 'all'
 
-                      for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
-                    
-                        value_to_share = histo.GetBinContent( bin_to_split )  # 19
-                        uncertainty_on_value_to_share = histo.GetBinError( bin_to_split )
-                        # you cannot share anything if it was already 0, com'on!
-                        # set more properly the splitting in "variables.py"
-                        if value_to_share > 0 :   # !=0 ?
-                          print " I am splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]
-                          relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
-                          number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
-                          
-                          print "    number_of_bins = " , number_of_bins 
-                          print "    value_to_share (", value_to_share, ") --> " , value_to_share/number_of_bins
-                          
-                          for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
-                            histo.SetBinContent( ibin, value_to_share/number_of_bins )
-                            histo.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
-                        else :
-                          print " I am NOT splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]
+        #
+        # If you run the splitting, you don't run the suppression of negative bins ...
+        # Too much burden on handling open/close of files
+        # If you need both, run twice the code, once with removeNegativeBins, once without removeNegativeBins
+        #
+        if not removeNegativeBins : 
+
+          #
+          # loop over cuts
+          #
+          for cutName in cuts:
+            
+            #
+            # prepare the signals and background list of samples
+            # after removing the ones not to be used in this specific phase space
+            #
+    
+            for sampleName in samples:
+            
+              # loop over variables
+              for variableName, variable in variables.iteritems():
+                
+                self._fileOut.cd ( cutName + "/" + variableName)
+                
+                #
+                # check if this variable is available only for a selected list of cuts
+                #
+                if 'cuts' in variable and cutName not in variable['cuts']:
+                  continue
+                  
+                #print "  variableName = ", variableName
+    
+                histo = self._getHisto(cutName, variableName, sampleName)
+                
+                if structureFile[sampleName]['isData'] == 1 :
+                  pass
+                else :
+                  #
+                  # only if not data!
+                  # now modify the histogram ...
+                  #
+                  #
+                  #       'splitbin' : {
+                  #                     'DY'     : { 'all'      : {16: [16,17]} },    # all stands for 'all cuts'
+                  #                     'Vg'     : { 'sr_highZ' : {16: [16,17]} },    # in this case it is applied only in this phase space
+                  #                     'VVV'    : { 'sr_highZ' : {16: [16,17]} },    # 
+                  #                     'VZ'     : { 'sr_highZ' : {16: [16,17]} },    # binning starts from 1!
+                  #                     'VgS_H'  : { 'sr_highZ' : {                   #
+                  #                                                16 : [16,17],      # more than one split can be applied: in this case 16 -> 16,17
+                  #                                                19 : [19,20,21],   #                                              and 19 -> 19,20,21
+                  #                                               }                   #            
+                  #                                },
+                  #                     'VgS_L'  : { 'sr_highZ' :                     #          
+                  #                                               {                   #            
+                  #                                                16 : [16,17],      #                         
+                  #                                                  19 : [19,20],    #                          
+                  #                                               },                  #            
+                  #                                 }                                 #
+                  #                    }  
+                  #                                     
+                  #                                     
+                  #                                     
+                  #                                     
+                  #      The content of bin '2' of DY is split between the bins '2,3,4,5' democratically
+                  #      The relative uncertainty of bin '2' is propagated to bin '3,4,5' too 
+                  #
+                  #
+                  
+                  if 'splitbin' in variable :
+                    if sampleName in variable['splitbin'].keys() :
+                      if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
+                        name_phasespace = cutName
+                        if 'all' in variable['splitbin'][sampleName].keys():
+                          name_phasespace = 'all'
+  
+                        for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
                       
-              histo.Write()
-                
-                    
-      
-              #
-              # Now check the nuisances: 
-              #     Nuisances
-              #             
-    
-              for nuisanceName, nuisance in nuisances.iteritems():
-                if 'type' not in nuisance:
-                  raise RuntimeError('Nuisance ' + nuisanceName + ' is missing the type specification')
-    
-                if nuisanceName == 'stat' or nuisance['type'] == 'rateParam' or nuisance['type'] in ['lnN', 'lnU']:
-                  # nothing to do ...
-                  continue
-    
-                # check if a nuisance can be skipped because not in this particular cut
-                if 'cuts' in nuisance and cutName not in nuisance['cuts']:
-                  continue
-    
-                
-                if nuisance['type'] == 'shape':
-                  #
-                  # 
-                  histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up')
-                  #
-                  # now modify the histogram ...
-                  #
-                  #print " histoUp = ", cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up' + " => ", histoUp
-                  if histoUp != None:
-
-                    if 'splitbin' in variable :
-                      if sampleName in variable['splitbin'].keys() :
-                        if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
-                          name_phasespace = cutName
-                          if 'all' in variable['splitbin'][sampleName].keys():
-                            name_phasespace = 'all'
+                          value_to_share = histo.GetBinContent( bin_to_split )  # 19
+                          uncertainty_on_value_to_share = histo.GetBinError( bin_to_split )
+                          # you cannot share anything if it was already 0, com'on!
+                          # set more properly the splitting in "variables.py"
+                          if value_to_share > 0 :   # !=0 ?
+                            print " I am splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]
+                            relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
+                            number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
+                            
+                            print "    number_of_bins = " , number_of_bins 
+                            print "    value_to_share (", value_to_share, ") --> " , value_to_share/number_of_bins
+                            
+                            for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
+                              histo.SetBinContent( ibin, value_to_share/number_of_bins )
+                              histo.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
+                          else :
+                            print " I am NOT splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]
                         
-                          for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
-                        
-                            value_to_share = histoUp.GetBinContent( bin_to_split )  # 19
-                            uncertainty_on_value_to_share = histoUp.GetBinError( bin_to_split )
-                            # you cannot share anything if it was already 0, com'on!
-                            # set more properly the splitting in "variables.py"
-                            if value_to_share > 0 :   # !=0 ?
-                              relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
-                              number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
-                              for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
-                                histoUp.SetBinContent( ibin, value_to_share/number_of_bins )
-                                histoUp.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
-                            else :
-                              pass 
+                histo.Write()
+                  
+                      
         
-                    histoUp.Write()
-
-
-                  histoDown = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Down')
-                  #
-                  # now modify the histogram ...
-                  #
-                  if histoDown != None :
-                    if 'splitbin' in variable :
-                      if sampleName in variable['splitbin'].keys() :
-                        if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
-                          name_phasespace = cutName
-                          if 'all' in variable['splitbin'][sampleName].keys():
-                            name_phasespace = 'all'
-                        
-                          for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
-                        
-                            value_to_share = histoDown.GetBinContent( bin_to_split )  # 19
-                            uncertainty_on_value_to_share = histoDown.GetBinError( bin_to_split )
-                            # you cannot share anything if it was already 0, com'on!
-                            # set more properly the splitting in "variables.py"
-                            if value_to_share > 0 :   # !=0 ?
-                              relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
-                              number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
-                              for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
-                                histoDown.SetBinContent( ibin, value_to_share/number_of_bins )
-                                histoDown.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
-                            else :
-                              pass 
-
-                    histoDown.Write()
+                #
+                # Now check the nuisances: 
+                #     Nuisances
+                #             
+      
+                for nuisanceName, nuisance in nuisances.iteritems():
+                  if 'type' not in nuisance:
+                    raise RuntimeError('Nuisance ' + nuisanceName + ' is missing the type specification')
+      
+                  if nuisanceName == 'stat' or nuisance['type'] == 'rateParam' or nuisance['type'] in ['lnN', 'lnU']:
+                    # nothing to do ...
+                    continue
+      
+                  # check if a nuisance can be skipped because not in this particular cut
+                  if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+                    continue
+      
+                  
+                  if nuisance['type'] == 'shape':
+                    #
+                    # 
+                    histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up')
+                    #
+                    # now modify the histogram ...
+                    #
+                    #print " histoUp = ", cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up' + " => ", histoUp
+                    if histoUp != None:
+  
+                      if 'splitbin' in variable :
+                        if sampleName in variable['splitbin'].keys() :
+                          if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
+                            name_phasespace = cutName
+                            if 'all' in variable['splitbin'][sampleName].keys():
+                              name_phasespace = 'all'
+                          
+                            for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
+                          
+                              value_to_share = histoUp.GetBinContent( bin_to_split )  # 19
+                              uncertainty_on_value_to_share = histoUp.GetBinError( bin_to_split )
+                              # you cannot share anything if it was already 0, com'on!
+                              # set more properly the splitting in "variables.py"
+                              if value_to_share > 0 :   # !=0 ?
+                                relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
+                                number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
+                                for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
+                                  histoUp.SetBinContent( ibin, value_to_share/number_of_bins )
+                                  histoUp.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
+                              else :
+                                pass 
+          
+                      histoUp.Write()
+  
+  
+                    histoDown = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Down')
+                    #
+                    # now modify the histogram ...
+                    #
+                    if histoDown != None :
+                      if 'splitbin' in variable :
+                        if sampleName in variable['splitbin'].keys() :
+                          if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
+                            name_phasespace = cutName
+                            if 'all' in variable['splitbin'][sampleName].keys():
+                              name_phasespace = 'all'
+                          
+                            for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
+                          
+                              value_to_share = histoDown.GetBinContent( bin_to_split )  # 19
+                              uncertainty_on_value_to_share = histoDown.GetBinError( bin_to_split )
+                              # you cannot share anything if it was already 0, com'on!
+                              # set more properly the splitting in "variables.py"
+                              if value_to_share > 0 :   # !=0 ?
+                                relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
+                                number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
+                                for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
+                                  histoDown.SetBinContent( ibin, value_to_share/number_of_bins )
+                                  histoDown.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
+                              else :
+                                pass 
+  
+                      histoDown.Write()
 
 
         #
