@@ -29,7 +29,7 @@ class BladeFactory:
 
     # _____________________________________________________________________________
     # _____________________________________________________________________________
-    def makeBlade( self, inputFile, outputFile, variables, cuts, samples, structureFile, nuisances):
+    def makeBlade( self, inputFile, outputFile, variables, cuts, samples, structureFile, nuisances, removeNegativeBins):
     
         print "==================="
         print "==== makeBlade ===="
@@ -237,6 +237,88 @@ class BladeFactory:
                     histoDown.Write()
 
 
+        #
+        # Now check if I need to remove the negative bins
+        #
+        if removeNegativeBins : 
+
+          for cutName in cuts:
+            
+            for sampleName in samples:
+            
+              # loop over variables
+              for variableName, variable in variables.iteritems():
+                
+                self._fileOut.cd ( cutName + "/" + variableName)
+                
+                #
+                # check if this variable is available only for a selected list of cuts
+                #
+                if 'cuts' in variable and cutName not in variable['cuts']:
+                  continue
+    
+                histo = self._getHisto(cutName, variableName, sampleName)
+                
+                if structureFile[sampleName]['isData'] == 1 :
+                  pass
+                else :
+                  #
+                  # only if not data!
+                  # now modify the histogram ...
+                  #
+
+                  for ibin in range(histo.GetBinsX()+2):
+                    if histo.GetBinContent( ibin ) < 0 :
+                      histo.SetBinContent ( ibin , 0 )
+                        
+                histo.Write()
+                  
+                #
+                # Now check the nuisances: 
+                #     Nuisances
+                #             
+      
+                for nuisanceName, nuisance in nuisances.iteritems():
+                  if 'type' not in nuisance:
+                    raise RuntimeError('Nuisance ' + nuisanceName + ' is missing the type specification')
+      
+                  if nuisanceName == 'stat' or nuisance['type'] == 'rateParam' or nuisance['type'] in ['lnN', 'lnU']:
+                    # nothing to do ...
+                    continue
+      
+                  # check if a nuisance can be skipped because not in this particular cut
+                  if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+                    continue
+      
+                  
+                  if nuisance['type'] == 'shape':
+                    #
+                    # 
+                    histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up')
+                    #
+                    # now modify the histogram ...
+                    #
+                    if histoUp != None:
+  
+                      for ibin in range(histoUp.GetBinsX()+2):
+                        if histoUp.GetBinContent( ibin ) < 0 :
+                          histoUp.SetBinContent ( ibin , 0 )
+          
+                      histoUp.Write()
+  
+  
+                    histoDown = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Down')
+                    #
+                    # now modify the histogram ...
+                    #
+                    if histoDown != None :
+
+                      for ibin in range(histoDown.GetBinsX()+2):
+                        if histoDown.GetBinContent( ibin ) < 0 :
+                          histoDown.SetBinContent ( ibin , 0 )
+  
+                      histoDown.Write()
+
         self._fileOut.Close()
         print "-------------------------"
         print " outputFile written : " , outputFile
@@ -293,11 +375,12 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--inputFile'          , dest='inputFile'         , help='input file '                                , default='./input.root')
-    parser.add_option('--outputFile'         , dest='outputFile'        , help='output file. Copy of the input file with modified histograms'    , default='./output.root')
-    parser.add_option('--structureFile'      , dest='structureFile'     , help='file with datacard configurations'          , default=None )
-    parser.add_option('--nuisancesFile'      , dest='nuisancesFile'     , help='file with nuisances configurations'         , default=None )
-    parser.add_option('--cardList'           , dest="cardList"          , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
+    parser.add_option('--inputFile'          , dest='inputFile'           , help='input file '                                , default='./input.root')
+    parser.add_option('--outputFile'         , dest='outputFile'          , help='output file. Copy of the input file with modified histograms'    , default='./output.root')
+    parser.add_option('--structureFile'      , dest='structureFile'       , help='file with datacard configurations'          , default=None )
+    parser.add_option('--nuisancesFile'      , dest='nuisancesFile'       , help='file with nuisances configurations'         , default=None )
+    parser.add_option('--cardList'           , dest="cardList"            , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
+    parser.add_option('--removeNegativeBins' , dest='removeNegativeBins'  , help='Remove negative bins'                       , action='store_true', default=False)
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -311,6 +394,7 @@ if __name__ == '__main__':
     
     print " inputFile  =          ", opt.inputFile
     print " outputFile =          ", opt.outputFile
+    print " removeNegativeBins =  ", opt.removeNegativeBins
  
     if not opt.debug:
       pass
@@ -392,4 +476,4 @@ if __name__ == '__main__':
         if not iCut in opt.cardList : cut2del.append(iCut)
       for iCut in cut2del : del cuts[iCut]   
     
-    factory.makeBlade( opt.inputFile ,opt.outputFile, variables, cuts, samples, structure, nuisances)
+    factory.makeBlade( opt.inputFile ,opt.outputFile, variables, cuts, samples, structure, nuisances, opt.removeNegativeBins)
