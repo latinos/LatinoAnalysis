@@ -280,8 +280,8 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
     ### Add Weights in sampleDic if needed
     if not 'weights' in sampleDic[key] :
       sampleDic[key]['weights'] = []
-    if len(sampleDic[key]['weights']) == 0 :
-      for iEntry in range(len(sampleDic[key]['name'])) : sampleDic[key]['weights'].append('(1.)')
+    if len(sampleDic[key]['weights']) < len(sampleDic[key]['name']) :
+      for iEntry in range(len(sampleDic[key]['name'])-len(sampleDic[key]['weights'])) : sampleDic[key]['weights'].append('(1.)')
 
     ### Now add the actual weight
     for iEntry in range(len(sampleDic[key]['name'])):

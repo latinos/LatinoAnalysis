@@ -689,7 +689,7 @@ class ShapeFactory:
                 hTotal = outDir.Get(histoName)
 
                 _allplots.remove(hTotal)
-                outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True, unroll2d=unroll2d)
+                outputsHisto = self._postplot(hTotal, doFold, cutName, sample, True, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                 _allplots.add(outputsHisto)
 
                 for nuisanceName, nuisance in nuisances.iteritems():
@@ -756,7 +756,7 @@ class ShapeFactory:
                       histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
                       hTotalVar = outDir.Get(histoNameVar)
                       _allplots.remove(hTotalVar)
-                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, False, unroll2d=unroll2d)
+                      outputsHistoVar = self._postplot(hTotalVar, doFold, cutName, sample, False, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                       _allplots.add(outputsHistoVar)
                       
                     continue
@@ -766,13 +766,13 @@ class ShapeFactory:
 
                   hTotalUp = outDir.Get(histoNameUp)
                   _allplots.remove(hTotalUp)
-                  outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False, unroll2d=unroll2d)
+                  outputsHistoUp = self._postplot(hTotalUp, doFold, cutName, sample, False, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                   _allplots.add(outputsHistoUp)
 
                   if twosided:
                     hTotalDown = outDir.Get(histoNameDown)
                     _allplots.remove(hTotalDown)
-                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d)
+                    outputsHistoDo = self._postplot(hTotalDown, doFold, cutName, sample, False, unroll2d=unroll2d, FixNegativeAfterHadd=self.FixNegativeAfterHadd)
                   else:
                     outputsHistoDo = outputsHisto.Clone(histoNameDown)
 
@@ -785,7 +785,7 @@ class ShapeFactory:
                   if 'symmetrize' in nuisance:
                     self._symmetrize(outputsHistoUp, outputsHistoDo)
   
-                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']):
+                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) and not self.FixNegativeAfterHadd:
                     # fix negative bins not consistent
                     self._fixNegativeBin(outputsHistoUp, outputsHisto)
                     if twosided:
@@ -881,7 +881,7 @@ class ShapeFactory:
 
     # _____________________________________________________________________________
     @staticmethod
-    def _postplot(hTotal, doFold, cutName, sample, fixZeros, unroll2d=True):
+    def _postplot(hTotal, doFold, cutName, sample, fixZeros, unroll2d=True, FixNegativeAfterHadd=False):
         if doFold == 1 or doFold == 3:
           ShapeFactory._fold(hTotal, 0, 1)
         if doFold == 2 or doFold == 3 :
@@ -941,7 +941,7 @@ class ShapeFactory:
         #
         # To be used with caution -> do not use this option if you don't know what you are playing with
         #
-        if fixZeros and 'suppressNegative' in sample and (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']):
+        if fixZeros and 'suppressNegative' in sample and (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']) and not FixNegativeAfterHadd:
           ShapeFactory._fixNegativeBinAndError(hTotal)
 
         return hTotal
@@ -1020,9 +1020,36 @@ class ShapeFactory:
 
       cnew = rnp.hist2array(histoNew, copy=False).flat
       cref = rnp.hist2array(histoReference, copy=False).flat
+      changed = False
 
-      indices = np.nonzero(cnew[:] * cref[:] <= 0.)[0]
-      cnew[indices] = cref[indices] * 1.e-4
+      # If ref and variation both != 0 -> Bring variation to same sign
+      indices = np.nonzero(cnew[:] * cref[:] < 0.)[0]
+      if not indices.size == 0:
+        changed = True
+        cnew[indices] = cref[indices] * 1.e-4
+
+      # If ref != 0 but variation == 0 -> Make variation same sign as signal
+      indices = np.nonzero(cnew[:] == 0.)[0]
+      if (not indices.size == 0) and np.any(cref[indices]):
+        changed = True
+        cnew[indices] = cref[indices] * 1.e-4
+
+      # If variation != 0 but ref == 0 (e.g. after fixed negative bins in ref) -> Find overall sign of ref and adjust variation
+      indices = np.nonzero(cref[:] < 0.)[0]
+      if indices.size == 0:
+        indices = np.nonzero(cnew[:] < 0.)[0]
+        if not indices.size == 0:
+          changed = True
+          cnew[indices] = cref[indices] * 1.e-4
+      indices = np.nonzero(cref[:] > 0.)[0]
+      if indices.size == 0:
+        indices = np.nonzero(cnew[:] > 0.)[0]
+        if not indices.size == 0:
+          changed = True
+          cnew[indices] = cref[indices] * 1.e-4
+      # If ref does not have the same sign in each bin -> Not clear how to proceed; variation could be genuine on top of 0 yield bin in ref
+
+      return changed
 
     # _____________________________________________________________________________
     @staticmethod
@@ -1034,12 +1061,33 @@ class ShapeFactory:
 
       cont = rnp.hist2array(histogram_to_be_fixed, copy=False, include_overflow=True).T.flat
       sumw2 = rnp.array(histogram_to_be_fixed.GetSumw2(), copy=False).flat
+      changed = False
 
       indices = np.nonzero(cont[:] < 0.)[0]
-      cont[indices] = 0.
+      if not indices.size == 0:
+        changed = True
+        cont[indices] = 0.
 
       indices = np.nonzero(cont[:] - np.sqrt(sumw2) < 0.)[0]
-      sumw2[indices] = np.square(cont[indices])
+      if not indices.size == 0:
+        changed = True
+        sumw2[indices] = np.square(cont[indices])
+
+      return changed
+
+    # _____________________________________________________________________________
+    @staticmethod
+    def _addUncertaintyOn0bincontent(histogram_to_be_fixed):
+      changed = 0
+      effectiveEntries = histogram_to_be_fixed.GetEffectiveEntries()
+      if effectiveEntries <= 0:
+        return changed
+      scalef = histogram_to_be_fixed.Integral()/effectiveEntries
+      for i in range(1, histogram_to_be_fixed.GetXaxis().GetNbins()):
+        if histogram_to_be_fixed.GetBinContent(i) == 0:
+          histogram_to_be_fixed.SetBinError(i, 1.84*scalef/2.)
+          changed += 1
+      return changed    
 
     # _____________________________________________________________________________
     @staticmethod
@@ -1455,8 +1503,100 @@ class ShapeFactory:
 
                 outputsHistoUp = nominal.Clone(histoNameUp)
                 rnp.array2hist(arrup, outputsHistoUp)
+                if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) : ShapeFactory._fixNegativeBin(outputsHistoUp, nominal)
                 outputsHistoUp.Write()
                 outputsHistoDown = nominal.Clone(histoNameDown)
                 if twosided:
                   rnp.array2hist(arrdown, outputsHistoDown)
+                  if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) : ShapeFactory._fixNegativeBin(outputsHistoDown, nominal)
                 outputsHistoDown.Write()
+
+    @staticmethod
+    def postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile):
+
+      if 'suppressNegative' in sample:
+        for cutName, cut in cuts.iteritems():
+          if not (cutName in sample['suppressNegative'] or 'all' in sample['suppressNegative']): continue
+
+          if 'categories' in cut:
+            catsuffixes = ['_' + catname for catname in cut['categories']]
+          else:
+            catsuffixes = ['']
+
+          for catsuffix in catsuffixes:
+            for variableName, variable in variables.iteritems():
+              if 'tree' in variable: continue
+              if 'cuts' in variable and cutName not in variable['cuts']: continue
+              if 'samples' in variable and sampleName not in variable['samples']: continue
+
+              dname = cutName + catsuffix + '/' + variableName
+              outDir = outFile.GetDirectory(dname)
+              outDir.cd()
+
+              if 'outputFormat' in sample:
+                outputFormat = sample['outputFormat']
+              else:
+                outputFormat = '{sample}{subsample}{nuisance}'
+    
+              if 'subsamples' in sample:
+                slabels = list('_%s' % ss for ss in sample['subsamples'].iterkeys())
+              else:
+                slabels = ['']
+    
+              for slabel in slabels:
+                histoName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='')
+                nominal = outDir.Get(histoName)
+
+                if ShapeFactory._fixNegativeBinAndError(nominal): nominal.Write()
+
+      if 'suppressNegativeNuisances' in sample:
+        for nuisance in nuisances.itervalues():
+          if sampleName not in nuisance['samples']: continue
+          #if 'kind' not in nuisance: continue
+          #if not (nuisance['kind'].startswith('tree') or nuisance['kind'].startswith('suffix') or nuisance['kind'].startswith('branch_custom')): continue
+          if 'type' not in nuisance: continue
+          if not nuisance['type'].startswith('shape'): continue
+          for cutName, cut in cuts.iteritems():
+            if not (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']): continue
+
+            twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
+
+            if 'cuts' in nuisance and cutName not in nuisance['cuts']: continue
+
+            if 'categories' in cut:
+              catsuffixes = ['_' + catname for catname in cut['categories']]
+            else:
+              catsuffixes = ['']
+
+            for catsuffix in catsuffixes:
+              for variableName, variable in variables.iteritems():
+                if 'tree' in variable: continue
+                if 'cuts' in variable and cutName not in variable['cuts']: continue
+                if 'samples' in variable and sampleName not in variable['samples']: continue
+
+                dname = cutName + catsuffix + '/' + variableName
+                outDir = outFile.GetDirectory(dname)
+                outDir.cd()
+
+                if 'outputFormat' in sample:
+                  outputFormat = sample['outputFormat']
+                else:
+                  outputFormat = '{sample}{subsample}{nuisance}'
+    
+                if 'subsamples' in sample:
+                  slabels = list('_%s' % ss for ss in sample['subsamples'].iterkeys())
+                else:
+                  slabels = ['']
+    
+                for slabel in slabels:
+                  histoName = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance='')
+                  nominal = outDir.Get(histoName)
+                  histoNameUp = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sUp' % nuisance['name']))
+                  outputsHistoUp = outDir.Get(histoNameUp)
+                  histoNameDown = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sDown' % nuisance['name']))
+                  outputsHistoDown = outDir.Get(histoNameDown)
+
+                  if ShapeFactory._fixNegativeBin(outputsHistoUp, nominal): outputsHistoUp.Write()
+                  if twosided:
+                    if ShapeFactory._fixNegativeBin(outputsHistoDown, nominal): outputsHistoDown.Write()
+
