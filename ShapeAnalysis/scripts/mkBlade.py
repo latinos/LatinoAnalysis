@@ -129,6 +129,9 @@ class BladeFactory:
                   #      The content of bin '2' of DY is split between the bins '2,3,4,5' democratically
                   #      The relative uncertainty of bin '2' is propagated to bin '3,4,5' too 
                   #
+                  #      If the content of the target bins is not empty, the democratically shared value is added,
+                  #      and the uncertainty is added in quadrature.
+                  #      This may be important for nuisances. For the nominal you usually check that it is empty, ... that is the whole purpose!
                   #
                   
                   if 'splitbin' in variable :
@@ -153,8 +156,10 @@ class BladeFactory:
                             print "    value_to_share (", value_to_share, ") --> " , value_to_share/number_of_bins
                             
                             for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
-                              histo.SetBinContent( ibin, value_to_share/number_of_bins )
-                              histo.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
+                              current_content = histo.GetBinContent( ibin )
+                              histo.SetBinContent( ibin, current_content + value_to_share/number_of_bins )
+                              current_error = histo.GetBinError( ibin )
+                              histo.SetBinError ( ibin, SumQ (current_error, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) ) #  = uncertainty_on_value_to_share / number_of_bins
                           else :
                             print " I am NOT splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]
                         
@@ -207,8 +212,10 @@ class BladeFactory:
                                 relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
                                 number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
                                 for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
-                                  histoUp.SetBinContent( ibin, value_to_share/number_of_bins )
-                                  histoUp.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
+                                  current_content = histoUp.GetBinContent( ibin )
+                                  histoUp.SetBinContent( ibin, current_content + value_to_share/number_of_bins )
+                                  current_error = histoUp.GetBinError( ibin )
+                                  histoUp.SetBinError ( ibin, SumQ (current_error, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) ) #  = uncertainty_on_value_to_share / number_of_bins
                               else :
                                 pass 
           
@@ -237,8 +244,10 @@ class BladeFactory:
                                 relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
                                 number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
                                 for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
-                                  histoDown.SetBinContent( ibin, value_to_share/number_of_bins )
-                                  histoDown.SetBinError ( ibin, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) #  = uncertainty_on_value_to_share / number_of_bins
+                                  current_content = histoDown.GetBinContent( ibin )
+                                  histoDown.SetBinContent( ibin, current_content + value_to_share/number_of_bins )
+                                  current_error = histoDown.GetBinError( ibin )
+                                  histoDown.SetBinError ( ibin, SumQ (current_error, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) ) #  = uncertainty_on_value_to_share / number_of_bins
                               else :
                                 pass 
   
@@ -356,6 +365,12 @@ class BladeFactory:
             #print shapeName, 'not found'
       
         return histo
+
+
+    # _____________________________________________________________________________
+    # --- squared sum
+    def SumQ(self, A, B):
+       return math.sqrt(A*A + B*B)
 
 
 
