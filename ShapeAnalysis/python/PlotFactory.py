@@ -468,12 +468,14 @@ class PlotFactory:
 
                 for ivar, nuisances_vy in enumerate([nuisances_vy_up, nuisances_vy_do]):
                   for nuisanceName, nuisance in mynuisances.iteritems():
+                    #print nuisanceName
                     try:
                       histoVar = nuisanceHistos[ivar][nuisanceName]
                     except KeyError:
                       # now, even if not considered this nuisance, I need to add it, 
                       # so that in case is "empty" it will add the nominal value
                       # for this sample that is not affected by the nuisance
+                      #print nuisanceName, sampleName
                       histoVar = histos[sampleName]
                     else:
                       if 'scale' in plotdef:
@@ -489,12 +491,14 @@ class PlotFactory:
                     
                     try:
                       vy = nuisances_vy[nuisanceName]
+                      #print sampleName, nuisanceName, vy
                     except KeyError:
                       vy = nuisances_vy[nuisanceName] = np.zeros_like(rnp.hist2array(histo, copy=False))
 
                     # get the background sum
                     if plotdef['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
                       vy += rnp.hist2array(histoVar, copy=False)
+                      # print sampleName, nuisanceName, rnp.hist2array(histoVar, copy=False)
 
               # create the group of histograms to plot
               # this has to be done after the scaling of the previous lines
@@ -581,11 +585,12 @@ class PlotFactory:
                 #    tgrBkg_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
                 #    tgrBkg_evy_up[iBin-1] = SumQ ( tgrBkg_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                 #    tgrBkg_evy_do[iBin-1] = SumQ ( tgrBkg_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) ) 
-
+            #print ">>>> Sample name: ", sampleName
             for nuisanceName in mynuisances.keys():
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               up = nuisances_vy_up[nuisanceName]
               do = nuisances_vy_do[nuisanceName]
+              #print nuisanceName, up, do
               up_is_up = (up > tgrMC_vy)
               dup2 = np.square(up - tgrMC_vy)
               ddo2 = np.square(do - tgrMC_vy)
@@ -707,7 +712,7 @@ class PlotFactory:
                   tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                   if self._showRelativeRatio :
                     tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
-                    print iBin, self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin])
+                    #print iBin, self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin])
                   else :
                     tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
                 
@@ -999,7 +1004,6 @@ class PlotFactory:
                   plotdef = plot[sampleName]
                 except KeyError:
                   continue
-              
                 if plotdef['isData'] == 1 :
                   if 'nameHR' in plotdef.keys() :
                     if self._showIntegralLegend == 0 :
@@ -1472,7 +1476,7 @@ class PlotFactory:
                 if self._plotLog:
                     # log Y axis
                     #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
-                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogC, maxYused/1000), self._maxLogCdifference * maxYused )
                     pad1difference.SetLogy(True)
                     self._saveCanvas(tcanvasDifference, self._outputDirPlots + "/log_" + canvasDifferenceNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
                     pad1difference.SetLogy(False)
@@ -1494,6 +1498,10 @@ class PlotFactory:
             
             if self._plotFancy and not self._showRelativeRatio:
               print "- draw with difference Fancy"
+
+              #blind data
+              for ip in range(tgrDataMinusMC.GetN(), tgrDataMinusMC.GetN()-4,-1):
+                tgrDataMinusMC.RemovePoint(ip)
               
               canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName + "_Fancy"
   
@@ -1513,7 +1521,8 @@ class PlotFactory:
               # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
               xAxisDistro = frameDistro_Fancy.GetXaxis()
               xAxisDistro.SetNdivisions(6,5,0)
-  
+              frameDistro_Fancy.GetYaxis().SetMaxDigits(2)
+
               if 'xaxis' in variable.keys() :
                 frameDistro_Fancy.GetXaxis().SetTitle(variable['xaxis'])
                 if variable["divideByBinWidth"] == 1:
@@ -1566,8 +1575,15 @@ class PlotFactory:
                 special_tlegend.AddEntry( tgrMCSigMinusMCBkg , 'Signal', "EPL")      
               
               # draw the data - MC
+              # if blind remove the last points
+              # maxip = 0
+              # for ip in range(0, tgrDataMinusMC.GetN()):
+              #   x = tgrDataMinusMC.GetPointX(ip)
+              #   if x > 0.6:
+              #     maxip = ip 
+              
               tgrDataMinusMC.Draw("P")
-
+              
               CMS_lumi.CMS_lumi(tcanvasDifference_Fancy, iPeriod, iPos)    
 
               oneLine2 = ROOT.TLine(frameDistro_Fancy.GetXaxis().GetXmin(), 0,  frameDistro_Fancy.GetXaxis().GetXmax(), 0);
@@ -2329,12 +2345,22 @@ class PlotFactory:
                     histos[sampleName].DrawNormalized("p, same")
 
               frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
-
+              
+              CMS_lumi.CMS_lumi(tcanvasSigVsBkg, iPeriod, iPos) 
               tlegend.Draw()
+              
+              tcanvasSigVsBkg.RedrawAxis()
               self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
-         
- 
- 
+
+              if self._plotLog:
+                # log Y axis
+                #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCdifference, maxYused/1000), self._maxLogCdifference * maxYused )
+                frameNorm.GetYaxis().SetRangeUser( min(self._minLogC, maxY_normalized/1000), self._maxLogC * maxY_normalized )
+                tcanvasSigVsBkg.SetLogy(True)
+                self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/log_cSigVsBkg_"  + cutName + "_" + variableName + self._FigNamePF, imageOnly=self._plotLinear)
+                tcanvasSigVsBkg.SetLogy(False)
+
+
             if self._plotNormalizedDistributionsTHstack :
               # ~~~~~~~~~~~~~~~~~~~~
               #
