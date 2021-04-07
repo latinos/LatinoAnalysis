@@ -127,13 +127,17 @@ if not args.only_entrylist:
   jobs.InitPy("skimmer.copy_trees()")
   if args.do_hadd:
     for iTarget in targetList:
-      outputfile = 'nanoLatino_%s__part%d.root' % iTarget
+      if type(iTarget) is not tuple:
+        outputfile = 'nanoLatino_%s__part0.root' % iTarget
+      else:
+        outputfile = 'nanoLatino_%s__part%d.root' % iTarget
       jobs.AddPy("ALL", iTarget, "skimmer.hadd('{}','{}','{}')".format('outputs_hadd', outputfile, 'haddnano.py'))
 
-    jobs.Add2All("if [ $? -eq 0 ]; then rsync -avz outputs_hadd/ "+ args.targetdir + "; fi")
+    jobs.Add2All("if [ $? -eq 0 ]; then sh hadd_script.sh; fi")
+    jobs.Add2All("if [ $? -eq 0 ]; then rsync -avz outputs_hadd/ "+ args.targetdir + "; else exit 1; fi")
 
   else:
-    jobs.Add2All("if [ $? -eq 0 ]; then  rsync -avz outputs_tmp/ "+ args.targetdir + "; fi")
+    jobs.Add2All("if [ $? -eq 0 ]; then  rsync -avz outputs_tmp/ "+ args.targetdir + "; else exit 1; fi")
 
 if args.save_entrylists:
   jobs.Add2All("rsync -avz entrylists "+ args.targetdir)

@@ -102,11 +102,15 @@ def get_entrylist(selection, filename, variations_dict, basedir):
         except:
             print "ERROR! Cannot read file: ", os.path.join(basedir,folder,filename)
             exit(1)
-        
-    for vselection in varied_selections:
-        print "Applying selection --> ", vselection
-        # Add the entries to the same total list to do an OR of the selections
-        total_tree.Draw(">>+total_list", vselection)
+    
+    if (total_tree.GetEntries() == 0):
+        print "WARNING: empty tree, creating empty TEntryList!"
+        total_entrylist = R.TEventList("total_list","total_list")
+    else:
+        for vselection in varied_selections:
+            print "Applying selection --> ", vselection
+            # Add the entries to the same total list to do an OR of the selections
+            total_tree.Draw(">>+total_list", vselection)
     
     # Extract the entrylist from the TFile
     total_entrylist = R.gDirectory.Get("total_list")
@@ -219,8 +223,6 @@ class Skimmer:
                 os.makedirs(os.path.join(outputfolder, folder))
             print "hadd ",folder
             files = [os.path.join(self.targetdir, folder,f) for f in os.listdir(os.path.join(self.targetdir, folder))]
-            proc=subprocess.Popen(["python", hadd_script, os.path.join(outputfolder, folder, outputfilename)]+files, 
-                                stderr = subprocess.PIPE,stdout = subprocess.PIPE)
-            out, err = proc.communicate()
-            print out
-            print err
+            cmd = " ".join(["python", hadd_script, os.path.join(outputfolder, folder, outputfilename)]+files)
+            with open("hadd_script.sh","a") as script:
+                script.write(cmd+"\n")
