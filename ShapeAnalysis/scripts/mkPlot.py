@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     parser.add_option('--postFit', dest='postFit', help='Plot sum of post-fit backgrounds, and the data/post-fit ratio.' , default='n') 
 
-    parser.add_option('--SkipMissingNuisances', dest='SkipMissingNuisances', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
+    parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
 
 
 
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
     print "                     postFit =", opt.postFit
-    print "        SkipMissingNuisances =", opt.SkipMissingNuisances
+    print "        skipMissingNuisance  =", opt.skipMissingNuisance
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -157,7 +157,7 @@ if __name__ == '__main__':
     
     factory._postFit = opt.postFit
     
-    factor._SkipMissingNuisances = opt.SkipMissingNuisances
+    factor._skipMissingNuisance = opt.skipMissingNuisance
     
     #samples = {}
     samples = OrderedDict()
