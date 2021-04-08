@@ -267,7 +267,7 @@ class BladeFactory:
               for variableName, variable in variables.iteritems():
                 
                 self._fileOut.cd ( cutName + "/" + variableName)
-                
+
                 #
                 # check if this variable is available only for a selected list of cuts
                 #
@@ -284,7 +284,7 @@ class BladeFactory:
                   # now modify the histogram ...
                   #
 
-                  for ibin in range(histo.GetBinsX()+2):
+                  for ibin in range(histo.GetNbinsX()+2):
                     if histo.GetBinContent( ibin ) < 0 :
                       histo.SetBinContent ( ibin , 0 )
                         
@@ -306,8 +306,7 @@ class BladeFactory:
                   # check if a nuisance can be skipped because not in this particular cut
                   if 'cuts' in nuisance and cutName not in nuisance['cuts']:
                     continue
-      
-                  
+                        
                   if nuisance['type'] == 'shape':
                     #
                     # the nominal is used to set the nuisance bins not to 0 but 10^{-3} of the nominal  [/ 1000. few lines below]
@@ -320,9 +319,9 @@ class BladeFactory:
                     #
                     if histoUp != None:
   
-                      for ibin in range(histoUp.GetBinsX()+2):
+                      for ibin in range(histoUp.GetNbinsX()+2):
                         if histoUp.GetBinContent( ibin ) < 0 :
-                          histoUp.SetBinContent ( ibin , histo.GetBinContent( ibin ) / 1000. )
+                          histoUp.SetBinContent ( ibin , max (0, histo.GetBinContent( ibin ) / 1000.) )
           
                       histoUp.Write()
   
@@ -333,9 +332,9 @@ class BladeFactory:
                     #
                     if histoDown != None :
 
-                      for ibin in range(histoDown.GetBinsX()+2):
+                      for ibin in range(histoDown.GetNbinsX()+2):
                         if histoDown.GetBinContent( ibin ) < 0 :
-                          histoDown.SetBinContent ( ibin , histo.GetBinContent( ibin ) / 1000. )
+                          histoDown.SetBinContent ( ibin , max (0, histo.GetBinContent( ibin ) / 1000.) )
   
                       histoDown.Write()
 
