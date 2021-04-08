@@ -310,7 +310,10 @@ class BladeFactory:
                   
                   if nuisance['type'] == 'shape':
                     #
-                    # 
+                    # the nominal is used to set the nuisance bins not to 0 but 10^{-3} of the nominal  [/ 1000. few lines below]
+                    #
+                    histo = self._getHisto(cutName, variableName, sampleName)
+                    #
                     histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up')
                     #
                     # now modify the histogram ...
@@ -319,7 +322,7 @@ class BladeFactory:
   
                       for ibin in range(histoUp.GetBinsX()+2):
                         if histoUp.GetBinContent( ibin ) < 0 :
-                          histoUp.SetBinContent ( ibin , 0 )
+                          histoUp.SetBinContent ( ibin , histo.GetBinContent( ibin ) / 1000. )
           
                       histoUp.Write()
   
@@ -332,7 +335,7 @@ class BladeFactory:
 
                       for ibin in range(histoDown.GetBinsX()+2):
                         if histoDown.GetBinContent( ibin ) < 0 :
-                          histoDown.SetBinContent ( ibin , 0 )
+                          histoDown.SetBinContent ( ibin , histo.GetBinContent( ibin ) / 1000. )
   
                       histoDown.Write()
 
