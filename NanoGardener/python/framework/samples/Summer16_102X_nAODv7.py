@@ -703,6 +703,9 @@ Samples['ZTo2L_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch/
 
 # EWK W production
 Samples["EWK_LNuJJ"] = {'nanoAOD': '/EWK_LNuJJ_MJJ-120_13TeV-madgraph-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'}
+Samples["EWK_LNuJJ_herwig"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+                "paths": ['/store/group/phys_higgs/cmshww/amassiro/HWWNano/Summer16_102X_nAODv7_Full2016v7/nanoAOD_tmp/LNuJJ_EWK_madgraph_herwigcpp_2016/VVjj_2016v7/210408_114406/0000']}
+
 Samples["EWK_LLJJ"] = {'nanoAOD': '/EWK_LLJJ_MLL-50_MJJ-120_13TeV-madgraph-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'}
 Samples["EWK_LLJJ_herwig"] = {'nanoAOD': '/EWK_LLJJ_MLL-50_MJJ-120_TuneEEC5_13TeV-madgraph-herwigpp_corrected/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM'}
 
