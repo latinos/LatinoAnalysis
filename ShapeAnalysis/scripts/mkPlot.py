@@ -76,6 +76,8 @@ if __name__ == '__main__':
 
     parser.add_option('--customize', dest='customizeKey', help="Optional parameters for the customizations script", default=None)
     parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
+    parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
+
 
 
     # read default parsing options as well
@@ -108,6 +110,7 @@ if __name__ == '__main__':
     print "                removeMCStat =", opt.removeMCStat
     print "                  customized =", opt.customizeKey
     print "                  plotFancy  =", opt.plotFancy
+    print "        skipMissingNuisance  =", opt.skipMissingNuisance
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -235,8 +238,10 @@ if __name__ == '__main__':
 
       factory._removeMCStat = opt.removeMCStat
       factory._plotFancy = opt.plotFancy
+      factory._skipMissingNuisance = opt.skipMissingNuisance
 
       factory.makePlot(inputFile ,outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
+
     
 #===============================
 

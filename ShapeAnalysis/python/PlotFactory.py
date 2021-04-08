@@ -464,7 +464,17 @@ class PlotFactory:
                       else:
                         histoVar = fileIn.Get(shapeNameVar)
   
-                      nuisanceHistos[ivar][nuisanceName] = histoVar
+                      if histoVar != None :
+                        nuisanceHistos[ivar][nuisanceName] = histoVar
+                      elif not self._skipMissingNuisance :
+                        print " This is bad, the nuisance ", nuisanceName, " is missing! You need to add it, maybe some jobs crashed?"
+                        nuisanceHistos[ivar][nuisanceName] = histoVar
+                      else :
+                        # if you had self._skipMissingNuisance set to true, put the variation the same as the nominal
+                        histoVar = histo.Clone(shapeNameVar.replace('/', '__'))
+                        # histoVar.Scale(variations[ivar])
+                        nuisanceHistos[ivar][nuisanceName] = histoVar
+                        
 
                 for ivar, nuisances_vy in enumerate([nuisances_vy_up, nuisances_vy_do]):
                   for nuisanceName, nuisance in mynuisances.iteritems():
