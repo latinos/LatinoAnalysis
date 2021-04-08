@@ -238,7 +238,7 @@ if __name__ == '__main__':
 
       factory._removeMCStat = opt.removeMCStat
       factory._plotFancy = opt.plotFancy
-      factor._skipMissingNuisance = opt.skipMissingNuisance
+      factory._skipMissingNuisance = opt.skipMissingNuisance
 
       factory.makePlot(inputFile ,outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
 

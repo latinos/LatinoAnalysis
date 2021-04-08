@@ -466,13 +466,13 @@ class PlotFactory:
   
                       if histoVar != None :
                         nuisanceHistos[ivar][nuisanceName] = histoVar
-                      elif not self._SkipMissingNuisances :
+                      elif not self._skipMissingNuisance :
                         print " This is bad, the nuisance ", nuisanceName, " is missing! You need to add it, maybe some jobs crashed?"
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                       else :
-                        # if you had self._SkipMissingNuisances set to true, put the variation the same as the nominal
+                        # if you had self._skipMissingNuisance set to true, put the variation the same as the nominal
                         histoVar = histo.Clone(shapeNameVar.replace('/', '__'))
-                        histoVar.Scale(variations[ivar])
+                        # histoVar.Scale(variations[ivar])
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                         
 
@@ -600,7 +600,7 @@ class PlotFactory:
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               up = nuisances_vy_up[nuisanceName]
               do = nuisances_vy_do[nuisanceName]
-              #print nuisanceName, up, do
+              # print nuisanceName, up, do
               up_is_up = (up > tgrMC_vy)
               dup2 = np.square(up - tgrMC_vy)
               ddo2 = np.square(do - tgrMC_vy)
