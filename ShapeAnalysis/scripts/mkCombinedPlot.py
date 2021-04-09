@@ -435,10 +435,15 @@ class ShapeFactory:
           #weight_X_frameDistro.GetXaxis().SetTitle(variableName)
         weight_X_frameDistro.GetXaxis().SetTitle(factory._variableHR)
                 
-        if self._divideByBinWidth==True:        
-          weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events/GeV")
+        # Y-axis title: default case
+        if opt.yAxisTitle == "":
+            if self._divideByBinWidth==True:        
+                weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events/GeV")
+            else:
+                weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
         else:
-          weight_X_frameDistro.GetYaxis().SetTitle("S/B weighted Events")
+            weight_X_frameDistro.GetYaxis().SetTitle(opt.yAxisTitle)
+
         weight_X_frameDistro.GetYaxis().SetRangeUser( max(0.001, minYused), maxYused )
 
         weight_X_thsBackground.Draw("hist same")
@@ -797,7 +802,8 @@ if __name__ == '__main__':
     parser.add_option('--getVarFromFile' , dest='getVarFromFile' , help='get variable, binning and range from file. Needed for variable bin width (set to 1 to trigger this)', default=0   ,    type=int)
     parser.add_option('--divideByBinWidth' , dest='divideByBinWidth'   , help='divide the bin content by the bin width'     , action='store_true', default=False)
     parser.add_option('--removeOverflow' , dest='removeOverflow'   , help='remove the overflow bin'     , action='store_true', default=False)
-    parser.add_option('--invertXY' ,       dest='invertXY'       , help='invert XY axes to make Y projections'     , action='store_true', default=False)
+    parser.add_option('--invertXY'       , dest='invertXY'         , help='invert XY axes to make Y projections'     , action='store_true', default=False)
+    parser.add_option('--yAxisTitle'     , dest='yAxisTitle'       , help='set y-axis title',     default="")
 
 
           
@@ -832,6 +838,8 @@ if __name__ == '__main__':
     print " removeOverflow =        ", opt.removeOverflow
 
     print " invertXY =        ", opt.invertXY
+
+    print " yAxisTitle =        ", opt.yAxisTitle
 
 
 

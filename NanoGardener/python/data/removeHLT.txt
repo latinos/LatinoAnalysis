@@ -416,7 +416,6 @@ drop HLT_Ele30_WPTight_Gsf
 drop HLT_Ele30_eta2p1_WPLoose_Gsf
 drop HLT_Ele30_eta2p1_WPTight_Gsf
 drop HLT_Ele30_eta2p1_WPTight_Gsf_CentralPFJet35_EleCleaned
-drop HLT_Ele32_WPTight_Gsf_L1DoubleEG
 drop HLT_Ele32_eta2p1_WPLoose_Gsf
 drop HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1
 drop HLT_Ele32_eta2p1_WPTight_Gsf

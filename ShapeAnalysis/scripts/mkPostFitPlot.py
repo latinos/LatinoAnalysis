@@ -85,21 +85,22 @@ class LawnMower:
            
            in_samples = False
            if sampleName in self._samples: in_samples = True
-         
+           
            if not in_samples:
-            # check if it is in subsamples
-            in_subsample = False
-            for _sampleName, _sample in self._samples.items():
+             # check if it is in subsamples
+             in_subsample = False
+             for _sampleName, _sample in self._samples.items():
                if "subsamples" not in _sample: continue
                for _subsam in  _sample["subsamples"].keys():
-                  if _sampleName+"_"+ _subsam == sampleName:
-                     in_subsample = True
-                     break
-            if not in_subsample: continue
-
-           if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
+                 if _sampleName+"_"+ _subsam == sampleName:
+                   in_subsample = True
+                   break
+             if not in_subsample: continue
+           
+           if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
              continue
-
+           
+           
            # 
            # propagate signal from pre-fit if triggered
            # NB: this is needed for exclusion analyses, where the fitted signal is 0
@@ -123,14 +124,10 @@ class LawnMower:
              template_histogram = histo.Clone ("template")
 
 
-
-          
-
-
-
-
         #print " template_histogram = " , template_histogram
          
+        totalFromDatacard = 0
+
         for sampleName, structureDef in self._structure.iteritems():
            if '/' in sampleName:
              cardName = sampleName.replace('/', '__')
@@ -155,11 +152,18 @@ class LawnMower:
                      break
             if not in_subsample: continue
 
-           if 'removeFromCuts' in structureDef and self._cutNameInOriginal not in structureDef['removeFromCuts']:
+           if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
              continue
 
            print " sampleName = ", sampleName
            
+           if sampleName != "DATA":
+               if totalFromDatacard == 0:
+                   totalFromDatacard = fileInJustForDATA.Get("histo_"+sampleName).Clone()
+               else:
+                   tmp = fileInJustForDATA.Get("histo_"+sampleName)
+                   totalFromDatacard.Add(tmp)
+
            copied_from_original = False
            
            #if samples_key != "DATA" :
@@ -181,6 +185,7 @@ class LawnMower:
                histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
                histo.SetName  ('histo_' + cardName)
                histo.SetTitle ('histo_' + cardName)
+               histo.Scale(0.0) #I think this needs to be here, to actually scale the hist to 0?
                histo.Write()  
                
                copied_from_original = True
@@ -276,6 +281,12 @@ class LawnMower:
           histo_total_prefit = self._ChangeBin(histo_total_prefit, template_histogram)
           histo_total_postfit_s = self._ChangeBin(histo_total_postfit_s, template_histogram)
           histo_total_postfit_b = self._ChangeBin(histo_total_postfit_b, template_histogram)
+
+        if self._MCStatFromInput:
+            self._AddErrors(histo_total,totalFromDatacard)
+            self._AddErrors(histo_total_prefit,totalFromDatacard)
+            self._AddErrors(histo_total_postfit_s,totalFromDatacard)
+            self._AddErrors(histo_total_postfit_b,totalFromDatacard)
         
         histo_total.Write()              
         histo_total_prefit.Write()      
@@ -305,8 +316,11 @@ class LawnMower:
         
         return new_histo
         
-
-        
+    # _____________________________________________________________________________
+    def _AddErrors(self, myhisto, templatehisto): 
+        for iBin in range(1, myhisto.GetNbinsX()+1):
+            newerror = math.sqrt(pow(myhisto.GetBinError(iBin),2)+pow(templatehisto.GetBinError(iBin),2))
+            myhisto.SetBinError(iBin,newerror)
 
 
 if __name__ == '__main__':
@@ -337,7 +351,7 @@ if __name__ == '__main__':
     parser.add_option('--kind'                  , dest='kind'                  , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default='s')
     parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
     parser.add_option('--getSignalFromPrefit'   , dest='getSignalFromPrefit'   , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
-          
+    parser.add_option('--MCStatFromInput'       , dest='MCStatFromInput'       , help='add prefit MC stat. unc. to posterior total unc. (for bystander fits)', action="store_true", default=False)
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -381,7 +395,7 @@ if __name__ == '__main__':
     factory._cutNameInOriginal = opt.cutNameInOriginal
     factory._kind              = opt.kind
     factory._getSignalFromPrefit = opt.getSignalFromPrefit
-    
+    factory._MCStatFromInput   = opt.MCStatFromInput
 
     # ~~~~
     samples = OrderedDict()
@@ -402,7 +416,6 @@ if __name__ == '__main__':
       handle = open(opt.structureFile,'r')
       exec(handle)
       handle.close()
-
 
     factory._structure = structure
     

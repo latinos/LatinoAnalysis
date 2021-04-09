@@ -184,12 +184,11 @@ class rochester_corr(Module):
             newpt_vec.append(newpt)
 
         # Reorder
-        order=[]
-        for idx1, pt1 in enumerate(newpt_vec):
-            pt_idx = 0
-            for idx2, pt2 in enumerate(newpt_vec):
-                if pt1 < pt2 or (pt1 == pt2 and idx1 > idx2): pt_idx += 1
-            order.append(pt_idx)
+        #
+        # e.g. if pt is         [ 26, 24, 27 ]
+        #      you get: order = [ 2, 0, 1]
+        #
+        order = sorted(range(len(newpt_vec)), key=newpt_vec.__getitem__, reverse=True)
 
         # Fill branches
         for typ in self.CollBr: 

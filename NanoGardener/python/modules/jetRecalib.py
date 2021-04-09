@@ -80,7 +80,7 @@ class jetRecalib(Module):
         
         for jid,jet in enumerate(jets):
             # Apply new correction (this includes undoing previous correction first)
-	    newjet_pt = self.jetReCalibrator.correct(jet,rho)
+	    newjet_pt = self.jetReCalibrator.correct(jet,rho)[0]
             # Rewrite new correction factor
             rawFactor_newlist.append(1. - ((jet.pt * (1. - jet.rawFactor))/newjet_pt))
 
@@ -117,3 +117,10 @@ jetRecalib2017C = lambda : jetRecalib("Fall17_17Nov2017C_V32_DATA", jetCollectio
 jetRecalib2017D = lambda : jetRecalib("Fall17_17Nov2017DE_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])
 jetRecalib2017E = lambda : jetRecalib("Fall17_17Nov2017DE_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])
 jetRecalib2017F = lambda : jetRecalib("Fall17_17Nov2017F_V32_DATA", jetCollections=["CleanJet"], metCollections=["MET"])
+
+
+jetRecalib2018A = lambda : jetRecalib("Autumn18_RunA_V19_DATA", jetCollections=["CleanJet"], metCollections=["PuppiMET"], jetType = "AK4PFchs")
+jetRecalib2018B = lambda : jetRecalib("Autumn18_RunB_V19_DATA", jetCollections=["CleanJet"], metCollections=["PuppiMET"], jetType = "AK4PFchs")
+jetRecalib2018C = lambda : jetRecalib("Autumn18_RunC_V19_DATA", jetCollections=["CleanJet"], metCollections=["PuppiMET"], jetType = "AK4PFchs")
+jetRecalib2018D = lambda : jetRecalib("Autumn18_RunD_V19_DATA", jetCollections=["CleanJet"], metCollections=["PuppiMET"], jetType = "AK4PFchs")
+

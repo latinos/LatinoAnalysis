@@ -19,13 +19,23 @@ except NameError:
 try:
   JOB_DIR_SPLIT = ( jobDirSplit == True ) 
 except NameError:
-  JOB_DIR_SPLIT = False
+  JOB_DIR_SPLIT = True
 #Avoid using this feature for tools that are not ready for it -> change it in the tool after loading the library
 
 try:
    CONDOR_ACCOUNTING_GROUP = condorAccountingGroup
 except NameError:
    CONDOR_ACCOUNTING_GROUP = ''
+
+try: 
+   AUTO_CONDOR_RETRY = autoCondorRetry 
+except NameError:
+   AUTO_CONDOR_RETRY = False 
+
+try: 
+  FORCE_GFAL_SHELL = forceGfalShell
+except NameError:
+  FORCE_GFAL_SHELL = False
 
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False,USE_SINGULARITY=False):
@@ -106,6 +116,9 @@ class batchJobs :
            jFile.write('#$ -cwd\n')
 
          jFile.write('export X509_USER_PROXY=/afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+         if 'latino' in hostName:
+           jFile.write('export X509_USER_PROXY=/eos/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+           jFile.write('export EOS_MGM_URL=root://eoscms.cern.ch\n')
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
@@ -331,6 +344,9 @@ class batchJobs :
            if CONDOR_ACCOUNTING_GROUP:
              jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
              jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
+           if AUTO_CONDOR_RETRY:
+             jdsFile.write('on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)\n')
+             jdsFile.write('periodic_release =  (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*3))\n')
            jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')

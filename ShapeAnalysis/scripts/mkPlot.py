@@ -73,6 +73,10 @@ if __name__ == '__main__':
 
     parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
 
+    parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
+    parser.add_option('--extraLegend'   , dest='extraLegend'   , help='User-specified additional legend'          , default=None)
+
+    parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
 
 
     # read default parsing options as well
@@ -101,8 +105,10 @@ if __name__ == '__main__':
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
-    print "                     postFit =", opt.postFit
     print "        skipMissingNuisance  =", opt.skipMissingNuisance
+    print "                    postFit  =", opt.postFit
+    print "               removeMCStat  =", opt.removeMCStat
+    print "                  plotFancy  =", opt.plotFancy
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -158,10 +164,18 @@ if __name__ == '__main__':
     factory._postFit = opt.postFit
     
     factor._skipMissingNuisance = opt.skipMissingNuisance
+
+    factory._removeMCStat = opt.removeMCStat
+
+    factory._plotFancy = opt.plotFancy
+
+    factory._extraLegend = opt.extraLegend
     
     #samples = {}
     samples = OrderedDict()
-    if os.path.exists(opt.samplesFile) :
+    if opt.samplesFile == None :
+      print " Please provide the samples structure (not strictly needed in mkPlot, since list of samples read from plot.py) "    
+    elif os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()

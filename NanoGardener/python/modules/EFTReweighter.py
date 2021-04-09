@@ -1,6 +1,7 @@
 
 import ROOT
 import math 
+import numpy
 import ctypes
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -39,27 +40,34 @@ class EFTReweighter(Module):
 
         if "VBF_H0" in self.sample :
           self.productionProcess = "VBF"
-          self.XHProcess = True
+          self.vertexType = "HVV"
         elif "ZH_H0" in self.sample :
           self.productionProcess = "ZH"
-          self.XHProcess = True
+          self.vertexType = "HVV"
         elif "WH_H0" in self.sample :
           self.productionProcess = "WH"
-          self.XHProcess = True
+          self.vertexType = "HVV"
+        elif "GGHjj_H0" in self.sample :
+          self.productionProcess = "GluGlujj"
+          self.vertexType = "Hgg"
         elif "H0" in self.sample :
           self.productionProcess = "GluGlu"
-          self.XHProcess = False
+          self.vertexType = "HVV"
         else:
           raise NameError(self.sample, "is an unrecognised simulation")
 
         print("Running MELA EFT reweighter with " + self.productionProcess + " sample")
 
         self.out = wrappedOutputTree
-        self.newbranches = ['gen_dme_hsm','gen_dme_hm','gen_dme_hp','gen_dme_hl','gen_dme_mixhm','gen_dme_mixhp','gen_dme_mixhl' ]
 
-        if self.XHProcess == True:
-         self.newbranches += ['gen_pme_hsm','gen_pme_hm','gen_pme_hp','gen_pme_hl','gen_pme_mixhm','gen_pme_mixhp','gen_pme_mixhl' ]
+        if self.vertexType == "HVV":
+         self.newbranches =  ['gen_dme_hsm','gen_dme_hm','gen_dme_hp','gen_dme_hl','gen_dme_mixhm','gen_dme_mixhp','gen_dme_mixhl' ]
+         if self.productionProcess != "GluGlu":
+          self.newbranches += ['gen_pme_hsm','gen_pme_hm','gen_pme_hp','gen_pme_hl','gen_pme_mixhm','gen_pme_mixhp','gen_pme_mixhl' ]
         
+        elif self.vertexType == "Hgg":
+         self.newbranches = ['gen_pme_hsm','gen_pme_hm','gen_pme_mixhm' ] 
+
         for nameBranches in self.newbranches :
           self.out.branch(nameBranches  ,  "F");
 
@@ -93,12 +101,13 @@ class EFTReweighter(Module):
 
         HFinalStateIdx = []
         for gid,gen in enumerate(Gen):
-          if abs(gen.pdgId) >= 21: continue 
+          if abs(gen.pdgId) >= 21: continue
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
+    #      print "genp ", gen.pdgId, event.GenPart_pdgId[mid], self.FromH(event, gid)
           if abs(event.GenPart_pdgId[mid]) != 24: continue 
           if self.FromH(event, gid) == False: continue
-          HFinalStateIdx.append(gid) 
+          HFinalStateIdx.append(gid)
 
         if len(HFinalStateIdx) != 4:      
          HFinalStateIdx = self.RemoveGammaW(event, HFinalStateIdx)
@@ -117,6 +126,17 @@ class EFTReweighter(Module):
           daughters.push_back(d)
           daughterIDs.push_back(LHEHFinalState[ipart][3])                            
 
+        # Check lnu pairs to catch corrupted pdgid events (in H0L1f05 part0 2016 nAODv7)
+
+        if self.sample is "H0L1f05_ToWWTo2L2Nu" :
+         if abs(daughterIDs[0]) in [11,13,15] and abs(daughterIDs[1]) in [12,14,16] and abs(daughterIDs[2]) in [12,14,16] and abs(daughterIDs[3]) in [11,13,15] :
+          if self.MatchLNuIDs(daughterIDs[0], daughterIDs[1]) is False : 
+           print "1st Lep-Nu pair IDs not matching : ", daughterIDs[0], daughterIDs[1]
+           daughterIDs[1]  = -1*numpy.sign(daughterIDs[0])*(abs(daughterIDs[0])+1)        
+          if self.MatchLNuIDs(daughterIDs[3], daughterIDs[2]) is False : 
+           print "2nd Lep-Nu pair IDs not matching : ", daughterIDs[3], daughterIDs[2]
+           daughterIDs[2]  = -1*numpy.sign(daughterIDs[3])*(abs(daughterIDs[3])+1)
+          
         mothers = ROOT.vector('TLorentzVector')()
         motherIDs = ROOT.vector('int')()
         incoming1=ROOT.TLorentzVector()
@@ -129,6 +149,8 @@ class EFTReweighter(Module):
         genid2 = int(event.Generator_id2)
         motherIDs.push_back(genid1)
         motherIDs.push_back(genid2)       
+
+        # additional particles (WH, ZH, VBF)
 
         adds   = ROOT.vector('TLorentzVector')()
         addIDs = ROOT.vector('int')()
@@ -155,7 +177,7 @@ class EFTReweighter(Module):
             self.productionMela = ROOT.TVar.Had_WH
            elif abs(gen.pdgId) in [11,12,13,14,15,16,17,18]:
             self.productionMela = ROOT.TVar.Lep_WH
-         
+
          if len(VFinalStateIdx) != 2 and self.productionProcess == "WH":      
           VFinalStateIdx = self.RemoveGammaW(event, VFinalStateIdx)
 
@@ -179,7 +201,7 @@ class EFTReweighter(Module):
 
          LHEjetIdx = []
          for idx,part in enumerate(self.LHE):
-          if abs(part.pdgId) in [1,2,3,4,5,21]:
+          if abs(part.pdgId) in [1,2,3,4,5,21] and part.status==1:
            LHEjetIdx.append(idx)
 
          LHEjetIdx = self.pTorder(event, LHEjetIdx)
@@ -189,10 +211,31 @@ class EFTReweighter(Module):
           add.SetPtEtaPhiM(event.LHEPart_pt[ijet], event.LHEPart_eta[ijet], event.LHEPart_phi[ijet], 0.)
           adds.push_back(add)
           addIDs.push_back(int(event.LHEPart_pdgId[ijet]))
-        
+
          if len(adds) !=2 : 
-          print "Number of additional particles does not equal 2! Setup is not appropiate for this VBF simulation"
-         
+          print "SOMETHING WENT WRONG!, VBF associated partons ", len(adds)
+
+        elif self.productionProcess == "GluGlujj" : 
+
+         self.productionMela = ROOT.TVar.JJQCD
+
+         LHEjetIdx = []
+         for idx,part in enumerate(self.LHE):
+          if abs(part.pdgId) in [1,2,3,4,5,21] and part.status==1:
+           LHEjetIdx.append(idx)
+
+         LHEjetIdx = self.pTorder(event, LHEjetIdx)
+
+         for ijet in LHEjetIdx:
+          add = ROOT.TLorentzVector()
+          add.SetPtEtaPhiM(event.LHEPart_pt[ijet], event.LHEPart_eta[ijet], event.LHEPart_phi[ijet], 0.)
+          adds.push_back(add)
+          addIDs.push_back(int(event.LHEPart_pdgId[ijet]))
+
+         if len(adds) !=2 : 
+          print "SOMETHING WENT WRONG!, GluGlujj associated partons ", len(adds)
+
+        # Get MEs from MELA
 
         daughter_coll = ROOT.SimpleParticleCollection_t() 
         associated_coll = ROOT.SimpleParticleCollection_t()        
@@ -210,52 +253,66 @@ class EFTReweighter(Module):
         self.mela.setCandidateDecayMode(ROOT.TVar.CandidateDecay_WW)   
         self.mela.setInputEvent(daughter_coll, associated_coll, mother_coll, 1)
         self.mela.setCurrentCandidateFromIndex(0)
-        
+
         DME = [1, 1, 1, 1, 1, 1, 1] 
         PME = [1, 1, 1, 1, 1, 1, 1]
 
-        if self.XHProcess == True:
+        if self.vertexType == "HVV":
 
-         DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
-         PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
+         if self.productionProcess == "GluGlu" : 
+          DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0)
+         else :  
+          DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0)
+          PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
   
-        elif self.productionProcess == "GluGlu" :
+         gen_dme_hsm   = DME[0]
+         gen_dme_hm    = DME[1]
+         gen_dme_hp    = DME[2]
+         gen_dme_hl    = DME[3]
+         gen_dme_mixhm = DME[4]
+         gen_dme_mixhp = DME[5] 
+         gen_dme_mixhl = DME[6] 
 
-         DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0) 
+         self.out.fillBranch( 'gen_dme_hsm',    gen_dme_hsm )
+         self.out.fillBranch( 'gen_dme_hm',     gen_dme_hm )
+         self.out.fillBranch( 'gen_dme_hp',     gen_dme_hp )
+         self.out.fillBranch( 'gen_dme_hl',     gen_dme_hl )
+         self.out.fillBranch( 'gen_dme_mixhm',  gen_dme_mixhm )
+         self.out.fillBranch( 'gen_dme_mixhp',  gen_dme_mixhp )
+         self.out.fillBranch( 'gen_dme_mixhl',  gen_dme_mixhl )
 
-        gen_dme_hsm   = DME[0]
-        gen_dme_hm    = DME[1]
-        gen_dme_hp    = DME[2]
-        gen_dme_hl    = DME[3]
-        gen_dme_mixhm = DME[4]
-        gen_dme_mixhp = DME[5] 
-        gen_dme_mixhl = DME[6] 
+         if self.productionProcess != "GluGlu" : 
 
-        gen_pme_hsm   = PME[0]
-        gen_pme_hm    = PME[1]
-        gen_pme_hp    = PME[2]
-        gen_pme_hl    = PME[3]
-        gen_pme_mixhm = PME[4]
-        gen_pme_mixhp = PME[5] 
-        gen_pme_mixhl = PME[6] 
+          gen_pme_hsm   = PME[0]
+          gen_pme_hm    = PME[1]
+          gen_pme_hp    = PME[2]
+          gen_pme_hl    = PME[3]
+          gen_pme_mixhm = PME[4]
+          gen_pme_mixhp = PME[5] 
+          gen_pme_mixhl = PME[6] 
 
-        self.out.fillBranch( 'gen_dme_hsm',    gen_dme_hsm )
-        self.out.fillBranch( 'gen_dme_hm',     gen_dme_hm )
-        self.out.fillBranch( 'gen_dme_hp',     gen_dme_hp )
-        self.out.fillBranch( 'gen_dme_hl',     gen_dme_hl )
-        self.out.fillBranch( 'gen_dme_mixhm',  gen_dme_mixhm )
-        self.out.fillBranch( 'gen_dme_mixhp',  gen_dme_mixhp )
-        self.out.fillBranch( 'gen_dme_mixhl',  gen_dme_mixhl )
+          self.out.fillBranch( 'gen_pme_hsm',    gen_pme_hsm )
+          self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
+          self.out.fillBranch( 'gen_pme_hp',     gen_pme_hp )
+          self.out.fillBranch( 'gen_pme_hl',     gen_pme_hl )
+          self.out.fillBranch( 'gen_pme_mixhm',  gen_pme_mixhm )
+          self.out.fillBranch( 'gen_pme_mixhp',  gen_pme_mixhp )
+          self.out.fillBranch( 'gen_pme_mixhl',  gen_pme_mixhl )
 
-        if self.XHProcess == True:
+        elif self.vertexType == "Hgg" : 
+
+         PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 1, 0) 
+
+         gen_pme_hsm   = PME[0]
+         gen_pme_hm    = PME[1]
+         gen_pme_mixhm = PME[4]
 
          self.out.fillBranch( 'gen_pme_hsm',    gen_pme_hsm )
          self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
-         self.out.fillBranch( 'gen_pme_hp',     gen_pme_hp )
-         self.out.fillBranch( 'gen_pme_hl',     gen_pme_hl )
          self.out.fillBranch( 'gen_pme_mixhm',  gen_pme_mixhm )
-         self.out.fillBranch( 'gen_pme_mixhp',  gen_pme_mixhp )
-         self.out.fillBranch( 'gen_pme_mixhl',  gen_pme_mixhl )
+
+        if math.isnan(gen_pme_hsm) : print "SOMETHING WENT WRONG?, Production ME is nan "
+        if math.isnan(gen_dme_hsm) : print "SOMETHING WENT WRONG?, Decay ME is nan "
 
         self.mela.resetInputEvent()
 
@@ -273,6 +330,10 @@ class EFTReweighter(Module):
             order[j] += 1
       newlist = [oldlist[i] for i in order]
       return newlist
+
+    def MatchLNuIDs(self, idL, idNu): 
+      if idNu == -1*numpy.sign(idL)*(abs(idL)+1) : return True
+      else : return False
 
     def FromH(self, event, pid): # Iterate over mothers to find Higgs
       while event.GenPart_genPartIdxMother[pid] != -1:
@@ -318,6 +379,7 @@ class EFTReweighter(Module):
         deltaR = 9999
         LHEid = -1
         for lid,lhe in enumerate(self.LHE):
+          if lhe.status!=1:continue
           if lhe.pdgId != pdgid: continue
           dphi = phi-lhe.phi
           if dphi > math.pi: dphi -= 2*math.pi
