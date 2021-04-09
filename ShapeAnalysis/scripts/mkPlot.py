@@ -71,6 +71,8 @@ if __name__ == '__main__':
 
     parser.add_option('--postFit', dest='postFit', help='Plot sum of post-fit backgrounds, and the data/post-fit ratio.' , default='n') 
 
+    parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
+
     parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
     parser.add_option('--extraLegend'   , dest='extraLegend'   , help='User-specified additional legend'          , default=None)
 
@@ -103,6 +105,7 @@ if __name__ == '__main__':
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
+    print "        skipMissingNuisance  =", opt.skipMissingNuisance
     print "                    postFit  =", opt.postFit
     print "               removeMCStat  =", opt.removeMCStat
     print "                  plotFancy  =", opt.plotFancy
@@ -159,6 +162,8 @@ if __name__ == '__main__':
     factory._fileFormats = opt.fileFormats.split(',')
     
     factory._postFit = opt.postFit
+    
+    factor._skipMissingNuisance = opt.skipMissingNuisance
 
     factory._removeMCStat = opt.removeMCStat
 
