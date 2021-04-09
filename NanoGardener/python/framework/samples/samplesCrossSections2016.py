@@ -692,7 +692,11 @@ samples['DY4JetsToLL']   			.extend( ['xsec=54.22',		'kfact=1.000',	'ref=I'] )
 samples['WGJJ']   				.extend( ['xsec=5.66200',	'kfact=1.000',	'ref=I'] )
 samples['EWKZ2Jets']				.extend( ['xsec=3.99800',	'kfact=1.000',	'ref=I'] )
 samples['EWK_LNuJJ']                .extend( ['xsec=20.44',	'kfact=1.000',	'ref=I'] )
+samples['EWK_LNuJJ_herwig']                .extend( ['xsec=20.43',	'kfact=1.000',	'ref=I'] )
 samples['EWK_LLJJ']                .extend( ['xsec=1.629',	'kfact=1.000',	'ref=I'] )
+samples['EWK_LLJJ_herwig'] .extend( ['xsec=0.9838',     'kfact=1.000',   'ref=I' ])
+
+
 samples['WLLJJ_WToLNu_EWK']  		.extend( ['xsec=0.01762', 	'kfact=1.000',	'ref=N'] )
 samples['WLLJJToLNu_M-50_QCD_0Jet']  		.extend( ['xsec=0.5754',	'kfact=1.000',	'ref=N'] )
 samples['WLLJJToLNu_M-50_QCD_1Jet']  		.extend( ['xsec=0.3436',	'kfact=1.000',	'ref=N'] )
@@ -957,8 +961,6 @@ samples['WpToLNu_WpTo2J_dipoleRecoil']   .extend( ['xsec=0.08793',    'kfact=1.0
 samples['WpToLNu_WmTo2J_dipoleRecoil']   .extend( ['xsec=0.9115',    'kfact=1.000',   'ref=I' ])
 samples['WpToLNu_ZTo2J_dipoleRecoil']    .extend( ['xsec=0.1825',    'kfact=1.000',   'ref=I' ])
 samples['ZTo2L_ZTo2J_dipoleRecoil']      .extend(['xsec=0.01589',     'kfact=1.000',   'ref=I' ])
-
-
 
 samples['WmTo2J_ZTo2L_QCD']     .extend( ['xsec=0.3866',    'kfact=1.000',   'ref=I' ])
 samples['WmToLNu_WmTo2J_QCD']   .extend( ['xsec=0.03774',   'kfact=1.000',   'ref=I' ])
