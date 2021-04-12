@@ -1,0 +1,46 @@
+Fractions = {
+
+    # Signals:
+
+    'darkHiggs_ToWWTo2L2Nu' : 0.5,
+    'pseudoscalar2HDMa_ToWWTo2L2Nu' : 0.5,
+    
+    # backgrounds:
+
+    'DYJetsToTT_MuEle_M-50' : 0.5,
+    'DYJetsToLL_M-10to50-LO' : 0.5,
+    'TTTo2L2Nu' : 0.5,
+    'ST_s-channel' : 0.5,
+    'ST_t-channel_antitop' : 0.5,
+    'ST_t-channel_top' : 0.5,
+    'ST_tW_antitop' : 0.5,
+    'ST_tW_top' : 0.5,
+    'WWTo2L2Nu' : 0.5,
+    'WpWmJJ_EWK_noTop' : 0.5,
+    'GluGluWWTo2L2Nu_MCFM' : 0.5,
+    'Wg_MADGRAPHMLM' : 0.5,
+    'Zg' : 0.5,
+    'WZTo3LNu_mllmin01' : 0.5,
+    'ZZTo2L2Nu' : 0.5,
+    'ZZTo2L2Q' : 0.5,
+    'ZZTo4L' : 0.5,
+    'WZTo2L2Q' : 0.5,
+    'ZZZ' : 0.5,
+    'WZZ' : 0.5,
+    'WWZ' : 0.5,
+    'WWW' : 0.5,
+    'GluGluHToWWTo2L2NuPowheg_M125' : 0.5,
+    'VBFHToWWTo2L2Nu_M125' : 0.5,
+    'HZJ_HtoWW_M125' : 0.5,
+    'ggZH_HtoWW_M125' : 0.5,
+    'HWplusJ_HToWW_M125' : 0.5,
+    'HWminusJ_HToWW_M125' : 0.5,
+    'GluGluHToTauTau_M125' : 0.5,
+    'VBFHToTauTau_M125' : 0.5,
+    'HZJ_HToTauTau_M125' : 0.5,
+    'HWplusJ_HToTauTau_M125' : 0.5,
+    'HWminusJ_HToTauTau_M125' : 0.5,
+    'DYJetsToLL_M-50' : 0.5,
+    
+
+}

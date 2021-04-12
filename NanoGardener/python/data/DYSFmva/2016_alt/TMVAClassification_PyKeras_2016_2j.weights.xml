@@ -19,7 +19,7 @@
     <Option name="CreateMVAPdfs" modified="No">False</Option>
     <Option name="IgnoreNegWeightsInTraining" modified="Yes">True</Option>
     <Option name="FilenameModel" modified="Yes">model_2016_2j.h5</Option>
-    <Option name="FilenameTrainedModel" modified="No">/user/xjanssen/HWWRun2/CMSSW_10_6_4/src/LatinoAnalysis/NanoGardener/python/data/DYSFmva/2016_alt/TrainedModel_PyKeras_2016_2j.h5</Option>
+    <Option name="FilenameTrainedModel" modified="No">/afs/cern.ch/user/x/xjanssen/work/cms/HWWRun2/v7/CMSSW_10_6_4/src/LatinoAnalysis/NanoGardener/python/data/DYSFmva/2016_alt/TrainedModel_PyKeras_2016_2j.h5</Option>
     <Option name="BatchSize" modified="Yes">768</Option>
     <Option name="NumEpochs" modified="Yes">400</Option>
     <Option name="Verbose" modified="No">1</Option>

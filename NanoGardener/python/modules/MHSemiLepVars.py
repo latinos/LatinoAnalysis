@@ -6,9 +6,10 @@ import os
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
 class MHSemiLepVars(Module):
-    def __init__(self):
+    def __init__(self, branch_map=''):
         self.MET  = ROOT.TLorentzVector()
         self.J1   = ROOT.TLorentzVector()
         self.J2   = ROOT.TLorentzVector()
@@ -26,6 +27,8 @@ class MHSemiLepVars(Module):
 
         self.el_mass = 0.000511
         self.mu_mass = 0.106
+        self._branch_map = branch_map
+        if not self._branch_map == '': print('MHSemiLepVars: branch_map='+self._branch_map)
 
     def beginJob(self):
         pass
@@ -36,7 +39,7 @@ class MHSemiLepVars(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.jet_idx_name = ''
 
-        self.out = wrappedOutputTree
+        self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map) 
         for var in self.angle_var:
             for obj in self.angle_obj:
                 self.out.branch('MHlnjj_'+var+'_'+obj, 'F')
@@ -104,6 +107,8 @@ class MHSemiLepVars(Module):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+        event = mappedEvent(event, mapname=self._branch_map)
+
         if self.jet_idx_name=='':
           if hasattr(event, 'idx_j1'): self.jet_idx_name = 'idx_j'
           elif hasattr(event, 'HM_idx_j1'): self.jet_idx_name = 'HM_idx_j'

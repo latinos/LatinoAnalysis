@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-import os
+#import os
 
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import math
 
-import ROOT
-from ROOT import *
-#from ROOT import TCanvas, TPad, TFile, TPaveText, TLegend
+#import ROOT
+#from ROOT import *
 #from ROOT import gBenchmark, gStyle, gROOT, TStyle
-#from ROOT import TH1F, TF1, TGraphErrors, TMultiGraph
+from ROOT import TCanvas, TPad, TFile, TPaveText, TLegend
+from ROOT import TH1D, TH1F, TF1, TGraphErrors, TMultiGraph
 
 # functions used in everyday life ...
 from LatinoAnalysis.Tools.commonTools import *
@@ -46,7 +46,6 @@ if __name__ == '__main__':
     print " outputFile    =          ", opt.outputFile
 
     # Create Needed dictionnary
-
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
@@ -85,41 +84,139 @@ if __name__ == '__main__':
     DYCalc = ROOT.DYCalc()
 
     # Compute Rinout and K_ff
-    Rinout  = {}
-    K_ff    = {}
-    Rfile   = {}
-    thelist = {}
-    DataR   = {}
+    Rinout          = {}
+    K_ff            = {}
+    K_ff_data       = {}
+    K_ff_data_value = {}
+    Rfile           = {}
+    Kfile           = {}
+    thelist         = {}
+    DataR           = {}
 
     for iRAndKff in RAndKff :
-      Rinout[iRAndKff]  = {}
-      Rfile[iRAndKff]   = {}
-      thelist[iRAndKff] = {}
-      DataR[iRAndKff]   = {}
-      K_ff[iRAndKff]    = {}
+      Rinout[iRAndKff]          = {}
+      Rfile[iRAndKff]           = {}
+      Kfile[iRAndKff]           = {}
+      thelist[iRAndKff]         = {}
+      DataR[iRAndKff]           = {}
+      K_ff[iRAndKff]            = {}
+      K_ff_data[iRAndKff]       = {}
+      K_ff_data_value[iRAndKff] = {}
 
       print iRAndKff
 
+      # Input: dyestim.py file in configuration folder
       for iRegion in RAndKff[iRAndKff]['Regions']: 
         print iRegion
-#       print iRegion ,' k = ' , DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen']),' +/- ', DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
-#       print iRegion ,' R = ' , DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen']),' +/- ', DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
+
+        #       print iRegion ,' k = ' , DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen']),' +/- ', DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
+        #       print iRegion ,' R = ' , DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen']),' +/- ', DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
+
+        # Compute K and its uncertainty - using MC
+        print("Starting with MC")
+
         K_ff[iRAndKff][iRegion] = {} 
-        RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions']
-        K_ff[iRAndKff][iRegion]['val'] = DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
-        K_ff[iRAndKff][iRegion]['err'] = DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
-        #R{out/in}
+        RAndKff[iRAndKff]['KffFile'], RAndKff[iRAndKff]['Regions']
+        K_ff[iRAndKff][iRegion]['val'] = DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],
+                                                     RAndKff[iRAndKff]['Regions'][iRegion]['kNum'] + "/events/histo_DY",
+                                                     RAndKff[iRAndKff]['Regions'][iRegion]['kDen'] + "/events/histo_DY")
+
+        K_ff[iRAndKff][iRegion]['err'] = DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],
+                                                      RAndKff[iRAndKff]['Regions'][iRegion]['kNum'] + "/events/histo_DY",
+                                                      RAndKff[iRAndKff]['Regions'][iRegion]['kDen'] + "/events/histo_DY")
+
+        print("MC:")
+        print("K value from MC: {} +- {}".format(K_ff[iRAndKff][iRegion]['val'], K_ff[iRAndKff][iRegion]['err']))
+
+
+        # Compute K and its uncertainty - using DATA
+        # Open input rootfile
+        K_ff_data[iRAndKff][iRegion] = {}
+        K_ff_data_value[iRAndKff][iRegion] = {}
+
+        print 'K file = ', RAndKff[iRAndKff]['KffFile']
+        Kfile[iRAndKff]   = TFile(RAndKff[iRAndKff]['KffFile'])
+        thelist[iRAndKff] = Kfile[iRAndKff].GetListOfKeys()
+
+        # Prepare numerator and denominator for K computation
+        for dirs in thelist[iRAndKff] :
+          # K numerator
+          if RAndKff[iRAndKff]['Regions'][iRegion]['kNum'] in dirs.GetName():
+            currentdir = dirs.ReadObj()
+            for subdir in currentdir.GetListOfKeys():
+              if subdir.GetName()!='events':
+                continue
+              # Numerator: starting with total data in the actual channel (ee or mm)
+              K_ff_data[iRAndKff][iRegion]['NumDATA'] = Kfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/histo_DATA')
+              K_ff_data[iRAndKff][iRegion]['kNum']    = TH1D.Clone(K_ff_data[iRAndKff][iRegion]['NumDATA'])
+              print("Total data = {}".format(K_ff_data[iRAndKff][iRegion]['kNum'].Integral()))
+              currentsubdir = subdir.ReadObj()
+              previoussample=''
+              for sample in currentsubdir.GetListOfKeys():
+                if sample.GetName()==previoussample:
+                  continue
+                previoussample = sample.GetName()
+                # Numerator: subtract backgrounds
+                if not 'histo_DY' in sample.GetName() and not 'histo_DATA' in sample.GetName():
+                  K_ff_data[iRAndKff][iRegion][sample.GetName()] = Kfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
+                  K_ff_data[iRAndKff][iRegion]['kNum'].Add(K_ff_data[iRAndKff][iRegion][sample.GetName()],-1)
+
+          # K denominator
+          if RAndKff[iRAndKff]['Regions'][iRegion]['kDen'] in dirs.GetName():
+            currentdir = dirs.ReadObj()
+            currentdir = dirs.ReadObj()
+            for subdir in currentdir.GetListOfKeys():
+              if subdir.GetName()!='events':
+                continue
+              # Denominator: starting with total data in opposite channel (mm or ee)
+              K_ff_data[iRAndKff][iRegion]['DenDATA'] = Kfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/histo_DATA')
+              K_ff_data[iRAndKff][iRegion]['kDen']    = TH1D.Clone(K_ff_data[iRAndKff][iRegion]['DenDATA'])
+              currentsubdir = subdir.ReadObj()
+              previoussample=''
+              for sample in currentsubdir.GetListOfKeys():
+                if sample.GetName()==previoussample:
+                  continue
+                previoussample = sample.GetName()
+                # Denominator: subtract backgrounds
+                if not 'histo_DY' in sample.GetName() and not 'histo_DATA' in sample.GetName():
+                  K_ff_data[iRAndKff][iRegion][sample.GetName()] = Kfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
+                  K_ff_data[iRAndKff][iRegion]['kDen'].Add(K_ff_data[iRAndKff][iRegion][sample.GetName()],-1)
+                
+        # Compute K
+        K_ff_data[iRAndKff][iRegion]['val'] = TH1F("k_ff_data", "k_ff_data", 1, 0, 2)
+        K_ff_data[iRAndKff][iRegion]['val'].Divide(K_ff_data[iRAndKff][iRegion]['kNum'], K_ff_data[iRAndKff][iRegion]['kDen'], 1, 1, "b")
+        K_ff_data_value[iRAndKff][iRegion]['val'] = math.sqrt(K_ff_data[iRAndKff][iRegion]['val'].GetBinContent(1))
+        k_err_num = K_ff_data[iRAndKff][iRegion]['kNum'].GetBinError(1) / K_ff_data[iRAndKff][iRegion]['kNum'].Integral()
+        k_err_den = K_ff_data[iRAndKff][iRegion]['kDen'].GetBinError(1) / K_ff_data[iRAndKff][iRegion]['kDen'].Integral()
+        K_ff_data_value[iRAndKff][iRegion]['err'] = 0.5 * math.sqrt(k_err_num*k_err_num + k_err_den*k_err_den) * K_ff_data_value[iRAndKff][iRegion]['val']
+
+        print("DATA:")
+        print("k numerator   = {} )".format(K_ff_data[iRAndKff][iRegion]['kNum'].Integral() ) )
+        print("k denominator = {} )".format(K_ff_data[iRAndKff][iRegion]['kDen'].Integral() ) )
+        print 'K from data = ', K_ff_data_value[iRAndKff][iRegion]['val'], ' +/- ', K_ff_data_value[iRAndKff][iRegion]['err'] 
+
+        # Put the value computed in data into the variable used for MC
+        K_ff[iRAndKff][iRegion]['val'] = K_ff_data_value[iRAndKff][iRegion]['val']
+        K_ff[iRAndKff][iRegion]['err'] = K_ff_data_value[iRAndKff][iRegion]['err']
+
+
+        # Compute R(out/in) and its uncertainty
         Rinout[iRAndKff][iRegion] = {}
         DataR[iRAndKff][iRegion]  = {}
+        # Open input rootfile
         print 'file = ', RAndKff[iRAndKff]['RFile']
         Rfile[iRAndKff] = TFile(RAndKff[iRAndKff]['RFile'])
         thelist[iRAndKff] = Rfile[iRAndKff].GetListOfKeys()
+
+        # Prepare numerator and denominator for R computation
         for dirs in thelist[iRAndKff] :
+          # R numerator
           if RAndKff[iRAndKff]['Regions'][iRegion]['RNum'] in dirs.GetName():
             currentdir = dirs.ReadObj()
             for subdir in currentdir.GetListOfKeys():
               if subdir.GetName()!='events':
                 continue
+              # Numerator: starting with total data in OUT region
               DataR[iRAndKff][iRegion]['NumDATA'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/histo_DATA')
               DataR[iRAndKff][iRegion]['RNum'] = TH1D.Clone(DataR[iRAndKff][iRegion]['NumDATA'])
               currentsubdir = subdir.ReadObj()
@@ -128,16 +225,19 @@ if __name__ == '__main__':
                 if sample.GetName()==previoussample:
                   continue
                 previoussample = sample.GetName()
+                # Numerator: subtract backgrounds
                 if not 'histo_DY' in sample.GetName() and not 'histo_DATA' in sample.GetName():
                   DataR[iRAndKff][iRegion][sample.GetName()]= Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
                   DataR[iRAndKff][iRegion]['RNum'].Add(DataR[iRAndKff][iRegion][sample.GetName()],-1)
 
+          # R denominator
           if RAndKff[iRAndKff]['Regions'][iRegion]['RDen'] in dirs.GetName():
             currentdir = dirs.ReadObj()
             currentdir = dirs.ReadObj()
             for subdir in currentdir.GetListOfKeys():
               if subdir.GetName()!='events':
                 continue
+              # Denominator: starting with total data in IN region
               DataR[iRAndKff][iRegion]['DenDATA'] = Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/histo_DATA')
               DataR[iRAndKff][iRegion]['RDen'] = TH1D.Clone(DataR[iRAndKff][iRegion]['DenDATA'])
               currentsubdir = subdir.ReadObj()
@@ -146,13 +246,14 @@ if __name__ == '__main__':
                 if sample.GetName()==previoussample:
                   continue
                 previoussample = sample.GetName()
+                # Denominator: subtract backgrounds
                 if not 'histo_DY' in sample.GetName() and not 'histo_DATA' in sample.GetName():
                   DataR[iRAndKff][iRegion][sample.GetName()]= Rfile[iRAndKff].Get(dirs.GetName()+'/'+subdir.GetName()+'/'+sample.GetName())
                   DataR[iRAndKff][iRegion]['RDen'].Add(DataR[iRAndKff][iRegion][sample.GetName()],-1)
 
-        DataR[iRAndKff][iRegion]['val'] = TH1F("HR_outin_MC","HR_outin_MC",1,0,2)
-        #DataR[iRAndKff][iRegion]['val'].Divide(DataR[iRAndKff][iRegion]['RNum'],DataR[iRAndKff][iRegion]['RDen'],1,1,"b")
-        DataR[iRAndKff][iRegion]['val'].Divide(DataR[iRAndKff][iRegion]['RNum'],DataR[iRAndKff][iRegion]['RDen'],1,1,"b")
+        # Compute R
+        DataR[iRAndKff][iRegion]['val'] = TH1F("HR_outin_MC", "HR_outin_MC", 1, 0, 2)
+        DataR[iRAndKff][iRegion]['val'].Divide(DataR[iRAndKff][iRegion]['RNum'],DataR[iRAndKff][iRegion]['RDen'], 1, 1, "b")
         Rinout[iRAndKff][iRegion]['val'] = DataR[iRAndKff][iRegion]['val'].GetBinContent(1)
         Rinout[iRAndKff][iRegion]['err'] = DataR[iRAndKff][iRegion]['val'].GetBinError(1)
         print 'R calc. Num = ',  DataR[iRAndKff][iRegion]['RNum'].Integral(), ' / Den = ', DataR[iRAndKff][iRegion]['RDen'].Integral(), ' | R(out/in) = ', Rinout[iRAndKff][iRegion]['val'], ' +/- ', Rinout[iRAndKff][iRegion]['err'] 
@@ -168,6 +269,8 @@ if __name__ == '__main__':
 
     # Read Input file
     inputFile  = ROOT.TFile.Open( opt.inputFile  , "READ")
+
+    # Create output file structure
     for key in inputFile.GetListOfKeys() : 
       if key.IsFolder() : 
         baseDir = key.GetName()
@@ -187,7 +290,7 @@ if __name__ == '__main__':
               for iDYestim in DYestim :
                 if baseDir == iDYestim : 
                   iDYestimKeep = iDYestim
-                  sName=''
+                  sName = ''
                   for i in range( 1, len(DYestim[iDYestim]['DYProc'].split('_'))+1 ) : 
                     if len(hName.split('_')) >= len(DYestim[iDYestim]['DYProc'].split('_'))+1 : 
                       if i==1 : sName+= hName.split('_')[i]
@@ -203,44 +306,59 @@ if __name__ == '__main__':
                           nHisDummy += 1.
                           hTmp.SetBinContent(iBin,0.00001)
                           hTmp.SetBinError(iBin,0.00001)
-                    if hName == 'histo_'+DYestim[iDYestim]['DYProc']:
+
+                    # Create up/down systematic uncertainty histograms
+                    if hName == 'histo_' + DYestim[iDYestim]['DYProc']:
                       hUp = hTmp.Clone('histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up')
                       hDo = hTmp.Clone('histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down')
                     print '--------- DY' , baseDir , hName , len(DYestim[iDYestim]['DYProc'].split('_'))
+                    
+                    # Standard case 
+                    # Get yields and uncertainties
                     if not 'Nout' in DYestim[iDYestim] :
-                      Nin = inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+DYestim[iDYestim]['SFinDa']).Integral()
+                      # Total SF Data IN  
+                      Nin  = inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+DYestim[iDYestim]['SFinDa']).Integral()
                       ENin = inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+DYestim[iDYestim]['SFinDa']).GetBinError(1)
-                      Ndf = inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_'+DYestim[iDYestim]['DFinDa']).Integral()
+                      # Total DF Data IN (symmetric background, e.g., WW, Top, Wjets)
+                      Ndf  = inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_'+DYestim[iDYestim]['DFinDa']).Integral()
                       ENdf = inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_'+DYestim[iDYestim]['DFinDa']).GetBinError(1)
-                      Nvv = 0
+                      Nvv  = 0
                       ENvv = 0
+                      # VV SF backgrounds IN ('VZ','Vg','VgS_L','VgS_H')  
                       for iMC in DYestim[iDYestim]['SFinMC'] : 
                         try:
-                          Nvv+= inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).Integral()
-                          ENvv= ENvv + pow(inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).GetBinError(1),2)
+                          Nvv += inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).Integral()
+                          ENvv = ENvv + pow(inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).GetBinError(1),2)
                         except:
                           print "Empty"
-                      ENvv = math.sqrt(ENvv)   
-                      Nvvdf = 0
+                      ENvv   = math.sqrt(ENvv)   
+                      Nvvdf  = 0
                       ENvvdf = 0
+                      # VV DF backgrounds IN ('VZ','Vg','VgS_L','VgS_H')  
                       for iMC in DYestim[iDYestim]['DFinMC'] : 
-                        Nvvdf+= inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_'+iMC).Integral()
-                        ENvvdf= ENvvdf + pow(inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_'+iMC).GetBinError(1),2)
+                        Nvvdf += inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_'+iMC).Integral()
+                        ENvvdf = ENvvdf + pow(inputFile.Get(DYestim[iDYestim]['DFin']+'/events/histo_'+iMC).GetBinError(1),2)
                       ENvvdf = math.sqrt(ENvvdf)
-                      Neu = Ndf - Nvvdf
-                      ENeu = math.sqrt(pow(Ndf,2)+pow(Nvvdf,2))
+                      # Remove VV MC bkgs from VV Data bkgs in DF channel  
+                      Neu    = Ndf - Nvvdf
+                      ENeu   = math.sqrt(pow(Ndf,2)+pow(Nvvdf,2))
+                      # Labels
                       rinout = DYestim[iDYestim]['rinout']
-                      tag = DYestim[iDYestim]['njet']+DYestim[iDYestim]['flavour']
-                      R  = Rinout[rinout][tag]['val']
-                      ER = Rinout[rinout][tag]['err']
+                      tag = DYestim[iDYestim]['njet'] + DYestim[iDYestim]['flavour']
+                      # Retrieve R(out/in) value
+                      R   = Rinout[rinout][tag]['val']
+                      ER  = Rinout[rinout][tag]['err']
                       if 'rsyst' in DYestim[iDYestim] : ER = math.sqrt(pow(ER,2)+pow(DYestim[iDYestim]['rsyst'],2))
+                      # Retrieve k value
                       k  = K_ff[rinout][tag]['val']
                       Ek = K_ff[rinout][tag]['err']
                       if 'ksyst' in DYestim[iDYestim] : Ek = math.sqrt(pow(Ek,2)+pow(DYestim[iDYestim]['ksyst'],2))
                       print 'R = ',R,' +- ',ER
                       print 'k = ',k,' +- ',Ek
                       print 'Nin =',Nin,' Neu = ',Neu,' Nvv = ',Nvv
-                      Nout = DYCalc.N_DY(R , Nin , k , Neu, Nvv )
+
+                      # Get OUT yields and uncertainties from R(out/in) method
+                      Nout = DYCalc.N_DY(R , Nin , k , Neu, Nvv)
                       #print R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv
                       Eout = DYCalc.EN_DY(R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv )
                       NUp  = Nout+Eout
@@ -251,12 +369,18 @@ if __name__ == '__main__':
                         #nHis = nHisDummy
                         print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!'
                         nHis = 0.00001
+
+                      # Finally, the acceptance (scale factor) value  
                       Acc  = 1.
                       EAcc = 0.01
+
+                      # Computing acceptance using MC
                       if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
                         hNum = inputFile.Get(DYestim[iDYestim]['AccNum']).Clone()
                         hDen = inputFile.Get(DYestim[iDYestim]['AccDen']).Clone()
                         hAcc = hNum.Clone("hAcc")
+                        print("Acc Num = {}".format(hNum.Integral()))
+                        print("Acc Den = {}".format(hDen.Integral()))
                         hAcc.Reset()                      
                         hAcc.Divide(hNum,hDen,1,1,"b") 
                         Acc  = hAcc.Integral()
@@ -266,6 +390,8 @@ if __name__ == '__main__':
                           print 'LOW STATS FOR ACCEPTANCE! Setting Acc to 0.001 +/- 0.01'
                           Acc  = 0.001
                           EAcc = 0.01
+
+                    # Case N_out already known
                     else:
                       Nout = DYestim[iDYestim]['Nout']
                       NUp  = Nout
@@ -280,8 +406,11 @@ if __name__ == '__main__':
                       Acc  = 1.
                       EAcc = 0.01
                       Eout = 0.5*((Nout-NDo)+(NUp-Nout))
+
+                    # Systematic uncertainties  
                     if 'asyst' in DYestim[iDYestim] : EAcc = math.sqrt(pow(EAcc,2)+pow(DYestim[iDYestim]['asyst'],2))
-                    print 'Acc = ',Acc," +- ",EAcc
+                    print 'Acc = ', Acc, " +- ", EAcc
+
                     # Central value or systematics not related to DY ESTIM
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                       Scale = Nout / nHis
@@ -296,7 +425,7 @@ if __name__ == '__main__':
                         NewBinContent = BinContent*Scale*Acc
                         hTmp.SetBinContent(iBin,NewBinContent)
                         BinError = hTmp.GetBinError(iBin)
-                        NewBinError = BinError*abs(Scale)*Acc
+                        NewBinError = BinError * abs(Scale)*Acc
                         NewBinError = 0.
                         hTmp.SetBinError(iBin,NewBinError)
                         #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent 

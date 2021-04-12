@@ -298,6 +298,7 @@ Samples['VBFHToWWToLNuQQ_M5000'] = {'nanoAOD' :'/VBFHToWWToLNuQQ_M5000_NNPDF31_T
 ######## DiBosons
 
 ### WW
+Samples['WWToLNuQQ']={'nanoAOD':'/WWToLNuQQ_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7_ext1-v1/NANOAODSIM'}
 Samples['WWTo2L2Nu'] = {'nanoAOD' :'/WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7_ext1-v1/NANOAODSIM'}
 ###Samples['WWTo2L2Nu_PrivateNano']       = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/','paths': ['/store/group/phys_higgs/cmshww/amassiro/NanoProd/WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8/nanoAOD__Fall2017_nAOD_v2_94X__WWTo2L2Nu/190125_164101/0000/']}
 Samples['WW-LO'] = {'nanoAOD' :'/WW_TuneCP5_13TeV-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'} ##!!!!
@@ -712,3 +713,7 @@ Samples['ttH_H0M_ToWWTo2L2Nu']     = {'nanoAOD' :'/ttHiggs0MToWWToLNu_2LOSfilter
 Samples['ttH_H0Mf05_ToWWTo2L2Nu']  = {'nanoAOD' :'/ttHiggs0Mf05ph0ToWWToLNu_2LOSfilter_M125_13TeV_JHUGenV710_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
 ##Samples['ttH_H0L1f05_ToWWTo2L2Nu'] = {'nanoAOD' :''}
 
+################### monoH dileptonic ##########################################
+
+Samples['darkHiggs_ToWWTo2L2Nu']          = {'nanoAOD' :'/DarkHiggs_MonoHs_HsToWWTo2l2nu_TuneCP5_13TeV-Madgraph_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_rp_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
+Samples['pseudoscalar2HDMa_ToWWTo2L2Nu']  = {'nanoAOD' :'/monoH_ppTochichihWWTollnunu_TuneCP3_13TeV_madgraph-pythia/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_rp_102X_mc2017_realistic_v7-v1/NANOAODSIM'}
