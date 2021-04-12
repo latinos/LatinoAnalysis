@@ -973,6 +973,14 @@ samples['WpToLNu_ZTo2J_QCD']    .extend( ['xsec=2.159',     'kfact=1.000',   're
 samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   'ref=I' ])
 
 
+samples['WmToLNuWmTo2J_EWKQCD'].extend(['xsec=0.00817',  'kfact=1.000', 'ref=I'])
+samples['WpToLNuWpTo2J_EWKQCD'].extend(['xsec=0.00817',  'kfact=1.000', 'ref=I'])
+samples['WmToLNuWpTo2J_EWKQCD'].extend(['xsec=-0.0441',  'kfact=1.000', 'ref=I'])
+samples['WpToLNuWmTo2J_EWKQCD'].extend(['xsec=-0.0441',  'kfact=1.000', 'ref=I'])
+samples['WToLNuZTo2J_EWKQCD'] .extend(['xsec=0.01385',  'kfact=1.000', 'ref=I'])
+samples['WToJJZToLL_EWKQCD'] .extend(['xsec=0.00450',  'kfact=1.000', 'ref=I'])
+samples['ZToLLZToJJ_EWKQCD'] .extend(['xsec=0.00172',  'kfact=1.000', 'ref=I'])
+
 # HH_WWbb_bblnujj semileptonic 2016
 # FIXME: insert reference
 samples['HH_bblnjj']        .extend(['xsec=1.97', 'kfact=1.000', 'ref=??'])

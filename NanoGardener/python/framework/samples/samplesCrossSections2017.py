@@ -1052,11 +1052,13 @@ samples['WpToLNu_WmTo2J_QCD']   .extend( ['xsec=5.544',     'kfact=1.000',   're
 samples['WpToLNu_ZTo2J_QCD']    .extend( ['xsec=2.162',     'kfact=1.000',   'ref=W' ])
 samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   'ref=W' ])
 
-samples['WmToLNuWpTo2J_EWKQCD'].extend(['xsec=1.0',  'kfact=1.000', 'ref=I'])
-samples['WpToLNuWmTo2J_EWKQCD'].extend(['xsec=1.0',  'kfact=1.000', 'ref=I'])
-samples['WToLNuZTo2J_EWKQCD']  .extend(['xsec=0.05948',  'kfact=1.000', 'ref=I'])
-samples['WToJJZToLL_EWKQCD'].extend(['xsec=0.05953',  'kfact=1.000', 'ref=I'])
-samples['ZToLLZToJJ_EWKQCD']   .extend(['xsec=0.01211',  'kfact=1.000', 'ref=I'])
+samples['WmToLNuWmTo2J_EWKQCD'].extend(['xsec=0.00817',  'kfact=1.000', 'ref=I'])
+samples['WpToLNuWpTo2J_EWKQCD'].extend(['xsec=0.00817',  'kfact=1.000', 'ref=I'])
+samples['WmToLNuWpTo2J_EWKQCD'].extend(['xsec=-0.0441',  'kfact=1.000', 'ref=I'])
+samples['WpToLNuWmTo2J_EWKQCD'].extend(['xsec=-0.0441',  'kfact=1.000', 'ref=I'])
+samples['WToLNuZTo2J_EWKQCD'] .extend(['xsec=0.01385',  'kfact=1.000', 'ref=I'])
+samples['WToJJZToLL_EWKQCD'] .extend(['xsec=0.00450',  'kfact=1.000', 'ref=I'])
+samples['ZToLLZToJJ_EWKQCD'] .extend(['xsec=0.00172',  'kfact=1.000', 'ref=I'])
 # Wjets EWK production semileptonic analysis
 # XS from AN CMS-SMP-17-161
 samples['WLNuJJ_EWK'].extend (['xsec=20.44', 'kfact=1.000', 'ref=SMP-17-161'])
