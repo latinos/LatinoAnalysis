@@ -29,11 +29,13 @@ class BladeFactory:
 
     # _____________________________________________________________________________
     # _____________________________________________________________________________
-    def makeBlade( self, inputFile, outputFile, variables, cuts, samples, structureFile, nuisances, removeNegativeBins):
+    def makeBlade( self, inputFile, outputFile, variables, cuts, samples, structureFile, nuisances, removeNegativeBins, minValueBins):
     
         print "==================="
         print "==== makeBlade ===="
         print "==================="
+        
+        self._minValueBins = minValueBins
         
         #
         # copied from mkdatacards.py
@@ -286,7 +288,13 @@ class BladeFactory:
 
                   for ibin in range(histo.GetNbinsX()+2):
                     if histo.GetBinContent( ibin ) < 0 :
-                      histo.SetBinContent ( ibin , 0 )
+                      # if overflow of underflow bin, set to 0
+                      if ibin == 0 || ibin == (histo.GetNbinsX()+1) : 
+                        histo.SetBinContent ( ibin , 0 )
+                      # otherwise set properly (in principle you should not have underflow and overflow bins)
+                      else :
+                        histo.SetBinContent ( ibin , self._minValueBins )
+                        histo.SetBinError   ( ibin , histo.GetBinError() )
                         
                 histo.Write()
                   
@@ -406,6 +414,7 @@ if __name__ == '__main__':
     parser.add_option('--nuisancesFile'      , dest='nuisancesFile'       , help='file with nuisances configurations'         , default=None )
     parser.add_option('--cardList'           , dest="cardList"            , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
     parser.add_option('--removeNegativeBins' , dest='removeNegativeBins'  , help='Remove negative bins'                       , action='store_true', default=False)
+    parser.add_option('--minValueBins'       , dest='minValueBins'        , help='Minimum values for bins set to 0'           , default=0.0001  ,    type=float  )
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -420,6 +429,7 @@ if __name__ == '__main__':
     print " inputFile  =          ", opt.inputFile
     print " outputFile =          ", opt.outputFile
     print " removeNegativeBins =  ", opt.removeNegativeBins
+    print " minValueBins =        ", opt.minValueBins
  
     if not opt.debug:
       pass
@@ -501,4 +511,4 @@ if __name__ == '__main__':
         if not iCut in opt.cardList : cut2del.append(iCut)
       for iCut in cut2del : del cuts[iCut]   
     
-    factory.makeBlade( opt.inputFile ,opt.outputFile, variables, cuts, samples, structure, nuisances, opt.removeNegativeBins)
+    factory.makeBlade( opt.inputFile ,opt.outputFile, variables, cuts, samples, structure, nuisances, opt.removeNegativeBins, opt.minValueBins)
