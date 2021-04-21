@@ -289,7 +289,7 @@ class BladeFactory:
                   for ibin in range(histo.GetNbinsX()+2):
                     if histo.GetBinContent( ibin ) < 0 :
                       # if overflow of underflow bin, set to 0
-                      if ibin == 0 || ibin == (histo.GetNbinsX()+1) : 
+                      if ibin == 0 or ibin == (histo.GetNbinsX()+1) : 
                         histo.SetBinContent ( ibin , 0 )
                       # otherwise set properly (in principle you should not have underflow and overflow bins)
                       else :
