@@ -294,7 +294,7 @@ class BladeFactory:
                       # otherwise set properly (in principle you should not have underflow and overflow bins)
                       else :
                         histo.SetBinContent ( ibin , self._minValueBins )
-                        histo.SetBinError   ( ibin , histo.GetBinError() )
+                        histo.SetBinError   ( ibin , histo.GetBinError(ibin) )
                         
                 histo.Write()
                   
