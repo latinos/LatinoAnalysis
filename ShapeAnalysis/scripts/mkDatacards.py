@@ -146,8 +146,8 @@ class DatacardFactory:
 #                        if not sampleName in killBinSig : killBinSig[sampleName] = []
 #                        killBinSig[sampleName].append(iBin)
 #                        histo.SetBinContent(iBin,0.)
-                   if 'scaleSample' in structure[sampleName]:
-                     scaleFactor = structure[sampleName]['scaleSample']
+                   if 'scaleSampleForDatacard' in structure[sampleName]:
+                     scaleFactor = structure[sampleName]['scaleSampleForDatacard']
                      histo.Scale(scaleFactor)
                    
                    yields[sampleName] = histo.Integral()
@@ -283,8 +283,8 @@ class DatacardFactory:
                         histoUp.SetDirectory(self._outFile)
                         histoDown.SetDirectory(self._outFile)
 
-                        if 'scaleSample' in structure[sampleName]:
-                          scaleFactor = structure[sampleName]['scaleSample']
+                        if 'scaleSampleForDatacard' in structure[sampleName]:
+                          scaleFactor = structure[sampleName]['scaleSampleForDatacard']
                           histoUp.Scale(scaleFactor)
                           histoDown.Scale(scaleFactor)
                         if '/' in nuisance['samples'][sampleName]:
@@ -560,8 +560,8 @@ class DatacardFactory:
           if self._skipMissingNuisance:
             return False
           # else let ROOT raise
-        if 'scaleSample' in structure[sampleName]:
-          scaleFactor = structure[sampleName]['scaleSample']
+        if 'scaleSampleForDatacard' in structure[sampleName]:
+          scaleFactor = structure[sampleName]['scaleSampleForDatacard']
           histoUp.Scale(scaleFactor)
           histoDown.Scale(scaleFactor)
 
