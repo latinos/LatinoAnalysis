@@ -363,7 +363,6 @@ class DatacardFactory:
                           diffDo = 0.
 
                         if 'symmetrize' in nuisance and nuisance['symmetrize']:
-                          print nuisance,'is being symmetrized'
                           diff = (diffUp - diffDo) * 0.5
                           if diff >= 1.:
                               # can't symmetrize
