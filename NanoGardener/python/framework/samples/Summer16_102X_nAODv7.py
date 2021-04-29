@@ -680,6 +680,26 @@ Samples["WpToLNu_ZTo2J"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/',
 Samples["WpTo2J_ZTo2L"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JZTo2LJJ_EWK_LO_SM_MJJ100PTJ10_TuneCUETP8M1_13TeV-madgraph-pythia8/VVjj_2016v6/200810_103256/0000/']}
 Samples["WpToLNu_WpTo2J"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWplusTo2JJJ_EWK_LO_SM_MJJ100PTJ10_TuneCUETP8M1_13TeV-madgraph-pythia8/VVjj_2016v6/200810_103326/0000/']}
 
+Samples['WmTo2J_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusTo2JZTo2LJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7//0000/']}
+Samples['WmToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusToLNuWminusTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7//0000/']} 
+Samples['WmToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusToLNuZTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7/210429_062723/0000/']}
+Samples['WpToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWminusTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7/210429_062808/0000/']}
+Samples['WpTo2J_WmToLNu_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JWminusToLNuJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7//0000/']}
+Samples['WpTo2J_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JZTo2LJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7/210429_062732/0000/']}
+Samples['WpToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWminusTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7/210429_062808/0000/']}
+Samples['WpToLNu_WpTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWplusTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7/210429_062742/0000/']}
+Samples['WpToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuZTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7/210429_062750/0000/']}
+Samples['ZTo2L_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/ZTo2LZTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2016v7/210429_062759/0000/']}
 
 
 # EWK W production
