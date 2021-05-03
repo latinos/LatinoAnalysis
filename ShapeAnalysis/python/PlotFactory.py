@@ -301,6 +301,11 @@ class PlotFactory:
                         if iBin >= b0 and iBin <= b1:
                           histos[sampleName].SetBinContent(iBin, 0)
                           histos[sampleName].SetBinError  (iBin, 0)
+                    # Allow to also pass arbitrary set of bin indexes to blind (e.g. for unrolled 2D histos)
+                    elif type(blind_range) in [list,tuple] and len(blind_range)>2:
+                      for iBin in blind_range:
+                        histos[sampleName].SetBinContent(iBin, 0)
+                        histos[sampleName].SetBinError  (iBin, 0)
 
                 thsData.Add(histos[sampleName])
 
