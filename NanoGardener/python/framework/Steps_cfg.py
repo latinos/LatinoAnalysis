@@ -1094,6 +1094,7 @@ Steps = {
                   'selection'  : '"(nElectron>=2 || nMuon>=2) && (Sum$(Muon_pt > 10 && abs(Muon_eta)<2.4) >1 || Sum$(Electron_pt > 10 && abs(Electron_eta)<2.5) >1)"' ,
                   'subTargets' : ['RunPeriodDATA'] ,
                   'onlySample' : [
+                                  # ------ v6 -------
                                   # Run2016 v6
                                   'SingleElectron_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleElectron_Run2016C-Nano25Oct2019-v1',      
@@ -1128,7 +1129,47 @@ Steps = {
                                   'SingleMuon_Run2018A-Nano25Oct2019-v1',      
                                   'SingleMuon_Run2018B-Nano25Oct2019-v1',      
                                   'SingleMuon_Run2018C-Nano25Oct2019-v1',      
-                                  'SingleMuon_Run2018D-Nano25Oct2019_ver2-v1'
+                                  'SingleMuon_Run2018D-Nano25Oct2019_ver2-v1',
+                                  # --------- UL: nAODv8 ------
+                                  # Run2016 v8
+                                  'SingleElectron_Run2016B-ver1_HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016B-ver2_HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016C-UL2016-v1',
+                                  'SingleElectron_Run2016D-UL2016-v1',
+                                  'SingleElectron_Run2016E-UL2016-v1',
+                                  'SingleElectron_Run2016F-UL2016-v2',
+                                  'SingleElectron_Run2016F-HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016G_UL2016-v1',
+                                  'SingleElectron_Run2016H_UL2016-v1',
+                                  'SingleMuon_Run2016B-ver1_HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016B-ver2_HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016C-UL2016-v1',
+                                  'SingleMuon_Run2016D-UL2016-v1',
+                                  'SingleMuon_Run2016E-UL2016-v1',
+                                  'SingleMuon_Run2016F-UL2016-v2',
+                                  'SingleMuon_Run2016F-HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016G_UL2016-v1',
+                                  'SingleMuon_Run2016H_UL2016-v1',
+                                  # Run2017 v8
+                                  'SingleElectron_Run2017B-UL2017-v1',
+                                  'SingleElectron_Run2017C-UL2017-v1',
+                                  'SingleElectron_Run2017D-UL2017-v1',
+                                  'SingleElectron_Run2017E-UL2017-v1',
+                                  'SingleElectron_Run2017F-UL2017-v1',
+                                  'SingleMuon_Run2017B-UL2017-v1',
+                                  'SingleMuon_Run2017C-UL2017-v1',
+                                  'SingleMuon_Run2017D-UL2017-v1',
+                                  'SingleMuon_Run2017E-UL2017-v2',
+                                  'SingleMuon_Run2017F-UL2017-v2',
+                                  # Run2018 v8
+                                  'EGamma_Run2018A-UL2018-v1',
+                                  'EGamma_Run2018B-UL2018-v1',
+                                  'EGamma_Run2018C-UL2018-v1',
+                                  'EGamma_Run2018D-UL2018-v1',
+                                  'SingleMuon_Run2018A-UL2018-v1',
+                                  'SingleMuon_Run2018B-UL2018-v1',
+                                  'SingleMuon_Run2018C-UL2018-v1',
+                                  'SingleMuon_Run2018D-UL2018-v1', 
                                  ] ,
 
               }, 
