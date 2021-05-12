@@ -1510,8 +1510,13 @@ class PlotFactory:
               print "- draw with difference Fancy"
 
               #blind data
-              for ip in range(tgrDataMinusMC.GetN(), tgrDataMinusMC.GetN()-4,-1):
-                tgrDataMinusMC.RemovePoint(ip)
+              if 'blind' in variable:
+                  
+                blind_range = variable['blind'][cutName]
+                b0 = histos[sampleName].FindBin(blind_range[0])
+                b1 = histos[sampleName].FindBin(blind_range[1])
+                for ip in range(tgrDataMinusMC.GetN(), tgrDataMinusMC.GetN()-(b1-b0+1),-1):
+                  tgrDataMinusMC.RemovePoint(ip)
               
               canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName + "_Fancy"
   
