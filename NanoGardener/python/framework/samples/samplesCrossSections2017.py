@@ -1062,6 +1062,7 @@ samples['ZToLLZToJJ_EWKQCD'] .extend(['xsec=0.00172',  'kfact=1.000', 'ref=I'])
 # Wjets EWK production semileptonic analysis
 # XS from AN CMS-SMP-17-161
 samples['WLNuJJ_EWK'].extend (['xsec=20.44', 'kfact=1.000', 'ref=SMP-17-161'])
+samples['EWK_LNuJJ_herwig'].extend (['xsec=20.44', 'kfact=1.000', 'ref=SMP-17-161'])
 samples['EWK_LLJJ_herwig'] .extend( ['xsec=1.047',     'kfact=1.000',   'ref=I' ])
 
 
