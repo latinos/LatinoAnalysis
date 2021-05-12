@@ -39,7 +39,7 @@ class KernelFactory:
 
     # _____________________________________________________________________________
     # _____________________________________________________________________________
-    def runAlgo(self, fileTreeIn, treeName, cutName, variableName, variable, sampleName, newSampleName, reweight = "", saveEigenVariations=True, resamples=50):
+    def runAlgo(self, fileTreeIn, treeName, cutName, variableName, variable, sampleName, newSampleName, reweight = "", saveEigenVariations=True, resamples=10):
       treeInOrig = fileTreeIn.Get(cutName + "/" + treeName +"/"+treeName+'_'+sampleName)
       if treeInOrig == None:
          raise RuntimeError('Missing tree '+ cutName + "/" + treeName+"/"+treeName+'_'+sampleName)
@@ -148,13 +148,19 @@ class KernelFactory:
       #print average
        
       cova_m = np.cov(np.transpose(integrals))
-      w, v = LA.eig(cova_m)
+      try:
+        w, v = LA.eig(cova_m)
+        invv = LA.inv(v)
+      except:
+        w = np.zeros_like(averages)
+        v = np.identity(averages.shape[0])
+        invv = v
+
       #protect against negative eigenvalues
       w  = w.clip(0,10000)
       #print (v)
       #print (w)
       sqrtw = np.sqrt(w)
-      invv = LA.inv(v)
       average_rotated = np.matmul(v,average)
       
       # compute a number of variations equal to the number of bins, but in the orthogonal space
@@ -249,14 +255,9 @@ class KernelFactory:
           
             # loop over variables
             for variableName, variable in variables.iteritems():
+              # skip trees
               if 'name' not in variable.keys():
                 continue
-              # to skip "events"
-              try:
-                float(variable['name'])
-                continue
-              except ValueError:
-                pass
               
               self._fileOut.cd ( cutName + "/" + variableName)
               
@@ -269,6 +270,29 @@ class KernelFactory:
               #print "  variableName = ", variableName
   
               histo = self._getHisto(cutName, variableName, sampleName)
+              try:
+                # save "events unmodified, just change the name"
+                float(variable['name'])
+                histo.SetName("histo_"+sampleName+"_KEYS")
+                histo.SetTitle("histo_"+sampleName+"_KEYS")
+                print "saving unmodified", cutName, variableName, sampleName
+                histo.Write()
+                for nuisanceName, nuisance in nuisances.iteritems():
+                  if nuisanceName == 'stat':
+                    continue
+                  histoUp = self._getHisto(cutName, variableName, sampleName, "_"+nuisance['name']+"Up")
+                  if histoUp != None:
+                    histoUp.SetName(str(histoUp.GetName()).replace("histo_"+sampleName, "histo_"+sampleName+"_KEYS"))
+                    histoUp.Write()
+                    print "saving unmodified", cutName, variableName, sampleName, nuisanceName+"Up"
+                  histoDown = self._getHisto(cutName, variableName, sampleName, "_"+nuisance['name']+"Down")
+                  if histoDown != None:
+                    histoDown.SetName(str(histoDown.GetName()).replace("histo_"+sampleName, "histo_"+sampleName+"_KEYS"))
+                    histoDown.Write()
+                    print "saving unmodified", cutName, variableName, sampleName, nuisanceName+"Down"
+                continue
+              except ValueError:
+                pass
               
               if structureFile[sampleName]['isData'] == 1 :
                 pass
