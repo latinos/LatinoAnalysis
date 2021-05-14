@@ -322,6 +322,8 @@ class DatacardFactory:
                     entryName = nuisance['name']
                   else:
                     entryName = 'CMS_' + nuisance['name']
+                  if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                    entryName += "_"+cutName
 
                   card.write(entryName.ljust(80-20))
 
@@ -401,7 +403,12 @@ class DatacardFactory:
                           suffixOut = None
                         else:
                           suffixOut = '_CMS_' + nuisance['name']
-
+                        if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                          if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
+                            suffixOut = "_"+nuisance['name']
+                          else:
+                            suffixOut = '_CMS_' + nuisance['name']
+                          suffixOut += "_"+cutName 
                         symmetrize = 'symmetrize' in nuisance and nuisance['symmetrize']
 
                         saved = self._saveNuisanceHistos(cutName, variableName, sampleName, '_' + nuisance['name'], suffixOut, symmetrize)

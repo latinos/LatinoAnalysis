@@ -98,89 +98,107 @@ class KernelFactory:
         pdf = ROOT.RooKeysPdf ("weighted", "weighted", roovars[0], dataset, ROOT.RooKeysPdf.MirrorBoth)
       else:
         pdf = ROOT.RooNDKeysPdfAnalytical("weighted", "weighted", ROOT.RooArgList(*roovars), dataset, "mad")
-      
-      atree = rnp.tree2array(treeIn)
-      tf = tempfile.NamedTemporaryFile()
-      fileout=ROOT.TFile(tf.name, "recreate")
-      fileout.cd()
-      integrals=np.empty([resamples, (len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)])
-      for ir in range(resamples):
-        sumw = -999
-        while sumw < 0:
-          atreesub = resample(atree, n_samples=treeIn.GetEntries(), random_state=1000+ir)
-          sumw = np.sum(atreesub['weight'])
-        treesub = rnp.array2tree(atreesub)
-        for ivar in range(len(branches)):
-          roovars[ivar].setRange(vbinedges[0][0], vbinedges[ivar][-1])
-        datasetsub = self.datasetFromTree(treesub, roovars, "datasetsub"+str(ir), reweight)
-        print datasetsub.sumEntries()
-        datasetsub.get().Print()
-         #ROOT.RooDataSet("datasetsub"+str(ir), "datasetsub"+str(ir), treesub, ROOT.RooArgSet(*(roovars + [rooweight])), "", "weight")
-        if len(branches)==1:
-          pdf = ROOT.RooKeysPdf ("weighted"+str(ir), "weighted"+str(ir), roovars[0], datasetsub, ROOT.RooKeysPdf.MirrorBoth)
-        else:
-          pdf = ROOT.RooNDKeysPdfAnalytical ("weighted"+str(ir), "weighted"+str(ir), ROOT.RooArgList(*roovars), datasetsub, "mad")
-        #normalization = pdf.analyticalIntegral(1)  
-        for binX in range(len(vbinedges[0])-1):
-          if len(branches)==1:
-            roovars[0].setRange("binX"+str(binX), vbinedges[0][binX], vbinedges[0][binX+1])
-            value = pdf.createIntegral(roovars[0], roovars[0], "binX"+str(bin)).getVal()
-            integrals[i, binX] = value 
-          else:
-            for binY in range(len(vbinedges[1])-1):
-              rangename = "binX"+str(binX)+"binY"+str(binY)
-              roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
-              roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
-              value = pdf.analyticalIntegral(1) 
-              integrals[ir, binX*(len(vbinedges[0])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
-        del datasetsub
-        del pdf
-      print integrals
-      normalizations = np.sum(integrals, axis=1)
-      #print normalizations
-      integrals = integrals[normalizations>0, :]
-      normalizations = normalizations[normalizations>0]
-      #print normalizations
-      integrals /= np.where(normalizations == 0, 1, normalizations)[:, np.newaxis]
-      #print normalizations, integrals
-      #print integrals.sum(axis = 1)
-      average = np.mean(integrals, axis=0)
-      #print average
-       
-      cova_m = np.cov(np.transpose(integrals))
-      try:
-        w, v = LA.eig(cova_m)
-        invv = LA.inv(v)
-      except:
-        w = np.zeros_like(averages)
-        v = np.identity(averages.shape[0])
-        invv = v
-
-      #protect against negative eigenvalues
-      w  = w.clip(0,10000)
-      #print (v)
-      #print (w)
-      sqrtw = np.sqrt(w)
-      average_rotated = np.matmul(v,average)
-      
-      # compute a number of variations equal to the number of bins, but in the orthogonal space
+    
       nvariarions = (len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)
-      variations_up=np.empty([nvariarions, nvariarions])
-      variations_do=np.empty([nvariarions, nvariarions])
-      
-      for bin in range(nvariarions):
-        average_rotated_shifted_up = np.copy(average_rotated)
-        average_rotated_shifted_up[bin] =  average_rotated_shifted_up[bin]+sqrtw[bin]
-        shifted_up = np.matmul(invv,average_rotated_shifted_up)
-        variations_up[bin] = shifted_up
+      # in this case do not do resampling 
+      if not saveEigenVariations:
+        average=np.empty([(len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)])
+        for binX in range(len(vbinedges[0])-1):
+            if len(branches)==1:
+              roovars[0].setRange("binX"+str(binX), vbinedges[0][binX], vbinedges[0][binX+1])
+              value = pdf.createIntegral(roovars[0], roovars[0], "binX"+str(bin)).getVal()
+              average[binX] = value
+            else:
+              for binY in range(len(vbinedges[1])-1):
+                rangename = "binX"+str(binX)+"binY"+str(binY)
+                roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
+                roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
+                value = pdf.analyticalIntegral(1)
+                average[binX*(len(vbinedges[0])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
+        average /= np.sum(average) 
+      # in this case we resample
+      else:
+        atree = rnp.tree2array(treeIn)
+        tf = tempfile.NamedTemporaryFile()
+        fileout=ROOT.TFile(tf.name, "recreate")
+        fileout.cd()
+        integrals=np.empty([resamples, (len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)])
+        for ir in range(resamples):
+          sumw = -999
+          while sumw < 0:
+            atreesub = resample(atree, n_samples=treeIn.GetEntries(), random_state=1000+ir)
+            sumw = np.sum(atreesub['weight'])
+          treesub = rnp.array2tree(atreesub)
+          for ivar in range(len(branches)):
+            roovars[ivar].setRange(vbinedges[0][0], vbinedges[ivar][-1])
+          datasetsub = self.datasetFromTree(treesub, roovars, "datasetsub"+str(ir), reweight)
+          print datasetsub.sumEntries()
+          datasetsub.get().Print()
+           #ROOT.RooDataSet("datasetsub"+str(ir), "datasetsub"+str(ir), treesub, ROOT.RooArgSet(*(roovars + [rooweight])), "", "weight")
+          if len(branches)==1:
+            pdf = ROOT.RooKeysPdf ("weighted"+str(ir), "weighted"+str(ir), roovars[0], datasetsub, ROOT.RooKeysPdf.MirrorBoth)
+          else:
+            pdf = ROOT.RooNDKeysPdfAnalytical ("weighted"+str(ir), "weighted"+str(ir), ROOT.RooArgList(*roovars), datasetsub, "mad")
+          #normalization = pdf.analyticalIntegral(1)  
+          for binX in range(len(vbinedges[0])-1):
+            if len(branches)==1:
+              roovars[0].setRange("binX"+str(binX), vbinedges[0][binX], vbinedges[0][binX+1])
+              value = pdf.createIntegral(roovars[0], roovars[0], "binX"+str(bin)).getVal()
+              integrals[i, binX] = value 
+            else:
+              for binY in range(len(vbinedges[1])-1):
+                rangename = "binX"+str(binX)+"binY"+str(binY)
+                roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
+                roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
+                value = pdf.analyticalIntegral(1) 
+                integrals[ir, binX*(len(vbinedges[0])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
+          del datasetsub
+          del pdf
+        print integrals
+        normalizations = np.sum(integrals, axis=1)
+        #print normalizations
+        integrals = integrals[normalizations>0, :]
+        normalizations = normalizations[normalizations>0]
+        #print normalizations
+        integrals /= np.where(normalizations == 0, 1, normalizations)[:, np.newaxis]
+        #print normalizations, integrals
+        #print integrals.sum(axis = 1)
+        average = np.mean(integrals, axis=0)
+        #print average
+         
+        cova_m = np.cov(np.transpose(integrals))
+        try:
+          w, v = LA.eig(cova_m)
+          invv = LA.inv(v)
+        except:
+          w = np.zeros_like(average)
+          v = np.identity(average.shape[0])
+          invv = v
 
-        average_rotated_shifted_do = np.copy(average_rotated)
-        average_rotated_shifted_do[bin] =  average_rotated_shifted_do[bin]-sqrtw[bin]
-        shifted_do = np.matmul(invv,average_rotated_shifted_do)
-        variations_do[bin] = shifted_do
-      #print average
-      #print variations_up
-      #print variations_do      
+        #protect against negative eigenvalues
+        w  = w.clip(0,10000)
+        #print (v)
+        #print (w)
+        sqrtw = np.sqrt(w)
+        average_rotated = np.matmul(v,average)
+        
+        # compute a number of variations equal to the number of bins, but in the orthogonal space
+        variations_up=np.empty([nvariarions, nvariarions])
+        variations_do=np.empty([nvariarions, nvariarions])
+        
+        for bin in range(nvariarions):
+          average_rotated_shifted_up = np.copy(average_rotated)
+          average_rotated_shifted_up[bin] =  average_rotated_shifted_up[bin]+sqrtw[bin]
+          shifted_up = np.matmul(invv,average_rotated_shifted_up)
+          variations_up[bin] = shifted_up
+
+          average_rotated_shifted_do = np.copy(average_rotated)
+          average_rotated_shifted_do[bin] =  average_rotated_shifted_do[bin]-sqrtw[bin]
+          shifted_do = np.matmul(invv,average_rotated_shifted_do)
+          variations_do[bin] = shifted_do
+        #print average
+        #print variations_up
+        #print variations_do      
       
       self._fileOut.cd ( cutName + "/" + variableName)
       nominal = ROOT.TH1D("histo_"+newSampleName, "histo_"+newSampleName, nvariarions, 0., float(nvariarions))
