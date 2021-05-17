@@ -39,7 +39,7 @@ class KernelFactory:
 
     # _____________________________________________________________________________
     # _____________________________________________________________________________
-    def runAlgo(self, fileTreeIn, treeName, cutName, variableName, variable, sampleName, newSampleName, reweight = "", saveEigenVariations=True, resamples=10):
+    def runAlgo(self, fileTreeIn, treeName, cutName, variableName, variable, sampleName, newSampleName, reweight = "", saveEigenVariations=True, resamples=100):
       treeInOrig = fileTreeIn.Get(cutName + "/" + treeName +"/"+treeName+'_'+sampleName)
       if treeInOrig == None:
          raise RuntimeError('Missing tree '+ cutName + "/" + treeName+"/"+treeName+'_'+sampleName)
@@ -56,7 +56,7 @@ class KernelFactory:
       shape = SF._makeshape(variableName, variable['range']) 
       if len(branches) != shape.GetDimension():
         raise RuntimeError('Mismatch between expression '+variable['name']+" and dimension of the allocated shape "+str(shape.GetDimension()))
-      fold = '0'
+      fold = 0
       if 'fold' in variable.keys():
         fold = variable['fold']
       # select only events with weight different from 0
@@ -114,7 +114,7 @@ class KernelFactory:
                 roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
                 roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
                 value = pdf.analyticalIntegral(1)
-                average[binX*(len(vbinedges[0])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
+                average[binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
         average /= np.sum(average) 
       # in this case we resample
       else:
@@ -150,8 +150,9 @@ class KernelFactory:
                 rangename = "binX"+str(binX)+"binY"+str(binY)
                 roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
                 roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
-                value = pdf.analyticalIntegral(1) 
-                integrals[ir, binX*(len(vbinedges[0])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
+                value = pdf.analyticalIntegral(1)
+                print "setting bin", binX*(len(vbinedges[1])-1)+binY, "to", value 
+                integrals[ir, binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
           del datasetsub
           del pdf
         print integrals
@@ -177,8 +178,9 @@ class KernelFactory:
 
         #protect against negative eigenvalues
         w  = w.clip(0,10000)
-        #print (v)
-        #print (w)
+        print v.shape
+        print w
+        print average.shape
         sqrtw = np.sqrt(w)
         average_rotated = np.matmul(v,average)
         
@@ -337,7 +339,7 @@ class KernelFactory:
       
                   if 'samples' in nuisance and sampleName not in nuisance['samples']:
                     continue
-                  
+                    
                   if nuisance['type'] == 'shape':
                     if nuisance['kind'] == 'weight':
                       self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS_"+nuisance['name']+"Up", 'reweight_'+nuisance['name']+"Up", saveEigenVariations=False)
