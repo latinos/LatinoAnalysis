@@ -151,7 +151,7 @@ class KernelFactory:
                 roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
                 roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
                 value = pdf.analyticalIntegral(1)
-                print "setting bin", binX*(len(vbinedges[1])-1)+binY, "to", value 
+                #print "setting bin", binX*(len(vbinedges[1])-1)+binY, "to", value 
                 integrals[ir, binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
           del datasetsub
           del pdf
