@@ -293,6 +293,8 @@ class KernelFactory:
               try:
                 # save "events unmodified, just change the name"
                 float(variable['name'])
+                if sampleName not in samplesToTreat:
+                  continue
                 histo.SetName("histo_"+sampleName+"_KEYS")
                 histo.SetTitle("histo_"+sampleName+"_KEYS")
                 print "saving unmodified", cutName, variableName, sampleName
