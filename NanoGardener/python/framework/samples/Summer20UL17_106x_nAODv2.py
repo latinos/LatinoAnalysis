@@ -1,3 +1,5 @@
+Samples = {}
+
 #--->Updated!###-----------------------------------------------##
 Samples['WZJJ_EWK_TL'] = {'nanoAOD' :'/WZJJ_EWK_TLPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM'}
 Samples['WZJJ_EWK_TT'] = {'nanoAOD' :'/WZJJ_EWK_TTPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM'}

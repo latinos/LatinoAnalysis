@@ -132,7 +132,7 @@ class addTnpTree(Module):
             
 
         # Compute HT and MET
-        ht = 0; met = event.METFixEE2017_pt if self.year == 2017 else event.MET_pt
+        ht = 0;  met =  event.MET_pt #met = event.METFixEE2017_pt if self.year == 2017 else event.MET_pt
         jetId = 1 if self.year == 2016 else 2 
         for j in jet: 
             ht += j.pt if j.pt > 30 and abs(j.eta)  < 2.4 and j.jetId&(1<<jetId) else 0

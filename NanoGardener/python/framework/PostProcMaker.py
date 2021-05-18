@@ -688,7 +688,9 @@ class PostProcMaker():
              if useLocal:
                f = ROOT.TFile.Open(iFile, "READ")
              else:
+               print self._aaaXrootd+iFile
                f = ROOT.TFile.Open(self._aaaXrootd+iFile, "READ")
+               #f = ROOT.TFile.Open(self._aaaXrootd+iFile) 
              Runs = f.Get("Runs")
              for iRun in Runs :
                trailer = ""
