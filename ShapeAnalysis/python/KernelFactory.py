@@ -101,23 +101,28 @@ class KernelFactory:
     
       nvariarions = (len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)
       # in this case do not do resampling 
-      if not saveEigenVariations:
-        average=np.empty([(len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)])
-        for binX in range(len(vbinedges[0])-1):
-            if len(branches)==1:
-              roovars[0].setRange("binX"+str(binX), vbinedges[0][binX], vbinedges[0][binX+1])
-              value = pdf.createIntegral(roovars[0], roovars[0], "binX"+str(bin)).getVal()
-              average[binX] = value
-            else:
-              for binY in range(len(vbinedges[1])-1):
-                rangename = "binX"+str(binX)+"binY"+str(binY)
-                roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
-                roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
-                value = pdf.analyticalIntegral(1)
-                average[binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
-        average /= np.sum(average) 
+      #if not saveEigenVariations:
+      average=np.empty([(len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)])
+      for binX in range(len(vbinedges[0])-1):
+          if len(branches)==1:
+            roovars[0].setRange("binX"+str(binX), vbinedges[0][binX], vbinedges[0][binX+1])
+            value = pdf.createIntegral(roovars[0], roovars[0], "binX"+str(bin)).getVal()
+            average[binX] = value
+          else:
+            for binY in range(len(vbinedges[1])-1):
+              rangename = "binX"+str(binX)+"binY"+str(binY)
+              roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
+              roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
+              value = pdf.analyticalIntegral(1)
+              average[binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
+      average /= np.sum(average)
+      self._fileOut.cd ( cutName + "/" + variableName)
+      nominal = ROOT.TH1D("histo_"+newSampleName, "histo_"+newSampleName, nvariarions, 0., float(nvariarions))
+      rnp.array2hist(average*dataset.sumEntries(), nominal)
+      nominal.Write()
+
       # in this case we resample
-      else:
+      if saveEigenVariations:
         atree = rnp.tree2array(treeIn)
         tf = tempfile.NamedTemporaryFile()
         fileout=ROOT.TFile(tf.name, "recreate")
@@ -202,12 +207,13 @@ class KernelFactory:
         #print variations_up
         #print variations_do      
       
-      self._fileOut.cd ( cutName + "/" + variableName)
-      nominal = ROOT.TH1D("histo_"+newSampleName, "histo_"+newSampleName, nvariarions, 0., float(nvariarions))
-      rnp.array2hist(average*dataset.sumEntries(), nominal)
-      nominal.Write()
+      #self._fileOut.cd ( cutName + "/" + variableName)
+      #nominal = ROOT.TH1D("histo_"+newSampleName, "histo_"+newSampleName, nvariarions, 0., float(nvariarions))
+      #rnp.array2hist(average*dataset.sumEntries(), nominal)
+      #nominal.Write()
       
-      if saveEigenVariations == True:
+      #if saveEigenVariations == True:
+        self._fileOut.cd ( cutName + "/" + variableName)
         for ivar in range(nvariarions):
           variedUp =  ROOT.TH1D("histo_"+newSampleName+"_eigenVariation"+str(ivar)+"Up", "histo_"+newSampleName+"_eigenVariation"+str(ivar)+"Up", nvariarions, 0., float(nvariarions))
           rnp.array2hist(variations_up[ivar]*dataset.sumEntries(), variedUp)
