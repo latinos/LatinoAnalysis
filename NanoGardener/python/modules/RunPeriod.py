@@ -58,7 +58,10 @@ class RunPeriod(Module):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.TM_runInt  = {}
         for RunP in self.Trigger[self.cmssw]:
-           self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
+           if 'runList' in self.Trigger[self.cmssw][RunP].keys() :
+             self.TM_runInt[RunP]  = {'l': self.Trigger[self.cmssw][RunP]['runList'] }   
+           else: 
+             self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
 
         # Set some run/event specific var
         self.total_lum = 0.
@@ -76,7 +79,11 @@ class RunPeriod(Module):
     def _run_period(self, run, event_seed=None):
         if self.isData:
            for RunP in self.TM_runInt:
-              if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
+             if 'l' in self.TM_runInt[RunP].keys() :
+               for iRun in self.TM_runInt[RunP]['l'] : 
+                 if run == iRun : return RunP
+             else:
+               if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
         else: 
          toss_a_coin = get_rndm(event_seed)
          for iPeriod in range(1,len(self.RunFrac)) :
@@ -92,6 +99,7 @@ class RunPeriod(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         run_p = self._run_period(eval(self.run))
+        print eval(self.run) , run_p
         for name in self.NewVar['I']: 
           if 'run_period' in name : self.out.fillBranch(name, run_p)  
 

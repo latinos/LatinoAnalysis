@@ -149,7 +149,9 @@ Trigger = {
                                 },
                           # Run>=278273: Switch to DZ version of E-Mu triggers
                           # OLD: 4  :  { 'begin' : 278273 , 'end' : 281612 , 'lumi' : 9.818  ,
-                          4  :  { 'begin' : 278273 , 'end' : 278808 , 'lumi' : 2.041  ,
+                          #4  :  { 'begin' : 278273 , 'end' : 278808 , 'lumi' : 2.041  ,
+                          4  :  { 'runList' : [277932, 277934, 277981, 277991, 277992, 278017, 278018, 278167, 278175, 278193, 278239, 278240, 278273, 278274, 278288, 278289, 278290, 278308, 278309, 278310, 278315, 278345, 278346, 278349, 278366, 278406, 278509, 278761, 278770, 278806, 278807] ,
+                                  'lumi' : 2.041  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -191,11 +193,58 @@ Trigger = {
                                                 'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
                                               } ,
                                 },
+
+
+                          5  :  { 'runList' : 	[278769, 278801, 278802, 278803, 278804, 278805, 278808] ,
+                                  'lumi' : 2.041  ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  { 
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                },
+
+
                           # No change of trigger, same as period 4
                           # END of HIP problem -> Muon ID/ISO SF change
                           #    Run2016G |   278820 | 280385
                           #    Run2016H |   280919 |
-                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 7.540  ,
+                          6  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 7.540  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -238,7 +287,7 @@ Trigger = {
                                               } ,
                                 },
                           # Run>=281613: Switch to DZ version of Double Mu triggersA : Lumi 8.606 - 0.860 = 7.746 (to accomodate space for pseudo period 7)
-                          6  :  { 'begin' : 281613 , 'end' : 284042 , 'lumi' : 7.746  ,
+                          7  :  { 'begin' : 281613 , 'end' : 284042 , 'lumi' : 7.746  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -283,7 +332,7 @@ Trigger = {
                                 }, 
                           # Run>=281613: Switch to DZ version of Double Mu triggers ... Few LS where HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL is seeded by L1_Mu23_EG10 
                           # Attributed to last run as a trick to switch to the lower efficiency
-                          7  :  { 'begin' : 284043 , 'end' : 284044 , 'lumi' : 0.860  ,
+                          8  :  { 'begin' : 284043 , 'end' : 284044 , 'lumi' : 0.860  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
