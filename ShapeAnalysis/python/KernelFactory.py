@@ -169,7 +169,7 @@ class KernelFactory:
         integrals /= np.where(normalizations == 0, 1, normalizations)[:, np.newaxis]
         #print normalizations, integrals
         #print integrals.sum(axis = 1)
-        average = np.mean(integrals, axis=0)
+        #average = np.mean(integrals, axis=0)
         #print average
          
         cova_m = np.cov(np.transpose(integrals))
