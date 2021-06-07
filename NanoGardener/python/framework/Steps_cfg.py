@@ -1084,6 +1084,7 @@ Steps = {
                   'subTargets' : ['RunPeriodMC','puW','baseW'] ,
                   'onlySample' : [ 
                                   'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO','DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_LO', 
                                  ] ,
               }, 
 
@@ -1182,6 +1183,7 @@ Steps = {
                   'declare'  : 'TnPMu = lambda : addTnpTree(int("RPLME_YEAR"),"Muon")', 
                   'module'   : 'TnPMu()', 
                   'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO','DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_LO', 
                                   # Run2016 v6
                                   'SingleMuon_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleMuon_Run2016C-Nano25Oct2019-v1',
@@ -1235,6 +1237,7 @@ Steps = {
                   'declare'  : 'TnPEle = lambda : addTnpTree(int("RPLME_YEAR"),"Electron")',
                   'module'   : 'TnPEle()', 
                   'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO','DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_LO', 
                                   # Run2016 v6
                                   'SingleElectron_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleElectron_Run2016C-Nano25Oct2019-v1',
