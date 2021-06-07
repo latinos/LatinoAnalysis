@@ -572,13 +572,22 @@ Productions = {
 
 #################################### nAODv8 UL DATA  ##############################################
  # -------- 2016 DATA UL2016 nAODv8: Full2016v8
- 'Run2016_UL2016_nAODv8_Full2016v8': {
+ 'Run2016_UL2016_nAODv8_HIPM_Full2016v8': {
                        'isData'  : True ,
                        'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_nAODv8.py' ,
-                       'cmssw'   : 'Full2016v8',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_HIPM_nAODv8.py' ,
+                       'cmssw'   : 'Full2016v8HIPM',
                        'year'    : '2016' ,
                    },
+
+ 'Run2016_UL2016_nAODv8_noHIPM_Full2016v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_noHIPM_nAODv8.py' ,
+                       'cmssw'   : 'Full2016v8noHIPM',
+                       'year'    : '2016' ,
+                   },
+
 
  # -------- 2017 DATA UL2017 nAODv8: Full2017v8
  'Run2017_UL2017_nAODv8_Full2017v8': {
@@ -691,17 +700,26 @@ Productions = {
 
 #################################### nAODv8 MC ##############################################
 
- # -------- 2016 MC 102X nAODv7: Full2016v7
- #'Summer16_102X_nAODv7_Full2016v7': {
- #                      'isData'  : False ,
- #                      'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer16_102X_nAODv7.py' ,
- #                      'cmssw'   : 'Full2016v7' ,
- #                      'year'    : '2016' ,
+ # -------- 2016 MC 106X nAODv8: Full2016v8
+ 'Summer20UL16_106x_nAODv8_HIPM_Full2016v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16APV_106x_nAODv2.py' ,
+                       'cmssw'   : 'Full2016v8HIPM' ,
+                       'year'    : '2016' ,
  #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
- #                      'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
- #                      'YRver'   : ['YR4','13TeV'] ,
- #                  },
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 
+ 'Summer20UL16_106x_nAODv8_noHIPM_Full2016v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16_106x_nAODv2.py' ,
+                       'cmssw'   : 'Full2016v8noHIPM' ,
+                       'year'    : '2016' ,
+ #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 
  # -------- 2017 MC UL
  'Summer20UL17_106x_nAODv8_Full2017v8' : {

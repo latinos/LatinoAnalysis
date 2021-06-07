@@ -16,10 +16,9 @@ PUCfg = {
                    'doSysVar'    : True ,
                 } ,
 
- 'Full2016v8' : {
+ 'Full2016v8HIPM' : {
                    'srcfile'     : "auto" ,
-                   'targetfiles' : { '1-5' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016BCDEF_PU.root' ,
-                                     '6-7' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016GH_PU.root' ,
+                   'targetfiles' : { '1-3' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016BCDEF_PU.root' ,
                                    } ,
                    'srchist'     : "pileup"   ,
                    'targethist'  : "pileup"   ,
@@ -29,6 +28,22 @@ PUCfg = {
                    'nvtx_var'    : "Pileup_nTrueInt" ,
                    'doSysVar'    : True ,
                 } ,
+
+
+ 'Full2016v8noHIPM' : {
+                   'srcfile'     : "auto" ,
+                   'targetfiles' : { '4-4' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016BCDEF_PU.root' ,
+                                     '5-7' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016GH_PU.root' ,
+                                   } ,
+                   'srchist'     : "pileup"   ,
+                   'targethist'  : "pileup"   ,
+                   'name'        : "puWeight" ,
+                   'norm'        : True       ,
+                   'verbose'     : False      ,
+                   'nvtx_var'    : "Pileup_nTrueInt" ,
+                   'doSysVar'    : True ,
+                } ,
+
 
  'Full2017v2' : {
                    'srcfile'     : "auto" ,

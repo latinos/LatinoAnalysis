@@ -2,11 +2,29 @@ Trigger = {
 
 # ---------------------------- Full2016v8 ---------------------------------
 
+#   ------------------------------
+#    runPeriod| from run | to run
+#   ----------+----------+--------
+#        1    |   273158 | 277420  -> 16.802739097 /fb    (Run B->E: no DZ filters on e-mu + HIPM problem)
+#        2    |     |              ->  1.063261220 /fb    (Run F: no DZ filters on e-mu + HIPM problem)
+#                   +---> [277932, 277934, 277981, 277991, 277992, 278017, 278018, 278167, 278175, 278193, 278239, 278240] 
+#        3    |     |              ->  1.655228036 /fb    (Run F: DZ filters on e-mu + HIPM problem)
+#                   +---> [278273, 278274, 278288, 278289, 278290, 278308, 278309, 278310, 278315, 278345, 278346, 278349, 278366, 278406, 278509, 278761, 278770, 278806, 278807]
+#        4    |     |              ->  0.418771191 /fb     (Run F: DZ filters on e-mu )
+#                   +---> [278769, 278801, 278802, 278803, 278804, 278805, 278808]                           
+#        5    |  278820  | 281612  ->  7.653261227 /fb  
+#        6    |  281613  | 284044  ->  8.740119304 /fb
+#        7    |  10% of period 6 to accomodate different L1 seeds (prescale in some lumi sections)
+
+#    Total lumi: 36.333380074 /fb 
+#    (brilcalc lumi --normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json -u /fb -i work/cms/HWWRun2/UL/CMSSW_10_6_20/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt)
+
+
 
      'Full2016v8HIPM'   : {
 
                           # Run B->E: no DZ filters on e-mu + HIPM problem
-                          1  :  { 'begin' : 273158 , 'end' : 277420 , 'lumi' : 0.0 ,
+                          1  :  { 'begin' : 273158 , 'end' : 277420 , 'lumi' : 16.802739097 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -52,7 +70,7 @@ Trigger = {
 
                             # Run F: no DZ filters on e-mu + HIPM problem
                             2:  { 'runList' : 	[277932, 277934, 277981, 277991, 277992, 278017, 278018, 278167, 278175, 278193, 278239, 278240] , 
-                                  'lumi' : 0.0 ,
+                                  'lumi' : 1.063261220 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -99,7 +117,7 @@ Trigger = {
 
                             # Run F: DZ filters on e-mu + HIPM problem
                             3:  { 'runList' :  [278273, 278274, 278288, 278289, 278290, 278308, 278309, 278310, 278315, 278345, 278346, 278349, 278366, 278406, 278509, 278761, 278770, 278806, 278807] ,
-                                  'lumi' : 0.0 ,  
+                                  'lumi' : 1.655228036 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -149,7 +167,7 @@ Trigger = {
      'Full2016v8noHIPM' : {
                             # Run F: DZ filters on e-mu 
                             4:  { 'runList' : [278769, 278801, 278802, 278803, 278804, 278805, 278808] ,
-                                  'lumi' : 0.0 ,
+                                  'lumi' : 0.418771191 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -198,7 +216,7 @@ Trigger = {
                           # END of HIP problem -> Muon ID/ISO SF change
                           #    Run2016G |   278820 | 280385
                           #    Run2016H |   280919 |
-                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 7.540  ,
+                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 281612  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -240,8 +258,8 @@ Trigger = {
                                                 'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
                                               } ,
                                 },
-                          # Run>=281613: Switch to DZ version of Double Mu triggersA : Lumi 8.606 - 0.860 = 7.746 (to accomodate space for pseudo period 7)
-                          6  :  { 'begin' : 281613 , 'end' : 284042 , 'lumi' : 7.746  ,
+                          # Run>=281613: Switch to DZ version of Double Mu triggersA : Lumi 8.740119304 - 0.8740119304  = 7.866107374 (to accomodate space for pseudo period 7)
+                          6  :  { 'begin' : 281613 , 'end' : 284042 , 'lumi' : 7.866107374  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -286,7 +304,7 @@ Trigger = {
                                 }, 
                           # Run>=281613: Switch to DZ version of Double Mu triggers ... Few LS where HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL is seeded by L1_Mu23_EG10 
                           # Attributed to last run as a trick to switch to the lower efficiency
-                          7  :  { 'begin' : 284043 , 'end' : 284044 , 'lumi' : 0.860  ,
+                          7  :  { 'begin' : 284043 , 'end' : 284044 , 'lumi' : 0.8740119304  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                 'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
@@ -337,7 +355,7 @@ Trigger = {
 
         'Full2017v8'  :  {  
                           # Run B 
-                          1  :  { 'begin' : 297020 , 'end' : 299329 , 'lumi' : 4.793 ,
+                          1  :  { 'begin' : 297020 , 'end' : 299329 , 'lumi' : 4.803371586 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017B.txt' ,
                                                 'SingleEle'         : 'Full2017v6/mvaWP90/Ele35_pt_eta_efficiency_withSys_Run2017B.txt' ,
@@ -384,7 +402,7 @@ Trigger = {
                                 },
 
                           # Run C
-                          2  :  { 'begin' : 299337 , 'end' : 302029 , 'lumi' : 9.633 ,
+                          2  :  { 'begin' : 299337 , 'end' : 302029 , 'lumi' : 9.574029838  ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                                 'SingleEle'         : 'Full2017v6/mvaWP90/Ele35_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
@@ -431,7 +449,7 @@ Trigger = {
 
                           # Run2017D       302030  303434     4.248
 
-                          3  :  { 'begin' : 302030 , 'end' : 303434  , 'lumi' : 4.248 ,
+                          3  :  { 'begin' : 302030 , 'end' : 303434  , 'lumi' : 4.247792714 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                                 'SingleEle'         : 'Full2017v6/mvaWP90/Ele35_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
@@ -476,7 +494,7 @@ Trigger = {
 
                           # Run2017E       303435  304826     9.315
 
-                          4  :  { 'begin' : 303435 , 'end' : 304826  , 'lumi' : 9.315 ,
+                          4  :  { 'begin' : 303435 , 'end' : 304826  , 'lumi' : 9.314581016 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                                 'SingleEle'         : 'Full2017v6/mvaWP90/Ele35_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
@@ -522,7 +540,7 @@ Trigger = {
 
                           # Run2017F       304911  306462    13.540
 
-                          5  :  { 'begin' : 304911 , 'end' : 306462  , 'lumi' : 13.540 ,
+                          5  :  { 'begin' : 304911 , 'end' : 306462  , 'lumi' : 13.539905374 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017F.txt' ,
                                                 'DoubleEleLegLowPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2017F.txt' ,
                                                 'SingleEle'         : 'Full2017v6/mvaWP90/Ele35_pt_eta_efficiency_withSys_Run2017F.txt' ,
@@ -571,16 +589,11 @@ Trigger = {
 
 # --------------------------- Full2018v8 ---------------------------------
 
-   # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmV2018Analysis
-   # Using lumi obtained with normtag
-   # Full 2018 lumi --> 58.826
-   
-   # export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH
-   # brilcalc lumi -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/PromptReco/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt
+   # Full 2018 lumi --> 59.832475339
 
         'Full2018v8'  :  {
                           # Full 2018 
-                          1  :  { 'begin' : 315252 , 'end' : 325175 , 'lumi' : 58.826 ,
+                          1  :  { 'begin' : 315252 , 'end' : 325175 , 'lumi' : 59.832475339 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2018v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2018.txt',
                                                 'DoubleEleLegLowPt' : 'Full2018v6/mvaWP90/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2018.txt',
                                                 'SingleEle'         : 'Full2018v6/mvaWP90/Ele32_pt_eta_efficiency_withSys_Run2018.txt',
