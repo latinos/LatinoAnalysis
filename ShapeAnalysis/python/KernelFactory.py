@@ -59,6 +59,9 @@ class KernelFactory:
       fold = 0
       if 'fold' in variable.keys():
         fold = variable['fold']
+      rho=1.  
+      if 'rho' in variable.keys():
+        rho = variable['rho']
       # select only events with weight different from 0
       selectionW = "abs(weight) > 0."
       #if weightSuffix != "":
@@ -75,8 +78,11 @@ class KernelFactory:
           axis = shape.GetYaxis()
         else:
           raise RuntimeError("cannot handle histo with "+len(branches)+" dimensions")
-        lowerbound = shape.GetXaxis().GetXmin() if fold != 1 and fold != 3 else 0  # will not work for non positive deined observables
-        upperbound = shape.GetXaxis().GetXmax() if fold != 2 and fold != 3 else shape.GetXaxis().GetXmax()*20 
+        lowerbound = axis.GetXmin() if fold != 1 and fold != 3 else 0  # will not work for non positive deined observables
+        upperbound = axis.GetXmax() if fold != 2 and fold != 3 else axis.GetXmax()*20
+        #if (ib == 0):
+        #lowerbound = axis.GetXmin()
+        #upperbound = axis.GetXmax()
         binning = ROOT.RooBinning(lowerbound, upperbound)
         binedges = [lowerbound]
         for ibin in range(1, axis.GetNbins()):
@@ -86,22 +92,35 @@ class KernelFactory:
         binedges.append(upperbound) 
         vbinedges.append(binedges)
         roovar = ROOT.RooRealVar(branch, branch, lowerbound, upperbound)
+        print "setting", roovar.GetName(), lowerbound, upperbound
         #roovar.setBinning(binning)
         roovars.append(roovar)
       print vbinedges
       if treeIn.GetEntries() == 0:
         print "WARNING: tree"+ cutName + "/" + variableName+"/"+treeName+'_'+sampleName+" has 0 entries"
         return 0
-     
+    
+      # generate samples cutting overflows/underflows
+      #atree = rnp.tree2array(treeIn)
+      #for ivar,var in enumerate(roovars):
+      #  atree[var.GetName()][atree[var.GetName()]<vbinedges[ivar][0]] = vbinedges[ivar][0] + 1
+      #  atree[var.GetName()][atree[var.GetName()]>vbinedges[ivar][-1]] = vbinedges[ivar][-1] - 1
+      tf = tempfile.NamedTemporaryFile()
+      fileout=ROOT.TFile(tf.name, "recreate")
+      fileout.cd()
+      #print atree
+      #treeInCut = rnp.array2tree(atree)
+
+      ROOT.RooNumIntConfig.defaultConfig().setEpsAbs(1e-5)
+      ROOT.RooNumIntConfig.defaultConfig().setEpsRel(1e-5)
+
       dataset = self.datasetFromTree(treeIn, roovars, 'dataset', reweight) 
       if len(branches)==1:
         pdf = ROOT.RooKeysPdf ("weighted", "weighted", roovars[0], dataset, ROOT.RooKeysPdf.MirrorBoth)
       else:
-        pdf = ROOT.RooNDKeysPdfAnalytical("weighted", "weighted", ROOT.RooArgList(*roovars), dataset, "mad")
-    
+        pdf = ROOT.RooNDKeysPdfAnalytical("weighted", "weighted", ROOT.RooArgList(*roovars), dataset, "mad", rho)
+      print "BUILT!"  
       nvariarions = (len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)
-      # in this case do not do resampling 
-      #if not saveEigenVariations:
       average=np.empty([(len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)])
       for binX in range(len(vbinedges[0])-1):
           if len(branches)==1:
@@ -111,22 +130,32 @@ class KernelFactory:
           else:
             for binY in range(len(vbinedges[1])-1):
               rangename = "binX"+str(binX)+"binY"+str(binY)
+              print rangename
               roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
               roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
-              value = pdf.analyticalIntegral(1)
+              if binX == len(vbinedges[0])-2 or binY == len(vbinedges[1])-2:
+                value = pdf.analyticalIntegral(1)
+                print "falling back to analytical for bin",binX,binY,value
+              else:
+                value = pdf.createIntegral(ROOT.RooArgSet(*roovars), ROOT.RooArgSet(), rangename).getVal()
+                valueana = pdf.analyticalIntegral(1)
+                if abs(value-valueana)/max(value, 1e-20) > 200:
+                  value = max(value, valueana)
+                print binX,binY,value,valueana
               average[binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
-      average /= np.sum(average)
+      print average        
+      #average /= np.sum(average)
       self._fileOut.cd ( cutName + "/" + variableName)
       nominal = ROOT.TH1D("histo_"+newSampleName, "histo_"+newSampleName, nvariarions, 0., float(nvariarions))
-      rnp.array2hist(average*dataset.sumEntries(), nominal)
+      #rnp.array2hist(average*dataset.sumEntries(), nominal)
+      rnp.array2hist(average, nominal)
       nominal.Write()
-
       # in this case we resample
       if saveEigenVariations:
         atree = rnp.tree2array(treeIn)
-        tf = tempfile.NamedTemporaryFile()
-        fileout=ROOT.TFile(tf.name, "recreate")
-        fileout.cd()
+        #tf = tempfile.NamedTemporaryFile()
+        #fileout=ROOT.TFile(tf.name, "recreate")
+        #fileout.cd()
         integrals=np.empty([resamples, (len(vbinedges[0])-1) if len(branches)==1 else (len(vbinedges[0])-1)*(len(vbinedges[1])-1)])
         for ir in range(resamples):
           sumw = -999
@@ -135,7 +164,8 @@ class KernelFactory:
             sumw = np.sum(atreesub['weight'])
           treesub = rnp.array2tree(atreesub)
           for ivar in range(len(branches)):
-            roovars[ivar].setRange(vbinedges[0][0], vbinedges[ivar][-1])
+            roovars[ivar].setRange(vbinedges[ivar][0], vbinedges[ivar][-1])
+            print "resetting", roovars[ivar].GetName(), vbinedges[ivar][0], vbinedges[ivar][-1]
           datasetsub = self.datasetFromTree(treesub, roovars, "datasetsub"+str(ir), reweight)
           print datasetsub.sumEntries()
           datasetsub.get().Print()
@@ -143,7 +173,7 @@ class KernelFactory:
           if len(branches)==1:
             pdf = ROOT.RooKeysPdf ("weighted"+str(ir), "weighted"+str(ir), roovars[0], datasetsub, ROOT.RooKeysPdf.MirrorBoth)
           else:
-            pdf = ROOT.RooNDKeysPdfAnalytical ("weighted"+str(ir), "weighted"+str(ir), ROOT.RooArgList(*roovars), datasetsub, "mad")
+            pdf = ROOT.RooNDKeysPdfAnalytical ("weighted"+str(ir), "weighted"+str(ir), ROOT.RooArgList(*roovars), datasetsub, "mad", rho)
           #normalization = pdf.analyticalIntegral(1)  
           for binX in range(len(vbinedges[0])-1):
             if len(branches)==1:
@@ -155,18 +185,26 @@ class KernelFactory:
                 rangename = "binX"+str(binX)+"binY"+str(binY)
                 roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
                 roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
+                #if binX == len(vbinedges[0])-2 or binY == len(vbinedges[1])-2:
+                #  value = pdf.analyticalIntegral(1)
+                #else:   
+                #  value = pdf.createIntegral(ROOT.RooArgSet(*roovars), ROOT.RooArgSet(), rangename).getVal()
+                #  valueana = pdf.analyticalIntegral(1)
+                #  if abs(value-valueana)/max(value, 1e-20) > 200:
+                #    value = max(value, valueana)
                 value = pdf.analyticalIntegral(1)
+                #value = pdf.createIntegral(ROOT.RooArgSet(*roovars)).getVal()
                 #print "setting bin", binX*(len(vbinedges[1])-1)+binY, "to", value 
                 integrals[ir, binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
           del datasetsub
           del pdf
         print integrals
-        normalizations = np.sum(integrals, axis=1)
+        ###normalizations = np.sum(integrals, axis=1)
         #print normalizations
-        integrals = integrals[normalizations>0, :]
-        normalizations = normalizations[normalizations>0]
+        ###integrals = integrals[normalizations>0, :]
+        ###normalizations = normalizations[normalizations>0]
         #print normalizations
-        integrals /= np.where(normalizations == 0, 1, normalizations)[:, np.newaxis]
+        ###integrals /= np.where(normalizations == 0, 1, normalizations)[:, np.newaxis]
         #print normalizations, integrals
         #print integrals.sum(axis = 1)
         #average = np.mean(integrals, axis=0)
@@ -216,9 +254,11 @@ class KernelFactory:
         self._fileOut.cd ( cutName + "/" + variableName)
         for ivar in range(nvariarions):
           variedUp =  ROOT.TH1D("histo_"+newSampleName+"_eigenVariation"+str(ivar)+"Up", "histo_"+newSampleName+"_eigenVariation"+str(ivar)+"Up", nvariarions, 0., float(nvariarions))
-          rnp.array2hist(variations_up[ivar]*dataset.sumEntries(), variedUp)
+          #rnp.array2hist(variations_up[ivar]*dataset.sumEntries(), variedUp)
+          rnp.array2hist(variations_up[ivar], variedUp)
           variedDown =  ROOT.TH1D("histo_"+newSampleName+"_eigenVariation"+str(ivar)+"Down", "histo_"+newSampleName+"_eigenVariation"+str(ivar)+"Down", nvariarions, 0., float(nvariarions))
-          rnp.array2hist(variations_do[ivar]*dataset.sumEntries(), variedDown)
+          #rnp.array2hist(variations_do[ivar]*dataset.sumEntries(), variedDown)
+          rnp.array2hist(variations_do[ivar], variedDown)
           variedUp.Write()
           variedDown.Write()
       #return nominal
@@ -325,7 +365,7 @@ class KernelFactory:
               if structureFile[sampleName]['isData'] == 1 :
                 pass
               elif  sampleName in samplesToTreat:
-                self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS", "", True)
+                self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS", "")
 
       
                 #
@@ -347,7 +387,7 @@ class KernelFactory:
       
                   if 'samples' in nuisance and sampleName not in nuisance['samples']:
                     continue
-                    
+                  
                   if nuisance['type'] == 'shape':
                     if nuisance['kind'] == 'weight':
                       self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS_"+nuisance['name']+"Up", 'reweight_'+nuisance['name']+"Up", saveEigenVariations=False)

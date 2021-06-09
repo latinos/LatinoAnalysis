@@ -139,9 +139,9 @@ protected:
 
   RooListProxy _rhoList;
   TIterator *_rhoItr; //! do not persist
-
+public:
   Double_t evaluate() const;
-
+protected:
   void createPdf(Bool_t firstCall = kTRUE) const;
   void setOptions() const;
   void initialize() const;
@@ -1440,8 +1440,9 @@ Double_t RooNDKeysPdfAnalytical::evaluate() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Int_t RooNDKeysPdfAnalytical::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* /*rangeName*/) const
+Int_t RooNDKeysPdfAnalytical::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName) const
 {
+  if (rangeName) return 0 ;
   Int_t code=0;
   if (matchArgs(allVars,analVars,RooArgSet(_varList))) { code=1; }
 
