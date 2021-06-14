@@ -78,6 +78,7 @@ if __name__ == '__main__':
 
     parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
 
+    parser.add_option('--NoPreliminary', dest='NoPreliminary', help='Remove preliminary status in plots' , action='store_true', default=False) 
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -109,6 +110,7 @@ if __name__ == '__main__':
     print "                    postFit  =", opt.postFit
     print "               removeMCStat  =", opt.removeMCStat
     print "                  plotFancy  =", opt.plotFancy
+    print "              NoPreliminary  =", opt.NoPreliminary   
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -171,6 +173,8 @@ if __name__ == '__main__':
 
     factory._extraLegend = opt.extraLegend
     
+    factory._preliminary = not opt.NoPreliminary
+
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :
