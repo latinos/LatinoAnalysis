@@ -137,11 +137,12 @@ class KernelFactory:
                 value = pdf.analyticalIntegral(1)
                 print "falling back to analytical for bin",binX,binY,value
               else:
-                value = pdf.createIntegral(ROOT.RooArgSet(*roovars), ROOT.RooArgSet(), rangename).getVal()
+                value = pdf.createIntegral(ROOT.RooArgSet(*roovars), ROOT.RooArgSet()).getVal()
                 valueana = pdf.analyticalIntegral(1)
                 if abs(value-valueana)/max(value, 1e-20) > 200:
                   value = max(value, valueana)
                 print binX,binY,value,valueana
+              #value = pdf.analyticalIntegral(1)
               average[binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
       print average        
       #average /= np.sum(average)
@@ -185,14 +186,14 @@ class KernelFactory:
                 rangename = "binX"+str(binX)+"binY"+str(binY)
                 roovars[0].setRange(vbinedges[0][binX], vbinedges[0][binX+1])
                 roovars[1].setRange(vbinedges[1][binY], vbinedges[1][binY+1])
-                #if binX == len(vbinedges[0])-2 or binY == len(vbinedges[1])-2:
-                #  value = pdf.analyticalIntegral(1)
-                #else:   
-                #  value = pdf.createIntegral(ROOT.RooArgSet(*roovars), ROOT.RooArgSet(), rangename).getVal()
-                #  valueana = pdf.analyticalIntegral(1)
-                #  if abs(value-valueana)/max(value, 1e-20) > 200:
-                #    value = max(value, valueana)
-                value = pdf.analyticalIntegral(1)
+                if binX == len(vbinedges[0])-2 or binY == len(vbinedges[1])-2:
+                  value = pdf.analyticalIntegral(1)
+                else:   
+                  value = pdf.createIntegral(ROOT.RooArgSet(*roovars), ROOT.RooArgSet()).getVal()
+                  valueana = pdf.analyticalIntegral(1)
+                  if abs(value-valueana)/max(value, 1e-20) > 200:
+                    value = max(value, valueana)
+                #value = pdf.analyticalIntegral(1)
                 #value = pdf.createIntegral(ROOT.RooArgSet(*roovars)).getVal()
                 #print "setting bin", binX*(len(vbinedges[1])-1)+binY, "to", value 
                 integrals[ir, binX*(len(vbinedges[1])-1)+binY] = value if not math.isnan(value) else 0 # protect? 
@@ -365,7 +366,7 @@ class KernelFactory:
               if structureFile[sampleName]['isData'] == 1 :
                 pass
               elif  sampleName in samplesToTreat:
-                self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS", "")
+                self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS", "", False)
 
       
                 #
@@ -387,12 +388,12 @@ class KernelFactory:
       
                   if 'samples' in nuisance and sampleName not in nuisance['samples']:
                     continue
-                  
+                  '''
                   if nuisance['type'] == 'shape':
                     if nuisance['kind'] == 'weight':
                       self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS_"+nuisance['name']+"Up", 'reweight_'+nuisance['name']+"Up", saveEigenVariations=False)
                       self.runAlgo(fileTreeIn, treeName, cutName, variableName, variable, sampleName, sampleName+"_KEYS_"+nuisance['name']+"Down", 'reweight_'+nuisance['name']+"Down", saveEigenVariations=False)
-                  
+                  '''
 
                     #elif nuisance['kind'] == 'tree'
                     #
