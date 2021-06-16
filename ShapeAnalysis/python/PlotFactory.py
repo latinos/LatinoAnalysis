@@ -53,6 +53,9 @@ class PlotFactory:
         self._fileFormats = ['png', 'root']
         
         self._preliminary = True
+        
+        self._removeAllMC = False
+        
 
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
@@ -1043,14 +1046,15 @@ class PlotFactory:
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
-              
-            #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
-                if self._showIntegralLegend == 0 :
-                    tlegend.AddEntry(tgrMC, "All MC", "F")
-                else :
-                    print " nexpected  = ", nexpected
-                    tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
+            # add "All MC" in the legend
+            if not self._removeAllMC :
+              #                     if there is "histo_total" there is no need of explicit nuisances
+              if len(mynuisances.keys()) != 0 or histo_total!= None:
+                  if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(tgrMC, "All MC", "F")
+                  else :
+                      print " nexpected  = ", nexpected
+                      tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
