@@ -1083,7 +1083,7 @@ class ShapeFactory:
       if effectiveEntries <= 0:
         return changed
       scalef = histogram_to_be_fixed.Integral()/effectiveEntries
-      for i in range(1, histogram_to_be_fixed.GetXaxis().GetNbins()):
+      for i in range(1, histogram_to_be_fixed.GetXaxis().GetNbins()+1):
         if histogram_to_be_fixed.GetBinContent(i) == 0:
           histogram_to_be_fixed.SetBinError(i, 1.84*scalef/2.)
           changed += 1

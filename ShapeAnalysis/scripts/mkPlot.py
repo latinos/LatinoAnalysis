@@ -71,11 +71,15 @@ if __name__ == '__main__':
 
     parser.add_option('--postFit', dest='postFit', help='Plot sum of post-fit backgrounds, and the data/post-fit ratio.' , default='n') 
 
+    parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
+
     parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
     parser.add_option('--extraLegend'   , dest='extraLegend'   , help='User-specified additional legend'          , default=None)
 
     parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
 
+    parser.add_option('--NoPreliminary', dest='NoPreliminary', help='Remove preliminary status in plots' , action='store_true', default=False) 
+    parser.add_option('--RemoveAllMC', dest='RemoveAllMC', help='Remove all MC in legend' , action='store_true', default=False) 
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -103,9 +107,12 @@ if __name__ == '__main__':
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
+    print "        skipMissingNuisance  =", opt.skipMissingNuisance
     print "                    postFit  =", opt.postFit
     print "               removeMCStat  =", opt.removeMCStat
     print "                  plotFancy  =", opt.plotFancy
+    print "              NoPreliminary  =", opt.NoPreliminary   
+    print "                RemoveAllMC  =", opt.RemoveAllMC   
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -159,6 +166,8 @@ if __name__ == '__main__':
     factory._fileFormats = opt.fileFormats.split(',')
     
     factory._postFit = opt.postFit
+    
+    factory._skipMissingNuisance = opt.skipMissingNuisance
 
     factory._removeMCStat = opt.removeMCStat
 
@@ -166,11 +175,21 @@ if __name__ == '__main__':
 
     factory._extraLegend = opt.extraLegend
     
+    factory._preliminary = not opt.NoPreliminary
+    
+    factory._removeAllMC = opt.RemoveAllMC
+
+
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :
       print " Please provide the samples structure (not strictly needed in mkPlot, since list of samples read from plot.py) "    
     elif os.path.exists(opt.samplesFile) :
+      # This line is needed for mkplot not to look for samples in eos.
+      # Imagine the samples have been removed in eos, but the file with histograms
+      # has been already generated, there is no need to check the existence of the samples on eos
+      # NB: in samples.py the function "nanoGetSampleFiles" must handle this, if needed
+      _samples_noload = True
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()

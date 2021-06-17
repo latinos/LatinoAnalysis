@@ -58,6 +58,7 @@ class Worker(threading.Thread):
         infile += "factory._tag       = '"+str(tag)+"'\n"
         infile += "factory._nThreads  = 1\n"
         infile += "factory.aliases    = "+aliases+"\n"
+        infile += "factory.FixNegativeAfterHadd = "+str(opt.FixNegativeAfterHadd)+"\n"
 
         #infile += "factory.makeNominals('"+inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts)+","+str(samples)+","+str(nuisances)+",'"+supercut+"',"+str(number)+")\n"
 
@@ -518,7 +519,7 @@ if __name__ == '__main__':
       if nThreads == 1:
         command.append('--compress')
       else:
-        command.extend(['-j', str(nThreads)])
+        command.extend(['-j', str(nThreads),'--compress'])
       command.append(finalpath)
       command.extend(fileList)
       print ' '.join(command)
