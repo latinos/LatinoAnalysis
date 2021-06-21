@@ -51,6 +51,11 @@ class PlotFactory:
         self._FigNamePF = ''
 
         self._fileFormats = ['png', 'root']
+        
+        self._preliminary = True
+        
+        self._removeAllMC = False
+        
 
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
@@ -1041,14 +1046,15 @@ class PlotFactory:
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
-              
-            #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
-                if self._showIntegralLegend == 0 :
-                    tlegend.AddEntry(tgrMC, "All MC", "F")
-                else :
-                    print " nexpected  = ", nexpected
-                    tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
+            # add "All MC" in the legend
+            if not self._removeAllMC :
+              #                     if there is "histo_total" there is no need of explicit nuisances
+              if len(mynuisances.keys()) != 0 or histo_total!= None:
+                  if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(tgrMC, "All MC", "F")
+                  else :
+                      print " nexpected  = ", nexpected
+                      tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -1061,6 +1067,8 @@ class PlotFactory:
             CMS_lumi.lumi_13TeV = "100 fb^{-1}"
             CMS_lumi.writeExtraText = 1
             CMS_lumi.extraText = "Preliminary"
+            if not self._preliminary :
+              CMS_lumi.extraText = ""
             CMS_lumi.relPosX = 0.12
             CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
             if 'sqrt' in legend.keys() :
