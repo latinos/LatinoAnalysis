@@ -256,7 +256,7 @@ if __name__ == '__main__':
 
     # Create output txt file to store nuisances values as lnN
     txt_file = open("Nuisances_file.txt", "w")
-    txt_file.write("Nuisances breakdown \n \n")
+    txt_file.write("# Nuisances breakdown \n \n")
 
     # Create output file structure
     # e.g., hww2l2v_13TeV_0j_ee/events/histo_DY
@@ -454,14 +454,16 @@ if __name__ == '__main__':
                     #txt_file.write(out_string)
 
                     # Now the output to plug in nuisances.py
-                    if "wwAcc" in DYestim[iDYestim]['AccNum']:
-                        txt_file.write("# {}_{} WW channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
-                    else:
-                        txt_file.write("# {}_{} channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
+                    if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
+                        if "wwAcc" in DYestim[iDYestim]['AccNum']:
+                            txt_file.write("# {}_{} WW channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
+                        else:
+                            txt_file.write("# {}_{} channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
 
                     add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour']
-                    if "wwAcc" in DYestim[iDYestim]['AccNum']:
-                        add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_WW"
+                    if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
+                        if "wwAcc" in DYestim[iDYestim]['AccNum']:
+                            add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_WW"
 
                     # k: anticorrelated between ee and mm
                     txt_file.write("nuisances['DYnorm_k_" + add_to_title + "'] = {\n")
