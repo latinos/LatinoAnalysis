@@ -171,7 +171,11 @@ class batchJobs :
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
          elif 'ifca' in hostName or 'cloud' in hostName:
-           tmpdataDir = "/gpfs/projects/cms/"+os.environ["USER"]+"/"+baseName+"/"+prodName
+           try:
+             StepName
+           except NameError:
+             StepName = 'Step'
+           tmpdataDir = "/gpfs/projects/cms/"+os.environ["USER"]+"/"+baseName+"/"+prodName+"/"+StepName
            jFile.write("mkdir -p "+tmpdataDir+"\n") 
            jFile.write("cd "+tmpdataDir+"/ \n") 
          elif 'sdfarm' in hostName or 'knu' in hostName:
