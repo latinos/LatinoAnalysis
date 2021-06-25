@@ -249,7 +249,7 @@ if __name__ == '__main__':
       factory._plotFancy = opt.plotFancy
       factory._skipMissingNuisance = opt.skipMissingNuisance
 
-      factory._extraLegend = opt.extraLegenf
+      factory._extraLegend = opt.extraLegend
       factory._preliminary = not opt.NoPreliminary
       factory._removeAllMC = opt.RemoveAllMC
 
