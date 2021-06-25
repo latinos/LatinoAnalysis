@@ -16,6 +16,7 @@ from collections import OrderedDict
 import math
 import numpy as np
 import root_numpy as rnp
+import re
 
 
 # ----------------------------------------------------- PlotFactory --------------------------------------
@@ -50,6 +51,11 @@ class PlotFactory:
         self._FigNamePF = ''
 
         self._fileFormats = ['png', 'root']
+        
+        self._preliminary = True
+        
+        self._removeAllMC = False
+        
 
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
@@ -300,6 +306,11 @@ class PlotFactory:
                         if iBin >= b0 and iBin <= b1:
                           histos[sampleName].SetBinContent(iBin, 0)
                           histos[sampleName].SetBinError  (iBin, 0)
+                    # Allow to also pass arbitrary set of bin indexes to blind (e.g. for unrolled 2D histos)
+                    elif type(blind_range) in [list,tuple] and len(blind_range)>2:
+                      for iBin in blind_range:
+                        histos[sampleName].SetBinContent(iBin, 0)
+                        histos[sampleName].SetBinError  (iBin, 0)
 
                 thsData.Add(histos[sampleName])
 
@@ -466,13 +477,12 @@ class PlotFactory:
   
                       if histoVar != None :
                         nuisanceHistos[ivar][nuisanceName] = histoVar
-                      elif not self._skipMissingNuisance :
+                      elif not self._SkipMissingNuisance :
                         print " This is bad, the nuisance ", nuisanceName, " is missing! You need to add it, maybe some jobs crashed?"
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                       else :
-                        # if you had self._skipMissingNuisance set to true, put the variation the same as the nominal
+                        # if you had self._SkipMissingNuisance set to true, put the variation the same as the nominal
                         histoVar = histo.Clone(shapeNameVar.replace('/', '__'))
-                        # histoVar.Scale(variations[ivar])
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                         
 
@@ -851,27 +861,32 @@ class PlotFactory:
             xAxis.SetNdivisions(6,5,0)
 
             # setup axis names
+            # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
+            # Set xaxis label if needed. Format should be variable name, followed by (units) or [units] if needed
             if 'xaxis' in variable.keys() : 
-              frame.GetXaxis().SetTitle(variable['xaxis'])
-              if variable["divideByBinWidth"] == 1:
-                if "GeV" in variable['xaxis']: 
-                  ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
-                  frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+                frame.GetXaxis().SetTitle(variable['xaxis'])
+                
+            # If yaxis is set, we want to override normal conventions
+            if 'yaxis' in variable.keys():
+                frame.GetYaxis().SetTitle(variable['yaxis'])
+            else:
+                # Grab unit from x axis title -- capture part in () or [] brackets
+                xaxistitle = frame.GetXaxis().GetTitle()
+                unitpattern = '(?:\[|\()(\w+)(?:\]|\))'
+                unitsearch = re.search(unitpattern,xaxistitle)
+                unit = 'unit' if unitsearch is None else unitsearch.group(1)
+
+                # If dividing by bin width, yaxis should be "<Events / [unit]>"
+                if variable["divideByBinWidth"] == 1:
+                    frame.GetYaxis().SetTitle("< Events / %s >"%unit)
                 else:
-                  frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
-              else:
-                if 'yaxis' in variable.keys() : 
-                  frame.GetYaxis().SetTitle(variable['yaxis'])
-                else :
-                  frame.GetYaxis().SetTitle("Events")                  
-            else :
-              if variable["divideByBinWidth"] == 1:
-                frame.GetYaxis().SetTitle("dN/d"+variableName)             
-              else:
-                if 'yaxis' in variable.keys() : 
-                  frame.GetYaxis().SetTitle(variable['yaxis'])
-                else :
-                  frame.GetYaxis().SetTitle("Events")
+                    # If using fixed bin width, yaxis should be "Events / bin size [unit]"
+                    if len(variable['range']) == 3:
+                        binsize = float(variable['range'][2] - variable['range'][1])/float(variable['range'][0])
+                        frame.GetYaxis().SetTitle("Events / %g %s"%(binsize,unit))
+                    # Otherwise, yaxis should be "Events / bin"
+                    else:
+                        frame.GetYaxis().SetTitle("Events / bin")
 
             #
             #  - now draw
@@ -1036,14 +1051,15 @@ class PlotFactory:
                       print " nevents [", sampleName, "] = ", nevents
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
-              
-            #                               if there is "histo_total" there is no need of explicit nuisances
-            if (not self._removeMCStat) or len(mynuisances.keys()) != 0 or histo_total!= None:
-                if self._showIntegralLegend == 0 :
-                    tlegend.AddEntry(tgrMC, "All MC", "F")
-                else :
-                    print " nexpected  = ", nexpected
-                    tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
+            # add "All MC" in the legend
+            if not self._removeAllMC :
+              #                     if there is "histo_total" there is no need of explicit nuisances
+              if len(mynuisances.keys()) != 0 or histo_total!= None:
+                  if self._showIntegralLegend == 0 :
+                      tlegend.AddEntry(tgrMC, "All MC", "F")
+                  else :
+                      print " nexpected  = ", nexpected
+                      tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -1056,6 +1072,8 @@ class PlotFactory:
             CMS_lumi.lumi_13TeV = "100 fb^{-1}"
             CMS_lumi.writeExtraText = 1
             CMS_lumi.extraText = "Preliminary"
+            if not self._preliminary :
+              CMS_lumi.extraText = ""
             CMS_lumi.relPosX = 0.12
             CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
             if 'sqrt' in legend.keys() :
@@ -1128,28 +1146,34 @@ class PlotFactory:
             xAxisDistro = frameDistro.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
 
-            if 'xaxis' in variable.keys() :
-              frameDistro.GetXaxis().SetTitle(variable['xaxis'])
-              if variable["divideByBinWidth"] == 1:
-                if "GeV" in variable['xaxis']: 
-                  ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
-                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+            # setup axis names
+            # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
+            # Set xaxis label if needed. Format should be variable name, followed by (units) or [units] if needed
+            if 'xaxis' in variable.keys() : 
+                frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+                
+            # If yaxis is set, we want to override normal conventions
+            if 'yaxis' in variable.keys():
+                frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+            else:
+                # Grab unit from x axis title -- capture part in () or [] brackets
+                xaxistitle = frameDistro.GetXaxis().GetTitle()
+                unitpattern = '(?:\[|\()(\w+)(?:\]|\))'
+                unitsearch = re.search(unitpattern,xaxistitle)
+                unit = 'unit' if unitsearch is None else unitsearch.group(1)
+
+                # If dividing by bin width, yaxis should be "<Events / [unit]>"
+                if variable["divideByBinWidth"] == 1:
+                    frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
                 else:
-                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
-              else:
-                if 'yaxis' in variable.keys() : 
-                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
-                else :
-                  frameDistro.GetYaxis().SetTitle("Events")
-            else :
-              frameDistro.GetXaxis().SetTitle(variableName)
-              if variable["divideByBinWidth"] == 1:
-                frameDistro.GetYaxis().SetTitle("dN/d"+variableName)
-              else:
-                if 'yaxis' in variable.keys() : 
-                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
-                else :
-                  frameDistro.GetYaxis().SetTitle("Events")
+                    # If using fixed bin width, yaxis should be "Events / bin size [unit]"
+                    if len(variable['range']) == 3:
+                        binsize = float(variable['range'][2] - variable['range'][1])/float(variable['range'][0])
+                        frameDistro.GetYaxis().SetTitle("Events / %g %s"%(binsize,unit))
+                    # Otherwise, yaxis should be "Events / bin"
+                    else:
+                        frameDistro.GetYaxis().SetTitle("Events / bin")
+
             #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
             frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 
@@ -1197,7 +1221,14 @@ class PlotFactory:
             #if 'sqrt' in legend.keys() and 'lumi' in legend.keys():
               #flag_lumi_sqrt = ROOT.TLatex (minXused + (maxXused-minXused)*2.5/4., 0 + (maxYused-0)*3.9/4., "#splitline{CMS preliminary}{#splitline{" +  legend['lumi'] + "}{" + legend['sqrt'] + "} }")
               #flag_lumi_sqrt.Draw()
-    
+            if self._extraLegend is not None:
+                legExtra = ROOT.TLatex()
+                legExtra.SetTextSize(0.045)
+                legExtra.SetTextAngle(0)
+                legExtra.SetTextAlign(22)
+                legExtra.SetTextFont(62)
+                legExtra.DrawLatexNDC(0.85,0.8,self._extraLegend)
+
             CMS_lumi.CMS_lumi(tcanvasRatio, iPeriod, iPos)    
 
             # draw back all the axes            
@@ -1340,28 +1371,34 @@ class PlotFactory:
             xAxisDistro = frameDistro.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
 
-            if 'xaxis' in variable.keys() :
-              frameDistro.GetXaxis().SetTitle(variable['xaxis'])
-              if variable["divideByBinWidth"] == 1:
-                if "GeV" in variable['xaxis']: 
-                  ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
-                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+            # setup axis names
+            # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
+            # Set xaxis label if needed. Format should be variable name, followed by (units) or [units] if needed
+            if 'xaxis' in variable.keys() : 
+                frameDistro.GetXaxis().SetTitle(variable['xaxis'])
+                
+            # If yaxis is set, we want to override normal conventions
+            if 'yaxis' in variable.keys():
+                frameDistro.GetYaxis().SetTitle(variable['yaxis'])
+            else:
+                # Grab unit from x axis title -- capture part in () or [] brackets
+                xaxistitle = frameDistro.GetXaxis().GetTitle()
+                unitpattern = '(?:\[|\()(\w+)(?:\]|\))'
+                unitsearch = re.search(unitpattern,xaxistitle)
+                unit = 'unit' if unitsearch is None else unitsearch.group(1)
+
+                # If dividing by bin width, yaxis should be "<Events / [unit]>"
+                if variable["divideByBinWidth"] == 1:
+                    frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
                 else:
-                  frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
-              else:
-                if 'yaxis' in variable.keys() : 
-                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
-                else :
-                  frameDistro.GetYaxis().SetTitle("Events")
-            else :
-              frameDistro.GetXaxis().SetTitle(variableName)
-              if variable["divideByBinWidth"] == 1:
-                frameDistro.GetYaxis().SetTitle("dN/d"+variableName)
-              else:
-                if 'yaxis' in variable.keys() : 
-                  frameDistro.GetYaxis().SetTitle(variable['yaxis'])
-                else :
-                  frameDistro.GetYaxis().SetTitle("Events")
+                    # If using fixed bin width, yaxis should be "Events / bin size [unit]"
+                    if len(variable['range']) == 3:
+                        binsize = float(variable['range'][2] - variable['range'][1])/float(variable['range'][0])
+                        frameDistro.GetYaxis().SetTitle("Events / %g %s"%(binsize,unit))
+                    # Otherwise, yaxis should be "Events / bin"
+                    else:
+                        frameDistro.GetYaxis().SetTitle("Events / bin")
+
             #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
             frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 
@@ -1888,7 +1925,7 @@ class PlotFactory:
                     # the expected signal events is unchanged
                     #
                     #global_normalization = totalBkg / totalWeightedIntegralBkg
-                    global_normalization = totalSig / totalWeightedIntegralSig
+                    global_normalization = totalSig / totalWeightedIntegralSig if totalWeightedIntegralSig != 0 else 1.0
                     
                     
                     for histo in weight_X_list_Data:

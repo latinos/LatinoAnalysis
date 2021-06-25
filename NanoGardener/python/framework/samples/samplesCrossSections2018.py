@@ -640,6 +640,8 @@ samples['WWW_DiLepFilter']	.extend( ['xsec=0.007666',	'kfact=1.000',	'ref=N'] )
 
 ## Vg
 samples['Wg_AMCNLOFXFX']  .extend( ['xsec=586.000',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
+samples['Wg_AMCNLOFXFX_PDFWeights']  .extend( ['xsec=586.000',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
+samples['Wg_AMCNLOFXFX_PDFWeights_ext1']  .extend( ['xsec=586.000',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
 samples['Wg_MADGRAPHMLM'] .extend( ['xsec=405.271',  'kfact=1.000',  'ref=E'] )       # LO
 samples['Wg500']          .extend( ['xsec=1.00000',  'kfact=1.000',  'ref=X'] )
 samples['WgStarLNuMuMu']  .extend( ['xsec=2.793',    'kfact=1.000',  'ref=X'] )
