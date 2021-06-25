@@ -117,20 +117,12 @@ if __name__ == '__main__':
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
-<<<<<<< HEAD
-    print "                     postFit =", opt.postFit
-    print "                removeMCStat =", opt.removeMCStat
-    print "                  customized =", opt.customizeKey
-    print "                  plotFancy  =", opt.plotFancy
-    print "        skipMissingNuisance  =", opt.skipMissingNuisance
-=======
     print "        skipMissingNuisance  =", opt.skipMissingNuisance
     print "                    postFit  =", opt.postFit
     print "               removeMCStat  =", opt.removeMCStat
     print "                  plotFancy  =", opt.plotFancy
     print "              NoPreliminary  =", opt.NoPreliminary   
     print "                RemoveAllMC  =", opt.RemoveAllMC   
->>>>>>> origin/master
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -149,58 +141,6 @@ if __name__ == '__main__':
         print 'Logging level set to INFO (%d)' % opt.debug
         logging.basicConfig( level=logging.INFO )
 
-<<<<<<< HEAD
-=======
-      
-    factory = PlotFactory()
-    factory._tag       = opt.tag
-    factory._energy    = opt.energy
-    factory._lumi      = opt.lumi
-    factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
-    factory._plotNormalizedIncludeData = opt.plotNormalizedIncludeData
-    factory._plotNormalizedDistributionsTHstack = opt.plotNormalizedDistributionsTHstack
-    factory._showIntegralLegend = opt.showIntegralLegend
-
-    if opt.onlyPlot is not None:
-        factory._plotsToWrite = opt.onlyPlot.split(',')
-    factory._plotLinear = opt.linearOnly or not opt.logOnly
-    factory._plotLog = opt.logOnly or not opt.linearOnly
-
-    factory._scaleToPlot = opt.scaleToPlot 
-    factory._minLogC = opt.minLogC 
-    factory._maxLogC = opt.maxLogC 
-    factory._minLogCratio = opt.minLogCratio
-    factory._maxLogCratio = opt.maxLogCratio
-    factory._maxLinearScale = opt.maxLinearScale
-
-    factory._minLogCdifference = opt.minLogCratio
-    factory._maxLogCdifference = opt.maxLogCratio
-
-    factory._showRelativeRatio = opt.showRelativeRatio
-    factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
-
-    factory._removeWeight = opt.removeWeight
-
-    factory._invertXY = opt.invertXY
-
-    factory._fileFormats = opt.fileFormats.split(',')
-    
-    factory._postFit = opt.postFit
-    
-    factory._skipMissingNuisance = opt.skipMissingNuisance
-
-    factory._removeMCStat = opt.removeMCStat
-
-    factory._plotFancy = opt.plotFancy
-
-    factory._extraLegend = opt.extraLegend
-    
-    factory._preliminary = not opt.NoPreliminary
-    
-    factory._removeAllMC = opt.RemoveAllMC
-
-
->>>>>>> origin/master
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :
@@ -316,6 +256,10 @@ if __name__ == '__main__':
       factory._removeMCStat = opt.removeMCStat
       factory._plotFancy = opt.plotFancy
       factory._skipMissingNuisance = opt.skipMissingNuisance
+
+      factory._extraLegend = opt.extraLegenf
+      factory._preliminary = not opt.NoPreliminary
+      factory._removeAllMC = opt.RemoveAllMC
 
       factory.makePlot(inputFile ,outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
 
