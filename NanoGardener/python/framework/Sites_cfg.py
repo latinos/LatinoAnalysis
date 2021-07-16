@@ -26,7 +26,7 @@ Sites = {
   'sdfarm' : {
               'lsCmd'       : 'ls' ,
               'mkDir'       : False ,
-	      'xrootdPath'  : 'root://cms-xrdr.private.lo:2094/',
+	            'xrootdPath'  : 'root://cms-xrdr.private.lo:2094/',
               'treeBaseDir' : '/xrootd/store/user/jhchoi/Latino/HWWNano/',
              } ,
               #'lsCmd'       : 'xrdfs cms-xrdr.sdfarm.kr ls' ,

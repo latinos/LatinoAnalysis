@@ -4,6 +4,7 @@
 vbsjjlnu_samples_bkg = [
                 'WWW','WWZ','WZZ','ZZZ','WWG',
                 'WLNuJJ_EWK','EWKZ2Jets_ZToLL_M-50','EWKZ2Jets_ZToLL_M-50_newpmx', 'EWK_LNuJJ','EWK_LLJJ',
+                'EWK_LNuJJ_herwig','EWK_LLJJ_herwig','EWK_LNuJJ_herwig',
                 'DYJetsToLL_M-5to50-LO',
                 'DYJetsToLL_M-10to50-LO', 'DYJetsToLL_M-10to50-LO_ext1', 
                 'DYJetsToLL_M-50-LO', 'DYJetsToLL_M-50-LO_ext1', 
@@ -93,8 +94,12 @@ vbsjjlnu_samples_bkg += [
 
 vbsjjlnu_samples_signal = [ 'WmTo2J_ZTo2L','WmToLNu_WmTo2J','WmToLNu_ZTo2J','WpTo2J_WmToLNu','WpTo2J_ZTo2L',
                     'WpToLNu_WpTo2J', 'WpToLNu_ZTo2J','ZTo2L_ZTo2J','WpToLNu_WmTo2J',
+                    'WmTo2J_ZTo2L_dipoleRecoil','WmToLNu_WmTo2J_dipoleRecoil','WmToLNu_ZTo2J_dipoleRecoil','WpTo2J_WmToLNu_dipoleRecoil','WpTo2J_ZTo2L_dipoleRecoil',
+                    'WpToLNu_WpTo2J_dipoleRecoil', 'WpToLNu_ZTo2J_dipoleRecoil','ZTo2L_ZTo2J_dipoleRecoil','WpToLNu_WmTo2J_dipoleRecoil',
                      'WmTo2J_ZTo2L_aQGC', 'WmToLNu_WmTo2J_aQGC','WmToLNu_ZTo2J_aQGC','WpTo2J_WmToLNu_aQGC','WpTo2J_ZTo2L_aQGC',
-                    'WpToLNu_WpTo2J_aQGC', 'WpToLNu_ZTo2J_aQGC','ZTo2L_ZTo2J_aQGC','WpToLNu_WmTo2J_aQGC']
+                    'WpToLNu_WpTo2J_aQGC', 'WpToLNu_ZTo2J_aQGC','ZTo2L_ZTo2J_aQGC','WpToLNu_WmTo2J_aQGC',
+                    'WmToLNuWmTo2J_EWKQCD','WpToLNuWpTo2J_EWKQCD','WmToLNuWpTo2J_EWKQCD','WpToLNuWmTo2J_EWKQCD',
+                    'WToLNuZTo2J_EWKQCD','WToJJZToLL_EWKQCD','ZToLLZToJJ_EWKQCD']
 
 vbsjjlnu_samples_qcdvv = ['WmTo2J_ZTo2L_QCD','WmToLNu_WmTo2J_QCD','WmToLNu_ZTo2J_QCD','WpTo2J_WmToLNu_QCD','WpTo2J_ZTo2L_QCD',
                 'WpToLNu_WpTo2J_QCD','WpToLNu_ZTo2J_QCD','ZTo2L_ZTo2J_QCD','WpToLNu_WmTo2J_QCD']
