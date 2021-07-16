@@ -45,6 +45,7 @@ class DatacardFactory:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
         else:
           self._fileIn = ROOT.TFile(inputFile, "READ")
+          ROOT.gROOT.GetListOfFiles().Remove(self._fileIn) 
 
         # categorize the sample names
         signal_ids = collections.OrderedDict() # id map of alternative_signals + cumulative_signals
