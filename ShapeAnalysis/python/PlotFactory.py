@@ -2349,21 +2349,32 @@ class PlotFactory:
 
                 hentry.SetFillStyle(0)
                 hentry.SetLineWidth(3)
+                
+                for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():         
+                  if ('new_histo_group_' + sampleNameGroup  + '_' ) in hentry.GetName() :
+                    if 'line' in sampleConfiguration.keys(): 
+                      hentry.SetLineStyle(self._getLine(sampleConfiguration['line']))
+
                 hentry.DrawNormalized("hist,same")
                   
-              for hentry in thsSignal_grouped.GetHists():
-                num_bins = hentry.GetNbinsX()
-                if hentry.Integral() > 0.:
-                  y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
-                  if y_normalized > maxY_normalized:
-                    maxY_normalized = y_normalized
-
-                for ibin in range( num_bins ) :
-                  hentry.SetBinError(ibin+1, 0.000001)
-
-                hentry.SetFillStyle(0)
-                hentry.SetLineWidth(3)
-                hentry.DrawNormalized("hist,same")
+              if thsSignal_grouped.GetNhists() != 0:
+                for hentry in thsSignal_grouped.GetHists():
+                  num_bins = hentry.GetNbinsX()
+                  if hentry.Integral() > 0.:
+                    y_normalized = hentry.GetBinContent(hentry.GetMaximumBin())/hentry.Integral()
+                    if y_normalized > maxY_normalized:
+                      maxY_normalized = y_normalized
+                
+                  for ibin in range( num_bins ) :
+                    hentry.SetBinError(ibin+1, 0.000001)
+                
+                  hentry.SetFillStyle(0)
+                  hentry.SetLineWidth(3)
+                  for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():         
+                    if ('new_histo_group_' + sampleNameGroup  + '_' ) in hentry.GetName() :
+                      if 'line' in sampleConfiguration.keys(): 
+                        hentry.SetLineStyle(self._getLine(sampleConfiguration['line']))
+                  hentry.DrawNormalized("hist,same")
 
               # ~~~~~~~~~~~~~~~~~~~~
               # include data only if required
@@ -2371,6 +2382,8 @@ class PlotFactory:
               if self._plotNormalizedIncludeData : 
                 for sampleName, plotdef in plot.iteritems():
                   if plotdef['isData'] == 1 :
+                    if 'line' in plotdef.keys(): 
+                      histos[sampleName].SetLineStyle(self._getLine(plotdef['line']))
                     histos[sampleName].DrawNormalized("p, same")
 
               frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
@@ -2416,7 +2429,7 @@ class PlotFactory:
                   maxY_normalized = temp_maxY_normalized
                 
               for hentry in thsBackground_grouped.GetHists():  
-                if hentry not in thsSignal_grouped.GetHists() :   # since signal is part of the "background" for plotting reason
+                if (thsSignal_grouped.GetNhists()==0) or (hentry not in thsSignal_grouped.GetHists()) :   # since signal is part of the "background" for plotting reason
                   num_bins = hentry.GetNbinsX()
                   for ibin in range( num_bins ) :
                     hentry.SetBinError(ibin+1, 0.000001)
@@ -2425,16 +2438,17 @@ class PlotFactory:
                   hentry.Scale(normalization_factor_background)
                   thsBackground_grouped_normalized.Add(hentry)
 
-              for hentry in thsSignal_grouped.GetHists():               
-                num_bins = hentry.GetNbinsX()
-                for ibin in range( num_bins ) :
-                  hentry.SetBinError(ibin+1, 0.000001)
-                hentry.SetFillStyle(0)
-                hentry.SetLineWidth(3)
-                hentry.Scale(normalization_factor_signal)
-                thsSignal_grouped_normalized.Add(hentry)
+              if thsSignal_grouped.GetNhists() != 0:
+                for hentry in thsSignal_grouped.GetHists():               
+                  num_bins = hentry.GetNbinsX()
+                  for ibin in range( num_bins ) :
+                    hentry.SetBinError(ibin+1, 0.000001)
+                  hentry.SetFillStyle(0)
+                  hentry.SetLineWidth(3)
+                  hentry.Scale(normalization_factor_signal)
+                  thsSignal_grouped_normalized.Add(hentry)
 
-              thsSignal_grouped_normalized.Draw("hist same noclear")
+                thsSignal_grouped_normalized.Draw("hist same noclear")
               thsBackground_grouped_normalized.Draw("hist same noclear")
 
               frameNormTHstack.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
@@ -2651,4 +2665,10 @@ class PlotFactory:
       elif type(color) == str:
         # hex string
         return ROOT.TColor.GetColor(color)
+
+
+    def _getLine(self, line):
+      return line
+
+
 
