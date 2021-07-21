@@ -878,7 +878,8 @@ class PlotFactory:
 
                 # If dividing by bin width, yaxis should be "<Events / [unit]>"
                 if variable["divideByBinWidth"] == 1:
-                    frame.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    # frame.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
                 else:
                     # If using fixed bin width, yaxis should be "Events / bin size [unit]"
                     if len(variable['range']) == 3:
@@ -1164,7 +1165,8 @@ class PlotFactory:
 
                 # If dividing by bin width, yaxis should be "<Events / [unit]>"
                 if variable["divideByBinWidth"] == 1:
-                    frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    # frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
                 else:
                     # If using fixed bin width, yaxis should be "Events / bin size [unit]"
                     if len(variable['range']) == 3:
@@ -1262,8 +1264,8 @@ class PlotFactory:
             frameRatio.GetYaxis().SetTitle("Data/Expected")
             #frameRatio.GetYaxis().SetTitle("Data/MC")
             #frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
-            #frameRatio.GetYaxis().SetRangeUser( 0.8, 1.2 )
-            frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
+            frameRatio.GetYaxis().SetRangeUser( 0.8, 1.2 )
+            # frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
             self.Pad2TAxis(frameRatio)
             #                               if there is "histo_total" there is no need of explicit nuisances
             if (not self._removeMCStat)  or len(mynuisances.keys()) != 0 or histo_total!= None:
@@ -1389,7 +1391,9 @@ class PlotFactory:
 
                 # If dividing by bin width, yaxis should be "<Events / [unit]>"
                 if variable["divideByBinWidth"] == 1:
-                    frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    # frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    #frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
                 else:
                     # If using fixed bin width, yaxis should be "Events / bin size [unit]"
                     if len(variable['range']) == 3:
@@ -1578,20 +1582,23 @@ class PlotFactory:
               if 'xaxis' in variable.keys() :
                 frameDistro_Fancy.GetXaxis().SetTitle(variable['xaxis'])
                 if variable["divideByBinWidth"] == 1:
-                  if "GeV" in variable['xaxis']: 
-                    ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
-                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+                  if 'yaxis' in variable.keys() : 
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Bkg " + variable['yaxis'])
                   else:
-                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variable['xaxis'])
+                    if "GeV" in variable['xaxis']: 
+                      ### FIXME: it's maybe better to add a "yaxis" field in the variable to let the user choose the y axis name
+                      frameDistro_Fancy.GetYaxis().SetTitle("Data - Bkg dN/d"+variable['xaxis'].replace("GeV","GeV^{-1}"))
+                    else:
+                      frameDistro_Fancy.GetYaxis().SetTitle("Data - Bkg dN/d"+variable['xaxis'])
                 else:
                   if 'yaxis' in variable.keys() : 
-                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected " + variable['yaxis'])
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Bkg " + variable['yaxis'])
                   else :
-                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected Events")
+                    frameDistro_Fancy.GetYaxis().SetTitle("Data - Bkg Events")
               else :
                 frameDistro_Fancy.GetXaxis().SetTitle(variableName)
                 if variable["divideByBinWidth"] == 1:
-                  frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variableName)
+                  frameDistro_Fancy.GetYaxis().SetTitle("Data - Bkg dN/d"+variableName)
                 else:
                   if 'yaxis' in variable.keys() : 
                     frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected " + variable['yaxis'])
@@ -1616,7 +1623,7 @@ class PlotFactory:
               special_tlegend.SetLineColor(0)
               special_tlegend.SetShadowColor(0)
               special_tlegend.AddEntry( tgrDataMinusMC , 'Data', "L")      
-              special_tlegend.AddEntry( tgrMCMinusMC, "Systematics", "F")
+              special_tlegend.AddEntry( tgrMCMinusMC, "syst. unc.", "F")
               
               if self._showDataMinusBkgOnly :
                 tgrMCSigMinusMCBkg.SetLineWidth(3)
@@ -2356,6 +2363,7 @@ class PlotFactory:
               # setup axis names
               if 'xaxis' in variable.keys() : 
                 frameNorm.GetXaxis().SetTitle(variable['xaxis'])
+              frameNorm.GetYaxis().SetTitle("a.u.")
               tcanvasSigVsBkg.RedrawAxis()
   
               maxY_normalized=0.0
