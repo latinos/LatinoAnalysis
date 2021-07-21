@@ -2380,6 +2380,12 @@ class PlotFactory:
 
                 hentry.SetFillStyle(0)
                 hentry.SetLineWidth(3)
+                
+                for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():         
+                  if ('new_histo_group_' + sampleNameGroup  + '_' ) in hentry.GetName() :
+                    if 'line' in sampleConfiguration.keys(): 
+                      hentry.SetLineStyle(self._getLine(sampleConfiguration['line']))
+
                 hentry.DrawNormalized("hist,same")
                   
               for hentry in thsSignal_grouped.GetHists():
@@ -2394,6 +2400,10 @@ class PlotFactory:
 
                 hentry.SetFillStyle(0)
                 hentry.SetLineWidth(3)
+                for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():         
+                  if ('new_histo_group_' + sampleNameGroup  + '_' ) in hentry.GetName() :
+                    if 'line' in sampleConfiguration.keys(): 
+                      hentry.SetLineStyle(self._getLine(sampleConfiguration['line']))
                 hentry.DrawNormalized("hist,same")
 
               # ~~~~~~~~~~~~~~~~~~~~
@@ -2402,6 +2412,8 @@ class PlotFactory:
               if self._plotNormalizedIncludeData : 
                 for sampleName, plotdef in plot.iteritems():
                   if plotdef['isData'] == 1 :
+                    if 'line' in plotdef.keys(): 
+                      histos[sampleName].SetLineStyle(self._getLine(plotdef['line']))
                     histos[sampleName].DrawNormalized("p, same")
 
               frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
@@ -2692,4 +2704,11 @@ class PlotFactory:
       elif type(color) == str:
         # hex string
         return ROOT.TColor.GetColor(color)
+
+
+    def _getLine(self, line):
+      if type(color) == int:
+        return color
+
+
 
