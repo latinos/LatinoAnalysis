@@ -386,10 +386,11 @@ class PlotFactory:
                     sigForAdditionalRatioList[sampleName] = histos[sampleName]
                     sigForAdditionalDifferenceList[sampleName] = histos[sampleName]
                 else :
-                  nexpected += histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())   # it was (-1, -1) in the past, correct now
+                  nexpected += histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())   # it was (-1, -1) in the past, correct now. Overflow and underflow bins not taken into account
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
 
+                  # this is really background only, meaning if "isSignal" is 1,2,3 then it's not included here
                   thsBackground.Add(histos[sampleName])
                   #print " adding to background: ", sampleName
 
@@ -484,8 +485,10 @@ class PlotFactory:
                         # if you had self._SkipMissingNuisance set to true, put the variation the same as the nominal
                         histoVar = histo.Clone(shapeNameVar.replace('/', '__'))
                         nuisanceHistos[ivar][nuisanceName] = histoVar
-                        
-
+                
+                #
+                # I fill the nuisances_vy_up and nuisances_vy_do with the sum of all "up" and all "down" variations
+                #
                 for ivar, nuisances_vy in enumerate([nuisances_vy_up, nuisances_vy_do]):
                   for nuisanceName, nuisance in mynuisances.iteritems():
                     try:
@@ -587,6 +590,11 @@ class PlotFactory:
             # you need to add the signal as well, since the signal was considered in the nuisances vector
             # otherwise you would introduce an uncertainty as big as the signal itself!!!
             #
+            # IF these lines below are commented it means that the uncertainty band is drawn only on bkg-only stacked historgram,
+            # meaning that you will get the dashed band on bkg stacked, and signal (typicalli empty red) drawn on top
+            # without the uncertainty band.
+            # Is this what you want? I hope so ...
+            #
             #if thsSignal.GetNhists() != 0:
               #for iBin in range(1,thsSignal.GetStack().Last().GetNbinsX()+1):
                 #tgrMC_vy[iBin] += (thsSignal.GetStack().Last().GetBinContent(iBin))
@@ -606,7 +614,14 @@ class PlotFactory:
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               up = nuisances_vy_up[nuisanceName]
               do = nuisances_vy_do[nuisanceName]
+              #
+              # NB: the test underneath is to be read "for each bin check if up[bin] > tgrMC_vy[bin] and store in an array of True or False
+              #     In other words, up_is_up is an array([False, False, False])
+              #
               up_is_up = (up > tgrMC_vy)
+              #
+              # this one above is an array of booleans
+              #
               dup2 = np.square(up - tgrMC_vy)
               ddo2 = np.square(do - tgrMC_vy)
               nuisances_err2_up += np.where(up_is_up, dup2, ddo2)
@@ -614,6 +629,10 @@ class PlotFactory:
 
             nuisances_err_up = np.sqrt(nuisances_err2_up)
             nuisances_err_do = np.sqrt(nuisances_err2_do)
+
+            #
+            # NB: reminder: only background uncertainties have been considered in the nuisances, no impacts on the signal (isSignal = 1,2,3)
+            #
 
             tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
@@ -639,6 +658,7 @@ class PlotFactory:
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
                 histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_b')
 
+            # at this stage "thsBackground" and then "last" includes ALSO the signal
             last = thsBackground.GetStack().Last()
 
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
@@ -658,6 +678,7 @@ class PlotFactory:
               #    MC could be background only
               #    or it can include the signal.
               #    Default is background+signal (check isSignal = 1,2,3 options).
+              #         tgrMC_vy is "background only" !!
               #    You can activate the data - "background only" by 
               #    using the flag "showDataMinusBkgOnly".
               #    NB: this will change also the case of "(data - expected) / expected"
@@ -688,6 +709,9 @@ class PlotFactory:
             # and use directly the error bars (so far symmetric
             # see https://hypernews.cern.ch/HyperNews/CMS/get/higgs-combination/995.html )
             # from the histogram itself
+            # 
+            # NB: the post-fit plot includes the signal!
+            #
             #
             special_shapeName = cutName+"/"+variableName+'/histo_total' 
             if type(fileIn) is dict:
@@ -695,7 +719,7 @@ class PlotFactory:
                 histo_total = fileIn['total'].Get(special_shapeName)
               else:
                 histo_total = None
-            else:
+            else:                                                                                                                                                                                  
               histo_total = fileIn.Get(special_shapeName)
 
             if variable['divideByBinWidth'] == 1 and histo_total != None:
@@ -708,6 +732,12 @@ class PlotFactory:
               for iBin in range(0, len(tgrMC_vx)) :
                 tgrMC.SetPoint     (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
                 if histo_total:
+                  #
+                  # if there is histo_total, we plot the uncertainty band on top of sig+bkg, since histo_total IS sig+bkg and it's uncertainty accordingly
+                  # This fix, in case of histo_total overrules the comment
+                  # few lines above "Is this what you want? I hope so ..."
+                  #
+                  tgrMC.SetPoint(iBin, tgrMC_vx[iBin], histo_total.GetBinContent(iBin+1))                  
                   tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
                   tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
@@ -715,21 +745,39 @@ class PlotFactory:
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
               tgrMCMinusMC = tgrMC.Clone("tgrMCMinusMC")  
               for iBin in range(0, len(tgrMC_vx)) :
-                tgrMCOverMC.SetPoint     (iBin, tgrMC_vx[iBin], 1.)
-                tgrMCMinusMC.SetPoint    (iBin, tgrMC_vx[iBin], 0.)
+                tgrMCOverMC.SetPoint     (iBin, tgrMC_vx[iBin], 1.)  # the ratio MC / MC is by construction 1
+                tgrMCMinusMC.SetPoint    (iBin, tgrMC_vx[iBin], 0.)  # the difference MC - MC is by construction 0
                 if histo_total:
-                  tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
-                  if self._showRelativeRatio :
-                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                  #                                                                                                                                      histo_total include also the signal
+                  tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), last.GetBinContent(iBin+1)), self.Ratio(histo_total.GetBinError(iBin+1), last.GetBinContent(iBin+1) ))     
+                  if self._showDataMinusBkgOnly :
+                    if self._showRelativeRatio :
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
+                    else :
+                      #             ok, this should have been the error on background only, without signal, properly propagated ... in first approximation it's the uncertainty on sig+bkg = histo_total
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))  
                   else :
-                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
+                    if self._showRelativeRatio :
+                      # not 100% sure if in the relative ratio I should put an uncertainty bar on the expected ... but I assume yes, as in the ratio plot, since expected-rate uncertainty is not propagated to "data"
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), last.GetBinContent(iBin+1)), self.Ratio(histo_total.GetBinError(iBin+1), last.GetBinContent(iBin+1)))     
+                    else :
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))                      
                 else :
+                  #        nuisances_err_do and nuisances_err_up do NOT include the signal
+                  #        thus in first approximation we say "uncertainty_(sig+bgk) / (sig+bkg) = uncertainty_(bkg) / bkg
+                  #        this is why everywhere here we have "tgrMC_vy[iBin]" instead of "last.GetBinContent(iBin+1)"
                   tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
-                  if self._showRelativeRatio :
-                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                  if self._showDataMinusBkgOnly :
+                    if self._showRelativeRatio :
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                    else :
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
                   else :
-                    tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
-                
+                    if self._showRelativeRatio :
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                    else :
+                      tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])     
+                    
                          
             
             tgrRatioList = {}
