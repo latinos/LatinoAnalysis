@@ -159,7 +159,7 @@ class PlotFactory:
             tcanvasDifference       = ROOT.TCanvas( "ccDifference" + cutName + "_" + variableName, "ccDifference", 800, 800 )
             weight_X_tcanvasDifference = ROOT.TCanvas( "weight_X_tcanvasDifference" + cutName + "_" + variableName, "weight_X_tcanvasDifference", 800, 800 )
             if self._plotNormalizedDistributions :
-              tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
+              tcanvasSigVsBkg    = ROOT.TCanvas( "ccSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 700 )
 
             if self._plotNormalizedDistributionsTHstack :
               tcanvasSigVsBkgTHstack    = ROOT.TCanvas( "ccTHstackSigVsBkg" + cutName + "_" + variableName,      "cc"     , 800, 600 )
@@ -1075,7 +1075,7 @@ class PlotFactory:
             CMS_lumi.extraText = "Preliminary"
             if not self._preliminary :
               CMS_lumi.extraText = ""
-            CMS_lumi.relPosX = 0.12
+            CMS_lumi.relPosX = 0.14
             CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
             if 'sqrt' in legend.keys() :
               CMS_lumi.lumi_sqrtS = legend['sqrt']
@@ -1133,7 +1133,7 @@ class PlotFactory:
             canvasPad1Name = 'pad1_' + cutName + "_" + variableName
             pad1 = ROOT.TPad(canvasPad1Name,canvasPad1Name, 0, 1-0.72, 1, 1)
             pad1.SetTopMargin(0.098)
-            pad1.SetBottomMargin(0.000) 
+            pad1.SetBottomMargin(0.020) 
             pad1.Draw()
             #pad1.cd().SetGrid()
             
@@ -1146,6 +1146,7 @@ class PlotFactory:
             # style from https://ghm.web.cern.ch/ghm/plots/MacroExample/myMacro.py
             xAxisDistro = frameDistro.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
+            xAxisDistro.SetLabelSize(0)
 
             # setup axis names
             # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
@@ -1241,7 +1242,7 @@ class PlotFactory:
             tcanvasRatio.cd()
             canvasPad2Name = 'pad2_' + cutName + "_" + variableName
             pad2 = ROOT.TPad(canvasPad2Name,canvasPad2Name,0,0,1,1-0.72)
-            pad2.SetTopMargin(0.000)
+            pad2.SetTopMargin(0.06)
             pad2.SetBottomMargin(0.392)
             pad2.Draw()
             #pad2.cd().SetGrid()
@@ -1315,6 +1316,7 @@ class PlotFactory:
             #frameRatio.Draw("AXIS")
             pad2.RedrawAxis()
             pad2.SetGrid()
+
 
             if 'cratio' in self._plotsToWrite:
                 if self._plotLinear:
@@ -1563,7 +1565,7 @@ class PlotFactory:
   
               tcanvasDifference_Fancy.cd()
               canvasPad1differenceName = 'pad1difference_' + cutName + "_" + variableName + "_Fancy"
-              pad1difference = ROOT.TPad(canvasPad1differenceName,canvasPad1differenceName, 0, 0, 1, 1)
+              pad1difference = ROOT.TPad(canvasPad1differenceName,canvasPad1differenceName, 0., 0., 1., 1.)
               pad1difference.Draw()
               
               pad1difference.cd()
@@ -2707,8 +2709,8 @@ class PlotFactory:
 
 
     def _getLine(self, line):
-      if type(color) == int:
-        return color
+      if type(line) == int:
+        return line
 
 
 
