@@ -272,7 +272,10 @@ class DatacardFactory:
 
                 if nuisance['type'] in ['lnN', 'lnU']:
                   # why is adding CMS_ not the default for lnN/lnU? (Y.I. 2019.11.06)
+
                   entryName = nuisance['name']
+                  if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                    entryName += "_"+cutName
 
                   card.write(entryName.ljust(80-20))
 
@@ -343,6 +346,9 @@ class DatacardFactory:
                     entryName = nuisance['name']
                   else:
                     entryName = 'CMS_' + nuisance['name']
+
+                  if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                    entryName += "_"+cutName
 
                   card.write(entryName.ljust(80-20))
 
@@ -423,6 +429,13 @@ class DatacardFactory:
                         else:
                           suffixOut = '_CMS_' + nuisance['name']
 
+                        if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                          if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
+                            suffixOut = "_"+nuisance['name']
+                          else:
+                            suffixOut = '_CMS_' + nuisance['name']
+                          suffixOut += "_"+cutName 
+ 
                         symmetrize = 'symmetrize' in nuisance and nuisance['symmetrize']
 
                         saved = self._saveNuisanceHistos(cutName, variableName, sampleName, '_' + nuisance['name'], suffixOut, symmetrize)
