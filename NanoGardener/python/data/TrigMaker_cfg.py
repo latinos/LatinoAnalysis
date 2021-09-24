@@ -1,6 +1,6 @@
 Trigger = {
 
-# ---------------------------- Full2016v8 ---------------------------------
+# ---------------------------- Full2016v9 ---------------------------------
 
 #   ------------------------------
 #    runPeriod| from run | to run
@@ -21,7 +21,7 @@ Trigger = {
 
 
 
-     'Full2016v8HIPM'   : {
+     'Full2016v9HIPM'   : {
 
                           # Run B->E: no DZ filters on e-mu + HIPM problem
                           1  :  { 'begin' : 273158 , 'end' : 277420 , 'lumi' : 16.802739097 ,
@@ -164,7 +164,7 @@ Trigger = {
                           } ,
 
 
-     'Full2016v8noHIPM' : {
+     'Full2016v9noHIPM' : {
                             # Run F: DZ filters on e-mu 
                             4:  { 'runList' : [278769, 278801, 278802, 278803, 278804, 278805, 278808] ,
                                   'lumi' : 0.418771191 ,
@@ -350,10 +350,10 @@ Trigger = {
                          },
 
 
-# ---------------------------- Full2017v8 ---------------------------------
+# ---------------------------- Full2017v9 ---------------------------------
 
 
-        'Full2017v8'  :  {  
+        'Full2017v9'  :  {  
                           # Run B 
                           1  :  { 'begin' : 297020 , 'end' : 299329 , 'lumi' : 4.803371586 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2017v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
@@ -587,11 +587,11 @@ Trigger = {
 
                        },   
 
-# --------------------------- Full2018v8 ---------------------------------
+# --------------------------- Full2018v9---------------------------------
 
    # Full 2018 lumi --> 59.832475339
 
-        'Full2018v8'  :  {
+        'Full2018v9'  :  {
                           # Full 2018 
                           1  :  { 'begin' : 315252 , 'end' : 325175 , 'lumi' : 59.832475339 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2018v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2018.txt',
@@ -3055,6 +3055,10 @@ Trigger['Full2016v5_mh'] = Trigger['Full2016v2']
 Trigger['Full2017v4'] = Trigger['Full2017v2'] 
 #Trigger['Full2017v2LP19'] = Trigger['Full2017v2'] 
 Trigger['Full2018v4'] = Trigger['Full2018'] 
+Trigger['Full2016v8HIPM'] = Trigger['Full2016v9HIPM'] 
+Trigger['Full2016v8noHIPM'] = Trigger['Full2016v9noHIPM'] 
+Trigger['Full2017v8'] = Trigger['Full2017v9']
+Trigger['Full2018v8'] = Trigger['Full2018v9']
 
 # Set v6 to V5
 
