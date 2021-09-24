@@ -155,13 +155,13 @@ class LawnMower:
            if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
              continue
 
-           print " sampleName = ", sampleName
+           print " sampleName = ", sampleName, shapeSource +"/histo_"+sampleName
            
            if sampleName != "DATA":
                if totalFromDatacard == 0:
-                   totalFromDatacard = fileInJustForDATA.Get("histo_"+sampleName).Clone()
+                   totalFromDatacard = fileInJustForDATA.Get(shapeSource +"/histo_"+sampleName).Clone()
                else:
-                   tmp = fileInJustForDATA.Get("histo_"+sampleName)
+                   tmp = fileInJustForDATA.Get(shapeSource +"/histo_"+sampleName)
                    totalFromDatacard.Add(tmp)
 
            copied_from_original = False
