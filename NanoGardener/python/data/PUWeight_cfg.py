@@ -16,7 +16,7 @@ PUCfg = {
                    'doSysVar'    : True ,
                 } ,
 
- 'Full2016v8HIPM' : {
+ 'Full2016v9HIPM' : {
                    'srcfile'     : "auto" ,
                    'targetfiles' : { '1-3' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016BCDEF_PU.root' ,
                                    } ,
@@ -30,7 +30,7 @@ PUCfg = {
                 } ,
 
 
- 'Full2016v8noHIPM' : {
+ 'Full2016v9noHIPM' : {
                    'srcfile'     : "auto" ,
                    'targetfiles' : { '4-4' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016BCDEF_PU.root' ,
                                      '5-7' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016GH_PU.root' ,
@@ -62,7 +62,7 @@ PUCfg = {
                    'doSysVar'    : True , 
                 } ,
 
- 'Full2017v8' : {
+ 'Full2017v9' : {
                    'srcfile'     : "auto" ,
                    'targetfiles' : { '1-1' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2017/UL2017B_PU.root' ,
                                      '2-2' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2017/UL2017C_PU.root' ,
@@ -92,7 +92,7 @@ PUCfg = {
                    'doSysVar'    : True ,
                 } ,
 
- 'Full2018v8' : {
+ 'Full2018v9' : {
                    'srcfile'     : "auto" ,
                    'targetfiles' : { '1-1' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2018/UL2018_PU.root' } ,
                    'srchist'     : "pileup"   ,
@@ -121,3 +121,8 @@ PUCfg['Full2018v6'] = PUCfg['Full2018v5']
 PUCfg['Full2016v7'] = PUCfg['Full2016v5']
 PUCfg['Full2017v7'] = PUCfg['Full2017v5']
 PUCfg['Full2018v7'] = PUCfg['Full2018v5']
+
+PUCfg['Full2016v8HIPM'] = PUCfg['Full2016v9HIPM']
+PUCfg['Full2016v8noHIPM'] = PUCfg['Full2016v9noHIPM']
+PUCfg['Full2017v8'] = PUCfg['Full2017v9']
+PUCfg['Full2018v8'] = PUCfg['Full2018v9']
