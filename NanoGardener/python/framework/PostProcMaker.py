@@ -814,7 +814,7 @@ class PostProcMaker():
              exit()
 
          # Now Build the HADD dictionnary according to target size
-         HaddDic = self.buildHadd(iSample, cutby='size')
+         HaddDic = self.buildHadd(iSample, FileInList, cutby='size')
 
          if len(HaddDic) > 0:
            self._HaddDic[iSample] = HaddDic

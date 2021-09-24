@@ -149,7 +149,7 @@ class batchJobs :
        if 'knu' in hostName or 'hercules' in hostName:
          pass
        else:
-         jFile.write('ulimit -c 0\n')
+         jFile.write('ulimit -c 0 -s unlimited\n')
        if    useBatchDir : 
          if 'iihe' in hostName:
            jFile.write('cd $TMPDIR \n')

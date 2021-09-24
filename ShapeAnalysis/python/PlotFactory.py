@@ -255,6 +255,7 @@ class PlotFactory:
                 histo = fileIn[sampleName].Get(shapeName)
               else:
                 histo = fileIn.Get(shapeName)
+              if not histo: continue
               print ' --> ', histo
               print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
               histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
@@ -493,10 +494,13 @@ class PlotFactory:
                   for nuisanceName, nuisance in mynuisances.iteritems():
                     try:
                       histoVar = nuisanceHistos[ivar][nuisanceName]
+                      test = rnp.hist2array(histoVar, copy=False)
                     except KeyError:
                       # now, even if not considered this nuisance, I need to add it, 
                       # so that in case is "empty" it will add the nominal value
                       # for this sample that is not affected by the nuisance
+                      histoVar = histos[sampleName]
+                    except TypeError:
                       histoVar = histos[sampleName]
                     else:
                       if 'scale' in plotdef:
@@ -1363,7 +1367,11 @@ class PlotFactory:
                 if self._plotLog:
                     # log Y axis
                     #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
-                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+                    #frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+                    if maxYused>0:
+                      frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), math.pow(10, math.log10(maxYused) + (math.log10(maxYused)-math.log10(self._minLogCratio)) * (self._maxLinearScale-1)) )
+                    else:
+                      frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
                     pad1.SetLogy(True)
                     self._saveCanvas(tcanvasRatio, self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
                     pad1.SetLogy(False)
@@ -2300,7 +2308,7 @@ class PlotFactory:
                     if self._plotLog:
                         weight_X_frameDistro.GetYaxis().SetRangeUser( min(0.001, maxYused/1000), 10 * maxYused )
                         weight_X_pad1.SetLogy(True)
-                        self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate, imageOnly=True)
+                        self._saveCanvas(weight_X_tcanvasRatio, self._outputDirPlots + "/log_" + weight_X_canvasRatioNameTemplate, imageOnly=self._plotLinear)
                         weight_X_pad1.SetLogy(False)
 
 

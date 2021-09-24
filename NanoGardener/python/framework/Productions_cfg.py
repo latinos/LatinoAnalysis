@@ -661,5 +661,31 @@ Productions = {
                        'year'    : '2018' ,
                       },
 
+#################################### nAODv7 EMBEDDING ##############################################
+
+ 'Embedding2016_102X_nAODv7_Full2016v7' : {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2016_nAODv7.py' ,
+                       'cmssw'   : 'Full2016v7',
+                       'year'    : '2016' ,
+                      },
+
+ 'Embedding2017_102X_nAODv7_Full2017v7' : {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2017_nAODv7.py' ,
+                       'cmssw'   : 'Full2017v7',
+                       'year'    : '2017' ,
+                      },
+
+ 'Embedding2018_102X_nAODv7_Full2018v7' : {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2018_nAODv7.py' ,
+                       'cmssw'   : 'Full2018v7',
+                       'year'    : '2018' ,
+                      },
+
 }
 
