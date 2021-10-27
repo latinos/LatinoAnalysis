@@ -67,7 +67,7 @@ class ApplyDNN_Production_Semi(Module):
           weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta"+withindex)
           wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi"+withindex)
           wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass"+withindex)
-          WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass"+withindex)
+          #WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass"+withindex)
 
           wr1pt = 0.0
           wr1eta = 0.0
@@ -87,7 +87,7 @@ class ApplyDNN_Production_Semi(Module):
           weta = self.GetValue(event, "HM_Whad_eta")
           wphi = self.GetValue(event, "HM_Whad_phi")
           wmass = self.GetValue(event, "HM_Whad_mass")
-          WWmass = self.GetValue(event, "HM_Hlnjj_mass")
+          #WWmass = self.GetValue(event, "HM_Hlnjj_mass")
           nojet = [int(self.GetValue(event, "HM_idx_j1")), int(self.GetValue(event, "HM_idx_j2"))]
 
           wr1pt = self.GetValue(event, "CleanJet_pt["+str(nojet[0])+"]")
@@ -226,7 +226,7 @@ class ApplyDNN_Production_Semi(Module):
         values.append(self.GetValue(event, "nCleanJet"))
         values.append(njet30)
         values.append(self.GetValue(event, "HM_largest_nonW_mjj"))
-        values.append(WWmass)
+        #values.append(WWmass)
 
         values.append(mjj_12)
         values.append(detajj_12)

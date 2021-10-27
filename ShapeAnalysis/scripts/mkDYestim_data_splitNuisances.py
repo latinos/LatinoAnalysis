@@ -465,6 +465,21 @@ if __name__ == '__main__':
                         if "wwAcc" in DYestim[iDYestim]['AccNum']:
                             add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_WW"
 
+                    print("XDDDDDDDDDDDDDDDDDDDDDDDDD")
+                    print("Current basedir name: {}".format(baseDir))
+                    print("Now split it!")
+                    baseDir_split = items = baseDir.split('_')
+                    print(baseDir_split)
+                    print("Add the last two items to the add_to_title string!")
+                    print("Add to title: {}_{}_{}".format(add_to_title,baseDir_split[-2],baseDir_split[-1]))
+                    print("XDDDDDDDDDDDDDDDDDDDDDDDDD")
+
+                    # Add more details to "add_to_title" to avoid repeated nuisances names
+                    # Do this only in HTXS
+                    if ("HTXS" in opt.dycfg or "STXS" in opt.dycfg):
+                        add_to_title = add_to_title + "_" + baseDir
+                        print("Add to title in case of HTXS: {}".format(add_to_title))
+
                     # k: anticorrelated between ee and mm
                     txt_file.write("nuisances['DYnorm_k_" + add_to_title + "'] = {\n")
                     txt_file.write("  'name': 'DYnorm_k_" + DYestim[iDYestim]['njet'] + "_" + opt.year + "',\n")
