@@ -1103,10 +1103,10 @@ class PlotFactory:
               #                     if there is "histo_total" there is no need of explicit nuisances
               if len(mynuisances.keys()) != 0 or histo_total!= None:
                   if self._showIntegralLegend == 0 :
-                      tlegend.AddEntry(tgrMC, "All MC", "F")
+                      tlegend.AddEntry(tgrMC, "Syst.", "F")
                   else :
                       print " nexpected  = ", nexpected
-                      tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
+                      tlegend.AddEntry(tgrMC, "Syst. [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
             tlegend.Draw()
@@ -1627,6 +1627,24 @@ class PlotFactory:
               xAxisDistro.SetNdivisions(6,5,0)
               frameDistro_Fancy.GetYaxis().SetMaxDigits(2)
 
+              xaxis = frameDistro_Fancy.GetXaxis()
+              xaxis.SetLabelFont ( 42)
+              xaxis.SetLabelOffset( 0.015)
+              xaxis.SetLabelSize ( 0.035)
+              xaxis.SetNdivisions ( 505)
+              xaxis.SetTitleFont ( 42)
+              xaxis.SetTitleOffset( 1.35)   
+              xaxis.SetTitleSize ( 0.035)
+            
+              yaxis = frameDistro_Fancy.GetYaxis()
+              yaxis.SetLabelFont ( 42)
+              yaxis.SetLabelOffset( 0.01)
+              yaxis.SetLabelSize ( 0.035)
+              yaxis.SetNdivisions ( 505)
+              yaxis.SetTitleFont ( 42)
+              yaxis.SetTitleOffset( 1.55)
+              yaxis.SetTitleSize ( 0.045)
+
               if 'xaxis' in variable.keys() :
                 frameDistro_Fancy.GetXaxis().SetTitle(variable['xaxis'])
                 if variable["divideByBinWidth"] == 1:
@@ -1654,7 +1672,7 @@ class PlotFactory:
                     frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected Events")
               frameDistro_Fancy.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetEYlow ()) ) - 20 ),
                                                     int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetEYhigh()) ) + 20 ) )
-  
+              
               #                               if there is "histo_total" there is no need of explicit nuisances
               if (not self._removeMCStat)  or len(mynuisances.keys()) != 0 or histo_total!= None:
                 tgrMCMinusMC.SetLineColor(12)
@@ -1670,8 +1688,8 @@ class PlotFactory:
               special_tlegend.SetTextSize(0.035)
               special_tlegend.SetLineColor(0)
               special_tlegend.SetShadowColor(0)
-              special_tlegend.AddEntry( tgrDataMinusMC , 'Data', "L")      
-              special_tlegend.AddEntry( tgrMCMinusMC, "syst. unc.", "F")
+              special_tlegend.AddEntry( tgrDataMinusMC , 'Data - Bkg', "PL")      
+              special_tlegend.AddEntry( tgrMCMinusMC, "Tot uncertainty", "F")
               
               if self._showDataMinusBkgOnly :
                 tgrMCSigMinusMCBkg.SetLineWidth(3)
@@ -1679,7 +1697,7 @@ class PlotFactory:
                 tgrMCSigMinusMCBkg.SetMarkerColor(2) # red
                 tgrMCSigMinusMCBkg.SetMarkerSize(0)         
                 tgrMCSigMinusMCBkg.Draw("P")
-                special_tlegend.AddEntry( tgrMCSigMinusMCBkg , 'Signal', "EPL")      
+                special_tlegend.AddEntry( tgrMCSigMinusMCBkg , 'Signal', "PL")      
               
               # draw the data - MC
               # if blind remove the last points
@@ -1688,19 +1706,19 @@ class PlotFactory:
               #   x = tgrDataMinusMC.GetPointX(ip)
               #   if x > 0.6:
               #     maxip = ip 
-              
+
               tgrDataMinusMC.Draw("P")
               
-              CMS_lumi.CMS_lumi(tcanvasDifference_Fancy, iPeriod, iPos)    
-
               oneLine2 = ROOT.TLine(frameDistro_Fancy.GetXaxis().GetXmin(), 0,  frameDistro_Fancy.GetXaxis().GetXmax(), 0);
               oneLine2.SetLineStyle(3)
               oneLine2.SetLineWidth(3)
               oneLine2.Draw("same")
               
               special_tlegend.Draw()
-  
-              # draw back all the axes            
+              
+              CMS_lumi.CMS_lumi(tcanvasDifference_Fancy, iPeriod, iPos)    
+
+              # draw back all the a xes            
               pad1difference.RedrawAxis()
               pad1difference.SetGrid()
   
@@ -2604,7 +2622,7 @@ class PlotFactory:
          yaxis.SetLabelSize ( 0.1)
          yaxis.SetNdivisions ( 505)
          yaxis.SetTitleFont ( 42)
-         yaxis.SetTitleOffset( .6)
+         yaxis.SetTitleOffset( .65)
          yaxis.SetTitleSize ( 0.11)
  
  
