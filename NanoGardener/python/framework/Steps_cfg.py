@@ -740,6 +740,16 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
+  #TODO: cross-check any UL-related changes per each subTarget:
+  # - jetSelUL2016fix DONE
+  'MCl1loose2016v9' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL2016fix', 'CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                  },
 
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
@@ -904,6 +914,17 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty','DressedLeptons','EFTGen'],
                   },
 
+  #TODO: cross-check any UL-related changes per each subTarget:
+  # - jetSelUL DONE
+  'MCl1loose2017v9' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL','CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty','DressedLeptons','EFTGen'],
+                  },
+
 
   'MCCorr2017' : {
                      'isChain'    : True  ,
@@ -1000,6 +1021,25 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
+
+  #TODO: cross-check any UL-related changes per each subTarget:
+  # - jetSelUL DONE
+  'MCl1loose2018v9' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL','CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                  },
+  'MCl1loose2018v9_puIDtest' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL_puIDtest','PromptParticlesGenVars','GenLeptonMatch'],
+                  },
+  
 
   'test2018v7' :  {
                   'isChain'    : True  ,
@@ -2701,6 +2741,7 @@ Steps = {
                   'module'     : 'leptonSel()' ,
                },             
 
+   #DEPRECATED - to be removed
    'jetSel'  : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2730,7 +2771,35 @@ Steps = {
                   'declare'    : 'jetSel = lambda : JetSel(1,"none",15.0,4.7,"CleanJet")' ,
                   'module'     : 'jetSel()' ,
                },
+   #END OF DEPRECATED
 
+   'jetSelUL' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet, UL2016fix=False "
+                  'declare'    : 'jetSel = lambda : JetSel(2,"loose",15.0,4.7,"CleanJet",False)' ,
+                  'module'     : 'jetSel()' ,
+               },
+   'jetSelUL_puIDtest' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='none',minpt=15.0,maxeta=4.7,jetColl="CleanJet, UL2016fix=False "
+                  'declare'    : 'jetSel = lambda : JetSel(2,"none",15.0,4.7,"CleanJet",False)' ,
+                  'module'     : 'jetSel()' ,
+               },
+   'jetSelUL2016fix' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet, UL2016fix=True "
+                  'declare'    : 'jetSel = lambda : JetSel(2,"loose",15.0,4.7,"CleanJet",True)' , #Contains fix on 2016 UL decoding bug in NanoAODv8/NanoAODv9
+                  'module'     : 'jetSel()' ,
+               }, 
 
    'CleanJetCut' : {
                  'isChain'    : False ,
