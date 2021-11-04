@@ -26,10 +26,11 @@ class ApplyDNN_Neutrino(Module):
         self.classifiers = []
         self.preprocessing = []
         for c, p in zip(["best_model_1.hdf5","best_model_0.hdf5"], ["fold0_keras_preprocessing_neutrino.pickle","fold1_keras_preprocessing_neutrino.pickle"]):
-          self.classifiers.append(load_model(self.pathtotraining+c, custom_objects={'customLoss': self.customLoss}))
+          self.classifiers.append(load_model(self.pathtotraining+c))
           self.preprocessing.append(pickle.load(open(self.pathtotraining+p, "rb")))
 
-        self.out = mappedOutputTree(wrappedOutputTree, suffix= "_"+self._suffix)
+        suffix = "" if self._branch_map=="" else "_"+self._branch_map
+        self.out = mappedOutputTree(wrappedOutputTree, suffix=suffix)
         self.out.branch("DNN_mth", "F")
 
 
@@ -70,7 +71,6 @@ class ApplyDNN_Neutrino(Module):
 
         values.append(self.GetValue(event, "PuppiMET_pt") * math.cos(self.GetValue(event, "PuppiMET_phi")))
         values.append(self.GetValue(event, "PuppiMET_pt") * math.sin(self.GetValue(event, "PuppiMET_phi")))
-        values.append(self.GetValue(event, "dphilmet"))
         values.append(self.GetValue(event, "dphilmet1"))
         values.append(self.GetValue(event, "dphilmet2"))
         values.append(self.GetValue(event, "mll"))
@@ -79,6 +79,8 @@ class ApplyDNN_Neutrino(Module):
         values.append(self.GetValue(event, "mtw1"))
         values.append(self.GetValue(event, "mtw2"))
         values.append(self.GetValue(event, "ht"))
+        values.append(self.GetValue(event, "vht_pt") * math.cos(self.GetValue(event, "vht_phi")))
+        values.append(self.GetValue(event, "vht_pt") * math.sin(self.GetValue(event, "vht_phi")))
 
 
         values_stacked = np.hstack(values).reshape(1, len(values))
