@@ -271,18 +271,22 @@ if __name__ == '__main__':
           print "==========================================================="
           print "Customization:  ", customization_key
           print "==========================================================="
-          samples_c,cuts_c,variables_c,nuisances_c,plot_c,groupPlot_c = customized_module.customize(samples,cuts,variables,nuisances,plot,groupPlot, key=customization_key)
+          samples_c,cuts_c,variables_c,nuisances_c,plot_c,groupPlot_c = customized_module.customize(samples,cuts,
+                                                        variables,nuisances,plot,groupPlot, key=customization_key)
           # Run plots for the current customization
 
-          p = Process(target=launch_plot,args=(opt.inputFile ,opt.outputDirPlots, variables_c, cuts_c, samples_c, plot_c, nuisances_c, legend, groupPlot_c) )
-          p.start()
-          # factory = get_factory()
-          # factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables_c, cuts_c, samples_c, plot_c, nuisances_c, legend, groupPlot_c)
-  
+          p = Process(target=launch_plot,args=(opt.inputFile ,opt.outputDirPlots, variables_c, cuts_c, samples_c, 
+                                                plot_c, nuisances_c, legend, groupPlot_c) )
+          p.start() 
       else:
           print "Customization script missing *customize* method! skipping it"
    
     else:
-      launch_plot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
+      # parallelize by cut
+      for cut in cuts:
+        p = Process(targetlaunch_plot( opt.inputFile ,opt.outputDirPlots, variables, [cut], samples, 
+                                      plot, nuisances,legend, groupPlot) )
+        p.start()
+        
     
     print '... and now closing ...'
