@@ -83,6 +83,8 @@ if __name__ == '__main__':
     parser.add_option('--NoPreliminary', dest='NoPreliminary', help='Remove preliminary status in plots' , action='store_true', default=False) 
     parser.add_option('--RemoveAllMC', dest='RemoveAllMC', help='Remove all MC in legend' , action='store_true', default=False) 
 
+    parser.add_option('--parallelPlotting', dest='parallelPlotting', help='Plot each cut in parallel' , action='store_true', default=False) 
+
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
@@ -114,7 +116,8 @@ if __name__ == '__main__':
     print "               removeMCStat  =", opt.removeMCStat
     print "                  plotFancy  =", opt.plotFancy
     print "              NoPreliminary  =", opt.NoPreliminary   
-    print "                RemoveAllMC  =", opt.RemoveAllMC   
+    print "                RemoveAllMC  =", opt.RemoveAllMC  
+    print "           parallelPlotting  =", opt.parallelPlotting
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -283,10 +286,15 @@ if __name__ == '__main__':
    
     else:
       # parallelize by cut
-      for cut in cuts:
-        p = Process(targetlaunch_plot( opt.inputFile ,opt.outputDirPlots, variables, [cut], samples, 
-                                      plot, nuisances,legend, groupPlot) )
-        p.start()
+      if opt.parallelPlotting:
+        for cut in cuts:
+          p = Process(target=launch_plot( opt.inputFile ,opt.outputDirPlots, variables, [cut], samples, 
+                                        plot, nuisances,legend, groupPlot) )
+          p.start()
+      else:
+        launch_plot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, 
+                                        plot, nuisances,legend, groupPlot) 
+
         
     
     print '... and now closing ...'
