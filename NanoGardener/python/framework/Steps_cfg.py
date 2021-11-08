@@ -5580,6 +5580,7 @@ Steps = {
 
 }
 Steps.update(addJESchainMembers())
+Steps.update(addJERchainMembers())
 Steps.update(addMETchainMembers())
 Steps.update(addSystChainMembers_CombJJLNu())
 
