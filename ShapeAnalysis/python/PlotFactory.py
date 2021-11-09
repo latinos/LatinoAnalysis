@@ -928,8 +928,8 @@ class PlotFactory:
 
                 # If dividing by bin width, yaxis should be "<Events / [unit]>"
                 if variable["divideByBinWidth"] == 1:
-                    # frame.GetYaxis().SetTitle("< Events / %s >"%unit)
-                    frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
+                    frame.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    #frame.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
                 else:
                     # If using fixed bin width, yaxis should be "Events / bin size [unit]"
                     if len(variable['range']) == 3:
@@ -1216,8 +1216,8 @@ class PlotFactory:
 
                 # If dividing by bin width, yaxis should be "<Events / [unit]>"
                 if variable["divideByBinWidth"] == 1:
-                    # frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
-                    frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
+                    frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    #frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
                 else:
                     # If using fixed bin width, yaxis should be "Events / bin size [unit]"
                     if len(variable['range']) == 3:
@@ -1447,9 +1447,8 @@ class PlotFactory:
 
                 # If dividing by bin width, yaxis should be "<Events / [unit]>"
                 if variable["divideByBinWidth"] == 1:
-                    # frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
-                    #frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
-                    frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
+                    frameDistro.GetYaxis().SetTitle("< Events / %s >"%unit)
+                    #frameDistro.GetYaxis().SetTitle("dN/d"+variable['xaxis'])
                 else:
                     # If using fixed bin width, yaxis should be "Events / bin size [unit]"
                     if len(variable['range']) == 3:
