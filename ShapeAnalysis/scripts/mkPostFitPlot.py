@@ -406,6 +406,13 @@ if __name__ == '__main__':
 
     factory._samples = samples
 
+    cuts = OrderedDict()
+    if os.path.exists(opt.cutsFile) :
+      handle = open(opt.cutsFile,'r')
+      exec(handle)
+      handle.close()
+
+
     # ~~~~
     structure = {}
     if opt.structureFile == None :

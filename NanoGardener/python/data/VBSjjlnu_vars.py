@@ -42,6 +42,10 @@ VBSjjlnu_vector_branches = [
     }
 ]
 
+VBSjjlnu_all_branches = [ ]
+for t,br in VBSjjlnu_branches.items():  VBSjjlnu_all_branches += br
+for d in VBSjjlnu_vector_branches:      VBSjjlnu_all_branches.append(d["name"])
+
 
 def getDefault():
     output = {}
