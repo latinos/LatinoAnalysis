@@ -781,6 +781,51 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
+#################################### nAODv9 MC ##############################################
+
+## -------- 2016 MC 106X nAODv8: Full2016v8
+#'Summer20UL16_106x_nAODv8_HIPM_Full2016v8': {
+#                      'isData'  : False ,
+#                      'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16APV_106x_nAODv2.py' ,
+#                      'cmssw'   : 'Full2016v8HIPM' ,
+#                      'year'    : '2016' ,
+##                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+#                      'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+#                      'YRver'   : ['YR4','13TeV'] ,
+#                  },
+
+#'Summer20UL16_106x_nAODv8_noHIPM_Full2016v8': {
+#                      'isData'  : False ,
+#                      'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16_106x_nAODv2.py' ,
+#                      'cmssw'   : 'Full2016v8noHIPM' ,
+#                      'year'    : '2016' ,
+##                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+#                      'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+#                      'YRver'   : ['YR4','13TeV'] ,
+#                  },
+
+ # -------- 2017 MC UL
+ 'Summer20UL17_106x_nAODv9_Full2017v9' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_106x_nAODv9.py',
+                       'cmssw'   : 'Full2017v9',
+                       'year'    : '2017' ,
+ #                      'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2017.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ # -------- 2018 MC UL
+ 'Summer20UL18_106x_nAODv9_Full2018v9' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_106x_nAODv9.py',
+                       'cmssw'   : 'Full2018v9',
+                       'year'    : '2018' ,
+ #                      'JESGT'   : 'Autumn18_V19_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
 
 }
 
