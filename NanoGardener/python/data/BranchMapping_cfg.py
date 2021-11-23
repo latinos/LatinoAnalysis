@@ -511,7 +511,11 @@ _Fatjet_syst_branches = [
   'HM_HlnFatMass_noTau21Cut'
 ]
 
-_JER_branches = ['CleanJet_pt'] + [
+_JER_branches = ['CleanJet_pt'] 
+#JER in principle can affect MET and RawMET branches
+_JER_branches += [br for br in _MET_branches if "Puppi" not in br]
+#and other...
+_JER_branches += [
   'njet',
   'dphilljet',
   'dphilljetjet',
