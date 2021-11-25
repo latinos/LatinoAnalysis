@@ -524,7 +524,8 @@ if __name__ == '__main__':
       command.extend(fileList)
       print ' '.join(command)
       if not opt.dryRun:
-        subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
+        proc = subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        hadd_out = proc.communicate()[0]
 
         outFile = ROOT.TFile.Open(finalpath, 'update')
         for nuisance in nuisances.itervalues():
@@ -538,8 +539,9 @@ if __name__ == '__main__':
               outFile = ROOT.TFile.Open(finalpath, 'update')
               ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
               outFile.Close()
-  
-        if not opt.doNotCleanup:
+        
+        ### Modded to avoid cleaning all partial shapes if hadd quits because the target rootfile already exists
+        if not opt.doNotCleanup and not 'exists' in hadd_out.lower():
           for fname in fileList:
             os.unlink(opt.outputDir + '/' + fname)
 
