@@ -52,12 +52,14 @@ class FatJetMaker(Module):
         self.over_lepR = over_lepR
         self.over_jetR = over_jetR
         self._output_branch_map = output_branch_map
+
+        self._input_branch_prefix = input_branch_suffix
         
-        if input_branch_suffix != '':
-            self._input_branch_prefix = "_"+ input_branch_suffix
-        else:
-            # nominal vars from NanoAODtools
-            self._input_branch_prefix = "_nom"
+        #if input_branch_suffix != '':
+        #    self._input_branch_prefix = "_"+ input_branch_suffix
+        #else:
+        #    # nominal vars from NanoAODtools
+        #    self._input_branch_prefix = "_nom"
 
 
     def beginJob(self):
@@ -124,7 +126,7 @@ class FatJetMaker(Module):
                 fj_pt = getattr(fj, "pt" + self._input_branch_prefix) # for systematic variations
             else:
                 fj_pt  = fj.pt  
-            
+                        
             # If the FatJet has only 1 particle remove it (rare corner case)
             if fj_tau1 == 0:  continue
             fj_tau21 = fj_tau2 / fj_tau1
