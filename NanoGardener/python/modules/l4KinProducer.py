@@ -130,20 +130,18 @@ class l4KinProducer(Module):
         jet_eta    = ROOT.std.vector(float)(0)
         jet_phi    = ROOT.std.vector(float)(0)
         jet_mass   = ROOT.std.vector(float)(0)
-        jet_cmvav2 = ROOT.std.vector(float)(0)
 
         for jet in Jet :
           jet_pt. push_back(jet.pt)
           jet_eta.push_back(jet.eta)
           jet_phi.push_back(jet.phi)
           jet_mass.push_back(OrigJet[jet.jetIdx].mass)
-          jet_cmvav2.push_back(OrigJet[jet.jetIdx].btagCMVA)
 
 
         ZWW = ROOT.ZWW()
 
         ZWW.setLepton(lep_pt, lep_eta, lep_phi, lep_flavour, lep_ch, lep_isLooseLepton)
-        ZWW.setJet(jet_pt, jet_eta, jet_phi, jet_mass, jet_cmvav2)
+        ZWW.setJet(jet_pt, jet_eta, jet_phi, jet_mass)
          
         MET_phi   = event.PuppiMET_phi
         MET_pt    = event.PuppiMET_pt
