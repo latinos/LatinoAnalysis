@@ -3559,7 +3559,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR)',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,cmssw)',
                   'module'     : 'rochesterMC()',
               },
 
@@ -3568,7 +3568,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR)',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR,cmssw)',
                   'module'     : 'rochesterDATA()',
               },
 
@@ -3577,7 +3577,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR,cmssw,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
                   'module'     : 'rochesterDATA()',
               },
 
@@ -3586,10 +3586,9 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,cmssw,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
                   'module'     : 'rochesterMC()',
               },
-
 
 ## ------- MODULES: Recoil corrections
 
