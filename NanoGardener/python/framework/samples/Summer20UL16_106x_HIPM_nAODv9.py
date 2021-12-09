@@ -1,3 +1,4 @@
+Samples = {} 
 #--->Updated!###-----------------------------------------------##
 Samples['WZ'] = {'nanoAOD' :'/WZ_TuneCP5_13TeV-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM'}
 ##---------------------------------------------------------------##
