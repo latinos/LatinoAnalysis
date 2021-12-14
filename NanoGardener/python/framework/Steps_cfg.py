@@ -2868,7 +2868,7 @@ Steps = {
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.FatJetMaker',
                   # The branch prefix needs to be used if the CleanFatJet module is run on top of CorrFatJet* modules
-                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=0, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
+                  'declare'    : 'fatjetMaker = lambda : FatJetMaker(jetid=2, minpt=200, maxeta=2.4, max_tau21=0.45, mass_range=[40, 250], over_lepR=0.8, over_jetR=0.8)',
                   'module'     : 'fatjetMaker()'
     },
 
