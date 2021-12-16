@@ -19,9 +19,9 @@ class JJH_EFTVars(Module):
 
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/interface/")
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/src/")
-        ROOT.gSystem.Load("libZZMatrixElementMELA.so")
-        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+self.cmssw_arch+"/libmcfm_707.so")
-
+        ROOT.gSystem.Load("libJHUGenMELAMELA.so") 
+        ROOT.gSystem.Load(self.cmssw_base+"/src/JHUGenMELA/MELA/data/"+self.cmssw_arch+"/libmcfm_707.so")
+      
         try:
             ROOT.gROOT.LoadMacro(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaHiggsEFT.C+g')
         except RuntimeError:
