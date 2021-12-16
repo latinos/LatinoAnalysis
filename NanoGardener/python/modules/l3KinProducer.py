@@ -22,7 +22,6 @@ class l3KinProducer(Module):
     l3KinDefault = -9999
     Zmass = 91.1876
     Wmass = 80.4
-    WH3l_btagWP = -0.5884
     newbranches = {
         'WH3l_ZVeto'     : (["F"], {}),
         'WH3l_flagOSSF'  : (["O"], {}),
@@ -110,12 +109,7 @@ class l3KinProducer(Module):
     def WH3l_njet(self):
         if not self.WH3l_isOk:
             return self.l3KinDefault
-        return sum([1 if j[0].Pt() > 40 and abs(j[0].Eta()) < 4.7 else 0 for j in self.CleanJet_4vecId])
-
-    def WH3l_nbjet(self):
-        if not self.WH3l_isOk:
-            return self.l3KinDefault
-        return sum([ 1 if 40 > j[0].Pt() > 20 and abs(j[0].Eta()) < 4.7 and j[1] > self.WH3l_btagWP else 0 for j in self.CleanJet_4vecId ])
+        return sum([1 if j.Pt() > 40 and abs(j.Eta()) < 4.7 else 0 for j in self.CleanJet_4vecId])
 
     def WH3l_mtlmet(self):
         """https://en.wikipedia.org/wiki/Transverse_mass with m_lepton=0, m_met=0. """
@@ -233,7 +227,7 @@ class l3KinProducer(Module):
         """Return mass difference between leading jets and W"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
             return self.l3KinDefault
-        return (self.ZH3l_CleanJet_4vecId[0][0] + self.ZH3l_CleanJet_4vecId[1][0]).M() - self.Wmass
+        return (self.ZH3l_CleanJet_4vecId[0] + self.ZH3l_CleanJet_4vecId[1]).M() - self.Wmass
 
     def ZH3l_pdgid_l(self):
         """Signed PDGID of lepton"""
@@ -253,31 +247,31 @@ class l3KinProducer(Module):
         """Delta phi between dijets and l+MET, i.e., between the Ws"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
             return self.l3KinDefault
-        return abs((self.ZH3l_XLepton[0] + self.MET).DeltaPhi(self.ZH3l_CleanJet_4vecId[0][0] + self.ZH3l_CleanJet_4vecId[1][0]))
+        return abs((self.ZH3l_XLepton[0] + self.MET).DeltaPhi(self.ZH3l_CleanJet_4vecId[0] + self.ZH3l_CleanJet_4vecId[1]))
 
     def ZH3l_dphilmetj(self):
         """Delta phi between lead jet and l+MET, i.e., between the Ws"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 1:
             return self.l3KinDefault
-        return abs((self.ZH3l_XLepton[0] + self.MET).DeltaPhi(self.ZH3l_CleanJet_4vecId[0][0]))
+        return abs((self.ZH3l_XLepton[0] + self.MET).DeltaPhi(self.ZH3l_CleanJet_4vecId[0]))
 
     def ZH3l_pTlmetjj(self):
         """pT of dijets and l+MET, i.e., of the WW system"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
             return self.l3KinDefault
-        return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0][0] + self.ZH3l_CleanJet_4vecId[1][0]).Pt()
+        return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0] + self.ZH3l_CleanJet_4vecId[1]).Pt()
 
     def ZH3l_pTlmetj(self):
         """pT of lead jet and l+MET, i.e., of the WW system"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 1:
             return self.l3KinDefault
-        return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0][0]).Pt()
+        return (self.ZH3l_XLepton[0] + self.MET + self.ZH3l_CleanJet_4vecId[0]).Pt()
 
     def ZH3l_mTlmetj(self):
         """Return transverse mass of l+met+jet system"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 1:
             return self.l3KinDefault
-        jvec0 = self.ZH3l_CleanJet_4vecId[0][0]
+        jvec0 = self.ZH3l_CleanJet_4vecId[0]
         lvec = self.ZH3l_XLepton[0] 
         WWvec = self.MET + lvec + jvec0;
         sumpt = self.MET.Pt() + lvec.Pt() + jvec0.Pt()
@@ -287,8 +281,8 @@ class l3KinProducer(Module):
         """Return transverse mass of l+met+dijet system"""
         if not self.ZH3l_isOk or not len(self.ZH3l_CleanJet_4vecId) >= 2:
             return self.l3KinDefault
-        jvec0 = self.ZH3l_CleanJet_4vecId[0][0]
-        jvec1 = self.ZH3l_CleanJet_4vecId[1][0]
+        jvec0 = self.ZH3l_CleanJet_4vecId[0]
+        jvec1 = self.ZH3l_CleanJet_4vecId[1]
         lvec = self.ZH3l_XLepton[0] 
         WWvec = self.MET + lvec + jvec0 + jvec1;
         sumpt = self.MET.Pt() + lvec.Pt() + jvec0.Pt() + jvec1.Pt()
@@ -324,14 +318,14 @@ class l3KinProducer(Module):
         self.CleanJet_4vecId = []
         Jet = Collection(event, "Jet")
         for j in Collection(event, "CleanJet"):
-            self.CleanJet_4vecId.append((ROOT.TLorentzVector(), Jet[j.jetIdx].btagCMVA))
-            self.CleanJet_4vecId[-1][0].SetPtEtaPhiM(j.pt, j.eta, j.phi, 0)
+            self.CleanJet_4vecId.append(ROOT.TLorentzVector())
+            self.CleanJet_4vecId[-1].SetPtEtaPhiM(j.pt, j.eta, j.phi, 0)
 
         self.l3_isOk = False if len(self.Lepton_4vecId) < 3 else True
         self.WH3l_isOk = self._WH3l_isOk()
 
         self.ZH3l_isOk = self._ZH3l_setXLepton()
-        self.ZH3l_CleanJet_4vecId = [ j for j in self.CleanJet_4vecId if j[0].Pt() > 30 and abs(j[0].Eta()) < 4.7]
+        self.ZH3l_CleanJet_4vecId = [ j for j in self.CleanJet_4vecId if j.Pt() > 30 and abs(j.Eta()) < 4.7]
 
         for nameBranchKey in self.newbranches.keys():
             self.out.fillBranch(nameBranchKey, getattr(self, nameBranchKey)());
