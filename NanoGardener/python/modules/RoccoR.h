@@ -121,7 +121,8 @@ struct RocRes{
 
 class RoccoR{
 
-    private:
+    //LOURDESprivate:
+    public:
 	enum TVAR{Default, Replica, Symhes};
 
 	static const double MPHI; 
@@ -146,7 +147,7 @@ class RoccoR{
 	int phiBin(double phi) const;
 	template <typename T> double error(T f) const;
 
-    public:
+    //public:
 	enum TYPE{MC, DT};
 
 	RoccoR(); 
