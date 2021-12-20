@@ -1,6 +1,6 @@
 
 #include <math.h>
-#include <ZZMatrixElement/MELA/interface/Mela.h>
+#include <JHUGenMELA/MELA/interface/Mela.h>
 
 std::vector<float> melaHiggsEFT(Mela *_mela, TVar::MatrixElement ME, TVar::Production Prod, bool IsGG, bool IsReco){
 
