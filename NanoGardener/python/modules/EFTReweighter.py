@@ -62,8 +62,10 @@ class EFTReweighter(Module):
 
         if self.vertexType == "HVV":
          self.newbranches =  ['gen_dme_hsm','gen_dme_hm','gen_dme_hp','gen_dme_hl','gen_dme_mixhm','gen_dme_mixhp','gen_dme_mixhl' ]
+         self.newbranches +=  ['gen_dme_eft_hm','gen_dme_eft_hp','gen_dme_eft_hl','gen_dme_eft_mixhm','gen_dme_eft_mixhp','gen_dme_eft_mixhl','gen_dme_eft_mixpm','gen_dme_eft_mixpl','gen_dme_eft_mixml']
          if self.productionProcess != "GluGlu":
-          self.newbranches += ['gen_pme_hsm','gen_pme_hm','gen_pme_hp','gen_pme_hl','gen_pme_mixhm','gen_pme_mixhp','gen_pme_mixhl' ]
+          self.newbranches += ['gen_pme_hsm','gen_pme_hm','gen_pme_hp','gen_pme_hl','gen_pme_hlzg','gen_pme_mixhm','gen_pme_mixhp','gen_pme_mixhl','gen_pme_mixhlzg']
+          self.newbranches += ['gen_pme_eft_hm','gen_pme_eft_hp','gen_pme_eft_hl','gen_pme_eft_mixhm','gen_pme_eft_mixhp','gen_pme_eft_mixhl','gen_pme_eft_mixpm','gen_pme_eft_mixpl','gen_pme_eft_mixml']
         
         elif self.vertexType == "Hgg":
          self.newbranches = ['gen_pme_hsm','gen_pme_hm','gen_pme_mixhm' ] 
@@ -85,13 +87,35 @@ class EFTReweighter(Module):
         gen_dme_mixhp = -999 
         gen_dme_mixhl = -999 
 
-        gen_pme_hsm   = -999
-        gen_pme_hm    = -999
-        gen_pme_hp    = -999
-        gen_pme_hl    = -999
-        gen_pme_mixhm = -999
-        gen_pme_mixhp = -999 
-        gen_pme_mixhl = -999 
+        gen_dme_eft_hm    = -999
+        gen_dme_eft_hp    = -999
+        gen_dme_eft_hl    = -999
+        gen_dme_eft_mixhm = -999
+        gen_dme_eft_mixhp = -999 
+        gen_dme_eft_mixhl = -999 
+        gen_dme_eft_mixpm = -999
+        gen_dme_eft_mixpl = -999 
+        gen_dme_eft_mixml = -999 
+
+        gen_pme_hsm     = -999
+        gen_pme_hm      = -999
+        gen_pme_hp      = -999
+        gen_pme_hl      = -999
+        gen_pme_hlzg    = -999
+        gen_pme_mixhm   = -999
+        gen_pme_mixhp   = -999 
+        gen_pme_mixhl   = -999 
+        gen_pme_mixhlzg = -999 
+
+        gen_pme_eft_hm    = -999
+        gen_pme_eft_hp    = -999
+        gen_pme_eft_hl    = -999
+        gen_pme_eft_mixhm = -999
+        gen_pme_eft_mixhp = -999 
+        gen_pme_eft_mixhl = -999 
+        gen_pme_eft_mixpm = -999
+        gen_pme_eft_mixpl = -999 
+        gen_pme_eft_mixml = -999 
 
         self.LHE = Collection(event,"LHEPart")
         Gen = Collection(event,"GenPart")
@@ -104,7 +128,7 @@ class EFTReweighter(Module):
           if abs(gen.pdgId) >= 21: continue
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
-    #      print "genp ", gen.pdgId, event.GenPart_pdgId[mid], self.FromH(event, gid)
+          # print "genp ", gen.pdgId, event.GenPart_pdgId[mid], self.FromH(event, gid)
           if abs(event.GenPart_pdgId[mid]) != 24: continue 
           if self.FromH(event, gid) == False: continue
           HFinalStateIdx.append(gid)
@@ -254,24 +278,29 @@ class EFTReweighter(Module):
         self.mela.setInputEvent(daughter_coll, associated_coll, mother_coll, 1)
         self.mela.setCurrentCandidateFromIndex(0)
 
-        DME = [1, 1, 1, 1, 1, 1, 1] 
-        PME = [1, 1, 1, 1, 1, 1, 1]
-
         if self.vertexType == "HVV":
 
          if self.productionProcess == "GluGlu" : 
           DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0)
          else :  
           DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0)
-          PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
   
-         gen_dme_hsm   = DME[0]
-         gen_dme_hm    = DME[1]
-         gen_dme_hp    = DME[2]
-         gen_dme_hl    = DME[3]
-         gen_dme_mixhm = DME[4]
-         gen_dme_mixhp = DME[5] 
-         gen_dme_mixhl = DME[6] 
+         gen_dme_hsm   = DME.find("me_hsm").second
+         gen_dme_hm    = DME.find("me_hm").second
+         gen_dme_hp    = DME.find("me_hp").second
+         gen_dme_hl    = DME.find("me_hl").second
+         gen_dme_mixhm = DME.find("me_mixhm").second
+         gen_dme_mixhp = DME.find("me_mixhp").second
+         gen_dme_mixhl = DME.find("me_mixhl").second
+         gen_dme_eft_hm    = DME.find("me_eft_hm").second
+         gen_dme_eft_hp    = DME.find("me_eft_hp").second
+         gen_dme_eft_hl    = DME.find("me_eft_hl").second
+         gen_dme_eft_mixhm = DME.find("me_eft_mixhm").second
+         gen_dme_eft_mixhp = DME.find("me_eft_mixhp").second
+         gen_dme_eft_mixhl = DME.find("me_eft_mixhl").second
+         gen_dme_eft_mixpm = DME.find("me_eft_mixpm").second
+         gen_dme_eft_mixpl = DME.find("me_eft_mixpl").second
+         gen_dme_eft_mixml = DME.find("me_eft_mixml").second
 
          self.out.fillBranch( 'gen_dme_hsm',    gen_dme_hsm )
          self.out.fillBranch( 'gen_dme_hm',     gen_dme_hm )
@@ -280,32 +309,67 @@ class EFTReweighter(Module):
          self.out.fillBranch( 'gen_dme_mixhm',  gen_dme_mixhm )
          self.out.fillBranch( 'gen_dme_mixhp',  gen_dme_mixhp )
          self.out.fillBranch( 'gen_dme_mixhl',  gen_dme_mixhl )
+         self.out.fillBranch( 'gen_dme_eft_hm',     gen_dme_eft_hm )
+         self.out.fillBranch( 'gen_dme_eft_hp',     gen_dme_eft_hp )
+         self.out.fillBranch( 'gen_dme_eft_hl',     gen_dme_eft_hl )
+         self.out.fillBranch( 'gen_dme_eft_mixhm',  gen_dme_eft_mixhm )
+         self.out.fillBranch( 'gen_dme_eft_mixhp',  gen_dme_eft_mixhp )
+         self.out.fillBranch( 'gen_dme_eft_mixhl',  gen_dme_eft_mixhl )
+         self.out.fillBranch( 'gen_dme_eft_mixpm',  gen_dme_eft_mixpm )
+         self.out.fillBranch( 'gen_dme_eft_mixpl',  gen_dme_eft_mixpl )
+         self.out.fillBranch( 'gen_dme_eft_mixml',  gen_dme_eft_mixml )
 
          if self.productionProcess != "GluGlu" : 
 
-          gen_pme_hsm   = PME[0]
-          gen_pme_hm    = PME[1]
-          gen_pme_hp    = PME[2]
-          gen_pme_hl    = PME[3]
-          gen_pme_mixhm = PME[4]
-          gen_pme_mixhp = PME[5] 
-          gen_pme_mixhl = PME[6] 
+          PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
 
-          self.out.fillBranch( 'gen_pme_hsm',    gen_pme_hsm )
-          self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
-          self.out.fillBranch( 'gen_pme_hp',     gen_pme_hp )
-          self.out.fillBranch( 'gen_pme_hl',     gen_pme_hl )
-          self.out.fillBranch( 'gen_pme_mixhm',  gen_pme_mixhm )
-          self.out.fillBranch( 'gen_pme_mixhp',  gen_pme_mixhp )
-          self.out.fillBranch( 'gen_pme_mixhl',  gen_pme_mixhl )
+          gen_pme_hsm     = PME.find("me_hsm").second
+          gen_pme_hm      = PME.find("me_hm").second
+          gen_pme_hp      = PME.find("me_hp").second
+          gen_pme_hl      = PME.find("me_hl").second
+          gen_pme_hlzg    = PME.find("me_hlzg").second
+          gen_pme_mixhm   = PME.find("me_mixhm").second
+          gen_pme_mixhp   = PME.find("me_mixhp").second
+          gen_pme_mixhl   = PME.find("me_mixhl").second
+          gen_pme_mixhlzg = PME.find("me_mixhlzg").second
+          gen_pme_eft_hm    = PME.find("me_eft_hm").second
+          gen_pme_eft_hp    = PME.find("me_eft_hp").second
+          gen_pme_eft_hl    = PME.find("me_eft_hl").second
+          gen_pme_eft_mixhm = PME.find("me_eft_mixhm").second
+          gen_pme_eft_mixhp = PME.find("me_eft_mixhp").second
+          gen_pme_eft_mixhl = PME.find("me_eft_mixhl").second
+          gen_pme_eft_mixpm = PME.find("me_eft_mixpm").second
+          gen_pme_eft_mixpl = PME.find("me_eft_mixpl").second
+          gen_pme_eft_mixml = PME.find("me_eft_mixml").second
+
+      #    print (gen_pme_hp*gen_dme_hp)/(gen_pme_eft_hp*gen_dme_eft_hp),(gen_pme_hm*gen_dme_hm)/(gen_pme_eft_hm*gen_dme_eft_hm)
+
+          self.out.fillBranch( 'gen_pme_hsm',     gen_pme_hsm )
+          self.out.fillBranch( 'gen_pme_hm',      gen_pme_hm )
+          self.out.fillBranch( 'gen_pme_hp',      gen_pme_hp )
+          self.out.fillBranch( 'gen_pme_hl',      gen_pme_hl )
+          self.out.fillBranch( 'gen_pme_hlzg',    gen_pme_hlzg )
+          self.out.fillBranch( 'gen_pme_mixhm',   gen_pme_mixhm )
+          self.out.fillBranch( 'gen_pme_mixhp',   gen_pme_mixhp )
+          self.out.fillBranch( 'gen_pme_mixhl',   gen_pme_mixhl )
+          self.out.fillBranch( 'gen_pme_mixhlzg', gen_pme_mixhlzg )
+          self.out.fillBranch( 'gen_pme_eft_hm',     gen_pme_eft_hm )
+          self.out.fillBranch( 'gen_pme_eft_hp',     gen_pme_eft_hp )
+          self.out.fillBranch( 'gen_pme_eft_hl',     gen_pme_eft_hl )
+          self.out.fillBranch( 'gen_pme_eft_mixhm',  gen_pme_eft_mixhm )
+          self.out.fillBranch( 'gen_pme_eft_mixhp',  gen_pme_eft_mixhp )
+          self.out.fillBranch( 'gen_pme_eft_mixhl',  gen_pme_eft_mixhl )
+          self.out.fillBranch( 'gen_pme_eft_mixpm',  gen_pme_eft_mixpm )
+          self.out.fillBranch( 'gen_pme_eft_mixpl',  gen_pme_eft_mixpl )
+          self.out.fillBranch( 'gen_pme_eft_mixml',  gen_pme_eft_mixml )
 
         elif self.vertexType == "Hgg" : 
 
          PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 1, 0) 
 
-         gen_pme_hsm   = PME[0]
-         gen_pme_hm    = PME[1]
-         gen_pme_mixhm = PME[4]
+         gen_pme_hsm   = PME.find("me_hsm").second
+         gen_pme_hm    = PME.find("me_hm").second
+         gen_pme_mixhm = PME.find("me_mixhm").second
 
          self.out.fillBranch( 'gen_pme_hsm',    gen_pme_hsm )
          self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
