@@ -1729,7 +1729,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelUL','CorrFatJetData','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
 # 'DATAl1loose2017': {
@@ -1793,7 +1793,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelUL','CorrFatJetData','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
   'DATAl1loose2018v9_puIDtest': {
@@ -3606,7 +3606,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,cmssw)',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,"RPLME_CMSSW")',
                   'module'     : 'rochesterMC()',
               },
 
@@ -3615,7 +3615,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR,cmssw)',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR,"RPLME_CMSSW")',
                   'module'     : 'rochesterDATA()',
               },
 
@@ -3624,7 +3624,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR,cmssw,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR,"RPLME_CMSSW","Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
                   'module'     : 'rochesterDATA()',
               },
 
@@ -3633,7 +3633,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,cmssw,"Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR,"RPLME_CMSSW","Lepton",[\'MET\',\'PuppiMET\',\'RawMET\',\'TkMET\'])',
                   'module'     : 'rochesterMC()',
               },
 
