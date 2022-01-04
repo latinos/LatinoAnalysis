@@ -26,7 +26,7 @@ class l3KinProducer(Module):
         'WH3l_ZVeto'     : (["F"], {}),
         'WH3l_flagOSSF'  : (["O"], {}),
         'WH3l_njet'      : (["I"], {}),
-        'WH3l_nbjet'     : (["I"], {}),
+#       'WH3l_nbjet'     : (["I"], {}),
         'WH3l_mtlmet'    : (["F"], {'n':3}),
         'WH3l_dphilmet'  : (["F"], {'n':3}),
         'WH3l_mOSll'     : (["F"], {'n':3}),
