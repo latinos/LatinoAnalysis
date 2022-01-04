@@ -8,16 +8,18 @@ from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import MuonWP
 formulas = {}
 
 # from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Moriond_2018
+
 METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_globalSuperTightHalo2016Filter*\
                      event.Flag_HBHENoiseFilter*\
                      event.Flag_HBHENoiseIsoFilter*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
                      event.Flag_BadPFMuonFilter*\
-                     event.Flag_ecalBadCalibFilterV2\
+                     event.Flag_BadPFMuonDzFilter*\
+                     event.Flag_ecalBadCalibFilter\
                    )'
 
-METFilter_DATA   =  METFilter_Common 
+METFilter_DATA   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
 
 formulas['METFilter_MC'] = METFilter_DATA
 

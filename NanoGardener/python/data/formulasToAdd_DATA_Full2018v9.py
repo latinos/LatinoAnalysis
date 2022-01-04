@@ -14,7 +14,8 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_HBHENoiseIsoFilter*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
                      event.Flag_BadPFMuonFilter*\
-                     event.Flag_ecalBadCalibFilterV2\
+                     event.Flag_BadPFMuonDzFilter*\
+                     event.Flag_ecalBadCalibFilter\
                    )'
 
 METFilter_DATA   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
