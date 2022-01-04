@@ -29,8 +29,7 @@ class ZWW{
     void setJet(std::vector<float> pt,
                 std::vector<float> eta,
                 std::vector<float> phi,
-                std::vector<float> mass,
-                std::vector<float> tag);
+                std::vector<float> mass);
 
     void setMET(float met, float phi);
 
@@ -114,7 +113,6 @@ class ZWW{
     int zbLepIdx_[2];
     TLorentzVector metVec_;
     int njet_;
-    int nbjet_;
 
         // Output for public member fcns
     bool outPreSelection_;
@@ -147,7 +145,6 @@ void ZWW::reset(){
     met_          = zwwDefault;
     metPhi_       = zwwDefault;
     njet_         = zwwDefault;
-    nbjet_        = zwwDefault;
     st_           = zwwDefault;
     minMt_        = zwwDefault;
     minDeltaPhi_  = zwwDefault;
