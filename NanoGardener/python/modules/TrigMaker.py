@@ -283,6 +283,8 @@ class TrigMaker(Module):
         eff_dbl = [0., 0., 0.]
         eff_sgl = [0., 0., 0.]
         eff_evt = [0., 0., 0.]
+        eff_evt_alt = [0., 0., 0.]
+
         for i in range(3): 
            eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2][i]*eff_dz[i]
            eff_sgl[i] = eff[0][i]*eff_gl[0][i]+eff[1][i]*eff_gl[1][i]-eff[0][i]*eff[1][i]*eff_gl[0][i]*eff_gl[1][i]
@@ -292,7 +294,7 @@ class TrigMaker(Module):
 
            # This alternative formula was derived using a different approach based on Bayes theorem. A closure test with the formula above showed an excellent agreement.
            # if eff_dbl==0. replace with a small number to avoid the last term in the formula to explode
-           if eff_dbl[i]==0. : eff_dbl[i] = 0.01
+           if eff_dbl[i]==0. : eff_dbl[i] = 0.0001
            eff_evt_alt[i] = eff_dbl[i] + eff_sgl[i] - eff[5][i]*eff_gl[2][i]*eff[0][i]*eff_gl[0][i] - eff[4][i]*eff_gl[2][i]*eff[1][i]*eff_gl[1][i]*( 1 - eff[5][i]*eff_gl[2][i]*eff[0][i]*eff_gl[0][i]/eff_dbl[i] )
 
         #print eff_dbl , eff_evt        
