@@ -1521,6 +1521,14 @@ Steps = {
                   'subTargets' : ['jetSel','l2Kin', 'l3Kin', 'l4Kin']
                },
 
+  'trigFix' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['trigMC','formulasMC']
+                },
+
+
 ## ------- WgStar DATA:
 
     'DATAWgStar2017v2' : { 
@@ -2849,6 +2857,9 @@ Steps = {
                  'declare'    : 'trigMCKR_MupTdo = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True, branch_map="MupTdo")',
                  'module'     : 'trigMCKR_MupTdo()',
                },
+
+
+
 
 ## ------- MODULES: JEC
 
