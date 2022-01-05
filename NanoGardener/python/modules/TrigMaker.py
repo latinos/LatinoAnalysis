@@ -291,8 +291,8 @@ class TrigMaker(Module):
            eff_evt[i] = eff_dbl[i] + eff[0][i]*eff_gl[0][i]*(1 - eff[5][i]*eff_gl[2][i]) + eff[1][i]*eff_gl[1][i]*(1 - eff[4][i]*eff_gl[2][i])
 
            # This alternative formula was derived using a different approach based on Bayes theorem. A closure test with the formula above showed an excellent agreement.
-           # if eff_dbl==0. replace with a very small number to avoid the last term in the formula to explode
-           if eff_dbl[i]==0. : eff_dbl[i] = 1e-6
+           # if eff_dbl==0. replace with a small number to avoid the last term in the formula to explode
+           if eff_dbl[i]==0. : eff_dbl[i] = 0.01
            eff_evt_alt[i] = eff_dbl[i] + eff_sgl[i] - eff[5][i]*eff_gl[2][i]*eff[0][i]*eff_gl[0][i] - eff[4][i]*eff_gl[2][i]*eff[1][i]*eff_gl[1][i]*( 1 - eff[5][i]*eff_gl[2][i]*eff[0][i]*eff_gl[0][i]/eff_dbl[i] )
 
         #print eff_dbl , eff_evt        
