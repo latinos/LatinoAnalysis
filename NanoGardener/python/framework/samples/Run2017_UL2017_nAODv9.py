@@ -27,5 +27,5 @@ Samples["SingleElectron_Run2017F-UL2017-v1"] = {'nanoAOD': '/SingleElectron/Run2
 Samples["SingleMuon_Run2017B-UL2017-v1"] = {'nanoAOD': '/SingleMuon/Run2017B-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 Samples["SingleMuon_Run2017C-UL2017-v1"] = {'nanoAOD': '/SingleMuon/Run2017C-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 Samples["SingleMuon_Run2017D-UL2017-v1"] = {'nanoAOD': '/SingleMuon/Run2017D-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD'}
-Samples["SingleMuon_Run2017E-UL2017-v2"] = {'nanoAOD': '/SingleMuon/Run2017E-UL2017_MiniAODv1_NanoAODv2-v2/NANOAOD'}
-Samples["SingleMuon_Run2017F-UL2017-v2"] = {'nanoAOD': '/SingleMuon/Run2017F-UL2017_MiniAODv1_NanoAODv2-v2/NANOAOD'}
+Samples["SingleMuon_Run2017E-UL2017-v1"] = {'nanoAOD': '/SingleMuon/Run2017E-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD'}
+Samples["SingleMuon_Run2017F-UL2017-v1"] = {'nanoAOD': '/SingleMuon/Run2017F-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD'}

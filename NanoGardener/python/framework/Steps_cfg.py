@@ -1287,8 +1287,8 @@ Steps = {
                                   'SingleMuon_Run2017B-UL2017-v1',
                                   'SingleMuon_Run2017C-UL2017-v1',
                                   'SingleMuon_Run2017D-UL2017-v1',
-                                  'SingleMuon_Run2017E-UL2017-v2',
-                                  'SingleMuon_Run2017F-UL2017-v2',
+                                  'SingleMuon_Run2017E-UL2017-v1',
+                                  'SingleMuon_Run2017F-UL2017-v1',
                                   # Run2018 v8
                                   'EGamma_Run2018A-UL2018-v1',
                                   'EGamma_Run2018B-UL2018-v1',
@@ -1367,8 +1367,8 @@ Steps = {
                                   'SingleMuon_Run2017B-UL2017-v1',
                                   'SingleMuon_Run2017C-UL2017-v1',
                                   'SingleMuon_Run2017D-UL2017-v1',
-                                  'SingleMuon_Run2017E-UL2017-v2',
-                                  'SingleMuon_Run2017F-UL2017-v2',
+                                  'SingleMuon_Run2017E-UL2017-v1',
+                                  'SingleMuon_Run2017F-UL2017-v1',
                                   # Run2018 v8
                                   'SingleMuon_Run2018A-UL2018-v1',
                                   'SingleMuon_Run2018B-UL2018-v2',
