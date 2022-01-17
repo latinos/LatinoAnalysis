@@ -14,12 +14,14 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_HBHENoiseIsoFilter*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
                      event.Flag_BadPFMuonFilter*\
-                     event.Flag_ecalBadCalibFilterV2\
+                     event.Flag_BadPFMuonDzFilter*\
+                     event.Flag_ecalBadCalibFilter\
                    )'
 
-METFilter_DATA   =  METFilter_Common 
+METFilter_DATA   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
 
 formulas['METFilter_MC'] = METFilter_DATA
+
 
 # Common Weights
 
@@ -29,8 +31,8 @@ formulas['XSWeight'] = 'event.baseW*\
                         if hasattr(event, \'genWeight\') else event.baseW'
 
 
-muWPlist = [wp for wp in MuonWP['Full2018v7']['TightObjWP']]
-eleWPlist = [wp for wp in ElectronWP['Full2018v7']['TightObjWP']]
+muWPlist = [wp for wp in MuonWP['Full2018v9']['TightObjWP']]
+eleWPlist = [wp for wp in ElectronWP['Full2018v9']['TightObjWP']]
 
 for eleWP in eleWPlist:
  for muWP in muWPlist:
