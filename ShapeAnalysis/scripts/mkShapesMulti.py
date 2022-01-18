@@ -525,7 +525,14 @@ if __name__ == '__main__':
       print ' '.join(command)
       if not opt.dryRun:
         proc = subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        hadd_out = proc.communicate()[0]
+        ### Display hadd info
+        stoppedForExistingRootfile = False
+        while True:
+          output = proc.stdout.readline()
+          if output == '' and proc.poll() is not None: break
+          if output:
+            if 'exists' in output.lower(): stoppedForExistingRootfile = True
+            print(output.strip())
 
         outFile = ROOT.TFile.Open(finalpath, 'update')
         for nuisance in nuisances.itervalues():
@@ -541,7 +548,7 @@ if __name__ == '__main__':
               outFile.Close()
         
         ### Modded to avoid cleaning all partial shapes if hadd quits because the target rootfile already exists
-        if not opt.doNotCleanup and not 'exists' in hadd_out.lower():
+        if not opt.doNotCleanup and not stoppedForExistingRootfile:
           for fname in fileList:
             os.unlink(opt.outputDir + '/' + fname)
 
