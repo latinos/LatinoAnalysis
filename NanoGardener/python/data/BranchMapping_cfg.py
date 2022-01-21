@@ -136,6 +136,8 @@ _ElepT_branches = [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -269,6 +271,8 @@ _MET_branches = [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -406,6 +410,8 @@ _JES_branches += [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -597,6 +603,8 @@ _JER_branches = ['CleanJet_pt'] + [
   'me_zh_mixhm',
   'me_zh_mixhp',
   'me_qcd_hsm',
+  'me_qcd_hm',
+  'me_qcd_mixhm',
   'pjjSm_wh',
   'pjjTr_wh',
   'pjjSm_zh',
@@ -678,14 +686,20 @@ for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
     if key not in _JER_branches:
       _JER_branches.append(key)
 
+vbsjjlnu_mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.VBSjjlnu_vars')
+for branches in [_ElepT_branches,_MupT_branches, _MET_branches, _JES_branches,_JER_branches, _Fatjet_syst_branches ]:
+  branches += vbsjjlnu_mod.VBSjjlnu_all_branches
+
 ## formulas MC
 for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formulasToAdd_MC_Full2017v6', 'formulasToAdd_MC_Full2017v7', 'formulasToAdd_MC_Full2018v6', 'formulasToAdd_MC_Full2018v7', 'formulasToAdd_MC_MonoH']:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
   for key in mod.formulas.iterkeys():
+    if key == "METFilter_MC": continue
     if "XS" not in key and key not in _ElepT_branches:
       _ElepT_branches.append(key)
     if "XS" not in key and key not in _MupT_branches:
       _MupT_branches.append(key)
+      
 # DO MET VARIATIONS AFFECT FORMULAS?
 
 ## LeptonSF

@@ -8,9 +8,10 @@ import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import os.path
 import logging
+import imp
 from array import array
 from collections import OrderedDict
-
+from multiprocessing import Process
 #import os.path
 
 
@@ -71,8 +72,18 @@ if __name__ == '__main__':
 
     parser.add_option('--postFit', dest='postFit', help='Plot sum of post-fit backgrounds, and the data/post-fit ratio.' , default='n') 
 
-    parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
+    parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
 
+    parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
+    parser.add_option('--extraLegend'   , dest='extraLegend'   , help='User-specified additional legend'          , default=None)
+
+    parser.add_option('--customize', dest='customizeKey', help="Optional parameters for the customizations script", default=None)
+    parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
+
+    parser.add_option('--NoPreliminary', dest='NoPreliminary', help='Remove preliminary status in plots' , action='store_true', default=False) 
+    parser.add_option('--RemoveAllMC', dest='RemoveAllMC', help='Remove all MC in legend' , action='store_true', default=False) 
+
+    parser.add_option('--parallelPlotting', dest='parallelPlotting', help='Plot each cut in parallel' , action='store_true', default=False) 
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -100,8 +111,13 @@ if __name__ == '__main__':
     print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
+    print "        skipMissingNuisance  =", opt.skipMissingNuisance
     print "                    postFit  =", opt.postFit
     print "               removeMCStat  =", opt.removeMCStat
+    print "                  plotFancy  =", opt.plotFancy
+    print "              NoPreliminary  =", opt.NoPreliminary   
+    print "                RemoveAllMC  =", opt.RemoveAllMC  
+    print "           parallelPlotting  =", opt.parallelPlotting
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -120,49 +136,16 @@ if __name__ == '__main__':
         print 'Logging level set to INFO (%d)' % opt.debug
         logging.basicConfig( level=logging.INFO )
 
-      
-    factory = PlotFactory()
-    factory._tag       = opt.tag
-    factory._energy    = opt.energy
-    factory._lumi      = opt.lumi
-    factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
-    factory._plotNormalizedIncludeData = opt.plotNormalizedIncludeData
-    factory._plotNormalizedDistributionsTHstack = opt.plotNormalizedDistributionsTHstack
-    factory._showIntegralLegend = opt.showIntegralLegend
-
-    if opt.onlyPlot is not None:
-        factory._plotsToWrite = opt.onlyPlot.split(',')
-    factory._plotLinear = opt.linearOnly or not opt.logOnly
-    factory._plotLog = opt.logOnly or not opt.linearOnly
-
-    factory._scaleToPlot = opt.scaleToPlot 
-    factory._minLogC = opt.minLogC 
-    factory._maxLogC = opt.maxLogC 
-    factory._minLogCratio = opt.minLogCratio
-    factory._maxLogCratio = opt.maxLogCratio
-    factory._maxLinearScale = opt.maxLinearScale
-
-    factory._minLogCdifference = opt.minLogCratio
-    factory._maxLogCdifference = opt.maxLogCratio
-
-    factory._showRelativeRatio = opt.showRelativeRatio
-    factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
-
-    factory._removeWeight = opt.removeWeight
-
-    factory._invertXY = opt.invertXY
-
-    factory._fileFormats = opt.fileFormats.split(',')
-    
-    factory._postFit = opt.postFit
-
-    factory._removeMCStat = opt.removeMCStat
-    
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :
       print " Please provide the samples structure (not strictly needed in mkPlot, since list of samples read from plot.py) "    
     elif os.path.exists(opt.samplesFile) :
+      # This line is needed for mkplot not to look for samples in eos.
+      # Imagine the samples have been removed in eos, but the file with histograms
+      # has been already generated, there is no need to check the existence of the samples on eos
+      # NB: in samples.py the function "nanoGetSampleFiles" must handle this, if needed
+      _samples_noload = True
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
@@ -213,7 +196,7 @@ if __name__ == '__main__':
     if opt.onlyCut != None :
       list_to_remove = []
       for cutName, cutExtended in cuts.iteritems():
-         if cutName != opt.onlyCut :
+         if cutName not in opt.onlyCut :
            list_to_remove.append(cutName)
       for toRemove in list_to_remove:
         del cuts[toRemove]
@@ -227,7 +210,91 @@ if __name__ == '__main__':
       handle = open(opt.plotFile,'r')
       exec(handle)
       handle.close()
+
+#=====================
+    def launch_plot(inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
+      factory = PlotFactory()
+      factory._tag       = opt.tag
+      factory._energy    = opt.energy
+      factory._lumi      = opt.lumi
+      factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
+      factory._plotNormalizedIncludeData = opt.plotNormalizedIncludeData
+      factory._plotNormalizedDistributionsTHstack = opt.plotNormalizedDistributionsTHstack
+      factory._showIntegralLegend = opt.showIntegralLegend
+
+      if opt.onlyPlot is not None:
+          factory._plotsToWrite = opt.onlyPlot.split(',')
+      factory._plotLinear = opt.linearOnly or not opt.logOnly
+      factory._plotLog = opt.logOnly or not opt.linearOnly
+
+      factory._scaleToPlot = opt.scaleToPlot 
+      factory._minLogC = opt.minLogC 
+      factory._maxLogC = opt.maxLogC 
+      factory._minLogCratio = opt.minLogCratio
+      factory._maxLogCratio = opt.maxLogCratio
+      factory._maxLinearScale = opt.maxLinearScale
+
+      factory._minLogCdifference = opt.minLogCratio
+      factory._maxLogCdifference = opt.maxLogCratio
+
+      factory._showRelativeRatio = opt.showRelativeRatio
+      factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
+
+      factory._removeWeight = opt.removeWeight
+
+      factory._invertXY = opt.invertXY
+
+      factory._fileFormats = opt.fileFormats.split(',')
+      
+      factory._postFit = opt.postFit
+
+      factory._removeMCStat = opt.removeMCStat
+      factory._plotFancy = opt.plotFancy
+      factory._SkipMissingNuisance = opt.skipMissingNuisance
+
+      factory._extraLegend = opt.extraLegend
+      factory._preliminary = not opt.NoPreliminary
+      factory._removeAllMC = opt.RemoveAllMC
+
+      factory.makePlot(inputFile ,outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
+
+    
+#===============================
+
+    # if present load the customization script
+    customized_module = None
+
+    if opt.customizeScript != None and opt.customizeKey!=None:
+      print "Loading customization script"
+      customized_module = imp.load_source('customize_module', opt.customizeScript)
+      # Call the script customize method with the key from options
+      if hasattr(customized_module, 'customize'):
+        customizations_keys = opt.customizeKey.split(',')
+        for customization_key in customizations_keys:
+          print "==========================================================="
+          print "Customization:  ", customization_key
+          print "==========================================================="
+          samples_c,cuts_c,variables_c,nuisances_c,plot_c,groupPlot_c = customized_module.customize(samples,cuts,
+                                                        variables,nuisances,plot,groupPlot, key=customization_key)
+          # Run plots for the current customization
+
+          p = Process(target=launch_plot,args=(opt.inputFile ,opt.outputDirPlots, variables_c, cuts_c, samples_c, 
+                                                plot_c, nuisances_c, legend, groupPlot_c) )
+          p.start() 
+      else:
+          print "Customization script missing *customize* method! skipping it"
    
-    factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
+    else:
+      # parallelize by cut
+      if opt.parallelPlotting:
+        for cut in cuts:
+          p = Process(target=launch_plot( opt.inputFile ,opt.outputDirPlots, variables, [cut], samples, 
+                                        plot, nuisances,legend, groupPlot) )
+          p.start()
+      else:
+        launch_plot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, 
+                                        plot, nuisances,legend, groupPlot) 
+
+        
     
     print '... and now closing ...'

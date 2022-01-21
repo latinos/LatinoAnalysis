@@ -45,6 +45,7 @@ class DatacardFactory:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
         else:
           self._fileIn = ROOT.TFile(inputFile, "READ")
+          ROOT.gROOT.GetListOfFiles().Remove(self._fileIn) #Speed up
 
         # categorize the sample names
         signal_ids = collections.OrderedDict() # id map of alternative_signals + cumulative_signals
@@ -146,7 +147,17 @@ class DatacardFactory:
 #                        if not sampleName in killBinSig : killBinSig[sampleName] = []
 #                        killBinSig[sampleName].append(iBin)
 #                        histo.SetBinContent(iBin,0.)
-                    
+                  if 'scaleSampleForDatacard' in structure[sampleName]:
+                    scaleFactor = 1.
+                    if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
+                      try:
+                        scaleFactor = structure[sampleName]['scaleSampleForDatacard'][cutName]
+                      except:
+                        pass
+                    if type(structure[sampleName]['scaleSampleForDatacard']) is int or type(structure[sampleName]['scaleSampleForDatacard']) is float:
+                      scaleFactor = structure[sampleName]['scaleSampleForDatacard']
+                    histo.Scale(scaleFactor)
+                  
                   yields[sampleName] = histo.Integral()
   
                 #
@@ -262,7 +273,10 @@ class DatacardFactory:
 
                 if nuisance['type'] in ['lnN', 'lnU']:
                   # why is adding CMS_ not the default for lnN/lnU? (Y.I. 2019.11.06)
+
                   entryName = nuisance['name']
+                  if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                    entryName += "_"+cutName
 
                   card.write(entryName.ljust(80-20))
 
@@ -270,7 +284,12 @@ class DatacardFactory:
                     print ">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"
                     card.write(('shape').ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance['all'] == 1) or \
+                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
+                        # If the cuts_samples options is there and the sample is inserted in the dictionary
+                        # check if the current cutName is included. Excluded the cuts not in the list
+                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        card.write(('-').ljust(columndef))
+                      elif ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
 
                         histo = self._getHisto(cutName, variableName, sampleName)
@@ -280,6 +299,17 @@ class DatacardFactory:
                         histoUp.SetDirectory(self._outFile)
                         histoDown.SetDirectory(self._outFile)
 
+                        if 'scaleSampleForDatacard' in structure[sampleName]:
+                          scaleFactor = 1.
+                          if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
+                            try:
+                              scaleFactor = structure[sampleName]['scaleSampleForDatacard'][cutName]
+                            except:
+                              pass
+                          if type(structure[sampleName]['scaleSampleForDatacard']) is int or type(structure[sampleName]['scaleSampleForDatacard']) is float:
+                            scaleFactor = structure[sampleName]['scaleSampleForDatacard']
+                          histoUp.Scale(scaleFactor)
+                          histoDown.Scale(scaleFactor)
                         if '/' in nuisance['samples'][sampleName]:
                           up, down = nuisance['samples'][sampleName].split('/')
                           histoUp.Scale(float(up))
@@ -323,13 +353,21 @@ class DatacardFactory:
                   else:
                     entryName = 'CMS_' + nuisance['name']
 
+                  if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                    entryName += "_"+cutName
+
                   card.write(entryName.ljust(80-20))
 
                   if 'AsLnN' in nuisance and float(nuisance['AsLnN']) >= 1.:
                     print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
                     card.write(('lnN').ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance['all'] == 1) or \
+                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
+                        # If the cuts_samples options is there and the sample is inserted in the dictionary
+                        # check if the current cutName is included. Excluded the cuts not in the list
+                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        card.write(('-').ljust(columndef))
+                      elif ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
                         histo = self._getHisto(cutName, variableName, sampleName)
                         histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up') 
@@ -341,7 +379,7 @@ class DatacardFactory:
                           if self._skipMissingNuisance:
                             card.write(('-').ljust(columndef)) 
                             continue
-
+                        
                         histoIntegral = histo.Integral()
                         histoUpIntegral = histoUp.Integral()
                         histoDownIntegral = histoDown.Integral()
@@ -394,7 +432,12 @@ class DatacardFactory:
                   else:  
                     card.write('shape'.ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance ['all'] == 1) or \
+                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
+                        # If the cuts_samples options is there and the sample is inserted in the dictionary
+                        # check if the current cutName is included. Excluded the cuts not in the list
+                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        card.write(('-').ljust(columndef))
+                      elif ('all' in nuisance and nuisance ['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
                         # save the nuisance histograms in the root file
                         if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
@@ -402,6 +445,13 @@ class DatacardFactory:
                         else:
                           suffixOut = '_CMS_' + nuisance['name']
 
+                        if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                          if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
+                            suffixOut = "_"+nuisance['name']
+                          else:
+                            suffixOut = '_CMS_' + nuisance['name']
+                          suffixOut += "_"+cutName 
+ 
                         symmetrize = 'symmetrize' in nuisance and nuisance['symmetrize']
 
                         saved = self._saveNuisanceHistos(cutName, variableName, sampleName, '_' + nuisance['name'], suffixOut, symmetrize)
@@ -552,6 +602,17 @@ class DatacardFactory:
           if self._skipMissingNuisance:
             return False
           # else let ROOT raise
+        if 'scaleSampleForDatacard' in structure[sampleName]:
+          scaleFactor = 1.
+          if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
+            try:
+              scaleFactor = structure[sampleName]['scaleSampleForDatacard'][cutName]
+            except:
+              pass
+          if type(structure[sampleName]['scaleSampleForDatacard']) is int or type(structure[sampleName]['scaleSampleForDatacard']) is float:
+            scaleFactor = structure[sampleName]['scaleSampleForDatacard']
+          histoUp.Scale(scaleFactor)
+          histoDown.Scale(scaleFactor)
 
         if symmetrize:
           histoNom = self._getHisto(cutName, variableName, sampleName)

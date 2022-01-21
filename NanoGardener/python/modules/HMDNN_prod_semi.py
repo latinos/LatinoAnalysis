@@ -42,84 +42,146 @@ class ApplyDNN_Production_Semi(Module):
 
         event = mappedEvent(event, mapname=self._branch_map)
 
+        values = []
+        ev = event.event
+
+        njet30 = 0
+        jetidx = [-1, -1, -1, -1]
+        for alpha in range(int(self.GetValue(event, "nCleanJet"))):
+          if self.GetValue(event, "CleanJet_pt["+str(alpha)+"]") >= 30.0:
+            njet30 += 1
+          else:
+            break
+
+        withindex = "[0]" # There was a case once where the entries in a sample weren't a list, for some reason
         try:
-          wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt[0]")
+          wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt"+withindex)
           ValidEntry=True
         except IndexError:
           ValidEntry=False
-        if self.GetValue(event, "HM_nCleanFatJetPassMBoosted") >= 1 and ValidEntry:
-          wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt[0]")
-          weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta[0]")
-          wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi[0]")
-          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass[0]")
-          WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass[0]")
+        except TypeError:
+          withindex = ''
+
+        if self.GetValue(event, "HM_nCleanFatJetPassMBoosted") >= 1 and ValidEntry: # Boosted
+          wpt = self.GetValue(event, "HM_CleanFatJetPassMBoosted_pt"+withindex)
+          weta = self.GetValue(event, "HM_CleanFatJetPassMBoosted_eta"+withindex)
+          wphi = self.GetValue(event, "HM_CleanFatJetPassMBoosted_phi"+withindex)
+          wmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_mass"+withindex)
+          #WWmass = self.GetValue(event, "HM_CleanFatJetPassMBoosted_HlnFat_mass"+withindex)
 
           wr1pt = 0.0
           wr1eta = 0.0
           wr1phi = 0.0
+          wr1mass = 0.0
           wr2pt = 0.0
           wr2eta = 0.0
           wr2phi = 0.0
+          wr2mass = 0.0
 
+          for i in range(int(self.GetValue(event, "nCleanJet"))):
+            if i==4: break
+            jetidx[i] = i
 
-          jetidx1 = 0
-          jetidx2 = 1
-        else:
+        elif int(self.GetValue(event, "HM_idx_j1")) != -1: # Resolved
           wpt = self.GetValue(event, "HM_Whad_pt")
           weta = self.GetValue(event, "HM_Whad_eta")
           wphi = self.GetValue(event, "HM_Whad_phi")
           wmass = self.GetValue(event, "HM_Whad_mass")
-          WWmass = self.GetValue(event, "HM_Hlnjj_mass")
-
+          #WWmass = self.GetValue(event, "HM_Hlnjj_mass")
           nojet = [int(self.GetValue(event, "HM_idx_j1")), int(self.GetValue(event, "HM_idx_j2"))]
-          if -1 in nojet: # Events has less than 2 jets and shouldn't be considered anyway
-            self.out.fillBranch("DNN_isVBF", 0.0)
-            return True
 
           wr1pt = self.GetValue(event, "CleanJet_pt["+str(nojet[0])+"]")
           wr1eta = self.GetValue(event, "CleanJet_eta["+str(nojet[0])+"]")
           wr1phi = self.GetValue(event, "CleanJet_phi["+str(nojet[0])+"]")
+          wr1mass = self.GetValue(event, "Jet_mass["+str(int(self.GetValue(event, "CleanJet_jetIdx["+str(nojet[0])+"]")))+"]")
           wr2pt = self.GetValue(event, "CleanJet_pt["+str(nojet[1])+"]")
           wr2eta = self.GetValue(event, "CleanJet_eta["+str(nojet[1])+"]")
           wr2phi = self.GetValue(event, "CleanJet_phi["+str(nojet[1])+"]")
+          wr2mass = self.GetValue(event, "Jet_mass["+str(int(self.GetValue(event, "CleanJet_jetIdx["+str(nojet[1])+"]")))+"]")
 
-          goodjet = [alpha for alpha in range(4) if alpha not in nojet]
-          jetidx1 = goodjet[0]
-          jetidx2 = goodjet[1]
+          j = 0
+          for i in range(int(self.GetValue(event, "nCleanJet"))):
+            if i in nojet: continue
+            jetidx[j] = i
+            j += 1
+            if j==4: break
 
-        if self.GetValue(event, "nCleanJet")>=1+jetidx1:
-          jetpt1 = self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]")
-          jeteta1 = self.GetValue(event, "CleanJet_eta["+str(jetidx1)+"]")
-          jetphi1 = self.GetValue(event, "CleanJet_phi["+str(jetidx1)+"]")
+        else: # Neither boosted nor resolved: Event not selected
+          self.out.fillBranch("DNN_isVBF", 0.0)
+          return True
+
+        if jetidx[0] != -1:
+          jetpt1 = self.GetValue(event, "CleanJet_pt["+str(jetidx[0])+"]")
+          jeteta1 = self.GetValue(event, "CleanJet_eta["+str(jetidx[0])+"]")
+          jetphi1 = self.GetValue(event, "CleanJet_phi["+str(jetidx[0])+"]")
+          jetmass1 = self.GetValue(event, "Jet_mass["+str(int(self.GetValue(event, "CleanJet_jetIdx["+str(jetidx[0])+"]")))+"]")
+          LorJ1 = ROOT.TLorentzVector()
+          LorJ1.SetPtEtaPhiM(jetpt1, jeteta1, jetphi1, jetmass1)
         else:
           jetpt1 = 0.0
           jeteta1 = 0.0
           jetphi1 = 0.0
-        if self.GetValue(event, "nCleanJet")>=1+jetidx2:
-          jetpt2 = self.GetValue(event, "CleanJet_pt["+str(jetidx2)+"]")
-          jeteta2 = self.GetValue(event, "CleanJet_eta["+str(jetidx2)+"]")
-          jetphi2 = self.GetValue(event, "CleanJet_phi["+str(jetidx2)+"]")
+          jetmass1 = 0.0
+        if jetidx[1] != -1:
+          jetpt2 = self.GetValue(event, "CleanJet_pt["+str(jetidx[1])+"]")
+          jeteta2 = self.GetValue(event, "CleanJet_eta["+str(jetidx[1])+"]")
+          jetphi2 = self.GetValue(event, "CleanJet_phi["+str(jetidx[1])+"]")
+          jetmass2 = self.GetValue(event, "Jet_mass["+str(int(self.GetValue(event, "CleanJet_jetIdx["+str(jetidx[1])+"]")))+"]")
+          LorJ2 = ROOT.TLorentzVector()
+          LorJ2.SetPtEtaPhiM(jetpt2, jeteta2, jetphi2, jetmass2)
+          mjj_12 = (LorJ1+LorJ2).M()
+          detajj_12 = abs(LorJ1.Eta()-LorJ2.Eta())
         else:
           jetpt2 = 0.0
           jeteta2 = 0.0
           jetphi2 = 0.0
-
-        #if jetidx1==0 and jetidx2==1:
-        #  mjj = self.GetValue(event, "mjj")
-        #  detajj = self.GetValue(event, "detajj")
-        if self.GetValue(event, "nCleanJet")>=1+jetidx2:
-          J1 = ROOT.TLorentzVector()
-          J2 = ROOT.TLorentzVector()
-          J1.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx1)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx1)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx1)+"]]"))
-          J2.SetPtEtaPhiM(self.GetValue(event, "CleanJet_pt["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_eta["+str(jetidx2)+"]"), self.GetValue(event, "CleanJet_phi["+str(jetidx2)+"]"), self.GetValue(event, "Jet_mass[event.CleanJet_jetIdx["+str(jetidx2)+"]]"))
-          mjj = (J1+J2).M()
-          detajj = abs(J1.Eta()-J2.Eta())
+          jetmass2 = 0.0
+          mjj_12 = 0.0
+          detajj_12 = 0.0
+        if jetidx[2] != -1:
+          jetpt3 = self.GetValue(event, "CleanJet_pt["+str(jetidx[2])+"]")
+          jeteta3 = self.GetValue(event, "CleanJet_eta["+str(jetidx[2])+"]")
+          jetphi3 = self.GetValue(event, "CleanJet_phi["+str(jetidx[2])+"]")
+          jetmass3 = self.GetValue(event, "Jet_mass["+str(int(self.GetValue(event, "CleanJet_jetIdx["+str(jetidx[2])+"]")))+"]")
+          LorJ3 = ROOT.TLorentzVector()
+          LorJ3.SetPtEtaPhiM(jetpt3, jeteta3, jetphi3, jetmass3)
+          mjj_13 = (LorJ1+LorJ3).M()
+          detajj_13 = abs(LorJ1.Eta()-LorJ3.Eta())
+          mjj_23 = (LorJ2+LorJ3).M()
+          detajj_23 = abs(LorJ2.Eta()-LorJ3.Eta())
         else:
-          mjj = -9999.0
-          detajj = -9999.0
-
-        values = []
-        ev = event.event
+          jetpt3 = 0.0
+          jeteta3 = 0.0
+          jetphi3 = 0.0
+          jetmass3 = 0.0
+          mjj_13 = 0.0
+          detajj_13 = 0.0
+          mjj_23 = 0.0
+          detajj_23 = 0.0
+        if jetidx[3] != -1:
+          jetpt4 = self.GetValue(event, "CleanJet_pt["+str(jetidx[3])+"]")
+          jeteta4 = self.GetValue(event, "CleanJet_eta["+str(jetidx[3])+"]")
+          jetphi4 = self.GetValue(event, "CleanJet_phi["+str(jetidx[3])+"]")
+          jetmass4 = self.GetValue(event, "Jet_mass["+str(int(self.GetValue(event, "CleanJet_jetIdx["+str(jetidx[3])+"]")))+"]")
+          LorJ4 = ROOT.TLorentzVector()
+          LorJ4.SetPtEtaPhiM(jetpt4, jeteta4, jetphi4, jetmass4)
+          mjj_14 = (LorJ1+LorJ4).M()
+          detajj_14 = abs(LorJ1.Eta()-LorJ4.Eta())
+          mjj_24 = (LorJ2+LorJ4).M()
+          detajj_24 = abs(LorJ2.Eta()-LorJ4.Eta())
+          mjj_34 = (LorJ3+LorJ4).M()
+          detajj_34 = abs(LorJ3.Eta()-LorJ4.Eta())
+        else:
+          jetpt4 = 0.0
+          jeteta4 = 0.0
+          jetphi4 = 0.0
+          jetmass4 = 0.0
+          mjj_14 = 0.0
+          detajj_14 = 0.0
+          mjj_24 = 0.0
+          detajj_24 = 0.0
+          mjj_34 = 0.0
+          detajj_34 = 0.0
 
         values.append(self.GetValue(event, "Lepton_pt[0]") * math.cos(self.GetValue(event, "Lepton_phi[0]")))
         values.append(self.GetValue(event, "Lepton_pt[0]") * math.sin(self.GetValue(event, "Lepton_phi[0]")))
@@ -128,9 +190,19 @@ class ApplyDNN_Production_Semi(Module):
         values.append(jetpt1 * math.cos(jetphi1))
         values.append(jetpt1 * math.sin(jetphi1))
         values.append(jetpt1 * math.sinh(jeteta1))
+        values.append(jetmass1)
         values.append(jetpt2 * math.cos(jetphi2))
         values.append(jetpt2 * math.sin(jetphi2))
         values.append(jetpt2 * math.sinh(jeteta2))
+        values.append(jetmass2)
+        values.append(jetpt3 * math.cos(jetphi3))
+        values.append(jetpt3 * math.sin(jetphi3))
+        values.append(jetpt3 * math.sinh(jeteta3))
+        values.append(jetmass3)
+        values.append(jetpt4 * math.cos(jetphi4))
+        values.append(jetpt4 * math.sin(jetphi4))
+        values.append(jetpt4 * math.sinh(jeteta4))
+        values.append(jetmass4)
 
         values.append(wpt * math.cos(wphi))
         values.append(wpt * math.sin(wphi))
@@ -143,17 +215,31 @@ class ApplyDNN_Production_Semi(Module):
         values.append(wr1pt * math.cos(wr1phi))
         values.append(wr1pt * math.sin(wr1phi))
         values.append(wr1pt * math.sinh(wr1eta))
+        values.append(wr1mass)
         values.append(wr2pt * math.cos(wr2phi))
         values.append(wr2pt * math.sin(wr2phi))
         values.append(wr2pt * math.sinh(wr2eta))
+        values.append(wr2mass)
 
         values.append(self.GetValue(event, "PuppiMET_pt") * math.cos(self.GetValue(event, "PuppiMET_phi")))
         values.append(self.GetValue(event, "PuppiMET_pt") * math.sin(self.GetValue(event, "PuppiMET_phi")))
         values.append(self.GetValue(event, "nCleanJet"))
-        values.append(mjj)
+        values.append(njet30)
         values.append(self.GetValue(event, "HM_largest_nonW_mjj"))
-        values.append(detajj)
-        values.append(WWmass)
+        #values.append(WWmass)
+
+        values.append(mjj_12)
+        values.append(detajj_12)
+        values.append(mjj_13)
+        values.append(detajj_13)
+        values.append(mjj_14)
+        values.append(detajj_14)
+        values.append(mjj_23)
+        values.append(detajj_23)
+        values.append(mjj_24)
+        values.append(detajj_24)
+        values.append(mjj_34)
+        values.append(detajj_34)
 
 
         values_stacked = np.hstack(values).reshape(1, len(values))

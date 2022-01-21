@@ -40,27 +40,34 @@ class EFTReweighter(Module):
 
         if "VBF_H0" in self.sample :
           self.productionProcess = "VBF"
-          self.XHProcess = True
+          self.vertexType = "HVV"
         elif "ZH_H0" in self.sample :
           self.productionProcess = "ZH"
-          self.XHProcess = True
+          self.vertexType = "HVV"
         elif "WH_H0" in self.sample :
           self.productionProcess = "WH"
-          self.XHProcess = True
+          self.vertexType = "HVV"
+        elif "GGHjj_H0" in self.sample :
+          self.productionProcess = "GluGlujj"
+          self.vertexType = "Hgg"
         elif "H0" in self.sample :
           self.productionProcess = "GluGlu"
-          self.XHProcess = False
+          self.vertexType = "HVV"
         else:
           raise NameError(self.sample, "is an unrecognised simulation")
 
         print("Running MELA EFT reweighter with " + self.productionProcess + " sample")
 
         self.out = wrappedOutputTree
-        self.newbranches = ['gen_dme_hsm','gen_dme_hm','gen_dme_hp','gen_dme_hl','gen_dme_mixhm','gen_dme_mixhp','gen_dme_mixhl' ]
 
-        if self.XHProcess == True:
-         self.newbranches += ['gen_pme_hsm','gen_pme_hm','gen_pme_hp','gen_pme_hl','gen_pme_mixhm','gen_pme_mixhp','gen_pme_mixhl' ]
+        if self.vertexType == "HVV":
+         self.newbranches =  ['gen_dme_hsm','gen_dme_hm','gen_dme_hp','gen_dme_hl','gen_dme_mixhm','gen_dme_mixhp','gen_dme_mixhl' ]
+         if self.productionProcess != "GluGlu":
+          self.newbranches += ['gen_pme_hsm','gen_pme_hm','gen_pme_hp','gen_pme_hl','gen_pme_mixhm','gen_pme_mixhp','gen_pme_mixhl' ]
         
+        elif self.vertexType == "Hgg":
+         self.newbranches = ['gen_pme_hsm','gen_pme_hm','gen_pme_mixhm' ] 
+
         for nameBranches in self.newbranches :
           self.out.branch(nameBranches  ,  "F");
 
@@ -97,6 +104,7 @@ class EFTReweighter(Module):
           if abs(gen.pdgId) >= 21: continue
           mid = event.GenPart_genPartIdxMother[gid]
           if mid == -1: continue
+    #      print "genp ", gen.pdgId, event.GenPart_pdgId[mid], self.FromH(event, gid)
           if abs(event.GenPart_pdgId[mid]) != 24: continue 
           if self.FromH(event, gid) == False: continue
           HFinalStateIdx.append(gid)
@@ -207,6 +215,26 @@ class EFTReweighter(Module):
          if len(adds) !=2 : 
           print "SOMETHING WENT WRONG!, VBF associated partons ", len(adds)
 
+        elif self.productionProcess == "GluGlujj" : 
+
+         self.productionMela = ROOT.TVar.JJQCD
+
+         LHEjetIdx = []
+         for idx,part in enumerate(self.LHE):
+          if abs(part.pdgId) in [1,2,3,4,5,21] and part.status==1:
+           LHEjetIdx.append(idx)
+
+         LHEjetIdx = self.pTorder(event, LHEjetIdx)
+
+         for ijet in LHEjetIdx:
+          add = ROOT.TLorentzVector()
+          add.SetPtEtaPhiM(event.LHEPart_pt[ijet], event.LHEPart_eta[ijet], event.LHEPart_phi[ijet], 0.)
+          adds.push_back(add)
+          addIDs.push_back(int(event.LHEPart_pdgId[ijet]))
+
+         if len(adds) !=2 : 
+          print "SOMETHING WENT WRONG!, GluGlujj associated partons ", len(adds)
+
         # Get MEs from MELA
 
         daughter_coll = ROOT.SimpleParticleCollection_t() 
@@ -225,55 +253,66 @@ class EFTReweighter(Module):
         self.mela.setCandidateDecayMode(ROOT.TVar.CandidateDecay_WW)   
         self.mela.setInputEvent(daughter_coll, associated_coll, mother_coll, 1)
         self.mela.setCurrentCandidateFromIndex(0)
-        
+
         DME = [1, 1, 1, 1, 1, 1, 1] 
         PME = [1, 1, 1, 1, 1, 1, 1]
 
-        if self.XHProcess == True:
+        if self.vertexType == "HVV":
 
-         DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0) 
-         PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
+         if self.productionProcess == "GluGlu" : 
+          DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0)
+         else :  
+          DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 0, 0)
+          PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 0, 0) 
   
-        elif self.productionProcess == "GluGlu" :
+         gen_dme_hsm   = DME[0]
+         gen_dme_hm    = DME[1]
+         gen_dme_hp    = DME[2]
+         gen_dme_hl    = DME[3]
+         gen_dme_mixhm = DME[4]
+         gen_dme_mixhp = DME[5] 
+         gen_dme_mixhl = DME[6] 
 
-         DME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, ROOT.TVar.ZZINDEPENDENT, 1, 0) 
+         self.out.fillBranch( 'gen_dme_hsm',    gen_dme_hsm )
+         self.out.fillBranch( 'gen_dme_hm',     gen_dme_hm )
+         self.out.fillBranch( 'gen_dme_hp',     gen_dme_hp )
+         self.out.fillBranch( 'gen_dme_hl',     gen_dme_hl )
+         self.out.fillBranch( 'gen_dme_mixhm',  gen_dme_mixhm )
+         self.out.fillBranch( 'gen_dme_mixhp',  gen_dme_mixhp )
+         self.out.fillBranch( 'gen_dme_mixhl',  gen_dme_mixhl )
 
-        gen_dme_hsm   = DME[0]
-        gen_dme_hm    = DME[1]
-        gen_dme_hp    = DME[2]
-        gen_dme_hl    = DME[3]
-        gen_dme_mixhm = DME[4]
-        gen_dme_mixhp = DME[5] 
-        gen_dme_mixhl = DME[6] 
+         if self.productionProcess != "GluGlu" : 
 
-        gen_pme_hsm   = PME[0]
-        gen_pme_hm    = PME[1]
-        gen_pme_hp    = PME[2]
-        gen_pme_hl    = PME[3]
-        gen_pme_mixhm = PME[4]
-        gen_pme_mixhp = PME[5] 
-        gen_pme_mixhl = PME[6] 
+          gen_pme_hsm   = PME[0]
+          gen_pme_hm    = PME[1]
+          gen_pme_hp    = PME[2]
+          gen_pme_hl    = PME[3]
+          gen_pme_mixhm = PME[4]
+          gen_pme_mixhp = PME[5] 
+          gen_pme_mixhl = PME[6] 
 
-        if math.isnan(gen_pme_hsm) : print "SOMETHING WENT WRONG!, Production ME is nan "
-        if math.isnan(gen_dme_hsm) : print "SOMETHING WENT WRONG!, Decay ME is nan "
+          self.out.fillBranch( 'gen_pme_hsm',    gen_pme_hsm )
+          self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
+          self.out.fillBranch( 'gen_pme_hp',     gen_pme_hp )
+          self.out.fillBranch( 'gen_pme_hl',     gen_pme_hl )
+          self.out.fillBranch( 'gen_pme_mixhm',  gen_pme_mixhm )
+          self.out.fillBranch( 'gen_pme_mixhp',  gen_pme_mixhp )
+          self.out.fillBranch( 'gen_pme_mixhl',  gen_pme_mixhl )
 
-        self.out.fillBranch( 'gen_dme_hsm',    gen_dme_hsm )
-        self.out.fillBranch( 'gen_dme_hm',     gen_dme_hm )
-        self.out.fillBranch( 'gen_dme_hp',     gen_dme_hp )
-        self.out.fillBranch( 'gen_dme_hl',     gen_dme_hl )
-        self.out.fillBranch( 'gen_dme_mixhm',  gen_dme_mixhm )
-        self.out.fillBranch( 'gen_dme_mixhp',  gen_dme_mixhp )
-        self.out.fillBranch( 'gen_dme_mixhl',  gen_dme_mixhl )
+        elif self.vertexType == "Hgg" : 
 
-        if self.XHProcess == True:
+         PME = ROOT.melaHiggsEFT(self.mela, ROOT.TVar.JHUGen, self.productionMela, 1, 0) 
+
+         gen_pme_hsm   = PME[0]
+         gen_pme_hm    = PME[1]
+         gen_pme_mixhm = PME[4]
 
          self.out.fillBranch( 'gen_pme_hsm',    gen_pme_hsm )
          self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
-         self.out.fillBranch( 'gen_pme_hp',     gen_pme_hp )
-         self.out.fillBranch( 'gen_pme_hl',     gen_pme_hl )
          self.out.fillBranch( 'gen_pme_mixhm',  gen_pme_mixhm )
-         self.out.fillBranch( 'gen_pme_mixhp',  gen_pme_mixhp )
-         self.out.fillBranch( 'gen_pme_mixhl',  gen_pme_mixhl )
+
+        if math.isnan(gen_pme_hsm) : print "SOMETHING WENT WRONG?, Production ME is nan "
+        if math.isnan(gen_dme_hsm) : print "SOMETHING WENT WRONG?, Decay ME is nan "
 
         self.mela.resetInputEvent()
 

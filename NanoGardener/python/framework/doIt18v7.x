@@ -36,6 +36,15 @@ do
          mkPostProc.py -p Autumn18_102X_nAODv7_Full2018v7 -s $iSyst -i MCl1loose2018v7__MCCorr2018v7__l2loose__l2tightOR2018v7__recoilDY -b  -Q nextweek
        done
 
+
+for iSyst in JESTotalup_suffix JESAbsoluteup_suffix JESBBEC1up_suffix JESEC2up_suffix JESFlavorQCDup_suffix JESHFup_suffix JESRelativeup_suffix ; do
+  mkPostProc.py -p Autumn18_102X_nAODv7_Full2018v7 -s $iSyst -i MCl1loose2018v7__MCCorr2018v7__l2loose__l2tightOR2018v7__recoilDY -b 
+done
+for iSyst in JESTotaldo_suffix JESAbsolutedo_suffix JESBBEC1do_suffix JESEC2do_suffix JESFlavorQCDdo_suffix JESHFdo_suffix JESRelativedo_suffix ; do
+  mkPostProc.py -p Autumn18_102X_nAODv7_Full2018v7 -s $iSyst -i MCl1loose2018v7__MCCorr2018v7__l2loose__l2tightOR2018v7__recoilDY -b 
+done
+
+
        echo "Press [CTRL+C] to stop.."
        sleep 1200
 

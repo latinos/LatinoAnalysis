@@ -309,6 +309,7 @@ Samples['GluGluToWWToMNTN'] = {'nanoAOD' :'/GluGluToWWToMNTN_13TeV_MCFM701_pythi
 Samples['GluGluToWWToTNEN'] = {'nanoAOD' :'/GluGluToWWToTNEN_13TeV_MCFM701_pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['GluGluToWWToTNMN'] = {'nanoAOD' :'/GluGluToWWToTNMN_13TeV_MCFM701_pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['GluGluToWWToTNTN'] = {'nanoAOD' :'/GluGluToWWToTNTN_13TeV_MCFM701_pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
+Samples['GluGluWWToLNuQQ'] = {'nanoAOD' :'/GluGluWWToLNuQQ_CP5_13TeV_aMCatNLO_pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
 #
 #
 #### WZ
@@ -326,6 +327,8 @@ Samples['ZZTo4L'] = {'nanoAOD' :'/ZZTo4L_13TeV_powheg_pythia8/RunIIFall17NanoAOD
 #### Wg
 #
 Samples['Wg_AMCNLOFXFX'] = {'nanoAOD' :'/WGToLNuG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
+Samples['Wg_AMCNLOFXFX_PDFWeights'] = {'nanoAOD' :'/WGToLNuG_01J_5f_PDFWeights_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
+Samples['Wg_AMCNLOFXFX_PDFWeights_ext1'] = {'nanoAOD' :'/WGToLNuG_01J_5f_PDFWeights_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8_ext1-v1/NANOAODSIM'} ##!!!!
 Samples['Wg_MADGRAPHMLM'] = {'nanoAOD' :'/WGToLNuG_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
 #### WGJJ
 Samples['WGJJ'] = {'nanoAOD' :'/WGJJToLNu_EWK_QCD_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
@@ -419,6 +422,7 @@ Samples['TTZjets_ext1'] = {'nanoAOD' :'/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia
 #
 ### W+Jets
 #
+Samples['WJetsToLNu'] = {'nanoAOD' : '/WJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
 Samples['WJetsToLNu-LO_ext1'] = {'nanoAOD' :'/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8_ext1-v1/NANOAODSIM'} ##!! !!ext sample!! check extension tag exists!!!!
 Samples['WJetsToLNu-LO'] = {'nanoAOD' :'/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
 Samples['WJetsToLNu_HT70_100'] = {'nanoAOD' :'/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
@@ -456,6 +460,13 @@ Samples['WpWpJJ_EWK_powheg'] = {'nanoAOD' :'/WpWpJJ_EWK_TuneCP5_13TeV-powheg-pyt
 Samples['WpWpJJ_EWK'] = {'nanoAOD' :'/WpWpJJ_EWK_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['WpWpJJ_EWK_QCD'] = {'nanoAOD' :'/WpWpJJ_EWK-QCD_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['WpWpJJ_QCD'] = {'nanoAOD' :'/WpWpJJ_QCD_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
+
+Samples['WpWmJJ_EWK_pol_LL'] = {'nanoAOD' :'/WWJJTo2L2NuJJ_EW_LLpolarization_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['WpWmJJ_EWK_pol_LT'] = {'nanoAOD' :'/WWJJTo2L2NuJJ_EW_LTpolarization_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['WpWmJJ_EWK_pol_TL'] = {'nanoAOD' :'/WWJJTo2L2NuJJ_EW_TLpolarization_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['WpWmJJ_EWK_pol_TT'] = {'nanoAOD' :'/WWJJTo2L2NuJJ_EW_TTpolarization_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+
+Samples['WWjj_OS_EWK_dim8']={'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', "paths":['/store/cmst3/group/dpsww/vbs/eft_2017/']}
 #
 ### VBS - specific backgrounds
 #
@@ -518,8 +529,10 @@ Samples['DYJetsToLL_M-4to50_HT-600toInf'] = {'nanoAOD' :'/DYJetsToLL_M-4to50_HT-
 #
 #### High mass HT binned
 #
+Samples['DYJetsToLL_M-50_HT-70to100'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
 Samples['DYJetsToLL_M-50_HT-100to200_newpmx'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_new_pmx_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
 Samples['DYJetsToLL_M-50_HT-100to200'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_new_pmx_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['DYJetsToLL_M-50_HT-100to200_ext1'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8_ext1-v1/NANOAODSIM'}
 Samples['DYJetsToLL_M-50_HT-200to400_ext1'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8_ext1-v1/NANOAODSIM'} ##!! !!ext sample!! check extension tag exists!!!!
 Samples['DYJetsToLL_M-50_HT-200to400'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
 Samples['DYJetsToLL_M-50_HT-400to600_newpmx'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_new_pmx_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
@@ -575,6 +588,27 @@ Samples["WpToLNu_ZTo2J"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/',
 Samples["WpTo2J_ZTo2L"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JZTo2LJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v6/200810_101406/0000/']}
 Samples["WpToLNu_WpTo2J"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWplusTo2JJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v6/200810_101446/0000/']}
 
+
+# Dipole recoil private samples
+Samples['WmToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusToLNuWminusTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210419_071110/0000/']}
+Samples['WmToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusToLNuZTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210419_071118/0000/']}
+Samples['WpToLNu_WpTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWplusTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210420_070936/0000/']}
+Samples['WpToLNu_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuZTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210419_071139/0000/']}
+Samples['WpToLNu_WmTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWminusTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210420_070945/0000/']}
+Samples['WpTo2J_WmToLNu_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JWminusToLNuJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210420_070927/0000/']}
+Samples['WmTo2J_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WminusTo2JZTo2LJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210419_071101/0000/']}
+Samples['WpTo2J_ZTo2L_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JZTo2LJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210419_071130/0000/']}
+Samples['ZTo2L_ZTo2J_dipoleRecoil'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/ZTo2LZTo2JJJ_dipoleRecoil_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v7/210419_071148/0000/']}
+
 #
 ## QCD di-boson production for VBS Semileptonic analysis  MC 2017
 ## >Sample string for mkPostProd
@@ -590,10 +624,23 @@ Samples["WpToLNu_ZTo2J_QCD"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cm
 Samples["WpTo2J_ZTo2L_QCD"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusTo2JZTo2LJJ_QCD_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v6/200810_101416/0000/']}
 Samples["WpToLNu_WpTo2J_QCD"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths': ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/WplusToLNuWplusTo2JJJ_QCD_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8/VVjj_2017v6/200810_101456/0000/']}
 
+####################### VBS jjlnu EWK-QCD interference
+Samples['WmToLNuWpTo2J_EWKQCD'] = {'nanoAOD':'/WminusToLNuWplusTo2JJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['WpToLNuWmTo2J_EWKQCD'] = {'nanoAOD': '/WplusToLNuWminusTo2JJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['WToLNuZTo2J_EWKQCD'] =   {'nanoAOD':'/WToLNuZTo2JJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['WTo2JZToLL_EWKQCD'] =    {'nanoAOD':'/WTo2JZToLNuJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['ZToLLZToJJ_EWKQCD'] =    {'nanoAOD': '/ZZJJ_EWK_QCD_LO_SM_MJJ200PTJ15_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+
+
 ####
 ## EWK W+Jets for Semileptonic VBS analysis
 Samples['WLNuJJ_EWK'] = {'nanoAOD' :'/LNuJJ_EWK_SM_5f_LO_NoWH_TuneCP5_13TeV_madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} ##!!!!
-#
+
+Samples["EWK_LNuJJ_herwig"] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 
+               "paths": ['/store/group/phys_smp/VJets_NLO_VBSanalyses/Samples/NanoAOD/EWK_LNuJJ_TuneCP5_13TeV-madgraph-herwig/VVjj_2017v7/210430_143345/0000']}
+
+Samples["EWK_LLJJ_herwig"] = {'nanoAOD': '/EWK_LLJJ_MLL-50_MJJ-120_TuneCH3_PSweights_13TeV-madgraph-herwig7_corrected/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+
 #
 #
 Samples['EWKZ2Jets_ZToLL_M-50_newpmx'] = {'nanoAOD' :'/EWKZ2Jets_ZToLL_M-50_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_new_pmx_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
@@ -718,3 +765,56 @@ Samples['WZJJ_LL'] = {'nanoAOD' :'/WZJJ_EWK_LLPolarization_TuneCP5_13TeV_madgrap
 Samples['WZJJ_TL'] = {'nanoAOD' :'/WZJJ_EWK_TLPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} 
 Samples['WZJJ_LT'] = {'nanoAOD' :'/WZJJ_EWK_LTPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} 
 Samples['WZJJ_TT'] = {'nanoAOD' :'/WZJJ_EWK_TTPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'} 
+
+### Semi-Lep MonoHiggs samples
+#2HDMa semileptonic signal
+
+# official samples
+# FIXME: not there yet
+#Samples['pseudoscalar2HDMa_ToWWToLNujj'] = {'nanoAOD' : ''}
+
+## private samples
+#Samples['2HDMa_SemiLep_MH3_200_MH4_150_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_200_MH4_150_pos/201001_073333/0000/']}
+#Samples['2HDMa_SemiLep_MH3_200_MH4_150_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_200_MH4_150_neg/201001_073344/0000/']}
+#Samples['2HDMa_SemiLep_MH3_300_MH4_150_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_300_MH4_150_pos/201001_073355/0000/']}
+#Samples['2HDMa_SemiLep_MH3_300_MH4_150_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_300_MH4_150_neg/201001_073406/0000/']}
+#Samples['2HDMa_SemiLep_MH3_400_MH4_150_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_400_MH4_150_pos/201001_073416/0000/']}
+#Samples['2HDMa_SemiLep_MH3_400_MH4_150_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_400_MH4_150_neg/201001_073428/0000/']}
+#Samples['2HDMa_SemiLep_MH3_500_MH4_150_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_500_MH4_150_pos/201001_073438/0000/']}
+#Samples['2HDMa_SemiLep_MH3_500_MH4_150_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_500_MH4_150_neg/201001_073449/0000/']}
+#Samples['2HDMa_SemiLep_MH3_600_MH4_150_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_600_MH4_150_pos/201001_073500/0000/']}
+#Samples['2HDMa_SemiLep_MH3_600_MH4_150_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_600_MH4_150_neg/201001_073511/0000/']}
+#Samples['2HDMa_SemiLep_MH3_1200_MH4_150_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_1200_MH4_150_pos/201001_073522/0000/']}
+#Samples['2HDMa_SemiLep_MH3_1200_MH4_150_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_2HDMa_semiLep/2HDMa_SemiLep_MH3_1200_MH4_150_neg/201001_073533/0000/']}
+
+
+#DarkHiggs semileptonic signal
+
+# official samples
+Samples['darkHiggs_ToWWToLNujj'] = {'nanoAOD' :'/MonoHToWWToLNujj_ZpBaryonic_TuneCP5_13TeV_madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_rp_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+
+## private samples
+#Samples['DarkHiggs_SemiLep_MZP_195_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_195_pos/201001_141124/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_195_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_195_neg/201001_141134/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_200_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_200_pos/201001_141146/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_200_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_200_neg/201001_141156/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_295_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_295_pos/201001_141207/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_295_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_295_neg/201001_141218/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_300_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_300_pos/201001_141228/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_300_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_300_neg/201001_141238/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_500_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_500_pos/201001_141249/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_500_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_500_neg/201001_141300/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_1000_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_1000_pos/201001_141310/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_1000_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_1000_neg/201001_141321/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_1200_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_1200_pos/201001_141331/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_1200_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_1200_neg/201001_141341/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_1500_pos'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_1500_pos/201001_141351/0000/']}
+#Samples['DarkHiggs_SemiLep_MZP_1500_neg'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/' , "paths":['/store/group/phys_muon/friccita/MonoH/SemiLep/monoHiggsMC_darkHiggs_semiLep/DarkHiggs_SemiLep_MZP_1500_neg/201001_141402/0000/']}
+
+####### EFT samples for ssWW
+Samples['SSWW'] = {'nanoAOD' :'/SSWW_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['VBS_SSWW_cW_INT'] = {'nanoAOD' :'/VBS_SSWW_cW_INT_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['VBS_SSWW_cW_BSM'] = {'nanoAOD' :'/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['VBS_SSWW_cHW_INT'] = {'nanoAOD' :'/VBS_SSWW_cHW_INT_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['VBS_SSWW_cHW_BSM'] = {'nanoAOD' :'/VBS_SSWW_cHW_BSM_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}
+Samples['VBS_SSWW_cW_cHW'] = {'nanoAOD' :'/VBS_SSWW_cW_cHW_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/NANOAODSIM'}

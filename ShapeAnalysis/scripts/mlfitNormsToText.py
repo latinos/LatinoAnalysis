@@ -68,3 +68,24 @@ while True:
             row = ["%-40s"%m.group(1), "%-25s"%m.group(2), "%10.3f"%(norm_s.getVal()),"%10.3f"%(norm_b.getVal())]
 	    print("{:<40} {:25} {:>20} {:>20}").format(*row)
             #print "%-30s %-30s %7.3f %7.3f" % (m.group(1), m.group(2), norm_s.getVal(), norm_b.getVal())
+
+# Get data
+categories = [key.GetName() for key in file.Get('shapes_prefit').GetListOfKeys()]
+for cat in categories:
+
+    tgr = file.Get('shapes_prefit/'+cat+'/data')
+    data = sum(list(tgr.GetY()))
+
+    if prefit and norm_p and errors:
+        row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f +/- %-10.3f"%(data,0), "%10.3f +/- %-10.3f"%(data,0),"%10.3f +/- %-10.3f"%(data,0)]
+        print("{:<40} {:25} {:10} {:10} {:10}").format(*row)
+    else:
+        if norm_p and prefit:
+            row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f"%(data), "%10.3f"%(data),"%10.3f"%(data)]
+            print("{:<40} {:25} {:>20} {:>20} {:>20}").format(*row)
+        else:
+            row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f"%(data),"%10.3f"%(data)]
+            print("{:<40} {:25} {:>20} {:>20}").format(*row)
+
+
+
