@@ -3282,7 +3282,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
-                  'declare'    : 'JERMakerMCUL = lambda : JERMaker(RPLME_YEAR, RPLME_CMSSW,"",jetType="AK4PFchs",jetColl="CleanJet")',
+                  'declare'    : 'JERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK4PFchs",jetColl="CleanJet")',
                   'module'     : 'JERMakerMCUL()',
                  },
 
@@ -3291,7 +3291,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
-                  'declare'    : 'FatJERMakerMCUL = lambda : JERMaker(RPLME_YEAR, RPLME_CMSSW,"",jetType="AK8PFPuppi",jetColl="FatJet",doGroomed=True)',
+                  'declare'    : 'FatJERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK8PFPuppi",jetColl="FatJet",doGroomed=True)',
                   'module'     : 'FatJERMakerMCUL()',
                  },
 
