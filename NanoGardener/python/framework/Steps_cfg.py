@@ -1294,7 +1294,7 @@ Steps = {
                                   'EGamma_Run2018B-UL2018-v1',
                                   'EGamma_Run2018C-UL2018-v1',
                                   'EGamma_Run2018D-UL2018-v1',
-                                  'SingleMuon_Run2018A-UL2018-v1',
+                                  'SingleMuon_Run2018A-UL2018-v2',
                                   'SingleMuon_Run2018B-UL2018-v2',
                                   'SingleMuon_Run2018C-UL2018-v2',
                                   'SingleMuon_Run2018D-UL2018-v1',
@@ -1370,7 +1370,7 @@ Steps = {
                                   'SingleMuon_Run2017E-UL2017-v1',
                                   'SingleMuon_Run2017F-UL2017-v1',
                                   # Run2018 v8
-                                  'SingleMuon_Run2018A-UL2018-v1',
+                                  'SingleMuon_Run2018A-UL2018-v2',
                                   'SingleMuon_Run2018B-UL2018-v2',
                                   'SingleMuon_Run2018C-UL2018-v2',
                                   'SingleMuon_Run2018D-UL2018-v1',
@@ -5498,6 +5498,7 @@ Steps = {
                   'selection'  : '"(MET_pt < 20 || PuppiMET_pt < 20)"' , 
                   'onlySample' : [
                                   #### DY
+                                  'DYJetsToLL_M-10to50_LO', 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
                                   'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2','DYJetsToLL_M-10to50-LO-ext1',
                                   'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50-LO_ext2','DYJetsToLL_M-10to50-LO_ext1',
