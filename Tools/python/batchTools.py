@@ -138,6 +138,8 @@ class batchJobs :
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
          jFile.write('export X509_USER_PROXY=/gwpool/users/'+os.environ["USER"]+'/.proxy\n')
+       elif 'ifca' in hostName or 'cloud' in hostName:
+         jFile.write('export X509_USER_PROXY=/gpfs/users/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
          if self.USE_SINGULARITY : jFileSing.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
@@ -173,8 +175,14 @@ class batchJobs :
            jFile.write("mkdir /tmp/$LSB_JOBID \n")
            jFile.write("cd /tmp/$LSB_JOBID \n")
            jFile.write("pwd \n")
-         elif 'ifca' in hostName:
-           jFile.write("cd /gpfs/projects/cms/"+os.environ["USER"]+"/ \n") 
+         elif 'ifca' in hostName or 'cloud' in hostName:
+           try:
+             StepName
+           except NameError:
+             StepName = 'Step'
+           tmpdataDir = "/gpfs/projects/cms/"+os.environ["USER"]+"/"+baseName+"/"+prodName+"/"+StepName
+           jFile.write("mkdir -p "+tmpdataDir+"\n") 
+           jFile.write("cd "+tmpdataDir+"/ \n") 
          elif 'sdfarm' in hostName or 'knu' in hostName:
            jFile.write('cd '+self.subDir+subDirExtra+'\n')
            jFile.write('cd ${_CONDOR_SCRATCH_DIR}\n')
@@ -198,7 +206,7 @@ class batchJobs :
          os.system('chmod +x '+self.subDir+subDirExtra+'/'+jName+'_Sing.sh')
 
      # Create Proxy at IIHE
-     if 'cern'  in hostName:
+     if 'cern' or 'ifca' in hostName or 'cloud' in hostName:
        cmd='voms-proxy-info'
        proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
        out, err = proc.communicate()
@@ -206,7 +214,10 @@ class batchJobs :
        for line in out.split('\n'):
         if "path" in line:
           proxypath=line.split(':')[1]
-       os.system('cp '+proxypath+' /afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+       if 'cern' in hostName:
+         os.system('cp '+proxypath+' /afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
+       elif 'ifca' in hostName or 'cloud' in hostName:
+         os.system('cp '+proxypath+' /gpfs/users/'+os.environ["USER"]+'/.proxy\n')  
      if 'iihe'  in hostName:
        #os.system('voms-proxy-init --voms cms:/cms/becms --valid 168:0')
        os.system('cp $X509_USER_PROXY /user/'+os.environ["USER"]+'/.proxy')
@@ -223,7 +234,7 @@ class batchJobs :
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-       subDirExtra = '/' + jName.split('__')[3] 
+       subDirExtra = '/' + jName.split('__')[3]
      else:
        subDirExtra =''
      #print 'Adding to ',self.subDir+'/'+jName  
@@ -422,8 +433,9 @@ class batchJobs :
          #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
          # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
-       elif 'ifca' in hostName :
-         jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+       elif 'ifca' in hostName or 'cloud' in hostName:
+           #jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+           jobid=os.system('sbatch -o '+outFile+' -e '+errFile+' --qos='+queue+' --partition=cloudcms '+jobFile+' > '+jidFile)
        elif "pi.infn.it" in socket.getfqdn():
          queue="cms"
          jobid=os.system('bsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
@@ -506,7 +518,7 @@ class batchJobs :
      jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a') 
      if 'iihe' in hostName :
         jFile.write('lcg-cp '+inputFile+' srm://maite.iihe.ac.be:8443/pnfs/iihe/cms'+outputFile+'\n')
-     elif 'ifca' in hostName :
+     elif 'ifca' in hostName or 'cloud' in hostName:
         jFile.write('mv '+inputFile+' /gpfs/gaes/cms'+outputFile+'\n')
      elif "pi.infn.it" in socket.getfqdn():   
         jFile.write('lcg-cp '+inputFile+' srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms'+outputFile+'\n')
@@ -561,7 +573,7 @@ def batchStatus():
               iStat = os.popen('cat '+jidFile+' | awk -F\'.\' \'{print $1}\' | xargs -n 1 qstat | grep localgrid | awk \'{print $5}\' ').read()
               if 'Q' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
-            elif 'ifca' in os.uname()[1] :	
+            elif 'ifca' in hostName or 'cloud' in hostName:	
               iStat = os.popen('qstat | grep \" qw \" |  awk \'{print $1 \" '+jidFile+'\"}\' | xargs -n 2 grep | awk \'{ print $2 }\' ').read()
 	      if 'job' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
@@ -748,7 +760,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           #jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)
-        elif 'ifca' in hostName:
+        elif 'ifca' in hostName or 'cloud' in hostName:
           jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
           else: os.system('rm '+jidFile)

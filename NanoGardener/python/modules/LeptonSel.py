@@ -49,6 +49,8 @@ class LeptonSel(Module):
         self.nLF = nLF
         self.Lep_minPt = [8.0]*self.nLF
         self.JC_maxdR = 0.3 
+        if 'SUSY' in WP_path:
+            self.JC_maxdR = 0.4
         self.JC_minPtLep = 10.
         self.JC_absEta   = 5.0
 
@@ -260,11 +262,13 @@ class LeptonSel(Module):
 
            if isVeto_lep:
               good_vetlep_idx.append(iLep)
+ 
+           if not isClean_lep: continue
+
+           if isVeto_lep:
               Lep_Tags['isVeto'].append(1)
            else:
               Lep_Tags['isVeto'].append(0)
- 
-           if not isClean_lep: continue
               
            # Lepton id's
            if self.doWgS: Lep_Tags['isWgs'].append(1)

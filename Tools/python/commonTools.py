@@ -196,7 +196,8 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
         lsCmd='ls ' 
       
       # ... IFCA   
-      elif 'ifca' in os.uname()[1] :
+      elif 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]:
+        absPath=True
         lsCmd='ls '
         if not '/gpfs/' in inputDir and '/store/' in inputDir:
           Dir = '/gpfs/gaes/cms/' + inputDir 
@@ -492,7 +493,7 @@ def printSampleDic(sampleDic):
 def getTmpDir():
     if   'iihe' in os.uname()[1] : return '/scratch/'
     elif 'cern' in os.uname()[1] : return '/tmp/$USER/'
-    elif 'ifca' in os.uname()[1] : return '/gpfs/projects/cms/'+os.environ["USER"]+'/'
+    elif 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]: return '/gpfs/projects/cms/'+os.environ["USER"]+'/'
     else : return '/tmp'
 
 def delDirSE(Dir):
@@ -503,7 +504,7 @@ def delDirSE(Dir):
     elif 'cern' in os.uname()[1] :
       if not '/eos/cms' in inDir : inDir = '/eos/cms' + inDir
       os.system('rm -rf '+inDir)
-    elif 'ifca' in os.uname()[1] : 
+    elif 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]: 
       if not '/gpfs/gaes/cms' in inDir : inDir = '/gpfs/gaes/cms' + inDir
       os.system('rm -rf '+inDir) 
     else:
@@ -518,7 +519,7 @@ def srmcp2local(inFile,outFile):
     elif 'cern' in os.uname()[1] :
       if not '/eos/cms' in srcFile : srcFile = '/eos/cms' + srcFile
       os.system('cp '+srcFile+' '+outFile)
-    elif  'ifca' in os.uname()[1] : 
+    elif  'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]: 
       if not '/gpfs/gaes/cms' in srcFile : srcFile = '/gpfs/gaes/cms' + srcFile
       os.system('cp '+srcFile+' '+outFile)
     else:
@@ -539,7 +540,7 @@ def lsListCommand(inputDir, iniStep = 'Prod'):
       else:
         usedDir = inputDir
       return 'ls /eos/cms' + usedDir
-    elif 'ifca' in os.uname()[1] :
+    elif 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]:
       if '/gpfs/gaes/cms/' in inputDir:
         usedDir = inputDir.split('/gpfs/gaes/cms/')[1]
       else:
@@ -580,7 +581,7 @@ def rootReadPath(inputFile):
         return "dcap://maite.iihe.ac.be/pnfs/iihe/cms" + inputFile
     elif "pi.infn.it" in socket.getfqdn():
       return "/gpfs/ddn/srm/cms/" + inputFile
-    elif 'ifca' in os.uname()[1] :
+    elif 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]:
       return "/gpfs/gaes/cms/" + inputFile
     elif 'knu' in os.uname()[1] :
       return "dcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms" + inputFile
@@ -604,8 +605,11 @@ def remoteFileSize(inputFile):
         return subprocess.check_output("ls -l " +inputFile + " | cut -d ' ' -f 5", shell=True)
       else:
         return subprocess.check_output("ls -l /eos/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
-    elif 'ifca' in os.uname()[1] :
-        return subprocess.check_output("ls -l /gpfs/gaes/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
+    elif 'ifca' in os.uname()[1] or 'cloud' in os.uname()[1]:
+        storeLocation = ''
+        if not '/gpfs/' in inputFile and 'store' in inputFile:
+            storeLocation = '/gpfs/gaes/cms/'
+        return subprocess.check_output("ls -l " + storeLocation + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "pi.infn.it" in socket.getfqdn():
         return subprocess.check_output("ls -l /gpfs/ddn/srm/cms/" + inputFile + " | cut -d ' ' -f 5", shell=True)
     elif "knu" in os.uname()[1]:
