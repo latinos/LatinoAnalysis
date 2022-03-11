@@ -45,7 +45,7 @@ class DatacardFactory:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
         else:
           self._fileIn = ROOT.TFile(inputFile, "READ")
-          ROOT.gROOT.GetListOfFiles().Remove(self._fileIn) #Speed up?
+          ROOT.gROOT.GetListOfFiles().Remove(self._fileIn) #Speed up
 
         # Keep track of what background has been written to the shapes root file
         # Avoid writing multiple times to speed up
@@ -175,7 +175,6 @@ class DatacardFactory:
                 self._outFile.cd()
                 histo.Write('', ROOT.TFile.kOverwrite)
 
-
             # Loop over alternative signal samples. One card per signal (there is always at least one entry (""))
             for signalName in alternative_signals:
               if signalName == '':
@@ -289,7 +288,12 @@ class DatacardFactory:
                     print ">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"
                     card.write(('shape').ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance['all'] == 1) or \
+                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
+                        # If the cuts_samples options is there and the sample is inserted in the dictionary
+                        # check if the current cutName is included. Excluded the cuts not in the list
+                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        card.write(('-').ljust(columndef))
+                      elif ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
 
                         card.write('1.000'.ljust(columndef))
@@ -371,7 +375,12 @@ class DatacardFactory:
                     print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
                     card.write(('lnN').ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance['all'] == 1) or \
+                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
+                        # If the cuts_samples options is there and the sample is inserted in the dictionary
+                        # check if the current cutName is included. Excluded the cuts not in the list
+                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        card.write(('-').ljust(columndef))
+                      elif ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
                         histo = self._getHisto(cutName, variableName, sampleName)
                         histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up') 
@@ -436,7 +445,12 @@ class DatacardFactory:
                   else:  
                     card.write('shape'.ljust(20))
                     for sampleName in processes:
-                      if ('all' in nuisance and nuisance ['all'] == 1) or \
+                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
+                        # If the cuts_samples options is there and the sample is inserted in the dictionary
+                        # check if the current cutName is included. Excluded the cuts not in the list
+                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        card.write(('-').ljust(columndef))
+                      elif ('all' in nuisance and nuisance ['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
                         # save the nuisance histograms in the root file
                         if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
@@ -593,7 +607,7 @@ class DatacardFactory:
 
     # _____________________________________________________________________________
     def _saveNuisanceHistos(self, cutName, variableName, sampleName, suffixIn, suffixOut = None, symmetrize = False):
-        # Check if already saved, if so skip 
+        # Check if already saved, is so skip 
         if not cutName in self.hasShapeDict: self.hasShapeDict[cutName] = {}
         if not variableName in self.hasShapeDict[cutName]: self.hasShapeDict[cutName][variableName] = {}
         if not sampleName in self.hasShapeDict[cutName][variableName]: self.hasShapeDict[cutName][variableName][sampleName] = {}
