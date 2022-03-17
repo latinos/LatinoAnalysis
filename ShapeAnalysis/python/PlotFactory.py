@@ -144,6 +144,8 @@ class PlotFactory:
           for variableName, variable in self._variables.iteritems():
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
+            if 'tree' in variable:
+                continue
 
             if type(fileIn) is not dict and not fileIn.GetDirectory(cutName+"/"+variableName):
               continue
@@ -259,6 +261,8 @@ class PlotFactory:
               print ' --> ', histo
               print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
               histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
+              if self._rebin != 1:
+                  histos[sampleName].Rebin(self._rebin)
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
@@ -475,6 +479,8 @@ class PlotFactory:
                         histoVar = fileIn.Get(shapeNameVar)
   
                       if histoVar != None :
+                        if self._rebin != 1:
+                          histoVar.Rebin(self._rebin)
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                       elif not self._SkipMissingNuisance :
                         print " This is bad, the nuisance ", nuisanceName, " is missing! You need to add it, maybe some jobs crashed?"
@@ -659,6 +665,8 @@ class PlotFactory:
             if self._postFit == 'b':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
                 histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_b')
+            if self._rebin != 1:
+                histoPF.Rebin(self._rebin)
 
             # at this stage "thsBackground" and then "last" includes ALSO the signal
             last = thsBackground.GetStack().Last()
@@ -723,6 +731,9 @@ class PlotFactory:
                 histo_total = None
             else:                                                                                                                                                                                  
               histo_total = fileIn.Get(special_shapeName)
+
+            if self._rebin != 1:
+                histo_total.Rebin(self._rebin)
 
             if variable['divideByBinWidth'] == 1 and histo_total != None:
               histo_total.Scale(1,"width")
