@@ -1493,8 +1493,12 @@ class ShapeFactory:
                 elif nuisance['kind'].endswith('_rms'):
                   arrnom = np.tile(vnominal.flat, (variations.shape[0], 1))
                   arrv = np.sqrt(np.mean(np.square(variations - arrnom), axis=0))
-                  arrup = vnominal.flat[:] + arrv
-                  arrdown = vnominal.flat[:] - arrv
+                  if 'scale' in nuisance and sampleName+slabel in nuisance['scale']:
+                    arrup = vnominal.flat[:] + arrv*nuisance['scale'][sampleName+slabel][0]
+                    arrdown = vnominal.flat[:] - arrv*nuisance['scale'][sampleName+slabel][1]
+                  else:
+                    arrup = vnominal.flat[:] + arrv
+                    arrdown = vnominal.flat[:] - arrv
 
                 arrup = arrup.reshape(vnominal.shape)
                 arrdown = arrdown.reshape(vnominal.shape)
