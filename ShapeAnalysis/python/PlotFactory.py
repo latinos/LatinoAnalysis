@@ -260,9 +260,9 @@ class PlotFactory:
               if not histo: continue
               print ' --> ', histo
               print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
-              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               if self._rebin != 1:
-                  histos[sampleName].Rebin(self._rebin)
+                  histo.Rebin(self._rebin)
+              histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
@@ -665,7 +665,7 @@ class PlotFactory:
             if self._postFit == 'b':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
                 histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_b')
-            if self._rebin != 1:
+            if (self._postFit == 'p' or self._postFit == 's' or self._postFit == 'b') and self._rebin != 1:
                 histoPF.Rebin(self._rebin)
 
             # at this stage "thsBackground" and then "last" includes ALSO the signal
@@ -732,7 +732,7 @@ class PlotFactory:
             else:                                                                                                                                                                                  
               histo_total = fileIn.Get(special_shapeName)
 
-            if self._rebin != 1:
+            if histo_total and self._rebin != 1:
                 histo_total.Rebin(self._rebin)
 
             if variable['divideByBinWidth'] == 1 and histo_total != None:
