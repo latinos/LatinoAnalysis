@@ -493,6 +493,13 @@ class PostProcMaker():
         else:
           command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
 
+      # KIT
+      elif self._LocalSite == 'kit' : 
+        if not cpMode:
+          command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
+        else:
+          command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
+
       # MISSING STAGE OUT
       else :
         print 'ERROR: mkStageOut not available for _LocalSite = ',self._LocalSite
