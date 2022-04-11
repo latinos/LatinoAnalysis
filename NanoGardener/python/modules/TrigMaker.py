@@ -89,6 +89,7 @@ class TrigMaker(Module):
         self.TM_LegEffData  = {}
         self.TM_LegEffMC  = {}
         self.TM_DZEff   = {}
+        self.TM_DRllSF   = {}
         self.TM_GlEff = {}
         #self.TM_trkSFMu = {}
         self.TM_runInt  = {}
@@ -98,6 +99,7 @@ class TrigMaker(Module):
            self.TM_LegEffData[RunP]  = {}
            self.TM_LegEffMC[RunP]  = {}
            self.TM_DZEff[RunP]   = {}
+           self.TM_DRllSF[RunP]   = {}
            self.TM_GlEff[RunP] = {}
            if 'runList' in self.Trigger[self.cmssw][RunP].keys():
              self.TM_runInt[RunP]  = {'runList' : self.Trigger[self.cmssw][RunP]['runList']}
@@ -146,6 +148,12 @@ class TrigMaker(Module):
               self.TM_GlEff[RunP][Tname].append(min(1.,self.Trigger[self.cmssw][RunP]['GlEff'][Tname][0]+self.Trigger[self.cmssw][RunP]['GlEff'][Tname][1]))
               self.TM_GlEff[RunP][Tname].append(self.Trigger[self.cmssw][RunP]['GlEff'][Tname][0]-self.Trigger[self.cmssw][RunP]['GlEff'][Tname][1])
               self.TM_GlEff[RunP][Tname].append(min(1.,self.Trigger[self.cmssw][RunP]['GlEff'][Tname][0]+self.Trigger[self.cmssw][RunP]['GlEff'][Tname][1]))
+
+           for Tname in self.Trigger[self.cmssw][RunP]['DRllSF']:
+              self.TM_DRllSF[RunP][Tname] = []
+              temp_file = open(cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/trigger/' + self.Trigger[self.cmssw][RunP]['DRllSF'][Tname],'r')
+              self.TM_DRllSF[RunP][Tname] = [line.rstrip().split() for line in temp_file if '#' not in line]
+              temp_file.close()
 
 
 
@@ -245,6 +253,14 @@ class TrigMaker(Module):
                  math.sqrt( SF_stat_u**2 + SF_syst_u**2 ) 
                 )
     
+    def _get_DRll_SF(self, run_p, trigName, drllIn):
+      DRll_SF = 1.
+      for val in self.TM_DRllSF[run_p][trigName] :
+        print val
+        if drllIn >= float(val[0]) and drllIn < float(val[1]) :
+          DRll_SF = float(val[2])
+      print DRll_SF
+      return DRll_SF
 
     def _get_DZEff(self,run_p,trigName,nvtxIn,pt1In,pt2In):
       DZeff = 1. 
@@ -271,7 +287,7 @@ class TrigMaker(Module):
       #print run_p,trigName,nvtx,pt1,pt2,DZeff,DZeff_err,DZeff-DZeff_err,min(1.,DZeff+DZeff_err)
       return DZeff,DZeff-DZeff_err,min(1.,DZeff+DZeff_err)
 
-    def _pair_eff(self, pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p):
+    def _pair_eff(self, pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p, drll=None):
         '''
         Look op leg efficiencies and apply 5% sys for Electron and tracker SF for Muon
         '''
@@ -280,6 +296,7 @@ class TrigMaker(Module):
         eff_dz_do = 1.
         eff_dz_up = 1.
         eff_gl = []
+        drll_sf = 1.
         # Leg_map = ['singA', 'singB', 'leadA', 'leadB', 'trailA', 'trailB'] 
         # With A the lepton with the higer pt, B the one with the lower pt
         # Lead is the tracked lepton and trail is the trailing 
@@ -287,24 +304,28 @@ class TrigMaker(Module):
         if abs(pdgId1) == 11 and abs(pdgId2) == 11:
            Leg_names = ['SingleEle', 'SingleEle', 'DoubleEleLegHigPt', 'DoubleEleLegHigPt', 'DoubleEleLegLowPt', 'DoubleEleLegLowPt']
            eff_dz_nom,eff_dz_do,eff_dz_up = self._get_DZEff(run_p,'DoubleEle',nvtx,pt1,pt2)
+           if drll!=None: drll_sf = self._get_DRll_SF(run_p,'DoubleEle',drll)
            eff_gl.append( self.TM_GlEff[run_p]['SingleEle'] )
            eff_gl.append( self.TM_GlEff[run_p]['SingleEle'] )
            eff_gl.append( self.TM_GlEff[run_p]['DoubleEle'] )
         elif abs(pdgId1) == 13 and abs(pdgId2) == 13:
            Leg_names = ['SingleMu', 'SingleMu', 'DoubleMuLegHigPt', 'DoubleMuLegHigPt', 'DoubleMuLegLowPt', 'DoubleMuLegLowPt']
            eff_dz_nom,eff_dz_do,eff_dz_up = self._get_DZEff(run_p,'DoubleMu',nvtx,pt1,pt2)
+           if drll!=None: drll_sf = self._get_DRll_SF(run_p,'DoubleMu',drll) 
            eff_gl.append( self.TM_GlEff[run_p]['SingleMu'] )
            eff_gl.append( self.TM_GlEff[run_p]['SingleMu'] )
            eff_gl.append( self.TM_GlEff[run_p]['DoubleMu'] )
         elif abs(pdgId1) == 11 and abs(pdgId2) == 13:
            Leg_names = ['SingleEle', 'SingleMu', 'EleMuLegHigPt', 'MuEleLegHigPt', 'MuEleLegLowPt', 'EleMuLegLowPt']
            eff_dz_nom,eff_dz_do,eff_dz_up = self._get_DZEff(run_p,'EleMu',nvtx,pt1,pt2)
+           if drll!=None: drll_sf = self._get_DRll_SF(run_p,'EleMu',drll) 
            eff_gl.append( self.TM_GlEff[run_p]['SingleEle'] )
            eff_gl.append( self.TM_GlEff[run_p]['SingleMu'] )
            eff_gl.append( self.TM_GlEff[run_p]['EleMu'] )
         else:
            Leg_names = ['SingleMu', 'SingleEle', 'MuEleLegHigPt', 'EleMuLegHigPt', 'EleMuLegLowPt', 'MuEleLegLowPt']
            eff_dz_nom,eff_dz_do,eff_dz_up = self._get_DZEff(run_p,'MuEle',nvtx,pt1,pt2)
+           if drll!=None: drll_sf = self._get_DRll_SF(run_p,'MuEle',drll) 
            eff_gl.append( self.TM_GlEff[run_p]['SingleMu'] )
            eff_gl.append( self.TM_GlEff[run_p]['SingleEle'] )
            eff_gl.append( self.TM_GlEff[run_p]['MuEle'] )
@@ -333,15 +354,17 @@ class TrigMaker(Module):
            #   eff[iLeg] = [a*b for a,b in zip(eff[iLeg], self.TM_trkSFMu[run_p])] 
            #if abs(pdgId2) == 13 and iLeg%2:
            #   eff[iLeg] = [a*b for a,b in zip(eff[iLeg], self.TM_trkSFMu[run_p])] 
-                
-        return effData, effMC, eff_dz , eff_gl
+        if drll!=None:
+          return effData, effMC, eff_dz , eff_gl, drll_sf        
+        else:
+          return effData, effMC, eff_dz , eff_gl
 
-    def _get_w(self, pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p, event_seed=None):
+    def _get_w(self, pdgId1, pt1, eta1, pdgId2, pt2, eta2, drll, nvtx, run_p, event_seed=None):
          
         pt1, eta1 = self._over_under(pdgId1, pt1, eta1)
         pt2, eta2 = self._over_under(pdgId2, pt2, eta2)
       
-        effData, effMC, eff_dz , eff_gl = self._pair_eff(pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p)
+        effData, effMC, eff_dz , eff_gl, DRll_SF = self._pair_eff(pdgId1, pt1, eta1, pdgId2, pt2, eta2, nvtx, run_p, drll)
         #eff_map = ['SingleEle', 'SingleMu', 'EleMuLegHigPt', 'MuEleLegHigPt', 'MuEleLegLowPt', 'EleMuLegLowPt']
 
         # nom, tot_d, tot_u, stat_d, stat_u, syst_d, syst_u
@@ -357,11 +380,11 @@ class TrigMaker(Module):
         for i in range(7): 
            effData_dbl[i] = max( (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i], 0.0001 )
            effData_sgl[i] =  effData[0][i]*eff_gl[0][i]+effData[1][i]*eff_gl[1][i]-effData[0][i]*effData[1][i]*eff_gl[0][i]*eff_gl[1][i]
-           effData_evt[i] = effData_dbl[i] + effData_sgl[i] - effData[5][i]*eff_gl[2][i]*effData[0][i]*eff_gl[0][i] - effData[4][i]*eff_gl[2][i]*effData[1][i]*eff_gl[1][i]*( 1 - effData[5][i]*eff_gl[2][i]*effData[0][i]*eff_gl[0][i]/effData_dbl[i] )
+           effData_evt[i] = (effData_dbl[i] + effData_sgl[i] - effData[5][i]*eff_gl[2][i]*effData[0][i]*eff_gl[0][i] - effData[4][i]*eff_gl[2][i]*effData[1][i]*eff_gl[1][i]*( 1 - effData[5][i]*eff_gl[2][i]*effData[0][i]*eff_gl[0][i]/effData_dbl[i] ))*DRll_SF
 
            effMC_dbl[i] = max( (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i], 0.0001 )
            effMC_sgl[i] =  effMC[0][i]*eff_gl[0][i]+effMC[1][i]*eff_gl[1][i]-effMC[0][i]*effMC[1][i]*eff_gl[0][i]*eff_gl[1][i]
-           effMC_evt[i] = effMC_dbl[i] + effMC_sgl[i] - effMC[5][i]*eff_gl[2][i]*effMC[0][i]*eff_gl[0][i] - effMC[4][i]*eff_gl[2][i]*effMC[1][i]*eff_gl[1][i]*( 1 - effMC[5][i]*eff_gl[2][i]*effMC[0][i]*eff_gl[0][i]/effMC_dbl[i] )
+           effMC_evt[i] = (effMC_dbl[i] + effMC_sgl[i] - effMC[5][i]*eff_gl[2][i]*effMC[0][i]*eff_gl[0][i] - effMC[4][i]*eff_gl[2][i]*effMC[1][i]*eff_gl[1][i]*( 1 - effMC[5][i]*eff_gl[2][i]*effMC[0][i]*eff_gl[0][i]/effMC_dbl[i] ))*DRll_SF
 
         SF_evt[0] = self._get_SF(effData_evt[0] , effMC_evt[0])
         SF_evt[1] = self._get_SFUnc(effData_evt, effMC_evt)[0]
@@ -379,8 +402,8 @@ class TrigMaker(Module):
         effs_mc = [0., 0., 0., 0., 0., 0., 0.]
 
         if abs(pdgId1) == 11 and abs(pdgId2) == 11:
-           effData_evt_v[0] = effData[0][0]*eff_gl[0][0] + (1 - effData[0][0]*eff_gl[0][0])*effData[1][0]*eff_gl[1][0]
-           effMC_evt_v[0] = effMC[0][0]*eff_gl[0][0] + (1 - effMC[0][0]*eff_gl[0][0])*effMC[1][0]*eff_gl[1][0]
+           effData_evt_v[0] = (effData[0][0]*eff_gl[0][0] + (1 - effData[0][0]*eff_gl[0][0])*effData[1][0]*eff_gl[1][0])*DRll_SF
+           effMC_evt_v[0] = (effMC[0][0]*eff_gl[0][0] + (1 - effMC[0][0]*eff_gl[0][0])*effMC[1][0]*eff_gl[1][0])*DRll_SF
            SF_evt_v[0] = self._get_SF(effData_evt_v[0] , effMC_evt_v[0])
            effs_data[0] = effData_evt_v[0]
            effs_mc[0] = effMC_evt_v[0]
@@ -391,14 +414,14 @@ class TrigMaker(Module):
            SF_evt_v_d[0] = self._get_SFUnc(effs_data, effs_mc)[0]
            SF_evt_v_u[0] = self._get_SFUnc(effs_data, effs_mc)[1]
 
-           effData_evt_v[2] = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]
-           effMC_evt_v[2] = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]
+           effData_evt_v[2] = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
+           effMC_evt_v[2] = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
            SF_evt_v[2] = self._get_SF(effData_evt_v[2] , effMC_evt_v[2])
            effs_data[0] = effData_evt_v[2]
            effs_mc[0] = effMC_evt_v[2]
            for i in range(1,7):
-             effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i] 
-             effs_mc[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i] 
+             effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
+             effs_mc[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
 
            SF_evt_v_d[2] = self._get_SFUnc(effs_data, effs_mc)[0]
            SF_evt_v_u[2] = self._get_SFUnc(effs_data, effs_mc)[1]
@@ -406,8 +429,8 @@ class TrigMaker(Module):
  
 
         elif abs(pdgId1) == 13 and abs(pdgId2) == 13:
-           effData_evt_v[1] = effData[0][0]*eff_gl[0][0] + (1 - effData[0][0]*eff_gl[0][0])*effData[1][0]*eff_gl[1][0]
-           effMC_evt_v[1] = effMC[0][0]*eff_gl[0][0] + (1 - effMC[0][0]*eff_gl[0][0])*effMC[1][0]*eff_gl[1][0]
+           effData_evt_v[1] = (effData[0][0]*eff_gl[0][0] + (1 - effData[0][0]*eff_gl[0][0])*effData[1][0]*eff_gl[1][0])*DRll_SF
+           effMC_evt_v[1] = (effMC[0][0]*eff_gl[0][0] + (1 - effMC[0][0]*eff_gl[0][0])*effMC[1][0]*eff_gl[1][0])*DRll_SF
            SF_evt_v[1] = self._get_SF(effData_evt_v[1] , effMC_evt_v[1])
            effs_data[0] = effData_evt_v[1]
            effs_mc[0] = effMC_evt_v[1]
@@ -419,22 +442,22 @@ class TrigMaker(Module):
            SF_evt_v_u[1] = self._get_SFUnc(effs_data, effs_mc)[1] 
 
 
-           effData_evt_v[3] = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]
-           effMC_evt_v[3] = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]
+           effData_evt_v[3] = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
+           effMC_evt_v[3] = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
            SF_evt_v[3] = self._get_SF(effData_evt_v[3] , effMC_evt_v[3])
            effs_data[0] = effData_evt_v[3]
            effs_mc[0] = effMC_evt_v[3]
            for i in range(1,7):
-               effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i]
-               effs_mc[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i]
+               effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
+               effs_mc[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
 
            SF_evt_v_d[3] = self._get_SFUnc(effs_data, effs_mc)[0]
            SF_evt_v_u[3] = self._get_SFUnc(effs_data, effs_mc)[1]
 
 
         elif abs(pdgId1) == 11 and abs(pdgId2) == 13:
-           effData_evt_v[0] = effData[0][0]*eff_gl[0][0]
-           effMC_evt_v[0] = effMC[0][0]*eff_gl[0][0]
+           effData_evt_v[0] = effData[0][0]*eff_gl[0][0]*DRll_SF
+           effMC_evt_v[0] = effMC[0][0]*eff_gl[0][0]*DRll_SF
            SF_evt_v[0] = self._get_SF(effData_evt_v[0] , effMC_evt_v[0])
            effs_data[0] = effData_evt_v[0]
            effs_mc[0] = effMC_evt_v[0]
@@ -445,8 +468,8 @@ class TrigMaker(Module):
            SF_evt_v_d[0] = self._get_SFUnc(effs_data, effs_mc)[0]
            SF_evt_v_u[0] = self._get_SFUnc(effs_data, effs_mc)[1]
 
-           effData_evt_v[1] = effData[1][0]*eff_gl[1][0]
-           effMC_evt_v[1] = effMC[1][0]*eff_gl[1][0]
+           effData_evt_v[1] = effData[1][0]*eff_gl[1][0]*DRll_SF
+           effMC_evt_v[1] = effMC[1][0]*eff_gl[1][0]*DRll_SF
            SF_evt_v[1] = self._get_SF(effData_evt_v[1] , effMC_evt_v[1])
            effs_data[0] = effData_evt_v[1]
            effs_mc[0] = effMC_evt_v[1]
@@ -457,21 +480,21 @@ class TrigMaker(Module):
            SF_evt_v_d[1] = self._get_SFUnc(effs_data, effs_mc)[0]
            SF_evt_v_u[1] = self._get_SFUnc(effs_data, effs_mc)[1]
 
-           effData_evt_v[4]  = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]
-           effMC_evt_v[4]  = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]
+           effData_evt_v[4]  = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
+           effMC_evt_v[4]  = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
            SF_evt_v[4] = self._get_SF(effData_evt_v[4] , effMC_evt_v[4])
            effs_data[0] = effData_evt_v[4]
            effs_mc[0] = effMC_evt_v[4]
            for i in range(1,7):
-               effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i]
-               effs_data[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i]
+               effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
+               effs_data[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
 
            SF_evt_v_d[4] = self._get_SFUnc(effs_data, effs_mc)[0]
            SF_evt_v_u[4] = self._get_SFUnc(effs_data, effs_mc)[1]
 
         else:
-           effData_evt_v[0] = effData[1][0]*eff_gl[0][0]
-           effMC_evt_v[0] = effMC[1][0]*eff_gl[0][0]
+           effData_evt_v[0] = effData[1][0]*eff_gl[0][0]*DRll_SF
+           effMC_evt_v[0] = effMC[1][0]*eff_gl[0][0]*DRll_SF
            SF_evt_v[0] = self._get_SF(effData_evt_v[0] , effMC_evt_v[0])
            effs_data[0] = effData_evt_v[0]
            effs_mc[0] = effMC_evt_v[0]
@@ -483,8 +506,8 @@ class TrigMaker(Module):
            SF_evt_v_u[0] = self._get_SFUnc(effs_data, effs_mc)[1]
 
 
-           effData_evt_v[1] = effData[0][0]*eff_gl[1][0]
-           effMC_evt_v[1] = effMC[0][0]*eff_gl[1][0]
+           effData_evt_v[1] = effData[0][0]*eff_gl[1][0]*DRll_SF
+           effMC_evt_v[1] = effMC[0][0]*eff_gl[1][0]*DRll_SF
            SF_evt_v[1] = self._get_SF(effData_evt_v[1] , effMC_evt_v[1])
            effs_data[0] = effData_evt_v[0]
            effs_mc[0] = effMC_evt_v[0]
@@ -496,14 +519,14 @@ class TrigMaker(Module):
            SF_evt_v_u[1] = self._get_SFUnc(effs_data, effs_mc)[1]
 
 
-           effData_evt_v[4]  = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]
-           effMC_evt_v[4]  = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]
+           effData_evt_v[4]  = (effData[4][0]*effData[3][0] + effData[2][0]*effData[5][0] - effData[3][0]*effData[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
+           effMC_evt_v[4]  = (effMC[4][0]*effMC[3][0] + effMC[2][0]*effMC[5][0] - effMC[3][0]*effMC[2][0])*eff_gl[2][0]*eff_dz[0]*DRll_SF
            SF_evt_v[4] = self._get_SF(effData_evt_v[4] , effMC_evt_v[4])
            effs_data[0] = effData_evt_v[4]
            effs_mc[0] = effMC_evt_v[4]
            for i in range(1,7):
-               effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i]
-               effs_mc[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i]
+               effs_data[i] = (effData[4][i]*effData[3][i] + effData[2][i]*effData[5][i] - effData[3][i]*effData[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
+               effs_mc[i] = (effMC[4][i]*effMC[3][i] + effMC[2][i]*effMC[5][i] - effMC[3][i]*effMC[2][i])*eff_gl[2][i]*eff_dz[i]*DRll_SF
 
            SF_evt_v_d[4] = self._get_SFUnc(effs_data, effs_mc)[0]
            SF_evt_v_u[4] = self._get_SFUnc(effs_data, effs_mc)[1]
@@ -666,6 +689,14 @@ class TrigMaker(Module):
            dec[Tname] = temp_dec
         return dec
 
+    def _dRll(self, pt1, eta1, phi1, pt2, eta2, phi2):
+        l1 = ROOT.TLorentzVector()
+        l2 = ROOT.TLorentzVector()
+        l1.SetPtEtaPhiM(pt1, eta1, phi1, 0.)
+        l2.SetPtEtaPhiM(pt2, eta2, phi2, 0.)
+
+        return l1.DeltaR(l2)
+
     def _dPhi(self,phi1,phi2):
         '''Copied from Gardener/python/varialbe/triggerMaker.py '''
         PI=3.14159265359
@@ -781,7 +812,8 @@ class TrigMaker(Module):
            #eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
  
         if nLep > 1:
-           tempData_evt, tempData_evt_v, tempSF_evt, tempSF_evt_v, tempSF_evt_v_d, tempSF_evt_v_u, Trig_em = self._get_w(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], nvtx, run_p, evt)
+           drll = self._dRll(pt[0], eta[0], phi[0], pt[1], eta[1], phi[1])
+           tempData_evt, tempData_evt_v, tempSF_evt, tempSF_evt_v, tempSF_evt_v_d, tempSF_evt_v_u, Trig_em = self._get_w(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], drll, nvtx, run_p, evt)
            for name in self.NewVar['F']:
                if 'TriggerEffWeight' in name:
                    if '_2l' in name:
