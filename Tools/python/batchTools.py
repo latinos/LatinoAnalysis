@@ -127,7 +127,7 @@ class batchJobs :
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
-       elif 'kit' in hostName:
+       elif 'kit' in hostName or 'bms' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          user_id = os.getuid()
          jFile.write('export X509_USER_PROXY=/tmp/x509up_u{}\n'.format(user_id))
@@ -426,7 +426,7 @@ class batchJobs :
          # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
        # KIT
-       elif 'kit' in hostName:
+       elif 'kit' in hostName or 'bms' in hostName:
           jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
           jdsFile = open(jdsFileName,'w')
           jdsFile.write('Universe = docker\n')
@@ -436,7 +436,8 @@ class batchJobs :
           jdsFile.write('Error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
           jdsFile.write('Log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
           jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
-          # jdsFile.write('accounting_group=group_cms\n')
+          jdsFile.write('RequestMemory = 8192 \n')
+          jdsFile.write('accounting_group = cms.higgs \n')
           jdsFile.write('JobBatchName = '+jName.split('__')[0]+'__'+jName.split('__')[1]+'__'+jName.split('__')[2]+'\n')         
           jdsFile.write("Queue")
           jdsFile.close()
