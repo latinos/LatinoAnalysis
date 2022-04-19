@@ -1025,7 +1025,7 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
 
-                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2017','btagPerJet2017',
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
                                      'CleanFatJet', 'BoostedWtagSF' ]
@@ -1162,7 +1162,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','btagPerJet2018',
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
                                      'CleanFatJet', 'BoostedWtagSF' ]
@@ -3364,7 +3364,7 @@ Steps = {
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
                   'declare'    : 'btagSFProducer2017 = lambda : btagSFProducer(era="2017", algo="deepcsv")',
                   'module'     : 'btagSFProducer2017()',
-                 },               
+                 },
 
   'btagPerJet2018': {
                   'isChain'    : False ,
@@ -3373,6 +3373,22 @@ Steps = {
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
                   'declare'    : 'btagSFProducer2018 = lambda : btagSFProducer(era="2018", algo="deepcsv")',
                   'module'     : 'btagSFProducer2018()',
+                 },
+  'btagPerJet_DeepCSV_UL': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
+                  'declare'    : 'btagSFProducer_DeepCSV_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepcsv")',
+                  'module'     : 'btagSFProducer_DeepCSV_UL()',
+                 },
+  'btagPerJet_DeepJet_UL': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
+                  'declare'    : 'btagSFProducer_DeepJet_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepjet")',
+                  'module'     : 'btagSFProducer_DeepJet_UL()',
                  },
 
   'btagPerEvent': {
