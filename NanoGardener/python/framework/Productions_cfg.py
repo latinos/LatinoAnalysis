@@ -687,5 +687,18 @@ Productions = {
                        'year'    : '2018' ,
                       },
 
+####################### UL Test #################################
+
+ # -------- 2018 MC 102X nAODv9
+ 'Summer20UL18_106x_nAODv9_Full2018v9':{
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Autumn18_102X_nAODv7.py' ,
+                       'cmssw'   : 'Full2018v7' ,
+                       'year'    : '2018' ,
+                       'JESGT'   : 'Autumn18_V19_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
 }
 
