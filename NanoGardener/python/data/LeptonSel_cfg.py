@@ -4208,7 +4208,51 @@ ElectronWP = {
                               } ,
 
               }, 
-
+ # ------------ 
+ 'WgStarObjWP' : {
+         
+         'cut_WP_Tight80X' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [ 
+                                    'False'
+                                    #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    ##'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    ##'electron_col[LF_idx]["cutBased"] == 4',
+                                    #'electron_col[LF_idx]["lostHits"] < 1',
+                                    #'electron_col[LF_idx]["convVeto"]',
+                                    #'electron_col[LF_idx]["tightCharge"] == 2',
+                                  ] ,
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.00998',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0816',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0414',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0588',                                  
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.0292',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0394',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0641',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0571', 
+                                  ] ,
+                                  } ,
+                             } ,
+                 
+                 } ,
+},
 
 ###____________________Full2016v9________ : for nAODv9 - no HIPM part
 'Full2016v9noHIPM': {
@@ -4370,6 +4414,51 @@ ElectronWP = {
                               } ,
 
               }, 
+ # ------------ 
+ 'WgStarObjWP' : {
+         
+         'cut_WP_Tight80X' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [ 
+                                    'False'
+                                    #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    ##'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    ##'electron_col[LF_idx]["cutBased"] == 4',
+                                    #'electron_col[LF_idx]["lostHits"] < 1',
+                                    #'electron_col[LF_idx]["convVeto"]',
+                                    #'electron_col[LF_idx]["tightCharge"] == 2',
+                                  ] ,
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.00998',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0816',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0414',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0588',                                  
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.0292',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0394',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0641',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0571', 
+                                  ] ,
+                                  } ,
+                             } ,
+                 
+                 } ,
+},
 
 ###____________________Full2016v7________ : for nAODv6
 'Full2016v7': {
