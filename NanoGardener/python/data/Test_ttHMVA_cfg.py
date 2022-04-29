@@ -9,6 +9,7 @@ mvaDic['Muon_ttHMVA_2018'] = {
     'xmlFile'       : 'LatinoAnalysis/NanoGardener/python/data/ttH-UL-leptonMVA/UL20_mu_TTH-like_2018_BDTG.weights.xml' ,
     'spectatorVars' : OrderedDict() ,
     'inputVars'     : OrderedDict() ,
+    'charVariables' : ['Muon_genPartFlav', 'Muon_jetNDauCharged'],
 }
 
 mvaDic['Muon_ttHMVA_2018']['spectatorVars']['event']                 = 'event.event'
@@ -45,6 +46,7 @@ mvaDic['Electron_ttHMVA_2018'] = {
     'xmlFile'       : 'LatinoAnalysis/NanoGardener/python/data/ttH-UL-leptonMVA/UL20_el_TTH-like_2018_BDTG.weights.xml' ,
     'spectatorVars' : OrderedDict() ,
     'inputVars'     : OrderedDict() ,
+    'charVariables' : ['Electron_genPartFlav', 'Electron_jetNDauCharged', 'Electron_lostHits'],
 }
 
 mvaDic['Electron_ttHMVA_2018']['spectatorVars']['event']                         = 'event.event'
@@ -56,7 +58,7 @@ mvaDic['Electron_ttHMVA_2018']['spectatorVars']['Electron_genPartFlav']         
 mvaDic['Electron_ttHMVA_2018']['spectatorVars']['Electron_dxy']                  = 'event.Electron_dxy[eleID]'
 mvaDic['Electron_ttHMVA_2018']['spectatorVars']['Electron_dz']                   = 'event.Electron_dz[eleID]'
 
-mvaDic['Electron_ttHMVA_2018']['inputVars']['Electron_pt']                                                                                = 'event.Electron_pt[eleID]' 
+mvaDic['Electron_ttHMVA_2018']['inputVars']['Electron_pt']                                                                                = 'event.Electron_pt[eleID]'
 mvaDic['Electron_ttHMVA_2018']['inputVars']['Electron_eta']                                                                               = 'event.Electron_eta[eleID]'
 mvaDic['Electron_ttHMVA_2018']['inputVars']['Electron_pfRelIso03_all']                                                                    = 'event.Electron_pfRelIso03_all[eleID]'
 mvaDic['Electron_ttHMVA_2018']['inputVars']['Electron_miniPFRelIso_chg']                                                                  = 'event.Electron_miniPFRelIso_chg[eleID]'

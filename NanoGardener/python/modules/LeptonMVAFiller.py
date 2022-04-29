@@ -145,7 +145,7 @@ class LeptonMVAFiller(Module):
                         iVar_copy = iVar # iVar copy is needed since in the training I used twice Muon_looseID :(
                         if 'Bis' in iVar: iVar_copy = iVar.replace('Bis','')
                         value = 0
-                        if any(i in iVar for i in ['genPartFlav', 'lostHits', 'jetNDau']): # special 'ord' treatment for uchar variables
+                        if any(i in iVar for i in self.mvaDic[iMva]['charVariables']): # special 'ord' treatment for uchar variables
                             var   = self.mvaDic[iMva]['spectatorVars'][iVar]
                             value = ord(eval(var))
                         else: # standard treatment
@@ -160,7 +160,7 @@ class LeptonMVAFiller(Module):
                         iVar_copy = iVar # iVar copy is needed since in the training, I used twice Muon_looseID :(
                         if 'Bis' in iVar: iVar_copy = iVar.replace('Bis','')
                         value = 0
-                        if any(i in iVar for i in ['genPartFlav', 'lostHits', 'jetNDau']): # special 'ord' treatment for uchar variables
+                        if any(i in iVar for i in self.mvaDic[iMva]['charVariables']): # special 'ord' treatment for uchar variables
                             var   = self.mvaDic[iMva]['inputVars'][iVar]
                             value = ord(eval(var))
                         else: # standard treatment
@@ -185,7 +185,7 @@ class LeptonMVAFiller(Module):
                         iVar_copy = iVar # iVar copy is needed since in the training, I used twice Muon_looseID :(
                         if 'Bis' in iVar: iVar_copy = iVar.replace('Bis','')
                         value = 0
-                        if any(i in iVar for i in ['genPartFlav', 'lostHits', 'jetNDau']): # special 'ord' treatment for uchar variables
+                        if any(i in iVar for i in self.mvaDic[iMva]['charVariables']): # special 'ord' treatment for uchar variables
                             var   = self.mvaDic[iMva]['spectatorVars'][iVar]
                             value = ord(eval(var))
                         else: # standard treatment
@@ -200,7 +200,7 @@ class LeptonMVAFiller(Module):
                         iVar_copy = iVar # iVar copy is needed since in the training, I used twice Muon_looseID :(
                         if 'Bis' in iVar: iVar_copy = iVar.replace('Bis','')
                         value = 0
-                        if any(i in iVar for i in ['genPartFlav', 'lostHits', 'jetNDau']): # special 'ord' treatment for uchar variables
+                        if any(i in iVar for i in self.mvaDic[iMva]['charVariables']): # special 'ord' treatment for uchar variables
                             var   = self.mvaDic[iMva]['inputVars'][iVar]
                             value = ord(eval(var))
                         else: # standard treatment
