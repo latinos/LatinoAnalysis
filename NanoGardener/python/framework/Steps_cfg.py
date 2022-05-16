@@ -785,15 +785,13 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
-  #TODO: cross-check any UL-related changes per each subTarget:
-  # - jetSelUL2016fix DONE
   'MCl1loose2016v9' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelUL2016fix', 'CorrFatJetMC', 'CleanFatJet',
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL2016fix', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty','DressedLeptons','EFTGen'],
                   },
 
   # FIXME: check btagPerJet2016, btagPerEvent
@@ -844,6 +842,19 @@ Steps = {
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
                 },
+
+  # Efficiency and PU JET ID scale factors not ready at the moment (JetPUID_SF_16 removed)
+  # CorrFatJetMC removed as it is using deprecated module, nominal JER smearing applied in FatJERsMCUL instead
+  # TODO: do we need to rerun CleanFatJet module here????
+  'MCCorr2016v9' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2016','btagPerJet2016',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF' ],
+                }, 
 
   'MCTRGFixv7' : { 
                      'isChain'    : True  ,
@@ -959,8 +970,6 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty','DressedLeptons','EFTGen'],
                   },
 
-  #TODO: cross-check any UL-related changes per each subTarget:
-  # - jetSelUL DONE
   'MCl1loose2017v9' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
@@ -1006,6 +1015,20 @@ Steps = {
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
+                },
+
+  # Efficiency and PU JET ID scale factors not ready at the moment (JetPUID_SF_17 removed)
+  # CorrFatJetMC removed as it is using deprecated module, nominal JER smearing applied in FatJERsMCUL instead
+  # TODO: do we need to rerun CleanFatJet module here????
+  'MCCorr2017v9' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF' ]
                 },
 
   'MCCorr2017LP19' : {
@@ -1067,8 +1090,6 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
-  #TODO: cross-check any UL-related changes per each subTarget:
-  # - jetSelUL DONE
   'MCl1loose2018v9' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
@@ -1077,16 +1098,6 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSelUL', 'CleanFatJet',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
-
-  #only for PU ID WP test - to be removed
-  'MCl1loose2018v9_puIDtest' :  {
-                  'isChain'    : True  ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False ,
-                  'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelUL_puIDtest','PromptParticlesGenVars','GenLeptonMatch'],
-                  },
-  
 
   'test2018v7' :  {
                   'isChain'    : True  ,
@@ -1144,6 +1155,18 @@ Steps = {
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
                 },
 
+  # Efficiency and PU JET ID scale factors not ready at the moment (JetPUID_SF_18 removed)
+  # CorrFatJetMC removed as it is using deprecated module, nominal JER smearing applied in FatJERsMCUL instead
+  # TODO: do we need to rerun CleanFatJet module here????
+  'MCCorr2018v9' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF' ]
+                },
 
   'MCGenOnly': {
                   'isChain'    : True  ,
@@ -1294,7 +1317,7 @@ Steps = {
                                   'EGamma_Run2018B-UL2018-v1',
                                   'EGamma_Run2018C-UL2018-v1',
                                   'EGamma_Run2018D-UL2018-v1',
-                                  'SingleMuon_Run2018A-UL2018-v1',
+                                  'SingleMuon_Run2018A-UL2018-v2',
                                   'SingleMuon_Run2018B-UL2018-v2',
                                   'SingleMuon_Run2018C-UL2018-v2',
                                   'SingleMuon_Run2018D-UL2018-v1',
@@ -1370,7 +1393,7 @@ Steps = {
                                   'SingleMuon_Run2017E-UL2017-v1',
                                   'SingleMuon_Run2017F-UL2017-v1',
                                   # Run2018 v8
-                                  'SingleMuon_Run2018A-UL2018-v1',
+                                  'SingleMuon_Run2018A-UL2018-v2',
                                   'SingleMuon_Run2018B-UL2018-v2',
                                   'SingleMuon_Run2018C-UL2018-v2',
                                   'SingleMuon_Run2018D-UL2018-v1',
@@ -1681,7 +1704,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSelUL2016fix','CorrFatJetData','CleanFatJet','rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSelUL2016fix','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                  },
 
   'DATAl1loose2017': {
@@ -1728,7 +1751,7 @@ Steps = {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
-                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                 'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelUL','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
@@ -2890,6 +2913,7 @@ Steps = {
                }, 
 
 
+    #deprecated and to be removed
     'CorrFatJetData' :  {
                 'isChain': False,
                 'do4MC': False,
@@ -2907,7 +2931,7 @@ Steps = {
                 'declare': 'corr_fatjet_mc = createFatjetCorrector( globalTag="Regrouped_RPLME_JESGT", dataYear="RPLME_YEAR", jetType="AK8PFPuppi", isMC=True, redojec=True, applySmearing=True)',
                 'module':  'corr_fatjet_mc()'
     },
-
+    #end of deprecated
 
     'CleanFatJet' : {
                   'isChain'    : False ,
@@ -3227,7 +3251,7 @@ Steps = {
                   'module'     : 'jetRecalib2018RPLME_RUN()', ### <--- TODO
                  }, 
 
-## ------- MODULES: JER (still needed for UL) TODO: update 
+## ------- MODULES: JER (pre-UL and UL) 
     'JERsMC2016': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -3252,7 +3276,24 @@ Steps = {
                   'declare'    : 'JERMakerMC18 = lambda : JERMaker("2018","",jetType="AK4PFchs",jetColl="CleanJet",jerTag="Autumn18_V7b_MC",jmr_vals=[1.24, 1.20, 1.28])',
                   'module'     : 'JERMakerMC18()',
                  },
-    #jerTag for 2018 is missing on purpose, 2017 JERs are used instead (for a moment)
+
+    'JERsMCUL': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
+                  'declare'    : 'JERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK4PFchs",jetColl="CleanJet")',
+                  'module'     : 'JERMakerMCUL()',
+                 },
+
+    'FatJERsMCUL': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
+                  'declare'    : 'FatJERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK8PFPuppi",jetColl="FatJet",doGroomed=True)',
+                  'module'     : 'FatJERMakerMCUL()',
+                 },
 
     'JERup_suffix' :   {
                   'isChain'    : True ,
@@ -3323,7 +3364,7 @@ Steps = {
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
                   'declare'    : 'btagSFProducer2017 = lambda : btagSFProducer(era="2017", algo="deepcsv")',
                   'module'     : 'btagSFProducer2017()',
-                 },               
+                 },
 
   'btagPerJet2018': {
                   'isChain'    : False ,
@@ -3332,6 +3373,22 @@ Steps = {
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
                   'declare'    : 'btagSFProducer2018 = lambda : btagSFProducer(era="2018", algo="deepcsv")',
                   'module'     : 'btagSFProducer2018()',
+                 },
+  'btagPerJet_DeepCSV_UL': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
+                  'declare'    : 'btagSFProducer_DeepCSV_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepcsv")',
+                  'module'     : 'btagSFProducer_DeepCSV_UL()',
+                 },
+  'btagPerJet_DeepJet_UL': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
+                  'declare'    : 'btagSFProducer_DeepJet_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepjet")',
+                  'module'     : 'btagSFProducer_DeepJet_UL()',
                  },
 
   'btagPerEvent': {
@@ -5498,6 +5555,7 @@ Steps = {
                   'selection'  : '"(MET_pt < 20 || PuppiMET_pt < 20)"' , 
                   'onlySample' : [
                                   #### DY
+                                  'DYJetsToLL_M-10to50_LO', 
                                   'DYJetsToLL_M-10to50','DYJetsToLL_M-50','DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO','DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
                                   'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2','DYJetsToLL_M-10to50-LO-ext1',
                                   'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50-LO_ext2','DYJetsToLL_M-10to50-LO_ext1',

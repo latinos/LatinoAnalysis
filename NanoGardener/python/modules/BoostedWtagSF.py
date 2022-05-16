@@ -44,7 +44,8 @@ class BoostedWtagSF(Module):
             self._input_branch_prefix = "_"+ input_branch_suffix
         else:
             # nominal vars from NanoAODtools
-            self._input_branch_prefix = "_nom"
+            #self._input_branch_prefix = "_nom"
+            self._input_branch_prefix = ""
 
 
     def beginJob(self):

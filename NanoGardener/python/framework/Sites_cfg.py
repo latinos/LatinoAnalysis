@@ -18,6 +18,7 @@ Sites = {
               'mkDir'       : True ,
               'xrootdPath'  : 'root://eoscms.cern.ch/' ,
               'treeBaseDir' : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
+              #'treeBaseDir' : '/eos/cms/store/group/phys_smp/ec/Latinos/HWWNano/',
               'batchQueues' : ['8nh','1nd','2nd','1nw'],
               'slc_ver'     : 7
            } ,

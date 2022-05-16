@@ -97,7 +97,10 @@ class TrigMaker(Module):
            self.TM_LegEff[RunP]  = {}
            self.TM_DZEff[RunP]   = {}
            self.TM_GlEff[RunP] = {}
-           self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
+           if 'runList' in self.Trigger[self.cmssw][RunP].keys():
+             self.TM_runInt[RunP]  = {'runList' : self.Trigger[self.cmssw][RunP]['runList']}
+           else: 
+             self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
            for Tname in self.Trigger[self.cmssw][RunP][self.typeStr]:
               self.TM_trig[RunP][Tname] = []
               for HLT in self.Trigger[self.cmssw][RunP][self.typeStr][Tname]:
@@ -150,7 +153,10 @@ class TrigMaker(Module):
     def _run_period(self, run, event_seed=None):
         if self.isData:
            for RunP in self.TM_runInt:
-              if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
+             if 'runList' in self.TM_runInt[RunP].keys():
+               if run in self.TM_runInt[RunP]['runList']: return RunP
+             else: 
+               if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
         else: 
          toss_a_coin = get_rndm(event_seed)
          for iPeriod in range(1,len(self.RunFrac)) :

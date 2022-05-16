@@ -68,3 +68,29 @@ config['jerTagsMC'] = {
     'UL2017': 'Summer19UL17_JRV2_MC',
     'UL2018': 'Summer19UL18_JRV2_MC',
 }
+
+#jet mass resolution: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
+#nominal, up, down
+config['jmrVals'] = {
+    '2016': [1.0, 1.2, 0.8],
+    '2017': [1.09, 1.14, 1.04],
+    # Use 2017 values for 2018 until 2018 are released
+    '2018': [1.09, 1.14, 1.04],
+    'UL2016_preVFP': [1.00, 1.00, 1.00],  # placeholder
+    'UL2016': [1.00, 1.00, 1.00],  # placeholder
+    'UL2017': [1.00, 1.00, 1.00],  # placeholder
+    'UL2018': [1.00, 1.00, 1.00],  # placeholder
+}
+
+#jet mass scale
+#W-tagging PUPPI softdrop JMS values: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
+config['jmsVals'] = {
+    '2016': [1.00, 0.9906, 1.0094],  # nominal, down, up
+    '2017': [0.982, 0.978, 0.986],
+    # Use 2017 values for 2018 until 2018 are released
+    '2018': [0.982, 0.978, 0.986],
+    'UL2016_preVFP': [1.000, 1.000, 1.000],  # placeholder
+    'UL2016': [1.000, 1.000, 1.000],  # placeholder
+    'UL2017': [1.000, 1.000, 1.000],  # placeholder
+    'UL2018': [1.000, 1.000, 1.000],  # placeholder
+}
