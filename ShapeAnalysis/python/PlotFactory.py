@@ -1123,10 +1123,13 @@ class PlotFactory:
             CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
             if 'sqrt' in legend.keys() :
               CMS_lumi.lumi_sqrtS = legend['sqrt']
+              CMS_lumi.lumiText = legend['sqrt']
             if 'lumi' in legend.keys() :
               CMS_lumi.lumi_13TeV = legend['lumi']
             else:
               CMS_lumi.lumi_13TeV = 'L = %.1f fb^{-1}' % self._lumi
+            if 'cms' in legend.keys() :
+              CMS_lumi.cmsText = legend['cms']
         
             # Simple example of macro: plot with CMS name and lumi text
             #  (this script does not pretend to work in all configurations)
@@ -1136,6 +1139,8 @@ class PlotFactory:
             #               iPeriod = 7 means: 7 TeV + 8 TeV + 13 TeV 
             #               iPeriod = 0 means: free form (uses lumi_sqrtS)
             iPeriod = 4
+            if 'period' in legend.keys() :
+                iPeriod = legend['period']
             iPos  = 0
             CMS_lumi.CMS_lumi(tcanvas, iPeriod, iPos)    
 

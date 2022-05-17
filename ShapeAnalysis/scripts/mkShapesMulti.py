@@ -179,11 +179,19 @@ def makeTargetList(options, samples):
 
           for iFileBlock in range(nFileBlocks):
             treeType = os.path.basename(sam_v['name'][0]).split('_')[0]
+            print("tree type: {}".format(treeType))
             if treeType == 'latino':
+              print("This is a latino tree!")
               chain = ROOT.TChain('latino')
             elif treeType == 'nanoLatino':
+              print("This is a nanoLatino tree!")
               chain = ROOT.TChain('Events')
-              
+            elif treeType == 'luxe':
+              print("This is a luxe tree!")
+              chain = ROOT.TChain('Tracks') 
+            else:
+              raise ValueError("This is a {} tree, but I don't know it!".format(treeType))
+
             for fname in sam_v['name'][iFileBlock * filesPerJob:(iFileBlock + 1) * filesPerJob]:
               chain.Add(fname)
             nEvents = chain.GetEntries()
