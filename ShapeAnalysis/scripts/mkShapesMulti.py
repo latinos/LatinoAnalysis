@@ -621,15 +621,20 @@ if __name__ == '__main__':
               if zeroMCerror == 1:
                 print "special treatment of 0 MC events active for sample", sample
               for cut in set(updatedCuts):
+                if 'cuts' in nuisances['stat'].keys():
+                  if cut not in nuisances['stat']['cuts']: continue
                 for variable in variables.keys():
+                  if 'cuts' in variables[variable] and cut not in variables[variable]['cuts']: continue
+                  # Ignore 1-bin histograms
+                  if 'range' in variables[variable] and ((len(variables[variable]['range'])==3 and variables[variable]['range'][0]==1) or (len(variables[variable]['range'])==1 and len(variables[variable]['range'][0])==1)): continue
                   hcentral = filein.Get(cut+"/"+variable+"/histo_"+sample)
                   # this is kept to the original before any error is reset
-                  hcentralClone = hcentral.Clone()
                   if hcentral == None:
                     print "Warning, missing", sample, cut, variable
                     continue
                   else:
                     print "Found", sample, cut, variable
+                  hcentralClone = hcentral.Clone()
                   for ibin in range(1, hcentral.GetNbinsX()+1):
                     filein.cd(cut+"/"+variable)
                     tag = "_ibin_"
@@ -671,7 +676,7 @@ if __name__ == '__main__':
                     #BUGFIX by Andrea: hcentral is now the firt variable in the function
                     #original text: scaleHistoStat(hup,  1, ibin, lumi, zeroMCerror)
                     #hcentral.Write("",ROOT.TObject.kOverwrite)
-                    print "Saviing histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statUp"
+                    print "Saving histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statUp"
                     hup.Write("",ROOT.TObject.kOverwrite)
                     print "Saving histogram ", cut+"/"+variable+"/histo_"+sample+tag + str(ibin) + "_statDown"
                     hdo.Write("",ROOT.TObject.kOverwrite)
