@@ -4036,6 +4036,418 @@ ElectronWP = {
                  } ,
 },
 
+###____________________Full2016v9________ : for nAODv9 - HIPM part
+'Full2016v9HIPM': {
+
+## ------------
+ 'VetoObjWP' : {
+           'HLTsafe' : {
+                         'cuts' : {
+                               # Common cuts
+                               'True' :
+                                [
+                                  'False'
+                                ] ,
+                                   },
+                       } ,
+                 } ,
+
+# ------------ 
+ 'FakeObjWP'  : {
+
+           'HLTsafe' : { 
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [
+                                   'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                   'electron_col[LF_idx]["cutBased"] >= 3',
+                                   'electron_col[LF_idx]["convVeto"] == 1',
+                                  ] ,             
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [
+                                   'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                   'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [
+                                   'electron_col[LF_idx]["sieie"] < 0.03 ' ,                           
+                                   'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.014' ,
+                                   'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                   'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                  ] ,
+                                   },
+                       } ,
+
+                 } ,
+# ------------ 
+'TightObjWP' : {
+
+          # ----- mvaFall17V2Iso
+
+          'mvaFall17V2Iso_WP90':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+         'mvaFall17V2Iso_WP90_tthmva_70':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06',
+                                     'electron_col[LF_idx]["mvaTTH"] > 0.7'
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+          'mvaFall17V2Iso_WP90_SS':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06', 
+                                     'electron_col[LF_idx]["tightCharge"] == 2',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+          'mvaFall17V2Iso_WP90_SS_tthmva_70':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06', 
+                                     'electron_col[LF_idx]["tightCharge"] == 2',
+                                     'electron_col[LF_idx]["mvaTTH"] > 0.7',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+              }, 
+ # ------------ 
+ 'WgStarObjWP' : {
+         
+         'cut_WP_Tight80X' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [ 
+                                    'False'
+                                    #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    ##'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    ##'electron_col[LF_idx]["cutBased"] == 4',
+                                    #'electron_col[LF_idx]["lostHits"] < 1',
+                                    #'electron_col[LF_idx]["convVeto"]',
+                                    #'electron_col[LF_idx]["tightCharge"] == 2',
+                                  ] ,
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.00998',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0816',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0414',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0588',                                  
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.0292',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0394',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0641',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0571', 
+                                  ] ,
+                                  } ,
+                             } ,
+                 
+                 } ,
+},
+
+###____________________Full2016v9________ : for nAODv9 - no HIPM part
+'Full2016v9noHIPM': {
+
+## ------------
+ 'VetoObjWP' : {
+           'HLTsafe' : {
+                         'cuts' : {
+                               # Common cuts
+                               'True' :
+                                [
+                                  'False'
+                                ] ,
+                                   },
+                       } ,
+                 } ,
+
+# ------------ 
+ 'FakeObjWP'  : {
+
+           'HLTsafe' : { 
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [
+                                   'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                   'electron_col[LF_idx]["cutBased"] >= 3',
+                                   'electron_col[LF_idx]["convVeto"] == 1',
+                                  ] ,             
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [
+                                   'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                   'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [
+                                   'electron_col[LF_idx]["sieie"] < 0.03 ' ,                           
+                                   'abs(electron_col[LF_idx]["eInvMinusPInv"]) < 0.014' ,
+                                   'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                   'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                  ] ,
+                                   },
+                       } ,
+
+                 } ,
+# ------------ 
+'TightObjWP' : {
+
+          # ----- mvaFall17V2Iso
+
+          'mvaFall17V2Iso_WP90':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+         'mvaFall17V2Iso_WP90_tthmva_70':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06',
+                                     'electron_col[LF_idx]["mvaTTH"] > 0.7'
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+          'mvaFall17V2Iso_WP90_SS':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06', 
+                                     'electron_col[LF_idx]["tightCharge"] == 2',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+          'mvaFall17V2Iso_WP90_SS_tthmva_70':  {
+                         'cuts' : { 
+                                # Common cuts 
+                                'True' :
+                                   [
+                                     'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                     'electron_col[LF_idx]["mvaFall17V2Iso_WP90"]',
+                                     'electron_col[LF_idx]["convVeto"] == 1',
+                                     'electron_col[LF_idx]["pfRelIso03_all"] < 0.06', 
+                                     'electron_col[LF_idx]["tightCharge"] == 2',
+                                     'electron_col[LF_idx]["mvaTTH"] > 0.7',
+                                   ] ,
+                                # Barrel
+                                 'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                   ] ,
+                                 # EndCap
+                                 'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                   [
+                                     'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                     'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                   ] ,
+                                  } ,
+                                # [FIXME] Add SF and FakeW 
+                              } ,
+
+              }, 
+ # ------------ 
+ 'WgStarObjWP' : {
+         
+         'cut_WP_Tight80X' : {
+                         'cuts' : { 
+                                # Common cuts
+                                'True' :
+                                  [ 
+                                    'False'
+                                    #'abs(electron_col[LF_idx]["eta"]) < 2.5' ,
+                                    ##'electron_col[LF_idx]["cutBased_HLTPreSel"] == 1',
+                                    ##'electron_col[LF_idx]["cutBased"] == 4',
+                                    #'electron_col[LF_idx]["lostHits"] < 1',
+                                    #'electron_col[LF_idx]["convVeto"]',
+                                    #'electron_col[LF_idx]["tightCharge"] == 2',
+                                  ] ,
+                                # Barrel
+                                'abs(electron_col[LF_idx]["eta"]) <= 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.05' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.1'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.00998',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00308',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0816',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0414',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0588',                                  
+                                  ] ,
+                                # EndCap
+                                'abs(electron_col[LF_idx]["eta"]) > 1.479' :
+                                  [ 
+                                    #'abs(electron_col[LF_idx]["dxy"]) < 0.1' ,
+                                    #'abs(electron_col[LF_idx]["dz"]) < 0.2'  ,
+                                    #'electron_col[LF_idx]["sieie"] < 0.0292',
+                                    ##'electron_col[LF_idx]["deltaEtaSC"] < 0.00605',
+                                    ##'itree.std_vector_electron_dPhiIn"][LF_idx] < 0.0394',
+                                    #'electron_col[LF_idx]["hoe"] < 0.0641',
+                                    #'electron_col[LF_idx]["eInvMinusPInv"] < 0.0129',
+                                    #'(electron_col[LF_idx]["pfRelIso03_all"] - self.ConeOverlapPt(lepton_col, iLep)/electron_col[LF_idx]["pt"]) < 0.0571', 
+                                  ] ,
+                                  } ,
+                             } ,
+                 
+                 } ,
+},
+
 ###____________________Full2016v7________ : for nAODv6
 'Full2016v7': {
 
@@ -6834,6 +7246,8 @@ MuonWP['Full2018v6'] = copy.deepcopy(MuonWP['Full2018'])
 MuonWP['Full2018v6']['TightObjWP']['cut_Tight_HWWW']['fakeW']='/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2018v6/mvaFall17V1IsoWP90/'
 
 
+MuonWP['Full2016v9HIPM'] = copy.deepcopy(MuonWP['Full2016v7'])
+MuonWP['Full2016v9noHIPM'] = copy.deepcopy(MuonWP['Full2016v7'])
 MuonWP['Full2018v9'] = copy.deepcopy(MuonWP['Full2018v7'])
 MuonWP['Full2017v9'] = copy.deepcopy(MuonWP['Full2017v7'])
  
