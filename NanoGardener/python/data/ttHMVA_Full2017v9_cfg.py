@@ -11,14 +11,15 @@ mvaDic['Muon_ttHMVA_2017'] = {
     'xmlFile'       : 'LatinoAnalysis/NanoGardener/python/data/ttH-UL-leptonMVA/UL20_mu_TTH-like_2017_BDTG.weights.xml' ,
     'spectatorVars' : OrderedDict() ,
     'inputVars'     : OrderedDict() ,
-    'charVariables' : ['Muon_genPartFlav', 'Muon_jetNDauCharged'],
+    # 'charVariables' : ['Muon_genPartFlav', 'Muon_jetNDauCharged'],
+    'charVariables' : ['Muon_jetNDauCharged'],
 }
 
 mvaDic['Muon_ttHMVA_2017']['spectatorVars']['event']                 = 'event.event'
 mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_mvaTTH']           = 'event.Muon_mvaTTH[muonID]'
 mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_miniPFRelIso_all'] = 'event.Muon_miniPFRelIso_all[muonID]'
 mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_looseId']          = 'event.Muon_looseId[muonID]'
-mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_genPartFlav']      = 'event.Muon_genPartFlav[muonID]'
+mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_genPartFlav']      = '1' # 'event.Muon_genPartFlav[muonID]'
 mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_isGlobal']         = 'event.Muon_isGlobal[muonID]'
 mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_isTracker']        = 'event.Muon_isTracker[muonID]'
 mvaDic['Muon_ttHMVA_2017']['spectatorVars']['Muon_isPFcand']         = 'event.Muon_isPFcand[muonID]'
@@ -48,7 +49,8 @@ mvaDic['Electron_ttHMVA_2017'] = {
     'xmlFile'       : 'LatinoAnalysis/NanoGardener/python/data/ttH-UL-leptonMVA/UL20_el_TTH-like_2017_BDTG.weights.xml' ,
     'spectatorVars' : OrderedDict() ,
     'inputVars'     : OrderedDict() ,
-    'charVariables' : ['Electron_genPartFlav', 'Electron_jetNDauCharged', 'Electron_lostHits'],
+    # 'charVariables' : ['Electron_genPartFlav', 'Electron_jetNDauCharged', 'Electron_lostHits'],
+    'charVariables' : ['Electron_jetNDauCharged', 'Electron_lostHits'],
 }
 
 mvaDic['Electron_ttHMVA_2017']['spectatorVars']['event']                         = 'event.event'
@@ -56,7 +58,7 @@ mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_mvaTTH']              
 mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_miniPFRelIso_all']     = 'event.Electron_miniPFRelIso_all[eleID]'
 mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_mvaFall17V2noIso_WPL'] = 'event.Electron_mvaFall17V2noIso_WPL[eleID]'
 mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_lostHits']             = 'event.Electron_lostHits[eleID]'
-mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_genPartFlav']          = 'event.Electron_genPartFlav[eleID]'
+mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_genPartFlav']          = '1' # 'event.Electron_genPartFlav[eleID]'
 mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_dxy']                  = 'event.Electron_dxy[eleID]'
 mvaDic['Electron_ttHMVA_2017']['spectatorVars']['Electron_dz']                   = 'event.Electron_dz[eleID]'
 
