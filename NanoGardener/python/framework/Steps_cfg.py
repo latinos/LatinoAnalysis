@@ -2829,7 +2829,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonMVAFiller' ,
-                  'declare'    : 'leptonMVAFiller = lambda : LeptonMVAFiller(\'data/Test_ttHMVA_cfg.py\')' ,
+                  'declare'    : 'leptonMVAFiller = lambda : LeptonMVAFiller(\'data/ttHMVA_RPLME_CMSSW_cfg.py\')' ,
                   'module'     : 'leptonMVAFiller()' ,
                },
 
