@@ -312,7 +312,7 @@ class HiggsXSection:
         FinalStateBR = self._br['W2lv']*self._br['W2lv']
      if 'WWToLNuQQ' in SampleName or 'WWToNuQQ' in SampleName:  
         FinalState   = 'WW->lvQQ'
-        FinalStateBR = self._br['W2lv']*self._br['W2QQ']
+        FinalStateBR = 2*self._br['W2lv']*self._br['W2QQ']
      if 'ZZTo4L'    in SampleName :  
         FinalState   = 'ZZ->4l'
         FinalStateBR = self._br['Z2ll']*self._br['Z2ll']
