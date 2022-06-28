@@ -2824,6 +2824,15 @@ Steps = {
                   'module'     : 'leptonMaker()' ,
                }, 
 
+  'leptonMVAFiller': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonMVAFiller' ,
+                  'declare'    : 'leptonMVAFiller = lambda : LeptonMVAFiller(\'data/ttHMVA_RPLME_CMSSW_cfg.py\')' ,
+                  'module'     : 'leptonMVAFiller()' ,
+               },
+
    'lepSel': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,

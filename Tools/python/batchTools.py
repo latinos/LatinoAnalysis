@@ -122,6 +122,10 @@ class batchJobs :
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
+       elif 'kit' in hostName or 'bms' in hostName:
+         jFile.write('#$ -N '+jName+'\n')
+         user_id = os.getuid()
+         # jFile.write('export X509_USER_PROXY=/tmp/x509up_u{}\n'.format(user_id))
        elif 'knu' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/u/user/'+os.environ["USER"]+'/.proxy\n')
@@ -138,12 +142,14 @@ class batchJobs :
          if self.USE_SINGULARITY : jFileSing.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        if 'CONFIGURATION_DIRECTORY' in os.environ:
          jFile.write('export CONFIGURATION_DIRECTORY='+os.environ['CONFIGURATION_DIRECTORY']+'\n')
-       jFile.write('voms-proxy-info\n')
+       if not ('kit' in hostName or 'bms' in hostName): jFile.write('voms-proxy-info\n')
        if self.USE_SINGULARITY : jFileSing.write('voms-proxy-info\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
-       jFile.write('cd '+CMSSW+'\n')
+       if 'kit' in hostName or 'bms' in hostName:
+          jFile.write('voms-proxy-info\n')
+       jFile.write('cd '+CMSSW+'/src\n')
        jFile.write('eval `scramv1 ru -sh`\n')
                
        if 'knu' in hostName or 'hercules' in hostName:
@@ -417,6 +423,29 @@ class batchJobs :
          #print "jdsFile: ", jdsFileName,"jidFile: ", jidFile 
          # We write the JDS file for documentation / resubmission, but initial submission will be done in one go below
          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
+       # KIT
+       elif 'kit' in hostName or 'bms' in hostName:
+          jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
+          jdsFile = open(jdsFileName,'w')
+          jdsFile.write('Universe = docker\n')
+          jdsFile.write('docker_image = mschnepf/slc7-condocker\n')
+          jdsFile.write('Executable = '+self.subDir+subDirExtra+'/'+jName+'.sh\n')
+          jdsFile.write('Output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
+          jdsFile.write('Error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
+          jdsFile.write('Log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
+          # jdsFile.write('should_transfer_files = YES\n')
+          # jdsFile.write('transfer_input_files = ""\n')
+          # jdsFile.write('transfer_output_files = ""\n')
+          user_id = os.getuid()
+          jdsFile.write('x509userproxy = /tmp/x509up_u{}\n'.format(user_id)) # hereeeee   
+          jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
+          jdsFile.write('RequestMemory = 8192 \n')
+          jdsFile.write('request_disk = 10000000 \n')
+          jdsFile.write('accounting_group = cms.higgs \n')
+          jdsFile.write('JobBatchName = '+jName.split('__')[0]+'__'+jName.split('__')[1]+'__'+jName.split('__')[2]+'\n')         
+          jdsFile.write("Queue")
+          jdsFile.close()
+          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
        elif 'ifca' in hostName :
          jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
        elif "pi.infn.it" in socket.getfqdn():
