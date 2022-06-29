@@ -853,7 +853,7 @@ Steps = {
                      'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2016','btagPerJet2016',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
-                                     'CleanFatJet', 'BoostedWtagSF' ],
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller'],
                 }, 
 
   'MCTRGFixv7' : { 
@@ -1028,7 +1028,7 @@ Steps = {
                      'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
-                                     'CleanFatJet', 'BoostedWtagSF' ]
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
 
   'MCCorr2017LP19' : {
@@ -1165,7 +1165,7 @@ Steps = {
                      'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
-                                     'CleanFatJet', 'BoostedWtagSF' ]
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
 
   'MCGenOnly': {
@@ -5661,16 +5661,24 @@ Steps = {
 #                 },
 
 # Run MVA after 2 lepton selection !
+#   'l2loose' :  {
+#                  'isChain'    : True  ,
+#                  'do4MC'      : True  ,
+#                  'do4Data'    : True  ,
+#                  'selection'  : '"(nLepton>=2)"' ,
+#                  'subTargets' : ['DYMVA','MonoHiggsMVA','JJHEFT'], 
+#                  'excludeSample' : LNuQQSamples
+#                },
+
+# In UL production the l2loose step will be run only for DATA
    'l2loose' :  {
                   'isChain'    : True  ,
-                  'do4MC'      : True  ,
+                  'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['DYMVA','MonoHiggsMVA','JJHEFT'], 
-                  'excludeSample' : LNuQQSamples
+                  'subTargets' : ['MonoHiggsMVA','JJHEFT','leptonMVAFiller'], 
                 },
-
-
+	
 #muWP='cut_Tight80x'
 #eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']
   'l2tightOR2016' : {
