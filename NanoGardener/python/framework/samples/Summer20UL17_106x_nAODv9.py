@@ -330,7 +330,7 @@ Samples['VBF_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0PHf05ph0ToWWTo2L2Nu_
 Samples['VBF_H0M_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0MToWWTo2L2Nu_M-125_TuneCP5_DipoleRecoil_13TeV-jhugen727-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 Samples['VBF_H0L1_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1ToWWTo2L2Nu_M-125_TuneCP5_DipoleRecoil_13TeV-jhugen727-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 Samples['VBF_H0L1Zgf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/VBFHiggs0L1Zgf05ph0ToWWTo2L2Nu_M-125_TuneCP5_DipoleRecoil_13TeV-jhugen727-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
-##---------------------------------------------------------------##ù#--->Updated!###-----------------------------------------------##
+##---------------------------------------------------------------##--->Updated!###-----------------------------------------------##
 Samples['WH_H0PM_ToWWTo2L2Nu'] = {'nanoAOD' :'/WHiggs0PMToWWToLNu_M-125_2LOSfilter_TuneCP5_13TeV-jhugen727-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 Samples['WH_H0PH_ToWWTo2L2Nu'] = {'nanoAOD' :'/WHiggs0PHToWWToLNu_M-125_2LOSfilter_TuneCP5_13TeV-jhugen727-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 Samples['WH_H0PHf05_ToWWTo2L2Nu'] = {'nanoAOD' :'/WHiggs0PHf05ph0ToWWToLNu_M-125_2LOSfilter_TuneCP5_13TeV-jhugen727-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}

@@ -37,7 +37,7 @@ class HiggsXSection:
       self._UseggZH = True
 
       self._br = {}
-      self._br['W2lv'] = 0.108*3.0
+      self._br['W2lv'] = 0.1086*3.0
       self._br['W2QQ'] = 0.676
       self._br['Z2ll'] = 0.033658*3.0
 
@@ -312,7 +312,7 @@ class HiggsXSection:
         FinalStateBR = self._br['W2lv']*self._br['W2lv']
      if 'WWToLNuQQ' in SampleName or 'WWToNuQQ' in SampleName:  
         FinalState   = 'WW->lvQQ'
-        FinalStateBR = self._br['W2lv']*self._br['W2QQ']
+        FinalStateBR = 2*self._br['W2lv']*self._br['W2QQ']
      if 'ZZTo4L'    in SampleName :  
         FinalState   = 'ZZ->4l'
         FinalStateBR = self._br['Z2ll']*self._br['Z2ll']

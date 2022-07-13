@@ -843,17 +843,15 @@ Steps = {
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
                 },
 
-  # Efficiency and PU JET ID scale factors not ready at the moment (JetPUID_SF_16 removed)
   # CorrFatJetMC removed as it is using deprecated module, nominal JER smearing applied in FatJERsMCUL instead
-  # TODO: do we need to rerun CleanFatJet module here????
   'MCCorr2016v9' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2016','btagPerJet2016',
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2016','btagPerJet2016','JetPUID_SF_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
-                                     'CleanFatJet', 'BoostedWtagSF' ],
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller'],
                 }, 
 
   'MCTRGFixv7' : { 
@@ -1017,18 +1015,16 @@ Steps = {
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
                 },
 
-  # Efficiency and PU JET ID scale factors not ready at the moment (JetPUID_SF_17 removed)
   # CorrFatJetMC removed as it is using deprecated module, nominal JER smearing applied in FatJERsMCUL instead
-  # TODO: do we need to rerun CleanFatJet module here????
   'MCCorr2017v9' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
 
-                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
-                                     'CleanFatJet', 'BoostedWtagSF' ]
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
 
   'MCCorr2017LP19' : {
@@ -1155,17 +1151,15 @@ Steps = {
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
                 },
 
-  # Efficiency and PU JET ID scale factors not ready at the moment (JetPUID_SF_18 removed)
   # CorrFatJetMC removed as it is using deprecated module, nominal JER smearing applied in FatJERsMCUL instead
-  # TODO: do we need to rerun CleanFatJet module here????
   'MCCorr2018v9' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL',
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
-                                     'CleanFatJet', 'BoostedWtagSF' ]
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
 
   'MCGenOnly': {
@@ -2824,6 +2818,15 @@ Steps = {
                   'module'     : 'leptonMaker()' ,
                }, 
 
+  'leptonMVAFiller': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonMVAFiller' ,
+                  'declare'    : 'leptonMVAFiller = lambda : LeptonMVAFiller(\'data/ttHMVA_RPLME_CMSSW_cfg.py\')' ,
+                  'module'     : 'leptonMVAFiller()' ,
+               },
+
    'lepSel': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -3336,6 +3339,16 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSFMaker' ,
                   'declare'    : 'JetPUID_SFMaker18 = lambda : JetSFMaker("Full2018v7")',
                   'module'     : 'JetPUID_SFMaker18()',
+                 },
+
+## ------- MODULES: MC PU ID SFs: UL version
+    'JetPUID_SF_UL': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSFMakerUL' ,
+                  'declare'    : 'JetPUID_SFMakerUL = lambda : JetSFMakerUL(RPLME_YEAR,"RPLME_CMSSW")',
+                  'module'     : 'JetPUID_SFMakerUL()',
                  },
 
 ## ------- MODULES: MC Weights
@@ -5652,16 +5665,24 @@ Steps = {
 #                 },
 
 # Run MVA after 2 lepton selection !
+#   'l2loose' :  {
+#                  'isChain'    : True  ,
+#                  'do4MC'      : True  ,
+#                  'do4Data'    : True  ,
+#                  'selection'  : '"(nLepton>=2)"' ,
+#                  'subTargets' : ['DYMVA','MonoHiggsMVA','JJHEFT'], 
+#                  'excludeSample' : LNuQQSamples
+#                },
+
+# In UL production the l2loose step will be run only for DATA
    'l2loose' :  {
                   'isChain'    : True  ,
-                  'do4MC'      : True  ,
+                  'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['DYMVA','MonoHiggsMVA','JJHEFT'], 
-                  'excludeSample' : LNuQQSamples
+                  'subTargets' : ['MonoHiggsMVA','JJHEFT','leptonMVAFiller'], 
                 },
-
-
+	
 #muWP='cut_Tight80x'
 #eleWPlist = ['cut_WP_Tight80X','cut_WP_Tight80X_SS','mva_90p_Iso2016','mva_90p_Iso2016_SS']
   'l2tightOR2016' : {
