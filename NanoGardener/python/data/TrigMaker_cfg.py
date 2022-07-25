@@ -47,8 +47,14 @@ Trigger = {
                                                     'EleMuLegHigPt'     : 'Full2016v9HIPM/mc/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                     'EleMuLegLowPt'     : 'Full2016v9HIPM/mc/Muons/IsoMu8_Run2016_PTvsETA_HWW_RunLt278273.txt' ,
                                                   } ,
-                                  'DZEff'  :  { 
-                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                  'DZEffData'  :  { 
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_HIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'value'   : [1.0   ,0.0] } ,
+                                                'EleMu'     : { 'value'   : [1.0   ,0.0] } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_MC_HIP_ee.txt' } ,
                                                 'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
                                                 'MuEle'     : { 'value'   : [1.0   ,0.0] } ,
                                                 'EleMu'     : { 'value'   : [1.0   ,0.0] } ,
@@ -110,8 +116,14 @@ Trigger = {
                                                     'EleMuLegHigPt'     : 'Full2016v9HIPM/mc/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                     'EleMuLegLowPt'     : 'Full2016v9HIPM/mc/Muons/IsoMu8_Run2016_PTvsETA_HWW_RunLt278273.txt' ,
                                                   } ,
-                                  'DZEff'  :  {
-                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                  'DZEffData'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_HIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'value'   : [1.0   ,0.0] } ,
+                                                'EleMu'     : { 'value'   : [1.0   ,0.0] } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_MC_HIP_ee.txt' } ,
                                                 'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
                                                 'MuEle'     : { 'value'   : [1.0   ,0.0] } ,
                                                 'EleMu'     : { 'value'   : [1.0   ,0.0] } ,
@@ -174,11 +186,17 @@ Trigger = {
                                                     'EleMuLegHigPt'     : 'Full2016v9HIPM/mc/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                     'EleMuLegLowPt'     : 'Full2016v9HIPM/mc/Muons/IsoMu12_Run2016_PTvsETA_HWW_RunGt278273.txt' ,
                                                   } ,
-                                  'DZEff'  :  {
-                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                  'DZEffData'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_HIP_ee.txt' } ,
                                                 'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
-                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_HIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_HIP_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_MC_HIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_MC_HIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9HIPM/DZeff_2016_MC_HIP_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -241,11 +259,17 @@ Trigger = {
                                                      'EleMuLegHigPt'     : 'Full2016v9noHIPM/mc/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                      'EleMuLegLowPt'     : 'Full2016v9noHIPM/mc/Muons/IsoMu12_Run2016_PTvsETA_HWW_RunGt278273.txt' ,
                                                  } ,
-                                  'DZEff'  :  {
-                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                  'DZEffData'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ee.txt' } ,
                                                 'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
-                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -307,11 +331,17 @@ Trigger = {
                                                      'EleMuLegHigPt'     : 'Full2016v9noHIPM/mc/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                      'EleMuLegLowPt'     : 'Full2016v9noHIPM/mc/Muons/IsoMu12_Run2016_PTvsETA_HWW_RunGt278273.txt' ,
                                                  } ,
-                                  'DZEff'  :  { 
-                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                  'DZEffData'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ee.txt' } ,
                                                 'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
-                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -367,11 +397,17 @@ Trigger = {
                                                      'EleMuLegHigPt'     : 'Full2016v9noHIPM/mc/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                      'EleMuLegLowPt'     : 'Full2016v9noHIPM/mc/Muons/IsoMu12_Run2016_PTvsETA_HWW_RunGt278273.txt' ,
                                                  } ,
-                                  'DZEff'  :  { 
-                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v6/DZEff_mm.txt' } ,
-                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                  'DZEffData'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_uu.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_uu.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -429,11 +465,17 @@ Trigger = {
                                                      'EleMuLegHigPt'     : 'Full2016v9noHIPM/mc/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                      'EleMuLegLowPt'     : 'Full2016v9noHIPM/mc/Muons/IsoMu12_Run2016_PTvsETA_HWW_RunGt278273.txt' ,
                                                  } ,
-                                  'DZEff'  :  { 
-                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v6/DZEff_mm.txt' } ,
-                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                  'DZEffData'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_uu.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_noHIP_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ee.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_uu.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v9noHIPM/DZeff_2016_MC_noHIP_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -497,11 +539,17 @@ Trigger = {
                                                     'EleMuLegHigPt'     : 'Full2017v9/mc/EGM_MVAid/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017B.txt' ,
                                                     'EleMuLegLowPt'     : 'Full2017v9/mc/Muons/Mu12_pt_eta_efficiency_withSys_Run2017B.txt' ,
                                               } ,
-                                  'DZEff'  :  { 
+                                  'DZEffData'  :  { 
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v6/DZEff_mm.txt' } ,
-                                                'MuEle'     : { 'pt1:pt2' : 'Full2017v6/DZEff_me_mva.txt' } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2017v6/DZEff_em_mva.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_uu.txt' } ,
+                                                'MuEle'     : { 'pt1:pt2' : 'Full2017v9/DZeff_2017_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_uu.txt' } ,
+                                                'MuEle'     : { 'pt1:pt2' : 'Full2017v9/DZeff_2017_MC_ue.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -562,11 +610,17 @@ Trigger = {
                                                     'EleMuLegLowPt'     : 'Full2017v9/mc/Muons/Mu12_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                               } ,
 
-                                  'DZEff'  :  { 
+                                  'DZEffData'  :  { 
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v6/DZEff_mm.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_uu.txt' } ,
                                                 'MuEle'     : { 'value'   : [1.0,0.0] } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2017v6/DZEff_em_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_uu.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -627,11 +681,17 @@ Trigger = {
                                                     'EleMuLegLowPt'     : 'Full2017v9/mc/Muons/Mu12_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                               } ,
 
-                                  'DZEff'  :  { 
+                                  'DZEffData'  :  { 
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v6/DZEff_mm.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_uu.txt' } ,
                                                 'MuEle'     : { 'value'   : [1.0,0.0] } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2017v6/DZEff_em_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_uu.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -689,11 +749,17 @@ Trigger = {
                                                     'EleMuLegHigPt'     : 'Full2017v9/mc/EGM_MVAid/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                                     'EleMuLegLowPt'     : 'Full2017v9/mc/Muons/Mu12_pt_eta_efficiency_withSys_Run2017CDE.txt' ,
                                               } ,
-                                  'DZEff'  :  { 
+                                  'DZEffData'  :  {
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v6/DZEff_mm.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_uu.txt' } ,
                                                 'MuEle'     : { 'value'   : [1.0,0.0] } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2017v6/DZEff_em_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_uu.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -752,11 +818,17 @@ Trigger = {
                                                     'EleMuLegHigPt'     : 'Full2017v9/mc/EGM_MVAid/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2017F.txt' ,
                                                     'EleMuLegLowPt'     : 'Full2017v9/mc/Muons/Mu12_pt_eta_efficiency_withSys_Run2017F.txt' ,
                                               } ,
-                                  'DZEff'  :  { 
+                                  'DZEffData'  :  {
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v6/DZEff_mm.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_uu.txt' } ,
                                                 'MuEle'     : { 'value'   : [1.0,0.0] } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2017v6/DZEff_em_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_uu.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2017v9/DZeff_2017_MC_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
@@ -822,11 +894,17 @@ Trigger = {
                                                 'EleMuLegHigPt'     : 'Full2018v9/mc/EGM_MVAid/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2018.txt',
                                                 'EleMuLegLowPt'     : 'Full2018v9/mc/Muons/Mu12_pt_eta_2018_nominal_efficiency.txt' ,
                                               } ,
-                                  'DZEff'  :  {
+                                  'DZEffData'  :  {
                                                 'DoubleEle' : { 'value'   : [1.0,0.0] } ,
-                                                'DoubleMu'  : { 'nvtx'    : 'Full2018v6/DZEff_mm.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2018v9/DZeff_2018_uu.txt' } ,
                                                 'MuEle'     : { 'value'   : [1.0,0.0] } ,
-                                                'EleMu'     : { 'nvtx'    : 'Full2018v6/DZEff_em_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2018v9/DZeff_2018_eu.txt' } ,
+                                              } ,
+                                  'DZEffMC'  :  {
+                                                'DoubleEle' : { 'value'   : [1.0,0.0] } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2018v9/DZeff_2018_MC_uu.txt' } ,
+                                                'MuEle'     : { 'value'   : [1.0,0.0] } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2018v9/DZeff_2018_MC_eu.txt' } ,
                                               } ,
                                   'DRllSF'  : {
                                                 'DoubleEle' :  'DRll_SF_ee.txt' ,
