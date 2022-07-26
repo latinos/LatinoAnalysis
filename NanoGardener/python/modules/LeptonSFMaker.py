@@ -16,6 +16,7 @@ from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree, mappedEvent
 
+from correctionlib import _core
 
 class LeptonSFMaker(Module):
     '''
@@ -89,8 +90,8 @@ class LeptonSFMaker(Module):
                     for rpr in self.ElectronWP[self.cmssw]['TightObjWP'][wp]['tkSF']:
                         self.SF_dict['electron'][wp]['tkSF']['beginRP'].append(int(rpr.split('-')[0]))
                         self.SF_dict['electron'][wp]['tkSF']['endRP'].append(int(rpr.split('-')[1]))
-                        tk_file = self.open_root(cmssw_base + '/src/' + self.ElectronWP[self.cmssw]['TightObjWP'][wp]['tkSF'][rpr])
-                        self.SF_dict['electron'][wp]['tkSF']['data'].append(self.get_root_obj(tk_file, 'EGamma_SF2D'))
+                        tk_file = self.ElectronWP[self.cmssw]['TightObjWP'][wp]['tkSF'][rpr]
+                        self.SF_dict['electron'][wp]['tkSF']['data'].append(_core.CorrectionSet.from_file(tk_file))
                         tk_file.Close()
                 if SFkey == 'wpSF':
                     self.SF_dict['electron'][wp]['wpSF']['data'] = []
@@ -267,6 +268,29 @@ class LeptonSFMaker(Module):
             if nvtx_t >= float(dot[0]) and nvtx_t < float(dot[1]): return float(dot[2]), float(dot[3]), float(dot[4])
         return 0., 1., 1.
 
+    def get_SF_corrlib(self, evaluator, pt, eta):
+        if self.cmssw == 'Full2016v9HIPM':
+            era = '2016preVFP'
+        elif self.cmssw == 'Full2016v9noHIPM':
+            era = '2016postVFP'
+        else:
+            era = (self.cmssw).replace('Full','').replace('v9','')
+
+        if pt <= 20:
+            SFnom  = evaluator["UL-Electron-ID-SF"].evaluate(era,"sf","RecoBelow20",eta,pt)
+            SFup   = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfup","RecoBelow20",eta,pt)
+            SFdown = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfdown","RecoBelow20",eta,pt)
+        else:
+            SFnom  = evaluator["UL-Electron-ID-SF"].evaluate(era,"sf","RecoAbove20",eta,pt)
+            SFup   = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfup","RecoAbove20",eta,pt)
+            SFdown = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfdown","RecoAbove20",eta,pt)
+    
+        # These are the actual up/down SFs, but we want to return the variation
+        SFup   = SFup - SFnom
+        SFdown = SFnom - SFdown
+
+        return SFnom, SFup, SFdown
+
     def trunc_kin(self, pdgId, pt, eta):
         pt_t = pt
         eta_t = eta
@@ -303,12 +327,15 @@ class LeptonSFMaker(Module):
         tkSF = 0.
         tkSF_err = 1.
         if abs(pdgId) == 11:
-            tkSF, tkSF_err = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], eta, pt)
+            tkSF, tkSF_up, tkSF_dwn = self.get_SF_corrlib(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], eta, pt)
+
         if abs(pdgId) == 13:
             tkSF, tkSF_up, tkSF_dwn = self.get_nvtxGraph_VnUnD(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], nvtx)
             tkSF_err = self.SF_dict[kin_str][wp]['tkSF']['SFerror']
-        
-        return tkSF, tkSF_err, tkSF_err
+            tkSF_up = tkSF_err
+            tkSF_dwn = tkSF_err
+
+        return tkSF, tkSF_up, tkSF_dwn
 
     def get_idIso_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
         pt, eta = self.trunc_kin(pdgId, lep_pt, lep_eta)
