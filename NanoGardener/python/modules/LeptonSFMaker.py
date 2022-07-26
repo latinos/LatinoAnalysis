@@ -149,7 +149,7 @@ class LeptonSFMaker(Module):
                             self.SF_dict['muon'][wp]['idSF']['beginRP'].append(int(rpr.split('-')[0]))
                             self.SF_dict['muon'][wp]['idSF']['endRP'].append(int(rpr.split('-')[1]))
                             data_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['idSF'][rpr][0])
-                            self.SF_dict['muon'][wp]['idSF']['data'].append(self.get_root_obj(data_file, 'Muon_idSF2D'))
+                            self.SF_dict['muon'][wp]['idSF']['data'].append(self.get_root_obj(data_file, 'NUM_TightHWW_DEN_TrackerMuons_eta_pt'))
                             data_file.Close()
 
                 if SFkey == 'isoSF':
@@ -175,7 +175,7 @@ class LeptonSFMaker(Module):
                             self.SF_dict['muon'][wp]['isoSF']['beginRP'].append(int(rpr.split('-')[0]))
                             self.SF_dict['muon'][wp]['isoSF']['endRP'].append(int(rpr.split('-')[1]))
                             data_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['isoSF'][rpr][0])
-                            self.SF_dict['muon'][wp]['isoSF']['data'].append(self.get_root_obj(data_file, 'Muon_isoSF2D'))
+                            self.SF_dict['muon'][wp]['isoSF']['data'].append(self.get_root_obj(data_file, 'NUM_TightHWW_ISO_DEN_TightHWW_eta_pt'))
                             data_file.Close()
 
                 if SFkey == 'tthMvaSF':
