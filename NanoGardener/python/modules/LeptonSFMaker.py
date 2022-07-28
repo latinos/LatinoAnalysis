@@ -354,16 +354,17 @@ class LeptonSFMaker(Module):
         if abs(pdgId) == 11:
             for dot in self.SF_dict[kin_str][wp]['wpSF']['data'][run_idx]:
                 if (pt >= float(dot[2]) and pt <= float(dot[3])) and (eta >= float(dot[0]) and eta <= float(dot[1])):
-                    data = float(dot[4])
-                    mc = float(dot[6])
+                    data = float(dot[4]) 
+                    mc = float(dot[7])   
 
-                    sigma_d = float(dot[5])
-                    sigma_m = float(dot[7])
-                    
+                    data_stat = float(dot[5])
+                    data_sys  = float(dot[6])
+                    mc_stat   = float(dot[8])                    
+                    mc_sys    = float(dot[9])
+
                     tkSF = data/mc
-                    tkSF_err = math.sqrt( (sigma_d/mc)**2 + (data/mc/mc*sigma_m)**2)
-                    tkSF_sys = math.sqrt( float(dot[8])**2 + float(dot[9])**2 + float(dot[10])**2 + float(dot[11])**2)
-                    tkSF_sys /= mc
+                    tkSF_err = math.sqrt( (data_stat/data)**2 + (mc_stat/mc)**2 ) * tkSF
+                    tkSF_sys = math.sqrt( (data_syst/data)**2 + (mc_syst/mc)**2 ) * tkSF
                     return tkSF, tkSF_err, tkSF_err, tkSF_sys
 
         if abs(pdgId) == 13:
