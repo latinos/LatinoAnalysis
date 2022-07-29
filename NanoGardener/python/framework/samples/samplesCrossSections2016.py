@@ -201,19 +201,19 @@ samples['ggZZ2e2t']                             .extend( ['xsec=0.003194',	'kfac
 samples['ZZJJTo4L_EWK']                         .extend( ['xsec=0.0004453',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Nu_EWK']		        .extend( ['xsec=0.0003014',	'kfact=1.000',		'ref=I'] ) #Run SMP-RunIISummer15wmLHEGS-00086
 
+# Updated!
 ## Single top
-samples['ST_t-channel_antitop']                 .extend( ['xsec=26.38',		'kfact=1.000',		'ref=E'] )
-samples['ST_t-channel_top']                     .extend( ['xsec=44.33',		'kfact=1.000',		'ref=E'] )
-samples['ST_t-channel_top_PSweights']           .extend( ['xsec=44.33',		'kfact=1.000',		'ref=E'] )
-samples['ST_t-channel']                         .extend( ['xsec=70.69',		'kfact=1.000',		'ref=E'] )
-samples['ST_tW_antitop']                        .extend( ['xsec=35.60',		'kfact=1.000',		'ref=E'] )
-samples['ST_tW_top']                            .extend( ['xsec=35.60',		'kfact=1.000',		'ref=E'] )
-samples['ST_s-channel']                         .extend( ['xsec=3.360',		'kfact=1.000',		'ref=E'] )
-# Updated???
-samples['ST_tW_antitop_noHad']                  .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] ) # 35.60 * (3*0.108)^2 ??  From D
-samples['ST_tW_antitop_noHad_ext1']             .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] ) # 35.60 * (3*0.108)^2 ??  From D
-samples['ST_tW_top_noHad']                      .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] ) # 35.60 * (3*0.108)^2 ??  From D
-samples['ST_tW_top_noHad_ext1']                 .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] ) # 35.60 * (3*0.108)^2 ??  From D
+samples['ST_t-channel_antitop']                 .extend( ['xsec=26.2278',       'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_top']                     .extend( ['xsec=44.07048',	'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_top_PSweights']           .extend( ['xsec=44.07048',	'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel']                         .extend( ['xsec=70.29828',	'kfact=1.000',		'ref=D'] )
+samples['ST_tW_antitop']                        .extend( ['xsec=35.85',		'kfact=1.000',		'ref=D'] )
+samples['ST_tW_top']                            .extend( ['xsec=35.85',		'kfact=1.000',		'ref=D'] )
+samples['ST_s-channel']                         .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
+samples['ST_tW_antitop_noHad']                  .extend( ['xsec=3.737',         'kfact=1.000',          'ref=D'] ) # 35.60 * (3*0.108)^2 - previously XS = 1
+samples['ST_tW_antitop_noHad_ext1']             .extend( ['xsec=3.737',         'kfact=1.000',          'ref=D'] ) # 35.60 * (3*0.108)^2 - previously XS = 1
+samples['ST_tW_top_noHad']                      .extend( ['xsec=3.737',         'kfact=1.000',          'ref=D'] ) # 35.60 * (3*0.108)^2 - previously XS = 1
+samples['ST_tW_top_noHad_ext1']                 .extend( ['xsec=3.737',         'kfact=1.000',          'ref=D'] ) # 35.60 * (3*0.108)^2 - previously XS = 1
 ############
 samples['tZq_ll_4f']                            .extend( ['xsec=0.0758',        'kfact=1.000',          'ref=E'] )
 
