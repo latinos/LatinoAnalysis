@@ -41,7 +41,7 @@ samples['WJetsToLNu_ext2']                	.extend( ['xsec=61526.7',	'kfact=1.00
 samples['WJetsToLNu-LO']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 samples['WJetsToLNu-LO_ext2']                	.extend( ['xsec=61526.7',	'kfact=1.00',		'ref=E'] )
 
-samples['WJetsToLNu_HT70_100']                  .extend( ['xsec=1353.0',        'kfact=1.0',            'ref=W'] )   
+samples['WJetsToLNu_HT70_100']                  .extend( ['xsec=1353.0',        'kfact=1.21',           'ref=W'] )   
 samples['WJetsToLNu_HT100_200']          	.extend( ['xsec=1345.00',	'kfact=1.21',		'ref=E'] )
 samples['WJetsToLNu_HT100_200_ext1']            .extend( ['xsec=1345.00',	'kfact=1.21',		'ref=E'] )
 samples['WJetsToLNu_HT100_200_ext2']            .extend( ['xsec=1345.00',	'kfact=1.21',		'ref=E'] )
