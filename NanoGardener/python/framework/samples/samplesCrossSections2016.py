@@ -716,7 +716,6 @@ samples['ZZZ']				.extend( ['xsec=0.01476',	'kfact=1.000',		'ref=W'] )
 samples['ZZZ_ext1']			.extend( ['xsec=0.01476',	'kfact=1.000',		'ref=W'] )
 
 samples['WWG']                          .extend( ['xsec=0.2147',        'kfact=1.000',          'ref=E'] )
-samples['WWG']                          .extend( ['xsec=0.2147',        'kfact=1.000',          'ref=E'] )
 ############
 
 ## Vg
