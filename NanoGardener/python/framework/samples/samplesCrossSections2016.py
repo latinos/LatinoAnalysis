@@ -90,13 +90,6 @@ samples['WJetsToLNu_2J']                        .extend( [ 'xsec=3338',         
 # samples['WJetsToLNu-LO_3J']                     .extend( [ 'xsec=958.0',        'kfact=1.0',            'ref=W'])
 # samples['WJetsToLNu-LO_4J']                     .extend( [ 'xsec=495.7',        'kfact=1.0',            'ref=W'])
 
-# Updated!
-# DYJetsToLL_M-50 = 6077.22 --> 5129 + 951.5 + 361.4 = 6441.9 --> k-factor = 0.94
-samples['DYJetsToLL_0J']                        .extend( [ 'xsec=5129',         'kfact=0.94',           'ref=W' ])
-samples['DYJetsToLL_1J']                        .extend( [ 'xsec=951.5',        'kfact=0.94',           'ref=W' ])
-samples['DYJetsToLL_2J']                        .extend( [ 'xsec=361.4',        'kfact=0.94',           'ref=W' ])
-########
-
 ## DY
 # Updated!
 samples['DYJetsToLL_M-10to50']          	.extend( ['xsec=18610.0',	'kfact=1.000',		'ref=E'] )
@@ -112,6 +105,11 @@ samples['DYJetsToLL_M-50']                      .extend( ['xsec=6077.22',       
 # samples['DYJetsToLL_M-50-PSdo']                 .extend( ['xsec=6077.22',       'kfact=1.000',          'ref=E'] )
 
 samples['DYJetsToTT_MuEle_M-50']                .extend( ['xsec=250.997',       'kfact=1.000',          'ref=E'] )  # (6077.22/3)*(0.352)^2
+
+# DYJetsToLL_M-50 = 6077.22 --> 5129 + 951.5 + 361.4 = 6441.9 --> k-factor = 0.94
+samples['DYJetsToLL_0J']                        .extend( [ 'xsec=5129',         'kfact=0.94',           'ref=W' ])
+samples['DYJetsToLL_1J']                        .extend( [ 'xsec=951.5',        'kfact=0.94',           'ref=W' ])
+samples['DYJetsToLL_2J']                        .extend( [ 'xsec=361.4',        'kfact=0.94',           'ref=W' ])
 ########
 
 samples['DYJetsToLL_M-5to50-LO']      	        .extend( ['xsec=71310.0',	'kfact=1.000',		'ref=E'] )
@@ -210,22 +208,28 @@ samples['WZTo2L2Q']		                .extend( ['xsec=5.5950',	'kfact=1.000',		'r
 samples['WZTo2Q2L_mllmin4p0']	                .extend( ['xsec=5.5950',	'kfact=1.000',		'ref=E'] ) # KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
 samples['WZTo1L3Nu']                            .extend( ['xsec=3.033',         'kfact=1.000',          'ref=E'] )  # err 0.00206
 samples['WZTo1L1Nu2Q']                          .extend( ['xsec=10.71',         'kfact=1.000',          'ref=E'] )
-samples['VVTo2L2Nu']		                .extend( ['xsec=11.950',	'kfact=1.000',		'ref=E'] )
-samples['VVTo2L2Nu_ext1']		        .extend( ['xsec=11.950',	'kfact=1.000',		'ref=E'] )
+# samples['VVTo2L2Nu']		                .extend( ['xsec=11.950',	'kfact=1.000',		'ref=E'] )
+# samples['VVTo2L2Nu_ext1']		        .extend( ['xsec=11.950',	'kfact=1.000',		'ref=E'] )
+
+samples['WZG']                                  .extend( ['xsec=0.04345',       'kfact=1.000',          'ref=E'] )
 
 
 ## ZZ
-samples['ZZ']                                   .extend( ['xsec=16.52300', 	'kfact=1.000',		'ref=W'] )
+samples['ZZ']                                   .extend( ['xsec=16.52300', 	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2Q2L']                             .extend( ['xsec=2.33',  	'kfact=1.000',		'ref=E'] ) # 16.523 * (3*0.033658)*(0.69911)*2
+samples['ZZTo2Q2L_mllmin4p0']                   .extend( ['xsec=2.33',  	'kfact=1.000',		'ref=E'] ) # KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
+samples['ZZTo2Nu2Q']                            .extend( ['xsec=4.62',  	'kfact=1.000',		'ref=E'] ) # 16.52300 * (0.20)*(0.69911)*2
 samples['ZZGTo4L']                              .extend( ['xsec=0.02202',	'kfact=1.000',		'ref=W'] )
 
 # samples['ZZTo2L2Q']                             .extend( ['xsec=3.220000',	'kfact=1.000',		'ref=E'] )
 # samples['ZZTo2L2Q_AMCNLOFXFX']                  .extend( ['xsec=3.22',          'kfact=1.000',          'ref=E'] )
 # Updated!
-samples['ZZTo4L']                               .extend( ['xsec=1.325', 	'kfact=1.000',		'ref=W'] )
-samples['ZZTo4L_M-1toInf']                      .extend( ['xsec=13.74', 	'kfact=1.000',		'ref=W'] ) # Do we trust this value?
+samples['ZZTo4Q']                               .extend( ['xsec=8.076', 	'kfact=1.000',		'ref=E'] ) # 16.52300*(0.69911)**2
+
+samples['ZZTo4L']                               .extend( ['xsec=1.325', 	'kfact=1.000',		'ref=E'] )
+samples['ZZTo4L_M-1toInf']                      .extend( ['xsec=1.374', 	'kfact=1.000',		'ref=E'] ) # KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
 # samples['ZZTo4L_AMCNLOFXFX']                    .extend( ['xsec=1.212000',      'kfact=1.000',          'ref=E'] )
-samples['ZZTo2L2Nu']                            .extend( ['xsec=0.9738',	'kfact=1.000',		'ref=E'] ) # Not compatible with just taking ZZ XS and multuply by (3*0.033658)**2
+samples['ZZTo2L2Nu']                            .extend( ['xsec=0.667', 	'kfact=1.000',		'ref=E'] ) # 16.52300 *(3*0.033658)*(0.20)*2
 # samples['ZZTo2L2Nu_ext1']                       .extend( ['xsec=0.564000',      'kfact=1.000',          'ref=E'] )
 samples['ggZZ4e']                               .extend( ['xsec=0.001586',	'kfact=1.000',		'ref=E'] )
 samples['ggZZ4e_DS']                            .extend( ['xsec=0.001586',	'kfact=1.000',		'ref=E'] )
@@ -285,6 +289,7 @@ samples['ST_s-channel_JMENano']                 .extend( ['xsec=3.34368',	'kfact
 # samples['ST_tW_antitop_noHad_ext1']             .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
 # samples['ST_tW_top_noHad_ext1']                 .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
 samples['tZq_ll_4f']                            .extend( ['xsec=0.0761',        'kfact=1.000',          'ref=W'] )
+samples['tZq_ll_4f_TuneCP5Up']                  .extend( ['xsec=0.0761',        'kfact=1.000',          'ref=W'] )
 samples['tZq_ll_4f_TuneCP5Down']                .extend( ['xsec=0.0761',        'kfact=1.000',          'ref=W'] )
 
 ## Top
@@ -740,14 +745,14 @@ samples['QCD_Pt-170to300_MuEnrichedPt5']        .extend( ['xsec=8654.4932',  	'k
 samples['QCD_Pt-300to470_MuEnrichedPt5']        .extend( ['xsec=797.3527',  	'kfact=1.000',	'ref=EN'] )    
 samples['QCD_Pt-470to600_MuEnrichedPt5']        .extend( ['xsec=79.02554',  	'kfact=1.000',	'ref=EN'] )    
 samples['QCD_Pt-600to800_MuEnrichedPt5']        .extend( ['xsec=25.09506',  	'kfact=1.000',	'ref=EN'] )    
-samples['QCD_Pt-800to1000_MuEnrichedPt5']        .extend( ['xsec=4.707368',  	'kfact=1.000',	'ref=EN'] )    
-samples['QCD_Pt-1000toInf_MuEnrichedPt5']        .extend( ['xsec=1.621317',  	'kfact=1.000',	'ref=EN'] )    
+samples['QCD_Pt-800to1000_MuEnrichedPt5']       .extend( ['xsec=4.707368',  	'kfact=1.000',	'ref=EN'] )    
+samples['QCD_Pt-1000toInf_MuEnrichedPt5']       .extend( ['xsec=1.621317',  	'kfact=1.000',	'ref=EN'] )    
 samples['QCD_Pt-20toInf_MuEnrichedPt15']  	.extend( ['xsec=302672.16', 	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-15to20_EMEnriched']       	.extend( ['xsec=2302200.0',	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-20to30_EMEnriched']       	.extend( ['xsec=5352960.0', 	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-30to50_EMEnriched']       	.extend( ['xsec=9928000.0', 	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-30to50_EMEnriched_ext1']       	.extend( ['xsec=9928000.0', 	'kfact=1.000',	'ref=EN'] )
-samples['QCD_Pt-50to80_EMEnriched']       	    .extend( ['xsec=2233000.0',  	'kfact=1.000',	'ref=EN'] )
+samples['QCD_Pt-50to80_EMEnriched']     	.extend( ['xsec=2233000.0',  	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-50to80_EMEnriched_ext1']       	.extend( ['xsec=2233000.0',  	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-80to120_EMEnriched']       	.extend( ['xsec=350000.0',  	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-120to170_EMEnriched']       	.extend( ['xsec=62964.0',  	'kfact=1.000',	'ref=EN'] )
