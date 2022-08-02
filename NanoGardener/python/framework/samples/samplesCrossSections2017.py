@@ -92,7 +92,7 @@ samples['DYJetsToLL_M-50-LO']      	     .extend( ['xsec=6077.22',    'kfact=1.0
 samples['DYJetsToLL_M-50-LO_ext1']           .extend( ['xsec=6077.22',    'kfact=1.000',          'ref=E'] )
 #########
 
-# Updated to be compatible with 2016 and ref. E
+# Updated
 samples['DYJetsToLL_M-50_HT-70to100']           .extend( ['xsec=146.5',   	'kfact=1.23',	'ref=W'] ) 
 samples['DYJetsToLL_M-50_HT-100to200']          .extend( ['xsec=160.7',	        'kfact=1.23',	'ref=W'] ) 
 samples['DYJetsToLL_M-50_HT-200to400']          .extend( ['xsec=48.63',	        'kfact=1.23',	'ref=W'] ) 
