@@ -26,7 +26,7 @@ Samples['HWminusJ_HToWW_M125'] = {'nanoAOD' :'/HWminusJ_HToWW_M-125_TuneCP5_13Te
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['HWplusJ_HToWW_M125'] = {'nanoAOD' :'/HWplusJ_HToWW_M-125_TuneCP5_13TeV-powheg-jhugen727-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
-Samples['HWplusJ_HToWW_M125'] = {'nanoAOD' :'/HWplusJ_HToWWTo2L2Nu_WTo2L_M-125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
+Samples['HWplusJ_HToWWTo2L2Nu_WTo2L_M125'] = {'nanoAOD' :'/HWplusJ_HToWWTo2L2Nu_WTo2L_M-125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['ttHToNonbb_M125'] = {'nanoAOD' :'/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'} ##!!!!
