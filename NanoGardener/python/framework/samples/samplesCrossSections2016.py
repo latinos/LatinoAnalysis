@@ -758,7 +758,7 @@ samples['QCD_Pt-120to170_EMEnriched']       	.extend( ['xsec=62964.0',  	'kfact=
 samples['QCD_Pt-170to300_EMEnriched']       	.extend( ['xsec=18810.0',  	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-300toInf_EMEnriched']       	.extend( ['xsec=1350.0',  	'kfact=1.000',	'ref=EN'] )
 samples['QCD_Pt-30toInf_DoubleEMEnriched']	.extend( ['xsec=259296.0', 	'kfact=1.000',	'ref=EN'] )
-samples['QCD_Pt_15to20_bcToE']    		.extend( ['xsec=232900',	'kfact=1.000',	'ref=I'] )
+samples['QCD_Pt_15to20_bcToE']    		.extend( ['xsec=186200',	'kfact=1.000',	'ref=I'] )
 
 # Updated! 
 samples['QCD_Pt_20to30_bcToE']    		.extend( ['xsec=303800',	'kfact=1.000',	'ref=I'] )

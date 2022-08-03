@@ -1,4 +1,4 @@
-1;5202;0c# Cross section DB
+# Cross section DB
 # Units in pb
 #
 # Detailed references at: https://docs.google.com/spreadsheets/d/1IEfle0H1V3ih2JVFpYckmTd-ACTBqgBRIsFydegGgPQ/edit?usp=sharing
@@ -719,7 +719,7 @@ samples['WWW_DiLeptonFilter']			.extend( ['xsec=0.007205',	'kfact=1.000',		'ref=
 
 samples['ZZZTo4L2Nu']				.extend( ['xsec=0.0001907',	'kfact=1.000',		'ref=N'] )
 samples['WZZTo4L2Nu']				.extend( ['xsec=0.00027',	'kfact=1.000',		'ref=N'] )
-samples['WWZTo4L2Nu']				.extend( ['xsec=0.0006024',	'kfact=1.000',		'ref=N'] )
+samples['WWZTo4L2Nu']				.extend( ['xsec=0.001809',	'kfact=1.000',		'ref=W'] ) # 0.1707*(3*0.108)*(3*0.108)*(3*0.033658)
 
 
 ## Vg
