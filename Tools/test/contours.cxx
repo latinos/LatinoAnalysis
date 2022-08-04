@@ -18,7 +18,7 @@ TList* contourPlot(TTree *t, TString x, TString y, double pmin, double pmax, TGr
     TGraph *gr = (TGraph*) gROOT->FindObject("Graph")->Clone();
     Double_t x0 = bestFit->GetX()[0], y0 = bestFit->GetY()[0];
     Double_t *xi = gr->GetX(), *yi = gr->GetY();
-    int n = gr->GetN();
+    n = gr->GetN();
     for (int i = 0; i < n; ++i) { xi[i] -= x0; yi[i] -= y0; }
     gr->Sort(&TGraph::CompareArg);
     for (int i = 0; i < n; ++i) { xi[i] += x0; yi[i] += y0; }
@@ -79,46 +79,6 @@ TH2 *treeToHist2D(TTree *t, TString x, TString y, TString name, TCut cut, double
     }
     h2d->SetDirectory(0);
     return h2d;
-}
-
-TList* contourFromTH2(TH2 *h2in, double threshold, int minPoints=20) {
-    std::cout << "Getting contour at threshold " << threshold << " from " << h2in->GetName() << ": " << h2in->GetNbinsX() << " x " << h2in->GetNbinsY() << " = " << h2in->GetNbinsX() * h2in->GetNbinsY() << " points total." << std::endl;
-    //http://root.cern.ch/root/html/tutorials/hist/ContourList.C.html
-    Double_t contours[1];
-    contours[0] = threshold;
-    if (h2in->GetNbinsX() * h2in->GetNbinsY() > 10000) minPoints = 50;
-    if (h2in->GetNbinsX() * h2in->GetNbinsY() < 900) minPoints = 5;
-
-    TH2D *h2 = frameTH2D((TH2D*)h2in,threshold);
-
-    h2->SetContour(1, contours);
-
-    // Draw contours as filled regions, and Save points
-    h2->Draw("CONT Z LIST");
-    gPad->Update(); // Needed to force the plotting and retrieve the contours in TGraphs
-
-
-    // Get Contours
-    TObjArray *conts = (TObjArray*)gROOT->GetListOfSpecials()->FindObject("contours");
-    TList* contLevel = NULL;
-
-    if (conts == NULL || conts->GetSize() == 0){
-        printf("*** No Contours Were Extracted!\n");
-        return 0;
-    }
-
-    TList *ret = new TList();
-    for(int i = 0; i < conts->GetSize(); i++){
-        contLevel = (TList*)conts->At(i);
-        printf("Contour %d has %d Graphs\n", i, contLevel->GetSize());
-        for (int j = 0, n = contLevel->GetSize(); j < n; ++j) {
-            TGraph *gr1 = (TGraph*) contLevel->At(j);
-            printf("\t graph %d with %d points\n", j,gr1->GetN());
-            if (gr1->GetN() > minPoints) ret->Add(gr1->Clone());
-            //break;
-        }
-    }
-    return ret;
 }
 
 TH2D* frameTH2D(TH2D *in, double threshold){
@@ -221,4 +181,44 @@ TH2D* frameTH2D(TH2D *in, double threshold){
 	return framed;
 #endif
 }
+
+TList* contourFromTH2(TH2 *h2in, double threshold, int minPoints=20) {
+    std::cout << "Getting contour at threshold " << threshold << " from " << h2in->GetName() << ": " << h2in->GetNbinsX() << " x " << h2in->GetNbinsY() << " = " << h2in->GetNbinsX() * h2in->GetNbinsY() << " points total." << std::endl;
+    //http://root.cern.ch/root/html/tutorials/hist/ContourList.C.html
+    Double_t contours[1];
+    contours[0] = threshold;
+    if (h2in->GetNbinsX() * h2in->GetNbinsY() > 10000) minPoints = 50;
+    if (h2in->GetNbinsX() * h2in->GetNbinsY() < 900) minPoints = 5;
+
+    TH2D *h2 = frameTH2D((TH2D*)h2in,threshold);
+
+    h2->SetContour(1, contours);
+
+    // Draw contours as filled regions, and Save points
+    h2->Draw("CONT Z LIST");
+    gPad->Update(); // Needed to force the plotting and retrieve the contours in TGraphs
+  
+    // Get Contours
+    TObjArray *conts = (TObjArray*)gROOT->GetListOfSpecials()->FindObject("contours");
+    TList* contLevel = NULL;
+
+    if (conts == NULL || conts->GetSize() == 0){
+        printf("*** No Contours Were Extracted!\n");
+        return 0;
+    }
+
+    TList *ret = new TList();
+    for(int i = 0; i < conts->GetSize(); i++){
+        contLevel = (TList*)conts->At(i);
+        printf("Contour %d has %d Graphs\n", i, contLevel->GetSize());
+        for (int j = 0, n = contLevel->GetSize(); j < n; ++j) {
+            TGraph *gr1 = (TGraph*) contLevel->At(j);
+            printf("\t graph %d with %d points\n", j,gr1->GetN());
+            if (gr1->GetN() > minPoints) ret->Add(gr1->Clone());
+            //break; 
+        }
+    }
+    return ret;
+}
+
 

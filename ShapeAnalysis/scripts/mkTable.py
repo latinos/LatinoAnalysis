@@ -183,10 +183,10 @@ def get_latex_reduced(tab, do_merged_only, show_prefit, show_unc, do_csv, nDec, 
                     except: fitvals[val] = '--'
                 if show_prefit:
                     if show_unc == 'all':    entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']+' ('+fitvals['pre_fit']+' +/- '+fitvals['pre_fit_error']+')'
-                    elif show_unc == 'post': entry[cat] = fitvals['s+b_fit']+' ('+fitvals['pre_fit']+') (+/- '+fitvals['s+b_fit_error']+')'
+                    elif show_unc == 'post': entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']+' ('+fitvals['pre_fit']+')' 
                     else:                    entry[cat] = fitvals['s+b_fit']+' ('+fitvals['pre_fit']+')'
                 else:
-                    if show_unc is None:     entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']
+                    if show_unc:             entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']
                     else:                    entry[cat] = fitvals['s+b_fit']
             formatted.append(entry)
         
@@ -204,10 +204,10 @@ def get_latex_reduced(tab, do_merged_only, show_prefit, show_unc, do_csv, nDec, 
                             fitvals[val] = '--'
                     if show_prefit:
                         if show_unc == 'all':    entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']+' ('+fitvals['pre_fit']+' +/- '+fitvals['pre_fit_error']+')'
-                        elif show_unc == 'post': entry[cat] = fitvals['s+b_fit']+' ('+fitvals['pre_fit']+') (+/- '+fitvals['s+b_fit_error']+')'
+                        elif show_unc == 'post': entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']+' ('+fitvals['pre_fit']+')'
                         else:                    entry[cat] = fitvals['s+b_fit']+' ('+fitvals['pre_fit']+')'
                     else:
-                        if show_unc is None:     entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']
+                        if show_unc:             entry[cat] = fitvals['s+b_fit']+' +/- '+fitvals['s+b_fit_error']
                         else:                    entry[cat] = fitvals['s+b_fit']
                 formatted.append(entry)
         else: print('Reduced table with merged categories requested, but no categories to merge in merging_map!'); exit()
@@ -256,7 +256,7 @@ parser.add_argument('-b', '--background', help='Add yields from background only 
 parser.add_argument('-s', '--signal', help='Add yields from signal+background fit', action='store_true')
 parser.add_argument('--fancyTable', help='Produce table of yields in sample VS category format', action='store_true')
 parser.add_argument('--mergedOnly', help='Use only categories that have been merged in the table', action='store_true')
-parser.add_argument('-u', '--uncertainties', help='If --fancyTable is selected, adds uncertainties (all or post) to the table')
+parser.add_argument('-u', '--uncertainties', help='If --fancyTable is selected, adds uncertainties (all or post) to the table by passing "all" or "post"')
 parser.add_argument('--csv', help='Outputs table in .csv format', action='store_true')
 parser.add_argument('--decimals', help='Number of decimals to be shown', type=int, default=2)
 parser.add_argument('--unblind', help='Include data in table', action='store_true')
@@ -279,7 +279,7 @@ if __name__ == '__main__':
 
     sample_order = []
 
-    if not map_path is None:
+    if map_path:
         if os.path.exists(args.mergingMap):
             print('--> Performing category and/or sample merging as specified in {}'.format(args.mergingMap))
             sys.path.insert(1, os.getcwd())

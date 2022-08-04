@@ -274,7 +274,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
 
 #### samples Weights
 
-def addSampleWeight(sampleDic,key,Sample,Weight):
+def addSampleWeight(sampleDic,key,Sample,Weight,pathname=''):
 
 
     ### Add Weights in sampleDic if needed
@@ -288,6 +288,7 @@ def addSampleWeight(sampleDic,key,Sample,Weight):
       name = sampleDic[key]['name'][iEntry]
       if '/' in name : name = os.path.basename(name)
       name = name.split('_',1)[-1].replace('.root','').split('__part')[0]
+      if pathname != '' and pathname not in sampleDic[key]['name'][iEntry]: continue
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       

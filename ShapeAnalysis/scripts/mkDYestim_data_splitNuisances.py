@@ -256,7 +256,7 @@ if __name__ == '__main__':
 
     # Create output txt file to store nuisances values as lnN
     txt_file = open("Nuisances_file.txt", "w")
-    txt_file.write("Nuisances breakdown \n \n")
+    txt_file.write("# Nuisances breakdown \n \n")
 
     # Create output file structure
     # e.g., hww2l2v_13TeV_0j_ee/events/histo_DY
@@ -454,14 +454,31 @@ if __name__ == '__main__':
                     #txt_file.write(out_string)
 
                     # Now the output to plug in nuisances.py
-                    if "wwAcc" in DYestim[iDYestim]['AccNum']:
-                        txt_file.write("# {}_{} WW channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
-                    else:
-                        txt_file.write("# {}_{} channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
+                    if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
+                        if "wwAcc" in DYestim[iDYestim]['AccNum']:
+                            txt_file.write("# {}_{} WW channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
+                        else:
+                            txt_file.write("# {}_{} channel \n".format(DYestim[iDYestim]['njet'],DYestim[iDYestim]['flavour']))
 
                     add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour']
-                    if "wwAcc" in DYestim[iDYestim]['AccNum']:
-                        add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_WW"
+                    if 'AccNum' in DYestim[iDYestim] and 'AccDen' in DYestim[iDYestim] :
+                        if "wwAcc" in DYestim[iDYestim]['AccNum']:
+                            add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_WW"
+
+                    print("XDDDDDDDDDDDDDDDDDDDDDDDDD")
+                    print("Current basedir name: {}".format(baseDir))
+                    print("Now split it!")
+                    baseDir_split = items = baseDir.split('_')
+                    print(baseDir_split)
+                    print("Add the last two items to the add_to_title string!")
+                    print("Add to title: {}_{}_{}".format(add_to_title,baseDir_split[-2],baseDir_split[-1]))
+                    print("XDDDDDDDDDDDDDDDDDDDDDDDDD")
+
+                    # Add more details to "add_to_title" to avoid repeated nuisances names
+                    # Do this only in HTXS
+                    if ("HTXS" in opt.dycfg or "STXS" in opt.dycfg):
+                        add_to_title = add_to_title + "_" + baseDir
+                        print("Add to title in case of HTXS: {}".format(add_to_title))
 
                     # k: anticorrelated between ee and mm
                     txt_file.write("nuisances['DYnorm_k_" + add_to_title + "'] = {\n")

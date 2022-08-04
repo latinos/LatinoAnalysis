@@ -238,3 +238,4 @@ def addOptions(parser):
     parser.add_option('-C', '--cutsFile' ,      dest='cutsFile'         , help='file with cuts'                              , default=None )
     parser.add_option('-S', '--samplesFile' ,   dest='samplesFile'      , help='file with cuts'                              , default=None )
     parser.add_option('-P', '--plotFile' ,      dest='plotFile'         , help='file with plot configurations'               , default=None )
+    parser.add_option('-Z', '--customizeScript' , dest='customizeScript' , help='Script for on-the-fly configuration customization'  , default=None )
