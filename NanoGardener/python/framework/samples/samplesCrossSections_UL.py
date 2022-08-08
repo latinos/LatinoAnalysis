@@ -28,10 +28,10 @@
 #       T       https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR
 #       U       https://twiki.cern.ch/twiki/pub/CMS/MonoHCombination/crossSection_ZpBaryonic_gq0p25.txt
 #	V	https://twiki.cern.ch/twiki/bin/viewauth/CMS/SameSignDilepton2016
-#   W       https://cms-gen-dev.cern.ch/xsdb/
-#       Z   http://cms.cern.ch/iCMS/analysisadmin/cadilines?line=SMP-18-006
+#       W       https://cms-gen-dev.cern.ch/xsdb/
+#       Z       http://cms.cern.ch/iCMS/analysisadmin/cadilines?line=SMP-18-006
 #       Y       https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBSMAt13TeV
-#    A1 https://indico.cern.ch/event/673253/contributions/2756806/attachments/1541203/2416962/20171016_VJetsXsecsUpdate_PH-GEN.pdf 
+#       A1      https://indico.cern.ch/event/673253/contributions/2756806/attachments/1541203/2416962/20171016_VJetsXsecsUpdate_PH-GEN.pdf 
 #	X	Unknown! - Cross section not yet there
 
 ### W+jets
@@ -94,6 +94,9 @@ samples['DYJetsToLL_M-4to50_HT-400to600']       .extend( ['xsec=5.697',         
 samples['DYJetsToLL_M-4to50_HT-600toInf']       .extend( ['xsec=1.85',          'kfact=1.000',          'ref=W'] )
 
 samples['EWKZ2Jets_ZToLL_M-50']                 .extend( ['xsec=6.215',         'kfact=1.000',          'ref=W'] )
+
+### Wgamma
+samples['WGToLNuG']                             .extend( ['xsec=412.7',         'kfact=1.000',          'ref=W'] )
 
 ### WW
 samples['WWTo2L2Nu']	                 	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )
