@@ -182,6 +182,10 @@ samples['ST_t-channel_antitop_hdampUp']         .extend( ['xsec=26.2278',       
 samples['ST_t-channel_antitop_hdampDown']       .extend( ['xsec=26.2278',       'kfact=1.000',		'ref=D'] )
 samples['ST_t-channel_antitop_5f']              .extend( ['xsec=80.95',         'kfact=1.000',		'ref=D'] )
 
+# What does noHad mean?
+# We have two Ws in the final state: do we want always both of them to decay leptonically? --> 35.85 * (3*0.108)^2
+# Or do we want at least one of them to not decay hadronically?                            --> 35.85 * (1 - 0.6741)
+# I am currently considering the first possibility, but I am not sure it is correct.
 samples['ST_tW_antitop']                        .extend( ['xsec=35.85',		'kfact=1.000',		'ref=D'] )
 samples['ST_tW_antitop_noHad']                  .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
 samples['ST_tW_antitop_noHad_TuneCP5Up']        .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
