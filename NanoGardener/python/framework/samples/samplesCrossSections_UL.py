@@ -209,6 +209,7 @@ samples['ST_s-channel_TuneCP5CR1']              .extend( ['xsec=3.34368',	'kfact
 samples['ST_s-channel_TuneCP5CR2']              .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
 samples['ST_s-channel_erdON']                   .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
 samples['ST_s-channel_JMENano']                 .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
+samples['ST_s-channel_had']                     .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (0.6832) --> at least one W boson decaying hadronically
 
 samples['TTWJetsToQQ']                          .extend( ['xsec=0.4377',        'kfact=1.000',          'ref=W'] )      
 samples['TTZToQQ']                              .extend( ['xsec=0.5297',        'kfact=1.000',          'ref=E'] )
