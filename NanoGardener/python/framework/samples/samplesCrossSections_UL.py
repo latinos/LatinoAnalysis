@@ -183,33 +183,33 @@ samples['ST_t-channel_antitop_hdampDown']       .extend( ['xsec=26.2278',       
 samples['ST_t-channel_antitop_5f']              .extend( ['xsec=80.95',         'kfact=1.000',		'ref=D'] )
 
 # What does noHad mean?
-# We have two Ws in the final state: do we want always both of them to decay leptonically? --> 35.85 * (3*0.108)^2
-# Or do we want at least one of them to not decay hadronically?                            --> 35.85 * (1 - 0.6741)
-# I am currently considering the first possibility, but I am not sure it is correct.
+# We want both of the Ws not to decay hadronically? --> 35.85 * (1 - 0.6741)^2
 samples['ST_tW_antitop']                        .extend( ['xsec=35.85',		'kfact=1.000',		'ref=D'] )
-samples['ST_tW_antitop_noHad']                  .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_antitop_noHad_TuneCP5Up']        .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_antitop_noHad_TuneCP5Down']      .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_antitop_noHad_hdampUp']          .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_antitop_noHad_hdampDown']        .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_antitop_noHad_PDF']              .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
+samples['ST_tW_antitop_noHad']                  .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_antitop_noHad_TuneCP5Up']        .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_antitop_noHad_TuneCP5Down']      .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_antitop_noHad_hdampUp']          .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_antitop_noHad_hdampDown']        .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_antitop_noHad_PDF']              .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
 
 samples['ST_tW_top']                            .extend( ['xsec=35.85',		'kfact=1.000',		'ref=D'] )
-samples['ST_tW_top_noHad']                      .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_top_noHad_TuneCP5Up']            .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_top_noHad_TuneCP5Down']          .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_top_noHad_hdampUp']              .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_top_noHad_hdampDown']            .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
-samples['ST_tW_top_noHad_PDF']                  .extend( ['xsec=3.76',          'kfact=1.000',          'ref=D'] ) # 35.85 * (3*0.108)^2 - previously XS = 1
+samples['ST_tW_top_noHad']                      .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_top_noHad_TuneCP5Up']            .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_top_noHad_TuneCP5Down']          .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_top_noHad_hdampUp']              .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_top_noHad_hdampDown']            .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
+samples['ST_tW_top_noHad_PDF']                  .extend( ['xsec=3.808',         'kfact=1.000',          'ref=D'] ) # 35.85 * (1 - 0.6741)^2 - previously XS = 1
 
-samples['ST_s-channel']                         .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
-samples['ST_s-channel_TuneCP5Up']               .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
-samples['ST_s-channel_TuneCP5Down']             .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
-samples['ST_s-channel_TuneCP5CR1']              .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
-samples['ST_s-channel_TuneCP5CR2']              .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
-samples['ST_s-channel_erdON']                   .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
-samples['ST_s-channel_JMENano']                 .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] )
-samples['ST_s-channel_had']                     .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (0.6832) --> at least one W boson decaying hadronically
+# All ST_s-channel samples are "leptonDecays" --> t->Wb->lvb
+samples['ST_s-channel']                         .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (3*0.108) --> the W boson decays leptonically
+samples['ST_s-channel_TuneCP5Up']               .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (3*0.108) --> the W boson decays leptonically
+samples['ST_s-channel_TuneCP5Down']             .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (3*0.108) --> the W boson decays leptonically
+samples['ST_s-channel_TuneCP5CR1']              .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (3*0.108) --> the W boson decays leptonically
+samples['ST_s-channel_TuneCP5CR2']              .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (3*0.108) --> the W boson decays leptonically
+samples['ST_s-channel_erdON']                   .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (3*0.108) --> the W boson decays leptonically
+samples['ST_s-channel_JMENano']                 .extend( ['xsec=3.34368',	'kfact=1.000',		'ref=D'] ) # 10.32 * (3*0.108) --> the W boson decays leptonically
+# Exception: here, the W decays hadronically ("hadronicDecays") --> t->Wb->qq'b
+samples['ST_s-channel_had']                     .extend( ['xsec=7.05062',	'kfact=1.000',		'ref=D'] ) # 10.32 * (0.6832)  --> the W boson decays hadronically
 
 samples['TTWJetsToQQ']                          .extend( ['xsec=0.4377',        'kfact=1.000',          'ref=W'] )      
 samples['TTZToQQ']                              .extend( ['xsec=0.5297',        'kfact=1.000',          'ref=E'] )
