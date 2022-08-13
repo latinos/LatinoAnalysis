@@ -851,8 +851,14 @@ Steps = {
                      'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','PrefCorr2016','btagPerJet2016','JetPUID_SF_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
-                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller'],
-                }, 
+                                     'CleanFatJet', 'BoostedWtagSF','leptonMVAFiller'],
+                },
+  'JERtest' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','CleanFatJet'],
+                },
 
   'MCTRGFixv7' : { 
                      'isChain'    : True  ,
@@ -3285,7 +3291,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
-                  'declare'    : 'JERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK4PFchs",jetColl="CleanJet")',
+                  'declare'    : 'JERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK4PFchs",jetColl="CleanJet",jerUncert=True,splitJER=True)',
                   'module'     : 'JERMakerMCUL()',
                  },
 
@@ -3294,7 +3300,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
-                  'declare'    : 'FatJERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK8PFPuppi",jetColl="FatJet",doGroomed=True)',
+                  'declare'    : 'FatJERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK8PFPuppi",jetColl="FatJet",jerUncert=True,splitJER=True,doGroomed=True)',
                   'module'     : 'FatJERMakerMCUL()',
                  },
 
