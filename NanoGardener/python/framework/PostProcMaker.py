@@ -325,7 +325,7 @@ class PostProcMaker():
        self._targetDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'
        if not self._iniStep == 'Prod' : self._targetDir += self._iniStep+'__'+iStep+'/'
        else                           : self._targetDir += iStep+'/'
-
+       
        if self._Sites[self._LocalSite]['mkDir'] : os.system('mkdir -p '+ self._targetDir )
 
      # UEPS
@@ -490,6 +490,12 @@ class PostProcMaker():
       #KISTI T3
       elif self._LocalSite == 'sdfarm' :
 	storeFile = storeFile.replace('xrootd', 'xrd')
+        if not cpMode:
+          command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
+        else:
+          command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
+      # KIT
+      elif self._LocalSite == 'kit' : 
         if not cpMode:
           command = 'xrdcp -f '+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
         else:
