@@ -434,8 +434,8 @@ class JERMaker(jetSmearer, object):
                 self.out.fillBranch("%s_mass_JER%sUp"   % (self.jetBranchName, jerID), [jets_mass_JERUp[jerID][idx] for idx in order])
                 self.out.fillBranch("%s_mass_JER%sDown" % (self.jetBranchName, jerID), [jets_mass_JERDown[jerID][idx] for idx in order])
                 if self.isAK8 and self.doGroomed:
-                    self.out.fillBranch("%s_msoftdrop_JER%sUp"   % (self.jetBranchName, jerID), [jets_msoftdrop_JERUp[jerID][idx] for idx in order])
-                    self.out.fillBranch("%s_msoftdrop_JER%sDown" % (self.jetBranchName, jerID), [jets_msoftdrop_JERDown[jerID][idx] for idx in order]) 
+                    self.out.fillBranch("%s_msoftdrop_JER%sUp"   % (self.jetBranchName, jerID), [jets_msdcorr_JERUp[jerID][idx] for idx in order])
+                    self.out.fillBranch("%s_msoftdrop_JER%sDown" % (self.jetBranchName, jerID), [jets_msdcorr_JERDown[jerID][idx] for idx in order]) 
             if self.isAK8:
                 self.out.fillBranch("%s_mass_JMRUp" % self.jetBranchName, [jets_mass_JMRUp[idx] for idx in order])
                 self.out.fillBranch("%s_mass_JMRDown" % self.jetBranchName, [jets_mass_JMRDown[idx] for idx in order])
