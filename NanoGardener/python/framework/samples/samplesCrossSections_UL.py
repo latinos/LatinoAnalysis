@@ -119,8 +119,8 @@ samples['GluGluToWWToTNTN']              	.extend( ['xsec=0.05152',	'kfact=1.000
 samples['WZ']			                .extend( ['xsec=47.130',	'kfact=1.000',		'ref=E'] )
 
 samples['WZTo3LNu']		                .extend( ['xsec=4.666',  	'kfact=1.000',		'ref=X'] ) # X = https://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2019_156_v8.pdf
-Samples['WZTo3LNu_mllmin4p0']	                .extend( ['xsec=4.666',   	'kfact=1.000',		'ref=X'] ) # X = https://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2019_156_v8.pdf BUT KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
-Samples['WZTo3LNu_mllmin0p1']	                .extend( ['xsec=4.666',   	'kfact=1.000',		'ref=X'] ) # X = https://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2019_156_v8.pdf BUT KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
+samples['WZTo3LNu_mllmin4p0']	                .extend( ['xsec=4.666',   	'kfact=1.000',		'ref=X'] ) # X = https://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2019_156_v8.pdf BUT KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
+samples['WZTo3LNu_mllmin0p1']	                .extend( ['xsec=4.666',   	'kfact=1.000',		'ref=X'] ) # X = https://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2019_156_v8.pdf BUT KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
 samples['WZTo2Q2L_mllmin4p0']	                .extend( ['xsec=5.5950',	'kfact=1.000',		'ref=E'] ) # KEEPING INCLUSIVE VALUE!!! NEED TO CHECK!
 samples['WZTo1L3Nu']                            .extend( ['xsec=3.033',         'kfact=1.000',          'ref=E'] )
 
@@ -345,46 +345,46 @@ samples['ttHToNonbb_M125']       		.extend( ['xsec=0.2123',	'kfact=1.000',	'ref=
 
 # Additional Higgs signals with non-SM parameters 
 # All XS set to 1. I haven't even looked at them
-Samples['H0PM_ToWWTo2L2Nu']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['H0PH_ToWWTo2L2Nu']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['H0PHf05_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['H0M_ToWWTo2L2Nu']                      .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['H0Mf05_ToWWTo2L2Nu']                   .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['H0L1_ToWWTo2L2Nu']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['H0L1f05_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['H0PM_ToWWTo2L2Nu']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['H0PH_ToWWTo2L2Nu']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['H0PHf05_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['H0M_ToWWTo2L2Nu']                      .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['H0Mf05_ToWWTo2L2Nu']                   .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['H0L1_ToWWTo2L2Nu']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['H0L1f05_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
 
-Samples['VBF_H0PM_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['VBF_H0PH_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['VBF_H0PHf05_ToWWTo2L2Nu']              .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['VBF_H0M_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['VBF_H0Mf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['VBF_H0L1_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['VBF_H0L1Zgf05_ToWWTo2L2Nu']            .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['VBF_H0PM_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['VBF_H0PH_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['VBF_H0PHf05_ToWWTo2L2Nu']              .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['VBF_H0M_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['VBF_H0Mf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['VBF_H0L1_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['VBF_H0L1Zgf05_ToWWTo2L2Nu']            .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
 
-Samples['WH_H0PM_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['WH_H0PH_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['WH_H0PHf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['WH_H0M_ToWWTo2L2Nu']                   .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['WH_H0Mf05_ToWWTo2L2Nu']                .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['WH_H0L1_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['WH_H0L1f05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['WH_H0PM_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['WH_H0PH_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['WH_H0PHf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['WH_H0M_ToWWTo2L2Nu']                   .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['WH_H0Mf05_ToWWTo2L2Nu']                .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['WH_H0L1_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['WH_H0L1f05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
 
-Samples['ZH_H0PM_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ZH_H0PH_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ZH_H0PHf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ZH_H0M_ToWWTo2L2Nu']                   .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ZH_H0Mf05_ToWWTo2L2Nu']                .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ZH_H0L1_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ZH_H0L1f05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ZH_H0LZgf05_ToWWTo2L2Nu']              .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0PM_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0PH_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0PHf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0M_ToWWTo2L2Nu']                   .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0Mf05_ToWWTo2L2Nu']                .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0L1_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0L1f05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ZH_H0LZgf05_ToWWTo2L2Nu']              .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
 
-Samples['GGHjj_H0PM_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['GGHjj_H0M_ToWWTo2L2Nu']                .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['GGHjj_H0Mf05_ToWWTo2L2Nu']             .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['GGHjj_H0PM_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['GGHjj_H0M_ToWWTo2L2Nu']                .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['GGHjj_H0Mf05_ToWWTo2L2Nu']             .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
 
-Samples['ttH_H0PM_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ttH_H0M_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
-Samples['ttH_H0Mf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )        
+samples['ttH_H0PM_ToWWTo2L2Nu']                 .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ttH_H0M_ToWWTo2L2Nu']                  .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+samples['ttH_H0Mf05_ToWWTo2L2Nu']               .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )        
 
 samples['SSWW']                                 .extend( ['xsec=1',             'kfact=1.000',  'ref=W'] )
 
