@@ -277,6 +277,7 @@ class TrigMaker(Module):
     def _get_DZEff(self,run_p,trigName,nvtxIn,pt1In,pt2In,isdata):
       DZeffs = self.TM_DZEffData[run_p][trigName] if isdata else self.TM_DZEffMC[run_p][trigName]
       DZeff = 1. 
+      DZeff_err = 0.
       nvtx = nvtxIn
       pt1 = pt1In
       pt2 = pt2In
