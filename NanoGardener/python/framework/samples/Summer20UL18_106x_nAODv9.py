@@ -57,12 +57,6 @@ Samples['GluGluToWWToTNMN'] = {'nanoAOD' :'/GluGluToWWToTNMN_TuneCP5_13TeV_MCFM7
 Samples['GluGluToWWToTNTN'] = {'nanoAOD' :'/GluGluToWWToTNTN_TuneCP5_13TeV_MCFM701_pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
-Samples['VBFHToWWTo2L2Nu_M125_CP5Up'] = {'nanoAOD' :'/VBFHToWWTo2L2Nu_M-125_TuneCP5Up_13TeV-powheg-jhugen727-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
-##---------------------------------------------------------------##
-#--->Updated!###-----------------------------------------------##
-Samples['VBFHToWWTo2L2Nu_M125_CP5Down'] = {'nanoAOD' :'/VBFHToWWTo2L2Nu_M-125_TuneCP5Down_13TeV-powheg-jhugen727-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
-##---------------------------------------------------------------##
-#--->Updated!###-----------------------------------------------##
 Samples['VBFHToTauTau_M125'] = {'nanoAOD' :'/VBFHToTauTau_M125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
@@ -283,7 +277,7 @@ Samples['TT_DiLept'] = {'nanoAOD' :'/TTJets_DiLept_genMET-150_TuneCP5_13TeV-madg
 Samples['ST_t-channel_antitop_5f'] = {'nanoAOD' :'/ST_t-channel_antitop_5f_InclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
-Samples['ST_t-channel_top_5f'] = {'nanoAOD' :'/ST_t-channel_antitop_5f_InclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
+#Samples['ST_t-channel_top_5f'] = {'nanoAOD' :'/ST_t-channel_antitop_5f_InclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['WZJJ_Inclusive'] = {'nanoAOD' :'/WZJJ_EWK_InclusivePolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
