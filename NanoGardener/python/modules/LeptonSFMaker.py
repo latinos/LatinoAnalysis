@@ -92,7 +92,7 @@ class LeptonSFMaker(Module):
                         self.SF_dict['electron'][wp]['tkSF']['endRP'].append(int(rpr.split('-')[1]))
                         tk_file = self.ElectronWP[self.cmssw]['TightObjWP'][wp]['tkSF'][rpr]
                         self.SF_dict['electron'][wp]['tkSF']['data'].append(_core.CorrectionSet.from_file(tk_file))
-                        tk_file.Close()
+
                 if SFkey == 'wpSF':
                     self.SF_dict['electron'][wp]['wpSF']['data'] = []
                     self.SF_dict['electron'][wp]['wpSF']['beginRP'] = []
