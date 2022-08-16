@@ -790,7 +790,7 @@ Productions = {
                       'cmssw'   : 'Full2016v9HIPM' ,
                       'year'    : '2016' ,
                       #'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
-                      'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                      'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections_UL.py' ,
                       'YRver'   : ['YR4','13TeV'] ,
                   },
 
@@ -800,7 +800,7 @@ Productions = {
                       'cmssw'   : 'Full2016v9noHIPM' ,
                       'year'    : '2016' ,
                       #'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
-                      'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py' ,
+                      'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections_UL.py' ,
                       'YRver'   : ['YR4','13TeV'] ,
                   },
 
@@ -811,7 +811,7 @@ Productions = {
                        'cmssw'   : 'Full2017v9',
                        'year'    : '2017' ,
  #                      'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
-                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2017.py' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections_UL.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
@@ -822,7 +822,7 @@ Productions = {
                        'cmssw'   : 'Full2018v9',
                        'year'    : '2018' ,
  #                      'JESGT'   : 'Autumn18_V19_MC',
-                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections_UL.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
