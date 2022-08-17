@@ -189,11 +189,8 @@ class LeptonSFMaker(Module):
                         self.SF_dict['muon'][wp]['tthMvaSF']['beginRP'] .append(int(rpr.split('-')[0]))
                         self.SF_dict['muon'][wp]['tthMvaSF']['endRP']   .append(int(rpr.split('-')[1])) 
                         nom_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][1])
-                        sys_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][2])
                         self.SF_dict['muon'][wp]['tthMvaSF']['nominal'] .append(self.get_root_obj(nom_file, self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][0]))
-                        self.SF_dict['muon'][wp]['tthMvaSF']['syst']    .append(self.get_root_obj(sys_file, self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][0]))
                         nom_file.Close()
-                        sys_file.Close()
 
             if not self.SF_dict['muon'][wp]['hasSFreco']: 
                 self.SF_dict['muon'][wp]['tkSF']['beginRP'] = self.SF_dict['muon'][wp]['idSF']['beginRP']                
@@ -433,14 +430,14 @@ class LeptonSFMaker(Module):
 
             if self.SF_dict[kin_str][wp]['hastthMvaSF']:
                 tthMvaSF , tthMvaSF_err = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['nominal'][run_idx], eta, pt)
-                dummy    , tthMvaSF_sys = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['syst'][run_idx], eta, pt)   
+               # dummy    , tthMvaSF_sys = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['syst'][run_idx], eta, pt)   
                 tkSF     = tkSF_id*tkSF_iso*tthMvaSF
                 tkSF_up  = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_up*tkSF_id_up/tkSF_id/tkSF_id
                                                                   + tkSF_iso_up *tkSF_iso_up /tkSF_iso/tkSF_iso
-                                                                  + (tthMvaSF_err*tthMvaSF_err+tthMvaSF_sys*tthMvaSF_sys)/tthMvaSF/tthMvaSF )
-                tkSF_dwn = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id
+                                                                  + (tthMvaSF_err*tthMvaSF_err)/tthMvaSF/tthMvaSF )
+		tkSF_dwn = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id
                                                                   + tkSF_iso_dwn*tkSF_iso_dwn/tkSF_iso/tkSF_iso
-                                                                  + (tthMvaSF_err*tthMvaSF_err+tthMvaSF_sys*tthMvaSF_sys)/tthMvaSF/tthMvaSF ) 
+                                                                  + (tthMvaSF_err*tthMvaSF_err)/tthMvaSF/tthMvaSF ) 
             else:  
                # Only ID*ISO:
                tkSF_up  = tkSF_id * tkSF_iso * math.sqrt(tkSF_id_up *tkSF_id_up /tkSF_id/tkSF_id +  tkSF_iso_up *tkSF_iso_up /tkSF_iso/tkSF_iso)
