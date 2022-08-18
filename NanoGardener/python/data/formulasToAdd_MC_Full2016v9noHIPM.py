@@ -7,8 +7,7 @@ from LatinoAnalysis.NanoGardener.data.LeptonSel_cfg import MuonWP
 
 formulas = {}
 
-# from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2018_2017_data_and_MC_UL
-
+# from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2016_data_and_MC_UL
 METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_globalSuperTightHalo2016Filter*\
                      event.Flag_HBHENoiseFilter*\
@@ -16,10 +15,10 @@ METFilter_Common = '(event.Flag_goodVertices*\
                      event.Flag_EcalDeadCellTriggerPrimitiveFilter*\
                      event.Flag_BadPFMuonFilter*\
                      event.Flag_BadPFMuonDzFilter*\
-                     event.Flag_ecalBadCalibFilter\
+                     event.Flag_eeBadScFilter\
                    )'
 
-METFilter_DATA   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
+METFilter_DATA   =  METFilter_Common 
 
 formulas['METFilter_MC'] = METFilter_DATA
 
@@ -32,14 +31,18 @@ formulas['XSWeight'] = 'event.baseW*\
 
 
 formulas['SFweight2l'] = 'event.puWeight*\
-                          (  event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL or\
-                             event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
-                             event.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or\
-                             event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ or\
-                             event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 or\
-                             event.HLT_IsoMu27 or\
-                             event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL or\
-                             event.HLT_Ele35_WPTight_Gsf )*\
+                          ( event.HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL or\
+                            event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL or\
+                            event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ or\
+                            event.HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL or\
+                            event.HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ or\
+                            event.HLT_IsoTkMu24 or\
+                            event.HLT_IsoMu24 or\
+                            event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Ele27_WPTight_Gsf or\
+                            event.HLT_Ele25_eta2p1_WPTight_Gsf )*\
                           event.TriggerSFWeight_2l*\
                           event.Lepton_RecoSF[0]*\
                           event.Lepton_RecoSF[1]*\
@@ -47,14 +50,18 @@ formulas['SFweight2l'] = 'event.puWeight*\
                           if event.nLepton > 1 else 0.'
 
 formulas['SFweight3l'] = 'event.puWeight*\
-                          (  event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL or\
-                             event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
-                             event.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or\
-                             event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ or\
-                             event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 or\
-                             event.HLT_IsoMu27 or\
-                             event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL or\
-                             event.HLT_Ele35_WPTight_Gsf )*\
+                          ( event.HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL or\
+                            event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL or\
+                            event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ or\
+                            event.HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL or\
+                            event.HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ or\
+                            event.HLT_IsoTkMu24 or\
+                            event.HLT_IsoMu24 or\
+                            event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Ele27_WPTight_Gsf or\
+                            event.HLT_Ele25_eta2p1_WPTight_Gsf )*\
                           event.TriggerSFWeight_3l*\
                           event.Lepton_RecoSF[0]*\
                           event.Lepton_RecoSF[1]*\
@@ -63,14 +70,18 @@ formulas['SFweight3l'] = 'event.puWeight*\
                           if event.nLepton > 2 else 0.'
 
 formulas['SFweight4l'] = 'event.puWeight*\
-                          (  event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL or\
-                             event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
-                             event.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or\
-                             event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ or\
-                             event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 or\
-                             event.HLT_IsoMu27 or\
-                             event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL or\
-                             event.HLT_Ele35_WPTight_Gsf )*\
+                          ( event.HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL or\
+                            event.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL or\
+                            event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ or\
+                            event.HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL or\
+                            event.HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ or\
+                            event.HLT_IsoTkMu24 or\
+                            event.HLT_IsoMu24 or\
+                            event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or\
+                            event.HLT_Ele27_WPTight_Gsf or\
+                            event.HLT_Ele25_eta2p1_WPTight_Gsf )*\
                           event.TriggerSFWeight_4l*\
                           event.Lepton_RecoSF[0]*\
                           event.Lepton_RecoSF[1]*\
@@ -79,7 +90,7 @@ formulas['SFweight4l'] = 'event.puWeight*\
                           event.EMTFbug_veto \
                           if event.nLepton > 3 else 0.'
 
-## MonoHiggs
+# MonoHiggs
 formulas['SFweight2lMH'] = 'event.puWeight*\
                           event.MHTriggerEffWeight_2l*\
                           event.Lepton_RecoSF[0]*\
@@ -87,10 +98,9 @@ formulas['SFweight2lMH'] = 'event.puWeight*\
                           event.EMTFbug_veto \
                           if event.nLepton > 1 and hasattr(event, \'MHTriggerEffWeight_2l\') else 0.'
 
-
 # Lepton WP
-muWPlist = [wp for wp in MuonWP['Full2017v9']['TightObjWP']]
-eleWPlist = [wp for wp in ElectronWP['Full2017v9']['TightObjWP']]
+muWPlist = [wp for wp in MuonWP['Full2016v9noHIPM']['TightObjWP']]
+eleWPlist = [wp for wp in ElectronWP['Full2016v9noHIPM']['TightObjWP']]
 
 for eleWP in eleWPlist:
   for muWP in muWPlist:
@@ -133,9 +143,8 @@ for eleWP in eleWPlist:
                                                       (event.Lepton_isTightElectron_'+eleWP+'[2]>0.5 or event.Lepton_isTightMuon_'+muWP+'[2]>0.5) and \
                                                       (event.Lepton_isTightElectron_'+eleWP+'[3]>0.5 or event.Lepton_isTightMuon_'+muWP+'[3]>0.5)) \
                                                      if event.nLepton > 3 else 0.'
-
-for eleWP in eleWPlist:
-
+ 
+for eleWP in eleWPlist: 
   formulas['LepSF2l__ele_'+eleWP+'__Up'] = '((abs(event.Lepton_pdgId[0]) == 11)*(event.Lepton_tightElectron_'+eleWP+'_TotSF'+'_Up[0])/(event.Lepton_tightElectron_'+eleWP+'_TotSF'+'[0])+\
                                              (abs(event.Lepton_pdgId[0]) == 13)) * \
                                             ((abs(event.Lepton_pdgId[1]) == 11)*(event.Lepton_tightElectron_'+eleWP+'_TotSF'+'_Up[1])/(event.Lepton_tightElectron_'+eleWP+'_TotSF'+'[1])+\
@@ -185,6 +194,7 @@ for eleWP in eleWPlist:
                                             if event.nLepton > 3 else 0.'
 
 for muWP in muWPlist:
+
   formulas['LepSF2l__mu_'+muWP+'__Up'] = '((abs(event.Lepton_pdgId[0]) == 13)*(event.Lepton_tightMuon_'+muWP+'_TotSF'+'_Up[0])/(event.Lepton_tightMuon_'+muWP+'_TotSF'+'[0])+\
                                            (abs(event.Lepton_pdgId[0]) == 11)) * \
                                           ((abs(event.Lepton_pdgId[1]) == 13)*(event.Lepton_tightMuon_'+muWP+'_TotSF'+'_Up[1])/(event.Lepton_tightMuon_'+muWP+'_TotSF'+'[1])+\
