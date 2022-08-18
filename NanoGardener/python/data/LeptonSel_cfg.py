@@ -7059,7 +7059,7 @@ MuonWP = {
                                  ] ,
                                   } ,
                          'idSF':  {
-                                    '1-3' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9HIPM/NUM_TightHWW_DEN_TrackerMuons_eta.root' ] ,
+                                    '1-3' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9HIPM/NUM_TightHWW_DEN_TrackerMuons_eta_pt.root' ] ,
                                   } ,
                          'isoSF':  {
                                     '1-3' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9HIPM/NUM_TightHWW_ISO_DEN_TightHWW_eta_pt.root' ] ,
@@ -7092,7 +7092,7 @@ MuonWP = {
                                  ] ,
                                   } ,
                          'idSF':  {
-                                    '1-3' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9HIPM/NUM_TightHWW_DEN_TrackerMuons_eta.root' ] ,
+                                    '1-3' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9HIPM/NUM_TightHWW_DEN_TrackerMuons_eta_pt.root' ] ,
                                   } ,
                          'isoSF':  {
                                     '1-3' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9HIPM/NUM_TightHWW_ISO_DEN_TightHWW_eta_pt.root' ] ,
@@ -7234,7 +7234,7 @@ MuonWP = {
                                  ] ,
                                   } ,
                          'idSF':  {
-                                    '4-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9noHIPM/NUM_TightHWW_DEN_TrackerMuons_eta.root' ] ,
+                                    '4-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9noHIPM/NUM_TightHWW_DEN_TrackerMuons_eta_pt.root' ] ,
                                   } ,
                          'isoSF':  {
                                     '4-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9noHIPM/NUM_TightHWW_ISO_DEN_TightHWW_eta_pt.root' ] ,
@@ -7267,7 +7267,7 @@ MuonWP = {
                                  ] ,
                                   } ,
                          'idSF':  {
-                                    '4-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9noHIPM/NUM_TightHWW_DEN_TrackerMuons_eta.root' ] ,
+                                    '4-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9noHIPM/NUM_TightHWW_DEN_TrackerMuons_eta_pt.root' ] ,
                                   } ,
                          'isoSF':  {
                                     '4-7' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v9noHIPM/NUM_TightHWW_ISO_DEN_TightHWW_eta_pt.root' ] ,
