@@ -324,7 +324,7 @@ class LeptonSFMaker(Module):
         tkSF = 0.
         tkSF_err = 1.
         if abs(pdgId) == 11:
-            tkSF, tkSF_up, tkSF_dwn = self.get_SF_corrlib(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], eta, pt)
+            tkSF, tkSF_up, tkSF_dwn = self.get_SF_corrlib(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], pt, eta)
 
         if abs(pdgId) == 13:
             tkSF, tkSF_up, tkSF_dwn = self.get_nvtxGraph_VnUnD(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], nvtx)
@@ -355,9 +355,9 @@ class LeptonSFMaker(Module):
                     mc = float(dot[7])   
 
                     data_stat = float(dot[5])
-                    data_sys  = float(dot[6])
+                    data_syst = float(dot[6])
                     mc_stat   = float(dot[8])                    
-                    mc_sys    = float(dot[9])
+                    mc_syst   = float(dot[9])
 
                     tkSF = data/mc
                     tkSF_err = math.sqrt( (data_stat/data)**2 + (mc_stat/mc)**2 ) * tkSF
