@@ -308,7 +308,7 @@ Trigger = {
                           # END of HIP problem -> Muon ID/ISO SF change
                           #    Run2016G |   278820 | 280385
                           #    Run2016H |   280919 |
-                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 281612  ,
+                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 7.653261227 ,
                                   'LegEffData' :  {  'DoubleEleLegHigPt' : 'Full2016v9noHIPM/data/EGM_MVAid/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
                                                      'DoubleEleLegLowPt' : 'Full2016v9noHIPM/data/EGM_MVAid/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
                                                      'SingleEle'         : 'Full2016v9noHIPM/data/EGM_MVAid/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
