@@ -49,7 +49,7 @@ Samples['TTTo2L2Nu_hdampDown'] = {'nanoAOD' :'/TTTo2L2Nu_hdampDOWN_TuneCP5_13TeV
 #--->Updated!###-----------------------------------------------##
 Samples['TTToSemiLeptonic'] = {'nanoAOD' :'/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 Samples['TTToSemiLeptonic_TuneCP5Up'] = {'nanoAOD' :'/TTToSemiLeptonic_TuneCP5up_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
-Samples['TTToSemiLeptonic_TueCP5Down'] = {'nanoAOD' :'/TTToSemiLeptonic_TuneCP5down_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
+Samples['TTToSemiLeptonic_TuneCP5Down'] = {'nanoAOD' :'/TTToSemiLeptonic_TuneCP5down_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 Samples['TTToSemiLeptonic_hdampUp'] = {'nanoAOD' :'/TTToSemiLeptonic_hdampUP_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 Samples['TTToSemiLeptonic_hdampDown'] = {'nanoAOD' :'/TTToSemiLeptonic_hdampDOWN_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 ##---------------------------------------------------------------##
