@@ -80,8 +80,8 @@ Samples['ST_tW_antitop_noHad_PDF'] = {'nanoAOD' :'/ST_tW_antitop_5f_NoFullyHadro
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['ST_tW_top'] = {'nanoAOD' :'/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
-Samples['ST_tW_top_TuneCP5Up'] = {'nanoAOD' :'/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5up_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
-Samples['ST_tW_top_TuneCP5Down'] = {'nanoAOD' :'/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5down_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['ST_tW_top_noHad_TuneCP5Up'] = {'nanoAOD' :'/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5up_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['ST_tW_top_noHad_TuneCP5Down'] = {'nanoAOD' :'/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5down_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
 Samples['ST_tW_top_noHad_hdampUp'] = {'nanoAOD' :'/ST_tW_top_5f_hdampup_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
 Samples['ST_tW_top_noHad_hdampDown'] = {'nanoAOD' :'/ST_tW_top_5f_hdampdown_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
 Samples['ST_tW_top_noHad'] = {'nanoAOD' :'/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
