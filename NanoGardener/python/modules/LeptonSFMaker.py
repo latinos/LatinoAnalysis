@@ -273,7 +273,7 @@ class LeptonSFMaker(Module):
         else:
             era = (self.cmssw).replace('Full','').replace('v9','')
 
-        if pt <= 20:
+        if pt < 20:
             SFnom  = evaluator["UL-Electron-ID-SF"].evaluate(era,"sf","RecoBelow20",eta,pt)
             SFup   = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfup","RecoBelow20",eta,pt)
             SFdown = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfdown","RecoBelow20",eta,pt)
