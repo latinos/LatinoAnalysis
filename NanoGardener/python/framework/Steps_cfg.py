@@ -5686,7 +5686,7 @@ Steps = {
                   'do4MC'      : False  ,
                   'do4Data'    : True  ,
                   'selection'  : '"(nLepton>=2)"' ,
-                  'subTargets' : ['MonoHiggsMVA','JJHEFT','leptonMVAFiller'], 
+                  'subTargets' : ['JJHEFT','leptonMVAFiller'], 
                 },
 	
 #muWP='cut_Tight80x'
