@@ -161,7 +161,6 @@ class JJH_EFTVars(Module):
          Higgs = LL + NuNu
          hm  = Higgs.M()
 
-        else : return False
 
         if JJH :
 
