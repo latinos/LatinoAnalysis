@@ -6014,6 +6014,58 @@ MuonWP = {
                        } ,
 
                    },                 
+ # -------------
+ 'WgStarObjWP' : {
+
+      'cut_Tight_HWWW' : {
+                         'cuts' : {
+                                # Common cuts
+                                'True' :
+                                 [
+                                   'abs(muon_col[LF_idx]["eta"]) < 2.4' ,
+                                   'muon_col[LF_idx]["tightId"] == 1' ,
+                                   'abs(muon_col[LF_idx]["dz"]) < 0.1' ,
+                                 ] ,
+                                 # dxy for pT < 20 GeV
+                                 'muon_col[LF_idx]["pt"] <= 20.0' :
+                                 [
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.01 ' ,
+                                 ] ,
+                                 # dxy for pT > 20 GeV
+                                 'muon_col[LF_idx]["pt"] > 20.0' :
+                                 [
+                                    'abs(muon_col[LF_idx]["dxy"]) < 0.02 ' ,
+                                 ] ,
+                                  } ,
+                         'idSF':  {
+                                    '1-1' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v9/NUM_TightHWW_DEN_TrackerMuons_eta_pt.root'],
+                                  } ,
+                         'isoSF': {
+                                    '1-1' : [ 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v9/NUM_TightHWW_ISO_DEN_TightHWW_eta_pt.root'],
+                                  } ,
+                         'fakeW' : '/LatinoAnalysis/NanoGardener/python/data/fake_prompt_rates/Full2018v9/cut_Tight_HWWW/',
+                         'cuts_iso': {
+                                # Common cuts
+                                'True' :
+                                [
+                                  '0.15',
+                                ],
+                                # Low pt
+                                'muon_col[LF_idx]["pt"] <= 20.0' :
+                                [
+                                  'None'
+                                ],
+                                # High pt
+                                'muon_col[LF_idx]["pt"] > 20.0' :
+                                [
+                                  'None'
+                                ],
+                                  },
+                         'iso': ['pfRelIso04_all', 0.4],
+                       } ,
+
+                 },
+
  
          },                 
 
