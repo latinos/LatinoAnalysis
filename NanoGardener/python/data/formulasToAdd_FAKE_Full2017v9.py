@@ -22,7 +22,7 @@ METFilter_FAKE   =  METFilter_Common + '*' + '(event.Flag_eeBadScFilter)'
 formulas['METFilter_FAKE'] = METFilter_FAKE
 
 
-muWPlist = [wp for wp in MuonWP['Full2017v9'['TightObjWP']]
+muWPlist = [wp for wp in MuonWP['Full2017v9']['TightObjWP']]
 eleWPlist = [wp for wp in ElectronWP['Full2017v9']['TightObjWP']]
 
 for eleWP in eleWPlist:
