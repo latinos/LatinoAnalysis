@@ -1033,6 +1033,35 @@ Steps = {
                                      'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
 
+  'MCCorr2017v9JERHighPt' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+
+                     'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
+                },
+
+  'MCCorr2017v9noJER' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+
+                     'subTargets' : ['baseW','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
+                },
+
+  'testTrig' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['trigMC']
+                },
+
   'MCCorr2017LP19' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -1163,6 +1192,26 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','JERsMCUL','FatJERsMCUL','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
+                },
+
+  'MCCorr2018v9JERHighPt' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
+                },
+
+  'MCCorr2018v9noJER' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
                                      'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
@@ -3286,13 +3335,22 @@ Steps = {
                   'module'     : 'JERMakerMC18()',
                  },
 
-    'JERsMCUL': {
+   'JERsMCUL': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
                   'declare'    : 'JERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK4PFchs",jetColl="CleanJet",jerUncert=True,splitJER=True)',
                   'module'     : 'JERMakerMCUL()',
+                 },
+
+   'JERsMCUL_highPt': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
+                  'declare'    : 'JERMakerMCUL_highPt = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK4PFchs",jetColl="CleanJet",jerUncert=True,splitJER=True,applyAtLowPt=False)',
+                  'module'     : 'JERMakerMCUL_highPt()',
                  },
 
     'FatJERsMCUL': {
@@ -3302,6 +3360,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
                   'declare'    : 'FatJERMakerMCUL = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK8PFPuppi",jetColl="FatJet",jerUncert=True,splitJER=True,doGroomed=True)',
                   'module'     : 'FatJERMakerMCUL()',
+                 },
+
+    'FatJERsMCUL_highPt': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JERMaker' ,
+                  'declare'    : 'FatJERMakerMCUL_highPt = lambda : JERMaker(RPLME_YEAR, "RPLME_CMSSW","",jetType="AK8PFPuppi",jetColl="FatJet",jerUncert=True,splitJER=True,doGroomed=True,applyAtLowPt=False)',
+                  'module'     : 'FatJERMakerMCUL_highPt()',
                  },
 
     'JERup_suffix' :   {
