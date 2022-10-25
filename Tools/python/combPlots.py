@@ -14,7 +14,7 @@ import LatinoAnalysis.Tools.rootlogonTDR
 from collections import OrderedDict
 
 gROOT.SetBatch()
-gROOT.ProcessLine('.L '+os.environ['CMSSW_BASE']+'/src/LatinoAnalysis/Tools/src/contours.cxx')
+gROOT.ProcessLine('.L '+os.environ['CMSSW_BASE']+'/src/LatinoAnalysis/Tools/test/contours.cxx')
 gStyle.SetOptTitle(0)
 gStyle.SetOptStat(0)
 
