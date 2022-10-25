@@ -27,6 +27,7 @@ class JERMaker(jetSmearer, object):
                  jerUncert=False,\
                  splitJER=False,\
                  doGroomed=False,\
+                 applyAtLowPt=True,\
                  jmr_vals=[],\
                  jms_vals=[]\
                 ):
@@ -38,6 +39,7 @@ class JERMaker(jetSmearer, object):
        self.jerUncert = jerUncert
        self.splitJER = splitJER
        self.doGroomed = doGroomed
+       self.applyAtLowPt = applyAtLowPt
        self.jmrVals = jmr_vals      
        self.jmsVals = jms_vals
        self.isAK8 = "AK8" in jetType
@@ -99,7 +101,7 @@ class JERMaker(jetSmearer, object):
        print("JERMaker: \n"+"    JetType = "+jetType+"\n"+"    JetColl = "+jetColl+"\n"+\
              "    JER input = "+self.jerInputFileName+"\n"+"    JER SF input = "+self.jerUncertaintyInputFileName+"\n"+\
              "    JER uncty = "+str(self.jerUncert)+"\n"+"    splitJER = "+str(self.splitJER)+"\n"+\
-             "    doGroomed = "+str(self.doGroomed))
+             "    doGroomed = "+str(self.doGroomed)+"\n"+"    applyAtLowPt = "+str(self.applyAtLowPt))
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         #setup output tree
@@ -252,6 +254,9 @@ class JERMaker(jetSmearer, object):
                 #evaluate JMS and JMR scale factors and uncertainties
                 (jmsNomVal, jmsDownVal, jmsUpVal) = self.jmsVals #global cfg
                 (jet_mass_jmrNomVal, jet_mass_jmrUpVal, jet_mass_jmrDownVal) = self.jetSmearer.getSmearValsM(jet, genJet) #super
+
+            if "UL" in self.era and (not self.applyAtLowPt) and jet.pt<50:
+              ( jet_pt_jerNomVal, jet_pt_jerUpVal, jet_pt_jerDownVal ) = ( 1.0, 1.0, 1.0 )
 
             jet_pt_nom       = jet.pt   * jet_pt_jerNomVal
             jet_pt_JERUp     = jet.pt   * jet_pt_jerUpVal
@@ -434,8 +439,8 @@ class JERMaker(jetSmearer, object):
                 self.out.fillBranch("%s_mass_JER%sUp"   % (self.jetBranchName, jerID), [jets_mass_JERUp[jerID][idx] for idx in order])
                 self.out.fillBranch("%s_mass_JER%sDown" % (self.jetBranchName, jerID), [jets_mass_JERDown[jerID][idx] for idx in order])
                 if self.isAK8 and self.doGroomed:
-                    self.out.fillBranch("%s_msoftdrop_JER%sUp"   % (self.jetBranchName, jerID), [jets_msoftdrop_JERUp[jerID][idx] for idx in order])
-                    self.out.fillBranch("%s_msoftdrop_JER%sDown" % (self.jetBranchName, jerID), [jets_msoftdrop_JERDown[jerID][idx] for idx in order]) 
+                    self.out.fillBranch("%s_msoftdrop_JER%sUp"   % (self.jetBranchName, jerID), [jets_msdcorr_JERUp[jerID][idx] for idx in order])
+                    self.out.fillBranch("%s_msoftdrop_JER%sDown" % (self.jetBranchName, jerID), [jets_msdcorr_JERDown[jerID][idx] for idx in order]) 
             if self.isAK8:
                 self.out.fillBranch("%s_mass_JMRUp" % self.jetBranchName, [jets_mass_JMRUp[idx] for idx in order])
                 self.out.fillBranch("%s_mass_JMRDown" % self.jetBranchName, [jets_mass_JMRDown[idx] for idx in order])
@@ -456,3 +461,5 @@ FatJERMakerMCUL16 = lambda : JERMaker("2016","Full2016v9noHIPM","",jetType="AK8P
 FatJERMakerMCUL16_preVFP = lambda : JERMaker("2016","Full2016v9HIPM","",jetType="AK8PFPuppi",jetColl="FatJet",jerTag="",doGroomed=True)
 FatJERMakerMCUL17 = lambda : JERMaker("2017","Full2017v9","",jetType="AK8PFPuppi",jetColl="FatJet",jerTag="",doGroomed=True)
 FatJERMakerMCUL18 = lambda : JERMaker("2018","Full2018v9","",jetType="AK8PFPuppi",jetColl="FatJet",jerTag="",doGroomed=True)
+FatJERMakerMCUL17_highPt = lambda : JERMaker("2017","Full2017v9","",jetType="AK8PFPuppi",jetColl="FatJet",jerTag="",doGroomed=True, applyAtLowPt=False)
+FatJERMakerMCUL18_highPt = lambda : JERMaker("2018","Full2018v9","",jetType="AK8PFPuppi",jetColl="FatJet",jerTag="",doGroomed=True, applyAtLowPt=False)

@@ -94,6 +94,7 @@ class TrigMaker(Module):
         self.TM_GlEff = {}
         #self.TM_trkSFMu = {}
         self.TM_runInt  = {}
+        self.TM_runPeriods = []
         for RunP in self.Trigger[self.cmssw]:
            #self.TM_trkSFMu[RunP] = deepcopy(self.Trigger[self.cmssw][RunP]['trkSFMu'])
            self.TM_trig[RunP]    = {}
@@ -103,6 +104,7 @@ class TrigMaker(Module):
            self.TM_DZEffMC[RunP]   = {}
            self.TM_DRllSF[RunP]   = {}
            self.TM_GlEff[RunP] = {}
+           self.TM_runPeriods.append(RunP)
            if 'runList' in self.Trigger[self.cmssw][RunP].keys():
              self.TM_runInt[RunP]  = {'runList' : self.Trigger[self.cmssw][RunP]['runList']}
            else: 
@@ -172,6 +174,7 @@ class TrigMaker(Module):
 
 
         # Set some run/event specific var
+        self.TM_runPeriods.sort()
         self.total_lum = 0.
         self.EMTFbug = {}
         for RunP in self.Trigger[self.cmssw]:
@@ -199,9 +202,9 @@ class TrigMaker(Module):
          toss_a_coin = get_rndm(event_seed)
          for iPeriod in range(1,len(self.RunFrac)) :
            if toss_a_coin >= self.RunFrac[iPeriod-1] and toss_a_coin < self.RunFrac[iPeriod]:
-              return iPeriod
+              return self.TM_runPeriods[iPeriod-1]
            if toss_a_coin == 1.0:
-              return len(self.RunFrac)-1
+              return self.TM_runPeriods[len(self.RunFrac)-1]
         print "Run Period undefined"
         return -1 
 
@@ -277,6 +280,7 @@ class TrigMaker(Module):
     def _get_DZEff(self,run_p,trigName,nvtxIn,pt1In,pt2In,isdata):
       DZeffs = self.TM_DZEffData[run_p][trigName] if isdata else self.TM_DZEffMC[run_p][trigName]
       DZeff = 1. 
+      DZeff_err = 0.
       nvtx = nvtxIn
       pt1 = pt1In
       pt2 = pt2In

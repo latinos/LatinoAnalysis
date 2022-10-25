@@ -92,7 +92,7 @@ class LeptonSFMaker(Module):
                         self.SF_dict['electron'][wp]['tkSF']['endRP'].append(int(rpr.split('-')[1]))
                         tk_file = self.ElectronWP[self.cmssw]['TightObjWP'][wp]['tkSF'][rpr]
                         self.SF_dict['electron'][wp]['tkSF']['data'].append(_core.CorrectionSet.from_file(tk_file))
-                        tk_file.Close()
+
                 if SFkey == 'wpSF':
                     self.SF_dict['electron'][wp]['wpSF']['data'] = []
                     self.SF_dict['electron'][wp]['wpSF']['beginRP'] = []
@@ -189,11 +189,8 @@ class LeptonSFMaker(Module):
                         self.SF_dict['muon'][wp]['tthMvaSF']['beginRP'] .append(int(rpr.split('-')[0]))
                         self.SF_dict['muon'][wp]['tthMvaSF']['endRP']   .append(int(rpr.split('-')[1])) 
                         nom_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][1])
-                        sys_file = self.open_root(cmssw_base + '/src/' + self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][2])
                         self.SF_dict['muon'][wp]['tthMvaSF']['nominal'] .append(self.get_root_obj(nom_file, self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][0]))
-                        self.SF_dict['muon'][wp]['tthMvaSF']['syst']    .append(self.get_root_obj(sys_file, self.MuonWP[self.cmssw]['TightObjWP'][wp]['tthMvaSF'][rpr][0]))
                         nom_file.Close()
-                        sys_file.Close()
 
             if not self.SF_dict['muon'][wp]['hasSFreco']: 
                 self.SF_dict['muon'][wp]['tkSF']['beginRP'] = self.SF_dict['muon'][wp]['idSF']['beginRP']                
@@ -276,7 +273,7 @@ class LeptonSFMaker(Module):
         else:
             era = (self.cmssw).replace('Full','').replace('v9','')
 
-        if pt <= 20:
+        if pt < 20:
             SFnom  = evaluator["UL-Electron-ID-SF"].evaluate(era,"sf","RecoBelow20",eta,pt)
             SFup   = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfup","RecoBelow20",eta,pt)
             SFdown = evaluator["UL-Electron-ID-SF"].evaluate(era,"sfdown","RecoBelow20",eta,pt)
@@ -327,7 +324,7 @@ class LeptonSFMaker(Module):
         tkSF = 0.
         tkSF_err = 1.
         if abs(pdgId) == 11:
-            tkSF, tkSF_up, tkSF_dwn = self.get_SF_corrlib(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], eta, pt)
+            tkSF, tkSF_up, tkSF_dwn = self.get_SF_corrlib(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], pt, eta)
 
         if abs(pdgId) == 13:
             tkSF, tkSF_up, tkSF_dwn = self.get_nvtxGraph_VnUnD(self.SF_dict[kin_str][wp]['tkSF']['data'][run_idx], nvtx)
@@ -358,9 +355,9 @@ class LeptonSFMaker(Module):
                     mc = float(dot[7])   
 
                     data_stat = float(dot[5])
-                    data_sys  = float(dot[6])
+                    data_syst = float(dot[6])
                     mc_stat   = float(dot[8])                    
-                    mc_sys    = float(dot[9])
+                    mc_syst   = float(dot[9])
 
                     tkSF = data/mc
                     tkSF_err = math.sqrt( (data_stat/data)**2 + (mc_stat/mc)**2 ) * tkSF
@@ -433,14 +430,14 @@ class LeptonSFMaker(Module):
 
             if self.SF_dict[kin_str][wp]['hastthMvaSF']:
                 tthMvaSF , tthMvaSF_err = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['nominal'][run_idx], eta, pt)
-                dummy    , tthMvaSF_sys = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['syst'][run_idx], eta, pt)   
+               # dummy    , tthMvaSF_sys = self.get_hist_VnE(self.SF_dict[kin_str][wp]['tthMvaSF']['syst'][run_idx], eta, pt)   
                 tkSF     = tkSF_id*tkSF_iso*tthMvaSF
                 tkSF_up  = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_up*tkSF_id_up/tkSF_id/tkSF_id
                                                                   + tkSF_iso_up *tkSF_iso_up /tkSF_iso/tkSF_iso
-                                                                  + (tthMvaSF_err*tthMvaSF_err+tthMvaSF_sys*tthMvaSF_sys)/tthMvaSF/tthMvaSF )
-                tkSF_dwn = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id
+                                                                  + (tthMvaSF_err*tthMvaSF_err)/tthMvaSF/tthMvaSF )
+		tkSF_dwn = tkSF_id*tkSF_iso*tthMvaSF * math.sqrt(   tkSF_id_dwn*tkSF_id_dwn/tkSF_id/tkSF_id
                                                                   + tkSF_iso_dwn*tkSF_iso_dwn/tkSF_iso/tkSF_iso
-                                                                  + (tthMvaSF_err*tthMvaSF_err+tthMvaSF_sys*tthMvaSF_sys)/tthMvaSF/tthMvaSF ) 
+                                                                  + (tthMvaSF_err*tthMvaSF_err)/tthMvaSF/tthMvaSF ) 
             else:  
                # Only ID*ISO:
                tkSF_up  = tkSF_id * tkSF_iso * math.sqrt(tkSF_id_up *tkSF_id_up /tkSF_id/tkSF_id +  tkSF_iso_up *tkSF_iso_up /tkSF_iso/tkSF_iso)

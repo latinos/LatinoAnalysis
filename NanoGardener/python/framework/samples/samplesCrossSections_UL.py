@@ -97,7 +97,9 @@ samples['EWKZ2Jets_ZToLL_M-50']                 .extend( ['xsec=6.215',         
 
 ### Wgamma
 samples['WGToLNuG']                             .extend( ['xsec=412.7',         'kfact=1.000',          'ref=W'] )
-
+samples['Wg_AMCNLOFXFX_01J_PDF']                .extend( ['xsec=191.8',         'kfact=1.000',          'ref=I'] )
+samples['Wg_AMCNLOFXFX_01J']                    .extend( ['xsec=191.8',         'kfact=1.000',          'ref=I'] )
+ 
 ### WW
 samples['WWTo2L2Nu']	                 	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )
 samples['WWTo2L2Nu_TuneCP5Up']                	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )		
