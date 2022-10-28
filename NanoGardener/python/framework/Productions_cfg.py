@@ -825,6 +825,15 @@ Productions = {
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections_UL.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
+ 'Summer20UL18_106x_nAODv9_Full2018v9_LatinosWorkshopExercise' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_106x_nAODv9.py',
+                       'cmssw'   : 'Full2018v9',
+                       'year'    : '2018' ,
+ #                      'JESGT'   : 'Autumn18_V19_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections_UL.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 
 
 }
