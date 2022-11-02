@@ -1,5 +1,28 @@
 The latinos framework is roughly divided in three parts.
 
+# 0. Install
+
+Download the framework:
+
+    cmsrel CMSSW_10_6_27
+    cd CMSSW_10_6_27/src/
+    cmsenv
+    git clone --branch 13TeV git@github.com:latinos/setup.git LatinosSetup
+    source LatinosSetup/SetupShapeOnly.sh
+    scram b -j 10
+
+Now we are in the `correctionlib/pybind11/` directory. Update correctionlib to `v2.9.2`:
+
+    git checkout v2.9.2
+    cd ../..
+    scram b -j 10
+
+Make a copy and edit the following python file (userConfig.py) to specify your base directory, i.e. the directory in which your job related information will be stored:
+
+    cd LatinoAnalysis/Tools/python/
+    cp userConfig_TEMPLATE.py userConfig.py
+    cd -
+
 # 1. Read miniAOD
 
 The code used to read and analyse miniAOD is documented here,
