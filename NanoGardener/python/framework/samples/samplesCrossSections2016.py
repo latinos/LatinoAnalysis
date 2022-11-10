@@ -115,6 +115,22 @@ samples['DYJetsToEE_Pow']                  .extend( ['xsec=1997',       'kfact=1
 samples['DYJetsToTT_MuEle_M-50']           .extend( ['xsec=248.849',    'kfact=1.000',          'ref=E'] )  # (6025.20/3)*(0.352)^2
 samples['DYJetsToTT_MuEle_M-50_ext1']           .extend( ['xsec=248.849',    'kfact=1.000',          'ref=E'] )  # (6025.20/3)*(0.352)^2
 
+samples['DYJetsToLL_M-100to200']     .extend( ['xsec=226.6',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-200to400']     .extend( ['xsec=7.77',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-400to500']     .extend( ['xsec=0.4065',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-500to700']     .extend( ['xsec=0.2334',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-700to800']     .extend( ['xsec=0.03614',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-800to1000']     .extend( ['xsec=0.03047',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-1000to1500']     .extend( ['xsec=0.01636',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-1500to2000']     .extend( ['xsec=0.00218',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-2000to3000']     .extend( ['xsec=0.0005156',	'kfact=1.000',	'ref=W'] )
+
+samples['DYJetsToLL_Pt-50to100']     .extend( ['xsec=354.8',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-100to250']     .extend( ['xsec=81.22',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-250to400']     .extend( ['xsec=2.991',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-400to650']     .extend( ['xsec=0.3882',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-650toInf']     .extend( ['xsec=0.03737',	'kfact=1.000',	'ref=W'] )
+
 ## DY (Low mass)
 samples['DYJetsToLL_M-5to50_HT-70to100']   .extend( ['xsec=303.8',  'kfact=1.000',          'ref=I'] )
 samples['DYJetsToLL_M-5to50_HT-100to200']  .extend( ['xsec=224.2',  'kfact=1.000',          'ref=E'] )

@@ -118,6 +118,23 @@ samples['DYJetsToLL_M-50_HT-800to1200_PSWeights']    .extend( ['xsec=0.8052',	'k
 samples['DYJetsToLL_M-50_HT-1200to2500_PSWeights']   .extend( ['xsec=0.1933',	'kfact=1.158',	'ref=W'] ) 
 samples['DYJetsToLL_M-50_HT-2500toInf_PSWeights']    .extend( ['xsec=0.003468',	'kfact=1.158',	'ref=W'] ) 
 
+samples['DYJetsToLL_M-100to200']     .extend( ['xsec=247.8',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-200to400']     .extend( ['xsec=8.502',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-400to500']     .extend( ['xsec=0.4514',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-500to700']     .extend( ['xsec=0.2558',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-700to800']     .extend( ['xsec=0.04023',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-800to1000']     .extend( ['xsec=0.03406',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-1000to1500']     .extend( ['xsec=0.01828',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-1500to2000']     .extend( ['xsec=0.002367',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-2000to3000']     .extend( ['xsec=0.0005409',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_M-3000toInf']     .extend( ['xsec=0.00003048',	'kfact=1.000',	'ref=W'] )
+
+samples['DYJetsToLL_Pt-50to100']     .extend( ['xsec=407.9',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-100to250']     .extend( ['xsec=96.8',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-250to400']     .extend( ['xsec=3.774',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-400to650']     .extend( ['xsec=0.5164',	'kfact=1.000',	'ref=W'] )
+samples['DYJetsToLL_Pt-650toInf']     .extend( ['xsec=0.04796	',	'kfact=1.000',	'ref=W'] )
+
 samples['DYJetsToEE_Pow']                  .extend( ['xsec=1997',       'kfact=1.000',          'ref=E'] )
 samples['DYJetsToTT_MuEle_M-50']           .extend( ['xsec=255.630',    'kfact=1.000',          'ref=X'] )  # (6025.20/3)*(0.352)^2
 samples['DYJetsToTT_MuEle_M-50_ext1']           .extend( ['xsec=255.630',    'kfact=1.000',          'ref=X'] )  # (6025.20/3)*(0.352)^2
