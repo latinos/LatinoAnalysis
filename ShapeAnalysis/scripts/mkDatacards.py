@@ -727,6 +727,8 @@ if __name__ == '__main__':
     factory._skipMissingNuisance = opt.skipMissingNuisance
     
     ## load the samples
+    ## Use flag to skip loading samples files, as currently done in mkPlot.py
+    _samples_noload = True
     samples = {}
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
