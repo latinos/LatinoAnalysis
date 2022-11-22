@@ -44,16 +44,18 @@ def do_significance(binning_dictionary, h_dict, last_bin, f_o_m):
     print("--------------------------------------")
     print("Inputs: last_bin = {}".format(last_bin))
     if last_bin < 1:
-        return 0
+        return 0, 0
 
     # Get all signals and background yields
-    max_significance = 0
+    max_significance = 0.0
     max_bin = 0
+    max_sig_in_bin = 0
+    max_bkg_in_bin = 0
     for i in range(0, last_bin - 2):
-        print("Iteration {}: integral from bin {} to bin {}".format(i, i, last_bin + 1))
+        # print("Iteration {}: integral from bin {} to bin {}".format(i, i, last_bin + 1))
         S = 0
         B = 0
-        significance = 0
+        significance = 0.0
         for key, value in binning_dictionary.items():
             integral = h_dict[key].Integral(i, last_bin + 1)
             # print("Integral for process {}: {}".format(key,integral))
@@ -73,16 +75,18 @@ def do_significance(binning_dictionary, h_dict, last_bin, f_o_m):
             else:
                 raise ValueError("I don't know this figure of merit")
         else:
-            significance = 0
+            significance = 0.0
 
-        print("Signal = {}, Background = {}, Significance = {}, max_significance = {}".format(S, B, significance, max_significance))
+        # print("Signal = {}, Background = {}, Significance = {}, max_significance = {}".format(S, B, significance, max_significance))
 
         # Compare with previous value
         if significance > max_significance:
             max_significance = significance
             max_bin = i
+            max_sig_in_bin = S
+            max_bkg_in_bin = B
 
-        print("max_bin:", max_bin)
+        # print("max_bin:", max_bin)
 
     # Check if the main backgrounds have at least 10 MC events in the selected range
     # It is not possible to get the number of MC events in a bin of a histogram
@@ -95,23 +99,32 @@ def do_significance(binning_dictionary, h_dict, last_bin, f_o_m):
     #
     # Second attemp: overall event weight is h.Integral()/h.GetEntries() 
     while (check_main_bkg(binning_dictionary)) > 0:
+        print("Main bkg to fix: {}".format(check_main_bkg(binning_dictionary)))
         for key, value in binning_dictionary.items():
             MC_events = 0
             if binning_dictionary[key]["isMainBackground"] == 1:
                 for i in range(max_bin, last_bin + 1):
-                    # if h_dict[key].GetBinContent(i) > 0:
-                    #     MC_events += h_dict[key].GetBinContent(i)*h_dict[key].GetBinContent(i) / (h_dict[key].GetBinError(i)*h_dict[key].GetBinError(i))
-                    #     print("Process {}: MC events = {}".format(key, MC_events))
-                    weight = h_dict[key].Integral() / h_dict[key].GetEntries() 
-                    MC_events += h_dict[key].GetBinContent(i) / weight
+                    # First definition of number of MC events
+                    if h_dict[key].GetBinContent(i) > 0:
+                        MC_events += h_dict[key].GetBinContent(i)*h_dict[key].GetBinContent(i) / (h_dict[key].GetBinError(i)*h_dict[key].GetBinError(i))
+                        # print("Process {}: MC events = {}".format(key, MC_events))
+                    # Second definition of number of MC events
+                    # weight = h_dict[key].Integral() / h_dict[key].GetEntries() 
+                    # MC_events += h_dict[key].GetBinContent(i) / weight
                     if MC_events >= 10:
                         binning_dictionary[key]["isMainBackground"] = 2
                     else: 
                         max_bin = max_bin - 1
+                    if max_bin < 10:
+                        binning_dictionary[key]["isMainBackground"] = 2
 
-    print("max_bin after main bkg correction:", max_bin)
 
-    return max_bin
+    print("Max_bin after main bkg correction:", max_bin)
+    print("Signal yield:                     ", max_sig_in_bin)
+    print("Background yield:                 ", max_bkg_in_bin)
+    print("Corresponding significance:       ", max_significance)
+
+    return max_bin, max_significance
 
 
 # Main function
@@ -167,7 +180,7 @@ if __name__ == '__main__':
       handle.close()
       
     # Just printing the dictionary for testing
-    print(binning)
+    # print(binning)
 
     
     # Open input rootfile: f
@@ -180,9 +193,9 @@ if __name__ == '__main__':
     histograms = {}
     n_bins = 0
     for key, value in binning.items():
-        print("Reading histogram: {}".format(folder + key))
+        # print("Reading histogram: {}".format(folder + key))
         histograms[key] = f.Get(folder + key)
-        print(histograms[key].Integral())
+        # print(histograms[key].Integral())
     # At the end of the loop, get the number of bins in the histograms and the bin width
     else:
         n_bins         = histograms[key].GetNbinsX()
@@ -194,10 +207,13 @@ if __name__ == '__main__':
     # Calculate figures of merit
     max_bin = n_bins + 1
     my_bins = []
+    my_significances = []
     stop = 0
     my_bins.append(max_bin)
+    # my_significances.append(0.0)
+    print("Max bin = ", max_bin)
     while (stop == 0):
-        new_max_bin = do_significance(binning, histograms, max_bin, figure)
+        new_max_bin, new_max_significance = do_significance(binning, histograms, max_bin, figure)
         print(new_max_bin)
         if new_max_bin == max_bin or max_bin <= 1:
             my_bins.append(0)
@@ -206,6 +222,7 @@ if __name__ == '__main__':
         max_bin = new_max_bin
         if new_max_bin < 0: continue
         my_bins.append(new_max_bin)
+        my_significances.append(new_max_significance)
 
     print(my_bins)
 
@@ -222,3 +239,25 @@ if __name__ == '__main__':
         output_string += str(i) + ","
     output_string += "],),"
     print(output_string)
+
+    output_significance = "'sign.': (["
+    for i in reversed(my_significances):
+        output_significance += str(round(i,4)) + ","
+    output_significance += "],),"
+    print(output_significance)
+
+    output_file_name = "Binning_" + cut.replace("hww2l2v_13TeV_WH_SS_","") + "_" + figure + ".txt"
+    with open(output_file_name, "w") as f:
+        f.write("variables['BDTG6_" + cut.replace("hww2l2v_13TeV_WH_SS_","") + "_" + figure+ "'] = {\n") # currently, variable is hard-coded
+        f.write("    'name'  : 'BDT_SS_v7',\n")        
+        f.write("    " + output_string)
+        f.write("\n")
+        f.write("    'xaxis' : 'BDT discriminant',\n")
+        f.write("    'fold'  : 3\n")
+        f.write("}\n")
+        f.write("# " + output_significance)
+        f.write("\n")
+    f.close()    
+
+    # print(my_significances)
+
