@@ -37,7 +37,7 @@ class PostProcMaker():
        sys.path.append('/usr/lib64/python2.7/site-packages')
        import gfal2
      
-     if not "CMSSW_10_6_20" in self._cmsswBasedir:
+     if not "CMSSW_10_6" in self._cmsswBasedir:
        self.ctx = gfal2.creat_context()
  
      # root tree prefix
@@ -287,7 +287,7 @@ class PostProcMaker():
      if FORCE_GFAL_SHELL:
        useGfal2Py = False
 
-     if "CMSSW_10_6_20" in self._cmsswBasedir: useGfal2Py = False
+     if "CMSSW_10_6" in self._cmsswBasedir: useGfal2Py = False
 
      if 'X509_CERT_DIR' not in os.environ and os.path.isdir('/etc/grid-security/certificates'):
        os.environ['X509_CERT_DIR'] = '/etc/grid-security/certificates'
