@@ -62,7 +62,7 @@ def createULJERvariation(type="", kind="Up"):
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.UltraJetUncertaintiesProducer',
-                  'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","RawMET"], splitJER=True)' %(type, kind.lower(), kind.lower()),
+                  'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET","RawMET"], splitJER=True)' %(type, kind.lower(), kind.lower()),
                   'module'     : 'JER%s%s()' %(type, kind.lower())
                }
   return dictionary
@@ -127,16 +127,16 @@ def createULJESchain(type, kind="Up"):
   if type == "Total":
     typeShort = ""
   toreplace = typeShort+kind.lower()
-  #chainTemplate = ['do_JESVAR_suffix','l2Kin_JESVAR', 'l3Kin_JESVAR', 'l4Kin_JESVAR','DYMVA_JESVAR','MonoHiggsMVA_JESVAR','formulasMC_JESVAR','JJHEFT_JESVAR']
-  chainTemplate = ['do_ULJESVAR_suffix']
+  chainTemplate = ['do_ULJESVAR_suffix','l2Kin_JESVAR', 'l3Kin_JESVAR', 'l4Kin_JESVAR','DYMVA_JESVAR','MonoHiggsMVA_JESVAR','formulasMC_JESVAR','JJHEFT_JESVAR']
+  #chainTemplate = ['do_ULJESVAR_suffix']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
   return chain
 
 def createULJERchain(type="", kind="Up"):
-  #chainTemplate = ['do_JERVAR_suffix','l2Kin_JERVAR', 'l3Kin_JERVAR', 'l4Kin_JERVAR','DYMVA_JERVAR','MonoHiggsMVA_JERVAR','formulasMC_JERVAR','JJHEFT_JERVAR']
-  chainTemplate = ['do_ULJERVAR_suffix']
+  chainTemplate = ['do_ULJERVAR_suffix','l2Kin_JERVAR', 'l3Kin_JERVAR', 'l4Kin_JERVAR','formulasMC_JERVAR','JJHEFT_JERVAR']
+  #chainTemplate = ['do_ULJERVAR_suffix']
   chain = []
   for item in chainTemplate:
     chain.append(item.replace("VAR", kind.lower()))
@@ -853,6 +853,27 @@ Steps = {
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
                                      'CleanFatJet', 'BoostedWtagSF','leptonMVAFiller'],
                 },
+
+  'MCCorr2016v9NoJERInHorn' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','PrefCorr2016','btagPerJet2016','JetPUID_SF_UL',
+                                     'rochesterMC', 'trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF','leptonMVAFiller'],
+                },
+
+  'MCCorr2016v9NoJER' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','JetPUID_SF_UL',
+                                     'rochesterMC', 'trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF','leptonMVAFiller'],
+                },
+
   'JERtest' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -1044,6 +1065,18 @@ Steps = {
                                      'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
 
+  'MCCorr2017v9NoJERInHorn' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+
+                     'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','PrefCorr2017', 'btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
+                },
+
+
   'MCCorr2017v9noJER' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -1206,6 +1239,17 @@ Steps = {
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
                                      'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
+
+  'MCCorr2018v9NoJERInHorn' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
+                                     'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
+                                     'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
+                },
+
 
   'MCCorr2018v9noJER' : {
                      'isChain'    : True  ,
@@ -3117,6 +3161,24 @@ Steps = {
 #                   'declare'    : 'JJHEFT_JESdo = lambda : JJH_EFTVars(branch_map="JESdo")',
 #                   'module'     : 'JJHEFT_JESdo()',
 #                },
+
+    'JJHEFT_JERup' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
+                  'declare'    : 'JJHEFT_JERup = lambda : JJH_EFTVars(branch_map="JERup")',
+                  'module'     : 'JJHEFT_JERup()',
+               },
+
+    'JJHEFT_JERdo' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  , 
+                  'do4Data'    : True  , 
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' , 
+                  'declare'    : 'JJHEFT_JERdo = lambda : JJH_EFTVars(branch_map="JERdo")',
+                  'module'     : 'JJHEFT_JERdo()',
+               },
 
 
     'EFTGen' : {

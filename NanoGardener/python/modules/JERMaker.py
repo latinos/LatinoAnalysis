@@ -255,7 +255,7 @@ class JERMaker(jetSmearer, object):
                 (jmsNomVal, jmsDownVal, jmsUpVal) = self.jmsVals #global cfg
                 (jet_mass_jmrNomVal, jet_mass_jmrUpVal, jet_mass_jmrDownVal) = self.jetSmearer.getSmearValsM(jet, genJet) #super
 
-            if "UL" in self.era and (not self.applyAtLowPt) and jet.pt<50:
+            if "UL" in self.era and (not self.applyAtLowPt) and jet.pt<50 and abs(jet.eta)>=2.8 and abs(jet.eta)<=3:
               ( jet_pt_jerNomVal, jet_pt_jerUpVal, jet_pt_jerDownVal ) = ( 1.0, 1.0, 1.0 )
 
             jet_pt_nom       = jet.pt   * jet_pt_jerNomVal
