@@ -395,3 +395,18 @@ samples['VBS_SSWW_cW_BSM']                      .extend( ['xsec=1',             
 samples['VBS_SSWW_cHW_INT']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=W'] )
 samples['VBS_SSWW_cHW_BSM']                     .extend( ['xsec=1',             'kfact=1.000',  'ref=W'] )
 samples['VBS_SSWW_cW_cHW']                      .extend( ['xsec=1',             'kfact=1.000',  'ref=W'] )
+
+samples['WpWmJJ_EWK_noTop_pol_LL']              .extend( ['xsec=0.01132',             'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_EWK_noTop_pol_LT']              .extend( ['xsec=0.01446',             'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_EWK_noTop_pol_TL']              .extend( ['xsec=0.01512',             'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_EWK_noTop_pol_TT']              .extend( ['xsec=0.05026',             'kfact=1.000',  'ref=I'] )
+
+samples['WpWmJJ_EWK_noTop_CMWW_pol_LL']         .extend( ['xsec=0.01394',             'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_EWK_noTop_CMWW_pol_LT']         .extend( ['xsec=0.01318',             'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_EWK_noTop_CMWW_pol_TL']         .extend( ['xsec=0.01390',             'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_EWK_noTop_CMWW_pol_TT']         .extend( ['xsec=0.05004',             'kfact=1.000',  'ref=I'] )
+
+samples['WpWmJJ_EWK_noTop']                     .extend( ['xsec=0.09283',             'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_QCD_noTop']                     .extend( ['xsec=2.190',               'kfact=1.000',  'ref=I'] )
+samples['WpWmJJ_EWK_QCD_noTop']                 .extend( ['xsec=2.295',               'kfact=1.000',  'ref=I'] )
+
