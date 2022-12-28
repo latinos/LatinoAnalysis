@@ -16,7 +16,7 @@
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TH3F.h"
-#include <ZZMatrixElement/MELA/interface/Mela.h>
+#include <JHUGenMELA/MELA/interface/Mela.h>
 #include <MelaAnalytics/CandidateLOCaster/interface/MELACandidateRecaster.h>
 
 class MelaReweighterWW{
