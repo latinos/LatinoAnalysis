@@ -409,7 +409,7 @@ class BWEwkSingletReweighter(Module):
             for rem in removethis:
               FinalStatePartIDs.remove(rem)
 
-          print FinalStatePartIDs
+          #print FinalStatePartIDs
           for p in FinalStatePartIDs:
             print p,": id",event.GenPart_pdgId[p],", mom:",event.GenPart_genPartIdxMother[p],", momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[p]]#,", mom-mom:",event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]],", mom-momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]]]
 
@@ -599,7 +599,7 @@ class BWEwkSingletReweighter(Module):
             for line in self.shifts:
               if float(line[0])==self.mH and float(line[1])==relw and float(line[2])==-1:
                 shift = float(line[3])
-                break
+                break      
           weights[name] = (1./shift)*decayWeight*CPSweight
           self.mela.setMelaHiggsMassWidth(self.mH, gprime)
           self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
@@ -613,7 +613,9 @@ class BWEwkSingletReweighter(Module):
           # now reset to the SM high mass signal and do not touch the normalization again
           self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
           weights[name+"_I_HB"] = self.mela.weightStoI_HB()
-          weights[name+"_B"] = self.mela.weightStoB()
+          # reset to SM width before reweighting to H and B
+          self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
+          weights[name+"_B"] = self.mela.weightStoB()  
           weights[name+"_H"] = self.mela.weightStoH()
           for key in weights.keys():
             if math.isnan(weights[key]) or math.isinf(weights[key]): #dirty protection for occasional failure
