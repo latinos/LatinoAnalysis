@@ -555,23 +555,22 @@ class BWEwkSingletReweighter(Module):
                                                          fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
                                                          partons, partonIDs,
                                                          mothers, motherIDs)
-            addweight = {}
-            addweight["_I"] = self.mela.weightStoI()
-            addweight["_I_Honly"] = self.mela.weightStoI_H()
-            addweight["_I_Bonly"] = self.mela.weightStoI_B()
-            addweight["_I_HB"] = self.mela.weightStoI_HB()
-            addweight["_B"] = self.mela.weightStoB()
-            addweight["_H"] = self.mela.weightStoH()
-
-            for appendix in self.branches:
-              if math.isnan(addweight[appendix]) or math.isinf(addweight[appendix]): #dirty protection for occasional failures
-                self.NANinfo
-                addweight[appendix]=0.
-              weights[name+appendix] = weights[name]*addweight[appendix]
-
-            for appendix in [""]+self.branches:
-              self.out.fillBranch(name+appendix, weights[name+appendix])
-
+            #addweight = {}
+            weights[name+"_I"] = math.sqrt(weights[name])*self.mela.weightStoI()
+            weights[name+"_I_Honly"] = math.sqrt(weights[name])*self.mela.weightStoI_H()
+            weights[name+"_I_Bonly"] = math.sqrt(weights[name])*self.mela.weightStoI_B()
+            # now reset to the SM high mass signal and do not touch the normalization again
+            self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
+            weights[name+"_I_HB"] = self.mela.weightStoI_HB()
+            # reset to SM width before reweighting to H and B
+            self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
+            weights[name+"_B"] = self.mela.weightStoB()
+            weights[name+"_H"] = self.mela.weightStoH()
+ 
+            for key in weights.keys():
+              if math.isnan(weights[key]) or math.isinf(weights[key]): #dirty protection for occasional failure
+                weights[key] = 0.
+              self.out.fillBranch(key, weights[key])
 
         ########## For Relative Width & Fixed Width model
         gprime = self.gsm
