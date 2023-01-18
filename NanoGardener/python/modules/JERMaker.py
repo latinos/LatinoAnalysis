@@ -28,6 +28,7 @@ class JERMaker(jetSmearer, object):
                  splitJER=False,\
                  doGroomed=False,\
                  applyAtLowPt=True,\
+                 sigmaResMatching=3,\
                  jmr_vals=[],\
                  jms_vals=[]\
                 ):
@@ -40,6 +41,7 @@ class JERMaker(jetSmearer, object):
        self.splitJER = splitJER
        self.doGroomed = doGroomed
        self.applyAtLowPt = applyAtLowPt
+       self.sigmaResMatching = sigmaResMatching
        self.jmrVals = jmr_vals      
        self.jmsVals = jms_vals
        self.isAK8 = "AK8" in jetType
@@ -195,7 +197,7 @@ class JERMaker(jetSmearer, object):
 
             resolution = self.jer.getResolution(params) #super
 
-            return abs(jet.pt - genJet.pt) < 3*resolution*jet.pt
+            return abs(jet.pt - genJet.pt) < self.sigmaResMatching*resolution*jet.pt
 
         pairs = matchObjectCollection(jets, genJets, dRmax=0.2, presel=isResMatching)
         if self.doGroomed:
