@@ -58,6 +58,7 @@ class Worker(threading.Thread):
         infile += "factory._tag       = '"+str(tag)+"'\n"
         infile += "factory._nThreads  = 1\n"
         infile += "factory.aliases    = "+aliases+"\n"
+        infile += "factory.FixNegativeAfterHadd = "+str(opt.FixNegativeAfterHadd)+"\n"
 
         #infile += "factory.makeNominals('"+inputDir+"','"+outputDir+"',"+str(variables)+","+str(cuts)+","+str(samples)+","+str(nuisances)+",'"+supercut+"',"+str(number)+")\n"
 
@@ -518,12 +519,20 @@ if __name__ == '__main__':
       if nThreads == 1:
         command.append('--compress')
       else:
-        command.extend(['-j', str(nThreads)])
+        command.extend(['-j', str(nThreads),'--compress'])
       command.append(finalpath)
       command.extend(fileList)
       print ' '.join(command)
       if not opt.dryRun:
-        subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
+        proc = subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        ### Display hadd info
+        stoppedForExistingRootfile = False
+        while True:
+          output = proc.stdout.readline()
+          if output == '' and proc.poll() is not None: break
+          if output:
+            if 'exists' in output.lower(): stoppedForExistingRootfile = True
+            print(output.strip())
 
         outFile = ROOT.TFile.Open(finalpath, 'update')
         for nuisance in nuisances.itervalues():
@@ -537,8 +546,9 @@ if __name__ == '__main__':
               outFile = ROOT.TFile.Open(finalpath, 'update')
               ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
               outFile.Close()
-  
-        if not opt.doNotCleanup:
+        
+        ### Modded to avoid cleaning all partial shapes if hadd quits because the target rootfile already exists
+        if not opt.doNotCleanup and not stoppedForExistingRootfile:
           for fname in fileList:
             os.unlink(opt.outputDir + '/' + fname)
 
