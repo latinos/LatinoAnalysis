@@ -127,7 +127,7 @@ def createULJESchain(type, kind="Up"):
   if type == "Total":
     typeShort = ""
   toreplace = typeShort+kind.lower()
-  chainTemplate = ['do_ULJESVAR_suffix','l2Kin_JESVAR', 'l3Kin_JESVAR', 'l4Kin_JESVAR','DYMVA_JESVAR','MonoHiggsMVA_JESVAR','formulasMC_JESVAR','JJHEFT_JESVAR']
+  chainTemplate = ['do_ULJESVAR_suffix','l2Kin_JESVAR', 'l3Kin_JESVAR', 'l4Kin_JESVAR', 'formulasMC_JESVAR','JJHEFT_JESVAR']
   #chainTemplate = ['do_ULJESVAR_suffix']
   chain = []
   for item in chainTemplate:
@@ -1263,6 +1263,16 @@ Steps = {
                      'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',
+                                     'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
+                },
+
+
+  'MCCorr2018v9NoJERInHornFS' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['JERsMCUL_highPt','FatJERsMCUL_highPt','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
+                                     'rochesterMC','trigMCFS','LeptonSF','puW','l2Kin','formulasMCFS', 
                                      'CleanFatJet', 'BoostedWtagSF', 'leptonMVAFiller']
                 },
 
@@ -3272,6 +3282,15 @@ Steps = {
                  'module'     : 'trigMC()',
                },
 
+  'trigMCFS'   : { 'isChain'    : False ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMakerFS' ,
+                 'declare'    : 'trigMCFS = lambda : TrigMakerFS("RPLME_CMSSW",isData=False,keepRunP=False)',
+                 'module'     : 'trigMCFS()',
+               },
+
+
   'trigMC_Cut'   : { 'isChain'    : False ,
                  'do4MC'      : True  ,
                  'do4Data'    : False ,
@@ -4229,6 +4248,15 @@ Steps = {
                   'declare'    : '',
                   'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MC_RPLME_CMSSW.py\')' ,
                  },
+
+  'formulasMCFS' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.GenericFormulaAdder' ,
+                  'declare'    : '',
+                  'module'     : 'GenericFormulaAdder(\'data/formulasToAdd_MCFS_RPLME_CMSSW.py\')' ,
+                 },
    
 
   'formulasMC_ElepTup' : {
@@ -5181,13 +5209,22 @@ Steps = {
                   'subTargets' : ['do_METup','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
+## Legacy
+#   'METup_suffix' :   {
+#                  'isChain'    : True ,
+#                  'do4MC'      : True  ,
+#                  'do4Data'    : False  ,
+#                  'subTargets' : ['do_METup_suffix','l2Kin_METup', 'l3Kin_METup', 'l4Kin_METup','DYMVA_METup','MonoHiggsMVA_METup','formulasMC_METup','JJHEFT_METup'] + 
+#                                 [item.replace("JES", "MET") for item in createJESchain("Response", "Up")] + 
+#                                 [item.replace("JES", "MET") for item in createJESchain("Resolution", "Up")],
+#                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+#               },
+
    'METup_suffix' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_METup_suffix','l2Kin_METup', 'l3Kin_METup', 'l4Kin_METup','DYMVA_METup','MonoHiggsMVA_METup','formulasMC_METup','JJHEFT_METup'] + 
-                                 [item.replace("JES", "MET") for item in createJESchain("Response", "Up")] + 
-                                 [item.replace("JES", "MET") for item in createJESchain("Resolution", "Up")],
+                  'subTargets' : ['do_METup_suffix','l2Kin_METup', 'l3Kin_METup', 'l4Kin_METup','formulasMC_METup','JJHEFT_METup'], 
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
@@ -5207,13 +5244,23 @@ Steps = {
                   'subTargets' : ['do_METdo','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                },
 
+## Legacy
+#   'METdo_suffix' :   {
+#                  'isChain'    : True ,
+#                  'do4MC'      : True  ,
+#                  'do4Data'    : False  ,
+#                  'subTargets' : ['do_METdo_suffix','l2Kin_METdo', 'l3Kin_METdo', 'l4Kin_METdo','DYMVA_METdo','MonoHiggsMVA_METdo','formulasMC_METdo','JJHEFT_METdo'] +
+#                                 [item.replace("JES", "MET") for item in createJESchain("Response", "Do")] + 
+#                                 [item.replace("JES", "MET") for item in createJESchain("Resolution", "Do")],
+#                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+#               },
+
+
    'METdo_suffix' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_METdo_suffix','l2Kin_METdo', 'l3Kin_METdo', 'l4Kin_METdo','DYMVA_METdo','MonoHiggsMVA_METdo','formulasMC_METdo','JJHEFT_METdo'] + 
-                                 [item.replace("JES", "MET") for item in createJESchain("Response", "Do")] + 
-                                 [item.replace("JES", "MET") for item in createJESchain("Resolution", "Do")],
+                  'subTargets' : ['do_METdo_suffix','l2Kin_METdo', 'l3Kin_METdo', 'l4Kin_METdo','formulasMC_METdo','JJHEFT_METdo'] ,
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
 
@@ -5316,13 +5363,23 @@ Steps = {
                   'subTargets' : ['do_ElepTdo','trigMCKeepRun','LeptonSF','l2Kin', 'l3Kin', 'l4Kin','DYMVA','MonoHiggsMVA','formulasMC'],
                 },
  
+#  'ElepTdo_suffix' :   {
+#                  'isChain'    : True ,
+#                  'do4MC'      : True  ,
+#                  'do4Data'    : False  ,
+#                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo', 'JJHEFT_ElepTdo'],
+#                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
+#               },
+
+  # Update for UL
   'ElepTdo_suffix' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
-                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'DYMVA_ElepTdo', 'MonoHiggsMVA_ElepTdo', 'formulasMC_ElepTdo', 'JJHEFT_ElepTdo'],
+                  'subTargets' : ['do_ElepTdo_suffix', 'trigMCKeepRun_ElepTdo', 'LeptonSF_ElepTdo', 'l2Kin_ElepTdo', 'l3Kin_ElepTdo', 'l4Kin_ElepTdo', 'formulasMC_ElepTdo', 'JJHEFT_ElepTdo'],
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts.txt'
                },
+
   'ElepTdo_suffix_WS' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
