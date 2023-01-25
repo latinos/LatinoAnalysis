@@ -77,7 +77,7 @@ _mothers(new SimpleParticleCollection_t())
 {
   //TVar::VerbosityLevel verbosity = TVar::DEBUG;
   TVar::VerbosityLevel verbosity = TVar::ERROR;
-  _mela =  new Mela(com, mpole, verbosity);
+  _mela =  new Mela(com, 125, verbosity);
   // Should be called per-ME -- U. Sarica
   //_mela->setMelaHiggsMassWidth(_mpole, _width, 0);
   //_mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
@@ -130,7 +130,8 @@ float MelaReweighterWW::weightStoSBI(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
-  _mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
+  //_mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
   if (!_isVBF)
     _mela->computeP(meS, false);
@@ -161,6 +162,7 @@ float MelaReweighterWW::weightStoI(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meSpow, false);
@@ -190,6 +192,7 @@ float MelaReweighterWW::weightStoI(){
   _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meHBI, false);
@@ -222,6 +225,7 @@ float MelaReweighterWW::weightStoI_H(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meSpow, false);
@@ -232,6 +236,7 @@ float MelaReweighterWW::weightStoI_H(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   //Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meH, false);
@@ -267,6 +272,7 @@ float MelaReweighterWW::weightStoI_B(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meSpow, false);
@@ -277,6 +283,7 @@ float MelaReweighterWW::weightStoI_B(){
   _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meSBI, false);
@@ -309,6 +316,7 @@ float MelaReweighterWW::weightStoI_HB(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meSpow, false);
@@ -319,6 +327,7 @@ float MelaReweighterWW::weightStoI_HB(){
   _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   //Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meH, false);
@@ -329,6 +338,7 @@ float MelaReweighterWW::weightStoI_HB(){
   _mela->setProcess(TVar::bkgWW_SMHiggs, TVar::MCFM, _isVBF ? TVar::JJEW : TVar::ZZGG);
   // Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meSBI, false);
@@ -358,9 +368,10 @@ float MelaReweighterWW::weightStoB(){
   //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
 
   float meS;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
+  //_mela->setMelaHiggsMassWidth(-1, 0, 1);
   // After discussion with U. Sarica
   //_mela->setMelaHiggsMassWidth(125., 4.07e-3, 1);
   //
@@ -375,6 +386,7 @@ float MelaReweighterWW::weightStoB(){
   else
     _mela->computeProdDecP(meB, false);
 
+  //std::cout << " meS = " << meS << " meB = " << meB << std::endl;
   //_mela->resetInputEvent();
   return meB/meS;
 }
@@ -386,9 +398,10 @@ float MelaReweighterWW::weightStoH(){
   //setupDaughters(_isVBF, id_l1, id_l2, id_n1, id_n2, l1, l2, n1, n2, associated, idsAssociated);
  
   float meSpow;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   // Added here -- U. Sarica
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF_S : TVar::ZZGG);
   _mela->setMelaHiggsMassWidth(_mpole, _width, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
   //
   if (!_isVBF)
     _mela->computeP(meSpow, false);
@@ -396,9 +409,10 @@ float MelaReweighterWW::weightStoH(){
     _mela->computeProdDecP(meSpow, false);
 
   float meH;
-  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF : TVar::ZZGG);
   //Added here -- U. Sarica
   _mela->setMelaHiggsMassWidth(125., 4.07e-3, 0);
+  _mela->setMelaHiggsMassWidth(-1, 0, 1);
+  _mela->setProcess(TVar::HSMHiggs, TVar::MCFM, _isVBF ? TVar::JJVBF : TVar::ZZGG);
   //
   if (!_isVBF)
     _mela->computeP(meH, false);

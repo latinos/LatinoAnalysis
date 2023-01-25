@@ -273,13 +273,13 @@ class BWEwkSingletReweighter(Module):
           print "decay weights for mass", str(int(self.mH)), "available between", self.minmass, "and", self.maxmass 
 
         self.out = wrappedOutputTree
-        self.branchnames = []
-        self.branches = ["_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"] # Don't really need all of them
+        self.branchnames = ["B", "H", "I_HB"]
+        self.branches = ["_I", "_I_Honly", "_I_Bonly"] # Don't really need all of them
         #if self.finalState == "LNuQQ":
         #  self.branches = ["_I", "_B"]
         #else:
         #  self.branches = ["_I"]
-
+         
         # SM width model
         for cprime in self.cprime_list:
           for brnew in self.brnew_list:
@@ -523,7 +523,17 @@ class BWEwkSingletReweighter(Module):
           else:   
             decayWeight = self.decayWeightFunction(mass)
 
-
+        #compute the weights to B and SM H and the interference between those. These do not depend on the width to which we are reweightin
+        self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                         fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
+                                                         partons, partonIDs,
+                                                         mothers, motherIDs)
+        weights = {}
+        self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
+        weights["B"]    = self.mela.weightStoB()
+        weights["H"]    = self.mela.weightStoH()
+        weights["I_HB"] = self.mela.weightStoI_HB()
+        
         ########## For SM width model
         CPSweight = 1.
         if self.undoCPS:
@@ -538,7 +548,6 @@ class BWEwkSingletReweighter(Module):
 
         for cprime in self.cprime_list:
           for brnew in self.brnew_list:
-            weights = {}
             name = 'cprime'+str(cprime)+"BRnew"+str(brnew)
             kprime = cprime**2
             #overallweight = kprime*(1-brnew) 
@@ -551,21 +560,10 @@ class BWEwkSingletReweighter(Module):
                   break
             weights[name] = (1./shift)*decayWeight*self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsm)/CPSweight
             self.mela.setMelaHiggsMassWidth(self.mH, gprime)
-            self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                         fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                         partons, partonIDs,
-                                                         mothers, motherIDs)
             #addweight = {}
             weights[name+"_I"] = math.sqrt(weights[name])*self.mela.weightStoI()
             weights[name+"_I_Honly"] = math.sqrt(weights[name])*self.mela.weightStoI_H()
             weights[name+"_I_Bonly"] = math.sqrt(weights[name])*self.mela.weightStoI_B()
-            # now reset to the SM high mass signal and do not touch the normalization again
-            self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
-            weights[name+"_I_HB"] = self.mela.weightStoI_HB()
-            # reset to SM width before reweighting to H and B
-            self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
-            weights[name+"_B"] = self.mela.weightStoB()
-            weights[name+"_H"] = self.mela.weightStoH()
  
             for key in weights.keys():
               if math.isnan(weights[key]) or math.isinf(weights[key]): #dirty protection for occasional failure
@@ -582,7 +580,7 @@ class BWEwkSingletReweighter(Module):
             gprime = relw * self.mH
           else: # Fixed width
             gprime = relw
-          if gprime == 0: self.gsm = 0.001 * self.mH # Is actually 0.1% relative width
+          if gprime == 0: gprime = 0.001 * self.mH # Is actually 0.1% relative width
           if self.undoCPS:
             # Invert CPSweight here w.r.t. previously because it could be 0
             if self.isNewJHU:
@@ -591,7 +589,6 @@ class BWEwkSingletReweighter(Module):
               thisCPSweight = ROOT.getCPSweight(self.mH, gprime, 172.5, mass, 0)
               CPSweight = 0 if (thisCPSweight==0) else 1/thisCPSweight
 
-          weights = {}
           name = 'RelW'+str(relw)
           shift = 1.
           if self.shifts:
@@ -601,26 +598,16 @@ class BWEwkSingletReweighter(Module):
                 break      
           weights[name] = (1./shift)*decayWeight*CPSweight
           self.mela.setMelaHiggsMassWidth(self.mH, gprime)
-          self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                       fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                       partons, partonIDs,
-                                                       mothers, motherIDs)
           #addweight = {}
           weights[name+"_I"] = math.sqrt(weights[name])*self.mela.weightStoI()
           weights[name+"_I_Honly"] = math.sqrt(weights[name])*self.mela.weightStoI_H()
           weights[name+"_I_Bonly"] = math.sqrt(weights[name])*self.mela.weightStoI_B()
-          # now reset to the SM high mass signal and do not touch the normalization again
-          self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
-          weights[name+"_I_HB"] = self.mela.weightStoI_HB()
-          # reset to SM width before reweighting to H and B
-          self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
-          weights[name+"_B"] = self.mela.weightStoB()  
-          weights[name+"_H"] = self.mela.weightStoH()
-          for key in weights.keys():
-            if math.isnan(weights[key]) or math.isinf(weights[key]): #dirty protection for occasional failure
-              weights[key] = 0.
-            self.out.fillBranch(key, weights[key])
-
+        
+        #finally fill the branches
+        for key in weights.keys():
+          if math.isnan(weights[key]) or math.isinf(weights[key]): #dirty protection for occasional failure
+             weights[key] = 0.
+          self.out.fillBranch(key, weights[key])
         return True
 
 
