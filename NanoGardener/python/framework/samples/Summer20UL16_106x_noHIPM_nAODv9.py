@@ -289,6 +289,11 @@ Samples['WZJJ_LT'] = {'nanoAOD' :'/WZJJ_EWK_LTPolarization_TuneCP5_13TeV_madgrap
 Samples['WZJJ_TT'] = {'nanoAOD' :'/WZJJ_EWK_TTPolarization_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 
+#--->Updated!###-----------------------------------------------##
+Samples['EWKZ2Jets_ZToLL_M-50_MJJ-120'] = {'nanoAOD' :'/EWK_LLJJ_MLL-50_MJJ-120_TuneCP5_13TeV-madgraph-pythia8_dipole/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'} ##!!!!
+
+Samples['EWKZ2Jets_ZToLL_M-50'] = {'nanoAOD' :'/EWKZ2Jets_ZToLL_M-50_TuneCP5_withDipoleRecoil_13TeV-madgraph-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'} ##!!!!
+
 # More signals
 #--->Updated!###-----------------------------------------------##
 Samples['H0PM_ToWWTo2L2Nu'] = {'nanoAOD' :'/Higgs0PMToWW_M-125_TuneCP5_13TeV-powheg-jhugen727-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
