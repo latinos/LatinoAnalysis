@@ -16,6 +16,7 @@ from LatinoAnalysis.NanoGardener.modules.wwNLLcorrectionWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.MetUnclustered import *
 from LatinoAnalysis.NanoGardener.modules.qq2vvEWKcorrectionsWeightProducer import *
 from LatinoAnalysis.NanoGardener.modules.qq2VEWKcorrectionsWeightProducer import *
+from LatinoAnalysis.NanoGardener.modules.qq2EWKcorrectionsVVvbsWeightProducer import *
 
 
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.collectionMerger import collectionMerger
@@ -44,7 +45,13 @@ from LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer import *
 #/store/mc/RunIIAutumn18NanoAODv5/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/Nano1June2019_102X_upgrade2018_realistic_v19-v1/60000/F575D852-8B1F-1C4A-B788-E049F3892AE3.root
 
 #xrdcp root://cms-xrd-global.cern.ch//store/mc/RunIIAutumn18NanoAODv5/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/Nano1June2019_102X_upgrade2018_realistic_v19-v1/60000/F575D852-8B1F-1C4A-B788-E049F3892AE3.root .
-files=["F575D852-8B1F-1C4A-B788-E049F3892AE3.root"]
+#files=["F575D852-8B1F-1C4A-B788-E049F3892AE3.root"]
+
+
+#/WLLJJ_WToLNu_EWK_TuneCP5_13TeV_madgraph-madspin-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM
+#xrdcp root://cms-xrd-global.cern.ch//store/mc/RunIIAutumn18NanoAODv7/WLLJJ_WToLNu_EWK_TuneCP5_13TeV_madgraph-madspin-pythia8/NANOAODSIM/Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/60000/30DD622C-A2CE-4E49-8573-6F3521059BAB.root .
+files=["30DD622C-A2CE-4E49-8573-6F3521059BAB.root"]
+
 
 
 #selection = "nElectron>0 && nMuon>0 && Electron_pt[0]>20 && Muon_pt[0]>20 && nJet>1 && Jet_pt[0]>30 && Jet_pt[1]>30"
@@ -76,7 +83,9 @@ p = PostProcessor(".", files,
                          #
                          #vvNLOEWKcorrectionWeightProducer('ww')
                          #vvNLOEWKcorrectionWeightProducer('wz')
-                         vvNLOEWKcorrectionWeightProducer('zz')
+                         #vvNLOEWKcorrectionWeightProducer('zz')
+                         #
+                         vvVBSNLOEWKcorrectionWeightProducer('vbswz')
                          #
                          #vNLOEWKcorrectionWeightProducer('z')
                          #vNLOEWKcorrectionWeightProducer('zvv')
