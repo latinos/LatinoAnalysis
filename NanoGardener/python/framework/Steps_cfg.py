@@ -3561,7 +3561,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
-                  'declare'    : 'btagSFProducer_DeepCSV_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepcsv")',
+                  'declare'    : 'btagSFProducer_DeepCSV_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepcsv", jesSystsForShape=["jes","jesAbsolute","jesAbsolute_RPLME_YEAR","jesBBEC1","jesBBEC1_RPLME_YEAR","jesEC2","jesEC2_RPLME_YEAR","jesFlavorQCD","jesHF","jesHF_RPLME_YEAR","jesRelativeBal","jesRelativeSample_RPLME_YEAR"])',
                   'module'     : 'btagSFProducer_DeepCSV_UL()',
                  },
   'btagPerJet_DeepJet_UL': {
@@ -3569,7 +3569,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
-                  'declare'    : 'btagSFProducer_DeepJet_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepjet")',
+                  'declare'    : 'btagSFProducer_DeepJet_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepjet", jesSystsForShape=["jes","jesAbsolute","jesAbsolute_RPLME_YEAR","jesBBEC1","jesBBEC1_RPLME_YEAR","jesEC2","jesEC2_RPLME_YEAR","jesFlavorQCD","jesHF","jesHF_RPLME_YEAR","jesRelativeBal","jesRelativeSample_RPLME_YEAR"])',
                   'module'     : 'btagSFProducer_DeepJet_UL()',
                  },
 
