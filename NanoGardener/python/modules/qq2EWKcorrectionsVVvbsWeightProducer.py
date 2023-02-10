@@ -34,7 +34,8 @@ class vvVBSNLOEWKcorrectionWeightProducer(Module):
         # change this part into correct path structure... 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
-        self.graph_WZvbs_kfact = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/VBSWZ_EWK_NLO_LO_CMS_mjj_forPython.txt');     
+        self.graph_WZvbs_kfact   = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/VBSWZ_EWK_NLO_LO_CMS_mjj_forPython.txt');     
+        self.graph_ssWWvbs_kfact = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/VBSssWW_QCDEWK_NLO_LO_CMS_mjj_forPython.txt');     
         
         self.sample_type = sample_type
         print " sample_type = " , sample_type
@@ -81,9 +82,12 @@ class vvVBSNLOEWKcorrectionWeightProducer(Module):
         lheParticles = Collection(event, "LHEPart")
         
         isVBSWZ   = False
-
+        isVBSssWW = False
+        
         if self.sample_type == 'vbswz' :
           isVBSWZ = True
+        if self.sample_type == 'vbsssww' :
+          isVBSssWW = True
           
 
 
@@ -151,7 +155,82 @@ class vvVBSNLOEWKcorrectionWeightProducer(Module):
             if mjj > 540. :
               ewknloW = self.graph_WZvbs_kfact.Eval(mjj)
               ewknloWuncertainty = 0.01   # it's ~1% flat, from the plots
-               
+      
+      
+      
+
+#     
+#      \ \     /  __ )   ___|                                              _)                   \ \        / \ \        / 
+#       \ \   /   __ \ \___ \        __|   _` |  __ `__ \    _ \       __|  |   _` |  __ \       \ \  \   /   \ \  \   /  
+#        \ \ /    |   |      |     \__ \  (   |  |   |   |   __/     \__ \  |  (   |  |   |       \ \  \ /     \ \  \ /   
+#         \_/    ____/ _____/      ____/ \__,_| _|  _|  _| \___|     ____/ _| \__, | _|  _|        \_/\_/       \_/\_/    
+#                                                                             |___/                                       
+
+        if isVBSssWW : 
+          
+          #
+          # NB: it assumes W>lvll
+          #     At LHE level only quarks are from VBS scattering
+          #
+          # What to do for W>qq ?
+          # Will these corrections still hold?
+          #    --> FIXME: it needs to be checked, since q charge is different than l/v charge, IF in the calculation W decay was considered
+          #
+          
+          # look for the two quarks to make mjj 
+          ptq1 = -1
+          ptq2 = -1
+ 
+          for particle  in lheParticles :
+              
+            # quarks = 1, 2, 3, 4, 5, 6
+            #
+            # LHEPart_status    Int_t   LHE particle status; -1:incoming, 1:outgoing
+            #
+            if (abs(particle.pdgId) >= 1 and abs(particle.pdgId) <= 6) and (particle.status==1) :
+     
+              if ptq1 == -1 :
+                ptq1   = particle.pt
+                etaq1  = particle.eta
+                phiq1  = particle.phi
+                idq1   = particle.pdgId
+              elif ptq2 == -1 :
+                ptq2   = particle.pt
+                etaq2  = particle.eta
+                phiq2  = particle.phi
+                idq2   = particle.pdgId
+              else :
+                print "another quark?? A third quark?? pt = ", particle.pt,  "  ptq1 = ", ptq1, "  ptq2 = ", ptq2, "  idq1 = ", idq1, "  idq2 = ", idq1
+                
+
+          #
+          # if for any reason I was not able to assign the quarks, set the weight to -2 --> it can be followed up later
+          #
+          if ptq1 == -1 or ptq2 == -1 :
+            ewknloW = -2
+          else :  
+            q1 = ROOT.TLorentzVector()
+            q2 = ROOT.TLorentzVector()
+            q1.SetPtEtaPhiM(ptq1, etaq1, phiq1, 0) # everything massless ... at these energies! ... maybe the b? ... but no, at reco all is massless
+            q2.SetPtEtaPhiM(ptq2, etaq2, phiq2, 0)
+            
+            mjj = (q1+q2).Mag()
+            
+            ewknloW = 1.0
+
+            if mjj > 1920. :
+              mjj = 1920.
+            if mjj < 525. :
+              mjj = 525.
+    
+            if mjj > 525. :
+              ewknloW = self.graph_ssWWvbs_kfact.Eval(mjj)
+              ewknloWuncertainty = 0.025   # it's ~2.5% flat, from the plots
+      
+
+
+
+
 
  
         # now finally fill the branch ...
