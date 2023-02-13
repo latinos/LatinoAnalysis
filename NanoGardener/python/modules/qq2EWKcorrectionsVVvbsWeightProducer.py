@@ -292,12 +292,12 @@ class vvVBSNLOEWKcorrectionWeightProducer(Module):
             
             ewknloW = 1.0
 
-            if mjj > 1920. :
-              mjj = 1920.
-            if mjj < 525. :
-              mjj = 525.
+            if mjj > 3960. :
+              mjj = 3960.
+            if mjj < 480. :
+              mjj = 480.
     
-            if mjj > 525. :
+            if mjj > 480. :
               ewknloW = self.graph_osWWvbs_kfact.Eval(mjj)
               ewknloWuncertainty = 0.01   # it's ~1% flat, from the plots  FIXME maybe to be estimated from corrections w.r.t. other variables?
       
