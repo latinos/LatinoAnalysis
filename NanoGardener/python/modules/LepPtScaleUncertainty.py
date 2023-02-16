@@ -22,29 +22,35 @@ from LatinoAnalysis.NanoGardener.data.LeptonMaker_cfg import Lepton_br, Lepton_v
 import os.path
 import math
 
+from correctionlib import _core
+
 class LeppTScalerTreeMaker(Module) :
     def __init__(self, kind="Up", lepFlavor="ele", version='Full2017v2'  , metCollections = ['MET', 'PuppiMET', 'RawMET', 'TkMET' , 'ChsMET'], suffix=''):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.metCollections = metCollections
         self.kind = kind # "Up" or "Dn"
         self.lepFlavor = lepFlavor # "ele" or "mu"
-        leppTscaler = {}
-        ScaleFactorFile = cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/lepton_scale_n_smear/'+version+'/leppTscaler_'+lepFlavor[:2]+'.py'
-        if os.path.exists(ScaleFactorFile):
-          handle = open(ScaleFactorFile,'r')
-          exec(handle)
-          handle.close()
-        self.leppTscaler = leppTscaler
-        print self.leppTscaler 
+        self.cmssw = version
+        if lepFlavor == "ele":
+            ScaleFactorFile = cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/lepton_scale_n_smear/'+version+'/EGM_ScaleUnc.json.gz'
+            self.corrset = _core.CorrectionSet.from_file(ScaleFactorFile)
+        else:
+            leppTscaler = []
+            ScaleFactorFile = cmssw_base + '/src/LatinoAnalysis/NanoGardener/python/data/lepton_scale_n_smear/'+version+'/leppTscaler_mu.py'
+            if os.path.exists(ScaleFactorFile):
+                handle = open(ScaleFactorFile,'r')
+                exec(handle)
+                handle.close()
+            self.leppTscaler = leppTscaler
 
-        # fix underflow and overflow
-        self.minpt = 0.0
-        self.maxpt = 0.0
-        self.maxeta = 0.0
-        for point in self.leppTscaler[lepFlavor]:
-          if point[0][1] > self.maxpt  : self.maxpt  = point[0][1]
-          if point[1][1] > self.maxeta : self.maxeta = point[1][1]
-        print 'maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta
+            # fix underflow and overflow
+            self.minpt = 0.0
+            self.maxpt = 0.0
+            self.maxeta = 0.0
+            for point in self.leppTscaler:
+                if point[0][1] > self.maxpt  : self.maxpt  = point[0][1]
+                if point[1][1] > self.maxeta : self.maxeta = point[1][1]
+            print 'maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta
 
         # Add a suffix to the output branches instead of overwriting the existing ones
         self._suffix = suffix
@@ -70,26 +76,29 @@ class LeppTScalerTreeMaker(Module) :
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def getScale (self, kindLep, pt, eta):
-
-
+    def getScale(self, pt, eta):
         if pt < self.minpt: pt = self.minpt
         if pt > self.maxpt: pt = self.maxpt - 0.000001
         if eta < 0: eta = -1 * eta
         if eta > self.maxeta: eta = self.maxeta - 0.000001
         
-        if kindLep in self.leppTscaler.keys() : 
-            # get the scale values in bins of pT and eta
-            for point in self.leppTscaler[kindLep] :
-                if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
-                    return point[2]
-            # default ... it should never happen!
-            print "WARNING: Did not find scale factor for pt =",pt,"and eta =",eta,"; using 1.0 as default"
-            return 1.0
-           
-        else:
-            return 1.0
+        # get the scale values in bins of pT and eta
+        for point in self.leppTscaler :
+            if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
+                return point[2]
+        # default ... it should never happen!
+        print "WARNING: Did not find scale factor for pt =",pt,"and eta =",eta,"; using 1.0 as default"
+        return 1.0
 
+    def getScaleCorrLib(self, eta, gain):
+        if self.cmssw == 'Full2016v9HIPM':
+            era = '2016preVFP'
+        elif self.cmssw == 'Full2016v9noHIPM':
+            era = '2016postVFP'
+        else:
+            era = (self.cmssw).replace('Full','').replace('v9','')
+        return self.corrset["UL-EGM_ScaleUnc"].evaluate(era,"scaleunc",eta,gain)
+    
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
@@ -119,8 +128,13 @@ class LeppTScalerTreeMaker(Module) :
             metx = met.pt * math.cos(met.phi)
             mety = met.pt * math.sin(met.phi)
             for idx,lep in enumerate(leptons):
-                if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
-                    diff = lep.pt * (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0)
+                if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11):
+                    gain = electrons[lep.electronIdx].seedGain
+                    diff = lep.pt * (self.variation * self.getScaleCorrLib(lep.eta, gain))
+                    metx = metx - (diff * math.cos(lep.phi))
+                    mety = mety - (diff * math.sin(lep.phi))
+                if (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
+                    diff = lep.pt * (self.variation * self.getScale(lep.pt, lep.eta) / 100.)
                     metx = metx - (diff * math.cos(lep.phi))
                     mety = mety - (diff * math.sin(lep.phi))
             newmetpt = math.sqrt(metx**2 + mety**2)
@@ -132,12 +146,15 @@ class LeppTScalerTreeMaker(Module) :
         for idx,lep in enumerate(leptons):
             origleppt = lep.pt
             if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
-                lep.pt = lep.pt * (1 + (self.variation * self.getScale(self.lepFlavor, lep.pt, lep.eta) / 100.0))
+                if self.lepFlavor == 'ele':
+                    gain = event.Electron_seedGain[lep.electronIdx]
+                    mass = event.Electron_mass[lep.electronIdx]
+                    scale = self.getScaleCorrLib(lep.eta,gain)
+                if self.lepFlavor == 'mu':
+                    mass = event.Muon_mass[lep.muonIdx]
+                    scale = self.getScale(lep.pt,lep.eta) / 100.
 
-                #SumET
-                if lep.electronIdx > -1: mass = event.Electron_mass[lep.electronIdx]
-                elif lep.muonIdx > -1: mass = event.Muon_mass[lep.muonIdx]
-                else: continue
+                lep.pt = lep.pt * (1 + (self.variation * scale))
 
                 p4 = ROOT.TLorentzVector()
                 p4.SetPtEtaPhiM(origleppt, lep.eta, lep.phi, mass)
