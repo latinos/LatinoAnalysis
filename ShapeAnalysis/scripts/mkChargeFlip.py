@@ -12,21 +12,26 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 import sys, os
-
-import optparse
-import LatinoAnalysis.Gardener.hwwtools as hwwtools
+argv = sys.argv
+sys.argv = argv[:1]
 
 import ROOT
-import numpy as np
-from math import sqrt
+import optparse
+import LatinoAnalysis.Gardener.hwwtools as hwwtools
+#import os.path
+#import logging
+#import imp
 
-from ROOT import TMinuit , TFile , TCanvas , TH2D, gROOT, gStyle
+import numpy as np
+from   math import sqrt
+
+from ROOT  import TMinuit , TFile , TCanvas , TH2D, gROOT, gStyle
 from array import array as arr
 from collections import OrderedDict
-from  ctypes import c_double, c_int, c_float
+from ctypes import c_double, c_int, c_float
 import random, csv
 
-from LatinoAnalysis.Tools.commonTools import *
+#from LatinoAnalysis.Tools.commonTools import *
 
 ROOT.gROOT.SetBatch(ROOT.kTRUE)
 ROOT.TH1.SetDefaultSumw2()
@@ -599,8 +604,8 @@ def ratio(filename, data, ptbin, output):
         for j in range(0, h_ratio.GetNbinsY()):
             # if h_ss.GetBinContent(i+1, j+1) < 10:                                
             if h_ss.GetBinContent(i+1, j+1) == 0:
-                h_ratio.SetBinContent(i+1, j+1, 0.01)
-                h_ratio.SetBinError(  i+1, j+1, 0.001)
+                h_ratio.SetBinContent(i+1, j+1, 0.001)
+                h_ratio.SetBinError(  i+1, j+1, 0.0002)
     h_ratio.SetName('h2_{}'.format(data))
     h_ratio.SetTitle('N_{SS}/N_{OS}')
 
@@ -653,6 +658,8 @@ def mkzfit(input_file, output_dir, era, var):
 
 if __name__ == '__main__':
 
+    sys.argv = argv
+
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
     
@@ -663,9 +670,12 @@ if __name__ == '__main__':
     parser.add_option('--steps'     , dest='steps'     , help='Steps to perform: z_fit, cf_fit, both',                   default='both')
  
     # Read default parsing options as well
-    hwwtools.addOptions(parser)
-    hwwtools.loadOptDefaults(parser)
+    #hwwtools.addOptions(parser)
+    #hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
+
+    sys.argv.append( '-b' )
+    ROOT.gROOT.SetBatch()
 
     if opt.input_file == 'DEFAULT' :
         raise ValueError("Please specify input rootfile")
