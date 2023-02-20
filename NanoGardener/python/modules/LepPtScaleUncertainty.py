@@ -107,7 +107,8 @@ class LeppTScalerTreeMaker(Module) :
         elif self.kind == 'Dn' or self.kind == 'Down':
             self.variation = -1.0
 
-        leptons = Collection(event,"Lepton")
+        leptons = Collection(event, "Lepton")
+        electrons = Collection(event, "Electron")
         met = Object(event, "MET")
         nLep = getattr(event, "nLepton")
 
@@ -147,8 +148,8 @@ class LeppTScalerTreeMaker(Module) :
             origleppt = lep.pt
             if (self.lepFlavor == 'ele' and abs(lep.pdgId) == 11) or (self.lepFlavor == 'mu' and abs(lep.pdgId) == 13):
                 if self.lepFlavor == 'ele':
-                    gain = event.Electron_seedGain[lep.electronIdx]
-                    mass = event.Electron_mass[lep.electronIdx]
+                    gain = electrons[lep.electronIdx].seedGain
+                    mass = electrons[lep.electronIdx].mass
                     scale = self.getScaleCorrLib(lep.eta,gain)
                 if self.lepFlavor == 'mu':
                     mass = event.Muon_mass[lep.muonIdx]
