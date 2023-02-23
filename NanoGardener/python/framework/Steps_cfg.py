@@ -877,7 +877,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['btagPerJet_DeepJet_UL_fix', 'btagPerJet_DeepCSV_UL_fix'],
+                     'subTargets' : ['btagPerJet_DeepJet_UL', 'btagPerJet_DeepCSV_UL'],
                      'branchsel'  : os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/dropbtag.txt',
                      'outputbranchsel'  : os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepall.txt'
                 },
