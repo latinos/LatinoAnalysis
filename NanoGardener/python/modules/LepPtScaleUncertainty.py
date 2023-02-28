@@ -109,6 +109,7 @@ class LeppTScalerTreeMaker(Module) :
 
         leptons = Collection(event, "Lepton")
         electrons = Collection(event, "Electron")
+        muons = Collection(event, "Muon")
         met = Object(event, "MET")
         nLep = getattr(event, "nLepton")
 
@@ -152,7 +153,7 @@ class LeppTScalerTreeMaker(Module) :
                     mass = electrons[lep.electronIdx].mass
                     scale = self.getScaleCorrLib(lep.eta,gain)
                 if self.lepFlavor == 'mu':
-                    mass = event.Muon_mass[lep.muonIdx]
+                    mass = muons[lep.muonIdx].mass
                     scale = self.getScale(lep.pt,lep.eta) / 100.
 
                 lep.pt = lep.pt * (1 + (self.variation * scale))
