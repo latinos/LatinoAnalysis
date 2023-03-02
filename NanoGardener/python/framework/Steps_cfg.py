@@ -141,6 +141,14 @@ def createULJERchain(type="", kind="Up"):
     chain.append(item.replace("VAR", kind.lower()))
   return chain
 
+def createULJERchainShort(type="", kind="Up"):
+  chainTemplate = ['do_ULJERVAR_suffix']
+  #chainTemplate = ['do_ULJERVAR_suffix']
+  chain = []
+  for item in chainTemplate:
+    chain.append(item.replace("VAR", kind.lower()))
+  return chain
+
 def createJESchain_CombJJLNu(type, kind="Up"):
   typeShort = type
   if type == "Total":
@@ -3492,6 +3500,22 @@ Steps = {
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts2.txt'
                },
 
+
+## test individual JER variations
+'JER0up_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : createULJERchainShort("0", "Up"), 
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts2.txt'
+               },
+'JER1up_suffix' :   {
+                  'isChain'    : True ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'subTargets' : createULJERchainShort("1", "Up"), 
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts2.txt'
+               },
       
 
 ## ------- MODULES: MC PU ID SF, EFF and (stat/syst) uncertainty creator (pre-UL)
