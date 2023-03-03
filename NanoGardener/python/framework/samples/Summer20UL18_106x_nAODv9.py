@@ -64,6 +64,8 @@ Samples['GluGluToWWToTNTN'] = {'nanoAOD' :'/GluGluToWWToTNTN_TuneCP5_13TeV_MCFM7
 
 # Signal
 #--->Updated!###-----------------------------------------------##
+Samples['WpWmJJ_EWK_noTop'] = {'nanoAOD' :'/WWJJToLNuLNu_EWK_noTop_TuneCP5_13TeV-madgraph-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
+#--->Updated!###-----------------------------------------------##
 Samples['VBFHToTauTau_M125'] = {'nanoAOD' :'/VBFHToTauTau_M125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
@@ -224,7 +226,7 @@ Samples['DYJetsToLL_M-50_HT-1200to2500'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-1200
 Samples['DYJetsToLL_M-50_HT-2500toInf'] = {'nanoAOD' :'/DYJetsToLL_M-50_HT-2500toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
-Samples['DYJetsToLL_M-10to50-LO'] = {'nanoAOD' :'//DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
+Samples['DYJetsToLL_M-10to50-LO'] = {'nanoAOD' :'/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
 Samples['DYJetsToLL_M-50-LO'] = {'nanoAOD' :'/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
 Samples['DYJetsToLL_M-50-LO_ext1'] = {'nanoAOD' :'/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1_ext1-v1/NANOAODSIM'}
 Samples['DYJetsToLL_M-50'] = {'nanoAOD' :'/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
@@ -251,6 +253,28 @@ Samples['ST_tW_top_noHad'] = {'nanoAOD' :'/ST_tW_top_5f_NoFullyHadronicDecays_Tu
 Samples['ST_tW_top'] = {'nanoAOD' :'/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
 Samples['ST_tW_antitop'] = {'nanoAOD' :'/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
 ##---------------------------------------------------------------##
+#--->Updated!###-----------------------------------------------##
+Samples['ST_tW_antitop'] = {'nanoAOD' :'/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_antitop_noHad'] = {'nanoAOD' :'/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
+Samples['ST_tW_antitop_noHad_TuneCP5Up'] = {'nanoAOD' :'/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5up_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_antitop_noHad_TuneCP5Down'] = {'nanoAOD' :'/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5down_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
+Samples['ST_tW_antitop_noHad_hdampUp'] = {'nanoAOD' :'/ST_tW_antitop_5f_hdampup_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_antitop_noHad_hdampDown'] = {'nanoAOD' :'/ST_tW_antitop_5f_hdampdown_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_antitop_noHad_PDF'] = {'nanoAOD' :'/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV_PDFWeights-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+##---------------------------------------------------------------##
+#--->Updated!###-----------------------------------------------##
+Samples['ST_tW_top'] = {'nanoAOD' : '/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_top_noHad'] = {'nanoAOD' : '/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
+Samples['ST_tW_top_noHad_TuneCP5Up'] = {'nanoAOD' : '/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5up_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_top_noHad_TuneCP5Down'] = {'nanoAOD' : '/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5down_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
+Samples['ST_tW_top_hdampUp'] = {'nanoAOD' : '/ST_tW_top_5f_hdampup_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_top_hdampDown'] = {'nanoAOD' : '/ST_tW_top_5f_hdampdown_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_tW_top_noHad_PDF'] = {'nanoAOD' : '/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV_PDFWeights-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+##---------------------------------------------------------------##
+#--->Updated!###-----------------------------------------------##
+Samples['ST_s-channel'] = {'nanoAOD' : '/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
+Samples['ST_s-channel_TuneCP5Up'] = {'nanoAOD' :'/ST_s-channel_4f_leptonDecays_TuneCP5up_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['ST_s-channel_TuneCP5Down'] = {'nanoAOD' :'/ST_s-channel_4f_leptonDecays_TuneCP5down_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
 #--->Updated!###-----------------------------------------------##
 Samples['TTZToLLNuNu_M-10'] = {'nanoAOD' :'/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
 Samples['TTZToLLNuNu_M-10_TuneCP5Up'] = {'nanoAOD' :'/TTZToLLNuNu_M-10_TuneCP5CR2_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
@@ -289,6 +313,8 @@ Samples['QCD_HT2000toInf'] = {'nanoAOD' :'/QCD_HT2000toInf_TuneCP5_PSWeights_13T
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['EWKZ2Jets_ZToLL_M-50'] = {'nanoAOD' :'/EWKZ2Jets_ZToLL_M-50_TuneCP5_withDipoleRecoil_13TeV-madgraph-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'} ##!!!!
+Samples['EWKZ2Jets_ZToLL_M-50_MJJ-120'] = {'nanoAOD' :'/EWKZ2Jets_ZToLL_M-50_TuneCP5_withDipoleRecoil_13TeV-madgraph-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'} ##!!!!
+
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['TT_DiLept'] = {'nanoAOD' :'/TTJets_DiLept_genMET-150_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!

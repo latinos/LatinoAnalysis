@@ -52,7 +52,7 @@ class btagSFProducerLatinos(Module):
         supported_btagSF = {
             'deepcsv' : {
                 'Full2016v9noHIPM_WP' : {
-                    'inputFileName' : "wp_deepCSV_106XUL16preVFP_v2.csv",
+                    'inputFileName' : "wp_deepCSV_106XUL16preVFP_v3.csv",
                     'measurement_types' : {
                         0 : "comb",  # b
                         1 : "comb",  # c
@@ -70,7 +70,7 @@ class btagSFProducerLatinos(Module):
                     'supported_wp' : [ "L", "M", "T"]
                 },
                 'Full2016v9noHIPM_shape' : {
-                    'inputFileName' : "reshaping_deepCSV_106XUL16preVFP_v2.csv",
+                    'inputFileName' : "reshaping_deepCSV_106XUL16preVFP_v3.csv",
                     'measurement_types' : {
                         0 : "iterativefit",  # b
                         1 : "iterativefit",  # c
@@ -106,7 +106,7 @@ class btagSFProducerLatinos(Module):
                     'supported_wp' : [ "shape_corr"]
                 },
                 'Full2018v9_WP' : {
-                    'inputFileName' : "wp_deepCSV_106XUL18_v2.csv",
+                    'inputFileName' : "wp_deepCSV_106XUL18_v3.csv",
                     'measurement_types' : {
                         0 : "comb",  # b
                         1 : "comb",  # c
@@ -115,7 +115,7 @@ class btagSFProducerLatinos(Module):
                     'supported_wp' : [ "L", "M", "T"]
                 },
                 'Full2018v9_shape' : {
-                    'inputFileName' : "reshaping_deepCSV_106XUL18_v2.csv",
+                    'inputFileName' : "reshaping_deepCSV_106XUL18_v3.csv",
                     'measurement_types' : {
                         0 : "iterativefit",  # b
                         1 : "iterativefit",  # c
@@ -126,7 +126,7 @@ class btagSFProducerLatinos(Module):
             },
             'deepjet' : {
                 'Full2016v9noHIPM_WP' : {
-                    'inputFileName' : "wp_deepJet_106XUL16preVFP_v2.csv",
+                    'inputFileName' : "wp_deepJet_106XUL16preVFP_v3.csv",
                     'measurement_types' : {
                         0 : "comb",  # b
                         1 : "comb",  # c
@@ -144,7 +144,7 @@ class btagSFProducerLatinos(Module):
                     'supported_wp' : [ "L", "M", "T"]
                 },
                 'Full2016v9noHIPM_shape' : {
-                    'inputFileName' : "reshaping_deepJet_106XUL16preVFP_v2.csv",
+                    'inputFileName' : "reshaping_deepJet_106XUL16preVFP_v3.csv",
                     'measurement_types' : {
                         0 : "iterativefit",  # b
                         1 : "iterativefit",  # c
@@ -180,7 +180,7 @@ class btagSFProducerLatinos(Module):
                     'supported_wp' : [ "shape_corr"]
                 },
                 'Full2018v9_WP' : {
-                    'inputFileName' : "wp_deepJet_106XUL18_v2.csv",
+                    'inputFileName' : "wp_deepJet_106XUL18_v3.csv",
                     'measurement_types' : {
                         0 : "comb",  # b
                         1 : "comb",  # c
@@ -189,7 +189,7 @@ class btagSFProducerLatinos(Module):
                     'supported_wp' : [ "L", "M", "T"]
                 },
                 'Full2018v9_shape' : {
-                    'inputFileName' : "reshaping_deepJet_106XUL18_v2.csv",
+                    'inputFileName' : "reshaping_deepJet_106XUL18_v3.csv",
                     'measurement_types' : {
                         0 : "iterativefit",  # b
                         1 : "iterativefit",  # c
