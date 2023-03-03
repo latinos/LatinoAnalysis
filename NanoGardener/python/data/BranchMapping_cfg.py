@@ -962,6 +962,25 @@ for source in ["Absolute", "Absolute_2016", "Absolute_2017", "Absolute_2018",
     'suffix': '_fatjetJES'+source+'up'
   }
 
+# JER 6 sources (parts)
+for source in ["0", "1", "2", "3", "4", "5"]:
+  branch_mapping['JER'+source+"do"] = {
+    'branches': _JER_branches,
+    'suffix': '_JER'+source+'do'
+  }
+  branch_mapping['JER'+source+"up"] = {
+    'branches': _JER_branches,
+    'suffix': '_JER'+source+'up'
+  }
+  branch_mapping['fatjetJER'+source+"do"] = {
+    'branches': _Fatjet_syst_branches,
+    'suffix': '_fatjetJER'+source+'do'
+  }
+  branch_mapping['fatjetJER'+source+"up"] = {
+    'branches': _Fatjet_syst_branches,
+    'suffix': '_fatjetJER'+source+'up'
+  }
+
 # MET recoil sources
 for source in ["Response", "Resolution"]:
   branch_mapping['MET'+source+"do"] = {

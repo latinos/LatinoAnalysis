@@ -14,12 +14,13 @@ class UltraJetUncertaintiesProducer(jetmetUncertaintiesProducer, object):
     #  -> produce JER variations independently from JES variations ('jerUncert=True and jesUncert=[]')
     #  -> turn ON/OFF storing unclustered MET correction variations (TODO: no flag yet, turned off by default)
     # - taking advantage of originally implemented options:
-    #  -> split JER uncertainty variations to bins of pT and eta ('jerUncert=True and splitJER=True') 
+    #  -> split JER uncertainty variations to bins of pT and eta ('jerUncert=True and splitJER=True')
+    #  -> split JER uncertainty but produce only one part, e.g. 5th, at the time ('jerUncert=True and splitJER=True and onlyJER=["4"]') 
     #  -> save MET uncertainies of Type-1 and Type-1Smear (on top of JER-smeared non-Puppi MET) ('saveMETUncs')  
     # - backwards compatible with pre-UL era
     #  -> apply HEM fix (applyHEMfix)
     #---------------------------------------------------------------------------------------------- 
-    def __init__(self, era, isMC=True, jerUncert=False, jesUncert=['Total'], kind=["Up"], jetFlav='AK4PFchs', jetColl='CleanJet', metBranchNames=["PuppiMET"], applySmearing=False, redoJEC=False, applyHEMfix=False, splitJER=False, saveMETUncs=True):
+    def __init__(self, era, isMC=True, jerUncert=False, jesUncert=['Total'], kind=["Up"], jetFlav='AK4PFchs', jetColl='CleanJet', metBranchNames=["PuppiMET"], applySmearing=False, redoJEC=False, applyHEMfix=False, splitJER=False, onlyJER=[""], saveMETUncs=True):
        #parse config with GTs
        cmsswBase = os.getenv('CMSSW_BASE')
        configName = "LatinoAnalysis/NanoGardener/python/data/UltraJECandJER_cfg.py"
@@ -42,6 +43,13 @@ class UltraJetUncertaintiesProducer(jetmetUncertaintiesProducer, object):
            print("[ERROR]: Please use 'jerUncert' option as a boolean flag.") 
            print("         List of JER uncertainties is produced internally based on 'splitJER' option.")
            sys.exit(1) 
+       if not isinstance(onlyJER,list):
+           print("[ERROR]: Please provide list of JER parts. String found.")
+           sys.exit(1)
+       else:
+           if splitJER and "" in onlyJER: onlyJER_str = "all"
+           elif not splitJER and "" in onlyJER: onlyJER_str = "merged"
+           else: onlyJER_str = ", ".join(onlyJER).strip(", ")
        if not isinstance(metBranchNames,list):
            print("[ERROR]: Please provide list of MET collections. String found.")
            sys.exit(1)
@@ -65,6 +73,7 @@ class UltraJetUncertaintiesProducer(jetmetUncertaintiesProducer, object):
        print("JEC re-calibration:"+str(redoJEC))
        print("JER uncertainties: "+str(jerUncert))
        print("JER splitting:     "+str(splitJER))
+       print("JER split-parts:   "+onlyJER_str) 
        print("JER GT:            "+jerTag)
        print("JER smearing       "+str(applySmearing))
        print("MET uncertainties: "+str(saveMETUncs))
@@ -104,6 +113,7 @@ class UltraJetUncertaintiesProducer(jetmetUncertaintiesProducer, object):
                redoJEC=redoJEC,    
                applyHEMfix=applyHEMfix,
                splitJER=splitJER,
+               onlyJER=onlyJER, 
                saveMETUncs=_saveMETUncs 
            )
        elif "AK8" in jetFlav:
