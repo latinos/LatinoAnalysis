@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import os, sys
+argv = sys.argv
+sys.argv = argv[:1]
 
 import optparse
 import LatinoAnalysis.Gardener.hwwtools as hwwtools
@@ -130,6 +132,8 @@ def do_significance(binning_dictionary, h_dict, last_bin, f_o_m):
 # Main function
 if __name__ == '__main__':
 
+    sys.argv = argv
+
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
     
@@ -141,9 +145,12 @@ if __name__ == '__main__':
 
  
     # read default parsing options as well
-    hwwtools.addOptions(parser)
-    hwwtools.loadOptDefaults(parser)
+    # hwwtools.addOptions(parser)
+    # hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
+
+    sys.argv.append( '-b' )
+    ROOT.gROOT.SetBatch()
 
     print " configuration file = ", opt.pyCfg
     print " input  = ",             opt.inputFile
