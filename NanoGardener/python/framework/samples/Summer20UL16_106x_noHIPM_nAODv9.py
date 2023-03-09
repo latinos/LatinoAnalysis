@@ -377,21 +377,7 @@ Samples['AToZHToLLTTbar_MA-1200_MH-400'] = {'nanoAOD' : '/AToZHToLLTTbar_MA-1200
 Samples['AToZHToLLTTbar_MA-1200_MH-850'] = {'nanoAOD' : '/AToZHToLLTTbar_MA-1200_MH-850_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 Samples['AToZHToLLTTbar_MA-1500_MH-1000'] = {'nanoAOD' : '/AToZHToLLTTbar_MA-1500_MH-1000_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 ## WW aTGCs --------------------------------------------------------------------------------------------------##
-Samples = {
-    'WWToLNuLNu_MWW-0To500' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-0To500_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER',
-    } ,
-    'WWToLNuLNu_MWW-500To750' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-500to750_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER',
-    } ,
-    'WWToLNuLNu_MWW-750To1000' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-750To1000_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER',
-    } ,
-    'WWToLNuLNu_MWW-1000ToInf' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-1000ToInf_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER',
-    } ,
-}
+Samples['WWToLNuLNu_MWW-0To500'] = {'dasInst' : 'prod/phys03', 'nanoAOD' : '/WWToLNuLNu_MWW-0To500_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER' }
+Samples['WWToLNuLNu_MWW-500To750'] = {'dasInst' : 'prod/phys03', 'nanoAOD' : '/WWToLNuLNu_MWW-500to750_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER'}
+Samples['WWToLNuLNu_MWW-750To1000'] = {'dasInst' : 'prod/phys03', 'nanoAOD' : '/WWToLNuLNu_MWW-750To1000_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER'}
+Samples['WWToLNuLNu_MWW-1000ToInf'] = {'dasInst' : 'prod/phys03', 'nanoAOD' : '/WWToLNuLNu_MWW-1000ToInf_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2016_v2-00000000000000000000000000000000/USER'}
