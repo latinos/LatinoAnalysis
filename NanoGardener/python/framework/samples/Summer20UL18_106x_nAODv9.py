@@ -422,22 +422,3 @@ Samples['AToZHToLLTTbar_MA-700_MH-350'] = {'nanoAOD' : '/AToZHToLLTTbar_MA-700_M
 Samples['AToZHToLLTTbar_MA-700_MH-400'] = {'nanoAOD' : '/AToZHToLLTTbar_MA-700_MH-400_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
 Samples['AToZHToLLTTbar_MA-900_MH-350'] = {'nanoAOD' : '/AToZHToLLTTbar_MA-900_MH-350_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
 Samples['AToZHToLLTTbar_MA-900_MH-400'] = {'nanoAOD' : '/AToZHToLLTTbar_MA-900_MH-400_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'}
-## WW aTGCs --------------------------------------------------------------------------##
-Samples = {
-    'WWToLNuLNu_MWW-0To500' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-0To500_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2018_v2-00000000000000000000000000000000/USER',
-    } ,
-    'WWToLNuLNu_MWW-500To750' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-500to750_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2018_v3-00000000000000000000000000000000/USER',
-    } ,
-    'WWToLNuLNu_MWW-750To1000' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-750To1000_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2018_v2-00000000000000000000000000000000/USER',
-    } ,
-    'WWToLNuLNu_MWW-1000ToInf' : {
-        'dasInst' : 'prod/phys03'  ,
-        'nanoAOD' : '/WWToLNuLNu_MWW-1000ToInf_TuneCP5_SMEFT_13TeV-madgraph-pythia8/phys_smp-NanoAODv9_UL2018_v2-00000000000000000000000000000000/USER',
-    } ,
-}
