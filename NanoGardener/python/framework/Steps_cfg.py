@@ -857,7 +857,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','PrefCorr2016','btagPerJet2016','JetPUID_SF_UL',
+                     'subTargets' : ['baseW','JERsMCUL_highPt','FatJERsMCUL_highPt','PrefCorr2016','btagPerJet_DeepCSV_UL', 'btagPerJet_DeepJet_UL','JetPUID_SF_UL',
                                      'rochesterMC', 'trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
                                      'CleanFatJet', 'BoostedWtagSF','leptonMVAFiller'],
@@ -3668,25 +3668,6 @@ Steps = {
                   'declare'    : 'btagSFProducer_DeepJet_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepjet", jesSystsForShape=["jes","jesAbsolute","jesAbsolute_RPLME_YEAR","jesBBEC1","jesBBEC1_RPLME_YEAR","jesEC2","jesEC2_RPLME_YEAR","jesFlavorQCD","jesHF","jesHF_RPLME_YEAR","jesRelativeBal","jesRelativeSample_RPLME_YEAR"])',
                   'module'     : 'btagSFProducer_DeepJet_UL()',
                  },
-
-  'btagPerJet_DeepCSV_UL_fix': {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
-                  'declare'    : 'btagSFProducer_DeepCSV_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepcsv")',
-                  'module'     : 'btagSFProducer_DeepCSV_UL()',
-                 },
-
-  'btagPerJet_DeepJet_UL_fix': {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.btagSFProducerLatinos' ,
-                  'declare'    : 'btagSFProducer_DeepJet_UL = lambda : btagSFProducerLatinos(era="RPLME_CMSSW_shape", algo="deepjet")',
-                  'module'     : 'btagSFProducer_DeepJet_UL()',
-                 },
-
 
 
   'btagPerEvent': {
