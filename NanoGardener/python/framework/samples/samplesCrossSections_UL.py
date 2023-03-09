@@ -436,3 +436,11 @@ samples['AToZHToLLTTbar_MA-700_MH-370']         .extend( ['xsec=1',             
 samples['AToZHToLLTTbar_MA-800_MH-600']         .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
 samples['AToZHToLLTTbar_MA-900_MH-370']         .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
 samples['AToZHToLLTTbar_MA-1200_MH-400']         .extend( ['xsec=1',             'kfact=1.000',  'ref=X'] )
+
+# WW aTGCs
+samples['WWToLNuLNu_MWW-0To500']         .extend( ['xsec=4.1880002',             'kfact=1.000',  'ref=X'] )
+samples['WWToLNuLNu_MWW-500To750']         .extend( ['xsec=0.2617599',             'kfact=1.000',  'ref=X'] )
+samples['WWToLNuLNu_MWW-750To1000']         .extend( ['xsec=0.0928599',             'kfact=1.000',  'ref=X'] )
+samples['WWToLNuLNu_MWW-1000ToInf']         .extend( ['xsec=0.1599200',             'kfact=1.000',  'ref=X'] )
+
+
