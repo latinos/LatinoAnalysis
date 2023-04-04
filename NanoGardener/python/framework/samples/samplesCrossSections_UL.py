@@ -94,6 +94,7 @@ samples['DYJetsToLL_M-4to50_HT-400to600']       .extend( ['xsec=5.697',         
 samples['DYJetsToLL_M-4to50_HT-600toInf']       .extend( ['xsec=1.85',          'kfact=1.000',          'ref=W'] )
 
 samples['EWKZ2Jets_ZToLL_M-50']                 .extend( ['xsec=6.215',         'kfact=1.000',          'ref=W'] )
+samples['EWKZ2Jets_ZToLL_M-50_MJJ-120']         .extend( ['xsec=1.723',         'kfact=1.000',          'ref=N'] )
 
 ### Wgamma
 samples['WGToLNuG']                             .extend( ['xsec=412.7',         'kfact=1.000',          'ref=W'] )
