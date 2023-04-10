@@ -65,6 +65,8 @@ class l3KinProducer(Module):
         'AZH_Amass':  (["F"], {}),
         'AZH_Hmass' : (["F"], {}),
         'AZH_ChiSquare' : (["F"], {}),
+        'AZH_Tophadronic' : (["F"], {}),
+        'AZH_Topleptonic' : (["F"], {}),
     }
 
     def __init__(self, branch_map=''):
@@ -331,7 +333,19 @@ class l3KinProducer(Module):
 
     def AZH_ChiSquare(self):
         if self.AZH_isOk:
-            return self.Chisq
+            return self.ChisqMin
+        else:
+            return -9999
+
+    def AZH_Tophadronic(self):
+        if self.AZH_isOk:
+            return (self.bJetHadronic_best + self.WJet1_best + self.WJet2_best).M()
+        else:
+            return -9999
+
+    def AZH_Topleptonic(self):
+        if self.AZH_isOk:
+            return (self.ZH3l_XLepton[0] + self.AZH_Neutrino_best + self.bJetLeptonic_best).M()
         else:
             return -9999
 
@@ -372,27 +386,27 @@ class l3KinProducer(Module):
 
 #------------#AZH Neutrino Pz Solution--------------------------------------------------------------------------------------------------------------------
         if self.ZH3l_isOk:
-          Zeta = 0.5 * pow(self.Wmass,2) + self.MET.Pt()*self.ZH3l_XLepton[0].Pt()*math.cos(self.ZH3l_XLepton[0].DeltaPhi(self.MET)) 
-          A = (pow(Zeta,2)*pow(self.ZH3l_XLepton[0].Pz(),2)) / pow(self.ZH3l_XLepton[0].Pt(),4)  -  (pow(self.MET.Pt(),2)*pow(self.ZH3l_XLepton[0].E(),2) - pow(Zeta,2)) / pow(self.ZH3l_XLepton[0].Pt(),2)
-          A = math.sqrt(A) if A> 0  else 0
+          self.Zeta = 0.5 * pow(self.Wmass,2) + self.MET.Pt()*self.ZH3l_XLepton[0].Pt()*math.cos(self.ZH3l_XLepton[0].DeltaPhi(self.MET)) 
+          self.A = (pow(self.Zeta,2)*pow(self.ZH3l_XLepton[0].Pz(),2)) / pow(self.ZH3l_XLepton[0].Pt(),4)  -  (pow(self.MET.Pt(),2)*pow(self.ZH3l_XLepton[0].E(),2) - pow(self.Zeta,2)) / pow(self.ZH3l_XLepton[0].Pt(),2)
+          A = math.sqrt(self.A) if self.A> 0  else 0
           self.AZH_Neutrino1 = ROOT.TLorentzVector()
           self.AZH_Neutrino2 = ROOT.TLorentzVector()
-          self.Pznu1 = (Zeta * self.ZH3l_XLepton[0].Pz())/pow(self.ZH3l_XLepton[0].Pt(),2) + A
-          self.Pznu2 = (Zeta * self.ZH3l_XLepton[0].Pz())/pow(self.ZH3l_XLepton[0].Pt(),2) - A
+          self.Pznu1 = (self.Zeta * self.ZH3l_XLepton[0].Pz())/pow(self.ZH3l_XLepton[0].Pt(),2) + A
+          self.Pznu2 = (self.Zeta * self.ZH3l_XLepton[0].Pz())/pow(self.ZH3l_XLepton[0].Pt(),2) - A
           self.Enu1 = math.sqrt( pow(self.MET.Pt(),2) + pow(self.Pznu1,2) )
           self.Enu2 = math.sqrt( pow(self.MET.Pt(),2) + pow(self.Pznu2,2) )
           self.AZH_Neutrino1.SetPxPyPzE(self.MET.Px(),self.MET.Py(),self.Pznu1,self.Enu1)
           self.AZH_Neutrino2.SetPxPyPzE(self.MET.Px(),self.MET.Py(),self.Pznu2,self.Enu2)
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------
+          self.WJet1_best = None
+          self.WJet2_best = None
+          self.bJetHadronic_best = None
+          self.bJetLeptonic_best = None
+          self.AZH_Neutrino_best = None
+          self.ChisqMin = 99999
+          self.Chisq = 0
           for AZH_Neutrino in [self.AZH_Neutrino1, self.AZH_Neutrino2]:
-            self.WJet1_best = None
-            self.WJet2_best = None
-            self.bJetHadronic_best = None
-            self.bJetLeptonic_best = None
-            self.AZH_Neutrino_best = None
-            self.ChisqMin = 99999
-            self.Chisq = 0
             for bJetPair in combinations(self.AZH_bJet_4vecId, 2):
                 WJets = [ j for j in self.ZH3l_CleanJet_4vecId if j not in bJetPair]
                 for i in range(2): 
