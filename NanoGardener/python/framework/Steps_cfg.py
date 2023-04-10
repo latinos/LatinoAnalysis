@@ -57,14 +57,38 @@ def createULJESvariation(type, kind="Up"):
   return dictionary
 
 def createULJERvariation(type="", kind="Up"):
-  dictionary = {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.UltraJetUncertaintiesProducer',
-                  'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET","RawMET"], splitJER=True, onlyJER=["%s"])' %(type, kind.lower(), kind.lower(), type),
-                  'module'     : 'JER%s%s()' %(type, kind.lower())
-               }
+  if type=="":
+    dictionary = {
+                    'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : False  ,
+                    'import'     : 'LatinoAnalysis.NanoGardener.modules.UltraJetUncertaintiesProducer',
+                    'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET"], splitJER=False, onlyJER=["%s"])' %(type, kind.lower(), kind.lower(), type),
+                    #'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET","RawMET"], splitJER=False, onlyJER=["%s"])' %(type, kind.lower(), kind.lower(), type),
+
+                    'module'     : 'JER%s%s()' %(type, kind.lower())
+                 }
+  elif type=="all":
+    dictionary = {
+                    'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : False  ,
+                    'import'     : 'LatinoAnalysis.NanoGardener.modules.UltraJetUncertaintiesProducer',
+                    'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET"], splitJER=True, onlyJER=[""])' %(type, kind.lower(), kind.lower()),
+                    #'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET","RawMET"], splitJER=True, onlyJER=[""])' %(type, kind.lower(), kind.lower()),
+                    'module'     : 'JER%s%s()' %(type, kind.lower())
+                 }
+  else:
+    dictionary = {
+                    'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : False  ,
+                    'import'     : 'LatinoAnalysis.NanoGardener.modules.UltraJetUncertaintiesProducer',
+                    'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET"], splitJER=True, onlyJER=["%s"])' %(type, kind.lower(), kind.lower(), type),
+                    #'declare'    : 'JER%s%s = lambda : UltraJetUncertaintiesProducer(era="ULRPLME_YEAR", jerUncert=True, jesUncert=[], kind=["%s"], metBranchNames=["MET","PuppiMET","RawMET"], splitJER=True, onlyJER=["%s"])' %(type, kind.lower(), kind.lower(), type),
+
+                    'module'     : 'JER%s%s()' %(type, kind.lower())
+                 }
   return dictionary
 
 def createFatjetJESvariation(type_, kind="Up"):
@@ -140,6 +164,16 @@ def createULJERchain(type, kind="Up"):
   for item in chainTemplate:
     chain.append(item.replace("VAR", toreplace))
   return chain
+
+def createULJERFullChain(kind="Up"):
+  chain = ['do_ULJER%s_suffix' %(kind.lower())] + ['do_ULJERall%s_suffix' %(kind.lower())]
+  chain += ['l2Kin_JER%s' %(kind.lower())]+['l2Kin_JER%s%s' %(i, kind.lower()) for i in range(0,6)]
+  chain += ['l3Kin_JER%s' %(kind.lower())]+['l3Kin_JER%s%s' %(i, kind.lower()) for i in range(0,6)]
+  chain += ['l4Kin_JER%s' %(kind.lower())]+['l4Kin_JER%s%s' %(i, kind.lower()) for i in range(0,6)]
+  chain += ['formulasMC_JER%s' %(kind.lower())]+['formulasMC_JER%s%s' %(i, kind.lower()) for i in range(0,6)]
+  chain += ['JJHEFT_JER%s' %(kind.lower())]+ ['JJHEFT_JER%s%s' %(i, kind.lower()) for i in range(0,6)]
+  return chain
+
 
 def createJESchain_CombJJLNu(type, kind="Up"):
   typeShort = type
@@ -3478,12 +3512,14 @@ Steps = {
                  },
 
     'JERup_suffix' :   {
-                  'isChain'    : True ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
-                  'subTargets' : createULJERchain("", "Up"), #KELLO NEW
+                  'isChain'    : True,
+                  'do4MC'      : True,
+                  'do4Data'    : False,
+                  'subTargets' : createULJERchain("","Up"), #KELLO NEW
+                  #'subTargets' : createULJERFullChain("Up"),
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts2.txt'
                },
+
     'JER0up_suffix' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
@@ -3526,13 +3562,16 @@ Steps = {
                   'subTargets' : createULJERchain("5", "Up"), #KELLO NEW
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts2.txt'
                },
+
     'JERdo_suffix' :   {
-                  'isChain'    : True ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False  ,
+                  'isChain'    : True,
+                  'do4MC'      : True,
+                  'do4Data'    : False,
                   'subTargets' : createULJERchain("", "Do"), #KELLO NEW
+                  #'subTargets' :  createULJERFullChain("Do"),
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/keepsysts2.txt'
                },
+
     'JER0do_suffix' :   {
                   'isChain'    : True ,
                   'do4MC'      : True  ,
@@ -4804,6 +4843,7 @@ Steps = {
   'do_ULJESRelativeSample_RPLME_YEARdo_suffix' : createULJESvariation("RelativeSample_RPLME_YEAR", "Do"),
 
   'do_ULJERup_suffix' : createULJERvariation("", "Up"),
+  'do_ULJERallup_suffix' : createULJERvariation("all", "Up"),
   'do_ULJER0up_suffix' : createULJERvariation("0", "Up"),
   'do_ULJER1up_suffix' : createULJERvariation("1", "Up"),
   'do_ULJER2up_suffix' : createULJERvariation("2", "Up"),
@@ -4811,6 +4851,7 @@ Steps = {
   'do_ULJER4up_suffix' : createULJERvariation("4", "Up"),
   'do_ULJER5up_suffix' : createULJERvariation("5", "Up"), 
   'do_ULJERdo_suffix' : createULJERvariation("", "Do"),
+  'do_ULJERalldo_suffix' : createULJERvariation("all", "Do"),
   'do_ULJER0do_suffix' : createULJERvariation("0", "Do"),
   'do_ULJER1do_suffix' : createULJERvariation("1", "Do"),
   'do_ULJER2do_suffix' : createULJERvariation("2", "Do"),
