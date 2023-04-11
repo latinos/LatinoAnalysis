@@ -100,6 +100,9 @@ Samples['ST_s-channel_JMENano'] = {'nanoAOD' :'/ST_s-channel_4f_leptonDecays_Tun
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['TTWJetsToQQ'] = {'nanoAOD' :'/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2/NANOAODSIM'} ##!!!!
+Samples['TTWJetsToLNu'] = {'nanoAOD' : '/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2/NANOAODSIM'}
+Samples['TTWJetsToLnu_TuneCP5Up'] = {'nanoAOD' : '/TTWJetsToLNu_TuneCP5up_13TeV-amcatnloFXFX-madspin-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2/NANOAODSIM'}
+Samples['TTWJetsToLnu_TuneCP5Down'] = {'nanoAOD' : '/TTWJetsToLNu_TuneCP5down_13TeV-amcatnloFXFX-madspin-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2/NANOAODSIM'}
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['TTZToQQ'] = {'nanoAOD' :'/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM'}
