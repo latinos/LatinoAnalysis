@@ -589,9 +589,14 @@ class BWEwkSingletReweighter(Module):
           shift = 1.
           if self.shifts:
             for line in self.shifts:
-              if float(line[0])==self.mH and float(line[1])==relw and float(line[2])==-1:
-                shift = float(line[3])
-                break      
+              if relw == 'orig':
+                if float(line[0])==self.mH and (line[1]==relw and float(line[2])==-1:
+                  shift = float(line[3])
+                  break
+              else:
+                if float(line[0])==self.mH and (float(line[1])==relw and float(line[2])==-1:
+                  shift = float(line[3])
+                  break      
           weights[name] = (1./shift)*decayWeight*CPSweight
           self.mela.setMelaHiggsMassWidth(self.mH, gprime)
           #addweight = {}
