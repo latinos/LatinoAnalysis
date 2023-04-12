@@ -590,11 +590,11 @@ class BWEwkSingletReweighter(Module):
           if self.shifts:
             for line in self.shifts:
               if relw == 'orig':
-                if float(line[0])==self.mH and (line[1]==relw and float(line[2])==-1:
+                if float(line[0])==self.mH and line[1]==relw and float(line[2])==-1:
                   shift = float(line[3])
                   break
               else:
-                if float(line[0])==self.mH and (float(line[1])==relw and float(line[2])==-1:
+                if float(line[0])==self.mH and (float(line[1]))==relw and float(line[2])==-1:
                   shift = float(line[3])
                   break      
           weights[name] = (1./shift)*decayWeight*CPSweight
