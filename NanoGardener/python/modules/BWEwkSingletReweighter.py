@@ -275,10 +275,6 @@ class BWEwkSingletReweighter(Module):
         self.out = wrappedOutputTree
         self.branchnames = ["B", "H", "I_HB"]
         self.branches = ["_I", "_I_Honly", "_I_Bonly"] # Don't really need all of them
-        #if self.finalState == "LNuQQ":
-        #  self.branches = ["_I", "_B"]
-        #else:
-        #  self.branches = ["_I"]
          
         # SM width model
         for cprime in self.cprime_list:
@@ -294,7 +290,7 @@ class BWEwkSingletReweighter(Module):
             self.branchnames.append('RelW'+str(relw)+appendix)
           for bname in self.branchnames:
             self.out.branch(bname, "F")
-
+        print self.branchnames
         self.mela = ROOT.MelaReweighterWW(13, self.mH, self.gsm)
         #GF 1.16637e-5
         #sin2thetaW 0.22264585341299603
@@ -575,7 +571,7 @@ class BWEwkSingletReweighter(Module):
         for relw in self.relw_list:
           if relw == "orig":
             # SM width
-            pass  
+            gprime = self.gsm  
           elif relw < 1.0: # Relative width
             gprime = relw * self.mH
           else: # Fixed width
