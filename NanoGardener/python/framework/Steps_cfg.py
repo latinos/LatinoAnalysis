@@ -1001,6 +1001,14 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
+  'MCNocut2018v7' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '""' ,
+                  'subTargets' : ['leptonMaker','lepSelNoLep','jetSelCustom','CorrFatJetMC', 'CleanFatJet',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
+                  },
   'test2018v7' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
@@ -2398,6 +2406,26 @@ Steps = {
                   'module'     : 'BWEwkSingRew()',
                   'onlySample' : TwoL2NuSamples + LNuQQSamples,
                },
+    
+    'BWReweight_test' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BWEwkSingletReweighter' ,
+                  'declare'    : 'BWEwkSingRew = lambda : BWEwkSingletReweighter(year=RPLME_YEAR, relw=[10.0, 100.0, "orig"])',
+                  'module'     : 'BWEwkSingRew()',
+                  'onlySample' : TwoL2NuSamples + LNuQQSamples,
+               },           
+
+    'BWReweight_LNuQQ' : {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'onlySample' : LNuQQSamples,
+                  'subTargets' : ['HiggsGenVars','BWReweight'],
+                  },
+
+
 
     'MelaDisc' : { 
                   'isChain'    : False ,
@@ -2469,6 +2497,7 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.HMlnjjVarsGen' ,
                   'declare'    : 'HMlnjjVarsGen = lambda : HMlnjjVarsGenClass("MC")',
                   'module'     : 'HMlnjjVarsGen()',
+                  'onlySample' : LNuQQSamples #+ ['WWToLNuQQ', 'WWToLNuQQ_ext1', 'WmToLNu_WmTo2J_QCD', 'WpToLNu_WpTo2J_QCD', ],
                },
 
     'HMlnjjVars' : {
@@ -2524,6 +2553,14 @@ Steps = {
                   'do4Data'    : True  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
                   'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 1)' ,
+                  'module'     : 'leptonSel()' ,
+               },
+   'lepSelNoLep': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 0)' ,
                   'module'     : 'leptonSel()' ,
                },
 

@@ -13,7 +13,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 # Needs variables from "HiggsGenVars" module to work
 class BWEwkSingletReweighter(Module):
-    def __init__(self, year="2017", cprime=[], brnew=[], relw=[0.00, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.12, 0.14, 0.15, 0.16, 0.18, 0.20, 0.25, 0.30, 10.0, 100.0], decayWeightsFile="decayWeights.pkl"): # cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], relw=[0.00, 0.05, 0.10, 0.15, 0.20]
+    def __init__(self, year="2017", cprime=[], brnew=[], relw=[0.00, 0.01, 0.02, 0.05, 0.10, 0.20, 0.30, 10.0, 100.0, "orig"], decayWeightsFile="decayWeights.pkl"): # cprime= [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], brnew=[0.0, 0.5], relw=[0.00, 0.05, 0.10, 0.15, 0.20]
 
         self.cmssw_base = os.getenv('CMSSW_BASE')
 
@@ -212,9 +212,9 @@ class BWEwkSingletReweighter(Module):
         # Directory MelaAnalytics: https://github.com/usarica/MelaAnalytics.git
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/interface/")
         ROOT.gSystem.AddIncludePath("-I"+self.cmssw_base+"/src/")
-        ROOT.gSystem.Load("libZZMatrixElementMELA.so")
+        ROOT.gSystem.Load("libJHUGenMELAMELA.so")
         ROOT.gSystem.Load("libMelaAnalyticsCandidateLOCaster.so")
-        ROOT.gSystem.Load(self.cmssw_base+"/src/ZZMatrixElement/MELA/data/"+cmssw_arch+"/libmcfm_707.so")
+        ROOT.gSystem.Load(self.cmssw_base+"/src/JHUGenMELA/MELA/data/"+cmssw_arch+"/libmcfm_707.so")
         try:
             ROOT.gROOT.LoadMacro(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/melaReweighterWW.C+g')
         except RuntimeError:
@@ -273,13 +273,9 @@ class BWEwkSingletReweighter(Module):
           print "decay weights for mass", str(int(self.mH)), "available between", self.minmass, "and", self.maxmass 
 
         self.out = wrappedOutputTree
-        self.branchnames = []
-        #self.branches = ["_I", "_B", "_I_Honly", "_I_Bonly", "_I_HB", "_H"] # Don't really need all of them
-        if self.finalState == "LNuQQ":
-          self.branches = ["_I", "_B"]
-        else:
-          self.branches = ["_I"]
-
+        self.branchnames = ["B", "H", "I_HB"]
+        self.branches = ["_I", "_I_Honly", "_I_Bonly"] # Don't really need all of them
+         
         # SM width model
         for cprime in self.cprime_list:
           for brnew in self.brnew_list:
@@ -294,7 +290,7 @@ class BWEwkSingletReweighter(Module):
             self.branchnames.append('RelW'+str(relw)+appendix)
           for bname in self.branchnames:
             self.out.branch(bname, "F")
-
+        print self.branchnames
         self.mela = ROOT.MelaReweighterWW(13, self.mH, self.gsm)
         #GF 1.16637e-5
         #sin2thetaW 0.22264585341299603
@@ -409,7 +405,7 @@ class BWEwkSingletReweighter(Module):
             for rem in removethis:
               FinalStatePartIDs.remove(rem)
 
-          print FinalStatePartIDs
+          #print FinalStatePartIDs
           for p in FinalStatePartIDs:
             print p,": id",event.GenPart_pdgId[p],", mom:",event.GenPart_genPartIdxMother[p],", momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[p]]#,", mom-mom:",event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]],", mom-momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]]]
 
@@ -523,7 +519,17 @@ class BWEwkSingletReweighter(Module):
           else:   
             decayWeight = self.decayWeightFunction(mass)
 
-
+        #compute the weights to B and SM H and the interference between those. These do not depend on the width to which we are reweightin
+        self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
+                                                         fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
+                                                         partons, partonIDs,
+                                                         mothers, motherIDs)
+        weights = {}
+        self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
+        weights["B"]    = self.mela.weightStoB()
+        weights["H"]    = self.mela.weightStoH()
+        weights["I_HB"] = self.mela.weightStoI_HB()
+        
         ########## For SM width model
         CPSweight = 1.
         if self.undoCPS:
@@ -538,7 +544,6 @@ class BWEwkSingletReweighter(Module):
 
         for cprime in self.cprime_list:
           for brnew in self.brnew_list:
-            weights = {}
             name = 'cprime'+str(cprime)+"BRnew"+str(brnew)
             kprime = cprime**2
             #overallweight = kprime*(1-brnew) 
@@ -551,74 +556,59 @@ class BWEwkSingletReweighter(Module):
                   break
             weights[name] = (1./shift)*decayWeight*self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsm)/CPSweight
             self.mela.setMelaHiggsMassWidth(self.mH, gprime)
-            self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                         fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                         partons, partonIDs,
-                                                         mothers, motherIDs)
-            addweight = {}
-            addweight["_I"] = self.mela.weightStoI()
-            #addweight["_I_Honly"] = self.mela.weightStoI_H()
-            #addweight["_I_Bonly"] = self.mela.weightStoI_B()
-            #addweight["_I_HB"] = self.mela.weightStoI_HB()
-            addweight["_B"] = self.mela.weightStoB()
-            #addweight["_H"] = self.mela.weightStoH()
-
-            for appendix in self.branches:
-              if math.isnan(addweight[appendix]) or math.isinf(addweight[appendix]): #dirty protection for occasional failures
-                self.NANinfo
-                addweight[appendix]=0.
-              weights[name+appendix] = weights[name]*addweight[appendix]
-
-            for appendix in [""]+self.branches:
-              self.out.fillBranch(name+appendix, weights[name+appendix])
-
+            #addweight = {}
+            weights[name+"_I"] = math.sqrt(weights[name])*self.mela.weightStoI()
+            weights[name+"_I_Honly"] = math.sqrt(weights[name])*self.mela.weightStoI_H()
+            weights[name+"_I_Bonly"] = math.sqrt(weights[name])*self.mela.weightStoI_B()
+ 
+            for key in weights.keys():
+              if math.isnan(weights[key]) or math.isinf(weights[key]): #dirty protection for occasional failure
+                weights[key] = 0.
+              self.out.fillBranch(key, weights[key])
 
         ########## For Relative Width & Fixed Width model
+        gprime = self.gsm
         for relw in self.relw_list:
-          if relw < 1.0: # Relative width
-            self.gsm = relw * self.mH
+          if relw == "orig":
+            # SM width
+            gprime = self.gsm  
+          elif relw < 1.0: # Relative width
+            gprime = relw * self.mH
           else: # Fixed width
-            self.gsm = relw
-          if self.gsm == 0: self.gsm = 0.001 * self.mH # Is actually 0.1% relative width
+            gprime = relw
+          if gprime == 0: gprime = 0.001 * self.mH # Is actually 0.1% relative width
           if self.undoCPS:
             # Invert CPSweight here w.r.t. previously because it could be 0
             if self.isNewJHU:
-              CPSweight = self.FixedBreightWigner(mass, self.mH, self.gsm)/self.FixedBreightWigner(mass, self.mH, self.gsmCPS)
+              CPSweight = self.FixedBreightWigner(mass, self.mH, gprime)/self.FixedBreightWigner(mass, self.mH, self.gsmCPS)
             else:
-              thisCPSweight = ROOT.getCPSweight(self.mH, self.gsm, 172.5, mass, 0)
+              thisCPSweight = ROOT.getCPSweight(self.mH, gprime, 172.5, mass, 0)
               CPSweight = 0 if (thisCPSweight==0) else 1/thisCPSweight
 
-          weights = {}
           name = 'RelW'+str(relw)
           shift = 1.
           if self.shifts:
             for line in self.shifts:
-              if float(line[0])==self.mH and float(line[1])==relw and float(line[2])==-1:
-                shift = float(line[3])
-                break
+              if relw == 'orig':
+                if float(line[0])==self.mH and line[1]==relw and float(line[2])==-1:
+                  shift = float(line[3])
+                  break
+              else:
+                if float(line[0])==self.mH and (float(line[1]))==relw and float(line[2])==-1:
+                  shift = float(line[3])
+                  break      
           weights[name] = (1./shift)*decayWeight*CPSweight
-          self.mela.setMelaHiggsMassWidth(self.mH, self.gsm)
-          self.mela.setupDaughters((self.productionProcess=="VBF"), int(ids[0]), int(ids[1]), int(ids[2]), int(ids[3]),
-                                                       fourMomenta[0], fourMomenta[1], fourMomenta[2], fourMomenta[3],
-                                                       partons, partonIDs,
-                                                       mothers, motherIDs)
-          addweight = {}
-          addweight["_I"] = self.mela.weightStoI()
-          #addweight["_I_Honly"] = self.mela.weightStoI_H()
-          #addweight["_I_Bonly"] = self.mela.weightStoI_B()
-          #addweight["_I_HB"] = self.mela.weightStoI_HB()
-          addweight["_B"] = self.mela.weightStoB()
-          #addweight["_H"] = self.mela.weightStoH()
-
-          for appendix in self.branches:
-            if math.isnan(addweight[appendix]) or math.isinf(addweight[appendix]): #dirty protection for occasional failures
-              self.NANinfo
-              addweight[appendix]=0.
-            weights[name+appendix] = weights[name]*addweight[appendix]
-
-          for appendix in [""]+self.branches:
-            self.out.fillBranch(name+appendix, weights[name+appendix])
-
+          self.mela.setMelaHiggsMassWidth(self.mH, gprime)
+          #addweight = {}
+          weights[name+"_I"] = math.sqrt(weights[name])*self.mela.weightStoI()
+          weights[name+"_I_Honly"] = math.sqrt(weights[name])*self.mela.weightStoI_H()
+          weights[name+"_I_Bonly"] = math.sqrt(weights[name])*self.mela.weightStoI_B()
+        
+        #finally fill the branches
+        for key in weights.keys():
+          if math.isnan(weights[key]) or math.isinf(weights[key]): #dirty protection for occasional failure
+             weights[key] = 0.
+          self.out.fillBranch(key, weights[key])
         return True
 
 
