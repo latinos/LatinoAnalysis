@@ -243,6 +243,7 @@ if __name__ == '__main__':
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=1, type='int')
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
+    parser.add_option('--useSingularity'   , dest='use_singularity'   , help='Run on singularity'     , action='store_true', default=False)
     parser.add_option("-n", "--dry-run"  , dest="dryRun"         , help="do not make shapes"                         , default=False, action="store_true")
     parser.add_option("-W" , "--iihe-wall-time" , dest="IiheWallTime" , help="Requested IIHE queue Wall Time" , default='168:00:00')
     parser.add_option('--FixNegativeAfterHadd' , dest='FixNegativeAfterHadd' , help='When using "suppressNegative(Nuisances)", only fix after hadd step' , action='store_true', default=False)
@@ -380,7 +381,7 @@ if __name__ == '__main__':
       nThreads = opt.numThreads
 
       if 'slc7' in os.environ['SCRAM_ARCH'] and 'iihe' in os.uname()[1] : use_singularity = True
-      else : use_singularity = False
+      else : use_singularity = opt.use_singularity
 
       bpostFix=''
       jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)

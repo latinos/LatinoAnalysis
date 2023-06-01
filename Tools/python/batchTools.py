@@ -119,7 +119,7 @@ class batchJobs :
        if self.USE_SINGULARITY : 
          jFileSing = open(self.subDir+subDirExtra+'/'+jName+'_Sing.sh','w')
          if 'iihe' in hostName: jFileSing.write('sl7 '+self.subDir+subDirExtra+'/'+jName+'.sh \n')
-	 if 'cern' in hostname: jFileSing.write("""#!/bin/sh\napptainer exec -B ${PWD} -B /afs/ -B /cvmfs \
+	 if 'cern' in hostName: jFileSing.write("""#!/bin/sh\napptainer exec -B ${{PWD}} -B /afs/ -B /cvmfs \
 		 --bind /tmp  --bind /eos/  -B /etc/grid-security/certificates  \
 		{0} \  sh {1}""".format(SINGULARITY_IMAGE, jName))
 
@@ -202,7 +202,6 @@ class batchJobs :
        if usePython : pFile.close()
        os.system('chmod +x '+self.subDir+subDirExtra+'/'+jName+'.sh')
        if self.USE_SINGULARITY :
-         jFileSing.write('ls -l \n')
          jFileSing.close()
          os.system('chmod +x '+self.subDir+subDirExtra+'/'+jName+'_Sing.sh')
 
@@ -361,7 +360,7 @@ class batchJobs :
            if AUTO_CONDOR_RETRY:
              jdsFile.write('on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)\n')
              jdsFile.write('periodic_release =  (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*3))\n')
-           if self.USE_SINGULARITY and 'cern' in hostname: 
+           if self.USE_SINGULARITY and 'cern' in hostName: 
 	     #we also need the transfer input files
              jdsFile.write("transfer_input_files = " + self.subDir+subDirExtra+'/'+jName+'.sh')
            jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
