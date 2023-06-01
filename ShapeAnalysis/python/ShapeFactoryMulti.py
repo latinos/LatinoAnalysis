@@ -1237,7 +1237,9 @@ class ShapeFactory:
         if os.system(eoususer+' ls '+path.split('/eosuser.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
       if 'eoscms.cern.ch' in path:
         if os.system('eos ls '+path.split('/eoscms.cern.ch/')[1]+' >/dev/null 2>&1') == 0 : return True
-      return False
+	
+      return True #FIXME: by default because it does not work on singularity
+      
 
     # _____________________________________________________________________________
     def _testIiheFile(self,path):
