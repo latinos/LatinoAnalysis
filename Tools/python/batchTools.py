@@ -121,7 +121,7 @@ class batchJobs :
          if 'iihe' in hostName: jFileSing.write('sl7 '+self.subDir+subDirExtra+'/'+jName+'.sh \n')
 	 if 'cern' in hostName: jFileSing.write("""#!/bin/sh\napptainer exec -B ${{PWD}} -B /afs/ -B /cvmfs \
 		 --bind /tmp  --bind /eos/  -B /etc/grid-security/certificates --env "LATINOS_BASEDIR={2}"\
-	 {0} \  sh {1}""".format(SINGULARITY_IMAGE, jName + ".sh", baseDir ))
+	 {0} sh {1}""".format(SINGULARITY_IMAGE, jName + ".sh", baseDir ))
 
        if 'cern' in hostName:
          jFile.write('#$ -N '+jName+'\n')
