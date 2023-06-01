@@ -121,7 +121,7 @@ class batchJobs :
          if 'iihe' in hostName: jFileSing.write('sl7 '+self.subDir+subDirExtra+'/'+jName+'.sh \n')
 	 if 'cern' in hostName: jFileSing.write("""#!/bin/sh\napptainer exec -B ${{PWD}} -B /afs/ -B /cvmfs \
 		 --bind /tmp  --bind /eos/  -B /etc/grid-security/certificates  \
-		{0} \  sh {1}""".format(SINGULARITY_IMAGE, jName))
+		{0} \  sh {1}""".format(SINGULARITY_IMAGE, jName + ".sh"))
 
        if 'cern' in hostName:
          jFile.write('#$ -N '+jName+'\n')
@@ -338,7 +338,10 @@ class batchJobs :
        outFile=self.subDir+subDirExtra+'/'+jName+'.out'
        jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
        jFile = open(jobFile,'a')
-       jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
+       if self.USE_SINGULARITY:
+          jFile.write('&& [ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
+       else:
+          jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
        jFile.close()
        print 'Submit',jName, ' on ', queue
 
