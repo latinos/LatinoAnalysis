@@ -42,6 +42,11 @@ try:
 except NameError:
   REQUEST_CPUS = 1
 
+try:
+  SINGULARITY_IMAGE = singularityImage
+except NameError:
+  SINGULARITY_IMAGE = None
+
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False,USE_SINGULARITY=False):
      # baseName   = Gardening, Plotting, ....
@@ -114,6 +119,10 @@ class batchJobs :
        if self.USE_SINGULARITY : 
          jFileSing = open(self.subDir+subDirExtra+'/'+jName+'_Sing.sh','w')
          if 'iihe' in hostName: jFileSing.write('sl7 '+self.subDir+subDirExtra+'/'+jName+'.sh \n')
+	 if 'cern' in hostname: jFileSing.write("""#!/bin/sh\napptainer exec -B ${PWD} -B /afs/ -B /cvmfs \
+		 --bind /tmp  --bind /eos/  -B /etc/grid-security/certificates  \
+		{0} \  sh {1}""".format(SINGULARITY_IMAGE, jName)
+
        if 'cern' in hostName:
          jFile.write('#$ -N '+jName+'\n')
          if CERN_USE_LSF:
@@ -140,11 +149,11 @@ class batchJobs :
          jFile.write('export X509_USER_PROXY=/gwpool/users/'+os.environ["USER"]+'/.proxy\n')
        else:
          jFile.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
-         if self.USE_SINGULARITY : jFileSing.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
+         if self.USE_SINGULARITY and 'iihe' in hostName: jFileSing.write('export X509_USER_PROXY=/user/'+os.environ["USER"]+'/.proxy\n')
        if 'CONFIGURATION_DIRECTORY' in os.environ:
          jFile.write('export CONFIGURATION_DIRECTORY='+os.environ['CONFIGURATION_DIRECTORY']+'\n')
        jFile.write('voms-proxy-info\n')
-       if self.USE_SINGULARITY : jFileSing.write('voms-proxy-info\n')
+       if self.USE_SINGULARITY 'iihe' in hostName: jFileSing.write('voms-proxy-info\n')
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
@@ -158,7 +167,7 @@ class batchJobs :
        if    useBatchDir : 
          if 'iihe' in hostName:
            jFile.write('cd $TMPDIR \n')
-           if self.USE_SINGULARITY : 
+           if self.USE_SINGULARITY and 'iihe' in hostName: 
               jFileSing.write('cd $TMPDIR \n')
          elif 'cern' in hostName:
            if not CERN_USE_LSF:
@@ -340,7 +349,7 @@ class batchJobs :
          else:
            jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
            jdsFile = open(jdsFileName,'w')
-           jdsFile.write('executable = '+self.subDir+subDirExtra+'/'+jName+'.sh\n')
+           jdsFile.write('executable = '+jobFile + '\n')
            jdsFile.write('universe = vanilla\n')
            #jdsFile.write('use_x509userproxy = true\n')
            jdsFile.write('output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
@@ -352,6 +361,9 @@ class batchJobs :
            if AUTO_CONDOR_RETRY:
              jdsFile.write('on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)\n')
              jdsFile.write('periodic_release =  (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*3))\n')
+           if self.USE_SINGULARITY and 'cern' in hostname: 
+	     #we also need the transfer input files
+             jdsFile.write("transfer_input_files = " + self.subDir+subDirExtra+'/'+jName+'.sh
            jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')
