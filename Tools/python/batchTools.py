@@ -153,7 +153,9 @@ class batchJobs :
        if 'CONFIGURATION_DIRECTORY' in os.environ:
          jFile.write('export CONFIGURATION_DIRECTORY='+os.environ['CONFIGURATION_DIRECTORY']+'\n')
        jFile.write('voms-proxy-info\n')
-       if self.USE_SINGULARITY and  'iihe' in hostName: jFileSing.write('voms-proxy-info\n')
+       if self.USE_SINGULARITY:
+          jFileSing.write('voms-proxy-info\n')
+          jFileSing.write("export LATINOS_BASEDIR=" + baseDir)
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
@@ -365,7 +367,7 @@ class batchJobs :
              jdsFile.write('periodic_release =  (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*3))\n')
            if self.USE_SINGULARITY and 'cern' in hostName: 
 	     #we also need the transfer input files
-             jdsFile.write("transfer_input_files = " + self.subDir+subDirExtra+'/'+jName+'.sh')
+             jdsFile.write("transfer_input_files = " + self.subDir+subDirExtra+'/'+jName+'.sh\n')
            jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')
