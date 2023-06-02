@@ -154,8 +154,8 @@ class batchJobs :
          jFile.write('export CONFIGURATION_DIRECTORY='+os.environ['CONFIGURATION_DIRECTORY']+'\n')
        jFile.write('voms-proxy-info\n')
        if self.USE_SINGULARITY:
-          jFileSing.write('voms-proxy-info\n')
-          jFileSing.write("export LATINOS_BASEDIR=" + baseDir)
+          if "iihe" in hostName:  jFileSing.write('voms-proxy-info\n')
+          jFile.write("export LATINOS_BASEDIR=" + baseDir + "\n")
        jFile.write('export SCRAM_ARCH='+SCRAMARCH+'\n')
        jFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch\n')
        jFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh\n') 
