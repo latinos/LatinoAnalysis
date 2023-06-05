@@ -340,7 +340,7 @@ class batchJobs :
        jidFile=self.subDir+subDirExtra+'/'+jName+'.jid'
        jFile = open(jobFile,'a')
        if self.USE_SINGULARITY:
-          jFile.write('&& [ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
+          jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
        else:
           jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
        jFile.close()
@@ -455,7 +455,10 @@ class batchJobs :
 #      jds += 'error = '+self.subDir+'/$(JName).err\n'
 #      jds += 'log = '+self.subDir+'/$(JName).log\n'
 
-       jds = 'executable = $(JName).sh\n'
+       if self.USE_SINGULARITY and 'cern' in hostName:
+          jds = 'executable = $(JName)_Sing.sh\n'
+       else:
+          jds = 'executable = $(JName).sh\n'
        jds += 'universe = vanilla\n'
        jds += 'output = $(JName).out\n'
        jds += 'error = $(JName).err\n'
@@ -466,6 +469,10 @@ class batchJobs :
          jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'
          jds += 'accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n'
        jds += '+JobFlavour = "'+queue+'"\n'
+       if self.USE_SINGULARITY and 'cern' in hostName: 
+	  #we also need the transfer input files
+          jds += "transfer_input_files = $(JName).sh\n"
+      
        jds += 'queue JName in (\n'
        for jName in self.jobsList:
          if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
