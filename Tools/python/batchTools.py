@@ -120,7 +120,7 @@ class batchJobs :
          jFileSing = open(self.subDir+subDirExtra+'/'+jName+'_Sing.sh','w')
          if 'iihe' in hostName: jFileSing.write('sl7 '+self.subDir+subDirExtra+'/'+jName+'.sh \n')
 	 if 'cern' in hostName: jFileSing.write("""#!/bin/bash\napptainer exec -B ${{PWD}} -B /afs/ -B /cvmfs -B /tmp  --bind /eos/  -B /etc/grid-security/certificates --env LATINOS_BASEDIR={2}\
-	 {0} bash {1} > {3} 2>&1\n""".format(SINGULARITY_IMAGE, jName + ".sh", baseDir, self.subDir +subDirExtra + "/"+ jName+".out" ))
+	 {0} bash {1}\n""".format(SINGULARITY_IMAGE, jName + ".sh", baseDir ))
 
        if 'cern' in hostName:
          jFile.write('#$ -N '+jName+'\n')
@@ -281,7 +281,10 @@ class batchJobs :
        else:
          subDirExtra =''
        jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
-       command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py'
+       if self.USE_SINGULARITY:
+         command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py > ' + self.subDir +subDirExtra + "/"+ jName+".out 2>&1"
+       else:
+         command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py'
        jFile.write(command+'\n')
        jFile.close()
 
@@ -510,8 +513,12 @@ class batchJobs :
               open(jidFile, 'w').close()
          else:
            for qdict in qlist:
-             with open(qdict['Cmd'].replace('.sh', '.jid'), 'w') as out:
-               out.write('%s.%d\n' % (clusterId, qdict['ProcId']))
+             if self.USE_SINGULARITY:
+                with open(qdict['Cmd'].replace('_Sing.sh', '.jid'), 'w') as out:
+                  out.write('%s.%d\n' % (clusterId, qdict['ProcId']))
+             else:
+                with open(qdict['Cmd'].replace('.sh', '.jid'), 'w') as out:
+                  out.write('%s.%d\n' % (clusterId, qdict['ProcId']))
 
    def AddCopy (self,iStep,iTarget,inputFile,outputFile):
      "Copy file from local to remote server (outputFile = /store/...)"
