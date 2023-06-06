@@ -281,10 +281,7 @@ class batchJobs :
        else:
          subDirExtra =''
        jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
-       if self.USE_SINGULARITY:
-         command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py > ' + self.subDir +subDirExtra + "/"+ jName+".out 2>&1"
-       else:
-         command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py'
+       command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py'
        jFile.write(command+'\n')
        jFile.close()
 
