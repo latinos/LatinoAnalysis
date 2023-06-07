@@ -83,7 +83,7 @@ if __name__ == '__main__':
     #     print " --> ", list_histos
 
     
-    texOutputFile =  open( 'plot_' + opt.cutName + '.tex' ,"w")
+    texOutputFile =  open( outputDirPlots + '/plot_' + opt.cutName + '.tex' ,"w")
     texOutputFile.write('\n')
 
     # loop over nuisances
