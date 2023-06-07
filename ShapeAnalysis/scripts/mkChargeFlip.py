@@ -25,7 +25,7 @@ import LatinoAnalysis.Gardener.hwwtools as hwwtools
 import numpy as np
 from   math import sqrt
 
-from ROOT  import TMinuit , TFile , TCanvas , TH2D, gROOT, gStyle
+from ROOT  import TMinuit , TFile , TCanvas , TH2D, gROOT, gStyle, TPad
 from array import array as arr
 from collections import OrderedDict
 from ctypes import c_double, c_int, c_float
@@ -38,26 +38,74 @@ ROOT.TH1.SetDefaultSumw2()
 
 zmass = "91.1876"
 
+# Define model global function
+def model( i, par ):
+     pass
+
+# Electrons
 # We hard-code the schema to: 
 # ptb ins:  [(0., 20.), (20., 200.)] 
 # eta bins: [(0., 1.4), (1.4, 2.5)]
-ptbins        = ["high_pt", "low_pt"]
-etabins       = ["EBEB", "EBEE", "EEEB", "EEEE"]
-eta_bin_array = [0.0, 1.4, 2.5]
-eta_bin       = ["EB","EE"]
+ptbins_ele        = ["high_pt", "low_pt"]
+etabins_ele       = ["EBEB", "EBEE", "EEEB", "EEEE"]
+eta_bin_array_ele = [0.0, 1.4, 2.5]
+eta_bin_ele       = ["EB","EE"]
+
 
 # Also the flip model is fixed at the moment, in agreement with the schema
 # from flipModel import model_2x2 as model
 # 2x2 eta bin scheme
 # parameters : 2
 # eta_bin = [ 0., 1.4 , 2.5 ]
-def model( i , par ):
+def model_2x2( i , par ):
 
      if   i == 0:  value = ( par[0] * (1-par[ 0]) + (1-par[ 0]) * par[ 0] ) / ( 1 - ( par[0] * (1-par[ 0]) + (1-par[ 0]) * par[ 0] ) )
      elif i == 1:  value = ( par[0] * (1-par[ 1]) + (1-par[ 0]) * par[ 1] ) / ( 1 - ( par[0] * (1-par[ 1]) + (1-par[ 0]) * par[ 1] ) )
 
      elif i == 2:  value = ( par[1] * (1-par[ 0]) + (1-par[ 1]) * par[ 0] ) / ( 1 - ( par[1] * (1-par[ 0]) + (1-par[ 1]) * par[ 0] ) )
      elif i == 3:  value = ( par[1] * (1-par[ 1]) + (1-par[ 1]) * par[ 1] ) / ( 1 - ( par[1] * (1-par[ 1]) + (1-par[ 1]) * par[ 1] ) )
+
+     return value
+
+
+# Muons
+# We hard-code the schema to: 
+# ptb ins:  [(0., 20.), (20., 200.)] 
+# eta bins: [(0., 0.9), (0., 1.2), (1.2, 2.1), (2.1, 2.4)]
+ptbins_muon        = ["high_pt", "low_pt"]
+etabins_muon       = ["BE", "BB", "BO", "BF",
+                      "EE", "EB", "EO", "EF",
+                      "OE", "OB", "OO", "OF",
+                      "FE", "FB", "FO", "FF"]
+eta_bin_array_muon = [0.0, 0.9, 1.2, 2.1, 2.4]
+eta_bin_muon       = ["B","E","O","F"]
+
+# Also the flip model is fixed at the moment, in agreement with the schema
+# from flipModel import model_4x4 as model
+# 4x4 eta bin scheme
+# parameters : 4
+# eta_bin = [ 0.0, 0.9, 1.2, 2.1, 2.4 ]
+def model_4x4( i , par ):
+
+     if   i == 0:  value = ( par[0] * (1-par[ 0]) + (1-par[ 0]) * par[ 0] ) / ( 1 - ( par[0] * (1-par[ 0]) + (1-par[ 0]) * par[ 0] ) )
+     elif i == 1:  value = ( par[0] * (1-par[ 1]) + (1-par[ 0]) * par[ 1] ) / ( 1 - ( par[0] * (1-par[ 1]) + (1-par[ 0]) * par[ 1] ) )
+     elif i == 2:  value = ( par[0] * (1-par[ 2]) + (1-par[ 0]) * par[ 2] ) / ( 1 - ( par[0] * (1-par[ 2]) + (1-par[ 0]) * par[ 2] ) )
+     elif i == 3:  value = ( par[0] * (1-par[ 3]) + (1-par[ 0]) * par[ 3] ) / ( 1 - ( par[0] * (1-par[ 3]) + (1-par[ 0]) * par[ 3] ) )
+
+     elif i == 4:  value = ( par[1] * (1-par[ 0]) + (1-par[ 1]) * par[ 0] ) / ( 1 - ( par[1] * (1-par[ 0]) + (1-par[ 1]) * par[ 0] ) )
+     elif i == 5:  value = ( par[1] * (1-par[ 1]) + (1-par[ 1]) * par[ 1] ) / ( 1 - ( par[1] * (1-par[ 1]) + (1-par[ 1]) * par[ 1] ) )
+     elif i == 6:  value = ( par[1] * (1-par[ 2]) + (1-par[ 1]) * par[ 2] ) / ( 1 - ( par[1] * (1-par[ 2]) + (1-par[ 1]) * par[ 2] ) )
+     elif i == 7:  value = ( par[1] * (1-par[ 3]) + (1-par[ 1]) * par[ 3] ) / ( 1 - ( par[1] * (1-par[ 3]) + (1-par[ 1]) * par[ 3] ) )
+
+     elif i == 8: value = ( par[2] * (1-par[ 0]) + (1-par[ 2]) * par[ 0] ) / ( 1 - ( par[2] * (1-par[ 0]) + (1-par[ 2]) * par[ 0] ) )
+     elif i == 9: value = ( par[2] * (1-par[ 1]) + (1-par[ 2]) * par[ 1] ) / ( 1 - ( par[2] * (1-par[ 1]) + (1-par[ 2]) * par[ 1] ) )
+     elif i == 10: value = ( par[2] * (1-par[ 2]) + (1-par[ 2]) * par[ 2] ) / ( 1 - ( par[2] * (1-par[ 2]) + (1-par[ 2]) * par[ 2] ) )
+     elif i == 11: value = ( par[2] * (1-par[ 3]) + (1-par[ 2]) * par[ 3] ) / ( 1 - ( par[2] * (1-par[ 3]) + (1-par[ 2]) * par[ 3] ) )
+
+     elif i == 12: value = ( par[3] * (1-par[ 0]) + (1-par[ 3]) * par[ 0] ) / ( 1 - ( par[3] * (1-par[ 0]) + (1-par[ 3]) * par[ 0] ) )
+     elif i == 13: value = ( par[3] * (1-par[ 1]) + (1-par[ 3]) * par[ 1] ) / ( 1 - ( par[3] * (1-par[ 1]) + (1-par[ 3]) * par[ 1] ) )
+     elif i == 14: value = ( par[3] * (1-par[ 2]) + (1-par[ 3]) * par[ 2] ) / ( 1 - ( par[3] * (1-par[ 2]) + (1-par[ 3]) * par[ 2] ) )
+     elif i == 15: value = ( par[3] * (1-par[ 3]) + (1-par[ 3]) * par[ 3] ) / ( 1 - ( par[3] * (1-par[ 3]) + (1-par[ 3]) * par[ 3] ) )
 
      return value
 
@@ -77,6 +125,12 @@ def fcn( npar , deriv , f , par , iflag):
     # par:   the array of parameters
     # iflag: internal flag: 1 at first call, 3 at the last, 4 during minimisation
     '''
+    
+    if flavor == "ele":
+         model = model_2x2
+    if flavor == "muon":
+         model = model_4x4
+
     chisq=0.0
     for i in range(0, nBins):
         delta = ( model( i, par ) - val[i] ) / err[i]
@@ -127,11 +181,48 @@ def mk2Dfromcsv(ifile_, pt_bin_, eta_bin, output_dir):
                     sf_flip   = float(ibn['SF']) ; sf_flip_sys = float(ibn['SFerr'])
 
                     sf_hist['data'].SetBinContent(    ibinX, ibinY, data_flip)
+                    sf_hist['data'].SetBinError(      ibinX, ibinY, data_flip_sys)
                     sf_hist['data_sys'].SetBinContent(ibinX, ibinY, data_flip_sys)
                     sf_hist['mc'].SetBinContent(      ibinX, ibinY, mc_flip)
+                    sf_hist['mc'].SetBinError(        ibinX, ibinY, mc_flip_sys)
                     sf_hist['mc_sys'].SetBinContent(  ibinX, ibinY, mc_flip_sys)
                     sf_hist['sf'].SetBinContent(      ibinX, ibinY, sf_flip)
+                    sf_hist['sf'].SetBinError(        ibinX, ibinY, sf_flip_sys)
                     sf_hist['sf_sys'].SetBinContent(  ibinX, ibinY, sf_flip_sys)
+
+    # Print histograms 
+    c_data = TCanvas('c_data', 'charge flipping rate data', 800, 800)
+    c_data.cd()
+    tpad_data = TPad("", "", 0.0, 0.0, 1.0, 1.0)
+    tpad_data.Draw()
+    tpad_data.cd()
+    tpad_data.SetLeftMargin(0.12)
+    tpad_data.SetRightMargin(0.18)
+    sf_hist['data'].Draw("colz,texte")
+    c_data.Print('{}/CF_Data.png'.format(output_dir))
+    c_data.Print('{}/CF_Data.pdf'.format(output_dir))
+
+    c_MC = TCanvas('c_MC', 'charge flipping rate MC', 800, 800)
+    c_MC.cd()
+    tpad_MC = TPad("", "", 0.0, 0.0, 1.0, 1.0)
+    tpad_MC.Draw()
+    tpad_MC.cd()
+    tpad_MC.SetLeftMargin(0.12)
+    tpad_MC.SetRightMargin(0.18)
+    sf_hist['mc'].Draw("colz,texte")
+    c_MC.Print('{}/CF_MC.png'.format(output_dir))
+    c_MC.Print('{}/CF_MC.pdf'.format(output_dir))
+
+    c_sf = TCanvas('c_sf', 'charge flipping rate sf', 800, 800)
+    c_sf.cd()
+    tpad_sf = TPad("", "", 0.0, 0.0, 1.0, 1.0)
+    tpad_sf.Draw()
+    tpad_sf.cd()
+    tpad_sf.SetLeftMargin(0.12)
+    tpad_sf.SetRightMargin(0.18)
+    sf_hist['sf'].Draw("colz,texte")
+    c_sf.Print('{}/SF.png'.format(output_dir))
+    c_sf.Print('{}/SF.pdf'.format(output_dir))
 
     # Save it
     h_fileout = TFile.Open("{}/chargeFlip_SF.root".format(output_dir), "RECREATE")
@@ -162,6 +253,11 @@ def mkValidation(ifile_, flipPro, h_val, ptbin_, year, output_dir):
      print("ifile_:   {}".format(ifile_))
      print("ptbin_:   {}".format(ptbin_))
 
+     if flavor == "ele":
+          model = model_2x2
+     if flavor == "muon":
+          model = model_4x4
+
      output = '{}/Step4_validateFlip/{}'.format(output_dir, ptbin_)
      os.system('mkdir -p {}'.format(output))
 
@@ -170,9 +266,12 @@ def mkValidation(ifile_, flipPro, h_val, ptbin_, year, output_dir):
 
      for ids in ['DATA','MC']:
           dim     = len(h_val[year][ids][0]) # Infer dimension
+          print("Dim: {}".format(dim))
           flipper = map(lambda x: x[0], flipPro[year][ids]) # Extract the fitted value (mischarge probability)
 
           bins_postfit = map( lambda x: model(x,flipper) , list(range(0,dim)) ) # Reproduce the ratio
+          print("bins_postfit: {}".format(bins_postfit))
+
           bins_prefit = h_val[year][ids][0]
           bins_diff = map(lambda x : (abs(bins_prefit[x] - bins_postfit[x])/bins_prefit[x])*100. , list(range(0,dim)) )
           # bins_diff = map(lambda x : (abs(bins_prefit[x] - bins_postfit[x])) , list(range(0,dim)) )
@@ -201,6 +300,8 @@ def outFormat(ifile_, pt_bin_, fitted_prob_, out_, output_dir, useCsv=True):
     outfile = open('{}/chargeFlip_{}_SF.csv'.format(output_dir, pt_bin_), "w")
     if not useCsv:
          outfile = open("{}/chargeFlip_{}_SF.txt".format(output_dir, pt_bin_), "w")
+
+    print("Outfile: {}".format(outfile))
 
     row_list = []
 
@@ -251,9 +352,14 @@ def fit_SF(p, perr):
      nBins=len(val)
 
      # Fit parameters: two per pT bin --> [cf(barrel), cf(endcap)]
-     name = ['q0', 'q1']
+     name = []
+     if flavor == "ele":
+          name = ['q0', 'q1']
+     if flavor == "muon":
+          name = ['q0', 'q1', 'q2', 'q3']
 
      npar=len(name)
+     print("Number of parameters: {}".format(npar))
      # Initial parameters values
      vstart = arr('d', npar*[0.1])
      # Initial step size
@@ -271,7 +377,8 @@ def fit_SF(p, perr):
      # Set starting values and step size for parameters
      # Define the parameters for the fit
      for i in range(0,npar): 
-          gMinuit.mnparm(i, name[i], vstart[i], step[i], 0, 0, ierflg)
+          gMinuit.mnparm(i, name[i], vstart[i], step[i], 0.000001, 0.01, ierflg)
+          # gMinuit.mnparm(i, name[i], vstart[i], step[i], 0, 0, ierflg) # parameters have no physical limits
 
      # Now ready for minimization step
      arglist [0] = 500                               # Number of calls for FCN before giving up
@@ -319,7 +426,7 @@ def fit_SF(p, perr):
      print("*==* MINUIT fit completed:")
      print('fcn@minimum = %.3g'%(amin.value ), " error code =" , ierflg.value , " status =" , icstat.value , " (if its 3, mean accurate)")
      print( " Results: \t value error corr. mat." )
-     for i in range(0,npar):
+     for i in range(0, npar):
           print('%s: \t%10.3e +/- %.1e'%(name[i], finalPar[i], finalParErr[i]))
           for j in range (0,i): 
                print('%+.3g'%(emat[i][j]/np.sqrt(emat[i][i])/np.sqrt(emat[j][j])))
@@ -353,6 +460,10 @@ def mkSf(ifile_, ptbin_, year, output_dir, var, outcsv_=True ):
           fitted_prob[year][ids] = fit_SF(arr('f', h4val[year][ids][0]), arr('f', h4val[year][ids][1]))
      out[year] = map(lambda x, y : [x[0]/y[0], sqrt((x[1]*x[1])/(x[0]*x[0]) + (y[1]*y[1])/(y[0]*y[0]))], fitted_prob[year]['DATA'], fitted_prob[year]['MC'])
 
+     print("Output: {}".format(out["2018"]))
+
+     print("h4val: {}".format(h4val))
+
      # Save output on a CSV file
      outFormat(ifile_, ptbin_, fitted_prob[year], out[year], output_dir, outcsv_)
 
@@ -365,6 +476,19 @@ def mkflipsf(variable, year, output_dir, var):
     if not os.path.exists(output_dir):
         print("Error, path folder {} does not exist".format(output_dir))
         sys.exit()
+
+    # if flavor == "ele":
+    #      ptbins        = ptbins_ele
+    #      etabins       = etabins_ele
+    #      eta_bin_array = eta_bin_array_ele
+    #      eta_bin       = eta_bin_ele
+    #      model         = model_2x2
+    # if flavor == "muon":
+    #      ptbins        = ptbins_muon
+    #      etabins       = etabins_muon
+    #      eta_bin_array = eta_bin_array_muon
+    #      eta_bin       = eta_bin_muon
+    #      model         = model_4x4
 
     # Fit and validate
     for iptbin in ptbins :
@@ -380,6 +504,11 @@ def mkflipsf(variable, year, output_dir, var):
         fpout.append(" ===> scale factor DATA/MC for %s" %year)
         for num, isf in enumerate(epsilon[year]):
              fpout.append('q{} data : {:.3e} +/- {:.3e} ; mc : {:.3e} +/- {:.3e} ; SF : {:.3e} +/- {:.3e} ( rel.error : {:.2f} % )'\
+                          .format( num , 
+                                   mischarge[year]['DATA'][num][0] , mischarge[year]['DATA'][num][1] , 
+                                   mischarge[year]['MC'][num][0]   , mischarge[year]['MC'][num][1]   , 
+                                   isf[0] , isf[1] , (isf[1]/isf[0])*100 ) )
+             print('q{} data : {:.3e} +/- {:.3e} ; mc : {:.3e} +/- {:.3e} ; SF : {:.3e} +/- {:.3e} ( rel.error : {:.2f} % )'\
                           .format( num , 
                                    mischarge[year]['DATA'][num][0] , mischarge[year]['DATA'][num][1] , 
                                    mischarge[year]['MC'][num][0]   , mischarge[year]['MC'][num][1]   , 
@@ -406,10 +535,23 @@ def mkflipsf(variable, year, output_dir, var):
 ##############################################################
 
 # Signal + bkg fit
-def fit(filename, ptbin, output, year, var):
+def fit(filename, ptbin, output, year, var, flavor):
 
     print(">>>>>>>>>>>>>>>>>>>> Extracting signal and background yields")
     fin             = ROOT.TFile.Open(filename)
+
+    if flavor == "ele":
+         ptbins        = ptbins_ele
+         etabins       = etabins_ele
+         eta_bin_array = eta_bin_array_ele
+         eta_bin       = eta_bin_ele
+         model         = model_2x2
+    if flavor == "muon":
+         ptbins        = ptbins_muon
+         etabins       = etabins_muon
+         eta_bin_array = eta_bin_array_muon
+         eta_bin       = eta_bin_muon
+         model         = model_4x4
 
     # Hard coded, at least for now
     histos_DATA     = []
@@ -568,11 +710,16 @@ def fit(filename, ptbin, output, year, var):
         h_os = ROOT.TH2D('h_' + ptbin + '_os_' + isample, 'h_' + ptbin + '_os_' + isample, len(eta_bin), eta_bin_array[0], eta_bin_array[-1], len(eta_bin), eta_bin_array[0], eta_bin_array[-1])
         for i in range(0, len(eta_bin)):
             for j in range(0, len(eta_bin)):
-                h_ss.SetBinContent(i+1 , j+1 , samples[isample][0]['DY_ee_cf_ss_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
-                h_ss.SetBinError  (i+1 , j+1 , samples[isample][1]['DY_ee_cf_ss_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
-                h_os.SetBinContent(i+1 , j+1 , samples[isample][0]['DY_ee_cf_os_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
-                h_os.SetBinError  (i+1 , j+1 , samples[isample][1]['DY_ee_cf_os_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
-
+                if flavor == "ele": 
+                     h_ss.SetBinContent(i+1 , j+1 , samples[isample][0]['DY_ee_cf_ss_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
+                     h_ss.SetBinError  (i+1 , j+1 , samples[isample][1]['DY_ee_cf_ss_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
+                     h_os.SetBinContent(i+1 , j+1 , samples[isample][0]['DY_ee_cf_os_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
+                     h_os.SetBinError  (i+1 , j+1 , samples[isample][1]['DY_ee_cf_os_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
+                elif flavor == "muon": 
+                     h_ss.SetBinContent(i+1 , j+1 , samples[isample][0]['DY_mm_cf_ss_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
+                     h_ss.SetBinError  (i+1 , j+1 , samples[isample][1]['DY_mm_cf_ss_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
+                     h_os.SetBinContent(i+1 , j+1 , samples[isample][0]['DY_mm_cf_os_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
+                     h_os.SetBinError  (i+1 , j+1 , samples[isample][1]['DY_mm_cf_os_' + ptbin + '_' + eta_bin[i] + eta_bin[j] + '_mll_histo_' + isample])
         ss_plots.append(h_ss)
         os_plots.append(h_os)
 
@@ -632,7 +779,7 @@ def ratio(filename, data, ptbin, output):
 
 
 # Main function
-def mkzfit(input_file, output_dir, era, var):
+def mkzfit(input_file, output_dir, era, var, flavor):
 
     output_1 = "{}/Step2_Zmassfit".format(output_dir)
     output_2 = "{}/Step3_Chflipfit".format(output_dir)
@@ -640,12 +787,25 @@ def mkzfit(input_file, output_dir, era, var):
     if not os.path.exists(output_1): os.system('mkdir -p {}'.format(output_1))
     if not os.path.exists(output_2): os.system('mkdir -p {}'.format(output_2))
 
+    if flavor == "ele":
+         ptbins        = ptbins_ele
+         etabins       = etabins_ele
+         eta_bin_array = eta_bin_array_ele
+         eta_bin       = eta_bin_ele
+         model         = model_2x2
+    if flavor == "muon":
+         ptbins        = ptbins_muon
+         etabins       = etabins_muon
+         eta_bin_array = eta_bin_array_muon
+         eta_bin       = eta_bin_muon
+         model         = model_4x4
+
     for iptbin in ptbins :
         name = "{}_{}".format(iptbin, var)
         print("Name: {}".format(name))
         # Signal + bkg fit to data distributions.
         # MC yields are also extracted here, just counting the expected events
-        fit(input_file, iptbin, output_1, era, var)
+        fit(input_file, iptbin, output_1, era, var, flavor)
 
         # Compute SS/OS ratio
         for idata in ['DATA', 'DY', 'DY_LO']:
@@ -668,6 +828,7 @@ if __name__ == '__main__':
     parser.add_option('--era'       , dest='era'       , help='Run 2 data taking period',                                default='2018')
     parser.add_option('--var'       , dest='var'       , help='Name of the variable to fit. Must be the invariant mass', default='mll')
     parser.add_option('--steps'     , dest='steps'     , help='Steps to perform: z_fit, cf_fit, both',                   default='both')
+    parser.add_option('--flavor'    , dest='flavor'    , help='Particle flavor: ele, muon',                              default='ele')
  
     # Read default parsing options as well
     #hwwtools.addOptions(parser)
@@ -683,11 +844,31 @@ if __name__ == '__main__':
     if opt.steps != 'z_fit' and opt.steps != 'cf_fit' and opt.steps != 'both':
         raise ValueError("Please introduce a valid step: z_fit, cf_fit, or both")
 
-    input_file = opt.input_file
-    output_dir = opt.output_dir
-    era        = opt.era
-    var        = opt.var
-    steps      = opt.steps
+    input_file    = opt.input_file
+    output_dir    = opt.output_dir
+    era           = opt.era
+    var           = opt.var
+    steps         = opt.steps
+    global flavor 
+    flavor        = opt.flavor
+
+    # Global variables definitions
+    global ptbins
+    global etabins
+    global eta_bin_array
+    global eta_bin
+
+    if flavor == "ele":
+         ptbins        = ptbins_ele
+         etabins       = etabins_ele
+         eta_bin_array = eta_bin_array_ele
+         eta_bin       = eta_bin_ele
+
+    if flavor == "muon":
+         ptbins        = ptbins_muon
+         etabins       = etabins_muon
+         eta_bin_array = eta_bin_array_muon
+         eta_bin       = eta_bin_muon
 
     # Move input parameters to variables
     print("Input file       = {}".format(input_file))
@@ -695,11 +876,12 @@ if __name__ == '__main__':
     print("Era              = {}".format(era))
     print("Variable         = {}".format(var))
     print("Steps            = {}".format(steps))
+    print("Flavor           = {}".format(flavor))
 
     # Execute sig+bkg fit to get N_SS and N_OS yields,
     # then prepare the ratios N_SS/N_OS
     if steps == 'both' or steps == 'z_fit':
-        mkzfit(input_file, output_dir, era, var)
+        mkzfit(input_file, output_dir, era, var, flavor)
     
     # Extract the charge-flip probabilities and scale factors
     if steps == 'both' or steps == 'cf_fit':
