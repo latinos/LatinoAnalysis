@@ -67,6 +67,12 @@ class l3KinProducer(Module):
         'AZH_ChiSquare' : (["F"], {}),
         'AZH_Tophadronic' : (["F"], {}),
         'AZH_Topleptonic' : (["F"], {}),
+        'AZH_mA_minus_mH_onebjet' : (["F"], {}),
+        'AZH_Amass_onebjet': (["F"], {}),
+        'AZH_Hmass_onebjet' : (["F"], {}),
+        'AZH_ChiSquare_onebjet' : (["F"], {}),
+        'AZH_Tophadronic_onebjet' : (["F"], {}),
+        'AZH_Topleptonic_onebjet' : (["F"], {}),
     }
 
     def __init__(self, branch_map=''):
@@ -348,7 +354,46 @@ class l3KinProducer(Module):
             return (self.ZH3l_XLepton[0] + self.AZH_Neutrino_best + self.bJetLeptonic_best).M()
         else:
             return -9999
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    def AZH_mA_minus_mH_onebjet(self):
+        if self.AZH_isOk_onebjet:
+            return (self.ZH3l_XLepton[0] + self.AZH_Neutrino_best_onebjet + self.bJetLeptonic_best_onebjet + self.bJetHadronic_best_onebjet + self.WJet1_best_onebjet + self.WJet2_best_onebjet + self.Zlepton1 + self.Zlepton2).M()-(self.ZH3l_XLepton[0] + self.AZH_Neutrino_best_onebjet + self.bJetLeptonic_best_onebjet + self.bJetHadronic_best_onebjet + self.WJet1_best_onebjet + self.WJet2_best_onebjet).M()
+        else:
+            return -9999
+
+    def AZH_Amass_onebjet(self):
+        if self.AZH_isOk_onebjet:
+            return (self.ZH3l_XLepton[0] + self.AZH_Neutrino_best_onebjet + self.bJetLeptonic_best_onebjet + self.bJetHadronic_best_onebjet + self.WJet1_best_onebjet + self.WJet2_best_onebjet + self.Zlepton1 + self.Zlepton2).M()
+        else:
+            return -9999
+
+    def AZH_Hmass_onebjet(self):
+        if self.AZH_isOk_onebjet:
+            return (self.ZH3l_XLepton[0] + self.AZH_Neutrino_best_onebjet + self.bJetLeptonic_best_onebjet + self.bJetHadronic_best_onebjet + self.WJet1_best_onebjet + self.WJet2_best_onebjet).M()
+        else:
+            return -9999
+
+    def AZH_ChiSquare_onebjet(self):
+        if self.AZH_isOk_onebjet:
+            return self.ChisqMin_onebjet
+        else:
+            return -9999
+
+    def AZH_Tophadronic_onebjet(self):
+        if self.AZH_isOk_onebjet:
+            return (self.bJetHadronic_best_onebjet + self.WJet1_best_onebjet + self.WJet2_best_onebjet).M()
+        else:
+            return -9999
+
+    def AZH_Topleptonic_onebjet(self):
+        if self.AZH_isOk_onebjet:
+            return (self.ZH3l_XLepton[0] + self.AZH_Neutrino_best_onebjet + self.bJetLeptonic_best_onebjet).M()
+        else:
+            return -9999
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
@@ -372,7 +417,7 @@ class l3KinProducer(Module):
         for j in Collection(event, "CleanJet"):
             self.CleanJet_4vecId.append(ROOT.TLorentzVector()) #redefine a new collection with btagDeepB
             self.CleanJet_4vecId[-1].SetPtEtaPhiM(j.pt, j.eta, j.phi, 0)
-            self.bJet_4vecId.append((ROOT.TLorentzVector(), Jet[j.jetIdx].btagDeepB))
+            self.bJet_4vecId.append((ROOT.TLorentzVector(), Jet[j.jetIdx].btagDeepFlavB))
             self.bJet_4vecId[-1][0].SetPtEtaPhiM(j.pt, j.eta, j.phi, 0)
 
         self.l3_isOk = False if len(self.Lepton_4vecId) < 3 else True
@@ -381,8 +426,10 @@ class l3KinProducer(Module):
         self.ZH3l_isOk = self._ZH3l_setXLepton()
         self.ZH3l_CleanJet_4vecId = [ j for j in self.CleanJet_4vecId if j.Pt() > 30 and abs(j.Eta()) < 4.7]
         
-        self.AZH_bJet_4vecId = [ j[0] for j in self.bJet_4vecId if j[0].Pt() > 30 and abs(j[0].Eta()) < 4.7 and j[1] > 0.4941]
+        self.ZH3l_CleanJetbtag_4vecId = [ j[1] for j in self.bJet_4vecId if j[0].Pt() > 30 and abs(j[0].Eta()) < 4.7] #same as ZH3l_CleanJet4vedId - just btagWP
+        self.AZH_bJet_4vecId = [ j[0] for j in self.bJet_4vecId if j[0].Pt() > 30 and abs(j[0].Eta()) < 4.7 and j[1] > 0.3040]
         self.AZH_isOk = self.ZH3l_isOk and len(self.ZH3l_CleanJet_4vecId) >= 4 and len(self.AZH_bJet_4vecId) >= 2
+        self.AZH_isOk_onebjet = self.ZH3l_isOk and len(self.ZH3l_CleanJet_4vecId) >= 4 and len(self.AZH_bJet_4vecId) == 1
 
 #------------#AZH Neutrino Pz Solution--------------------------------------------------------------------------------------------------------------------
         if self.ZH3l_isOk:
@@ -424,7 +471,44 @@ class l3KinProducer(Module):
                         self.WJet2_best = WJet2
                         self.bJetHadronic_best = bJetHadronic
                         self.bJetLeptonic_best = bJetLeptonic
-                        self.AZH_Neutrino_best = AZH_Neutrino 
+                        self.AZH_Neutrino_best = AZH_Neutrino
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        if self.AZH_isOk_onebjet:
+          self.WJet1_best_onebjet = None
+          self.WJet2_best_onebjet = None 
+          self.bJetHadronic_best_onebjet = None 
+          self.bJetLeptonic_best_onebjet = None
+          self.AZH_Neutrino_best_onebjet = None
+          self.ChisqMin_onebjet = 99999
+          self.Chisq_onebjet = 0
+          for AZH_Neutrino in [self.AZH_Neutrino1, self.AZH_Neutrino2]: 
+               self.ibJet2 = 0
+               bJetPair = []
+               for ij in range(len(self.ZH3l_CleanJet_4vecId)):
+                   if self.ZH3l_CleanJet_4vecId[ij] != self.AZH_bJet_4vecId[0] and self.ZH3l_CleanJetbtag_4vecId[ij] > self.ZH3l_CleanJetbtag_4vecId[self.ibJet2]:
+                      self.ibJet2 = ij
+               bJetPair = [self.AZH_bJet_4vecId[0], self.ZH3l_CleanJet_4vecId[self.ibJet2]]
+               WJets = [j for j in self.ZH3l_CleanJet_4vecId if j not in bJetPair]
+               for i in range(2):
+                 for WJet1_onebjet, WJet2_onebjet in combinations(WJets, 2):
+                     bJetHadronic_onebjet = bJetPair[i]
+                     bJetLeptonic_onebjet = bJetPair[1-i]
+                     WMassLeptonic_onebjet = (self.ZH3l_XLepton[0] + AZH_Neutrino).M()
+                     WMassHadronic_onebjet = (WJet1_onebjet + WJet2_onebjet).M()
+                     TopMassLeptonic_onebjet = (self.ZH3l_XLepton[0] + AZH_Neutrino + bJetLeptonic_onebjet).M()
+                     TopMassHadronic_onebjet = (WJet1_onebjet + WJet2_onebjet + bJetHadronic_onebjet).M()
+                     self.Chisq_onebjet = TMath.Power((TopMassLeptonic_onebjet-self.Topmassleptonic_true)/self.sigmaleptonic,2) + TMath.Power((TopMassHadronic_onebjet-self.Topmasshadronic_true)/self.sigmahadronic,2)
+                     if self.Chisq_onebjet < self.ChisqMin_onebjet:
+                           self.ChisqMin_onebjet = self.Chisq_onebjet
+                           self.WJet1_best_onebjet = WJet1_onebjet
+                           self.WJet2_best_onebjet = WJet2_onebjet
+                           self.bJetHadronic_best_onebjet = bJetHadronic_onebjet
+                           self.bJetLeptonic_best_onebjet = bJetLeptonic_onebjet
+                           self.AZH_Neutrino_best_onebjet = AZH_Neutrino
+
+#-----------------------------------------------------------------------------------------------------------------
+
         for nameBranchKey in self.newbranches.keys():
             self.out.fillBranch(nameBranchKey, getattr(self, nameBranchKey)());
 
