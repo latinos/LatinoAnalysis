@@ -71,6 +71,7 @@ samples['DYJetsToLL_M-10to50-LO']               .extend( ['xsec=18610.0',       
 samples['DYJetsToLL_M-50']                      .extend( ['xsec=6077.22',       'kfact=1.000',          'ref=E'] )
 samples['DYJetsToLL_M-50-LO']      	        .extend( ['xsec=6077.22',	'kfact=1.000',		'ref=E'] )
 samples['DYJetsToLL_M-50-LO_ext1']     	        .extend( ['xsec=6077.22',	'kfact=1.000',		'ref=E'] )
+samples['DYJetsToLL_M-10to50_NLO']          	.extend( ['xsec=20490.0',	'kfact=1.000',		'ref=W'] )
 
 samples['DYJetsToTT_MuEle_M-50']                .extend( ['xsec=250.997',       'kfact=1.000',          'ref=E'] )  # (6077.22/3)*(0.352)^2
 
