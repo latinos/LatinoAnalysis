@@ -221,9 +221,9 @@ samples['TTWJetsToLNu']                         .extend( ['xsec=0.2161',	'kfact=
 samples['TTWJetsToLNu_TuneCP5Up']               .extend( ['xsec=0.2161',	'kfact=1.000',		'ref=E'] )	
 samples['TTWJetsToLNu_TuneCP5Down']             .extend( ['xsec=0.2161',	'kfact=1.000',		'ref=E'] )	
 
-samples['TTZToLLNuNu_M-10']                     .extend( ['xsec=0.2439',	'kfact=1.000',		'ref=W'] )
-samples['TTZToLLNuNu_M-10_TuneCP5Up']           .extend( ['xsec=0.2439',	'kfact=1.000',		'ref=W'] )
-samples['TTZToLLNuNu_M-10_TuneCP5Down']         .extend( ['xsec=0.2439',	'kfact=1.000',		'ref=W'] )
+samples['TTZToLLNuNu_M-10']                     .extend( ['xsec=0.2432',	'kfact=1.000',		'ref=W'] )
+samples['TTZToLLNuNu_M-10_TuneCP5Up']           .extend( ['xsec=0.2432',	'kfact=1.000',		'ref=W'] )
+samples['TTZToLLNuNu_M-10_TuneCP5Down']         .extend( ['xsec=0.2432',	'kfact=1.000',		'ref=W'] )
 
 samples['tZq_ll']   				.extend( ['xsec=0.07580',	'kfact=1.000',	        'ref=E'] )
 samples['tZq_ll_TuneCP5Up']   			.extend( ['xsec=0.07580',	'kfact=1.000',	        'ref=E'] )
