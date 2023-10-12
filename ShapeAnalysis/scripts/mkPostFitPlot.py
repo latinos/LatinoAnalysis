@@ -111,14 +111,26 @@ class LawnMower:
              print "THISFILE:",self._inputFile
              fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
-             self._outFile.cd (self._cutNameInOriginal+"/"+self._variable)
+             if self._isInputFileFromDatacard:
+                 if sampleName == "DATA": sampleName = "data_obs"
+                 self._outFile.cd (self._cutNameInOriginal + "/" + self._variable)
+                 print("Shape source = " + shapeSource + "/" + sampleName)
+                 histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + sampleName)
+                 print("Histo:")
+                 print(histo)
+                 print("Histo + cardName = histo_" + cardName)
+                 histo.SetName  ("histo_" + cardName)
+                 histo.SetTitle ("histo_" + cardName)
 
-             print shapeSource + "/histo_" + sampleName
-             histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
-             print histo
-             print 'histo_' + cardName
-             histo.SetName  ('histo_' + cardName)
-             histo.SetTitle ('histo_' + cardName)
+             else:
+                 self._outFile.cd (self._cutNameInOriginal+"/"+self._variable)
+                 print shapeSource + "/histo_" + sampleName
+                 histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
+                 print histo
+                 print 'histo_' + cardName
+                 histo.SetName  ('histo_' + cardName)
+                 histo.SetTitle ('histo_' + cardName)
+
              histo.Write()              
              
              template_histogram = histo.Clone ("template")
@@ -159,14 +171,20 @@ class LawnMower:
            
            if sampleName != "DATA":
                if totalFromDatacard == 0:
-                   totalFromDatacard = fileInJustForDATA.Get("histo_"+sampleName).Clone()
+                   if self._isInputFileFromDatacard:
+                       totalFromDatacard = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + sampleName).Clone()
+                   else:
+                       totalFromDatacard = fileInJustForDATA.Get("histo_"+sampleName).Clone()
                else:
-                   tmp = fileInJustForDATA.Get("histo_"+sampleName)
+                   if self._isInputFileFromDatacard:
+                       tmp = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + sampleName)
+                   else:
+                       tmp = fileInJustForDATA.Get("histo_"+sampleName)
                    totalFromDatacard.Add(tmp)
 
            copied_from_original = False
            
-           #if samples_key != "DATA" :
+           # if samples_key != "DATA" :
            if not ((self._getSignalFromPrefit == 1 and structureDef['isSignal'] == 1 ) or sampleName == "DATA"):
              if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(cardName) ):
                print "Sample ", cardName, " does not exist in ", fileIn
@@ -180,13 +198,22 @@ class LawnMower:
                #
                fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
-               self._outFile.cd(self._cutNameInOriginal+"/"+self._variable)
+               if self._isInputFileFromDatacard:
+                 if sampleName == "DATA": sampleName = "data_obs"
+                 self._outFile.cd (self._cutNameInOriginal + "/" + self._variable)
+                 histo = fileInJustForDATA.Get(self._cutNameInOriginal + "/" + sampleName)
+                 histo.SetName  ("histo_" + cardName)
+                 histo.SetTitle ("histo_" + cardName)
+                 histo.Scale(0.0) # I think this needs to be here, to actually scale the hist to 0?
 
-               histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
-               histo.SetName  ('histo_' + cardName)
-               histo.SetTitle ('histo_' + cardName)
-               histo.Scale(0.0) #I think this needs to be here, to actually scale the hist to 0?
-               histo.Write()  
+               else:
+                 self._outFile.cd(self._cutNameInOriginal+"/"+self._variable)
+                 histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
+                 histo.SetName  ('histo_' + cardName)
+                 histo.SetTitle ('histo_' + cardName)
+                 histo.Scale(0.0) # I think this needs to be here, to actually scale the hist to 0?
+
+               histo.Write()
                
                copied_from_original = True
 
@@ -342,16 +369,17 @@ if __name__ == '__main__':
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('--inputFileCombine'      , dest='inputFileCombine'      , help='input file with roofit results, mlfit'                          , default='input.root')
-    parser.add_option('--outputFile'            , dest='outputFile'            , help='output file with histograms, same format as mkShape.py output'  , default='output.root')
-    parser.add_option('--variable'              , dest='variable'              , help='variable name'  , default='mll')
-    parser.add_option('--cut'                   , dest='cut'                   , help='cut name'  , default='0j')
-    parser.add_option('--cutNameInOriginal'     , dest='cutNameInOriginal'     , help='cut name as appears in cuts.py'  , default='')
-    parser.add_option('--inputFile'             , dest='inputFile'             , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
-    parser.add_option('--kind'                  , dest='kind'                  , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default='s')
-    parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
-    parser.add_option('--getSignalFromPrefit'   , dest='getSignalFromPrefit'   , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
-    parser.add_option('--MCStatFromInput'       , dest='MCStatFromInput'       , help='add prefit MC stat. unc. to posterior total unc. (for bystander fits)', action="store_true", default=False)
+    parser.add_option('--inputFileCombine'       , dest='inputFileCombine'       , help='input file with roofit results, mlfit'                          , default='input.root')
+    parser.add_option('--outputFile'             , dest='outputFile'             , help='output file with histograms, same format as mkShape.py output'  , default='output.root')
+    parser.add_option('--variable'               , dest='variable'               , help='variable name'  , default='mll')
+    parser.add_option('--cut'                    , dest='cut'                    , help='cut name'  , default='0j')
+    parser.add_option('--cutNameInOriginal'      , dest='cutNameInOriginal'      , help='cut name as appears in cuts.py'  , default='')
+    parser.add_option('--inputFile'              , dest='inputFile'              , help='input file with histograms (only to get the DATA distribution)' , default='input.root')
+    parser.add_option('--isInputFileFromDatacard', dest='isInputFileFromDatacard', help='flat to specify if inpuFile is from datacard shapes'            , default=False)
+    parser.add_option('--kind'                   , dest='kind'                   , help='which kind of post-fit distribution: s = signal + background, b = background only, p = prefit'  , default='s')
+    parser.add_option('--structureFile'          , dest='structureFile'          , help='file with datacard configurations'          , default=None )
+    parser.add_option('--getSignalFromPrefit'    , dest='getSignalFromPrefit'    , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
+    parser.add_option('--MCStatFromInput'        , dest='MCStatFromInput'        , help='add prefit MC stat. unc. to posterior total unc. (for bystander fits)', action="store_true", default=False)
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -361,15 +389,16 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print " configuration file    =          ", opt.pycfg
-    print " inputFileCombine      =          ", opt.inputFileCombine
-    print " inputFile (for DATA)  =          ", opt.inputFile
-    print " outputFile            =          ", opt.outputFile
-    print " variable              =          ", opt.variable
-    print " cut                   =          ", opt.cut
-    print " kind                  =          ", opt.kind
-    print " getSignalFromPrefit   =          ", opt.getSignalFromPrefit
-    print " structureFile         =          ", opt.structureFile
+    print " configuration file      =          ", opt.pycfg
+    print " inputFileCombine        =          ", opt.inputFileCombine
+    print " inputFile (for DATA)    =          ", opt.inputFile
+    print " isInputFileFromDatacard =          ", opt.isInputFileFromDatacard
+    print " outputFile              =          ", opt.outputFile
+    print " variable                =          ", opt.variable
+    print " cut                     =          ", opt.cut
+    print " kind                    =          ", opt.kind
+    print " getSignalFromPrefit     =          ", opt.getSignalFromPrefit
+    print " structureFile           =          ", opt.structureFile
 
 
 
@@ -388,14 +417,14 @@ if __name__ == '__main__':
         logging.basicConfig( level=logging.INFO )
 
     factory = LawnMower()
-    factory._inputFileCombine  = opt.inputFileCombine
-    factory._outputFileName    = opt.outputFile
-    factory._variable          = opt.variable
-    factory._cut               = opt.cut
-    factory._cutNameInOriginal = opt.cutNameInOriginal
-    factory._kind              = opt.kind
+    factory._inputFileCombine    = opt.inputFileCombine
+    factory._outputFileName      = opt.outputFile
+    factory._variable            = opt.variable
+    factory._cut                 = opt.cut
+    factory._cutNameInOriginal   = opt.cutNameInOriginal
+    factory._kind                = opt.kind
     factory._getSignalFromPrefit = opt.getSignalFromPrefit
-    factory._MCStatFromInput   = opt.MCStatFromInput
+    factory._MCStatFromInput     = opt.MCStatFromInput
 
     # ~~~~
     samples = OrderedDict()
@@ -420,6 +449,7 @@ if __name__ == '__main__':
     factory._structure = structure
     
     factory._inputFile = opt.inputFile
+    factory._isInputFileFromDatacard = opt.isInputFileFromDatacard
     
     factory.makePostFitPlot()
     
