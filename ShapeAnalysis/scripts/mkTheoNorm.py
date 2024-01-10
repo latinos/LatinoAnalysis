@@ -108,5 +108,5 @@ if __name__ == '__main__':
         nfdict[nuisance][sample] = ["{}*({}Up/{})".format(norm_up,nuis_name,nuis_name), "{}*({}Down/{})".format(norm_down,nuis_name,nuis_name)]
 
     # Save on json file
-    with open("TheoNorm_{}_{}_{}.json".format(era,variable,nuisance),"w") as outfile:
+    with open("TheoNorm_{}_{}_{}_{}.json".format(era,cut,variable,nuisance),"w") as outfile:
         json.dump(nfdict, outfile, indent=4)
