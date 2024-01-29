@@ -425,7 +425,7 @@ class DatacardFactory:
                         if abs(lnNUp - 1.) < 5.e-4 and abs(lnNDo - 1.) < 5.e-4:
                           card.write(('-').ljust(columndef))
                         else:
-                          card.write((('%-.4f' % lnNUp)+"/"+('%-.4f' % lnNDo)).ljust(columndef))
+                          card.write((('%-.4f' % lnNDo)+"/"+('%-.4f' % lnNUp)).ljust(columndef))
                       else:
                         card.write(('-').ljust(columndef)) 
 
