@@ -46,6 +46,7 @@ def model( i, par ):
 # We hard-code the schema to: 
 # ptb ins:  [(0., 20.), (20., 200.)] 
 # eta bins: [(0., 1.4), (1.4, 2.5)]
+ptlist_ele        = [0.,20.,200.]
 ptbins_ele        = ["high_pt", "low_pt"]
 etabins_ele       = ["EBEB", "EBEE", "EEEB", "EEEE"]
 eta_bin_array_ele = [0.0, 1.4, 2.5]
@@ -72,6 +73,7 @@ def model_2x2( i , par ):
 # We hard-code the schema to: 
 # ptb ins:  [(0., 20.), (20., 200.)] 
 # eta bins: [(0., 0.9), (0., 1.2), (1.2, 2.1), (2.1, 2.4)]
+ptlist_muon        = [0.,200.,1000.]
 ptbins_muon        = ["high_pt", "low_pt"]
 etabins_muon       = ["BE", "BB", "BO", "BF",
                       "EE", "EB", "EO", "EF",
@@ -140,15 +142,16 @@ def fcn( npar , deriv , f , par , iflag):
     pass
 
 
-def mk2Dfromcsv(ifile_, pt_bin_, eta_bin, output_dir):
+def mk2Dfromcsv(ifile_, pt_bin_, eta_bin, output_dir, ptlist_):
 
     print("In mk2Dfromcsv:")
     print("ifile_  = {}".format(ifile_))
     print("pt_bin_ = {}".format(pt_bin_))
+    print("ptlist  = {}".format(ptlist_))
     print("eta_bin = {}".format(eta_bin))
 
-    ptlist = [0.,20.,200.]
-    ptlist = sorted(list(dict.fromkeys(ptlist)))
+    # ptlist = [0.,20.,200.]
+    ptlist_ = sorted(list(dict.fromkeys(ptlist_)))
 
     # initialize csv
     dcsv = OrderedDict()
@@ -164,7 +167,7 @@ def mk2Dfromcsv(ifile_, pt_bin_, eta_bin, output_dir):
     # Initialize mischarge probability h2d
     sf_hist = OrderedDict()
     for ihist in [ 'data' , 'data_sys' , 'mc' , 'mc_sys' , 'sf' , 'sf_sys' ]:
-        sf_hist[ihist] = TH2D(ihist, 'charge flipping rate %s ; eta bin ; pt bin' %ihist, len(eta_bin)-1, arr('f' , eta_bin), len(ptlist)-1, arr('f', ptlist))
+        sf_hist[ihist] = TH2D(ihist, 'charge flipping rate %s ; eta bin ; pt bin' %ihist, len(eta_bin)-1, arr('f' , eta_bin), len(ptlist_)-1, arr('f', ptlist_))
 
     h_dummy = sf_hist['data']
     for ibinX in range(1, h_dummy.GetNbinsX()+1):
@@ -178,7 +181,7 @@ def mk2Dfromcsv(ifile_, pt_bin_, eta_bin, output_dir):
 
                     data_flip = float(ibn['DATA']) ; data_flip_sys = float(ibn['DATAerr'])
                     mc_flip   = float(ibn['MC']) ; mc_flip_sys = float(ibn['MCerr'])
-                    sf_flip   = float(ibn['SF']) ; sf_flip_sys = float(ibn['SFerr'])
+                    sf_flip   = float(ibn['SF']) ; sf_flip_sys = float(ibn['totalSys'])
 
                     sf_hist['data'].SetBinContent(    ibinX, ibinY, data_flip)
                     sf_hist['data'].SetBinError(      ibinX, ibinY, data_flip_sys)
@@ -285,7 +288,7 @@ def mkValidation(ifile_, flipPro, h_val, ptbin_, year, output_dir):
      pass
 
 
-def outFormat(ifile_, pt_bin_, fitted_prob_, out_, output_dir, useCsv=True):
+def outFormat(ifile_, pt_bin_, fitted_prob_, out_, outLO_, output_dir, useCsv=True):
 
     print("In outFormat: ")
     print("pt_bin_:  {}".format(pt_bin_))
@@ -309,14 +312,21 @@ def outFormat(ifile_, pt_bin_, fitted_prob_, out_, output_dir, useCsv=True):
         row = ""
         if i == (len(eta_bin_array) - 1): continue
         row =  '{:.1f} , {:.1f} , '.format(ieta, eta_bin_array[i+1])
-        row += '{:.1f} , {:.1f} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e}'\
-                .format(pt_lo, pt_hi, fitted_prob_['DATA'][i][0], fitted_prob_['DATA'][i][1], fitted_prob_['MC'][i][0], fitted_prob_['MC'][i][1], out_[i][0], out_[i][1])
+        row += '{:.1f} , {:.1f} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e} , {:.3e}, {:.3e}'\
+                .format(pt_lo, pt_hi, 
+                        fitted_prob_['DATA'][i][0],  fitted_prob_['DATA'][i][1], 
+                        fitted_prob_['MC'][i][0],    fitted_prob_['MC'][i][1], 
+                        fitted_prob_['MC_LO'][i][0], fitted_prob_['MC_LO'][i][1], 
+                        out_[i][0],   out_[i][1],
+                        outLO_[i][0], outLO_[i][1],
+                        np.sqrt((outLO_[i][0]-out_[i][0])*(outLO_[i][0]-out_[i][0]) + out_[i][1]*out_[i][1])
+                )
         row_list.append(row if not useCsv else [row])
 
     # preprocess
     fout = []
     for i, line in enumerate(row_list):
-        header = ['etaDown', 'etaUp', 'ptDown', 'ptUp', 'DATA', 'DATAerr', 'MC', 'MCerr', 'SF', 'SFerr']
+        header = ['etaDown', 'etaUp', 'ptDown', 'ptUp', 'DATA', 'DATAerr', 'MC', 'MCerr', 'MC_LO', 'MC_LOerr', 'SF', 'SFerr', 'SF_LO', 'SF_LOerr', 'totalSys']
         if i==0: 
             fout.append(' , '.join(header) if not useCsv else header)
         fout.append(line if not useCsv else line[0].replace(' ','').split(','))
@@ -444,30 +454,40 @@ def mkSf(ifile_, ptbin_, year, output_dir, var, outcsv_=True ):
      fitted_prob = OrderedDict()
      h4val       = OrderedDict()
      out         = OrderedDict()
+     outLO       = OrderedDict()
      h_ratio     = {}
      
      name = "{}_{}".format(ptbin_, var)
 
-     h_data = TFile.Open("{0}/Step3_Chflipfit/{1}/ratio_DATA_{1}.root".format(output_dir, name), "READ")
-     h_mc   = TFile.Open("{0}/Step3_Chflipfit/{1}/ratio_DY_{1}.root".  format(output_dir, name), "READ") # MC input is hard-coded to DY for now
+     h_data  = TFile.Open("{0}/Step3_Chflipfit/{1}/ratio_DATA_{1}.root". format(output_dir, name), "READ")
+     h_mc    = TFile.Open("{0}/Step3_Chflipfit/{1}/ratio_DY_{1}.root".   format(output_dir, name), "READ") # MC input is hard-coded to DY for now
+     h_mc_LO = TFile.Open("{0}/Step3_Chflipfit/{1}/ratio_DY_LO_{1}.root".format(output_dir, name), "READ") # MC LO input is hard-coded to DY_LO for now
 
      # Fit
      fitted_prob[year] = {}
      h4val[year] = {}
-     for ids in ['DATA', 'MC']:
+     for ids in ['DATA', 'MC', 'MC_LO']:
           print(ids)
-          h4val[year][ids] = flatten2D(h_data.Get('h2_DATA') if ids=='DATA' else h_mc.Get('h2_DY') )
-          fitted_prob[year][ids] = fit_SF(arr('f', h4val[year][ids][0]), arr('f', h4val[year][ids][1]))
-     out[year] = map(lambda x, y : [x[0]/y[0], sqrt((x[1]*x[1])/(x[0]*x[0]) + (y[1]*y[1])/(y[0]*y[0]))], fitted_prob[year]['DATA'], fitted_prob[year]['MC'])
+          if ids == 'DATA':
+               h4val[year][ids] = flatten2D(h_data.Get('h2_DATA'))
+          elif ids == 'MC':
+               h4val[year][ids] = flatten2D(h_mc.Get('h2_DY'))
+          else: # ids == 'MC_LO'
+               h4val[year][ids] = flatten2D(h_mc_LO.Get('h2_DY_LO'))
+          # h4val[year][ids] = flatten2D(h_data.Get('h2_DATA') if ids=='DATA' else h_mc.Get('h2_DY') )
 
-     print("Output: {}".format(out["2018"]))
+          fitted_prob[year][ids] = fit_SF(arr('f', h4val[year][ids][0]), arr('f', h4val[year][ids][1]))
+     out[year]   = map(lambda x, y : [x[0]/y[0], sqrt((x[1]*x[1])/(x[0]*x[0]) + (y[1]*y[1])/(y[0]*y[0]))], fitted_prob[year]['DATA'], fitted_prob[year]['MC'])
+     outLO[year] = map(lambda x, y : [x[0]/y[0], sqrt((x[1]*x[1])/(x[0]*x[0]) + (y[1]*y[1])/(y[0]*y[0]))], fitted_prob[year]['DATA'], fitted_prob[year]['MC_LO'])
+
+     print("Output: {}".format(out[year]))
 
      print("h4val: {}".format(h4val))
 
      # Save output on a CSV file
-     outFormat(ifile_, ptbin_, fitted_prob[year], out[year], output_dir, outcsv_)
+     outFormat(ifile_, ptbin_, fitted_prob[year], out[year], outLO[year], output_dir, outcsv_)
 
-     return [fitted_prob, h4val, out]
+     return [fitted_prob, h4val, out, outLO]
 
 
 # Main function
@@ -497,22 +517,41 @@ def mkflipsf(variable, year, output_dir, var):
         fpout   = []
         # Get c-f SFs and save them into a csv file
         fitted    = mkSf(ifile, iptbin, year, output_dir, var, True)
-        mischarge = fitted[0]
-        histo_val = fitted[1]
-        epsilon   = fitted[2]
+        mischarge = fitted[0] # fitted_prob
+        histo_val = fitted[1] # h4val
+        epsilon   = fitted[2] # out
+        sys       = fitted[3] # outLO
         
+        print("SYYSSSSSS", epsilon[year])
+        print("SYYSSSSSS", sys[year])
+
         fpout.append(" ===> scale factor DATA/MC for %s" %year)
         for num, isf in enumerate(epsilon[year]):
-             fpout.append('q{} data : {:.3e} +/- {:.3e} ; mc : {:.3e} +/- {:.3e} ; SF : {:.3e} +/- {:.3e} ( rel.error : {:.2f} % )'\
+             fpout.append('q{} data : {:.3e} +/- {:.3e} ; mc : {:.3e} +/- {:.3e} ; SF : {:.3e} +/- {:.3e} ( rel.error : {:.2f} % ) ; SF LO : {:.3e} +/- {:.3e} (sys. unc. on SF : {:.2f} ), total unc. : {:.2f}'\
                           .format( num , 
                                    mischarge[year]['DATA'][num][0] , mischarge[year]['DATA'][num][1] , 
                                    mischarge[year]['MC'][num][0]   , mischarge[year]['MC'][num][1]   , 
-                                   isf[0] , isf[1] , (isf[1]/isf[0])*100 ) )
-             print('q{} data : {:.3e} +/- {:.3e} ; mc : {:.3e} +/- {:.3e} ; SF : {:.3e} +/- {:.3e} ( rel.error : {:.2f} % )'\
+                                   isf[0],       isf[1],       (isf[1]/isf[0])*100,
+                                   sys[year][num][0], sys[year][num][1], abs(float(sys[year][num][0]) - isf[0]),
+                                   np.sqrt(abs(float(sys[year][num][0]) - isf[0])*abs(float(sys[year][num][0]) - isf[0]) + isf[1]*isf[1])
+                              )
+             )
+
+             print('q{} data : {:.3e} +/- {:.3e} ; mc : {:.3e} +/- {:.3e} ; SF : {:.3e} +/- {:.3e} ( rel.error : {:.2f} % ) ; SF LO : {:.3e} +/- {:.3e} (sys. unc. on SF : {:.2f} ), total unc. : {:.2f}' \
                           .format( num , 
                                    mischarge[year]['DATA'][num][0] , mischarge[year]['DATA'][num][1] , 
                                    mischarge[year]['MC'][num][0]   , mischarge[year]['MC'][num][1]   , 
-                                   isf[0] , isf[1] , (isf[1]/isf[0])*100 ) )
+                                   isf[0],       isf[1],       (isf[1]/isf[0])*100,
+                                   sys[year][num][0], sys[year][num][1], abs(float(sys[year][num][0]) - isf[0]),
+                                   np.sqrt(abs(float(sys[year][num][0]) - isf[0])*abs(float(sys[year][num][0]) - isf[0]) + isf[1]*isf[1])
+                              )
+             )
+
+             # print('q{} data : {:.3e} +/- {:.3e} ; mc : {:.3e} +/- {:.3e} ; SF : {:.3e} +/- {:.3e} ( rel.error : {:.2f} % )'\
+             #              .format( num , 
+             #                       mischarge[year]['DATA'][num][0] , mischarge[year]['DATA'][num][1] , 
+             #                       mischarge[year]['MC'][num][0]   , mischarge[year]['MC'][num][1]   , 
+             #                       isf[0] , isf[1] , (isf[1]/isf[0])*100 ) )
 
         # On-the-fly validation
         mkValidation(ifile, mischarge, histo_val, iptbin, year, output_dir)
@@ -527,7 +566,7 @@ def mkflipsf(variable, year, output_dir, var):
     list_file = []
     for iptbin in ptbins:
          list_file.append("{}/fit_summary_{}.txt".format(output_dir, iptbin))
-    mk2Dfromcsv(list_file, ptbins, eta_bin_array, output_dir)
+    mk2Dfromcsv(list_file, ptbins, eta_bin_array, output_dir, ptlist)
 
 
 ##############################################################
@@ -749,8 +788,8 @@ def ratio(filename, data, ptbin, output):
     # This aspect may be tuned better
     for i in range(0, h_ratio.GetNbinsX()):
         for j in range(0, h_ratio.GetNbinsY()):
-            # if h_ss.GetBinContent(i+1, j+1) < 10:                                
-            if h_ss.GetBinContent(i+1, j+1) == 0:
+            if h_ss.GetBinContent(i+1, j+1) < 10:                                
+            # if h_ss.GetBinContent(i+1, j+1) == 0:
                 h_ratio.SetBinContent(i+1, j+1, 0.001)
                 h_ratio.SetBinError(  i+1, j+1, 0.0002)
     h_ratio.SetName('h2_{}'.format(data))
@@ -853,18 +892,21 @@ if __name__ == '__main__':
     flavor        = opt.flavor
 
     # Global variables definitions
+    global ptlist
     global ptbins
     global etabins
     global eta_bin_array
     global eta_bin
 
     if flavor == "ele":
+         ptlist        = ptlist_ele
          ptbins        = ptbins_ele
          etabins       = etabins_ele
          eta_bin_array = eta_bin_array_ele
          eta_bin       = eta_bin_ele
 
     if flavor == "muon":
+         ptlist        = ptlist_muon
          ptbins        = ptbins_muon
          etabins       = etabins_muon
          eta_bin_array = eta_bin_array_muon
