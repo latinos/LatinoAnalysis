@@ -24,6 +24,7 @@ Samples['ZZTo4Q'] = {'nanoAOD' :'/ZZTo4Q_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunI
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['WWTo2L2Nu'] = {'nanoAOD' :'/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'}
+Samples['WWJTo2L2Nu_minnlo'] = {'nanoAOD' :'/WWJTo2L2Nu_TuneCP5_13TeV-powheg-minnlo-pythia8/RunIISummer20UL18NanoAODv9-cblas_lib_fixed_106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM'} ##!!!!
 ##---------------------------------------------------------------##
 #--->Updated!###-----------------------------------------------##
 Samples['WWTo2L2Nu_TuneCP5Up'] = {'nanoAOD' :'/WWTo2L2Nu_TuneCP5Up_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM'} ##!!!!

@@ -103,6 +103,7 @@ samples['Wg_AMCNLOFXFX_01J']                    .extend( ['xsec=191.8',         
  
 ### WW
 samples['WWTo2L2Nu']	                 	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )
+samples['WWJTo2L2Nu_minnlo']                    .extend( ['xsec=12.0537',       'kfact=1.000',          'ref=E'] )
 samples['WWTo2L2Nu_TuneCP5Up']                	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )		
 samples['WWTo2L2Nu_TuneCP5Down']               	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )		
 
