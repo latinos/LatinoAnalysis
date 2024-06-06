@@ -386,7 +386,7 @@ class l3KinProducer(Module):
         else:
             return -9999
 
-    def AZH_Topleptonic_onebjet(self):
+    def AZH_Topleptonic(self):
         if self.AZH_isOk_onebjet:
             return (self.ZH3l_XLepton[0] + self.AZH_Neutrino_best_onebjet + self.bJetLeptonic_best_onebjet).M()
         else:
@@ -482,13 +482,12 @@ class l3KinProducer(Module):
           self.AZH_Neutrino_best_onebjet = None
           self.ChisqMin_onebjet = 99999
           self.Chisq_onebjet = 0
-          for AZH_Neutrino in [self.AZH_Neutrino1, self.AZH_Neutrino2]: 
+             for AZH_Neutrino in [self.AZH_Neutrino1, self.AZH_Neutrino2]: 
                self.ibJet2 = 0
-               bJetPair = []
                for ij in range(len(self.ZH3l_CleanJet_4vecId)):
-                   if self.ZH3l_CleanJet_4vecId[ij] != self.AZH_bJet_4vecId[0] and self.ZH3l_CleanJetbtag_4vecId[ij] > self.ZH3l_CleanJetbtag_4vecId[self.ibJet2]:
+                   if self.ZH3l_CleanJet_4vecId[ij] != self.AZH_bJet_4vecId[0] and self.ZH3l_CleanJetbtag_4vecId[ij] > self.ZH3l_CleanJetbtag_4vecId[self.ibjet2]:
                       self.ibJet2 = ij
-               bJetPair = [self.AZH_bJet_4vecId[0], self.ZH3l_CleanJet_4vecId[self.ibJet2]]
+               bJetPair[2] = {self.AZH_bJet_4vecId[0], self.ZH3l_CleanJet_4vecId[ibJet2]}
                WJets = [j for j in self.ZH3l_CleanJet_4vecId if j not in bJetPair]
                for i in range(2):
                  for WJet1_onebjet, WJet2_onebjet in combinations(WJets, 2):
