@@ -103,6 +103,7 @@ samples['Wg_AMCNLOFXFX_01J']                    .extend( ['xsec=191.8',         
  
 ### WW
 samples['WWTo2L2Nu']	                 	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )
+samples['WWJTo2L2Nu_minnlo']                    .extend( ['xsec=12.0537',       'kfact=1.000',          'ref=E'] )
 samples['WWTo2L2Nu_TuneCP5Up']                	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )		
 samples['WWTo2L2Nu_TuneCP5Down']               	.extend( ['xsec=12.178',	'kfact=1.000',		'ref=E'] )		
 
@@ -687,3 +688,24 @@ samples['WWToLNuLNu_MWW-0To500']         .extend( ['xsec=4.1880002',            
 samples['WWToLNuLNu_MWW-500To750']         .extend( ['xsec=0.2617599',             'kfact=1.000',  'ref=X'] )
 samples['WWToLNuLNu_MWW-750To1000']         .extend( ['xsec=0.0928599',             'kfact=1.000',  'ref=X'] )
 samples['WWToLNuLNu_MWW-1000ToInf']         .extend( ['xsec=0.1599200',             'kfact=1.000',  'ref=X'] )
+
+# MCFM H samples for the off-shell analysis
+samples['GluGluHToWWToENEN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToENMN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToENTN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToMNEN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToMNMN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToMNTN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToTNEN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToTNMN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToTNTN_BSI']        .extend( ['xsec=0.0624109',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToENEN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToENMN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToENTN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToMNEN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToMNMN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToMNTN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToTNEN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToTNMN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+samples['GluGluHToWWToTNTN_SIG']        .extend( ['xsec=0.0293133',        'kfact=1.000',          'ref=Y'] )
+
