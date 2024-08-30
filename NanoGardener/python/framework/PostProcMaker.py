@@ -342,15 +342,22 @@ class PostProcMaker():
      if not self._iniStep == 'Prod' : bpostFix='____'+self._iniStep
 
      # Make job directories
+     ## remember: py files will be created in EOS (not in afs for space limitation grr)
      if JOB_DIR_SPLIT :
        jDir = jobDir+'/NanoGardening__'+iProd+'__'+iStep
+       jDirPy = jobDirPy+'/NanoGardening__'+iProd+'__'+iStep
        for iSample in self._targetDic :
          if not os.path.exists(jDir+'/'+iSample) : os.system('mkdir -p '+jDir+'/'+iSample)
+         if not os.path.exists(jDirPy+'/'+iSample) : os.system('mkdir -p '+jDirPy+'/'+iSample)
      else:
        jDir = jobDir+'/NanoGardening__'+iProd
+       jDirPy = jobDirPy+'/NanoGardening__'+iProd
      if not os.path.exists(jDir) : os.system('mkdir -p '+jDir)
+     if not os.path.exists(jDirPy) : os.system('mkdir -p '+jDirPy)
      wDir = workDir+'/NanoGardening__'+iProd
+     wDirPy = workDirPy+'/NanoGardening__'+iProd
      if not os.path.exists(wDir) : os.system('mkdir -p '+wDir)
+     if not os.path.exists(wDirPy) : os.system('mkdir -p '+wDirPy)
 
      # prepare targetList
      targetList = []
@@ -402,9 +409,9 @@ class PostProcMaker():
          if iTarget in targetList :
            # Create python
            if JOB_DIR_SPLIT :
-             pyFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+             pyFile=jDirPy+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            else:
-             pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+             pyFile=jDirPy+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
            outFile=self._treeFilePrefix+iTarget+'__'+iStep+'.root'
            jsonFilter = self._Productions[iProd]['jsonFile'] if 'jsonFile' in self._Productions[iProd].keys() else None

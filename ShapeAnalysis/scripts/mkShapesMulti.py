@@ -239,7 +239,8 @@ if __name__ == '__main__':
     parser.add_option('--batchQueue'     , dest='batchQueue'     , help='Queue on batch'                             , default='')
     parser.add_option('--batchSplit'     , dest="batchSplit"     , help="Splitting mode for batch jobs"              , default=[], type='string' , action='callback' , callback=list_maker('batchSplit',','))
     parser.add_option('--doHadd'         , dest='doHadd'         , help='Hadd for batch mode'                        , default=False)
-    parser.add_option('--redoStat'       , dest='redoStat'        , help='redo stat uncertainty'                        , default=False)
+    parser.add_option('--redoStat'       , dest='redoStat'        , help='redo stat uncertainty'                     , default=False)
+    parser.add_option('--Silent'         , dest='silent'         , help='do not write logs, errs and outs condor files'   , action='store_false', default=True)
     parser.add_option('--doThreads'      , dest='doThreads'      , help='switch to multi-threading mode'             , default=False)
     parser.add_option('--nThreads'       , dest='numThreads'     , help='number of threads for multi-threading'      , default=1, type='int')
     parser.add_option('--doNotCleanup'   , dest='doNotCleanup'   , help='do not remove additional support files'     , action='store_true', default=False)
@@ -383,7 +384,7 @@ if __name__ == '__main__':
       else : use_singularity = False
 
       bpostFix=''
-      jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity)
+      jobs = batchJobs('mkShapes',opt.tag,stepList,targetList,','.join(batchSplit),bpostFix,JOB_DIR_SPLIT_READY=True,USE_SINGULARITY=use_singularity,makeout=opt.silent)
       jobs.nThreads = nThreads
 
       jobs.AddPy2Sh()
