@@ -30,7 +30,7 @@ def merge(indir, outdir, pname=''):
     nnew = 0
     nadd = 0
 
-    LOG.debug(pname + '/' + indir.GetName())
+    LOG.debug('Merging from %s', pname + '/' + indir.GetName())
 
     # Collect all existing keys in outdir into a dict to avoid calling outdir.Get() (slow)
     # Pick up only the latest versions (highest key cycle number)
@@ -64,37 +64,41 @@ def merge(indir, outdir, pname=''):
     for name, key in inkeys.iteritems():
         obj = key.ReadObj()
 
-        if obj.IsA() is tdirectoryfile:
-            # If the input object is a directory, recurse
+        try:
+            if obj.IsA() is tdirectoryfile:
+                # If the input object is a directory, recurse
 
-            try:
-                outsubdir = outcont[name]
-            except KeyError:
-                outsubdir = outdir.mkdir(name)
+                try:
+                    outsubdir = outcont[name]
+                except KeyError:
+                    outsubdir = outdir.mkdir(name)
 
-            nsubnew, nsubadd = merge(obj, outsubdir, pname + '/' + indir.GetName())
-            nnew += nsubnew
-            nadd += nsubadd
+                nsubnew, nsubadd = merge(obj, outsubdir, pname + '/' + indir.GetName())
+                nnew += nsubnew
+                nadd += nsubadd
 
-        else:
-            # Write to outdir or add to an existing histogram
-
-            outdir.cd()
-            try:
-                outhist = outcont[name]
-            except KeyError:
-                obj.SetDirectory(outdir)
-                obj.Write()
-                nnew += 1
             else:
-                outhist.Add(obj)
-                outhist.Write(name)
-                outhist.Delete()
-                nadd += 1
+                # Write to outdir or add to an existing histogram
 
-        # Delete the object from memory immediately
-        # Using TObject::Delete because TDirectory::Delete does different things
-        ROOT.TObject.Delete(obj)
+                outdir.cd()
+                try:
+                    outhist = outcont[name]
+                except KeyError:
+                    obj.SetDirectory(outdir)
+                    obj.Write()
+                    nnew += 1
+                else:
+                    outhist.Add(obj)
+                    outhist.Write(name)
+                    outhist.Delete()
+                    nadd += 1
+
+            # Delete the object from memory immediately
+            ROOT.TObject.Delete(obj)
+
+        except Exception as e:
+            LOG.error('Error processing object %s in %s: %s', name, pname, e)
+            raise  # Re-raise the exception after logging
 
     return nnew, nadd
 
@@ -104,63 +108,73 @@ def writeto(sourcePaths, targetPath, eosDownload=False):
     Target is closed after processing each source to clean memory.
     """
 
-    LOG.info('merge %s -> %s', sourcePaths, targetPath)
+    LOG.info('Starting merge from %s to %s', sourcePaths, targetPath)
 
     target = ROOT.TFile.Open(targetPath, 'recreate')
-    # This is critical (and safe) - see https://root-forum.cern.ch/t/tfile-close-slow/24179
     ROOT.gROOT.GetListOfFiles().Remove(target)
 
     _nadd = 0
 
     for path in sourcePaths:
-        pathOrig = path
-        pathReal = os.path.realpath(pathOrig)
-        if eosDownload and pathReal.startswith('/eos'):
-            for _ in range(5):
-                with tempfile.NamedTemporaryFile(suffix='.root', delete=False) as tmp:
-                    pass
-                proc = subprocess.Popen(['xrdcp', '-f', 'root://eoscms.cern.ch/' + pathReal, tmp.name])
-                proc.communicate()
-                if proc.returncode == 0:
-                    path = tmp.name
-                    break
-                else:
-                    try:
-                        os.unlink(tmp.name)
-                    except:
+        LOG.info('Processing file: %s', path)  # Log the current file being processed
+
+        try:
+            pathOrig = path
+            pathReal = os.path.realpath(pathOrig)
+
+            if eosDownload and pathReal.startswith('/eos'):
+                for _ in range(5):
+                    with tempfile.NamedTemporaryFile(suffix='.root', delete=False) as tmp:
                         pass
-                    time.sleep(5)
-            else:
-                raise RuntimeError('Failed to download ' + pathOrig)
+                    proc = subprocess.Popen(['xrdcp', '-f', 'root://eoscms.cern.ch/' + pathReal, tmp.name])
+                    proc.communicate()
+                    if proc.returncode == 0:
+                        path = tmp.name
+                        break
+                    else:
+                        try:
+                            os.unlink(tmp.name)
+                        except Exception as e:
+                            LOG.error('Error deleting temp file %s: %s', tmp.name, e)
+                        time.sleep(5)
+                else:
+                    LOG.error('Failed to download %s', pathOrig)
+                    raise RuntimeError('Failed to download ' + pathOrig)
 
-        start = time.time()
-        source = ROOT.TFile.Open(path)
-        ROOT.gROOT.GetListOfFiles().Remove(source)
+            start = time.time()
+            source = ROOT.TFile.Open(path)
+            ROOT.gROOT.GetListOfFiles().Remove(source)
 
-        nnew, nadd = merge(source, target)
+            nnew, nadd = merge(source, target)
 
-        source.Close()
-        target.Close() # closing target at each iteration to flush out in-memory objects
+            source.Close()
+            target.Close()  # Closing target to flush out in-memory objects
 
-        LOG.info('%s -> %s: %d new, %d merged (%.1f s)', pathOrig, targetPath, nnew, nadd, time.time() - start)
+            LOG.info('Finished processing %s: %d new, %d merged (%.1f s)', pathOrig, nnew, nadd, time.time() - start)
 
-        _nadd += nadd
-        if pathOrig != sourcePaths[-1]:
-            if _nadd > 1000000:
-                # purge duplicate keys by compressing
-                os.rename(targetPath, targetPath + '.tmp')
-                writeto([targetPath + '.tmp'], targetPath)
-                os.unlink(targetPath + '.tmp')
-                _nadd = 0
-    
-            target = ROOT.TFile.Open(targetPath, 'update')
-            ROOT.gROOT.GetListOfFiles().Remove(target)
+            _nadd += nadd
+            if pathOrig != sourcePaths[-1]:
+                if _nadd > 1000000:
+                    # Purge duplicate keys by compressing
+                    os.rename(targetPath, targetPath + '.tmp')
+                    writeto([targetPath + '.tmp'], targetPath)
+                    os.unlink(targetPath + '.tmp')
+                    _nadd = 0
 
-        if eosDownload and pathReal.startswith('/eos'):
-            try:
-                os.unlink(path)
-            except:
-                pass
+                target = ROOT.TFile.Open(targetPath, 'update')
+                ROOT.gROOT.GetListOfFiles().Remove(target)
+
+            if eosDownload and pathReal.startswith('/eos'):
+                try:
+                    os.unlink(path)
+                except Exception as e:
+                    LOG.error('Error deleting file %s: %s', path, e)
+
+        except Exception as e:
+            LOG.error('Error processing file %s: %s', path, e)
+            raise  # Re-raise the exception after logging
+
+
 
 if __name__ == '__main__':
     sys.argv = _argv
@@ -188,6 +202,7 @@ if __name__ == '__main__':
             sourcePaths.extend(glob.glob(path))
         else:
             sourcePaths.append(path)
+    total_files = len(sourcePaths) # Count the total number of input files
 
     if args.writeDirect and not args.compress:
         targetName = args.target
@@ -210,8 +225,10 @@ if __name__ == '__main__':
 
                     proc.join()
                     if proc.exitcode != 0:
+                        LOG.error('Merge failed for process %s.', proc.name)
                         raise RuntimeError('Merge failed.')
 
+                    LOG.info('Process %s completed.', proc.name)
                     processes.remove((proc, targetPath))
                     allSources.append((targetPath, True))
 
@@ -231,9 +248,17 @@ if __name__ == '__main__':
 
             if len(allSources) > 1:
                 jobid = 'proc%d' % ijob
-    
-                sources[jobid] = [allSources.pop(), allSources.pop()]
-                sourcePaths = [s[0] for s in sources[jobid]]
+                
+                # Log the list of remaining files before starting a job
+                remaining_files = len(allSources)
+                LOG.info('Remaining files: %d/%d', remaining_files, total_files)
+                
+                # Select and log the files for the current job
+                selected_files = [allSources.pop(0), allSources.pop(0)]
+                LOG.info('Starting job %s with sources %s', jobid, [s[0] for s in selected_files])
+                
+                sources[jobid] = selected_files
+                sourcePaths = [s[0] for s in selected_files]
                 dtemp = tempfile.mkdtemp()
                 targetPath = dtemp + '/tmp.root'
                 proc = multiprocessing.Process(target=writeto, args=(sourcePaths, targetPath, args.eosDownload), name=jobid)
@@ -253,7 +278,7 @@ if __name__ == '__main__':
                 shutil.rmtree(os.path.dirname(allSources[0][0]))
         else:
             shutil.copyfile(allSources[0][0], targetName)
-    
+
     if args.compress:
         LOG.info('Compressing')
         writeto([targetName], args.target)
@@ -265,3 +290,5 @@ if __name__ == '__main__':
 
         shutil.move(targetName, args.target)
         shutil.rmtree(os.path.dirname(targetName))
+
+
