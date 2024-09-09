@@ -85,6 +85,8 @@ if __name__ == '__main__':
 
     parser.add_option('--parallelPlotting', dest='parallelPlotting', help='Plot each cut in parallel' , action='store_true', default=False) 
 
+    parser.add_option('--rebin', dest='rebin', help='Rebin histograms before plotting', default=1, type=int);
+
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
@@ -118,6 +120,7 @@ if __name__ == '__main__':
     print "              NoPreliminary  =", opt.NoPreliminary   
     print "                RemoveAllMC  =", opt.RemoveAllMC  
     print "           parallelPlotting  =", opt.parallelPlotting
+    print "                       rebin =", opt.rebin
     print ""
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -255,6 +258,8 @@ if __name__ == '__main__':
       factory._extraLegend = opt.extraLegend
       factory._preliminary = not opt.NoPreliminary
       factory._removeAllMC = opt.RemoveAllMC
+
+      factory._rebin = opt.rebin
 
       factory.makePlot(inputFile ,outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
 
