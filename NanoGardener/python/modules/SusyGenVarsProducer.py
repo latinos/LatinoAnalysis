@@ -26,76 +26,120 @@ class SusyGenVarsProducer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
 
-        self.out.branch("susyMprompt",     "F")
-        self.out.branch("susyMstop",       "F")
-        self.out.branch("susyMLSP",        "F")
-        self.out.branch("susyMChargino",   "F")
-        self.out.branch("susyMSlepton",    "F")
-        self.out.branch("Xsec",            "F")
-        self.out.branch("XsecUncertainty", "F")
-        self.out.branch("ptISR",           "F")
-        self.out.branch("njetISR",         "F")
+        self.out.branch("susyIDprompt",  "F")
+        self.out.branch("susyMprompt",   "F")
+        self.out.branch("susyMstop",     "F")
+        self.out.branch("susyMLSP",      "F")
+        self.out.branch("susyMChargino", "F")
+        self.out.branch("susyMSlepton",  "F")
+        self.out.branch("Xsec",          "F")
+        self.out.branch("XsecUp",        "F")
+        self.out.branch("XsecDown",      "F")
+        self.out.branch("ptISR",         "F")
+        self.out.branch("njetISR",       "F")
 
         if self.susyModelIsSet==False :
 
             self.susyProcess = ''
+            self.susyModel = ''
 
             for process in SUSYCrossSections :
-                for susyModel in SUSYCrossSections[process]['susyModels'] :
-                    if susyModel in inputFile.GetName() :
+                for model in SUSYCrossSections[process]['susyModels'] :
+                    if model in inputFile.GetName() :
                         self.susyProcess = process
+                        self.susyModel = model
 
             if self.susyProcess=='' :
-                raise Exception('SusyGenVarsProducer ERROR: SUSY process not found for', inputFile.GetName())
+                print 'SusyGenVarsProducer WARNING: SUSY process not found for input file', inputFile.GetName()
+
+                for model in SUSYCrossSections[process]['susyModels'] :
+                    if model in outputFile.GetName() :
+                        self.susyProcess = process
+                        self.susyModel = model
+
+                if self.susyProcess=='' :
+                    print 'SusyGenVarsProducer WARNING: SUSY process not found for output file', outputFile.GetName()
             
-            self.susyModelIsSet = True
+            if self.susyProcess!='' :
+                self.susyModelIsSet = True
 
     ###    
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def getCrossSectionUncertainty(self, susyProcess, isusyMass):
-        
-        xsUnc = SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['uncertainty']
+    def getCrossSectionUncertainty(self, susyProcess, isusyMass, variation):
+    
+        if 'uncertainty'+variation not in SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]: variation = ''
+        xsUnc = SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['uncertainty'+variation]
+
         if '%' not in xsUnc: 
             return float(xsUnc)
         else:
             xsUnc = xsUnc.replace('%', '')
             return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])*float(xsUnc)/100.
-
-    def getCrossSection(self, susyProcess, susyMass):
-
-        isusyMass = int(susyMass)
-
-        if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
-            
-            return [float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value']),
-                    self.getCrossSectionUncertainty(susyProcess, isusyMass)]
         
-        elif isusyMass%5!=0 :
-                    
-            isusyMass1 = 5*(isusyMass/5)
-            isusyMass2 = 5*(isusyMass/5+1)
-                    
+    def getCrossSection(self, susyProcess, susyModel, susyMass):
+
+        convBR = float(SUSYCrossSections[susyProcess]['susyModels'][susyModel])
+        
+        isusyMass = int(susyMass)
+        
+        if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
+        
+            susyXsec = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])
+
+            return [ convBR*susyXsec,
+                     convBR*(susyXsec+self.getCrossSectionUncertainty(susyProcess, isusyMass, 'Up')),
+                     convBR*(susyXsec-self.getCrossSectionUncertainty(susyProcess, isusyMass, 'Down')) ]
+        
+        else: # Try to extrapolate
+
+            step = 5 # T2tt
+            
+            if 'Slepton' in susyProcess:
+                if isusyMass<=400:
+                    step =  20
+                elif isusyMass<=440:
+                    step =  40
+                elif isusyMass<=500:
+                    step =  60
+                elif isusyMass<=1000:
+                    step = 100
+ 
+            isusyMass1 = step*(isusyMass/step)
+            isusyMass2 = step*(isusyMass/step+1)
+
+            if 'Slepton' in susyProcess:
+                if step==60:
+                    isusyMass1 =  440
+                    isusyMass2 =  500
+                elif isusyMass>1000:
+                    isusyMass1 =  900
+                    isusyMass2 = 1000
+
             if str(isusyMass1) in SUSYCrossSections[susyProcess]['massPoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
 
                 susyXsec1 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass1)]['value'])
                 susyXsec2 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass2)]['value'])
-
+            
                 slope = -math.log(susyXsec2/susyXsec1)/(isusyMass2-isusyMass1)
                 susyXsec = susyXsec1*math.exp(-slope*(isusyMass-isusyMass1))
-
-                susyXsecRelUnc = (self.getCrossSectionUncertainty(susyProcess, isusyMass1)/susyXsec1 + 
-                                  self.getCrossSectionUncertainty(susyProcess, isusyMass2)/susyXsec2)/2.
-                
-                return [susyXsec, susyXsec*susyXsecRelUnc]
-
-        raise Exception('SusyGenVarsProducer ERROR: cross section not available for', self.susyProcess, 'at mass =', susyMass)
+            
+                susyXsecRelUncUp = (self.getCrossSectionUncertainty(susyProcess, isusyMass1, 'Up')/susyXsec1 + 
+                                    self.getCrossSectionUncertainty(susyProcess, isusyMass2, 'Up')/susyXsec2)/2.
+            
+                susyXsecRelUncDown = (self.getCrossSectionUncertainty(susyProcess, isusyMass1, 'Down')/susyXsec1 + 
+                                      self.getCrossSectionUncertainty(susyProcess, isusyMass2, 'Down')/susyXsec2)/2.
+            
+                return [convBR*susyXsec, convBR*susyXsec*(1.+susyXsecRelUncUp), convBR*susyXsec*(1.-susyXsecRelUncDown)]
+            
+            raise Exception('susyCrossSections ERROR: cross section not available for', self.susyProcess, 'at mass =', susyMass)
 
     ###
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
+        idPrompt     = -1.
         massPrompt   = -1.
         massStop     = -1.
         massLSP      = -1.
@@ -120,6 +164,7 @@ class SusyGenVarsProducer(Module):
                 if abs(genParticles[particle.genPartIdxMother].pdgId)<1000000 : # Its mother is not SUSY
 
                     if nSusyParticles==0 :
+                        idPrompt = abs(particle.pdgId)
                         massPrompt = particle.mass
                         susyParticle1.SetPtEtaPhiM(particle.pt, particle.eta, particle.phi, particle.mass)
                     elif nSusyParticles==1 :
@@ -139,9 +184,41 @@ class SusyGenVarsProducer(Module):
                     (abs(particle.pdgId)==2000011 or abs(particle.pdgId)==2000013 or abs(particle.pdgId)==2000015)) : # RH sleptons
                     massSlepton = particle.mass
 
-        xSec = self.getCrossSection(self.susyProcess, massPrompt)
-        xSection = xSec[0]
-        xSecUncert = xSec[1]
+        if self.susyModelIsSet==False:
+            if massStop>-1:
+                self.susyProcess = 'StopSbottom'
+                if massChargino>-1:
+                    self.susyModel = 'T2bW'
+                else:
+                    self.susyModel = 'T2tt'
+            elif massChargino>-1:
+                self.susyProcess = 'WinoC1C1'
+                if massSlepton>-1:
+                    self.susyModel = 'TChipmSlepSnu'
+                else:
+                    self.susyModel = 'TChipmWW'
+            elif massSlepton>-1:
+                if idPrompt>=2000000:
+                    self.susyProcess = 'SleptonRH'
+                    if idPrompt==2000011:
+                        self.susyModel = 'TSelectronSelectronRH'
+                    elif idPrompt==2000013:
+                        self.susyModel = 'TSmuonSmuonRH'
+                else:
+                    self.susyProcess = 'SleptonLH'
+                    if idPrompt==1000011:
+                        self.susyModel = 'TSelectronSelectronLH'
+                    elif idPrompt==1000013:
+                        self.susyModel = 'TSmuonSmuonLH'
+            else:
+                raise Exception('SusyGenVarsProducer ERROR: SUSY process not set from gen particle inspection either')
+            if self.susyProcess=='StopSbottom' or self.susyProcess=='WinoC1C1':
+                print 'SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection'
+                self.susyModelIsSet = True
+                
+    
+        susyMass = int(25*round(float(massPrompt)/25)) if ((massPrompt%25)>=21 or (massPrompt%25)<=4) else massPrompt
+        xSection, xSectionUp, xSectionDown = self.getCrossSection(self.susyProcess, self.susyModel, susyMass)
         
         if nSusyParticles==2 :
             ptISR = (susyParticle1+susyParticle2).Pt()
@@ -154,7 +231,8 @@ class SusyGenVarsProducer(Module):
 
         for jet in jetColl :
             # https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L372-L395
-            if jet.jetId & 1 : # is loose 
+            #if jet.jetId & 1 : # does not work in 2017 and 2018 
+            if jet.jetId > 0 : # is loose 
                 # https://github.com/manuelfs/babymaker/blob/11e7a6f26ed6c1efcd0027c8b4219eb69a997bae/bmaker/interface/jet_met_tools.hh
                 if jet.pt>30 and abs(jet.eta)<2.4 :
                     
@@ -193,15 +271,17 @@ class SusyGenVarsProducer(Module):
                     if matched==False:
                         njetISR += 1
 
-        self.out.fillBranch("susyMprompt",     massPrompt)
-        self.out.fillBranch("susyMstop",       massStop)
-        self.out.fillBranch("susyMLSP",        massLSP)
-        self.out.fillBranch("susyMChargino",   massChargino)
-        self.out.fillBranch("susyMSlepton",    massSlepton)
-        self.out.fillBranch("Xsec",            xSection)
-        self.out.fillBranch("XsecUncertainty", xSecUncert)
-        self.out.fillBranch("ptISR",           ptISR)
-        self.out.fillBranch("njetISR",         njetISR)
+        self.out.fillBranch("susyIDprompt",  idPrompt)
+        self.out.fillBranch("susyMprompt",   massPrompt)
+        self.out.fillBranch("susyMstop",     massStop)
+        self.out.fillBranch("susyMLSP",      massLSP)
+        self.out.fillBranch("susyMChargino", massChargino)
+        self.out.fillBranch("susyMSlepton",  massSlepton)
+        self.out.fillBranch("Xsec",          xSection)
+        self.out.fillBranch("XsecUp",        xSectionUp)
+        self.out.fillBranch("XsecDown",      xSectionDown)
+        self.out.fillBranch("ptISR",         ptISR)
+        self.out.fillBranch("njetISR",       njetISR)
             
         return True
  
