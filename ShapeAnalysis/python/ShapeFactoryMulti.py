@@ -1552,6 +1552,7 @@ class ShapeFactory:
 
       if 'suppressNegativeNuisances' in sample:
         for nuisance in nuisances.itervalues():
+          if 'name' not in nuisance: continue
           if sampleName not in nuisance['samples']: continue
           #if 'kind' not in nuisance: continue
           #if not (nuisance['kind'].startswith('tree') or nuisance['kind'].startswith('suffix') or nuisance['kind'].startswith('branch_custom')): continue
