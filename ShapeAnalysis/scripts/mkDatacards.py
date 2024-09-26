@@ -47,6 +47,10 @@ class DatacardFactory:
           self._fileIn = ROOT.TFile(inputFile, "READ")
           ROOT.gROOT.GetListOfFiles().Remove(self._fileIn) #Speed up
 
+        # Keep track of what background has been written to the shapes root file
+        # Avoid writing multiple times to speed up
+        self.hasShapeDict = {}
+
         # categorize the sample names
         signal_ids = collections.OrderedDict() # id map of alternative_signals + cumulative_signals
         alternative_signals = ['']
@@ -169,7 +173,7 @@ class DatacardFactory:
                   self._removeStatUncertainty (histo)
                  
                 self._outFile.cd()
-                histo.Write()
+                histo.Write('', ROOT.TFile.kOverwrite)
 
             # Loop over alternative signal samples. One card per signal (there is always at least one entry (""))
             for signalName in alternative_signals:
@@ -292,6 +296,16 @@ class DatacardFactory:
                       elif ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
 
+                        card.write('1.000'.ljust(columndef))
+
+                        # Check if shapes already saved, if so skip 
+                        suffixIn = '_'+nuisance['name']
+                        if not cutName in self.hasShapeDict: self.hasShapeDict[cutName] = {}
+                        if not variableName in self.hasShapeDict[cutName]: self.hasShapeDict[cutName][variableName] = {}
+                        if not sampleName in self.hasShapeDict[cutName][variableName]: self.hasShapeDict[cutName][variableName][sampleName] = {}
+                        if not suffixIn in self.hasShapeDict[cutName][variableName][sampleName]: self.hasShapeDict[cutName][variableName][sampleName][suffixIn] = False
+                        if self.hasShapeDict[cutName][variableName][sampleName][suffixIn]: continue
+
                         histo = self._getHisto(cutName, variableName, sampleName)
 
                         histoUp = histo.Clone('%s_%sUp' % (histo.GetName(), nuisance['name']))
@@ -319,10 +333,9 @@ class DatacardFactory:
                           histoDown.Scale(1. / float(nuisance['samples'][sampleName]))
 
                         self._outFile.cd()
-                        histoUp.Write()
-                        histoDown.Write()
-
-                        card.write('1.000'.ljust(columndef))
+                        histoUp.Write('', ROOT.TFile.kOverwrite)
+                        histoDown.Write('', ROOT.TFile.kOverwrite)
+                        self.hasShapeDict[cutName][variableName][sampleName][suffixIn] = True
 
                       else:
                         card.write(('-').ljust(columndef))
@@ -594,6 +607,13 @@ class DatacardFactory:
 
     # _____________________________________________________________________________
     def _saveNuisanceHistos(self, cutName, variableName, sampleName, suffixIn, suffixOut = None, symmetrize = False):
+        # Check if already saved, is so skip 
+        if not cutName in self.hasShapeDict: self.hasShapeDict[cutName] = {}
+        if not variableName in self.hasShapeDict[cutName]: self.hasShapeDict[cutName][variableName] = {}
+        if not sampleName in self.hasShapeDict[cutName][variableName]: self.hasShapeDict[cutName][variableName][sampleName] = {}
+        if not suffixIn in self.hasShapeDict[cutName][variableName][sampleName]: self.hasShapeDict[cutName][variableName][sampleName][suffixIn] = False
+        if self.hasShapeDict[cutName][variableName][sampleName][suffixIn]: return True
+
         histoUp = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Up')
         histoDown = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Down')
 
@@ -633,9 +653,10 @@ class DatacardFactory:
             histoDown.SetName('histo_%s%sDown' % (sampleName, suffixOut))
 
         self._outFile.cd()
-        histoUp.Write()
-        histoDown.Write()
+        histoUp.Write('', ROOT.TFile.kOverwrite)
+        histoDown.Write('', ROOT.TFile.kOverwrite)
 
+        self.hasShapeDict[cutName][variableName][sampleName][suffixIn] = True
         return True
 
     # _____________________________________________________________________________
