@@ -2207,7 +2207,8 @@ Steps = {
                                   'TTTo2L2Nu_PSWeights',
                                   'TTToSemiLeptonic',
                                   'TTWjets',
-                                  'TTWjets_ext1'
+                                  'TTWjets_ext1',
+                                  'TTWJetsToLNu_ext1',
                                   'TTZjets',
                                   'TTZjets_ext1',
                                   'ST_s-channel',
