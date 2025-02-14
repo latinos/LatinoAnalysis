@@ -1499,8 +1499,10 @@ class ShapeFactory:
                   deltas = variations - vnominal
                   deltas_up = np.where(deltas > 0, deltas, 0)  
                   deltas_down = np.where(deltas < 0, deltas, 0) 
-                  arrup = np.sqrt(np.sum(deltas_up**2, axis=0))
-                  arrdown = np.sqrt(np.sum(deltas_down**2, axis=0))
+                  delta_arrup = np.sqrt(np.sum(deltas_up**2, axis=0))
+                  delta_arrdown = np.sqrt(np.sum(deltas_down**2, axis=0))
+                  arrup = vnominal.flat[:] + delta_arrup
+                  arrdown = vnominal.flat[:] - delta_arrdown
 
                 elif nuisance['kind'].endswith('_rms'):
                   arrnom = np.tile(vnominal.flat, (variations.shape[0], 1))
