@@ -759,7 +759,7 @@ class ShapeFactory:
                   if 'kind' not in nuisance:
                     continue
 
-                  if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')  or nuisance['kind'].endswith('_squaredSum') :
+                  if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')  or nuisance['kind'].endswith('_square') :
                     for ivar in range(len(configurationNuis)):
                       histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
                       hTotalVar = outDir.Get(histoNameVar)
@@ -1497,14 +1497,11 @@ class ShapeFactory:
                   arrup = np.max(variations, axis=0)
                   arrdown = np.min(variations, axis=0)
 
-                elif nuisance['kind'].endswith('_squaredSum'):
-                  deltas = variations - vnominal
-                  deltas_up = np.where(deltas > 0, deltas, 0)  
-                  deltas_down = np.where(deltas < 0, deltas, 0) 
-                  delta_arrup = np.sqrt(np.sum(deltas_up**2, axis=0))
-                  delta_arrdown = np.sqrt(np.sum(deltas_down**2, axis=0))
-                  arrup = vnominal.flat[:] + delta_arrup
-                  arrdown = vnominal.flat[:] - delta_arrdown
+                # squared sum of variations, to be then considered as 68% coverage sqrt ( sum_i delta^2 )
+                elif nuisance['kind'].endswith('_square'):
+                  deltas = np.sqrt(np.sum(np.square(variations - vnominal), axis=0))
+                  arrup = vnominal.flat[:] + deltas
+                  arrdown = vnominal.flat[:] - deltas
 
                 elif nuisance['kind'].endswith('_rms'):
                   arrnom = np.tile(vnominal.flat, (variations.shape[0], 1))
