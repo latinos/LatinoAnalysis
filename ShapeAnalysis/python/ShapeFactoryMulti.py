@@ -369,14 +369,7 @@ class ShapeFactory:
               else:
                 nuisanceweight = sampleweight
 
-              # For tree or suffix nuisances, might need to provide an event weight (when filling) different from the value in 'samples' (which goes into the datacard)
-              # For now this is not sample dependent (could change later)
-              if 'reweight' in nuisance:
-                nuisanceShift = ShapeFactory._make_reweight(nuisance['reweight'][ivar])
-                nuisanceweightfinal = ROOT.multidraw.ReweightSource(nuisanceweight, nuisanceShift)
-                ndrawer.setReweight(nuisanceweightfinal)
-              else:
-                ndrawer.setReweight(nuisanceweight)
+              ndrawer.setReweight(nuisanceweight)
 
               # if the nuisance drawer is built from independent files, length of chain can be
               # different from the length of tree weights
