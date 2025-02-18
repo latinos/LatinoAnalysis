@@ -752,7 +752,7 @@ class ShapeFactory:
                   if 'kind' not in nuisance:
                     continue
 
-                  if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms'):
+                  if nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')  or nuisance['kind'].endswith('_square') :
                     for ivar in range(len(configurationNuis)):
                       histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
                       hTotalVar = outDir.Get(histoNameVar)
@@ -1489,6 +1489,12 @@ class ShapeFactory:
                 if nuisance['kind'].endswith('_envelope'):
                   arrup = np.max(variations, axis=0)
                   arrdown = np.min(variations, axis=0)
+
+                # squared sum of variations, to be then considered as 68% coverage sqrt ( sum_i delta^2 )
+                elif nuisance['kind'].endswith('_square'):
+                  deltas = np.sqrt(np.sum(np.square(variations - vnominal), axis=0))
+                  arrup = vnominal.flat[:] + deltas
+                  arrdown = vnominal.flat[:] - deltas
 
                 elif nuisance['kind'].endswith('_rms'):
                   arrnom = np.tile(vnominal.flat, (variations.shape[0], 1))
