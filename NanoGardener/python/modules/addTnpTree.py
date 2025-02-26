@@ -90,7 +90,7 @@ class addTnpTree(Module):
       return match
 
     def matchesPrompt(self, lep, genparts):
-        return (lep.genPartFlav == 1 and genparts[lep.genPartIdx].statusFlags & 1) or  (lep.genPartFlav == 15 and genparts[lep.genPartIdx].statusFlags & (1 << 5))
+        return (lep.genPartFlav == 1 and genparts[lep.genPartIdx].statusFlags & 1) or  (lep.genPartFlav == 15 and (genparts[lep.genPartIdx].statusFlags >> 5) & 1)
 
     def analyze(self, event):
         # Get Jet and Ele collections
