@@ -473,8 +473,8 @@ class PostProcMaker():
         else:
           command = 'xrdcp -f '+self._Sites[self._LocalSite]['xrootdPath']+prodFile+' '+self._Sites[self._LocalSite]['xrootdPath']+storeFile
       # IFCA
-      elif self._LocalSite == 'ifca' :
-         if self._TargetSite == 'ifca' or self._TargetSite == None :
+      elif self._LocalSite == 'ifca' or self._LocalSite == 'cloud' :
+         if self._TargetSite == 'ifca' or self._TargetSite == 'cloud' or self._TargetSite == None :
             if self._redo :
                command += 'rm '+storeFile+' ; '
             if not cpMode:
@@ -732,6 +732,10 @@ class PostProcMaker():
      if 'RPLME_YEAR' in module :
        module = module.replace('RPLME_YEAR',self._prodYear)
 
+     # SOURCEDIR
+     if 'RPLME_SOURCEDIR' in module :
+       module = module.replace('RPLME_SOURCEDIR',self._sourceDir)
+
      # SAMPLE
      if 'RPLME_SAMPLE' in module :
        module = module.replace('RPLME_SAMPLE',iSample)
@@ -943,7 +947,9 @@ class PostProcMaker():
              self._crab.AddJobOutputFile(iStep,iTarget,outFile)
              self._crab.setUnpackCommands(iStep,iTarget,[outFile],[stageOutCmd])
 
-     if   self._jobMode == 'Batch' and not self._pretend : self._jobs.Sub()
+     if   self._jobMode == 'Batch' and not self._pretend : 
+	if self._LocalSite=='ifca' or self._LocalSite=='cloud': self._jobs.Sub(self._batchQueue)
+	else: self._jobs.Sub()	
      elif self._jobMode == 'Crab':
         self._crab.mkCrabCfg()
         if not self._pretend : self._crab.Sub()

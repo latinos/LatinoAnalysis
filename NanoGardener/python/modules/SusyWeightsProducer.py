@@ -1,5 +1,7 @@
 import ROOT
 import math
+import os
+import subprocess
 from array import array
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -11,13 +13,13 @@ from LatinoAnalysis.NanoGardener.data.SusyISRCorrections import SUSYISRCorrectio
 class SusyWeightsProducer(Module):
 
     ###
-    def __init__(self, cmssw):
+    def __init__(self, cmssw, sourcedir):
         self.cmssw = cmssw
+        self.sourcedir = sourcedir[:sourcedir.index('susyGen')] + 'susyGen'
         pass
 
     ###
     def beginJob(self):
-        self.massScanIsFilled = False
         pass
 
     ###
@@ -29,52 +31,73 @@ class SusyWeightsProducer(Module):
         self.out = wrappedOutputTree
         self.out.branch("baseW",         "F")
         self.out.branch("isrW",          "F")
-
-        if self.massScanIsFilled==False :
-
-            inputFileName = inputFile.GetName()
             
-            chain = ROOT.TChain('Events');
-            
-            if '__part' in inputFileName :
-                inputFileName = inputFileName[:inputFileName.index('__part')] + '__part*.root'
+        chain = ROOT.TChain('Events')
 
-            chain.Add(inputFileName)
+        inputFileName = inputFile.GetName()
+              
+        if '__part' in inputFileName :
+            inputFileName = inputFileName[:inputFileName.index('__part')] + '__part*.root'
+            nInputTrees = int(subprocess.check_output('ls ' + self.sourcedir + '/' + inputFileName + ' | grep -c root', shell=True).strip('\n'))
+            for part in range(nInputTrees):
+                partFileName = self.sourcedir + '/' + inputFileName.replace('__part*.root', '__part' + str(part) + '.root')
+                if os.path.isfile(partFileName) :
+                    chain.Add(partFileName)
+                else:
+                    raise Exception('SusyWeightsProducer ERROR: input susyGen file', partFileName, 'does not exist')
 
-            self.massScan = ROOT.TH2D("massScan", "", 3000, 0., 3000., 3000, 0., 3000.)
-            chain.Project(self.massScan.GetName(), "susyMLSP:susyMprompt", "genWeight", "")
+        else:
+            chain.Add(self.sourcedir + '/' + inputFileName)
+            nInputTrees = 1
+
+        print 'SusyWeightsProducer: read', nInputTrees, 'input susyGen files with', chain.GetEntries(), 'events'
+
+        self.massPointN = { }
+
+        inputTree.SetEstimate(inputTree.GetEntries())
+        inputTree.Draw('susyIDprompt')
+        idPromptArray = inputTree.GetV1()
+        idPromptList = [ ] 
+        for i in range(inputTree.GetSelectedRows()):
+            if int(idPromptArray[i]) not in idPromptList:
+                idPromptList.append(int(idPromptArray[i]))
+
+        for idPrompt in idPromptList:
+                
+            self.massPointN[idPrompt] = { }
 
             self.isrObservable = ''
 
-            for isrObs in SUSYISRCorrections:
-                for susyModel in SUSYISRCorrections[isrObs]['susyModels'] :
-                    if susyModel in inputFileName :
-                        for isrVer in SUSYISRCorrections[isrObs]['version']:
-                            if self.cmssw in SUSYISRCorrections[isrObs]['version'][isrVer]['production'].keys():
+            for process in SUSYISRCorrections:
+                if str(idPrompt) in SUSYISRCorrections[process]['susyPromptParticles']:
+                    for isrVer in SUSYISRCorrections[process]['version']:
+                        if self.cmssw in SUSYISRCorrections[process]['version'][isrVer]['production']:
 
-                                self.isrObservable = isrObs
+                            self.isrObservable = SUSYISRCorrections[process]['version'][isrVer]['observable']
                         
-                                self.isrEdge = []
-                                self.isrCorrection = []
+                            self.isrEdge = []
+                            self.isrCorrection = []
 
-                                for edge in sorted(SUSYISRCorrections[isrObs]['version'][isrVer]['correction'].keys()) :
+                            for edge in sorted(SUSYISRCorrections[process]['version'][isrVer]['correction'].keys()) :
                                     
-                                    self.isrEdge.append( float(edge) )
-                                    self.isrCorrection.append( float(SUSYISRCorrections[isrObs]['version'][isrVer]['correction'][edge]) )
+                                self.isrEdge.append( float(edge) )
+                                self.isrCorrection.append( float(SUSYISRCorrections[process]['version'][isrVer]['correction'][edge]) )
 
-                                    self.isrBins = len(self.isrEdge) - 1
+                            self.isrBins = len(self.isrEdge) - 1
 
             if self.isrObservable=='' :
                 raise Exception('SusyWeightsProducer ERROR: SUSY model not found for', inputFile.GetName())
 
-            self.isrN = {}
+                
+            massScan = ROOT.TH2D("massScan", "", 3000, 0., 3000., 3000, 0., 3000.)
+            inputTree.Project(massScan.GetName(), "susyMLSP:susyMprompt", "susyIDprompt=="+str(idPrompt), "")
             
-            for xb in range(1, self.massScan.GetNbinsX()+1) :
-                for yb in range(1, self.massScan.GetNbinsY()+1) :
-                    if self.massScan.GetBinContent(xb, yb)>0. :
+            for xb in range(1, massScan.GetNbinsX()+1) :
+                for yb in range(1, massScan.GetNbinsY()+1) :
+                    if massScan.GetBinContent(xb, yb)>0. :
 
                         histoISR = ROOT.TH1D("histoISR", "", self.isrBins, array('d',self.isrEdge))
-                        chain.Project(histoISR.GetName(), self.isrObservable, "(susyMprompt=="+str(xb-1)+" && susyMLSP=="+str(yb-1)+")*genWeight", "")
+                        chain.Project(histoISR.GetName(), self.isrObservable, "(susyMprompt=="+str(xb-1)+" && susyMLSP=="+str(yb-1)+" && susyIDprompt=="+str(idPrompt)+")*genWeight", "")
 
                         reweightedNormalization = 0.
                         for ib in range(self.isrBins+1) :
@@ -82,11 +105,11 @@ class SusyWeightsProducer(Module):
 
                         normFactor = histoISR.Integral(0, self.isrBins+1)/reweightedNormalization
 
-                        self.isrN.update({str(xb-1)+"-"+str(yb-1):normFactor})
-                        print 'SusyWeightsProducer: overall ISR normalization factor for mass point (',str(xb-1),',',str(yb-1),'):', normFactor
-
-            self.massScanIsFilled = True
-
+                        self.massPointN[idPrompt][str(xb-1)+"-"+str(yb-1)] = {}
+                        self.massPointN[idPrompt][str(xb-1)+"-"+str(yb-1)]['events'] = histoISR.GetEntries()
+                        self.massPointN[idPrompt][str(xb-1)+"-"+str(yb-1)]['isrW'] = normFactor
+                        print 'SusyWeightsProducer: overall ISR normalization factor for mass point (',str(idPrompt),',',str(xb-1),',',str(yb-1),'):', normFactor
+                        
     ###    
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -96,12 +119,11 @@ class SusyWeightsProducer(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         Xsec  = event.Xsec
-        massScanBin = self.massScan.FindBin(event.susyMprompt, event.susyMLSP)
-        nevents = self.massScan.GetBinContent(massScanBin)
-        
+        nevents = self.massPointN[int(event.susyIDprompt)][str(int(event.susyMprompt))+"-"+str(int(event.susyMLSP))]['events']
+         
         baseW = 1000.*Xsec/nevents
 
-        isrW = self.isrN[str(int(event.susyMprompt))+'-'+str(int(event.susyMLSP))]
+        isrW = self.massPointN[int(event.susyIDprompt)][str(int(event.susyMprompt))+"-"+str(int(event.susyMLSP))]['isrW']
         for ib in reversed(xrange(self.isrBins+1)) :
             if getattr(event, self.isrObservable) >= self.isrEdge[ib] :
                 isrW *= self.isrCorrection[ib]
