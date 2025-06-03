@@ -1,3 +1,27 @@
+# Before Starting
+
+If you are here, you probably want to use the `Latinos` framework to analyze ultra-legacy  Run 2 data. Please consider that this version of the framework is obsolete, and we suggest to use instead [mkShapesRDF](https://github.com/latinos/mkShapesRDF/tree/master).
+
+In case you really need to use this version of the framework, be aware that it is based on a `CMSSW` version not running on `el9`. To use the framework on lxplus, follow the instructions [here](https://gitlab.cern.ch/cms-cat/cmssw-lxplus). In particular, the framework can run only inside a singularity, and you need to create a script called `start_el7.sh`, containing:
+
+```
+#!/bin/bash
+export APPTAINER_BINDPATH=/afs,/cvmfs,/cvmfs/grid.cern.ch/etc/grid-security:/etc/grid-security,/cvmfs/grid.cern.ch/etc/grid-security/vomses:/etc/vomses,/eos,/etc/pki/ca-trust,/etc/tnsnames.ora,/run/user,/tmp,/var/run/user,/etc/sysconfig,/etc:/orig/etc
+schedd=`myschedd show -j | jq .currentschedd | tr -d '"'`
+
+apptainer -s exec /cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/cms-cat/cmssw-lxplus/cmssw-el7-lxplus:latest/ sh -c "source /app/setupCondor.sh && export _condor_SCHEDD_HOST=$schedd && export _condor_SCHEDD_NAME=$schedd && export _condor_CREDD_HOST=$schedd && /bin/bash  "
+```
+
+Then, make the script executable using `chmod +x start_el7.sh`, and run it:
+
+```
+./start_el7.sh
+```
+
+Good luck!
+
+
+
 The latinos framework is roughly divided in three parts.
 
 # 0. Install
