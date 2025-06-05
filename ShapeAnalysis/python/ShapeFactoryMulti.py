@@ -1488,6 +1488,7 @@ class ShapeFactory:
                   histoNameVar = 'histo_' + outputFormat.format(sample=sampleName, subsample=slabel, nuisance=('_%sV%dVar' % (nuisance['name'], ivar)))
                   hTotalVar = outDir.Get(histoNameVar)
                   variations[ivar, :] = rnp.hist2array(hTotalVar, copy=True).flat
+                  hTotalVar.Delete()
                   if hasattr(userConfig, 'shapeFactoryDeleteVariations') and userConfig.shapeFactoryDeleteVariations:
                     outDir.Delete(histoNameVar + ';*')
 
@@ -1511,11 +1512,15 @@ class ShapeFactory:
                 rnp.array2hist(arrup, outputsHistoUp)
                 if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) : ShapeFactory._fixNegativeBin(outputsHistoUp, nominal)
                 outputsHistoUp.Write()
+                outputsHistoUp.Delete()
                 outputsHistoDown = nominal.Clone(histoNameDown)
                 if twosided:
                   rnp.array2hist(arrdown, outputsHistoDown)
                   if 'suppressNegativeNuisances' in sample and (cutName in sample['suppressNegativeNuisances'] or 'all' in sample['suppressNegativeNuisances']) : ShapeFactory._fixNegativeBin(outputsHistoDown, nominal)
                 outputsHistoDown.Write()
+                outputsHistoDown.Delete()
+                nominal.Delete()
+            ROOT.TObject.Delete(outDir)
 
     @staticmethod
     def postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile):
@@ -1554,6 +1559,8 @@ class ShapeFactory:
                 nominal = outDir.Get(histoName)
 
                 if ShapeFactory._fixNegativeBinAndError(nominal): nominal.Write()
+                nominal.Delete()
+              ROOT.TObject.Delete(outDir)
 
       if 'suppressNegativeNuisances' in sample:
         for nuisance in nuisances.itervalues():
@@ -1606,3 +1613,7 @@ class ShapeFactory:
                   if twosided:
                     if ShapeFactory._fixNegativeBin(outputsHistoDown, nominal): outputsHistoDown.Write()
 
+                  nominal.Delete()
+                  outputsHistoUp.Delete()
+                  outputsHistoDown.Delete()
+                ROOT.TObject.Delete(outDir)

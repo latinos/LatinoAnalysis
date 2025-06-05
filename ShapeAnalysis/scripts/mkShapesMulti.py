@@ -16,6 +16,7 @@ import tempfile
 import subprocess
 import threading, Queue
 from LatinoAnalysis.ShapeAnalysis.ShapeFactoryMulti import ShapeFactory
+import time
 
 # Common Tools & batch
 from LatinoAnalysis.Tools.commonTools import *
@@ -534,19 +535,20 @@ if __name__ == '__main__':
             if 'exists' in output.lower(): stoppedForExistingRootfile = True
             print(output.strip())
 
+        start = time.time()
         outFile = ROOT.TFile.Open(finalpath, 'update')
+        # Speed up closure of output file in case of many histograms - see https://root-forum.cern.ch/t/tfile-close-slow/24179
+        ROOT.gROOT.GetListOfFiles().Remove(outFile)
         for nuisance in nuisances.itervalues():
           if 'kind' in nuisance and (nuisance['kind'].endswith('_envelope') or nuisance['kind'].endswith('_rms')):
             ShapeFactory.postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile)
-        outFile.Close()
 
         if opt.FixNegativeAfterHadd:
           for sampleName, sample in samples.iteritems():
             if 'suppressNegative' in sample or 'suppressNegativeNuisances' in sample:
-              outFile = ROOT.TFile.Open(finalpath, 'update')
               ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
-              outFile.Close()
-        
+        outFile.Close()
+        print 'Time to postprocess hadded shapes: {:.1f}s'.format(time.time()-start)
         ### Modded to avoid cleaning all partial shapes if hadd quits because the target rootfile already exists
         if not opt.doNotCleanup and not stoppedForExistingRootfile:
           for fname in fileList:
