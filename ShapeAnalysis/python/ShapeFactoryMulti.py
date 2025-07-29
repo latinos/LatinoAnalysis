@@ -83,14 +83,14 @@ class ShapeFactory:
             for line in linesToAdd:
               ROOT.gROOT.ProcessLineSync(line)
 
-        print " supercut = ", supercut
+        # print " supercut = ", supercut
 
         if number != 99999 :
           outputFileName = outputDir+'/plots_'+self._tag+"_"+str(number)+".root"
         else :
           outputFileName = outputDir+'/plots_'+self._tag+".root"
 
-        print " outputFileName = ", outputFileName
+        # print " outputFileName = ", outputFileName
         os.system ("mkdir -p " + outputDir + "/")
 
         ROOT.TH1.SetDefaultSumw2(True)
@@ -105,7 +105,7 @@ class ShapeFactory:
         print ''
         print '  <cuts>'
         for cutName, cut in self._cuts.iteritems():
-          print "cut = ", cutName, " :: ", self._cuts[cutName]
+          # print "cut = ", cutName, " :: ", self._cuts[cutName]
           if type(cut) is dict and 'categories' in cut:
             for catname in cut['categories']:
               outFile.mkdir(cutName + '_' + catname)
@@ -132,11 +132,11 @@ class ShapeFactory:
             line += variable['class']
           elif 'tree' in variable:
             line += 'tree (%d branches)' % len(variable['tree'])
-          print line
-          if 'range' in variable:
-            print "      range:", variable['range']
-          if 'samples' in variable:
-            print "      samples:", variable['samples']
+          # print line
+          # if 'range' in variable:
+          #   print "      range:", variable['range']
+          # if 'samples' in variable:
+          #   print "      samples:", variable['samples']
 
         print ''
         print '  <nuisances>'
@@ -145,10 +145,10 @@ class ShapeFactory:
           line = "    nuisance = " + nuisanceName
           if 'name' in nuisance:
             line += " :: " + nuisance['name']
-          print line
-          if 'kind' in nuisance:
-              print "      kind:", nuisance['kind']
-          print "      type:", nuisance['type']
+          # print line
+          # if 'kind' in nuisance:
+          #     print "      kind:", nuisance['kind']
+          # print "      type:", nuisance['type']
 
           if nuisanceName == "stat":
             for item in nuisance["samples"].itervalues():
@@ -167,8 +167,8 @@ class ShapeFactory:
 
         # One MultiDraw per sample = tree
         for sampleName, sample in self._samples.iteritems():
-          print "    sample =", sampleName
-          print "    name:", sample['name']
+          # print "    sample =", sampleName
+          # print "    name:", sample['name']
           #print "    weight:", sample['weight']
 
           if 'outputFormat' in sample:
@@ -1173,9 +1173,9 @@ class ShapeFactory:
 	if "sdfarm" in os.uname()[1]:
 	  inputDir = inputDir.replace("xrootd","xrd")
 
-        print "  connectInputs from", inputDir
+        # print "  connectInputs from", inputDir
 
-        print '  (%d files)' % len(filenames)
+        # print '  (%d files)' % len(filenames)
 
         drawer = ROOT.multidraw.MultiDraw(self._treeName)
         drawer.setWeightBranch('')
@@ -1437,6 +1437,27 @@ class ShapeFactory:
     def postprocess_nuisance_variations(nuisance, samples, cuts, variables, outFile):
       twosided = ('OneSided' not in nuisance or not nuisance['OneSided'])
 
+      total_folders = 0
+      for cutName, cut in cuts.iteritems():
+        if 'cuts' in nuisance and cutName not in nuisance['cuts']:
+          continue
+
+        if 'categories' in cut:
+            catsuffixes = ['_' + catname for catname in cut['categories']]
+        else:
+          catsuffixes = ['']
+
+        for catsuffix in catsuffixes:
+          for variableName, variable in variables.iteritems():
+            if 'tree' in variable:
+              continue
+    
+            if 'cuts' in variable and cutName not in variable['cuts']:
+              continue
+
+            total_folders += 1
+
+      processed_folders = 0
       for cutName, cut in cuts.iteritems():
         if 'cuts' in nuisance and cutName not in nuisance['cuts']:
           continue
@@ -1457,6 +1478,8 @@ class ShapeFactory:
             dname = cutName + catsuffix + '/' + variableName
             outDir = outFile.GetDirectory(dname)
             outDir.cd()
+            processed_folders += 1
+            print('Processing folder %d/%d' % (processed_folders, total_folders))
 
             for sampleName, sample in samples.iteritems():
               if sampleName not in nuisance['samples']:
