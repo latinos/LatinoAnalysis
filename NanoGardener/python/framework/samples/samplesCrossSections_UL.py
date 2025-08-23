@@ -171,18 +171,18 @@ samples['TTToSemiLeptonic_TuneCP5Down']         .extend( ['xsec=364.35',	'kfact=
 samples['TTToSemiLeptonic_hdampUp']             .extend( ['xsec=364.35',	'kfact=1.000',	        'ref=E'] )
 samples['TTToSemiLeptonic_hdampDown']           .extend( ['xsec=364.35',	'kfact=1.000',	        'ref=E'] )
 
-samples['ST_t-channel_top']                     .extend( ['xsec=44.07048',	'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_top_TuneCP5Up']           .extend( ['xsec=44.07048',	'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_top_TuneCP5Down']         .extend( ['xsec=44.07048',	'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_top_hdampUp']             .extend( ['xsec=44.07048',	'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_top_hdampDown']           .extend( ['xsec=44.07048',	'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_top']                     .extend( ['xsec=136.02',	'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_top_TuneCP5Up']           .extend( ['xsec=136.02',	'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_top_TuneCP5Down']         .extend( ['xsec=136.02',	'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_top_hdampUp']             .extend( ['xsec=136.02',	'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_top_hdampDown']           .extend( ['xsec=136.02',	'kfact=1.000',		'ref=D'] )
 samples['ST_t-channel_top_5f']                  .extend( ['xsec=136.02',        'kfact=1.000',          'ref=Z'] )
 
-samples['ST_t-channel_antitop']                 .extend( ['xsec=26.2278',       'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_antitop_TuneCP5Up']       .extend( ['xsec=26.2278',       'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_antitop_TuneCP5Down']     .extend( ['xsec=26.2278',       'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_antitop_hdampUp']         .extend( ['xsec=26.2278',       'kfact=1.000',		'ref=D'] )
-samples['ST_t-channel_antitop_hdampDown']       .extend( ['xsec=26.2278',       'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_antitop']                 .extend( ['xsec=80.95',       'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_antitop_TuneCP5Up']       .extend( ['xsec=80.95',       'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_antitop_TuneCP5Down']     .extend( ['xsec=80.95',       'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_antitop_hdampUp']         .extend( ['xsec=80.95',       'kfact=1.000',		'ref=D'] )
+samples['ST_t-channel_antitop_hdampDown']       .extend( ['xsec=80.95',       'kfact=1.000',		'ref=D'] )
 samples['ST_t-channel_antitop_5f']              .extend( ['xsec=80.95',         'kfact=1.000',		'ref=D'] )
 
 # What does noHad mean?
@@ -222,9 +222,9 @@ samples['TTWJetsToLNu']                         .extend( ['xsec=0.2161',	'kfact=
 samples['TTWJetsToLNu_TuneCP5Up']               .extend( ['xsec=0.2161',	'kfact=1.000',		'ref=E'] )	
 samples['TTWJetsToLNu_TuneCP5Down']             .extend( ['xsec=0.2161',	'kfact=1.000',		'ref=E'] )	
 
-samples['TTZToLLNuNu_M-10']                     .extend( ['xsec=0.2439',	'kfact=1.000',		'ref=W'] )
-samples['TTZToLLNuNu_M-10_TuneCP5Up']           .extend( ['xsec=0.2439',	'kfact=1.000',		'ref=W'] )
-samples['TTZToLLNuNu_M-10_TuneCP5Down']         .extend( ['xsec=0.2439',	'kfact=1.000',		'ref=W'] )
+samples['TTZToLLNuNu_M-10']                     .extend( ['xsec=0.2432',	'kfact=1.000',		'ref=W'] )
+samples['TTZToLLNuNu_M-10_TuneCP5Up']           .extend( ['xsec=0.2432',	'kfact=1.000',		'ref=W'] )
+samples['TTZToLLNuNu_M-10_TuneCP5Down']         .extend( ['xsec=0.2432',	'kfact=1.000',		'ref=W'] )
 
 samples['tZq_ll']   				.extend( ['xsec=0.07580',	'kfact=1.000',	        'ref=E'] )
 samples['tZq_ll_TuneCP5Up']   			.extend( ['xsec=0.07580',	'kfact=1.000',	        'ref=E'] )
