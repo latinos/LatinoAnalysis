@@ -115,10 +115,11 @@ class batchJobs :
            jFile.write('#$ -q all.q\n')
            jFile.write('#$ -cwd\n')
 
+         jFile.write('export EOS_MGM_URL=root://eoscms.cern.ch\n')
          jFile.write('export X509_USER_PROXY=/afs/cern.ch/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
          if 'latino' in hostName:
            jFile.write('export X509_USER_PROXY=/eos/user/'+os.environ["USER"][:1]+'/'+os.environ["USER"]+'/.proxy\n')
-           jFile.write('export EOS_MGM_URL=root://eoscms.cern.ch\n')
+           
        elif "pi.infn.it" in socket.getfqdn():  
          jFile.write('#$ -N '+jName+'\n')
          jFile.write('export X509_USER_PROXY=/home/users/'+os.environ["USER"]+'/.proxy\n')
